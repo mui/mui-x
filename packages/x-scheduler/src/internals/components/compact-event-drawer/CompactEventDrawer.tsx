@@ -79,7 +79,6 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
 
   const open = editingMode === 'edit';
 
-  const dragHandlerRef = React.useRef<HTMLElement | null>(null);
   const paperRef = React.useRef<HTMLDivElement>(null);
 
   return (
@@ -122,7 +121,6 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
                 key={occurrence.key}
                 occurrence={occurrence}
                 onClose={stopEditing}
-                dragHandlerRef={dragHandlerRef}
                 isDraggable={false}
               />
             )}

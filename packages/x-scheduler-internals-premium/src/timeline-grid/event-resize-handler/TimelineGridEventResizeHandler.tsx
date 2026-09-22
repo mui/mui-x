@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
-import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import {
+  SchedulerDraggable,
   useEventResizeHandler,
   isResizeHandlerEnabled,
 } from '@mui/x-scheduler-internals/internals';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
 import { useTimelineGridEventContext } from '../event/TimelineGridEventContext';
 import type { TimelineGridEvent } from '../event/TimelineGridEvent';
@@ -46,19 +47,21 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
       isEventEndClipped: contextValue.isEventEndClipped,
     });
 
-    const { state } = useEventResizeHandler({
+    const { state, draggableProps } = useEventResizeHandler({
       ref,
       side,
       enabled,
       getDragData,
     });
 
-    return useRenderElement('div', componentProps, {
+    const element = useRenderElement('div', componentProps, {
       enabled,
       state,
       ref: [forwardedRef, ref],
       props: [elementProps],
     });
+
+    return element && <SchedulerDraggable {...draggableProps} render={element} />;
   },
 );
 

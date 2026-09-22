@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
@@ -52,6 +53,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     getCursorPositionInElementMs,
     getDateAtPointer,
     ref: dropTargetRef,
+    targetProps,
   } = useTimeDropTarget({
     start,
     end,
@@ -168,7 +170,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   return (
     <CalendarGridTimeColumnContext.Provider value={contextValue}>
-      {element}
+      <Draggable.Target {...targetProps} render={element} />
     </CalendarGridTimeColumnContext.Provider>
   );
 });

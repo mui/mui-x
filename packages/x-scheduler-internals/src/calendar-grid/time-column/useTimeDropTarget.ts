@@ -170,15 +170,14 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     },
   );
 
-  useDropTarget({
-    ref,
+  const targetProps = useDropTarget({
     surfaceType: 'time-grid',
     getEventDropData,
     isValidDropTarget,
     addPropertiesToDroppedEvent,
   });
 
-  return { getCursorPositionInElementMs, getDateAtPointer, ref };
+  return { targetProps, getCursorPositionInElementMs, getDateAtPointer, ref };
 }
 
 export namespace useTimeDropTarget {

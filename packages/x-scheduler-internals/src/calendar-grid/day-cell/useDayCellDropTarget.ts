@@ -94,15 +94,14 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
     },
   );
 
-  useDropTarget({
+  const targetProps = useDropTarget({
     surfaceType: 'day-grid',
-    ref,
     getEventDropData,
     isValidDropTarget,
     addPropertiesToDroppedEvent,
   });
 
-  return ref;
+  return { ref, targetProps };
 }
 
 export namespace useDayCellDropTarget {

@@ -3,6 +3,7 @@
     '.experiment-dependency-arrows-host, .experiment-dependency-arrows-host * { box-sizing: border-box; }'
   }
 </style>
+<Draggable.Provider>
 <SchedulerStoreContext.Provider value={storeContextValue}>
   <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
     <EventEditingStyledContext.Provider value={styledContextValue}>
@@ -13,3 +14,4 @@
     </EventEditingStyledContext.Provider>
   </EventTimelinePremiumStyledContext.Provider>
 </SchedulerStoreContext.Provider>
+</Draggable.Provider>

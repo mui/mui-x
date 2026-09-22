@@ -151,8 +151,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
     },
   );
 
-  useDropTarget({
-    ref,
+  const targetProps = useDropTarget({
     resourceId,
     surfaceType: 'timeline',
     getEventDropData,
@@ -160,7 +159,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
     addPropertiesToDroppedEvent,
   });
 
-  return { getCursorPositionInElementMs, ref };
+  return { targetProps, getCursorPositionInElementMs, ref };
 }
 
 export namespace useEventRowDropTarget {

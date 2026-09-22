@@ -14,10 +14,8 @@ const getDeltas = (location: DragLocationHistory) => {
 
 export function useDraggableDialog(
   elementRef: React.RefObject<HTMLElement | null>,
-  handleRef: React.RefObject<HTMLElement | null>,
   mutateStyle: (style: string) => void,
 ) {
-  const manager = Draggable.useDragDropManager();
   const offset = React.useRef({ x: 0, y: 0 });
 
   const resetDrag = useStableCallback(() => {
@@ -28,44 +26,30 @@ export function useDraggableDialog(
     }
   });
 
-  React.useEffect(() => {
-    const element = elementRef.current;
-    if (!element) {
-      return undefined;
-    }
+  const draggableProps: Draggable.Root.Props = {
+    kind: dialogDragKind,
+    onMove: ({ location }) => {
+      const { deltaX, deltaY } = getDeltas(location);
 
-    return manager.registerDraggable(element, () => ({
-      kind: dialogDragKind,
-      dragHandle: handleRef,
-      dragPreview: { disabled: true },
-      onMoveStart: () => {
-        element.setAttribute('data-dragging', 'true');
-      },
-      onMove: ({ location }) => {
-        const { deltaX, deltaY } = getDeltas(location);
+      const x = offset.current.x + deltaX;
+      const y = offset.current.y + deltaY;
 
-        const x = offset.current.x + deltaX;
-        const y = offset.current.y + deltaY;
+      const currentElement = elementRef.current;
+      if (currentElement) {
+        const transform = `translate(${x}px, ${y}px)`;
+        mutateStyle(transform);
+      }
+    },
+    onMoveEnd: ({ location, canceled }) => {
+      const { deltaX, deltaY } = getDeltas(location);
 
-        const currentElement = elementRef.current;
-        if (currentElement) {
-          const transform = `translate(${x}px, ${y}px)`;
-          mutateStyle(transform);
-        }
-      },
-      onMoveEnd: ({ location, canceled }) => {
-        element.removeAttribute('data-dragging');
+      if (!canceled) {
+        offset.current.x += deltaX;
+        offset.current.y += deltaY;
+      }
+      mutateStyle(`translate(${offset.current.x}px, ${offset.current.y}px)`);
+    },
+  };
 
-        const { deltaX, deltaY } = getDeltas(location);
-
-        if (!canceled) {
-          offset.current.x += deltaX;
-          offset.current.y += deltaY;
-        }
-        mutateStyle(`translate(${offset.current.x}px, ${offset.current.y}px)`);
-      },
-    }));
-  }, [manager, elementRef, mutateStyle, handleRef]);
-
-  return resetDrag;
+  return { resetDrag, draggableProps };
 }

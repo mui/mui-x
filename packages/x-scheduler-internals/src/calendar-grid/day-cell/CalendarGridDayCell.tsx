@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
@@ -42,7 +43,10 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
-  const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
+  const { ref: dropTargetRef, targetProps } = useDayCellDropTarget({
+    value,
+    addPropertiesToDroppedEvent,
+  });
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, index);
 
   const cellRef = React.useRef<HTMLDivElement>(null);
@@ -130,7 +134,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   return (
     <CalendarGridDayCellContext.Provider value={contextValue}>
-      {element}
+      <Draggable.Target {...targetProps} render={element} />
     </CalendarGridDayCellContext.Provider>
   );
 });

@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import { useDragHandle } from '@mui/x-scheduler-internals/internals';
+import { SchedulerDraggable } from '@mui/x-scheduler-internals/internals';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -57,10 +58,9 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
       storeContext: store,
     }));
 
-    useDragHandle({ ref, enabled: true, getDragData });
-    useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId, side });
+    const targetProps = useEventDependencyDropTarget({ eventId, occurrenceKey, resourceId, side });
 
-    return useRenderElement('div', componentProps, {
+    const element = useRenderElement('div', componentProps, {
       ref: [forwardedRef, ref],
       props: [
         elementProps,
@@ -71,6 +71,13 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
         } as Record<string, string>,
       ],
     });
+
+    return (
+      <Draggable.Target
+        {...targetProps}
+        render={<SchedulerDraggable getDragData={getDragData} render={element} />}
+      />
+    );
   },
 );
 

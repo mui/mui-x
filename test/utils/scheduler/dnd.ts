@@ -286,7 +286,13 @@ function ensurePointerCaptureMethods(element: HTMLElement): void {
 
 function createPointerEvent(
   type: string,
-  options: { clientX?: number; clientY?: number; pointerId?: number; button?: number } = {},
+  options: {
+    clientX?: number;
+    clientY?: number;
+    pointerId?: number;
+    button?: number;
+    pointerType?: string;
+  } = {},
 ): Event {
   const init = {
     bubbles: true,
@@ -294,6 +300,9 @@ function createPointerEvent(
     clientX: options.clientX ?? 0,
     clientY: options.clientY ?? 0,
     button: options.button ?? 0,
+    buttons: type === 'pointerup' || type === 'pointercancel' ? 0 : 1,
+    isPrimary: true,
+    pointerType: options.pointerType ?? 'touch',
   };
   // `PointerEvent` may be missing in JSDOM; fall back to a `MouseEvent` with a `pointerId`.
   if (typeof PointerEvent === 'function') {
@@ -301,6 +310,8 @@ function createPointerEvent(
   }
   const event = new MouseEvent(type, init) as any;
   event.pointerId = options.pointerId ?? 1;
+  event.pointerType = init.pointerType;
+  event.isPrimary = true;
   return event;
 }
 
@@ -319,6 +330,8 @@ interface SimulatePointerResizeParameters {
    * @default 1
    */
   pointerId?: number;
+  /** The input device, defaulting to touch. */
+  pointerType?: 'touch' | 'pen';
   /**
    * End with `pointercancel` instead of `pointerup`.
    * @default false
@@ -344,18 +357,28 @@ interface SimulatePointerResizeParameters {
  * ```
  */
 export function simulatePointerResize(parameters: SimulatePointerResizeParameters): void {
-  const { handle, to, from = {}, pointerId = 1, cancel = false, hold = false } = parameters;
+  const {
+    handle,
+    to,
+    from = {},
+    pointerId = 1,
+    pointerType = 'touch',
+    cancel = false,
+    hold = false,
+  } = parameters;
   ensurePointerCaptureMethods(handle);
 
   const down = { clientX: from.clientX ?? 0, clientY: from.clientY ?? 0 };
   const move = { clientX: to.clientX ?? down.clientX, clientY: to.clientY ?? down.clientY };
 
-  handle.dispatchEvent(createPointerEvent('pointerdown', { ...down, pointerId, button: 0 }));
-  handle.dispatchEvent(createPointerEvent('pointermove', { ...move, pointerId }));
+  handle.dispatchEvent(
+    createPointerEvent('pointerdown', { ...down, pointerId, pointerType, button: 0 }),
+  );
+  handle.dispatchEvent(createPointerEvent('pointermove', { ...move, pointerId, pointerType }));
   if (hold) {
     return;
   }
   handle.dispatchEvent(
-    createPointerEvent(cancel ? 'pointercancel' : 'pointerup', { ...move, pointerId }),
+    createPointerEvent(cancel ? 'pointercancel' : 'pointerup', { ...move, pointerId, pointerType }),
   );
 }

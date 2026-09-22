@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
@@ -172,16 +173,20 @@ export default function TimelineAutoScheduling() {
           '.experiment-auto-scheduling-host, .experiment-auto-scheduling-host * { box-sizing: border-box; }'
         }
       </style>
-      <SchedulerStoreContext.Provider value={storeContextValue}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventEditingStyledContext.Provider value={styledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <EventTimelinePremiumContent />
-              <ErrorContainer />
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventTimelinePremiumStyledContext.Provider>
-      </SchedulerStoreContext.Provider>
+      <Draggable.Provider>
+        <SchedulerStoreContext.Provider value={storeContextValue}>
+          <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+            <EventEditingStyledContext.Provider value={styledContextValue}>
+              <SharedComponentsStyledContext.Provider
+                value={sharedStyledContextValue}
+              >
+                <EventTimelinePremiumContent />
+                <ErrorContainer />
+              </SharedComponentsStyledContext.Provider>
+            </EventEditingStyledContext.Provider>
+          </EventTimelinePremiumStyledContext.Provider>
+        </SchedulerStoreContext.Provider>
+      </Draggable.Provider>
     </div>
   );
 }

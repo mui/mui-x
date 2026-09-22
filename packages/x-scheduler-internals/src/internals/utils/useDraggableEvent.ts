@@ -1,8 +1,7 @@
 'use client';
 import * as React from 'react';
-import { Draggable } from '@base-ui/react/draggable';
 import { useStore } from '@base-ui/utils/store';
-import { registerSchedulerDraggable } from './schedulerDrag';
+import type { SchedulerDraggable } from './SchedulerDraggable';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -17,7 +16,6 @@ export function useDraggableEvent(
   parameters: useDraggableEvent.Parameters,
 ): useDraggableEvent.ReturnValue {
   const {
-    ref,
     start,
     end,
     occurrenceKey,
@@ -55,28 +53,20 @@ export function useDraggableEvent(
     resizing: placeholderAction === 'internal-resize',
   };
 
-  const manager = Draggable.useDragDropManager();
-
-  React.useEffect(() => {
-    if (!isDraggable || !ref.current) {
-      return;
-    }
-
-    // eslint-disable-next-line consistent-return
-    return registerSchedulerDraggable(manager, ref.current, {
-      getDragData,
-      onMoveStart: ({ location }) => {
-        preview.actions.onDragStart(location);
-      },
-      onMove: ({ location }) => {
-        preview.actions.onDrag(location);
-      },
-      onMoveEnd: () => {
-        store.setOccurrencePlaceholder(null);
-        preview.actions.onDrop();
-      },
-    });
-  }, [manager, ref, getDragData, isDraggable, store, preview.actions]);
+  const draggableProps: Omit<SchedulerDraggable.Props, 'render'> = {
+    disabled: !isDraggable,
+    getDragData,
+    onMoveStart: ({ location }) => {
+      preview.actions.onDragStart(location);
+    },
+    onMove: ({ location }) => {
+      preview.actions.onDrag(location);
+    },
+    onMoveEnd: () => {
+      store.setOccurrencePlaceholder(null);
+      preview.actions.onDrop();
+    },
+  };
 
   // A bound clipped by the collection range or hidden by the daily hour window does not
   // render at its real position, so it must not expose a resize handle: the drop math
@@ -92,7 +82,7 @@ export function useDraggableEvent(
     [position.startingBeforeEdge, position.endingAfterEdge],
   );
 
-  return { state, preview, contextValue };
+  return { state, preview, contextValue, draggableProps };
 }
 
 export namespace useDraggableEvent {
@@ -132,10 +122,6 @@ export namespace useDraggableEvent {
      */
     getDragData: (input: { clientX: number; clientY: number }) => any;
     /**
-     * The ref to the event's root element.
-     */
-    ref: React.RefObject<HTMLDivElement | null>;
-    /**
      * The position the caller renders the event at. The clipping flags come from it, so a
      * single pass of the positioning arithmetic serves both rendering and resizing.
      */
@@ -143,6 +129,7 @@ export namespace useDraggableEvent {
   }
 
   export interface ReturnValue {
+    draggableProps: Omit<SchedulerDraggable.Props, 'render'>;
     /**
      * The state to pass to the useRenderElement hook.
      */

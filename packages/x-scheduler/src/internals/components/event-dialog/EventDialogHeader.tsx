@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
@@ -21,7 +22,6 @@ const EventDialogHeaderRoot = styled('header', {
 
 interface EventDialogHeaderProps {
   onClose: () => void;
-  dragHandlerRef?: React.RefObject<HTMLElement | null>;
   /**
    * Whether the header acts as a drag handle; when `false` the move cursor is suppressed.
    * @default true
@@ -31,12 +31,11 @@ interface EventDialogHeaderProps {
 }
 
 export default function EventDialogHeader(props: EventDialogHeaderProps) {
-  const { children, onClose, dragHandlerRef, isDraggable = true } = props;
+  const { children, onClose, isDraggable = true } = props;
   const { classes, localeText } = useEventEditingStyledContext();
 
-  return (
+  const element = (
     <EventDialogHeaderRoot
-      ref={dragHandlerRef}
       className={classes.eventDialogHeader}
       data-draggable={isDraggable || undefined}
     >
@@ -52,4 +51,6 @@ export default function EventDialogHeader(props: EventDialogHeaderProps) {
       </div>
     </EventDialogHeaderRoot>
   );
+
+  return isDraggable ? <Draggable.Handle render={element} /> : element;
 }

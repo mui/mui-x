@@ -5,7 +5,7 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
-import { registerSchedulerDraggable } from '../internals/utils/schedulerDrag';
+import { SchedulerDraggable } from '../internals/utils/SchedulerDraggable';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../internals/utils/useDragPreview';
 
@@ -56,23 +56,6 @@ const StandaloneEventInner = React.forwardRef(function StandaloneEventInner(
     occurrenceKey: `external-${data.id}`,
   }));
 
-  const manager = Draggable.useDragDropManager();
-
-  React.useEffect(() => {
-    return registerSchedulerDraggable(manager, ref.current!, {
-      getDragData,
-      onMoveStart: ({ location }) => {
-        preview.actions.onDragStart(location);
-      },
-      onMove: ({ location }) => {
-        preview.actions.onDrag(location);
-      },
-      onMoveEnd: () => {
-        preview.actions.onDrop();
-      },
-    });
-  }, [manager, getDragData, preview.actions]);
-
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef, ref],
@@ -81,7 +64,13 @@ const StandaloneEventInner = React.forwardRef(function StandaloneEventInner(
 
   return (
     <React.Fragment>
-      {element}
+      <SchedulerDraggable
+        getDragData={getDragData}
+        render={element}
+        onMoveStart={({ location }) => preview.actions.onDragStart(location)}
+        onMove={({ location }) => preview.actions.onDrag(location)}
+        onMoveEnd={() => preview.actions.onDrop()}
+      />
       {preview.element}
     </React.Fragment>
   );

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useDragHandle } from './useDragHandle';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import type { SchedulerDraggable } from './SchedulerDraggable';
 import type { SchedulerEventSide } from '../../models';
 
 /**
@@ -12,16 +13,38 @@ import type { SchedulerEventSide } from '../../models';
 export function useEventResizeHandler(
   parameters: useEventResizeHandler.Parameters,
 ): useEventResizeHandler.ReturnValue {
-  const { ref, side, enabled, getDragData } = parameters;
+  const { ref, side, enabled, getDragData, directPointerResize = false } = parameters;
 
   const state: useEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
     [side],
   );
 
-  useDragHandle({ ref, enabled, getDragData, preventTouchScroll: true });
+  const draggableProps: Omit<SchedulerDraggable.Props, 'render'> = {
+    disabled: !enabled,
+    getDragData,
+    // Veto during pointer-down, before the direct handler captures the pointer.
+    // Waiting for a hold or movement would let pending-gesture cleanup release it.
+    activation: directPointerResize
+      ? { touch: { type: 'immediate' }, pen: { type: 'immediate' } }
+      : undefined,
+    onBeforeMoveStart: (context, details) => {
+      // The direct resize handler owns touch and pen on time-grid events.
+      if (directPointerResize && context.input.pointerType !== 'mouse') {
+        details.cancel();
+      }
+    },
+  };
 
-  return { state };
+  useIsoLayoutEffect(() => {
+    // Base UI sets touch-action: manipulation when its ref registers the source.
+    // Resize handles must keep the page from panning during the direct gesture.
+    if (enabled) {
+      ref.current?.style.setProperty('touch-action', 'none');
+    }
+  }, [ref, enabled]);
+
+  return { state, draggableProps };
 }
 
 export namespace useEventResizeHandler {
@@ -44,6 +67,8 @@ export namespace useEventResizeHandler {
   }
 
   export interface Parameters extends PublicParameters {
+    /** Whether a separate pointer handler owns touch and pen resize gestures. */
+    directPointerResize?: boolean;
     /**
      * The ref to the event's resize handler root element.
      */
@@ -63,6 +88,7 @@ export namespace useEventResizeHandler {
   }
 
   export interface ReturnValue {
+    draggableProps: Omit<SchedulerDraggable.Props, 'render'>;
     /**
      * The state to pass to the useRenderElement hook.
      */

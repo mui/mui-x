@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
@@ -90,7 +91,11 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   );
 
   // Feature hooks
-  const { getCursorPositionInElementMs, ref: dropTargetRef } = useEventRowDropTarget({
+  const {
+    getCursorPositionInElementMs,
+    ref: dropTargetRef,
+    targetProps,
+  } = useEventRowDropTarget({
     resourceId,
     addPropertiesToDroppedEvent,
   });
@@ -193,7 +198,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
 
   return (
     <TimelineGridEventRowContext.Provider value={contextValue}>
-      {element}
+      <Draggable.Target {...targetProps} render={element} />
     </TimelineGridEventRowContext.Provider>
   );
 });

@@ -11,7 +11,6 @@ import { schedulerDragKind } from './schedulerDrag';
  * already running when the hook mounts is never marked.
  */
 export function useElementDragMarker(ref: React.RefObject<Element | null>): void {
-  const manager = Draggable.useDragDropManager();
   const draggingRef = React.useRef(false);
 
   useIsoLayoutEffect(() => {
@@ -20,19 +19,15 @@ export function useElementDragMarker(ref: React.RefObject<Element | null>): void
     }
   });
 
-  React.useEffect(
-    () =>
-      manager.registerMonitor(() => ({
-        accept: schedulerDragKind,
-        onMoveStart: () => {
-          draggingRef.current = true;
-          ref.current?.setAttribute('data-drag-active', '');
-        },
-        onMoveEnd: () => {
-          draggingRef.current = false;
-          ref.current?.removeAttribute('data-drag-active');
-        },
-      })),
-    [manager, ref],
-  );
+  Draggable.useDragMonitor({
+    accept: schedulerDragKind,
+    onMoveStart: () => {
+      draggingRef.current = true;
+      ref.current?.setAttribute('data-drag-active', '');
+    },
+    onMoveEnd: () => {
+      draggingRef.current = false;
+      ref.current?.removeAttribute('data-drag-active');
+    },
+  });
 }

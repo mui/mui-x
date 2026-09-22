@@ -6,6 +6,7 @@ import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
@@ -125,9 +126,9 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const {
     state,
     preview,
+    draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
-    ref,
     start,
     end,
     occurrenceKey,
@@ -175,7 +176,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   return (
     <CalendarGridDayEventContext.Provider value={contextValue}>
-      {element}
+      <SchedulerDraggable {...draggableProps} render={element} />
       {preview.element}
     </CalendarGridDayEventContext.Provider>
   );

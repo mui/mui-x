@@ -1,5 +1,13 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
+import {
+  SchedulerDraggable,
+  useDraggableEvent,
+  useOriginalOccurrence,
+  computeElementPositionInCollection,
+  dateToTimelineAxisOffsetMs,
+} from '@mui/x-scheduler-internals/internals';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
@@ -11,12 +19,6 @@ import type {
   SchedulerResourceId,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import {
-  useDraggableEvent,
-  useOriginalOccurrence,
-  computeElementPositionInCollection,
-  dateToTimelineAxisOffsetMs,
-} from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -138,9 +140,9 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const {
     state,
     preview,
+    draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
-    ref,
     start,
     end,
     occurrenceKey,
@@ -157,7 +159,11 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     tabIndex: rowHasFocus ? 0 : -1,
   });
 
-  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
+  const targetProps = useEventDependencyDropTarget({
+    eventId,
+    occurrenceKey,
+    resourceId: rowResourceId,
+  });
 
   const mergedState = {
     ...state,
@@ -190,7 +196,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   return (
     <TimelineGridEventContext.Provider value={contextValue}>
-      {element}
+      <Draggable.Target
+        {...targetProps}
+        render={<SchedulerDraggable {...draggableProps} render={element} />}
+      />
       {preview.element}
     </TimelineGridEventContext.Provider>
   );

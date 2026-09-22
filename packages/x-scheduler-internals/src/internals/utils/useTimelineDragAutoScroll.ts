@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { Draggable } from '@base-ui/react/draggable';
+import type { Draggable } from '@base-ui/react/draggable';
 import { schedulerDragKind } from './schedulerDrag';
 
 /**
@@ -20,7 +20,6 @@ export function useTimelineDragAutoScroll(params: {
   pinnedLeftWidth: number;
 }) {
   const { scrollerRef, pinnedLeftWidth } = params;
-  const manager = Draggable.useDragDropManager();
 
   const pinnedLeftWidthRef = React.useRef(pinnedLeftWidth);
   pinnedLeftWidthRef.current = pinnedLeftWidth;
@@ -47,13 +46,14 @@ export function useTimelineDragAutoScroll(params: {
       });
     };
 
-    const cleanupAutoScroll = manager.registerAutoScroller(scroller, () => ({
-      accept: schedulerDragKind,
-    }));
-
     return () => {
-      cleanupAutoScroll();
       delete (scroller as Partial<HTMLElement>).getBoundingClientRect;
     };
-  }, [manager, scrollerRef]);
+  }, [scrollerRef]);
+
+  const viewportProps: Draggable.Viewport.Props<Record<string, unknown>> = {
+    accept: schedulerDragKind,
+    disabled: process.env.NODE_ENV === 'test',
+  };
+  return viewportProps;
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
@@ -194,16 +195,20 @@ export default function TimelineDependencyArrows() {
           '.experiment-dependency-arrows-host, .experiment-dependency-arrows-host * { box-sizing: border-box; }'
         }
       </style>
-      <SchedulerStoreContext.Provider value={storeContextValue}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventEditingStyledContext.Provider value={styledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <EventTimelinePremiumContent />
-              <ErrorContainer />
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventTimelinePremiumStyledContext.Provider>
-      </SchedulerStoreContext.Provider>
+      <Draggable.Provider>
+        <SchedulerStoreContext.Provider value={storeContextValue}>
+          <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+            <EventEditingStyledContext.Provider value={styledContextValue}>
+              <SharedComponentsStyledContext.Provider
+                value={sharedStyledContextValue}
+              >
+                <EventTimelinePremiumContent />
+                <ErrorContainer />
+              </SharedComponentsStyledContext.Provider>
+            </EventEditingStyledContext.Provider>
+          </EventTimelinePremiumStyledContext.Provider>
+        </SchedulerStoreContext.Provider>
+      </Draggable.Provider>
     </div>
   );
 }

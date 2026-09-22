@@ -76,84 +76,83 @@ const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
  * virtualization mid-drag. The source store scopes it to this timeline's gestures.
  */
 export function useDependencyCreationMonitor() {
-  const manager = Draggable.useDragDropManager();
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
 
-  React.useEffect(() => {
-    if (!enabled) {
-      return undefined;
+  const updateCreation = ({
+    source,
+    location,
+  }: {
+    source: DragSource<Record<string, unknown>>;
+    location: DragLocationHistory;
+  }) => {
+    if (
+      !enabled ||
+      !isDependencyTerminalDrag(source.payload) ||
+      source.payload.storeContext !== store
+    ) {
+      return;
     }
+    // Invalid targets (recurring or read-only events) never highlight or snap the
+    // rubber band.
+    const target = getDependencyDropTarget(location.current.dropTargets);
+    const validTarget = target?.isValid ? target : null;
+    store.setDependencyCreation({
+      sourceEventId: source.payload.eventId,
+      sourceOccurrenceKey: source.payload.occurrenceKey,
+      sourceResourceId: source.payload.resourceId,
+      sourceSide: source.payload.sourceSide,
+      targetEventId: validTarget?.targetEventId ?? null,
+      targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
+      targetResourceId: validTarget?.targetResourceId ?? null,
+      targetSide: validTarget?.targetSide ?? null,
+    });
+  };
 
-    const updateCreation = ({
-      source,
-      location,
-    }: {
-      source: DragSource<Record<string, unknown>>;
-      location: DragLocationHistory;
-    }) => {
-      if (!isDependencyTerminalDrag(source.payload) || source.payload.storeContext !== store) {
+  Draggable.useDragMonitor({
+    accept: schedulerDragKind,
+    onMoveStart: updateCreation,
+    // Only target changes touch the state: the cursor never enters it, the arrows
+    // layer follows the pointer through the DOM.
+    onTargetChange: updateCreation,
+    onMoveEnd: ({ source, location, canceled }) => {
+      if (
+        !enabled ||
+        !isDependencyTerminalDrag(source.payload) ||
+        source.payload.storeContext !== store
+      ) {
         return;
       }
-      // Invalid targets (recurring or read-only events) never highlight or snap the
-      // rubber band.
-      const target = getDependencyDropTarget(location.current.dropTargets);
-      const validTarget = target?.isValid ? target : null;
-      store.setDependencyCreation({
-        sourceEventId: source.payload.eventId,
-        sourceOccurrenceKey: source.payload.occurrenceKey,
-        sourceResourceId: source.payload.resourceId,
-        sourceSide: source.payload.sourceSide,
-        targetEventId: validTarget?.targetEventId ?? null,
-        targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
-        targetResourceId: validTarget?.targetResourceId ?? null,
-        targetSide: validTarget?.targetSide ?? null,
+      store.setDependencyCreation(null);
+      const target = canceled ? null : getDependencyDropTarget(location.current.dropTargets);
+      if (target === null) {
+        return;
+      }
+
+      const result = store.addDependency({
+        source: source.payload.eventId,
+        target: target.targetEventId,
+        type: getDependencyType(source.payload.sourceSide, target.targetSide),
       });
-    };
 
-    const cleanupMonitor = manager.registerMonitor(() => ({
-      accept: schedulerDragKind,
-      onMoveStart: updateCreation,
-      // Only target changes touch the state: the cursor never enters it, the arrows
-      // layer follows the pointer through the DOM.
-      onTargetChange: updateCreation,
-      onMoveEnd: ({ source, location, canceled }) => {
-        if (!isDependencyTerminalDrag(source.payload) || source.payload.storeContext !== store) {
-          return;
+      if (result.status === 'rejected') {
+        // A duplicate selects the existing arrow: the feedback points at the link
+        // that already covers the attempted connection.
+        if (result.reason === 'duplicateDependency') {
+          store.setSelectedDependencyId(result.dependencyId);
         }
-        store.setDependencyCreation(null);
-        const target = canceled ? null : getDependencyDropTarget(location.current.dropTargets);
-        if (target === null) {
-          return;
-        }
-
-        const result = store.addDependency({
-          source: source.payload.eventId,
-          target: target.targetEventId,
-          type: getDependencyType(source.payload.sourceSide, target.targetSide),
+        store.pushError(/* minify-error-disabled */ new Error(REJECTION_MESSAGES[result.reason]), {
+          transient: true,
         });
+      }
+    },
+  });
 
-        if (result.status === 'rejected') {
-          // A duplicate selects the existing arrow: the feedback points at the link
-          // that already covers the attempted connection.
-          if (result.reason === 'duplicateDependency') {
-            store.setSelectedDependencyId(result.dependencyId);
-          }
-          store.pushError(
-            /* minify-error-disabled */ new Error(REJECTION_MESSAGES[result.reason]),
-            {
-              transient: true,
-            },
-          );
-        }
-      },
-    }));
-
+  React.useEffect(() => {
     return () => {
-      cleanupMonitor();
       // A teardown mid-gesture (feature disabled, grid unmounted on a view switch)
       // would otherwise freeze the rubber band and the drag-source highlight.
       store.setDependencyCreation(null);
     };
-  }, [manager, store, enabled]);
+  }, [store, enabled]);
 }

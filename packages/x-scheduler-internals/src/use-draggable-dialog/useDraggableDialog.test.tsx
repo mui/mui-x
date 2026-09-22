@@ -13,17 +13,15 @@ import { useDraggableDialog } from './useDraggableDialog';
 
 function TestDialog() {
   const elementRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = React.useRef<HTMLDivElement>(null);
-  useDraggableDialog(elementRef, handleRef, (transform) => {
+  const { draggableProps } = useDraggableDialog(elementRef, (transform) => {
     elementRef.current!.style.transform = transform;
   });
   return (
-    <div ref={elementRef} data-testid="dialog">
-      <div ref={handleRef} data-testid="handle">
-        Move dialog
-      </div>
+    <Draggable.Root {...draggableProps} ref={elementRef} data-testid="dialog">
+      <Draggable.Handle data-testid="handle">Move dialog</Draggable.Handle>
       <input aria-label="Title" />
-    </div>
+      <Draggable.Preview disabled />
+    </Draggable.Root>
   );
 }
 
