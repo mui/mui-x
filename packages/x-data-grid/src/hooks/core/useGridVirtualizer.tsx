@@ -67,7 +67,8 @@ const addGridDimensionsCreator = () =>
   lruMemoize(
     (
       dimensions: Dimensions.State['dimensions'],
-      columnsMeta: Dimensions.State['columnsMeta'],
+      leftPinnedWidth: number,
+      rightPinnedWidth: number,
       headerHeight: number,
       groupHeaderHeight: number,
       headerFilterHeight: number,
@@ -76,8 +77,8 @@ const addGridDimensionsCreator = () =>
       return {
         ...dimensions,
         columnsTotalWidth: dimensions.contentSize.width,
-        leftPinnedWidth: columnsMeta.pinnedLeftColumnsTotalWidth,
-        rightPinnedWidth: columnsMeta.pinnedRightColumnsTotalWidth,
+        leftPinnedWidth,
+        rightPinnedWidth,
         headerHeight,
         groupHeaderHeight,
         headerFilterHeight,
@@ -353,7 +354,8 @@ export function useGridVirtualizer() {
   useFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
       virtualizer.store.state.dimensions,
-      virtualizer.store.state.columnsMeta,
+      virtualizer.store.state.columnsMeta.pinnedLeftColumnsTotalWidth,
+      virtualizer.store.state.columnsMeta.pinnedRightColumnsTotalWidth,
       headerHeight,
       groupHeaderHeight,
       headerFilterHeight,
@@ -368,16 +370,22 @@ export function useGridVirtualizer() {
     if (!dimensions.isReady) {
       return;
     }
+    const gridDimensions = addGridDimensions(
+      dimensions,
+      columnsMeta.pinnedLeftColumnsTotalWidth,
+      columnsMeta.pinnedRightColumnsTotalWidth,
+      headerHeight,
+      groupHeaderHeight,
+      headerFilterHeight,
+      headersTotalHeight,
+    );
+    // Moving columns changes the columns meta, but not the grid dimensions.
+    if (gridDimensions === apiRef.current.state.dimensions) {
+      return;
+    }
     apiRef.current.setState((gridState) => ({
       ...gridState,
-      dimensions: addGridDimensions(
-        dimensions,
-        columnsMeta,
-        headerHeight,
-        groupHeaderHeight,
-        headerFilterHeight,
-        headersTotalHeight,
-      ),
+      dimensions: gridDimensions,
     }));
   };
 
