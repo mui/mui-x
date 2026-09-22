@@ -6,7 +6,7 @@ import {
   gridPivotActiveSelector,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridColumnsState } from '@mui/x-data-grid-pro';
+import type { GridColumnDimensions, GridColumnsState } from '@mui/x-data-grid-pro';
 import type { GridPipeProcessor, GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -124,7 +124,12 @@ export const useGridComputedColumnsPreProcessors = (
       }
 
       const previousColumns = state.columns as GridColumnsState | undefined;
-      const { pendingColumnIndexes } = apiRef.current.caches.computedColumns;
+      const { pendingColumnIndexes, pendingColumnDimensions } =
+        apiRef.current.caches.computedColumns;
+      // The indexes of the new columns are positions in the final order (the `columnIndex`
+      // of `addComputedColumn()`, the `orderedFields` of a restored state): inserted in
+      // ascending order once the other columns are placed, each lands exactly.
+      const pendingInsertions: { field: string; index: number }[] = [];
       for (const [field, record] of records) {
         const existing = columnsState.lookup[field];
         if (existing !== undefined && !existing.computed) {
@@ -140,10 +145,27 @@ export const useGridComputedColumnsPreProcessors = (
         // `columns` prop updates, which both create the column from scratch.
         const previous = (existing ?? previousColumns?.lookup[field]) as
           GridStateColDef | undefined;
-        columnsState.lookup[field] =
-          previous?.computed && previous.hasBeenResized
-            ? { ...record.colDef, width: previous.width, flex: previous.flex, hasBeenResized: true }
-            : { ...record.colDef, hasBeenResized: false };
+        if (previous?.computed && previous.hasBeenResized) {
+          columnsState.lookup[field] = {
+            ...record.colDef,
+            width: previous.width,
+            flex: previous.flex,
+            hasBeenResized: true,
+          };
+        } else if (existing === undefined && pendingColumnDimensions.has(field)) {
+          // The dimensions a restored state holds for a column that arrives now,
+          // applied like the columns restore applies them to an existing column.
+          const dimensions = pendingColumnDimensions.get(field)!;
+          const colDef = { ...record.colDef, hasBeenResized: true };
+          for (const key of Object.keys(dimensions) as (keyof GridColumnDimensions)[]) {
+            const value = dimensions[key];
+            colDef[key] = value === -1 ? Infinity : value;
+          }
+          columnsState.lookup[field] = colDef;
+        } else {
+          columnsState.lookup[field] = { ...record.colDef, hasBeenResized: false };
+        }
+        pendingColumnDimensions.delete(field);
 
         if (columnsState.orderedFields.includes(field)) {
           continue;
@@ -153,14 +175,24 @@ export const useGridComputedColumnsPreProcessors = (
           columnsState.orderedFields,
           previousColumns?.orderedFields ?? [],
         );
-        const insertionIndex = indexFromPreviousOrder ?? pendingColumnIndexes.get(field);
+        const pendingIndex = pendingColumnIndexes.get(field);
         pendingColumnIndexes.delete(field);
-        if (insertionIndex === undefined) {
+        if (indexFromPreviousOrder !== null) {
+          columnsState.orderedFields.splice(indexFromPreviousOrder, 0, field);
+        } else if (pendingIndex === undefined) {
           columnsState.orderedFields.push(field);
         } else {
-          const index = Math.max(0, Math.min(insertionIndex, columnsState.orderedFields.length));
-          columnsState.orderedFields.splice(index, 0, field);
+          pendingInsertions.push({ field, index: pendingIndex });
         }
+      }
+
+      pendingInsertions.sort((a, b) => a.index - b.index);
+      for (const insertion of pendingInsertions) {
+        columnsState.orderedFields.splice(
+          Math.max(0, Math.min(insertion.index, columnsState.orderedFields.length)),
+          0,
+          insertion.field,
+        );
       }
 
       return columnsState;

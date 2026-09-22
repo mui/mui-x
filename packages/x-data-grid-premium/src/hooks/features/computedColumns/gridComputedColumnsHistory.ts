@@ -132,6 +132,8 @@ export const createComputedColumnsHistoryHandler = (
     const cache = getCache();
     for (const snapshot of columns) {
       cache.pendingColumnIndexes.set(snapshot.field, snapshot.index);
+      // The width comes from the snapshot, not from a rejected `restoreState()`.
+      cache.pendingColumnDimensions.delete(snapshot.field);
     }
 
     const modelBefore = gridComputedColumnsSelector(apiRef);

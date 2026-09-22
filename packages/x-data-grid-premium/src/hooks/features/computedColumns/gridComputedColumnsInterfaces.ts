@@ -1,4 +1,4 @@
-import type { GridRowId } from '@mui/x-data-grid-pro';
+import type { GridColumnDimensions, GridRowId } from '@mui/x-data-grid-pro';
 
 /**
  * The result type of a computed column. Drives the column `type` of the generated column.
@@ -129,6 +129,13 @@ export interface GridComputedColumnsInternalCache {
    * parent has echoed the new model back through the `computedColumns` prop.
    */
   pendingColumnIndexes: Map<string, number>;
+  /**
+   * The dimensions `restoreState()` holds for computed columns that are not part of the
+   * columns state yet: with a controlled model, the columns restore runs before the parent
+   * has echoed the restored model, so the dimensions of its new columns wait here (as
+   * exported, `-1` standing for `Infinity`) and are applied when the columns are inserted.
+   */
+  pendingColumnDimensions: Map<string, GridColumnDimensions>;
   /**
    * The model `setComputedColumns()` found in the state right before its last update,
    * whether that update was applied or is waiting for the parent to echo it. The history

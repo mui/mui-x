@@ -246,6 +246,21 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'sum']);
     });
 
+    it('puts back several removed columns at their exact positions', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total, tax] } }} />);
+      // The model order (total, tax) is not the column order (tax, total).
+      await act(async () => api().setColumnIndex('tax', 0));
+      await act(async () => api().setColumnIndex('total', 2));
+      expect(getFields()).to.deep.equal(['tax', 'item', 'total', 'price', 'quantity']);
+
+      await act(async () => api().setComputedColumns([]));
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+
+      await undo();
+      expect(getModel()).to.deep.equal([total, tax]);
+      expect(getFields()).to.deep.equal(['tax', 'item', 'total', 'price', 'quantity']);
+    });
+
     it('does not record anything when `historyStackSize` is 0', async () => {
       await render(<Test historyStackSize={0} />);
       await act(async () => api().addComputedColumn(total));

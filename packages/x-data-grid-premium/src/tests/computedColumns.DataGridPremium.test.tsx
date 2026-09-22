@@ -13,9 +13,12 @@ import {
   useGridApiRef,
   gridClasses,
   gridColumnFieldsSelector,
+  gridColumnVisibilityModelSelector,
   gridComputedColumnsSelector,
+  gridVisibleColumnFieldsSelector,
 } from '@mui/x-data-grid-premium';
 import { GRID_FORMULA_FUNCTIONS, formulaFeature } from '@mui/x-data-grid-premium/formula';
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type {
   DataGridPremiumProps,
   GridApi,
@@ -24,6 +27,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, afterEach } from 'vitest';
+import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 
 const total: GridComputedColumnDefinition = {
   field: 'total',
@@ -779,6 +783,167 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity']);
       expect(getColumn('total').width).to.equal(250);
       expect(getColumnValuesOf('total')).to.deep.equal(['6', '50', '8']);
+    });
+
+    describe('controlled `restoreState`', () => {
+      const getPendingLayout = () => {
+        const { pendingColumnIndexes, pendingColumnDimensions } = unwrapPrivateAPI<
+          GridPrivateApiPremium,
+          GridApi
+        >(apiRef.current!).caches.computedColumns;
+        return { indexes: pendingColumnIndexes.size, dimensions: pendingColumnDimensions.size };
+      };
+
+      function ControlledTest({
+        initialModel = [],
+        accept = () => true,
+        ...props
+      }: Partial<DataGridPremiumProps> & {
+        initialModel?: GridComputedColumnsModel;
+        accept?: (model: GridComputedColumnsModel) => boolean;
+      }) {
+        const [model, setModel] = React.useState<GridComputedColumnsModel>(initialModel);
+        return (
+          <Test
+            {...props}
+            computedColumns={model}
+            onComputedColumnsChange={(nextModel) => {
+              if (accept(nextModel)) {
+                setModel(nextModel);
+              }
+            }}
+          />
+        );
+      }
+
+      it('should restore the order, the dimensions and the visibility once the parent echoes', async () => {
+        await render(<ControlledTest />);
+        await act(async () =>
+          apiRef.current!.restoreState({
+            computedColumns: { model: [total] },
+            columns: {
+              orderedFields: ['item', 'total', 'price', 'quantity'],
+              dimensions: { total: { width: 250, minWidth: 120 } },
+              columnVisibilityModel: { total: false },
+            },
+          }),
+        );
+        expect(gridComputedColumnsSelector(apiRef as RefObject<GridApi>)).to.deep.equal([total]);
+        expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity']);
+        expect(getColumn('total').width).to.equal(250);
+        expect(getColumn('total').minWidth).to.equal(120);
+        expect(getColumn('total').hasBeenResized).to.equal(true);
+        expect(gridColumnVisibilityModelSelector(apiRef as RefObject<GridApi>)).to.deep.equal({
+          total: false,
+        });
+        expect(gridVisibleColumnFieldsSelector(apiRef as RefObject<GridApi>)).to.deep.equal([
+          'item',
+          'price',
+          'quantity',
+        ]);
+        expect(getPendingLayout()).to.deep.equal({ indexes: 0, dimensions: 0 });
+      });
+
+      it('should restore into a model that already has computed columns', async () => {
+        await render(<ControlledTest initialModel={[ratio]} />);
+        expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'ratio']);
+        await act(async () =>
+          apiRef.current!.restoreState({
+            computedColumns: { model: [ratio, total] },
+            columns: {
+              orderedFields: ['total', 'item', 'ratio', 'price', 'quantity'],
+              dimensions: { total: { width: 250 }, ratio: { width: 260 } },
+            },
+          }),
+        );
+        expect(getFields()).to.deep.equal(['total', 'item', 'ratio', 'price', 'quantity']);
+        expect(getColumn('total').width).to.equal(250);
+        expect(getColumn('ratio').width).to.equal(260);
+        expect(getColumnValuesOf('total')).to.deep.equal(['6', '50', '8']);
+      });
+
+      it('should place two columns whose model order differs from the column order', async () => {
+        await render(<ControlledTest />);
+        await act(async () =>
+          apiRef.current!.restoreState({
+            computedColumns: { model: [total, ratio] },
+            columns: { orderedFields: ['ratio', 'item', 'total', 'price', 'quantity'] },
+          }),
+        );
+        expect(getFields()).to.deep.equal(['ratio', 'item', 'total', 'price', 'quantity']);
+      });
+
+      it('should leave nothing behind when the parent rejects the restored model', async () => {
+        await render(
+          <ControlledTest accept={(model) => !model.some((item) => item.field === 'total')} />,
+        );
+        await act(async () =>
+          apiRef.current!.restoreState({
+            computedColumns: { model: [total] },
+            columns: {
+              orderedFields: ['total', 'item', 'price', 'quantity'],
+              dimensions: { total: { width: 250 } },
+            },
+          }),
+        );
+        expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+        expect(getPendingLayout()).to.deep.equal({ indexes: 1, dimensions: 1 });
+
+        await act(async () => apiRef.current!.addComputedColumn(ratio, { columnIndex: 1 }));
+        expect(getFields()).to.deep.equal(['item', 'ratio', 'price', 'quantity']);
+        expect(getColumn('ratio').hasBeenResized).to.equal(false);
+        expect(getPendingLayout()).to.deep.equal({ indexes: 0, dimensions: 0 });
+      });
+
+      it('should not give the dimensions of a rejected restore to a later insertion of the field', async () => {
+        let acceptTotal = false;
+        await render(
+          <ControlledTest
+            accept={(model) => acceptTotal || !model.some((item) => item.field === 'total')}
+          />,
+        );
+        await act(async () =>
+          apiRef.current!.restoreState({
+            computedColumns: { model: [total] },
+            columns: {
+              orderedFields: ['total', 'item', 'price', 'quantity'],
+              dimensions: { total: { width: 250 } },
+            },
+          }),
+        );
+        expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+
+        acceptTotal = true;
+        await act(async () => apiRef.current!.addComputedColumn(total));
+        expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+        expect(getColumn('total').width).not.to.equal(250);
+        expect(getColumn('total').hasBeenResized).to.equal(false);
+      });
+
+      it('should restore the state exported by an uncontrolled grid', async () => {
+        const { unmount } = await render(
+          <Test initialState={{ computedColumns: { model: [total, ratio] } }} />,
+        );
+        act(() => apiRef.current!.setColumnIndex('total', 1));
+        act(() => apiRef.current!.setColumnWidth('total', 333));
+        act(() => apiRef.current!.setColumnVisibility('ratio', false));
+        const exportedState = apiRef.current!.exportState();
+        expect(exportedState.columns!.dimensions!.total).to.include({ width: 333, maxWidth: -1 });
+        unmount();
+
+        await render(<ControlledTest />);
+        await act(async () => apiRef.current!.restoreState(exportedState));
+        expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity', 'ratio']);
+        expect(getColumn('total').width).to.equal(333);
+        expect(getColumn('total').maxWidth).to.equal(Infinity);
+        expect(gridVisibleColumnFieldsSelector(apiRef as RefObject<GridApi>)).to.deep.equal([
+          'item',
+          'total',
+          'price',
+          'quantity',
+        ]);
+        expect(getColumnValuesOf('total')).to.deep.equal(['6', '50', '8']);
+      });
     });
   });
 

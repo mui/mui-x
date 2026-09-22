@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
+import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import { useGridApiMethod, useGridRegisterPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type {
   GridStateInitializer,
@@ -68,6 +69,7 @@ export const computedColumnsStateInitializer: GridStateInitializer<
   apiRef.current.caches.computedColumns = {
     editorRequest: null,
     pendingColumnIndexes: new Map(),
+    pendingColumnDimensions: new Map(),
     previousModel: null,
     historyEcho: null,
   };
@@ -138,14 +140,20 @@ export const useGridComputedColumns = (
         return;
       }
 
-      // An index still pending for a field that is not part of the applied model
-      // belongs to an insertion the parent rejected.
-      const { pendingColumnIndexes } = apiRef.current.caches.computedColumns;
-      if (pendingColumnIndexes.size > 0) {
+      // An index or dimensions still pending for a field that is not part of the applied
+      // model belong to an insertion the parent rejected.
+      const { pendingColumnIndexes, pendingColumnDimensions } =
+        apiRef.current.caches.computedColumns;
+      if (pendingColumnIndexes.size > 0 || pendingColumnDimensions.size > 0) {
         const fields = new Set(appliedModel.map((definition) => definition.field));
         for (const field of Array.from(pendingColumnIndexes.keys())) {
           if (!fields.has(field)) {
             pendingColumnIndexes.delete(field);
+          }
+        }
+        for (const field of Array.from(pendingColumnDimensions.keys())) {
+          if (!fields.has(field)) {
+            pendingColumnDimensions.delete(field);
           }
         }
       }
@@ -160,7 +168,8 @@ export const useGridComputedColumns = (
       // The column is inserted by the formula feature once the model is applied,
       // which a controlled model defers until the parent echoes it: the index
       // waits in the cache instead of being applied with `setColumnIndex()` here.
-      const { pendingColumnIndexes } = apiRef.current.caches.computedColumns;
+      const { pendingColumnIndexes, pendingColumnDimensions } =
+        apiRef.current.caches.computedColumns;
       const isNewField = !gridComputedColumnsSelector(apiRef).some(
         (item) => item.field === definition.field,
       );
@@ -169,6 +178,8 @@ export const useGridComputedColumns = (
       } else {
         pendingColumnIndexes.delete(definition.field);
       }
+      // Dimensions a rejected `restoreState()` left for this field are not this insertion's.
+      pendingColumnDimensions.delete(definition.field);
 
       apiRef.current.setComputedColumns((prev) => [...prev, definition]);
     },
@@ -202,6 +213,7 @@ export const useGridComputedColumns = (
   const removeComputedColumn = React.useCallback<GridComputedColumnsApi['removeComputedColumn']>(
     (field) => {
       apiRef.current.caches.computedColumns.pendingColumnIndexes.delete(field);
+      apiRef.current.caches.computedColumns.pendingColumnDimensions.delete(field);
       apiRef.current.setComputedColumns((prev) => {
         if (!prev.some((definition) => definition.field === field)) {
           return prev;
@@ -331,10 +343,42 @@ export const useGridComputedColumns = (
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePremium>) => {
       const model = context.stateToRestore.computedColumns?.model;
-      if (model != null) {
-        // Registered before `useGridColumns`: the computed columns exist by the
-        // time the columns restore applies `orderedFields` and the dimensions.
-        apiRef.current.setComputedColumns(model);
+      if (model == null) {
+        return params;
+      }
+
+      // Registered before `useGridColumns`: the computed columns exist by the
+      // time the columns restore applies `orderedFields` and the dimensions.
+      const modelBefore = gridComputedColumnsSelector(apiRef);
+      apiRef.current.setComputedColumns(model);
+      const modelAfter = gridComputedColumnsSelector(apiRef);
+
+      const columnsToRestore = context.stateToRestore.columns;
+      if (modelAfter !== modelBefore || modelBefore === model || columnsToRestore == null) {
+        return params;
+      }
+
+      // Not applied: the model is controlled and the parent has not echoed it yet, so the
+      // columns restore that follows finds no column for the new definitions and drops their
+      // order and dimensions. They wait in the cache for the `hydrateColumns` pass that
+      // inserts the columns once the echo is applied; the visibility model keeps the keys of
+      // columns that do not exist yet, so it needs nothing.
+      const { pendingColumnIndexes, pendingColumnDimensions } =
+        apiRef.current.caches.computedColumns;
+      const lookup = gridColumnLookupSelector(apiRef);
+      const { orderedFields = [], dimensions = {} } = columnsToRestore;
+      for (const definition of model) {
+        const { field } = definition;
+        if (lookup[field] !== undefined) {
+          continue;
+        }
+        const index = orderedFields.indexOf(field);
+        if (index !== -1) {
+          pendingColumnIndexes.set(field, index);
+        }
+        if (dimensions[field] !== undefined) {
+          pendingColumnDimensions.set(field, dimensions[field]);
+        }
       }
       return params;
     },
