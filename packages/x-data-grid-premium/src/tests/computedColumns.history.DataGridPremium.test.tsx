@@ -379,24 +379,30 @@ describe('<DataGridPremium /> - Computed columns history', () => {
     });
   });
 
-  describe('controlled model', () => {
-    function Controlled(props: {
-      initialModel?: GridComputedColumnsModel;
-      onChange?: (model: GridComputedColumnsModel) => void;
-      copy?: boolean;
-    }) {
-      const [model, setModel] = React.useState<GridComputedColumnsModel>(props.initialModel ?? []);
-      return (
-        <Test
-          computedColumns={model}
-          onComputedColumnsChange={(nextModel) => {
-            props.onChange?.(nextModel);
-            setModel(props.copy ? [...nextModel] : nextModel);
-          }}
-        />
-      );
-    }
+  function Controlled({
+    initialModel,
+    onChange,
+    copy,
+    ...gridProps
+  }: Partial<DataGridPremiumProps> & {
+    initialModel?: GridComputedColumnsModel;
+    onChange?: (model: GridComputedColumnsModel) => void;
+    copy?: boolean;
+  }) {
+    const [model, setModel] = React.useState<GridComputedColumnsModel>(initialModel ?? []);
+    return (
+      <Test
+        {...gridProps}
+        computedColumns={model}
+        onComputedColumnsChange={(nextModel) => {
+          onChange?.(nextModel);
+          setModel(copy ? [...nextModel] : nextModel);
+        }}
+      />
+    );
+  }
 
+  describe('controlled model', () => {
     it('records the applied model once and ignores the echo of an undo/redo', async () => {
       const onChange = vi.fn();
       await render(<Controlled onChange={onChange} />);
@@ -471,6 +477,50 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(canRedo()).to.equal(true);
     });
 
+    it('restores the columns when the parent echoes before the operation returns', async () => {
+      // In a browser, a click on Undo/Redo lets React flush the parent's `setModel` (and
+      // the effect that publishes the echo) at the first `await` of the operation, while
+      // the history hook still ignores every event as "triggered by undo/redo". A native
+      // click outside `act` reproduces that timing; `act` would hold the update back.
+      const clickOutsideAct = async (button: HTMLButtonElement) => {
+        const actEnvironment = (globalThis as any).IS_REACT_ACT_ENVIRONMENT;
+        (globalThis as any).IS_REACT_ACT_ENVIRONMENT = false;
+        try {
+          button.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+          await microtasks();
+        } finally {
+          (globalThis as any).IS_REACT_ACT_ENVIRONMENT = actEnvironment;
+        }
+      };
+      await render(<Controlled showToolbar />);
+      await act(async () => api().addComputedColumn(total));
+      await act(async () => api().setColumnWidth('total', 150));
+      await act(async () => api().setColumnVisibility('total', false));
+
+      await clickOutsideAct(getToolbarButton('Undo'));
+      expect(getModel()).to.deep.equal([]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+      expect(api().state.history.stack).to.have.length(1);
+      expect(canUndo()).to.equal(false);
+      expect(canRedo()).to.equal(true);
+
+      await clickOutsideAct(getToolbarButton('Redo'));
+      expect(getModel()).to.deep.equal([total]);
+      expect(api().getColumn('total')!.width).to.equal(150);
+      expect(gridColumnVisibilityModelSelector(typedApiRef())).to.deep.equal({ total: false });
+      expect(api().state.history.stack).to.have.length(1);
+      expect(canUndo()).to.equal(true);
+      expect(canRedo()).to.equal(false);
+
+      // A later change equal to the last echo is a step of its own.
+      await act(async () => api().removeComputedColumn('total'));
+      expect(getModel()).to.deep.equal([]);
+      expect(api().state.history.stack).to.have.length(2);
+      await undo();
+      expect(getModel()).to.deep.equal([total]);
+      expect(api().getColumn('total')!.width).to.equal(150);
+    });
+
     it('records a model set by the parent as a step', async () => {
       let setModel: React.Dispatch<React.SetStateAction<GridComputedColumnsModel>>;
       function Parent() {
@@ -485,6 +535,197 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       await undo();
       expect(getModel()).to.deep.equal([]);
       expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+    });
+  });
+
+  describe('re-enabled history', () => {
+    const getStackSize = () => api().state.history.stack.length;
+
+    it('records from the model that held when recording resumed', async () => {
+      const { setProps } = await render(<Test historyStackSize={0} />);
+      await act(async () => api().addComputedColumn(total));
+      expect(canUndo()).to.equal(false);
+
+      setProps({ historyStackSize: 20 });
+      await act(async () => api().addComputedColumn(tax));
+      expect(getStackSize()).to.equal(1);
+
+      await undo();
+      expect(getModel()).to.deep.equal([total]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+      expect(canUndo()).to.equal(false);
+      await redo();
+      expect(getModel()).to.deep.equal([total, tax]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total', 'tax']);
+    });
+
+    it('records from the model that held when recording resumed (controlled model)', async () => {
+      const { setProps } = await render(<Controlled historyStackSize={0} />);
+      await act(async () => api().addComputedColumn(total));
+      expect(getModel()).to.deep.equal([total]);
+      expect(canUndo()).to.equal(false);
+
+      setProps({ historyStackSize: 20 });
+      await act(async () => api().addComputedColumn(tax));
+      expect(getModel()).to.deep.equal([total, tax]);
+      expect(getStackSize()).to.equal(1);
+
+      await undo();
+      expect(getModel()).to.deep.equal([total]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+      expect(canUndo()).to.equal(false);
+      expect(canRedo()).to.equal(true);
+      await redo();
+      expect(getModel()).to.deep.equal([total, tax]);
+    });
+
+    it('neither records nor undoes the changes made while the history was off', async () => {
+      const { setProps } = await render(<Test />);
+      await act(async () => api().addComputedColumn(total));
+      expect(getStackSize()).to.equal(1);
+
+      setProps({ historyStackSize: 0 });
+      await act(async () => api().addComputedColumn(tax));
+      expect(canUndo()).to.equal(false);
+      expect(getStackSize()).to.equal(0);
+
+      setProps({ historyStackSize: 20 });
+      await act(async () => api().addComputedColumn(sum));
+      expect(getStackSize()).to.equal(1);
+
+      await undo();
+      expect(getModel()).to.deep.equal([total, tax]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total', 'tax']);
+      expect(canUndo()).to.equal(false);
+      expect(canRedo()).to.equal(true);
+
+      await redo();
+      expect(getModel()).to.deep.equal([total, tax, sum]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total', 'tax', 'sum']);
+    });
+  });
+
+  describe('inline props', () => {
+    // Every render of the parent hands the grid a new `isCellEditable` / `columns` /
+    // `historyEventHandlers` identity, so the handlers map is re-created in the commit
+    // that echoes a controlled model. The inline values are created inside the parent's
+    // render: a prop of `Controlled` would keep its identity across its re-renders.
+    const getStackSize = () => api().state.history.stack.length;
+
+    function InlineEditable() {
+      const [model, setModel] = React.useState<GridComputedColumnsModel>([]);
+      return (
+        <Test
+          isCellEditable={() => true}
+          computedColumns={model}
+          onComputedColumnsChange={setModel}
+        />
+      );
+    }
+
+    it('records exactly one step under an inline `isCellEditable` with a controlled model', async () => {
+      await render(<InlineEditable />);
+      await act(async () => api().addComputedColumn(total));
+      expect(getModel()).to.deep.equal([total]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+      expect(getStackSize()).to.equal(1);
+      expect(canUndo()).to.equal(true);
+
+      await undo();
+      expect(getModel()).to.deep.equal([]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+      expect(canUndo()).to.equal(false);
+      expect(canRedo()).to.equal(true);
+
+      await redo();
+      expect(getModel()).to.deep.equal([total]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+      expect(getStackSize()).to.equal(1);
+    });
+
+    it('records the echo when the parent passes `columns` inline', async () => {
+      function InlineColumns() {
+        const [model, setModel] = React.useState<GridComputedColumnsModel>([]);
+        return (
+          <Test
+            columns={[...baselineProps.columns]}
+            computedColumns={model}
+            onComputedColumnsChange={setModel}
+          />
+        );
+      }
+      await render(<InlineColumns />);
+      await act(async () => api().addComputedColumn(total, { columnIndex: 1 }));
+      expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity']);
+      expect(getStackSize()).to.equal(1);
+
+      await undo();
+      expect(getModel()).to.deep.equal([]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+      expect(canUndo()).to.equal(false);
+      await redo();
+      expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity']);
+    });
+
+    it('recognizes the echo of an undo under an inline `isCellEditable` and restores the width', async () => {
+      await render(<InlineEditable />);
+      await act(async () => api().addComputedColumn(total));
+      await act(async () => api().setColumnWidth('total', 150));
+
+      await undo();
+      expect(getModel()).to.deep.equal([]);
+      // The echo is the undo itself, not a new step.
+      expect(getStackSize()).to.equal(1);
+      expect(canUndo()).to.equal(false);
+      expect(canRedo()).to.equal(true);
+
+      await redo();
+      expect(getModel()).to.deep.equal([total]);
+      expect(api().getColumn('total')!.width).to.equal(150);
+      expect(canUndo()).to.equal(true);
+      expect(canRedo()).to.equal(false);
+    });
+
+    it('keeps recording with a custom `historyEventHandlers` map re-created on every render', async () => {
+      function InlineHandlers() {
+        const customApiRef = useGridApiRef();
+        apiRef = customApiRef;
+        const [model, setModel] = React.useState<GridComputedColumnsModel>([total]);
+        return (
+          <div style={{ width: 900, height: 500 }}>
+            <DataGridPremium
+              {...baselineProps}
+              apiRef={customApiRef}
+              historyEventHandlers={
+                {
+                  computedColumnsChange: createComputedColumnsHistoryHandler(
+                    customApiRef as RefObject<GridApi>,
+                  ),
+                } as Record<GridEvents, GridHistoryEventHandler>
+              }
+              computedColumns={model}
+              onComputedColumnsChange={setModel}
+            />
+          </div>
+        );
+      }
+      await render(<InlineHandlers />);
+
+      await act(async () => api().addComputedColumn(tax));
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total', 'tax']);
+      expect(getStackSize()).to.equal(1);
+      await act(async () => api().setColumnWidth('tax', 160));
+
+      await undo();
+      expect(getModel()).to.deep.equal([total]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+      expect(canUndo()).to.equal(false);
+      expect(canRedo()).to.equal(true);
+
+      await redo();
+      expect(getModel()).to.deep.equal([total, tax]);
+      expect(api().getColumn('tax')!.width).to.equal(160);
+      expect(canUndo()).to.equal(true);
     });
   });
 

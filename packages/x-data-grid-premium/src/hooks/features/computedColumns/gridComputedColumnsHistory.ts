@@ -8,26 +8,11 @@ import {
 import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridHistoryEventHandler } from '../history/gridHistoryInterfaces';
-import type { GridComputedColumnsModel } from './gridComputedColumnsInterfaces';
+import type {
+  GridComputedColumnSnapshot,
+  GridComputedColumnsModel,
+} from './gridComputedColumnsInterfaces';
 import { gridComputedColumnsSelector } from './gridComputedColumnsSelectors';
-
-/**
- * Where a computed column stood right before its definition was dropped, so that the
- * operation bringing the definition back puts the column where the user had it.
- */
-interface GridComputedColumnSnapshot {
-  field: string;
-  /**
-   * The index of the column among all the columns, hidden ones included.
-   */
-  index: number;
-  /**
-   * The width the user gave the column. Left out when the column was never resized:
-   * the width of the definition (or of `computedColDef`) applies again.
-   */
-  width?: number;
-  visible: boolean;
-}
 
 export interface GridComputedColumnsHistoryData {
   previousModel: GridComputedColumnsModel;
@@ -94,29 +79,19 @@ function captureColumns(
  * Every change of the model is one step: adding, editing or removing a definition from the
  * panel, the column menu or the API. Undo and redo put the whole model back, then restore the
  * position, width and visibility of the columns the step brings back.
+ *
+ * The handler keeps no state of its own: `store()` runs after the state update, so the
+ * previous model of a step is the one `setComputedColumns()` stashed in
+ * `caches.computedColumns.previousModel` right before it, and the echo an undo/redo expects
+ * from a controlled parent waits in `caches.computedColumns.historyEcho`. The history hook
+ * may therefore re-create the handler at any time (a handler built before the grid mounted,
+ * an inline `historyEventHandlers` map) and stop recording for a while (`historyStackSize`
+ * set to 0) without losing the baseline of the next step.
  */
 export const createComputedColumnsHistoryHandler = (
   apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridComputedColumnsHistoryData> => {
-  // The model the state held when the last change was seen. `store()` runs after the
-  // state update, so the previous model has to come from here. A handler created before
-  // the grid mounted (a custom `historyEventHandlers` map) reads it from the formula
-  // feature on its first change: the event is published before the columns are hydrated,
-  // so the runtime still holds the model it injected last.
-  let lastModel: GridComputedColumnsModel | null =
-    apiRef.current === null ? null : gridComputedColumnsSelector(apiRef);
-  const getLastModel = (): GridComputedColumnsModel => {
-    lastModel ??= getPrivateApi(apiRef).caches.formula?.computedColumns.model ?? [];
-    return lastModel;
-  };
-  // With a controlled model, `setComputedColumns()` only calls `onComputedColumnsChange()`;
-  // the state follows once the parent echoes the prop, after the undo/redo returned. That
-  // echo is the operation itself, not a new step, and the columns to restore only exist
-  // once it is hydrated.
-  let pendingEcho: {
-    model: GridComputedColumnsModel;
-    columns: GridComputedColumnSnapshot[];
-  } | null = null;
+  const getCache = () => getPrivateApi(apiRef).caches.computedColumns;
 
   /**
    * Re-applies the width and the visibility of the columns the operation brought back
@@ -154,9 +129,9 @@ export const createComputedColumnsHistoryHandler = (
    * or not, so the position needs no second columns update.
    */
   const applyModel = (model: GridComputedColumnsModel, columns: GridComputedColumnSnapshot[]) => {
-    const { pendingColumnIndexes } = getPrivateApi(apiRef).caches.computedColumns;
+    const cache = getCache();
     for (const snapshot of columns) {
-      pendingColumnIndexes.set(snapshot.field, snapshot.index);
+      cache.pendingColumnIndexes.set(snapshot.field, snapshot.index);
     }
 
     const modelBefore = gridComputedColumnsSelector(apiRef);
@@ -164,37 +139,52 @@ export const createComputedColumnsHistoryHandler = (
     const modelAfter = gridComputedColumnsSelector(apiRef);
 
     if (modelAfter === modelBefore && modelBefore !== model) {
-      // Not applied: the model is controlled and the parent has not echoed it yet.
-      pendingEcho = { model, columns };
+      // Not applied: the model is controlled and the parent has not echoed it yet. With a
+      // controlled model, `setComputedColumns()` only calls `onComputedColumnsChange()`;
+      // the state follows once the parent echoes the prop, and the columns to restore
+      // only exist once that echo is hydrated. The echo may reach the history hook while
+      // it still ignores every event as part of this operation (a parent updated from a
+      // click is flushed at the first `await`), so `store()` cannot be the one finishing
+      // it: the restoration waits for the `columnsChange` that hydrates the echoed model.
+      const echo = { model, columns };
+      cache.historyEcho = echo;
+      const unsubscribe = apiRef.current.subscribeEvent('columnsChange', () => {
+        if (cache.historyEcho !== echo) {
+          // A later undo/redo asked for another model before the parent echoed this one,
+          // or the parent published another model and `store()` recorded it.
+          unsubscribe();
+          return;
+        }
+        const currentModel = gridComputedColumnsSelector(apiRef);
+        if (currentModel !== model && !isDeepEqual(currentModel, model)) {
+          return;
+        }
+        unsubscribe();
+        cache.historyEcho = null;
+        restoreColumns(columns);
+      });
       return;
     }
-    lastModel = modelAfter;
-    pendingEcho = null;
+    cache.historyEcho = null;
     restoreColumns(columns);
   };
 
   return {
     store: (model: GridComputedColumnsModel) => {
-      const previousModel = getLastModel();
-      lastModel = model;
+      const cache = getCache();
+      const previousModel = cache.previousModel ?? [];
       if (previousModel === model) {
         return null;
       }
 
-      if (pendingEcho !== null) {
-        const { model: expectedModel, columns } = pendingEcho;
-        pendingEcho = null;
+      if (cache.historyEcho !== null) {
+        // The echo is the operation itself, not a new step. Any other model means the
+        // parent did not echo the operation (or normalized it): a step of its own.
+        const { model: expectedModel } = cache.historyEcho;
         if (model === expectedModel || isDeepEqual(model, expectedModel)) {
-          // The event is published before the columns are hydrated: the columns to
-          // restore appear with the `columnsChange` that follows.
-          if (columns.length > 0) {
-            const unsubscribe = apiRef.current.subscribeEvent('columnsChange', () => {
-              unsubscribe();
-              restoreColumns(columns);
-            });
-          }
           return null;
         }
+        cache.historyEcho = null;
       }
 
       return {

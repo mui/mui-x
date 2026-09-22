@@ -60,10 +60,12 @@ export const useGridHistory = (
   const { historyStackSize, onUndo, onRedo, historyValidationEvents } = props;
 
   // Use default history events if none provided.
-  // The handlers are re-subscribed whenever they change, and a change that lands in the
-  // same commit as an event published from an effect (the controlled `computedColumns`
-  // echo) loses that event: the dependencies are the values, not the (often inline)
-  // `featureDependencies` object.
+  // The identity of the map only drives `isEnabled`, `apply` and the validation: the event
+  // subscriptions below follow the set of event names and read the current handler from
+  // `handlersRef` at event time, so a map re-created on a render (inline `columns`,
+  // `isCellEditable` or `historyEventHandlers`) does not unsubscribe. The dependencies are
+  // still the values, not the (often inline) `featureDependencies` object, to keep the map
+  // stable when nothing changed.
   const formulaFeature = props.featureDependencies?.formula;
   const historyEventHandlers = React.useMemo(() => {
     if (props.historyEventHandlers && !isObjectEmpty(props.historyEventHandlers)) {
@@ -87,6 +89,14 @@ export const useGridHistory = (
     props.disableComputedColumns,
     props.disableFormulas,
   ]);
+
+  // The handlers the subscriptions call, always the ones of the last render. An event
+  // published from an effect of the commit that re-created the map (the controlled
+  // `computedColumns` echo) would otherwise fall between the cleanup and the re-creation
+  // of the subscription.
+  const handlersRef = React.useRef(historyEventHandlers);
+  handlersRef.current = historyEventHandlers;
+  const eventNamesKey = Object.keys(historyEventHandlers).sort().join('|');
 
   const isEnabled = React.useMemo(
     () => historyStackSize > 0 && !isObjectEmpty(historyEventHandlers),
@@ -385,17 +395,23 @@ export const useGridHistory = (
   }, [apiRef, isValidationNeeded, historyValidationEvents, debouncedValidateStackItems]);
 
   React.useEffect(() => {
-    if (historyStackSize === 0) {
+    if (historyStackSize === 0 || eventNamesKey === '') {
       return () => {};
     }
 
-    const events = Object.keys(historyEventHandlers) as GridEvents[];
+    const events = eventNamesKey.split('|') as GridEvents[];
     // Subscribe to all events in the map
     events.forEach((eventName) => {
-      const handler = historyEventHandlers[eventName];
       const unsubscribe = apiRef.current.subscribeEvent(eventName, (...params: any[]) => {
         // Don't store if the event was triggered by undo/redo
         if (operationStateRef.current !== 'idle') {
+          return;
+        }
+
+        // The handler of the current map; gone when a render dropped it and the
+        // re-subscription is still pending.
+        const handler = handlersRef.current[eventName];
+        if (!handler) {
           return;
         }
 
@@ -412,7 +428,7 @@ export const useGridHistory = (
       eventUnsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
       eventUnsubscribersRef.current = [];
     };
-  }, [apiRef, historyEventHandlers, historyStackSize, addToStack]);
+  }, [apiRef, eventNamesKey, historyStackSize, addToStack]);
 
   // If the stack size is changed and it is smaller than the current stack size, clear the stack
   React.useEffect(() => {

@@ -68,6 +68,8 @@ export const computedColumnsStateInitializer: GridStateInitializer<
   apiRef.current.caches.computedColumns = {
     editorRequest: null,
     pendingColumnIndexes: new Map(),
+    previousModel: null,
+    historyEcho: null,
   };
 
   return {
@@ -118,6 +120,12 @@ export const useGridComputedColumns = (
       if (newModel === currentModel) {
         return;
       }
+
+      // The `computedColumnsChange` event is published from inside `setState`, once the
+      // state holds the new model: the history handler reads the previous one from here.
+      // A write the controlled parent has not echoed yet stashes it too, and the echo
+      // (which comes back through here) stashes the same model again.
+      apiRef.current.caches.computedColumns.previousModel = currentModel;
 
       apiRef.current.setState((state) => ({
         ...state,

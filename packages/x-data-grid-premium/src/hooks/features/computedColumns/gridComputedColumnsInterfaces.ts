@@ -102,6 +102,24 @@ export interface GridComputedColumnEditorRequest {
   columnIndex?: number;
 }
 
+/**
+ * Where a computed column stood right before its definition was dropped, so that the
+ * history operation bringing the definition back puts the column where the user had it.
+ */
+export interface GridComputedColumnSnapshot {
+  field: string;
+  /**
+   * The index of the column among all the columns, hidden ones included.
+   */
+  index: number;
+  /**
+   * The width the user gave the column. Left out when the column was never resized:
+   * the width of the definition (or of `computedColDef`) applies again.
+   */
+  width?: number;
+  visible: boolean;
+}
+
 export interface GridComputedColumnsInternalCache {
   editorRequest: GridComputedColumnEditorRequest | null;
   /**
@@ -111,6 +129,20 @@ export interface GridComputedColumnsInternalCache {
    * parent has echoed the new model back through the `computedColumns` prop.
    */
   pendingColumnIndexes: Map<string, number>;
+  /**
+   * The model `setComputedColumns()` found in the state right before its last update,
+   * whether that update was applied or is waiting for the parent to echo it. The history
+   * handler reads it when the `computedColumnsChange` event arrives, after the state
+   * already holds the new model: it is the previous model of the step, whatever handler
+   * instance records it and whether or not the history was recording at the time.
+   */
+  previousModel: GridComputedColumnsModel | null;
+  /**
+   * The model an undo or redo asked a controlled parent to echo, with the columns to
+   * restore once the echo is hydrated. The echoed `computedColumnsChange` is the
+   * operation itself, not a new step.
+   */
+  historyEcho: { model: GridComputedColumnsModel; columns: GridComputedColumnSnapshot[] } | null;
 }
 
 /**
