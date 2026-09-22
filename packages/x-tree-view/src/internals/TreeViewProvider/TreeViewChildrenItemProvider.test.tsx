@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+import type { SimpleTreeViewApiRef } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import type { useSimpleTreeViewApiRef } from '@mui/x-tree-view/hooks';
 import { describe, it, expect } from 'vitest';
 
 describe('<TreeViewChildrenItemProvider />', () => {
@@ -33,7 +33,7 @@ describe('<TreeViewChildrenItemProvider />', () => {
    */
   function renderTreeWithSuspendingChild({ nested }: { nested: boolean }) {
     const suspender = createSuspender();
-    const apiRef: ReturnType<typeof useSimpleTreeViewApiRef> = { current: undefined };
+    const apiRef: SimpleTreeViewApiRef = { current: undefined };
 
     function Child({ shouldSuspend }: { shouldSuspend: boolean }) {
       if (shouldSuspend && suspender.isPending) {
@@ -80,7 +80,7 @@ describe('<TreeViewChildrenItemProvider />', () => {
       user,
       suspender,
       getOrderedChildrenIds: () =>
-        apiRef.current!.getItemOrderedChildrenIds(nested ? 'parent' : null),
+        apiRef.current!.getItemOrderedChildrenIds!(nested ? 'parent' : null),
     };
   }
 
