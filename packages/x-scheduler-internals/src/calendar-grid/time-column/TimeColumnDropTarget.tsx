@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
-import type { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
+import { useCalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
@@ -18,8 +19,9 @@ const isValidDropTarget = buildIsValidDropTarget([
   'StandaloneEvent',
 ]);
 
-export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
-  const { start, end, addPropertiesToDroppedEvent } = parameters;
+export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
+  const { addPropertiesToDroppedEvent, render } = props;
+  const { start, end, getCursorPositionInElementMs } = useCalendarGridTimeColumnContext();
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -27,37 +29,6 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
-
-  const collectionStartTimestamp = adapter.getTime(start);
-  const collectionEndTimestamp = adapter.getTime(end);
-  const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
-
-  const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
-    useStableCallback(({ input, elementRef }) => {
-      if (!ref.current || !elementRef.current) {
-        return 0;
-      }
-
-      const clientY = input.clientY;
-      const elementPosition = elementRef.current.getBoundingClientRect();
-      const positionY = (clientY - elementPosition.y) / ref.current.offsetHeight;
-      const clampedPositionY = Math.max(0, Math.min(1, positionY));
-
-      return Math.round(collectionDurationMs * clampedPositionY);
-    });
-
-  const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
-    (input) => {
-      // Bail when the column isn't measurable yet — zero height makes `getCursorPositionInElementMs` return NaN.
-      if (!ref.current || ref.current.offsetHeight === 0) {
-        return null;
-      }
-      const offsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
-      const roundedOffsetMs =
-        Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-      return adapter.addMilliseconds(start, roundedOffsetMs);
-    },
-  );
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
     ({ data, getDataFromInside, getDataFromOutside, input }) => {
@@ -177,27 +148,15 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     addPropertiesToDroppedEvent,
   });
 
-  return { targetProps, getCursorPositionInElementMs, getDateAtPointer, ref };
+  return <Draggable.Target {...targetProps} ref={ref} render={render} />;
 }
 
-export namespace useTimeDropTarget {
-  export interface Parameters {
-    /**
-     * The data and time at which the column starts.
-     */
-    start: TemporalSupportedObject;
-    /**
-     * The data and time at which the column ends.
-     */
-    end: TemporalSupportedObject;
+export namespace TimeColumnDropTarget {
+  export interface Props {
+    render: React.ReactElement;
     /**
      * Add properties to the event dropped in the column before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
-
-  export interface ReturnValue extends Pick<
-    CalendarGridTimeColumnContext,
-    'getCursorPositionInElementMs' | 'getDateAtPointer'
-  > {}
 }

@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   useDropTarget,
   dateToTimelineAxisOffsetMs,
@@ -14,7 +15,7 @@ import {
   EVENT_DRAG_PRECISION_MINUTE,
   EVENT_DRAG_PRECISION_MS,
 } from '@mui/x-scheduler-internals/constants';
-import type { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
+import { useTimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 
@@ -24,15 +25,13 @@ const isValidDropTarget = buildIsValidDropTarget([
   'StandaloneEvent',
 ]);
 
-export function useEventRowDropTarget(parameters: useEventRowDropTarget.Parameters) {
-  const { resourceId, addPropertiesToDroppedEvent } = parameters;
+export function EventRowDropTarget(props: EventRowDropTarget.Props) {
+  const { addPropertiesToDroppedEvent, render } = props;
+  const { resourceId, rowRef, getCursorPositionInElementMs } = useTimelineGridEventRowContext();
 
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
-
-  // Ref hooks
-  const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
@@ -41,31 +40,13 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   // hidden hours take no space, so px↔date conversions go through the axis helpers.
   const collectionDurationMs = config.durationMs;
 
-  const getCursorPositionInElementMs: TimelineGridEventRowContext['getCursorPositionInElementMs'] =
-    useStableCallback(({ input, elementRef }) => {
-      if (!ref.current || !elementRef.current) {
-        return 0;
-      }
-
-      const clientX = input.clientX;
-      const elementPosition = elementRef.current.getBoundingClientRect();
-      const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
-
-      // A cursor on (or past) either edge must not map beyond the axis: the offset
-      // would resolve into the day before or after the collection.
-      return Math.min(
-        Math.max(Math.round(collectionDurationMs * positionX), 0),
-        collectionDurationMs,
-      );
-    });
-
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
     ({ data, getDataFromInside, getDataFromOutside, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
-      const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
+      const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: rowRef });
 
       const axisOffsetToDate = (offsetMs: number) => {
         const roundedOffset =
@@ -159,23 +140,15 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
     addPropertiesToDroppedEvent,
   });
 
-  return { targetProps, getCursorPositionInElementMs, ref };
+  return <Draggable.Target {...targetProps} render={render} />;
 }
 
-export namespace useEventRowDropTarget {
-  export interface Parameters {
-    /**
-     * The id of the resource to drop the event onto.
-     */
-    resourceId: SchedulerResourceId;
+export namespace EventRowDropTarget {
+  export interface Props {
+    render: React.ReactElement;
     /**
      * Add properties to the event dropped in the row before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
-
-  export interface ReturnValue extends Pick<
-    TimelineGridEventRowContext,
-    'getCursorPositionInElementMs'
-  > {}
 }

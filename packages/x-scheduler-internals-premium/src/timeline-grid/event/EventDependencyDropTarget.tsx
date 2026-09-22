@@ -1,6 +1,7 @@
 'use client';
 import { useStore } from '@base-ui/utils/store';
-import type { Draggable } from '@base-ui/react/draggable';
+import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { schedulerDragKind, schedulerDropTargetKind } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
@@ -21,8 +22,8 @@ import { isDependencyTerminalDrag } from '../event-dependency-terminal/dependenc
  * Declarative only: the drop itself is finalized by the creation monitor on the grid
  * root, which reads the hovered target from the drop target data.
  */
-export function useEventDependencyDropTarget(parameters: useEventDependencyDropTarget.Parameters) {
-  const { eventId, occurrenceKey, resourceId, side = 'start' } = parameters;
+export function EventDependencyDropTarget(props: EventDependencyDropTarget.Props) {
+  const { eventId, occurrenceKey, resourceId, side = 'start', render } = props;
 
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
@@ -49,11 +50,12 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
       source.payload.storeContext === store &&
       source.payload.eventId !== eventId,
   };
-  return targetProps;
+  return <Draggable.Target {...targetProps} render={render} />;
 }
 
-export namespace useEventDependencyDropTarget {
-  export interface Parameters {
+export namespace EventDependencyDropTarget {
+  export interface Props {
+    render: React.ReactElement;
     eventId: SchedulerEventId;
     occurrenceKey: string;
     /**

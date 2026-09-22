@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { Draggable } from '@base-ui/react/draggable';
 import {
   SchedulerDraggable,
   useDraggableEvent,
@@ -30,7 +29,7 @@ import {
   eventTimelinePremiumPresetSelectors,
 } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
-import { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
+import { EventDependencyDropTarget } from './EventDependencyDropTarget';
 
 const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
@@ -159,12 +158,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     tabIndex: rowHasFocus ? 0 : -1,
   });
 
-  const targetProps = useEventDependencyDropTarget({
-    eventId,
-    occurrenceKey,
-    resourceId: rowResourceId,
-  });
-
   const mergedState = {
     ...state,
     startingBeforeEdge,
@@ -196,8 +189,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   return (
     <TimelineGridEventContext.Provider value={contextValue}>
-      <Draggable.Target
-        {...targetProps}
+      <EventDependencyDropTarget
+        eventId={eventId}
+        occurrenceKey={occurrenceKey}
+        resourceId={rowResourceId}
         render={<SchedulerDraggable {...draggableProps} render={element} />}
       />
       {preview.element}

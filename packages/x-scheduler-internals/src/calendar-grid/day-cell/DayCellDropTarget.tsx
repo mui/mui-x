@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapterContext } from '../../use-adapter-context';
@@ -14,14 +15,11 @@ const isValidDropTarget = buildIsValidDropTarget([
   'StandaloneEvent',
 ]);
 
-export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
-  const { value, addPropertiesToDroppedEvent } = parameters;
+export function DayCellDropTarget(props: DayCellDropTarget.Props) {
+  const { value, addPropertiesToDroppedEvent, render } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
-
-  // Ref hooks
-  const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
@@ -101,10 +99,14 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
     addPropertiesToDroppedEvent,
   });
 
-  return { ref, targetProps };
+  return <Draggable.Target {...targetProps} render={render} />;
 }
 
-export namespace useDayCellDropTarget {
+export namespace DayCellDropTarget {
+  export interface Props extends Parameters {
+    render: React.ReactElement;
+  }
+
   export interface Parameters {
     /**
      * The value of the cell.
