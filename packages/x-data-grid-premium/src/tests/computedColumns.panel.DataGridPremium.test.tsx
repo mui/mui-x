@@ -387,6 +387,25 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getButton('Add column')).to.have.property('disabled', false);
     });
 
+    it('disables Apply for a draft closing a cycle with the field a stored column waits for', async () => {
+      await render(
+        <Test initialState={{ computedColumns: { model: [define('ratio', '=future + 1')] } }} />,
+      );
+      await openEditor(null);
+
+      typeName('Future');
+      typeFormula('=ratio + 1');
+      expect(getFieldInput().value).to.equal('future');
+      expect(getValidationMessages()).to.deep.equal([
+        'Circular reference: future → ratio → future.',
+      ]);
+      expect(getButton('Add column')).to.have.property('disabled', true);
+
+      typeFormula('=price * 2');
+      expect(getValidationMessages()).to.deep.equal([]);
+      expect(getButton('Add column')).to.have.property('disabled', false);
+    });
+
     it('shows the issues of a stored invalid definition right away', async () => {
       await render(
         <Test initialState={{ computedColumns: { model: [define('bad', '=price * nope')] } }} />,
@@ -429,6 +448,26 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       typeFormula('=');
       await waitFor(() => {
         expect(getPreviewText()).to.equal('');
+      });
+    });
+
+    it('previews the error of a computed column the way the cell will', async () => {
+      await render(
+        <Test
+          rows={[{ id: 0, item: 'Apple', price: 4, quantity: 0 }]}
+          initialState={{ computedColumns: { model: [define('ratio', '=price / quantity')] } }}
+        />,
+      );
+      await openEditor(null, { sampleRowId: 0 });
+
+      typeFormula('=IFERROR(ratio, 0)');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('0');
+      });
+
+      typeFormula('=ratio * 2');
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('#DIV/0!');
       });
     });
 

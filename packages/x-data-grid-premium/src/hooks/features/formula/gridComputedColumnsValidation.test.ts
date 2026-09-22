@@ -219,6 +219,53 @@ describe('gridComputedColumnsValidation', () => {
       const { validate } = createHarness([define('a', '=b'), define('b', '=a')]);
       expect(validate({ formula: '=a + 1' })).to.deep.equal({ valid: true, issues: [] });
     });
+
+    it('should report a cycle closed by the field the definition brings', () => {
+      const { validate } = createHarness([define('ratio', '=future + 1')]);
+      expect(validate({ field: 'future', formula: '=ratio + 1' }).issues).to.deep.equal([
+        {
+          code: 'cycle',
+          message: 'Circular reference: future → ratio → future.',
+          path: ['future', 'ratio', 'future'],
+        },
+      ]);
+    });
+
+    it('should report a cycle closed by the field through several stored columns', () => {
+      const { validate } = createHarness([
+        define('tax', '=future * 0.2'),
+        define('gross', '=tax + price'),
+      ]);
+      expect(validate({ field: 'future', formula: '=gross - 1' }).issues).to.deep.equal([
+        {
+          code: 'cycle',
+          message: 'Circular reference: future → gross → tax → future.',
+          path: ['future', 'gross', 'tax', 'future'],
+        },
+      ]);
+    });
+
+    it('should accept the field a stored column is waiting for when no cycle is closed', () => {
+      const { validate } = createHarness([define('ratio', '=future + 1')]);
+      expect(validate({ field: 'future', formula: '=price * 2' })).to.deep.equal({
+        valid: true,
+        issues: [],
+      });
+    });
+
+    it('should not report a cycle through a data column the field collides with', () => {
+      const { validate } = createHarness([define('ratio', '=price / 2')]);
+      expect(validate({ field: 'price', formula: '=ratio * 3' })).to.deep.equal({
+        valid: false,
+        issues: [
+          {
+            code: 'fieldExists',
+            message: 'A column with the field "price" already exists.',
+            field: 'price',
+          },
+        ],
+      });
+    });
   });
 
   describe('getComputedColumnVerdict', () => {

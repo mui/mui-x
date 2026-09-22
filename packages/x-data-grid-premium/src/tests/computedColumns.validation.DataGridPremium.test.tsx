@@ -301,6 +301,30 @@ describe('<DataGridPremium /> - Computed columns validation', () => {
       ).to.deep.equal(['fieldExists']);
     });
 
+    it('should report the cycle a definition closes with the field a stored one is waiting for', async () => {
+      await render(
+        <Test initialState={{ computedColumns: { model: [define('ratio', '=future + 1')] } }} />,
+      );
+      expect(getIssueCodes('ratio')).to.deep.equal(['unknownField']);
+      const closing = define('future', '=ratio + 1');
+      expect(apiRef.current!.validateComputedColumn(closing).issues).to.deep.equal([
+        {
+          code: 'cycle',
+          message: 'Circular reference: future → ratio → future.',
+          path: ['future', 'ratio', 'future'],
+        },
+      ]);
+      expect(apiRef.current!.validateComputedColumn(define('future', '=price * 2'))).to.deep.equal({
+        valid: true,
+        issues: [],
+      });
+
+      // What the verdict announced: the stored column runs into the cycle too.
+      act(() => apiRef.current!.addComputedColumn(closing));
+      expect(getColumnValuesOf('future')).to.deep.equal(['#CYCLE!', '#CYCLE!', '#CYCLE!']);
+      expect(getIssueCodes('ratio')).to.deep.equal(['cycle']);
+    });
+
     it('should use the locale text of the grid', async () => {
       await render(
         <Test

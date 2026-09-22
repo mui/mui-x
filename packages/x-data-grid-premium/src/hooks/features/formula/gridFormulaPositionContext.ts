@@ -30,6 +30,23 @@ import type { FormulaPositionContext } from './engine';
 export const GRID_FORMULA_ROW_NUMBER_FIELD = '__formula_row_number__';
 
 /**
+ * Context for formulas without position-dependent syntax — their binding and
+ * evaluation never consult positions, so building a real snapshot for them
+ * would be wasted work.
+ */
+export const EMPTY_POSITION_CONTEXT: FormulaPositionContext = {
+  version: 0,
+  rowCount: 0,
+  columnCount: 0,
+  dataFromIndex: 1,
+  dataToIndex: 0,
+  getRowIdAtPosition: () => undefined,
+  getPositionOfRowId: () => undefined,
+  getFieldAtPosition: () => undefined,
+  getPositionOfField: () => undefined,
+};
+
+/**
  * The inputs a position context is built from: sorted + filtered data-row
  * order and visible-column order. Rebind events compare snapshots to skip
  * rebinding when nothing actually moved.

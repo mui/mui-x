@@ -49,7 +49,8 @@ export interface GridComputedColumnValidationScope {
    */
   referenceableFields: ReadonlySet<string>;
   /**
-   * For each stored computed column, the computed columns its formula reads directly.
+   * For each stored computed column, the fields its formula reads directly —
+   * including the ones no column holds yet, which a definition may bring.
    */
   computedDependencies: ReadonlyMap<string, ReadonlySet<string>>;
 }
@@ -90,15 +91,9 @@ export function createComputedColumnValidationScope(
     }
   }
 
-  const computedDependencies = new Map<string, Set<string>>();
+  const computedDependencies = new Map<string, ReadonlySet<string>>();
   for (const [field, record] of records) {
-    const dependencies = new Set<string>();
-    for (const dependency of record.dependencies) {
-      if (records.has(dependency)) {
-        dependencies.add(dependency);
-      }
-    }
-    computedDependencies.set(field, dependencies);
+    computedDependencies.set(field, record.dependencies);
   }
 
   return {
@@ -264,13 +259,27 @@ export function getComputedColumnVerdict(
     );
   } else if (field !== '') {
     // The definition takes the place of the stored one it replaces in the graph.
-    const graph = new Map(scope.computedDependencies);
+    const storedDependencies = new Map(scope.computedDependencies);
     if (ignoreField !== undefined) {
-      graph.delete(ignoreField);
+      storedDependencies.delete(ignoreField);
+    }
+    // The stored columns may read `field` before any column holds it: this
+    // definition closes those edges. It does not when `field` is a data column
+    // — the stored formulas read that column, and the field is reported above.
+    const bringsField = !scope.columnFields.has(field);
+    const graph = new Map<string, ReadonlySet<string>>();
+    for (const [storedField, storedFieldDependencies] of storedDependencies) {
+      const edges = new Set<string>();
+      for (const dependency of storedFieldDependencies) {
+        if (storedDependencies.has(dependency) || (bringsField && dependency === field)) {
+          edges.add(dependency);
+        }
+      }
+      graph.set(storedField, edges);
     }
     const computedDependencies = new Set<string>();
     for (const dependency of dependencies.fieldRefs) {
-      if (graph.has(dependency)) {
+      if (storedDependencies.has(dependency)) {
         computedDependencies.add(dependency);
       }
     }

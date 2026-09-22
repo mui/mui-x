@@ -24,7 +24,7 @@ import {
   toFormulaText,
 } from './engine';
 import type { FormulaErrorValue, FormulaScalar } from './engine';
-import { EMPTY_POSITION_CONTEXT } from './createFormulaEvaluation';
+import { EMPTY_POSITION_CONTEXT } from './gridFormulaPositionContext';
 import { applyComputedColDefOverrides, createComputedBaseColDef } from './createComputedColDef';
 import type { GridComputedColumnGetters } from './createComputedColDef';
 import type {
@@ -177,6 +177,24 @@ export function evaluateComputedCell(
   }
   rowResults.set(field, result);
   return result;
+}
+
+/**
+ * The value a formula reads from a computed cell: the typed result, with an
+ * error kept as an error value instead of the code string the `valueGetter`
+ * returns to the grid. Static results are not memoized, so this is the read
+ * path of the cell-formula runtime and of the draft preview.
+ * @param {RefObject<GridPrivateApiPremium>} apiRef The private grid api.
+ * @param {GridValidRowModel} row The row of the cell.
+ * @param {string} field The field of the computed column.
+ * @returns {FormulaScalar | FormulaErrorValue} The value of the cell as the engine sees it.
+ */
+export function resolveComputedCellValue(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  row: GridValidRowModel,
+  field: string,
+): FormulaScalar | FormulaErrorValue {
+  return toResolvedValue(evaluateComputedCell(apiRef, row, field));
 }
 
 function createComputedGetters(

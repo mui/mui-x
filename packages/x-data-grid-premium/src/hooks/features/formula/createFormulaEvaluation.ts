@@ -41,25 +41,13 @@ import type {
   GridFormulaResult,
 } from './gridFormulaInterfaces';
 import { areFormulaFieldsEqual, resetFormulaEvaluationCache } from './gridFormulaUtils';
-import { arePositionArraysEqual, createFormulaPositionContext } from './gridFormulaPositionContext';
+import {
+  arePositionArraysEqual,
+  createFormulaPositionContext,
+  EMPTY_POSITION_CONTEXT,
+} from './gridFormulaPositionContext';
 import type { GridFormulaPositionSnapshot } from './gridFormulaPositionContext';
-
-/**
- * Context for formulas without position-dependent syntax — their binding and
- * evaluation never consult positions, so building a real snapshot for them
- * would be wasted work.
- */
-export const EMPTY_POSITION_CONTEXT: FormulaPositionContext = {
-  version: 0,
-  rowCount: 0,
-  columnCount: 0,
-  dataFromIndex: 1,
-  dataToIndex: 0,
-  getRowIdAtPosition: () => undefined,
-  getPositionOfRowId: () => undefined,
-  getFieldAtPosition: () => undefined,
-  getPositionOfField: () => undefined,
-};
+import { resolveComputedCellValue } from './gridComputedColumnsRuntime';
 
 /**
  * Above this many materialized range cells per formula, a dev-mode warning
@@ -524,7 +512,8 @@ function createPassResolver(ctx: FormulaPassContext): FormulaPassResolver {
       if (row === undefined) {
         return null;
       }
-      const value = readRawCellValue(apiRef, row, columnsLookup[ref.field]);
+      const colDef = columnsLookup[ref.field];
+      const value = readRawCellValue(apiRef, row, colDef);
       const rowKey = String(ref.id);
       let tracked = cache.trackedValues.get(rowKey);
       if (tracked === undefined) {
@@ -532,6 +521,13 @@ function createPassResolver(ctx: FormulaPassContext): FormulaPassResolver {
         cache.trackedValues.set(rowKey, tracked);
       }
       tracked.set(ref.field, value);
+      if (colDef?.computed) {
+        // The raw value of a computed cell is what its `valueGetter` returns —
+        // an error is flattened to its code — which is what the tracked values
+        // compare between passes. The formula reads the typed result instead,
+        // so `IFERROR` catches it and a range propagates it.
+        return resolveComputedCellValue(apiRef, row, ref.field);
+      }
       return value as FormulaScalar;
     },
     hasRow: (id) => rowsLookup[id] !== undefined,

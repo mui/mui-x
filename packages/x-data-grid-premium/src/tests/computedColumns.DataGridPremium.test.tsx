@@ -375,6 +375,114 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValuesOf('note')).to.deep.equal(['9', '8']);
     });
 
+    describe('errors read by a cell formula', () => {
+      const errorColumns: DataGridPremiumProps['columns'] = [
+        { field: 'price', type: 'number' },
+        { field: 'quantity', type: 'number' },
+        { field: 'net', type: 'number', allowFormulas: true, editable: true },
+      ];
+
+      it('should let `IFERROR` catch the error of a computed cell', async () => {
+        await render(
+          <Test
+            columns={errorColumns}
+            rows={[
+              { id: 0, price: 4, quantity: 0, net: '=IFERROR(ratio, 0)' },
+              { id: 1, price: 4, quantity: 2, net: '=IFERROR(ratio, 0)' },
+            ]}
+            computedColumns={[ratio]}
+          />,
+        );
+        expect(getColumnValuesOf('ratio')).to.deep.equal(['#DIV/0!', '2']);
+        expect(getColumnValuesOf('net')).to.deep.equal(['0', '2']);
+
+        // The caught error follows the data of the row.
+        act(() => apiRef.current!.updateRows([{ id: 0, quantity: 4 }]));
+        expect(getColumnValuesOf('net')).to.deep.equal(['1', '2']);
+        act(() => apiRef.current!.updateRows([{ id: 1, quantity: 0 }]));
+        expect(getColumnValuesOf('net')).to.deep.equal(['1', '0']);
+      });
+
+      it('should propagate the error of a computed cell through a range', async () => {
+        await render(
+          <Test
+            columns={errorColumns}
+            rows={[
+              { id: 0, price: 4, quantity: 2, net: '=SUM(COLUMN_VALUES("ratio"))' },
+              { id: 1, price: 4, quantity: 0 },
+            ]}
+            computedColumns={[ratio]}
+          />,
+        );
+        expect(getColumnValuesOf('net')).to.deep.equal(['#DIV/0!', '']);
+
+        act(() => apiRef.current!.updateRows([{ id: 1, quantity: 4 }]));
+        expect(getColumnValuesOf('net')).to.deep.equal(['3', '']);
+      });
+
+      it('should let `IFERROR` catch the static error of an invalid computed column', async () => {
+        await render(
+          <Test
+            columns={errorColumns}
+            rows={[{ id: 0, price: 4, quantity: 2, net: '=IFERROR(broken, -1)' }]}
+            computedColumns={[{ ...ratio, field: 'broken', formula: '=price +' }]}
+          />,
+        );
+        expect(getColumnValuesOf('broken')).to.deep.equal(['#ERROR!']);
+        expect(getColumnValuesOf('net')).to.deep.equal(['-1']);
+      });
+
+      it('should not treat the text of an error code as an error', async () => {
+        await render(
+          <Test
+            columns={errorColumns}
+            rows={[{ id: 0, price: 4, quantity: 2, net: '=IFERROR(label, 0)' }]}
+            computedColumns={[
+              { field: 'label', headerName: 'Label', formula: '="#DIV/0!"', type: 'string' },
+            ]}
+          />,
+        );
+        expect(getColumnValuesOf('label')).to.deep.equal(['#DIV/0!']);
+        expect(getColumnValuesOf('net')).to.deep.equal(['#DIV/0!']);
+      });
+
+      it('should let `IFERROR` catch the error of another formula cell', async () => {
+        await render(
+          <Test
+            columns={[
+              { field: 'price', type: 'number' },
+              { field: 'quantity', type: 'number' },
+              { field: 'ratio', type: 'number', allowFormulas: true },
+              { field: 'net', type: 'number', allowFormulas: true },
+            ]}
+            rows={[
+              {
+                id: 0,
+                price: 4,
+                quantity: 0,
+                ratio: '=price / quantity',
+                net: '=IFERROR(ratio, 0)',
+              },
+            ]}
+          />,
+        );
+        expect(getColumnValuesOf('net')).to.deep.equal(['0']);
+      });
+
+      it('should let a computed column catch the error of another computed column', async () => {
+        await render(
+          <Test
+            rows={[{ id: 0, item: 'Apple', price: 4, quantity: 0 }]}
+            computedColumns={[
+              ratio,
+              { field: 'safe', headerName: 'Safe', formula: '=IFERROR(ratio, 0)', type: 'number' },
+            ]}
+          />,
+        );
+        expect(getColumnValuesOf('safe')).to.deep.equal(['0']);
+      });
+    });
+
     it('should not re-evaluate the cell formulas when a column is resized', async () => {
       await render(
         <Test
