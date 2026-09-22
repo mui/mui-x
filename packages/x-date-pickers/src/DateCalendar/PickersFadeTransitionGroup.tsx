@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { TransitionGroup } from 'react-transition-group';
-import type { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
 import Fade from '@mui/material/Fade';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
@@ -33,7 +32,7 @@ const useUtilityClasses = (classes: Partial<PickersFadeTransitionGroupClasses> |
 const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
   name: 'MuiPickersFadeTransitionGroup',
   slot: 'Root',
-})<TransitionGroupProps & { ownerState: ExportedPickersFadeTransitionGroupProps }>({
+})<{ ownerState: ExportedPickersFadeTransitionGroupProps }>({
   display: 'block',
   position: 'relative',
 });
@@ -44,6 +43,12 @@ const exitingChildStyle: React.CSSProperties = {
   top: 0,
   insetInlineStart: 0,
 };
+
+// Applies the exiting style without a `childFactory`, so `TransitionGroup` keeps the identity
+// of unchanged exiting elements and React skips their renders.
+function PickersFadeTransition(props: React.ComponentProps<typeof Fade>) {
+  return <Fade {...props} style={props.in ? undefined : exitingChildStyle} />;
+}
 
 /**
  * @ignore - do not document.
@@ -59,14 +64,8 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
     return children;
   }
   return (
-    <PickersFadeTransitionGroupRoot
-      className={clsx(classes.root, className)}
-      ownerState={other}
-      childFactory={(child: React.ReactElement<{ in?: boolean; style?: React.CSSProperties }>) =>
-        React.cloneElement(child, { style: child.props.in ? undefined : exitingChildStyle })
-      }
-    >
-      <Fade
+    <PickersFadeTransitionGroupRoot className={clsx(classes.root, className)} ownerState={other}>
+      <PickersFadeTransition
         appear={false}
         mountOnEnter
         unmountOnExit
@@ -78,7 +77,7 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
         }}
       >
         {children}
-      </Fade>
+      </PickersFadeTransition>
     </PickersFadeTransitionGroupRoot>
   );
 }
