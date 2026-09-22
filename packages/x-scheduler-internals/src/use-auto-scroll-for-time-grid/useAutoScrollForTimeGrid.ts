@@ -5,7 +5,7 @@ import { schedulerDragKind } from '../internals/utils/schedulerDrag';
 import { buildIsValidDropTarget } from '../build-is-valid-drop-target/buildIsValidDropTarget';
 
 // Only event drags should autoscroll the grid; other element drags (e.g. the dialog) carry no `source`.
-// Exported for unit testing (the effect itself is a no-op under `NODE_ENV === 'test'`).
+// Exported for testing the accepted drag sources.
 export const canAutoScrollForDrag = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
   'CalendarGridTimeEventResizeHandler',
@@ -16,12 +16,13 @@ export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null
   const manager = Draggable.useDragDropManager();
   React.useEffect(() => {
     const element = ref.current;
-    if (!element || process.env.NODE_ENV === 'test') {
+    if (!element) {
       return undefined;
     }
 
     return manager.registerAutoScroller(element, () => ({
       accept: schedulerDragKind,
+      overflowMargin: { top: 160, bottom: 160 },
       onDragScroll: ({ source, direction }, details) => {
         if (direction === 'horizontal' || !canAutoScrollForDrag(source.payload)) {
           details.cancel();

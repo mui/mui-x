@@ -27,7 +27,7 @@ export function useTimelineDragAutoScroll(params: {
   React.useEffect(() => {
     const scroller = scrollerRef.current;
     // The library warns when attached to a non-scrollable element, which is what
-    // jsdom reports because it doesn't lay out. Matches CalendarGridTimeScrollableContent.
+    // jsdom reports because it doesn't lay out.
     if (!scroller || process.env.NODE_ENV === 'test') {
       return undefined;
     }

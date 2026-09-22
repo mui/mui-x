@@ -64,13 +64,17 @@ export function startDrag(element: Element, options: DragPointerOptions = {}) {
 
 /** Moves an active drag over a target. Hit testing is mocked because jsdom has no layout. */
 export function moveDrag(element: Element, options: DragPointerOptions = {}) {
-  mockDragHitTest(element);
+  if (options.mockHitTest !== false) {
+    mockDragHitTest(element);
+  }
   dispatchDragPointer('pointermove', element, options);
 }
 
 /** Releases over a target. Base UI flushes the pending move before committing the drop. */
 export function dropDrag(element: Element, options: DragPointerOptions = {}) {
-  mockDragHitTest(element);
+  if (options.mockHitTest !== false) {
+    mockDragHitTest(element);
+  }
   dispatchDragPointer('pointerup', element, options);
   // Pointer capture redirects the browser's compatibility click to the body.
   // Deliver it so Base UI consumes it instead of swallowing a later test's click.

@@ -14,8 +14,8 @@ catalog:
   '@babel/preset-typescript': ^7.29.7
   '@babel/runtime': ^7.29.7
   '@babel/traverse': ^7.29.8
-  '@base-ui/react': https://pkg.pr.new/mui/base-ui/@base-ui/react@a4a3464
-  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@a4a3464
+  '@base-ui/react': https://pkg.pr.new/mui/base-ui/@base-ui/react@a6b2a49
+  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@a6b2a49
   '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
@@ -117,7 +117,7 @@ allowBuilds:
   msw: false
 
 overrides:
-  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@a4a3464
+  '@base-ui/utils': https://pkg.pr.new/mui/base-ui/@base-ui/utils@a6b2a49
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
