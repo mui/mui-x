@@ -1,6 +1,11 @@
 import * as React from 'react';
-import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import { DataGrid, gridClasses, gridColumnLookupSelector } from '@mui/x-data-grid';
+import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import {
+  DataGrid,
+  gridClasses,
+  gridColumnLookupSelector,
+  gridRenderContextSelector,
+} from '@mui/x-data-grid';
 import type { DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -220,5 +225,39 @@ describe('<DataGrid /> - Columns', () => {
 
       expect(error).to.equal(undefined);
     });
+  });
+
+  describe('column virtualization', () => {
+    // Needs layout
+    it.skipIf(isJSDOM)(
+      'should keep the cells aligned with their headers when the columns before them change width',
+      () => {
+        const apiRef: RefObject<GridApiCommunity | null> = { current: null };
+        const manyColumns: GridColDef[] = Array.from({ length: 30 }, (_, index) => ({
+          field: `c${index}`,
+          width: 100,
+        }));
+        render(<TestDataGrid apiRef={apiRef} columns={manyColumns} rows={[{ id: 0 }]} />);
+
+        const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+        // Away from the column edges, so that the rendered columns stay the same below.
+        fireEvent.scroll(virtualScroller, { target: { scrollLeft: 1020 } });
+        const { firstColumnIndex, lastColumnIndex } = gridRenderContextSelector(apiRef);
+
+        // Moves width from a column before the rendered ones to a column after them: the total
+        // width and the rendered columns stay the same, but the rendered columns move.
+        act(() => {
+          apiRef.current!.updateColumns([
+            { field: 'c1', width: 60 },
+            { field: 'c28', width: 140 },
+          ]);
+        });
+
+        expect(gridRenderContextSelector(apiRef)).to.include({ firstColumnIndex, lastColumnIndex });
+        expect(getCell(0, 10).getBoundingClientRect().left).to.equal(
+          getColumnHeaderCell(10).getBoundingClientRect().left,
+        );
+      },
+    );
   });
 });
