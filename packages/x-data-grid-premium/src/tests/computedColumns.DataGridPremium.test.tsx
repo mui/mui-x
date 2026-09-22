@@ -698,6 +698,139 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValues(0)).to.deep.equal(['small (2)', '', '']);
     });
 
+    describe('grouping column metadata', () => {
+      // The grouping column is built before the computed columns are injected: a
+      // record rebuilt without a getter change (name, format) must still reach it.
+      const createProbe = () => {
+        const apply = vi.fn((args: any[]) => args[0]);
+        const PROBE = { name: 'PROBE', minArgs: 1, maxArgs: 1, apply };
+        return { apply, functions: { ...GRID_FORMULA_FUNCTIONS, PROBE } as any };
+      };
+      const double: GridComputedColumnDefinition = {
+        field: 'double',
+        headerName: 'Double',
+        formula: '=PROBE(price) * 2',
+        type: 'number',
+      };
+      const groupedRows = [
+        { id: 1, price: 2 },
+        { id: 2, price: 3 },
+      ];
+      const groupedColumns: DataGridPremiumProps['columns'] = [{ field: 'price', type: 'number' }];
+
+      const renderGrouped = async (
+        probe: ReturnType<typeof createProbe>,
+        props: Partial<DataGridPremiumProps> = {},
+      ) => {
+        const utils = await render(
+          <Test
+            rows={groupedRows}
+            columns={groupedColumns}
+            formulaFunctions={probe.functions}
+            initialState={{
+              computedColumns: { model: [double] },
+              rowGrouping: { model: ['double'] },
+            }}
+            defaultGroupingExpansionDepth={-1}
+            {...props}
+          />,
+        );
+        const counters = {
+          columnsChange: 0,
+          formulaEvaluated: 0,
+          apply: probe.apply.mock.calls.length,
+        };
+        apiRef.current!.subscribeEvent('columnsChange', () => {
+          counters.columnsChange += 1;
+        });
+        apiRef.current!.subscribeEvent('formulaEvaluated', () => {
+          counters.formulaEvaluated += 1;
+        });
+        return { ...utils, counters };
+      };
+      const getGroupingHeader = () => getColumnHeadersTextContent()[0];
+
+      it('should rename the grouping column with a name-only edit', async () => {
+        const probe = createProbe();
+        const { counters } = await renderGrouped(probe);
+        expect(getGroupingHeader()).to.equal('Double');
+        expect(getColumnValues(0)).to.deep.equal(['4 (1)', '', '6 (1)', '']);
+
+        act(() => apiRef.current!.updateComputedColumn('double', { headerName: 'Renamed' }));
+        expect(getGroupingHeader()).to.equal('Renamed');
+        expect(getColumnValues(0)).to.deep.equal(['4 (1)', '', '6 (1)', '']);
+        // Exactly one extra hydration, no re-evaluation.
+        expect(counters.columnsChange).to.equal(2);
+        expect(counters.formulaEvaluated).to.equal(0);
+        expect(probe.apply.mock.calls.length).to.equal(counters.apply);
+      });
+
+      it('should format the group labels with a format-only edit', async () => {
+        const probe = createProbe();
+        const { counters } = await renderGrouped(probe);
+
+        act(() =>
+          apiRef.current!.updateComputedColumn('double', {
+            numberFormat: { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+          }),
+        );
+        expect(getColumnValues(0)).to.deep.equal(['4.00 (1)', '', '6.00 (1)', '']);
+        expect(getGroupingHeader()).to.equal('Double');
+        expect(counters.columnsChange).to.equal(2);
+        expect(counters.formulaEvaluated).to.equal(0);
+        expect(probe.apply.mock.calls.length).to.equal(counters.apply);
+      });
+
+      it('should follow a name and format edit in the `multiple` grouping column mode', async () => {
+        const probe = createProbe();
+        const { counters } = await renderGrouped(probe, { rowGroupingColumnMode: 'multiple' });
+        expect(getGroupingHeader()).to.equal('Double');
+        expect(getColumnValues(0)).to.deep.equal(['4 (1)', '', '6 (1)', '']);
+
+        act(() =>
+          apiRef.current!.updateComputedColumn('double', {
+            headerName: 'Renamed',
+            numberFormat: { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+          }),
+        );
+        expect(getGroupingHeader()).to.equal('Renamed');
+        expect(getColumnValues(0)).to.deep.equal(['4.00 (1)', '', '6.00 (1)', '']);
+        expect(counters.columnsChange).to.equal(2);
+        expect(counters.formulaEvaluated).to.equal(0);
+        expect(probe.apply.mock.calls.length).to.equal(counters.apply);
+      });
+
+      it('should keep the grouping column name when only the formula changes', async () => {
+        const probe = createProbe();
+        const { counters } = await renderGrouped(probe);
+
+        act(() => apiRef.current!.updateComputedColumn('double', { formula: '=PROBE(price) * 3' }));
+        expect(getGroupingHeader()).to.equal('Double');
+        expect(getColumnValues(0)).to.deep.equal(['6 (1)', '', '9 (1)', '']);
+        expect(counters.columnsChange).to.equal(2);
+        expect(probe.apply.mock.calls.length).to.be.greaterThan(counters.apply);
+      });
+
+      it('should keep the grouping column when the `columns` prop is replaced', async () => {
+        const probe = createProbe();
+        const { counters, setProps } = await renderGrouped(probe);
+
+        setProps({ columns: [...groupedColumns, { field: 'extra' }] });
+        await microtasks();
+        expect(getFields()).to.deep.equal([
+          '__row_group_by_columns_group__',
+          'price',
+          'double',
+          'extra',
+        ]);
+        expect(getGroupingHeader()).to.equal('Double');
+        expect(getColumnValues(0)).to.deep.equal(['4 (1)', '', '6 (1)', '']);
+        // The records did not change, so no extra hydration: two `columnsChange`
+        // is what the replacement publishes on its own.
+        expect(counters.columnsChange).to.equal(2);
+      });
+    });
+
     it('should span the rows of a computed column', async () => {
       await render(
         <Test

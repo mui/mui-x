@@ -1,5 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridColDef } from '@mui/x-data-grid-pro';
+import { isGroupingColumn } from '@mui/x-data-grid-pro/internals';
 import {
   FORMULA_BUILT_IN_FUNCTIONS,
   createFormulaFunctionRegistry,
@@ -46,6 +47,7 @@ export function createComputedColumnsRuntimeCache(): GridComputedColumnsRuntimeC
     referencedFields: new Set(),
     model: null,
     computedColDef: undefined,
+    hydratedColDefs: new Map(),
   };
 }
 
@@ -138,14 +140,18 @@ export function areFormulaFieldsEqual(a: string[], b: string[]): boolean {
 
 /**
  * The column inputs evaluation depends on: field existence and `valueGetter`
- * identity (raw dependency reads go through it).
+ * identity (raw dependency reads go through it). The row grouping columns are
+ * left out — every hydration rebuilds them with fresh getters that read the
+ * grouped columns at call time, so their identity says nothing about the data.
  */
 export function computeColumnsSignature(
   columnsLookup: Record<string, GridColDef>,
 ): Map<string, unknown> {
   const signature = new Map<string, unknown>();
   for (const field of Object.keys(columnsLookup)) {
-    signature.set(field, columnsLookup[field].valueGetter);
+    if (!isGroupingColumn(field)) {
+      signature.set(field, columnsLookup[field].valueGetter);
+    }
   }
   return signature;
 }

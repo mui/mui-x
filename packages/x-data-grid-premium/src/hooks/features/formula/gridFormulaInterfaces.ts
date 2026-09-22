@@ -205,6 +205,13 @@ export interface GridComputedColumnsRuntimeCache {
    */
   model: GridComputedColumnsModel | null;
   computedColDef: DataGridPremiumProcessedProps['computedColDef'];
+  /**
+   * For each record, the `colDef` identity the columns state was last hydrated with.
+   * The row grouping columns are built before the computed columns are injected, so a
+   * record rebuilt in a hydration pass (name, format) leaves the grouping column of a
+   * grouped computed field one pass behind — a changed identity requests the second pass.
+   */
+  hydratedColDefs: Map<string, GridColDef>;
 }
 
 export interface GridFormulaInternalCache {

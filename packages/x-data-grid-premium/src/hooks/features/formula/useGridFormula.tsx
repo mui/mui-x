@@ -15,6 +15,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import type { GridCellCoordinates, GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
 import {
+  createColumnsState,
   gridPivotActiveSelector,
   GridStrategyGroup,
   RowGroupingStrategy,
@@ -88,6 +89,11 @@ export const formulaStateInitializer: GridStateInitializer<
   const premiumState = state as Partial<GridStatePremium>;
   const columnsLookup = premiumState.columns?.lookup ?? {};
   cache.lastColumnsSignature = computeColumnsSignature(columnsLookup);
+  // The pass that registers the pipe processors after the mount builds the grouping
+  // columns from these records: the first `columnsChange` must not hydrate a third time.
+  for (const [field, record] of cache.computedColumns.records) {
+    cache.computedColumns.hydratedColDefs.set(field, record.colDef);
+  }
   const pivotActive = premiumState.pivoting?.active ?? false;
   const enabled = !props.disableFormulas && !props.dataSource && !pivotActive;
   const formulaFields = enabled ? getFormulaFields(columnsLookup) : [];
@@ -456,6 +462,46 @@ export const useGridFormula = (
     triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: true });
   }, [runPass, triggerDependentFeatures]);
 
+  /**
+   * The row grouping columns are built from the columns state of the previous pass,
+   * before the computed columns are injected into the current one. A record rebuilt
+   * by the injection (name, format — the getters are kept) leaves the grouping column
+   * of a grouped computed field with the previous `headerName` and `valueFormatter`:
+   * hydrate once more so it is built from the current record. The second pass finds
+   * the identities recorded here, so it never requests a third one. Synchronous on
+   * purpose: `requestPipeProcessorsApplication` is a no-op while the hydration that
+   * published this event is still running.
+   */
+  const syncGroupingColumns = React.useCallback(() => {
+    const { records, hydratedColDefs } = apiRef.current.caches.formula!.computedColumns;
+    const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
+    let groupingColumnsStale = false;
+    for (const [field, record] of records) {
+      if (hydratedColDefs.get(field) !== record.colDef) {
+        hydratedColDefs.set(field, record.colDef);
+        if (groupedFields.includes(field)) {
+          groupingColumnsStale = true;
+        }
+      }
+    }
+    for (const field of Array.from(hydratedColDefs.keys())) {
+      if (!records.has(field)) {
+        hydratedColDefs.delete(field);
+      }
+    }
+    if (!groupingColumnsStale) {
+      return;
+    }
+    const columnsState = createColumnsState({
+      apiRef,
+      columnsToUpsert: [],
+      initialState: undefined,
+      keepOnlyColumnsToUpsert: false,
+    });
+    apiRef.current.setState((state) => ({ ...state, columns: columnsState }));
+    apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
+  }, [apiRef]);
+
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     const cache = apiRef.current.caches.formula!;
     const fieldsChanged = !areFormulaFieldsEqual(
@@ -476,30 +522,39 @@ export const useGridFormula = (
       // funnel through this event. The rebind pass compares the visible
       // field order itself and exits cheaply when nothing moved.
       triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
-      return;
+    } else {
+      cache.lastColumnsSignature = columnsSignature;
+      // The computed columns read the other columns through their `valueGetter`,
+      // and their own getters change with their formula.
+      const computedColumnsChanged = signatureChanged && cache.computedColumns.records.size > 0;
+      if (computedColumnsChanged) {
+        resetComputedResults(cache);
+      }
+      if (signatureChanged) {
+        // Not only the computed cells read the revision: the preview of a draft
+        // (the first computed column included) reads the same getters.
+        bumpComputedColumnsRevision(apiRef);
+      }
+      if (fieldsChanged) {
+        apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      }
+      // Row spanning resets on `columnsChange` after this handler.
+      triggerDependentFeatures(runPass('full'), {
+        aggregation: true,
+        rowSpanning: false,
+        computedColumnsChanged,
+      });
     }
-    cache.lastColumnsSignature = columnsSignature;
-    // The computed columns read the other columns through their `valueGetter`,
-    // and their own getters change with their formula.
-    const computedColumnsChanged = signatureChanged && cache.computedColumns.records.size > 0;
-    if (computedColumnsChanged) {
-      resetComputedResults(cache);
-    }
-    if (signatureChanged) {
-      // Not only the computed cells read the revision: the preview of a draft
-      // (the first computed column included) reads the same getters.
-      bumpComputedColumnsRevision(apiRef);
-    }
-    if (fieldsChanged) {
-      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
-    }
-    // Row spanning resets on `columnsChange` after this handler.
-    triggerDependentFeatures(runPass('full'), {
-      aggregation: true,
-      rowSpanning: false,
-      computedColumnsChanged,
-    });
-  }, [apiRef, computeEffectiveFormulaFields, runPass, triggerDependentFeatures]);
+    // Last: the nested `columnsChange` of the extra hydration finds the signature
+    // bookkeeping above done, so it takes the cheap branch.
+    syncGroupingColumns();
+  }, [
+    apiRef,
+    computeEffectiveFormulaFields,
+    runPass,
+    syncGroupingColumns,
+    triggerDependentFeatures,
+  ]);
 
   const handleFormulaEvaluated = React.useCallback<GridEventListener<'formulaEvaluated'>>(
     ({ changedCells }) => {
