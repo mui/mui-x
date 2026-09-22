@@ -82,7 +82,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('cancel action', () => {
-ffffffff      it('should call onClose, onCancel and onChange with the initial value', async () => {
+      it('should call onClose, onCancel and onChange with the initial value', async () => {
         const onChange = vi.fn();
         const onAccept = vi.fn();
         const onClose = vi.fn();

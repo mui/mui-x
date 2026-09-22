@@ -143,11 +143,11 @@ export const usePicker = <
   const acceptValueChanges = useEventCallback(() => setValue(value, { source: 'view' }));
 
   const cancelValueChanges = useEventCallback(() => {
-    onCancel?.();
     setValue(state.lastCommittedValue, {
       skipPublicationIfPristine: true,
       source: 'view',
     });
+    onCancel?.();
   });
 
   const dismissViews = useEventCallback(() => {
