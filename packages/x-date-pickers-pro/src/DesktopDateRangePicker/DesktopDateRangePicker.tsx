@@ -239,7 +239,7 @@ DesktopDateRangePicker.propTypes /* remove-proptypes */ = {
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the Cancel action is triggered, resetting the value to the last committed one.
+   * Callback fired when the Cancel action is triggered.
    */
   onCancel: PropTypes.func,
   /**

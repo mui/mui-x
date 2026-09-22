@@ -270,7 +270,7 @@ StaticDateTimePicker.propTypes /* remove-proptypes */ = {
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the Cancel action is triggered, resetting the value to the last committed one.
+   * Callback fired when the Cancel action is triggered.
    */
   onCancel: PropTypes.func,
   /**
@@ -287,7 +287,8 @@ StaticDateTimePicker.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when component requests to be closed.
    * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
-   * @deprecated Please avoid using as it will be removed in next major version.
+   * @deprecated Use `onCancel` or `onAccept` instead, depending on the action you want to react to.
+   * This callback will be removed in the next major version.
    */
   onClose: PropTypes.func,
   /**

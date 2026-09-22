@@ -34,7 +34,7 @@
     "onClose": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Please avoid using as it will be removed in next major version."
+      "deprecationInfo": "Use <code>onCancel</code> or <code>onAccept</code> instead, depending on the action you want to react to."
     },
     "onError": {
       "type": { "name": "func" },
