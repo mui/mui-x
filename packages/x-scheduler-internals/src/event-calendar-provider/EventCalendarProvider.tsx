@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import type { EventCalendarParameters, EventCalendarStoreConstructor } from '../use-event-calendar';
 import { useEventCalendar } from '../use-event-calendar';
 import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
@@ -10,7 +11,11 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
   const store = useEventCalendar(parameters, storeClass);
 
   return (
-    <SchedulerStoreContext.Provider value={store as any}>{children}</SchedulerStoreContext.Provider>
+    <Draggable.Provider>
+      <SchedulerStoreContext.Provider value={store as any}>
+        {children}
+      </SchedulerStoreContext.Provider>
+    </Draggable.Provider>
   );
 }
 

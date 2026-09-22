@@ -30,7 +30,7 @@ describe('DayView - touch resize', () => {
 
   function getTimeGridColumn(): HTMLElement {
     return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]`,
+      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`,
     )!;
   }
 
@@ -68,6 +68,7 @@ describe('DayView - touch resize', () => {
     fireEvent.click(eventElement);
 
     const endHandle = getResizeHandle(eventElement, 'end');
+    expect(endHandle.style.touchAction).toBe('none');
 
     await act(async () => {
       simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });

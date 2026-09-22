@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/utils/disable-native-drag-preview';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStore } from '@base-ui/utils/store';
+import { registerSchedulerDraggable } from './schedulerDrag';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -55,30 +55,28 @@ export function useDraggableEvent(
     resizing: placeholderAction === 'internal-resize',
   };
 
+  const manager = Draggable.useDragDropManager();
+
   React.useEffect(() => {
     if (!isDraggable || !ref.current) {
       return;
     }
 
     // eslint-disable-next-line consistent-return
-    return draggable({
-      element: ref.current,
-      getInitialData: ({ input }) => getDragData(input),
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDragStart: ({ location }) => {
+    return registerSchedulerDraggable(manager, ref.current, {
+      getDragData,
+      onMoveStart: ({ location }) => {
         preview.actions.onDragStart(location);
       },
-      onDrag: ({ location }) => {
+      onMove: ({ location }) => {
         preview.actions.onDrag(location);
       },
-      onDrop: () => {
+      onMoveEnd: () => {
         store.setOccurrencePlaceholder(null);
         preview.actions.onDrop();
       },
     });
-  }, [ref, getDragData, isDraggable, store, preview.actions]);
+  }, [manager, ref, getDragData, isDraggable, store, preview.actions]);
 
   // A bound clipped by the collection range or hidden by the daily hour window does not
   // render at its real position, so it must not expose a resize handle: the drop math

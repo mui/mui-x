@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/utils/disable-native-drag-preview';
-import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/utils/prevent-unhandled';
-import type { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/types';
-import { isCoarsePointer } from '../internals/utils/pointer-utils';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { Draggable } from '@base-ui/react/draggable';
+import type { DragLocationHistory } from '@base-ui/react/draggable';
+
+const dialogDragKind = Draggable.createKind<undefined>('scheduler-dialog');
 
 const getDeltas = (location: DragLocationHistory) => {
   const deltaX = location.current.input.clientX - location.initial.input.clientX;
@@ -17,15 +17,16 @@ export function useDraggableDialog(
   handleRef: React.RefObject<HTMLElement | null>,
   mutateStyle: (style: string) => void,
 ) {
+  const manager = Draggable.useDragDropManager();
   const offset = React.useRef({ x: 0, y: 0 });
 
-  const resetDrag = React.useCallback(() => {
+  const resetDrag = useStableCallback(() => {
     offset.current = { x: 0, y: 0 };
     const element = elementRef.current;
     if (element) {
       mutateStyle('none');
     }
-  }, [elementRef, mutateStyle]);
+  });
 
   React.useEffect(() => {
     const element = elementRef.current;
@@ -33,27 +34,14 @@ export function useDraggableDialog(
       return undefined;
     }
 
-    // Skip draggable wiring on a coarse pointer: `draggable="true"` blocks typing into the dialog's
-    // form fields on touch, and native drag-and-drop never starts from touch anyway.
-    if (isCoarsePointer()) {
-      return undefined;
-    }
-
-    return draggable({
-      element,
-      dragHandle: handleRef.current || undefined,
-      canDrag: ({ input }) => {
-        const target = document.elementFromPoint(input.clientX, input.clientY);
-        return !target?.closest('input, textarea, select, [contenteditable="true"]');
-      },
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDragStart: () => {
-        preventUnhandled.start();
+    return manager.registerDraggable(element, () => ({
+      kind: dialogDragKind,
+      dragHandle: handleRef,
+      dragPreview: { disabled: true },
+      onMoveStart: () => {
         element.setAttribute('data-dragging', 'true');
       },
-      onDrag: ({ location }) => {
+      onMove: ({ location }) => {
         const { deltaX, deltaY } = getDeltas(location);
 
         const x = offset.current.x + deltaX;
@@ -65,17 +53,19 @@ export function useDraggableDialog(
           mutateStyle(transform);
         }
       },
-      onDrop: ({ location }) => {
-        preventUnhandled.stop();
+      onMoveEnd: ({ location, canceled }) => {
         element.removeAttribute('data-dragging');
 
         const { deltaX, deltaY } = getDeltas(location);
 
-        offset.current.x += deltaX;
-        offset.current.y += deltaY;
+        if (!canceled) {
+          offset.current.x += deltaX;
+          offset.current.y += deltaY;
+        }
+        mutateStyle(`translate(${offset.current.x}px, ${offset.current.y}px)`);
       },
-    });
-  }, [elementRef, mutateStyle, handleRef]);
+    }));
+  }, [manager, elementRef, mutateStyle, handleRef]);
 
   return resetDrag;
 }

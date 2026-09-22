@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
+import { Draggable } from '@base-ui/react/draggable';
+import { schedulerDragKind, schedulerDropTargetKind } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -29,30 +30,47 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, eventId);
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, eventId);
 
+  const manager = Draggable.useDragDropManager();
+
   React.useEffect(() => {
     if (!ref.current || !enabled) {
       return undefined;
     }
 
-    return dropTargetForElements({
-      element: ref.current,
-      getData: () => ({
-        dependencyTargetEventId: eventId,
-        dependencyTargetOccurrenceKey: occurrenceKey,
-        dependencyTargetResourceId: resourceId,
-        dependencyTargetSide: side,
-        dependencyTargetIsValid: !isRecurring && !isReadOnly,
+    return manager.registerDropTarget<typeof schedulerDragKind, Record<string, unknown>>(
+      ref.current,
+      () => ({
+        accept: schedulerDragKind,
+        kind: schedulerDropTargetKind,
+        payload: {
+          dependencyTargetEventId: eventId,
+          dependencyTargetOccurrenceKey: occurrenceKey,
+          dependencyTargetResourceId: resourceId,
+          dependencyTargetSide: side,
+          dependencyTargetIsValid: !isRecurring && !isReadOnly,
+        },
+        // Only the dependency gesture of this timeline lands here (rows keep handling
+        // the event drags — their allowlist ignores this source, and gestures born in
+        // another timeline on the page carry a different store), and an event cannot
+        // depend on itself.
+        canDrop: ({ source }) =>
+          isDependencyTerminalDrag(source.payload) &&
+          source.payload.storeContext === store &&
+          source.payload.eventId !== eventId,
       }),
-      // Only the dependency gesture of this timeline lands here (rows keep handling
-      // the event drags — their allowlist ignores this source, and gestures born in
-      // another timeline on the page carry a different store), and an event cannot
-      // depend on itself.
-      canDrop: ({ source }) =>
-        isDependencyTerminalDrag(source.data) &&
-        source.data.storeContext === store &&
-        source.data.eventId !== eventId,
-    });
-  }, [ref, store, enabled, isRecurring, isReadOnly, eventId, occurrenceKey, resourceId, side]);
+    );
+  }, [
+    manager,
+    ref,
+    store,
+    enabled,
+    isRecurring,
+    isReadOnly,
+    eventId,
+    occurrenceKey,
+    resourceId,
+    side,
+  ]);
 }
 
 export namespace useEventDependencyDropTarget {

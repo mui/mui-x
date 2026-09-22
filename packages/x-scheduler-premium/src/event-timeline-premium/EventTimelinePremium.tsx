@@ -1,4 +1,5 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -131,25 +132,27 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
 
   return (
-    <SchedulerStoreContext.Provider value={store as any}>
-      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
-        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventTimelinePremiumRoot
-                ref={forwardedRef}
-                className={clsx(classes.root, className)}
-                {...other}
-              >
-                <EventTimelinePremiumContent />
-                <ErrorContainer />
-                {watermark}
-              </EventTimelinePremiumRoot>
-            </SchedulerSlotsProvider>
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventTimelinePremiumStyledContext.Provider>
-    </SchedulerStoreContext.Provider>
+    <Draggable.Provider>
+      <SchedulerStoreContext.Provider value={store as any}>
+        <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+          <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+              <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+                <EventTimelinePremiumRoot
+                  ref={forwardedRef}
+                  className={clsx(classes.root, className)}
+                  {...other}
+                >
+                  <EventTimelinePremiumContent />
+                  <ErrorContainer />
+                  {watermark}
+                </EventTimelinePremiumRoot>
+              </SchedulerSlotsProvider>
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </SchedulerStoreContext.Provider>
+    </Draggable.Provider>
   );
 }) as EventTimelinePremiumComponent;
 

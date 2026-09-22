@@ -1,6 +1,7 @@
 'use client';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
+import { Draggable } from '@base-ui/react/draggable';
+import { schedulerDragKind } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/dependencyTerminalDragData';
 
@@ -14,18 +15,21 @@ export function useDependencyDragCursor(
   enabled: boolean,
   onCursorMove: (clientX: number, clientY: number) => void,
 ) {
+  const manager = Draggable.useDragDropManager();
   const store = useEventTimelinePremiumStoreContext();
 
   useIsoLayoutEffect(() => {
     if (!enabled) {
       return undefined;
     }
-    return monitorForElements({
-      canMonitor: ({ source }) =>
-        isDependencyTerminalDrag(source.data) && source.data.storeContext === store,
-      onDrag: ({ location }) => {
+    return manager.registerMonitor(() => ({
+      accept: schedulerDragKind,
+      onMove: ({ location, source }) => {
+        if (!isDependencyTerminalDrag(source.payload) || source.payload.storeContext !== store) {
+          return;
+        }
         onCursorMove(location.current.input.clientX, location.current.input.clientY);
       },
-    });
-  }, [enabled, onCursorMove, store]);
+    }));
+  }, [manager, enabled, onCursorMove, store]);
 }

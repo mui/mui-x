@@ -61,7 +61,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       };
     });
 
-    // Shared by both resize handlers running together: native drag-and-drop serves the mouse, the
+    // Shared by both resize handlers running together: Base UI serves the mouse, the
     // pointer handler serves touch/pen, so one handle resizes from whatever pointer the user has.
     const enabled = isResizeHandlerEnabled({
       side,

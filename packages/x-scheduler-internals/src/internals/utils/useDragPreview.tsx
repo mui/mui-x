@@ -52,7 +52,14 @@ export function useDragPreview(parameters: useDragPreview.Parameters): useDragPr
           !schedulerEventSelectors.canDropEventsToTheOutside(store.state)
         ) {
           shouldShowPreview = false;
-        } else if (location.current.dropTargets.some((el) => el.data.isSchedulerDropTarget)) {
+        } else if (
+          location.current.dropTargets.some(
+            (el) =>
+              typeof el.payload === 'object' &&
+              el.payload !== null &&
+              'isSchedulerDropTarget' in el.payload,
+          )
+        ) {
           shouldShowPreview = false;
         }
 
@@ -100,7 +107,7 @@ export namespace useDragPreview {
   }
 
   /**
-   * Copy pasted from Pragmatic Dnd internal types
+   * The subset of the drag location used to position and hide the preview.
    */
   export interface DragLocationHistory {
     current: {
@@ -108,8 +115,8 @@ export namespace useDragPreview {
         clientX: number;
         clientY: number;
       };
-      dropTargets: {
-        data: Record<string | symbol, unknown>;
+      dropTargets: readonly {
+        payload: unknown;
       }[];
     };
   }

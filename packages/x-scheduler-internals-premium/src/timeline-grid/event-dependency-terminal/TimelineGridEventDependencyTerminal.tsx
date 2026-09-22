@@ -52,7 +52,7 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
       resourceId,
       sourceSide: side,
       source: 'TimelineGridEventDependencyTerminal' as const,
-      // Identity discriminator: pragmatic monitors are page-global, so the monitor
+      // Identity discriminator: Base UI monitors are page-global, so the monitor
       // and the drop targets only react to gestures born in their own timeline.
       storeContext: store,
     }));

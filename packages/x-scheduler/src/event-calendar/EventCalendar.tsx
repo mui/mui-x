@@ -1,4 +1,5 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
@@ -58,19 +59,21 @@ const EventCalendar = React.forwardRef(function EventCalendar<
   const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
 
   return (
-    <SchedulerStoreContext.Provider value={store as any}>
-      <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
-        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventDialogProvider>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-              </EventDialogProvider>
-            </SchedulerSlotsProvider>
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventCalendarStyledContext.Provider>
-    </SchedulerStoreContext.Provider>
+    <Draggable.Provider>
+      <SchedulerStoreContext.Provider value={store as any}>
+        <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
+          <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+              <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+                <EventDialogProvider>
+                  <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+                </EventDialogProvider>
+              </SchedulerSlotsProvider>
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventCalendarStyledContext.Provider>
+      </SchedulerStoreContext.Provider>
+    </Draggable.Provider>
   );
 }) as EventCalendarComponent;
 

@@ -75,7 +75,7 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         event.preventDefault();
         store.deleteSelectedDependency();
       } else if (event.key === 'Escape') {
-        // Escape during an in-flight creation drag cancels the drag (pragmatic
+        // Escape during an in-flight creation drag cancels the drag (Base UI
         // handles it); one keystroke must not also drop the selection.
         if (store.state.dependencyCreation === null) {
           store.setSelectedDependencyId(null);
@@ -108,6 +108,12 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         ) {
           return;
         }
+      }
+      // Starting another dependency drag keeps the current selection, including if
+      // the new gesture is canceled with Escape.
+      const terminal = isElement(target) ? target.closest('[data-dependency-terminal]') : null;
+      if (terminal && elementRef.current?.closest('[role="grid"]')?.contains(terminal)) {
+        return;
       }
       store.setSelectedDependencyId(null);
       // Inside the timeline, dismissing the selection is this press's whole meaning:

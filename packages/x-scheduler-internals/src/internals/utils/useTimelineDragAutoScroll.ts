@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
-import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
+import { Draggable } from '@base-ui/react/draggable';
+import { schedulerDragKind } from './schedulerDrag';
 
 /**
- * Registers pragmatic-drag-and-drop autoscroll on the timeline scroller, with the
+ * Registers Base UI auto-scroll on the timeline scroller, with the
  * left-edge hitbox shifted to start at the right of the pinned title column.
  *
  * The scroller spans the entire content width — the title column is overlaid via
@@ -19,6 +20,7 @@ export function useTimelineDragAutoScroll(params: {
   pinnedLeftWidth: number;
 }) {
   const { scrollerRef, pinnedLeftWidth } = params;
+  const manager = Draggable.useDragDropManager();
 
   const pinnedLeftWidthRef = React.useRef(pinnedLeftWidth);
   pinnedLeftWidthRef.current = pinnedLeftWidth;
@@ -45,11 +47,13 @@ export function useTimelineDragAutoScroll(params: {
       });
     };
 
-    const cleanupAutoScroll = autoScrollForElements({ element: scroller });
+    const cleanupAutoScroll = manager.registerAutoScroller(scroller, () => ({
+      accept: schedulerDragKind,
+    }));
 
     return () => {
       cleanupAutoScroll();
       delete (scroller as Partial<HTMLElement>).getBoundingClientRect;
     };
-  }, [scrollerRef]);
+  }, [manager, scrollerRef]);
 }

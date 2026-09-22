@@ -1,6 +1,7 @@
 import { screen, act } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
+  cancelDrag,
   EventBuilder,
   simulateDragAndDrop,
   mockElementBounds,
@@ -11,14 +12,12 @@ import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { vi, describe, it, expect } from 'vitest';
 
 /**
- * Returns all time grid column drop targets (`[data-drop-target-for-element]`)
+ * Returns all time grid column drop targets (`[data-drop-target]`)
  * in DOM order (one per day of the rendered week).
  */
 function getTimeGridColumns(): HTMLElement[] {
   return Array.from(
-    document.querySelectorAll<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]`,
-    ),
+    document.querySelectorAll<HTMLElement>(`.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`),
   );
 }
 
@@ -63,6 +62,29 @@ const JULY_4_COLUMN_INDEX = 5;
 
 describe('WeekView - Drag and Drop', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
+
+  it('discards the event move when the pointer gesture is canceled', async () => {
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .title('Canceled meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .draggable(true)
+      .build();
+    render(<StandaloneWeekView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    mockAllTimeGridColumnBounds();
+    await act(async () => {
+      simulateDragAndDrop({
+        source: screen.getByRole('button', { name: /Canceled meeting/i }),
+        target: getDayGridCell(4),
+        hold: true,
+      });
+    });
+    cancelDrag();
+    expect(onEventsChange).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole('button', { name: /Canceled meeting/i }).hasAttribute('data-dragging'),
+    ).toBe(false);
+  });
 
   it('should move a time event to the day grid on the same day', async () => {
     const handleEventsChange = vi.fn();

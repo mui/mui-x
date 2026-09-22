@@ -67,8 +67,6 @@
     "directory": "packages/x-scheduler-internals"
   },
   "dependencies": {
-    "@atlaskit/pragmatic-drag-and-drop": "catalog:",
-    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^3.2.0",
     "@babel/runtime": "catalog:",
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",

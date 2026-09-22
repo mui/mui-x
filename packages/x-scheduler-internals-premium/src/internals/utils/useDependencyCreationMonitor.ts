@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-import type { DragLocationHistory, ElementDragType } from '@atlaskit/pragmatic-drag-and-drop/types';
+import { Draggable } from '@base-ui/react/draggable';
+import { schedulerDragKind, schedulerDropTargetKind } from '@mui/x-scheduler-internals/internals';
+import type { DragLocationHistory, DragSource } from '@base-ui/react/draggable';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -35,17 +36,20 @@ function getDependencyDropTarget(
   dropTargets: DragLocationHistory['current']['dropTargets'],
 ): DependencyDropTargetData | null {
   for (const dropTarget of dropTargets) {
-    const eventId = dropTarget.data.dependencyTargetEventId;
+    if (!schedulerDropTargetKind.matches(dropTarget)) {
+      continue;
+    }
+    const eventId = dropTarget.payload.dependencyTargetEventId;
     if (typeof eventId === 'string' || typeof eventId === 'number') {
-      const occurrenceKey = dropTarget.data.dependencyTargetOccurrenceKey;
-      const resourceId = dropTarget.data.dependencyTargetResourceId;
+      const occurrenceKey = dropTarget.payload.dependencyTargetOccurrenceKey;
+      const resourceId = dropTarget.payload.dependencyTargetResourceId;
       return {
         targetEventId: eventId,
         targetOccurrenceKey: typeof occurrenceKey === 'string' ? occurrenceKey : null,
         targetResourceId: typeof resourceId === 'string' ? resourceId : null,
         // The event body registers the start edge; only a terminal can target the end.
-        targetSide: dropTarget.data.dependencyTargetSide === 'end' ? 'end' : 'start',
-        isValid: dropTarget.data.dependencyTargetIsValid === true,
+        targetSide: dropTarget.payload.dependencyTargetSide === 'end' ? 'end' : 'start',
+        isValid: dropTarget.payload.dependencyTargetIsValid === true,
       };
     }
   }
@@ -69,9 +73,10 @@ const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
  * terminal.
  * A global monitor mounted by the grid root (rather than callbacks on the terminal's
  * draggable) so the gesture survives the source element being unmounted by
- * virtualization mid-drag; `canMonitor` scopes it back to this timeline's gestures.
+ * virtualization mid-drag. The source store scopes it to this timeline's gestures.
  */
 export function useDependencyCreationMonitor() {
+  const manager = Draggable.useDragDropManager();
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
 
@@ -84,10 +89,10 @@ export function useDependencyCreationMonitor() {
       source,
       location,
     }: {
-      source: ElementDragType['payload'];
+      source: DragSource<Record<string, unknown>>;
       location: DragLocationHistory;
     }) => {
-      if (!isDependencyTerminalDrag(source.data)) {
+      if (!isDependencyTerminalDrag(source.payload) || source.payload.storeContext !== store) {
         return;
       }
       // Invalid targets (recurring or read-only events) never highlight or snap the
@@ -95,10 +100,10 @@ export function useDependencyCreationMonitor() {
       const target = getDependencyDropTarget(location.current.dropTargets);
       const validTarget = target?.isValid ? target : null;
       store.setDependencyCreation({
-        sourceEventId: source.data.eventId,
-        sourceOccurrenceKey: source.data.occurrenceKey,
-        sourceResourceId: source.data.resourceId,
-        sourceSide: source.data.sourceSide,
+        sourceEventId: source.payload.eventId,
+        sourceOccurrenceKey: source.payload.occurrenceKey,
+        sourceResourceId: source.payload.resourceId,
+        sourceSide: source.payload.sourceSide,
         targetEventId: validTarget?.targetEventId ?? null,
         targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
         targetResourceId: validTarget?.targetResourceId ?? null,
@@ -106,30 +111,26 @@ export function useDependencyCreationMonitor() {
       });
     };
 
-    const cleanupMonitor = monitorForElements({
-      canMonitor: ({ source }) =>
-        isDependencyTerminalDrag(source.data) && source.data.storeContext === store,
-      onDragStart: updateCreation,
+    const cleanupMonitor = manager.registerMonitor(() => ({
+      accept: schedulerDragKind,
+      onMoveStart: updateCreation,
       // Only target changes touch the state: the cursor never enters it, the arrows
       // layer follows the pointer through the DOM.
-      onDropTargetChange: updateCreation,
-      onDrop: ({ source, location }) => {
-        // Canceling the drag (e.g. with Escape) fires `onDrop` with no drop target,
-        // so the gesture is discarded on the same path.
-        store.setDependencyCreation(null);
-
-        if (!isDependencyTerminalDrag(source.data)) {
+      onTargetChange: updateCreation,
+      onMoveEnd: ({ source, location, canceled }) => {
+        if (!isDependencyTerminalDrag(source.payload) || source.payload.storeContext !== store) {
           return;
         }
-        const target = getDependencyDropTarget(location.current.dropTargets);
+        store.setDependencyCreation(null);
+        const target = canceled ? null : getDependencyDropTarget(location.current.dropTargets);
         if (target === null) {
           return;
         }
 
         const result = store.addDependency({
-          source: source.data.eventId,
+          source: source.payload.eventId,
           target: target.targetEventId,
-          type: getDependencyType(source.data.sourceSide, target.targetSide),
+          type: getDependencyType(source.payload.sourceSide, target.targetSide),
         });
 
         if (result.status === 'rejected') {
@@ -146,7 +147,7 @@ export function useDependencyCreationMonitor() {
           );
         }
       },
-    });
+    }));
 
     return () => {
       cleanupMonitor();
@@ -154,5 +155,5 @@ export function useDependencyCreationMonitor() {
       // would otherwise freeze the rubber band and the drag-source highlight.
       store.setDependencyCreation(null);
     };
-  }, [store, enabled]);
+  }, [manager, store, enabled]);
 }

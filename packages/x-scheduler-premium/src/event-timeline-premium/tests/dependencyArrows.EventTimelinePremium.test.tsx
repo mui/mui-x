@@ -1,3 +1,4 @@
+import { cancelDrag, startDrag } from 'test/utils/scheduler/dnd';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -530,13 +531,18 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     }
 
     async function withDrag(source: Element, during: () => Promise<void>) {
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
+      const rect = source.getBoundingClientRect();
+      startDrag(source, {
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.top + rect.height / 2,
+        mockHitTest: false,
+      });
       // The drag start (and end) perturb layout; keep the observer deliveries acted.
       await absorbObserverFrames();
       try {
         await during();
       } finally {
-        fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+        cancelDrag();
         await absorbObserverFrames();
       }
     }
@@ -635,9 +641,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       await renderFarTimelineWithArrow();
       const probe = probeAt(getHitPath().getBoundingClientRect());
 
-      const terminal = document
-        .querySelector('[data-dependency-terminal]')!
-        .closest('[draggable="true"]')!;
+      const terminal = document.querySelector('[data-dependency-terminal]')!;
       await withDrag(terminal, async () => {
         await waitFor(() => {
           expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
@@ -664,8 +668,9 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       const probeButton = () => probeAt(getButton().getBoundingClientRect())();
       expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
 
-      // External-drag shaped: a pointer drag's own pointerdown would deselect first.
-      await withDrag(getEventElement(farPredecessor.title), async () => {
+      // A terminal press preserves the selection while creating another dependency.
+      const terminal = document.querySelector('[data-dependency-terminal]')!;
+      await withDrag(terminal, async () => {
         await waitFor(() => {
           expect(probeButton().closest('[data-dependency-interactions]')).to.equal(null);
         });

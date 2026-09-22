@@ -61,7 +61,7 @@ describe('CompactThreeDayView - touch resize & arming', () => {
     fireEvent.click(morning);
 
     // Map pointer Y to a time via the bounds of the event's own column, not a sibling day.
-    const column = morning.closest<HTMLElement>('[data-drop-target-for-element]')!;
+    const column = morning.closest<HTMLElement>('[data-drop-target]')!;
     mockElementBounds(column, { top: 0, height: 1440, width: 200 });
 
     const endHandle = getResizeHandle(morning, 'end');

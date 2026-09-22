@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/utils/disable-native-drag-preview';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import { registerSchedulerDraggable } from '../internals/utils/schedulerDrag';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../internals/utils/useDragPreview';
 
-export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
+const StandaloneEventInner = React.forwardRef(function StandaloneEventInner(
   componentProps: StandaloneEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -56,24 +56,22 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
     occurrenceKey: `external-${data.id}`,
   }));
 
+  const manager = Draggable.useDragDropManager();
+
   React.useEffect(() => {
-    return draggable({
-      element: ref.current!,
-      getInitialData: getDragData,
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDragStart: ({ location }) => {
+    return registerSchedulerDraggable(manager, ref.current!, {
+      getDragData,
+      onMoveStart: ({ location }) => {
         preview.actions.onDragStart(location);
       },
-      onDrag: ({ location }) => {
+      onMove: ({ location }) => {
         preview.actions.onDrag(location);
       },
-      onDrop: () => {
+      onMoveEnd: () => {
         preview.actions.onDrop();
       },
     });
-  }, [getDragData, preview.actions]);
+  }, [manager, getDragData, preview.actions]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -86,6 +84,17 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
       {element}
       {preview.element}
     </React.Fragment>
+  );
+});
+
+export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
+  props: StandaloneEvent.Props,
+  ref: React.ForwardedRef<HTMLDivElement>,
+) {
+  return (
+    <Draggable.Provider>
+      <StandaloneEventInner {...props} ref={ref} />
+    </Draggable.Provider>
   );
 });
 

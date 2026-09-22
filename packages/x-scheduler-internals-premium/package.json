@@ -49,7 +49,6 @@
     "directory": "packages/x-scheduler-internals-premium"
   },
   "dependencies": {
-    "@atlaskit/pragmatic-drag-and-drop": "catalog:",
     "@babel/runtime": "catalog:",
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",

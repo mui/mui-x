@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
+import { Draggable } from '@base-ui/react/draggable';
+import { schedulerDragKind, schedulerDropTargetKind } from './schedulerDrag';
 import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
@@ -52,6 +53,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
+  const manager = Draggable.useDragDropManager();
+
   React.useEffect(() => {
     if (!ref.current) {
       return undefined;
@@ -100,72 +103,78 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       };
     };
 
-    return dropTargetForElements({
-      element: ref.current,
-      getData: () => ({ isSchedulerDropTarget: true, surfaceType }),
-      canDrop: ({ source }) => {
-        if (!isValidDropTarget(source.data)) {
-          return false;
-        }
+    return manager.registerDropTarget<typeof schedulerDragKind, Record<string, unknown>>(
+      ref.current,
+      () => ({
+        accept: schedulerDragKind,
+        kind: schedulerDropTargetKind,
+        payload: { isSchedulerDropTarget: true, surfaceType },
+        canDrop: ({ source }) => {
+          if (!isValidDropTarget(source.payload)) {
+            return false;
+          }
 
-        if (
-          source.data.source === 'StandaloneEvent' &&
-          !schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
-        ) {
-          return false;
-        }
+          if (
+            source.payload.source === 'StandaloneEvent' &&
+            !schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
+          ) {
+            return false;
+          }
 
-        return true;
-      },
-      onDrag: ({ source, location }) => {
-        const newPlaceholder = getEventDropData({
-          data: source.data,
-          getDataFromInside,
-          getDataFromOutside,
-          input: location.current.input,
-        });
-        if (newPlaceholder) {
-          store.setOccurrencePlaceholder(newPlaceholder);
-        }
-      },
-      onDrop: ({ source, location }) => {
-        const dropData = getEventDropData({
-          data: source.data,
-          getDataFromInside,
-          getDataFromOutside,
-          input: location.current.input,
-        });
+          return true;
+        },
+        onDraggableMove: ({ source, location }) => {
+          const newPlaceholder = getEventDropData({
+            data: source.payload,
+            getDataFromInside,
+            getDataFromOutside,
+            input: location.current.input,
+          });
+          if (newPlaceholder) {
+            store.setOccurrencePlaceholder(newPlaceholder);
+          }
+        },
+        onDraggableDrop: ({ source, location }) => {
+          const dropData = getEventDropData({
+            data: source.payload,
+            getDataFromInside,
+            getDataFromOutside,
+            input: location.current.input,
+          });
 
-        const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
+          const placeholder =
+            dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
 
-        if (isInternalDragOrResizePlaceholder(placeholder)) {
-          applyInternalDragOrResizeOccurrencePlaceholder(
-            store,
-            placeholder,
-            addPropertiesToDroppedEvent,
-          );
-        } else if (placeholder?.type === 'external-drag') {
-          applyExternalDragOccurrencePlaceholder(store, placeholder, addPropertiesToDroppedEvent);
-        }
-      },
-      onDragLeave: () => {
-        const currentPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
-        if (currentPlaceholder?.surfaceType !== surfaceType) {
-          return;
-        }
+          if (isInternalDragOrResizePlaceholder(placeholder)) {
+            applyInternalDragOrResizeOccurrencePlaceholder(
+              store,
+              placeholder,
+              addPropertiesToDroppedEvent,
+            );
+          } else if (placeholder?.type === 'external-drag') {
+            applyExternalDragOccurrencePlaceholder(store, placeholder, addPropertiesToDroppedEvent);
+          }
+        },
+        onDraggableLeave: () => {
+          const currentPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
+          if (currentPlaceholder?.surfaceType !== surfaceType) {
+            return;
+          }
 
-        const type = currentPlaceholder.type;
-        const shouldHidePlaceholder =
-          type === 'external-drag' ||
-          (isInternalDragOrResizePlaceholder(currentPlaceholder) &&
-            schedulerEventSelectors.canDropEventsToTheOutside(store.state));
+          const type = currentPlaceholder.type;
+          const shouldHidePlaceholder =
+            type === 'external-drag' ||
+            (isInternalDragOrResizePlaceholder(currentPlaceholder) &&
+              schedulerEventSelectors.canDropEventsToTheOutside(store.state));
 
-        if (shouldHidePlaceholder) {
-          store.setOccurrencePlaceholder({ ...currentPlaceholder, isHidden: true });
-        }
-      },
-    });
+          if (shouldHidePlaceholder) {
+            store.setOccurrencePlaceholder({ ...currentPlaceholder, isHidden: true });
+          }
+        },
+      }),
+    );
   }, [
+    manager,
     ref,
     surfaceType,
     resourceId,

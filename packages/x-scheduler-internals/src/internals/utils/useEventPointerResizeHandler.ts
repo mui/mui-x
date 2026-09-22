@@ -152,8 +152,8 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
     };
 
     const onPointerDown = (event: PointerEvent) => {
-      // Mouse resizes via the native drag-and-drop handler (sharing this handle), so let it fall
-      // through. Touch and pen resize here, since native drag-and-drop doesn't start from a touch.
+      // Mouse resizes through the Base UI drag engine. Touch and pen keep the direct
+      // resize gesture, which starts immediately and clamps to this surface.
       if (event.pointerType === 'mouse') {
         return;
       }
