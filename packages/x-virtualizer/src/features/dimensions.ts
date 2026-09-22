@@ -753,10 +753,20 @@ function useColumnsMeta(
       return;
     }
 
-    store.set('columnsMeta', columnsMeta);
-    if (didWidthsChange) {
+    // The dimensions derive from the total width. When they change, write the meta without
+    // notifying and let `updateDimensions` publish it with them, so that the listeners run once
+    // and never see the new columns with the previous dimensions.
+    const { dimensions } = store.state;
+    if (
+      dimensions.isReady &&
+      roundToDecimalPlaces(columnsMeta.totalWidth, 1) !== dimensions.contentSize.width
+    ) {
+      store.state = { ...store.state, columnsMeta };
       updateDimensions();
+      return;
     }
+
+    store.set('columnsMeta', columnsMeta);
   }, [store, columns, pinnedColumns, updateDimensions]);
 }
 
