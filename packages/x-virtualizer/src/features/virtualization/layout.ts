@@ -80,12 +80,11 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       api.updateDimensions,
     );
 
-    store.state.virtualization.context = {
-      scrollerRef,
-      containerRef,
-      scrollbarVerticalRef,
-      scrollbarHorizontalRef,
-    };
+    // A stable context keeps the props selectors that depend on it memoized.
+    store.state.virtualization.context = React.useMemo(
+      () => ({ scrollerRef, containerRef, scrollbarVerticalRef, scrollbarHorizontalRef }),
+      [scrollerRef, containerRef, scrollbarVerticalRef, scrollbarHorizontalRef],
+    );
   }
 
   static selectors = {
@@ -255,9 +254,8 @@ export class LayoutList extends Layout<ListElements> {
 
     const mergedRef = useForkRef(scrollerRef, containerRef);
 
-    store.state.virtualization.context = {
-      mergedRef,
-    };
+    // A stable context keeps the props selectors that depend on it memoized.
+    store.state.virtualization.context = React.useMemo(() => ({ mergedRef }), [mergedRef]);
   }
 
   static selectors = {
@@ -376,9 +374,8 @@ export class LayoutListSticky extends Layout<ListElements> {
 
     const mergedRef = useForkRef(scrollerRef, containerRef);
 
-    store.state.virtualization.context = {
-      mergedRef,
-    };
+    // A stable context keeps the props selectors that depend on it memoized.
+    store.state.virtualization.context = React.useMemo(() => ({ mergedRef }), [mergedRef]);
   }
 
   static selectors = {
@@ -655,12 +652,11 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
       api.updateDimensions,
     );
 
-    store.state.virtualization.context = {
-      scrollerRef,
-      containerRef,
-      scrollbarVerticalRef,
-      scrollbarHorizontalRef,
-    };
+    // A stable context keeps the props selectors that depend on it memoized.
+    store.state.virtualization.context = React.useMemo(
+      () => ({ scrollerRef, containerRef, scrollbarVerticalRef, scrollbarHorizontalRef }),
+      [scrollerRef, containerRef, scrollbarVerticalRef, scrollbarHorizontalRef],
+    );
   }
 
   static selectors = {
