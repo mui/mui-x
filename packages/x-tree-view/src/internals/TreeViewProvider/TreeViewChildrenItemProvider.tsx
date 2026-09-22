@@ -21,6 +21,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
 
   const { store, rootRef } = useTreeViewContext<SimpleTreeViewStore<any>>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
+  const [, refreshChildrenIds] = React.useReducer((version: number) => version + 1, 0);
 
   React.useEffect(() => {
     if (!rootRef.current) {
@@ -65,9 +66,18 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
 
   const value = React.useMemo<TreeViewChildrenItemContextValue>(
     () => ({
-      registerChild: (childIdAttribute, childItemId) =>
-        childrenIdAttrToIdRef.current.set(childIdAttribute, childItemId),
-      unregisterChild: (childIdAttribute) => childrenIdAttrToIdRef.current.delete(childIdAttribute),
+      // React hides a suspended subtree and reveals it again without rerendering this
+      // provider, so writing to the ref is not enough: the rerender is what makes the
+      // effect above recompute the order. Without it, a child that comes back is on
+      // the screen but missing from the order, and keyboard navigation skips over it.
+      registerChild: (childIdAttribute, childItemId) => {
+        childrenIdAttrToIdRef.current.set(childIdAttribute, childItemId);
+        refreshChildrenIds();
+      },
+      unregisterChild: (childIdAttribute) => {
+        childrenIdAttrToIdRef.current.delete(childIdAttribute);
+        refreshChildrenIds();
+      },
       parentId: itemId,
     }),
     [itemId],
