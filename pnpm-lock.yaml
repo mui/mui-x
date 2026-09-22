@@ -358,7 +358,7 @@ catalogs:
       version: 4.4.5
     reselect:
       specifier: ^5.2.0
-      version: 5.2.0
+      version: 5.3.0
     rimraf:
       specifier: ^6.1.3
       version: 6.1.3
@@ -1010,7 +1010,7 @@ importers:
         version: 15.8.1
       reselect:
         specifier: 'catalog:'
-        version: 5.2.0
+        version: 5.3.0
       use-sync-external-store:
         specifier: 'catalog:'
         version: 1.7.0(react@19.3.0)
@@ -1843,7 +1843,7 @@ importers:
         version: 9.4.0(@types/react@19.3.0)(react@19.3.0)
       reselect:
         specifier: 'catalog:'
-        version: 5.2.0
+        version: 5.3.0
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -10256,9 +10256,6 @@ packages:
   reselect@4.1.8:
     resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
 
-  reselect@5.2.0:
-    resolution: {integrity: sha512-AgZ3UOZm3YndfrJ4OYjgrT7bmCm/1iqkjvEfH/oYjzh6PD2qw4QuT3jjnXIrpdt4MTpMXclMT3lXbmRY+XRakw==}
-
   reselect@5.3.0:
     resolution: {integrity: sha512-XGoLeRAVzUTcJ1qkxPQhDJyIZ5d6zzZD9nT7AEZOaaU9UbWclhycElmhO+VD5bFeLuzhPBaOV2oXC8uG35ZSpg==}
 
@@ -14010,7 +14007,7 @@ snapshots:
       '@babel/runtime': 7.29.7
       '@mui/utils': 7.3.11(@types/react@19.3.0)(react@19.3.0)
       react: 19.3.0
-      reselect: 5.2.0
+      reselect: 5.3.0
       use-sync-external-store: 1.7.0(react@19.3.0)
     transitivePeerDependencies:
       - '@types/react'
@@ -20449,8 +20446,6 @@ snapshots:
   require-from-string@2.0.2: {}
 
   reselect@4.1.8: {}
-
-  reselect@5.2.0: {}
 
   reselect@5.3.0: {}
 
