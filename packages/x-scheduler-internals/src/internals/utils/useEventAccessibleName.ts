@@ -8,7 +8,8 @@ import {
   schedulerPreferenceSelectors,
   schedulerResourceSelectors,
 } from '../../scheduler-selectors';
-import { getPrimaryResourceId } from './event-utils';
+import { generateOccurrenceFromEvent, getPrimaryResourceId } from './event-utils';
+import type { useOriginalOccurrence } from './useOriginalOccurrence';
 import {
   DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT,
   getEventAccessibleName,
@@ -69,4 +70,37 @@ export function useEventAccessibleName(
       resourceName,
     });
   }, [occurrence, adapter, ampm, localeText, isRecurring, resourceName]);
+}
+
+export interface UseDefaultEventAccessibleNameParameters
+  extends
+    Pick<UseEventAccessibleNameParameters, 'includeResource'>,
+    useOriginalOccurrence.Parameters {
+  /**
+   * `true` when the consumer passed its own `aria-label` or `aria-labelledby`, so the default is skipped.
+   */
+  hasCustomLabel: boolean;
+}
+
+/**
+ * The English default name a headless event primitive gives itself. Resolves the occurrence from
+ * the store, and returns `undefined` when the event is not there or the consumer passed a label.
+ */
+export function useDefaultEventAccessibleName(
+  parameters: UseDefaultEventAccessibleNameParameters,
+): string | undefined {
+  const { eventId, occurrenceKey, start, end, dataTimezone, includeResource, hasCustomLabel } =
+    parameters;
+  const store = useSchedulerStoreContext();
+  const event = useStore(store, schedulerEventSelectors.processedEvent, eventId);
+
+  const occurrence = React.useMemo(
+    () =>
+      event && !hasCustomLabel
+        ? generateOccurrenceFromEvent({ event, eventId, occurrenceKey, start, end, dataTimezone })
+        : null,
+    [event, hasCustomLabel, eventId, occurrenceKey, start, end, dataTimezone],
+  );
+
+  return useEventAccessibleName({ occurrence, includeResource });
 }

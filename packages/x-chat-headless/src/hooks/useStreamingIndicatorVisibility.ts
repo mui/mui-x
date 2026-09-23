@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { createSelectorMemoized, useStore } from '@mui/x-internals/store';
+import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { chatSelectors } from '../selectors';
 import { useChatStore } from './useChatStore';
 import type { ChatInternalState } from '../types/chat-state';

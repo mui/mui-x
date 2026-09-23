@@ -56,7 +56,6 @@ const MoreEventsPopoverBody = styled('div', {
 
 interface MoreEventsData {
   occurrences: SchedulerEventOccurrence[];
-  count: number;
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
 
@@ -198,7 +197,6 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
           open={state.open}
           anchor={state.anchorEl}
           occurrences={state.data.occurrences}
-          count={state.data.count}
           day={state.data.day}
           onClose={closePopover}
         />
@@ -222,7 +220,7 @@ export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
   return React.cloneElement(children as React.ReactElement<any>, {
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      openPopover(event.currentTarget, { occurrences, count: occurrences.length, day });
+      openPopover(event.currentTarget, { occurrences, day });
     },
   });
 }

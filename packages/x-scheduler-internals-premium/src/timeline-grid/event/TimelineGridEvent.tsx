@@ -13,14 +13,12 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   useDraggableEvent,
-  generateOccurrenceFromEvent,
+  useOriginalOccurrence,
   computeElementPositionInCollection,
   dateToTimelineAxisOffsetMs,
-  useEventAccessibleName,
 } from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
@@ -53,6 +51,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     // Internal props
     start,
     end,
+    dataTimezone,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -80,7 +79,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const event = useStore(store, schedulerEventSelectors.processedEvent, eventId);
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const dependencyDropTarget = useStore(
     store,
@@ -90,17 +88,12 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   );
 
   // Feature hooks
-  const originalOccurrence = React.useMemo(
-    () => generateOccurrenceFromEvent({ event: event!, eventId, occurrenceKey, start, end }),
-    [event, eventId, occurrenceKey, start, end],
-  );
-
-  const hasCustomLabel =
-    elementProps['aria-label'] != null || elementProps['aria-labelledby'] != null;
-  // The row title already carries the resource, so the name leaves it out.
-  const accessibleName = useEventAccessibleName({
-    occurrence: event && !hasCustomLabel ? originalOccurrence : null,
-    includeResource: false,
+  const getOriginalOccurrence = useOriginalOccurrence({
+    eventId,
+    occurrenceKey,
+    start,
+    end,
+    dataTimezone,
   });
 
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
@@ -111,12 +104,11 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         -dateToTimelineAxisOffsetMs(adapter, config, start.value),
         0,
       );
-
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
       return {
         eventId,
         occurrenceKey,
-        originalOccurrence,
+        originalOccurrence: getOriginalOccurrence(),
         start: start.value,
         end: end.value,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
@@ -185,7 +177,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     props: [
       elementProps,
       {
-        ...(hasCustomLabel ? undefined : { 'aria-label': accessibleName }),
         style: {
           [TimelineGridEventCssVars.xPosition]: `${position * 100}%`,
           [TimelineGridEventCssVars.width]: `${duration * 100}%`,
@@ -216,7 +207,8 @@ export namespace TimelineGridEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {
+      useDraggableEvent.PublicParameters,
+      Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
     elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 
