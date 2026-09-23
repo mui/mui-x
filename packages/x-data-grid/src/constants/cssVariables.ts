@@ -62,6 +62,7 @@ const keys = {
     base: '--DataGrid-t-radius-base',
   },
   focus: {
+    outlineColor: '--DataGrid-t-focus-outline-color',
     outlineWidth: '--DataGrid-t-focus-outline-width',
   },
   typography: {

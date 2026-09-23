@@ -64,8 +64,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
       ? (t.vars || t).palette.action.hover
       : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 800 : 100],
     [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
-    [k.colors.interactive.focus]:
-      focusRing?.outlineColor ?? removeOpacity((t.vars || t).palette.primary.main),
+    [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
     [k.colors.interactive.disabled]: removeOpacity((t.vars || t).palette.action.disabled),
     [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
@@ -79,6 +78,8 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
     [k.radius.base]: radius,
 
+    [k.focus.outlineColor]:
+      focusRing?.outlineColor ?? removeOpacity((t.vars || t).palette.primary.main),
     [k.focus.outlineWidth]: focusOutlineWidth(focusRing),
 
     [k.typography.fontFamily.base]: t.typography.fontFamily as string,
