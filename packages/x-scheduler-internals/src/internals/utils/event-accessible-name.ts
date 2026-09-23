@@ -47,8 +47,7 @@ export interface SchedulerEventAccessibleNameLocaleText {
   eventAriaLabel: (parts: SchedulerEventAriaLabelParts) => string;
 }
 
-// Kept in sync by hand with `enUSEvent` in `@mui/x-scheduler/locales/enUS`: the l10n script only
-// reads object literals, so the styled package cannot reuse this constant.
+// Mirrors `enUSEvent` in `@mui/x-scheduler/locales`, which the l10n script needs as a literal.
 export const DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT: SchedulerEventAccessibleNameLocaleText = {
   eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
   eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,

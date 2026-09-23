@@ -65,7 +65,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     dataTimezone,
   });
 
-  // Labels set on the `render` element are not detected.
   const hasCustomLabel = Boolean(elementProps['aria-label'] || elementProps['aria-labelledby']);
   const accessibleName = useDefaultEventAccessibleName({
     eventId,

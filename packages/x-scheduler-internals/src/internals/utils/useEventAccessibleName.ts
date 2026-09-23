@@ -71,15 +71,14 @@ export interface UseDefaultEventAccessibleNameParameters extends useOriginalOccu
    */
   includeResource: boolean;
   /**
-   * `false` skips the store reads and returns `undefined`: the consumer passed its own label, or
-   * the element is not interactive.
+   * `false` skips the store reads, e.g. when the consumer passed its own label.
    */
   enabled: boolean;
 }
 
 /**
  * English default name of a headless event primitive, resolved from the store.
- * Returns `undefined` when disabled or when the event is not in the store (a placeholder).
+ * `undefined` when disabled or when the event is not in the store.
  */
 export function useDefaultEventAccessibleName(
   parameters: UseDefaultEventAccessibleNameParameters,
