@@ -42,6 +42,8 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Co',
   recurrenceRepeatLabel: 'Powtarzaj',
   recurrenceTabLabel: 'Powtarzanie',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Powtarzanie',
   recurrenceWeeklyFrequencyLabel: 'tygodnie',
   recurrenceWeeklyPresetLabel: ({ weekday }) => {
@@ -69,6 +71,8 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   noResourceAriaLabel: 'Brak określonego zasobu',
   selectColorAriaLabel: (color) => `Wybierz ${color} jako kolor wydarzenia`,
   resourceLabel: 'Zasób',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   requiredResourceError: 'Należy wybrać zasób.',
   saveChanges: 'Zapisz',
   startDateAfterEndDateError: 'Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.',

@@ -67,7 +67,7 @@ When you need a custom derived value, use the store directly:
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 
 function MessageCounter() {
   const store = useChatStore();

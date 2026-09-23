@@ -10,7 +10,7 @@ import {
   UseTreeItemContentSlotOwnProps,
   UseTreeItemStatus,
 } from '@mui/x-tree-view/useTreeItem';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../../datasets/disabledAndEditableProducts';
 
 interface CustomContentProps extends UseTreeItemContentSlotOwnProps {
   children: React.ReactNode;

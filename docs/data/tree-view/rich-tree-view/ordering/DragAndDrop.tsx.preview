@@ -1,5 +1,5 @@
 <RichTreeViewPro
-  items={ITEMS}
+  items={MUI_X_PRODUCTS}
   itemsReordering
   defaultExpandedItems={['grid', 'pickers']}
 />

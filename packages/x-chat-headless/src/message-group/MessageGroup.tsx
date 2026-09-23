@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatStore } from '../hooks/useChatStore';
 import { useMessage, useMessageIds } from '../hooks/useMessage';
 import { useMessageAuthor } from '../hooks/useMessageAuthor';
@@ -16,7 +16,7 @@ import { MessageAvatar } from '../message/MessageAvatar';
 import { MessageContent } from '../message/MessageContent';
 import { MessageMeta } from '../message/MessageMeta';
 import { MessageRoot } from '../message/MessageRoot';
-import { type MessageGroupOwnerState } from './messageGroup.types';
+import type { MessageGroupOwnerState } from './messageGroup.types';
 
 /**
  * A function that maps a message to a group key.

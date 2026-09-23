@@ -87,6 +87,10 @@ export interface MinimalTreeViewParameters<
   Multiple extends boolean | undefined,
 > {
   /**
+   * The id used to build the id attributes of the items when the `id` parameter is not provided.
+   */
+  defaultId: string | undefined;
+  /**
    * Whether the layout is right-to-left.
    */
   isRtl: boolean;

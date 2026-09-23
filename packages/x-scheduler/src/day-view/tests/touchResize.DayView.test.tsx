@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createMatchMedia,
@@ -10,7 +9,7 @@ import {
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 /**
  * Arming and pointer resize are device-adaptive, so they work in the normal Day View too. Driven via
@@ -35,7 +34,7 @@ describe('DayView - touch resize', () => {
     )!;
   }
 
-  function renderResizableEvent(onEventsChange = spy()) {
+  function renderResizableEvent(onEventsChange = vi.fn()) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -74,8 +73,8 @@ describe('DayView - touch resize', () => {
       simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
     });
 
-    expect(onEventsChange.callCount).to.equal(1);
-    const updatedEvents = onEventsChange.firstCall.args[0];
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = onEventsChange.mock.calls[0][0];
     // Start stays at 10:00, end moves later than 11:00.
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
@@ -122,7 +121,7 @@ describe('DayView - touch resize', () => {
       });
     });
 
-    expect(onEventsChange.callCount).to.equal(0);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).to.equal(null);
   });
 });

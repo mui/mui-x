@@ -922,10 +922,13 @@ describe('recurring-events/updateRecurringEvent', () => {
         title: 'Edit only this',
       });
 
-      // EXDATE should match America/New_York startOfDay, not the display timezone shifted date
-      expect(
-        adapter.isSameDay(updated.updated![0].exDates![0], adapter.startOfDay(occurrenceStart)),
-      ).to.equal(true);
+      // EXDATE should match America/New_York startOfDay, not the day of the zone the
+      // instant happens to carry.
+      expect(adapter.getTime(updated.updated![0].exDates![0])).to.equal(
+        adapter.getTime(
+          adapter.startOfDay(adapter.setTimezone(occurrenceStart, 'America/New_York')),
+        ),
+      );
     });
 
     it('should delete the original series when only-this empties a finite series', () => {

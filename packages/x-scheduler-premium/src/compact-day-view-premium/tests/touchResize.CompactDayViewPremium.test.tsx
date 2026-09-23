@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import {
+  adapter,
   createSchedulerRenderer,
   EventBuilder,
   mockElementBounds,
@@ -16,12 +17,13 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 /**
  * Resizing a recurring event commits through the recurring scope dialog. Whichever scope is chosen,
- * the resized occurrence must stay armed afterwards (toolbar + selection outline), even when the scope
- * detaches it onto a freshly-created event whose occurrence key differs from the original.
+ * a same-day resize keeps the resized occurrence armed afterwards (toolbar + selection outline), even
+ * when the scope detaches it onto a freshly-created event whose occurrence key differs from the
+ * original. (An `all` change that moves the occurrence off its day disarms it instead.)
  */
 describe('CompactDayViewPremium - touch resize (recurring)', () => {
   const { render } = createSchedulerRenderer({
@@ -44,15 +46,18 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
   function ControlledView({
     initialEvent,
     onChange,
+    displayTimezone,
   }: {
     initialEvent: SchedulerEvent;
     onChange: (events: SchedulerEvent[]) => void;
+    displayTimezone?: TemporalTimezone;
   }) {
     const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
     return (
       <StandaloneCompactDayViewPremium
         events={events}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone={displayTimezone}
         onEventsChange={(next) => {
           setEvents(next);
           onChange(next);
@@ -61,17 +66,27 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     );
   }
 
-  function renderResizableRecurringEvent() {
-    const onEventsChange = spy();
+  function renderResizableRecurringEvent({
+    start = '2025-07-03T10:00:00Z',
+    displayTimezone,
+  }: { start?: string; displayTimezone?: TemporalTimezone } = {}) {
+    const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
       .title('Daily Standup')
-      .singleDay('2025-07-03T10:00:00Z', 60)
+      .withDataTimezone('UTC')
+      .singleDay(start, 60)
       .recurrent('DAILY')
       .resizable(true)
       .build();
 
-    const { user } = render(<ControlledView initialEvent={event} onChange={onEventsChange} />);
+    const { user } = render(
+      <ControlledView
+        initialEvent={event}
+        onChange={onEventsChange}
+        displayTimezone={displayTimezone}
+      />,
+    );
 
     // Geometry resolver maps pointer Y to a time via the column's bounds.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
@@ -81,8 +96,8 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
 
   // Whatever the scope, some resulting event must carry the resized 16:00 end — else the re-key/detach
   // dropped it.
-  function expectResizedEndCommitted(onEventsChange: ReturnType<typeof spy>) {
-    const updatedEvents: SchedulerEvent[] = onEventsChange.lastCall.args[0];
+  function expectResizedEndCommitted(onEventsChange: ReturnType<typeof vi.fn>) {
+    const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall?.[0];
     const committedResizedEnd = updatedEvents.some(
       (item) => new Date(item.end).getUTCHours() === 16,
     );
@@ -121,6 +136,34 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     expect(getEventElement()).to.have.attribute('data-armed');
     // ...and the detached occurrence kept the resized end.
     expectResizedEndCommitted(onEventsChange);
+  });
+
+  it('should exclude the resized occurrence of its own day when resized from another timezone', async () => {
+    // The visible day is July 2 in New York; the July 3 02:00 UTC occurrence shows on it at 22:00.
+    const { user, onEventsChange } = renderResizableRecurringEvent({
+      start: '2025-07-03T02:00:00Z',
+      displayTimezone: 'America/New_York',
+    });
+    const eventElement = armEvent();
+
+    const startHandle = getResizeHandle(eventElement, 'start');
+    await act(async () => {
+      simulatePointerResize({ handle: startHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+    });
+
+    await screen.findByText(/Apply this change to:/i);
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    // The exception lands on the occurrence's own July 3rd, not the displayed July 2nd.
+    const updatedEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+    const series = updatedEvents.find((item) => item.id === 'event-1')!;
+    expect(series.exDates).to.have.length(1);
+    expect(
+      adapter.formatByString(adapter.date(String(series.exDates![0]), 'UTC'), 'yyyy-MM-dd'),
+    ).to.equal('2025-07-03');
+    const detached = updatedEvents.find((item) => item.id !== 'event-1')!;
+    expect(detached.rrule).to.equal(undefined);
+    expect(new Date(detached.start).toISOString()).to.equal('2025-07-02T20:00:00.000Z');
   });
 
   it('should keep the resized occurrence armed when applying the change to all events', async () => {

@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import * as React from 'react';
 import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
@@ -9,7 +9,7 @@ import {
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 /**
  * Touch resize uses pointer events, not native drag-and-drop, so it is driven here via
@@ -24,7 +24,7 @@ describe('CompactDayView - touch resize', () => {
     )!;
   }
 
-  function renderResizableEvent(onEventsChange = spy()) {
+  function renderResizableEvent({ onEventsChange = vi.fn(), controlled = false } = {}) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -32,8 +32,27 @@ describe('CompactDayView - touch resize', () => {
       .resizable(true)
       .build();
 
+    // Feeds the changes back into the `events` prop, like a real host does.
+    function ControlledHost() {
+      const [events, setEvents] = React.useState([event]);
+      return (
+        <StandaloneCompactDayView
+          events={events}
+          resources={[]}
+          onEventsChange={(next: typeof events) => {
+            onEventsChange(next);
+            setEvents(next);
+          }}
+        />
+      );
+    }
+
     const { user } = render(
-      <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
+      controlled ? (
+        <ControlledHost />
+      ) : (
+        <StandaloneCompactDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />
+      ),
     );
 
     // Geometry resolver maps pointer Y to a time via the column's bounds.
@@ -68,8 +87,8 @@ describe('CompactDayView - touch resize', () => {
       simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
     });
 
-    expect(onEventsChange.callCount).to.equal(1);
-    const updatedEvents = onEventsChange.firstCall.args[0];
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = onEventsChange.mock.calls[0][0];
     // Start stays at 10:00, end moves later than 11:00.
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
@@ -85,35 +104,41 @@ describe('CompactDayView - touch resize', () => {
       simulatePointerResize({ handle: startHandle, to: { clientY: clientYForTime(0, 24, 8) } });
     });
 
-    expect(onEventsChange.callCount).to.equal(1);
-    const updatedEvents = onEventsChange.firstCall.args[0];
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = onEventsChange.mock.calls[0][0];
     // End stays at 11:00, start moves earlier than 10:00.
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(8);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(11);
   });
 
-  it('should keep a prior armed resize when an unrelated field is then edited from the form', async () => {
-    const { onEventsChange, user } = renderResizableEvent();
-    const eventElement = armEvent();
+  // Controlled, the resized end survives through the model; uncontrolled (the host has not
+  // fed the change back yet), the form resends the bound the snapshot is ahead on.
+  [true, false].forEach((controlled) => {
+    it(`should keep a prior armed resize when an unrelated field is then edited from the form (${controlled ? 'controlled' : 'uncontrolled'})`, async () => {
+      const { onEventsChange, user } = renderResizableEvent({ controlled });
+      const eventElement = armEvent();
 
-    const endHandle = getResizeHandle(eventElement, 'end');
-    await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      const endHandle = getResizeHandle(eventElement, 'end');
+      await act(async () => {
+        simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      });
+
+      // Open the editing form from the armed toolbar and change only the title.
+      fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+      // The form must be seeded with the resized end, not the pre-resize model value.
+      expect(screen.getByLabelText(/end time/i)).to.have.value('16:00');
+      fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
+        target: { value: 'Renamed Meeting' },
+      });
+      // The form validates asynchronously before submitting, so let the submit settle.
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updatedEvents = onEventsChange.mock.lastCall?.[0];
+      // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
+      expect(updatedEvents[0].title).to.equal('Renamed Meeting');
+      expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
+      expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
     });
-
-    // Open the editing form from the armed toolbar and change only the title.
-    fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
-    fireEvent.change(screen.getByRole('textbox', { name: /Event title/i }), {
-      target: { value: 'Renamed Meeting' },
-    });
-    // The form validates asynchronously before submitting, so let the submit settle.
-    await user.click(screen.getByRole('button', { name: 'Save' }));
-
-    const updatedEvents = onEventsChange.lastCall.args[0];
-    // Saving the form must preserve the resized end time, not revert it to the pre-resize value.
-    expect(updatedEvents[0].title).to.equal('Renamed Meeting');
-    expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
-    expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
 
   it('should remove the resize handles once the armed event is opened in the editing form', () => {
@@ -147,6 +172,6 @@ describe('CompactDayView - touch resize', () => {
       });
     });
 
-    expect(onEventsChange.callCount).to.equal(0);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
   });
 });

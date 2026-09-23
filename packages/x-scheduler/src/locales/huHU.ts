@@ -42,6 +42,8 @@ const huHUDialog: Partial<EventEditingLocaleText> = {
   // recurrenceEveryLabel: 'Every',
   // recurrenceRepeatLabel: 'Repeat',
   // recurrenceTabLabel: 'Recurrence',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
   // recurrenceWeeklyPresetLabel: ({
@@ -60,6 +62,8 @@ const huHUDialog: Partial<EventEditingLocaleText> = {
   // noResourceAriaLabel: 'No specific resource',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
   // startDateAfterEndDateError: 'End date cannot be before start date.',

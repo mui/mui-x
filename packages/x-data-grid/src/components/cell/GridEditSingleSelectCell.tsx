@@ -19,7 +19,7 @@ export interface GridEditSingleSelectCellProps extends GridRenderEditCellParams 
    * Callback called when the value is changed by the user.
    * @param {Event<any>} event The event source of the callback.
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange?: (
     event: Parameters<NonNullable<GridSlotProps['baseSelect']['onOpen']>>[0],
@@ -100,11 +100,11 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       getOptionValue,
     );
 
+    await apiRef.current.setEditCellValue({ id, field, value: formattedTargetValue }, event);
+
     if (onValueChange) {
       await onValueChange(event, formattedTargetValue);
     }
-
-    await apiRef.current.setEditCellValue({ id, field, value: formattedTargetValue }, event);
   };
 
   const handleClose = (event: React.KeyboardEvent, reason: string) => {
@@ -221,7 +221,7 @@ GridEditSingleSelectCell.propTypes /* remove-proptypes */ = {
    * Callback called when the value is changed by the user.
    * @param {Event<any>} event The event source of the callback.
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange: PropTypes.func,
   /**

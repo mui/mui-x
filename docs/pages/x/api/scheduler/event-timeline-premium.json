@@ -132,6 +132,18 @@
       "description": "The content of the \"General\" tab of the event editing surface:\nthe dialog on regular views, the compact editing drawer on compact views.\nIt is rendered inside the tab panel, so it must not render a tab panel of its own.\nReturn a fragment rather than a wrapper element to keep the spacing between the sections.",
       "default": "EventDialogGeneralTabContent",
       "class": null
+    },
+    {
+      "name": "timelineEventContent",
+      "description": "The content of an event block.\nIt replaces the title text and is rendered inside the block, so the block keeps its\ngeometry, its drag and resize handles, and its button semantics.\nThe content is part of the accessible name of the event.",
+      "default": "the occurrence title",
+      "class": null
+    },
+    {
+      "name": "timelineResourceTitle",
+      "description": "The content of a resource title cell.\nIt replaces the title text and is rendered next to the legend color and the collapse toggle.\nThe content is part of the accessible name of every event in the row.",
+      "default": "the resource title",
+      "class": null
     }
   ],
   "classes": [
@@ -418,6 +430,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventDialogRecurrenceTimezoneLabel",
+      "className": "MuiEventTimelinePremium-eventDialogRecurrenceTimezoneLabel",
+      "description": "Styles applied to the recurrence timezone note and label suffix elements.",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialogRepeatSectionContent",
       "className": "MuiEventTimelinePremium-eventDialogRepeatSectionContent",
       "description": "Styles applied to the event dialog repeat section content element.",
@@ -694,5 +712,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler-premium/src/event-timeline-premium/EventTimelinePremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/lazy-loading/\">Event Timeline - Lazy loading events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-scheduler/components/event-dialog/\">Scheduler - Event dialog</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/drag-interactions/\">Event Timeline - Drag Interactions</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/editing/\">Event Timeline - Editing</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/events/\">Event Timeline - Events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/lazy-loading/\">Event Timeline - Lazy loading events</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/localization/\">Event Timeline - Localization</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/navigation/\">Event Timeline - Navigation</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/preferences/\">Event Timeline - Preferences</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/presets/\">Event Timeline - Presets</a></li>\n<li><a href=\"/x/react-scheduler/event-timeline/resources/\">Event Timeline - Resources</a></li></ul>"
 }

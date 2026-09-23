@@ -25,6 +25,7 @@ function GridFilterInputMultipleMultiSelect(props: GridFilterInputMultipleMultiS
     clearButton,
     headerFilterMenu,
     slotProps,
+    disableDebounce,
     ...other
   } = props;
 
