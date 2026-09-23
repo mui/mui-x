@@ -2,7 +2,7 @@ import type { SchedulerWeekday } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
   SchedulerLocalization,
-  SchedulerEditingTranslations,
+  SchedulerDialogTranslations,
   SchedulerEventTranslations,
   SchedulerCalendarTranslations,
   SchedulerTimelineTranslations,
@@ -38,7 +38,7 @@ const weekOrdinalNames: Record<number, string> = {
   4: 'четвёртой',
 };
 
-const ruRUDialog: SchedulerEditingTranslations = {
+const ruRUDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Цвет события',
   colorSectionLabel: 'Цвет',

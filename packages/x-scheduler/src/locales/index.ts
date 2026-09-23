@@ -42,7 +42,7 @@ export * from './zhTW';
 export { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 export type {
   SchedulerLocalization,
-  SchedulerEditingTranslations,
+  SchedulerDialogTranslations,
   SchedulerEventTranslations,
   SchedulerCalendarTranslations,
   SchedulerTimelineTranslations,

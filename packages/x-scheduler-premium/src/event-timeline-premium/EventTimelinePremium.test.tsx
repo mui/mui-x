@@ -1355,6 +1355,47 @@ describe('<EventTimelinePremium />', () => {
       ).not.to.equal(null);
     });
 
+    it('should announce the resource of the row an event is rendered in', async () => {
+      const shared = EventBuilder.new()
+        .title('Shared')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([engineering, design])
+        .build();
+
+      await renderTimeline({ events: [shared] });
+
+      const inEngineering = within(
+        document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement,
+      ).getByRole('button');
+      const inDesign = within(
+        document.querySelector(`[data-resource-id="${design.id}"]`) as HTMLElement,
+      ).getByRole('button');
+
+      expect(inEngineering).toHaveAccessibleName(
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+      );
+      expect(inDesign).toHaveAccessibleName(
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${design.title}`,
+      );
+    });
+
+    it('should not name the drag placeholder', async () => {
+      const standup = EventBuilder.new()
+        .title('Standup')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [standup] });
+
+      const placeholders = document.querySelectorAll(
+        `.${eventTimelinePremiumClasses.eventPlaceholder}`,
+      );
+      placeholders.forEach((placeholder) => {
+        expect(placeholder).not.to.have.attribute('aria-label');
+      });
+    });
+
     it('should append "Recurring" to the name of a recurring event only', async () => {
       const recurringEvent = EventBuilder.new()
         .title('Recurring timeline event')

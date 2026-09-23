@@ -1,13 +1,13 @@
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
   SchedulerLocalization,
-  SchedulerEditingTranslations,
+  SchedulerDialogTranslations,
   SchedulerEventTranslations,
   SchedulerCalendarTranslations,
   SchedulerTimelineTranslations,
 } from '../utils/getSchedulerLocalization';
 
-const plPLDialog: SchedulerEditingTranslations = {
+const plPLDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Kolor wydarzenia',
   // colorSectionLabel: 'Color',

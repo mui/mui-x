@@ -99,14 +99,16 @@ export interface EventEditingLocaleText {
 export interface SchedulerEventAriaLabelParts {
   title: string;
   /**
-   * Time range, all-day sentence, or date-time range of a multi-day event.
+   * When the event happens within the day: a time range, or the all-day sentence.
+   * Not set when the event spans several days at a time, since `date` then carries the times.
+   * @example "7:30 AM to 8:30 AM"
    */
-  when: string;
+  when?: string;
   /**
-   * The day of the event, or its date range when it lasts several all-day days.
-   * Not set when `when` already carries the dates.
+   * The day the event happens on, or the range of days it spans.
+   * @example "Monday, May 26th, 2025"
    */
-  date?: string;
+  date: string;
   resource?: string;
   recurring?: string;
 }
@@ -119,7 +121,8 @@ export interface SchedulerEventLocaleText {
    */
   eventAriaLabelTimeRange: (start: string, end: string) => string;
   /**
-   * Range of an event that spans several days.
+   * Range of an event that spans several days. Receives a date on both sides for an all-day
+   * event, and a date followed by a time for a timed one.
    * @example "From Monday, May 26th, 2025 to Wednesday, May 28th, 2025"
    */
   eventAriaLabelDateRange: (start: string, end: string) => string;

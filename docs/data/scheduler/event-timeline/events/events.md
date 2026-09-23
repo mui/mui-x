@@ -201,7 +201,7 @@ It is placed inside the block, so the block keeps its geometry, its drag and res
 
 The slot also renders in the placeholder that previews a drag, a resize or a creation, with `variant` set to `"placeholder"` and an `occurrence` carrying the pending dates.
 
-The slot doesn't change the accessible name of the event, which is built from its title, dates, resource and recurrence.
+The slot doesn't change the accessible name of the event, which is built from its title, dates, resource, and recurrence.
 The block is a button, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
 
 ### Typing custom slot props

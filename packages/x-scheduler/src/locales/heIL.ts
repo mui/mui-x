@@ -1,7 +1,7 @@
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
   SchedulerLocalization,
-  SchedulerEditingTranslations,
+  SchedulerDialogTranslations,
   SchedulerEventTranslations,
   SchedulerCalendarTranslations,
   SchedulerTimelineTranslations,
@@ -72,7 +72,7 @@ const viewNames = {
   agenda: 'סדר יום',
 };
 
-const heILDialog: SchedulerEditingTranslations = {
+const heILDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'צבע האירוע',
   colorSectionLabel: 'צבע',

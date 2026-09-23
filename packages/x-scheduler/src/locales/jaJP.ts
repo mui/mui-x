@@ -1,13 +1,13 @@
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
   SchedulerLocalization,
-  SchedulerEditingTranslations,
+  SchedulerDialogTranslations,
   SchedulerEventTranslations,
   SchedulerCalendarTranslations,
   SchedulerTimelineTranslations,
 } from '../utils/getSchedulerLocalization';
 
-const jaJPDialog: SchedulerEditingTranslations = {
+const jaJPDialog: SchedulerDialogTranslations = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // colorSectionLabel: 'Color',

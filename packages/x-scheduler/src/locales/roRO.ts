@@ -1,13 +1,13 @@
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
   SchedulerLocalization,
-  SchedulerEditingTranslations,
+  SchedulerDialogTranslations,
   SchedulerEventTranslations,
   SchedulerCalendarTranslations,
   SchedulerTimelineTranslations,
 } from '../utils/getSchedulerLocalization';
 
-const roRODialog: SchedulerEditingTranslations = {
+const roRODialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Culoarea evenimentului',
   // colorSectionLabel: 'Color',

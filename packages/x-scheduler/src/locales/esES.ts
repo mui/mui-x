@@ -1,13 +1,13 @@
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
   SchedulerLocalization,
-  SchedulerEditingTranslations,
+  SchedulerDialogTranslations,
   SchedulerEventTranslations,
   SchedulerCalendarTranslations,
   SchedulerTimelineTranslations,
 } from '../utils/getSchedulerLocalization';
 
-const esESDialog: SchedulerEditingTranslations = {
+const esESDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Color del evento',
   // colorSectionLabel: 'Color',

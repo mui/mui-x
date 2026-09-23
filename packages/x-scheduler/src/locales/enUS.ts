@@ -80,7 +80,6 @@ const enUSDialog: EventEditingLocaleText = {
   title: 'Apply this change to:',
 };
 
-// Mirrors `DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT` in `@mui/x-scheduler-internals/internals`.
 const enUSEvent: SchedulerEventLocaleText = {
   // Event accessible name
   eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,

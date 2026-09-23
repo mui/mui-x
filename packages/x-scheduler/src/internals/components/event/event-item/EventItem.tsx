@@ -191,8 +191,6 @@ export const EventItem = React.forwardRef(function EventItem(
   const store = useEventCalendarStoreContext();
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
-  // State hooks
-
   // Selector hooks
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);

@@ -67,7 +67,7 @@ Weekday column headers carry a `role="columnheader"` with an `aria-label` contai
 
 ### Events
 
-Each event element has `role="button"` and an `aria-label` that announces, in order: the event title, when it happens, its resource, and whether it recurs.
+Each event element has `role="button"` and an `aria-label` that announces, in order: the event title, when it happens within the day, the day itself, the resource, and whether it recurs.
 The visible content of the event (which varies with the view, the available space, and the variant) is not part of the accessible name, so every event is announced the same way.
 
 | Event               | Accessible name                                                                    |
@@ -80,7 +80,7 @@ The visible content of the event (which varies with the view, the available spac
 | Recurring           | `"Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Recurring"`                 |
 
 Times follow the 12-hour or 24-hour preference, and dates use the adapter's localized full date format.
-Each sentence comes from a [locale text](#localization-of-aria-labels) key prefixed with `eventAriaLabel`, and `eventAriaLabel` itself composes the parts, so a locale can reorder them or change the separator.
+Each sentence comes from a [locale text](#localization-of-aria-labels) key, and `eventAriaLabel` composes the parts, so a locale can reorder them or change the separator.
 On the Event Timeline, the announced resource is the one of the row the event is rendered in.
 
 Multi-day events are rendered once as the main (visible) element and additionally as invisible placeholder elements in the spanned cells. The placeholder elements carry `aria-hidden="true"` so assistive technologies see only one announcement per event.
@@ -227,17 +227,17 @@ The following keys are specifically relevant to accessibility:
   eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
   eventAriaLabelAllDay: 'All day',
   eventAriaLabelRecurring: 'Recurring',
-  // Composes the name. `when` is the time range or "All day", `date` is the day or
-  // the date range of a multi-day all-day event. Either can be omitted.
+  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
+  // Composes the name. `date` is always set; `when` is the time range or "All day", and is
+  // left out when the event spans several days, since `date` then carries the times.
   eventAriaLabel: ({ title, when, date, resource, recurring }) =>
     [title, when, date, resource, recurring].filter(Boolean).join(', '),
-  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
-  hiddenEvents: (count) => `${count} more..`,
 
-  // Event details
+  // Read-only dialog
   noResourceAriaLabel: 'No specific resource',
 
   // Month view
+  hiddenEvents: (count) => `${count} more..`,
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
 
   // Mini calendar

@@ -240,7 +240,7 @@ The slot receives the `resource` and is placed next to the legend color and the 
 {{"demo": "ResourceTitleSlot.js", "bg": "inline", "defaultCodeOpen": false}}
 
 The events of the row announce the resource through their own accessible name, so the content of the slot doesn't change it.
-Keep some text in the cell, and describe rather than label it when adding a tooltip, as the demo does with `describeChild`.
+The cell is its own focus target and toggles the collapse, so keep some text in it, and describe rather than label it when adding a tooltip, as the demo does with `describeChild`.
 
 On a collapsible resource, the cell toggles the collapse on click, <kbd class="key">Enter</kbd> and <kbd class="key">Space</kbd>.
 Links, buttons, and inputs rendered by the slot keep their own clicks and keys: activating them doesn't toggle the collapse, and the arrow keys don't move the focus to another cell.

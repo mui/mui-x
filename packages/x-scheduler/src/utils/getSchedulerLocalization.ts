@@ -7,7 +7,7 @@ import type {
 
 type SharedLocaleTextKey = keyof EventEditingLocaleText | keyof SchedulerEventLocaleText;
 
-export type SchedulerEditingTranslations = Partial<EventEditingLocaleText>;
+export type SchedulerDialogTranslations = Partial<EventEditingLocaleText>;
 export type SchedulerEventTranslations = Partial<SchedulerEventLocaleText>;
 export type SchedulerCalendarTranslations = Partial<
   Omit<EventCalendarLocaleText, SharedLocaleTextKey>
@@ -32,8 +32,8 @@ export interface SchedulerLocalization {
 }
 
 export const getSchedulerLocalization = (translations: {
-  dialog: SchedulerEditingTranslations;
-  event?: SchedulerEventTranslations;
+  dialog: SchedulerDialogTranslations;
+  event: SchedulerEventTranslations;
   calendar: SchedulerCalendarTranslations;
   timeline: SchedulerTimelineTranslations;
 }): SchedulerLocalization => ({

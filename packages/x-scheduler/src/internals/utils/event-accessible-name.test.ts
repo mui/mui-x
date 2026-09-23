@@ -7,6 +7,10 @@ import { getEventAccessibleName } from './event-accessible-name';
 const localeText = enUS.components.MuiEventCalendar.defaultProps
   .localeText as SchedulerEventLocaleText;
 
+function timedOccurrence(title: string, start: string, end: string) {
+  return EventBuilder.new().title(title).startAt(start).endAt(end).toOccurrence();
+}
+
 function getName(
   occurrence: ReturnType<EventBuilder['toOccurrence']>,
   overrides: Partial<Omit<Parameters<typeof getEventAccessibleName>[0], 'occurrence'>> = {},
@@ -24,21 +28,13 @@ function getName(
 describe('getEventAccessibleName', () => {
   // 2025-07-03 is a Thursday.
   it('should announce the title, the time range and the date of a timed event', () => {
-    const occurrence = EventBuilder.new()
-      .title('Running')
-      .startAt('2025-07-03T07:30:00')
-      .endAt('2025-07-03T08:30:00')
-      .toOccurrence();
+    const occurrence = timedOccurrence('Running', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
     expect(getName(occurrence)).to.equal('Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025');
   });
 
   it('should format the time range in 24-hour format when ampm is false', () => {
-    const occurrence = EventBuilder.new()
-      .title('Running')
-      .startAt('2025-07-03T16:00:00')
-      .endAt('2025-07-03T17:00:00')
-      .toOccurrence();
+    const occurrence = timedOccurrence('Running', '2025-07-03T16:00:00', '2025-07-03T17:00:00');
 
     expect(getName(occurrence, { ampm: false })).to.equal(
       'Running, 16:00 to 17:00, Thursday, July 3rd, 2025',
@@ -63,11 +59,7 @@ describe('getEventAccessibleName', () => {
   });
 
   it('should announce the date and time range of a multi-day timed event', () => {
-    const occurrence = EventBuilder.new()
-      .title('Trip')
-      .startAt('2025-07-03T07:30:00')
-      .endAt('2025-07-05T17:00:00')
-      .toOccurrence();
+    const occurrence = timedOccurrence('Trip', '2025-07-03T07:30:00', '2025-07-05T17:00:00');
 
     expect(getName(occurrence)).to.equal(
       'Trip, From Thursday, July 3rd, 2025 7:30 AM to Saturday, July 5th, 2025 5:00 PM',
@@ -75,11 +67,7 @@ describe('getEventAccessibleName', () => {
   });
 
   it('should append the resource when a resource name is provided', () => {
-    const occurrence = EventBuilder.new()
-      .title('Running')
-      .startAt('2025-07-03T07:30:00')
-      .endAt('2025-07-03T08:30:00')
-      .toOccurrence();
+    const occurrence = timedOccurrence('Running', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
     expect(getName(occurrence, { resourceName: 'Sport' })).to.equal(
       'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Resource: Sport',
@@ -87,11 +75,7 @@ describe('getEventAccessibleName', () => {
   });
 
   it('should append "Recurring" for a recurring event', () => {
-    const occurrence = EventBuilder.new()
-      .title('Running')
-      .startAt('2025-07-03T07:30:00')
-      .endAt('2025-07-03T08:30:00')
-      .toOccurrence();
+    const occurrence = timedOccurrence('Running', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
     expect(getName(occurrence, { isRecurring: true })).to.equal(
       'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Recurring',
@@ -99,11 +83,7 @@ describe('getEventAccessibleName', () => {
   });
 
   it('should use the provided locale text for every sentence', () => {
-    const occurrence = EventBuilder.new()
-      .title('Correr')
-      .startAt('2025-07-03T07:30:00')
-      .endAt('2025-07-03T08:30:00')
-      .toOccurrence();
+    const occurrence = timedOccurrence('Correr', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
     const esLocaleText = {
       ...localeText,
@@ -120,26 +100,17 @@ describe('getEventAccessibleName', () => {
   });
 
   it('should skip an empty title instead of announcing a leading separator', () => {
-    const occurrence = EventBuilder.new()
-      .title('')
-      .startAt('2025-07-03T07:30:00')
-      .endAt('2025-07-03T08:30:00')
-      .toOccurrence();
+    const occurrence = timedOccurrence('', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
     expect(getName(occurrence)).to.equal('7:30 AM to 8:30 AM, Thursday, July 3rd, 2025');
   });
 
   it('should let the locale reorder the parts through eventAriaLabel', () => {
-    const occurrence = EventBuilder.new()
-      .title('Running')
-      .startAt('2025-07-03T07:30:00')
-      .endAt('2025-07-03T08:30:00')
-      .toOccurrence();
+    const occurrence = timedOccurrence('Running', '2025-07-03T07:30:00', '2025-07-03T08:30:00');
 
-    const reorderingLocaleText = {
+    const reorderingLocaleText: SchedulerEventLocaleText = {
       ...localeText,
-      eventAriaLabel: ({ title, when, date }: { title: string; when: string; date?: string }) =>
-        `${date} ${when} ${title}`,
+      eventAriaLabel: ({ title, when, date }) => `${date} ${when} ${title}`,
     };
 
     expect(getName(occurrence, { localeText: reorderingLocaleText })).to.equal(

@@ -1,13 +1,13 @@
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
   SchedulerLocalization,
-  SchedulerEditingTranslations,
+  SchedulerDialogTranslations,
   SchedulerEventTranslations,
   SchedulerCalendarTranslations,
   SchedulerTimelineTranslations,
 } from '../utils/getSchedulerLocalization';
 
-const arSDDialog: SchedulerEditingTranslations = {
+const arSDDialog: SchedulerDialogTranslations = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // colorSectionLabel: 'Color',
