@@ -36,6 +36,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     event: React.SyntheticEvent | null,
     newModel: string[] | string | null,
     additionalItemsToPropagate?: TreeViewItemId[],
+    skipIfUnchanged = false,
   ) => {
     const {
       selectionPropagation = EMPTY_OBJECT as TreeViewSelectionPropagation,
@@ -61,6 +62,16 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
       }) as TreeViewSelectionValue<Multiple>;
     } else {
       cleanModel = newModel as TreeViewSelectionValue<Multiple>;
+    }
+
+    if (skipIfUnchanged && Array.isArray(cleanModel)) {
+      const oldSelectedItems = selectionSelectors.selectedItemsMap(this.store.state);
+      if (
+        cleanModel.length === oldSelectedItems.size &&
+        cleanModel.every((itemId) => oldSelectedItems.has(itemId))
+      ) {
+        return;
+      }
     }
 
     // The store is updated before the callbacks are fired,
@@ -166,6 +177,34 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     // Only propagate to the new items, the rest of the parent's subtree is already up to date.
     const newModel = selectionSelectors.selectedItems(this.store.state).concat(newItemIds);
     this.setSelectedItems(null, newModel, newItemIds);
+  };
+
+  /**
+   * Reapply descendant selection after updating the children of several parents.
+   * The complete item hierarchy must be stored before calling this method.
+   * @param {(TreeViewItemId | null)[]} parentIds The parents whose children changed.
+   */
+  public propagateSelectionToUpdatedParents = (parentIds: readonly (TreeViewItemId | null)[]) => {
+    const state = this.store.state;
+    if (
+      !selectionSelectors.enabled(state) ||
+      !selectionSelectors.isMultiSelectEnabled(state) ||
+      !selectionSelectors.propagationRules(state).descendants
+    ) {
+      return;
+    }
+
+    const selectedParents = parentIds.filter(
+      (parentId): parentId is TreeViewItemId =>
+        parentId !== null && selectionSelectors.isItemSelected(state, parentId),
+    );
+    if (selectedParents.length === 0) {
+      return;
+    }
+
+    // A single update includes children from every changed parent even when the
+    // selection is controlled and callbacks do not immediately update the store.
+    this.setSelectedItems(null, selectionSelectors.selectedItems(state), selectedParents, true);
   };
 
   /**

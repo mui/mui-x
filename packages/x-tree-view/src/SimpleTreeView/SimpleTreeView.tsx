@@ -107,7 +107,7 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
       apiRef={apiRef}
       rootRef={ref}
     >
-      <TreeViewChildrenItemProvider itemId={null} idAttribute={null}>
+      <TreeViewChildrenItemProvider items={props.children}>
         <TreeViewItemDepthContext.Provider value={0}>
           <Root {...rootProps} />
         </TreeViewItemDepthContext.Provider>
