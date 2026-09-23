@@ -43,7 +43,7 @@ export const useChartPremiumExport: ChartPlugin<UseChartPremiumExportSignature> 
 
       const buffer = await workbook.xlsx.writeBuffer();
       const url = URL.createObjectURL(new Blob([buffer], { type: EXCEL_MIME_TYPE }));
-      triggerDownload(url, `${options?.fileName || document.title}.xlsx`);
+      triggerDownload(url, `${options?.fileName || document.title || 'untitled'}.xlsx`);
       URL.revokeObjectURL(url);
     } catch (error) {
       console.error('MUI X Charts: Error exporting chart as Excel:', error);

@@ -234,6 +234,29 @@ describe('useChartPremiumExport', () => {
       expect(downloads).to.deep.equal(['Report.xlsx']);
     });
 
+    it('falls back to `untitled` when the document has no title', async () => {
+      const title = document.title;
+      document.title = '';
+      onTestFinished(() => {
+        document.title = title;
+      });
+      const apiRef = createApiRef('bar');
+      render(
+        <BarChartPremium
+          apiRef={apiRef}
+          width={300}
+          height={200}
+          series={[{ data: [1] }]}
+          xAxis={[{ data: ['A'] }]}
+        />,
+      );
+
+      await act(() => apiRef.current!.exportAsExcel());
+      await act(() => apiRef.current!.exportAsExcel({ fileName: '' }));
+
+      expect(downloads).to.deep.equal(['untitled.xlsx', 'untitled.xlsx']);
+    });
+
     it('does not download when the chart has no data', async () => {
       const apiRef = createApiRef('bar');
       render(<BarChartPremium apiRef={apiRef} width={300} height={200} series={[]} />);
