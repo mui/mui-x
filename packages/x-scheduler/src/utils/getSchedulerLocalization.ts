@@ -7,6 +7,15 @@ import type {
 
 type SharedLocaleTextKey = keyof EventEditingLocaleText | keyof SchedulerEventLocaleText;
 
+export type SchedulerEditingTranslations = Partial<EventEditingLocaleText>;
+export type SchedulerEventTranslations = Partial<SchedulerEventLocaleText>;
+export type SchedulerCalendarTranslations = Partial<
+  Omit<EventCalendarLocaleText, SharedLocaleTextKey>
+>;
+export type SchedulerTimelineTranslations = Partial<
+  Omit<EventTimelineLocaleText, SharedLocaleTextKey>
+>;
+
 export interface SchedulerLocalization {
   components: {
     MuiEventCalendar: {
@@ -23,10 +32,10 @@ export interface SchedulerLocalization {
 }
 
 export const getSchedulerLocalization = (translations: {
-  calendar: Partial<Omit<EventCalendarLocaleText, SharedLocaleTextKey>>;
-  timeline: Partial<Omit<EventTimelineLocaleText, SharedLocaleTextKey>>;
-  dialog: Partial<EventEditingLocaleText>;
-  event?: Partial<SchedulerEventLocaleText>;
+  dialog: SchedulerEditingTranslations;
+  event: SchedulerEventTranslations;
+  calendar: SchedulerCalendarTranslations;
+  timeline: SchedulerTimelineTranslations;
 }): SchedulerLocalization => ({
   components: {
     MuiEventCalendar: {

@@ -1,13 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerEventLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerEditingTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const frFRDialog: Partial<EventEditingLocaleText> = {
+const frFRDialog: SchedulerEditingTranslations = {
   // EventDialog
   colorPickerLabel: "Couleur de l'événement",
   // colorSectionLabel: 'Color',
@@ -80,7 +80,7 @@ const frFRDialog: Partial<EventEditingLocaleText> = {
   title: 'Appliquer ce changement à :',
 };
 
-const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const frFRCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Ressources',
 
@@ -141,16 +141,23 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Titre de la ressource',
 };
 
-const frFREvent: Partial<SchedulerEventLocaleText> = {
+const frFREvent: SchedulerEventTranslations = {
   // Event accessible name
-  eventAccessibleNameTimeRange: (start, end) => `de ${start} à ${end}`,
-  eventAccessibleNameDateRange: (start, end) => `Du ${start} au ${end}`,
-  eventAccessibleNameAllDay: 'Toute la journée',
-  eventAccessibleNameRecurring: 'Récurrent',
+  eventAriaLabelTimeRange: (start, end) => `de ${start} à ${end}`,
+  eventAriaLabelDateRange: (start, end) => `Du ${start} au ${end}`,
+  eventAriaLabelAllDay: 'Toute la journée',
+  eventAriaLabelRecurring: 'Récurrent',
   resourceAriaLabel: (resourceName) => `Ressource : ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
-const frFRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const frFRTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',
 };

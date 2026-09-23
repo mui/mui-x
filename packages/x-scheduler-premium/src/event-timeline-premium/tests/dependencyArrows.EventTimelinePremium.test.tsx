@@ -345,10 +345,9 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         ],
       });
 
-      const name = getEventElement('Event B').getAttribute('aria-label')!;
-      expect(name).to.match(/^Event B, /);
-      expect(name).not.to.include('Event A');
-      expect(name).not.to.include('Event C');
+      expect(getEventElement('Event B')).toHaveAccessibleName(
+        `Event B, 11:00 AM to 12:00 PM, Thursday, July 3rd, 2025, Resource: ${resource1.title}`,
+      );
     });
 
     it('should not describe an event without predecessors', async () => {

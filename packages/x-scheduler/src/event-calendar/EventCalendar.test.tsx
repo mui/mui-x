@@ -42,12 +42,12 @@ describe('EventCalendar', () => {
     render(
       <EventCalendar
         events={[event1]}
-        localeText={{ eventAccessibleNameTimeRange: (start, end) => `de ${start} a ${end}` }}
+        localeText={{ eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}` }}
       />,
     );
 
     expect(
-      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday 26 May' }),
+      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday, May 26th, 2025' }),
     ).not.to.equal(null);
   });
 
@@ -66,12 +66,13 @@ describe('EventCalendar', () => {
 
     expect(mondayEvent).to.have.attribute(
       'aria-label',
-      'Running, 7:30 AM to 8:15 AM, Monday 26 May',
+      'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025',
     );
     expect(tuesdayEvent).to.have.attribute(
       'aria-label',
-      'Weekly, 4:00 PM to 5:00 PM, Tuesday 27 May',
+      'Weekly, 4:00 PM to 5:00 PM, Tuesday, May 27th, 2025',
     );
+    expect(mondayEvent).not.to.have.attribute('aria-labelledby');
 
     expect(screen.getByRole('columnheader', { name: /Monday 26/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Tuesday 27/i })).not.to.equal(null);
@@ -370,6 +371,10 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
+      expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
+        'aria-label',
+        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+      );
 
       // Show 12 hours format again
       await openPreferencesMenu(user);

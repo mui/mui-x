@@ -1,13 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerEventLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerEditingTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const plPLDialog: Partial<EventEditingLocaleText> = {
+const plPLDialog: SchedulerEditingTranslations = {
   // EventDialog
   colorPickerLabel: 'Kolor wydarzenia',
   // colorSectionLabel: 'Color',
@@ -91,16 +91,23 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   title: 'Zastosuj tę zmianę do:',
 };
 
-const plPLEvent: Partial<SchedulerEventLocaleText> = {
+const plPLEvent: SchedulerEventTranslations = {
   // Event accessible name
-  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  // eventAccessibleNameAllDay: 'All day',
-  // eventAccessibleNameRecurring: 'Recurring',
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
   resourceAriaLabel: (resourceName) => `Zasób: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
-const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const plPLCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Zasoby',
 
@@ -161,7 +168,7 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };
 
-const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const plPLTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };

@@ -1,13 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerEventLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerEditingTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const deDEDialog: Partial<EventEditingLocaleText> = {
+const deDEDialog: SchedulerEditingTranslations = {
   // EventDialog
   colorPickerLabel: 'Ereignisfarbe',
   // colorSectionLabel: 'Color',
@@ -80,16 +80,23 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   title: 'Diese Änderung anwenden auf:',
 };
 
-const deDEEvent: Partial<SchedulerEventLocaleText> = {
+const deDEEvent: SchedulerEventTranslations = {
   // Event accessible name
-  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  // eventAccessibleNameAllDay: 'All day',
-  // eventAccessibleNameRecurring: 'Recurring',
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
   resourceAriaLabel: (resourceName) => `Ressource: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
-const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const deDECalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Ressourcen',
 
@@ -150,7 +157,7 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Ressourcentitel',
 };
 
-const deDETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const deDETimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressourcentitel',
 };

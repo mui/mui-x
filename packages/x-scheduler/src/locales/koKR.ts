@@ -1,13 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerEventLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerEditingTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const koKRDialog: Partial<EventEditingLocaleText> = {
+const koKRDialog: SchedulerEditingTranslations = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // colorSectionLabel: 'Color',
@@ -81,16 +81,23 @@ const koKRDialog: Partial<EventEditingLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const koKREvent: Partial<SchedulerEventLocaleText> = {
+const koKREvent: SchedulerEventTranslations = {
   // Event accessible name
-  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  // eventAccessibleNameAllDay: 'All day',
-  // eventAccessibleNameRecurring: 'Recurring',
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
   // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
-const koKRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const koKRCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -142,7 +149,7 @@ const koKRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const koKRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const koKRTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

@@ -1,13 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerEventLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerEditingTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const nbNODialog: Partial<EventEditingLocaleText> = {
+const nbNODialog: SchedulerEditingTranslations = {
   // EventDialog
   colorPickerLabel: 'Hendelsesfarge',
   // colorSectionLabel: 'Color',
@@ -80,16 +80,23 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   title: 'Bruk denne endringen på:',
 };
 
-const nbNOEvent: Partial<SchedulerEventLocaleText> = {
+const nbNOEvent: SchedulerEventTranslations = {
   // Event accessible name
-  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  // eventAccessibleNameAllDay: 'All day',
-  // eventAccessibleNameRecurring: 'Recurring',
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
   resourceAriaLabel: (resourceName) => `Ressurs: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
-const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const nbNOCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Ressurser',
 
@@ -150,7 +157,7 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Ressurstittel',
 };
 
-const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const nbNOTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',
 };

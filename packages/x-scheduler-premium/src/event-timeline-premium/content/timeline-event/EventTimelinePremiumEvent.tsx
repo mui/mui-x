@@ -203,8 +203,12 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Feature hooks
   const id = useId(idProp);
-  // The row title already carries the resource, so the name leaves it out.
-  const accessibleName = useEventAccessibleName({ occurrence, includeResource: false, localeText });
+  const accessibleName = useEventAccessibleName({
+    occurrence: variant === 'placeholder' ? null : occurrence,
+    isRecurring,
+    resourceName: rowResource?.title,
+    localeText,
+  });
 
   const EventContent = slots.timelineEventContent;
   const content = EventContent ? (
@@ -264,8 +268,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       dataTimezone={getOccurrenceDataTimezone(occurrence)}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
-      {...sharedProps}
       aria-label={accessibleName}
+      {...sharedProps}
       aria-describedby={dependencySources.length > 0 ? `${id}-dependencies` : undefined}
       className={clsx(sharedProps.className, classes.event)}
     >

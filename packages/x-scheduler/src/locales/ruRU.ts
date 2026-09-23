@@ -1,12 +1,12 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerWeekday,
-  SchedulerEventLocaleText,
-} from '../models/translations';
+import type { SchedulerWeekday } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerEditingTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
 const weekdayNames: Record<SchedulerWeekday, string> = {
   sunday: 'воскресенье',
@@ -38,7 +38,7 @@ const weekOrdinalNames: Record<number, string> = {
   4: 'четвёртой',
 };
 
-const ruRUDialog: Partial<EventEditingLocaleText> = {
+const ruRUDialog: SchedulerEditingTranslations = {
   // EventDialog
   colorPickerLabel: 'Цвет события',
   colorSectionLabel: 'Цвет',
@@ -114,16 +114,23 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   title: 'К каким событиям применить изменение:',
 };
 
-const ruRUEvent: Partial<SchedulerEventLocaleText> = {
+const ruRUEvent: SchedulerEventTranslations = {
   // Event accessible name
-  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  // eventAccessibleNameAllDay: 'All day',
-  // eventAccessibleNameRecurring: 'Recurring',
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
   resourceAriaLabel: (resourceName) => `Ресурс: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
-const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const ruRUCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Ресурсы',
 
@@ -208,7 +215,7 @@ const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Название ресурса',
 };
 
-const ruRUTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const ruRUTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Название ресурса',
 };

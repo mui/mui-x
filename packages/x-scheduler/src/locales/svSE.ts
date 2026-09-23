@@ -1,13 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerEventLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerEditingTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const svSEDialog: Partial<EventEditingLocaleText> = {
+const svSEDialog: SchedulerEditingTranslations = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // colorSectionLabel: 'Color',
@@ -81,16 +81,23 @@ const svSEDialog: Partial<EventEditingLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const svSEEvent: Partial<SchedulerEventLocaleText> = {
+const svSEEvent: SchedulerEventTranslations = {
   // Event accessible name
-  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  // eventAccessibleNameAllDay: 'All day',
-  // eventAccessibleNameRecurring: 'Recurring',
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
   // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
-const svSECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const svSECalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -142,7 +149,7 @@ const svSECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const svSETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const svSETimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };

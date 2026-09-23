@@ -84,7 +84,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   // Context hooks
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
-  const { schedulerId, classes } = useEventCalendarStyledContext();
+  const { classes } = useEventCalendarStyledContext();
 
   // The popover stays open behind the editing surface, so close it when that surface closes.
   React.useEffect(() => {
@@ -133,7 +133,6 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     >
       <MoreEventsPopoverHeader
         className={classes.moreEventsPopoverHeader}
-        id={`${schedulerId}-PopoverHeader-${day.key}`}
         aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
       >
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>

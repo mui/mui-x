@@ -80,13 +80,17 @@ const enUSDialog: EventEditingLocaleText = {
   title: 'Apply this change to:',
 };
 
+// Kept in sync by hand with `DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT` in
+// `@mui/x-scheduler-internals/internals`, the English default of the headless primitives.
 const enUSEvent: SchedulerEventLocaleText = {
   // Event accessible name
-  eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  eventAccessibleNameAllDay: 'All day',
-  eventAccessibleNameRecurring: 'Recurring',
+  eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  eventAriaLabelAllDay: 'All day',
+  eventAriaLabelRecurring: 'Recurring',
   resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
+  eventAriaLabel: ({ title, when, date, resource, recurring }) =>
+    [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
 const enUSCalendar: Omit<

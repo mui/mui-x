@@ -1,39 +1,62 @@
 import type { SchedulerRenderableEventOccurrence, TemporalSupportedObject } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { formatHourAndMinutes, formatWeekDayDayOfMonthAndMonth } from './date-utils';
+import { formatHourAndMinutes } from './date-utils';
+
+export interface SchedulerEventAriaLabelParts {
+  title: string;
+  /**
+   * Time range, all-day sentence, or date-time range of a multi-day event.
+   */
+  when: string;
+  /**
+   * The day of the event. Not set when `when` already spans several dates.
+   */
+  date?: string;
+  resource?: string;
+  recurring?: string;
+}
 
 export interface SchedulerEventAccessibleNameLocaleText {
   /**
    * Time range of a timed event that starts and ends on the same day.
    * @example "7:30 AM to 8:30 AM"
    */
-  eventAccessibleNameTimeRange: (start: string, end: string) => string;
+  eventAriaLabelTimeRange: (start: string, end: string) => string;
   /**
-   * Date range of an event that spans several days.
-   * @example "From Monday 26 May to Wednesday 28 May"
+   * Range of an event that spans several days.
+   * @example "From Monday, May 26th, 2025 to Wednesday, May 28th, 2025"
    */
-  eventAccessibleNameDateRange: (start: string, end: string) => string;
+  eventAriaLabelDateRange: (start: string, end: string) => string;
   /**
    * Announced instead of the time range for an all-day event.
    */
-  eventAccessibleNameAllDay: string;
+  eventAriaLabelAllDay: string;
   /**
    * Appended to the name of a recurring event.
    */
-  eventAccessibleNameRecurring: string;
+  eventAriaLabelRecurring: string;
   /**
    * Resource the event belongs to.
    * @example "Resource: Sport"
    */
   resourceAriaLabel: (resourceName: string) => string;
+  /**
+   * Composes the parts into the event name. Locales can reorder them or change the separator.
+   * @example "Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Resource: Sport, Recurring"
+   */
+  eventAriaLabel: (parts: SchedulerEventAriaLabelParts) => string;
 }
 
+// Kept in sync by hand with `enUSEvent` in `@mui/x-scheduler/locales/enUS`: the l10n script only
+// reads object literals, so the styled package cannot reuse this constant.
 export const DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT: SchedulerEventAccessibleNameLocaleText = {
-  eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  eventAccessibleNameAllDay: 'All day',
-  eventAccessibleNameRecurring: 'Recurring',
+  eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  eventAriaLabelAllDay: 'All day',
+  eventAriaLabelRecurring: 'Recurring',
   resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
+  eventAriaLabel: ({ title, when, date, resource, recurring }) =>
+    [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
 export interface GetEventAccessibleNameParameters {
@@ -43,15 +66,15 @@ export interface GetEventAccessibleNameParameters {
   localeText: SchedulerEventAccessibleNameLocaleText;
   isRecurring: boolean;
   /**
-   * Name of the resource to announce. Leave it out where the surrounding row already carries it.
+   * Name of the resource to announce, if any.
    */
   resourceName?: string | null;
 }
 
 /**
- * Builds the accessible name of an event: title, then when it happens, then the resource and
+ * Builds the accessible name of an event from its title, when it happens, its resource and
  * whether it recurs.
- * @example "Running, 7:30 AM to 8:30 AM, Thursday 3 July, Resource: Sport, Recurring"
+ * @example "Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Resource: Sport, Recurring"
  */
 export function getEventAccessibleName(parameters: GetEventAccessibleNameParameters): string {
   const { occurrence, adapter, ampm, localeText, isRecurring, resourceName } = parameters;
@@ -60,38 +83,32 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
   const isMultiDay = !adapter.isSameDay(start, end);
 
   const formatDate = (date: TemporalSupportedObject) =>
-    formatWeekDayDayOfMonthAndMonth(date, adapter);
+    adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
   const formatDateTime = (date: TemporalSupportedObject) =>
     `${formatDate(date)} ${formatHourAndMinutes(date, adapter, ampm)}`;
 
-  const parts: string[] = [occurrence.title];
-
+  let when: string;
+  let date: string | undefined;
   if (occurrence.allDay) {
-    parts.push(localeText.eventAccessibleNameAllDay);
-    parts.push(
-      isMultiDay
-        ? localeText.eventAccessibleNameDateRange(formatDate(start), formatDate(end))
-        : formatDate(start),
-    );
+    when = localeText.eventAriaLabelAllDay;
+    date = isMultiDay
+      ? localeText.eventAriaLabelDateRange(formatDate(start), formatDate(end))
+      : formatDate(start);
   } else if (isMultiDay) {
-    parts.push(localeText.eventAccessibleNameDateRange(formatDateTime(start), formatDateTime(end)));
+    when = localeText.eventAriaLabelDateRange(formatDateTime(start), formatDateTime(end));
   } else {
-    parts.push(
-      localeText.eventAccessibleNameTimeRange(
-        formatHourAndMinutes(start, adapter, ampm),
-        formatHourAndMinutes(end, adapter, ampm),
-      ),
+    when = localeText.eventAriaLabelTimeRange(
+      formatHourAndMinutes(start, adapter, ampm),
+      formatHourAndMinutes(end, adapter, ampm),
     );
-    parts.push(formatDate(start));
+    date = formatDate(start);
   }
 
-  if (resourceName) {
-    parts.push(localeText.resourceAriaLabel(resourceName));
-  }
-
-  if (isRecurring) {
-    parts.push(localeText.eventAccessibleNameRecurring);
-  }
-
-  return parts.join(', ');
+  return localeText.eventAriaLabel({
+    title: occurrence.title,
+    when,
+    date,
+    resource: resourceName ? localeText.resourceAriaLabel(resourceName) : undefined,
+    recurring: isRecurring ? localeText.eventAriaLabelRecurring : undefined,
+  });
 }

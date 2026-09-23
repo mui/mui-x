@@ -3,6 +3,8 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  getAllEventsByTitle,
+  getEventNamePattern,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
@@ -92,7 +94,7 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEvents = screen.getAllByLabelText(new RegExp(`^${multiDayEvent.title},`));
+      const allEvents = getAllEventsByTitle(multiDayEvent.title);
       const mainEvent = allEvents.find((event) => event.getAttribute('aria-hidden') !== 'true');
       const invisibleEvents = allEvents.filter(
         (event) => event.getAttribute('aria-hidden') === 'true',
@@ -132,9 +134,9 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText(new RegExp(`^${event1.title},`));
-      const event2Elements = screen.getAllByLabelText(new RegExp(`^${event2.title},`));
-      const event3Elements = screen.getAllByLabelText(new RegExp(`^${event3.title},`));
+      const event1Elements = getAllEventsByTitle(event1.title);
+      const event2Elements = getAllEventsByTitle(event2.title);
+      const event3Elements = getAllEventsByTitle(event3.title);
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -168,7 +170,7 @@ describe('<WeekView />', () => {
       const allDayRow = within(allDayGridContainer).getByRole('row');
 
       const mainEvent = within(allDayRow)
-        .getAllByLabelText(new RegExp(`^${fourDayEvent.title},`))
+        .getAllByLabelText(getEventNamePattern(fourDayEvent.title))
         .find((el) => el.getAttribute('aria-hidden') !== 'true');
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];

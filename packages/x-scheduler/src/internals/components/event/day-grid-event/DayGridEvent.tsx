@@ -325,7 +325,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const formatTime = useFormatTime();
   const accessibleName = useEventAccessibleName({
     occurrence,
-    includeResource: true,
+    isRecurring,
+    resourceName: resource?.title,
     localeText,
   });
 

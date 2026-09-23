@@ -1,5 +1,9 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createSchedulerRenderer, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import {
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
+} from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { esES } from '@mui/x-scheduler/locales';
@@ -35,6 +39,26 @@ describe('<StandaloneWeekView />', () => {
       );
 
       expect(screen.getByText('Todo el día')).toBeVisible();
+    });
+
+    it('should name events with the locale text provided through the theme', () => {
+      const event = EventBuilder.new()
+        .title('Correr')
+        .startAt('2025-07-03T07:30:00')
+        .endAt('2025-07-03T08:30:00')
+        .build();
+
+      render(
+        <ThemeProvider theme={createTheme({}, esES)}>
+          <StandaloneWeekView events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+        </ThemeProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3rd, 2025',
+        }),
+      ).not.to.equal(null);
     });
 
     it('should override the theme locale text with the localeText prop', () => {

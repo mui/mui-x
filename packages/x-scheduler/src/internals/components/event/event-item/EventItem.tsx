@@ -2,7 +2,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { useId } from '@base-ui/utils/useId';
 import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
@@ -186,7 +185,7 @@ export const EventItem = React.forwardRef(function EventItem(
   props: EventItemProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, date, id: idProp, variant = 'regular', className, onClick, ...other } = props;
+  const { occurrence, date, variant = 'regular', className, onClick, ...other } = props;
 
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
@@ -194,7 +193,6 @@ export const EventItem = React.forwardRef(function EventItem(
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
   // State hooks
-  const id = useId(idProp);
 
   // Selector hooks
   const resource = useStore(
@@ -208,7 +206,8 @@ export const EventItem = React.forwardRef(function EventItem(
   const formatTime = useFormatTime();
   const accessibleName = useEventAccessibleName({
     occurrence,
-    includeResource: true,
+    isRecurring,
+    resourceName: resource?.title,
     localeText,
   });
 
@@ -300,7 +299,6 @@ export const EventItem = React.forwardRef(function EventItem(
       render={
         <EventItemCard
           ref={forwardedRef}
-          id={id}
           data-variant={variant}
           data-palette={color}
           data-editing={isEditing || undefined}

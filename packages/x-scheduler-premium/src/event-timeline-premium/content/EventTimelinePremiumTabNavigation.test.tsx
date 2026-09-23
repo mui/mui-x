@@ -6,6 +6,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  queryEventByTitle,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
@@ -76,7 +77,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   }
 
   function getEvent(title: string): HTMLElement | null {
-    return screen.queryByLabelText(new RegExp(`^${title},`));
+    return queryEventByTitle(title);
   }
 
   function getScroller(): HTMLElement {

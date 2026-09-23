@@ -1,4 +1,4 @@
-import { within } from '@mui/internal-test-utils';
+import { screen, within } from '@mui/internal-test-utils';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 
 /**
@@ -48,4 +48,23 @@ export function getMonthViewCell(dayOfMonth: number): HTMLElement {
     throw new Error(`Could not find month view cell for day ${dayOfMonth}`);
   }
   return cell;
+}
+
+/**
+ * Matches the accessible name of a rendered event: the title, followed by when it happens.
+ */
+export function getEventNamePattern(title: string) {
+  return new RegExp(`^${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')},`);
+}
+
+export function getEventByTitle(title: string) {
+  return screen.getByLabelText(getEventNamePattern(title));
+}
+
+export function getAllEventsByTitle(title: string) {
+  return screen.getAllByLabelText(getEventNamePattern(title));
+}
+
+export function queryEventByTitle(title: string) {
+  return screen.queryByLabelText(getEventNamePattern(title));
 }

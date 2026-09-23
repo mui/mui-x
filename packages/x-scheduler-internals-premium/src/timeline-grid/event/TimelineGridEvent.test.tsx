@@ -112,16 +112,23 @@ describe('<TimelineGrid.Event />', () => {
       );
     }
 
-    it('should name the event with its title, time range and date but not its resource', () => {
+    it('should name the event with its title, time range, date and resource', () => {
       renderRunning();
       expect(
-        screen.getByRole('button', { name: 'Running, 7:30 AM to 8:30 AM, Thursday 3 July' }),
+        screen.getByRole('button', {
+          name: 'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Resource: Sport',
+        }),
       ).not.to.equal(null);
     });
 
     it('should let a consumer aria-label win over the default name', () => {
       renderRunning({ 'aria-label': 'Custom' });
       expect(screen.getByRole('button', { name: 'Custom' })).not.to.equal(null);
+    });
+
+    it('should not add a default name when the consumer passes aria-labelledby', () => {
+      renderRunning({ 'aria-labelledby': 'some-id' });
+      expect(screen.getByTestId('event')).not.to.have.attribute('aria-label');
     });
   });
 });

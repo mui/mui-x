@@ -19,9 +19,10 @@ describe('<AgendaView />', () => {
       <EventCalendar events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
     );
 
-    expect(
-      screen.getByRole('button', { name: 'My Event, 12:00 AM to 1:00 AM, Thursday 3 July' }),
-    ).not.to.equal(null);
+    const eventButton = screen.getByRole('button', {
+      name: 'My Event, 12:00 AM to 1:00 AM, Thursday, July 3rd, 2025',
+    });
+    expect(eventButton).not.to.have.attribute('aria-labelledby');
   });
 
   describe('multi-resource events', () => {

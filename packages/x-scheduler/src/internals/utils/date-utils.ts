@@ -40,5 +40,3 @@ export function formatMonthFullLetterAndYear(date: TemporalSupportedObject, adap
 
   return adapter.formatByString(date, dateFormat);
 }
-
-export { formatHourAndMinutes } from '@mui/x-scheduler-internals/internals';

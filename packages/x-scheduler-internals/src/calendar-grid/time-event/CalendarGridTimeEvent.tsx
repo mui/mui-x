@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
@@ -36,7 +35,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     eventId,
     occurrenceKey,
     renderDragPreview,
-    id: idProp,
     isDraggable = false,
     nativeButton = false,
     interactive = true,
@@ -58,9 +56,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  // State hooks
-  const id = useId(idProp);
-
   // Feature hooks
   const getOriginalOccurrence = useOriginalOccurrence({
     eventId,
@@ -70,8 +65,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     dataTimezone,
   });
 
-  const hasCustomLabel =
-    elementProps['aria-label'] != null || elementProps['aria-labelledby'] != null;
+  // Labels set on the `render` element are not detected.
+  const hasCustomLabel = Boolean(elementProps['aria-label'] || elementProps['aria-labelledby']);
   const accessibleName = useDefaultEventAccessibleName({
     eventId,
     occurrenceKey,
@@ -79,7 +74,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     end,
     dataTimezone,
     includeResource: true,
-    hasCustomLabel,
+    enabled: !hasCustomLabel && interactive,
   });
 
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
@@ -146,7 +141,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     props: [
       elementProps,
       {
-        id,
         // A non-interactive event stays a plain div: no role, no tabIndex, no name.
         ...(interactive && !hasCustomLabel ? { 'aria-label': accessibleName } : undefined),
         style: {
@@ -176,8 +170,8 @@ export namespace CalendarGridTimeEvent {
       useDraggableEvent.PublicParameters,
       Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
     /**
-     * Whether the event behaves like a button: `role="button"`, roving `tabIndex` and the column
-     * header labelling. Set it to `false` for an inert preview (creation / resize placeholder) that
+     * Whether the event behaves like a button: `role="button"`, roving `tabIndex` and the default
+     * accessible name. Set it to `false` for an inert preview (creation / resize placeholder) that
      * only hosts pointer interactions — it then renders a plain `div`, so it is never focusable.
      * @default true
      */

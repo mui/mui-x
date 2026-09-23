@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
-import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
@@ -45,7 +44,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     eventId,
     occurrenceKey,
     renderDragPreview,
-    id: idProp,
     isDraggable = false,
     nativeButton = false,
     // Props forwarded to the DOM element
@@ -67,9 +65,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Selector hooks
   const hasPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isDefined);
-
-  // State hooks
-  const id = useId(idProp);
 
   // Feature hooks
   const getDraggedDay = useStableCallback((input: { clientX: number }) => {
@@ -97,8 +92,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     dataTimezone,
   });
 
-  const hasCustomLabel =
-    elementProps['aria-label'] != null || elementProps['aria-labelledby'] != null;
+  // Labels set on the `render` element are not detected.
+  const hasCustomLabel = Boolean(elementProps['aria-label'] || elementProps['aria-labelledby']);
   const accessibleName = useDefaultEventAccessibleName({
     eventId,
     occurrenceKey,
@@ -106,7 +101,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     end,
     dataTimezone,
     includeResource: true,
-    hasCustomLabel,
+    enabled: !hasCustomLabel,
   });
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
@@ -172,7 +167,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     props: [
       elementProps,
       {
-        id,
         ...(hasCustomLabel ? undefined : { 'aria-label': accessibleName }),
         style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
       },

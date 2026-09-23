@@ -28,7 +28,7 @@ describe('getEventAccessibleName', () => {
       .endAt('2025-07-03T08:30:00')
       .toOccurrence();
 
-    expect(getName(occurrence)).to.equal('Running, 7:30 AM to 8:30 AM, Thursday 3 July');
+    expect(getName(occurrence)).to.equal('Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025');
   });
 
   it('should format the time range in 24-hour format when ampm is false', () => {
@@ -39,14 +39,14 @@ describe('getEventAccessibleName', () => {
       .toOccurrence();
 
     expect(getName(occurrence, { ampm: false })).to.equal(
-      'Running, 16:00 to 17:00, Thursday 3 July',
+      'Running, 16:00 to 17:00, Thursday, July 3rd, 2025',
     );
   });
 
   it('should announce "All day" instead of a time range for a single-day all-day event', () => {
     const occurrence = EventBuilder.new().title('Conference').fullDay('2025-07-03').toOccurrence();
 
-    expect(getName(occurrence)).to.equal('Conference, All day, Thursday 3 July');
+    expect(getName(occurrence)).to.equal('Conference, All day, Thursday, July 3rd, 2025');
   });
 
   it('should announce the date range of a multi-day all-day event', () => {
@@ -56,7 +56,7 @@ describe('getEventAccessibleName', () => {
       .toOccurrence();
 
     expect(getName(occurrence)).to.equal(
-      'Conference, All day, From Thursday 3 July to Saturday 5 July',
+      'Conference, All day, From Thursday, July 3rd, 2025 to Saturday, July 5th, 2025',
     );
   });
 
@@ -68,7 +68,7 @@ describe('getEventAccessibleName', () => {
       .toOccurrence();
 
     expect(getName(occurrence)).to.equal(
-      'Trip, From Thursday 3 July 7:30 AM to Saturday 5 July 5:00 PM',
+      'Trip, From Thursday, July 3rd, 2025 7:30 AM to Saturday, July 5th, 2025 5:00 PM',
     );
   });
 
@@ -80,7 +80,7 @@ describe('getEventAccessibleName', () => {
       .toOccurrence();
 
     expect(getName(occurrence, { resourceName: 'Sport' })).to.equal(
-      'Running, 7:30 AM to 8:30 AM, Thursday 3 July, Resource: Sport',
+      'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Resource: Sport',
     );
   });
 
@@ -92,7 +92,7 @@ describe('getEventAccessibleName', () => {
       .toOccurrence();
 
     expect(getName(occurrence, { isRecurring: true })).to.equal(
-      'Running, 7:30 AM to 8:30 AM, Thursday 3 July, Recurring',
+      'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Recurring',
     );
   });
 
@@ -105,13 +105,43 @@ describe('getEventAccessibleName', () => {
 
     const esLocaleText = {
       ...localeText,
-      eventAccessibleNameTimeRange: (start: string, end: string) => `de ${start} a ${end}`,
-      eventAccessibleNameRecurring: 'Recurrente',
+      eventAriaLabelTimeRange: (start: string, end: string) => `de ${start} a ${end}`,
+      eventAriaLabelRecurring: 'Recurrente',
       resourceAriaLabel: (name: string) => `Recurso: ${name}`,
     };
 
     expect(
       getName(occurrence, { localeText: esLocaleText, isRecurring: true, resourceName: 'Deporte' }),
-    ).to.equal('Correr, de 7:30 AM a 8:30 AM, Thursday 3 July, Recurso: Deporte, Recurrente');
+    ).to.equal(
+      'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3rd, 2025, Recurso: Deporte, Recurrente',
+    );
+  });
+
+  it('should skip an empty title instead of announcing a leading separator', () => {
+    const occurrence = EventBuilder.new()
+      .title('')
+      .startAt('2025-07-03T07:30:00')
+      .endAt('2025-07-03T08:30:00')
+      .toOccurrence();
+
+    expect(getName(occurrence)).to.equal('7:30 AM to 8:30 AM, Thursday, July 3rd, 2025');
+  });
+
+  it('should let the locale reorder the parts through eventAriaLabel', () => {
+    const occurrence = EventBuilder.new()
+      .title('Running')
+      .startAt('2025-07-03T07:30:00')
+      .endAt('2025-07-03T08:30:00')
+      .toOccurrence();
+
+    const reorderingLocaleText = {
+      ...localeText,
+      eventAriaLabel: ({ title, when, date }: { title: string; when: string; date?: string }) =>
+        `${date} ${when} ${title}`,
+    };
+
+    expect(getName(occurrence, { localeText: reorderingLocaleText })).to.equal(
+      'Thursday, July 3rd, 2025 7:30 AM to 8:30 AM Running',
+    );
   });
 });

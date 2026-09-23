@@ -1,11 +1,11 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerEventLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerEditingTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
 // Callbacks receive both stable English tokens and date-locale weekday strings.
 const weekdays = [
@@ -72,7 +72,7 @@ const viewNames = {
   agenda: 'סדר יום',
 };
 
-const heILDialog: Partial<EventEditingLocaleText> = {
+const heILDialog: SchedulerEditingTranslations = {
   // EventDialog
   colorPickerLabel: 'צבע האירוע',
   colorSectionLabel: 'צבע',
@@ -145,16 +145,23 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   title: 'על אילו אירועים להחיל את השינוי?',
 };
 
-const heILEvent: Partial<SchedulerEventLocaleText> = {
+const heILEvent: SchedulerEventTranslations = {
   // Event accessible name
-  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
-  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
-  // eventAccessibleNameAllDay: 'All day',
-  // eventAccessibleNameRecurring: 'Recurring',
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
   resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
-const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const heILCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'משאבים',
 
@@ -227,7 +234,7 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'שם המשאב',
 };
 
-const heILTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const heILTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'שם המשאב',
 };

@@ -18,14 +18,14 @@ import type { SchedulerEventAccessibleNameLocaleText } from './event-accessible-
 
 export interface UseEventAccessibleNameParameters {
   /**
-   * The occurrence to name. `null` when the event is not in the store (e.g. a placeholder).
+   * The occurrence to name, or `null` to skip the computation.
    */
   occurrence: SchedulerRenderableEventOccurrence | null;
+  isRecurring: boolean;
   /**
-   * Whether to announce the occurrence's primary resource.
-   * Leave it off where the surrounding row already carries the resource.
+   * Name of the resource to announce, if any.
    */
-  includeResource: boolean;
+  resourceName?: string | null;
   /**
    * The translated sentences. Defaults to English.
    */
@@ -33,28 +33,21 @@ export interface UseEventAccessibleNameParameters {
 }
 
 /**
- * Returns the accessible name of an event occurrence, or `undefined` without an occurrence.
+ * Accessible name of an event occurrence, or `undefined` without an occurrence.
  */
 export function useEventAccessibleName(
   parameters: UseEventAccessibleNameParameters,
 ): string | undefined {
   const {
     occurrence,
-    includeResource,
+    isRecurring,
+    resourceName = null,
     localeText = DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT,
   } = parameters;
 
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
-
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
-  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence?.id ?? '');
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    includeResource ? getPrimaryResourceId(occurrence?.resource) : null,
-  );
-  const resourceName = resource?.title ?? null;
 
   return React.useMemo(() => {
     if (occurrence == null) {
@@ -72,35 +65,45 @@ export function useEventAccessibleName(
   }, [occurrence, adapter, ampm, localeText, isRecurring, resourceName]);
 }
 
-export interface UseDefaultEventAccessibleNameParameters
-  extends
-    Pick<UseEventAccessibleNameParameters, 'includeResource'>,
-    useOriginalOccurrence.Parameters {
+export interface UseDefaultEventAccessibleNameParameters extends useOriginalOccurrence.Parameters {
   /**
-   * `true` when the consumer passed its own `aria-label` or `aria-labelledby`, so the default is skipped.
+   * Whether to announce the occurrence's primary resource.
    */
-  hasCustomLabel: boolean;
+  includeResource: boolean;
+  /**
+   * `false` skips the store reads and returns `undefined`: the consumer passed its own label, or
+   * the element is not interactive.
+   */
+  enabled: boolean;
 }
 
 /**
- * The English default name a headless event primitive gives itself. Resolves the occurrence from
- * the store, and returns `undefined` when the event is not there or the consumer passed a label.
+ * English default name of a headless event primitive, resolved from the store.
+ * Returns `undefined` when disabled or when the event is not in the store (a placeholder).
  */
 export function useDefaultEventAccessibleName(
   parameters: UseDefaultEventAccessibleNameParameters,
 ): string | undefined {
-  const { eventId, occurrenceKey, start, end, dataTimezone, includeResource, hasCustomLabel } =
-    parameters;
+  const { eventId, occurrenceKey, start, end, dataTimezone, includeResource, enabled } = parameters;
   const store = useSchedulerStoreContext();
-  const event = useStore(store, schedulerEventSelectors.processedEvent, eventId);
+
+  const lookupId = enabled ? eventId : null;
+  const event = useStore(store, schedulerEventSelectors.processedEvent, lookupId);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, lookupId);
+  // Only the primary resource is announced.
+  const resource = useStore(
+    store,
+    schedulerResourceSelectors.processedResource,
+    includeResource ? getPrimaryResourceId(event?.resource) : null,
+  );
 
   const occurrence = React.useMemo(
     () =>
-      event && !hasCustomLabel
+      event
         ? generateOccurrenceFromEvent({ event, eventId, occurrenceKey, start, end, dataTimezone })
         : null,
-    [event, hasCustomLabel, eventId, occurrenceKey, start, end, dataTimezone],
+    [event, eventId, occurrenceKey, start, end, dataTimezone],
   );
 
-  return useEventAccessibleName({ occurrence, includeResource });
+  return useEventAccessibleName({ occurrence, isRecurring, resourceName: resource?.title });
 }

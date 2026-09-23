@@ -97,17 +97,16 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     dataTimezone,
   });
 
-  // The row title already carries the resource, so the name leaves it out.
-  const hasCustomLabel =
-    elementProps['aria-label'] != null || elementProps['aria-labelledby'] != null;
+  // Labels set on the `render` element are not detected.
+  const hasCustomLabel = Boolean(elementProps['aria-label'] || elementProps['aria-labelledby']);
   const accessibleName = useDefaultEventAccessibleName({
     eventId,
     occurrenceKey,
     start,
     end,
     dataTimezone,
-    includeResource: false,
-    hasCustomLabel,
+    includeResource: true,
+    enabled: !hasCustomLabel,
   });
 
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(

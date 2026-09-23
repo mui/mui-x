@@ -7,6 +7,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  getAllEventsByTitle,
   ResourceBuilder,
   SchedulerStoreRunner,
   withinEventCalendarToolbar,
@@ -196,11 +197,10 @@ describe('<MonthView />', () => {
     it('should name each event in the popover with its title, time range and date', async () => {
       const { popover } = await renderAndOpenPopover();
 
-      expect(
-        within(popover).getByRole('button', {
-          name: 'Event 1, 8:00 AM to 9:00 AM, Thursday 1 May',
-        }),
-      ).not.to.equal(null);
+      const event = within(popover).getByRole('button', {
+        name: 'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1st, 2025',
+      });
+      expect(event).not.to.have.attribute('aria-labelledby');
     });
 
     it('should close the popover when `onEventEditingStart` cancels an activation from it', async () => {
@@ -509,7 +509,7 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEventOccurrences = screen.getAllByLabelText(/^Grid Row Test,/);
+      const allEventOccurrences = getAllEventsByTitle('Grid Row Test');
       const mainEvent = allEventOccurrences.find(
         (event) => event.getAttribute('aria-hidden') !== 'true',
       );
@@ -552,9 +552,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText(/^Event 1,/);
-      const event2Elements = screen.getAllByLabelText(/^Event 2,/);
-      const event3Elements = screen.getAllByLabelText(/^Event 3,/);
+      const event1Elements = getAllEventsByTitle('Event 1');
+      const event2Elements = getAllEventsByTitle('Event 2');
+      const event3Elements = getAllEventsByTitle('Event 3');
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -582,9 +582,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const mainEvent = screen
-        .getAllByLabelText(/^Three Day Event,/)
-        .find((el) => el.getAttribute('aria-hidden') !== 'true');
+      const mainEvent = getAllEventsByTitle('Three Day Event').find(
+        (el) => el.getAttribute('aria-hidden') !== 'true',
+      );
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];
 
@@ -601,7 +601,7 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const eventInstances = screen.getAllByLabelText(/^Multiple week event,/);
+      const eventInstances = getAllEventsByTitle('Multiple week event');
 
       const visibleInstances = eventInstances.filter(
         (el) => el.getAttribute('aria-hidden') !== 'true',

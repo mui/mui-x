@@ -122,7 +122,7 @@ describe('<CalendarGrid.DayEvent />', () => {
       renderRunning();
       expect(
         screen.getByRole('button', {
-          name: 'Running, 7:30 AM to 8:30 AM, Thursday 3 July, Resource: Sport',
+          name: 'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Resource: Sport',
         }),
       ).not.to.equal(null);
     });

@@ -241,15 +241,3 @@ export function formatHourAndMinutes(
 
   return adapter.formatByString(date, timeFormat);
 }
-
-/**
- * @example "Thursday 3 July"
- */
-export function formatWeekDayDayOfMonthAndMonth(
-  date: TemporalSupportedObject,
-  adapter: Adapter,
-): string {
-  const f = adapter.formats;
-
-  return adapter.formatByString(date, `${f.weekday} ${f.dayOfMonth} ${f.monthFullLetter}`);
-}
