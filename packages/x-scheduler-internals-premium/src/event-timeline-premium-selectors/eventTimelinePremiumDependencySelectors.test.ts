@@ -253,6 +253,39 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     ]);
   });
 
+  it('should describe an all-day successor with the lag it can actually carry', () => {
+    const allDayTarget = EventBuilder.new().id('event-all-day').allDay().build();
+    const state = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, allDayTarget],
+      dependencies: [
+        {
+          id: 'dep-short',
+          source: 'event-a',
+          target: 'event-all-day',
+          type: 'FinishToStart',
+          lag: 2,
+          lagUnit: 'hour',
+        },
+        {
+          id: 'dep-long',
+          source: 'event-a',
+          target: 'event-all-day',
+          type: 'FinishToFinish',
+          lag: 36,
+          lagUnit: 'hour',
+        },
+      ],
+    });
+
+    expect(
+      eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-all-day'),
+    ).to.deep.equal([
+      { title: eventA.title, type: 'FinishToStart', lag: null },
+      { title: eventA.title, type: 'FinishToFinish', lag: { amount: 1, unit: 'day' } },
+    ]);
+  });
+
   it('should return the same empty instance for every event without predecessors', () => {
     const state = getState();
 

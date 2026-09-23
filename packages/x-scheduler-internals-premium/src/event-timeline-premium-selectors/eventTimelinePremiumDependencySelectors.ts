@@ -11,6 +11,7 @@ import type {
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
   getDependencyLag,
+  getWholeDayDependencyLag,
   groupByEventId,
   isDependencyActive,
   isDependencyReadOnly,
@@ -35,7 +36,8 @@ export interface SchedulerDependencySourceDescription {
   title: string;
   type: SchedulerDependencyType;
   /**
-   * The lag the engine applies, or `null` when the dependency has no usable lag.
+   * The lag the engine applies to this successor, or `null` when the dependency has no
+   * usable lag.
    */
   lag: SchedulerResolvedDependencyLag | null;
 }
@@ -47,10 +49,15 @@ const activeSourcesByTargetSelector = createSelectorMemoized(
     const sourcesByTarget = new Map<SchedulerEventId, SchedulerDependencySourceDescription[]>();
     for (const dependency of dependencies) {
       // Active dependencies always resolve: their events exist in the lookup.
+      const lag = getDependencyLag(dependency);
       const source = {
         title: processedEventLookup.get(dependency.source)!.title,
         type: dependency.type,
-        lag: getDependencyLag(dependency),
+        // The same normalization the engine applies, so the description never announces
+        // a wait the successor does not take.
+        lag: processedEventLookup.get(dependency.target)!.allDay
+          ? getWholeDayDependencyLag(lag)
+          : lag,
       };
       const sources = sourcesByTarget.get(dependency.target);
       if (sources) {
