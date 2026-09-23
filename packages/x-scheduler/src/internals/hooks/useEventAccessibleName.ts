@@ -13,9 +13,9 @@ import { getEventAccessibleName } from '../utils/event-accessible-name';
 
 export interface UseEventAccessibleNameParameters {
   /**
-   * The occurrence to name, or `null` to skip the computation.
+   * The occurrence to name.
    */
-  occurrence: SchedulerRenderableEventOccurrence | null;
+  occurrence: SchedulerRenderableEventOccurrence;
   isRecurring: boolean;
   localeText: SchedulerEventLocaleText;
   /**
@@ -26,11 +26,9 @@ export interface UseEventAccessibleNameParameters {
 }
 
 /**
- * Accessible name of an event occurrence, or `undefined` without an occurrence.
+ * Accessible name of an event occurrence.
  */
-export function useEventAccessibleName(
-  parameters: UseEventAccessibleNameParameters,
-): string | undefined {
+export function useEventAccessibleName(parameters: UseEventAccessibleNameParameters): string {
   const { occurrence, isRecurring, localeText, resourceName: resourceNameProp } = parameters;
 
   const adapter = useAdapterContext();
@@ -40,22 +38,20 @@ export function useEventAccessibleName(
   const primaryResource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    usesPrimaryResource ? getPrimaryResourceId(occurrence?.resource) : null,
+    usesPrimaryResource ? getPrimaryResourceId(occurrence.resource) : null,
   );
   const resourceName = usesPrimaryResource ? (primaryResource?.title ?? null) : resourceNameProp;
 
-  return React.useMemo(() => {
-    if (occurrence == null) {
-      return undefined;
-    }
-
-    return getEventAccessibleName({
-      occurrence,
-      adapter,
-      ampm,
-      localeText,
-      isRecurring,
-      resourceName,
-    });
-  }, [occurrence, adapter, ampm, localeText, isRecurring, resourceName]);
+  return React.useMemo(
+    () =>
+      getEventAccessibleName({
+        occurrence,
+        adapter,
+        ampm,
+        localeText,
+        isRecurring,
+        resourceName,
+      }),
+    [occurrence, adapter, ampm, localeText, isRecurring, resourceName],
+  );
 }

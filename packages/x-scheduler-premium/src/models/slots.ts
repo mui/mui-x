@@ -47,7 +47,7 @@ export interface EventTimelinePremiumSlots extends SchedulerSlots {
    * The content of an event block.
    * It replaces the title text and is rendered inside the block, so the block keeps its
    * geometry, its drag and resize handles, and its button semantics.
-   * The content is visible only: the event is named by its localized `aria-label`.
+   * The content doesn't change the accessible name of the event, which is built from its data.
    * @default the occurrence title
    */
   timelineEventContent?: React.ComponentType<
@@ -56,8 +56,8 @@ export interface EventTimelinePremiumSlots extends SchedulerSlots {
   /**
    * The content of a resource title cell.
    * It replaces the title text and is rendered next to the legend color and the collapse toggle.
-   * The content is visible only: the events of the row announce the resource through
-   * `resourceAriaLabel`, not through this cell.
+   * The events of the row announce the resource through their own accessible name, so the
+   * content doesn't change it.
    * @default the resource title
    */
   timelineResourceTitle?: React.ComponentType<

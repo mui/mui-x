@@ -21,6 +21,7 @@ function getName(
     ampm: true,
     localeText,
     isRecurring: false,
+    resourceName: null,
     ...overrides,
   });
 }

@@ -13,9 +13,9 @@ export interface GetEventAccessibleNameParameters {
   localeText: SchedulerEventLocaleText;
   isRecurring: boolean;
   /**
-   * Name of the resource to announce, if any.
+   * Name of the resource to announce, or `null` to announce none.
    */
-  resourceName?: string | null;
+  resourceName: string | null;
 }
 
 /**

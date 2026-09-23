@@ -165,8 +165,8 @@ const enUSTimeline: Omit<
 };
 
 export const enUS: SchedulerLocalization = getSchedulerLocalization({
-  event: enUSEvent,
   dialog: enUSDialog,
+  event: enUSEvent,
   calendar: enUSCalendar,
   timeline: enUSTimeline,
 });

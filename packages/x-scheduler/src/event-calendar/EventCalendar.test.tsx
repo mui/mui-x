@@ -56,6 +56,25 @@ describe('EventCalendar', () => {
     ).not.to.equal(null);
   });
 
+  it('should keep the resource color indicator out of the accessibility tree', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const running = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+      .resource(sport)
+      .build();
+
+    render(<EventCalendar events={[running]} resources={[sport]} defaultView="month" />);
+
+    const indicators = document.querySelectorAll(`.${eventCalendarClasses.eventColorIndicator}`);
+    expect(indicators.length).to.be.greaterThan(0);
+    indicators.forEach((indicator) => {
+      expect(indicator).to.have.attribute('aria-hidden', 'true');
+      expect(indicator).not.to.have.attribute('role');
+      expect(indicator).not.to.have.attribute('aria-label');
+    });
+  });
+
   it('should translate the event accessible name through localeText', () => {
     render(
       <EventCalendar

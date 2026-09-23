@@ -1379,6 +1379,34 @@ describe('<EventTimelinePremium />', () => {
       );
     });
 
+    it('should name a multi-day event with a single date and time range', async () => {
+      const trip = EventBuilder.new()
+        .title('Trip')
+        .span('2025-07-03T07:30:00Z', '2025-07-05T17:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [trip], preset: 'dayAndMonth' });
+
+      expect(getEventByTitle('Trip')).toHaveAccessibleName(
+        `Trip, From Thursday, July 3rd, 2025 7:30 AM to Saturday, July 5th, 2025 5:00 PM, Resource: ${engineering.title}`,
+      );
+    });
+
+    it('should name an all-day event with its date range instead of a time range', async () => {
+      const conference = EventBuilder.new()
+        .title('Conference')
+        .span('2025-07-03', '2025-07-05', { allDay: true })
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [conference], preset: 'dayAndMonth' });
+
+      expect(getEventByTitle('Conference')).toHaveAccessibleName(
+        `Conference, All day, From Thursday, July 3rd, 2025 to Saturday, July 5th, 2025, Resource: ${engineering.title}`,
+      );
+    });
+
     it('should name events with the locale text of the timeline', async () => {
       const standup = EventBuilder.new()
         .title('Reunión')

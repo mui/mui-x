@@ -202,7 +202,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Feature hooks
   const id = useId(idProp);
   const accessibleName = useEventAccessibleName({
-    occurrence: variant === 'placeholder' ? null : occurrence,
+    occurrence,
     isRecurring,
     resourceName: rowResource?.title ?? null,
     localeText,
@@ -281,7 +281,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         {content}
       </EventTimelinePremiumEventLinesClamp>
       {dependencySources.length > 0 && (
-        // Visually hidden, and read through the `aria-describedby` reference above.
+        // Visually hidden, and `aria-hidden` so it is announced through the `aria-describedby`
+        // reference above rather than as a child of the event.
         <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
           {dependencySources
             .map((source) => DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title))

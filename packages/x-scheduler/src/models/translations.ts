@@ -98,7 +98,7 @@ export interface EventEditingLocaleText {
  */
 export interface SchedulerEventAriaLabelParts {
   /**
-   * The title of the event.
+   * The title of the event. Empty when the event has none, which the default composition skips.
    */
   title: string;
   /**
