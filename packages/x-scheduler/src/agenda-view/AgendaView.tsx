@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
-import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarViewDefinition } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
@@ -20,11 +19,11 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
-import { AgendaViewProps } from './AgendaView.types';
+import type { AgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { EventSkeleton } from '../internals/components/event-skeleton';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
-import { EventDialogTrigger } from '../internals/components/event-dialog';
+import { EventContextMenuTrigger } from '../internals/components/event-context-menu';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -68,7 +67,7 @@ const DayNumberCell = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'AgendaViewDayNumberCell',
 })(({ theme }) => ({
-  fontSize: theme.typography.h6.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-agendaDayNumber, 1.5rem)',
   fontWeight: theme.typography.fontWeightMedium,
   lineHeight: 1,
   minWidth: '4ch',
@@ -156,7 +155,7 @@ const AgendaViewWeekNumberRow = styled('div', {
   }),
 }));
 
-const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
+const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(
       schedulerOtherSelectors.visibleDate(state),
@@ -178,17 +177,13 @@ export const AgendaView = React.memo(
     const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
-    // Ref hooks
-    const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useMergedRefs(forwardedRef, containerRef);
-
     // Selector hooks
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
     // Feature hooks
-    const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
+    const { days } = useEventCalendarView(AGENDA_VIEW_DEFINITION);
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     // Selector hooks
@@ -213,7 +208,7 @@ export const AgendaView = React.memo(
     return (
       <AgendaViewRoot
         {...props}
-        ref={handleRef}
+        ref={forwardedRef}
         className={clsx(props.className, classes.agendaView)}
       >
         {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (
@@ -270,14 +265,14 @@ export const AgendaView = React.memo(
                 {!isLoading &&
                   occurrences.map((occurrence) => (
                     <li key={occurrence.key} className={classes.agendaViewEventListItem}>
-                      <EventDialogTrigger occurrence={occurrence}>
+                      <EventContextMenuTrigger occurrence={occurrence}>
                         <EventItem
                           occurrence={occurrence}
                           date={date}
                           variant="regular"
-                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
+                          ariaLabelledBy={`${schedulerId}-DayHeaderCell-${date.key}`}
                         />
-                      </EventDialogTrigger>
+                      </EventContextMenuTrigger>
                     </li>
                   ))}
               </EventsList>

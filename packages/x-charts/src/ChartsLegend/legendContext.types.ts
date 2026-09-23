@@ -1,5 +1,5 @@
-import { type ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
-import { type SeriesId } from '../models/seriesType/common';
+import type { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
+import type { SeriesId } from '../models/seriesType/common';
 import type { ChartSeriesType } from '../models/seriesType/config';
 
 interface LegendItemContextBase {

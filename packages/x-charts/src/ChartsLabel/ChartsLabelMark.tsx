@@ -1,13 +1,11 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useTheme, type SxProps, type Theme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import {
-  type ChartsLabelMarkClasses,
-  labelMarkClasses,
-  useUtilityClasses,
-} from './labelMarkClasses';
+import { labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
+import type { ChartsLabelMarkClasses } from './labelMarkClasses';
 import type { MarkShape } from '../models/seriesType/line';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import { getSymbol } from '../internals/getSymbol';
@@ -19,11 +17,7 @@ export interface ChartsLabelCustomMarkProps {
 }
 
 export type ChartsLabelMarkType =
-  | 'square'
-  | 'circle'
-  | 'line'
-  | 'line+mark'
-  | React.ComponentType<ChartsLabelCustomMarkProps>;
+  'square' | 'circle' | 'line' | 'line+mark' | React.ComponentType<ChartsLabelCustomMarkProps>;
 
 export interface ChartsLabelMarkProps {
   /**

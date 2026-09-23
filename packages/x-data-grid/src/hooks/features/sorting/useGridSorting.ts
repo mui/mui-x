@@ -21,16 +21,17 @@ import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
-  type GridStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
 } from '../../core/strategyProcessing';
+import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import {
   buildAggregatedSortingApplier,
   mergeStateWithSortModel,
   getNextGridSortDirection,
   sanitizeSortModel,
 } from './gridSortingUtils';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
 
@@ -189,6 +190,9 @@ export const useGridSorting = (
   const sortColumn = React.useCallback<GridSortApi['sortColumn']>(
     (field, direction, allowMultipleSorting) => {
       const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return;
+      }
       const sortItem = createSortItem(column, direction);
       let sortModel: GridSortModel;
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {

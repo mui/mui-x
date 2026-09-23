@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
@@ -7,13 +8,13 @@ import { useTheme } from '@mui/material/styles';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
 import {
-  type UseChartBrushSignature,
   selectorBrushStartX,
   selectorBrushStartY,
   selectorBrushCurrentX,
   selectorBrushCurrentY,
   selectorBrushConfig,
 } from '../internals/plugins/featurePlugins/useChartBrush';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useStore } from '../internals/store/useStore';
 
 function BrushRect(props: React.SVGProps<SVGRectElement>) {
@@ -38,7 +39,7 @@ export interface ChartsBrushOverlayProps {
 /**
  * Component that renders visual feedback during brush interaction
  */
-export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
+function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
   const { className } = props;
   const store = useStore<[UseChartBrushSignature]>();
   const drawingArea = store.use(selectorChartDrawingArea);
@@ -120,3 +121,16 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
     </g>
   );
 }
+
+ChartsBrushOverlay.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
+} as any;
+
+export { ChartsBrushOverlay };

@@ -1,21 +1,23 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
-  type GridApi,
-  type GridDataSource,
-  type GridGetRowsResponse,
   useGridApiRef,
-  type GridPivotModel,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
-import { spy } from 'sinon';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridDataSource,
+  GridGetRowsResponse,
+  GridPivotModel,
+} from '@mui/x-data-grid-premium';
 import { getColumnHeadersTextContent, getRowValues } from 'test/utils/helperFn';
-import { type PivotingColDefCallback } from '../hooks/features/pivoting/gridPivotingInterfaces';
+import { vi, describe, it, expect } from 'vitest';
+import type { PivotingColDefCallback } from '../hooks/features/pivoting/gridPivotingInterfaces';
 
 describe('<DataGridPremium /> - Data source pivoting', () => {
   const { render } = createRenderer();
@@ -29,12 +31,12 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
   };
 
   let apiRef: RefObject<GridApi | null>;
-  const fetchRowsSpy = spy();
+  const fetchRowsSpy = vi.fn();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -132,10 +134,10 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
+    expect(fetchRowsSpy.mock.lastCall?.[0].pivotModel).to.deep.equal(pivotModel);
   });
 
   it('should not pass hidden rows, columns and values in the `pivotModel` in the `getRows` params', async () => {
@@ -156,10 +158,10 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal({
+    expect(fetchRowsSpy.mock.lastCall?.[0].pivotModel).to.deep.equal({
       rows: [],
       columns: [],
       values: [],
@@ -227,10 +229,10 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
+    expect(fetchRowsSpy.mock.lastCall?.[0].pivotModel).to.deep.equal(pivotModel);
     await waitFor(() => {
       expect(getColumnHeadersTextContent()).to.deep.equal([
         '',
@@ -280,11 +282,11 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     // Verify that pivot model is passed to getRows
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
+    expect(fetchRowsSpy.mock.lastCall?.[0].pivotModel).to.deep.equal(pivotModel);
 
     // Verify displayed data
     await waitFor(() => {
@@ -335,11 +337,11 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     // Verify that pivot model is passed to getRows
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
+    expect(fetchRowsSpy.mock.lastCall?.[0].pivotModel).to.deep.equal(pivotModel);
 
     // Verify displayed data
     await waitFor(() => {
@@ -442,7 +444,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     await waitFor(() => {
@@ -501,7 +503,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     await waitFor(() => {
@@ -511,7 +513,11 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
     await waitFor(() => {
       const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-      expect(footerRow?.quantity).to.deep.equal({ position: 'footer', value: 100 });
+      expect(footerRow?.quantity).to.deep.equal({
+        position: 'footer',
+        value: 100,
+        formattedValue: undefined,
+      });
     });
   });
 
@@ -562,7 +568,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     // Custom header is being used and the value is picked from the custom field name
@@ -641,7 +647,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+        expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
       });
 
       await waitFor(() => {
@@ -722,7 +728,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+        expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
       });
 
       await waitFor(() => {

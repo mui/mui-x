@@ -120,7 +120,7 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
   );
 }
 
-GridSkeletonCell.propTypes = {
+GridSkeletonCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -133,12 +133,15 @@ GridSkeletonCell.propTypes = {
   empty: PropTypes.bool,
   field: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  skeletonProps: PropTypes.object,
   type: PropTypes.oneOf([
     'actions',
     'boolean',
     'custom',
     'date',
     'dateTime',
+    'longText',
+    'multiSelect',
     'number',
     'singleSelect',
     'string',

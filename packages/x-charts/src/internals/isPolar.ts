@@ -1,7 +1,7 @@
-import {
-  type ChartSeriesType,
-  type ChartSeriesDefaultized,
-  type PolarChartSeriesType,
+import type {
+  ChartSeriesType,
+  ChartSeriesDefaultized,
+  PolarChartSeriesType,
 } from '../models/seriesType/config';
 import { polarSeriesTypes } from './configInit';
 

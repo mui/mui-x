@@ -1,6 +1,7 @@
-import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
-import { mergeDateAndTime, PickerRangeValue } from '@mui/x-date-pickers/internals';
-import { RangePosition } from '../../models';
+import type { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import type { PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { mergeDateAndTime } from '@mui/x-date-pickers/internals';
+import type { RangePosition } from '../../models';
 
 interface CalculateRangeChangeOptions {
   adapter: MuiPickersAdapter;

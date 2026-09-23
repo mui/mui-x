@@ -1,24 +1,29 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
+import type { EventDialogClasses } from '../internals/components/event-dialog/eventDialogClasses';
 import {
-  EventDialogClasses,
   eventDialogClassKeys,
   eventDialogSlots,
 } from '../internals/components/event-dialog/eventDialogClasses';
+import type { EventContextMenuClasses } from '../internals/components/event-context-menu/eventContextMenuClasses';
 import {
-  ErrorContainerClasses,
+  eventContextMenuClassKeys,
+  eventContextMenuSlots,
+} from '../internals/components/event-context-menu/eventContextMenuClasses';
+import type { ErrorContainerClasses } from '../internals/components/error-container/errorContainerClasses';
+import {
   errorContainerClassKeys,
   errorContainerSlots,
 } from '../internals/components/error-container/errorContainerClasses';
+import type { EventSkeletonClasses } from '../internals/components/event-skeleton/eventSkeletonClasses';
 import {
-  EventSkeletonClasses,
   eventSkeletonClassKeys,
   eventSkeletonSlots,
 } from '../internals/components/event-skeleton/eventSkeletonClasses';
 
 export interface EventCalendarClasses
-  extends EventDialogClasses, ErrorContainerClasses, EventSkeletonClasses {
+  extends EventDialogClasses, EventContextMenuClasses, ErrorContainerClasses, EventSkeletonClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the side panel element. */
@@ -271,6 +276,32 @@ export interface EventCalendarClasses
   miniCalendarNextButton: string;
   /** Styles applied to the more events popover element. */
   moreEventsPopover: string;
+  /** Styles applied to the header toolbar compact menu button element (compact layout). */
+  headerToolbarCompactMenuButton: string;
+  /** Styles applied to the header toolbar compact today button element (compact layout). */
+  headerToolbarCompactTodayButton: string;
+  /** Styles applied to the side panel drawer paper (popup) element (compact layout). */
+  sidePanelDrawer: string;
+  /** Styles applied to the side panel drawer backdrop element. */
+  sidePanelDrawerBackdrop: string;
+  /** Styles applied to the side panel drawer root (modal) element. */
+  sidePanelDrawerViewport: string;
+  /** Styles applied to the side panel drawer header element. */
+  sidePanelDrawerHeader: string;
+  /** Styles applied to the side panel drawer title element. */
+  sidePanelDrawerTitle: string;
+  /** Styles applied to the side panel drawer close button element. */
+  sidePanelDrawerCloseButton: string;
+  /** Styles applied to the side panel drawer view list element. */
+  sidePanelDrawerViewList: string;
+  /** Styles applied to side panel drawer view list item elements. */
+  sidePanelDrawerViewItem: string;
+  /** Styles applied to the side panel drawer preferences button element. */
+  sidePanelDrawerPreferencesButton: string;
+  /** Styles applied to the side panel drawer preferences entry list element. */
+  sidePanelDrawerPreferences: string;
+  /** Styles applied to the side panel drawer collapsible preferences options list element. */
+  sidePanelDrawerPreferencesList: string;
 }
 
 export type EventCalendarClassKey = keyof EventCalendarClasses;
@@ -408,9 +439,23 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'miniCalendarPreviousButton',
     'miniCalendarNextButton',
     'moreEventsPopover',
+    'headerToolbarCompactMenuButton',
+    'headerToolbarCompactTodayButton',
+    'sidePanelDrawer',
+    'sidePanelDrawerBackdrop',
+    'sidePanelDrawerViewport',
+    'sidePanelDrawerHeader',
+    'sidePanelDrawerTitle',
+    'sidePanelDrawerCloseButton',
+    'sidePanelDrawerViewList',
+    'sidePanelDrawerViewItem',
+    'sidePanelDrawerPreferencesButton',
+    'sidePanelDrawerPreferences',
+    'sidePanelDrawerPreferencesList',
     ...errorContainerClassKeys,
     ...eventSkeletonClassKeys,
     ...eventDialogClassKeys,
+    ...eventContextMenuClassKeys,
   ],
 );
 
@@ -541,9 +586,23 @@ const slots = {
   miniCalendarPreviousButton: ['miniCalendarPreviousButton'],
   miniCalendarNextButton: ['miniCalendarNextButton'],
   moreEventsPopover: ['moreEventsPopover'],
+  headerToolbarCompactMenuButton: ['headerToolbarCompactMenuButton'],
+  headerToolbarCompactTodayButton: ['headerToolbarCompactTodayButton'],
+  sidePanelDrawer: ['sidePanelDrawer'],
+  sidePanelDrawerBackdrop: ['sidePanelDrawerBackdrop'],
+  sidePanelDrawerViewport: ['sidePanelDrawerViewport'],
+  sidePanelDrawerHeader: ['sidePanelDrawerHeader'],
+  sidePanelDrawerTitle: ['sidePanelDrawerTitle'],
+  sidePanelDrawerCloseButton: ['sidePanelDrawerCloseButton'],
+  sidePanelDrawerViewList: ['sidePanelDrawerViewList'],
+  sidePanelDrawerViewItem: ['sidePanelDrawerViewItem'],
+  sidePanelDrawerPreferencesButton: ['sidePanelDrawerPreferencesButton'],
+  sidePanelDrawerPreferences: ['sidePanelDrawerPreferences'],
+  sidePanelDrawerPreferencesList: ['sidePanelDrawerPreferencesList'],
   ...errorContainerSlots,
   ...eventSkeletonSlots,
   ...eventDialogSlots,
+  ...eventContextMenuSlots,
 };
 
 /**

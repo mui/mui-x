@@ -3,8 +3,8 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { type ChartsBaseSlots } from '../../models/slots/chartsBaseSlots';
-import { type ChartsIconSlots } from '../../models/slots/chartsIconSlots';
+import type { ChartsBaseSlots } from '../../models/slots/chartsBaseSlots';
+import type { ChartsIconSlots } from '../../models/slots/chartsIconSlots';
 import type { ChartBaseToggleButtonProps } from '../../models';
 
 const baseSlots: ChartsBaseSlots = {

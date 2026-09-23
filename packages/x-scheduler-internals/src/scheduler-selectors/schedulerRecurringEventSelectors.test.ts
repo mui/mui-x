@@ -1,7 +1,8 @@
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
-import { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { getWeekDayCode } from '@mui/x-scheduler-internals-premium/internals';
+import { describe, it, expect } from 'vitest';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
 
 describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClass] as const))(

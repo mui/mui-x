@@ -220,6 +220,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateTimeField/DateTimeField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field/\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field/\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
 }

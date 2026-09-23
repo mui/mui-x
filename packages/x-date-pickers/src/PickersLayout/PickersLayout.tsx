@@ -4,14 +4,11 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { PickerLayoutOwnerState, PickersLayoutProps } from './PickersLayout.types';
-import {
-  pickersLayoutClasses,
-  getPickersLayoutUtilityClass,
-  PickersLayoutClasses,
-} from './pickersLayoutClasses';
+import type { PickerLayoutOwnerState, PickersLayoutProps } from './PickersLayout.types';
+import type { PickersLayoutClasses } from './pickersLayoutClasses';
+import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
-import { PickerValidValue } from '../internals/models';
+import type { PickerValidValue } from '../internals/models';
 import { usePickerContext } from '../hooks/usePickerContext';
 
 const useUtilityClasses = (
@@ -146,7 +143,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
   );
 }) as PickersLayoutComponent;
 
-PickersLayout.propTypes = {
+PickersLayout.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

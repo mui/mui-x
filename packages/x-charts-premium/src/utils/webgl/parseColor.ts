@@ -92,8 +92,7 @@ function parseColorUsingCanvas(color: string): [number, number, number, number] 
   }
 
   const ctx = canvas.getContext('2d')! as
-    | OffscreenCanvasRenderingContext2D
-    | CanvasRenderingContext2D;
+    OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
 
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, 1, 1);

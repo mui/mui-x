@@ -1,6 +1,6 @@
-import { createSelector } from '@mui/x-internals/store';
-import { type ChartRootSelector } from '../../utils/selectors';
-import { type UseChartIdSignature } from './useChartId.types';
+import { createSelector } from '@base-ui/utils/store';
+import type { ChartRootSelector } from '../../utils/selectors';
+import type { UseChartIdSignature } from './useChartId.types';
 
 const selectorChartIdState: ChartRootSelector<UseChartIdSignature> = (state) => state.id;
 

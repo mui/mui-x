@@ -1,13 +1,13 @@
 import {
-  type GrowableBuffer,
   compileShader,
   createGrowableBuffer,
   logWebGLErrors,
   uploadGrowableBuffer,
 } from '../utils/webgl/utils';
+import type { GrowableBuffer } from '../utils/webgl/utils';
 import { candleFragmentShader, candleVertexShader } from './candleShaders';
 import { wickFragmentShader, wickVertexShader } from './wickShaders';
-import { type CandlestickPlotData } from './useCandlestickPlotData';
+import type { CandlestickPlotData } from './useCandlestickPlotData';
 
 const QUAD_VERTICES = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 const WICK_VERTICES = new Float32Array([0, -1, 0, 1]);

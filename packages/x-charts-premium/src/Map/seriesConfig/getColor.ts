@@ -4,30 +4,41 @@ const getColor: ColorProcessor<'mapShape'> = (series, _mainAxis, _secondaryAxis,
   const colorScale = zAxis?.colorScale;
 
   if (colorScale) {
-    return (dataIndex?: number) => {
-      if (dataIndex == null) {
+    return (name?: string) => {
+      if (name == null) {
         return series.color;
       }
-      const item = series.data[dataIndex];
+      const itemIndex = series.lookupByName.get(name);
+      if (itemIndex === undefined) {
+        return series.color;
+      }
+      const item = series.data[itemIndex];
+
       if (item === undefined) {
         return series.color;
       }
-      const scaleInput = item.colorValue ?? item.value;
-      if (scaleInput != null) {
-        const color = colorScale(scaleInput);
-        if (color !== null) {
-          return color;
-        }
+
+      if (item.color !== undefined) {
+        return item.color;
       }
-      return item.color ?? series.color;
+      const scaleInput = item.colorValue ?? item.value;
+
+      const color = colorScale(scaleInput);
+
+      return color;
     };
   }
 
-  return (dataIndex?: number) => {
-    if (dataIndex == null) {
+  return (name?: string) => {
+    if (name == null) {
       return series.color;
     }
-    return series.data[dataIndex].color ?? series.color;
+    const itemIndex = series.lookupByName.get(name);
+    if (itemIndex === undefined) {
+      return series.color;
+    }
+    const item = series.data[itemIndex];
+    return item?.color ?? series.color;
   };
 };
 

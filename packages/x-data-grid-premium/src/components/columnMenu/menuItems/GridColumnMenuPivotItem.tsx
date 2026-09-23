@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { type GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
+import { useGridSelector } from '@mui/x-data-grid-pro';
+import type { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
 import { gridPivotPanelOpenSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';

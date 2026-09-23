@@ -1,7 +1,8 @@
 'use client';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridOverlay, type GridOverlayProps } from '@mui/x-data-grid';
+import { GridOverlay } from '@mui/x-data-grid';
+import type { GridOverlayProps } from '@mui/x-data-grid';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
 const GridEmptyPivotOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
@@ -16,7 +17,7 @@ const GridEmptyPivotOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
   },
 );
 
-GridEmptyPivotOverlay.propTypes = {
+GridEmptyPivotOverlay.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

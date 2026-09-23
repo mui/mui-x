@@ -1,11 +1,11 @@
-import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
-import {
-  type CartesianSeriesType,
-  type CommonDefaultizedProps,
-  type CommonSeriesType,
-  type SeriesId,
+import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import type {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  SeriesId,
 } from './common';
-import { type DatasetElementType } from './config';
+import type { DatasetElementType } from './config';
 
 export type ScatterValueType = {
   x: number;
@@ -29,8 +29,7 @@ export type ScatterValueType = {
   id?: string | number;
 };
 
-export interface ScatterSeriesType
-  extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
+export interface ScatterSeriesType extends CommonSeriesType<'scatter'>, CartesianSeriesType {
   type: 'scatter';
   data?: readonly ScatterValueType[];
   /**

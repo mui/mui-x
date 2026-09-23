@@ -53,7 +53,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
   );
 }
 
-AnimatedArea.propTypes = {
+AnimatedArea.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -63,9 +63,9 @@ AnimatedArea.propTypes = {
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
     gradientId: PropTypes.string,
-    seriesId: PropTypes.string.isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
+    seriesId: PropTypes.string.isRequired,
   }).isRequired,
   /**
    * If `true`, animations are skipped.

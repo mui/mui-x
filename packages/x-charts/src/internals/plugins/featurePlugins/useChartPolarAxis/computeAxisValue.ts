@@ -1,30 +1,30 @@
 import type { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
-  type ChartsAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
   isContinuousScaleConfig,
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type PolarAxisConfig,
-  type ComputedAxis,
 } from '../../../../models/axis';
-import {
-  type ChartSeriesType,
-  type PolarChartSeriesType,
-} from '../../../../models/seriesType/config';
+import type {
+  ChartsAxisProps,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  PolarAxisConfig,
+  ComputedAxis,
+} from '../../../../models/axis';
+import type { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
-import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { deg2rad } from '../../../angleConversion';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { scaleBand, scalePoint } from '../../../scales';
-import { type ComputedAxisConfig } from '../useChartCartesianAxis';
+import { getPercentageValue } from '../../../getPercentageValue';
+import type { ComputedAxisConfig } from '../useChartCartesianAxis';
 import { EPSILON } from '../../../../utils/epsilon';
 
 type RotationConfig = PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>;
@@ -49,10 +49,11 @@ function getRange(
     return { range: angles, isFullCircle };
   }
   const availableRadius = Math.min(drawingArea.height, drawingArea.width) / 2;
+  const { minRadius, maxRadius } = axis as RadiusConfig;
   return {
     range: [
-      (axis as RadiusConfig).minRadius ?? 0,
-      (axis as RadiusConfig).maxRadius ?? availableRadius,
+      minRadius === undefined ? 0 : getPercentageValue(minRadius, availableRadius),
+      maxRadius === undefined ? availableRadius : getPercentageValue(maxRadius, availableRadius),
     ],
     isFullCircle: false,
   };

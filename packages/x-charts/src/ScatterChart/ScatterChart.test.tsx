@@ -2,6 +2,7 @@ import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer'
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { ScatterChart, scatterClasses } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const cellSelector = '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th';

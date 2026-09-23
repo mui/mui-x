@@ -6,6 +6,9 @@ import type { ProcessedSeries } from '../../../corePlugins/useChartSeries/useCha
  * Walk forward (or backward) from `startIndex` and return the first dataIndex
  * whose data point is visible. Returns `null` if every traversed index is hidden.
  *
+ * Shared-axis types (line, bar) opt out of `useCurrentSeriesMaxLength`, so `dataLength`
+ * can exceed the focused series length to focus an index with no value.
+ *
  * Series-level hidden flags are filtered upstream (see `getNonEmptySeriesArray`),
  * so only per-data-point hidden flags are relevant here. Today only Pie sets a
  * `hidden` flag on individual data items; for other series types the data

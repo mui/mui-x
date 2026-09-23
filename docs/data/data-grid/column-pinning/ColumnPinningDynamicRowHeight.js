@@ -18,7 +18,13 @@ export default function ColumnPinningDynamicRowHeight() {
 
   const columns = React.useMemo(
     () => [
-      { field: 'name', headerName: 'Name', width: 160, editable: true },
+      {
+        field: 'name',
+        headerName: 'Name',
+        width: 160,
+        editable: true,
+        rowHeader: true,
+      },
       { field: 'email', headerName: 'Email', width: 200, editable: true },
       { field: 'age', headerName: 'Age', type: 'number', editable: true },
       {

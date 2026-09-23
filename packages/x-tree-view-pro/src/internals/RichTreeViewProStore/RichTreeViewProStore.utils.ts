@@ -1,8 +1,9 @@
-import {
-  ExtendableRichTreeViewStore,
-  TreeViewParametersToStateMapper,
-} from '@mui/x-tree-view/internals';
-import { RichTreeViewProStoreParameters, RichTreeViewProState } from './RichTreeViewProStore.types';
+import type { TreeViewParametersToStateMapper } from '@mui/x-tree-view/internals';
+import { ExtendableRichTreeViewStore } from '@mui/x-tree-view/internals';
+import type {
+  RichTreeViewProStoreParameters,
+  RichTreeViewProState,
+} from './RichTreeViewProStore.types';
 import { TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE } from '../plugins/lazyLoading';
 
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;

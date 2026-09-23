@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { type ChartBaseIconProps, type ChartsIconSlots } from '@mui/x-charts/models';
+import type { ChartBaseIconProps, ChartsIconSlots } from '@mui/x-charts/models';
 import type {
   ZoomInIconPropsOverrides,
   ZoomOutIconPropsOverrides,

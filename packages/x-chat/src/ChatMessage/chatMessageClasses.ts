@@ -29,6 +29,10 @@ export interface ChatMessageClasses {
   inlineMeta: string;
   /** Styles applied to the date divider element. */
   dateDivider: string;
+  /** Styles applied to the horizontal rule on each side of the date divider label. */
+  dateDividerLine: string;
+  /** Styles applied to the formatted day label inside the date divider. */
+  dateDividerLabel: string;
   /** Applied when the message role is 'user' */
   roleUser: string;
   /** Applied when the message role is 'assistant' */
@@ -37,6 +41,8 @@ export interface ChatMessageClasses {
   streaming: string;
   /** Applied when the message has an error status */
   error: string;
+  /** Applied when the avatar slot is hidden (`slots.avatar: null`) so the grid drops the avatar track. */
+  noAvatar: string;
 }
 
 export type ChatMessageClassKey = keyof ChatMessageClasses;
@@ -59,10 +65,13 @@ export const chatMessageClasses: ChatMessageClasses = generateUtilityClasses('Mu
   'inlineMetaSpacer',
   'inlineMeta',
   'dateDivider',
+  'dateDividerLine',
+  'dateDividerLabel',
   'roleUser',
   'roleAssistant',
   'streaming',
   'error',
+  'noAvatar',
 ]);
 
 const slots: Record<ChatMessageClassKey, string[]> = {
@@ -79,10 +88,13 @@ const slots: Record<ChatMessageClassKey, string[]> = {
   inlineMetaSpacer: ['inlineMetaSpacer'],
   inlineMeta: ['inlineMeta'],
   dateDivider: ['dateDivider'],
+  dateDividerLine: ['dateDividerLine'],
+  dateDividerLabel: ['dateDividerLabel'],
   roleUser: ['roleUser'],
   roleAssistant: ['roleAssistant'],
   streaming: ['streaming'],
   error: ['error'],
+  noAvatar: ['noAvatar'],
 };
 
 export const useChatMessageUtilityClasses = (

@@ -1,6 +1,6 @@
-import { type Position } from '@mui/x-charts/models';
-import { type FunnelLabelOptions } from './funnel.types';
-import { type Point } from './curves';
+import type { Position } from '@mui/x-charts/models';
+import type { FunnelLabelOptions } from './funnel.types';
+import type { Point } from './curves';
 
 type AlignReturnType = {
   textAnchor: FunnelLabelOptions['textAnchor'];

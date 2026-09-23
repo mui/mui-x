@@ -1,5 +1,5 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoizedWithOptions } from '@base-ui/utils/store';
 import type {
   AxisId,
   AxisItemIdentifier,
@@ -10,7 +10,7 @@ import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
 } from '../useChartInteraction/useChartInteraction.selectors';
-import { type ComputeResult } from './computeAxisValue';
+import type { ComputeResult } from './computeAxisValue';
 import { generateSvg2rotation } from './coordinateTransformation';
 import { getRotationAxisIndex, getRadiusAxisIndex } from './getAxisIndex';
 import {
@@ -159,12 +159,10 @@ export const selectorChartsInteractionTooltipRotationAxes = createSelectorMemoiz
   }
 
   return axes.axisIds
-    .map(
-      (axisId, axisIndex): AxisItemIdentifier => ({
-        axisId,
-        dataIndex: indexes[axisIndex],
-      }),
-    )
+    .map((axisId, axisIndex): AxisItemIdentifier => ({
+      axisId,
+      dataIndex: indexes[axisIndex],
+    }))
     .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
 });
 
@@ -254,12 +252,10 @@ export const selectorChartsInteractionTooltipRadiusAxes = createSelectorMemoized
   }
 
   return axes.axisIds
-    .map(
-      (axisId, axisIndex): AxisItemIdentifier => ({
-        axisId,
-        dataIndex: indexes[axisIndex],
-      }),
-    )
+    .map((axisId, axisIndex): AxisItemIdentifier => ({
+      axisId,
+      dataIndex: indexes[axisIndex],
+    }))
     .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
 });
 

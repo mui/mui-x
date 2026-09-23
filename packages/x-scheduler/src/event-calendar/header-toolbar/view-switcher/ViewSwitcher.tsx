@@ -3,11 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
-import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { CalendarView } from '@mui/x-scheduler-internals/models';
+import type { CalendarView } from '@mui/x-scheduler-internals/models';
 import { useEventCalendarStyledContext } from '../../EventCalendarStyledContext';
 
 const ViewSwitcherRoot = styled('div', {
@@ -35,8 +34,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 ) {
   const { views, onViewChange, view, className, ...other } = props;
 
-  const containerRef = React.useRef<HTMLElement | null>(null);
-  const handleRef = useMergedRefs(forwardedRef, containerRef);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -56,15 +53,18 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   };
 
   return (
-    <ViewSwitcherRoot ref={handleRef} {...other} className={clsx(className, classes.viewSwitcher)}>
+    <ViewSwitcherRoot
+      ref={forwardedRef}
+      {...other}
+      className={clsx(className, classes.viewSwitcher)}
+    >
       <Button
         className={classes.viewSwitcherButton}
         size="medium"
         id={`${schedulerId}-view-switcher-button`}
         aria-controls={open ? `${schedulerId}-view-switcher-menu` : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        aria-label="Switch View"
+        aria-expanded={open}
         onClick={handleMenuOpen}
         endIcon={<ExpandMoreOutlined />}
       >

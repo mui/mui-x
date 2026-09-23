@@ -7,7 +7,7 @@ export const gridHeaderFilteringStateSelector = createRootSelector(
 
 export const gridHeaderFilteringEnabledSelector = createSelector(
   gridHeaderFilteringStateSelector,
-  // No initialization in MIT, so we need to default to false to be used by `getTotalHeaderHeight`
+  // The state is only initialized in Pro, so it is `undefined` on the MIT grid.
   (headerFilteringState) => headerFilteringState?.enabled ?? false,
 );
 

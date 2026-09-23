@@ -4,6 +4,7 @@ import type { ChartSeriesType } from '../models/seriesType/config';
 import { getSeriesColorFn } from './getSeriesColorFn';
 
 type LineOrBarSeriesType = Extract<ChartSeriesType, 'line' | 'bar' | 'radialLine' | 'radialBar'>;
+
 export interface ResolveColorProcessorParams<SeriesType extends LineOrBarSeriesType, V> {
   series: Pick<DefaultizedSeriesType<SeriesType>, 'color' | 'data' | 'colorGetter'>;
   valueColorScale?: (value: number) => string | null;
@@ -23,8 +24,9 @@ export function resolveColorProcessor<SeriesType extends LineOrBarSeriesType, V>
         return series.color;
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor({ value, dataIndex }) : valueColorScale(value);
-      if (color === null) {
+
+      const color = valueColorScale(value!);
+      if (typeof color !== 'string') {
         return getSeriesColor({ value, dataIndex });
       }
       return color;
@@ -41,11 +43,8 @@ export function resolveColorProcessor<SeriesType extends LineOrBarSeriesType, V>
         value: series.data[dataIndex],
         dataIndex,
       };
-      const color =
-        value === null
-          ? getSeriesColor(fallbackValue)
-          : categoryColorScale(value as NonNullable<V>);
-      if (color === null) {
+      const color = categoryColorScale(value as NonNullable<V>);
+      if (typeof color !== 'string') {
         return getSeriesColor(fallbackValue);
       }
       return color;

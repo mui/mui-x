@@ -54,10 +54,16 @@ function RegressionLine({ seriesId }) {
   const palette = rainbowSurgePalette(theme.palette.mode);
   const stroke = palette[2];
   const allSeries = useSeries();
-  const series = allSeries.scatter.series[seriesId];
-  const xScale = useXScale(series.xAxisId);
-  const yScale = useYScale(series.yAxisId);
+  // Scatter's series processor is async, so `allSeries.scatter` is `undefined`
+  // until it settles. Keep hooks unconditional and bail out of rendering only.
+  const series = allSeries.scatter?.series[seriesId];
+  const xScale = useXScale(series?.xAxisId ?? undefined);
+  const yScale = useYScale(series?.yAxisId ?? undefined);
   const clipPathId = `linear-regression-clip-${useId()}`;
+
+  if (!series) {
+    return null;
+  }
 
   const { m, b } = linearRegression(series.data ?? []);
 

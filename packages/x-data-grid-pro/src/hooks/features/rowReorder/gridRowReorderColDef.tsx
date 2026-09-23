@@ -1,4 +1,5 @@
-import { gridRowIdSelector, type GridColDef, GRID_STRING_COL_DEF } from '@mui/x-data-grid';
+import { gridRowIdSelector, GRID_STRING_COL_DEF } from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
 import { renderRowReorderCell } from '../../../components/GridRowReorderCell';
 
 export const GRID_REORDER_COL_DEF: GridColDef = {

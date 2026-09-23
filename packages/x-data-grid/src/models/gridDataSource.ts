@@ -75,6 +75,9 @@ export interface GridDataSource {
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
   /**
    * This method will be called when the user updates a row.
+   * Resolve with the updated row to merge it into the existing one, or with a
+   * `{ _action: 'replace', row }` update ([[GridRowModelReplace]]) to store `row` as the new row
+   * without merging, which preserves its prototype chain, its `#private` fields and its identity.
    * @param {GridUpdateRowParams} params The parameters required to update the row.
    * @returns {Promise<any>} If resolved (synced on the backend), the grid will update the row and mutate the cache.
    */

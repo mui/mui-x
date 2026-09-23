@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { iOSMediaQuery } from '@mui/x-internals/platform';
 import clsx from 'clsx';
 import { LayoutDataGrid, Virtualization } from '@mui/x-virtualizer';
 import {
@@ -70,6 +71,17 @@ const Scroller = styled('div', {
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
   },
+  // [iOS-scrollbar-swap]
+  // On iOS, virtual scrollbars do not show a thumb unless the user scrolls the element directly:
+  // https://github.com/mui/mui-x/issues/22386
+  // So keep this scroller's own native scrollbars and hide the ones in `GridVirtualScrollbar`
+  // instead to avoid a duplicate thumb.
+  [iOSMediaQuery]: {
+    scrollbarWidth: 'auto',
+    '&::-webkit-scrollbar': {
+      display: 'block',
+    },
+  },
 
   '@media print': {
     overflow: 'hidden',
@@ -89,7 +101,10 @@ const Viewport = styled('div', {
     display: 'inline-block',
     position: 'sticky',
     top: 0,
+    // The viewport spans the scrollport exactly, so both 0-insets resolve to the same
+    // offset and it stays pinned in LTR and RTL alike.
     left: 0,
+    right: 0,
     overflow: 'hidden',
   },
 });

@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import { Unstable_RadialLineChart as RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
+import { RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
 import { dataset } from '../dataset/weather';
 
 const shapes = ['circle', 'square', 'diamond', 'cross', 'star', 'triangle', 'wye'];

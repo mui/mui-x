@@ -1,0 +1,8 @@
+<RichTreeView
+  items={ITEMS}
+  checkboxSelection
+  multiSelect
+  defaultExpandedItems={['beverages', 'snacks', 'meals']}
+  selectionPropagation={{ parents: true, descendants: true }}
+  isItemDisabled={(item) => item.label.includes('(out of stock)')}
+/>

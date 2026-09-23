@@ -15,7 +15,8 @@ import {
 } from '../filter/gridFilterSelector';
 import { gridDensityFactorSelector } from '../density';
 import { useGridLogger, useGridSelector, useGridApiMethod, useGridEvent } from '../../utils';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {
   getPageCount,

@@ -2,13 +2,9 @@
 
 ## Release
 
-> Tip: For people who are doing the release for the first time, make sure you sign in to npm from the command line using security-key flow as well as have two-factor authentication enabled.
-> You can follow [this guide](https://docs.npmjs.com/accessing-npm-using-2fa) for more information on how to set it up.
-
-> Tip: You can use `release:publish:dry-run` to test the release process without actually publishing the packages.
-> Be sure install [verdaccio](https://verdaccio.org/) (local npm registry) before doing it.
-
 > Tip: You can copy raw markdown checklist below to the release Pull Request and follow it step by step marking completed items.
+
+> Tip: You can also run or assist any stage of the release with an LLM agent through the `mui-release` skill (installed at `.agents/skills/mui-release`) — for example, type `/mui-release` in Claude Code. The agent treats this README as the source of truth.
 
 A typical release goes like this:
 
@@ -70,7 +66,7 @@ In case of a problem, another method to generate the changelog is available at t
 ### Release the packages
 
 > [!WARNING]
-> If one of the packages hasn't been published before, a team member with admin role must do the initial publish. To find team member, use the command:
+> If one of the packages hasn't been published before, a team member with admin role must do the initial publish with `pnpm code-infra publish-new-package`. It publishes from your machine, so it requires being signed in to npm locally with two-factor authentication (pass the code via `--otp`). To find team member, use the command:
 >
 > ```bash
 > npm team ls mui:MUI-X
@@ -89,6 +85,19 @@ In case of a problem, another method to generate the changelog is available at t
 >
 > and click _Set up connection_
 
+1. Run `pnpm release:publish`. You may be asked to authenticate with GitHub when running the command for the first time or after a very long time.
+2. It'll automatically fetch the latest merged release PR and ask for confirmation before publishing. The pre-selected commit in the interactive picker may not be the release commit — make sure to pick the `[release] vX.Y.Z` entry for the version being released instead of accepting the default.
+3. If you already know the sha of the commit, you can pass it directly like `pnpm release:publish --sha <your-sha>`.
+4. Other flags for the command:
+
+   > - **--dry-run** Used for debugging. Or directly run `pnpm release:publish:dry-run`. Note that this still triggers a real workflow run that requires the `npm-publish` deployment approval.
+   > - **--tag** Use to publish legacy or canary versions. For legacy releases, the commit picker won't find the release commit (it only looks at the latest release PR), so pass the sha explicitly: `pnpm release:publish --sha <legacy-merge-sha> --tag <legacy-dist-tag>`.
+
+5. This command invokes the [Publish](https://github.com/mui/mui-x/actions/workflows/publish.yml) GitHub action. It'll log the URL which can be opened to see the latest workflow run.
+6. The next screen shows "@username requested your review to deploy to npm-publish", click "Review deployments" and authorize your workflow run. **Never approve workflow runs you didn't initiate.**
+
+Alternatively, you can run the workflow from the GitHub UI:
+
 1. Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
 2. Choose "Run workflow" dropdown
 
@@ -99,13 +108,12 @@ In case of a problem, another method to generate the changelog is available at t
    > - **npm dist tag to publish to** Use to publish legacy or canary versions.
 
 3. Click "Run workflow"
-4. Refresh the page to see the newly created workflow, and click it.
-5. The next screen shows "@username requested your review to deploy to npm-publish", click "Review deployments" and authorize your workflow run. **Never approve workflow runs you didn't initiaite.**
+4. Refresh the page to see the newly created workflow, and click it, then approve the deployment as above.
 
-The action publishes packages, and prepares the GitHub release. The release tag is created during GitHub release. The GitHub release is created in draft mode.
+The action publishes packages, then creates and pushes the release tag, and finally creates the GitHub release in draft mode.
 
 > [!WARNING]
-> If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
+> If the workflow fails to create the tag, you can create and push it manually: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
 > Make sure to copy the git tag command above so that the tag is annotated!
 
 ### Publish the documentation
@@ -152,7 +160,3 @@ You can use the following script in your browser console on any GitHub page to a
   window.location.href = diffPage;
 })();
 ```
-
-### release:publish failed
-
-If you receive an error message like `There are no new packages that should be published`. Ensure you are publishing to the correct registry, not `verdaccio` or anything else. If you need to reset your configuration, you can run `npm config delete registry`.

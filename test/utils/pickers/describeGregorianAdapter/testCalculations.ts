@@ -1,5 +1,6 @@
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { getDateOffset } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 

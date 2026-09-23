@@ -18,6 +18,7 @@ export default function ExcelExportWithWebWorker() {
     dataSet: 'Commodity',
     rowLength: 50_000,
     editable: true,
+    multiSelect: true,
   });
 
   return (

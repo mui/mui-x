@@ -4,13 +4,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { Toolbar, type ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
-import {
-  useChartsContext,
-  useChartsSlots,
-  type UseChartCartesianAxisSignature,
-  type AxisId,
-} from '@mui/x-charts/internals';
+import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
+import type { ChartsToolbarProps } from '@mui/x-charts/Toolbar';
+import { useChartsContext, useChartsSlots } from '@mui/x-charts/internals';
+import type { UseChartCartesianAxisSignature, AxisId } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
 import { ChartsToolbarDivider } from './internals/ChartsToolbarDivider';
@@ -19,16 +16,12 @@ import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsToolbarRangeButtonTrigger } from './ChartsToolbarRangeButtonTrigger';
-import { type RangeButtonValue } from './rangeButtonValueToZoom';
-import { type ChartsSlotsPro } from '../internals/material';
-import {
-  type ChartsToolbarPrintExportOptions,
-  ChartsToolbarPrintExportTrigger,
-} from './ChartsToolbarPrintExportTrigger';
-import {
-  type ChartsToolbarImageExportOptions,
-  ChartsToolbarImageExportTrigger,
-} from './ChartsToolbarImageExportTrigger';
+import type { RangeButtonValue } from './rangeButtonValueToZoom';
+import type { ChartsSlotsPro } from '../internals/material';
+import { ChartsToolbarPrintExportTrigger } from './ChartsToolbarPrintExportTrigger';
+import type { ChartsToolbarPrintExportOptions } from './ChartsToolbarPrintExportTrigger';
+import { ChartsToolbarImageExportTrigger } from './ChartsToolbarImageExportTrigger';
+import type { ChartsToolbarImageExportOptions } from './ChartsToolbarImageExportTrigger';
 
 export type {
   RangeButtonFunctionParams,
@@ -230,7 +223,7 @@ function ChartsToolbarPro({
   return <Toolbar {...other}>{children}</Toolbar>;
 }
 
-ChartsToolbarPro.propTypes = {
+ChartsToolbarPro.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -241,6 +234,7 @@ ChartsToolbarPro.propTypes = {
       fileName: PropTypes.string,
       nonce: PropTypes.string,
       onBeforeExport: PropTypes.func,
+      pixelRatio: PropTypes.number,
       quality: PropTypes.number,
       type: PropTypes.string.isRequired,
     }),
@@ -255,6 +249,7 @@ ChartsToolbarPro.propTypes = {
       label: PropTypes.string.isRequired,
       value: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+        PropTypes.arrayOf(PropTypes.string.isRequired),
         PropTypes.func,
         PropTypes.shape({
           step: PropTypes.number,

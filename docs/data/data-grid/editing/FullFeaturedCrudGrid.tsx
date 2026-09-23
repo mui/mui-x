@@ -179,7 +179,7 @@ function ActionsCell(props: GridRenderCellParams) {
 }
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'name', headerName: 'Name', width: 180, editable: true, rowHeader: true },
   {
     field: 'bio',
     headerName: 'Bio',

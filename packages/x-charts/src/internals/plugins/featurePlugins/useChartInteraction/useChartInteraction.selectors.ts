@@ -1,6 +1,6 @@
-import { createSelector } from '@mui/x-internals/store';
-import { type ChartOptionalRootSelector } from '../../utils/selectors';
-import { type UseChartInteractionSignature } from './useChartInteraction.types';
+import { createSelector } from '@base-ui/utils/store';
+import type { ChartOptionalRootSelector } from '../../utils/selectors';
+import type { UseChartInteractionSignature } from './useChartInteraction.types';
 
 const selectInteraction: ChartOptionalRootSelector<UseChartInteractionSignature> = (state) =>
   state.interaction;

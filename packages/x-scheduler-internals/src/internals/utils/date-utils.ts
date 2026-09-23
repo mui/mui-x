@@ -1,6 +1,6 @@
-import { TemporalTimezone, TemporalSupportedObject } from '../../base-ui-copy/types';
-import { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
-import { Adapter } from '../../use-adapter/useAdapter.types';
+import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
+import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 /**
  * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
@@ -69,6 +69,21 @@ export function mergeDateAndTime(
 }
 
 /**
+ * Snaps an all-day event's bounds to span the whole day; non-all-day bounds are returned unchanged.
+ */
+export function normalizeAllDayBounds(
+  adapter: Adapter,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
+  allDay: boolean | undefined,
+): { start: TemporalSupportedObject; end: TemporalSupportedObject } {
+  if (!allDay) {
+    return { start, end };
+  }
+  return { start: adapter.startOfDay(start), end: adapter.endOfDay(end) };
+}
+
+/**
  * Returns a string representation of the date.
  * It can be used as key in Maps or passed to the React `key` property when looping through days.
  * It only contains date information, two dates representing the same day but with different time will have the same key.
@@ -120,6 +135,13 @@ function getSundayDayNumber(adapter: Adapter): number {
     sundayDayNumberCache.set(adapter, cached);
   }
   return cached;
+}
+
+/**
+ * The JS weekday (0=Sun … 6=Sat) of a date, read in its own timezone.
+ */
+export function getJsDayOfWeek(adapter: Adapter, date: TemporalSupportedObject): number {
+  return (adapter.getDayOfWeek(date) - getSundayDayNumber(adapter) + 7) % 7;
 }
 
 /**

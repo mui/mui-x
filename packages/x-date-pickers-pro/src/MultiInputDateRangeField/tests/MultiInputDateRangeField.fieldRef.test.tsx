@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { FieldRef } from '@mui/x-date-pickers/models';
+import type { FieldRef } from '@mui/x-date-pickers/models';
 import { createPickerRenderer } from 'test/utils/pickers';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe, it, expect } from 'vitest';
 
 describe('<MultiInputDateRangeField /> - fieldRef', () => {
   const { render } = createPickerRenderer();

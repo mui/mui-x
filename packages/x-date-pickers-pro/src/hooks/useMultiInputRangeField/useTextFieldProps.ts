@@ -2,9 +2,9 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-pickers/managers';
-import { UseValidationReturnValue } from '@mui/x-date-pickers/validation';
-import { PickerValueType } from '@mui/x-date-pickers/models';
-import {
+import type { UseValidationReturnValue } from '@mui/x-date-pickers/validation';
+import type { PickerValueType } from '@mui/x-date-pickers/models';
+import type {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   PickerAnyManager,
@@ -12,16 +12,18 @@ import {
   PickerRangeValue,
   PickerValue,
   RangePosition,
-  useField,
   UseFieldInternalProps,
   UseFieldReturnValue,
+} from '@mui/x-date-pickers/internals';
+import {
+  useField,
   useNullableFieldPrivateContext,
   useNullablePickerContext,
   usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
-import { PickerAnyRangeManager } from '../../internals/models/managers';
+import type { PickerAnyRangeManager } from '../../internals/models/managers';
 import { useNullablePickerRangePositionContext } from '../../internals/hooks/useNullablePickerRangePositionContext';
-import { UseMultiInputFieldSelectedSectionsResponseItem } from './useMultiInputRangeFieldSelectedSections';
+import type { UseMultiInputFieldSelectedSectionsResponseItem } from './useMultiInputRangeFieldSelectedSections';
 import type { UseMultiInputRangeFieldTextFieldProps } from './useMultiInputRangeField';
 
 /**

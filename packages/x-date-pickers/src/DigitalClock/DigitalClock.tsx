@@ -14,10 +14,11 @@ import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { DigitalClockClasses, getDigitalClockUtilityClass } from './digitalClockClasses';
-import { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types';
+import type { DigitalClockClasses } from './digitalClockClasses';
+import { getDigitalClockUtilityClass } from './digitalClockClasses';
+import type { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
-import { PickerValidDate } from '../models';
+import type { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -386,7 +387,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   );
 }) as DigitalClockComponent;
 
-DigitalClock.propTypes = {
+DigitalClock.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

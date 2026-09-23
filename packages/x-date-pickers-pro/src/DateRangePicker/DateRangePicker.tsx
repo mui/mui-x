@@ -7,7 +7,7 @@ import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '@mui/x-date-pickers/internals'
 import refType from '@mui/utils/refType';
 import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
-import { DateRangePickerProps } from './DateRangePicker.types';
+import type { DateRangePickerProps } from './DateRangePicker.types';
 
 type DatePickerComponent = ((
   props: DateRangePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -41,7 +41,7 @@ const DateRangePicker = React.forwardRef(function DateRangePicker(
   return <MobileDateRangePicker ref={ref} {...other} />;
 }) as DatePickerComponent;
 
-DateRangePicker.propTypes = {
+DateRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -2,12 +2,13 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { EventManager } from '@mui/x-internals/EventManager';
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../../constants/signature';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridCoreApi } from '../../models';
 import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import { getPublicApiRef } from '../../utils/getPublicApiRef';
 
 const SYMBOL_API_PRIVATE = Symbol('mui.api_private');
 
@@ -124,8 +125,8 @@ export function useGridApiInitialization<
       const details =
         props.signature === GridSignature.DataGridPro ||
         props.signature === GridSignature.DataGridPremium
-          ? { api: privateApiRef.current.getPublicApi() }
-          : {};
+          ? { apiRef: getPublicApiRef(privateApiRef), api: privateApiRef.current.getPublicApi() }
+          : { apiRef: getPublicApiRef(privateApiRef) };
       privateApiRef.current.eventManager.emit(name, params, event, details);
     },
     [privateApiRef, props.signature],

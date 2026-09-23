@@ -1,18 +1,11 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  type DataGridProProps,
-  type GridApi,
-  type GridSortModel,
-  useGridApiRef,
-  type GridColDef,
-} from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridApi, GridSortModel, GridColDef } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Sorting', () => {
   const baselineProps: DataGridProProps = {
@@ -262,12 +255,12 @@ describe('<DataGridPro /> - Sorting', () => {
     });
 
     it('should update the sort state when the model is not set, but the onChange is set', () => {
-      const onModelChange = spy();
+      const onModelChange = vi.fn();
       render(<TestCase onSortModelChange={onModelChange} />);
-      expect(onModelChange.callCount).to.equal(0);
+      expect(onModelChange.mock.calls.length).to.equal(0);
       fireEvent.click(getColumnHeaderCell(0));
-      expect(onModelChange.callCount).to.equal(1);
-      expect(onModelChange.lastCall.firstArg).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
+      expect(onModelChange.mock.calls.length).to.equal(1);
+      expect(onModelChange.mock.lastCall?.[0]).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
     });
 
     it('should control sort state when the model and the onChange are set', () => {
@@ -301,7 +294,7 @@ describe('<DataGridPro /> - Sorting', () => {
     });
 
     it('should not call onSortModelChange on initialization or on sortModel prop change', () => {
-      const onSortModelChange = spy();
+      const onSortModelChange = vi.fn();
 
       function Test(props: Partial<DataGridProProps>) {
         return (
@@ -326,7 +319,7 @@ describe('<DataGridPro /> - Sorting', () => {
         />,
       );
 
-      expect(onSortModelChange.callCount).to.equal(0);
+      expect(onSortModelChange.mock.calls.length).to.equal(0);
       setProps({
         sortModel: [
           { field: 'year', sort: 'asc' },
@@ -334,7 +327,89 @@ describe('<DataGridPro /> - Sorting', () => {
         ],
       });
 
-      expect(onSortModelChange.callCount).to.equal(0);
+      expect(onSortModelChange.mock.calls.length).to.equal(0);
+    });
+  });
+
+  describe('column type: multiSelect', () => {
+    it('should sort alphabetically by joined values', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: ['A'] },
+              { id: 2, tags: ['A', 'B', 'C'] },
+              { id: 3, tags: ['A', 'B'] },
+              { id: 4, tags: [] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C'],
+                width: 200,
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'asc' }]}
+          />
+        </div>,
+      );
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal(['', 'A', 'AB', 'ABC']);
+    });
+
+    it('should sort alphabetically by joined values descending', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: ['A'] },
+              { id: 2, tags: ['A', 'B', 'C'] },
+              { id: 3, tags: ['A', 'B'] },
+              { id: 4, tags: [] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C'],
+                width: 200,
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'desc' }]}
+          />
+        </div>,
+      );
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal(['ABC', 'AB', 'A', '']);
+    });
+
+    it('should handle null and undefined values when sorting', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: null },
+              { id: 2, tags: undefined },
+              { id: 3, tags: ['A'] },
+              { id: 4, tags: ['B', 'C'] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C'],
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'asc' }]}
+          />
+        </div>,
+      );
+      // null/undefined treated as length 0
+      expect(getColumnValues(0)).to.deep.equal(['', '', 'A', 'BC']);
     });
   });
 });

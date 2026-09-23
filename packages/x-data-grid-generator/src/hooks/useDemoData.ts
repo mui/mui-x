@@ -2,16 +2,14 @@
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
 import type { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
-import { type GridDemoData, getRealGridData } from '../services/real-data-service';
+import { getRealGridData } from '../services/real-data-service';
+import type { GridDemoData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
 import asyncWorker from '../services/asyncWorker';
 import type { GridColDefGenerator } from '../services/gridColDefGenerator';
-import {
-  type AddPathToDemoDataOptions,
-  type DemoTreeDataValue,
-  addTreeDataOptionsToDemoData,
-} from '../services/tree-data-generator';
+import { addTreeDataOptionsToDemoData } from '../services/tree-data-generator';
+import type { AddPathToDemoDataOptions, DemoTreeDataValue } from '../services/tree-data-generator';
 
 const dataCache = new LRUCache<string, DemoTreeDataValue>({
   max: 10,
@@ -33,6 +31,7 @@ export interface UseDemoDataOptions {
   maxColumns?: number;
   visibleFields?: string[];
   editable?: boolean;
+  multiSelect?: boolean;
   treeData?: AddPathToDemoDataOptions;
 }
 
@@ -93,13 +92,16 @@ export const deepFreeze = <T>(object: T): T => {
 
 export interface ColumnsOptions extends Pick<
   UseDemoDataOptions,
-  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'multiSelect'
 > {}
 
 export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] => {
   let columns =
     options.dataSet === 'Commodity' ? getCommodityColumns(options.editable) : getEmployeeColumns();
 
+  if (!options.multiSelect) {
+    columns = columns.filter((col) => col.type !== 'multiSelect');
+  }
   if (options.visibleFields) {
     columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
@@ -136,8 +138,15 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       editable: options.editable,
       maxColumns: options.maxColumns,
       visibleFields: options.visibleFields,
+      multiSelect: options.multiSelect,
     });
-  }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
+  }, [
+    options.dataSet,
+    options.editable,
+    options.maxColumns,
+    options.visibleFields,
+    options.multiSelect,
+  ]);
 
   const [data, setData] = React.useState<DemoTreeDataValue>(() => {
     return addTreeDataOptionsToDemoData(
@@ -155,7 +164,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       (options.treeData?.maxDepth ?? 1) > 1
         ? `${options.treeData?.maxDepth}-${options.treeData?.averageChildren ?? 2}-${options.treeData?.groupingField ?? ''}`
         : 'false';
-    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-treeData:${treeDataKey}`;
+    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-multiSelect:${options.multiSelect ? 'true' : 'false'}-treeData:${treeDataKey}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.
@@ -209,6 +218,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     options.treeData?.maxDepth,
     options.treeData?.groupingField,
     options.treeData?.averageChildren,
+    options.multiSelect,
     index,
     columns,
   ]);

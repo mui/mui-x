@@ -1,4 +1,5 @@
-import { type CartesianExtremumGetter, findMinMax } from '@mui/x-charts/internals';
+import { findMinMax } from '@mui/x-charts/internals';
+import type { CartesianExtremumGetter } from '@mui/x-charts/internals';
 
 const getBaseExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
   const { axis, getFilters, isDefaultAxis } = params;

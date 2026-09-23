@@ -2,15 +2,14 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
+import type { DateOrTimeViewWithMeridiem, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   usePicker,
   PickerPopper,
-  DateOrTimeViewWithMeridiem,
   PickerProvider,
-  PickerRangeValue,
   extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
-import {
+import type {
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';

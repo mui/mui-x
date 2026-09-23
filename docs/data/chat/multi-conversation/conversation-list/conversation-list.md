@@ -8,13 +8,21 @@ components: ChatConversationList
 
 # Chat - Conversation List
 
-<p class="description">Render a sidebar that lists all available conversations, supports switching between them, and is fully customizable through slots and theme overrides.</p>
+<p class="description">Render a sidebar that lists all conversations and lets users switch between them.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+`ChatConversationList` is the inbox sidebar for multi-conversation apps — reach for it when users manage several threads; a single-thread assistant can use `ChatBox` without it. It's a single component with styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, the unread badge, and the per-row actions button.
 
-{{"demo": "../../material/examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+## Interactive playground
+
+Toggle the list variant, conversation count, and unread badges:
+
+{{"demo": "ChatConversationListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The example below shows a complete two-pane inbox using controlled state:
+
+{{"demo": "../../material/examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Component anatomy
 
@@ -32,66 +40,113 @@ ChatConversationList              <- scrolling listbox (role="listbox")
     unreadBadge                   <- count badge (primary.main background)
 ```
 
-All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually — instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
+All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually—instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
+
+## Variants
+
+The `variant` prop switches the row layout. It accepts `'default'` (the default) and `'compact'`:
+
+- `'default'` renders the full row: avatar, title, preview line, timestamp, and unread badge.
+- `'compact'` renders a denser row: the `unreadBadge` collapses to an 8px dot, `itemAvatar`, `preview`, and `timestamp` are not rendered, and the `itemActions` button appears on hover or keyboard focus.
+
+The compact row structure is:
+
+```text
+ChatConversationList              <- scrolling listbox (role="listbox")
+  [per conversation]
+  item                            <- row container (role="option")
+    unreadBadge                   <- collapses to an 8px dot
+    itemContent                   <- flex column
+      title                       <- conversation name (bold when unread)
+    itemActions                   <- 3-dot button, revealed on hover/focus
+```
+
+When `variant="compact"`, the root carries the `.MuiChatConversationList-compact` class hook, so you can target the compact layout from a theme override or `sx`.
+
+{{"demo": "ConversationListVariants.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Slot reference
 
-| Slot key         | Default component                     | Purpose                                              |
-| :--------------- | :------------------------------------ | :--------------------------------------------------- |
-| `root`           | styled `div`                          | The outer list container                             |
-| `scroller`       | styled `div`                          | Fixed-width scrolling column with `border-right`     |
-| `viewport`       | styled `div`                          | Scrollable overflow container                        |
-| `scrollbar`      | no-op `div`                           | Custom scrollbar track (replaced by native overflow) |
-| `scrollbarThumb` | no-op `div`                           | Custom scrollbar thumb                               |
-| `item`           | styled `div`                          | Individual row, receives selection/focus styles      |
-| `itemAvatar`     | `ConversationListItemAvatar` wrapper  | Circular avatar element                              |
-| `itemContent`    | `ConversationListItemContent` wrapper | Title + preview column                               |
-| `title`          | `ConversationListTitle` wrapper       | Conversation name text                               |
-| `preview`        | `ConversationListPreview` wrapper     | Preview line text                                    |
-| `timestamp`      | `ConversationListTimestamp` wrapper   | Timestamp text                                       |
-| `unreadBadge`    | `ConversationListUnreadBadge` wrapper | Unread count pill                                    |
+| Slot key         | Default component                     | CSS class                                  | Purpose                                                                                                  |
+| :--------------- | :------------------------------------ | :----------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| `root`           | styled `div`                          | `.MuiChatConversationList-root`            | The outer list container                                                                                 |
+| `scroller`       | styled `div`                          | `.MuiChatConversationList-scroller`        | Scrolling column with `border-right`; its width is set by the `ChatBox` layout                           |
+| `viewport`       | styled `div`                          | —                                          | Scrollable overflow container                                                                            |
+| `scrollbar`      | no-op `div`                           | —                                          | Custom scrollbar track (replaced by native overflow)                                                     |
+| `scrollbarThumb` | no-op `div`                           | —                                          | Custom scrollbar thumb                                                                                   |
+| `item`           | styled `div`                          | `.MuiChatConversationList-item`            | Individual row, receives selection/focus styles                                                          |
+| `itemAvatar`     | `ConversationListItemAvatar` wrapper  | `.MuiChatConversationList-itemAvatar`      | Circular avatar element                                                                                  |
+| `itemContent`    | `ConversationListItemContent` wrapper | `.MuiChatConversationList-itemContent`     | Title + preview column                                                                                   |
+| `title`          | `ConversationListTitle` wrapper       | `.MuiChatConversationList-itemTitle`       | Conversation name text                                                                                   |
+| `preview`        | `ConversationListPreview` wrapper     | `.MuiChatConversationList-itemPreview`     | Preview line text                                                                                        |
+| `timestamp`      | `ConversationListTimestamp` wrapper   | `.MuiChatConversationList-itemTimestamp`   | Timestamp text                                                                                           |
+| `unreadBadge`    | `ConversationListUnreadBadge` wrapper | `.MuiChatConversationList-itemUnreadBadge` | Unread count pill                                                                                        |
+| `itemActions`    | `ConversationListItemActions` wrapper | `.MuiChatConversationList-itemActions`     | Per-row actions affordance (3-dot button); rendered only in the compact variant, revealed on hover/focus |
 
-Because the Material UI layer fills all slot defaults at instantiation, overriding a single slot only affects that region without disturbing the others.
+Sub-slot class suffixes carry an `item` prefix that the slot keys drop — `slots.title` styles via `.MuiChatConversationList-itemTitle`.
+
+The `itemActions` slot only renders when `variant="compact"`; replace it to attach per-row menus (rename, delete, and so on). See [Variants](#variants) for the compact row layout.
+
+Because `ChatConversationList` provides a default for every slot, overriding a single slot only affects that region without disturbing the others.
+
+For the exhaustive prop and slot listing, see the [ChatConversationList API reference](/x/api/chat/chat-conversation-list/).
 
 ## Switching conversations
 
-The conversation list is rendered automatically when `ChatBox` is provided with more than one conversation. Clicking a row calls `onActiveConversationChange` with the conversation ID. Use controlled state to manage the active conversation:
+The conversation list is rendered when `ChatBox` is given `features={{ conversationList: true }}`.
+Clicking a row calls `onActiveConversationChange` with the conversation ID. The callback receives `string | undefined` — it fires with `undefined` when the active conversation is cleared (for example, when the user navigates back from the thread pane on narrow layouts, or when the active conversation is removed by a real-time event), so guard before assigning it to non-nullable state.
+Use controlled state to manage the active conversation:
 
 ```tsx
 const [activeConversationId, setActiveConversationId] = React.useState('thread-a');
 
 <ChatBox
   activeConversationId={activeConversationId}
-  onActiveConversationChange={(nextId) => setActiveConversationId(nextId)}
+  onActiveConversationChange={(nextId) => {
+    if (nextId) {
+      setActiveConversationId(nextId);
+    }
+  }}
   conversations={conversations}
+  features={{ conversationList: true }}
 />;
 ```
 
-If only one conversation is provided, `ChatBox` renders the thread pane directly without a sidebar.
+If you omit that feature flag, `ChatBox` renders the thread pane directly without a sidebar.
 
-## ownerState and how state flows
+:::info
+With an empty `conversations` array the list renders an empty listbox — there is no built-in empty-state slot. Render your own placeholder (for example, a "No conversations yet" panel) alongside or instead of the list when `conversations.length === 0`. See [Loading and empty states](/x/react-chat/display/loading-and-empty-states/) for patterns.
+:::
+
+## Reading row state through ownerState
 
 The item and all its sub-slots receive an `ownerState` prop that carries the current row's interaction state alongside the full conversation object.
 
 ### Item ownerState
 
-| Field          | Type               | Description                            |
-| :------------- | :----------------- | :------------------------------------- |
-| `selected`     | `boolean`          | This conversation is the active thread |
-| `unread`       | `boolean`          | The conversation has unread messages   |
-| `focused`      | `boolean`          | This row currently has keyboard focus  |
-| `conversation` | `ChatConversation` | The full conversation data object      |
+| Field          | Type                                  | Description                             |
+| :------------- | :------------------------------------ | :-------------------------------------- |
+| `selected`     | `boolean`                             | This conversation is the active thread  |
+| `unread`       | `boolean`                             | The conversation has unread messages    |
+| `focused`      | `boolean`                             | This row currently has keyboard focus   |
+| `conversation` | `ChatConversation`                    | The full conversation data object       |
+| `variant`      | `'default' \| 'compact' \| undefined` | The list variant the row is rendered in |
 
-The `selected` flag drives the row background (`palette.action.selected`). The `unread` flag drives bold title typography. The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
+The `selected` flag drives the row background (`palette.action.selected`).
+The `unread` flag drives bold title typography.
+A row counts as unread when `conversation.unreadCount` is greater than 0 or `conversation.readState` is `'unread'` — set either field on the conversation object.
+The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
 
 Because the full `conversation` object is included, custom slot components can directly read fields such as `conversation.title`, `conversation.metadata`, `conversation.unreadCount`, and `conversation.lastMessageAt` without additional selectors.
+Custom `item` slots can branch on `ownerState.variant` to render a different layout per variant (see [Variants](#variants)).
 
 ### Root ownerState
 
-| Field                  | Type                  | Description                        |
-| :--------------------- | :-------------------- | :--------------------------------- |
-| `conversationCount`    | `number`              | Total number of conversations      |
-| `activeConversationId` | `string \| undefined` | Currently selected conversation ID |
+| Field                  | Type                     | Description                        |
+| :--------------------- | :----------------------- | :--------------------------------- |
+| `conversationCount`    | `number`                 | Total number of conversations      |
+| `activeConversationId` | `string \| undefined`    | Currently selected conversation ID |
+| `variant`              | `'default' \| 'compact'` | The list variant currently applied |
 
 ## Overriding the avatar
 
@@ -120,7 +175,7 @@ const ThemedAvatar = React.forwardRef(function ThemedAvatar(
       sx={{
         width: 40,
         height: 40,
-        bgcolor: ownerState?.selected ? 'primary.main' : 'grey.400',
+        bgcolor: ownerState?.selected ? 'primary.main' : 'grey.300',
         fontSize: 'body2.fontSize',
         fontWeight: 'fontWeightMedium',
         ...props.sx,
@@ -134,11 +189,11 @@ const ThemedAvatar = React.forwardRef(function ThemedAvatar(
 <ChatConversationList slots={{ itemAvatar: ThemedAvatar }} />;
 ```
 
-The `ownerState` prop arrives directly on the component because the Material UI layer passes it through `slotProps` using a function form. Destructure it before spreading `...props` to avoid forwarding a non-standard attribute to the DOM.
+Every slot component receives `ownerState` as a prop. Destructure it before spreading `...props` to avoid forwarding a non-standard attribute to the DOM.
 
 ## Overriding the item content layout
 
-Replace `itemContent` when you want to change the structural layout of the title and preview region — for example to add a participant count or an icon:
+Replace `itemContent` when you want to change the structural layout of the title and preview region—for example, to add a participant count or an icon:
 
 ```tsx
 import { ChatConversationList } from '@mui/x-chat';
@@ -249,16 +304,13 @@ The `role="option"` and `aria-selected` attributes are set automatically before 
 
 ## Full custom item renderer
 
-The `conversation` object in `ownerState` lets you derive everything you need to render a rich row without additional data fetching or selectors. The following example builds a full item renderer that shows an avatar with initials, a bold title for unread conversations, a truncated preview, a human-readable timestamp, and a count badge:
+The `conversation` object in `ownerState` lets you derive everything you need to render a rich row without additional data fetching or selectors. The demo below builds a full item renderer that shows an avatar with initials, a bold title for unread conversations, a truncated preview, a human-readable timestamp, and a count badge:
+
+{{"demo": "ConversationListFullCustomRow.js", "bg": "inline", "defaultCodeOpen": false}}
+
+A small helper turns the ISO `lastMessageAt` field into a relative label:
 
 ```tsx
-import * as React from 'react';
-import { ChatConversationList } from '@mui/x-chat';
-import Avatar from '@mui/material/Avatar';
-import Badge from '@mui/material/Badge';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-
 function formatRelativeTime(iso?: string) {
   if (!iso) return '';
   const diff = Date.now() - new Date(iso).getTime();
@@ -270,103 +322,33 @@ function formatRelativeTime(iso?: string) {
   if (hours < 24) return `${hours}h`;
   return `${Math.floor(hours / 24)}d`;
 }
+```
 
+Inside the row component, destructure `ownerState` and spread `...props` so the built-in selection, `role="option"`, `aria-selected`, and keyboard handlers survive:
+
+```tsx
 const FullCustomRow = React.forwardRef(function FullCustomRow(
   { ownerState, ...props },
   ref,
 ) {
-  const { conversation, selected, unread, focused } = ownerState ?? {};
-  const title = conversation?.title ?? 'Untitled';
-  const initials = title
-    .split(' ')
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join('')
-    .toUpperCase();
-
-  return (
-    <Box
-      ref={ref}
-      {...props}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 1.5,
-        px: 2,
-        py: 1,
-        cursor: 'pointer',
-        bgcolor: selected ? 'action.selected' : 'transparent',
-        '&:focus-visible': {
-          outline: '2px solid',
-          outlineColor: 'primary.main',
-          outlineOffset: -2,
-        },
-        '&:hover': {
-          bgcolor: selected ? 'action.selected' : 'action.hover',
-        },
-      }}
-    >
-      <Badge
-        badgeContent={conversation?.unreadCount}
-        color="primary"
-        max={99}
-        invisible={!unread}
-      >
-        <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.light' }}>
-          {initials}
-        </Avatar>
-      </Badge>
-
-      <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'baseline',
-          }}
-        >
-          <Typography
-            variant="body2"
-            noWrap
-            sx={{
-              fontWeight: unread ? 'fontWeightBold' : 'fontWeightMedium',
-              flex: 1,
-            }}
-          >
-            {title}
-          </Typography>
-          <Typography
-            variant="caption"
-            color="text.disabled"
-            sx={{ ml: 1, flexShrink: 0 }}
-          >
-            {formatRelativeTime(conversation?.lastMessageAt)}
-          </Typography>
-        </Box>
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          noWrap
-          sx={{ display: 'block' }}
-        >
-          {conversation?.subtitle ?? 'No messages yet'}
-        </Typography>
-      </Box>
-    </Box>
-  );
+  const { conversation, selected, unread } = ownerState ?? {};
+  // ...derive initials, render Badge + Avatar + title + timestamp...
+  return <Box ref={ref} {...props} sx={{/* row layout */}} />;
 });
 ```
 
-Pass it to `ChatBox` via `slotProps.conversationList`:
+Pass it to `ChatConversationList` through the `item` slot — or to `ChatBox` via `slotProps.conversationList`:
 
 ```tsx
+<ChatConversationList slots={{ item: FullCustomRow }} />;
+
 <ChatBox
   slotProps={{
     conversationList: {
       slots: { item: FullCustomRow },
     },
   }}
-/>
+/>;
 ```
 
 ## Styling without slot replacement
@@ -398,7 +380,7 @@ const theme = createTheme({
 });
 ```
 
-Theme overrides apply globally across your application and are the lowest-friction option when you only need visual adjustments.
+Theme overrides apply globally across the application and are the lowest-friction option when only visual adjustments are needed.
 
 ## Controlling the list width
 
@@ -412,13 +394,16 @@ The conversation list width is driven by the scroller slot. Override it through 
 />
 ```
 
-Or set the CSS variable on a parent element to control the width from a layout level:
+Or set the `--ChatBox-conversationListWidth` CSS variable on `ChatBox` to control the width from a layout level:
 
 ```tsx
-<Box sx={{ '--ChatBox-conversationListWidth': '320px' }}>
-  <ChatConversationList />
-</Box>
+<ChatBox
+  features={{ conversationList: true }}
+  sx={{ '--ChatBox-conversationListWidth': '320px' }}
+/>
 ```
+
+The CSS variable is read by `ChatBox`'s layout pane — when rendering `ChatConversationList` standalone, size it through the `scroller` slot or its parent container instead.
 
 ## Accessibility notes
 
@@ -432,8 +417,10 @@ Pass `aria-label` to the root through `slotProps`:
 <ChatConversationList slotProps={{ root: { 'aria-label': 'Conversations' } }} />
 ```
 
+The [message list](/x/react-chat/accessibility/) shares the same roving-focus model, so both lists feel identical to keyboard users.
+
 ## See also
 
-- [Conversation Header](/x/react-chat/multi-conversation/conversation-header/) for the header bar that accompanies the active thread.
-- [Multi-conversation demo](/x/react-chat/demos/team-messaging/) for a two-pane inbox layout using controlled state.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.
+- [Conversation header](/x/react-chat/multi-conversation/conversation-header/) for details on the header bar that accompanies the active thread.
+- [Multi-conversation example](/x/react-chat/material/examples/multi-conversation/) for a two-pane inbox layout using controlled state.
+- [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.

@@ -52,7 +52,7 @@ export interface EventCalendarPreferencesMenuConfig {
   toggleWeekNumberVisibility: boolean;
   /**
    * Whether the menu item to toggle AM/PM time format is visible.
-   * @default false
+   * @default true
    */
   toggleAmpm: boolean;
   /**

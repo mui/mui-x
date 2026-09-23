@@ -7,18 +7,20 @@ githubLabel: 'scope: chat'
 
 # Chat - Slow streaming
 
-<p class="description">A ChatBox with a deliberately slow streaming adapter to observe the real-time text rendering behavior.</p>
+<p class="description">Observe incremental text rendering in real time with an artificially throttled streaming adapter.</p>
 
-This demo uses a slow adapter (500ms per chunk) to make the streaming behavior clearly visible.
+The `ChatBox` adapter emits one chunk every 500 ms so the streaming behavior is visible in real time:
 
 - Visible incremental text rendering during streaming
 - Bubble grows as chunks arrive
 - Composer behavior during active streaming
 - Auto-scroll following the growing response
-- State transitions: idle -> streaming -> complete
+- State transitions from idle to streaming to complete
+
+The demo below illustrates each of these behaviors:
 
 {{"demo": "SlowStreaming.js", "bg": "inline"}}
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

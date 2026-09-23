@@ -1,5 +1,9 @@
-import { AdapterFormats, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type {
+  AdapterFormats,
+  MuiPickersAdapter,
+  PickerValidDate,
+} from '@mui/x-date-pickers/models';
+import type { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 
 export const isRangeValid = (
   adapter: MuiPickersAdapter,

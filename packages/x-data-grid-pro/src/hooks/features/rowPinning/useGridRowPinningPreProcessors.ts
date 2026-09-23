@@ -1,18 +1,15 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  type GridHydrateRowsValue,
-  type GridPipeProcessor,
-  useGridRegisterPipeProcessor,
-} from '@mui/x-data-grid/internals';
-import {
-  GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
-  type GridPinnedRowNode,
-  type GridRowEntry,
-  type GridRowId,
-  type GridRowModel,
+import { useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
+import type { GridHydrateRowsValue, GridPipeProcessor } from '@mui/x-data-grid/internals';
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type {
+  GridGroupNode,
+  GridPinnedRowNode,
+  GridRowEntry,
+  GridRowId,
+  GridRowModel,
 } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { GridPinnedRowsProp, GridRowPinningInternalCache } from './gridRowPinningInterface';

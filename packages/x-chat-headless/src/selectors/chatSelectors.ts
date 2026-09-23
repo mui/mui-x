@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { resolveMessageAuthor } from '../internals/messageAuthor';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
@@ -14,7 +14,9 @@ export const chatSelectors = {
   conversationsById: createSelector((state: State) => state.conversationsById),
   activeConversationId: createSelector((state: State) => state.activeConversationId),
   isStreaming: createSelector((state: State) => state.isStreaming),
+  streamingConversationId: createSelector((state: State) => state.streamingConversationId),
   hasMoreHistory: createSelector((state: State) => state.hasMoreHistory),
+  isLoadingHistory: createSelector((state: State) => state.isLoadingHistory),
   error: createSelector((state: State) => state.error),
   messages: createSelectorMemoized(
     (state: State) => state.messageIds,
@@ -130,13 +132,18 @@ export const chatSelectors = {
   ),
 } as const;
 
+// `messageAuthor` intentionally has no standalone `select*` alias: it requires
+// trailing `(id, parameters: ChatStoreParameters)` args and is consumed via the
+// internal useMessageAuthor plumbing rather than ad-hoc useStore calls.
 export const selectMessageIds = chatSelectors.messageIds;
 export const selectMessagesById = chatSelectors.messagesById;
 export const selectConversationIds = chatSelectors.conversationIds;
 export const selectConversationsById = chatSelectors.conversationsById;
 export const selectActiveConversationId = chatSelectors.activeConversationId;
 export const selectIsStreaming = chatSelectors.isStreaming;
+export const selectStreamingConversationId = chatSelectors.streamingConversationId;
 export const selectHasMoreHistory = chatSelectors.hasMoreHistory;
+export const selectIsLoadingHistory = chatSelectors.isLoadingHistory;
 export const selectError = chatSelectors.error;
 export const selectMessages = chatSelectors.messages;
 export const selectMessage = chatSelectors.message;

@@ -2,9 +2,12 @@ import type { ProPluginsPerSeriesType } from '@mui/x-charts-pro/internals';
 import type { ChartAnyPluginSignature, ChartPublicAPI } from '@mui/x-charts/internals';
 import type { BarChartPremiumPluginSignatures } from '../BarChartPremium/BarChartPremium.plugins';
 import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { GeoPremiumPluginSignatures } from '../ChartsGeoDataProviderPremium/ChartsGeoDataProviderPremium.plugins';
 
 export type PremiumPluginsPerSeriesType = Omit<ProPluginsPerSeriesType, 'bar'> & {
   bar: BarChartPremiumPluginSignatures;
+  rangeBar: BarChartPremiumPluginSignatures;
+  mapShape: GeoPremiumPluginSignatures;
 };
 
 /**
@@ -15,9 +18,9 @@ export type PremiumPluginsPerSeriesType = Omit<ProPluginsPerSeriesType, 'bar'> &
  * @example ChartProApi<'composition'>
  */
 export type ChartPremiumApi<
-  ChartType extends keyof ProPluginsPerSeriesType | undefined = undefined,
+  ChartType extends keyof PremiumPluginsPerSeriesType | undefined = undefined,
   Signatures extends readonly ChartAnyPluginSignature[] =
-    ChartType extends keyof ProPluginsPerSeriesType
+    ChartType extends keyof PremiumPluginsPerSeriesType
       ? PremiumPluginsPerSeriesType[ChartType]
       : AllPluginSignatures,
 > = ChartPublicAPI<Signatures>;

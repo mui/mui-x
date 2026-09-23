@@ -3,23 +3,25 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
-  type GridRowId,
   gridRowTreeSelector,
   useFirstRender,
 } from '@mui/x-data-grid-pro';
+import type { GridRowId } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
-  type GridColumnRawLookup,
-  type GridPipeProcessor,
-  type GridHydrateColumnsValue,
-  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   sortRowTree,
   createRowTree,
   updateRowTree,
-  type RowTreeBuilderGroupingCriterion,
   getVisibleRowsLookup,
   RowGroupingStrategy,
+} from '@mui/x-data-grid-pro/internals';
+import type {
+  GridColumnRawLookup,
+  GridPipeProcessor,
+  GridHydrateColumnsValue,
+  GridStrategyProcessor,
+  RowTreeBuilderGroupingCriterion,
 } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {

@@ -2,10 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridSlotProps } from '../../models';
-import { type QuickFilterState, useQuickFilterContext } from './QuickFilterContext';
+import { useQuickFilterContext } from './QuickFilterContext';
+import type { QuickFilterState } from './QuickFilterContext';
 
 export type QuickFilterControlProps = Omit<GridSlotProps['baseTextField'], 'className'> & {
   /**
@@ -96,7 +98,7 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
   },
 );
 
-QuickFilterControl.propTypes = {
+QuickFilterControl.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

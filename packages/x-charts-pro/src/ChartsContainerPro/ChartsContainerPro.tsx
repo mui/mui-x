@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsSurface, type ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
-import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import type { ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
+import type { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartsContainerProProps } from './useChartsContainerProProps';
-import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartsDataProviderPro, type ChartsDataProviderProProps } from '../ChartsDataProviderPro';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
+import type { ChartsDataProviderProProps } from '../ChartsDataProviderPro';
 
 export interface ChartsContainerProSlots {}
 

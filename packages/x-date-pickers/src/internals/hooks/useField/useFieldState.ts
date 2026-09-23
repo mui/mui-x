@@ -5,7 +5,7 @@ import useTimeout from '@mui/utils/useTimeout';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
-import {
+import type {
   UseFieldInternalProps,
   UseFieldState,
   FieldParsedSelectedSections,
@@ -25,7 +25,7 @@ import {
   getSectionOrder,
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
-import {
+import type {
   FieldSelectedSections,
   PickersTimezone,
   PickerValidDate,
@@ -34,11 +34,9 @@ import {
 } from '../../../models';
 import { useValidation } from '../../../validation';
 import { useControlledValue } from '../useControlledValue';
-import {
-  GetDefaultReferenceDateProps,
-  getSectionTypeGranularity,
-} from '../../utils/getDefaultReferenceDate';
-import { PickerValidValue } from '../../models';
+import type { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
+import { getSectionTypeGranularity } from '../../utils/getDefaultReferenceDate';
+import type { PickerValidValue } from '../../models';
 
 const QUERY_LIFE_DURATION_MS = 5000;
 

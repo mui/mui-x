@@ -9,16 +9,17 @@ import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useControlled from '@mui/utils/useControlled';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import { YearCalendarButton } from './YearCalendarButton';
 import { useNow } from '../internals/hooks/useUtils';
-import { getYearCalendarUtilityClass, YearCalendarClasses } from './yearCalendarClasses';
-import { YearCalendarProps } from './YearCalendar.types';
+import type { YearCalendarClasses } from './yearCalendarClasses';
+import { getYearCalendarUtilityClass } from './yearCalendarClasses';
+import type { YearCalendarProps } from './YearCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
-import { PickerOwnerState, PickerValidDate } from '../models';
+import type { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
@@ -360,7 +361,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
   );
 }) as YearCalendarComponent;
 
-YearCalendar.propTypes = {
+YearCalendar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

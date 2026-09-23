@@ -59,7 +59,7 @@ export default function GroupedMessageTimeline() {
         slotProps={{
           root: {
             style: {
-              height: 520,
+              height: 500,
               display: 'grid',
               gridTemplateRows: 'auto minmax(0, 1fr) auto',
               gap: 14,
@@ -111,12 +111,12 @@ export default function GroupedMessageTimeline() {
                 <Message.Root
                   messageId={id}
                   slotProps={{
-                    root: demoSlotProps.messageRoot,
+                    root: demoSlotProps.message,
                   }}
                 >
                   <Message.Avatar
                     slotProps={{
-                      avatar: demoSlotProps.messageAvatar,
+                      avatar: demoSlotProps.avatar,
                       image: demoSlotProps.messageAvatarImage,
                     }}
                   />
@@ -129,9 +129,9 @@ export default function GroupedMessageTimeline() {
                     <Message.Meta
                       slotProps={{
                         meta: (ownerState) => ({
-                          ...demoSlotProps.messageMeta(ownerState),
+                          ...demoSlotProps.meta(ownerState),
                           style: {
-                            ...demoSlotProps.messageMeta(ownerState).style,
+                            ...demoSlotProps.meta(ownerState).style,
                             marginBottom: 4,
                           },
                         }),
@@ -202,7 +202,7 @@ export default function GroupedMessageTimeline() {
         />
         <Composer.Root
           slotProps={{
-            root: demoSlotProps.composerRoot,
+            root: demoSlotProps.composer,
           }}
         >
           <Composer.TextArea
@@ -216,7 +216,7 @@ export default function GroupedMessageTimeline() {
             <Composer.SendButton
               data-variant="primary"
               slotProps={{
-                sendButton: demoSlotProps.composerSendButton,
+                sendButton: demoSlotProps.send,
               }}
             >
               Send

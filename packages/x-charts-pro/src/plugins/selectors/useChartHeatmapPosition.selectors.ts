@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector } from '@base-ui/utils/store';
 import {
   getDataIndexForOrdinalScaleValue,
   isBandScale,
@@ -6,7 +6,7 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '@mui/x-charts/internals';
-import { type HeatmapItemIdentifierWithData } from '../../models';
+import type { HeatmapItemIdentifierWithData } from '../../models';
 
 export const selectorHeatmapItemAtPosition = createSelector(
   selectorChartXAxis,

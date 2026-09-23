@@ -1,12 +1,14 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
+import { useInteractionItemProps } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/internals';
 import { useItemHighlightState } from '../hooks';
 
 export type MapShapeProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
   seriesId: SeriesId;
-  dataIndex: number;
+  featureName: string;
   d: string;
   color: string;
 };
@@ -21,11 +23,11 @@ const MapShapeRoot = styled('path', {
 });
 
 function MapShape(props: MapShapeProps) {
-  const { seriesId, dataIndex, d, color, onClick, ...other } = props;
+  const { seriesId, featureName, d, color, onClick, ...other } = props;
 
   const identifier = React.useMemo(
-    () => ({ type: 'mapShape' as const, seriesId, dataIndex }),
-    [seriesId, dataIndex],
+    () => ({ type: 'mapShape' as const, seriesId, name: featureName }),
+    [seriesId, featureName],
   );
   const interactionProps = useInteractionItemProps(identifier);
   const highlightState = useItemHighlightState(identifier);
@@ -38,7 +40,7 @@ function MapShape(props: MapShapeProps) {
       fill={color}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      data-index={dataIndex}
+      data-name={featureName}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
       filter={isHighlighted ? 'brightness(120%)' : undefined}
@@ -48,5 +50,14 @@ function MapShape(props: MapShapeProps) {
     />
   );
 }
+
+MapShape.propTypes /* remove-proptypes */ = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  featureName: PropTypes.string.isRequired,
+  seriesId: PropTypes.string.isRequired,
+} as any;
 
 export { MapShape };

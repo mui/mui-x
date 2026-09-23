@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "9.4.0",
+  "version": "9.14.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Charts components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
+    "build": "code-infra build --tsgo",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-charts": "workspace:^",
     "@mui/x-charts-vendor": "workspace:^",

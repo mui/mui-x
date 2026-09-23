@@ -5,12 +5,8 @@ import {
   gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
 import type { GridRowId, GridGroupNode, GridLeafNode } from '@mui/x-data-grid-pro';
-import {
-  BaseReorderOperation,
-  rowReorderUtils,
-  type ReorderOperation,
-  type ReorderExecutionContext,
-} from '@mui/x-data-grid-pro/internals';
+import { BaseReorderOperation, rowReorderUtils } from '@mui/x-data-grid-pro/internals';
+import type { ReorderOperation, ReorderExecutionContext } from '@mui/x-data-grid-pro/internals';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';

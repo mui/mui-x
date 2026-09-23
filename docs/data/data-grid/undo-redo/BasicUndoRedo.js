@@ -8,6 +8,7 @@ export default function BasicUndoRedo() {
     dataSet: 'Commodity',
     rowLength: 200,
     editable: true,
+    multiSelect: true,
   });
 
   return (

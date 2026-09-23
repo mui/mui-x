@@ -1,23 +1,22 @@
 import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import {
+import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import type {
   EventCalendarPreferences,
   CalendarView,
-  EventCalendarViewConfig,
+  EventCalendarViewDefinition,
   TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
-import { Adapter } from '../use-adapter/useAdapter.types';
-import {
-  DEFAULT_SCHEDULER_PREFERENCES,
+import type { Adapter } from '../use-adapter/useAdapter.types';
+import type {
   SchedulerParametersToStateMapper,
-  SchedulerStore,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
-import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
+import { DEFAULT_SCHEDULER_PREFERENCES, SchedulerStore } from '../internals/utils/SchedulerStore';
+import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
-import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -52,7 +51,7 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
         `See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.`,
     );
   }
-  return { views };
+  return { views, viewConfig: parameters.viewConfig ?? EMPTY_OBJECT };
 };
 
 function warnIfShouldEventRequireResourceMisconfigured(
@@ -87,7 +86,7 @@ const mapper: SchedulerParametersToStateMapper<
               ...DEFAULT_PREFERENCES_MENU_CONFIG,
               ...parameters.preferencesMenuConfig,
             },
-      viewConfig: null,
+      viewDefinition: null,
       view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
       shouldEventRequireResource,
     };
@@ -111,31 +110,36 @@ const mapper: SchedulerParametersToStateMapper<
 /**
  * Base class that can be extended by premium stores.
  * Accepts instanceName as a parameter to allow subclasses to provide their own instance name.
+ * `Parameters` is generic so premium stores can widen it with their own parameters.
  */
 export class ExtendableEventCalendarStore<
   TEvent extends object,
   TResource extends object,
-> extends SchedulerStore<
-  TEvent,
-  TResource,
-  EventCalendarState,
-  EventCalendarParameters<TEvent, TResource>
-> {
+  Parameters extends EventCalendarParameters<TEvent, TResource> = EventCalendarParameters<
+    TEvent,
+    TResource
+  >,
+> extends SchedulerStore<TEvent, TResource, EventCalendarState, Parameters> {
   public constructor(
-    parameters: EventCalendarParameters<TEvent, TResource>,
+    parameters: Parameters,
     adapter: Adapter,
     instanceName: SchedulerInstanceName,
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
     super(parameters, adapter, instanceName, mapper, recurringEventsPlugin);
 
+    // A view change swaps the grid, so the edited occurrence goes stale like it does on a date change.
+    this.disposables.defer(this.registerStoreEffect((state) => state.view, this.stopEditing));
+
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
       this.assertViewValidity(this.state.view);
-      this.subscribe((state) => {
-        this.assertViewValidity(state.view);
-        return null;
-      });
+      this.disposables.defer(
+        this.subscribe((state) => {
+          this.assertViewValidity(state.view);
+          return null;
+        }),
+      );
     }
   }
 
@@ -185,19 +189,20 @@ export class ExtendableEventCalendarStore<
 
     const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
     const canSetView = viewProp === undefined && hasViewChange;
-    if (canSetVisibleDate || canSetView) {
-      this.update({
-        ...(canSetVisibleDate ? { visibleDate } : undefined),
-        ...(canSetView ? { view } : undefined),
-      });
+    if (canSetVisibleDate && canSetView) {
+      this.update({ visibleDate, view });
+    } else if (canSetVisibleDate) {
+      this.update({ visibleDate });
+    } else if (canSetView) {
+      this.update({ view });
     }
   };
 
   private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
-    const siblingVisibleDateGetter = this.state.viewConfig?.siblingVisibleDateGetter;
+    const siblingVisibleDateGetter = this.state.viewDefinition?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+        'MUI X Scheduler: No definition found for the current view. Please use useEventCalendarView in your custom view.',
       );
       return;
     }
@@ -252,6 +257,15 @@ export class ExtendableEventCalendarStore<
    */
   public setPreferences = (partialPreferences: Partial<EventCalendarPreferences>, event: Event) => {
     const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      preferencesProp !== undefined &&
+      !onPreferencesChange
+    ) {
+      warn(
+        'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided. Preference changes will be silently ignored.',
+      );
+    }
 
     const updated = {
       ...this.state.preferences,
@@ -270,9 +284,9 @@ export class ExtendableEventCalendarStore<
    * Sets the method used to determine the previous / next visible date.
    * Returns the cleanup function.
    */
-  public setViewConfig = (config: EventCalendarViewConfig) => {
-    this.set('viewConfig', config);
-    return () => this.set('viewConfig', null);
+  public setViewDefinition = (definition: EventCalendarViewDefinition) => {
+    this.set('viewDefinition', definition);
+    return () => this.set('viewDefinition', null);
   };
 
   public buildPublicAPI() {

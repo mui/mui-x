@@ -1,7 +1,5 @@
-import {
-  SCATTER_CHART_PRO_PLUGINS,
-  type ScatterChartProPluginSignatures,
-} from '@mui/x-charts-pro/ScatterChartPro';
+import { SCATTER_CHART_PRO_PLUGINS } from '@mui/x-charts-pro/ScatterChartPro';
+import type { ScatterChartProPluginSignatures } from '@mui/x-charts-pro/ScatterChartPro';
 
 export type ScatterChartPremiumPluginSignatures = ScatterChartProPluginSignatures;
 

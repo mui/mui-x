@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { type GridSlotProps, getDataGridUtilityClass } from '@mui/x-data-grid-pro';
+import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
+import type { GridSlotProps } from '@mui/x-data-grid-pro';
 import { styled } from '@mui/material/styles';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';

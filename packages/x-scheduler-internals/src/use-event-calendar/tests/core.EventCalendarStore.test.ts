@@ -1,13 +1,19 @@
-import { adapter, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  adapter,
+  EventBuilder,
+  ResourceBuilder,
+  utcJuly4AllDayBuilder,
+} from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { vi, describe, it, expect } from 'vitest';
 import {
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import type { CalendarView, SchedulerEventOccurrence } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -25,6 +31,7 @@ describe('Core - EventCalendarStore', () => {
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
+        selection: null,
         eventColor: 'teal',
         eventCreation: true,
         eventIdList: [],
@@ -32,10 +39,10 @@ describe('Core - EventCalendarStore', () => {
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
-        editedEventId: null,
+        editingOccurrence: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
+        pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         processedEventLookup: new Map(),
@@ -48,10 +55,12 @@ describe('Core - EventCalendarStore', () => {
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         view: DEFAULT_VIEW,
-        viewConfig: null,
+        viewConfig: {},
+        viewDefinition: null,
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
+        collapsedResources: {},
         isLoading: false,
         errors: [],
       };
@@ -86,6 +95,236 @@ describe('Core - EventCalendarStore', () => {
       }).toWarnDev([
         'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
       ]);
+    });
+  });
+
+  describe('editing state machine', () => {
+    // The editing methods only read `occurrence.key` / `displayTimezone`, so a minimal occurrence suffices.
+    const occurrence = (id: string) => ({ id, key: id }) as any;
+
+    describe('startEditing', () => {
+      it('should record the occurrence in edit mode by default', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited);
+
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+      });
+
+      it('should honor an explicit mode', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+        store.startEditing(occurrence('event-1'), 'armed');
+
+        expect(store.state.editingOccurrence?.mode).to.equal('armed');
+      });
+
+      it('should call `onEventEditingStart` with the occurrence before recording the editing state', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited);
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        expect(onEventEditingStart.mock.lastCall?.[0]).to.equal(edited);
+        expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('edit');
+        expect(onEventEditingStart.mock.lastCall?.[1].occurrence).to.equal(edited);
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+      });
+
+      it('should not call `onEventEditingStart` when arming, then call it on the armed → edit transition', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const edited = occurrence('event-1');
+
+        store.startEditing(edited, 'armed');
+        expect(onEventEditingStart.mock.calls.length).to.equal(0);
+
+        const nativeEvent = new Event('click');
+        store.setEditingMode('edit', nativeEvent);
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        expect(onEventEditingStart.mock.lastCall?.[0]).to.equal(edited);
+        expect(onEventEditingStart.mock.lastCall?.[1].event).to.equal(nativeEvent);
+      });
+
+      it('should disarm when `onEventEditingStart` cancels the armed → edit transition', () => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+
+        store.setEditingMode('edit');
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        // The armed state keeps document-wide guards active, so a canceled edit fully disarms.
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should not record the editing state when `onEventEditingStart` cancels', () => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should clear the creation placeholder when `onEventEditingStart` cancels a creation', () => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const placeholder = {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T10:30:00', 'default'),
+        } as any;
+        store.setOccurrencePlaceholder(placeholder);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
+        expect(onEventEditingStart.mock.lastCall?.[1].occurrence).to.equal(
+          onEventEditingStart.mock.lastCall?.[0],
+        );
+        expect(store.state.editingOccurrence).to.equal(null);
+        expect(store.state.occurrencePlaceholder).to.equal(null);
+      });
+
+      it('should forward the native event that initiated the creation placeholder', () => {
+        const onEventEditingStart = vi.fn();
+        const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onEventEditingStart }, adapter);
+        const nativeEvent = new Event('click');
+        const placeholder = {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T10:30:00', 'default'),
+        } as any;
+        store.setOccurrencePlaceholder(placeholder, nativeEvent);
+
+        store.startEditing(occurrence('event-1'));
+
+        expect(onEventEditingStart.mock.lastCall?.[1].event).to.equal(nativeEvent);
+      });
+    });
+
+    describe('setEditingMode', () => {
+      it('should swap the mode while keeping the same occurrence', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = occurrence('event-1');
+        store.startEditing(edited, 'armed');
+
+        store.setEditingMode('edit');
+
+        expect(store.state.editingOccurrence).to.deep.equal({ occurrence: edited, mode: 'edit' });
+      });
+
+      it('should be a no-op when nothing is being edited', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+        store.setEditingMode('edit');
+
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should keep the same reference when the mode is unchanged', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+        const before = store.state.editingOccurrence;
+
+        store.setEditingMode('armed');
+
+        expect(store.state.editingOccurrence).to.equal(before);
+      });
+    });
+
+    describe('setEditingOccurrenceTimes', () => {
+      it('should refresh the edited occurrence times, keeping the mode', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        store.startEditing(occurrence('event-1'), 'armed');
+        const start = adapter.date('2024-01-15T10:00:00', 'default');
+        const end = adapter.date('2024-01-15T11:30:00', 'default');
+
+        store.setEditingOccurrenceTimes({ start, end });
+
+        const editing = store.state.editingOccurrence!;
+        expect(editing.occurrence.displayTimezone.start.value).toEqualDateTime(start);
+        expect(editing.occurrence.displayTimezone.end.value).toEqualDateTime(end);
+        expect(editing.mode).to.equal('armed');
+      });
+
+      it('should be a no-op when nothing is being edited', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+
+        store.setEditingOccurrenceTimes({
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T11:30:00', 'default'),
+        });
+
+        expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should keep the data bounds on the committed instants', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = EventBuilder.new(adapter)
+          .withDataTimezone('UTC')
+          .withDisplayTimezone('America/New_York')
+          .singleDay('2024-01-15T15:00:00Z', 60)
+          .toOccurrence();
+        store.startEditing(edited, 'armed');
+        const start = adapter.date('2024-01-15T14:00:00Z', 'default');
+        const end = adapter.date('2024-01-15T16:00:00Z', 'default');
+
+        store.setEditingOccurrenceTimes({ start, end });
+
+        const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
+        expect(editing.displayTimezone.start.timestamp).to.equal(adapter.getTime(start));
+        expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        // A rule added from the dialog is built on the data-timezone start.
+        expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
+        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(adapter.getTimezone(editing.dataTimezone.start.value)).to.equal('UTC');
+      });
+
+      it('should keep a bound left out on its stored value in both timezones', () => {
+        // July 4 00:00 UTC is displayed on July 3 in New York: an end-only resize must not
+        // re-read the untouched start from its displayed day.
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = utcJuly4AllDayBuilder()
+          .withDisplayTimezone('America/New_York')
+          .toOccurrence();
+        store.startEditing(edited, 'armed');
+        const end = adapter.addDays(edited.displayTimezone.end.value, 1);
+
+        store.setEditingOccurrenceTimes({ end });
+
+        const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
+        expect(editing.displayTimezone.start).to.equal(edited.displayTimezone.start);
+        expect(editing.dataTimezone.start).to.equal(edited.dataTimezone.start);
+        expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
+      });
+    });
+
+    describe('stopEditing', () => {
+      it('should clear the editing state and any in-progress creation placeholder', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        store.startEditing(occurrence('event-1'), 'edit');
+        store.setOccurrencePlaceholder({
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T11:00:00', 'default'),
+          resourceId: null,
+        });
+
+        store.stopEditing();
+
+        expect(store.state.editingOccurrence).to.equal(null);
+        expect(store.state.occurrencePlaceholder).to.equal(null);
+      });
     });
   });
 

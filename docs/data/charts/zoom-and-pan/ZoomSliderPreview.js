@@ -8,7 +8,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
-import { Unstable_CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
+import { CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
 
 import {
   dateAxisFormatter,

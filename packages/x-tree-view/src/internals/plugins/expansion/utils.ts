@@ -1,4 +1,4 @@
-import { RichTreeViewStoreParameters } from '../../RichTreeViewStore';
+import type { RichTreeViewStoreParameters } from '../../RichTreeViewStore';
 
 export const getExpansionTrigger = ({
   isItemEditable,

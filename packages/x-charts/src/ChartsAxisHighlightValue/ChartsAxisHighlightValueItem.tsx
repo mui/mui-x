@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { styled, type SxProps } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import type { SxProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useUtilityClasses } from './chartsAxisHighlightValueClasses';
 

@@ -9,7 +9,7 @@ import {
   usePreviousMonthDisabled,
 } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
-import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
+import type { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
 type PickersRangeCalendarHeaderComponent = ((
   props: PickersRangeCalendarHeaderProps & React.RefAttributes<HTMLDivElement>,
@@ -91,7 +91,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   );
 }) as PickersRangeCalendarHeaderComponent;
 
-PickersRangeCalendarHeader.propTypes = {
+PickersRangeCalendarHeader.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

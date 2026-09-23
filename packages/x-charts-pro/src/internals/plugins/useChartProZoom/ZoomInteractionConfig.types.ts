@@ -8,8 +8,9 @@ export type ZoomInteractionConfig = {
    * - `tapAndDrag`: Zooms in or out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
    * - `brush`: Zooms into a selected area by clicking and dragging to create a selection area. (Conflicts with `drag` pan interaction)
    * - `doubleTapReset`: Resets the zoom level to the original state when double-tapping.
+   * - `keyboard`: Zooms in with `+`, out with `-`, and resets with `0`, while the chart is focused.
    *
-   * @default ['wheel', 'pinch']
+   * @default ['wheel', 'pinch', 'keyboard']
    */
   zoom?: readonly (ZoomInteraction | ZoomInteraction['type'])[];
   /**
@@ -17,8 +18,9 @@ export type ZoomInteractionConfig = {
    * - `drag`: Pans the chart when dragged with the mouse.
    * - `pressAndDrag`: Pans the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
    * - `wheel`: Pans the chart when the mouse wheel is scrolled (horizontal by default).
+   * - `keyboard`: Pans the chart with `Shift` + arrow keys, while the chart is focused.
    *
-   * @default ['drag', 'wheel']
+   * @default ['drag', 'wheel', 'keyboard']
    */
   pan?: readonly (PanInteraction | PanInteraction['type'])[];
 };
@@ -36,17 +38,19 @@ export type DefaultizedZoomInteractionConfig = {
   pan: Entry<PanInteraction>;
 };
 
-export type ZoomInteraction =
+type ZoomInteraction =
   | WheelInteraction
   | PinchInteraction
   | TapAndDragInteraction
   | DoubleTapResetInteraction
-  | BrushInteraction;
-export type PanInteraction = DragInteraction | PressAndDragInteraction | WheelPanInteraction;
+  | BrushInteraction
+  | KeyboardInteraction;
+type PanInteraction =
+  DragInteraction | PressAndDragInteraction | WheelPanInteraction | KeyboardInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
 export type PanInteractionName = PanInteraction['type'];
-export type InteractionMode = Exclude<PointerMode, 'pen'>;
+type InteractionMode = Exclude<PointerMode, 'pen'>;
 
 type AllKeysProp = {
   /**
@@ -83,42 +87,42 @@ type Unpack<T> = {
   [K in keyof T]: T[K] extends object ? Unpack<T[K]> : T[K];
 };
 
-export type WheelInteraction = Unpack<
+type WheelInteraction = Unpack<
   {
     type: 'wheel';
   } & NoModeProp &
     AllKeysProp
 >;
 
-export type PinchInteraction = Unpack<
+type PinchInteraction = Unpack<
   {
     type: 'pinch';
   } & NoModeProp &
     NoKeysProp
 >;
 
-export type DragInteraction = Unpack<
+type DragInteraction = Unpack<
   {
     type: 'drag';
   } & AllModeProp &
     AllKeysProp
 >;
 
-export type TapAndDragInteraction = Unpack<
+type TapAndDragInteraction = Unpack<
   {
     type: 'tapAndDrag';
   } & AllModeProp &
     AllKeysProp
 >;
 
-export type PressAndDragInteraction = Unpack<
+type PressAndDragInteraction = Unpack<
   {
     type: 'pressAndDrag';
   } & AllModeProp &
     AllKeysProp
 >;
 
-export type WheelPanInteraction = Unpack<
+type WheelPanInteraction = Unpack<
   {
     type: 'wheel';
     /**
@@ -133,18 +137,25 @@ export type WheelPanInteraction = Unpack<
     AllKeysProp
 >;
 
-export type DoubleTapResetInteraction = Unpack<
+type DoubleTapResetInteraction = Unpack<
   {
     type: 'doubleTapReset';
   } & AllModeProp &
     AllKeysProp
 >;
 
-export type BrushInteraction = Unpack<
+type BrushInteraction = Unpack<
   {
     type: 'brush';
   } & AllModeProp &
     AllKeysProp
+>;
+
+type KeyboardInteraction = Unpack<
+  {
+    type: 'keyboard';
+  } & NoModeProp &
+    NoKeysProp
 >;
 
 export type AnyInteraction = {

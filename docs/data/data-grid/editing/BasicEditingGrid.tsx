@@ -14,7 +14,7 @@ export default function BasicEditingGrid() {
 }
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'name', headerName: 'Name', width: 180, editable: true, rowHeader: true },
   {
     field: 'bio',
     headerName: 'Bio',

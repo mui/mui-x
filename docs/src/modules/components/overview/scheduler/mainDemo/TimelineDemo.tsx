@@ -34,7 +34,7 @@ export default function TimelineDemo() {
   };
 
   return (
-    <Stack>
+    <Stack sx={{ px: { xs: 2, md: 0 } }}>
       <SchedulerDemoThemeProvider selectedTheme={selectedTheme}>
         <Stack spacing={1} sx={{ height: 600, width: '100%', mb: 6 }}>
           <Stack
@@ -82,7 +82,7 @@ export default function TimelineDemo() {
           </Box>
         </Stack>
       </SchedulerDemoThemeProvider>
-      <Stack direction="row" spacing={2} sx={{ flexDirection: { xs: 'column', md: 'row' }, mb: 6 }}>
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ mb: 6 }}>
         <LicenseCard
           plan="premium"
           title="Premium-only component"

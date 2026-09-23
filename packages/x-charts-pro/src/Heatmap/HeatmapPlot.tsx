@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { HeatmapSVGPlot } from './HeatmapSVGPlot';
-import { type HeatmapRendererPlotProps } from './Heatmap.types';
+import type { HeatmapRendererPlotProps } from './Heatmap.types';
 
 export interface HeatmapPlotProps extends HeatmapRendererPlotProps {}
 
@@ -10,7 +10,7 @@ function HeatmapPlot({ borderRadius, ...props }: HeatmapPlotProps): React.ReactN
   return <HeatmapSVGPlot borderRadius={borderRadius} {...props} />;
 }
 
-HeatmapPlot.propTypes = {
+HeatmapPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

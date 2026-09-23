@@ -7,22 +7,15 @@ githubLabel: 'scope: chat'
 
 # Chat - Composer with attachments
 
-<p class="description">Build the full headless draft surface with a textarea, hidden file input, helper text, and send action.</p>
+<p class="description">Compose messages with text and file attachments using the headless `Composer` primitives.</p>
 
-This demo isolates the draft area so the interaction model is easy to understand before it is embedded into a larger chat shell.
+Chat composers hide a lot of behavior behind a simple surface: autosizing, disabled states, IME-safe submit, attachment selection, and helper text.
 
-That is useful because chat composers often look simple but hide a lot of behavior: autosizing, disabled states, IME-safe submit, attachment selection, and helper text.
-
-- `Composer.Root`
-- `Composer.TextArea`
-- `Composer.AttachButton`
-- `Composer.HelperText`
-- `Composer.SendButton`
-- attachment flows and IME-safe input behavior
+The demo below shows the headless composer wired up with text input, attachment selection, helper text, and send state:
 
 {{"demo": "ComposerWithAttachments.js"}}
 
-## Key primitives
+## Wiring the composer primitives
 
 - `Composer.Root` for form submission and shared composer context
 - `Composer.TextArea` for autosizing textarea behavior and IME-safe submit
@@ -30,33 +23,32 @@ That is useful because chat composers often look simple but hide a lot of behavi
 - `Composer.HelperText` for error or helper messaging
 - `Composer.SendButton` for runtime-aware disabled and submit state
 
-## Implementation notes
+## Composing with attachments
 
 - Show both text-only and attachment-backed drafts.
 - Make the helper text visible through either explicit copy or a runtime error so its role is clear.
 - Keep the visual design plain so the hidden file-input relationship is the main lesson.
 
-## When to use this pattern
+## Common use cases
 
 Use this pattern when:
 
-- a product surface needs upload support
-- the send action depends on runtime state
-- the team needs a clear demo of the headless composer contract
+- A product surface needs upload support.
+- The send action depends on runtime state.
 
 This applies to support chat with screenshots, copilots that accept reference files, and internal tools where users need to attach evidence or export artifacts alongside text.
 
 ## What to pay attention to
 
-- `Composer.AttachButton` owns the visible-trigger plus hidden-input relationship, so the page layer does not need attachment plumbing.
-- `Composer.HelperText` is the natural place for both authored guidance and runtime error fallback.
-- `Composer.TextArea` already handles the IME and Enter behavior that teams often reimplement by hand.
+- `Composer.AttachButton` owns the visible-trigger and hidden-input relationship—the page layer doesn't need attachment plumbing.
+- `Composer.HelperText` surfaces both authored guidance and runtime error fallback.
+- `Composer.TextArea` handles IME and Enter behavior.
 
 ## See also
 
-- Continue with [Composer](/x/react-chat/headless/composer/) for the reference-level API and behaviors.
-- Continue with [Slot customization](/x/react-chat/headless/examples/slot-customization/) when the default composer structure is correct but the markup needs to match a custom design system.
+- See [Composer](/x/react-chat/headless/composer/) for details on the reference-level API and behaviors.
+- See [Slot customization](/x/react-chat/headless/examples/slot-customization/) for details on adapting the composer markup to a custom design system.
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

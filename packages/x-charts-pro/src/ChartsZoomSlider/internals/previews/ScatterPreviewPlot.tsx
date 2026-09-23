@@ -1,17 +1,16 @@
 import * as React from 'react';
 import {
   useStore,
-  type D3Scale,
-  type ColorGetter,
   useScatterPlotData,
   scatterSeriesConfig,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
 } from '@mui/x-charts/internals';
+import type { D3Scale, ColorGetter } from '@mui/x-charts/internals';
 import { useScatterSeriesContext, useXAxes, useYAxes, useZAxes } from '@mui/x-charts/hooks';
 import { ScatterMarker } from '@mui/x-charts/ScatterChart';
-import { type DefaultizedScatterSeriesType } from '@mui/x-charts/models';
-import { type PreviewPlotProps } from './PreviewPlot.types';
+import type { DefaultizedScatterSeriesType } from '@mui/x-charts/models';
+import type { PreviewPlotProps } from './PreviewPlot.types';
 
 interface ScatterPreviewPlotProps extends PreviewPlotProps {
   x: number;

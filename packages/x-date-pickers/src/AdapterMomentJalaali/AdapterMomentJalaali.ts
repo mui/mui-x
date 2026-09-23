@@ -1,7 +1,8 @@
 /* v8 ignore next */
-import defaultJMoment, { Moment } from 'moment-jalaali';
+import type { Moment } from 'moment-jalaali';
+import defaultJMoment from 'moment-jalaali';
 import { AdapterMoment } from '../AdapterMoment';
-import {
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,
@@ -60,11 +61,11 @@ const defaultFormats: AdapterFormats = {
   minutes: 'mm',
   seconds: 'ss',
 
-  fullDate: 'jYYYY, jMMMM Do',
+  fullDate: 'jYYYY, jMMMM jD',
   keyboardDate: 'jYYYY/jMM/jDD',
   shortDate: 'jD jMMM',
   normalDate: 'dddd, jD jMMM',
-  normalDateWithWeekday: 'DD MMMM',
+  normalDateWithWeekday: 'ddd, jD jMMMM',
 
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',

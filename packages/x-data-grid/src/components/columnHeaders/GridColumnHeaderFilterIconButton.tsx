@@ -42,7 +42,7 @@ function GridColumnHeaderFilterIconButtonWrapped(props: ColumnHeaderFilterIconBu
   return <GridColumnHeaderFilterIconButton {...props} />;
 }
 
-GridColumnHeaderFilterIconButtonWrapped.propTypes = {
+GridColumnHeaderFilterIconButtonWrapped.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -125,7 +125,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
   );
 }
 
-GridColumnHeaderFilterIconButton.propTypes = {
+GridColumnHeaderFilterIconButton.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

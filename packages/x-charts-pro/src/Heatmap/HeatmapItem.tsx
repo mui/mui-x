@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { type SeriesId } from '@mui/x-charts/internals';
+import type { WithDataAttributes } from '@mui/utils/types';
+import type { SeriesId } from '@mui/x-charts/internals';
 import { useUtilityClasses } from './heatmapClasses';
-import { HeatmapCell, type HeatmapCellOwnerState, type HeatmapCellProps } from './HeatmapCell';
+import { HeatmapCell } from './HeatmapCell';
+import type { HeatmapCellOwnerState, HeatmapCellProps } from './HeatmapCell';
 import type { CellPropsOverrides } from '../models/chartsSlotsComponentsPropsPro';
 
 export interface HeatmapItemSlots {
@@ -15,7 +17,7 @@ export interface HeatmapItemSlots {
 }
 
 export interface HeatmapItemSlotProps {
-  cell?: Partial<HeatmapCellProps> & CellPropsOverrides;
+  cell?: WithDataAttributes<Partial<HeatmapCellProps> & CellPropsOverrides>;
 }
 
 export interface HeatmapItemProps {

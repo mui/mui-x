@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector } from '@base-ui/utils/store';
 import {
   getDataIndexForOrdinalScaleValue,
   isBandScale,
@@ -7,7 +7,7 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '@mui/x-charts/internals';
-import { type OHLCItemIdentifier } from '../../models';
+import type { OHLCItemIdentifier } from '../../models';
 
 export const selectorCandlestickItemAtPosition = createSelector(
   selectorChartXAxis,

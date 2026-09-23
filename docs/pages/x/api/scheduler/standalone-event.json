@@ -1,10 +1,6 @@
 {
   "props": {
-    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
-    "nativeButton": { "type": { "name": "bool" }, "default": "false" },
     "onEventDrop": { "type": { "name": "func" } },
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
-    "style": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "sx": {
       "type": {
         "name": "union",
@@ -25,6 +21,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler/src/standalone-event/StandaloneEvent.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interaction</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/drag-interactions/\">Event Calendar - Drag Interactions</a></li></ul>"
 }

@@ -33,6 +33,5 @@
   "muiName": "MuiChatSuggestions",
   "filename": "/packages/x-chat/src/ChatSuggestions/ChatSuggestions.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/behavior/suggestions/\">Chat - Suggestions</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/suggestions/\">Chat - Suggestions</a></li></ul>"
 }

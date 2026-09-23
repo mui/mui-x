@@ -1,17 +1,12 @@
 import * as React from 'react';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import {
-  DataGrid,
-  type DataGridProps,
-  type GridRowsProp,
-  type GridColDef,
-  gridClasses,
-  gridColumnLookupSelector,
-} from '@mui/x-data-grid';
+import { DataGrid, gridClasses, gridColumnLookupSelector } from '@mui/x-data-grid';
+import type { DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { describe, it, expect } from 'vitest';
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
@@ -201,6 +196,29 @@ describe('<DataGrid /> - Columns', () => {
     expect(gridColumnLookupSelector(apiRef).status).to.deep.include({
       sortable: true,
       filterable: true,
+    });
+  });
+
+  describe('resize cleanup', () => {
+    // Regression test for https://github.com/mui/mui-x/pull/23431
+    it('should not crash when unmounting while the document has no body', async () => {
+      const { unmount } = render(<TestDataGrid />);
+
+      const { body } = document;
+      body.remove();
+
+      let error: unknown;
+      try {
+        await act(async () => {
+          unmount();
+        });
+      } catch (err) {
+        error = err;
+      } finally {
+        document.documentElement.appendChild(body);
+      }
+
+      expect(error).to.equal(undefined);
     });
   });
 });

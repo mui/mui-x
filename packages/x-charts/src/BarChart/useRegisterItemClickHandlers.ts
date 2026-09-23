@@ -1,22 +1,25 @@
 'use client';
 import * as React from 'react';
-import { type BarItemIdentifier } from '../models/seriesType';
+import type { BarItemIdentifier } from '../models/seriesType';
 import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
-import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
-import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartsContext } from '../context/ChartsProvider';
 import { getChartPoint } from '../internals/getChartPoint';
 import { useStore } from '../internals/store/useStore';
 import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
+import { useRegisterItemActivation } from '../internals/useRegisterItemActivation';
+import type { ChartsActivationEvent } from '../models/events';
 
 /**
  * Hook that registers pointer event handlers for chart item clicking.
  * @param onItemClick Callback for item click events.
  */
 export function useRegisterItemClickHandlers(
-  onItemClick: ((event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void) | undefined,
+  onItemClick:
+    ((event: ChartsActivationEvent, barItemIdentifier: BarItemIdentifier) => void) | undefined,
 ) {
   const { instance } =
     useChartsContext<
@@ -24,6 +27,17 @@ export function useRegisterItemClickHandlers(
     >();
   const chartsLayerContainerRef = useChartsLayerContainerRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<'bar'>]>();
+
+  useRegisterItemActivation(
+    { type: 'bar' },
+    onItemClick &&
+      ((event, item) =>
+        onItemClick(event, {
+          type: 'bar',
+          seriesId: item.seriesId,
+          dataIndex: item.dataIndex,
+        })),
+  );
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;

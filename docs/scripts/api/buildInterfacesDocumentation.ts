@@ -405,26 +405,15 @@ export async function buildInterfacesDocumentationPage(
     await writePrettifiedFile(
       path.resolve(apiPagesDirectory, `${slug}.js`),
       `import * as React from 'react';
-    import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
-    import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
-    import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
-    import jsonPageContent from './${slug}.json';
-  
-    export default function Page(props) {
-      const { descriptions } = props;
-      return <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
-    }
-    
-    export async function getStaticProps() {
-      const req = require.context(
-        '${importTranslationPagesDirectory}/',
-        false,
-        /\\.\\/${slug}.*.json$/,
-      );
-      const descriptions = mapApiPageTranslations(req);
-      return { props: { descriptions } };
-    };
-    `.replace(/\r?\n/g, EOL),
+import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
+import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
+import descriptions from '${importTranslationPagesDirectory}/${slug}.json';
+import jsonPageContent from './${slug}.json';
+
+export default function Page() {
+  return <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
+}
+`.replace(/\r?\n/g, EOL),
     );
 
     // eslint-disable-next-line no-console

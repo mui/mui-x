@@ -6,11 +6,11 @@ import { ChatBox } from '@mui/x-chat';
 import {
   createEchoAdapter,
   syncConversationPreview,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   inboxConversations,
   inboxThreads,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const CompactRowSlot = React.forwardRef<
@@ -95,6 +95,7 @@ export default function CompactRow() {
       activeConversationId={activeConversationId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
           setActiveConversationId(nextId);

@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { type GridRowId, gridRowNodeSelector } from '@mui/x-data-grid';
+import { gridRowNodeSelector } from '@mui/x-data-grid';
+import type { GridRowId } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';

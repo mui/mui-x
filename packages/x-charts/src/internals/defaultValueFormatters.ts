@@ -1,7 +1,7 @@
-import {
-  type AxisValueFormatterContext,
-  type ContinuousScaleName,
-  type D3ContinuousScale,
+import type {
+  AxisValueFormatterContext,
+  ContinuousScaleName,
+  D3ContinuousScale,
 } from '../models/axis';
 
 /**

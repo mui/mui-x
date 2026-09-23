@@ -71,6 +71,5 @@
   "muiName": "MuiTimePickerToolbar",
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
 }

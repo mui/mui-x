@@ -269,6 +269,7 @@ describe('createRealtimeActions', () => {
         stopStreaming: vi.fn(),
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
+        historyLoadRequestIdRef: { current: 0 },
       });
       const { handleRealtimeEvent } = createRealtimeActions({
         store: asUnknown(store),

@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('it-IT');
 
@@ -58,6 +55,11 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'Assistente AI',
+
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
 
   // Columns management text
   columnsManagementSearchTitle: 'Cerca',

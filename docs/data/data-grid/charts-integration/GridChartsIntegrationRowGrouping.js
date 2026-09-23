@@ -49,6 +49,7 @@ export default function GridChartsIntegrationRowGrouping() {
     dataSet: 'Commodity',
     rowLength: 100,
     editable: true,
+    multiSelect: true,
   });
 
   const apiRef = useGridApiRef();

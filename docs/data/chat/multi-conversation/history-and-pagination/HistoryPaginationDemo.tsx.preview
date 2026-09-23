@@ -1,0 +1,12 @@
+<ChatBox
+  adapter={adapter}
+  initialConversations={initialConversations}
+  initialActiveConversationId={CONVERSATION_ID}
+  slotProps={{ messageList: { overlay: <HistoryLoadingIndicator /> } }}
+  sx={{
+    height: 460,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

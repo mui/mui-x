@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import SpeedIcon from '@mui/icons-material/Speed';
 import ForumIcon from '@mui/icons-material/Forum';
 import TuneIcon from '@mui/icons-material/Tune';
+import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 import InfoCard from '../InfoCard';
 
 const featuredItems = [
@@ -26,6 +27,12 @@ const featuredItems = [
     description:
       'Connect to any backend, override slots, and apply theme overrides for full control of your chat UI.',
     icon: <TuneIcon fontSize="small" color="primary" />,
+  },
+  {
+    title: 'Accessible by default',
+    description:
+      'Roving focus keeps the message list a single Tab stop, with arrow keys, Enter drill-in, and Escape built in. Labeled landmarks and polite live regions announce streaming responses exactly once.',
+    icon: <AccessibilityNewIcon fontSize="small" color="primary" />,
   },
 ];
 
@@ -59,7 +66,7 @@ export default function ChatFeaturesHighlight() {
           sx={{ maxWidth: { xs: '500px', md: '100%' } }}
         >
           {featuredItems.map(({ title, description, icon }, index) => (
-            <Box sx={{ flexBasis: '33%' }} key={index}>
+            <Box sx={{ flexBasis: '25%' }} key={index}>
               <InfoCard
                 title={title}
                 description={description}

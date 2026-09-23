@@ -1,10 +1,10 @@
-import {
-  getBandSize,
-  type ChartSeriesDefaultized,
-  type ChartsXAxisProps,
-  type ChartsYAxisProps,
-  type ComputedAxis,
-  type ScaleName,
+import { getBandSize } from '@mui/x-charts/internals';
+import type {
+  ChartSeriesDefaultized,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ComputedAxis,
+  ScaleName,
 } from '@mui/x-charts/internals';
 
 export function createGetRangeBarDimensions(params: {

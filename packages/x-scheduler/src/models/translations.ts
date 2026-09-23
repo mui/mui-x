@@ -1,14 +1,31 @@
-import { CalendarView } from '@mui/x-scheduler-internals/models';
+import type { CalendarView } from '@mui/x-scheduler-internals/models';
 
-export interface EventDialogLocaleText {
+export type SchedulerWeekday =
+  'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+
+// Strings shared by every event-editing surface: the dialog, the drawer, and the armed-event toolbar.
+export interface EventEditingLocaleText {
   // EventDialog
   colorPickerLabel: string;
+  colorSectionLabel: string;
   dateTimeSectionLabel: string;
   resourceColorSectionLabel: string;
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
+  // EventToolbar (armed-event actions), not the dialog.
+  editEventButtonAriaLabel: string;
+  // Duplicates `deleteEvent` today but stays separate so the toolbar's aria-label can diverge from the
+  // dialog's button text without a translation regression.
+  deleteEventButtonAriaLabel: string;
+  eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
+  // EventContextMenu (shown on right-click of an event, or on Space while it is focused)
+  editEvent: string;
+  // Replaces `editEvent` on a read-only event: opens the same non-editable view, so the label
+  // says so instead of promising an edit that can't happen.
+  showEventDetails: string;
+  eventContextMenuAriaLabel: string;
   descriptionLabel: string;
   endDateLabel: string;
   endTimeLabel: string;
@@ -29,9 +46,21 @@ export interface EventDialogLocaleText {
   recurrenceEveryLabel: string;
   recurrenceRepeatLabel: string;
   recurrenceTabLabel: string;
+  /**
+   * Helper text of the Recurrence tab naming the event's timezone, when it is not the display one.
+   * `timezone` is already localized ("Pacific Time"), or an identifier such as "UTC".
+   */
+  recurrenceTimezoneLabel: (timezone: string) => string;
+  /**
+   * Suffix appended to the recurrence label of the read-only details, same `timezone` value.
+   */
+  recurrenceLabelTimezoneSuffix: (timezone: string) => string;
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
-  recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceWeeklyPresetLabel: (params: {
+    weekday: SchedulerWeekday;
+    weekdayName: string;
+  }) => string;
   recurrenceMonthlyDayOfMonthLabel: (dayNumber: number) => string;
   recurrenceMonthlyFrequencyLabel: string;
   recurrenceMonthlyLastWeekAriaLabel: (weekDay: string) => string;
@@ -43,11 +72,15 @@ export interface EventDialogLocaleText {
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   noResourceAriaLabel: string;
+  selectColorAriaLabel: (color: string) => string;
   resourceLabel: string;
+  invalidDateError: string;
+  invalidTimeError: string;
   requiredResourceError: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;
+  startTimeAfterEndTimeError: string;
   startTimeLabel: string;
 
   // RecurringScopeDialog
@@ -60,7 +93,7 @@ export interface EventDialogLocaleText {
   title: string;
 }
 
-export interface EventCalendarLocaleText extends EventDialogLocaleText {
+export interface EventCalendarLocaleText extends EventEditingLocaleText {
   // ResourcesTree
   resourcesLabel: string;
 
@@ -80,6 +113,9 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   // DateNavigator
   closeSidePanel: string;
   openSidePanel: string;
+
+  // SidePanelDrawer (small screens)
+  openMenu: string;
 
   // PreferencesMenu
   amPm12h: string;
@@ -114,11 +150,14 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   miniCalendarGoToPreviousMonth: string;
   miniCalendarGoToNextMonth: string;
 
+  // Main calendar region
+  calendarContentAriaLabel: string;
+
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
 }
 
-export interface EventTimelineLocaleText extends EventDialogLocaleText {
+export interface EventTimelineLocaleText extends EventEditingLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
 }

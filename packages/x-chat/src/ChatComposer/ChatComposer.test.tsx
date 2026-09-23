@@ -31,7 +31,7 @@ describe('ChatComposer', () => {
     expect(document.querySelector('.MuiChatComposer-root')).not.toBe(null);
   });
 
-  it('forwards custom className via slotProps.composerRoot', () => {
+  it('forwards custom className via slotProps.composer', () => {
     render(
       <ChatBox
         adapter={createAdapter()}

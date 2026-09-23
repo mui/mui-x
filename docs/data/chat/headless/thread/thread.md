@@ -8,7 +8,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless thread
 
-<p class="description">Build the active conversation surface from thread primitives that derive their state from the selected conversation.</p>
+<p class="description">Compose the active conversation surface from headless thread primitives synced to the selected conversation.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -38,7 +38,7 @@ import {
 </Conversation.Root>;
 ```
 
-## Primitive set
+## Thread primitives
 
 The thread surface is built from:
 
@@ -48,75 +48,74 @@ The thread surface is built from:
 - `Conversation.Subtitle`
 - `Conversation.HeaderActions`
 
-## `Conversation.Root`
+## Anchoring the active conversation
 
 `Conversation.Root` derives the active conversation from chat state and exposes it through thread owner state and context.
 
 It is responsible for:
 
-- tracking the active conversation id
-- resolving the active conversation object
-- exposing `hasConversation` for empty or loading thread states
-- acting as the thread pane marker for `Chat.Layout`
+- Track the active conversation ID.
+- Resolve the active conversation object.
+- Expose `hasConversation` for empty or loading thread states.
+- Act as the thread pane marker for `Chat.Layout`.
 
-Because `Conversation.Root` sits on top of chat state instead of receiving the active conversation as a prop, it stays synchronized with conversation switching automatically.
+Because `Conversation.Root` reads from chat state instead of taking the active conversation as a prop, it stays in sync as conversations switch.
 
 ## Header composition
 
 `Conversation.Header` is a structural wrapper for thread header content.
 The default thread stack often includes:
 
-- `Conversation.Title`
-- `Conversation.Subtitle`
-- `Conversation.HeaderActions`
-- `Indicators.TypingIndicator`
+- `Conversation.Title`.
+- `Conversation.Subtitle`.
+- `Conversation.HeaderActions`.
+- `Indicators.TypingIndicator`.
 
-Because the thread primitives all derive from the same context, header subparts can stay simple and focus on rendering.
-
-That means custom title, subtitle, or action slots can react to the active conversation without repeating selector logic in every header component.
+Because the thread primitives all share the same context, header subparts stay simple and focus on rendering.
+Custom title, subtitle, or action slots can react to the active conversation without repeating selector logic in every header component.
 
 ## Empty and missing-thread states
 
 `Conversation.Root` exposes `hasConversation` through owner state.
 Use that to switch between:
 
-- a fully populated thread
-- a placeholder that prompts the user to select a conversation
-- a custom empty state for inbox views that have no active selection
+- A fully populated thread.
+- A placeholder that prompts the user to select a conversation.
+- A custom empty state for inbox views that have no active selection.
 
-For example, a custom root slot can render a thread placeholder when no active conversation exists while still keeping the same overall page structure.
+A custom root slot can render a thread placeholder when no active conversation exists, keeping the surrounding page structure intact.
 
 ## Owner state
 
 Thread slots derive owner state from the active conversation, including:
 
-- `conversationId`
-- `conversation`
-- `hasConversation`
+- `conversationId`.
+- `conversation`.
+- `hasConversation`.
 
 This is useful for empty-thread layouts, custom action areas, and conditional header styling.
 
 Typical owner-state-driven patterns include:
 
-- changing spacing when the thread is empty
-- hiding action buttons until a conversation is active
-- switching between subtitle variants based on the active thread metadata
+- Change spacing when the thread is empty.
+- Hide action buttons until a conversation is active.
+- Switch between subtitle variants based on the active thread metadata.
 
-## Conversation subparts
+## Header subparts reference
 
-### `Conversation.Title`
+### Rendering the conversation title
 
 `Conversation.Title` is the structural slot for the conversation title.
 Use it when the active conversation already carries a title and the thread header should stay minimal.
 
-### `Conversation.Subtitle`
+### Rendering the subtitle
 
 `Conversation.Subtitle` is the structural slot for secondary thread text such as participant names, preview metadata, or presence-driven summaries.
 
-### `Conversation.HeaderActions`
+### Rendering the header actions
 
-`Conversation.HeaderActions` is the structural action region for controls such as archive, mute, or context-specific thread actions.
-It is intentionally light on policy so the app can decide which actions belong there.
+`Conversation.HeaderActions` is the action region for controls such as archive, mute, or thread-context actions.
+Decide which actions belong there — the slot is intentionally policy-free.
 
 ## Recommended patterns
 
@@ -126,9 +125,9 @@ It is intentionally light on policy so the app can decide which actions belong t
 
 ## See also
 
-- Continue with [Message list](/x/react-chat/headless/message-list/) for the scrolling and history behavior inside the thread.
-- Continue with [Indicators](/x/react-chat/headless/indicators/) for thread-level affordances such as typing feedback.
-- Continue with [Two-pane inbox](/x/react-chat/headless/examples/two-pane-inbox/) for the full thread-in-layout demo.
+- See [Message list](/x/react-chat/headless/message-list/) for scrolling and history behavior inside the thread.
+- See [Indicators](/x/react-chat/headless/indicators/) for thread-level affordances such as typing feedback.
+- See [Two-pane inbox](/x/react-chat/headless/examples/two-pane-inbox/) for the thread-in-layout demo.
 
 ## API
 

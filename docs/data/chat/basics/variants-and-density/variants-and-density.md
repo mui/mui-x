@@ -1,14 +1,14 @@
 ---
 productId: x-chat
-title: Variants & Density
+title: Variants and density
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Variants & Density
+# Chat - Variants and density
 
-<p class="description">Switch between the default bubble layout and a compact messenger-style layout, and control vertical spacing with the density prop.</p>
+<p class="description">Switch between bubble and compact layouts and control message spacing in the Chat.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -19,7 +19,8 @@ components: ChatBox
 ### Default variant
 
 The default variant renders messages as colored bubbles.
-The default variant right-aligns user messages with a primary-colored background and left-aligns assistant messages with a neutral background.
+The default variant right-aligns the current user's messages with a primary-colored background and left-aligns everyone else's (assistants and other participants) with a neutral background.
+Set `currentUser` on `ChatBox` so the chat can identify which messages to treat as your own.
 Timestamps appear below each message.
 This is the standard layout used by most AI chat interfaces.
 
@@ -33,12 +34,12 @@ Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layou
 
 Compact mode applies the following changes to the message list:
 
-- **No bubbles** — messages render as plain text without background colors or padding.
-- **Left-aligned** — all messages are left-aligned regardless of role (no right-aligned user messages).
-- **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
-- **Avatars preserved** — avatars remain visible for the first message in each group.
+- **No bubbles**—messages render as plain text without background colors or padding.
+- **Left-aligned**—all messages are left-aligned regardless of role (no right-aligned user messages).
+- **Group header timestamps**—the timestamp moves from below each message to the group header, displayed next to the author name.
+- **Avatars preserved when available**—the first message in each group still shows its resolved avatar.
 
-When set on `ChatBox`, the variant automatically applies to the conversation list as well.
+The demo below shows the compact variant applied to a `ChatBox`:
 
 {{"demo": "../../material/message-list/CompactVariant.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -52,12 +53,12 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 | Slack/Discord-style channel view                    | Compact             |
 | Code review or agentic workflows                    | Default             |
 
-The compact variant is particularly effective for conversations with many short messages from multiple participants, where bubbles would create excessive visual noise.
+The compact variant suits conversations with many short messages from multiple participants, where bubbles would create visual noise.
 
 ## Density
 
 The `density` prop controls the vertical spacing between messages independently of the variant.
-Three values are available — `compact`, `standard` (default), and `comfortable` — mirroring the density model used in [Data Grid](/x/react-data-grid/accessibility/#density).
+Three values are available—`compact`, `standard` (default), and `comfortable`—mirroring the density model used in [Data Grid—Density](/x/react-data-grid/accessibility/#density).
 
 ```tsx
 <ChatBox density="compact" adapter={adapter} />
@@ -79,7 +80,7 @@ Use the toggle in the demo below to compare the three density levels:
 
 ### Combining variant and density
 
-The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value:
+The `density` prop is independent of `variant`—you can combine `variant="compact"` with any density value:
 
 ```tsx
 {

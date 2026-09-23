@@ -169,7 +169,9 @@ function createScaleBand(seed?: ScaleBandState): ScaleBand<any> {
   scale.copy = () =>
     createScaleBand({ index, domain, r0, r1, isRound, paddingInner, paddingOuter, align });
 
-  rescale();
+  // `rescale` returns the scale for the fluent setters; here it only seeds the
+  // initial layout, so the (callable) return is intentionally discarded.
+  void rescale();
 
   return scale as any;
 }

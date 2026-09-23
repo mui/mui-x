@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useChatStore } from '../hooks/useChatStore';
 import { useConversations } from '../hooks/useConversation';
@@ -16,39 +16,28 @@ import {
   thumbStyle,
 } from '../internals/ScrollAreaSlots';
 import { mergeReactProps } from '../internals/mergeReactProps';
-import { ConversationListItem, type ConversationListItemProps } from './ConversationListItem';
-import {
-  ConversationListItemAvatar,
-  type ConversationListItemAvatarProps,
-} from './ConversationListItemAvatar';
-import {
-  ConversationListItemContent,
-  type ConversationListItemContentProps,
-} from './ConversationListItemContent';
-import { ConversationListTitle, type ConversationListTitleProps } from './ConversationListTitle';
-import {
-  ConversationListPreview,
-  type ConversationListPreviewProps,
-} from './ConversationListPreview';
-import {
-  ConversationListTimestamp,
-  type ConversationListTimestampProps,
-} from './ConversationListTimestamp';
-import {
-  ConversationListUnreadBadge,
-  type ConversationListUnreadBadgeProps,
-} from './ConversationListUnreadBadge';
-import {
-  ConversationListItemActions,
-  type ConversationListItemActionsProps,
-} from './ConversationListItemActions';
-import {
-  type ConversationListItemOwnerState,
-  type ConversationListRootOwnerState,
-  type ConversationListVariant,
+import { useRovingFocus } from '../internals/useRovingFocus';
+import { ConversationListItem } from './ConversationListItem';
+import type { ConversationListItemProps } from './ConversationListItem';
+import { ConversationListItemAvatar } from './ConversationListItemAvatar';
+import type { ConversationListItemAvatarProps } from './ConversationListItemAvatar';
+import { ConversationListItemContent } from './ConversationListItemContent';
+import type { ConversationListItemContentProps } from './ConversationListItemContent';
+import { ConversationListTitle } from './ConversationListTitle';
+import type { ConversationListTitleProps } from './ConversationListTitle';
+import { ConversationListPreview } from './ConversationListPreview';
+import type { ConversationListPreviewProps } from './ConversationListPreview';
+import { ConversationListTimestamp } from './ConversationListTimestamp';
+import type { ConversationListTimestampProps } from './ConversationListTimestamp';
+import { ConversationListUnreadBadge } from './ConversationListUnreadBadge';
+import type { ConversationListUnreadBadgeProps } from './ConversationListUnreadBadge';
+import { ConversationListItemActions } from './ConversationListItemActions';
+import type { ConversationListItemActionsProps } from './ConversationListItemActions';
+import type {
+  ConversationListItemOwnerState,
+  ConversationListRootOwnerState,
+  ConversationListVariant,
 } from './conversationList.types';
-
-const lastFocusedConversationIdByStore = new WeakMap<object, string>();
 
 export interface ConversationListRootSlots {
   root: React.ElementType;
@@ -296,25 +285,6 @@ type ConversationListRootComponent = ((
   props: ConversationListRootProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-function getInitialFocusedConversationId(
-  conversations: ChatConversation[],
-  activeConversationId: string | undefined,
-  storedFocusedConversationId: string | undefined,
-) {
-  const hasConversation = (id: string | undefined) =>
-    id != null && conversations.some((conversation) => conversation.id === id);
-
-  if (hasConversation(storedFocusedConversationId)) {
-    return storedFocusedConversationId;
-  }
-
-  if (hasConversation(activeConversationId)) {
-    return activeConversationId;
-  }
-
-  return conversations[0]?.id;
-}
-
 // ---------------------------------------------------------------------------
 // Functional default styles for the scroll slots.
 // ---------------------------------------------------------------------------
@@ -340,24 +310,38 @@ export const ConversationListRoot = markChatLayoutPane(
     const conversations = useConversations();
     const { activeConversationId, setActiveConversation } = useChat();
     const store = useChatStore();
-    const storedFocusedConversationId = lastFocusedConversationIdByStore.get(store);
-    const restoreFocusIdRef = React.useRef<string | null>(
-      conversations.some((conversation) => conversation.id === storedFocusedConversationId)
-        ? storedFocusedConversationId!
-        : null,
-    );
-    const [focusedConversationId, setFocusedConversationId] = React.useState(() =>
-      getInitialFocusedConversationId(
-        conversations,
-        activeConversationId,
-        storedFocusedConversationId,
-      ),
-    );
-    const itemRefs = React.useRef(new Map<string, HTMLElement | null>());
     const conversationIds = React.useMemo(
       () => conversations.map((conversation) => conversation.id),
       [conversations],
     );
+    const titleById = React.useMemo(
+      () => new Map(conversations.map((conversation) => [conversation.id, conversation.title])),
+      [conversations],
+    );
+    const getTypeAheadLabel = React.useCallback(
+      (id: string) => titleById.get(id) ?? undefined,
+      [titleById],
+    );
+    const handleActivate = React.useCallback(
+      (id: string) => {
+        void setActiveConversation(id);
+      },
+      [setActiveConversation],
+    );
+    const {
+      effectiveFocusedId: focusedConversationId,
+      registerItemRef,
+      setFocusedId,
+      handleKeyDown,
+    } = useRovingFocus({
+      itemIds: conversationIds,
+      restoreKey: store,
+      scope: 'conversation-list',
+      preferredId: activeConversationId,
+      onActivate: handleActivate,
+      getTypeAheadLabel,
+      restoreFocusOnMount: true,
+    });
     const ownerState: ConversationListRootOwnerState = {
       conversationCount: conversations.length,
       activeConversationId,
@@ -412,189 +396,12 @@ export const ConversationListRoot = markChatLayoutPane(
       },
     });
 
-    const focusConversation = React.useCallback((id: string | undefined) => {
-      if (id == null) {
-        return;
-      }
-
-      itemRefs.current.get(id)?.focus();
-    }, []);
-
-    React.useEffect(() => {
-      if (focusedConversationId == null || conversationIds.includes(focusedConversationId)) {
-        return;
-      }
-
-      setFocusedConversationId(
-        getInitialFocusedConversationId(
-          conversations,
-          activeConversationId,
-          storedFocusedConversationId,
-        ),
-      );
-    }, [
-      activeConversationId,
-      conversationIds,
-      conversations,
-      focusedConversationId,
-      storedFocusedConversationId,
-    ]);
-
-    React.useEffect(() => {
-      if (restoreFocusIdRef.current == null) {
-        return;
-      }
-
-      focusConversation(restoreFocusIdRef.current);
-      restoreFocusIdRef.current = null;
-    }, [conversations, focusConversation]);
-
-    const registerItemRef = React.useCallback((id: string, element: HTMLElement | null) => {
-      if (element == null) {
-        itemRefs.current.delete(id);
-        return;
-      }
-
-      itemRefs.current.set(id, element);
-    }, []);
-
-    const handleFocusedConversationChange = React.useCallback(
-      (id: string) => {
-        setFocusedConversationId(id);
-        lastFocusedConversationIdByStore.set(store, id);
-      },
-      [store],
-    );
-
-    const moveFocus = React.useCallback(
-      (targetIndex: number) => {
-        const boundedIndex = Math.max(0, Math.min(targetIndex, conversationIds.length - 1));
-        const targetId = conversationIds[boundedIndex];
-
-        if (targetId == null) {
-          return;
-        }
-
-        handleFocusedConversationChange(targetId);
-        focusConversation(targetId);
-      },
-      [conversationIds, focusConversation, handleFocusedConversationChange],
-    );
-
-    const typeAheadRef = React.useRef<{ buffer: string; resetTimer: number | null }>({
-      buffer: '',
-      resetTimer: null,
-    });
-
-    const moveFocusToTitlePrefix = React.useCallback(
-      (prefix: string, fromIndex: number) => {
-        if (prefix === '') {
-          return;
-        }
-
-        const lowercase = prefix.toLowerCase();
-        const total = conversations.length;
-
-        for (let offset = 1; offset <= total; offset += 1) {
-          const candidate = conversations[(fromIndex + offset) % total];
-          const title = candidate?.title?.toLowerCase() ?? '';
-
-          if (title.startsWith(lowercase)) {
-            handleFocusedConversationChange(candidate.id);
-            focusConversation(candidate.id);
-            return;
-          }
-        }
-      },
-      [conversations, focusConversation, handleFocusedConversationChange],
-    );
-
-    const handleKeyDown = React.useCallback(
-      (event: React.KeyboardEvent<HTMLDivElement>, id: string) => {
-        const currentIndex = conversationIds.indexOf(id);
-
-        if (currentIndex === -1) {
-          return;
-        }
-
-        // Page-size moves a percentage of the list at a time, with a sane
-        // minimum so short lists still move by at least one item.
-        const pageSize = Math.max(1, Math.floor(conversationIds.length / 10));
-
-        switch (event.key) {
-          case 'ArrowDown':
-            event.preventDefault();
-            moveFocus(currentIndex + 1);
-            return;
-          case 'ArrowUp':
-            event.preventDefault();
-            moveFocus(currentIndex - 1);
-            return;
-          case 'Home':
-            event.preventDefault();
-            moveFocus(0);
-            return;
-          case 'End':
-            event.preventDefault();
-            moveFocus(conversationIds.length - 1);
-            return;
-          case 'PageDown':
-            event.preventDefault();
-            moveFocus(currentIndex + pageSize);
-            return;
-          case 'PageUp':
-            event.preventDefault();
-            moveFocus(currentIndex - pageSize);
-            return;
-          case 'Enter':
-            event.preventDefault();
-            void setActiveConversation(id);
-            return;
-          default:
-            break;
-        }
-
-        // Type-ahead: a single printable character (no modifier) appends to a
-        // small buffer and jumps focus to the first conversation whose title
-        // starts with that buffer (Bug #20).
-        const isPrintable =
-          event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey;
-
-        if (!isPrintable) {
-          return;
-        }
-
-        event.preventDefault();
-        typeAheadRef.current.buffer += event.key;
-
-        if (typeAheadRef.current.resetTimer != null) {
-          clearTimeout(typeAheadRef.current.resetTimer);
-        }
-        typeAheadRef.current.resetTimer = setTimeout(() => {
-          typeAheadRef.current.buffer = '';
-          typeAheadRef.current.resetTimer = null;
-        }, 800) as unknown as number;
-
-        moveFocusToTitlePrefix(typeAheadRef.current.buffer, currentIndex);
-      },
-      [conversationIds, moveFocus, moveFocusToTitlePrefix, setActiveConversation],
-    );
-
-    React.useEffect(
-      () => () => {
-        if (typeAheadRef.current.resetTimer != null) {
-          clearTimeout(typeAheadRef.current.resetTimer);
-        }
-      },
-      [],
-    );
-
     const handleSelect = React.useCallback(
       (id: string) => {
-        handleFocusedConversationChange(id);
+        setFocusedId(id);
         void setActiveConversation(id);
       },
-      [handleFocusedConversationChange, setActiveConversation],
+      [setFocusedId, setActiveConversation],
     );
 
     return (
@@ -611,7 +418,7 @@ export const ConversationListRoot = markChatLayoutPane(
                   conversation={conversation}
                   focused={focusedConversationId === conversation.id}
                   key={conversation.id}
-                  onFocus={handleFocusedConversationChange}
+                  onFocus={setFocusedId}
                   onKeyDown={handleKeyDown}
                   onSelect={handleSelect}
                   registerItemRef={registerItemRef}

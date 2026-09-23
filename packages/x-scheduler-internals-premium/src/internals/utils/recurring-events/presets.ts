@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventPresetKey,

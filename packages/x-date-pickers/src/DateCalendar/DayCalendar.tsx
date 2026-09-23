@@ -7,19 +7,17 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerDay, PickerDayOwnerStateBase, PickerDayProps } from '../PickerDay';
-import { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
+import type { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { PickerDayOwnerStateBase, PickerDayProps } from '../PickerDay';
+import { PickerDay } from '../PickerDay';
+import type { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
-import { PickerOnChangeFn } from '../internals/hooks/useViews';
+import type { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import {
-  PickersSlideTransition,
-  SlideDirection,
-  SlideTransitionProps,
-} from './PickersSlideTransition';
-import {
+import type { SlideDirection, SlideTransitionProps } from './PickersSlideTransition';
+import { PickersSlideTransition } from './PickersSlideTransition';
+import type {
   BaseDateValidationProps,
   DayValidationProps,
   MonthValidationProps,
@@ -27,10 +25,11 @@ import {
 } from '../internals/models/validation';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
-import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { PickerValidDate, TimezoneProps } from '../models';
-import { DateCalendarClasses } from './dateCalendarClasses';
-import { FormProps } from '../internals/models/formProps';
+import type { DayCalendarClasses } from './dayCalendarClasses';
+import { getDayCalendarUtilityClass } from './dayCalendarClasses';
+import type { PickerValidDate, TimezoneProps } from '../models';
+import type { DateCalendarClasses } from './dateCalendarClasses';
+import type { FormProps } from '../internals/models/formProps';
 import { usePickerDayOwnerState } from '../internals/hooks/usePickerDayOwnerState';
 
 export interface DayCalendarSlots {
@@ -242,6 +241,7 @@ function WrappedDay({
   currentMonthNumber: number;
 }) {
   const {
+    currentMonth,
     disabled,
     disableHighlightToday,
     isMonthSwitchingAnimating,
@@ -295,20 +295,20 @@ function WrappedDay({
   });
 
   const isFirstVisibleCell = React.useMemo(() => {
-    const startOfMonth = adapter.startOfMonth(adapter.setMonth(day, currentMonthNumber));
+    const startOfMonth = adapter.startOfMonth(currentMonth);
     if (!showDaysOutsideCurrentMonth) {
       return adapter.isSameDay(day, startOfMonth);
     }
     return adapter.isSameDay(day, adapter.startOfWeek(startOfMonth));
-  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, adapter]);
+  }, [currentMonth, day, showDaysOutsideCurrentMonth, adapter]);
 
   const isLastVisibleCell = React.useMemo(() => {
-    const endOfMonth = adapter.endOfMonth(adapter.setMonth(day, currentMonthNumber));
+    const endOfMonth = adapter.endOfMonth(currentMonth);
     if (!showDaysOutsideCurrentMonth) {
       return adapter.isSameDay(day, endOfMonth);
     }
     return adapter.isSameDay(day, adapter.endOfWeek(endOfMonth));
-  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, adapter]);
+  }, [currentMonth, day, showDaysOutsideCurrentMonth, adapter]);
 
   return (
     <Day
@@ -369,6 +369,8 @@ export function DayCalendar(inProps: DayCalendarProps) {
   const now = useNow(timezone);
   const classes = useUtilityClasses(classesProp);
   const isRtl = useRtl();
+  // The week number is a `rowheader`, so it takes the first column of the grid.
+  const columnIndexOffset = displayWeekNumber ? 1 : 0;
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -517,12 +519,19 @@ export function DayCalendar(inProps: DayCalendarProps) {
   }, [currentMonth, fixedWeekNumber, adapter]);
 
   return (
-    <PickerCalendarDayRoot role="grid" aria-labelledby={gridLabelId} className={classes.root}>
-      <PickerCalendarDayHeader role="row" className={classes.header}>
+    <PickerCalendarDayRoot
+      role="grid"
+      aria-labelledby={gridLabelId}
+      aria-colcount={columnIndexOffset + 7}
+      aria-rowcount={weeksToDisplay.length + 1}
+      className={classes.root}
+    >
+      <PickerCalendarDayHeader role="row" aria-rowindex={1} className={classes.header}>
         {displayWeekNumber && (
           <PickerCalendarWeekNumberLabel
             variant="caption"
             role="columnheader"
+            aria-colindex={1}
             aria-label={translations.calendarWeekNumberHeaderLabel}
             className={classes.weekNumberLabel}
           >
@@ -534,6 +543,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
             key={i.toString()}
             variant="caption"
             role="columnheader"
+            aria-colindex={columnIndexOffset + i + 1}
             aria-label={adapter.format(weekday, 'weekday')}
             className={classes.weekDayLabel}
           >
@@ -567,14 +577,14 @@ export function DayCalendar(inProps: DayCalendarProps) {
                 role="row"
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}
-                // fix issue of announcing row 1 as row 2
-                // caused by week day labels row
-                aria-rowindex={index + 1}
+                // The week day labels row is the first row of the grid.
+                aria-rowindex={index + 2}
               >
                 {displayWeekNumber && (
                   <PickerCalendarWeekNumber
                     className={classes.weekNumber}
                     role="rowheader"
+                    aria-colindex={1}
                     aria-label={translations.calendarWeekNumberAriaLabelText(
                       adapter.getWeekNumber(week[0]),
                     )}
@@ -596,8 +606,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
                     onDaySelect={handleDaySelect}
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
-                    // fix issue of announcing column 1 as column 2 when `displayWeekNumber` is enabled
-                    aria-colindex={dayIndex + 1}
+                    aria-colindex={columnIndexOffset + dayIndex + 1}
                   />
                 ))}
               </PickerCalendarWeek>

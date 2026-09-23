@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { ChatStore } from '../../store';
 import type { ChatRealtimeEvent } from '../../types/chat-realtime';
 import { applyPresenceUpdate, applyReadUpdate } from './useChatControllerHelpers';

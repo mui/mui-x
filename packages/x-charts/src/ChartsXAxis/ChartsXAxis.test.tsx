@@ -3,6 +3,7 @@ import { screen } from '@mui/internal-test-utils';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
+import { describe, it, expect } from 'vitest';
 
 describe('<ChartsXAxis />', () => {
   const { render } = createRenderer();

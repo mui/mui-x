@@ -1,16 +1,13 @@
-import { type ChartAnyPluginSignature, type ChartPublicAPI } from '@mui/x-charts/internals';
-import { type HeatmapPluginSignatures } from '../Heatmap/Heatmap.plugins';
-import { type LineChartProPluginSignatures } from '../LineChartPro/LineChartPro.plugins';
-import { type ScatterChartProPluginSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
-import { type BarChartProPluginSignatures } from '../BarChartPro/BarChartPro.plugins';
-import {
-  type AllPluginSignatures,
-  type DefaultPluginSignatures,
-} from '../internals/plugins/allPlugins';
-import { type FunnelChartPluginSignatures } from '../FunnelChart/FunnelChart.plugins';
-import { type RadarChartProPluginSignatures } from '../RadarChartPro/RadarChartPro.plugins';
-import { type PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
-import { type SankeyChartPluginSignatures } from '../SankeyChart/SankeyChart.plugins';
+import type { ChartAnyPluginSignature, ChartPublicAPI } from '@mui/x-charts/internals';
+import type { HeatmapPluginSignatures } from '../Heatmap/Heatmap.plugins';
+import type { LineChartProPluginSignatures } from '../LineChartPro/LineChartPro.plugins';
+import type { ScatterChartProPluginSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
+import type { BarChartProPluginSignatures } from '../BarChartPro/BarChartPro.plugins';
+import type { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
+import type { FunnelChartPluginSignatures } from '../FunnelChart/FunnelChart.plugins';
+import type { RadarChartProPluginSignatures } from '../RadarChartPro/RadarChartPro.plugins';
+import type { PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
+import type { SankeyChartPluginSignatures } from '../SankeyChart/SankeyChart.plugins';
 
 export type ProPluginsPerSeriesType = {
   heatmap: HeatmapPluginSignatures;

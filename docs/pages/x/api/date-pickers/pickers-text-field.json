@@ -124,6 +124,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/PickersTextField/PickersTextField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-field/\">Custom field</a></li></ul>"
 }

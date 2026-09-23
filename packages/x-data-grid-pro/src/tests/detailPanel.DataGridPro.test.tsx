@@ -1,19 +1,17 @@
 import * as React from 'react';
-import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  type GridApi,
   useGridApiRef,
-  type DataGridProProps,
-  type GridRowParams,
   gridClasses,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
+import type { GridApi, DataGridProProps, GridRowParams } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, waitFor, act, reactMajor } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer();
@@ -299,7 +297,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   it('should cache the content of getDetailPanelContent', async () => {
-    const getDetailPanelContent = spy(() => <div>Detail</div>);
+    const getDetailPanelContent = vi.fn(() => <div>Detail</div>);
     const { setProps, user } = render(
       <TestCase
         columns={[{ field: 'brand' }]}
@@ -324,23 +322,23 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 2x when sortedRowsSet is fired
     const expectedCallCount = reactMajor >= 19 ? 6 : 10;
 
-    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelContent.mock.calls.length).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelContent.mock.calls.length).to.equal(expectedCallCount);
 
     await user.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelContent.mock.calls.length).to.equal(expectedCallCount);
 
-    const getDetailPanelContent2 = spy(() => <div>Detail</div>);
+    const getDetailPanelContent2 = vi.fn(() => <div>Detail</div>);
     setProps({ getDetailPanelContent: getDetailPanelContent2 });
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent2.callCount).to.equal(2); // Called 2x by the effect
+    expect(getDetailPanelContent2.mock.calls.length).to.equal(2); // Called 2x by the effect
     await user.click(screen.getByRole('button', { name: /previous page/i }));
-    expect(getDetailPanelContent2.callCount).to.equal(2);
+    expect(getDetailPanelContent2.mock.calls.length).to.equal(2);
   });
 
   it('should cache the content of getDetailPanelHeight', async () => {
-    const getDetailPanelHeight = spy(() => 100);
+    const getDetailPanelHeight = vi.fn(() => 100);
     const { setProps, user } = render(
       <TestCase
         columns={[{ field: 'brand' }]}
@@ -366,26 +364,26 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 2x when sortedRowsSet is fired
     const expectedCallCount = reactMajor >= 19 ? 6 : 10;
 
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
 
     await user.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
 
-    const getDetailPanelHeight2 = spy(() => 200);
+    const getDetailPanelHeight2 = vi.fn(() => 200);
     setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight2.callCount).to.equal(2); // Called 2x by the effect
+    expect(getDetailPanelHeight2.mock.calls.length).to.equal(2); // Called 2x by the effect
     await user.click(screen.getByRole('button', { name: /previous page/i }));
-    expect(getDetailPanelHeight2.callCount).to.equal(2);
+    expect(getDetailPanelHeight2.mock.calls.length).to.equal(2);
   });
 
   // Doesn't work with mocked window.getComputedStyle
   it.skipIf(isJSDOM)(
     'should update the panel height if getDetailPanelHeight is changed while the panel is open',
     async () => {
-      const getDetailPanelHeight = spy(() => 100);
+      const getDetailPanelHeight = vi.fn(() => 100);
       const { setProps, user } = render(
         <TestCase
           columns={[{ field: 'brand' }]}
@@ -408,7 +406,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       const virtualScroller = grid('virtualScroller')!;
       expect(virtualScroller.scrollHeight).to.equal(208);
 
-      const getDetailPanelHeight2 = spy(() => 200);
+      const getDetailPanelHeight2 = vi.fn(() => 200);
       setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
 
       expect(detailPanel).toHaveComputedStyle({ height: '200px' });
@@ -417,7 +415,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   );
 
   it('should only call getDetailPanelHeight on the rows that have detail content', () => {
-    const getDetailPanelHeight = spy(({ row }) => row.id + 100); // Use `row` to allow to assert its args below
+    const getDetailPanelHeight = vi.fn(({ row }) => row.id + 100); // Use `row` to allow to assert its args below
     render(
       <TestCase
         columns={[{ field: 'brand' }]}
@@ -439,12 +437,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 1x when sortedRowsSet is fired
     const expectedCallCount = reactMajor >= 19 ? 3 : 5;
 
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
-    expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
+    expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
+    expect(getDetailPanelHeight.mock.lastCall?.[0].id).to.equal(0);
   });
 
   it('should not select the row when opening the detail panel', async () => {
-    const handleRowSelectionModelChange = spy();
+    const handleRowSelectionModelChange = vi.fn();
     const { user } = render(
       <TestCase
         getDetailPanelContent={() => <div>Detail</div>}
@@ -454,7 +452,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(screen.queryByText('Detail')).to.equal(null);
     await user.click(getCell(1, 0));
-    expect(handleRowSelectionModelChange.callCount).to.equal(0);
+    expect(handleRowSelectionModelChange.mock.calls.length).to.equal(0);
   });
 
   // See https://github.com/mui/mui-x/issues/4607
@@ -544,7 +542,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('should call when a row is expanded or closed', async () => {
-      const handleDetailPanelsExpandedRowIdsChange = spy();
+      const handleDetailPanelsExpandedRowIdsChange = vi.fn();
       const { user } = render(
         <TestCase
           getDetailPanelContent={() => <div>Detail</div>}
@@ -552,19 +550,19 @@ describe('<DataGridPro /> - Detail panel', () => {
         />,
       );
       await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]); // Expand the 1st row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([0]));
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.lastCall?.[0]).to.deep.equal(new Set([0]));
       await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]); // Expand the 2nd row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.lastCall?.[0]).to.deep.equal(
         new Set([0, 1]),
       );
       await user.click(screen.getAllByRole('button', { name: 'Collapse' })[0]); // Close the 1st row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([1]));
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.lastCall?.[0]).to.deep.equal(new Set([1]));
       await user.click(screen.getAllByRole('button', { name: 'Collapse' })[0]); // Close the 2nd row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([]));
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.lastCall?.[0]).to.deep.equal(new Set([]));
     });
 
     it('should not change the open detail panels when called while detailPanelsExpandedRowIds is the same', async () => {
-      const handleDetailPanelsExpandedRowIdsChange = spy();
+      const handleDetailPanelsExpandedRowIdsChange = vi.fn();
       const { user } = render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
@@ -574,7 +572,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       );
       expect(screen.getByText('Row 0')).not.to.equal(null);
       await user.click(screen.getByRole('button', { name: 'Collapse' }));
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([]));
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.lastCall?.[0]).to.deep.equal(new Set([]));
       expect(screen.getByText('Row 0')).not.to.equal(null);
     });
   });
@@ -706,5 +704,201 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getRow(0)).toHaveInlineStyle({
       color: 'yellow',
     });
+  });
+
+  // https://github.com/mui/mui-x/issues/23573
+  describe('flex column width in auto-growing layouts', () => {
+    const detailPanelHeight = 100;
+
+    function GrowingTestCase({
+      containerStyle,
+      ...other
+    }: Partial<DataGridProProps> & { containerStyle?: React.CSSProperties }) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 400, ...containerStyle }}>
+          <DataGridPro
+            apiRef={apiRef}
+            // Overlay scrollbars (macOS) measure as 0px, which would hide the
+            // scrollbar reservation these tests are about.
+            scrollbarSize={15}
+            resizeThrottleMs={60}
+            columns={[
+              { field: 'id', width: 100 },
+              { field: 'name', flex: 1 },
+            ]}
+            rows={[
+              { id: 0, name: 'A' },
+              { id: 1, name: 'B' },
+              { id: 2, name: 'C' },
+            ]}
+            getDetailPanelContent={() => <div style={{ height: detailPanelHeight }} />}
+            getDetailPanelHeight={() => detailPanelHeight}
+            {...other}
+          />
+        </div>
+      );
+    }
+
+    const getFlexHeader = () =>
+      document.querySelector<HTMLElement>('[role="columnheader"][data-field="name"]')!;
+
+    const nextFrame = () =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+
+    // Samples the flex column width once per frame, after the frame's rendering
+    // steps (layout, ResizeObserver callbacks, paint), so a width that was
+    // painted and reverted later is still observed.
+    const sampleFlexWidthPerFrame = (frames: number) =>
+      new Promise<number[]>((resolve) => {
+        const widths: number[] = [];
+        const tick = () => {
+          setTimeout(() => {
+            widths.push(getFlexHeader().offsetWidth);
+            if (widths.length >= frames) {
+              resolve(widths);
+            } else {
+              requestAnimationFrame(tick);
+            }
+          });
+        };
+        requestAnimationFrame(tick);
+      });
+
+    const waitForReady = () =>
+      waitFor(() => {
+        expect(apiRef.current!.getRootDimensions().isReady).to.equal(true);
+      });
+
+    it.skipIf(isJSDOM)(
+      'should not shrink the flex column when expanding a detail panel in a growing layout',
+      async () => {
+        const { user } = render(<GrowingTestCase />);
+        await waitForReady();
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+        const initialWidth = getFlexHeader().offsetWidth;
+
+        await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+        // 15 frames cover the resize throttle window, during which the
+        // transient scrollbar reservation used to be painted.
+        const widths = await act(() => sampleFlexWidthPerFrame(15));
+
+        expect(widths, `sampled widths: ${widths.join(', ')}`).to.deep.equal(
+          widths.map(() => initialWidth),
+        );
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should restore flex width on container growth without waiting for the resize throttle',
+      async () => {
+        // Freeze the resize throttle while allowing native layout and
+        // ResizeObserver deliveries to proceed.
+        // This ensures that the dimension correction is not delayed by the resize throttle.
+        vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+        const { unmount } = render(<GrowingTestCase />);
+        let observer: ResizeObserver | undefined;
+        try {
+          expect(apiRef.current!.getRootDimensions().isReady).to.equal(true);
+          expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+          const initialWidth = getFlexHeader().offsetWidth;
+          const expectedHeight =
+            apiRef.current!.getRootDimensions().root.height + detailPanelHeight;
+          const container = document.querySelector<HTMLElement>(`.${gridClasses.main}`)!;
+          const resized = new Promise<void>((resolve) => {
+            observer = new ResizeObserver(([entry]) => {
+              if (entry.contentRect.height === expectedHeight) {
+                resolve();
+              }
+            });
+            observer.observe(container);
+          });
+
+          act(() => apiRef.current!.toggleDetailPanel(0));
+          // Wait for the observed height change and let React commit the result.
+          // No throttle timers are advanced, and intermediate layouts are allowed.
+          await act(async () => resized);
+
+          expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+          expect(getFlexHeader().offsetWidth).to.equal(initialWidth);
+        } finally {
+          observer?.disconnect();
+          unmount();
+          vi.useRealTimers();
+        }
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should not shrink the flex column when a second detail panel expands within the resize throttle window',
+      async () => {
+        render(<GrowingTestCase />);
+        await waitForReady();
+        const initialWidth = getFlexHeader().offsetWidth;
+
+        await act(() => apiRef.current!.toggleDetailPanel(0));
+        // The container grew once already; its resize is still inside the
+        // throttle window when the second panel expands.
+        await act(() => nextFrame());
+        await act(() => apiRef.current!.toggleDetailPanel(1));
+        const widths = await act(() => sampleFlexWidthPerFrame(15));
+
+        expect(widths, `sampled widths: ${widths.join(', ')}`).to.deep.equal(
+          widths.map(() => initialWidth),
+        );
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should show the vertical scrollbar when growth reaches maxHeight',
+      async () => {
+        const { setProps } = render(<GrowingTestCase />);
+        const initialWidth = getFlexHeader().offsetWidth;
+        const naturalHeight = document
+          .querySelector<HTMLElement>(`.${gridClasses.root}`)!
+          .getBoundingClientRect().height;
+        setProps({
+          containerStyle: {
+            display: 'flex',
+            flexDirection: 'column',
+            maxHeight: naturalHeight + detailPanelHeight / 2,
+          },
+        });
+
+        act(() => apiRef.current!.toggleDetailPanel(0));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(true);
+          expect(getFlexHeader().offsetWidth).to.equal(initialWidth - 15);
+        });
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'should show the vertical scrollbar right away when the container cannot grow',
+      async () => {
+        const { setProps } = render(<GrowingTestCase />);
+        await waitForReady();
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+
+        // Pin the container to its natural height: same layout, but it can no
+        // longer grow with the content.
+        const naturalHeight = document
+          .querySelector<HTMLElement>(`.${gridClasses.root}`)!
+          .getBoundingClientRect().height;
+        setProps({ containerStyle: { height: naturalHeight } });
+        await act(() => nextFrame());
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(false);
+
+        await act(() => apiRef.current!.toggleDetailPanel(0));
+        // The container does not react, so the scrollbar computed for the
+        // expansion is final and must not wait for a resize.
+        expect(apiRef.current!.getRootDimensions().hasScrollY).to.equal(true);
+      },
+    );
   });
 });

@@ -902,7 +902,15 @@ async function main() {
       console.log(`Creating branch from master for current major version: ${branchSource}`);
     }
 
-    await execa('git', ['checkout', '-b', branchName, '--track', branchSource]);
+    // Note: intentionally not tracking `branchSource` here. Tracking it directly
+    // would point this branch's upstream at the `upstream` remote, so a later plain
+    // `git push` (e.g. during manual fixups) would push straight to `upstream/master`
+    // instead of the fork. The branch doesn't exist on the fork yet, so we can't point
+    // `--track` at it either; instead we configure the tracking refs by hand so the
+    // branch is never left orphaned even if the push below is skipped or fails.
+    await execa('git', ['checkout', '-b', branchName, branchSource]);
+    await execa('git', ['config', `branch.${branchName}.remote`, forkRemote]);
+    await execa('git', ['config', `branch.${branchName}.merge`, `refs/heads/${branchName}`]);
 
     // Update package.json
     await updatePackageJson(newVersion);
@@ -950,7 +958,7 @@ async function main() {
 
     console.log(`Changes committed to branch ${branchName}`);
 
-    // Push the committed changes to fork remote
+    // Push the committed changes to fork remote (already tracked above).
     console.log('Pushing committed changes to fork remote...');
     await execa('git', ['push', forkRemote, branchName]);
     console.log(`Changes pushed to ${forkRemote}/${branchName}`);

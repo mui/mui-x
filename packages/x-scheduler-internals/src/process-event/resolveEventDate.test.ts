@@ -1,5 +1,6 @@
 import { adapter } from 'test/utils/scheduler/adapters';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import { describe, it, expect } from 'vitest';
 
 describe('resolveEventDate', () => {
   it('should convert Z-string to an instant', () => {
@@ -18,5 +19,11 @@ describe('resolveEventDate', () => {
   it('should use "default" timezone when dataTimezone is "default"', () => {
     const result = resolveEventDate('2025-01-01T09:00:00', 'default', adapter);
     expect(adapter.getHours(result)).to.equal(9);
+  });
+
+  it('should throw when the date is invalid', () => {
+    expect(() => resolveEventDate('not-a-date', 'default', adapter, 'event-1')).to.throw(
+      /MUI X Scheduler: The date "not-a-date" of event "event-1" is not a valid date/,
+    );
   });
 });

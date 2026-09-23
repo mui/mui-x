@@ -2,10 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { ComposerSendButton, type ComposerSendButtonProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { ComposerSendButton } from '@mui/x-chat-headless';
+import type { ComposerSendButtonProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatComposerUtilityClasses } from './chatComposerClasses';
+import type { ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerSendButton');
 
@@ -71,23 +74,25 @@ const ChatComposerSendButton = React.forwardRef<HTMLButtonElement, ChatComposerS
         ref={ref}
         {...other}
         slots={{
-          sendButton: slots?.sendButton ?? ChatComposerSendButtonStyled,
           ...slots,
+          sendButton: slots?.sendButton ?? ChatComposerSendButtonStyled,
         }}
         slotProps={{
           ...slotProps,
-          sendButton: {
-            className: clsx(classes.sendButton, className),
-            sx,
-            ...slotProps?.sendButton,
-          } as any,
+          sendButton: mergeSlotProps(
+            {
+              className: clsx(classes.sendButton, className),
+              sx,
+            },
+            slotProps?.sendButton,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatComposerSendButton.propTypes = {
+ChatComposerSendButton.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

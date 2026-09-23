@@ -1,5 +1,5 @@
 import { DateTime, Info } from 'luxon';
-import {
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,

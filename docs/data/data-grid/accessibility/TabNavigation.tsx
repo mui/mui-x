@@ -17,11 +17,13 @@ const columns: GridColDef[] = [
   {
     field: 'firstName',
     headerName: 'First name',
+    rowHeader: true,
     width: 150,
   },
   {
     field: 'lastName',
     headerName: 'Last name',
+    rowHeader: true,
     width: 150,
   },
   {

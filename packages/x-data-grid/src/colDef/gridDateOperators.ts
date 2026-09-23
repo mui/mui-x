@@ -1,7 +1,5 @@
-import {
-  GridFilterInputDate,
-  type GridFilterInputDateProps,
-} from '../components/panel/filterPanel/GridFilterInputDate';
+import { GridFilterInputDate } from '../components/panel/filterPanel/GridFilterInputDate';
+import type { GridFilterInputDateProps } from '../components/panel/filterPanel/GridFilterInputDate';
 import type { GridFilterItem } from '../models/gridFilterItem';
 import type { GridFilterOperator, GetApplyFilterFn } from '../models/gridFilterOperator';
 

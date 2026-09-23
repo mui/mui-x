@@ -1,5 +1,5 @@
 import { interpolateDate, interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
-import { type ContinuousColorConfig } from '../../../models/colorMapping';
+import type { ContinuousColorConfig } from '../../../models/colorMapping';
 
 const PX_PRECISION = 10;
 
@@ -26,8 +26,7 @@ export default function ChartsContinuousGradientObjectBound(
   const { isReversed, gradientId, colorScale, colorMap } = props;
 
   const extremumValues = [colorMap.min ?? 0, colorMap.max ?? 100] as
-    | [number, number]
-    | [Date, Date];
+    [number, number] | [Date, Date];
 
   const interpolator =
     typeof extremumValues[0] === 'number'

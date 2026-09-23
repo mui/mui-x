@@ -1,5 +1,6 @@
-import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { getDateKey, TimeoutManager } from '@mui/x-scheduler-internals/internals';
 
 const MAX_CONCURRENT_REQUESTS = 3;
@@ -54,7 +55,11 @@ export class SchedulerDataManager {
 
   private debounceMs: number;
 
-  private timeoutManager = new TimeoutManager();
+  private readonly disposables = new DisposableStack();
+
+  // Registered first so `clearAll` runs last (LIFO) — the constructor's defer
+  // calls `cancelQueuedRequests`, which itself touches `timeoutManager`.
+  private timeoutManager = this.disposables.use(new TimeoutManager());
 
   // Requests waiting for the debounce timer to finish (rapid navigation buffer)
   private stagedRanges: DateRange[] | null = null;
@@ -62,6 +67,10 @@ export class SchedulerDataManager {
   private pendingDebounceResolve: (() => void) | null = null;
 
   private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
+
+  public get disposed(): boolean {
+    return this.disposables.disposed;
+  }
 
   constructor(
     adapter: Adapter,
@@ -77,6 +86,12 @@ export class SchedulerDataManager {
     this.maxConcurrentRequests = options.maxConcurrentRequests ?? MAX_CONCURRENT_REQUESTS;
     this.maxQueuedRequests = options.maxQueuedRequests ?? MAX_QUEUED_REQUESTS;
     this.debounceMs = options.debounceMs ?? DEBOUNCE_MS;
+
+    this.disposables.defer(() => {
+      this.cancelQueuedRequests();
+      this.pendingRequests.clear();
+      this.settledRequests.clear();
+    });
   }
 
   /**
@@ -139,6 +154,9 @@ export class SchedulerDataManager {
    * takes over — callers shouldn't treat the resolution as a fetch-completion signal.
    */
   public queue = async (ranges: DateRange[]) => {
+    if (this.disposed) {
+      return undefined;
+    }
     if (this.pendingDebounceResolve) {
       this.pendingDebounceResolve();
       this.pendingDebounceResolve = null;
@@ -172,6 +190,9 @@ export class SchedulerDataManager {
    * Useful for initial load or forced refresh.
    */
   public queueImmediate = async (ranges: DateRange[]) => {
+    if (this.disposed) {
+      return;
+    }
     // Clear any pending debounce
     this.timeoutManager.clearTimeout('debounce');
     if (this.pendingDebounceResolve) {
@@ -198,17 +219,18 @@ export class SchedulerDataManager {
   };
 
   public setRequestSettled = async (range: DateRange) => {
+    if (this.disposed) {
+      return;
+    }
     const key = getDateRangeKey(this.adapter, range);
     this.pendingRequests.delete(key);
     this.settledRequests.add(key);
     await this.processQueue();
   };
 
-  public clear = () => {
-    this.cancelQueuedRequests();
-    this.pendingRequests.clear();
-    this.settledRequests.clear();
-  };
+  [disposeSymbol](): void {
+    this.disposables.dispose();
+  }
 
   public clearPendingRequest = async (range: DateRange) => {
     const key = getDateRangeKey(this.adapter, range);

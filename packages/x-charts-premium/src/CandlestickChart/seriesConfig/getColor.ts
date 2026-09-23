@@ -1,4 +1,5 @@
-import { type ColorProcessor, getSeriesColorFn } from '@mui/x-charts/internals';
+import { getSeriesColorFn } from '@mui/x-charts/internals';
+import type { ColorProcessor } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
   const bandColorScale = xAxis?.colorScale;
@@ -12,9 +13,9 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
       }
 
       const value = bandValues[dataIndex];
-      const color = value === null ? getSeriesColor({ value, dataIndex }) : bandColorScale(value);
+      const color = bandColorScale(value);
 
-      if (color === null) {
+      if (typeof color !== 'string') {
         return getSeriesColor({ value, dataIndex });
       }
 

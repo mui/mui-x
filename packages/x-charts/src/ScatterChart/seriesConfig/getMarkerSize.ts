@@ -1,5 +1,5 @@
-import { type DefaultizedScatterSeriesType } from '../../models/seriesType/scatter';
-import { type ZAxisDefaultized } from '../../models/z-axis';
+import type { DefaultizedScatterSeriesType } from '../../models/seriesType/scatter';
+import type { ZAxisDefaultized } from '../../models/z-axis';
 
 /**
  * Returns the marker size of a scatter item given its data index.

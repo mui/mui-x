@@ -5,7 +5,7 @@ import { useWebGLLayer } from '../../ChartsWebGLLayer/ChartsWebGLContext';
 import { BarWebGLProgram } from '../webgl/BarWebGLProgram';
 import { useWebGLBarLikePlotData } from '../webgl/useWebGLBarLikePlotData';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
-import { type ProcessedRangeBarSeriesData } from './types';
+import type { ProcessedRangeBarSeriesData } from './types';
 
 export interface RangeBarWebGLPlotProps {
   borderRadius?: number;

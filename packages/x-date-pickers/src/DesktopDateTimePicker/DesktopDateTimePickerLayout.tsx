@@ -3,15 +3,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Divider from '@mui/material/Divider';
+import type { PickersLayoutProps } from '../PickersLayout';
 import {
   PickersLayoutContentWrapper,
-  PickersLayoutProps,
   PickersLayoutRoot,
   pickersLayoutClasses,
   usePickerLayout,
 } from '../PickersLayout';
 import { usePickerContext } from '../hooks/usePickerContext';
-import { PickerValidValue } from '../internals/models';
+import type { PickerValidValue } from '../internals/models';
 
 type DesktopDateTimePickerLayoutComponent = (<TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue> & React.RefAttributes<HTMLDivElement>,
@@ -57,7 +57,7 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
   );
 }) as DesktopDateTimePickerLayoutComponent;
 
-DesktopDateTimePickerLayout.propTypes = {
+DesktopDateTimePickerLayout.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { type Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { hash } from '@mui/x-internals/hash';
-import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
+import { vars } from '../constants/cssVariables';
+import type { GridCSSVariablesInterface } from '../constants/cssVariables';
 import { colorMixIfSupported, supportsColorMix } from '../components/containers/GridRootStyles';
 
 export function useMaterialCSSVariables() {
@@ -20,11 +21,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
   const paperColor = (t.vars || t).palette.background.paper;
 
-  const backgroundBase =
-    dataGridPalette?.bg ??
-    (t.palette.mode === 'dark'
-      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 95%, #fff)`, paperColor)
-      : paperColor);
+  const backgroundBase = getBackgroundBase(t);
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.alpha(
@@ -40,13 +37,13 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
   const radius = getRadius(t);
 
-  const fontBody = (t.vars as any)?.font?.body2 ?? formatFont(t.typography.body2);
+  const fontBody = getFontBody(t);
   const fontSmall = (t.vars as any)?.font?.caption ?? formatFont(t.typography.caption);
   const fontLarge = (t.vars as any)?.font?.body1 ?? formatFont(t.typography.body1);
   const k = vars.keys;
 
   return {
-    [k.spacingUnit]: t.vars ? ((t.vars as any).spacing ?? t.spacing(1)) : t.spacing(1),
+    [k.spacingUnit]: getSpacingUnit(t),
 
     [k.colors.border.base]: borderColor,
     [k.colors.background.base]: backgroundBase,
@@ -97,6 +94,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
     [k.zIndex.panel]: (t.vars || t).zIndex.modal,
     [k.zIndex.menu]: (t.vars || t).zIndex.modal,
+    [k.zIndex.modal]: (t.vars || t).zIndex.modal,
   };
 }
 
@@ -109,7 +107,25 @@ function getRadius(theme: Theme) {
     : theme.shape.borderRadius;
 }
 
-function getBorderColor(theme: Theme) {
+export function getBackgroundBase(theme: Theme) {
+  const paperColor = (theme.vars || theme).palette.background.paper;
+  return (
+    (theme.vars || theme).palette.DataGrid?.bg ??
+    (theme.palette.mode === 'dark'
+      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 95%, #fff)`, paperColor)
+      : paperColor)
+  );
+}
+
+export function getFontBody(theme: Theme) {
+  return (theme.vars as any)?.font?.body2 ?? formatFont(theme.typography.body2);
+}
+
+export function getSpacingUnit(theme: Theme) {
+  return theme.vars ? ((theme.vars as any).spacing ?? theme.spacing(1)) : theme.spacing(1);
+}
+
+export function getBorderColor(theme: Theme) {
   if (theme.vars) {
     return theme.vars.palette.TableCell.border;
   }

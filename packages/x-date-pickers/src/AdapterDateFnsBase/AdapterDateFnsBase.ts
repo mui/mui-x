@@ -1,5 +1,5 @@
-import { MakeRequired } from '@mui/x-internals/types';
-import {
+import type { MakeRequired } from '@mui/x-internals/types';
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,

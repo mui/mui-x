@@ -1,15 +1,15 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   BaseTimePickerProps,
   BaseTimePickerSlots,
   BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
-import {
+import type {
   StaticOnlyPickerProps,
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { TimeView } from '../models';
+import type { TimeView } from '../models';
 
 export interface StaticTimePickerSlots extends BaseTimePickerSlots, UseStaticPickerSlots {}
 

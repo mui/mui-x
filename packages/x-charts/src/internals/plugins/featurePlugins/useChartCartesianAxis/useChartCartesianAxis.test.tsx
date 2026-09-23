@@ -1,5 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { describe, it, expect } from 'vitest';
 
 describe('useChartCartesianAxis', () => {
   const { render } = createRenderer();

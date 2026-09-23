@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useAnimateBarLabel } from '../../hooks/animation/useAnimateBarLabel';
-import { type BarLabelOwnerState } from './BarLabel.types';
+import type { BarLabelOwnerState } from './BarLabel.types';
 import {
   ANIMATION_DURATION_MS,
   ANIMATION_TIMING_FUNCTION,
@@ -137,7 +137,7 @@ function getDominantBaseline({
   return 'central';
 }
 
-BarLabel.propTypes = {
+BarLabel.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

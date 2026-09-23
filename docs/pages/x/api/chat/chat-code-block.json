@@ -59,6 +59,5 @@
   "muiName": "MuiChatCodeBlock",
   "filename": "/packages/x-chat/src/ChatCodeBlock/ChatCodeBlock.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/code-blocks/\">Chat - Code Blocks</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/code-blocks/\">Chat - Code blocks</a></li></ul>"
 }

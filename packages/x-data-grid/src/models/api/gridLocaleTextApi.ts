@@ -55,6 +55,11 @@ export interface GridLocaleText {
   // Toolbar AI Assistant button
   toolbarAssistant: React.ReactNode;
 
+  // Formula bar (Premium formulas)
+  formulaBarLabel: string;
+  formulaBarInputLabel: string;
+  formulaBarAddressLabel: string;
+
   // Columns management text
   columnsManagementSearchTitle: string;
   columnsManagementNoColumns: string;

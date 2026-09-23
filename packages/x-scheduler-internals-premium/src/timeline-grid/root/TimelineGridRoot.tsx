@@ -1,10 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
+import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import { useDependencyCreationMonitor } from '../../internals/utils/useDependencyCreationMonitor';
 import { TimelineGridRootCssVars } from './TimelineGridRootCssVars';
 import type {
   TimelineGridCellCoordinates,
@@ -46,19 +50,37 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   const store = useEventTimelinePremiumStoreContext();
 
   // Selector hooks
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const resources = useStore(
     store,
     schedulerOccurrenceSelectors.groupedByResourceList,
-    presetConfig.start,
-    presetConfig.end,
+    config.start,
+    config.end,
   );
 
   const rootRef = React.useRef<HTMLDivElement>(null);
 
+  useDependencyCreationMonitor();
+
   const [focusedCell, setFocusedCellState] = React.useState<TimelineGridCellCoordinates | null>(
     null,
   );
+
+  // Latest resource list, read by the stable `setFocusedCell` and the re-homing
+  // effect below without adding them to a dependency array.
+  const resourcesRef = React.useRef(resources);
+  useIsoLayoutEffect(() => {
+    resourcesRef.current = resources;
+  });
+
+  // Tracks the resource under the focused cell so focus can be re-homed to the
+  // nearest surviving row if that row is removed (e.g. an ancestor resource
+  // collapses), instead of letting it drop to the document body.
+  const focusedResourceRef = React.useRef<{
+    resourceId: SchedulerResourceId;
+    columnType: TimelineGridColumnType;
+    rowIndex: number;
+  } | null>(null);
 
   const setFocusedCell = React.useCallback((coordinates: TimelineGridCellCoordinates) => {
     setFocusedCellState((prev) =>
@@ -66,6 +88,14 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
         ? prev
         : coordinates,
     );
+    const entry = resourcesRef.current[coordinates.rowIndex];
+    focusedResourceRef.current = entry
+      ? {
+          resourceId: entry.resource.id,
+          columnType: coordinates.columnType,
+          rowIndex: coordinates.rowIndex,
+        }
+      : null;
   }, []);
 
   const clearFocusedCellIfMatches = React.useCallback(
@@ -82,18 +112,63 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     const nextTarget = event.relatedTarget;
     if (nextTarget) {
       if (!rootRef.current?.contains(nextTarget)) {
+        focusedResourceRef.current = null;
         setFocusedCellState(null);
       }
       return;
     }
     // `relatedTarget` is null with portals, programmatic blur, or window-blur.
     // Defer to let focus settle, then recheck whether focus truly left the grid.
+    // The tracked resource is left untouched: a null `relatedTarget` also covers
+    // the focused row unmounting on collapse, which the effect below re-homes.
     queueMicrotask(() => {
       if (!rootRef.current?.contains(document.activeElement)) {
         setFocusedCellState(null);
       }
     });
   }, []);
+
+  // When the focused resource row is removed (e.g. an ancestor collapses), move
+  // focus to the row now at the clamped position in the same column — the
+  // positionally-nearest survivor, not necessarily the collapsed parent. Runs as
+  // a passive effect so the removed rows' unmount cleanup clears `focusedCell`
+  // first and this write wins.
+  React.useEffect(() => {
+    const focused = focusedResourceRef.current;
+    if (focused === null) {
+      return;
+    }
+
+    const nextIndex = resources.findIndex((entry) => entry.resource.id === focused.resourceId);
+    if (nextIndex !== -1) {
+      // Still visible; keep the tracked index in sync in case rows shifted above it.
+      focused.rowIndex = nextIndex;
+      return;
+    }
+
+    // Do not steal focus if it already moved to an element outside the grid.
+    const ownerDocument = rootRef.current?.ownerDocument;
+    const activeElement = ownerDocument?.activeElement ?? null;
+    if (
+      activeElement !== null &&
+      activeElement !== ownerDocument?.body &&
+      !rootRef.current?.contains(activeElement)
+    ) {
+      focusedResourceRef.current = null;
+      return;
+    }
+
+    if (resources.length === 0) {
+      focusedResourceRef.current = null;
+      setFocusedCellState(null);
+      return;
+    }
+
+    setFocusedCell({
+      columnType: focused.columnType,
+      rowIndex: Math.min(focused.rowIndex, resources.length - 1),
+    });
+  }, [resources, setFocusedCell]);
 
   const totalRowCount = resources.length;
 
@@ -110,7 +185,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
         role: 'grid',
         onBlur: handleBlur,
         style: {
-          [TimelineGridRootCssVars.unitCount]: presetConfig.tickCount,
+          [TimelineGridRootCssVars.unitCount]: config.tickCount,
           [TimelineGridRootCssVars.rowCount]: resources.length,
         } as React.CSSProperties,
       },

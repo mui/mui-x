@@ -1,23 +1,19 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import { gridRowTreeSelector, gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import type { GridRowId } from '@mui/x-data-grid-pro';
 import {
-  type GridRowId,
-  gridRowTreeSelector,
-  gridColumnLookupSelector,
-} from '@mui/x-data-grid-pro';
-import {
-  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   createRowTree,
   updateRowTree,
   getVisibleRowsLookup,
   skipSorting,
   skipFiltering,
-  type GridRowsPartialUpdates,
   getParentPath,
   RowGroupingStrategy,
   gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridStrategyProcessor, GridRowsPartialUpdates } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { getGroupingRules } from './gridRowGroupingUtils';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';

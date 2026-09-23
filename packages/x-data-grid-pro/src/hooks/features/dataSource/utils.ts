@@ -1,11 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
-  type GridKeyValue,
-  type GridRowId,
-  type GridRowTreeConfig,
-} from '@mui/x-data-grid';
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type { GridGroupNode, GridKeyValue, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models';
 import type { GridGetRowsParamsPro } from './models';
 
@@ -134,7 +129,7 @@ export const getGroupKeys = (tree: GridRowTreeConfig, rowId: GridRowId) => {
   const rowNode = tree[rowId];
   let currentNodeId = rowNode.parent;
   const groupKeys: GridKeyValue[] = [];
-  while (currentNodeId && currentNodeId !== GRID_ROOT_GROUP_ID) {
+  while (currentNodeId != null && currentNodeId !== GRID_ROOT_GROUP_ID) {
     const currentNode = tree[currentNodeId] as GridGroupNode;
     groupKeys.push(currentNode.groupingKey ?? '');
     currentNodeId = currentNode.parent;

@@ -1,9 +1,9 @@
-import { spy } from 'sinon';
-import {
+import type {
   SchedulerResourceId,
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler-internals/models';
 import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
+import { vi, describe, it, expect } from 'vitest';
 import { schedulerResourceSelectors } from '../../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
@@ -51,7 +51,7 @@ storeClasses.forEach((storeClass) => {
           title: string;
         }
 
-        const idGetter = spy((event: MyResource2) => event.myId);
+        const idGetter = vi.fn((event: MyResource2) => event.myId);
 
         const resourceModelStructure2: SchedulerResourceModelStructure<MyResource2> = {
           id: {
@@ -77,7 +77,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Called to convert Resource 1 on mount.
-        expect(idGetter.callCount).to.equal(1);
+        expect(idGetter.mock.calls.length).to.equal(1);
 
         store.updateStateFromParameters(
           {
@@ -90,7 +90,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Not called again when updating a non-related parameter.
-        expect(idGetter.callCount).to.equal(1);
+        expect(idGetter.mock.calls.length).to.equal(1);
 
         const resources2: MyResource2[] = [
           {
@@ -114,7 +114,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Called again to convert Resource 1 and Resource 2 because props.events changed.
-        expect(idGetter.callCount).to.equal(3);
+        expect(idGetter.mock.calls.length).to.equal(3);
 
         store.updateStateFromParameters(
           {
@@ -127,7 +127,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Called again to convert Resource 1 and Resource 2 because props.resourceModelStructure changed.
-        expect(idGetter.callCount).to.equal(5);
+        expect(idGetter.mock.calls.length).to.equal(5);
       });
     });
 
@@ -185,7 +185,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('Method: setVisibleResources', () => {
       it('should update visibleResources and call onVisibleResourcesChange when is uncontrolled', () => {
-        const onVisibleResourcesChange = spy();
+        const onVisibleResourcesChange = vi.fn();
         const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, onVisibleResourcesChange },
           adapter,
@@ -195,12 +195,12 @@ storeClasses.forEach((storeClass) => {
         store.setVisibleResources(newVisibleResources, new Event('click'));
 
         expect(store.state.visibleResources).to.equal(newVisibleResources);
-        expect(onVisibleResourcesChange.calledOnce).to.equal(true);
-        expect(onVisibleResourcesChange.lastCall.firstArg).to.equal(newVisibleResources);
+        expect(onVisibleResourcesChange.mock.calls.length).to.equal(1);
+        expect(onVisibleResourcesChange.mock.lastCall?.[0]).to.equal(newVisibleResources);
       });
 
       it('should not change the state but call onVisibleResourcesChange when is controlled', () => {
-        const onVisibleResourcesChange = spy();
+        const onVisibleResourcesChange = vi.fn();
         const controlledVisibleResources: Record<SchedulerResourceId, boolean> = { r1: true };
 
         const store = new storeClass.Value(
@@ -216,12 +216,12 @@ storeClasses.forEach((storeClass) => {
         store.setVisibleResources(newVisibleResources, new Event('click'));
 
         expect(store.state.visibleResources).to.equal(controlledVisibleResources);
-        expect(onVisibleResourcesChange.calledOnce).to.equal(true);
-        expect(onVisibleResourcesChange.lastCall.firstArg).to.equal(newVisibleResources);
+        expect(onVisibleResourcesChange.mock.calls.length).to.equal(1);
+        expect(onVisibleResourcesChange.mock.lastCall?.[0]).to.equal(newVisibleResources);
       });
 
       it('should do nothing if visibleResources is the same reference (no state change, no callback)', () => {
-        const onVisibleResourcesChange = spy();
+        const onVisibleResourcesChange = vi.fn();
         const visibleResources: Record<SchedulerResourceId, boolean> = { r1: false };
 
         const store = new storeClass.Value(
@@ -236,7 +236,249 @@ storeClasses.forEach((storeClass) => {
         store.setVisibleResources(visibleResources, new Event('click'));
 
         expect(store.state.visibleResources).to.equal(visibleResources);
-        expect(onVisibleResourcesChange.called).to.equal(false);
+        expect(onVisibleResourcesChange.mock.calls.length).to.equal(0);
+      });
+    });
+
+    describe('prop: collapsedResources', () => {
+      it('should default to no collapsed resources', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        expect(store.state.collapsedResources).to.deep.equal({});
+      });
+
+      it('should initialize from defaultCollapsedResources', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { a: true } },
+          adapter,
+        );
+        expect(store.state.collapsedResources).to.deep.equal({ a: true });
+      });
+
+      it('should read the controlled collapsedResources over the default', () => {
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            collapsedResources: { a: true },
+            defaultCollapsedResources: { b: true },
+          },
+          adapter,
+        );
+        expect(store.state.collapsedResources).to.deep.equal({ a: true });
+      });
+
+      it('should update collapsedResources when the controlled prop changes', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, collapsedResources: { a: true } },
+          adapter,
+        );
+        expect(store.state.collapsedResources).to.deep.equal({ a: true });
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, collapsedResources: { b: true } },
+          adapter,
+        );
+        expect(store.state.collapsedResources).to.deep.equal({ b: true });
+      });
+
+      it('should warn when switching from uncontrolled to controlled collapsedResources', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { a: true } },
+          adapter,
+        );
+
+        expect(() => {
+          store.updateStateFromParameters(
+            { ...DEFAULT_PARAMS, collapsedResources: { b: true } },
+            adapter,
+          );
+        }).toWarnDev(
+          'MUI X Scheduler: A component is changing the uncontrolled collapsedResources state',
+        );
+
+        expect(store.state.collapsedResources).to.deep.equal({ b: true });
+      });
+
+      it('should warn when switching from controlled to uncontrolled collapsedResources', () => {
+        const collapsedResources: Record<SchedulerResourceId, boolean> = { a: true };
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, collapsedResources }, adapter);
+
+        expect(() => {
+          store.updateStateFromParameters(
+            { ...DEFAULT_PARAMS, collapsedResources: undefined },
+            adapter,
+          );
+        }).toWarnDev(
+          'MUI X Scheduler: A component is changing the controlled collapsedResources state',
+        );
+
+        expect(store.state.collapsedResources).to.equal(collapsedResources);
+      });
+
+      it('should warn when defaultCollapsedResources changes after initialization', () => {
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { a: true } },
+          adapter,
+        );
+
+        expect(() => {
+          store.updateStateFromParameters(
+            { ...DEFAULT_PARAMS, defaultCollapsedResources: { b: true } },
+            adapter,
+          );
+        }).toWarnDev(
+          'MUI X Scheduler: A component is changing the default collapsedResources state',
+        );
+      });
+    });
+
+    describe('Method: setCollapsedResources', () => {
+      it('should update collapsedResources and call onCollapsedResourcesChange when is uncontrolled', () => {
+        const onCollapsedResourcesChange = vi.fn();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+
+        const newCollapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+        store.setCollapsedResources(newCollapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(newCollapsedResources);
+        expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
+        expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.equal(newCollapsedResources);
+      });
+
+      it('should not change the state but call onCollapsedResourcesChange when is controlled', () => {
+        const onCollapsedResourcesChange = vi.fn();
+        const controlledCollapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            collapsedResources: controlledCollapsedResources,
+            onCollapsedResourcesChange,
+          },
+          adapter,
+        );
+
+        const newCollapsedResources: Record<SchedulerResourceId, boolean> = { r2: true };
+        store.setCollapsedResources(newCollapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(controlledCollapsedResources);
+        expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
+        expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.equal(newCollapsedResources);
+      });
+
+      it('should do nothing if collapsedResources is the same reference (no state change, no callback)', () => {
+        const onCollapsedResourcesChange = vi.fn();
+        const collapsedResources: Record<SchedulerResourceId, boolean> = { r1: true };
+
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            defaultCollapsedResources: collapsedResources,
+            onCollapsedResourcesChange,
+          },
+          adapter,
+        );
+
+        store.setCollapsedResources(collapsedResources, new Event('click'));
+
+        expect(store.state.collapsedResources).to.equal(collapsedResources);
+        expect(onCollapsedResourcesChange.mock.calls.length).to.equal(0);
+      });
+
+      it('should forward the triggering event through the change event details', () => {
+        const onCollapsedResourcesChange = vi.fn();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+
+        const event = new Event('click');
+        store.setCollapsedResources({ r1: true }, event);
+
+        const eventDetails = onCollapsedResourcesChange.mock.lastCall?.[1];
+        expect(eventDetails.event).to.equal(event);
+        expect(eventDetails.reason).to.equal('none');
+      });
+
+      it('should not update the state when the change event details are canceled', () => {
+        const onCollapsedResourcesChange = vi.fn(
+          (
+            _collapsedResources: Record<SchedulerResourceId, boolean>,
+            eventDetails: {
+              cancel: () => void;
+            },
+          ) => {
+            eventDetails.cancel();
+          },
+        );
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+
+        store.setCollapsedResources({ r1: true }, new Event('click'));
+
+        expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
+        expect(store.state.collapsedResources).to.deep.equal({});
+      });
+    });
+
+    describe('Method: toggleResourceCollapse', () => {
+      it('should toggle a resource collapse state', () => {
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const id = DEFAULT_PARAMS.resources[0].id;
+
+        store.toggleResourceCollapse(id, undefined);
+        expect(store.state.collapsedResources).to.deep.equal({ [id]: true });
+
+        // Expanding removes the key rather than writing `false`.
+        store.toggleResourceCollapse(id, undefined);
+        expect(store.state.collapsedResources).to.deep.equal({});
+      });
+
+      it('should call onCollapsedResourcesChange when uncontrolled', () => {
+        const onCollapsedResourcesChange = vi.fn();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onCollapsedResourcesChange },
+          adapter,
+        );
+        const id = DEFAULT_PARAMS.resources[0].id;
+
+        store.toggleResourceCollapse(id, undefined);
+
+        expect(store.state.collapsedResources).to.deep.equal({ [id]: true });
+        expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
+        expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [id]: true });
+      });
+
+      it('should expand a resource collapsed through defaultCollapsedResources', () => {
+        const id = DEFAULT_PARAMS.resources[0].id;
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultCollapsedResources: { [id]: true } },
+          adapter,
+        );
+
+        store.toggleResourceCollapse(id, undefined);
+
+        expect(store.state.collapsedResources).to.deep.equal({});
+      });
+
+      it('should call onCollapsedResourcesChange and not mutate state when controlled', () => {
+        const onCollapsedResourcesChange = vi.fn();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, collapsedResources: {}, onCollapsedResourcesChange },
+          adapter,
+        );
+        const id = DEFAULT_PARAMS.resources[0].id;
+
+        store.toggleResourceCollapse(id, undefined);
+
+        expect(onCollapsedResourcesChange.mock.calls.length).to.equal(1);
+        expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ [id]: true });
+        // Controlled: state is not updated internally.
+        expect(store.state.collapsedResources).to.deep.equal({});
       });
     });
   });

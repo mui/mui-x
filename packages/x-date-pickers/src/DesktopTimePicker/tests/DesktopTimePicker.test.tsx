@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DesktopTimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -57,9 +57,9 @@ describe('<DesktopTimePicker />', () => {
 
   describe('selecting behavior', () => {
     it('should call "onAccept", "onChange", and "onClose" when selecting a single option', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopTimePicker
@@ -74,22 +74,22 @@ describe('<DesktopTimePicker />', () => {
       await openPicker(user, { type: 'time' });
 
       await user.click(screen.getByRole('option', { name: '09:00 AM' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
       // closeOnSelect false by default
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Click on 'accept' action to close the picker
       await user.click(screen.getByText(/ok/i));
-      expect(onAccept.callCount).to.equal(1);
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should call "onAccept", "onChange", and "onClose" when selecting all section', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopTimePicker
@@ -103,31 +103,31 @@ describe('<DesktopTimePicker />', () => {
       await openPicker(user, { type: 'time' });
 
       await user.click(screen.getByRole('option', { name: '2 hours' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       await user.click(screen.getByRole('option', { name: '15 minutes' }));
-      expect(onChange.callCount).to.equal(2);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       await user.click(screen.getByRole('option', { name: 'PM' }));
-      expect(onChange.callCount).to.equal(3);
+      expect(onChange.mock.calls.length).to.equal(3);
       // closeOnSelect false by default
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Click on 'accept' action to close the picker
       await user.click(screen.getByText(/ok/i));
-      expect(onAccept.callCount).to.equal(1);
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should allow out of order section selection', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopTimePicker
@@ -141,36 +141,36 @@ describe('<DesktopTimePicker />', () => {
       await openPicker(user, { type: 'time' });
 
       await user.click(screen.getByRole('option', { name: '15 minutes' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       await user.click(screen.getByRole('option', { name: '2 hours' }));
-      expect(onChange.callCount).to.equal(2);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       await user.click(screen.getByRole('option', { name: '25 minutes' }));
-      expect(onChange.callCount).to.equal(3);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(3);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       await user.click(screen.getByRole('option', { name: 'PM' }));
-      expect(onChange.callCount).to.equal(4);
+      expect(onChange.mock.calls.length).to.equal(4);
       // closeOnSelect false by default
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Click on 'accept' action to close the picker
       await user.click(screen.getByText(/ok/i));
-      expect(onAccept.callCount).to.equal(1);
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should finish selection when selecting only the last section', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopTimePicker
@@ -184,15 +184,15 @@ describe('<DesktopTimePicker />', () => {
       await openPicker(user, { type: 'time' });
 
       await user.click(screen.getByRole('option', { name: 'PM' }));
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
       // closeOnSelect false by default
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
 
       // Click on 'accept' action to close the picker
       await user.click(screen.getByText(/ok/i));
-      expect(onAccept.callCount).to.equal(1);
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.mock.calls.length).to.equal(1);
+      expect(onClose.mock.calls.length).to.equal(1);
     });
   });
 

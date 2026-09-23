@@ -1,8 +1,7 @@
 import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
-import {
-  DesktopDateTimePicker,
-  DesktopDateTimePickerProps,
-} from '@mui/x-date-pickers/DesktopDateTimePicker';
+import type { DesktopDateTimePickerProps } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { describe, it } from 'vitest';
 
 describe('<DesktopDateTimePicker /> - Field', () => {
   const { render } = createPickerRenderer();

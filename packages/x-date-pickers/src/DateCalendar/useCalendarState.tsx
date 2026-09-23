@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { SlideDirection } from './PickersSlideTransition';
+import type { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
-import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
-import { DateCalendarDefaultizedProps } from './DateCalendar.types';
+import type { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
+import type { DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';

@@ -2,10 +2,10 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
-import {
-  type GridPipeProcessor,
-  type GridRestoreStatePreProcessingContext,
-  useGridRegisterPipeProcessor,
+import { useGridRegisterPipeProcessor } from '@mui/x-data-grid-pro/internals';
+import type {
+  GridPipeProcessor,
+  GridRestoreStatePreProcessingContext,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {

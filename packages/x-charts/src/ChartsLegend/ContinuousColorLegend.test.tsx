@@ -3,6 +3,7 @@ import { ContinuousColorLegend, continuousColorLegendClasses } from '@mui/x-char
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { describe } from 'vitest';
 
 describe('<ContinuousColorLegend />', () => {
   const { render } = createRenderer();

@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
-import { useBarPlotData, type ProcessedBarSeriesData } from '@mui/x-charts/internals';
+import { useBarPlotData } from '@mui/x-charts/internals';
+import type { ProcessedBarSeriesData } from '@mui/x-charts/internals';
 import { useWebGLLayer } from '../../ChartsWebGLLayer/ChartsWebGLContext';
 import { BarWebGLProgram } from './BarWebGLProgram';
 import { useBarWebGLPlotData } from './useBarWebGLPlotData';

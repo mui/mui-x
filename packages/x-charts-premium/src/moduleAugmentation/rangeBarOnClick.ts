@@ -1,4 +1,4 @@
-import { type RangeBarValueType } from '../models';
+import type { RangeBarValueType } from '../models';
 
 declare module '@mui/x-charts/models' {
   interface ChartsTypeFeatureFlags {

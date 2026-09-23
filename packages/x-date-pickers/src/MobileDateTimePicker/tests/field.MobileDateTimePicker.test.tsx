@@ -1,5 +1,6 @@
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
+import { describe, it } from 'vitest';
 
 describe('<MobileDateTimePicker /> - Field', () => {
   const { render } = createPickerRenderer();

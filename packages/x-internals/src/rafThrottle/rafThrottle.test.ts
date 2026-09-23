@@ -1,4 +1,4 @@
-import { expect } from 'vitest';
+import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
 import { rafThrottle } from './rafThrottle';
 
 describe('rafThrottle', () => {

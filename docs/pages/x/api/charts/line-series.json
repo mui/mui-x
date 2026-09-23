@@ -34,7 +34,11 @@
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "strictStepCurve": { "type": { "description": "boolean" } },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "valueFormatter": {
+      "type": {
+        "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"
+      }
+    },
     "valueGetter": {
       "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; number | null" }
     },

@@ -96,6 +96,7 @@ const keys = {
   zIndex: {
     panel: '--DataGrid-t-z-index-panel',
     menu: '--DataGrid-t-z-index-menu',
+    modal: '--DataGrid-t-z-index-modal',
   },
 } as const;
 

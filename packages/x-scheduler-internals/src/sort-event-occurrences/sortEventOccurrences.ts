@@ -1,4 +1,4 @@
-import { SchedulerEventOccurrence } from '../models';
+import type { SchedulerEventOccurrence } from '../models';
 
 /**
  * Sorts event occurrences by their start date (earliest first).

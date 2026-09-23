@@ -30,6 +30,7 @@ export default function ServerSidePivotingDataGrid() {
       rowLength: 2000,
       dataSet: 'Commodity',
       maxColumns: 20,
+      multiSelect: true,
     },
     { useCursorPagination: false },
   );

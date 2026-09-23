@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { applyTickSpacing, getTicks } from './useTicks';
 import { scaleBand } from '../internals';
 

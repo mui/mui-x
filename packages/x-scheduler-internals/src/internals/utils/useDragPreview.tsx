@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RenderDragPreviewParameters } from '../../models';
+import type { RenderDragPreviewParameters } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 

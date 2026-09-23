@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx, { type ClassValue } from 'clsx';
+import clsx from 'clsx';
+import type { ClassValue } from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -9,18 +10,13 @@ import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
+import { focusElement } from '../../utils/focusElement';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
-import {
-  type GridCellEventLookup,
-  type GridEvents,
-  GridCellModes,
-  type GridRowId,
-  type GridEditCellProps,
-} from '../../models';
+import { GridCellModes } from '../../models';
+import type { GridCellEventLookup, GridEvents, GridRowId, GridEditCellProps } from '../../models';
 import type { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
 import type { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
@@ -164,6 +160,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const cellMode: GridCellModes = editCellState ? GridCellModes.Edit : GridCellModes.View;
 
   const { value: forcedValue, formattedValue: forcedFormattedValue } = cellAggregationResult || {};
+  const stateTabIndex = useGridSelector(apiRef, () => {
+    const cellTabIndex = gridTabIndexCellSelector(apiRef);
+    return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
+  });
+
   const cellParams: GridCellParams<any, any, any, any> = apiRef.current.getCellParamsForRow<
     any,
     any,
@@ -173,10 +174,9 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     colDef: column,
     cellMode,
     rowNode: rowNode as GridTreeNodeWithRender,
-    tabIndex: useGridSelector(apiRef, () => {
-      const cellTabIndex = gridTabIndexCellSelector(apiRef);
-      return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
-    }),
+    // A cell kept mounted outside the render context is collapsed to zero size, so it must not
+    // become the grid's tab stop: tabbing in would move focus to something the user can't see.
+    tabIndex: isNotVisible ? -1 : stateTabIndex,
     hasFocus: useGridSelector(apiRef, () => {
       const focus = gridFocusCellSelector(apiRef);
       return focus?.id === rowId && focus.field === field;
@@ -260,6 +260,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName, params, event);
 
@@ -272,6 +277,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName, params, event);
       if (onMouseDown) {
@@ -360,16 +370,22 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
+      // An external editor can legitimately hold DOM focus for the focused cell
+      // (e.g. the Premium formula bar) — the same pipe the document click
+      // handler consults decides whether pulling focus back is allowed. The
+      // pseudo-event only carries the element that owns the focus.
+      const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
+        event: { target: doc.activeElement } as unknown as MouseEvent,
+        cell: null,
+      });
+      if (!canUpdateFocus) {
+        return;
+      }
+
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
 
-      if (doesSupportPreventScroll()) {
-        elementToFocus.focus({ preventScroll: true });
-      } else {
-        const scrollPosition = apiRef.current.getScrollPosition();
-        elementToFocus.focus();
-        apiRef.current.scroll(scrollPosition);
-      }
+      focusElement(elementToFocus, apiRef);
     }
   }, [hasFocus, cellMode, apiRef]);
 
@@ -452,7 +468,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   return (
     <div
       className={clsx(classes.root, classNames, className)}
-      role="gridcell"
+      role={column.rowHeader ? 'rowheader' : 'gridcell'}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
@@ -478,7 +494,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   );
 });
 
-GridCell.propTypes = {
+GridCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

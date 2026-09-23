@@ -93,7 +93,7 @@ export default function CustomColumnMenu() {
           apiRef={apiRef}
           columns={[
             { field: 'default', width: 150 },
-            { field: 'name', width: 150 },
+            { field: 'name', width: 150, rowHeader: true },
             { field: 'stars', width: 150 },
           ]}
           rows={[

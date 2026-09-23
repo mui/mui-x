@@ -15,11 +15,8 @@ import {
   MessageRoot,
 } from '../message';
 import { MessageGroup } from '../message-group';
-import {
-  MessageListDateDivider,
-  MessageListRoot,
-  type MessageListRootProps,
-} from '../message-list';
+import { MessageListDateDivider, MessageListRoot } from '../message-list';
+import type { MessageListRootProps } from '../message-list';
 import {
   ConversationHeader,
   ConversationHeaderInfo,
@@ -117,6 +114,7 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
     getItemKey,
     items,
     onReachTop,
+    onReachBottom,
     renderItem,
     slotProps,
     slots,
@@ -127,6 +125,7 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
   void getItemKey;
   void items;
   void onReachTop;
+  void onReachBottom;
   void renderItem;
   void slotProps;
   void slots;

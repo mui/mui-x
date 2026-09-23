@@ -14,6 +14,11 @@
       "isPremiumPlan": true
     },
     "align": { "type": { "description": "GridAlignment" } },
+    "allowFormulas": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isPremiumPlan": true
+    },
     "availableAggregationFunctions": {
       "type": { "description": "string[]" },
       "isPremiumPlan": true
@@ -89,11 +94,12 @@
       "isProPlan": true
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
+    "rowHeader": { "type": { "description": "boolean" }, "default": "false" },
     "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
-    "type": { "type": { "description": "GridColType" }, "default": "'singleSelect'" },
+    "type": { "type": { "description": "GridColType" }, "default": "'string'" },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },

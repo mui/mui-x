@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { type SxProps, type Theme } from '@mui/material/styles';
-import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { ChartsLoadingOverlay } from './ChartsLoadingOverlay';
 import { useSeries } from '../hooks/useSeries';
-import { type SeriesId } from '../models/seriesType/common';
+import type { SeriesId } from '../models/seriesType/common';
 import { ChartsNoDataOverlay } from './ChartsNoDataOverlay';
 import type {
   LoadingOverlayPropsOverrides,

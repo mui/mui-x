@@ -1,57 +1,57 @@
-import {
+import type {
   DateCalendarProps,
   ExportedSlideTransitionProps,
   ExportedPickersFadeTransitionGroupProps,
 } from '../DateCalendar';
-import { DayCalendarSkeletonProps } from '../DayCalendarSkeleton';
-import { ClockNumberProps, TimeClockProps, ClockPointerProps, ClockProps } from '../TimeClock';
-import { MonthCalendarProps } from '../MonthCalendar';
-import { PickerDayProps } from '../PickerDay';
-import { YearCalendarProps } from '../YearCalendar';
-import { DateFieldProps } from '../DateField';
-import { LocalizationProviderProps } from '../LocalizationProvider';
-import { PickersLayoutProps } from '../PickersLayout';
-import { DayCalendarProps } from '../DateCalendar/DayCalendar';
-import { ExportedPickersArrowSwitcherProps } from '../internals/components/PickersArrowSwitcher/PickersArrowSwitcher.types';
-import { ExportedPickerPopperProps } from '../internals/components/PickerPopper';
-import { PickersToolbarProps } from '../internals/components/PickersToolbar';
-import { PickersToolbarButtonProps } from '../internals/components/PickersToolbarButton';
-import { ExportedPickersToolbarTextProps } from '../internals/components/PickersToolbarText';
+import type { DayCalendarSkeletonProps } from '../DayCalendarSkeleton';
+import type { ClockNumberProps, TimeClockProps, ClockPointerProps, ClockProps } from '../TimeClock';
+import type { MonthCalendarProps } from '../MonthCalendar';
+import type { PickerDayProps } from '../PickerDay';
+import type { YearCalendarProps } from '../YearCalendar';
+import type { DateFieldProps } from '../DateField';
+import type { LocalizationProviderProps } from '../LocalizationProvider';
+import type { PickersLayoutProps } from '../PickersLayout';
+import type { DayCalendarProps } from '../DateCalendar/DayCalendar';
+import type { ExportedPickersArrowSwitcherProps } from '../internals/components/PickersArrowSwitcher/PickersArrowSwitcher.types';
+import type { ExportedPickerPopperProps } from '../internals/components/PickerPopper';
+import type { PickersToolbarProps } from '../internals/components/PickersToolbar';
+import type { PickersToolbarButtonProps } from '../internals/components/PickersToolbarButton';
+import type { ExportedPickersToolbarTextProps } from '../internals/components/PickersToolbarText';
 
-import { DatePickerProps } from '../DatePicker';
-import { ExportedDatePickerToolbarProps } from '../DatePicker/DatePickerToolbar';
-import { DesktopDatePickerProps } from '../DesktopDatePicker';
-import { MobileDatePickerProps } from '../MobileDatePicker';
-import { StaticDatePickerProps } from '../StaticDatePicker';
+import type { DatePickerProps } from '../DatePicker';
+import type { ExportedDatePickerToolbarProps } from '../DatePicker/DatePickerToolbar';
+import type { DesktopDatePickerProps } from '../DesktopDatePicker';
+import type { MobileDatePickerProps } from '../MobileDatePicker';
+import type { StaticDatePickerProps } from '../StaticDatePicker';
 
-import { DateTimePickerProps, DateTimePickerTabsProps } from '../DateTimePicker';
-import { ExportedDateTimePickerToolbarProps } from '../DateTimePicker/DateTimePickerToolbar';
-import { DesktopDateTimePickerProps } from '../DesktopDateTimePicker';
-import { MobileDateTimePickerProps } from '../MobileDateTimePicker';
-import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
-import { DateTimeFieldProps } from '../DateTimeField';
+import type { DateTimePickerProps, DateTimePickerTabsProps } from '../DateTimePicker';
+import type { ExportedDateTimePickerToolbarProps } from '../DateTimePicker/DateTimePickerToolbar';
+import type { DesktopDateTimePickerProps } from '../DesktopDateTimePicker';
+import type { MobileDateTimePickerProps } from '../MobileDateTimePicker';
+import type { StaticDateTimePickerProps } from '../StaticDateTimePicker';
+import type { DateTimeFieldProps } from '../DateTimeField';
 
-import { TimePickerProps } from '../TimePicker';
-import { ExportedTimePickerToolbarProps } from '../TimePicker/TimePickerToolbar';
-import { DesktopTimePickerProps } from '../DesktopTimePicker';
-import { MobileTimePickerProps } from '../MobileTimePicker';
-import { StaticTimePickerProps } from '../StaticTimePicker';
-import { ExportedDigitalClockProps } from '../DigitalClock';
-import { TimeFieldProps } from '../TimeField';
-import {
+import type { TimePickerProps } from '../TimePicker';
+import type { ExportedTimePickerToolbarProps } from '../TimePicker/TimePickerToolbar';
+import type { DesktopTimePickerProps } from '../DesktopTimePicker';
+import type { MobileTimePickerProps } from '../MobileTimePicker';
+import type { StaticTimePickerProps } from '../StaticTimePicker';
+import type { ExportedDigitalClockProps } from '../DigitalClock';
+import type { TimeFieldProps } from '../TimeField';
+import type {
   ExportedMultiSectionDigitalClockSectionProps,
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
-import { ExportedPickersCalendarHeaderProps } from '../PickersCalendarHeader';
-import {
+import type { ExportedPickersCalendarHeaderProps } from '../PickersCalendarHeader';
+import type {
   PickersTextFieldProps,
   PickersInputBaseProps,
   PickersOutlinedInputProps,
   PickersInputProps,
   PickersFilledInputProps,
 } from '../PickersTextField';
-import { PickersSectionListProps } from '../PickersSectionList';
-import { PickerValidValue } from '../internals/models';
+import type { PickersSectionListProps } from '../PickersSectionList';
+import type { PickerValidValue } from '../internals/models';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps;

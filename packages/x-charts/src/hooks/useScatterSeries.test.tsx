@@ -1,7 +1,9 @@
-import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook } from '@mui/internal-test-utils';
+import type { RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { useScatterSeries, useScatterSeriesContext } from './useScatterSeries';
-import { type DefaultizedScatterSeriesType, type ScatterSeriesType } from '../models';
+import type { DefaultizedScatterSeriesType, ScatterSeriesType } from '../models';
 import { ScatterChart } from '../ScatterChart';
 
 const mockSeries: ScatterSeriesType[] = [

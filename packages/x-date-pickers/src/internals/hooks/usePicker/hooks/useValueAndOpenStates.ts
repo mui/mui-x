@@ -2,13 +2,18 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValueManager } from '../../../models';
-import { PickerSelectionState, UsePickerProps, UsePickerState } from '../usePicker.types';
+import type {
+  DateOrTimeViewWithMeridiem,
+  PickerValidValue,
+  PickerValueManager,
+} from '../../../models';
+import type { PickerSelectionState, UsePickerProps, UsePickerState } from '../usePicker.types';
 import { useControlledValue } from '../../useControlledValue';
 import { usePickerAdapter } from '../../../../hooks/usePickerAdapter';
-import { InferError, PickerChangeHandlerContext } from '../../../../models';
-import { SetValueActionOptions } from '../../../components/PickerProvider';
-import { useValidation, Validator } from '../../../../validation';
+import type { InferError, PickerChangeHandlerContext } from '../../../../models';
+import type { SetValueActionOptions } from '../../../components/PickerProvider';
+import type { Validator } from '../../../../validation';
+import { useValidation } from '../../../../validation';
 
 export function useValueAndOpenStates<
   TValue extends PickerValidValue,

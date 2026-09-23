@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Core adapters
 
-<p class="description">Write a <code>ChatAdapter</code> to connect the core runtime to any backend — HTTP, SSE, WebSocket, or AI SDK.</p>
+<p class="description">Connect your backend to the chat runtime by implementing the adapter interface.</p>
 
 The `ChatAdapter` interface is the transport boundary between the core runtime and your backend.
 Only one method is required: `sendMessage()`.
@@ -23,7 +23,7 @@ The following demo shows a minimal adapter in action:
 
 ## Minimal adapter
 
-The smallest working adapter returns a `ReadableStream` of chunks from `sendMessage()`:
+A minimal adapter returns a `ReadableStream` of chunks from `sendMessage()`:
 
 ```tsx
 const adapter: ChatAdapter = {
@@ -42,9 +42,9 @@ const adapter: ChatAdapter = {
 };
 ```
 
-That is enough for `ChatProvider` to handle streaming, message normalization, and state updates.
+`ChatProvider` then handles streaming, message normalization, and state updates.
 
-## Full interface reference
+## Adapter interface reference
 
 ```ts
 interface ChatAdapter<Cursor = string> {
@@ -54,6 +54,9 @@ interface ChatAdapter<Cursor = string> {
   ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
 
   // Optional
+  regenerate?(
+    input: ChatRegenerateInput,
+  ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
   listConversations?(
     input?: ChatListConversationsInput<Cursor>,
   ): Promise<ChatListConversationsResult<Cursor>>;
@@ -74,9 +77,9 @@ interface ChatAdapter<Cursor = string> {
 }
 ```
 
-## Method reference
+## Adapter methods
 
-### `sendMessage(input)` (required)
+### Sending messages
 
 Sends a user message and returns a readable stream of response chunks.
 
@@ -91,9 +94,27 @@ interface ChatSendMessageInput {
 }
 ```
 
-The `signal` is connected to `stopStreaming()` — when the user cancels, the signal aborts, giving your adapter a chance to clean up.
+The `signal` is connected to `stopStreaming()`—when the user cancels, the signal aborts, giving the adapter a chance to clean up.
 
-### `listConversations(input?)`
+### Regenerating responses
+
+Regenerates the assistant reply identified by `messageId`, returning a fresh response stream (same shape as `sendMessage`).
+
+```ts
+interface ChatRegenerateInput {
+  conversationId?: string;
+  messageId: string; // the assistant message being regenerated (already removed)
+  message: ChatMessage; // the user message that prompted the reply
+  messages: ChatMessage[]; // thread context up to and including `message`
+  signal: AbortSignal;
+}
+```
+
+`regenerate` is **optional**: regeneration works without implementing it. When the adapter omits `regenerate`, the runtime re-sends the anchoring user message through `sendMessage`. Implement it when your backend distinguishes regeneration from a fresh send—for example, the [Vercel AI SDK](/x/react-chat/backend/built-in-adapters/ai-sdk-adapter/) uses `trigger: 'regenerate-message'`.
+
+The UI is driven by the runtime, not by calling the adapter directly: trigger regeneration with [`chat.regenerate(message.id)`](/x/react-chat/customization/structure/#adding-a-regenerate-action-on-assistant-messages). If the adapter call rejects before any output streams, the runtime restores the removed reply (no data is lost). Once the stream starts, partial output is kept with the stream-reported status.
+
+### Listing conversations
 
 Loads the conversation list, typically called on mount.
 
@@ -110,7 +131,7 @@ interface ChatListConversationsResult<Cursor> {
 }
 ```
 
-### `listMessages(input)`
+### Loading message history
 
 Loads messages for a conversation, called when `activeConversationId` changes.
 
@@ -128,7 +149,7 @@ interface ChatListMessagesResult<Cursor> {
 }
 ```
 
-### `reconnectToStream(input)`
+### Reconnecting to an interrupted stream
 
 Resumes an interrupted stream, for example after an SSE disconnect.
 
@@ -142,9 +163,10 @@ interface ChatReconnectToStreamInput {
 
 Returns `null` if reconnection is not possible.
 
-### `setTyping(input)`
+### Sending typing indicators
 
 Sends a typing indicator to the backend.
+When `features.typingSignal` is enabled, the runtime calls this automatically—see [Real-time adapters](/x/react-chat/backend/real-time-adapters/).
 
 ```ts
 interface ChatSetTypingInput {
@@ -153,7 +175,7 @@ interface ChatSetTypingInput {
 }
 ```
 
-### `markRead(input)`
+### Marking messages as read
 
 Marks a conversation or specific message as read.
 
@@ -164,7 +186,7 @@ interface ChatMarkReadInput {
 }
 ```
 
-### `subscribe(input)`
+### Receiving real-time events
 
 Starts a realtime subscription.
 Called on mount, returns a cleanup function called on unmount.
@@ -177,7 +199,7 @@ interface ChatSubscribeInput {
 type ChatSubscriptionCleanup = () => void;
 ```
 
-### `loadMore(cursor?)`
+### Loading older messages
 
 Loads older messages for the current conversation using a pagination cursor.
 
@@ -189,7 +211,7 @@ interface ChatLoadMoreResult<Cursor> {
 }
 ```
 
-### `addToolApprovalResponse(input)`
+### Sending tool approval responses
 
 Sends a tool approval decision back to the backend.
 
@@ -201,7 +223,7 @@ interface ChatAddToolApproveResponseInput {
 }
 ```
 
-### `stop()`
+### Stopping an in-flight request
 
 Called alongside the abort signal when the user stops streaming.
 Use this for server-side cleanup that goes beyond closing the stream.
@@ -231,7 +253,7 @@ const adapter: ChatAdapter<MyCursor> = {
 
 The cursor type flows through `ChatProvider`, store, hooks, and all adapter input/output types.
 
-## Write your first adapter
+## Writing your first adapter
 
 ### Step 1: Echo adapter
 
@@ -331,10 +353,10 @@ When an adapter method throws, the runtime:
 
 1. Records a `ChatError` with the appropriate `source` field (`'send'`, `'history'`, or `'adapter'`).
 2. Surfaces the error through `useChat().error`, `useChatStatus().error`, and the `onError` callback.
-3. Sets `recoverable` based on the error type — stream disconnects are typically recoverable, while send failures may be retryable.
+3. Sets `recoverable` based on the error type—stream disconnects are typically recoverable, while send failures may be retryable.
 
 :::info
-You do not need to catch errors inside adapter methods — the runtime handles them for you. When an adapter method throws, the runtime records a `ChatError`, surfaces it through the UI and callbacks, and marks it recoverable or retryable when applicable.
+You do not need to catch errors inside adapter methods—the runtime handles them for you. When an adapter method throws, the runtime records a `ChatError`, surfaces it through the UI and callbacks, and marks it recoverable or retryable when applicable.
 :::
 
 ## See also
@@ -347,4 +369,4 @@ You do not need to catch errors inside adapter methods — the runtime handles t
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

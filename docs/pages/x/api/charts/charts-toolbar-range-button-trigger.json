@@ -29,6 +29,5 @@
   "muiName": "MuiChartsToolbarRangeButtonTrigger",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarRangeButtonTrigger.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li></ul>"
 }

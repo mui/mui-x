@@ -1,15 +1,13 @@
 'use client';
 import * as React from 'react';
 import {
-  type ChartPlugin,
-  type AxisId,
-  type ZoomData,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
   selectorChartXAxisWithDomains,
   selectorChartYAxisWithDomains,
 } from '@mui/x-charts/internals';
+import type { ChartPlugin, AxisId, ZoomData } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
@@ -20,10 +18,10 @@ import {
   rangeButtonValueToZoom,
 } from '../../../ChartsToolbarPro/rangeButtonValueToZoom';
 import { calculateZoom } from './calculateZoom';
-import {
-  type InitialZoom,
-  type InitialZoomRange,
-  type UseChartProZoomSignature,
+import type {
+  InitialZoom,
+  InitialZoomRange,
+  UseChartProZoomSignature,
 } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
@@ -33,8 +31,11 @@ import { useZoomOnTapAndDrag } from './gestureHooks/useZoomOnTapAndDrag';
 import { usePanOnPressAndDrag } from './gestureHooks/usePanOnPressAndDrag';
 import { useZoomOnBrush } from './gestureHooks/useZoomOnBrush';
 import { useZoomOnDoubleTapReset } from './gestureHooks/useZoomOnDoubleTapReset';
+import { useZoomOnKeyboard } from './gestureHooks/useZoomOnKeyboard';
+import { usePanOnKeyboard } from './gestureHooks/usePanOnKeyboard';
 import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 import { initializeZoomData } from './initializeZoomData';
+import { useRegisterZoomGestures } from './gestureHooks/useRegisterZoomGestures';
 
 /**
  * Type guard for `initialZoom` entries provided as a range value.
@@ -245,6 +246,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   }, [removeIsInteracting]);
 
   // Add events
+  useRegisterZoomGestures(pluginData);
+
   usePanOnDrag(pluginData, setZoomDataCallback);
 
   usePanOnPressAndDrag(pluginData, setZoomDataCallback);
@@ -260,6 +263,10 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   useZoomOnBrush(pluginData, setZoomDataCallback);
 
   useZoomOnDoubleTapReset(pluginData, setZoomDataCallback);
+
+  useZoomOnKeyboard(pluginData, setZoomDataCallback);
+
+  usePanOnKeyboard(pluginData, setZoomDataCallback);
 
   const zoom = React.useCallback(
     (step: number) => {

@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import {
-  Unstable_RadarDataProvider as RadarDataProvider,
+  RadarDataProvider,
   RadarGrid,
   RadarSeriesMarks,
   RadarSeriesArea,

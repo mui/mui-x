@@ -17,6 +17,32 @@ Level AA exceeds the basic criteria for accessibility and is a common target for
 
 The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
+## Row headers
+
+Column headers describe the data in each column, while row headers identify the data in each row.
+Screen readers use these associations to provide context as users navigate the grid.
+
+Set `rowHeader: true` on a column that contains a meaningful label for each row, such as a person's name or a product name.
+The cells in that column receive the [`rowheader` role](https://www.w3.org/TR/wai-aria-1.2/#rowheader):
+
+```tsx
+const columns: GridColDef[] = [
+  { field: 'name', headerName: 'Product', rowHeader: true },
+  { field: 'price', headerName: 'Price', type: 'number' },
+];
+```
+
+{{"demo": "RowHeaderGrid.js", "bg": "inline"}}
+
+Do not use an arbitrary index as a row header.
+A grid can have multiple row header columns when more than one value is needed to identify a row.
+
+The `rowHeader` property changes the cell's semantic role and how the column is virtualized.
+It does not change the column's position, visibility, or styling.
+
+Row header cells stay mounted when [column virtualization](/x/react-data-grid/virtualization/#column-virtualization) scrolls their column out of view, so screen readers can announce the row's identity from anywhere in the row.
+While outside the rendered columns, these cells take up no space.
+
 ## Density
 
 `DataGrid` exposes the `density` prop which supports the following values:
@@ -168,7 +194,7 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 |         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select/Deselect the current row                                      |
 | <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Select the current row and the row above or below                    |
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
-|              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
+|              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows, or all cells if `cellSelection` is enabled          |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows                                     |
 |                                   <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
 |                         <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |

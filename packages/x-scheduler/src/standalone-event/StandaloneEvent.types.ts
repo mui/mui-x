@@ -1,6 +1,6 @@
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { Theme } from '@mui/material/styles';
-import { StandaloneEvent as UnstyledStandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { Theme } from '@mui/material/styles';
+import type { StandaloneEvent as UnstyledStandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 
 export interface StandaloneEventProps extends Omit<
   UnstyledStandaloneEvent.Props,

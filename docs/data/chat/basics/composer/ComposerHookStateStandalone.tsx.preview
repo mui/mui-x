@@ -1,0 +1,4 @@
+<ComposerDemoShell
+  beforeComposer={<ComposerInfo />}
+  helperText="Type, attach a file, or send to watch the hook state update."
+/>

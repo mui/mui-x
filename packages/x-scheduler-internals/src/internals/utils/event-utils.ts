@@ -1,13 +1,59 @@
-import { TemporalTimezone } from '../../base-ui-copy/types/temporal';
-import {
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
   SchedulerEventOccurrence,
   SchedulerEventId,
+  SchedulerRenderableEventOccurrence,
+  SchedulerResourceId,
 } from '../../models';
-import { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
-import { Adapter } from '../../use-adapter/useAdapter.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
+import type { Adapter } from '../../use-adapter/useAdapter.types';
+import { getDateKey } from './date-utils';
+import type { SchedulerEventRangeIndex } from './event-range-index';
+
+/**
+ * Whether the occurrence is a persisted event occurrence, as opposed to a
+ * placeholder (creation draft, drag preview) that has no `dataTimezone`.
+ */
+export function isEventOccurrence(
+  occurrence: SchedulerRenderableEventOccurrence,
+): occurrence is SchedulerEventOccurrence {
+  return 'dataTimezone' in occurrence;
+}
+
+/**
+ * The occurrence in the data timezone, the identity recurring drag updates target;
+ * placeholders have none.
+ */
+export function getOccurrenceDataTimezone(
+  occurrence: SchedulerRenderableEventOccurrence,
+): SchedulerEventOccurrence['dataTimezone'] | undefined {
+  return isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+}
+
+/**
+ * The render key of a non-recurring occurrence: the event id stringified.
+ * Single source of truth so producers (occurrence expansion) and consumers (the editing highlight)
+ * derive identical keys.
+ */
+export function getOccurrenceKey(eventId: SchedulerEventId): string {
+  return String(eventId);
+}
+
+/**
+ * The render key of a recurring occurrence: the event id plus the occurrence's day key. Shared so the
+ * occurrence expansion and any code re-deriving the key (e.g. re-pointing the edited occurrence after a
+ * recurring scope change) stay in lockstep.
+ */
+export function getRecurringOccurrenceKey(
+  eventId: SchedulerEventId,
+  day: TemporalSupportedObject,
+  adapter: Adapter,
+): string {
+  return `${eventId}::${getDateKey(day, adapter)}`;
+}
 
 export function generateOccurrenceFromEvent({
   event,
@@ -15,12 +61,18 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
+  dataTimezone,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
   occurrenceKey: string;
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
+  /**
+   * The occurrence in the data timezone; only its bounds are read. Defaults to the display
+   * `start`/`end`, a fallback only placeholder occurrences may rely on.
+   */
+  dataTimezone?: SchedulerEventOccurrence['dataTimezone'];
 }): SchedulerEventOccurrence {
   return {
     ...event,
@@ -33,8 +85,8 @@ export function generateOccurrenceFromEvent({
     },
     dataTimezone: {
       ...event?.dataTimezone,
-      start,
-      end,
+      start: dataTimezone?.start ?? start,
+      end: dataTimezone?.end ?? end,
     },
   };
 }
@@ -68,30 +120,36 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
 /**
  * Returns the occurrences to render in the given date range, expanding recurring events.
+ * Build eventRangeIndex with expandRecurringEvents set to whether recurringEventsPlugin is non-null.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources, displayTimezone, recurringEventsPlugin } =
-    parameters;
+  const {
+    adapter,
+    start,
+    end,
+    eventRangeIndex,
+    visibleResources,
+    displayTimezone,
+    recurringEventsPlugin,
+  } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
+  const eventsInRange = eventRangeIndex.getEventsForRange(start, end);
 
-  for (const event of events) {
+  for (const event of eventsInRange) {
     // STEP 1: Skip events from resources that are not visible
-    if (event.resource && visibleResources[event.resource] === false) {
+    const eventResourceIds = getEventResourceIds(event.resource);
+    const allHidden =
+      eventResourceIds.length > 0 && eventResourceIds.every((id) => visibleResources[id] === false);
+    if (allHidden) {
       continue;
     }
 
-    // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
-    if (event.displayTimezone.rrule) {
+    // STEP 2: Recurrent event processing, if it is recurrent expand it for the visible days
+    if (event.dataTimezone.rrule) {
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.
       if (recurringEventsPlugin == null) {
-        if (
-          adapter.isAfter(event.displayTimezone.start.value, end) ||
-          adapter.isBefore(event.displayTimezone.end.value, start)
-        ) {
-          continue;
-        }
-        occurrences.push({ ...event, key: String(event.id) });
+        occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
         continue;
       }
 
@@ -108,25 +166,80 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
-    if (
-      adapter.isAfter(event.displayTimezone.start.value, end) ||
-      adapter.isBefore(event.displayTimezone.end.value, start)
-    ) {
-      continue;
-    }
-
-    occurrences.push({ ...event, key: String(event.id) });
+    occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
   }
 
   return occurrences;
+}
+
+/**
+ * Returns the resource IDs for the given resource, or an empty array if the resource is null or undefined.
+ */
+export function getEventResourceIds(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+): SchedulerResourceId[] {
+  if (resource == null) {
+    return [];
+  }
+
+  return Array.isArray(resource) ? resource : [resource];
+}
+
+/**
+ * Returns the primary resource ID for the given resource, or null if the resource is null or undefined.
+ */
+export function getPrimaryResourceId(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+): SchedulerResourceId | null {
+  if (resource == null) {
+    return null;
+  }
+
+  if (Array.isArray(resource)) {
+    return resource[0] ?? null;
+  }
+
+  return resource;
+}
+
+export type ResourceSelectionMode = 'single' | 'multiple';
+
+/**
+ * Resolves whether an occurrence should be edited (and saved) as single- or multi-resource.
+ *
+ * - Creating: `canHaveMultipleResources` decides, full stop. A creation placeholder can already
+ *   carry a `resource` (e.g. the Event Timeline pre-selects the row it was created in), but that
+ *   only seeds an entry — it doesn't get to pick the picker, exactly like the Event Calendar,
+ *   whose creation placeholder never carries a resource at all.
+ * - Editing: the shape of `resource` is the source of truth and is never overridden — a string
+ *   means single, an array (including `[]`) means multiple. Only when `resource` carries no
+ *   shape (`null` or `undefined`) does the mode fall back to `canHaveMultipleResources`.
+ *
+ * `canHaveMultipleResources` is resolved by the caller from the `eventCreation` prop, or
+ * inferred from the rest of the data — see `schedulerEventSelectors.canHaveMultipleResources`.
+ */
+export function getResourceSelectionMode(
+  resource: SchedulerResourceId | SchedulerResourceId[] | null | undefined,
+  canHaveMultipleResources: boolean,
+  isCreating: boolean,
+): ResourceSelectionMode {
+  if (isCreating) {
+    return canHaveMultipleResources ? 'multiple' : 'single';
+  }
+  if (Array.isArray(resource)) {
+    return 'multiple';
+  }
+  if (resource != null) {
+    return 'single';
+  }
+  return canHaveMultipleResources ? 'multiple' : 'single';
 }
 
 export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
-  events: SchedulerProcessedEvent[];
+  eventRangeIndex: SchedulerEventRangeIndex;
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;

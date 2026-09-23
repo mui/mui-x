@@ -1,8 +1,6 @@
 import composeClasses from '@mui/utils/composeClasses';
-import {
-  type ChartsRadialAxisClasses,
-  getRadialAxisUtilityClass,
-} from '../ChartsRadiusAxis/sharedRadialAxisClasses';
+import { getRadialAxisUtilityClass } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
+import type { ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export const useUtilityClasses = (props: { classes?: Partial<ChartsRadialAxisClasses> }) => {
   const { classes } = props;

@@ -1,8 +1,4 @@
-import {
-  type HeatmapItemProps,
-  type HeatmapItemSlotProps,
-  type HeatmapItemSlots,
-} from './HeatmapItem';
+import type { HeatmapItemProps, HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 
 export interface HeatmapPlotSlots extends HeatmapItemSlots {}
 

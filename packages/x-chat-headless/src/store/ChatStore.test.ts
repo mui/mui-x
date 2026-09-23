@@ -55,6 +55,7 @@ describe('ChatStore', () => {
     expect(store.state.activeConversationId).toBeUndefined();
     expect(store.state.isStreaming).toBe(false);
     expect(store.state.hasMoreHistory).toBe(false);
+    expect(store.state.isLoadingHistory).toBe(false);
     expect(store.state.historyCursor).toBeUndefined();
     expect(store.state.composerValue).toBe('');
     expect(store.state.composerIsComposing).toBe(false);
@@ -342,6 +343,18 @@ describe('ChatStore', () => {
 
     expect(store.state.historyCursor).toBe('cursor-1');
     expect(store.state.hasMoreHistory).toBe(true);
+  });
+
+  it('setHistoryLoading toggles the history loading flag', () => {
+    const store = new ChatStore();
+
+    expect(store.state.isLoadingHistory).toBe(false);
+
+    store.setHistoryLoading(true);
+    expect(store.state.isLoadingHistory).toBe(true);
+
+    store.setHistoryLoading(false);
+    expect(store.state.isLoadingHistory).toBe(false);
   });
 
   it('setComposerValue updates the composer model', () => {
@@ -682,6 +695,7 @@ describe('ChatStore', () => {
       },
       isStreaming: true,
       hasMoreHistory: true,
+      isLoadingHistory: true,
       historyCursor: 'cursor-1',
       error: {
         code: 'STREAM_ERROR',
@@ -697,6 +711,7 @@ describe('ChatStore', () => {
     expect(store.state.messagesById).toEqual({});
     expect(store.state.isStreaming).toBe(false);
     expect(store.state.hasMoreHistory).toBe(false);
+    expect(store.state.isLoadingHistory).toBe(false);
     expect(store.state.historyCursor).toBeUndefined();
     expect(store.state.messageErrorsById).toEqual({});
     expect(store.state.error).toBeNull();

@@ -1,4 +1,5 @@
-import { type ZoomData } from '@mui/x-charts/internals';
+import type { ZoomData } from '@mui/x-charts/internals';
+import { describe, it, expect } from 'vitest';
 import { initializeZoomData } from './initializeZoomData';
 
 describe('initializeZoomData', () => {

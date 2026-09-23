@@ -9,12 +9,8 @@ import {
   vars,
   gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
-import {
-  useGridSelector,
-  getDataGridUtilityClass,
-  type GridRenderCellParams,
-  type GridGroupNode,
-} from '@mui/x-data-grid-pro';
+import { useGridSelector, getDataGridUtilityClass } from '@mui/x-data-grid-pro';
+import type { GridRenderCellParams, GridGroupNode } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';

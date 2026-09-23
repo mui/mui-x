@@ -1,4 +1,6 @@
-export const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-export const isOSX = /macintosh/i.test(window.navigator.userAgent);
+import { platform } from '@base-ui/utils/platform';
+
+export const isJSDOM = platform.env.jsdom;
+export const isOSX = platform.os.mac;
 export const hasTouchSupport =
   typeof window.Touch !== 'undefined' && typeof window.TouchEvent !== 'undefined';

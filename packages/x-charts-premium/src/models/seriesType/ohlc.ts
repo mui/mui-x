@@ -1,12 +1,12 @@
 import type { ChartsColor } from '@mui/x-charts/colorPalettes';
-import {
-  type CommonSeriesType,
-  type CartesianSeriesType,
-  type SeriesId,
-  type CommonDefaultizedProps,
-  type DatasetElementType,
+import type {
+  CommonSeriesType,
+  CartesianSeriesType,
+  SeriesId,
+  CommonDefaultizedProps,
+  DatasetElementType,
 } from '@mui/x-charts/internals';
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 
 /**
  * Type representing the values of a single OHLC element.
@@ -21,9 +21,7 @@ export type OHLCValueType = [number, number, number, number];
 export type OHLCField = 'open' | 'high' | 'low' | 'close';
 
 export interface OHLCSeriesType
-  extends
-    Omit<CommonSeriesType<OHLCValueType | null, 'ohlc'>, 'valueFormatter'>,
-    CartesianSeriesType {
+  extends Omit<CommonSeriesType<'ohlc'>, 'valueFormatter'>, CartesianSeriesType {
   type: 'ohlc';
   /**
    * The OHLC data points.

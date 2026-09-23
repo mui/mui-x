@@ -11,6 +11,5 @@
   "muiName": "MuiFocusedRadarMark",
   "filename": "/packages/x-charts/src/RadarChart/FocusedRadarMark.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>"
 }

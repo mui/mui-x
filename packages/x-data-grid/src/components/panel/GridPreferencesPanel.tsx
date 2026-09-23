@@ -11,8 +11,7 @@ export function GridPreferencesPanel() {
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const rootProps = useGridRootProps();
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
-  const { columnsPanelTriggerRef, filterPanelTriggerRef, aiAssistantPanelTriggerRef } =
-    useGridPanelContext();
+  const { triggers } = useGridPanelContext();
 
   const panelContent = apiRef.current.unstable_applyPipeProcessors(
     'preferencePanel',
@@ -20,16 +19,16 @@ export function GridPreferencesPanel() {
     preferencePanelState.openedPanelValue ?? GridPreferencePanelsValue.filters,
   );
 
-  let target: HTMLButtonElement | null = null;
+  let target: HTMLElement | null = null;
   switch (preferencePanelState.openedPanelValue) {
     case GridPreferencePanelsValue.filters:
-      target = filterPanelTriggerRef.current;
+      target = triggers.filterPanel.element;
       break;
     case GridPreferencePanelsValue.columns:
-      target = columnsPanelTriggerRef.current;
+      target = triggers.columnsPanel.element;
       break;
     case GridPreferencePanelsValue.aiAssistant:
-      target = aiAssistantPanelTriggerRef.current;
+      target = triggers.aiAssistantPanel.element;
       break;
     default:
   }

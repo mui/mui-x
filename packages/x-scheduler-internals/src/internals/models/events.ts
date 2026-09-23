@@ -1,4 +1,4 @@
-import { SchedulerEventId } from '../../models';
+import type { SchedulerEventId } from '../../models';
 
 interface SchedulerEventLookup<TEvent extends object> {
   /**

@@ -4,8 +4,9 @@ import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
-import { PickerOwnerState, TimeView } from '../models';
-import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
+import type { PickerOwnerState, TimeView } from '../models';
+import type { ClockPointerClasses } from './clockPointerClasses';
+import { getClockPointerUtilityClass } from './clockPointerClasses';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> {

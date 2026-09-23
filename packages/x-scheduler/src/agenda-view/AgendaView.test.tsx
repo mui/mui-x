@@ -1,44 +1,72 @@
-import { screen, waitFor, within } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { screen, within } from '@mui/internal-test-utils';
 import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
 
-  // Regression test for https://github.com/mui/mui-x/pull/22676#pullrequestreview-4424947060
-  // The standalone views render `EventSkeleton`, which reads `SharedComponentsStyledContext`.
-  // `EventCalendarProvider` (the wrapper used by every standalone view) must supply that
-  // context, otherwise rendering the data-source loading state throws.
-  it('should render the skeleton in a standalone view while events are loading', async () => {
-    const dataSource = {
-      getEvents: () => new Promise<SchedulerEvent[]>(() => {}),
-      persistEvents: async () => ({ success: true }),
-    };
+  it('should reference resolvable header IDs in each event aria-labelledby', () => {
+    const event = EventBuilder.new().title('My Event').build();
 
     render(
-      <StandaloneAgendaView
-        dataSource={dataSource}
-        defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-      />,
+      <EventCalendar events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
     );
 
-    await waitFor(() => {
-      expect(
-        document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`).length,
-      ).to.be.greaterThan(0);
+    const eventButton = screen.getByRole('button', { name: /My Event/i });
+    const tokens = (eventButton.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
+    expect(tokens.length).to.be.greaterThan(0);
+    tokens.forEach((token) => {
+      expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(null);
+    });
+  });
+
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('should render the event once when at least one of its assigned resources is visible', () => {
+      const event = EventBuilder.new().title('Team Sync').resources([resourceA, resourceB]).build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+        />,
+      );
+
+      expect(screen.getAllByText('Team Sync')).toHaveLength(1);
+    });
+
+    it('should not render the event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new().title('Team Sync').resources([resourceA, resourceB]).build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceA.id]: false, [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+        />,
+      );
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
     });
   });
 
   describe('time navigation', () => {
     it('should go to previous agenda period (12 days) when clicking on the Previous Agenda button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -50,13 +78,13 @@ describe('<AgendaView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous agenda/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -12),
       );
     });
 
     it('should go to next agenda period (12 days) when clicking on the Next Agenda button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -68,7 +96,7 @@ describe('<AgendaView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next agenda/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12),
       );
     });

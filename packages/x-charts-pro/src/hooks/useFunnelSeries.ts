@@ -1,11 +1,6 @@
 'use client';
-import {
-  useSeriesOfType,
-  useAllSeriesOfType,
-  type ProcessedSeries,
-  type SeriesId,
-  type ChartSeriesDefaultized,
-} from '@mui/x-charts/internals';
+import { useSeriesOfType, useAllSeriesOfType } from '@mui/x-charts/internals';
+import type { ProcessedSeries, SeriesId, ChartSeriesDefaultized } from '@mui/x-charts/internals';
 
 export type UseFunnelSeriesReturnValue = ChartSeriesDefaultized<'funnel'>;
 export type UseFunnelSeriesContextReturnValue = ProcessedSeries['funnel'];

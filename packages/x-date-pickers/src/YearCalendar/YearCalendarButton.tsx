@@ -4,18 +4,15 @@ import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import {
+import type {
   YearButtonOwnerState,
   YearCalendarSlotProps,
   YearCalendarSlots,
 } from './YearCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { PickerOwnerState } from '../models/pickers';
-import {
-  getYearCalendarUtilityClass,
-  yearCalendarClasses,
-  YearCalendarClasses,
-} from './yearCalendarClasses';
+import type { PickerOwnerState } from '../models/pickers';
+import type { YearCalendarClasses } from './yearCalendarClasses';
+import { getYearCalendarUtilityClass, yearCalendarClasses } from './yearCalendarClasses';
 
 export interface YearCalendarButtonProps {
   value: number;

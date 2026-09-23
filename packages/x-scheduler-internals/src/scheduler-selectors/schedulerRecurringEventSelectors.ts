@@ -1,10 +1,10 @@
-import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import {
+import { createSelectorMemoized } from '@base-ui/utils/store';
+import type {
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerProcessedDate,
 } from '../models';
-import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 
 const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugin;
 
@@ -31,22 +31,17 @@ export const schedulerRecurringEventSelectors = {
     ): RecurringEventPresetKey | 'custom' | null =>
       recurringEventsPlugin?.getDefaultPresetKey(adapter, rule, occurrenceStart) ?? null,
   ),
-  isSameRRule: createSelector(
-    (state: State) => state.adapter,
-    selectRecurringEventsPlugin,
-    (
-      adapter,
-      recurringEventsPlugin,
-      rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
-      rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
-    ): boolean => {
-      if (!rruleA && !rruleB) {
-        return true;
-      }
-      if (!rruleA || !rruleB) {
-        return false;
-      }
-      return recurringEventsPlugin?.isSameRRule(adapter, rruleA, rruleB) ?? false;
-    },
-  ),
+  isSameRRule: (
+    state: State,
+    rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
+    rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
+  ): boolean => {
+    if (!rruleA && !rruleB) {
+      return true;
+    }
+    if (!rruleA || !rruleB) {
+      return false;
+    }
+    return selectRecurringEventsPlugin(state)?.isSameRRule(state.adapter, rruleA, rruleB) ?? false;
+  },
 };

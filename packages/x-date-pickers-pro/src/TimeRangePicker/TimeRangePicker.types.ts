@@ -1,9 +1,9 @@
-import {
+import type {
   DesktopTimeRangePickerProps,
   DesktopTimeRangePickerSlots,
   DesktopTimeRangePickerSlotProps,
 } from '../DesktopTimeRangePicker';
-import {
+import type {
   MobileTimeRangePickerProps,
   MobileTimeRangePickerSlots,
   MobileTimeRangePickerSlotProps,

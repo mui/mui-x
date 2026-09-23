@@ -3,10 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import debounce from '@mui/utils/debounce';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import useId from '@mui/utils/useId';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
-import { QuickFilterContext, type QuickFilterState } from './QuickFilterContext';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { QuickFilterContext } from './QuickFilterContext';
+import type { QuickFilterState } from './QuickFilterContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
@@ -157,14 +160,17 @@ function QuickFilter(props: QuickFilterProps) {
     }
   }, [expandedValue]);
 
+  // Identity-stable, so that a re-render with a new `parser` does not recreate the debounced
+  // function below and clear a pending commit. See https://github.com/mui/mui-x/issues/23572.
+  const commitQuickFilterValue = useEventCallback((newValue: string) => {
+    const newQuickFilterValues = parser(newValue);
+    prevQuickFilterValuesRef.current = newQuickFilterValues;
+    apiRef.current.setQuickFilterValues(newQuickFilterValues);
+  });
+
   const setQuickFilterValueDebounced = React.useMemo(
-    () =>
-      debounce((newValue: string) => {
-        const newQuickFilterValues = parser(newValue);
-        prevQuickFilterValuesRef.current = newQuickFilterValues;
-        apiRef.current.setQuickFilterValues(newQuickFilterValues);
-      }, debounceMs),
-    [apiRef, debounceMs, parser],
+    () => debounce(commitQuickFilterValue, debounceMs),
+    [commitQuickFilterValue, debounceMs],
   );
   React.useEffect(() => setQuickFilterValueDebounced.clear, [setQuickFilterValueDebounced]);
 
@@ -216,7 +222,7 @@ function QuickFilter(props: QuickFilterProps) {
   return <QuickFilterContext.Provider value={contextValue}>{element}</QuickFilterContext.Provider>;
 }
 
-QuickFilter.propTypes = {
+QuickFilter.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

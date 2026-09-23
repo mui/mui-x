@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useStore, useStoreEffect } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import { useChatRuntimeContext } from '../internals/useChatRuntimeContext';
 import { chatSelectors } from '../selectors';
 import type { ChatDraftAttachment } from '../types/chat-entities';
@@ -188,13 +189,28 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       parts.push({ type: 'text', text: nextValue });
     }
 
-    for (const attachment of nextAttachments) {
-      parts.push({
-        type: 'file',
-        mediaType: attachment.file.type || 'application/octet-stream',
-        url: attachment.previewUrl ?? URL.createObjectURL(attachment.file),
-        filename: attachment.file.name,
-      });
+    const submissionCreatedUrls = new Map<string, string>();
+
+    try {
+      for (const attachment of nextAttachments) {
+        const url = attachment.previewUrl ?? URL.createObjectURL(attachment.file);
+
+        if (!attachment.previewUrl) {
+          submissionCreatedUrls.set(attachment.localId, url);
+        }
+
+        parts.push({
+          type: 'file',
+          mediaType: attachment.file.type || 'application/octet-stream',
+          url,
+          filename: attachment.file.name,
+        });
+      }
+    } catch (error) {
+      for (const url of submissionCreatedUrls.values()) {
+        revokeAttachmentPreviewUrl(url);
+      }
+      throw error;
     }
 
     const messageId = createLocalId();
@@ -205,7 +221,7 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
     // we're about to send, so we must NOT revoke them now (#7) — they live
     // until the message itself is removed from the store (or the composer
     // unmounts).
-    const transferredUrls = new Map<string, string>();
+    const transferredUrls = submissionCreatedUrls;
     for (const attachment of nextAttachments) {
       const ownedUrl = ownedPreviewUrlsRef.current.get(attachment.localId);
       if (ownedUrl) {
@@ -239,15 +255,19 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       // they're cleaned up via the composer-attachment lifecycle if the user
       // eventually removes them.
       const previouslyTransferred = messageOwnedPreviewUrlsRef.current.get(messageId);
-      messageOwnedPreviewUrlsRef.current.delete(messageId);
 
       store.setComposerValue(nextValue);
       for (const attachment of nextAttachments) {
         store.addComposerAttachment(attachment);
-        const previewUrl = previouslyTransferred?.get(attachment.localId) ?? attachment.previewUrl;
-        if (previewUrl) {
+        const previewUrl = attachment.previewUrl;
+        if (previewUrl && previouslyTransferred?.get(attachment.localId) === previewUrl) {
           ownedPreviewUrlsRef.current.set(attachment.localId, previewUrl);
+          previouslyTransferred.delete(attachment.localId);
         }
+      }
+
+      if (previouslyTransferred?.size === 0) {
+        messageOwnedPreviewUrlsRef.current.delete(messageId);
       }
     }
   }, [actions, store]);

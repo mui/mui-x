@@ -1,4 +1,4 @@
-import { type FunnelClasses } from '../FunnelChart';
+import type { FunnelClasses } from '../FunnelChart';
 
 type ExtractSafe<T, U extends T> = T extends U ? T : never;
 

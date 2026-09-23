@@ -1,5 +1,6 @@
-import { type D3Scale, isOrdinalScale } from '@mui/x-charts/internals';
-import { type PositionGetter } from './curves/curve.types';
+import { isOrdinalScale } from '@mui/x-charts/internals';
+import type { D3Scale } from '@mui/x-charts/internals';
+import type { PositionGetter } from './curves/curve.types';
 
 export const createPositionGetter: (
   scale: D3Scale,

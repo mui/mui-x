@@ -1,8 +1,8 @@
 'use client';
 import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { type SxProps } from '@mui/material/styles';
-import { type AxisId } from '../models/axis';
+import type { SxProps } from '@mui/material/styles';
+import type { AxisId } from '../models/axis';
 import { useChartsLayerContainerRef } from '../hooks/useChartsLayerContainerRef';
 import { useAxisHighlightValue } from './useAxisHighlightValue';
 import { ChartsAxisHighlightValueItem } from './ChartsAxisHighlightValueItem';
@@ -82,7 +82,7 @@ function ChartsAxisHighlightValue(props: ChartsAxisHighlightValueProps) {
   return ReactDOM.createPortal(content, chartsLayerContainerRef.current);
 }
 
-ChartsAxisHighlightValue.propTypes = {
+ChartsAxisHighlightValue.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

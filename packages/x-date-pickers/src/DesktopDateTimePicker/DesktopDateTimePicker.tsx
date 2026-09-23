@@ -6,15 +6,15 @@ import refType from '@mui/utils/refType';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
-import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
+import type { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { validateDateTime, extractValidationProps } from '../validation';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
-import { PickerOwnerState } from '../models';
+import type { PickerOwnerState } from '../models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -27,7 +27,7 @@ import {
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import {
+import type {
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
 } from '../internals/hooks/usePicker';
@@ -182,7 +182,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker(
   return renderPicker();
 }) as DesktopDateTimePickerComponent;
 
-DesktopDateTimePicker.propTypes = {
+DesktopDateTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { type SeriesId } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/internals';
 
 export interface FunnelClasses {
   /** Styles applied to the funnel plot element. */

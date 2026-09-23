@@ -2,6 +2,7 @@ import { createPickerRenderer } from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<TimeField /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

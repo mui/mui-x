@@ -8,13 +8,7 @@ import type {
 export type ChatRole = 'system' | 'user' | 'assistant';
 
 export type ChatMessageStatus =
-  | 'pending'
-  | 'sending'
-  | 'streaming'
-  | 'sent'
-  | 'read'
-  | 'error'
-  | 'cancelled';
+  'pending' | 'sending' | 'streaming' | 'sent' | 'read' | 'error' | 'cancelled';
 
 export type ConversationReadState = 'read' | 'unread';
 
@@ -98,6 +92,10 @@ export interface ChatDraftAttachment {
   file: File;
   previewUrl?: string;
   status: ChatDraftAttachmentStatus;
+  /**
+   * Upload progress as a percentage (0 to 100).
+   * Only meaningful while `status` is `'uploading'`.
+   */
   progress?: number;
 }
 

@@ -68,6 +68,5 @@
   "muiName": "MuiBarLabel",
   "filename": "/packages/x-charts/src/BarChart/BarLabel/BarLabel.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>"
 }

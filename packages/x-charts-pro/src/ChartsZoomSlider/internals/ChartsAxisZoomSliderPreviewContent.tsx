@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  type AxisId,
-  type SeriesId,
-  selectorChartSeriesProcessed,
-  useStore,
-} from '@mui/x-charts/internals';
+import { selectorChartSeriesProcessed, useStore } from '@mui/x-charts/internals';
+import type { AxisId, SeriesId } from '@mui/x-charts/internals';
 import { seriesPreviewPlotMap } from './seriesPreviewPlotMap';
 
 export interface ChartsAxisZoomSliderPreviewContentProps {

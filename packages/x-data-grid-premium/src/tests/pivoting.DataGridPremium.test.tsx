@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import {
-  DataGridPremium,
-  type DataGridPremiumProps,
-  gridClasses,
-  type GridColDef,
-  type GridPivotModel,
-  type GridApi,
+import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
+import type {
+  DataGridPremiumProps,
+  GridColDef,
+  GridPivotModel,
+  GridApi,
 } from '@mui/x-data-grid-premium';
 import {
   $$,
@@ -17,8 +16,8 @@ import {
   getRowValues,
   sleep,
 } from 'test/utils/helperFn';
-import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 const ROWS = [
   {
@@ -591,6 +590,42 @@ describe('<DataGridPremium /> - Pivoting', () => {
     });
   });
 
+  it('should not list multiSelect columns as available pivot fields', async () => {
+    render(
+      <Test
+        columns={[
+          { field: 'id', headerName: 'ID' },
+          { field: 'ticker', headerName: 'Ticker' },
+          {
+            field: 'tags',
+            headerName: 'Tags',
+            type: 'multiSelect',
+            valueOptions: ['A', 'B'],
+          },
+        ]}
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: { rows: [{ field: 'ticker' }], columns: [], values: [] },
+            panelOpen: true,
+          },
+        }}
+      />,
+    );
+
+    const getAvailableFields = () =>
+      Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '.MuiDataGrid-pivotPanelAvailableFields .MuiDataGrid-pivotPanelField',
+        ),
+      ).map((field) => field.textContent);
+
+    await waitFor(() => {
+      expect(getAvailableFields()).to.include('ID');
+    });
+    expect(getAvailableFields()).not.to.include('Tags');
+  });
+
   it('should recalculate pivot values when a row is updated while in pivot mode', async () => {
     const apiRef = { current: null } as React.RefObject<GridApi | null>;
 
@@ -663,6 +698,47 @@ describe('<DataGridPremium /> - Pivoting', () => {
         '3,200',
         'stock',
       ]);
+    });
+  });
+
+  it('should store the row provided in a replace update verbatim while in pivot mode', async () => {
+    const apiRef = { current: null } as React.RefObject<GridApi | null>;
+
+    const { setProps } = render(
+      <Test
+        apiRef={apiRef}
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
+    });
+
+    const replacement = { ...ROWS[0], volume: 6000 };
+    act(() => {
+      apiRef.current?.updateRows([{ _action: 'replace', row: replacement }]);
+    });
+
+    // The envelope is unwrapped before the row reaches the non-pivot rows.
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,700']);
+    });
+
+    setProps({ pivotActive: false });
+
+    // The object provided in the envelope is the one stored, not a copy of it.
+    await waitFor(() => {
+      expect(apiRef.current?.getRow(1)).to.equal(replacement);
     });
   });
 
@@ -891,7 +967,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
   it.skipIf(isJSDOM)(
     'should not hide the pivot column on double click on the column separator',
     async () => {
-      const onColumnWidthChange = spy();
+      const onColumnWidthChange = vi.fn();
 
       const { user } = render(
         <Test
@@ -917,13 +993,13 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
       const separators = $$(`.${gridClasses['columnSeparator--resizable']}`);
 
-      expect(onColumnWidthChange.callCount).to.equal(0);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(0);
 
       await user.dblClick(separators[1]);
 
-      expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].colDef.field).to.equal('2024>->volume');
-      expect(onColumnWidthChange.args[0][0].width).to.equal(68);
+      expect(onColumnWidthChange.mock.calls.length).to.equal(1);
+      expect(onColumnWidthChange.mock.calls[0][0].colDef.field).to.equal('2024>->volume');
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(68);
       expect(getColumnHeaderCell(1).offsetWidth).to.equal(68);
 
       await waitFor(() => {

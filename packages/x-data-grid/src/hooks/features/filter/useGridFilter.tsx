@@ -20,12 +20,13 @@ import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilter
 import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowsLookupSelector } from '../rows';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import {
   GRID_DEFAULT_STRATEGY,
-  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '../../core/strategyProcessing';
+import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import {
   buildAggregatedFilterApplier,
   sanitizeFilterModel,
@@ -33,6 +34,11 @@ import {
   cleanFilterItem,
   passFilterLogic,
   shouldQuickFilterExcludeHiddenColumns,
+  upsertFilterItemInModel,
+  upsertFilterItemsInModel,
+  deleteFilterItemFromModel,
+  setFilterLogicOperatorInModel,
+  isFilterItemComplete,
 } from './gridFilterUtils';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
@@ -148,14 +154,7 @@ export const useGridFilter = (
   const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      const items = [...filterModel.items];
-      const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
-      if (itemIndex === -1) {
-        items.push(item);
-      } else {
-        items[itemIndex] = item;
-      }
-      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItem');
+      apiRef.current.setFilterModel(upsertFilterItemInModel(filterModel, item), 'upsertFilterItem');
     },
     [apiRef],
   );
@@ -163,16 +162,10 @@ export const useGridFilter = (
   const upsertFilterItems = React.useCallback<GridFilterApi['upsertFilterItems']>(
     (items) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      const existingItems = [...filterModel.items];
-      items.forEach((item) => {
-        const itemIndex = existingItems.findIndex((filterItem) => filterItem.id === item.id);
-        if (itemIndex === -1) {
-          existingItems.push(item);
-        } else {
-          existingItems[itemIndex] = item;
-        }
-      });
-      apiRef.current.setFilterModel({ ...filterModel, items: existingItems }, 'upsertFilterItems');
+      apiRef.current.setFilterModel(
+        upsertFilterItemsInModel(filterModel, items),
+        'upsertFilterItems',
+      );
     },
     [apiRef],
   );
@@ -180,13 +173,10 @@ export const useGridFilter = (
   const deleteFilterItem = React.useCallback<GridFilterApi['deleteFilterItem']>(
     (itemToDelete) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      const items = filterModel.items.filter((item) => item.id !== itemToDelete.id);
-
-      if (items.length === filterModel.items.length) {
-        return;
-      }
-
-      apiRef.current.setFilterModel({ ...filterModel, items }, 'deleteFilterItem');
+      apiRef.current.setFilterModel(
+        deleteFilterItemFromModel(filterModel, itemToDelete),
+        'deleteFilterItem',
+      );
     },
     [apiRef],
   );
@@ -196,33 +186,9 @@ export const useGridFilter = (
       logger.debug('Displaying filter panel');
       if (targetColumnField) {
         const filterModel = gridFilterModelSelector(apiRef);
-        const filterItemsWithValue = filterModel.items.filter((item) => {
-          if (item.value !== undefined) {
-            // Some filters like `isAnyOf` support array as `item.value`.
-            // If array is empty, we want to remove it from the filter model.
-            if (Array.isArray(item.value) && item.value.length === 0) {
-              return false;
-            }
-            return true;
-          }
-
-          const column = apiRef.current.getColumn(item.field);
-          const filterOperator = column.filterOperators?.find(
-            (operator) => operator.value === item.operator,
-          );
-          const requiresFilterValue =
-            typeof filterOperator?.requiresFilterValue === 'undefined'
-              ? true
-              : filterOperator?.requiresFilterValue;
-
-          // Operators like `isEmpty` don't have and don't require `item.value`.
-          // So we don't want to remove them from the filter model if `item.value === undefined`.
-          // See https://github.com/mui/mui-x/issues/5402
-          if (requiresFilterValue) {
-            return false;
-          }
-          return true;
-        });
+        const filterItemsWithValue = filterModel.items.filter((item) =>
+          isFilterItemComplete(item, apiRef.current.getColumn(item.field)),
+        );
 
         let newFilterItems: GridFilterItem[];
         const filterItemOnTarget = filterItemsWithValue.find(
@@ -268,14 +234,8 @@ export const useGridFilter = (
   const setFilterLogicOperator = React.useCallback<GridFilterApi['setFilterLogicOperator']>(
     (logicOperator) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      if (filterModel.logicOperator === logicOperator) {
-        return;
-      }
       apiRef.current.setFilterModel(
-        {
-          ...filterModel,
-          logicOperator,
-        },
+        setFilterLogicOperatorInModel(filterModel, logicOperator),
         'changeLogicOperator',
       );
     },

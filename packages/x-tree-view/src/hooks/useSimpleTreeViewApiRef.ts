@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { TreeViewPublicAPI } from '../internals/models';
-import { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
+import type { TreeViewPublicAPI } from '../internals/models';
+import type { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
 
 /**
  * Creates the ref to pass to the `apiRef` prop of the `SimpleTreeView` component.

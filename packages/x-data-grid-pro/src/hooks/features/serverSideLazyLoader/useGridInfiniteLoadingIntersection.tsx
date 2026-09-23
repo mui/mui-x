@@ -2,11 +2,8 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridSelector, useGridApiMethod, gridDimensionsSelector } from '@mui/x-data-grid';
-import {
-  type GridInfiniteLoaderPrivateApi,
-  useTimeout,
-  gridHorizontalScrollbarHeightSelector,
-} from '@mui/x-data-grid/internals';
+import { useTimeout, gridHorizontalScrollbarHeightSelector } from '@mui/x-data-grid/internals';
+import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -17,7 +14,12 @@ const InfiniteLoadingTriggerElement = styled('div', {
   shouldForwardProp: undefined,
 })({
   position: 'sticky',
+  // Both 0-insets keep the trigger in the viewport in LTR and RTL alike. Sticky insets
+  // are independent constraints, and a width: 0 box satisfies both at once, so it clamps
+  // at whichever edge the scroll pushes it past. Without `right`, the trigger scrolls out
+  // through the right edge in RTL and the observer never fires again.
   left: 0,
+  right: 0,
   width: 0,
   height: 0,
 });

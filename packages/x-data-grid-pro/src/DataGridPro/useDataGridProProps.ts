@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { getThemeProps } from '@mui/system';
-import {
-  GRID_DEFAULT_LOCALE_TEXT,
-  DATA_GRID_PROPS_DEFAULT_VALUES,
-  type GridValidRowModel,
-} from '@mui/x-data-grid';
+import { GRID_DEFAULT_LOCALE_TEXT, DATA_GRID_PROPS_DEFAULT_VALUES } from '@mui/x-data-grid';
+import type { GridValidRowModel } from '@mui/x-data-grid';
 import { computeSlots, ROW_SELECTION_PROPAGATION_DEFAULT } from '@mui/x-data-grid/internals';
 import type {
   DataGridProProps,

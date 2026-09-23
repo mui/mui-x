@@ -1,0 +1,15 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "message": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the message text element"
+    },
+    "retryButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the retry button"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

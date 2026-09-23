@@ -2,47 +2,36 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
-import {
-  useChartsContainerProps,
-  type ChartsSlots,
-  type ChartsSlotProps,
-} from '@mui/x-charts/internals';
-import {
-  Unstable_ChartsRadialGrid as ChartsRadialGrid,
-  type ChartsRadialGridProps,
-} from '@mui/x-charts/ChartsRadialGrid';
+import type { MakeOptional } from '@mui/x-internals/types';
+import { useChartsContainerProps } from '@mui/x-charts/internals';
+import type { ChartsSlots, ChartsSlotProps } from '@mui/x-charts/internals';
+import { Unstable_ChartsRadialGrid as ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
+import type { ChartsRadialGridProps } from '@mui/x-charts/ChartsRadialGrid';
 import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
 import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
-import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
+import { ChartsLegend } from '../ChartsLegend';
+import type { ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
-import {
-  ChartsTooltip,
-  type ChartsTooltipSlots,
-  type ChartsTooltipSlotProps,
-} from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import type { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { ChartsClipPath } from '../ChartsClipPath';
-import {
-  ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlots,
-  type ChartsOverlaySlotProps,
+import { ChartsOverlay } from '../ChartsOverlay';
+import type {
+  ChartsOverlayProps,
+  ChartsOverlaySlots,
+  ChartsOverlaySlotProps,
 } from '../ChartsOverlay';
-import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
+import type { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
 import { radialBarSeriesConfig } from './seriesConfig';
-import {
-  ChartsRadialDataProviderPremium,
-  type ChartsRadialDataProviderPremiumProps,
-} from '../ChartsRadialDataProviderPremium';
+import { ChartsRadialDataProviderPremium } from '../ChartsRadialDataProviderPremium';
+import type { ChartsRadialDataProviderPremiumProps } from '../ChartsRadialDataProviderPremium';
 import type { RadialBarSeriesType } from '../models/seriesType/radialBar';
-import { type RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
+import type { RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
 import { RadialBarPlot } from './RadialBarPlot';
 import { useRadialBarChartProps } from './useRadialBarChartProps';
-import {
-  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
-  type ChartsRadialAxisHighlightProps,
-} from '../ChartsRadialAxisHighlight';
+import { Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight } from '../ChartsRadialAxisHighlight';
+import type { ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
 
 export type RadialBarSeries = MakeOptional<RadialBarSeriesType, 'type'>;
 
@@ -138,10 +127,11 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
     children,
   } = useRadialBarChartProps(props);
 
+  const { apiRef, ...containerProps } = chartsContainerProps;
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'radialBar',
     RadialBarChartPluginSignatures
-  >(chartsContainerProps);
+  >(containerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
@@ -149,6 +139,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
   return (
     <ChartsRadialDataProviderPremium<'radialBar', RadialBarChartPluginSignatures>
       {...chartsDataProviderProps}
+      apiRef={apiRef}
       seriesConfig={seriesConfig}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
@@ -172,7 +163,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
   );
 });
 
-RadialBarChart.propTypes = {
+RadialBarChart.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -214,7 +205,16 @@ RadialBarChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    keyboardActivation: PropTypes.bool,
+  }),
+  /**
+   * If `true`, clicking an item immediately shows the keyboard focus indicator on it.
+   * By default, clicking sets the item that keyboard navigation starts from, but the focus
+   * indicator stays hidden until the user presses a key.
+   * @default false
+   */
+  focusItemOnClick: PropTypes.bool,
   /**
    * Option to display a radial grid in the background.
    */
@@ -346,7 +346,7 @@ RadialBarChart.propTypes = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
@@ -361,6 +361,13 @@ RadialBarChart.propTypes = {
    * @param {HighlightItemIdentifierWithType<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The callback fired when an item is clicked.
+   *
+   * @param {ChartsActivationEvent<HTMLDivElement>} event The click event.
+   * @param {SeriesItemIdentifierWithType<SeriesType>} item The clicked item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The callback fired when the tooltip item changes.
    *
@@ -426,4 +433,4 @@ RadialBarChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialBarChart as Unstable_RadialBarChart };
+export { RadialBarChart };

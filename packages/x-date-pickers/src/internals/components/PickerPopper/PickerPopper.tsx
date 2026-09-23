@@ -3,27 +3,30 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import Grow from '@mui/material/Grow';
 import Fade from '@mui/material/Fade';
-import MuiPaper, { PaperProps as MuiPaperProps, PaperProps } from '@mui/material/Paper';
-import MuiPopper, {
+import type { PaperProps as MuiPaperProps, PaperProps } from '@mui/material/Paper';
+import MuiPaper from '@mui/material/Paper';
+import type {
   PopperProps as MuiPopperProps,
   PopperPlacementType,
   PopperProps,
 } from '@mui/material/Popper';
-import BaseFocusTrap, {
-  TrapFocusProps as MuiTrapFocusProps,
-} from '@mui/material/Unstable_TrapFocus';
+import MuiPopper from '@mui/material/Popper';
+import type { TrapFocusProps as MuiTrapFocusProps } from '@mui/material/Unstable_TrapFocus';
+import BaseFocusTrap from '@mui/material/Unstable_TrapFocus';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
+import type { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
 import { isElementInteractive } from '../../utils/isElementInteractive';
-import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
+import type { PickerPopperClasses } from './pickerPopperClasses';
+import { getPickerPopperUtilityClass } from './pickerPopperClasses';
 import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
 import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
-import { PickerOwnerState } from '../../../models';
+import type { PickerOwnerState } from '../../../models';
 import { usePickerContext } from '../../../hooks';
 
 export interface PickerPopperOwnerState extends PickerOwnerState {
@@ -61,10 +64,13 @@ export interface PickerPopperSlotProps {
   /**
    * Props passed down to the desktop [Transition](https://mui.com/material-ui/transitions/) component.
    */
-  desktopTransition?: Partial<MuiTransitionProps>;
+  desktopTransition?: WithDataAttributes<Partial<MuiTransitionProps>>;
   /**
    * Props passed down to the [FocusTrap](https://mui.com/base-ui/react-focus-trap/) component on desktop.
    */
+  // Not widened with `data-*`: FocusTrap renders no DOM element and its
+  // `exactProp` guard rejects unknown props (a stray `data-*` throws in dev),
+  // so the attribute could never reach the DOM.
   desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
@@ -156,7 +162,7 @@ function useClickAwayListener(
     }
 
     // Ensure that this hook is not "activated" synchronously.
-    // https://github.com/facebook/react/issues/20074
+    // https://github.com/react/react/issues/20074
     function armClickAwayListener() {
       activatedRef.current = true;
     }

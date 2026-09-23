@@ -1,8 +1,8 @@
-import { TreeViewItemId } from '../../../models';
+import type { TreeViewItemId } from '../../../models';
 import { expansionSelectors } from './selectors';
 import { itemsSelectors } from '../items/selectors';
-import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
-import { TreeViewEventParameters } from '../../models';
+import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
+import type { TreeViewEventParameters } from '../../models';
 
 export class TreeViewExpansionPlugin {
   private store: MinimalTreeViewStore<any, any>;

@@ -3,13 +3,11 @@ import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRotationScale } from '../../hooks/useScale';
 import { useStore } from '../../internals/store/useStore';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
-import {
-  selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { type AxisId } from '../../models/axis';
-import { type DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
-import { type ChartInstance } from '../../internals/plugins/models';
+import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import type { AxisId } from '../../models/axis';
+import type { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
+import type { ChartInstance } from '../../internals/plugins/models';
 import {
   selectorChartsInteractionRotationAxisIndex,
   selectorChartsInteractionRotationAxisValue,

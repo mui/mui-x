@@ -28,7 +28,10 @@
     "desc": { "type": { "name": "string" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ keyboardActivation?: bool }" }
+    },
+    "focusItemOnClick": { "type": { "name": "bool" }, "default": "false" },
     "gap": { "type": { "name": "number" }, "default": "0" },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
@@ -83,7 +86,7 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, funnelItemIdentifier: FunnelItemIdentifier) => void",
+        "type": "function(event: ChartsActivationEvent<SVGElement>, funnelItemIdentifier: FunnelItemIdentifier) => void",
         "describedArgs": ["event", "funnelItemIdentifier"]
       }
     },
@@ -210,6 +213,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/pyramid/\">Charts - Pyramid <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/export/\">Charts - Export <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/funnel/\">Charts - Funnel <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-charts/pyramid/\">Charts - Pyramid <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
 }

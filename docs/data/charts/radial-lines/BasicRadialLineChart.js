@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_RadialLineChart as RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
+import { RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
 import { dataset } from '../dataset/weather';
 
 export default function BasicRadialLineChart() {

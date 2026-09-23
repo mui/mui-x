@@ -1,10 +1,11 @@
 'use client';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
-import { type ChartsDataProviderProps } from '../ChartsDataProvider';
+import type { ChartsSurfaceProps } from '../ChartsSurface';
+import type { ChartsDataProviderProps } from '../ChartsDataProvider';
 import type { ChartsContainerProps } from './ChartsContainer';
-import { type ChartSeriesType } from '../models/seriesType/config';
-import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import type { ChartSeriesType } from '../models/seriesType/config';
+import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export type UseChartsContainerPropsReturnValue<
   SeriesType extends ChartSeriesType,
@@ -59,6 +60,7 @@ export const useChartsContainerProps = <
     slots,
     slotProps,
     disableKeyboardNavigation,
+    focusItemOnClick,
     brushConfig,
     onHiddenItemsChange,
     hiddenItems,
@@ -104,6 +106,7 @@ export const useChartsContainerProps = <
     seriesConfig,
     experimentalFeatures,
     disableKeyboardNavigation,
+    focusItemOnClick,
     brushConfig,
     onHiddenItemsChange,
     hiddenItems,

@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import {
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
@@ -7,10 +7,10 @@ import {
   selectorChartRawYAxis,
   selectorChartXAxisAutoSizes,
   selectorChartYAxisAutoSizes,
-  type ChartState,
 } from '@mui/x-charts/internals';
+import type { ChartState } from '@mui/x-charts/internals';
 import { computeAxisValue } from './computeAxisValue';
-import { type UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
+import type { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 
 export const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignature]>) =>
   state.funnel;
