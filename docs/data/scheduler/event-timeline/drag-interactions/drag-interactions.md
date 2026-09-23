@@ -3,7 +3,7 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
-components: EventTimelinePremium, StandaloneEvent
+components: EventTimelinePremium
 ---
 
 # Event Timeline - Drag Interactions
@@ -153,23 +153,5 @@ function App() {
 Use the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props to drag events between the Event Timeline and external containers.
 When `canDragEventsFromTheOutside` is `true`, you can drop events created with `StandaloneEvent` into the Event Timeline.
 When `canDropEventsToTheOutside` is `true`, you can drag events out of the Event Timeline.
-
-Use `StandaloneEvent` to provide external events. It handles drag activation and the floating preview with the Base UI drag engine.
-
-```tsx
-import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
-
-<StandaloneEvent
-  data={{ id: 'task-1', title: 'Planning', duration: 60 }}
-  onEventDrop={() => removeFromExternalList('task-1')}
->
-  Planning
-</StandaloneEvent>;
-```
-
-The `data` prop contains the event properties and an optional duration in minutes.
-The Scheduler supplies the dates and destination resource from the drop position.
-Use `onEventDrop` to remove the event from the external list after the Scheduler handles the drop.
-`StandaloneEvent` can render outside a Scheduler provider and hides its floating preview while the Scheduler displays an in-grid preview.
 
 {{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
