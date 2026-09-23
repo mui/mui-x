@@ -65,25 +65,19 @@ const DefaultYearButton = styled('button', {
   width: 72,
   borderRadius: 18,
   cursor: 'pointer',
-  ...(theme.focusVisible
-    ? {
-        ...applyInsetFocusVisible(1),
-        '&:focus-visible': theme.focusVisible,
-        '&:focus:not(:focus-visible)': {
-          backgroundColor: theme.alpha(
-            (theme.vars || theme).palette.action.active,
-            (theme.vars || theme).palette.action.focusOpacity,
-          ),
-        },
-      }
-    : {
-        '&:focus': {
-          backgroundColor: theme.alpha(
-            (theme.vars || theme).palette.action.active,
-            (theme.vars || theme).palette.action.focusOpacity,
-          ),
-        },
-      }),
+  '&:focus': {
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.action.active,
+      (theme.vars || theme).palette.action.focusOpacity,
+    ),
+  },
+  ...(theme.focusVisible && {
+    '&:focus-visible': {
+      backgroundColor: 'transparent',
+      ...applyInsetFocusVisible(1),
+      ...theme.focusVisible,
+    },
+  }),
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
@@ -100,20 +94,9 @@ const DefaultYearButton = styled('button', {
   [`&.${yearCalendarClasses.selected}`]: {
     color: (theme.vars || theme).palette.primary.contrastText,
     backgroundColor: (theme.vars || theme).palette.primary.main,
-    '&:hover': {
+    '&:focus, &:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
-    ...(theme.focusVisible
-      ? {
-          '&:focus:not(:focus-visible)': {
-            backgroundColor: (theme.vars || theme).palette.primary.dark,
-          },
-        }
-      : {
-          '&:focus': {
-            backgroundColor: (theme.vars || theme).palette.primary.dark,
-          },
-        }),
   },
 }));
 

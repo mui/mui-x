@@ -64,16 +64,16 @@ export const TreeItemContent = styled('div', {
     backgroundColor: 'transparent',
     cursor: 'auto',
   },
-  ...(theme.focusVisible
-    ? {
-        ...applyInsetFocusVisible(1),
-        [`.${treeItemClasses.root}:focus-visible > &`]: theme.focusVisible,
-      }
-    : {
-        '&[data-focused]': {
-          backgroundColor: (theme.vars || theme).palette.action.focus,
-        },
-      }),
+  '&[data-focused]': {
+    backgroundColor: (theme.vars || theme).palette.action.focus,
+  },
+  ...(theme.focusVisible && {
+    ...applyInsetFocusVisible(1),
+    [`.${treeItemClasses.root}:focus-visible > &`]: theme.focusVisible,
+    [`.${treeItemClasses.root}:focus-visible > &:not([data-selected])`]: {
+      backgroundColor: 'transparent',
+    },
+  }),
   '&[data-selected]': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.primary.main,
@@ -93,14 +93,12 @@ export const TreeItemContent = styled('div', {
       },
     },
   },
-  ...(!theme.focusVisible && {
-    '&[data-selected][data-focused]': {
-      backgroundColor: theme.alpha(
-        (theme.vars || theme).palette.primary.main,
-        `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
-      ),
-    },
-  }),
+  '&[data-selected][data-focused]': {
+    backgroundColor: theme.alpha(
+      (theme.vars || theme).palette.primary.main,
+      `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`,
+    ),
+  },
 }));
 
 export const TreeItemLabel = styled('div', {

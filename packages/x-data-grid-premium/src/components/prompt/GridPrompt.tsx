@@ -10,7 +10,8 @@ import type { GridSingleSelectColDef } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 
-import { keyframes, styled } from '@mui/material/styles';
+import { keyframes, styled } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
 import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import useId from '@mui/utils/useId';
@@ -167,32 +168,35 @@ const PromptChangeList = styled('div', {
 const PromptChangesToggle = styled('button', {
   name: 'MuiDataGrid',
   slot: 'PromptChangesToggle',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing(0.25),
-  padding: 0,
-  font: vars.typography.font.small,
-  color: vars.colors.foreground.accent,
-  fontWeight: vars.typography.fontWeight.medium,
-  cursor: 'pointer',
-  border: 'none',
-  background: 'none',
-  outline: 'none',
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-  ...(theme.focusVisible
-    ? {
-        ...applyInsetFocusVisible(1),
-        '&:focus-visible': theme.focusVisible,
-      }
-    : {
-        '&:focus-visible': {
-          textDecoration: 'underline',
-        },
-      }),
-}));
+})<{ ownerState: OwnerState }>(({ theme }) => {
+  const { focusVisible } = theme as Theme;
+  return {
+    display: 'flex',
+    alignItems: 'center',
+    gap: vars.spacing(0.25),
+    padding: 0,
+    font: vars.typography.font.small,
+    color: vars.colors.foreground.accent,
+    fontWeight: vars.typography.fontWeight.medium,
+    cursor: 'pointer',
+    border: 'none',
+    background: 'none',
+    outline: 'none',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+    ...(focusVisible
+      ? {
+          ...applyInsetFocusVisible(1),
+          '&:focus-visible': focusVisible,
+        }
+      : {
+          '&:focus-visible': {
+            textDecoration: 'underline',
+          },
+        }),
+  };
+});
 
 const PromptChangesToggleIcon = styled('svg', {
   name: 'MuiDataGrid',

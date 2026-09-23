@@ -85,14 +85,9 @@ export const DigitalClockItem = styled(MenuItem, {
   '&.Mui-selected': {
     backgroundColor: (theme.vars || theme).palette.primary.main,
     color: (theme.vars || theme).palette.primary.contrastText,
-    '&:hover': {
+    '&:focus-visible, &:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
-    ...(!theme.focusVisible && {
-      '&:focus-visible': {
-        backgroundColor: (theme.vars || theme).palette.primary.dark,
-      },
-    }),
   },
   ...(!theme.focusVisible && {
     '&.Mui-focusVisible': {
