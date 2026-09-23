@@ -102,6 +102,7 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   startDateLabel: 'Дата начала',
   startTimeAfterEndTimeError: 'Время окончания должно быть позже времени начала.',
   startTimeLabel: 'Время начала',
+
   // RecurringScopeDialog
   all: 'Все события',
   cancel: 'Отмена',
