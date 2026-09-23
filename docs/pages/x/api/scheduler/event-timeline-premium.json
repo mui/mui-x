@@ -434,6 +434,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventDialogRecurrenceTimezoneLabel",
+      "className": "MuiEventTimelinePremium-eventDialogRecurrenceTimezoneLabel",
+      "description": "Styles applied to the recurrence timezone note and label suffix elements.",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialogRepeatSectionContent",
       "className": "MuiEventTimelinePremium-eventDialogRepeatSectionContent",
       "description": "Styles applied to the event dialog repeat section content element.",

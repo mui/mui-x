@@ -43,6 +43,8 @@ const ptPTDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'A cada',
   recurrenceRepeatLabel: 'Repetir',
   recurrenceTabLabel: 'Recorrência',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Recorrência',
   recurrenceWeeklyFrequencyLabel: 'semanas',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Repete semanalmente (${weekdayName})`,

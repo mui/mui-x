@@ -8,10 +8,7 @@ import EditRounded from '@mui/icons-material/EditRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
 import SearchRounded from '@mui/icons-material/SearchRounded';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 
@@ -58,10 +55,6 @@ export function useEventContextMenuItems(
   const { startEditing } = useEventEditingContext();
 
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
-  const areRecurringEventsAvailable = useStore(
-    store,
-    schedulerOtherSelectors.areRecurringEventsAvailable,
-  );
 
   const handleEdit = (event: React.MouseEvent) => {
     onRequestClose();
@@ -76,32 +69,17 @@ export function useEventContextMenuItems(
     }
   };
 
-  // Mirrors EventToolbar's delete / FormContent's delete: recurring events open the scope dialog;
-  // non-recurring events go through the delete confirmation dialog (unless
-  // `eventDeletion={{ confirmation: false }}`).
+  // Recurring events open the scope dialog; single events delete immediately.
+  // No confirmation step here either — see #18025.
   const handleDelete = () => {
     onRequestClose();
-    if (areRecurringEventsAvailable && occurrence.displayTimezone.rrule) {
-      store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        eventId: occurrence.id,
-        onSubmit: () => {},
-      });
-      return;
-    }
-
-    // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`.
+    // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`. Only the
+    // immediate delete needs it; the scope dialog manages its own focus.
     const focusFallback = getFocusFallback(anchorEl);
-    store.requestEventDeletion({
-      eventId: occurrence.id,
-      onSubmit: () => {
-        // `onSubmit` fires synchronously from the confirmation dialog's own click handler, while
-        // the dialog (and its focus trap) is still mounted — an immediate `.focus()` call here
-        // gets pulled straight back into the trap. Deferring past the current task lets the
-        // dialog actually close first, so the fallback focus sticks.
-        setTimeout(() => focusFallback?.focus());
-      },
-    });
+    const deletedImmediately = store.deleteOccurrence(occurrence);
+    if (deletedImmediately) {
+      focusFallback?.focus();
+    }
   };
 
   const EditIcon = isReadOnly ? SearchRounded : EditRounded;
