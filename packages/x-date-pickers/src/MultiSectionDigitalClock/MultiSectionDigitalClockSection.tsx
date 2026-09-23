@@ -122,9 +122,6 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
       },
     }),
   },
-  // `MenuItem` is a core clip-prone family, so an opted-in app already gets the
-  // inset ring here. Drop the focus tint rather than stack it underneath, exactly
-  // as core's own `MenuItem` drops its `focusVisible` background.
   ...(!theme.focusVisible && {
     '&.Mui-focusVisible': {
       backgroundColor: theme.alpha(

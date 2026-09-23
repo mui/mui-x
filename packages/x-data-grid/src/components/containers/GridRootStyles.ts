@@ -14,8 +14,6 @@ export type OwnerState = DataGridProcessedProps;
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
-// `var(--DataGrid-t-focus-outline-width)` — defaults to 1px, or `theme.focusVisible.outlineWidth`
-// when the app opts into the themed ring. See `material/variables.ts`.
 const focusOutlineWidth = vars.focus.outlineWidth;
 const focusOutlineOffset = `calc(-1 * ${focusOutlineWidth})`;
 

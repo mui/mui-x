@@ -65,15 +65,10 @@ const DefaultYearButton = styled('button', {
   width: 72,
   borderRadius: 18,
   cursor: 'pointer',
-  // Not a ButtonBase, so the themed ring cannot arrive on its own. Inset it: the
-  // year list is an `overflowY: auto` scroller, and keyboard navigation parks the
-  // focused year flush against an edge, where an outset ring is cut in half.
   ...(theme.focusVisible
     ? {
         ...applyInsetFocusVisible(1),
         '&:focus-visible': theme.focusVisible,
-        // The ring replaces the focus tint for keyboard focus; a click-focused
-        // button keeps it.
         '&:focus:not(:focus-visible)': {
           backgroundColor: theme.alpha(
             (theme.vars || theme).palette.action.active,

@@ -45,8 +45,6 @@ const CollapsibleTriggerRoot = styled('button', {
     backgroundColor: vars.colors.interactive.hover,
     cursor: 'pointer',
   },
-  // Inset: the grid root is `overflow: hidden`, so an outset ring on a panel
-  // control can be cut at the edge.
   ...(theme.focusVisible
     ? {
         ...applyInsetFocusVisible(1),

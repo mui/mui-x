@@ -74,9 +74,6 @@ const GridChartsPanelChartSelection = styled('button', {
   '&:hover': {
     backgroundColor: vars.colors.interactive.hover,
   },
-  // Without the theme ring, focus borrows the hover tint because there is nothing
-  // else to show. With it, the ring is the signal and the tint would only muddy it.
-  // Inset, since the grid root clips.
   ...(theme.focusVisible
     ? {
         ...applyInsetFocusVisible(1),

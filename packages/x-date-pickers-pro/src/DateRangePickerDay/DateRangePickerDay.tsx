@@ -139,12 +139,6 @@ const selectedDayStyles = (theme: Theme) => ({
 
 const DISABLED_DAY_OPACITY = 0.6;
 
-/**
- * Same opt-out as `PickerDay` — see the comment there. A range day cell also
- * spends `outline` on the "today" marker, so core's `theme.focusVisible` ring
- * would override it and make a focused "today" indistinguishable from any other
- * focused day. Suppressing keeps the marker and the existing `:focus` background.
- */
 const SUPPRESS_THEME_FOCUS_RING = {
   internalDisabledThemeFocusVisible: true,
 } as Record<string, unknown>;

@@ -62,8 +62,6 @@ const keys = {
     base: '--DataGrid-t-radius-base',
   },
   focus: {
-    // Width of the cell / column-header focus ring. Bridged from
-    // `theme.focusVisible.outlineWidth` when the app opts in, else the grid default.
     outlineWidth: '--DataGrid-t-focus-outline-width',
   },
   typography: {

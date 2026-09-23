@@ -64,13 +64,6 @@ export const TreeItemContent = styled('div', {
     backgroundColor: 'transparent',
     cursor: 'auto',
   },
-  // The tab stop is the root `li`, but it wraps the whole subtree once expanded, so
-  // a ring there would enclose every descendant. Draw it on the content row instead
-  // — the same split core uses for its slot-drawn controls.
-  //
-  // Inset, because a tree is routinely placed inside a scrollable panel — the reason
-  // core insets `ListItemButton` too. And as core does there, the ring replaces the
-  // focus tint rather than stacking on top of it.
   ...(theme.focusVisible
     ? {
         ...applyInsetFocusVisible(1),
@@ -100,8 +93,6 @@ export const TreeItemContent = styled('div', {
       },
     },
   },
-  // Selected rows keep their own tint; only the extra focus layer goes away, so the
-  // ring reads against a single flat background.
   ...(!theme.focusVisible && {
     '&[data-selected][data-focused]': {
       backgroundColor: theme.alpha(

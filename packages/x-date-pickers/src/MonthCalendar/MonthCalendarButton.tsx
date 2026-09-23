@@ -67,13 +67,9 @@ const DefaultMonthButton = styled('button', {
   width: 72,
   borderRadius: 18,
   cursor: 'pointer',
-  // Not a ButtonBase, so the themed ring cannot arrive on its own. `outsetFocusRing`
-  // because the inset vars inherit — a clip-prone ancestor must not inset this ring.
   ...(theme.focusVisible
     ? {
         '&:focus-visible': { ...outsetFocusRing, ...theme.focusVisible },
-        // The ring replaces the focus tint for keyboard focus; a click-focused
-        // button keeps it.
         '&:focus:not(:focus-visible)': {
           backgroundColor: theme.alpha(
             (theme.vars || theme).palette.action.active,

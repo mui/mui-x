@@ -16,7 +16,6 @@ export function useMaterialCSSVariables() {
 }
 
 function transformTheme(t: Theme): GridCSSVariablesInterface {
-  // `false` is the explicit opt-out, and falls back to the grid's own defaults just like `undefined`.
   const focusRing = t.focusVisible || undefined;
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.vars || t).palette.DataGrid;
@@ -107,17 +106,6 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   };
 }
 
-/**
- * Width of the cell / column-header focus ring.
- *
- * Bridged from `theme.focusVisible` so an app that opts into the themed ring gets its width here too —
- * a team that widens the ring for legibility must not silently get 1px inside the grid.
- *
- * Only colour and width are bridged. The grid keeps its own geometry and selector on purpose: the ring
- * stays **inset** (cells are adjacent, and an outset ring would overlap neighbours and be clipped by the
- * virtualized scroller), and stays on `:focus` rather than `:focus-visible`, because the roving tabindex
- * has to show the cell cursor on click-focus too.
- */
 function focusOutlineWidth(focusRing: React.CSSProperties | undefined) {
   const width = focusRing?.outlineWidth;
   if (width == null) {
