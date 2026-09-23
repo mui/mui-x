@@ -34,7 +34,6 @@ import {
 } from '../utils/dependency-utils';
 import type { SchedulerDependencyLagIssue } from '../utils/dependency-utils';
 
-// Every ignored lag says what was wrong, what it costs, and what to write instead.
 const DEPENDENCY_LAG_WARNINGS: Record<
   SchedulerDependencyLagIssue,
   (dependency: SchedulerDependency) => string[]

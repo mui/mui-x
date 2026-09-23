@@ -401,9 +401,8 @@ export function computeAutoSchedulingCascade(
     }
 
     // A resize keeps the edge it did not touch, as long as that edge is not the violated
-    // one. Keeping the end also requires the clamp not to run past it.
-    // Keeping the start leaves the end as the only violated edge, so its bound is set:
-    // holding it here is what lets the branches below read it without an assertion.
+    // one. Keeping the end also requires the clamp not to run past it. Keeping the start
+    // leaves the end as the only violated edge, so its bound is always set here.
     const keptStartBound = endResizedSeeds.has(eventId) && !startViolated ? required.end : null;
     const keepsEnd = (newStartTimestamp: number) =>
       startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp && !endViolated;

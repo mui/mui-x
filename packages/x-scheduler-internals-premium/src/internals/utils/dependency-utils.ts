@@ -74,8 +74,7 @@ export function getDependencyLagIssue(
   dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
 ): SchedulerDependencyLagIssue | null {
   const { lag, lagUnit } = dependency;
-  // No lag at all, so neither the amount nor the unit configures anything: nothing to warn
-  // about, whatever the unit says.
+  // Without an amount the unit configures nothing, so an unknown one is not worth a warning.
   if (lag == null || lag === 0) {
     return null;
   }

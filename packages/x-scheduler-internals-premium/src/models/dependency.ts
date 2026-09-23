@@ -30,16 +30,9 @@ export type SchedulerDependencyLagUnit = 'minute' | 'hour' | 'day' | 'week';
 
 /**
  * The lag of a dependency once resolved, as the amount and unit the engine applies.
- * Not the shape of `SchedulerDependency['lag']`, which is the amount alone.
  */
 export interface SchedulerResolvedDependencyLag {
-  /**
-   * How many `unit` the successor waits.
-   */
   amount: number;
-  /**
-   * The unit `amount` is expressed in.
-   */
   unit: SchedulerDependencyLagUnit;
 }
 
@@ -65,12 +58,9 @@ export interface SchedulerDependency {
    */
   type: SchedulerDependencyType;
   /**
-   * The calendar time the successor must wait after the constraining edge of the
+   * The calendar time the successor waits after the constraining edge of the
    * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
-   * A value other than zero or a positive whole number, or an unknown `lagUnit` next to a
-   * lag, discards the lag with a warning. An all-day successor carries the lag in whole
-   * days, rounded down, since it has no time of day. Lead (a negative lag) is not supported yet, so the
-   * same data will schedule differently once it is.
+   * An invalid lag is ignored with a warning.
    * @default 0
    */
   lag?: number;
