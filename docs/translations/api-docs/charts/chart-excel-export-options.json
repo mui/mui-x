@@ -2,7 +2,7 @@
   "interfaceDescription": "The options to apply on the Excel export.",
   "propertiesDescriptions": {
     "escapeFormulas": {
-      "description": "If <code>true</code>, text cells starting with <code>=</code>, <code>+</code>, <code>-</code> or <code>@</code> are escaped so Excel does not evaluate them as formulas."
+      "description": "If <code>false</code>, the formulas in the cells will not be escaped.<br />It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.<br />See <a href=\"https://owasp.org/www-community/attacks/CSV_Injection\">https://owasp.org/www-community/attacks/CSV_Injection</a> for more information."
     },
     "fileName": { "description": "The name of the file without the extension." },
     "includeFormattedValues": {

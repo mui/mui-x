@@ -27,7 +27,9 @@ export interface ChartExcelExportOptions {
    */
   includeFormattedValues?: boolean;
   /**
-   * If `true`, text cells starting with `=`, `+`, `-` or `@` are escaped so Excel does not evaluate them as formulas.
+   * If `false`, the formulas in the cells will not be escaped.
+   * It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.
+   * See https://owasp.org/www-community/attacks/CSV_Injection for more information.
    * @default true
    */
   escapeFormulas?: boolean;
