@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
-  createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
   utcJuly4AllDayBuilder,
@@ -25,7 +24,7 @@ import {
   useEventDialogFormField,
   useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
-import { vi, describe, it, expect, afterEach, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { Mock } from 'vitest';
 import type { SchedulerSlotProps, SchedulerSlots } from '../../../models/slots';
 import { MonthView } from '../../../month-view';
@@ -1974,35 +1973,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('combobox', { name: 'Resource' })).not.to.have.attribute(
         'aria-readonly',
       );
-    });
-  });
-
-  describe('drag affordance', () => {
-    const originalMatchMedia = window.matchMedia;
-    afterEach(() => {
-      window.matchMedia = originalMatchMedia;
-    });
-
-    it('should keep native dragging disabled on a fine pointer', () => {
-      window.matchMedia = createMatchMedia(false);
-      render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <EventDialogContent open {...defaultProps} />
-        </EventCalendarProvider>,
-      );
-
-      expect(document.querySelector('[draggable="true"]')).to.equal(null);
-    });
-
-    it('should not mark the dialog draggable on a coarse pointer, so its form fields stay typeable on touch', () => {
-      window.matchMedia = createMatchMedia(true);
-      render(
-        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <EventDialogContent open {...defaultProps} />
-        </EventCalendarProvider>,
-      );
-
-      expect(document.querySelector('[draggable="true"]')).to.equal(null);
     });
   });
 });

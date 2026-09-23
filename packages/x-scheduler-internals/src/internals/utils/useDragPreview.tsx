@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { Draggable } from '@base-ui/react/draggable';
 import type { DragLocationHistory } from '@base-ui/react/draggable';
 import type { RenderDragPreviewParameters } from '../../models';
@@ -27,7 +28,7 @@ function FloatingPreview(props: { location: DragLocationHistory; children: React
 export function useDragPreview(parameters: useDragPreview.Parameters): useDragPreview.ReturnValue {
   const { renderDragPreview, data, type } = parameters;
   const store = useSchedulerStoreContext();
-  const enabled = schedulerEventSelectors.canDropEventsToTheOutside(store.state);
+  const enabled = useStore(store, schedulerEventSelectors.canDropEventsToTheOutside);
 
   return {
     element: (

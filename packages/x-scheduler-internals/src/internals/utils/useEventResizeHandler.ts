@@ -1,9 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { schedulerDropTargetKind } from './schedulerDrag';
 import type { SchedulerEventDragPayload, SchedulerEventResizeData } from './schedulerDrag';
 import type { SchedulerDraggable } from './SchedulerDraggable';
 import type { SchedulerEventSide } from '../../models';
+import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 
 /**
  * Base UI drag-and-drop resize for calendar events. This hook and the pointer-based resize
@@ -25,6 +27,8 @@ export function useEventResizeHandler<TData extends SchedulerEventResizeData>(
     occurrenceKey,
     directPointerResize = false,
   } = parameters;
+
+  const store = useSchedulerStoreContext();
 
   const state: useEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
@@ -50,6 +54,16 @@ export function useEventResizeHandler<TData extends SchedulerEventResizeData>(
       // The direct resize handler owns touch and pen on time-grid events.
       if (directPointerResize && context.input.pointerType !== 'mouse') {
         details.cancel();
+      }
+    },
+    // The event root's `onMoveEnd` does not run for this nested handle. A drop on a Scheduler
+    // target is left to that target: it runs after this and may fall back to the placeholder.
+    onMoveEnd: ({ canceled, location }) => {
+      if (
+        canceled ||
+        !location.current.dropTargets.some((target) => schedulerDropTargetKind.matches(target))
+      ) {
+        store.setOccurrencePlaceholder(null);
       }
     },
   };

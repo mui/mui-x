@@ -86,6 +86,36 @@ describe('WeekView - Drag and Drop', () => {
     ).toBe(false);
   });
 
+  it('discards the resize placeholder when the pointer gesture is canceled', async () => {
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .title('Canceled resize')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .resizable(true)
+      .build();
+    render(<StandaloneWeekView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    mockAllTimeGridColumnBounds();
+    const eventElement = screen.getByRole('button', { name: /Canceled resize/i });
+    await act(async () => {
+      simulateDragAndDrop({
+        source: getResizeHandle(eventElement, 'end'),
+        target: getTimeGridColumns()[JULY_3_COLUMN_INDEX],
+        targetClientY: clientYForTime(0, 24, 16),
+        hold: true,
+      });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).not.toBe(null);
+    await act(async () => cancelDrag());
+    expect(onEventsChange).not.toHaveBeenCalled();
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).toBe(null);
+    expect(
+      screen.getByRole('button', { name: /Canceled resize/i }).hasAttribute('data-resizing'),
+    ).toBe(false);
+  });
+
   it('should move a time event to the day grid on the same day', async () => {
     const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
