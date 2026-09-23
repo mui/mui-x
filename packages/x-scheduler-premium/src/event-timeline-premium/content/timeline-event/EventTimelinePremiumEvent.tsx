@@ -11,6 +11,7 @@ import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencySourceDescription } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
@@ -268,6 +269,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
