@@ -59,6 +59,13 @@ describe('dependency-utils', () => {
       expect(getDependencyLagIssue(dependency({ lag: 0.5 }))).to.equal('notAWholeNumber');
     });
 
+    it('should not flag anything when there is no lag to apply', () => {
+      expect(getDependencyLagIssue(dependency({ lagUnit: 'fortnight' as any }))).to.equal(null);
+      expect(getDependencyLagIssue(dependency({ lag: 0, lagUnit: 'fortnight' as any }))).to.equal(
+        null,
+      );
+    });
+
     it('should flag a non-finite lag', () => {
       expect(getDependencyLagIssue(dependency({ lag: Number.NaN }))).to.equal('notAWholeNumber');
       expect(getDependencyLagIssue(dependency({ lag: Number.POSITIVE_INFINITY }))).to.equal(

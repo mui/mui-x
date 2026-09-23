@@ -5,7 +5,7 @@ import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerDependenciesState,
   SchedulerDependencyId,
-  SchedulerDependencyLag,
+  SchedulerResolvedDependencyLag,
   SchedulerDependencyType,
 } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
@@ -37,7 +37,7 @@ export interface SchedulerDependencySourceDescription {
   /**
    * The lag the engine applies, or `null` when the dependency has no usable lag.
    */
-  lag: SchedulerDependencyLag | null;
+  lag: SchedulerResolvedDependencyLag | null;
 }
 
 const activeSourcesByTargetSelector = createSelectorMemoized(

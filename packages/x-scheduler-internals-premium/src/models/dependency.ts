@@ -29,9 +29,10 @@ export type SchedulerDependencyType =
 export type SchedulerDependencyLagUnit = 'minute' | 'hour' | 'day' | 'week';
 
 /**
- * The lag of a dependency, normalized to the amount and unit the engine applies.
+ * The lag of a dependency once resolved, as the amount and unit the engine applies.
+ * Not the shape of `SchedulerDependency['lag']`, which is the amount alone.
  */
-export interface SchedulerDependencyLag {
+export interface SchedulerResolvedDependencyLag {
   /**
    * How many `unit` the successor waits.
    */
@@ -66,8 +67,8 @@ export interface SchedulerDependency {
   /**
    * The calendar time the successor must wait after the constraining edge of the
    * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
-   * A value that is not a positive whole number, or an unknown `lagUnit` next to a lag,
-   * discards the lag with a warning. Lead (a negative lag) is not supported yet, so the
+   * A value other than zero or a positive whole number, or an unknown `lagUnit` next to a
+   * lag, discards the lag with a warning. Lead (a negative lag) is not supported yet, so the
    * same data will schedule differently once it is.
    * @default 0
    */

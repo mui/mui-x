@@ -11,7 +11,7 @@ import type {
 import type {
   SchedulerDependency,
   SchedulerDependenciesState,
-  SchedulerDependencyLag,
+  SchedulerResolvedDependencyLag,
   SchedulerDependencyId,
   SchedulerDependencyEventRejectionReason,
   SchedulerDependencyLagUnit,
@@ -74,7 +74,8 @@ export function getDependencyLagIssue(
   dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
 ): SchedulerDependencyLagIssue | null {
   const { lag, lagUnit } = dependency;
-  // A unit without a lag configures nothing, so it is not worth a warning.
+  // No lag at all, so neither the amount nor the unit configures anything: nothing to warn
+  // about, whatever the unit says.
   if (lag == null || lag === 0) {
     return null;
   }
@@ -93,7 +94,7 @@ export function getDependencyLagIssue(
  */
 export function getDependencyLag(
   dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
-): SchedulerDependencyLag | null {
+): SchedulerResolvedDependencyLag | null {
   const amount = dependency.lag ?? 0;
   if (amount === 0 || getDependencyLagIssue(dependency) !== null) {
     return null;
@@ -107,7 +108,7 @@ export function getDependencyLag(
 export function addDependencyLag(
   adapter: Adapter,
   date: TemporalSupportedObject,
-  lag: SchedulerDependencyLag | null,
+  lag: SchedulerResolvedDependencyLag | null,
 ): TemporalSupportedObject {
   if (lag === null) {
     return date;

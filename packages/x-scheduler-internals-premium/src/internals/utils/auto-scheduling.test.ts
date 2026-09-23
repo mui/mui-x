@@ -2781,4 +2781,24 @@ describe('computeAutoSchedulingCascade', () => {
     expect(result).to.have.length(1);
     expectDates(result[0], '2025-07-06T01:00:00Z', '2025-07-06T02:00:00Z');
   });
+
+  it('should round the end of an end-resized event up to the next second', () => {
+    const predecessor = allDayEvent('a', '2025-07-03');
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T09:00:00', '2025-07-04T08:00:00')
+      .toProcessed();
+
+    // The FF bound is the inclusive all-day end (23:59:59.999); keeping the start, the
+    // clamped end has to land on the next whole second or it stays violated.
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b', { type: 'FinishToFinish' })],
+      [{ id: 'b', end: date('2025-07-03T10:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expectDates(result[0], '2025-07-03T09:00:00Z', '2025-07-04T00:00:00Z');
+  });
 });

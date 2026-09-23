@@ -393,13 +393,15 @@ export function computeAutoSchedulingCascade(
 
     // A resize keeps the edge it did not touch, as long as that edge is not the violated
     // one. Keeping the end also requires the clamp not to run past it.
-    const keepsStart = endResizedSeeds.has(eventId) && !startViolated;
+    // Keeping the start leaves the end as the only violated edge, so its bound is set:
+    // holding it here is what lets the branches below read it without an assertion.
+    const keptStartBound = endResizedSeeds.has(eventId) && !startViolated ? required.end : null;
     const keepsEnd = (newStartTimestamp: number) =>
       startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp && !endViolated;
 
     if (base.allDay) {
-      if (keepsStart) {
-        const newEnd = adapter.addDays(base.end, minimalDayShift(base.end, required.end!));
+      if (keptStartBound !== null) {
+        const newEnd = adapter.addDays(base.end, minimalDayShift(base.end, keptStartBound));
         return { ...base, end: newEnd, endTimestamp: adapter.getTime(newEnd) };
       }
       const dayCount = Math.max(
@@ -418,8 +420,8 @@ export function computeAutoSchedulingCascade(
       };
     }
 
-    if (keepsStart) {
-      const newEnd = roundUpToSecond(required.end!.date);
+    if (keptStartBound !== null) {
+      const newEnd = roundUpToSecond(keptStartBound.date);
       return { ...base, end: newEnd, endTimestamp: adapter.getTime(newEnd) };
     }
     const duration = base.endTimestamp - base.startTimestamp;
