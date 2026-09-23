@@ -1,6 +1,6 @@
 import { DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
-import { enUS } from './enUS';
+import { enUS } from '../locales/enUS';
 import type { SchedulerEventLocaleText } from '../models/translations';
 
 describe('enUS', () => {

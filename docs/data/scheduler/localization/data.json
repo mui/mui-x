@@ -104,14 +104,6 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/nlNL.ts"
   },
   {
-    "languageTag": "en-US",
-    "importName": "enUS",
-    "localeName": "English (United States)",
-    "missingKeysCount": 0,
-    "totalKeysCount": 112,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/enUS.test.ts"
-  },
-  {
     "languageTag": "fi-FI",
     "importName": "fiFI",
     "localeName": "Finnish",
