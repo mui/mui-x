@@ -337,15 +337,14 @@ export function computeAutoSchedulingCascade(
     };
   }
 
-  function computeShift(eventId: SchedulerEventId): ResolvedDates | null {
-    const base = newDates.get(eventId) ?? resolveCurrentDates(eventId);
-    if (base === null) {
-      // Not loaded (lazy loading): nothing to move.
-      return null;
-    }
-    // A repositioned seed is being placed by the user: every active predecessor
-    // constrains it. An end-resized seed is constrained by the predecessors bounding its
-    // end. Anything else is pushed only by predecessors whose bounding edge advanced.
+  // The earliest start and end the predecessors of `eventId` allow, in the timezone of
+  // `base`. A repositioned seed is being placed by the user: every active predecessor
+  // constrains it. An end-resized seed is constrained by the predecessors bounding its
+  // end. Anything else is pushed only by predecessors whose bounding edge advanced.
+  function collectBounds(
+    eventId: SchedulerEventId,
+    base: ResolvedDates,
+  ): Record<SchedulerEventSide, Bound | null> {
     const constrainedByAll = repositionedSeeds.has(eventId);
     const constrainedOnEnd = endResizedSeeds.has(eventId);
     const timezone = adapter.getTimezone(base.start);
@@ -366,12 +365,21 @@ export function computeAutoSchedulingCascade(
         continue;
       }
       const reference = adapter.setTimezone(sourceDates[edges.source], timezone);
-      const date = addDependencyLag(adapter, reference, getDependencyLag(dependency));
-      required[edges.target] = later(required[edges.target], {
-        date,
-        timestamp: adapter.getTime(date),
-      });
+      required[edges.target] = later(
+        required[edges.target],
+        toBound(addDependencyLag(adapter, reference, getDependencyLag(dependency))),
+      );
     }
+    return required;
+  }
+
+  function computeShift(eventId: SchedulerEventId): ResolvedDates | null {
+    const base = newDates.get(eventId) ?? resolveCurrentDates(eventId);
+    if (base === null) {
+      // Not loaded (lazy loading): nothing to move.
+      return null;
+    }
+    const required = collectBounds(eventId, base);
 
     const startViolated = required.start !== null && base.startTimestamp < required.start.timestamp;
     const endViolated = required.end !== null && base.endTimestamp < required.end.timestamp;
@@ -385,7 +393,7 @@ export function computeAutoSchedulingCascade(
 
     // A resize keeps the edge it did not touch, as long as that edge is not the violated
     // one. Keeping the end also requires the clamp not to run past it.
-    const keepsStart = constrainedOnEnd && !startViolated;
+    const keepsStart = endResizedSeeds.has(eventId) && !startViolated;
     const keepsEnd = (newStartTimestamp: number) =>
       startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp && !endViolated;
 
@@ -417,8 +425,7 @@ export function computeAutoSchedulingCascade(
     const duration = base.endTimestamp - base.startTimestamp;
     let candidate = required.start;
     if (required.end !== null) {
-      const fromEnd = adapter.addMilliseconds(required.end.date, -duration);
-      candidate = later(candidate, { date: fromEnd, timestamp: adapter.getTime(fromEnd) });
+      candidate = later(candidate, toBound(adapter.addMilliseconds(required.end.date, -duration)));
     }
     // A violated edge always leaves a candidate.
     const newStart = roundUpToSecond(candidate!.date);
@@ -433,6 +440,10 @@ export function computeAutoSchedulingCascade(
       endTimestamp: adapter.getTime(newEnd),
       allDay: false,
     };
+  }
+
+  function toBound(date: TemporalSupportedObject): Bound {
+    return { date, timestamp: adapter.getTime(date) };
   }
 
   function later(current: Bound | null, bound: Bound): Bound {
