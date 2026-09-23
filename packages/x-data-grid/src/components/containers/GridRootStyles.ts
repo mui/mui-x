@@ -172,7 +172,10 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-bottomContainerHeight': '0px',
     '--DataGrid-horizontalFiller': '0px',
 
-    flex: ownerState.height != null ? '0 1 auto' : 1,
+    // flex-grow stays on to still fill a flex-row parent's width; flex-shrink: 0
+    // plus maxHeight below stop a flex-column parent from resizing the root away
+    // from the requested height. See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+    flex: ownerState.height != null ? '1 0 auto' : 1,
     boxSizing: 'border-box',
     position: 'relative',
     borderWidth: '1px',
@@ -184,6 +187,7 @@ export const GridRootStyles = styled('div', {
     font: vars.typography.font.body,
     outline: 'none',
     height: ownerState.height ?? '100%',
+    maxHeight: ownerState.height,
     display: 'flex',
     minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
     minHeight: 0,

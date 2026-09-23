@@ -919,6 +919,48 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
         expect(getComputedStyle(grid('root')!).height).to.equal('300px');
       });
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should not grow past the given height inside a flex column container',
+        () => {
+          render(
+            <div style={{ display: 'flex', flexDirection: 'column', height: 500 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ height: '300px' });
+        },
+      );
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should not shrink below the given height when the flex column parent is shorter',
+        () => {
+          render(
+            <div style={{ display: 'flex', flexDirection: 'column', height: 200 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ height: '300px' });
+        },
+      );
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should fill the available width inside a flex row container',
+        () => {
+          render(
+            <div style={{ display: 'flex', width: 400 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ width: '400px' });
+        },
+      );
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
