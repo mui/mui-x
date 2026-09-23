@@ -32,28 +32,30 @@ export function EventDependencyDropTarget(props: EventDependencyDropTarget.Props
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, eventId);
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, eventId);
 
-  const targetProps: Draggable.Target.Props<
-    Draggable.AcceptedDragPayload<typeof schedulerDependencyKind>,
-    Draggable.AcceptedDragPayload<typeof schedulerDependencyTargetKind>
-  > = {
-    disabled: !enabled,
-    accept: schedulerDependencyKind,
-    kind: schedulerDependencyTargetKind,
-    payload: {
+  const payload = React.useMemo(
+    () => ({
       dependencyTargetEventId: eventId,
       dependencyTargetOccurrenceKey: occurrenceKey,
       dependencyTargetResourceId: resourceId,
       dependencyTargetSide: side,
       dependencyTargetIsValid: !isRecurring && !isReadOnly,
-    },
-    // Only the dependency gesture of this timeline lands here (rows keep handling
-    // the event drags — their allowlist ignores this source, and gestures born in
-    // another timeline on the page carry a different store), and an event cannot
-    // depend on itself.
-    canDrop: ({ source }) =>
-      source.payload.storeContext === store && source.payload.eventId !== eventId,
-  };
-  return <Draggable.Target {...targetProps} render={render} />;
+    }),
+    [eventId, occurrenceKey, resourceId, side, isRecurring, isReadOnly],
+  );
+
+  return (
+    <Draggable.Target
+      disabled={!enabled}
+      accept={schedulerDependencyKind}
+      kind={schedulerDependencyTargetKind}
+      payload={payload}
+      // Only dependency gestures from this timeline land here; an event cannot depend on itself.
+      canDrop={({ source }) =>
+        source.payload.storeContext === store && source.payload.eventId !== eventId
+      }
+      render={render}
+    />
+  );
 }
 
 export namespace EventDependencyDropTarget {
