@@ -107,6 +107,7 @@ describe('<CalendarGrid.DayEvent />', () => {
                   start={processDate(adapter.date(running.start as string, 'default'), adapter)}
                   end={processDate(adapter.date(running.end as string, 'default'), adapter)}
                   renderDragPreview={() => null}
+                  dataTimezone={undefined}
                   data-testid="event"
                   {...props}
                 />

@@ -20,6 +20,7 @@ import {
   getPaletteVariants,
   useSchedulerSlots,
 } from '@mui/x-scheduler/internals';
+import { useEventAccessibleName } from '@mui/x-scheduler-internals/internals';
 import type {
   EventTimelinePremiumSlots,
   EventTimelinePremiumSlotProps,
@@ -164,7 +165,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 ) {
   const {
     occurrence,
-    ariaLabelledBy,
     className,
     variant,
     id: idProp,
@@ -176,7 +176,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const { classes } = useEventTimelinePremiumStyledContext();
+  const { classes, localeText } = useEventTimelinePremiumStyledContext();
   const { slots, slotProps } = useSchedulerSlots<
     EventTimelinePremiumSlots,
     EventTimelinePremiumSlotProps
@@ -201,6 +201,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Feature hooks
   const id = useId(idProp);
+  // The row title already carries the resource, so the name leaves it out.
+  const accessibleName = useEventAccessibleName({ occurrence, includeResource: false, localeText });
 
   const EventContent = slots.timelineEventContent;
   const content = EventContent ? (
@@ -219,7 +221,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     start: occurrence.displayTimezone.start,
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
-    'aria-labelledby': `${ariaLabelledBy} ${id}`,
     className: clsx(className, occurrence.className),
     style: {
       '--number-of-lines': 1,
@@ -262,6 +263,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
+      aria-label={accessibleName}
       aria-describedby={dependencySources.length > 0 ? `${id}-dependencies` : undefined}
       className={clsx(sharedProps.className, classes.event)}
     >
@@ -275,9 +277,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         {content}
       </EventTimelinePremiumEventLinesClamp>
       {dependencySources.length > 0 && (
-        // `aria-hidden` keeps the description out of the name-from-content computed
-        // through the self-referential `aria-labelledby`; the `aria-describedby`
-        // reference still picks it up.
+        // `aria-hidden` keeps the description out of the visible content while the
+        // `aria-describedby` reference still picks it up.
         <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
           {dependencySources
             .map((source) => DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title))

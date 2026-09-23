@@ -12,7 +12,10 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
+import {
+  getOccurrenceDataTimezone,
+  useEventAccessibleName,
+} from '@mui/x-scheduler-internals/internals';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -522,8 +525,9 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
 ) {
   const { occurrence, className, ...other } = props;
 
-  const { classes } = useEventCalendarStyledContext();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
+  const accessibleName = useEventAccessibleName({ occurrence, includeResource: true, localeText });
   const {
     isRecurring,
     isDraggable,
@@ -546,6 +550,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
       occurrenceKey={occurrence.key}
       dataTimezone={getOccurrenceDataTimezone(occurrence)}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      aria-label={accessibleName}
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}
       {...rootDataAttributes}

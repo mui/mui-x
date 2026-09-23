@@ -19,6 +19,7 @@ import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-cal
 import {
   getPrimaryResourceId,
   getOccurrenceDataTimezone,
+  useEventAccessibleName,
 } from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
@@ -322,6 +323,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   // Feature hooks
   const formatTime = useFormatTime();
+  const accessibleName = useEventAccessibleName({
+    occurrence,
+    includeResource: true,
+    localeText,
+  });
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -441,6 +447,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
+      aria-label={accessibleName}
       {...sharedProps}
       className={clsx(classes.dayGridEvent, sharedProps.className)}
     >

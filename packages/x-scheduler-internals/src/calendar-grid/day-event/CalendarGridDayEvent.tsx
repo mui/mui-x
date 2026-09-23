@@ -18,12 +18,11 @@ import type {
 import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
-import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
-import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
+import { useDefaultEventAccessibleName } from '../../internals/utils/useEventAccessibleName';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
@@ -60,9 +59,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { id: rootId } = useCalendarGridRootContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
-  const { index: cellIndex, hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
+  const { hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -97,6 +95,18 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     start,
     end,
     dataTimezone,
+  });
+
+  const hasCustomLabel =
+    elementProps['aria-label'] != null || elementProps['aria-labelledby'] != null;
+  const accessibleName = useDefaultEventAccessibleName({
+    eventId,
+    occurrenceKey,
+    start,
+    end,
+    dataTimezone,
+    includeResource: true,
+    hasCustomLabel,
   });
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
@@ -151,8 +161,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Rendering hooks
 
-  const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
-
   const contextValue: CalendarGridDayEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
@@ -165,7 +173,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       elementProps,
       {
         id,
-        'aria-labelledby': `${columnHeaderId} ${id}`,
+        ...(hasCustomLabel ? undefined : { 'aria-label': accessibleName }),
         style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
       },
       getButtonProps,

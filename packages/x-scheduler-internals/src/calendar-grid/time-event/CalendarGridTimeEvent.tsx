@@ -9,7 +9,6 @@ import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
-import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import type {
@@ -18,8 +17,8 @@ import type {
   SchedulerResourceId,
   TemporalSupportedObject,
 } from '../../models';
-import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
+import { useDefaultEventAccessibleName } from '../../internals/utils/useEventAccessibleName';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
   componentProps: CalendarGridTimeEvent.Props,
@@ -47,13 +46,11 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { id: rootId } = useCalendarGridRootContext();
   const {
     start: columnStart,
     end: columnEnd,
     dayStartMinute,
     dayEndMinute,
-    index: columnIndex,
     hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
@@ -71,6 +68,18 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     start,
     end,
     dataTimezone,
+  });
+
+  const hasCustomLabel =
+    elementProps['aria-label'] != null || elementProps['aria-labelledby'] != null;
+  const accessibleName = useDefaultEventAccessibleName({
+    eventId,
+    occurrenceKey,
+    start,
+    end,
+    dataTimezone,
+    includeResource: true,
+    hasCustomLabel,
   });
 
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
@@ -126,8 +135,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     tabIndex: columnHasFocus ? 0 : -1,
   });
 
-  const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
-
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
@@ -140,8 +147,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
       elementProps,
       {
         id,
-        // A non-interactive event stays a plain div: no role, no tabIndex, no header label.
-        ...(interactive ? { 'aria-labelledby': `${columnHeaderId} ${id}` } : undefined),
+        // A non-interactive event stays a plain div: no role, no tabIndex, no name.
+        ...(interactive && !hasCustomLabel ? { 'aria-label': accessibleName } : undefined),
         style: {
           [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
