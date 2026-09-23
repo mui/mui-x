@@ -234,10 +234,10 @@ export function formatHourAndMinutes(
   adapter: Adapter,
   ampm: boolean,
 ): string {
-  const { formats } = adapter;
+  const f = adapter.formats;
   const timeFormat = ampm
-    ? `${formats.hours12h}:${formats.minutesPadded} ${formats.meridiem}`
-    : `${formats.hours24h}:${formats.minutesPadded}`;
+    ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
+    : `${f.hours24h}:${f.minutesPadded}`;
 
   return adapter.formatByString(date, timeFormat);
 }
