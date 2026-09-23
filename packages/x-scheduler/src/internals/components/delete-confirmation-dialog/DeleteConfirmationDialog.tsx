@@ -25,10 +25,6 @@ export function DeleteConfirmationDialog() {
       open={open}
       onClose={() => store.resolveEventDeletion(false)}
       aria-labelledby={`${schedulerId}-delete-confirmation-dialog-title`}
-      // A confirmed deletion may remove the element that had focus before the dialog opened (the
-      // toolbar/menu/dialog trigger), so restoring focus to it on close would silently fail and
-      // fall back to `<body>`. Each caller's `onSubmit` already puts focus somewhere sensible.
-      disableRestoreFocus
     >
       <DialogTitle id={`${schedulerId}-delete-confirmation-dialog-title`}>
         {localeText.deleteConfirmationTitle}

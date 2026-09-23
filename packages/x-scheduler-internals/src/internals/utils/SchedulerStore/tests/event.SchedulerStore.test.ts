@@ -574,7 +574,28 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('Method: deleteOccurrence', () => {
-      it('should delete a non-recurring occurrence immediately and report it', () => {
+      it('should delete a non-recurring occurrence immediately and report it when confirmation is off', () => {
+        const onEventsChange = vi.fn();
+        const onDelete = vi.fn();
+        const builder = EventBuilder.new();
+        const event = builder.build();
+
+        const store = new storeClass.Value(
+          {
+            resources: TEST_RESOURCES,
+            events: [event],
+            onEventsChange,
+            eventDeletion: { confirmation: false },
+          },
+          adapter,
+        );
+
+        expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(true);
+        expect(onDelete.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+      });
+
+      it('should open the delete confirmation dialog by default instead of deleting immediately', () => {
         const onEventsChange = vi.fn();
         const onDelete = vi.fn();
         const builder = EventBuilder.new();
@@ -585,13 +606,84 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(true);
+        expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(false);
+        expect(onDelete.mock.calls.length).to.equal(0);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.pendingDeleteConfirmation).to.deep.equal({
+          eventId: event.id,
+          onSubmit: onDelete,
+        });
+      });
+
+      it('should delete the occurrence and call `onDelete` once the pending confirmation is confirmed', () => {
+        const onEventsChange = vi.fn();
+        const onDelete = vi.fn();
+        const builder = EventBuilder.new();
+        const event = builder.build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.deleteOccurrence(builder.toOccurrence(), onDelete);
+        store.resolveEventDeletion(true);
+
         expect(onDelete.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
       });
 
+      it('should keep the occurrence and not call `onDelete` when the pending confirmation is canceled', () => {
+        const onEventsChange = vi.fn();
+        const onDelete = vi.fn();
+        const builder = EventBuilder.new();
+        const event = builder.build();
+
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.deleteOccurrence(builder.toOccurrence(), onDelete);
+        store.resolveEventDeletion(false);
+
+        expect(onDelete.mock.calls.length).to.equal(0);
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
       it.skipIf(storeClass.name !== 'EventCalendarStore')(
-        'should delete a recurring occurrence immediately without the recurring events plugin',
+        'should delete a recurring occurrence immediately without the recurring events plugin, when confirmation is off',
+        () => {
+          const onEventsChange = vi.fn();
+          const onDelete = vi.fn();
+          const builder = EventBuilder.new().recurrent('DAILY');
+          const event = builder.build();
+
+          let store: any;
+          expect(() => {
+            store = new storeClass.Value(
+              {
+                resources: TEST_RESOURCES,
+                events: [event],
+                onEventsChange,
+                eventDeletion: { confirmation: false },
+              },
+              adapter,
+            );
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          ]);
+
+          // The rule is ignored without the plugin, so there is no scope to ask for.
+          expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(true);
+          expect(onDelete.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        },
+      );
+
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should open the delete confirmation dialog by default for a recurring occurrence without the recurring events plugin',
         () => {
           const onEventsChange = vi.fn();
           const onDelete = vi.fn();
@@ -608,8 +700,19 @@ storeClasses.forEach((storeClass) => {
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
           ]);
 
-          // The rule is ignored without the plugin, so there is no scope to ask for.
-          expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(true);
+          // No plugin to open a scope dialog with, so this goes through the confirmation dialog
+          // like any other non-recurring delete, not straight to `deleteEvent`.
+          expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(false);
+          expect(onDelete.mock.calls.length).to.equal(0);
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(store.state.pendingRecurringEventOperation).to.equal(null);
+          expect(store.state.pendingDeleteConfirmation).to.deep.equal({
+            eventId: event.id,
+            onSubmit: onDelete,
+          });
+
+          store.resolveEventDeletion(true);
+
           expect(onDelete.mock.calls.length).to.equal(1);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
         },
@@ -661,7 +764,12 @@ storeClasses.forEach((storeClass) => {
             .toOccurrence();
 
           const store = new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [event], onEventsChange },
+            {
+              resources: TEST_RESOURCES,
+              events: [event],
+              onEventsChange,
+              eventDeletion: { confirmation: false },
+            },
             adapter,
           );
 
@@ -820,6 +928,27 @@ storeClasses.forEach((storeClass) => {
             onEventsChange,
             eventDeletion: { confirmation: false },
           },
+          adapter,
+        );
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        expect(onSubmit.mock.calls.length).to.equal(1);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should pick up a new `eventDeletion` prop applied through `updateStateFromParameters`', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const params = { resources: TEST_RESOURCES, events: [event], onEventsChange };
+        const store = new storeClass.Value(params, adapter);
+
+        // Confirmation is on by default; requesting a deletion now would only open the dialog.
+        store.updateStateFromParameters(
+          { ...params, eventDeletion: { confirmation: false } },
           adapter,
         );
 

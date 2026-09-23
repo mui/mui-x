@@ -116,6 +116,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       occurrence={occurrence}
       onClose={onClose}
       dragHandlerRef={dragHandlerRef}
+      anchor={anchor}
     />
   );
 

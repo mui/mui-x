@@ -169,6 +169,22 @@ describe('EventContextMenu', () => {
     expect(getEvent()).not.to.equal(null);
   });
 
+  it('should not delete anything when Escape is pressed in the confirmation dialog', async () => {
+    const { onEventsChange } = renderEvent();
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+    // MUI focuses the dialog paper itself, not a specific action, once it opens.
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    fireEvent.keyDown(dialog, { key: 'Escape' });
+
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
+    expect(getEvent()).not.to.equal(null);
+  });
+
   it('should delete a non-recurring event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {
     const { onEventsChange } = renderEvent(vi.fn(), { eventDeletion: { confirmation: false } });
 
@@ -180,6 +196,30 @@ describe('EventContextMenu', () => {
     expect(screen.queryByRole('menu')).to.equal(null);
     expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+  });
+
+  it('should open the delete confirmation dialog for a recurring event when there is no recurring-events plugin', () => {
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .recurrent('DAILY')
+      .build();
+
+    expect(() => {
+      render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    }).toWarnDev([
+      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+    ]);
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    // No recurring-events plugin, so there's no scope to ask for: this goes through the same
+    // confirmation dialog as any other non-recurring delete, not straight to `deleteEvent`.
+    expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
   });
 
   it('should not lose focus to <body> after a confirmed Delete: it falls back to the owning grid column', async () => {
@@ -202,14 +242,25 @@ describe('EventContextMenu', () => {
     expect(document.activeElement).not.to.equal(document.body);
   });
 
-  it('should not lose focus to <body> after Cancel', () => {
+  it('should return focus to the event after Cancel', async () => {
     renderStatefulEvent();
+    const eventElement = getEvent();
+    // `fireEvent.contextMenu` alone doesn't focus the target the way a real keyboard/pointer
+    // interaction would; focusing it first reflects what MUI's dialog actually captures on open.
+    eventElement.focus();
 
-    fireEvent.contextMenu(getEvent());
+    fireEvent.contextMenu(eventElement);
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
-    expect(document.activeElement).not.to.equal(document.body);
+    // The dialog closes through an exit transition, so it lingers in the DOM for a tick — asserting
+    // before it's gone would only catch focus still sitting on the (still-mounted) Cancel button.
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
+    // Nothing was deleted, so MUI's own restore-on-close returns focus to the event — the element
+    // that had it when the confirmation dialog opened.
+    expect(document.activeElement).to.equal(eventElement);
   });
 
   describe('read-only events', () => {

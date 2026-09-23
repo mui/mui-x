@@ -71,7 +71,8 @@ export const schedulerOtherSelectors = {
    * use this to stand down their own outside-pointer/scroll-blocking handlers while either is open.
    */
   isConfirmationDialogOpen: (state: State) =>
-    state.pendingRecurringEventOperation != null || state.pendingDeleteConfirmation != null,
+    schedulerOtherSelectors.isRecurringScopeDialogOpen(state) ||
+    schedulerOtherSelectors.isDeleteConfirmationDialogOpen(state),
   /**
    * The default event color used when no color is specified on the event or its resource.
    */

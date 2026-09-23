@@ -60,6 +60,7 @@ import {
 } from '../event-dialog/form/EventDialogFormContext';
 import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
+import { getFocusFallback } from '../../utils/focus-utils';
 
 const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -131,6 +132,12 @@ interface FormContentProps {
    * @default true
    */
   isDraggable?: boolean;
+  /**
+   * The element the surface is anchored to (the event, or another trigger of it). Used to find a
+   * focus fallback if a delete removes it — see `getFocusFallback`. `undefined` when the caller
+   * has none to offer (e.g. a standalone render with no editing surface around it).
+   */
+  anchor?: HTMLElement | null;
 }
 
 export function FormContent(props: FormContentProps) {
@@ -220,7 +227,7 @@ export function FormContent(props: FormContentProps) {
 }
 
 function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
-  const { onClose, dragHandlerRef, isDraggable } = props;
+  const { onClose, dragHandlerRef, isDraggable, anchor } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -521,8 +528,20 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    // A recurring delete closes the dialog on scope submit instead of right away.
-    store.deleteOccurrence(occurrence, onClose);
+    // A recurring delete closes the dialog on scope submit; a non-recurring one closes it once the
+    // delete confirmation dialog is confirmed (or right away if `eventDeletion.confirmation` is
+    // `false`) — never synchronously here.
+    // Captured before the delete unmounts `anchor` — see `getFocusFallback`. Without it, closing
+    // the dialog leaves MUI trying (and failing) to restore focus to the now-deleted event.
+    const focusFallback = anchor ? getFocusFallback(anchor) : null;
+    store.deleteOccurrence(occurrence, () => {
+      onClose();
+      // `onDelete` may fire synchronously (an immediate delete) or later, from the scope dialog's
+      // or the confirmation dialog's own click handler — while its focus trap is still mounted. An
+      // immediate `.focus()` call there gets pulled straight back into the trap. Deferring past the
+      // current task lets the dialog actually close first, so the fallback focus sticks.
+      setTimeout(() => focusFallback?.focus());
+    });
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {

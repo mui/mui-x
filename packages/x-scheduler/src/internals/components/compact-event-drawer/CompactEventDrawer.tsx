@@ -68,7 +68,8 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
   const store = useEventCalendarStoreContext();
   const { classes } = useEventEditingStyledContext();
   // Closing the drawer clears the store editing state via the shared editing context.
-  const { stopEditing } = useEventEditingContext();
+  // Renamed to avoid colliding with the drawer's own `anchor="bottom"` slide-direction prop below.
+  const { stopEditing, anchor: triggerAnchor } = useEventEditingContext();
 
   const occurrence = useStore(store, schedulerOtherSelectors.editingOccurrence);
   const editingMode = useStore(store, schedulerOtherSelectors.editingMode);
@@ -125,6 +126,7 @@ export function CompactEventDrawer(props: CompactEventDrawerProps) {
                 onClose={stopEditing}
                 dragHandlerRef={dragHandlerRef}
                 isDraggable={false}
+                anchor={triggerAnchor}
               />
             )}
           </CompactEventDrawerContent>

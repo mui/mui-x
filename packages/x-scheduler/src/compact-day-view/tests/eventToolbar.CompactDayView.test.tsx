@@ -1,6 +1,8 @@
+import * as React from 'react';
 import { screen, within, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { vi, describe, it, expect } from 'vitest';
 
 /**
@@ -36,6 +38,31 @@ describe('CompactDayView - event toolbar', () => {
 
   function getEvent(): HTMLElement {
     return screen.getByRole('button', { name: /Morning Meeting/i });
+  }
+
+  // `renderEvent`'s fixed array never actually removes the event from the DOM on delete (the
+  // store warns if nothing feeds `onEventsChange` back into it), which can't exercise what
+  // happens once an occurrence really unmounts. This one is fully controlled instead.
+  function renderStatefulEvent() {
+    const initialEvent = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .build();
+
+    function StatefulCompactDayView() {
+      const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
+      return (
+        <StandaloneCompactDayView
+          events={events}
+          resources={[]}
+          onEventsChange={setEvents}
+          visibleDate={new Date('2025-07-03T00:00:00Z')}
+        />
+      );
+    }
+
+    render(<StatefulCompactDayView />);
   }
 
   it('should keep arming built-in and only fire `onEventEditingStart` when the toolbar Edit is tapped', () => {
@@ -142,6 +169,27 @@ describe('CompactDayView - event toolbar', () => {
     expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
   });
 
+  it('should not lose focus to <body> after a confirmed Delete from the toolbar: it falls back to the owning grid column', async () => {
+    renderStatefulEvent();
+
+    fireEvent.click(getEvent());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+    // Confirms the event actually unmounts here (unlike `renderEvent`'s fixed array), so the
+    // assertion below exercises the real focus-loss scenario, not a no-op.
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
+    });
+
+    // The fallback focus is deferred past the dialog's own focus trap releasing.
+    await waitFor(() => {
+      expect(document.activeElement).to.have.attribute('tabindex', '0');
+    });
+    expect(document.activeElement).not.to.equal(document.body);
+  });
+
   it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()
@@ -168,6 +216,101 @@ describe('CompactDayView - event toolbar', () => {
     expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+  });
+
+  // The docked toolbar's own Delete is one entry point; the drawer's editing form has its own
+  // Delete event button too, reached by tapping Edit first.
+  describe('Deletion (drawer form)', () => {
+    function openForm() {
+      fireEvent.click(getEvent());
+      fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+    }
+
+    it('should open the delete confirmation dialog instead of deleting immediately when the form Delete event is clicked', () => {
+      const { onEventsChange } = renderEvent();
+      openForm();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+
+      expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should delete the event and close the drawer once Delete event is confirmed', async () => {
+      const { onEventsChange } = renderEvent();
+      openForm();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+      // The form's own delete button shares the same accessible name, so the confirm click is
+      // scoped to the dialog.
+      const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+      fireEvent.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
+      await waitFor(() => {
+        expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+      });
+    });
+
+    it('should keep the form open when Cancel is clicked in the confirmation dialog', async () => {
+      const { onEventsChange } = renderEvent();
+      openForm();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      });
+      expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
+    });
+
+    it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {
+      const onEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Morning Meeting')
+        .singleDay('2025-07-03T10:00:00Z', 60)
+        .build();
+
+      render(
+        <StandaloneCompactDayView
+          events={[event]}
+          resources={[]}
+          onEventsChange={onEventsChange}
+          visibleDate={new Date('2025-07-03T00:00:00Z')}
+          eventDeletion={{ confirmation: false }}
+        />,
+      );
+
+      fireEvent.click(getEvent());
+      fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+    });
+
+    it('should not lose focus to <body> after a confirmed Delete from the form: it falls back to the owning grid column', async () => {
+      renderStatefulEvent();
+      openForm();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+      const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+      fireEvent.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.have.attribute('tabindex', '0');
+      });
+      expect(document.activeElement).not.to.equal(document.body);
+    });
   });
 
   // The dock is not anchored to the event, so nothing hides it when its occurrence leaves the

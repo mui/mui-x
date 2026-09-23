@@ -9,6 +9,7 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 import { useDisarmOnEscape } from '../armed-occurrence';
+import { getFocusFallback } from '../../utils/focus-utils';
 
 // `Paper` (elevation 3) supplies the `background.paper` fill and `shadows[3]` box shadow.
 const EventToolbarRoot = styled(Paper, {
@@ -67,10 +68,20 @@ export function EventToolbar(props: EventToolbarProps) {
     );
   };
 
-  // Recurring events open the scope dialog (which closes the surface on submit);
-  // single events delete immediately and close.
+  // Recurring events open the scope dialog; non-recurring events go through the delete
+  // confirmation dialog (unless `eventDeletion={{ confirmation: false }}`). Either way the
+  // toolbar only closes once the deletion is actually applied.
   const handleDelete = () => {
-    store.deleteOccurrence(occurrence, stopEditing);
+    // Captured before the delete unmounts `anchor` — see `getFocusFallback`.
+    const focusFallback = anchor ? getFocusFallback(anchor) : null;
+    store.deleteOccurrence(occurrence, () => {
+      stopEditing();
+      // `onDelete` may fire synchronously (an immediate delete) or later, from the scope dialog's
+      // or the confirmation dialog's own click handler — while its focus trap is still mounted. An
+      // immediate `.focus()` call there gets pulled straight back into the trap. Deferring past the
+      // current task lets the dialog actually close first, so the fallback focus sticks.
+      setTimeout(() => focusFallback?.focus());
+    });
   };
 
   return (

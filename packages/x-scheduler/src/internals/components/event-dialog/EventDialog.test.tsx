@@ -332,7 +332,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
   });
 
-  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event', async () => {
+  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event, with confirmation off', async () => {
+    // `EventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
+    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
+    // component's own direct wiring to the store. See the `Deletion` suite below for the
+    // confirmation dialog itself, exercised through the full `EventDialogProvider`.
     const onEventsChange = vi.fn();
     const onClose = vi.fn();
     const { user } = render(
@@ -340,6 +344,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         events={[DEFAULT_EVENT]}
         resources={resources}
         onEventsChange={onEventsChange}
+        eventDeletion={{ confirmation: false }}
       >
         <EventDialogContent open {...defaultProps} onClose={onClose} />
       </EventCalendarProvider>,
@@ -517,6 +522,41 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
       });
       expect(screen.getByLabelText(/event title/i)).to.have.value(DEFAULT_EVENT.title);
+    });
+
+    it('should not lose focus to <body> after a confirmed Delete: it falls back to the owning grid cell', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+      const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+      await user.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+      await waitFor(() => {
+        expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+      });
+      // The fallback focus is deferred past the dialog's own focus trap releasing.
+      await waitFor(() => {
+        expect(document.activeElement).to.have.attribute('tabindex', '0');
+      });
+      expect(document.activeElement).not.to.equal(document.body);
+    });
+
+    it('should return focus to the dialog Delete event button after Cancel', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      const deleteButton = await screen.findByRole('button', { name: 'Delete event' });
+      await user.click(deleteButton);
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      // Nothing was deleted, so MUI's own restore-on-close returns focus to the dialog's Delete
+      // event button — the element that had it when the confirmation dialog opened.
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(deleteButton);
+      });
     });
 
     it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', async () => {

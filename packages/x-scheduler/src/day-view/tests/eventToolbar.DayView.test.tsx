@@ -1,6 +1,8 @@
+import * as React from 'react';
 import { screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { vi, describe, it, expect, afterEach } from 'vitest';
 
 /**
@@ -25,6 +27,24 @@ describe('DayView - event toolbar', () => {
     render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
 
     return { onEventsChange };
+  }
+
+  // `renderEvent`'s fixed array never actually removes the event from the DOM on delete (the
+  // store warns if nothing feeds `onEventsChange` back into it), which can't exercise what
+  // happens once an occurrence really unmounts. This one is fully controlled instead.
+  function renderStatefulEvent() {
+    const initialEvent = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .build();
+
+    function StatefulDayView() {
+      const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
+      return <StandaloneDayView events={events} resources={[]} onEventsChange={setEvents} />;
+    }
+
+    render(<StatefulDayView />);
   }
 
   function renderEventOnEachDay() {
@@ -146,6 +166,47 @@ describe('DayView - event toolbar', () => {
       expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
     });
     expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
+  });
+
+  it('should not lose focus to <body> after a confirmed Delete: it falls back to the owning grid column', async () => {
+    window.matchMedia = createMatchMedia(true);
+    renderStatefulEvent();
+
+    fireEvent.click(getEvent());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+    // Confirms the event actually unmounts here (unlike `renderEvent`'s fixed array), so the
+    // assertion below exercises the real focus-loss scenario, not a no-op.
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
+    });
+
+    // The fallback focus is deferred past the dialog's own focus trap releasing.
+    await waitFor(() => {
+      expect(document.activeElement).to.have.attribute('tabindex', '0');
+    });
+    expect(document.activeElement).not.to.equal(document.body);
+  });
+
+  it('should return focus to the toolbar Delete button after Cancel', async () => {
+    window.matchMedia = createMatchMedia(true);
+    renderEvent();
+
+    fireEvent.click(getEvent());
+    const deleteButton = screen.getByRole('button', { name: 'Delete event' });
+    // `fireEvent.click` alone doesn't focus the target the way a real pointer/keyboard
+    // interaction would; focusing it first reflects what MUI's dialog actually captures on open.
+    deleteButton.focus();
+    fireEvent.click(deleteButton);
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    // Nothing was deleted, so MUI's own restore-on-close returns focus to the toolbar's Delete
+    // button — the element that had it when the confirmation dialog opened.
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(deleteButton);
+    });
   });
 
   it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {

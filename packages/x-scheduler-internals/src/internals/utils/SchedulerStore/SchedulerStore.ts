@@ -180,9 +180,6 @@ export class SchedulerStore<
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
-      // Left as-is (including `undefined`); `schedulerEventSelectors.deletionConfig` fills in
-      // the defaults, mirroring how `eventCreation` is normalized.
-      eventDeletion: parameters.eventDeletion,
       pendingDeleteConfirmation: null,
     };
 
@@ -236,6 +233,9 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
+      // Left as-is (including `undefined`); `schedulerEventSelectors.deletionConfig` fills in
+      // the defaults.
+      eventDeletion: parameters.eventDeletion,
       displayTimezone: parameters.displayTimezone ?? 'default',
     };
   }
@@ -704,8 +704,10 @@ export class SchedulerStore<
 
   /**
    * Deletes an occurrence from a UI surface: a recurring one opens the scope dialog, any other
-   * goes straight to `deleteEvent`. `onDelete` runs once the delete applied.
-   * @returns Whether the delete applied immediately (`false` when the scope dialog opened).
+   * goes through `requestEventDeletion` (the delete confirmation dialog, unless opted out of via
+   * `eventDeletion={{ confirmation: false }}`). `onDelete` runs once the delete actually applied.
+   * @returns Whether the delete applied immediately (`false` when the scope dialog or the delete
+   * confirmation dialog opened instead).
    */
   public deleteOccurrence = (
     occurrence: SchedulerRenderableEventOccurrence,
@@ -730,9 +732,10 @@ export class SchedulerStore<
       });
       return false;
     }
-    this.deleteEvent(occurrence.id);
-    onDelete?.();
-    return true;
+
+    const { confirmation } = schedulerEventSelectors.deletionConfig(this.state);
+    this.requestEventDeletion({ eventId: occurrence.id, onSubmit: onDelete });
+    return !confirmation;
   };
 
   /**
