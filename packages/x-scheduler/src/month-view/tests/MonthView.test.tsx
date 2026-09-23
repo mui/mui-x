@@ -197,10 +197,19 @@ describe('<MonthView />', () => {
     it('should name each event in the popover with its title, time range and date', async () => {
       const { popover } = await renderAndOpenPopover();
 
-      const event = within(popover).getByRole('button', {
-        name: 'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1st, 2025',
+      const eventButtons = within(popover).getAllByRole('button');
+
+      expect(eventButtons.map((button) => button.getAttribute('aria-label'))).to.deep.equal([
+        'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1st, 2025',
+        'Event 2, 9:00 AM to 10:00 AM, Thursday, May 1st, 2025',
+        'Event 3, 10:00 AM to 11:00 AM, Thursday, May 1st, 2025',
+        'Event 4, 11:00 AM to 12:00 PM, Thursday, May 1st, 2025',
+        'Event 5, 12:00 PM to 1:00 PM, Thursday, May 1st, 2025',
+        'Event 6, 1:00 PM to 2:00 PM, Thursday, May 1st, 2025',
+      ]);
+      eventButtons.forEach((button) => {
+        expect(button).not.to.have.attribute('aria-labelledby');
       });
-      expect(event).not.to.have.attribute('aria-labelledby');
     });
 
     it('should close the popover when `onEventEditingStart` cancels an activation from it', async () => {
@@ -453,6 +462,27 @@ describe('<MonthView />', () => {
         .build(),
     ];
 
+    it('should announce a multi-day timed event as a single date and time range', () => {
+      const trip = EventBuilder.new()
+        .title('Trip')
+        .span('2025-05-05T07:30:00Z', '2025-05-07T17:00:00Z')
+        .build();
+
+      render(
+        <EventCalendarProvider events={[trip]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Trip, From Monday, May 5th, 2025 7:30 AM to Wednesday, May 7th, 2025 5:00 PM',
+        }),
+      ).not.to.equal(null);
+    });
+
     it('should announce an all-day event as a date range instead of a time range', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
@@ -624,6 +654,13 @@ describe('<MonthView />', () => {
       );
 
       expect(visibleInstances).toHaveLength(2);
+      // Each segment announces the whole event, not the slice of it that its row shows.
+      visibleInstances.forEach((instance) => {
+        expect(instance).to.have.attribute(
+          'aria-label',
+          'Multiple week event, All day, From Monday, May 19th, 2025 to Tuesday, May 27th, 2025',
+        );
+      });
     });
   });
 

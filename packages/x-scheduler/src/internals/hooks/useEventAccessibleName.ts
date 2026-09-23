@@ -19,9 +19,10 @@ export interface UseEventAccessibleNameParameters {
   isRecurring: boolean;
   localeText: SchedulerEventLocaleText;
   /**
-   * The resource to announce. Defaults to the occurrence's primary resource.
+   * The resource to announce: a name, or `null` to announce none.
+   * Defaults to the occurrence's primary resource.
    */
-  resourceName?: string;
+  resourceName?: string | null;
 }
 
 /**
@@ -35,12 +36,13 @@ export function useEventAccessibleName(
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const usesPrimaryResource = resourceNameProp === undefined;
   const primaryResource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    resourceNameProp === undefined ? getPrimaryResourceId(occurrence?.resource) : null,
+    usesPrimaryResource ? getPrimaryResourceId(occurrence?.resource) : null,
   );
-  const resourceName = resourceNameProp ?? primaryResource?.title ?? null;
+  const resourceName = usesPrimaryResource ? (primaryResource?.title ?? null) : resourceNameProp;
 
   return React.useMemo(() => {
     if (occurrence == null) {

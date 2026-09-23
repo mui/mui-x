@@ -313,7 +313,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   // Feature hooks
   const formatTime = useFormatTime();
   const accessibleName = useEventAccessibleName({
-    occurrence,
+    occurrence: variant === 'placeholder' ? null : occurrence,
     isRecurring,
     localeText,
   });

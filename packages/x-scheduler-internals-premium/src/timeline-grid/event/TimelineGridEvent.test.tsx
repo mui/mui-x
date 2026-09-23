@@ -16,19 +16,13 @@ describe('<TimelineGrid.Event />', () => {
   const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
   const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
 
-  type ProviderProps = React.ComponentProps<typeof EventTimelinePremiumProvider>;
-
-  // Mounts the event in the row context it needs. `resourceId` is the row it renders in.
-  function renderEvent(
-    node: React.ReactElement,
-    options: Partial<Pick<ProviderProps, 'events' | 'resources'>> & { resourceId?: string } = {},
-  ) {
-    const { events = [], resources = [ResourceBuilder.new().build()], resourceId = 'r1' } = options;
+  // Mounts the event in the row context it needs.
+  function renderEvent(node: React.ReactElement) {
     return render(
-      <EventTimelinePremiumProvider events={events} resources={resources}>
+      <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
         <TimelineGrid.Root>
           <TimelineGrid.BodyRow index={0}>
-            <TimelineGrid.EventRow resourceId={resourceId}>{() => node}</TimelineGrid.EventRow>
+            <TimelineGrid.EventRow resourceId="r1">{() => node}</TimelineGrid.EventRow>
           </TimelineGrid.BodyRow>
         </TimelineGrid.Root>
       </EventTimelinePremiumProvider>,
@@ -76,5 +70,23 @@ describe('<TimelineGrid.Event />', () => {
     expect(event.style.getPropertyValue('--width')).to.equal('50%');
     expect(event).to.have.attribute('data-starting-before-edge');
     expect(event).not.to.have.attribute('data-ending-after-edge');
+  });
+
+  it('should leave the accessible name to the consumer', () => {
+    renderEvent(
+      <TimelineGrid.Event
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        dataTimezone={undefined}
+        start={start}
+        end={end}
+        renderDragPreview={() => null}
+        data-testid="event"
+      />,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event).not.to.have.attribute('aria-label');
+    expect(event).not.to.have.attribute('aria-labelledby');
   });
 });

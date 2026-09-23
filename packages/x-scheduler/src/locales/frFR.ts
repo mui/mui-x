@@ -80,6 +80,22 @@ const frFRDialog: SchedulerDialogTranslations = {
   title: 'Appliquer ce changement à :',
 };
 
+const frFREvent: SchedulerEventTranslations = {
+  // Event accessible name
+  eventAriaLabelTimeRange: (start, end) => `de ${start} à ${end}`,
+  eventAriaLabelDateRange: (start, end) => `Du ${start} au ${end}`,
+  eventAriaLabelAllDay: 'Toute la journée',
+  eventAriaLabelRecurring: 'Récurrent',
+  resourceAriaLabel: (resourceName) => `Ressource : ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
 const frFRCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Ressources',
@@ -139,22 +155,6 @@ const frFRCalendar: SchedulerCalendarTranslations = {
 
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',
-};
-
-const frFREvent: SchedulerEventTranslations = {
-  // Event accessible name
-  eventAriaLabelTimeRange: (start, end) => `de ${start} à ${end}`,
-  eventAriaLabelDateRange: (start, end) => `Du ${start} au ${end}`,
-  eventAriaLabelAllDay: 'Toute la journée',
-  eventAriaLabelRecurring: 'Récurrent',
-  resourceAriaLabel: (resourceName) => `Ressource : ${resourceName}`,
-  // eventAriaLabel: ({
-  //   title,
-  //   when,
-  //   date,
-  //   resource,
-  //   recurring
-  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
 const frFRTimeline: SchedulerTimelineTranslations = {

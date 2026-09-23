@@ -1379,21 +1379,21 @@ describe('<EventTimelinePremium />', () => {
       );
     });
 
-    it('should not name the drag placeholder', async () => {
+    it('should name events with the locale text of the timeline', async () => {
       const standup = EventBuilder.new()
-        .title('Standup')
+        .title('Reunión')
         .singleDay('2025-07-03T09:00:00Z')
         .resource(engineering)
         .build();
 
-      await renderTimeline({ events: [standup] });
-
-      const placeholders = document.querySelectorAll(
-        `.${eventTimelinePremiumClasses.eventPlaceholder}`,
-      );
-      placeholders.forEach((placeholder) => {
-        expect(placeholder).not.to.have.attribute('aria-label');
+      await renderTimeline({
+        events: [standup],
+        localeText: { eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}` },
       });
+
+      expect(getEventByTitle('Reunión')).toHaveAccessibleName(
+        `Reunión, de 9:00 AM a 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+      );
     });
 
     it('should append "Recurring" to the name of a recurring event only', async () => {

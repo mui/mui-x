@@ -7,7 +7,12 @@ import {
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { fr } from 'date-fns/locale/fr';
-import { createDateLocaleTheme, deDE, esES, frFR } from '@mui/x-scheduler/locales';
+import {
+  createDateLocaleTheme,
+  esES,
+  frFR,
+  getSchedulerLocalization,
+} from '@mui/x-scheduler/locales';
 import { describe, it, expect } from 'vitest';
 
 describe('<StandaloneWeekView />', () => {
@@ -62,15 +67,21 @@ describe('<StandaloneWeekView />', () => {
       ).not.to.equal(null);
     });
 
-    it('should keep the English event name for a locale that does not translate it', () => {
+    it('should keep the English event name for a locale that translates nothing', () => {
       const event = EventBuilder.new()
         .title('Laufen')
         .startAt('2025-07-03T07:30:00')
         .endAt('2025-07-03T08:30:00')
         .build();
+      const emptyLocale = getSchedulerLocalization({
+        dialog: {},
+        event: {},
+        calendar: {},
+        timeline: {},
+      });
 
       render(
-        <ThemeProvider theme={createTheme({}, deDE)}>
+        <ThemeProvider theme={createTheme({}, emptyLocale)}>
           <StandaloneWeekView events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
         </ThemeProvider>,
       );

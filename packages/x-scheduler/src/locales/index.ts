@@ -40,12 +40,6 @@ export * from './zhCN';
 export * from './zhHK';
 export * from './zhTW';
 export { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-export type {
-  SchedulerLocalization,
-  SchedulerDialogTranslations,
-  SchedulerEventTranslations,
-  SchedulerCalendarTranslations,
-  SchedulerTimelineTranslations,
-} from '../utils/getSchedulerLocalization';
+export type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 export { createDateLocaleTheme } from '../utils/createDateLocaleTheme';
 export type { DateLocaleTheme } from '../utils/createDateLocaleTheme';

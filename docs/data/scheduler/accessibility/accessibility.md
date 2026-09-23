@@ -68,6 +68,7 @@ Weekday column headers carry a `role="columnheader"` with an `aria-label` contai
 ### Events
 
 Each event element has `role="button"` and an `aria-label` that announces, in order: the event title, when it happens within the day, the day itself, the resource, and whether it recurs.
+The previews rendered while creating, dragging or resizing an event are inert: they are hidden from assistive technologies and carry no name.
 The visible content of the event (which varies with the view, the available space, and the variant) is not part of the accessible name, so every event is announced the same way.
 
 | Event               | Accessible name                                                                    |

@@ -204,7 +204,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   const accessibleName = useEventAccessibleName({
     occurrence: variant === 'placeholder' ? null : occurrence,
     isRecurring,
-    resourceName: rowResource?.title,
+    resourceName: rowResource?.title ?? null,
     localeText,
   });
 
@@ -281,8 +281,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         {content}
       </EventTimelinePremiumEventLinesClamp>
       {dependencySources.length > 0 && (
-        // `aria-hidden` keeps the description out of the visible content while the
-        // `aria-describedby` reference still picks it up.
+        // Visually hidden, and read through the `aria-describedby` reference above.
         <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
           {dependencySources
             .map((source) => DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title))

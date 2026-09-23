@@ -88,4 +88,22 @@ describe('<CalendarGrid.DayEvent />', () => {
       expect(screen.getByTestId('event')).to.have.attribute('data-ending-after-edge');
     });
   });
+
+  it('should leave the accessible name to the consumer', () => {
+    renderEvent(
+      <CalendarGrid.DayEvent
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        dataTimezone={undefined}
+        start={eventStart}
+        end={eventEnd}
+        renderDragPreview={() => null}
+        data-testid="event"
+      />,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event).not.to.have.attribute('aria-label');
+    expect(event).not.to.have.attribute('aria-labelledby');
+  });
 });

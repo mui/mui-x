@@ -97,6 +97,9 @@ export interface EventEditingLocaleText {
  * The parts `eventAriaLabel` composes into the accessible name of an event.
  */
 export interface SchedulerEventAriaLabelParts {
+  /**
+   * The title of the event.
+   */
   title: string;
   /**
    * When the event happens within the day: a time range, or the all-day sentence.
@@ -109,11 +112,20 @@ export interface SchedulerEventAriaLabelParts {
    * @example "Monday, May 26th, 2025"
    */
   date: string;
+  /**
+   * The resource the event belongs to. Not set when it has none.
+   */
   resource?: string;
+  /**
+   * Set when the event is a recurring one.
+   */
   recurring?: string;
 }
 
-// Strings shared by every surface that renders events: the accessible name of an event.
+/**
+ * Strings that build the accessible name of an event, shared by the Event Calendar and the
+ * Event Timeline.
+ */
 export interface SchedulerEventLocaleText {
   /**
    * Time range of a timed event that starts and ends on the same day.
