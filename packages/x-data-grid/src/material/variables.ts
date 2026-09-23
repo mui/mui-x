@@ -16,7 +16,6 @@ export function useMaterialCSSVariables() {
 }
 
 function transformTheme(t: Theme): GridCSSVariablesInterface {
-  const focusRing = t.focusVisible || undefined;
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.vars || t).palette.DataGrid;
 
@@ -78,10 +77,6 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
     [k.radius.base]: radius,
 
-    [k.focus.outlineColor]:
-      focusRing?.outlineColor ?? removeOpacity((t.vars || t).palette.primary.main),
-    [k.focus.outlineWidth]: focusOutlineWidth(focusRing),
-
     [k.typography.fontFamily.base]: t.typography.fontFamily as string,
     [k.typography.fontWeight.light]: t.typography.fontWeightLight as string,
     [k.typography.fontWeight.regular]: t.typography.fontWeightRegular as string,
@@ -105,14 +100,6 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.zIndex.menu]: (t.vars || t).zIndex.modal,
     [k.zIndex.modal]: (t.vars || t).zIndex.modal,
   };
-}
-
-function focusOutlineWidth(focusRing: React.CSSProperties | undefined) {
-  const width = focusRing?.outlineWidth;
-  if (width == null) {
-    return '1px';
-  }
-  return typeof width === 'number' ? `${width}px` : width;
 }
 
 function getRadius(theme: Theme) {

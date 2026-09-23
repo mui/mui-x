@@ -14,9 +14,7 @@ export type OwnerState = DataGridProcessedProps;
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
 
-const focusOutlineColor = vars.focus.outlineColor;
-const focusOutlineWidth = vars.focus.outlineWidth;
-const focusOutlineOffset = `calc(-1 * ${focusOutlineWidth})`;
+const focusOutlineWidth = 1;
 
 const separatorIconDragStyles = {
   width: 3,
@@ -262,12 +260,12 @@ export const GridRootStyles = styled('div', {
       boxSizing: 'border-box',
     },
     [`& .${c.columnHeader}:focus-within, & .${c.cell}:focus-within`]: {
-      outline: `solid ${setOpacity(focusOutlineColor, 0.5)} ${focusOutlineWidth}`,
-      outlineOffset: focusOutlineOffset,
+      outline: `solid ${setOpacity(vars.colors.interactive.focus, 0.5)} ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
     },
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
-      outline: `solid ${focusOutlineColor} ${focusOutlineWidth}`,
-      outlineOffset: focusOutlineOffset,
+      outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
     },
     // Hide the column separator when:
     // - the column is focused and has an outline
@@ -636,8 +634,8 @@ export const GridRootStyles = styled('div', {
       boxShadow: vars.shadows.base,
       backgroundColor: vars.colors.background.overlay,
       '&:focus-within': {
-        outline: `${focusOutlineWidth} solid ${focusOutlineColor}`,
-        outlineOffset: focusOutlineOffset,
+        outline: `${focusOutlineWidth}px solid ${vars.colors.interactive.focus}`,
+        outlineOffset: focusOutlineWidth * -1,
       },
     },
     [`& .${c['cell--editing']}`]: {

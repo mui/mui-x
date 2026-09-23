@@ -61,10 +61,6 @@ const keys = {
   radius: {
     base: '--DataGrid-t-radius-base',
   },
-  focus: {
-    outlineColor: '--DataGrid-t-focus-outline-color',
-    outlineWidth: '--DataGrid-t-focus-outline-width',
-  },
   typography: {
     font: {
       body: '--DataGrid-t-typography-font-body',
