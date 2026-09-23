@@ -1,7 +1,5 @@
 import type { ChartPlugin } from '@mui/x-charts/internals';
 import { DEFAULT_CHART_EXCEL_OPTIONS } from '../../excelExport/defaults';
-import { getChartExcelTables } from '../../excelExport/getChartExcelTables';
-import { buildChartExcelWorkbook } from '../../excelExport/buildChartExcelWorkbook';
 import type {
   ChartExcelExportOptions,
   UseChartPremiumExportSignature,
@@ -26,7 +24,13 @@ export const useChartPremiumExport: ChartPlugin<UseChartPremiumExportSignature> 
       includeHeaders,
     } = options;
 
-    const tables = getChartExcelTables(store.state, {
+    // Snapshot before awaiting, so the export reflects the chart as it was when asked.
+    const state = store.state;
+
+    // Lazy, so a chart that is never exported does not ship the extractors.
+    const { getChartExcelTables, buildChartExcelWorkbook } = await import('../../excelExport');
+
+    const tables = getChartExcelTables(state, {
       includeHiddenSeries,
       includeFormattedValues,
       escapeFormulas,
