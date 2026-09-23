@@ -384,7 +384,7 @@ export function computeAutoSchedulingCascade(
     }
 
     // A resize keeps the edge it did not touch, as long as that edge is not the violated
-    // one and the clamp does not run past it.
+    // one. Keeping the end also requires the clamp not to run past it.
     const keepsStart = constrainedOnEnd && !startViolated;
     const keepsEnd = (newStartTimestamp: number) =>
       startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp && !endViolated;

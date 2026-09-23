@@ -11,6 +11,7 @@ import type {
 import type {
   SchedulerDependency,
   SchedulerDependenciesState,
+  SchedulerDependencyLag,
   SchedulerDependencyId,
   SchedulerDependencyEventRejectionReason,
   SchedulerDependencyLagUnit,
@@ -59,14 +60,11 @@ const DEPENDENCY_LAG_ADDERS: Record<
   week: (adapter, date, amount) => adapter.addWeeks(date, amount),
 };
 
-/**
- * Whether the value is one of the supported lag units.
- */
-export function isDependencyLagUnit(unit: unknown): unit is SchedulerDependencyLagUnit {
+function isDependencyLagUnit(unit: unknown): unit is SchedulerDependencyLagUnit {
   return typeof unit === 'string' && Object.hasOwn(DEPENDENCY_LAG_ADDERS, unit);
 }
 
-export type SchedulerDependencyLagIssue = 'negative' | 'invalid' | 'unknownUnit';
+export type SchedulerDependencyLagIssue = 'negative' | 'notAWholeNumber' | 'unknownUnit';
 
 /**
  * Why the lag of a dependency is ignored, or `null` when it is usable: a lag must be a
@@ -76,21 +74,17 @@ export function getDependencyLagIssue(
   dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
 ): SchedulerDependencyLagIssue | null {
   const { lag, lagUnit } = dependency;
-  if (lagUnit != null && !isDependencyLagUnit(lagUnit)) {
-    return 'unknownUnit';
-  }
-  if (lag == null) {
+  // A unit without a lag configures nothing, so it is not worth a warning.
+  if (lag == null || lag === 0) {
     return null;
   }
   if (typeof lag !== 'number' || !Number.isInteger(lag)) {
-    return 'invalid';
+    return 'notAWholeNumber';
   }
-  return lag < 0 ? 'negative' : null;
-}
-
-export interface SchedulerDependencyLag {
-  amount: number;
-  unit: SchedulerDependencyLagUnit;
+  if (lag < 0) {
+    return 'negative';
+  }
+  return lagUnit != null && !isDependencyLagUnit(lagUnit) ? 'unknownUnit' : null;
 }
 
 /**

@@ -3,8 +3,9 @@ import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
-  SchedulerDependencyId,
   SchedulerDependenciesState,
+  SchedulerDependencyId,
+  SchedulerDependencyLag,
   SchedulerDependencyType,
 } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
@@ -14,7 +15,6 @@ import {
   isDependencyActive,
   isDependencyReadOnly,
 } from '../internals/utils/dependency-utils';
-import type { SchedulerDependencyLag } from '../internals/utils/dependency-utils';
 
 // Typed against the two slices they read, so the scheduling plugin (generic over
 // `SchedulerState & SchedulerDependenciesState`) shares them with the rendering.

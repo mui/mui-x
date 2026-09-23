@@ -2108,7 +2108,7 @@ describe('computeAutoSchedulingCascade', () => {
     );
   });
 
-  it('should not move an FF successor whose duration already covers the lagged bound', () => {
+  it('should not move an FF successor whose end already meets the lagged bound exactly', () => {
     const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
     const successor = EventBuilder.new()
       .id('b')
@@ -2121,7 +2121,8 @@ describe('computeAutoSchedulingCascade', () => {
       [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
     );
 
-    // The required start (13:00 − 4h = 09:00) lands before the predecessor's new end.
+    // The bound is the predecessor's new end (12:00) plus an hour, which the successor's
+    // end already meets, so nothing is violated.
     expect(result).to.deep.equal([]);
   });
 
@@ -2636,5 +2637,133 @@ describe('computeAutoSchedulingCascade', () => {
     expect(adapter.getTime(result[0].end!)).to.equal(
       adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
     );
+  });
+
+  it('should push the end of an SF successor when the predecessor start-resizes later', () => {
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T18:00:00Z')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T08:00:00Z', '2025-07-03T10:00:00Z')
+      .toProcessed();
+
+    // Only the start of the predecessor moves, and SF bounds the successor's end by it.
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b', { type: 'StartToFinish' })],
+      [{ id: 'a', start: date('2025-07-03T14:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T14:00:00Z');
+  });
+
+  it('should clamp the end of an end-resized event under an SF predecessor', () => {
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .span('2025-07-03T14:00:00Z', '2025-07-03T18:00:00Z')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T15:00:00Z')
+      .toProcessed();
+
+    // SF bounds the end by the predecessor's start, so the end resize is clamped there
+    // and the untouched start stays.
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b', { type: 'StartToFinish' })],
+      [{ id: 'b', end: date('2025-07-03T11:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(result[0].id).to.equal('b');
+    expectDates(result[0], '2025-07-03T09:00:00Z', '2025-07-03T14:00:00Z');
+  });
+
+  it('should not push an FS successor when only the end of an end-resized event advanced', () => {
+    const first = EventBuilder.new()
+      .id('a')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z')
+      .toProcessed();
+    const second = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+    const third = EventBuilder.new()
+      .id('c')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T11:00:00Z')
+      .toProcessed();
+
+    // `b` keeps its start and only its end advances, so it pushes its FF successor and
+    // leaves its SS successor alone.
+    const result = runCascade(
+      [first, second, third],
+      [
+        dependency('a', 'b', { type: 'FinishToFinish' }),
+        dependency('b', 'c', { type: 'StartToStart' }),
+      ],
+      [{ id: 'b', end: date('2025-07-03T09:30:00Z') }],
+    );
+
+    expect(result.map((entry) => entry.id)).to.deep.equal(['b']);
+    expectDates(result[0], '2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z');
+  });
+
+  it('should move an end-resized event as a whole when its start is violated too', () => {
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T12:00:00Z')
+      .toProcessed();
+
+    // The predecessor advances its start in the same batch, so the SS bound is violated
+    // and the kept start gives way.
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b', { type: 'StartToStart' })],
+      [
+        { id: 'a', start: date('2025-07-03T14:00:00Z'), end: date('2025-07-03T15:00:00Z') },
+        { id: 'b', end: date('2025-07-03T11:00:00Z') },
+      ],
+    );
+
+    const successorResult = result.find((entry) => entry.id === 'b')!;
+    expectDates(successorResult, '2025-07-03T14:00:00Z', '2025-07-03T16:00:00Z');
+  });
+
+  it('should place a dropped event by its end bound when that lands later than its start bound', () => {
+    const startBound = EventBuilder.new()
+      .id('a')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z')
+      .toProcessed();
+    const endBound = EventBuilder.new()
+      .id('c')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T20:00:00Z')
+      .toProcessed();
+    const dropped = EventBuilder.new()
+      .id('b')
+      .span('2025-07-03T06:00:00Z', '2025-07-03T07:00:00Z')
+      .toProcessed();
+
+    // SS asks for a start at 09:00, FF asks for an end at 20:00; the hour-long event has
+    // to start at 19:00 to satisfy the later of the two.
+    const result = runCascade(
+      [startBound, endBound, dropped],
+      [
+        dependency('a', 'b', { type: 'StartToStart' }),
+        dependency('c', 'b', { type: 'FinishToFinish' }),
+      ],
+      [{ id: 'b', start: date('2025-07-03T08:00:00Z'), end: date('2025-07-03T09:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expectDates(result[0], '2025-07-03T19:00:00Z', '2025-07-03T20:00:00Z');
   });
 });

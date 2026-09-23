@@ -156,6 +156,17 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([lagged]);
   });
 
+  it('should not warn about a valid lag', () => {
+    const lagged: SchedulerDependency = { ...DEP_1, id: 'dep-lag', lag: 2, lagUnit: 'hour' };
+    expect(() => {
+      getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [lagged],
+      });
+    }).not.toWarnDev();
+  });
+
   it('should keep a dependency with a fractional lag active, with a dev warning', () => {
     let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
     const lagged: SchedulerDependency = { ...DEP_1, id: 'dep-lag', lag: 0.5 };
@@ -165,7 +176,9 @@ describe('eventTimelinePremiumDependencySelectors', () => {
         events: [eventA, eventB],
         dependencies: [lagged],
       });
-    }).toWarnDev(['MUI X Scheduler: The dependency "dep-lag" has an invalid lag (0.5).']);
+    }).toWarnDev([
+      'MUI X Scheduler: The dependency "dep-lag" has a lag that is not a whole number (0.5).',
+    ]);
 
     expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([lagged]);
   });

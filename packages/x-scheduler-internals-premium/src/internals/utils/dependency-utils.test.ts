@@ -56,18 +56,18 @@ describe('dependency-utils', () => {
     });
 
     it('should flag a fractional lag', () => {
-      expect(getDependencyLagIssue(dependency({ lag: 0.5 }))).to.equal('invalid');
+      expect(getDependencyLagIssue(dependency({ lag: 0.5 }))).to.equal('notAWholeNumber');
     });
 
     it('should flag a non-finite lag', () => {
-      expect(getDependencyLagIssue(dependency({ lag: Number.NaN }))).to.equal('invalid');
+      expect(getDependencyLagIssue(dependency({ lag: Number.NaN }))).to.equal('notAWholeNumber');
       expect(getDependencyLagIssue(dependency({ lag: Number.POSITIVE_INFINITY }))).to.equal(
-        'invalid',
+        'notAWholeNumber',
       );
     });
 
     it('should flag a lag that is not a number', () => {
-      expect(getDependencyLagIssue(dependency({ lag: '2' as any }))).to.equal('invalid');
+      expect(getDependencyLagIssue(dependency({ lag: '2' as any }))).to.equal('notAWholeNumber');
     });
 
     it('should flag an unknown unit', () => {

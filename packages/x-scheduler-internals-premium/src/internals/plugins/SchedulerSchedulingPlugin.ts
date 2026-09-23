@@ -32,6 +32,29 @@ import {
   getDependencyLagIssue,
   isDependencyType,
 } from '../utils/dependency-utils';
+import type { SchedulerDependencyLagIssue } from '../utils/dependency-utils';
+
+// Every ignored lag says what was wrong, what it costs, and what to write instead.
+const DEPENDENCY_LAG_WARNINGS: Record<
+  SchedulerDependencyLagIssue,
+  (dependency: SchedulerDependency) => string[]
+> = {
+  negative: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has a negative lag (${String(dependency.lag)}).`,
+    'Lead (negative lag) is not supported yet, so the lag is ignored.',
+    'Use a positive whole number, or remove the lag.',
+  ],
+  notAWholeNumber: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has a lag that is not a whole number (${String(dependency.lag)}).`,
+    'A fractional lag cannot be expressed in its unit, so it is ignored.',
+    'Round it, or express it in a smaller `lagUnit`.',
+  ],
+  unknownUnit: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown lag unit "${String(dependency.lagUnit)}".`,
+    'The lag cannot be applied, so it is ignored.',
+    'Use one of "minute", "hour", "day" or "week".',
+  ],
+};
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
@@ -264,21 +287,8 @@ export class SchedulerSchedulingPlugin<
         ]);
       }
       const lagIssue = getDependencyLagIssue(dependency);
-      if (lagIssue === 'negative') {
-        warnOnce([
-          `MUI X Scheduler: The dependency "${String(dependency.id)}" has a negative lag (${dependency.lag}).`,
-          'Lead (negative lag) is not supported yet, so the lag is ignored.',
-        ]);
-      } else if (lagIssue === 'invalid') {
-        warnOnce([
-          `MUI X Scheduler: The dependency "${String(dependency.id)}" has an invalid lag (${String(dependency.lag)}).`,
-          'The lag must be a whole number, so it is ignored.',
-        ]);
-      } else if (lagIssue === 'unknownUnit') {
-        warnOnce([
-          `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown lag unit "${String(dependency.lagUnit)}".`,
-          'The supported units are "minute", "hour", "day" and "week", so the lag is ignored.',
-        ]);
+      if (lagIssue !== null) {
+        warnOnce(DEPENDENCY_LAG_WARNINGS[lagIssue](dependency));
       }
       for (const eventId of [dependency.source, dependency.target]) {
         const status = classifyDependencyEvent(processedEventLookup, eventId);

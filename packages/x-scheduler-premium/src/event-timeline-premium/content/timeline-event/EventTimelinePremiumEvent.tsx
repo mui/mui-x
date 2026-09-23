@@ -150,7 +150,8 @@ const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHa
   },
 });
 
-// TODO(dependencies public flip, #23420): move to localeText. Hardcoded while the feature has
+// TODO(dependencies public flip, #23420): move to localeText, together with the lag sentence
+// built below, whose unit names and plural are English too. Hardcoded while the feature has
 // no public API.
 const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<
   SchedulerDependencyType,
