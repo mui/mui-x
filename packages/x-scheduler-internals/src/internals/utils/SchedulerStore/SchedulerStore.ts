@@ -25,7 +25,6 @@ import type {
   SchedulerRenderableEventOccurrence,
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
-  SchedulerProcessedEvent,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -59,7 +58,12 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString, getOccurrenceEnd } from '../date-utils';
-import { getOccurrenceKey, getRecurringOccurrenceKey, isEventOccurrence, getPrimaryResourceId } from '../event-utils';
+import {
+  getOccurrenceKey,
+  getRecurringOccurrenceKey,
+  isEventOccurrence,
+  getPrimaryResourceId,
+} from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 
@@ -890,7 +894,11 @@ export class SchedulerStore<
     // applied.
     const wasRefused = (updatedEvents.created?.length ?? 0) > 0 && createdIds.length === 0;
 
-    if (pendingRecurringEventOperation.kind === 'update' && changesInDataTimezone != null) {
+    if (
+      pendingRecurringEventOperation.kind === 'update' &&
+      changesInDataTimezone != null &&
+      !wasRefused
+    ) {
       this.reconcileEditingOccurrence({
         original,
         occurrenceStart: occurrenceStartInDataTimezone,
