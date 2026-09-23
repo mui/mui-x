@@ -179,6 +179,13 @@ describe('<AdapterDayjs />', () => {
           expect(adapter.getDaysInMonth(getAncientDate())).to.equal(31);
         });
 
+        it('should fix `UTC` values bound to a timezone with `dayjs.tz`', () => {
+          const value = dayjs.tz('1890-03-10 12:00', 'UTC');
+
+          expectWallClock(adapter.startOfDay(value), '1890-03-10 00:00:00.000');
+          expect(adapter.getDaysInMonth(value)).to.equal(31);
+        });
+
         it('should keep years that cannot round-trip through the ISO format valid', () => {
           const farFuture = adapter.setYear(getAncientDate(), 10000);
 

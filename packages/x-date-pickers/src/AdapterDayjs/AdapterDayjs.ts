@@ -286,12 +286,11 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   /**
    * Before a timezone was standardized, IANA falls back on the Local Mean Time of the location, whose
    * offset is not a round number of minutes (`Asia/Kolkata` is `GMT+05:53:28`). `dayjs` mishandles those
-   * offsets. `system` and `UTC` values keep an offset that matches their instant, so they are immune.
+   * offsets. Only values bound to a timezone with `dayjs.tz` are affected, including `dayjs.tz(value, 'UTC')`.
    */
   private isAffectedByLocalMeanTime = (value: Dayjs) => {
-    const timezone = this.getTimezone(value);
-
-    return this.hasUTCPlugin() && timezone !== 'system' && timezone !== 'UTC';
+    // @ts-ignore
+    return this.hasUTCPlugin() && this.hasTimezonePlugin() && !!value.$x?.$timezone;
   };
 
   /**
