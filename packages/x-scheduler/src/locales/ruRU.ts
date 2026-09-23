@@ -3,6 +3,7 @@ import type {
   EventCalendarLocaleText,
   EventTimelineLocaleText,
   SchedulerWeekday,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -113,6 +114,15 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   title: 'К каким событиям применить изменение:',
 };
 
+const ruRUEvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAccessibleNameAllDay: 'All day',
+  // eventAccessibleNameRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Ресурс: ${resourceName}`,
+};
+
 const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ресурсы',
@@ -180,7 +190,6 @@ const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
     };
     return labels[timeSpan];
   },
-  resourceAriaLabel: (resourceName) => `Ресурс: ${resourceName}`,
   weekAbbreviation: 'Нед.',
   weekNumberAriaLabel: (weekNumber) => `Неделя ${weekNumber}`,
 
@@ -206,6 +215,7 @@ const ruRUTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const ruRU: SchedulerLocalization = getSchedulerLocalization({
   dialog: ruRUDialog,
+  event: ruRUEvent,
   calendar: ruRUCalendar,
   timeline: ruRUTimeline,
 });

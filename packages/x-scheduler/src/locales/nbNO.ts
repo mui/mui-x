@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -79,6 +80,15 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   title: 'Bruk denne endringen på:',
 };
 
+const nbNOEvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAccessibleNameAllDay: 'All day',
+  // eventAccessibleNameRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Ressurs: ${resourceName}`,
+};
+
 const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressurser',
@@ -122,7 +132,6 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} til..`,
   nextTimeSpan: (timeSpan) => `Neste ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Forrige ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Ressurs: ${resourceName}`,
   weekAbbreviation: 'U',
   weekNumberAriaLabel: (weekNumber) => `Uke ${weekNumber}`,
 
@@ -148,6 +157,7 @@ const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const nbNO: SchedulerLocalization = getSchedulerLocalization({
   dialog: nbNODialog,
+  event: nbNOEvent,
   calendar: nbNOCalendar,
   timeline: nbNOTimeline,
 });

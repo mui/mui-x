@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -90,6 +91,15 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   title: 'Zastosuj tę zmianę do:',
 };
 
+const plPLEvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAccessibleNameAllDay: 'All day',
+  // eventAccessibleNameRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Zasób: ${resourceName}`,
+};
+
 const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Zasoby',
@@ -133,7 +143,6 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} więcej..`,
   nextTimeSpan: (timeSpan) => `Następny ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Poprzedni ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Zasób: ${resourceName}`,
   weekAbbreviation: 'T',
   weekNumberAriaLabel: (weekNumber) => `Tydzień ${weekNumber}`,
 
@@ -159,6 +168,7 @@ const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const plPL: SchedulerLocalization = getSchedulerLocalization({
   dialog: plPLDialog,
+  event: plPLEvent,
   calendar: plPLCalendar,
   timeline: plPLTimeline,
 });

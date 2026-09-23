@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -79,6 +80,15 @@ const roRODialog: Partial<EventEditingLocaleText> = {
   title: 'Aplică această modificare la:',
 };
 
+const roROEvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAccessibleNameAllDay: 'All day',
+  // eventAccessibleNameRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Resursă: ${resourceName}`,
+};
+
 const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Resurse',
@@ -122,7 +132,6 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `Încă ${hiddenEventsCount}..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} următoare`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterioară`,
-  resourceAriaLabel: (resourceName) => `Resursă: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Săptămâna ${weekNumber}`,
 
@@ -148,6 +157,7 @@ const roROTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const roRO: SchedulerLocalization = getSchedulerLocalization({
   dialog: roRODialog,
+  event: roROEvent,
   calendar: roROCalendar,
   timeline: roROTimeline,
 });

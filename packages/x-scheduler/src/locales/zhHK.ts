@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -80,6 +81,15 @@ const zhHKDialog: Partial<EventEditingLocaleText> = {
   // title: 'Apply this change to:',
 };
 
+const zhHKEvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAccessibleNameAllDay: 'All day',
+  // eventAccessibleNameRecurring: 'Recurring',
+  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
+};
+
 const zhHKCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
@@ -118,7 +128,6 @@ const zhHKCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
-  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
   // EventItem
@@ -140,6 +149,7 @@ const zhHKTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const zhHK: SchedulerLocalization = getSchedulerLocalization({
   dialog: zhHKDialog,
+  event: zhHKEvent,
   calendar: zhHKCalendar,
   timeline: zhHKTimeline,
 });

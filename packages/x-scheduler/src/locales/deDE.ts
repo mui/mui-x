@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -79,6 +80,15 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   title: 'Diese Änderung anwenden auf:',
 };
 
+const deDEEvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAccessibleNameAllDay: 'All day',
+  // eventAccessibleNameRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Ressource: ${resourceName}`,
+};
+
 const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressourcen',
@@ -122,7 +132,6 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} weitere..`,
   nextTimeSpan: (timeSpan) => `Nächste(r) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Vorherige(r) ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Ressource: ${resourceName}`,
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Woche ${weekNumber}`,
 
@@ -148,6 +157,7 @@ const deDETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const deDE: SchedulerLocalization = getSchedulerLocalization({
   dialog: deDEDialog,
+  event: deDEEvent,
   calendar: deDECalendar,
   timeline: deDETimeline,
 });

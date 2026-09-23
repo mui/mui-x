@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -144,6 +145,15 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   title: 'על אילו אירועים להחיל את השינוי?',
 };
 
+const heILEvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  // eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAccessibleNameAllDay: 'All day',
+  // eventAccessibleNameRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
+};
+
 const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'משאבים',
@@ -199,7 +209,6 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
       month: 'החודש הקודם',
       agenda: 'התקופה הקודמת',
     })[view],
-  resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
   weekAbbreviation: 'שב׳',
   weekNumberAriaLabel: (weekNumber) => `שבוע ${weekNumber}`,
 
@@ -225,6 +234,7 @@ const heILTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const heIL: SchedulerLocalization = getSchedulerLocalization({
   dialog: heILDialog,
+  event: heILEvent,
   calendar: heILCalendar,
   timeline: heILTimeline,
 });
