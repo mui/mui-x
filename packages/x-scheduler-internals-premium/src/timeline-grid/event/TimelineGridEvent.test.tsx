@@ -88,7 +88,14 @@ describe('<TimelineGrid.Event />', () => {
       .resource(sport)
       .build();
 
-    function renderRunning(props: Partial<React.ComponentProps<typeof TimelineGrid.Event>> = {}) {
+    function renderRunning(
+      props: Partial<React.ComponentProps<typeof TimelineGrid.Event>> = {},
+      options: Parameters<typeof renderEvent>[1] = {
+        events: [running],
+        resources: [sport],
+        resourceId: 'sport',
+      },
+    ) {
       return renderEvent(
         <TimelineGrid.Event
           eventId="running"
@@ -100,7 +107,7 @@ describe('<TimelineGrid.Event />', () => {
           data-testid="event"
           {...props}
         />,
-        { events: [running], resources: [sport], resourceId: 'sport' },
+        options,
       );
     }
 
@@ -137,15 +144,8 @@ describe('<TimelineGrid.Event />', () => {
         .resources([sport, work])
         .build();
 
-      renderEvent(
-        <TimelineGrid.Event
-          eventId="shared"
-          occurrenceKey="shared"
-          start={processDate(adapter.date(shared.start as string, 'default'), adapter)}
-          end={processDate(adapter.date(shared.end as string, 'default'), adapter)}
-          renderDragPreview={() => null}
-          dataTimezone={undefined}
-        />,
+      renderRunning(
+        { eventId: 'shared', occurrenceKey: 'shared' },
         { events: [shared], resources: [sport, work], resourceId: 'work' },
       );
 

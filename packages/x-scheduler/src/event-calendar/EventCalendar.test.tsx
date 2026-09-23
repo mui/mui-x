@@ -38,6 +38,24 @@ describe('EventCalendar', () => {
     .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
     .build();
 
+  it('should announce the primary resource of the event', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const other = ResourceBuilder.new().id('other').title('Other').build();
+    const running = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+      .resources([sport, other])
+      .build();
+
+    render(<EventCalendar events={[running]} resources={[sport, other]} />);
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025, Resource: Sport',
+      }),
+    ).not.to.equal(null);
+  });
+
   it('should translate the event accessible name through localeText', () => {
     render(
       <EventCalendar
@@ -336,7 +354,7 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to change the time format using the UI in the week view', async () => {
-      const { user } = render(<EventCalendar events={[]} />);
+      const { user } = render(<EventCalendar events={[event1]} />);
 
       // 12 hours format should be visible by default
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
@@ -348,6 +366,11 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
+
+      expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
+        'aria-label',
+        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+      );
 
       // Show 12 hours format again
       await openPreferencesMenu(user);

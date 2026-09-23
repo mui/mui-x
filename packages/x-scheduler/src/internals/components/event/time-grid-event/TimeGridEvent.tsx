@@ -10,12 +10,10 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
-  schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   getOccurrenceDataTimezone,
-  getPrimaryResourceId,
   useEventAccessibleName,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
@@ -538,15 +536,9 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
     rootDataAttributes,
     rootPositionProps,
   } = useTimeGridEvent(occurrence);
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    getPrimaryResourceId(occurrence.resource),
-  );
   const accessibleName = useEventAccessibleName({
     occurrence,
     isRecurring,
-    resourceName: resource?.title,
     localeText,
   });
 

@@ -33,7 +33,7 @@ export interface SchedulerLocalization {
 
 export const getSchedulerLocalization = (translations: {
   dialog: SchedulerEditingTranslations;
-  event: SchedulerEventTranslations;
+  event?: SchedulerEventTranslations;
   calendar: SchedulerCalendarTranslations;
   timeline: SchedulerTimelineTranslations;
 }): SchedulerLocalization => ({

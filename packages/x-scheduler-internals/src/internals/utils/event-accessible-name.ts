@@ -9,7 +9,8 @@ export interface SchedulerEventAriaLabelParts {
    */
   when: string;
   /**
-   * The day of the event. Not set when `when` already spans several dates.
+   * The day of the event, or its date range when it lasts several all-day days.
+   * Not set when `when` already carries the dates.
    */
   date?: string;
   resource?: string;

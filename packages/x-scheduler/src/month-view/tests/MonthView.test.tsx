@@ -453,6 +453,22 @@ describe('<MonthView />', () => {
         .build(),
     ];
 
+    it('should announce an all-day event as a date range instead of a time range', () => {
+      render(
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Multi-day Conference, All day, From Monday, May 5th, 2025 to Wednesday, May 7th, 2025',
+        }),
+      ).not.to.equal(null);
+    });
+
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider

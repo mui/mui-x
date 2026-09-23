@@ -23,9 +23,9 @@ export interface UseEventAccessibleNameParameters {
   occurrence: SchedulerRenderableEventOccurrence | null;
   isRecurring: boolean;
   /**
-   * Name of the resource to announce, if any.
+   * The resource to announce. Defaults to the occurrence's primary resource.
    */
-  resourceName?: string | null;
+  resourceId?: SchedulerResourceId;
   /**
    * The translated sentences. Defaults to English.
    */
@@ -41,13 +41,19 @@ export function useEventAccessibleName(
   const {
     occurrence,
     isRecurring,
-    resourceName = null,
+    resourceId,
     localeText = DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT,
   } = parameters;
 
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const resource = useStore(
+    store,
+    schedulerResourceSelectors.processedResource,
+    resourceId ?? getPrimaryResourceId(occurrence?.resource),
+  );
+  const resourceName = resource?.title ?? null;
 
   return React.useMemo(() => {
     if (occurrence == null) {
@@ -69,7 +75,7 @@ export interface UseDefaultEventAccessibleNameParameters extends useOriginalOccu
   /**
    * The resource to announce. Defaults to the event's primary resource.
    */
-  resourceId?: SchedulerResourceId | null;
+  resourceId?: SchedulerResourceId;
   /**
    * `false` returns `undefined` without resolving the name, e.g. when the consumer passed its own label.
    */
@@ -89,11 +95,6 @@ export function useDefaultEventAccessibleName(
   const lookupId = enabled ? eventId : null;
   const event = useStore(store, schedulerEventSelectors.processedEvent, lookupId);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, lookupId);
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    resourceId ?? getPrimaryResourceId(event?.resource),
-  );
 
   const occurrence = React.useMemo(
     () =>
@@ -103,5 +104,5 @@ export function useDefaultEventAccessibleName(
     [event, eventId, occurrenceKey, start, end, dataTimezone],
   );
 
-  return useEventAccessibleName({ occurrence, isRecurring, resourceName: resource?.title });
+  return useEventAccessibleName({ occurrence, isRecurring, resourceId });
 }

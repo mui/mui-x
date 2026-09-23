@@ -10,14 +10,10 @@ import type {
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import {
-  schedulerEventSelectors,
-  schedulerResourceSelectors,
-} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import {
-  getPrimaryResourceId,
   getOccurrenceDataTimezone,
   useEventAccessibleName,
 } from '@mui/x-scheduler-internals/internals';
@@ -314,11 +310,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const isEndResizable = useStore(store, isResizableSelector, 'end', occurrence);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    getPrimaryResourceId(occurrence.resource),
-  );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
 
   // Feature hooks
@@ -326,7 +317,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const accessibleName = useEventAccessibleName({
     occurrence,
     isRecurring,
-    resourceName: resource?.title,
     localeText,
   });
 

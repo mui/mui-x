@@ -1,34 +1,49 @@
-import { DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT } from '@mui/x-scheduler-internals/internals';
+import {
+  DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT,
+  getEventAccessibleName,
+} from '@mui/x-scheduler-internals/internals';
+import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { enUS } from '../locales/enUS';
 import type { SchedulerEventLocaleText } from '../models/translations';
 
 describe('enUS', () => {
-  it('should keep the event name strings in sync with the headless default', () => {
-    const shipped = enUS.components.MuiEventCalendar.defaultProps
-      .localeText as SchedulerEventLocaleText;
-    const fallback = DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT;
-    const parts = {
-      title: 'Running',
-      when: '7:30 AM to 8:30 AM',
-      date: 'Monday, May 26th, 2025',
-      resource: 'Resource: Sport',
-      recurring: 'Recurring',
-    };
+  const shipped = enUS.components.MuiEventCalendar.defaultProps
+    .localeText as SchedulerEventLocaleText;
 
-    expect(Object.keys(shipped)).to.include.members(Object.keys(fallback));
-    expect(shipped.eventAriaLabelTimeRange('a', 'b')).to.equal(
-      fallback.eventAriaLabelTimeRange('a', 'b'),
+  // The headless primitives fall back to their own English vocabulary, which the l10n script
+  // cannot read from `enUS`. Every sentence must come out the same through both.
+  function bothNames(occurrence: ReturnType<EventBuilder['toOccurrence']>, isRecurring: boolean) {
+    const parameters = { occurrence, adapter, ampm: true, isRecurring, resourceName: 'Sport' };
+    return [
+      getEventAccessibleName({ ...parameters, localeText: shipped }),
+      getEventAccessibleName({
+        ...parameters,
+        localeText: DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT,
+      }),
+    ];
+  }
+
+  it('should name events the same way as the headless default', () => {
+    const timed = EventBuilder.new()
+      .title('Running')
+      .startAt('2025-07-03T07:30:00')
+      .endAt('2025-07-03T08:30:00')
+      .toOccurrence();
+    const [shippedTimed, defaultTimed] = bothNames(timed, true);
+    expect(shippedTimed).to.equal(defaultTimed);
+    expect(shippedTimed).to.equal(
+      'Running, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Resource: Sport, Recurring',
     );
-    expect(shipped.eventAriaLabelDateRange('a', 'b')).to.equal(
-      fallback.eventAriaLabelDateRange('a', 'b'),
-    );
-    expect(shipped.eventAriaLabelAllDay).to.equal(fallback.eventAriaLabelAllDay);
-    expect(shipped.eventAriaLabelRecurring).to.equal(fallback.eventAriaLabelRecurring);
-    expect(shipped.resourceAriaLabel('Sport')).to.equal(fallback.resourceAriaLabel('Sport'));
-    expect(shipped.eventAriaLabel(parts)).to.equal(fallback.eventAriaLabel(parts));
-    expect(shipped.eventAriaLabel({ title: 'Running', when: 'All day' })).to.equal(
-      fallback.eventAriaLabel({ title: 'Running', when: 'All day' }),
+
+    const allDay = EventBuilder.new()
+      .title('Conference')
+      .span('2025-07-03', '2025-07-05', { allDay: true })
+      .toOccurrence();
+    const [shippedAllDay, defaultAllDay] = bothNames(allDay, false);
+    expect(shippedAllDay).to.equal(defaultAllDay);
+    expect(shippedAllDay).to.equal(
+      'Conference, All day, From Thursday, July 3rd, 2025 to Saturday, July 5th, 2025, Resource: Sport',
     );
   });
 });

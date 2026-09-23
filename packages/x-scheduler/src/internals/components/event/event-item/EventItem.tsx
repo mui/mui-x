@@ -7,11 +7,10 @@ import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
-  schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { getPrimaryResourceId, useEventAccessibleName } from '@mui/x-scheduler-internals/internals';
+import { useEventAccessibleName } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { EventItemProps } from './EventItem.types';
@@ -195,11 +194,6 @@ export const EventItem = React.forwardRef(function EventItem(
   // State hooks
 
   // Selector hooks
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    getPrimaryResourceId(occurrence.resource),
-  );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
@@ -207,7 +201,6 @@ export const EventItem = React.forwardRef(function EventItem(
   const accessibleName = useEventAccessibleName({
     occurrence,
     isRecurring,
-    resourceName: resource?.title,
     localeText,
   });
 

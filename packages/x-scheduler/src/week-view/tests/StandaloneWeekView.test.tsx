@@ -7,7 +7,7 @@ import {
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { fr } from 'date-fns/locale/fr';
-import { createDateLocaleTheme, esES, frFR } from '@mui/x-scheduler/locales';
+import { createDateLocaleTheme, deDE, esES, frFR } from '@mui/x-scheduler/locales';
 import { describe, it, expect } from 'vitest';
 
 describe('<StandaloneWeekView />', () => {
@@ -58,6 +58,26 @@ describe('<StandaloneWeekView />', () => {
       expect(
         screen.getByRole('button', {
           name: 'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3rd, 2025',
+        }),
+      ).not.to.equal(null);
+    });
+
+    it('should keep the English event name for a locale that does not translate it', () => {
+      const event = EventBuilder.new()
+        .title('Laufen')
+        .startAt('2025-07-03T07:30:00')
+        .endAt('2025-07-03T08:30:00')
+        .build();
+
+      render(
+        <ThemeProvider theme={createTheme({}, deDE)}>
+          <StandaloneWeekView events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+        </ThemeProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Laufen, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025',
         }),
       ).not.to.equal(null);
     });

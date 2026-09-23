@@ -135,13 +135,13 @@
     },
     {
       "name": "timelineEventContent",
-      "description": "The content of an event block.\nIt replaces the title text and is rendered inside the block, so the block keeps its\ngeometry, its drag and resize handles, and its button semantics.\nThe content is part of the accessible name of the event.",
+      "description": "The content of an event block.\nIt replaces the title text and is rendered inside the block, so the block keeps its\ngeometry, its drag and resize handles, and its button semantics.\nThe content is visible only: the event is named by its localized `aria-label`.",
       "default": "the occurrence title",
       "class": null
     },
     {
       "name": "timelineResourceTitle",
-      "description": "The content of a resource title cell.\nIt replaces the title text and is rendered next to the legend color and the collapse toggle.\nThe content is part of the accessible name of every event in the row.",
+      "description": "The content of a resource title cell.\nIt replaces the title text and is rendered next to the legend color and the collapse toggle.\nThe content is visible only: the events of the row announce the resource through\n`resourceAriaLabel`, not through this cell.",
       "default": "the resource title",
       "class": null
     }

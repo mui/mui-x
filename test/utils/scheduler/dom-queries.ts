@@ -66,7 +66,3 @@ export function getEventByTitle(title: string) {
 export function getAllEventsByTitle(title: string) {
   return screen.getAllByLabelText(getEventNamePattern(title));
 }
-
-export function queryEventByTitle(title: string) {
-  return screen.queryByLabelText(getEventNamePattern(title));
-}

@@ -206,7 +206,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   const accessibleName = useEventAccessibleName({
     occurrence: variant === 'placeholder' ? null : occurrence,
     isRecurring,
-    resourceName: rowResource?.title,
+    resourceId,
     localeText,
   });
 

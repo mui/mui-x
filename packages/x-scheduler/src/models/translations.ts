@@ -1,5 +1,8 @@
 import type { CalendarView } from '@mui/x-scheduler-internals/models';
-import type { SchedulerEventAccessibleNameLocaleText } from '@mui/x-scheduler-internals/internals';
+import type {
+  SchedulerEventAccessibleNameLocaleText,
+  SchedulerEventAriaLabelParts,
+} from '@mui/x-scheduler-internals/internals';
 
 export type SchedulerWeekday =
   'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
@@ -96,6 +99,11 @@ export interface EventEditingLocaleText {
 
 // Strings shared by every surface that renders events: the accessible name of an event.
 export type SchedulerEventLocaleText = SchedulerEventAccessibleNameLocaleText;
+
+/**
+ * The parts `eventAriaLabel` composes into the accessible name of an event.
+ */
+export type { SchedulerEventAriaLabelParts };
 
 export interface EventCalendarLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // ResourcesTree
