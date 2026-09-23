@@ -11,7 +11,6 @@ describe('useCalendarGridDateFromPositionInTimeColumn', () => {
   function Wrapper({ children }: { children: React.ReactNode }) {
     const value: CalendarGridTimeColumnContext = React.useMemo(
       () => ({
-        index: 0,
         hasFocus: false,
         start: START,
         end: adapter.addHours(START, 12),
