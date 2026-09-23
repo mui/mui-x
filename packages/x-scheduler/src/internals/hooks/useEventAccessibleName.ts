@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type {
-  SchedulerRenderableEventOccurrence,
-  SchedulerResourceId,
-} from '@mui/x-scheduler-internals/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
@@ -24,7 +21,7 @@ export interface UseEventAccessibleNameParameters {
   /**
    * The resource to announce. Defaults to the occurrence's primary resource.
    */
-  resourceId?: SchedulerResourceId;
+  resourceName?: string;
 }
 
 /**
@@ -33,17 +30,17 @@ export interface UseEventAccessibleNameParameters {
 export function useEventAccessibleName(
   parameters: UseEventAccessibleNameParameters,
 ): string | undefined {
-  const { occurrence, isRecurring, localeText, resourceId } = parameters;
+  const { occurrence, isRecurring, localeText, resourceName: resourceNameProp } = parameters;
 
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
-  const resource = useStore(
+  const primaryResource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    resourceId ?? getPrimaryResourceId(occurrence?.resource),
+    resourceNameProp === undefined ? getPrimaryResourceId(occurrence?.resource) : null,
   );
-  const resourceName = resource?.title ?? null;
+  const resourceName = resourceNameProp ?? primaryResource?.title ?? null;
 
   return React.useMemo(() => {
     if (occurrence == null) {

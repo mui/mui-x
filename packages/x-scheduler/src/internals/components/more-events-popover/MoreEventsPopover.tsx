@@ -131,10 +131,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       onClose={onClose}
       slotProps={{ transition: { onExited: restoreFocusOnExit } }}
     >
-      <MoreEventsPopoverHeader
-        className={classes.moreEventsPopoverHeader}
-        aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
-      >
+      <MoreEventsPopoverHeader className={classes.moreEventsPopoverHeader}>
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>
           {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
         </MoreEventsPopoverTitle>

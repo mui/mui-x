@@ -83,7 +83,7 @@ Times follow the 12-hour or 24-hour preference, and dates use the adapter's loca
 Each sentence comes from a [locale text](#localization-of-aria-labels) key, and `eventAriaLabel` composes the parts, so a locale can reorder them or change the separator.
 On the Event Timeline, the announced resource is the one of the row the event is rendered in.
 
-Multi-day events are rendered once as the main (visible) element and additionally as invisible placeholder elements in the spanned cells. The placeholder elements carry `aria-hidden="true"` so assistive technologies see only one announcement per event.
+Multi-day events are rendered once per row they span, plus invisible placeholder elements in the other spanned cells. The placeholders carry `aria-hidden="true"`, and every visible segment announces the same name, which is the full range of the event.
 
 The resource color indicator inside an event is decorative (`aria-hidden="true"`); the resource is announced through the `resourceAriaLabel` part of the event name.
 
@@ -176,7 +176,7 @@ The dialog is labeled by its event title via `aria-labelledby`.
 
 When a month cell has more events than can be displayed, a **"X more"** button opens a popover listing all events for that day.
 
-- The popover header element carries an `aria-label` with the full formatted date (for example, `"Monday, May 26"`).
+- The popover header shows the full formatted date (for example, `"Monday, May 26"`).
 - Each event inside the popover has the same `aria-label` as in the grid (see [Events](#events)).
 - Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. On a mouse/trackpad, <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead of activating the event directly.
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
