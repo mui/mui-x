@@ -26,6 +26,8 @@ import {
   isPasteShortcut,
   useGridLogger,
   isEventTargetInPortal,
+  isReplaceUpdate,
+  getReplaceRow,
 } from '@mui/x-data-grid/internals';
 import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -198,7 +200,12 @@ export class CellValueUpdater {
 
         try {
           const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
-          newRows.set(rowId, finalRowUpdate);
+          // A `{ _action: 'replace', row }` update is unwrapped so that the
+          // `clipboardPasteEnd` event exposes the stored row, not the envelope.
+          newRows.set(
+            rowId,
+            isReplaceUpdate(finalRowUpdate) ? getReplaceRow(finalRowUpdate) : finalRowUpdate,
+          );
           this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);

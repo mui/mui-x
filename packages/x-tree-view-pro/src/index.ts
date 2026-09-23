@@ -9,6 +9,7 @@ export * from '@mui/x-tree-view/TreeItemIcon';
 export * from '@mui/x-tree-view/TreeItemProvider';
 export * from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 export * from '@mui/x-tree-view/TreeItemLabelInput';
+export * from '@mui/x-tree-view/TreeItemLoader';
 
 export * from '@mui/x-tree-view/models';
 export * from '@mui/x-tree-view/icons';

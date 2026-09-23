@@ -12,7 +12,7 @@ import {
   UseTreeItemLabelInputSlotOwnProps,
   UseTreeItemLabelSlotOwnProps,
 } from '@mui/x-tree-view/useTreeItem';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../../datasets/products';
 
 interface CustomLabelProps extends UseTreeItemLabelSlotOwnProps {
   editable: boolean;

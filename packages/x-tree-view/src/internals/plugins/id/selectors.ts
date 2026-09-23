@@ -1,10 +1,8 @@
-import { createSelector } from '@mui/x-internals/store';
 import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
 import type { TreeViewItemId } from '../../../models';
 
-const treeIdSelector = createSelector(
-  (state: MinimalTreeViewState<any, any>) => state.providedTreeId ?? state.treeId,
-);
+const treeIdSelector = (state: MinimalTreeViewState<any, any>) =>
+  state.providedTreeId ?? state.treeId;
 
 export const idSelectors = {
   /**
@@ -16,14 +14,15 @@ export const idSelectors = {
    * If the user explicitly defined an id attribute, it will be returned.
    * Otherwise, the method creates a unique id for the item based on the Tree View id attribute and the item `itemId`
    */
-  treeItemIdAttribute: createSelector(
-    treeIdSelector,
-    (treeId, itemId: TreeViewItemId, providedIdAttribute: string | undefined) => {
-      if (providedIdAttribute != null) {
-        return providedIdAttribute;
-      }
+  treeItemIdAttribute: (
+    state: MinimalTreeViewState<any, any>,
+    itemId: TreeViewItemId,
+    providedIdAttribute: string | undefined,
+  ) => {
+    if (providedIdAttribute != null) {
+      return providedIdAttribute;
+    }
 
-      return `${treeId ?? ''}-${itemId}`;
-    },
-  ),
+    return `${treeIdSelector(state) ?? ''}-${itemId}`;
+  },
 };

@@ -70,7 +70,7 @@ const cell_11 = {
   yIndex: 1,
 } as const;
 
-function test(
+function move(
   direction:
     'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown' | 'Home' | 'End' | 'PageUp' | 'PageDown',
   initialFocus: FocusedItemIdentifier<'heatmap'> | null,
@@ -86,65 +86,65 @@ function test(
 
 describe('<Heatmap /> - keyboard navigation', () => {
   it('should move to the first or last node if no current focus', async () => {
-    expect(test('ArrowRight', null)).to.deep.equal(cell_00);
-    expect(test('ArrowLeft', null)).to.deep.equal(cell_00);
-    expect(test('ArrowUp', null)).to.deep.equal(cell_00);
-    expect(test('ArrowDown', null)).to.deep.equal(cell_00);
-    expect(test('Home', null)).to.deep.equal(cell_00);
-    expect(test('End', null)).to.deep.equal(cell_11);
+    expect(move('ArrowRight', null)).to.deep.equal(cell_00);
+    expect(move('ArrowLeft', null)).to.deep.equal(cell_00);
+    expect(move('ArrowUp', null)).to.deep.equal(cell_00);
+    expect(move('ArrowDown', null)).to.deep.equal(cell_00);
+    expect(move('Home', null)).to.deep.equal(cell_00);
+    expect(move('End', null)).to.deep.equal(cell_11);
   });
 
   it('should move to the first/last cell of the current row', () => {
-    expect(test('Home', cell_01)).to.deep.equal(cell_00);
-    expect(test('Home', cell_11)).to.deep.equal(cell_10);
-    expect(test('End', cell_00)).to.deep.equal(cell_01);
-    expect(test('End', cell_10)).to.deep.equal(cell_11);
+    expect(move('Home', cell_01)).to.deep.equal(cell_00);
+    expect(move('Home', cell_11)).to.deep.equal(cell_10);
+    expect(move('End', cell_00)).to.deep.equal(cell_01);
+    expect(move('End', cell_10)).to.deep.equal(cell_11);
   });
 
   it('should stay in place when already at the first/last cell of the row', () => {
-    expect(test('Home', cell_00)).to.deep.equal(cell_00);
-    expect(test('Home', cell_10)).to.deep.equal(cell_10);
-    expect(test('End', cell_01)).to.deep.equal(cell_01);
-    expect(test('End', cell_11)).to.deep.equal(cell_11);
+    expect(move('Home', cell_00)).to.deep.equal(cell_00);
+    expect(move('Home', cell_10)).to.deep.equal(cell_10);
+    expect(move('End', cell_01)).to.deep.equal(cell_01);
+    expect(move('End', cell_11)).to.deep.equal(cell_11);
   });
 
   it('should move to different cell', () => {
-    expect(test('ArrowRight', cell_00)).to.deep.equal(cell_01);
-    expect(test('ArrowLeft', cell_11)).to.deep.equal(cell_10);
-    expect(test('ArrowUp', cell_10)).to.deep.equal(cell_00);
-    expect(test('ArrowDown', cell_01)).to.deep.equal(cell_11);
+    expect(move('ArrowRight', cell_00)).to.deep.equal(cell_01);
+    expect(move('ArrowLeft', cell_11)).to.deep.equal(cell_10);
+    expect(move('ArrowUp', cell_10)).to.deep.equal(cell_00);
+    expect(move('ArrowDown', cell_01)).to.deep.equal(cell_11);
   });
 
   it('should move to the first/last cell of the grid with Ctrl+Home and Ctrl+End', () => {
-    expect(test('Home', cell_11, { ctrlKey: true })).to.deep.equal(cell_00);
-    expect(test('Home', cell_01, { metaKey: true })).to.deep.equal(cell_00);
-    expect(test('End', cell_00, { ctrlKey: true })).to.deep.equal(cell_11);
-    expect(test('End', cell_10, { metaKey: true })).to.deep.equal(cell_11);
+    expect(move('Home', cell_11, { ctrlKey: true })).to.deep.equal(cell_00);
+    expect(move('Home', cell_01, { metaKey: true })).to.deep.equal(cell_00);
+    expect(move('End', cell_00, { ctrlKey: true })).to.deep.equal(cell_11);
+    expect(move('End', cell_10, { metaKey: true })).to.deep.equal(cell_11);
     // Stays in place when already at the boundary.
-    expect(test('Home', cell_00, { ctrlKey: true })).to.deep.equal(cell_00);
-    expect(test('End', cell_11, { ctrlKey: true })).to.deep.equal(cell_11);
+    expect(move('Home', cell_00, { ctrlKey: true })).to.deep.equal(cell_00);
+    expect(move('End', cell_11, { ctrlKey: true })).to.deep.equal(cell_11);
     // Moves to the first/last cell if no current focus.
-    expect(test('Home', null, { ctrlKey: true })).to.deep.equal(cell_00);
-    expect(test('End', null, { ctrlKey: true })).to.deep.equal(cell_11);
+    expect(move('Home', null, { ctrlKey: true })).to.deep.equal(cell_00);
+    expect(move('End', null, { ctrlKey: true })).to.deep.equal(cell_11);
   });
 
   it('should move to the first/last row keeping the column with PageUp and PageDown', () => {
-    expect(test('PageUp', cell_10)).to.deep.equal(cell_00);
-    expect(test('PageUp', cell_11)).to.deep.equal(cell_01);
-    expect(test('PageDown', cell_00)).to.deep.equal(cell_10);
-    expect(test('PageDown', cell_01)).to.deep.equal(cell_11);
+    expect(move('PageUp', cell_10)).to.deep.equal(cell_00);
+    expect(move('PageUp', cell_11)).to.deep.equal(cell_01);
+    expect(move('PageDown', cell_00)).to.deep.equal(cell_10);
+    expect(move('PageDown', cell_01)).to.deep.equal(cell_11);
     // Stays in place when already at the boundary.
-    expect(test('PageUp', cell_00)).to.deep.equal(cell_00);
-    expect(test('PageDown', cell_11)).to.deep.equal(cell_11);
+    expect(move('PageUp', cell_00)).to.deep.equal(cell_00);
+    expect(move('PageDown', cell_11)).to.deep.equal(cell_11);
     // Moves to the first/last row if no current focus.
-    expect(test('PageUp', null)).to.deep.equal(cell_00);
-    expect(test('PageDown', null)).to.deep.equal(cell_11);
+    expect(move('PageUp', null)).to.deep.equal(cell_00);
+    expect(move('PageDown', null)).to.deep.equal(cell_11);
   });
 
   it('should try to go outside of the range', () => {
-    expect(test('ArrowRight', cell_01)).to.deep.equal(cell_01);
-    expect(test('ArrowLeft', cell_10)).to.deep.equal(cell_10);
-    expect(test('ArrowUp', cell_00)).to.deep.equal(cell_00);
-    expect(test('ArrowDown', cell_11)).to.deep.equal(cell_11);
+    expect(move('ArrowRight', cell_01)).to.deep.equal(cell_01);
+    expect(move('ArrowLeft', cell_10)).to.deep.equal(cell_10);
+    expect(move('ArrowUp', cell_00)).to.deep.equal(cell_00);
+    expect(move('ArrowDown', cell_11)).to.deep.equal(cell_11);
   });
 });

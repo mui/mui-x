@@ -1,4 +1,4 @@
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
@@ -13,11 +13,7 @@ import type {
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
 import type { TreeViewValidItem } from '../../models';
-import {
-  createMinimalInitialState,
-  createTreeViewDefaultId,
-  deriveStateFromParameters,
-} from './MinimalTreeViewStore.utils';
+import { createMinimalInitialState, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';
@@ -161,8 +157,8 @@ export class MinimalTreeViewStore<
     updateModel(newMinimalState, 'expandedItems', 'defaultExpandedItems');
     updateModel(newMinimalState, 'selectedItems', 'defaultSelectedItems');
 
-    if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
-      newMinimalState.treeId = createTreeViewDefaultId();
+    if (this.state.treeId !== parameters.defaultId) {
+      newMinimalState.treeId = parameters.defaultId;
     }
 
     if (
@@ -178,7 +174,7 @@ export class MinimalTreeViewStore<
       updateModel,
     );
 
-    this.update(newState);
+    this.update(newState as State);
     this.parameters = parameters;
   }
 

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type {
-  EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
   SchedulerSlotProps,
   SchedulerSlots,
@@ -29,11 +28,15 @@ const event = EventBuilder.new()
   .resource(engineering)
   .build();
 
-function CustomGeneralTab(props: EventDialogGeneralTabProps & { marker?: string }) {
+function CustomGeneralTab(props: { marker?: string }) {
   return <p>{props.marker ? `Custom general tab ${props.marker}` : 'Custom general tab'}</p>;
 }
 
-const slots: SchedulerSlots = { eventDialogGeneralTab: CustomGeneralTab };
+// The overrides interface is only populated through module augmentation on the consumer side.
+const slots: SchedulerSlots = {
+  eventDialogGeneralTab:
+    CustomGeneralTab as React.ComponentType<EventDialogGeneralTabPropsOverrides>,
+};
 const slotProps: SchedulerSlotProps = {
   // The overrides interface is only populated through module augmentation on the consumer side.
   eventDialogGeneralTab: { marker: 'via slotProps' } as EventDialogGeneralTabPropsOverrides,
@@ -44,7 +47,7 @@ const slotProps: SchedulerSlotProps = {
  * down to it. The compact views open the drawer, the others the dialog; both render the same form.
  */
 describe('eventDialogGeneralTab slot - premium surfaces', () => {
-  const { render } = createSchedulerRenderer({ clockConfig: visibleDate });
+  const { renderSettled } = createSchedulerRenderer({ clockConfig: visibleDate });
 
   const surfaces = [
     ['EventCalendarPremium', EventCalendarPremium, false],
@@ -59,8 +62,8 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
   ] as const;
 
   surfaces.forEach(([name, Component, isCompact]) => {
-    it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, () => {
-      render(
+    it(`should forward the eventDialogGeneralTab slot and its slot props from <${name} />`, async () => {
+      await renderSettled(
         <Component
           events={[event]}
           resources={[engineering]}
@@ -81,8 +84,8 @@ describe('eventDialogGeneralTab slot - premium surfaces', () => {
     });
   });
 
-  it('should keep the recurrence tab working when the general tab is replaced by the slot', () => {
-    render(
+  it('should keep the recurrence tab working when the general tab is replaced by the slot', async () => {
+    await renderSettled(
       <EventCalendarPremium
         events={[event]}
         resources={[engineering]}

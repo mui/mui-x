@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { createSelector, useStore } from '@base-ui/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import type {
@@ -16,7 +16,10 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
+import {
+  getPrimaryResourceId,
+  getOccurrenceDataTimezone,
+} from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
@@ -271,31 +274,29 @@ const DayGridEventLinesClamp = styled('span', {
   flexGrow: 1,
 });
 
-const isResizableSelector = createSelector(
-  (
-    state: EventCalendarState,
-    side: SchedulerEventSide,
-    occurrence: SchedulerRenderableEventOccurrence,
-  ) => {
-    if (!schedulerEventSelectors.isResizable(state, occurrence.id, side)) {
-      return false;
-    }
+const isResizableSelector = (
+  state: EventCalendarState,
+  side: SchedulerEventSide,
+  occurrence: SchedulerRenderableEventOccurrence,
+) => {
+  if (!schedulerEventSelectors.isResizable(state, occurrence.id, side)) {
+    return false;
+  }
 
-    const view = eventCalendarViewSelectors.view(state);
+  const view = eventCalendarViewSelectors.view(state);
 
-    // There is only one day cell in the day view
-    if (view === 'day') {
-      return false;
-    }
+  // There is only one day cell in the day view
+  if (view === 'day') {
+    return false;
+  }
 
-    // In month view, only multi-day and all-day events can be resized
-    if (view === 'month') {
-      return isOccurrenceAllDayOrMultipleDay(occurrence, state.adapter);
-    }
+  // In month view, only multi-day and all-day events can be resized
+  if (view === 'month') {
+    return isOccurrenceAllDayOrMultipleDay(occurrence, state.adapter);
+  }
 
-    return true;
-  },
-);
+  return true;
+};
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   props: DayGridEventProps,
@@ -436,6 +437,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <DayGridEventRoot
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
