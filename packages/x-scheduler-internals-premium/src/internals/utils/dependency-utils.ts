@@ -108,11 +108,9 @@ const DEPENDENCY_LAG_UNIT_IN_DAYS: Record<SchedulerDependencyLagUnit, number> = 
   week: 7,
 };
 
-/**
- * The lag as an all-day event can carry it: whole days, rounded down. An all-day event has
- * no time of day, so a lag shorter than a day cannot be honored and adds nothing.
- */
-export function getWholeDayDependencyLag(
+// The lag as an all-day event can carry it: whole days, rounded down. An all-day event
+// has no time of day, so a lag shorter than a day cannot be honored and adds nothing.
+function getWholeDayDependencyLag(
   lag: SchedulerResolvedDependencyLag | null,
 ): SchedulerResolvedDependencyLag | null {
   if (lag === null) {
@@ -120,6 +118,19 @@ export function getWholeDayDependencyLag(
   }
   const days = Math.floor(lag.amount * DEPENDENCY_LAG_UNIT_IN_DAYS[lag.unit]);
   return days === 0 ? null : { amount: days, unit: 'day' };
+}
+
+/**
+ * The lag the engine makes a successor wait, or `null` when it waits nothing. The single
+ * definition shared by the engine and the accessible description, so the announced wait
+ * is always the one taken.
+ */
+export function getEffectiveDependencyLag(
+  dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
+  isAllDaySuccessor: boolean | undefined,
+): SchedulerResolvedDependencyLag | null {
+  const lag = getDependencyLag(dependency);
+  return isAllDaySuccessor ? getWholeDayDependencyLag(lag) : lag;
 }
 
 /**

@@ -10,8 +10,7 @@ import type {
 } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
-  getDependencyLag,
-  getWholeDayDependencyLag,
+  getEffectiveDependencyLag,
   groupByEventId,
   isDependencyActive,
   isDependencyReadOnly,
@@ -49,15 +48,13 @@ const activeSourcesByTargetSelector = createSelectorMemoized(
     const sourcesByTarget = new Map<SchedulerEventId, SchedulerDependencySourceDescription[]>();
     for (const dependency of dependencies) {
       // Active dependencies always resolve: their events exist in the lookup.
-      const lag = getDependencyLag(dependency);
       const source = {
         title: processedEventLookup.get(dependency.source)!.title,
         type: dependency.type,
-        // The same normalization the engine applies, so the description never announces
-        // a wait the successor does not take.
-        lag: processedEventLookup.get(dependency.target)!.allDay
-          ? getWholeDayDependencyLag(lag)
-          : lag,
+        lag: getEffectiveDependencyLag(
+          dependency,
+          processedEventLookup.get(dependency.target)!.allDay,
+        ),
       };
       const sources = sourcesByTarget.get(dependency.target);
       if (sources) {

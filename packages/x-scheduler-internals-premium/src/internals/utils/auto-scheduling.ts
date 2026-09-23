@@ -14,8 +14,7 @@ import type { SchedulerDependency } from '../../models';
 import {
   addDependencyLag,
   getDependencyEdges,
-  getDependencyLag,
-  getWholeDayDependencyLag,
+  getEffectiveDependencyLag,
 } from './dependency-utils';
 
 export interface ComputeAutoSchedulingCascadeParameters {
@@ -370,13 +369,10 @@ export function computeAutoSchedulingCascade(
         continue;
       }
       const reference = adapter.setTimezone(sourceDates[edges.source], timezone);
-      // An all-day event carries the lag in whole days, so a shorter one adds nothing.
-      const lag = getDependencyLag(dependency);
+      const lag = getEffectiveDependencyLag(dependency, base.allDay);
       required[edges.target] = later(
         required[edges.target],
-        toBound(
-          addDependencyLag(adapter, reference, base.allDay ? getWholeDayDependencyLag(lag) : lag),
-        ),
+        toBound(addDependencyLag(adapter, reference, lag)),
       );
     }
     return required;

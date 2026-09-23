@@ -6,6 +6,7 @@ import {
   getDependencyEdges,
   getDependencyLag,
   getDependencyLagIssue,
+  getEffectiveDependencyLag,
   getDependencyType,
 } from './dependency-utils';
 
@@ -114,6 +115,46 @@ describe('dependency-utils', () => {
 
     it('should return no lag for an unknown unit', () => {
       expect(getDependencyLag(dependency({ lag: 2, lagUnit: 'fortnight' as any }))).to.equal(null);
+    });
+  });
+
+  describe('getEffectiveDependencyLag', () => {
+    it('should resolve the lag of a timed successor unchanged', () => {
+      expect(
+        getEffectiveDependencyLag(dependency({ lag: 2, lagUnit: 'hour' }), false),
+      ).to.deep.equal({
+        amount: 2,
+        unit: 'hour',
+      });
+    });
+
+    it('should drop a lag shorter than a day on an all-day successor', () => {
+      expect(getEffectiveDependencyLag(dependency({ lag: 2, lagUnit: 'hour' }), true)).to.equal(
+        null,
+      );
+    });
+
+    it('should round a longer lag down to whole days on an all-day successor', () => {
+      expect(
+        getEffectiveDependencyLag(dependency({ lag: 36, lagUnit: 'hour' }), true),
+      ).to.deep.equal({
+        amount: 1,
+        unit: 'day',
+      });
+    });
+
+    it('should convert weeks to days on an all-day successor', () => {
+      expect(
+        getEffectiveDependencyLag(dependency({ lag: 2, lagUnit: 'week' }), true),
+      ).to.deep.equal({
+        amount: 14,
+        unit: 'day',
+      });
+    });
+
+    it('should return no lag for an invalid one, whatever the successor', () => {
+      expect(getEffectiveDependencyLag(dependency({ lag: -1 }), true)).to.equal(null);
+      expect(getEffectiveDependencyLag(dependency({ lag: -1 }), false)).to.equal(null);
     });
   });
 
