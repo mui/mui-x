@@ -311,15 +311,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const handleEndsChange = (endsSelection: EndsSelection) => {
     switch (endsSelection) {
       case 'until': {
-        formStore.setValues((prev) => ({
-          recurrenceSelection: 'custom',
-          rruleDraft: {
-            ...prev.rruleDraft,
-            // The end of the event's last day, in its own timezone.
-            until: adapter.endOfDay(ruleBounds.end.value),
-            count: undefined,
-          },
-        }));
+        // The end of the event's last day, in its own timezone.
+        updateCustomDraft({ until: adapter.endOfDay(ruleBounds.end.value), count: undefined });
         break;
       }
       case 'after': {
