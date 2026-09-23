@@ -37,19 +37,6 @@ const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
   position: 'relative',
 });
 
-// Removes an exiting element from the layout to prevent the content from jumping (#9736).
-const exitingChildStyle: React.CSSProperties = {
-  position: 'absolute',
-  top: 0,
-  insetInlineStart: 0,
-};
-
-// Applies the exiting style without a `childFactory`, so `TransitionGroup` keeps the identity
-// of unchanged exiting elements and React skips their renders.
-function PickersFadeTransition(props: React.ComponentProps<typeof Fade>) {
-  return <Fade {...props} style={props.in ? undefined : exitingChildStyle} />;
-}
-
 /**
  * @ignore - do not document.
  */
@@ -65,19 +52,19 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
   }
   return (
     <PickersFadeTransitionGroupRoot className={clsx(classes.root, className)} ownerState={other}>
-      <PickersFadeTransition
+      <Fade
         appear={false}
         mountOnEnter
         unmountOnExit
+        exit={false}
         key={transKey}
         timeout={{
           appear: theme.transitions.duration.enteringScreen,
           enter: theme.transitions.duration.enteringScreen,
-          exit: 0,
         }}
       >
         {children}
-      </PickersFadeTransition>
+      </Fade>
     </PickersFadeTransitionGroupRoot>
   );
 }
