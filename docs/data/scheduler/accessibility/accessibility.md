@@ -227,6 +227,8 @@ The following keys are specifically relevant to accessibility:
   eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
   eventAriaLabelAllDay: 'All day',
   eventAriaLabelRecurring: 'Recurring',
+  // Composes the name. `when` is the time range, "All day" or the multi-day range,
+  // `date` is the day (omitted when `when` already spans several days).
   eventAriaLabel: ({ title, when, date, resource, recurring }) =>
     [title, when, date, resource, recurring].filter(Boolean).join(', '),
   resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
