@@ -210,7 +210,8 @@ function AppWrapper(props) {
       metadata: '',
       name: 'MUI X',
       versions: [
-        { text: 'v7', href: `https://mui.com${languagePrefix}/x/introduction/` },
+        { text: 'latest', href: `https://mui.com${languagePrefix}/x/introduction/` },
+        { text: 'v7', href: `https://v7.mui.com${languagePrefix}/x/introduction/` },
         { text: `v${process.env.LIB_VERSION}`, current: true },
         { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
@@ -223,8 +224,12 @@ function AppWrapper(props) {
         name: 'Data Grid',
         versions: [
           {
-            text: 'v7',
+            text: 'latest',
             href: `https://mui.com${languagePrefix}/x/react-data-grid/`,
+          },
+          {
+            text: 'v7',
+            href: `https://v7.mui.com${languagePrefix}/x/react-data-grid/`,
           },
           { text: `v${process.env.DATA_GRID_VERSION}`, current: true },
           { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
@@ -237,8 +242,12 @@ function AppWrapper(props) {
         name: 'Date Pickers',
         versions: [
           {
-            text: 'v7',
+            text: 'latest',
             href: `https://mui.com${languagePrefix}/x/react-date-pickers/`,
+          },
+          {
+            text: 'v7',
+            href: `https://v7.mui.com${languagePrefix}/x/react-date-pickers/`,
           },
           { text: `v${process.env.DATE_PICKERS_VERSION}`, current: true },
           {
@@ -253,8 +262,12 @@ function AppWrapper(props) {
         name: 'Charts',
         versions: [
           {
-            text: 'v7',
+            text: 'latest',
             href: `https://mui.com${languagePrefix}/x/react-charts/`,
+          },
+          {
+            text: 'v7',
+            href: `https://v7.mui.com${languagePrefix}/x/react-charts/`,
           },
           { text: `v${process.env.CHARTS_VERSION}`, current: true },
         ],
@@ -265,8 +278,12 @@ function AppWrapper(props) {
         name: 'Tree View',
         versions: [
           {
-            text: 'v7',
+            text: 'latest',
             href: `https://mui.com${languagePrefix}/x/react-tree-view/getting-started`,
+          },
+          {
+            text: 'v7',
+            href: `https://v7.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
           },
           { text: `v${process.env.TREE_VIEW_VERSION}`, current: true },
         ],
