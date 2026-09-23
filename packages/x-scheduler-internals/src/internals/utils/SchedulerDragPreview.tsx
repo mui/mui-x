@@ -13,7 +13,10 @@ function isOutsideScheduler(location: DragLocationHistory) {
 }
 
 /** Visibility changes only when the target changes; Base UI positions the floating preview. */
-function FloatingPreview(props: { location: DragLocationHistory; children: React.ReactNode }) {
+export function SchedulerFloatingPreview(props: {
+  location: DragLocationHistory;
+  children: React.ReactNode;
+}) {
   const { location, children } = props;
   const [visible, setVisible] = React.useState(() => isOutsideScheduler(location));
   Draggable.useDragMonitor({
@@ -33,14 +36,16 @@ export function SchedulerDragPreview(props: SchedulerDragPreview.Props) {
   return (
     <Draggable.Preview disabled={!enabled} offset="pointer" style={{ pointerEvents: 'none' }}>
       {({ location }) => (
-        <FloatingPreview location={location}>{renderDragPreview({ data, type })}</FloatingPreview>
+        <SchedulerFloatingPreview location={location}>
+          {renderDragPreview({ data, type })}
+        </SchedulerFloatingPreview>
       )}
     </Draggable.Preview>
   );
 }
 
 export namespace SchedulerDragPreview {
-  export interface Props extends RenderDragPreviewParameters {
+  export interface Props extends Extract<RenderDragPreviewParameters, { type: 'internal-event' }> {
     renderDragPreview: (parameters: RenderDragPreviewParameters) => React.ReactNode;
   }
 }

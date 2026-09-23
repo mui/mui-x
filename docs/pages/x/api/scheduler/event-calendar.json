@@ -1325,6 +1325,12 @@
       "isGlobal": false
     },
     {
+      "key": "standaloneEvent",
+      "className": "MuiEventCalendar-standaloneEvent",
+      "description": "Styles applied to the standalone event element.",
+      "isGlobal": false
+    },
+    {
       "key": "timeGridEvent",
       "className": "MuiEventCalendar-timeGridEvent",
       "description": "Styles applied to time grid event elements.",

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { screen, act } from '@mui/internal-test-utils';
+import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { schedulerExternalEventKind } from '@mui/x-scheduler/drag-and-drop';
@@ -71,6 +72,72 @@ describe('External Scheduler drag kind', () => {
     expect(onEventsChange).toHaveBeenCalledTimes(1);
     expect(onEventsChange.mock.calls[0][0][0].title).toBe('External job');
     expect(onEventDrop).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses the latest StandaloneEvent callback after a rerender during a drag', async () => {
+    const data = { id: 'external', title: 'External job', duration: 60 };
+    const onEventsChange = vi.fn();
+    function Fixture({ onEventDrop }: { onEventDrop: () => void }) {
+      return (
+        <React.Fragment>
+          <StandaloneEvent data={data} onEventDrop={onEventDrop} data-testid="external-source">
+            External job
+          </StandaloneEvent>
+          <StandaloneMonthView
+            events={[]}
+            resources={[]}
+            canDragEventsFromTheOutside
+            onEventsChange={onEventsChange}
+          />
+        </React.Fragment>
+      );
+    }
+    const onEventDrop = vi.fn();
+    const nextOnEventDrop = vi.fn(() => {
+      expect(onEventsChange).toHaveBeenCalledTimes(1);
+    });
+    const view = await renderSettled(<Fixture onEventDrop={onEventDrop} />);
+    await act(async () => {
+      simulateDragAndDrop({
+        source: screen.getByTestId('external-source'),
+        target: getMonthViewCell(5),
+        hold: true,
+      });
+    });
+    view.setProps({ onEventDrop: nextOnEventDrop });
+    await act(async () => dropDrag(getMonthViewCell(5)));
+    expect(onEventDrop).not.toHaveBeenCalled();
+    expect(nextOnEventDrop).toHaveBeenCalledTimes(1);
+    expect(onEventsChange.mock.calls[0][0][0].title).toBe('External job');
+  });
+
+  it('does not notify StandaloneEvent when the target has event creation disabled', async () => {
+    const onEventDrop = vi.fn();
+    const onEventsChange = vi.fn();
+    await renderSettled(
+      <React.Fragment>
+        <StandaloneEvent
+          data={{ id: 'external', title: 'External job' }}
+          onEventDrop={onEventDrop}
+          data-testid="external-source"
+        />
+        <StandaloneMonthView
+          events={[]}
+          resources={[]}
+          canDragEventsFromTheOutside
+          eventCreation={false}
+          onEventsChange={onEventsChange}
+        />
+      </React.Fragment>,
+    );
+    await act(async () => {
+      simulateDragAndDrop({
+        source: screen.getByTestId('external-source'),
+        target: getMonthViewCell(5),
+      });
+    });
+    expect(onEventsChange).not.toHaveBeenCalled();
+    expect(onEventDrop).not.toHaveBeenCalled();
   });
 
   it.each([false, true])(

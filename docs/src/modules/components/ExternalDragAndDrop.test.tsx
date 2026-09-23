@@ -38,7 +38,7 @@ describe.each([
         requestAnimationFrame(() => resolve());
       });
     });
-    expect(preview.style.visibility).toBe('hidden');
+    expect(preview.parentElement!.style.visibility).toBe('hidden');
     await act(async () => {
       moveDrag(document.body, { clientX: 200 });
       await new Promise<void>((resolve) => {

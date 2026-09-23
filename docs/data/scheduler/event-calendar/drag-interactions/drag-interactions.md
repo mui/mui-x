@@ -3,7 +3,7 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
-components: EventCalendar, EventCalendarPremium
+components: EventCalendar, EventCalendarPremium, StandaloneEvent
 ---
 
 # Event Calendar - Drag Interactions
@@ -151,41 +151,25 @@ function App() {
 ## External drag and drop
 
 Use the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props to drag events between the Event Calendar and external containers.
-When `canDragEventsFromTheOutside` is `true`, you can drop external draggables using `schedulerExternalEventKind` into the Event Calendar.
+When `canDragEventsFromTheOutside` is `true`, you can drop events created with `StandaloneEvent` into the Event Calendar.
 When `canDropEventsToTheOutside` is `true`, you can drag events out of the Event Calendar.
 
-Create external items with the Base UI drag engine and the Scheduler's exported kind:
+Use `StandaloneEvent` to provide external events. It handles drag activation and the floating preview with the Base UI drag engine.
 
 ```tsx
-import { Draggable } from '@base-ui/react/draggable';
-import { schedulerExternalEventKind } from '@mui/x-scheduler/drag-and-drop';
+import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 
-<Draggable.Provider>
-  <Draggable.Root
-    kind={schedulerExternalEventKind}
-    payload={{
-      eventData: { id: 'task-1', title: 'Planning', duration: 60 },
-      onEventDrop: () => removeFromExternalList('task-1'),
-    }}
-  >
-    Planning
-  </Draggable.Root>
-</Draggable.Provider>;
+<StandaloneEvent
+  data={{ id: 'task-1', title: 'Planning', duration: 60 }}
+  onEventDrop={() => removeFromExternalList('task-1')}
+>
+  Planning
+</StandaloneEvent>;
 ```
 
-`eventData` contains the event properties and an optional duration in minutes.
+The `data` prop contains the event properties and an optional duration in minutes.
 The Scheduler supplies the dates and destination resource from the drop position.
-The optional `onEventDrop` callback runs after the Scheduler handles the drop; use it to remove the item from the external list.
-Keep this callback in the payload: the source's `onMoveEnd` runs before the Scheduler's drop handler.
-
-A provider can wrap the whole external list.
-External sources and the Scheduler can use separate providers because the exported kind is shared.
-Use the exported kind directly rather than creating a new kind with the same name.
-
-The example above uses the engine's default floating preview.
-For a custom preview, use `Draggable.Preview`.
-The demo below uses `Draggable.useDragMonitor` and `schedulerDropTargetKind.matches(target)` to hide that preview over Scheduler targets.
-The Scheduler renders its own in-grid previews, including events that span multiple days or weeks.
-Styling and focus or button behavior belong to your external component.
+Use `onEventDrop` to remove the event from the external list after the Scheduler handles the drop.
+`StandaloneEvent` can render outside a Scheduler provider and hides its floating preview while the Scheduler displays an in-grid preview.
 
 {{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}

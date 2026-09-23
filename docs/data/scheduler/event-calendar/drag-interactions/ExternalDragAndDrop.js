@@ -3,12 +3,10 @@ import { styled } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { Draggable } from '@base-ui/react/draggable';
-
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 
 import {
-  schedulerExternalEventKind,
-  schedulerDropTargetKind,
   schedulerDayEventMoveKind,
   schedulerTimeEventMoveKind,
 } from '@mui/x-scheduler/drag-and-drop';
@@ -49,30 +47,13 @@ const externalEventStyles = (theme) => ({
   },
 });
 
-const ExternalEventCard = styled('div')(({ theme }) => externalEventStyles(theme));
+const StyledStandaloneEvent = styled(StandaloneEvent)(({ theme }) =>
+  externalEventStyles(theme),
+);
 
 const ExternalEventPlaceholder = styled('div')(({ theme }) =>
   externalEventStyles(theme),
 );
-
-// Scheduler draws the in-grid preview, which can span multiple days or rows.
-function ExternalEventPreview({ location, children }) {
-  const isOutsideScheduler = (nextLocation) =>
-    !nextLocation.current.dropTargets.some((target) =>
-      schedulerDropTargetKind.matches(target),
-    );
-  const [visible, setVisible] = React.useState(() => isOutsideScheduler(location));
-  Draggable.useDragMonitor({
-    accept: schedulerExternalEventKind,
-    onMoveStart: (event) => setVisible(isOutsideScheduler(event.location)),
-    onTargetChange: (event) => setVisible(isOutsideScheduler(event.location)),
-  });
-  return (
-    <ExternalEventCard style={{ visibility: visible ? undefined : 'hidden' }}>
-      {children}
-    </ExternalEventCard>
-  );
-}
 
 const acceptedKinds = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind];
 
@@ -125,15 +106,11 @@ export default function ExternalDragAndDrop() {
   const [placeholder, setPlaceholder] = React.useState(null);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
 
-  const externalEventPayloads = React.useMemo(
-    () =>
-      externalEvents.map((event) => ({
-        eventData: event,
-        onEventDrop: () =>
-          setExternalEvents((prev) => prev.filter((item) => item.id !== event.id)),
-      })),
-    [externalEvents],
-  );
+  const handleEventDropInsideEventCalendar = (removedEvent) => {
+    setExternalEvents((prev) =>
+      prev.filter((event) => event.id !== removedEvent.id),
+    );
+  };
 
   return (
     <Draggable.Provider>
@@ -155,29 +132,15 @@ export default function ExternalDragAndDrop() {
           }}
           render={<ExternalEventsContainer />}
         >
-          {externalEventPayloads.map((payload) => {
-            const event = payload.eventData;
-            return (
-              <Draggable.Root
-                key={event.id}
-                kind={schedulerExternalEventKind}
-                payload={payload}
-                render={<ExternalEventCard />}
-              >
-                {event.title} ({event.duration} mins)
-                <Draggable.Preview
-                  offset="pointer"
-                  style={{ pointerEvents: 'none' }}
-                >
-                  {({ location }) => (
-                    <ExternalEventPreview location={location}>
-                      {event.title}
-                    </ExternalEventPreview>
-                  )}
-                </Draggable.Preview>
-              </Draggable.Root>
-            );
-          })}
+          {externalEvents.map((event) => (
+            <StyledStandaloneEvent
+              key={event.id}
+              data={event}
+              onEventDrop={() => handleEventDropInsideEventCalendar(event)}
+            >
+              {event.title} ({event.duration} mins)
+            </StyledStandaloneEvent>
+          ))}
           {placeholder != null && (
             <ExternalEventPlaceholder data-placeholder>
               {placeholder.title} ({placeholder.duration} mins)

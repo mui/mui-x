@@ -21,14 +21,26 @@ const EventDragPreviewRoot = styled('div', {
   variants: getPaletteVariants(theme),
 }));
 
-export function EventDragPreview(props: RenderDragPreviewParameters) {
+function InternalEventDragPreview(
+  props: Extract<RenderDragPreviewParameters, { type: 'internal-event' }>,
+) {
   const store = useSchedulerStoreContext();
-  const styledContext = React.useContext(EventCalendarStyledContext);
   const color = useStore(store, schedulerEventSelectors.color, props.data.id, undefined);
+  return <EventDragPreviewContent title={props.data.title} color={color} />;
+}
 
+function EventDragPreviewContent({ title, color }: { title: string; color: PaletteName }) {
+  const styledContext = React.useContext(EventCalendarStyledContext);
   return (
     <EventDragPreviewRoot className={styledContext?.classes.eventDragPreview} data-palette={color}>
-      {props.data.title}
+      {title}
     </EventDragPreviewRoot>
   );
+}
+
+export function EventDragPreview(props: RenderDragPreviewParameters) {
+  if (props.type === 'standalone-event') {
+    return <EventDragPreviewContent title={props.data.title} color={props.data.color ?? 'teal'} />;
+  }
+  return <InternalEventDragPreview {...props} />;
 }

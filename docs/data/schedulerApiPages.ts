@@ -34,6 +34,10 @@ const schedulerApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/scheduler/standalone-event',
+    title: 'StandaloneEvent',
+  },
+  {
     pathname: '/x/api/scheduler/standalone-month-view',
     title: 'StandaloneMonthView',
   },
