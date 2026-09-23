@@ -287,9 +287,10 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       colors={colors}
       disableAxisListener={
         onHighlightedAxisChange === undefined &&
-        (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
-        axisHighlight?.x === 'none' &&
-        axisHighlight?.y === 'none'
+        (!showTooltip || (slotProps?.tooltip?.trigger ?? 'axis') !== 'axis') &&
+        !(showHighlight && plotType === 'line') &&
+        (axisHighlight?.x ?? 'none') === 'none' &&
+        (axisHighlight?.y ?? 'none') === 'none'
       }
       onHighlightChange={onHighlightChange}
       onHighlightedAxisChange={onHighlightedAxisChange}
