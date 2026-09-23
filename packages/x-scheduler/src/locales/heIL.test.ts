@@ -4,6 +4,12 @@ import { heIL } from './heIL';
 const localeText = heIL.components.MuiEventCalendar.defaultProps.localeText;
 
 describe('heIL', () => {
+  it('should write the weekday in full in the weekly preset label', () => {
+    expect(
+      localeText.recurrenceWeeklyPresetLabel!({ weekday: 'monday', weekdayName: 'Monday' }),
+    ).to.equal('מדי שבוע ביום שני');
+  });
+
   describe('monthly recurrence labels', () => {
     it('should write the weekday in full in the aria label and as a letter in the visible label', () => {
       expect(

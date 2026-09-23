@@ -96,7 +96,11 @@ describe('<EventDialogContent open />', () => {
   const { render } = createSchedulerRenderer();
 
   // An event opened from a calendar displayed in another timezone.
-  function renderCrossTimezoneDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+  function renderCrossTimezoneDialog(
+    builder: EventBuilder,
+    displayTimezone: TemporalTimezone,
+    providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
+  ) {
     const onEventsChange = vi.fn();
     const event = builder.withDisplayTimezone(displayTimezone).build();
     const { user, setProps } = render(
@@ -106,6 +110,7 @@ describe('<EventDialogContent open />', () => {
         storeClass={PremiumTestStore}
         displayTimezone={displayTimezone}
         onEventsChange={onEventsChange}
+        {...providerProps}
       >
         <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
       </EventCalendarProvider>,
@@ -3341,7 +3346,7 @@ describe('<EventDialogContent open />', () => {
       });
 
       describe('Recurrence Custom behavior', () => {
-        async function openCustomMonthly(user: any) {
+        async function openCustomMonthly(user: ReturnType<typeof render>['user']) {
           await user.click(screen.getByRole('tab', { name: /recurrence/i }));
           await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
           await user.click(await screen.findByRole('option', { name: /custom/i }));
@@ -3930,7 +3935,7 @@ describe('<EventDialogContent open />', () => {
           });
         });
 
-        it('should build the monthly ordinal labels from the date locale, not from the weekday token', async () => {
+        it('should build the monthly last week labels from the date locale, not from the weekday token', async () => {
           const { user } = render(
             <EventCalendarProvider
               events={[DEFAULT_EVENT]}
@@ -3977,21 +3982,14 @@ describe('<EventDialogContent open />', () => {
 
         it('should pass the weekday token and name to the monthly week number locale callbacks', async () => {
           // 2025-05-05 is the first Monday of the month, so the ordinal is 1 instead of -1.
-          const firstMondayEvent = EventBuilder.new()
+          const builder = EventBuilder.new()
             .title('Running')
             .singleDay('2025-05-05T07:30:00Z', 45)
-            .resource(personalResource)
-            .build();
-          const firstMondayOccurrence = EventBuilder.new()
-            .id(firstMondayEvent.id)
-            .title(firstMondayEvent.title)
-            .span(firstMondayEvent.start, firstMondayEvent.end)
-            .resource(personalResource)
-            .toOccurrence();
+            .resource(personalResource);
 
           const { user } = render(
             <EventCalendarProvider
-              events={[firstMondayEvent]}
+              events={[builder.build()]}
               resources={resources}
               localeText={{
                 recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday, weekdayName }) =>
@@ -4001,7 +3999,7 @@ describe('<EventDialogContent open />', () => {
               }}
               storeClass={PremiumTestStore}
             >
-              <TestEventDialogContent open {...defaultProps} occurrence={firstMondayOccurrence} />
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
             </EventCalendarProvider>,
           );
 
@@ -4017,27 +4015,16 @@ describe('<EventDialogContent open />', () => {
             .title('Early call')
             .withDataTimezone('Pacific/Auckland')
             .span('2025-05-27T01:00:00', '2025-05-27T01:45:00')
-            .resource(personalResource)
-            .withDisplayTimezone('UTC');
-          const onEventsChange = vi.fn();
+            .resource(personalResource);
 
-          const { user } = render(
-            <EventCalendarProvider
-              events={[builder.build()]}
-              resources={resources}
-              displayTimezone="UTC"
-              onEventsChange={onEventsChange}
-              localeText={{
-                recurrenceMonthlyLastWeekAriaLabel: ({ weekday, weekdayName }) =>
-                  `aria:${weekday}:${weekdayName}`,
-                recurrenceMonthlyLastWeekLabel: ({ weekday, weekdayName }) =>
-                  `label:${weekday}:${weekdayName}`,
-              }}
-              storeClass={PremiumTestStore}
-            >
-              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
-            </EventCalendarProvider>,
-          );
+          const { user, onEventsChange } = renderCrossTimezoneDialog(builder, 'UTC', {
+            localeText: {
+              recurrenceMonthlyLastWeekAriaLabel: ({ weekday, weekdayName }) =>
+                `aria:${weekday}:${weekdayName}`,
+              recurrenceMonthlyLastWeekLabel: ({ weekday, weekdayName }) =>
+                `label:${weekday}:${weekdayName}`,
+            },
+          });
 
           await openCustomMonthly(user);
 

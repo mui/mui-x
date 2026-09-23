@@ -14,6 +14,13 @@ export interface SchedulerWeekdayLabelParams {
   weekdayName: string;
 }
 
+export interface SchedulerMonthlyWeekNumberLabelParams extends SchedulerWeekdayLabelParams {
+  /**
+   * The ordinal of the weekday within the month, 1 to 4 (2 for the second Monday).
+   */
+  ord: number;
+}
+
 // Strings shared by every event-editing surface: the dialog, the drawer, and the armed-event toolbar.
 export interface EventEditingLocaleText {
   // EventDialog
@@ -84,17 +91,13 @@ export interface EventEditingLocaleText {
   recurrenceMonthlyLastWeekLabel: (params: SchedulerWeekdayLabelParams) => string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
   /**
-   * `weekdayName` is the full name ("Monday"), `ord` is the week of the month, starting at 1.
+   * `weekdayName` is the full name ("Monday").
    */
-  recurrenceMonthlyWeekNumberAriaLabel: (
-    params: SchedulerWeekdayLabelParams & { ord: number },
-  ) => string;
+  recurrenceMonthlyWeekNumberAriaLabel: (params: SchedulerMonthlyWeekNumberLabelParams) => string;
   /**
-   * `weekdayName` is the abbreviated name ("Mon"), `ord` is the week of the month, starting at 1.
+   * `weekdayName` is the abbreviated name ("Mon").
    */
-  recurrenceMonthlyWeekNumberLabel: (
-    params: SchedulerWeekdayLabelParams & { ord: number },
-  ) => string;
+  recurrenceMonthlyWeekNumberLabel: (params: SchedulerMonthlyWeekNumberLabelParams) => string;
   recurrenceWeeklyMonthlySpecificInputsLabel: string;
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
