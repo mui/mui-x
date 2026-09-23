@@ -17,7 +17,6 @@ import type {
   TemporalSupportedObject,
 } from '../../models';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
-import { useDefaultEventAccessibleName } from '../../internals/utils/useEventAccessibleName';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
   componentProps: CalendarGridTimeEvent.Props,
@@ -63,16 +62,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     start,
     end,
     dataTimezone,
-  });
-
-  const hasCustomLabel = Boolean(elementProps['aria-label'] || elementProps['aria-labelledby']);
-  const accessibleName = useDefaultEventAccessibleName({
-    eventId,
-    occurrenceKey,
-    start,
-    end,
-    dataTimezone,
-    enabled: !hasCustomLabel && interactive,
   });
 
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
@@ -139,8 +128,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     props: [
       elementProps,
       {
-        // A non-interactive event stays a plain div: no role, no tabIndex, no name.
-        ...(interactive && !hasCustomLabel ? { 'aria-label': accessibleName } : undefined),
         style: {
           [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
@@ -168,8 +155,8 @@ export namespace CalendarGridTimeEvent {
       useDraggableEvent.PublicParameters,
       Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
     /**
-     * Whether the event behaves like a button: `role="button"`, roving `tabIndex` and the default
-     * accessible name. Set it to `false` for an inert preview (creation / resize placeholder) that
+     * Whether the event behaves like a button: `role="button"` and a roving `tabIndex`.
+     * Set it to `false` for an inert preview (creation / resize placeholder) that
      * only hosts pointer interactions — it then renders a plain `div`, so it is never focusable.
      * @default true
      */

@@ -1,9 +1,11 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import {
-  DEFAULT_EVENT_ACCESSIBLE_NAME_LOCALE_TEXT as localeText,
-  getEventAccessibleName,
-} from './event-accessible-name';
+import { enUS } from '../../locales/enUS';
+import type { SchedulerEventLocaleText } from '../../models/translations';
+import { getEventAccessibleName } from './event-accessible-name';
+
+const localeText = enUS.components.MuiEventCalendar.defaultProps
+  .localeText as SchedulerEventLocaleText;
 
 function getName(
   occurrence: ReturnType<EventBuilder['toOccurrence']>,

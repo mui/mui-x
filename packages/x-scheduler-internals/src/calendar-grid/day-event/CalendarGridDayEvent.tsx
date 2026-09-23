@@ -21,7 +21,6 @@ import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
-import { useDefaultEventAccessibleName } from '../../internals/utils/useEventAccessibleName';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
@@ -92,16 +91,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     dataTimezone,
   });
 
-  const hasCustomLabel = Boolean(elementProps['aria-label'] || elementProps['aria-labelledby']);
-  const accessibleName = useDefaultEventAccessibleName({
-    eventId,
-    occurrenceKey,
-    start,
-    end,
-    dataTimezone,
-    enabled: !hasCustomLabel,
-  });
-
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
     () => ({
       eventId,
@@ -165,7 +154,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     props: [
       elementProps,
       {
-        ...(hasCustomLabel ? undefined : { 'aria-label': accessibleName }),
         style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
       },
       getButtonProps,

@@ -14,7 +14,6 @@ import type {
 import {
   useDraggableEvent,
   useOriginalOccurrence,
-  useDefaultEventAccessibleName,
   computeElementPositionInCollection,
   dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
@@ -95,17 +94,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     start,
     end,
     dataTimezone,
-  });
-
-  const hasCustomLabel = Boolean(elementProps['aria-label'] || elementProps['aria-labelledby']);
-  const accessibleName = useDefaultEventAccessibleName({
-    eventId,
-    occurrenceKey,
-    start,
-    end,
-    dataTimezone,
-    resourceId: rowResourceId,
-    enabled: !hasCustomLabel,
   });
 
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
@@ -189,7 +177,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     props: [
       elementProps,
       {
-        ...(hasCustomLabel ? undefined : { 'aria-label': accessibleName }),
         style: {
           [TimelineGridEventCssVars.xPosition]: `${position * 100}%`,
           [TimelineGridEventCssVars.width]: `${duration * 100}%`,

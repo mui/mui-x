@@ -4,7 +4,7 @@ import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models'
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { formatHourAndMinutes } from '@mui/x-scheduler-internals/internals';
+import { formatHourAndMinutes } from '../utils/date-utils';
 
 export function useFormatTime() {
   // Context hooks

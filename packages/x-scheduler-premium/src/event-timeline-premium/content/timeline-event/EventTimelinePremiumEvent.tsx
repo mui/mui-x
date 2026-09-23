@@ -11,16 +11,14 @@ import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import {
-  getOccurrenceDataTimezone,
-  useEventAccessibleName,
-} from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   EventDragPreview,
   getPaletteVariants,
+  useEventAccessibleName,
   useSchedulerSlots,
 } from '@mui/x-scheduler/internals';
 import type {

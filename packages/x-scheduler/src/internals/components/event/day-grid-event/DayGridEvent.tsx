@@ -13,14 +13,12 @@ import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-ca
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import {
-  getOccurrenceDataTimezone,
-  useEventAccessibleName,
-} from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import type { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
+import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';

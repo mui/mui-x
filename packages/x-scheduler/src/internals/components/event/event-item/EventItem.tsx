@@ -10,9 +10,9 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useEventAccessibleName } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';

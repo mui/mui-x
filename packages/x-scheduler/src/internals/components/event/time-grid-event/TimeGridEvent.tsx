@@ -12,10 +12,8 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import {
-  getOccurrenceDataTimezone,
-  useEventAccessibleName,
-} from '@mui/x-scheduler-internals/internals';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
+import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
