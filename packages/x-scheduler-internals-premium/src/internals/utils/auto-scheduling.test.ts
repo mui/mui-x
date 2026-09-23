@@ -2029,7 +2029,7 @@ describe('computeAutoSchedulingCascade', () => {
     );
   });
 
-  it('should push an all-day FF successor lagged by hours to the next whole day', () => {
+  it('should ignore a lag shorter than a day on an all-day successor', () => {
     const eventA = allDayEvent('a', '2025-07-03');
     const eventB = allDayEvent('b', '2025-07-03');
 
@@ -2046,8 +2046,36 @@ describe('computeAutoSchedulingCascade', () => {
       ],
     );
 
+    // An all-day event moves in whole days, so two hours add nothing: the successor
+    // finishes with its predecessor instead of a day later.
     expect(result).to.have.length(1);
-    // The end must reach 07-06T01:59:59.999, so the day moves to the 6th.
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T00:00:00')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
+    );
+  });
+
+  it('should carry a lag longer than a day on an all-day successor as whole days', () => {
+    const eventA = allDayEvent('a', '2025-07-03');
+    const eventB = allDayEvent('b', '2025-07-03');
+
+    const result = runCascade(
+      [eventA, eventB],
+      [dependency('a', 'b', { type: 'FinishToFinish', lag: 36, lagUnit: 'hour' })],
+      [
+        {
+          id: 'a',
+          start: utcDate('2025-07-05T00:00:00'),
+          end: utcDate('2025-07-05T23:59:59.999'),
+          allDay: true,
+        },
+      ],
+    );
+
+    // 36 hours round down to one day, so the successor finishes a day after.
+    expect(result).to.have.length(1);
     expect(adapter.getTime(result[0].start!)).to.equal(
       adapter.getTime(utcDate('2025-07-06T00:00:00')),
     );

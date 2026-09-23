@@ -102,6 +102,27 @@ export function getDependencyLag(
   return { amount, unit: dependency.lagUnit ?? 'day' };
 }
 
+const DEPENDENCY_LAG_UNIT_IN_DAYS: Record<SchedulerDependencyLagUnit, number> = {
+  minute: 1 / (24 * 60),
+  hour: 1 / 24,
+  day: 1,
+  week: 7,
+};
+
+/**
+ * The lag as an all-day event can carry it: whole days, rounded down. An all-day event has
+ * no time of day, so a lag shorter than a day cannot be honored and adds nothing.
+ */
+export function getWholeDayDependencyLag(
+  lag: SchedulerResolvedDependencyLag | null,
+): SchedulerResolvedDependencyLag | null {
+  if (lag === null) {
+    return null;
+  }
+  const days = Math.floor(lag.amount * DEPENDENCY_LAG_UNIT_IN_DAYS[lag.unit]);
+  return days === 0 ? null : { amount: days, unit: 'day' };
+}
+
 /**
  * Adds a dependency lag to a date, in the timezone of the date.
  */

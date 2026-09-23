@@ -68,7 +68,8 @@ export interface SchedulerDependency {
    * The calendar time the successor must wait after the constraining edge of the
    * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
    * A value other than zero or a positive whole number, or an unknown `lagUnit` next to a
-   * lag, discards the lag with a warning. Lead (a negative lag) is not supported yet, so the
+   * lag, discards the lag with a warning. An all-day successor carries the lag in whole
+   * days, rounded down, since it has no time of day. Lead (a negative lag) is not supported yet, so the
    * same data will schedule differently once it is.
    * @default 0
    */

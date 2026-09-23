@@ -11,7 +11,12 @@ import { dateToEventString, normalizeAllDayBounds } from '@mui/x-scheduler-inter
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerDependency } from '../../models';
-import { addDependencyLag, getDependencyEdges, getDependencyLag } from './dependency-utils';
+import {
+  addDependencyLag,
+  getDependencyEdges,
+  getDependencyLag,
+  getWholeDayDependencyLag,
+} from './dependency-utils';
 
 export interface ComputeAutoSchedulingCascadeParameters {
   adapter: Adapter;
@@ -365,9 +370,13 @@ export function computeAutoSchedulingCascade(
         continue;
       }
       const reference = adapter.setTimezone(sourceDates[edges.source], timezone);
+      // An all-day event carries the lag in whole days, so a shorter one adds nothing.
+      const lag = getDependencyLag(dependency);
       required[edges.target] = later(
         required[edges.target],
-        toBound(addDependencyLag(adapter, reference, getDependencyLag(dependency))),
+        toBound(
+          addDependencyLag(adapter, reference, base.allDay ? getWholeDayDependencyLag(lag) : lag),
+        ),
       );
     }
     return required;
