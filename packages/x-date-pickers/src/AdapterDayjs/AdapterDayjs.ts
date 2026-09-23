@@ -289,8 +289,9 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
    * offsets. Only values bound to a timezone with `dayjs.tz` are affected, including `dayjs.tz(value, 'UTC')`.
    */
   private isAffectedByLocalMeanTime = (value: Dayjs) => {
-    // @ts-ignore
-    return this.hasUTCPlugin() && this.hasTimezonePlugin() && !!value.$x?.$timezone;
+    const zone = (value as Dayjs & { $x?: { $timezone?: string } }).$x?.$timezone;
+
+    return this.hasUTCPlugin() && this.hasTimezonePlugin() && !!zone;
   };
 
   /**
