@@ -1376,6 +1376,10 @@ describe('<EventTimelinePremium />', () => {
       expect(getEventByTitle(singleEvent.title)).toHaveAccessibleName(
         `${singleEvent.title}, 11:00 AM to 12:00 PM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
       );
+      // Each occurrence announces its own date, not the date of the series.
+      expect(getAllEventsByTitle(recurringEvent.title)[1]).toHaveAccessibleName(
+        `${recurringEvent.title}, 9:00 AM to 10:00 AM, Friday, July 4th, 2025, Resource: ${engineering.title}, Recurring`,
+      );
     });
   });
 });

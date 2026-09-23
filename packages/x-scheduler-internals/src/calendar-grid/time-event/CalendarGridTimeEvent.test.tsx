@@ -109,8 +109,12 @@ describe('<CalendarGrid.TimeEvent />', () => {
       expect(screen.getByRole('button', { name: 'Custom' })).not.to.equal(null);
     });
 
-    it('should not add a default name when the consumer passes aria-labelledby', () => {
-      renderRunning({ 'aria-labelledby': 'some-id' });
+    it('should let a consumer aria-labelledby name the event', () => {
+      renderRunning({
+        'aria-labelledby': 'custom-label',
+        children: <span id="custom-label">Custom label</span>,
+      });
+      expect(screen.getByRole('button', { name: 'Custom label' })).not.to.equal(null);
       expect(screen.getByTestId('event')).not.to.have.attribute('aria-label');
     });
 

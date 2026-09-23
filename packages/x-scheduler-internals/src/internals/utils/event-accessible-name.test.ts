@@ -144,4 +144,15 @@ describe('getEventAccessibleName', () => {
       'Thursday, July 3rd, 2025 7:30 AM to 8:30 AM Running',
     );
   });
+
+  it('should announce the day and time in the display timezone', () => {
+    const occurrence = EventBuilder.new()
+      .title('Late call')
+      .startAt('2025-07-03T23:30:00Z')
+      .endAt('2025-07-04T00:30:00Z')
+      .withDisplayTimezone('Asia/Tokyo')
+      .toOccurrence();
+
+    expect(getName(occurrence)).to.equal('Late call, 8:30 AM to 9:30 AM, Friday, July 4th, 2025');
+  });
 });

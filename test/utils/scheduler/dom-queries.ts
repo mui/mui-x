@@ -51,7 +51,9 @@ export function getMonthViewCell(dayOfMonth: number): HTMLElement {
 }
 
 /**
- * Matches the accessible name of a rendered event: the title, followed by when it happens.
+ * Matches the accessible name of a rendered event with the default English composition: the title,
+ * followed by when it happens. The lookups below also match `aria-hidden` copies of multi-day
+ * events; use `getByRole('button', { name })` to assert on the exposed name.
  */
 export function getEventNamePattern(title: string) {
   return new RegExp(`^${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')},`);

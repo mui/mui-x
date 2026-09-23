@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerRenderableEventOccurrence } from '../../models';
+import type { SchedulerRenderableEventOccurrence, SchedulerResourceId } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
@@ -67,7 +67,11 @@ export function useEventAccessibleName(
 
 export interface UseDefaultEventAccessibleNameParameters extends useOriginalOccurrence.Parameters {
   /**
-   * `false` skips the store reads, e.g. when the consumer passed its own label.
+   * The resource to announce. Defaults to the event's primary resource.
+   */
+  resourceId?: SchedulerResourceId | null;
+  /**
+   * `false` returns `undefined` without resolving the name, e.g. when the consumer passed its own label.
    */
   enabled: boolean;
 }
@@ -79,17 +83,16 @@ export interface UseDefaultEventAccessibleNameParameters extends useOriginalOccu
 export function useDefaultEventAccessibleName(
   parameters: UseDefaultEventAccessibleNameParameters,
 ): string | undefined {
-  const { eventId, occurrenceKey, start, end, dataTimezone, enabled } = parameters;
+  const { eventId, occurrenceKey, start, end, dataTimezone, resourceId, enabled } = parameters;
   const store = useSchedulerStoreContext();
 
   const lookupId = enabled ? eventId : null;
   const event = useStore(store, schedulerEventSelectors.processedEvent, lookupId);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, lookupId);
-  // Only the primary resource is announced.
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    getPrimaryResourceId(event?.resource),
+    resourceId ?? getPrimaryResourceId(event?.resource),
   );
 
   const occurrence = React.useMemo(

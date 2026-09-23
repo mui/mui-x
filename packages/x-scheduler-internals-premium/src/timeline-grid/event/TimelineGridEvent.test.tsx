@@ -118,9 +118,42 @@ describe('<TimelineGrid.Event />', () => {
       expect(screen.getByRole('button', { name: 'Custom' })).not.to.equal(null);
     });
 
-    it('should not add a default name when the consumer passes aria-labelledby', () => {
-      renderRunning({ 'aria-labelledby': 'some-id' });
+    it('should let a consumer aria-labelledby name the event', () => {
+      renderRunning({
+        'aria-labelledby': 'custom-label',
+        children: <span id="custom-label">Custom label</span>,
+      });
+      expect(screen.getByRole('button', { name: 'Custom label' })).not.to.equal(null);
       expect(screen.getByTestId('event')).not.to.have.attribute('aria-label');
+    });
+
+    it('should announce the resource of the row for a multi-resource event', () => {
+      const work = ResourceBuilder.new().id('work').title('Work').build();
+      const shared = EventBuilder.new()
+        .id('shared')
+        .title('Shared')
+        .startAt('2025-07-03T07:30:00')
+        .endAt('2025-07-03T08:30:00')
+        .resources([sport, work])
+        .build();
+
+      renderEvent(
+        <TimelineGrid.Event
+          eventId="shared"
+          occurrenceKey="shared"
+          start={processDate(adapter.date(shared.start as string, 'default'), adapter)}
+          end={processDate(adapter.date(shared.end as string, 'default'), adapter)}
+          renderDragPreview={() => null}
+          dataTimezone={undefined}
+        />,
+        { events: [shared], resources: [sport, work], resourceId: 'work' },
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Shared, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025, Resource: Work',
+        }),
+      ).not.to.equal(null);
     });
   });
 });
