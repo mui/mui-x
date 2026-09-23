@@ -25,28 +25,22 @@ function FloatingPreview(props: { location: DragLocationHistory; children: React
 }
 
 /** The floating preview outside Scheduler targets. In-grid occurrence previews stay in the grid. */
-export function useDragPreview(parameters: useDragPreview.Parameters): useDragPreview.ReturnValue {
-  const { renderDragPreview, data, type } = parameters;
+export function SchedulerDragPreview(props: SchedulerDragPreview.Props) {
+  const { renderDragPreview, data, type } = props;
   const store = useSchedulerStoreContext();
   const enabled = useStore(store, schedulerEventSelectors.canDropEventsToTheOutside);
 
-  return {
-    element: (
-      <Draggable.Preview disabled={!enabled} offset="pointer" style={{ pointerEvents: 'none' }}>
-        {({ location }) => (
-          <FloatingPreview location={location}>{renderDragPreview({ data, type })}</FloatingPreview>
-        )}
-      </Draggable.Preview>
-    ),
-  };
+  return (
+    <Draggable.Preview disabled={!enabled} offset="pointer" style={{ pointerEvents: 'none' }}>
+      {({ location }) => (
+        <FloatingPreview location={location}>{renderDragPreview({ data, type })}</FloatingPreview>
+      )}
+    </Draggable.Preview>
+  );
 }
 
-export namespace useDragPreview {
-  export type Parameters = RenderDragPreviewParameters & {
+export namespace SchedulerDragPreview {
+  export interface Props extends RenderDragPreviewParameters {
     renderDragPreview: (parameters: RenderDragPreviewParameters) => React.ReactNode;
-  };
-
-  export interface ReturnValue {
-    element: React.ReactNode;
   }
 }

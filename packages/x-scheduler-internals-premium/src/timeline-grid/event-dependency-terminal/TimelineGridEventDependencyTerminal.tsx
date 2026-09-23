@@ -42,9 +42,6 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
     // Context hooks
     const store = useEventTimelinePremiumStoreContext();
 
-    // Ref hooks
-    const ref = React.useRef<HTMLDivElement>(null);
-
     // Feature hooks
     const payload = React.useMemo(
       () => ({
@@ -60,7 +57,7 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
     );
 
     const element = useRenderElement('div', componentProps, {
-      ref: [forwardedRef, ref],
+      ref: forwardedRef,
       props: [
         elementProps,
         {

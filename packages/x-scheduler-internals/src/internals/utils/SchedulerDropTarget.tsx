@@ -55,6 +55,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
 
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
+  const payload = React.useMemo(() => ({ surfaceType }), [surfaceType]);
 
   const getDataFromInside =
     (type: 'internal-drag' | 'internal-resize'): SchedulerDropTarget.GetDataFromInside =>
@@ -122,7 +123,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
     <Draggable.Target
       accept={accept}
       kind={schedulerDropTargetKind}
-      payload={{ surfaceType }}
+      payload={payload}
       render={render}
       canDrop={({ source }) => {
         if (

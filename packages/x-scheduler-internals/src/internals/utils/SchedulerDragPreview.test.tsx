@@ -10,7 +10,7 @@ import {
   EventBuilder,
 } from 'test/utils/scheduler';
 import { schedulerDayEventMoveKind, schedulerDropTargetKind } from './schedulerDrag';
-import { useDragPreview } from './useDragPreview';
+import { SchedulerDragPreview } from './SchedulerDragPreview';
 import { EventCalendarProvider } from '../../event-calendar-provider';
 
 const PreviewContext = React.createContext('missing context');
@@ -26,15 +26,10 @@ function PreviewContent() {
 }
 
 function Source({ renderPreview }: { renderPreview: () => React.ReactNode }) {
-  const preview = useDragPreview({
-    type: 'internal-event',
-    data: event,
-    renderDragPreview: renderPreview,
-  });
   return (
     <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload} data-testid="source">
       Source
-      {preview.element}
+      <SchedulerDragPreview type="internal-event" data={event} renderDragPreview={renderPreview} />
     </Draggable.Root>
   );
 }

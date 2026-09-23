@@ -124,11 +124,15 @@ export default function ExternalDragAndDrop() {
   const [placeholder, setPlaceholder] = React.useState(null);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
 
-  const handleEventDropInsideEventTimeline = (removedEvent) => {
-    setExternalEvents((prev) =>
-      prev.filter((event) => event.id !== removedEvent.id),
-    );
-  };
+  const externalEventPayloads = React.useMemo(
+    () =>
+      externalEvents.map((event) => ({
+        eventData: event,
+        onEventDrop: () =>
+          setExternalEvents((prev) => prev.filter((item) => item.id !== event.id)),
+      })),
+    [externalEvents],
+  );
 
   return (
     <Draggable.Provider>
@@ -150,26 +154,29 @@ export default function ExternalDragAndDrop() {
           }}
           render={<ExternalEventsContainer />}
         >
-          {externalEvents.map((event) => (
-            <Draggable.Root
-              key={event.id}
-              kind={schedulerExternalEventKind}
-              payload={{
-                eventData: event,
-                onEventDrop: () => handleEventDropInsideEventTimeline(event),
-              }}
-              render={<ExternalEventCard />}
-            >
-              {event.title} ({event.duration} mins)
-              <Draggable.Preview offset="pointer" style={{ pointerEvents: 'none' }}>
-                {({ location }) => (
-                  <ExternalEventPreview location={location}>
-                    {event.title}
-                  </ExternalEventPreview>
-                )}
-              </Draggable.Preview>
-            </Draggable.Root>
-          ))}
+          {externalEventPayloads.map((payload) => {
+            const event = payload.eventData;
+            return (
+              <Draggable.Root
+                key={event.id}
+                kind={schedulerExternalEventKind}
+                payload={payload}
+                render={<ExternalEventCard />}
+              >
+                {event.title} ({event.duration} mins)
+                <Draggable.Preview
+                  offset="pointer"
+                  style={{ pointerEvents: 'none' }}
+                >
+                  {({ location }) => (
+                    <ExternalEventPreview location={location}>
+                      {event.title}
+                    </ExternalEventPreview>
+                  )}
+                </Draggable.Preview>
+              </Draggable.Root>
+            );
+          })}
           {placeholder != null && (
             <ExternalEventPlaceholder data-placeholder>
               {placeholder.title} ({placeholder.duration} mins)

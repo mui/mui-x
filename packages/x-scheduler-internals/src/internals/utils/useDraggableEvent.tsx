@@ -10,7 +10,7 @@ import {
 } from '../../scheduler-selectors';
 import type { SchedulerEventId } from '../../models';
 import type { useElementPositionInCollection } from './useElementPositionInCollection';
-import { useDragPreview } from './useDragPreview';
+import { SchedulerDragPreview } from './SchedulerDragPreview';
 import { useEvent } from './useEvent';
 
 export function useDraggableEvent<TData extends SchedulerEventMoveData>(
@@ -43,12 +43,6 @@ export function useDraggableEvent<TData extends SchedulerEventMoveData>(
   // Feature hooks
   const { state: eventState } = useEvent({ start, end, occurrenceKey });
 
-  const preview = useDragPreview({
-    type: 'internal-event',
-    data: event,
-    renderDragPreview,
-  });
-
   const state = {
     ...eventState,
     dragging: placeholderAction === 'internal-drag',
@@ -65,7 +59,13 @@ export function useDraggableEvent<TData extends SchedulerEventMoveData>(
     payload,
     disabled: !isDraggable,
     getDragData,
-    preview: preview.element,
+    preview: (
+      <SchedulerDragPreview
+        type="internal-event"
+        data={event}
+        renderDragPreview={renderDragPreview}
+      />
+    ),
     onMoveEnd: () => {
       store.setOccurrencePlaceholder(null);
     },
@@ -103,7 +103,7 @@ export namespace useDraggableEvent {
   }
 
   export interface PublicParameters
-    extends useEvent.Parameters, Pick<useDragPreview.Parameters, 'renderDragPreview'> {
+    extends useEvent.Parameters, Pick<SchedulerDragPreview.Props, 'renderDragPreview'> {
     /**
      * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
