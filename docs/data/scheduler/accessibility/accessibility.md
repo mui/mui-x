@@ -85,7 +85,7 @@ On the Event Timeline, the announced resource is the one of the row the event is
 
 Multi-day events are rendered once as the main (visible) element and additionally as invisible placeholder elements in the spanned cells. The placeholder elements carry `aria-hidden="true"` so assistive technologies see only one announcement per event.
 
-The resource color indicator inside an event uses `role="img"` with an `aria-label` describing the resource (for example, `"Resource: Sport"`). When no resource is assigned the label falls back to the localized `noResourceAriaLabel` value. The indicator itself is not part of the event's accessible name; the resource is announced through the name's `resourceAriaLabel` part instead.
+The resource color indicator inside an event is decorative (`aria-hidden="true"`); the resource is announced through the `resourceAriaLabel` part of the event name.
 
 Recurring event icons are `aria-hidden="true"` as they are decorative.
 
@@ -229,9 +229,11 @@ The following keys are specifically relevant to accessibility:
   eventAriaLabelRecurring: 'Recurring',
   eventAriaLabel: ({ title, when, date, resource, recurring }) =>
     [title, when, date, resource, recurring].filter(Boolean).join(', '),
-  noResourceAriaLabel: 'No specific resource',
   resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
   hiddenEvents: (count) => `${count} more..`,
+
+  // Event details
+  noResourceAriaLabel: 'No specific resource',
 
   // Month view
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,

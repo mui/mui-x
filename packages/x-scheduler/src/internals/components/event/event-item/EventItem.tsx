@@ -224,15 +224,7 @@ export const EventItem = React.forwardRef(function EventItem(
       case 'compact':
         return (
           <React.Fragment>
-            <ResourceLegendColor
-              className={classes.resourceLegendColor}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <ResourceLegendColor className={classes.resourceLegendColor} aria-hidden="true" />
             <EventItemLinesClamp
               className={classes.eventItemLinesClamp}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -261,15 +253,7 @@ export const EventItem = React.forwardRef(function EventItem(
       case 'regular':
         return (
           <React.Fragment>
-            <ResourceLegendColor
-              className={classes.resourceLegendColor}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <ResourceLegendColor className={classes.resourceLegendColor} aria-hidden="true" />
             <EventItemLinesClamp
               className={classes.eventItemLinesClamp}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -290,7 +274,7 @@ export const EventItem = React.forwardRef(function EventItem(
             'Check the component documentation for supported variants.',
         );
     }
-  }, [variant, resource?.title, localeText, formatTime, occurrence, classes]);
+  }, [variant, formatTime, occurrence, classes]);
 
   return (
     <Button

@@ -360,15 +360,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       case 'compact':
         return (
           <DayGridEventCardWrapper className={classes.dayGridEventCardWrapper}>
-            <EventColorIndicator
-              className={classes.eventColorIndicator}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <EventColorIndicator className={classes.eventColorIndicator} aria-hidden="true" />
 
             <DayGridEventCardContent className={classes.dayGridEventCardContent}>
               <DayGridEventLinesClamp
@@ -407,8 +399,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     occurrence.displayTimezone.start.value,
     occurrence.displayTimezone.end.value,
     isRecurring,
-    resource?.title,
-    localeText,
     formatTime,
     classes,
   ]);
