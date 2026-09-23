@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import type { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
