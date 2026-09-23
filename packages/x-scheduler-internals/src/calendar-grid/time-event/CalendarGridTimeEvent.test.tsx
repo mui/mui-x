@@ -9,6 +9,7 @@ import {
 } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
 
 describe('<CalendarGrid.TimeEvent />', () => {
@@ -16,6 +17,33 @@ describe('<CalendarGrid.TimeEvent />', () => {
 
   const eventStart = processDate(adapter.now('default'), adapter);
   const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
+
+  type ProviderProps = React.ComponentProps<typeof EventCalendarProvider>;
+
+  // Mounts the event in the column context it needs.
+  function renderEvent(
+    node: React.ReactElement,
+    options: Partial<Pick<ProviderProps, 'events' | 'resources'>> & {
+      columnStart?: TemporalSupportedObject;
+      columnEnd?: TemporalSupportedObject;
+    } = {},
+  ) {
+    const {
+      events = [],
+      resources = [],
+      columnStart = eventStart.value,
+      columnEnd = eventEnd.value,
+    } = options;
+    return render(
+      <EventCalendarProvider events={events} resources={resources}>
+        <CalendarGrid.Root>
+          <CalendarGrid.TimeColumn start={columnStart} end={columnEnd}>
+            {node}
+          </CalendarGrid.TimeColumn>
+        </CalendarGrid.Root>
+      </EventCalendarProvider>,
+    );
+  }
 
   describeConformance(
     <CalendarGrid.TimeEvent
@@ -29,15 +57,7 @@ describe('<CalendarGrid.TimeEvent />', () => {
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {
-        return render(
-          <EventCalendarProvider events={[]}>
-            <CalendarGrid.Root>
-              <CalendarGrid.TimeColumn start={eventStart.value} end={eventEnd.value}>
-                {node}
-              </CalendarGrid.TimeColumn>
-            </CalendarGrid.Root>
-          </EventCalendarProvider>,
-        );
+        return renderEvent(node);
       },
     }),
   );
@@ -55,23 +75,23 @@ describe('<CalendarGrid.TimeEvent />', () => {
     function renderRunning(
       props: Partial<React.ComponentProps<typeof CalendarGrid.TimeEvent>> = {},
     ) {
-      return render(
-        <EventCalendarProvider events={[running]} resources={[sport]}>
-          <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn start={day} end={adapter.endOfDay(day)}>
-              <CalendarGrid.TimeEvent
-                eventId="running"
-                occurrenceKey="running"
-                start={processDate(adapter.date(running.start as string, 'default'), adapter)}
-                end={processDate(adapter.date(running.end as string, 'default'), adapter)}
-                renderDragPreview={() => null}
-                dataTimezone={undefined}
-                data-testid="event"
-                {...props}
-              />
-            </CalendarGrid.TimeColumn>
-          </CalendarGrid.Root>
-        </EventCalendarProvider>,
+      return renderEvent(
+        <CalendarGrid.TimeEvent
+          eventId="running"
+          occurrenceKey="running"
+          start={processDate(adapter.date(running.start as string, 'default'), adapter)}
+          end={processDate(adapter.date(running.end as string, 'default'), adapter)}
+          renderDragPreview={() => null}
+          dataTimezone={undefined}
+          data-testid="event"
+          {...props}
+        />,
+        {
+          events: [running],
+          resources: [sport],
+          columnStart: day,
+          columnEnd: adapter.endOfDay(day),
+        },
       );
     }
 

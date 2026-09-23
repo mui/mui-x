@@ -17,6 +17,25 @@ describe('<TimelineGrid.Event />', () => {
   const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
   const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
 
+  type ProviderProps = React.ComponentProps<typeof EventTimelinePremiumProvider>;
+
+  // Mounts the event in the row context it needs. `resourceId` is the row it renders in.
+  function renderEvent(
+    node: React.ReactElement,
+    options: Partial<Pick<ProviderProps, 'events' | 'resources'>> & { resourceId?: string } = {},
+  ) {
+    const { events = [], resources = [ResourceBuilder.new().build()], resourceId = 'r1' } = options;
+    return render(
+      <EventTimelinePremiumProvider events={events} resources={resources}>
+        <TimelineGrid.Root>
+          <TimelineGrid.BodyRow index={0}>
+            <TimelineGrid.EventRow resourceId={resourceId}>{() => node}</TimelineGrid.EventRow>
+          </TimelineGrid.BodyRow>
+        </TimelineGrid.Root>
+      </EventTimelinePremiumProvider>,
+    );
+  }
+
   describeConformance(
     <TimelineGrid.Event
       eventId="fake-id"
@@ -29,46 +48,28 @@ describe('<TimelineGrid.Event />', () => {
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {
-        return render(
-          <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
-            <TimelineGrid.Root>
-              <TimelineGrid.BodyRow index={0}>
-                <TimelineGrid.EventRow resourceId="r1">{() => node}</TimelineGrid.EventRow>
-              </TimelineGrid.BodyRow>
-            </TimelineGrid.Root>
-          </EventTimelinePremiumProvider>,
-        );
+        return renderEvent(node);
       },
     }),
   );
 
   it('should use a precomputed timeline position', () => {
-    render(
-      <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
-        <TimelineGrid.Root>
-          <TimelineGrid.BodyRow index={0}>
-            <TimelineGrid.EventRow resourceId="r1">
-              {() => (
-                <TimelineGrid.Event
-                  eventId="fake-id"
-                  occurrenceKey="fake-key"
-                  dataTimezone={undefined}
-                  start={start}
-                  end={end}
-                  elementPosition={{
-                    position: 0.25,
-                    duration: 0.5,
-                    startingBeforeEdge: true,
-                    endingAfterEdge: false,
-                  }}
-                  renderDragPreview={() => null}
-                  data-testid="event"
-                />
-              )}
-            </TimelineGrid.EventRow>
-          </TimelineGrid.BodyRow>
-        </TimelineGrid.Root>
-      </EventTimelinePremiumProvider>,
+    renderEvent(
+      <TimelineGrid.Event
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        dataTimezone={undefined}
+        start={start}
+        end={end}
+        elementPosition={{
+          position: 0.25,
+          duration: 0.5,
+          startingBeforeEdge: true,
+          endingAfterEdge: false,
+        }}
+        renderDragPreview={() => null}
+        data-testid="event"
+      />,
     );
 
     const event = screen.getByTestId('event');
@@ -88,27 +89,18 @@ describe('<TimelineGrid.Event />', () => {
       .build();
 
     function renderRunning(props: Partial<React.ComponentProps<typeof TimelineGrid.Event>> = {}) {
-      return render(
-        <EventTimelinePremiumProvider events={[running]} resources={[sport]}>
-          <TimelineGrid.Root>
-            <TimelineGrid.BodyRow index={0}>
-              <TimelineGrid.EventRow resourceId="sport">
-                {() => (
-                  <TimelineGrid.Event
-                    eventId="running"
-                    occurrenceKey="running"
-                    start={processDate(adapter.date(running.start as string, 'default'), adapter)}
-                    end={processDate(adapter.date(running.end as string, 'default'), adapter)}
-                    renderDragPreview={() => null}
-                    dataTimezone={undefined}
-                    data-testid="event"
-                    {...props}
-                  />
-                )}
-              </TimelineGrid.EventRow>
-            </TimelineGrid.BodyRow>
-          </TimelineGrid.Root>
-        </EventTimelinePremiumProvider>,
+      return renderEvent(
+        <TimelineGrid.Event
+          eventId="running"
+          occurrenceKey="running"
+          start={processDate(adapter.date(running.start as string, 'default'), adapter)}
+          end={processDate(adapter.date(running.end as string, 'default'), adapter)}
+          renderDragPreview={() => null}
+          dataTimezone={undefined}
+          data-testid="event"
+          {...props}
+        />,
+        { events: [running], resources: [sport], resourceId: 'sport' },
       );
     }
 
