@@ -22,7 +22,8 @@ export const useChartPremiumExport: ChartPlugin<UseChartPremiumExportSignature> 
       includeHiddenSeries = DEFAULT_CHART_EXCEL_OPTIONS.includeHiddenSeries,
       includeFormattedValues = DEFAULT_CHART_EXCEL_OPTIONS.includeFormattedValues,
       escapeFormulas = DEFAULT_CHART_EXCEL_OPTIONS.escapeFormulas,
-      includeHeaders = true,
+      // Left undefined on purpose: `buildChartExcelWorkbook` owns its default.
+      includeHeaders,
     } = options;
 
     const tables = getChartExcelTables(store.state, {
