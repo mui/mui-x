@@ -45,17 +45,8 @@ export function useEventResizeHandler<TData extends SchedulerEventResizeData>(
     payload,
     disabled: !enabled,
     getDragData,
-    // Veto during pointer-down, before the direct handler captures the pointer.
-    // Waiting for a hold or movement would let pending-gesture cleanup release it.
-    activation: directPointerResize
-      ? { touch: { type: 'immediate' }, pen: { type: 'immediate' } }
-      : undefined,
-    onBeforeMoveStart: (context, details) => {
-      // The direct resize handler owns touch and pen on time-grid events.
-      if (directPointerResize && context.input.pointerType !== 'mouse') {
-        details.cancel();
-      }
-    },
+    // The direct resize handler owns touch and pen on time-grid events.
+    activation: directPointerResize ? { touch: false, pen: false } : undefined,
     // The event root's `onMoveEnd` does not run for this nested handle. A drop on a Scheduler
     // target is left to that target: it runs after this and may fall back to the placeholder.
     onMoveEnd: ({ canceled, location }) => {
