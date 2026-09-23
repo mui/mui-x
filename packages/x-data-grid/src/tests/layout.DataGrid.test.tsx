@@ -950,17 +950,14 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
       // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
       // Need layout
-      it.skipIf(isJSDOM)(
-        'should fill the available width inside a flex row container',
-        () => {
-          render(
-            <div style={{ display: 'flex', width: 400 }}>
-              <DataGrid {...baselineProps} height={300} />
-            </div>,
-          );
-          expect(grid('root')).toHaveComputedStyle({ width: '400px' });
-        },
-      );
+      it.skipIf(isJSDOM)('should fill the available width inside a flex row container', () => {
+        render(
+          <div style={{ display: 'flex', width: 400 }}>
+            <DataGrid {...baselineProps} height={300} />
+          </div>,
+        );
+        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
+      });
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
