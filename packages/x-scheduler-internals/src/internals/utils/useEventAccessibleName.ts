@@ -67,10 +67,6 @@ export function useEventAccessibleName(
 
 export interface UseDefaultEventAccessibleNameParameters extends useOriginalOccurrence.Parameters {
   /**
-   * Whether to announce the occurrence's primary resource.
-   */
-  includeResource: boolean;
-  /**
    * `false` skips the store reads, e.g. when the consumer passed its own label.
    */
   enabled: boolean;
@@ -83,7 +79,7 @@ export interface UseDefaultEventAccessibleNameParameters extends useOriginalOccu
 export function useDefaultEventAccessibleName(
   parameters: UseDefaultEventAccessibleNameParameters,
 ): string | undefined {
-  const { eventId, occurrenceKey, start, end, dataTimezone, includeResource, enabled } = parameters;
+  const { eventId, occurrenceKey, start, end, dataTimezone, enabled } = parameters;
   const store = useSchedulerStoreContext();
 
   const lookupId = enabled ? eventId : null;
@@ -93,7 +89,7 @@ export function useDefaultEventAccessibleName(
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
-    includeResource ? getPrimaryResourceId(event?.resource) : null,
+    getPrimaryResourceId(event?.resource),
   );
 
   const occurrence = React.useMemo(

@@ -104,7 +104,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     start,
     end,
     dataTimezone,
-    includeResource: true,
     enabled: !hasCustomLabel,
   });
 

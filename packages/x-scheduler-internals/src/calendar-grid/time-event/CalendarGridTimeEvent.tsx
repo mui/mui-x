@@ -72,7 +72,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     start,
     end,
     dataTimezone,
-    includeResource: true,
     enabled: !hasCustomLabel && interactive,
   });
 

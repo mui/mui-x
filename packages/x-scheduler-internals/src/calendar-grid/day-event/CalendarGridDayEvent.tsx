@@ -99,7 +99,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     start,
     end,
     dataTimezone,
-    includeResource: true,
     enabled: !hasCustomLabel,
   });
 
