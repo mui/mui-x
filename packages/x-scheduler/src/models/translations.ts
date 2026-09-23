@@ -1,4 +1,5 @@
 import type { CalendarView } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventAccessibleNameLocaleText } from '@mui/x-scheduler-internals/internals';
 
 export type SchedulerWeekday =
   'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
@@ -84,7 +85,10 @@ export interface EventEditingLocaleText {
   title: string;
 }
 
-export interface EventCalendarLocaleText extends EventEditingLocaleText {
+// Strings shared by every surface that renders events: the accessible name of an event.
+export type SchedulerEventLocaleText = SchedulerEventAccessibleNameLocaleText;
+
+export interface EventCalendarLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // ResourcesTree
   resourcesLabel: string;
 
@@ -129,7 +133,6 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText {
   hiddenEvents: (hiddenEventsCount: number) => string;
   nextTimeSpan: (view: CalendarView) => string;
   previousTimeSpan: (view: CalendarView) => string;
-  resourceAriaLabel: (resourceName: string) => string;
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;
 
@@ -148,7 +151,7 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText {
   timelineResourceTitleHeader: string;
 }
 
-export interface EventTimelineLocaleText extends EventEditingLocaleText {
+export interface EventTimelineLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
 }

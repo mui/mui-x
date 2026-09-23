@@ -16,6 +16,7 @@ import {
   generateOccurrenceFromEvent,
   computeElementPositionInCollection,
   dateToTimelineAxisOffsetMs,
+  useEventAccessibleName,
 } from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -79,6 +80,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
+  const event = useStore(store, schedulerEventSelectors.processedEvent, eventId);
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const dependencyDropTarget = useStore(
     store,
@@ -88,6 +90,19 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   );
 
   // Feature hooks
+  const originalOccurrence = React.useMemo(
+    () => generateOccurrenceFromEvent({ event: event!, eventId, occurrenceKey, start, end }),
+    [event, eventId, occurrenceKey, start, end],
+  );
+
+  const hasCustomLabel =
+    elementProps['aria-label'] != null || elementProps['aria-labelledby'] != null;
+  // The row title already carries the resource, so the name leaves it out.
+  const accessibleName = useEventAccessibleName({
+    occurrence: event && !hasCustomLabel ? originalOccurrence : null,
+    includeResource: false,
+  });
+
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
       // Measured on the axis so it stays consistent with the cursor offsets when a
@@ -96,15 +111,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         -dateToTimelineAxisOffsetMs(adapter, config, start.value),
         0,
       );
-      const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-
-      const originalOccurrence = generateOccurrenceFromEvent({
-        event,
-        eventId,
-        occurrenceKey,
-        start,
-        end,
-      });
 
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
       return {
@@ -179,6 +185,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     props: [
       elementProps,
       {
+        ...(hasCustomLabel ? undefined : { 'aria-label': accessibleName }),
         style: {
           [TimelineGridEventCssVars.xPosition]: `${position * 100}%`,
           [TimelineGridEventCssVars.width]: `${duration * 100}%`,

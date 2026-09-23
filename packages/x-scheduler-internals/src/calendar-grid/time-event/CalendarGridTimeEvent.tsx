@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
@@ -9,7 +10,6 @@ import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
-import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
@@ -20,8 +20,8 @@ import type {
   SchedulerResourceId,
   TemporalSupportedObject,
 } from '../../models';
-import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { generateOccurrenceFromEvent } from '../../internals/utils/event-utils';
+import { useEventAccessibleName } from '../../internals/utils/useEventAccessibleName';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
   componentProps: CalendarGridTimeEvent.Props,
@@ -49,13 +49,11 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { id: rootId } = useCalendarGridRootContext();
   const {
     start: columnStart,
     end: columnEnd,
     dayStartMinute,
     dayEndMinute,
-    index: columnIndex,
     hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
@@ -63,22 +61,27 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
+  // Selector hooks
+  const event = useStore(store, schedulerEventSelectors.processedEvent, eventId);
+
   // State hooks
   const id = useId(idProp);
 
   // Feature hooks
+  const originalOccurrence = React.useMemo(
+    () => generateOccurrenceFromEvent({ event: event!, eventId, occurrenceKey, start, end }),
+    [event, eventId, occurrenceKey, start, end],
+  );
+
+  const hasCustomLabel =
+    elementProps['aria-label'] != null || elementProps['aria-labelledby'] != null;
+  const accessibleName = useEventAccessibleName({
+    occurrence: event && !hasCustomLabel ? originalOccurrence : null,
+    includeResource: true,
+  });
+
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-
-      const originalOccurrence = generateOccurrenceFromEvent({
-        event,
-        eventId,
-        occurrenceKey,
-        start,
-        end,
-      });
-
       // No `input` (pointer-based resize) — skip the layout-reading cursor measurement.
       const initialCursorPositionInEventMs = input
         ? Math.max(adapter.getTime(columnStart) - start.timestamp, 0) +
@@ -130,8 +133,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     tabIndex: columnHasFocus ? 0 : -1,
   });
 
-  const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
-
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
@@ -144,8 +145,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
       elementProps,
       {
         id,
-        // A non-interactive event stays a plain div: no role, no tabIndex, no header label.
-        ...(interactive ? { 'aria-labelledby': `${columnHeaderId} ${id}` } : undefined),
+        // A non-interactive event stays a plain div: no role, no tabIndex, no name.
+        ...(interactive && !hasCustomLabel ? { 'aria-label': accessibleName } : undefined),
         style: {
           [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,

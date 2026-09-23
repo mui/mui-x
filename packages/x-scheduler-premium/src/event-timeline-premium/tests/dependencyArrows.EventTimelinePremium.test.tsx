@@ -314,7 +314,10 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         ],
       });
 
-      expect(getEventElement('Event B')).toHaveAccessibleName('Resource 1 Event B');
+      const name = getEventElement('Event B').getAttribute('aria-label')!;
+      expect(name).to.match(/^Event B, /);
+      expect(name).not.to.include('Event A');
+      expect(name).not.to.include('Event C');
     });
 
     it('should not describe an event without predecessors', async () => {

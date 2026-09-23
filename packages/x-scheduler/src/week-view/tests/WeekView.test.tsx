@@ -92,7 +92,7 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEvents = screen.getAllByLabelText(multiDayEvent.title);
+      const allEvents = screen.getAllByLabelText(new RegExp(`^${multiDayEvent.title},`));
       const mainEvent = allEvents.find((event) => event.getAttribute('aria-hidden') !== 'true');
       const invisibleEvents = allEvents.filter(
         (event) => event.getAttribute('aria-hidden') === 'true',
@@ -132,9 +132,9 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText(event1.title);
-      const event2Elements = screen.getAllByLabelText(event2.title);
-      const event3Elements = screen.getAllByLabelText(event3.title);
+      const event1Elements = screen.getAllByLabelText(new RegExp(`^${event1.title},`));
+      const event2Elements = screen.getAllByLabelText(new RegExp(`^${event2.title},`));
+      const event3Elements = screen.getAllByLabelText(new RegExp(`^${event3.title},`));
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -168,7 +168,7 @@ describe('<WeekView />', () => {
       const allDayRow = within(allDayGridContainer).getByRole('row');
 
       const mainEvent = within(allDayRow)
-        .getAllByLabelText(fourDayEvent.title)
+        .getAllByLabelText(new RegExp(`^${fourDayEvent.title},`))
         .find((el) => el.getAttribute('aria-hidden') !== 'true');
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];

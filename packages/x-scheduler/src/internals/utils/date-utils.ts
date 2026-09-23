@@ -41,18 +41,4 @@ export function formatMonthFullLetterAndYear(date: TemporalSupportedObject, adap
   return adapter.formatByString(date, dateFormat);
 }
 
-/**
- * @example "1:30 PM" or "13:30"
- */
-export function formatHourAndMinutes(
-  date: TemporalSupportedObject,
-  adapter: Adapter,
-  ampm: boolean,
-) {
-  const f = adapter.formats;
-  const timeFormat = ampm
-    ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
-    : `${f.hours24h}:${f.minutesPadded}`;
-
-  return adapter.formatByString(date, timeFormat);
-}
+export { formatHourAndMinutes } from '@mui/x-scheduler-internals/internals';

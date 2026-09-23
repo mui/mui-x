@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -120,7 +121,6 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} más..`,
   nextTimeSpan: (timeSpan) => `Siguiente ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
-  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
@@ -139,6 +139,15 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Nombre del recurso',
 };
 
+const esESEvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  eventAccessibleNameTimeRange: (start, end) => `de ${start} a ${end}`,
+  eventAccessibleNameDateRange: (start, end) => `Del ${start} al ${end}`,
+  eventAccessibleNameAllDay: 'Todo el día',
+  eventAccessibleNameRecurring: 'Recurrente',
+  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
+};
+
 const esESTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nombre del recurso',
@@ -146,6 +155,7 @@ const esESTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const esES: SchedulerLocalization = getSchedulerLocalization({
   dialog: esESDialog,
+  event: esESEvent,
   calendar: esESCalendar,
   timeline: esESTimeline,
 });

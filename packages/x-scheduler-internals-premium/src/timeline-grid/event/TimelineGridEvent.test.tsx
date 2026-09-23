@@ -5,6 +5,7 @@ import {
   adapter,
   createSchedulerRenderer,
   describeConformance,
+  EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
@@ -73,5 +74,51 @@ describe('<TimelineGrid.Event />', () => {
     expect(event.style.getPropertyValue('--width')).to.equal('50%');
     expect(event).to.have.attribute('data-starting-before-edge');
     expect(event).not.to.have.attribute('data-ending-after-edge');
+  });
+  describe('accessible name', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const running = EventBuilder.new()
+      .id('running')
+      .title('Running')
+      .startAt('2025-07-03T07:30:00')
+      .endAt('2025-07-03T08:30:00')
+      .resource(sport)
+      .build();
+
+    function renderRunning(props: Partial<React.ComponentProps<typeof TimelineGrid.Event>> = {}) {
+      return render(
+        <EventTimelinePremiumProvider events={[running]} resources={[sport]}>
+          <TimelineGrid.Root>
+            <TimelineGrid.BodyRow index={0}>
+              <TimelineGrid.EventRow resourceId="sport">
+                {() => (
+                  <TimelineGrid.Event
+                    eventId="running"
+                    occurrenceKey="running"
+                    start={processDate(adapter.date(running.start as string, 'default'), adapter)}
+                    end={processDate(adapter.date(running.end as string, 'default'), adapter)}
+                    renderDragPreview={() => null}
+                    data-testid="event"
+                    {...props}
+                  />
+                )}
+              </TimelineGrid.EventRow>
+            </TimelineGrid.BodyRow>
+          </TimelineGrid.Root>
+        </EventTimelinePremiumProvider>,
+      );
+    }
+
+    it('should name the event with its title, time range and date but not its resource', () => {
+      renderRunning();
+      expect(
+        screen.getByRole('button', { name: 'Running, 7:30 AM to 8:30 AM, Thursday 3 July' }),
+      ).not.to.equal(null);
+    });
+
+    it('should let a consumer aria-label win over the default name', () => {
+      renderRunning({ 'aria-label': 'Custom' });
+      expect(screen.getByRole('button', { name: 'Custom' })).not.to.equal(null);
+    });
   });
 });

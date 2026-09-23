@@ -383,7 +383,9 @@ describe('<EventTimelinePremium />', () => {
 
       await renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
 
-      const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
+      const recurringEventElements = screen.getAllByLabelText(
+        new RegExp(`^${recurringEvent.title},`),
+      );
       expect(recurringEventElements.length).to.be.greaterThan(0);
       recurringEventElements.forEach((element) => {
         expect(
@@ -391,7 +393,7 @@ describe('<EventTimelinePremium />', () => {
         ).not.to.equal(null);
       });
 
-      const singleEventElement = screen.getByLabelText(singleEvent.title);
+      const singleEventElement = screen.getByLabelText(new RegExp(`^${singleEvent.title},`));
       expect(
         singleEventElement.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
       ).to.equal(null);
@@ -407,7 +409,7 @@ describe('<EventTimelinePremium />', () => {
 
       const { user } = await renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
 
-      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      const occurrences = screen.getAllByLabelText(new RegExp(`^${recurringEvent.title},`));
       expect(occurrences.length).to.be.greaterThan(1);
       const clickedOccurrenceKey = occurrences[0].getAttribute('data-occurrence-key');
       expect(clickedOccurrenceKey).not.to.equal(null);
@@ -415,7 +417,7 @@ describe('<EventTimelinePremium />', () => {
       await user.click(occurrences[0]);
 
       const editedOccurrences = screen
-        .getAllByLabelText(recurringEvent.title)
+        .getAllByLabelText(new RegExp(`^${recurringEvent.title},`))
         .filter((occurrence) => occurrence.hasAttribute('data-editing'));
       expect(editedOccurrences).to.have.length(1);
       expect(editedOccurrences[0].getAttribute('data-occurrence-key')).to.equal(
@@ -433,11 +435,11 @@ describe('<EventTimelinePremium />', () => {
 
       const { user } = await renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
 
-      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      const occurrences = screen.getAllByLabelText(new RegExp(`^${recurringEvent.title},`));
       await user.click(occurrences[0]);
       expect(
         screen
-          .getAllByLabelText(recurringEvent.title)
+          .getAllByLabelText(new RegExp(`^${recurringEvent.title},`))
           .filter((occurrence) => occurrence.hasAttribute('data-editing')),
       ).to.have.length(1);
 
@@ -445,7 +447,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(
         screen
-          .getAllByLabelText(recurringEvent.title)
+          .getAllByLabelText(new RegExp(`^${recurringEvent.title},`))
           .filter((occurrence) => occurrence.hasAttribute('data-editing')),
       ).to.have.length(0);
     });
@@ -455,7 +457,7 @@ describe('<EventTimelinePremium />', () => {
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
       await renderTimeline({ preset: 'dayAndHour' });
 
-      const eventElement = screen.getByLabelText(event1.title);
+      const eventElement = screen.getByLabelText(new RegExp(`^${event1.title},`));
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -470,7 +472,7 @@ describe('<EventTimelinePremium />', () => {
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
       await renderTimeline({ preset: 'dayAndMonth' });
 
-      const eventElement = screen.getByLabelText(event3.title);
+      const eventElement = screen.getByLabelText(new RegExp(`^${event3.title},`));
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -491,7 +493,7 @@ describe('<EventTimelinePremium />', () => {
 
       await renderTimeline({ preset: 'dayAndWeek' });
 
-      const eventElement = screen.getByLabelText(event1.title);
+      const eventElement = screen.getByLabelText(new RegExp(`^${event1.title},`));
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -520,7 +522,7 @@ describe('<EventTimelinePremium />', () => {
         parseFloat(grid.style.getPropertyValue('--unit-count'));
       const monthWidth = totalWidth / 36;
 
-      const event1Element = screen.getByLabelText(event1.title);
+      const event1Element = screen.getByLabelText(new RegExp(`^${event1.title},`));
       expect(event1Element).not.to.equal(null);
       const xPositioning = event1Element.style.getPropertyValue('--x-position');
 
@@ -528,7 +530,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition).to.be.lessThanOrEqual(monthWidth); // first month
 
-      const nextMonthEventElement = screen.getByLabelText('Next month');
+      const nextMonthEventElement = screen.getByLabelText(/^Next month,/);
       expect(nextMonthEventElement).not.to.equal(null);
       const xPositioning2 = nextMonthEventElement.style.getPropertyValue('--x-position');
 
@@ -551,7 +553,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({ events: [thisYearEvent, nextYearEvent], preset: 'year' });
 
       const totalWidth = 30 * 200;
-      const thisYearEventElement = screen.getByLabelText(thisYearEvent.title);
+      const thisYearEventElement = screen.getByLabelText(new RegExp(`^${thisYearEvent.title},`));
       expect(thisYearEventElement).not.to.equal(null);
       const xPositioning = thisYearEventElement.style.getPropertyValue('--x-position');
 
@@ -559,7 +561,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition).to.be.lessThanOrEqual(200); // 2025
 
-      const nextYearEventElement = screen.getByLabelText(nextYearEvent.title);
+      const nextYearEventElement = screen.getByLabelText(new RegExp(`^${nextYearEvent.title},`));
       expect(nextYearEventElement).not.to.equal(null);
       const xPositioning2 = nextYearEventElement.style.getPropertyValue('--x-position');
 
@@ -1083,6 +1085,22 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.mock.lastCall?.[1].trigger.isConnected).to.equal(false);
       expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(row);
       expect(row.isConnected).to.equal(true);
+    });
+  });
+
+  describe('accessible name', () => {
+    it('should name each event with its title, time range and date but not its resource', async () => {
+      const standup = EventBuilder.new()
+        .title('Standup')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [standup] });
+
+      expect(
+        screen.getByRole('button', { name: 'Standup, 9:00 AM to 10:00 AM, Thursday 3 July' }),
+      ).not.to.equal(null);
     });
   });
 });

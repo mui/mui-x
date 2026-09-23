@@ -20,3 +20,5 @@ export * from './useEventCreation';
 export * from './useKeyboardEventCreation';
 export * from './getNavigationTarget';
 export * from './getDisplayedHourRange';
+export * from './event-accessible-name';
+export * from './useEventAccessibleName';

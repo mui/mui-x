@@ -69,7 +69,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> Tab navigation', () => {
   }
 
   function getEvent(title: string): HTMLElement | null {
-    return screen.queryByLabelText(title);
+    return screen.queryByLabelText(new RegExp(`^${title},`));
   }
 
   function getScroller(): HTMLElement {

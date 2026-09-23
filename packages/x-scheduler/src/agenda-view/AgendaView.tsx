@@ -271,12 +271,7 @@ export const AgendaView = React.memo(
                   occurrences.map((occurrence) => (
                     <li key={occurrence.key} className={classes.agendaViewEventListItem}>
                       <EventContextMenuTrigger occurrence={occurrence}>
-                        <EventItem
-                          occurrence={occurrence}
-                          date={date}
-                          variant="regular"
-                          ariaLabelledBy={`${schedulerId}-DayHeaderCell-${date.key}`}
-                        />
+                        <EventItem occurrence={occurrence} date={date} variant="regular" />
                       </EventContextMenuTrigger>
                     </li>
                   ))}

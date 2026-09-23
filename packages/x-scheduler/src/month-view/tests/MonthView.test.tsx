@@ -193,21 +193,14 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should reference resolvable header IDs in each event aria-labelledby', async () => {
+    it('should name each event in the popover with its title, time range and date', async () => {
       const { popover } = await renderAndOpenPopover();
 
-      const eventButtons = within(popover).getAllByRole('button');
-      expect(eventButtons.length).to.be.greaterThan(0);
-
-      eventButtons.forEach((button) => {
-        const tokens = (button.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
-        expect(tokens.length).to.be.greaterThan(0);
-        tokens.forEach((token) => {
-          expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(
-            null,
-          );
-        });
-      });
+      expect(
+        within(popover).getByRole('button', {
+          name: 'Event 1, 8:00 AM to 9:00 AM, Thursday 1 May',
+        }),
+      ).not.to.equal(null);
     });
 
     it('should close the popover when `onEventEditingStart` cancels an activation from it', async () => {
@@ -516,7 +509,7 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEventOccurrences = screen.getAllByLabelText('Grid Row Test');
+      const allEventOccurrences = screen.getAllByLabelText(/^Grid Row Test,/);
       const mainEvent = allEventOccurrences.find(
         (event) => event.getAttribute('aria-hidden') !== 'true',
       );
@@ -559,9 +552,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText('Event 1');
-      const event2Elements = screen.getAllByLabelText('Event 2');
-      const event3Elements = screen.getAllByLabelText('Event 3');
+      const event1Elements = screen.getAllByLabelText(/^Event 1,/);
+      const event2Elements = screen.getAllByLabelText(/^Event 2,/);
+      const event3Elements = screen.getAllByLabelText(/^Event 3,/);
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -590,7 +583,7 @@ describe('<MonthView />', () => {
       );
 
       const mainEvent = screen
-        .getAllByLabelText('Three Day Event')
+        .getAllByLabelText(/^Three Day Event,/)
         .find((el) => el.getAttribute('aria-hidden') !== 'true');
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];
@@ -608,7 +601,7 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const eventInstances = screen.getAllByLabelText('Multiple week event');
+      const eventInstances = screen.getAllByLabelText(/^Multiple week event,/);
 
       const visibleInstances = eventInstances.filter(
         (el) => el.getAttribute('aria-hidden') !== 'true',

@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -77,7 +78,19 @@ const enUSDialog: EventEditingLocaleText = {
   title: 'Apply this change to:',
 };
 
-const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> = {
+const enUSEvent: SchedulerEventLocaleText = {
+  // Event accessible name
+  eventAccessibleNameTimeRange: (start, end) => `${start} to ${end}`,
+  eventAccessibleNameDateRange: (start, end) => `From ${start} to ${end}`,
+  eventAccessibleNameAllDay: 'All day',
+  eventAccessibleNameRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
+};
+
+const enUSCalendar: Omit<
+  EventCalendarLocaleText,
+  keyof EventEditingLocaleText | keyof SchedulerEventLocaleText
+> = {
   // ResourcesTree
   resourcesLabel: 'Resources',
 
@@ -121,7 +134,6 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
   nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Previous ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
 
@@ -140,12 +152,16 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   timelineResourceTitleHeader: 'Resource title',
 };
 
-const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventEditingLocaleText> = {
+const enUSTimeline: Omit<
+  EventTimelineLocaleText,
+  keyof EventEditingLocaleText | keyof SchedulerEventLocaleText
+> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
 };
 
 export const enUS: SchedulerLocalization = getSchedulerLocalization({
+  event: enUSEvent,
   dialog: enUSDialog,
   calendar: enUSCalendar,
   timeline: enUSTimeline,

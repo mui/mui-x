@@ -9,6 +9,7 @@ import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
+import { useEventAccessibleName } from '@mui/x-scheduler-internals/internals';
 import { EventDragPreview, getPaletteVariants } from '@mui/x-scheduler/internals';
 import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
@@ -138,7 +139,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 ) {
   const {
     occurrence,
-    ariaLabelledBy,
     className,
     variant,
     id: idProp,
@@ -150,7 +150,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const { classes } = useEventTimelinePremiumStyledContext();
+  const { classes, localeText } = useEventTimelinePremiumStyledContext();
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(
@@ -170,13 +170,14 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Feature hooks
   const id = useId(idProp);
+  // The row title already carries the resource, so the name leaves it out.
+  const accessibleName = useEventAccessibleName({ occurrence, includeResource: false, localeText });
 
   const sharedProps = {
     id,
     start: occurrence.displayTimezone.start,
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
-    'aria-labelledby': `${ariaLabelledBy} ${id}`,
     className: clsx(className, occurrence.className),
     style: {
       '--number-of-lines': 1,
@@ -216,6 +217,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
+      aria-label={accessibleName}
       aria-describedby={dependsOnTitles.length > 0 ? `${id}-dependencies` : undefined}
       className={clsx(sharedProps.className, classes.event)}
     >

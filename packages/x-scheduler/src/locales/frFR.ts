@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -120,7 +121,6 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} de plus..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} suivant(e)`,
   previousTimeSpan: (timeSpan) => `${timeSpan} précédent(e)`,
-  resourceAriaLabel: (resourceName) => `Ressource : ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semaine ${weekNumber}`,
 
@@ -139,6 +139,15 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Titre de la ressource',
 };
 
+const frFREvent: Partial<SchedulerEventLocaleText> = {
+  // Event accessible name
+  eventAccessibleNameTimeRange: (start, end) => `de ${start} à ${end}`,
+  eventAccessibleNameDateRange: (start, end) => `Du ${start} au ${end}`,
+  eventAccessibleNameAllDay: 'Toute la journée',
+  eventAccessibleNameRecurring: 'Récurrent',
+  resourceAriaLabel: (resourceName) => `Ressource : ${resourceName}`,
+};
+
 const frFRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',
@@ -146,6 +155,7 @@ const frFRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLoca
 
 export const frFR: SchedulerLocalization = getSchedulerLocalization({
   dialog: frFRDialog,
+  event: frFREvent,
   calendar: frFRCalendar,
   timeline: frFRTimeline,
 });
