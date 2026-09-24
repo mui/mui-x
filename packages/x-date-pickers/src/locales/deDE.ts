@@ -52,7 +52,7 @@ const deDEPickers: Partial<PickersLocaleText> = {
   minutesClockNumberText: (minutes) =>
     `${minutes} ${Number(minutes) === 1 ? 'Minute' : timeViews.minutes}`,
   secondsClockNumberText: (seconds) =>
-    `${seconds}  ${Number(seconds) === 1 ? 'Sekunde' : timeViews.seconds}`,
+    `${seconds} ${Number(seconds) === 1 ? 'Sekunde' : timeViews.seconds}`,
 
   // Digital clock labels
   selectViewText: (view) => `${timeViews[view]} auswählen`,
