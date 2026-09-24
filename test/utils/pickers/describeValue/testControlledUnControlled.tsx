@@ -234,8 +234,12 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
         if (params.variant === 'mobile' && params.type === 'date-time-range') {
           expect(screen.getByLabelText('Start End')).to.have.attribute('role', 'dialog');
+          expect(screen.getAllByRole('heading', { level: 2 }).length).to.be.greaterThan(0);
         } else {
           expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
+          expect(screen.getByRole('heading', { level: 2, name: 'Test toolbar' })).not.to.equal(
+            null,
+          );
         }
       });
 

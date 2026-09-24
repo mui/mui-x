@@ -75,16 +75,6 @@ describe('<MobileDatePicker />', () => {
     expect(screen.getByTestId('custom-loading')).toBeVisible();
   });
 
-  describe('accessibility', () => {
-    it('should label the dialog with a level 2 heading', () => {
-      render(<MobileDatePicker open />);
-
-      const heading = screen.getByRole('heading', { level: 2 });
-      expect(heading).to.have.text('Select date');
-      expect(screen.getByRole('dialog')).toHaveAccessibleName('Select date');
-    });
-  });
-
   describe('Component slot: Toolbar', () => {
     it('should render custom toolbar component', () => {
       render(

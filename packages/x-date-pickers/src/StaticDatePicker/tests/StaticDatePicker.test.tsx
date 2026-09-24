@@ -13,6 +13,13 @@ describe('<StaticDatePicker />', () => {
     expect(screen.getAllByTestId('day')).to.have.length(31);
   });
 
+  it('should not render the toolbar title as a heading', () => {
+    render(<StaticDatePicker defaultValue={adapterToUse.date('2019-01-01')} />);
+
+    // the toolbar is not inside a dialog here, so it must not add an entry to the page's heading outline
+    expect(screen.queryByRole('heading', { level: 2 })).to.equal(null);
+  });
+
   it('switches between months', async () => {
     const { user } = render(
       <StaticDatePicker reduceAnimations defaultValue={adapterToUse.date('2019-01-01')} />,

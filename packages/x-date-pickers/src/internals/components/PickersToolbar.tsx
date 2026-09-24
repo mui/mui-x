@@ -10,6 +10,7 @@ import type { PickersToolbarClasses } from './pickersToolbarClasses';
 import { getPickersToolbarUtilityClass } from './pickersToolbarClasses';
 import type { PickerToolbarOwnerState } from '../hooks/useToolbarOwnerState';
 import { useToolbarOwnerState } from '../hooks/useToolbarOwnerState';
+import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
 
 export interface PickersToolbarProps extends Pick<BaseToolbarProps, 'hidden' | 'titleId'> {
   className?: string;
@@ -107,6 +108,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar(
 
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp);
+  const { viewContainerRole } = usePickerPrivateContext();
 
   if (hidden) {
     return null;
@@ -122,7 +124,9 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar(
     >
       <Typography
         data-testid="picker-toolbar-title"
-        component="h2"
+        // only mark the title up as a heading when it labels a dialog; otherwise it would
+        // add an unlabeled landmark to the page's heading outline (e.g. static pickers)
+        {...(viewContainerRole === 'dialog' && { component: 'h2' as const })}
         variant="overline"
         id={titleId}
         className={classes.title}
