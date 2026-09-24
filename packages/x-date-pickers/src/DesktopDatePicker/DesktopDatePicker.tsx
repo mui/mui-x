@@ -3,17 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import type { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import type { DatePickerViewRenderers } from '../DatePicker/shared';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { validateDate, extractValidationProps } from '../validation';
+import { extractValidationProps } from '../validation';
 import type { DateView, PickerOwnerState } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import { useDateManager } from '../managers';
 
 type DesktopDatePickerComponent = ((
   props: DesktopDatePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -34,6 +34,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateManager();
 
   // Props with the default values common to all date pickers
   const defaultizedProps = useDatePickerDefaultizedProps<DesktopDatePickerProps>(
@@ -75,9 +76,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker(
   const { renderPicker } = useDesktopPicker<DateView, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date',
-    validator: validateDate,
+    manager,
     steps: null,
   });
 

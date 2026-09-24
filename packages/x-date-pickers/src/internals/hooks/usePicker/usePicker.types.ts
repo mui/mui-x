@@ -5,9 +5,9 @@ import type {
   InferError,
   OnErrorProps,
   PickerChangeHandlerContext,
+  PickerManager,
   PickerOwnerState,
   PickerValidDate,
-  PickerValueType,
   TimezoneProps,
 } from '../../../models';
 import type {
@@ -16,10 +16,8 @@ import type {
   PickerOrientation,
   PickerRangeValue,
   PickerValidValue,
-  PickerValueManager,
   PickerVariant,
 } from '../../models';
-import type { Validator } from '../../../validation';
 import type { UseViewsOptions } from '../useViews';
 import type { PickerProviderProps } from '../../components/PickerProvider';
 import type { PickersInputLocaleText } from '../../../locales';
@@ -182,9 +180,7 @@ export interface UsePickerParameters<
   ref: React.ForwardedRef<HTMLDivElement> | undefined;
   localeText: PickersInputLocaleText | undefined;
   variant: PickerVariant;
-  valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
-  valueType: PickerValueType;
-  validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
+  manager: PickerManager<TValue, InferError<TExternalProps>, any, any>;
   autoFocusView: boolean;
   viewContainerRole: 'dialog' | 'tooltip' | null;
   /**

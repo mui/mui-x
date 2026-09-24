@@ -30,12 +30,11 @@ import {
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { rangeValueManager } from '../internals/utils/valueManagers';
 import type { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
-import { validateDateTimeRange } from '../validation';
 import type { DateTimeRangePickerView } from '../internals/models';
+import { useDateTimeRangeManager } from '../managers';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
@@ -130,6 +129,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateTimeRangeManager();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<MobileDateTimeRangePickerProps>(
     inProps,
@@ -187,9 +187,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   const { renderPicker } = useMobileRangePicker<DateTimeRangePickerView, typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'date-time',
-    validator: validateDateTimeRange,
+    manager,
     rendererInterceptor,
     steps: STEPS,
   });

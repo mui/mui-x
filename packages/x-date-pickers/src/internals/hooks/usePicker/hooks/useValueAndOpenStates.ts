@@ -2,17 +2,12 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
-import type {
-  DateOrTimeViewWithMeridiem,
-  PickerValidValue,
-  PickerValueManager,
-} from '../../../models';
+import type { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../../models';
 import type { PickerSelectionState, UsePickerProps, UsePickerState } from '../usePicker.types';
 import { useControlledValue } from '../../useControlledValue';
 import { usePickerAdapter } from '../../../../hooks/usePickerAdapter';
-import type { InferError, PickerChangeHandlerContext } from '../../../../models';
+import type { InferError, PickerChangeHandlerContext, PickerManager } from '../../../../models';
 import type { SetValueActionOptions } from '../../../components/PickerProvider';
-import type { Validator } from '../../../../validation';
 import { useValidation } from '../../../../validation';
 
 export function useValueAndOpenStates<
@@ -22,7 +17,8 @@ export function useValueAndOpenStates<
 >(parameters: UsePickerDateStateParameters<TValue, TView, TExternalProps>) {
   type TError = InferError<TExternalProps>;
 
-  const { props, valueManager, validator } = parameters;
+  const { props, manager } = parameters;
+  const { internal_valueManager: valueManager, validator } = manager;
   const {
     value: valueProp,
     defaultValue: defaultValueProp,
@@ -256,6 +252,5 @@ interface UsePickerDateStateParameters<
   TExternalProps extends UsePickerProps<TValue, TView, any, any>,
 > {
   props: TExternalProps;
-  valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
-  validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
+  manager: PickerManager<TValue, InferError<TExternalProps>, any, any>;
 }

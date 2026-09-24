@@ -8,9 +8,8 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateDateTime } from '../validation';
+import { useDateTimeManager } from '../managers';
 import type { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { mergeSx } from '../internals/utils/utils';
@@ -44,6 +43,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   inProps: StaticDateTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const manager = useDateTimeManager();
   const defaultizedProps = useDateTimePickerDefaultizedProps<StaticDateTimePickerProps>(
     inProps,
     'MuiStaticDateTimePicker',
@@ -125,9 +125,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   const { renderPicker } = useStaticPicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date-time',
-    validator: validateDateTime,
+    manager,
     steps: STEPS,
   });
 

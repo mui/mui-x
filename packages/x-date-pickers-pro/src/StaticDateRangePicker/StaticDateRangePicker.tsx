@@ -6,8 +6,7 @@ import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
 import type { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { rangeValueManager } from '../internals/utils/valueManagers';
-import { validateDateRange } from '../validation';
+import { useDateRangeManager } from '../managers';
 
 type StaticDateRangePickerComponent = ((
   props: StaticDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -27,6 +26,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
   inProps: StaticDateRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const manager = useDateRangeManager();
   const defaultizedProps = useDateRangePickerDefaultizedProps<StaticDateRangePickerProps>(
     inProps,
     'MuiStaticDateRangePicker',
@@ -59,9 +59,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
   const { renderPicker } = useStaticRangePicker<'day', typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'date',
-    validator: validateDateRange,
+    manager,
     steps: null,
   });
 
