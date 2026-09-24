@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
-import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
+import { styled, useThemeProps } from '@mui/material/styles';
+import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -139,9 +139,10 @@ const selectedDayStyles = (theme: Theme) => ({
 
 const DISABLED_DAY_OPACITY = 0.6;
 
-const SUPPRESS_THEME_FOCUS_RING = {
-  internalDisabledThemeFocusVisible: true,
-} as Record<string, unknown>;
+const todayOutline = (theme: Theme) => ({
+  outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+  outlineOffset: -1,
+});
 
 const DateRangePickerDayRoot = styled(ButtonBase, {
   name: 'MuiDateRangePickerDay',
@@ -184,6 +185,13 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
   borderRadius: 'calc(var(--PickerDay-size) / 2)',
   padding: 0,
   position: 'relative',
+  ...(theme.focusVisible && {
+    [`&.${buttonBaseClasses.focusVisible}`]: {
+      outline: 'none',
+      outlineOffset: 0,
+      boxShadow: 'none',
+    },
+  }),
   marginLeft: 'var(--PickerDay-horizontalMargin)',
   marginRight: 'var(--PickerDay-horizontalMargin)',
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
@@ -244,8 +252,10 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         isDaySelected: false,
       },
       style: {
-        outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
-        outlineOffset: -1,
+        ...todayOutline(theme),
+        ...(theme.focusVisible && {
+          [`&.${buttonBaseClasses.focusVisible}`]: todayOutline(theme),
+        }),
       },
     },
     {
@@ -436,9 +446,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     name: 'MuiDateRangePickerDay',
   });
 
-  const theme = useTheme();
-  const suppressThemeFocusRing = theme.focusVisible ? SUPPRESS_THEME_FOCUS_RING : null;
-
   useLicenseVerifier({
     releaseDate: '__RELEASE_INFO__',
     version: process.env.MUI_VERSION!,
@@ -586,7 +593,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-      {...suppressThemeFocusRing}
       {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
