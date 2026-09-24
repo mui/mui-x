@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { TreeViewItemId } from '../../../models';
 import type { MinimalTreeViewState } from '../../MinimalTreeViewStore';
 import { itemsSelectors } from '../items/selectors';

@@ -1757,6 +1757,19 @@ describe('<DataGrid /> - Rows', () => {
       );
     });
 
+    it('should throw a console error if height is used with autoHeight', () => {
+      expect(() => {
+        render(<TestCase height={300} autoHeight />);
+      }).toErrorDev(
+        [
+          'MUI X: `<DataGrid height={...} autoHeight={true} />` are not valid props.',
+          'You cannot use both the `height` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to its content.',
+          '',
+          'Please remove one of these two props.',
+        ].join('\n'),
+      );
+    });
+
     describe('prototype preservation on updateRows', () => {
       it('should preserve the prototype of a class instance when updated with a plain-object partial', async () => {
         class BrandRow {

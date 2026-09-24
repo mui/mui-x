@@ -112,7 +112,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ day?: { endTime?: number, startTime?: number }, week?: { endTime?: number, startTime?: number } }"
+        "description": "{ day?: { endTime?: number, initialScrollTime?: number, startTime?: number }, week?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
       }
     },
     "views": {
@@ -689,6 +689,12 @@
       "key": "eventDialogRecurrenceSelectorToggleGroup",
       "className": "MuiEventCalendarPremium-eventDialogRecurrenceSelectorToggleGroup",
       "description": "Styles applied to the event dialog recurrence selector toggle group element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogRecurrenceTimezoneLabel",
+      "className": "MuiEventCalendarPremium-eventDialogRecurrenceTimezoneLabel",
+      "description": "Styles applied to the recurrence timezone note and label suffix elements.",
       "isGlobal": false
     },
     {

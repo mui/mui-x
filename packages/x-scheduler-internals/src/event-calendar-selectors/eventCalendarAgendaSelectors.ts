@@ -42,7 +42,7 @@ const visibleDays = createSelectorMemoized(
   schedulerOtherSelectors.displayTimezone,
   eventCalendarPreferenceSelectors.showWeekends,
   eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-  schedulerEventSelectors.processedEventList,
+  schedulerEventSelectors.processedEventRangeIndex,
   schedulerResourceSelectors.visibleMap,
   schedulerOtherSelectors.recurringEventsPlugin,
   (
@@ -53,7 +53,7 @@ const visibleDays = createSelectorMemoized(
     displayTimezone,
     showWeekends,
     showEmptyDaysInAgenda,
-    events,
+    eventRangeIndex,
     visibleResources,
     recurringEventsPlugin,
   ) => {
@@ -71,7 +71,7 @@ const visibleDays = createSelectorMemoized(
     let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days: accumulatedDays,
-      events,
+      eventRangeIndex,
       visibleResources,
       displayTimezone,
       recurringEventsPlugin,
@@ -103,7 +103,7 @@ const visibleDays = createSelectorMemoized(
       occurrenceMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days: accumulatedDays,
-        events,
+        eventRangeIndex,
         visibleResources,
         displayTimezone,
         recurringEventsPlugin,

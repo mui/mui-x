@@ -47,16 +47,6 @@ export function processEvent(
       ? recurringEventsPlugin.parseRRule(adapter, model.rrule, dataTimezone)
       : undefined;
 
-  const displayTimezoneRRule =
-    recurringEventsPlugin && parsedDataRRule
-      ? recurringEventsPlugin.projectRRuleToTimezone(
-          adapter,
-          parsedDataRRule,
-          displayTimezone,
-          startInstant,
-        )
-      : undefined;
-
   return {
     id: model.id,
     title: model.title,
@@ -72,7 +62,6 @@ export function processEvent(
       start: processDate(displayBounds.start, adapter),
       end: processDate(displayBounds.end, adapter),
       timezone: displayTimezone,
-      rrule: displayTimezoneRRule,
       exDates: exDatesInDisplayTz,
     },
     resource: model.resource,

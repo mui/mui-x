@@ -51,6 +51,13 @@ export interface EventCalendarTimeGridViewConfig {
    * @default 24
    */
   endTime?: number;
+  /**
+   * Hour the time grid scrolls to when it mounts.
+   * Must be a displayed hour (`startTime` to `endTime - 1`); otherwise the default applies
+   * and a warning is logged in development.
+   * @default 7 when it is a displayed hour, otherwise `startTime`
+   */
+  initialScrollTime?: number;
 }
 
 /**
