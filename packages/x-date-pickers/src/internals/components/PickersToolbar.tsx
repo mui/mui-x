@@ -122,6 +122,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar(
     >
       <Typography
         data-testid="picker-toolbar-title"
+        component="h2"
         variant="overline"
         id={titleId}
         className={classes.title}
