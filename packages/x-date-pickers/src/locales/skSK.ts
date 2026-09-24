@@ -10,6 +10,17 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Popoludnie',
 };
 
+// Slovak has 3 count-based forms: 1, 2-4, and 0 or 5+
+function getPluralSuffix(count: number, one: string, few: string, many: string) {
+  if (count === 1) {
+    return one;
+  }
+  if (count > 1 && count < 5) {
+    return few;
+  }
+  return many;
+}
+
 const skSKPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Predchádzajúci mesiac',
@@ -48,9 +59,12 @@ const skSKPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `${timeViews[view] ?? view} vybraný. ${!formattedTime ? 'Nie je vybraný čas' : `Vybraný čas je ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} hodín`,
-  minutesClockNumberText: (minutes) => `${minutes} minút`,
-  secondsClockNumberText: (seconds) => `${seconds} sekúnd`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralSuffix(Number(hours), 'hodina', 'hodiny', 'hodín')}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralSuffix(Number(minutes), 'minúta', 'minúty', 'minút')}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralSuffix(Number(seconds), 'sekunda', 'sekundy', 'sekúnd')}`,
 
   // Digital clock labels
   selectViewText: (view) => `Vyberte ${timeViews[view]}`,
