@@ -348,7 +348,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 ### Usage
 
-The `onCancel` callback fires when the picker's value is reset through the Cancel action.
+The `onCancel` callback is called when the user triggers the Cancel action.
 Use it to react to an explicit cancellation, for example to close a dialog that wraps the picker.
 
 ```tsx
@@ -356,7 +356,6 @@ Use it to react to an explicit cancellation, for example to close a dialog that 
 ```
 
 The callback takes no arguments. The picker resets the value to the last accepted value (which can trigger `onChange`), then calls `onCancel`, then closes (which triggers `onClose`).
-This is the same slot in the sequence that `onAccept` occupies on the accept flow: `onChange` → `onCancel` → `onClose`.
 
 ### When is "onCancel" called?
 
@@ -382,7 +381,6 @@ The action bar does not show a _Cancel_ button by default on pickers that close 
 :::warning
 Static pickers also have a deprecated `onClose` callback, which still fires on every Cancel click (as well as on Clear, Today, and OK).
 Use `onCancel` for cancellations and `onAccept` for confirmed value changes instead.
-`onCancel` and `onAccept` are not an exact replacement for `onClose`: clicking Clear, Today, or OK without changing the value fires `onClose` but not `onAccept`.
 :::
 
 #### When the picker is dismissed without clicking "Cancel"
