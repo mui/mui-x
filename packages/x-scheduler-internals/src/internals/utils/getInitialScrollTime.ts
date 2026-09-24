@@ -1,4 +1,4 @@
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { DisplayedHourRange } from './getDisplayedHourRange';
 
 const DEFAULT_INITIAL_SCROLL_TIME = 7;
@@ -25,7 +25,7 @@ export function getInitialScrollTime(
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      warn(
+      warnOnce(
         [
           `MUI X Scheduler: \`${source}\` received an invalid \`initialScrollTime\` (${initialScrollTime}).`,
           `\`initialScrollTime\` must be a displayed hour (${startTime} to ${endTime - 1}).`,

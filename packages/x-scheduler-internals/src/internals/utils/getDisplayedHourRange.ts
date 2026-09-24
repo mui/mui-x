@@ -1,4 +1,4 @@
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 
 const DEFAULT_START_TIME = 0;
 const DEFAULT_END_TIME = 24;
@@ -39,7 +39,7 @@ export function getDisplayedHourRange(
 
   if (!isValid) {
     if (process.env.NODE_ENV !== 'production') {
-      warn(
+      warnOnce(
         [
           `MUI X Scheduler: \`${source}\` received an invalid hour range (startTime: ${resolvedStartTime}, endTime: ${resolvedEndTime}).`,
           '`startTime` and `endTime` must be whole hours between 0 and 24 with `startTime` lower than `endTime`.',

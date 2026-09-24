@@ -1,6 +1,6 @@
 import type * as React from 'react';
 import { Store, createSelectorMemoized } from '@base-ui/utils/store';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import type { ResourceSelectionMode } from '@mui/x-scheduler-internals/internals';
 import type { EventDialogFormValues } from '../utils';
@@ -55,7 +55,7 @@ function normalizeValidatorResult(
   // Booleans are excluded from the type but reachable from JS (`condition && 'message'`).
   if (process.env.NODE_ENV !== 'production') {
     if (list.some((message) => typeof message === 'boolean')) {
-      warn(
+      warnOnce(
         [
           'MUI X Scheduler: A form field validator returned a boolean.',
           'Booleans are ignored: return the error message(s) when the value is invalid, or `null` when it is valid.',
@@ -366,7 +366,7 @@ export class EventDialogFormStore<
         this.state.values === values && this.validatorsRevision === validatorsRevision;
       if (isSettled || restarts >= maxRestarts) {
         if (process.env.NODE_ENV !== 'production' && !isSettled) {
-          warn(
+          warnOnce(
             [
               'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
               'The submit stays blocked; the stored errors describe the last completed pass.',

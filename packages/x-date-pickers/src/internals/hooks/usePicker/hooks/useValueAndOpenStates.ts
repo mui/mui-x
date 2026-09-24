@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type {
   DateOrTimeViewWithMeridiem,
@@ -43,7 +43,7 @@ export function useValueAndOpenStates<
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
-      warn(
+      warnOnce(
         [
           'MUI X: The `renderInput` prop has been removed in version 6.0 of the Date and Time Pickers.',
           'You can replace it with the `textField` component slot in most cases.',

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 /**
@@ -24,7 +24,7 @@ export function useGridMissingFormulaFeatureWarning(
       !!props.slotProps?.toolbar?.formulaBar ||
       props.columns?.some((column) => column.allowFormulas === true) === true;
     if (usesFormulaProps) {
-      warn(
+      warnOnce(
         [
           'MUI X Data Grid: Formula-related props were provided, but the formula feature is missing.',
           'Without it, `=` cell values render as raw strings and the formula props have no effect.',

@@ -15,7 +15,7 @@ import {
   useTreeViewStore,
   lazyLoadingSelectors,
 } from '@mui/x-tree-view/internals';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import type { RichTreeViewProProps } from './RichTreeViewPro.types';
@@ -95,7 +95,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
-      warn(
+      warnOnce(
         [
           'MUI X: The `<RichTreeViewPro />` component does not support JSX children.',
           'If you want to add items, you need to use the `items` prop.',
@@ -116,7 +116,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   if (process.env.NODE_ENV !== 'production') {
     if (parameters.itemHeight === null && !parameters.disableVirtualization) {
-      warn(
+      warnOnce(
         [
           'MUI X: `itemHeight={null}` is not compatible with virtualization.',
           'Please use `disableVirtualization` when using `itemHeight={null}`.',

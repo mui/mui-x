@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
@@ -91,7 +91,7 @@ function validatePresetConfig(presetConfig: EventTimelinePremiumPresetConfig) {
       const hourConfig = presetConfig[preset];
       if (hourConfig) {
         if (!PRESET_ZOOM_ORDER.includes(preset)) {
-          warn(
+          warnOnce(
             [
               `MUI X Scheduler: \`presetConfig.${preset}\` is not a known preset, so the configuration is ignored.`,
               `Use one of the built-in presets (${PRESET_ZOOM_ORDER.join(', ')}), or remove the entry from \`presetConfig\`.`,
@@ -125,7 +125,7 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) => {
   const enabled = parameters.dependencies !== undefined;
   if (!enabled && parameters.onDependenciesChange !== undefined) {
-    warn(
+    warnOnce(
       [
         'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
         'The `dependencies` prop is fully controlled, so without it the handler could never display anything and the dependencies feature stays disabled.',
@@ -143,7 +143,7 @@ function warnIfShouldEventRequireResourceMisconfigured(
   resources: readonly unknown[] | undefined,
 ) {
   if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
-    warn(
+    warnOnce(
       [
         'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
         'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
@@ -326,7 +326,7 @@ export class EventTimelinePremiumStore<
   public setPreset = (preset: EventTimelinePremiumPreset, event: Event) => {
     const { preset: presetProp, onPresetChange } = this.parameters;
     if (process.env.NODE_ENV !== 'production' && presetProp !== undefined && !onPresetChange) {
-      warn(
+      warnOnce(
         'MUI X Scheduler: EventTimelinePremium is controlled (received a `preset` prop) but `onPresetChange` is not provided. Preset changes will be silently ignored.',
       );
     }

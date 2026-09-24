@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
 import { ChatDateDivider } from '../ChatMessage/ChatDateDivider';
@@ -17,7 +17,7 @@ function warnIfHostElementRowSlot(
     return;
   }
   if (typeof value === 'string') {
-    warn(
+    warnOnce(
       [
         `MUI X: The \`${slotName}\` slot was given a host element (e.g. \`'div'\`).`,
         `The ${slotName} is a self-suppressing row component: it reads \`messageId\`/\`index\`/\`items\` and renders only at its boundary, returning \`null\` otherwise.`,
@@ -36,7 +36,7 @@ function warnIfDividerSlotWithoutFeature(
     return;
   }
   if (hasCustomization) {
-    warn(
+    warnOnce(
       [
         `MUI X: A \`${slotName}\` slot or slotProps entry was provided, but the \`${slotName}\` feature is disabled.`,
         `Dividers are opt-in and render nothing unless enabled, so the customization has no effect.`,

@@ -30,7 +30,7 @@ import {
   getReplaceRow,
 } from '@mui/x-data-grid/internals';
 import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
-import { error as logError } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import debounce from '@mui/utils/debounce';
 import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -187,7 +187,7 @@ export class CellValueUpdater {
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else if (process.env.NODE_ENV !== 'production') {
-            logError(
+            errorOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',

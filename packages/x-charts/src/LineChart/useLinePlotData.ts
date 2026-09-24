@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { error } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
@@ -130,7 +130,7 @@ export function useLinePlotData(
             );
           }
           if (xData.length < stackedData.length) {
-            error(
+            errorOnce(
               `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
             );
           }

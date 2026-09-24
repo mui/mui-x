@@ -10,7 +10,7 @@ import type {
 } from '@mui/x-data-grid-pro';
 import { isObject, isSingleSelectColDef, gridHasColSpanSelector } from '@mui/x-data-grid/internals';
 import type { GridStateColDef, GridSingleSelectColDef } from '@mui/x-data-grid/internals';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import type { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 import {
@@ -150,7 +150,7 @@ export const serializeRowUnsafe = (
         const formattedValue = apiRef.current.getRowFormattedValue(row, castColumn);
         if (process.env.NODE_ENV !== 'production') {
           if (String(formattedValue) === '[object Object]') {
-            warn(
+            warnOnce(
               [
                 'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
                 'You can provide a `valueFormatter` with a string representation to be used.',
@@ -198,7 +198,7 @@ export const serializeRowUnsafe = (
         cellValue = apiRef.current.getRowFormattedValue(row, column);
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellValue) === '[object Object]') {
-            warn(
+            warnOnce(
               [
                 'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
                 'You can provide a `valueFormatter` with a string representation to be used.',

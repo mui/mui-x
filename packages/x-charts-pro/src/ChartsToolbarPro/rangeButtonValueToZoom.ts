@@ -1,4 +1,4 @@
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 
 /**
  * A calendar interval unit for range buttons.
@@ -117,7 +117,7 @@ export function rangeButtonValueToZoom(
   if (typeof value === 'function') {
     const result = value(params);
     if (process.env.NODE_ENV !== 'production' && result.end < result.start) {
-      warn(
+      warnOnce(
         [
           `MUI X Charts: Range button function returned an end value (${result.end}) lower than the start value (${result.start}).`,
           'This likely produces an unexpected zoom range.',
@@ -140,7 +140,7 @@ export function rangeButtonValueToZoom(
     const endIndex = ordinalData.findIndex((item) => item === value[1]);
     if (startIndex !== -1 && endIndex !== -1) {
       if (process.env.NODE_ENV !== 'production' && endIndex < startIndex) {
-        warn(
+        warnOnce(
           [
             'MUI X Charts: Range button received a range whose end value comes before its start value.',
             'This produces an empty zoom range.',
@@ -178,7 +178,7 @@ export function rangeButtonValueToZoom(
       const startTarget = toTimestamp(value[0]) ?? Number.NaN;
       const endTarget = toTimestamp(value[1]) ?? Number.NaN;
       if (process.env.NODE_ENV !== 'production' && endTarget < startTarget) {
-        warn(
+        warnOnce(
           [
             'MUI X Charts: Range button received a date range whose end is before its start.',
             'This produces an empty zoom range.',
@@ -208,7 +208,7 @@ export function rangeButtonValueToZoom(
   }
 
   if (process.env.NODE_ENV !== 'production' && ordinalData !== undefined) {
-    warn(
+    warnOnce(
       [
         'MUI X Charts: Range button received a value for an ordinal axis whose data could not be matched.',
         'The zoom range may not match the intended selection. Provide axis values that exist on the axis, date-like axis data, or use a function value.',
@@ -226,7 +226,7 @@ export function rangeButtonValueToZoom(
     const rangeStart = toTimestamp(value[0]) ?? domainMin;
     const rangeEnd = toTimestamp(value[1]) ?? domainMax;
     if (process.env.NODE_ENV !== 'production' && rangeEnd < rangeStart) {
-      warn(
+      warnOnce(
         [
           'MUI X Charts: Range button received a date range whose end is before its start.',
           'This produces an empty zoom range.',

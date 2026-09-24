@@ -4,7 +4,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
-import { error } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import type { ChartPlugin } from '../../models';
 import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
@@ -64,7 +64,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       .map((axis) => axis.id);
     const duplicates = new Set(ids.filter((id, index) => ids.indexOf(id) !== index));
     if (duplicates.size > 0) {
-      error(
+      errorOnce(
         [
           `MUI X Charts: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
           `Please make sure that each axis has a unique id.`,

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
@@ -171,7 +171,7 @@ export function FormContent(props: FormContentProps) {
     if (process.env.NODE_ENV !== 'production') {
       for (const key of Object.keys(customProperties)) {
         if (BUILT_IN_FORM_KEYS.has(key)) {
-          warn(
+          warnOnce(
             [
               `MUI X Scheduler: The event model contains a custom property "${key}" that collides with a built-in form key.`,
               'The form seeds that key from the event dates and resource, so the custom property cannot be read or written through the form.',
@@ -258,7 +258,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // built-in section, leaving the stored error with no visible field.
   const warnUnvalidatedField = (field: string, problem: string) => {
     if (process.env.NODE_ENV !== 'production' && !formStore.hasValidator(field)) {
-      warn(
+      warnOnce(
         [
           `MUI X Scheduler: ${problem} but no field of the event dialog validates the "${field}" field.`,
           'Saving is still blocked, but the end user may have no visible field to fix it.',
@@ -329,7 +329,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // Checked on submit rather than on mount: the registry is only complete once
       // every section has run its effects, whatever the composition.
       if (shouldEventRequireResource && !formStore.hasValidator('resourceIds')) {
-        warn(
+        warnOnce(
           [
             'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
             'Saving without a resource is still blocked, but the end user has no visible field to fix it.',
@@ -350,7 +350,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           setTabValue('general');
         }
         if (process.env.NODE_ENV !== 'production') {
-          warn(
+          warnOnce(
             [
               'MUI X Scheduler: A form field validator threw or rejected during the submit.',
               'The submit was aborted and no error was stored on the form.',

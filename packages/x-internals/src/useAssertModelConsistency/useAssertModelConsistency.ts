@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { error } from '../warning';
+import { errorOnce } from '../warning';
 
 /**
  * Make sure a controlled prop is used correctly.
@@ -39,7 +39,7 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
   });
 
   if (isControlled !== (controlled !== undefined)) {
-    error(
+    errorOnce(
       [
         `${warningPrefix}: A component is changing the ${
           isControlled ? '' : 'un'
@@ -54,7 +54,7 @@ function useAssertModelConsistencyOutsideOfProduction<T>(parameters: {
   }
 
   if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-    error(
+    errorOnce(
       [
         `${warningPrefix}: A component is changing the default ${propName} state of an uncontrolled ${componentName} after being initialized. ` +
           `To suppress this warning opt to use a controlled ${componentName}.`,

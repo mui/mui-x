@@ -9,7 +9,7 @@ import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import type { FieldOwnerState } from '../../models';
 import type { UseFieldOwnerStateParameters } from '../hooks/useFieldOwnerState';
@@ -62,7 +62,7 @@ export const cleanFieldResponse = <
       legacyInputLabelProps ||
       legacyFormHelperTextProps
     ) {
-      warn(
+      warnOnce(
         [
           'MUI X: The `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props are no longer supported on Picker / Field components.',
           'They have been silently dropped because they would otherwise be forwarded as unknown attributes on the underlying form control.',
@@ -437,7 +437,7 @@ export function useFieldTextFieldProps<TProps extends UseFieldOwnerStateParamete
       legacyInputLabelProps ||
       legacyFormHelperTextProps
     ) {
-      warn(
+      warnOnce(
         [
           'MUI X: Field components no longer accept the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
           'They have been dropped to avoid leaking unknown attributes onto the underlying form control.',

@@ -1,6 +1,6 @@
 'use client';
 import PropTypes from 'prop-types';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { ChartsXAxisProps, ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
 
@@ -25,7 +25,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   if (!axis) {
     if (process.env.NODE_ENV !== 'production') {
-      warn(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+      warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
     }
     return null;
   }

@@ -1,5 +1,5 @@
 import { Store } from '@base-ui/utils/store';
-import { error as logError } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
   DisposableStack,
@@ -128,7 +128,7 @@ export class MinimalTreeViewStore<
         const initialIsControlled = this.initialParameters?.[controlledProp] !== undefined;
 
         if (initialIsControlled !== isControlled) {
-          logError(
+          errorOnce(
             [
               `MUI X Tree View: A component is changing the ${
                 initialIsControlled ? '' : 'un'
@@ -140,7 +140,7 @@ export class MinimalTreeViewStore<
             ].join('\n'),
           );
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          logError(
+          errorOnce(
             [
               `MUI X Tree View: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
               `To suppress this warning opt to use a controlled ${this.instanceName}.`,

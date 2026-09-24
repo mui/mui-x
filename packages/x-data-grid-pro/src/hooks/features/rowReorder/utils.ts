@@ -11,7 +11,7 @@ import type {
   GridRowModelReplace,
   GridUpdateRowParams,
 } from '@mui/x-data-grid';
-import { error as logError } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import type { ReorderOperationType } from './types';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -237,7 +237,7 @@ export function handleProcessRowUpdateError(
   if (onProcessRowUpdateError) {
     onProcessRowUpdateError(error);
   } else if (process.env.NODE_ENV !== 'production') {
-    logError(
+    errorOnce(
       [
         'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
         'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',

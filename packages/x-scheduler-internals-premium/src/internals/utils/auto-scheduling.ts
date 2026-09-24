@@ -1,4 +1,4 @@
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEvent,
@@ -221,7 +221,7 @@ export function computeAutoSchedulingCascade(
         break;
       }
       if (process.env.NODE_ENV !== 'production') {
-        warn(
+        warnOnce(
           [
             'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
             'Auto-scheduling processed the updated event with the cycle unresolved, so its members may keep violating each other.',
@@ -266,7 +266,7 @@ export function computeAutoSchedulingCascade(
 
   if (process.env.NODE_ENV !== 'production') {
     if (processed.size < members.size) {
-      warn(
+      warnOnce(
         [
           'MUI X Scheduler: The dependencies provided via props contain a cycle.',
           'Auto-scheduling left the events on the cycle (and the ones behind it) unmoved.',

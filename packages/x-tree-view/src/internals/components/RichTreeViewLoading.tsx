@@ -3,7 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import type { SlotComponentProps } from '@mui/utils/types';
 import { useStore } from '@base-ui/utils/store';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { TreeItemLoader } from '../../TreeItemLoader';
 import type { TreeItemLoaderOwnerState } from '../../TreeItemLoader';
 import type { TreeItemLoaderContextValue } from '../../TreeItemLoader/TreeItemLoaderContext';
@@ -21,7 +21,7 @@ export const MAX_LOADING_ITEMS_COUNT = 100;
 export function getLoadingItemsCount(itemsCount: number | undefined): number {
   if (process.env.NODE_ENV !== 'production') {
     if (itemsCount != null && (!Number.isFinite(itemsCount) || itemsCount < 0)) {
-      warn(
+      warnOnce(
         [
           `MUI X: The \`itemsCount\` value in \`slotProps.loading\` received an invalid value (${itemsCount}).`,
           'It must be a non-negative finite number.',

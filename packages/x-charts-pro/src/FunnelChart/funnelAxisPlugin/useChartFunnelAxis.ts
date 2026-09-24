@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { error } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import {
   getChartPoint,
   getCartesianAxisIndex,
@@ -32,7 +32,7 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       .map((axis) => axis.id);
     const duplicates = new Set(ids.filter((id, index) => ids.indexOf(id) !== index));
     if (duplicates.size > 0) {
-      error(
+      errorOnce(
         [
           `MUI X Charts: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
           `Please make sure that each axis has a unique id.`,

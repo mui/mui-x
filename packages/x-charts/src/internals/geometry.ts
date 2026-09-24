@@ -1,4 +1,4 @@
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { deg2rad } from './angleConversion';
 
 const ANGLE_APPROX = 5; // Angle (in deg) for which we approximate the rectangle as perfectly horizontal/vertical
@@ -14,7 +14,7 @@ const ANGLE_APPROX = 5; // Angle (in deg) for which we approximate the rectangle
 export function getMinXTranslation(width: number, height: number, angle: number = 0) {
   if (process.env.NODE_ENV !== 'production') {
     if (angle > 90 || angle < -90) {
-      warn(
+      warnOnce(
         [
           `MUI X Charts: It seems you applied an angle larger than 90° or smaller than -90° to an axis text.`,
           `This could cause some text overlapping.`,

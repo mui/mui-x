@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { error as logError } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -472,7 +472,7 @@ export const useGridCellEditing = (
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else if (process.env.NODE_ENV !== 'production') {
-            logError(
+            errorOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',

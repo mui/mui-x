@@ -1,4 +1,4 @@
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRotationScale } from '../../hooks/useScale';
 import { useChartsContext } from '../../context/ChartsProvider/useChartsContext';
@@ -46,7 +46,7 @@ export function useRadarAxis(params: UseRadarAxisParams) {
   const existingMetrics = rotationScale.domain() as (string | number)[];
 
   if (process.env.NODE_ENV !== 'production' && !existingMetrics.includes(metric)) {
-    warn(
+    warnOnce(
       [
         `MUI X Charts: Your radar axis tries to display values for the metric "${metric}" which does not exist.`,
         `Either add this metric to your radar, or pick one from the existing metrics: ${existingMetrics.join(', ')}`,

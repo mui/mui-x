@@ -1,5 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { gridRowIdSelector } from '@mui/x-data-grid-pro';
 import type {
   GridCellCoordinates,
@@ -391,7 +391,7 @@ function warnOnLargeRangeDependencies(
   materializedCells +=
     dependencies.wholeColumns.length * Math.max(0, context.dataToIndex - context.dataFromIndex + 1);
   if (materializedCells > RANGE_CELLS_WARNING_THRESHOLD) {
-    warn(
+    warnOnce(
       [
         `MUI X Data Grid: A formula materializes over ${RANGE_CELLS_WARNING_THRESHOLD.toLocaleString('en-US')} range cells per evaluation.`,
         'Formulas of this size can make editing and scrolling noticeably slow.',
@@ -487,7 +487,7 @@ function scanRow(
         continue;
       }
       if (process.env.NODE_ENV !== 'production' && columnsLookup[field]?.valueGetter) {
-        warn(
+        warnOnce(
           [
             `MUI X Data Grid: The column "${field}" defines both \`allowFormulas\` and \`valueGetter\`.`,
             'The `valueGetter` is ignored for cells holding a formula and only applies to plain cells.',

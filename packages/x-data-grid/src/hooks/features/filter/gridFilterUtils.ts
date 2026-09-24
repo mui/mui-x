@@ -1,5 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { error } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { GridLogicOperator } from '../../../models';
 import type {
   GridColDef,
@@ -180,7 +180,7 @@ export const sanitizeFilterModel = (
   let items: GridFilterItem[];
   if (hasSeveralItems && disableMultipleColumnsFiltering) {
     if (process.env.NODE_ENV !== 'production') {
-      error(
+      errorOnce(
         [
           'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
           'If you are using the community version of the Data Grid, this prop is always `true`.',
@@ -196,13 +196,13 @@ export const sanitizeFilterModel = (
   const hasItemWithoutOperator = items.some((item) => item.operator == null);
 
   if (hasItemsWithoutIds && process.env.NODE_ENV !== 'production') {
-    error(
+    errorOnce(
       'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
     );
   }
 
   if (hasItemWithoutOperator && process.env.NODE_ENV !== 'production') {
-    error(
+    errorOnce(
       'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
     );
   }

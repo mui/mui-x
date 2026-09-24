@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import { isBuiltInEventProperty } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -114,7 +114,7 @@ export function useEventDialogFormField(
 ): UseEventDialogFormFieldReturnValue<unknown> {
   if (process.env.NODE_ENV !== 'production') {
     if (!BUILT_IN_FORM_KEYS.has(key) && isBuiltInEventProperty(key)) {
-      warn(
+      warnOnce(
         [
           `MUI X Scheduler: useEventDialogFormField() received the key "${key}", which is a built-in event property.`,
           'The edit is dropped on save, so the field cannot be persisted.',
@@ -123,7 +123,7 @@ export function useEventDialogFormField(
       );
     }
     if (BUILT_IN_FORM_KEYS.has(key) && parameters.defaultValue !== undefined) {
-      warn(
+      warnOnce(
         [
           `MUI X Scheduler: useEventDialogFormField() received a \`defaultValue\` for the built-in key "${key}".`,
           'Built-in keys are always seeded from the event being edited, so the default is never applied.',

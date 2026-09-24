@@ -4,7 +4,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
-import { error as logError, warn } from '@mui/x-internals/warning';
+import { errorOnce, warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID, getReplaceRow, isReplaceUpdate } from '../rows/gridRowsUtils';
 import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
@@ -198,7 +198,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
               }),
             );
           } else if (process.env.NODE_ENV !== 'production') {
-            logError(
+            errorOnce(
               [
                 'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
                 'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
@@ -388,7 +388,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             }),
           );
         } else if (process.env.NODE_ENV !== 'production') {
-          logError(
+          errorOnce(
             [
               'MUI X: A call to `dataSource.updateRow()` threw an error which was not handled because `onDataSourceError()` is missing.',
               'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
@@ -544,7 +544,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       (currentStrategy === DataSourceRowsUpdateStrategy.GroupedData ||
         currentStrategy === DataSourceRowsUpdateStrategy.LazyLoadedGroupedData)
     ) {
-      warn(
+      warnOnce(
         [
           'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
           'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',

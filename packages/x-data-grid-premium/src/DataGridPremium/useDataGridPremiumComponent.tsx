@@ -82,7 +82,7 @@ import {
 import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
-import { warn } from '@mui/x-internals/warning';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import type { GridFormulaFeature } from '../models/gridFeatureDependencies';
@@ -171,7 +171,7 @@ export const useDataGridPremiumComponent = (
   const formulaFeature = React.useRef(props.featureDependencies?.formula).current;
   if (process.env.NODE_ENV !== 'production') {
     if (props.featureDependencies?.formula !== formulaFeature) {
-      warn(
+      warnOnce(
         [
           'MUI X Data Grid: The `featureDependencies` prop changed after the first render.',
           'Injected features are captured once when the grid mounts, so the change is ignored.',

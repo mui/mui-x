@@ -1,4 +1,4 @@
-import { error } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { isNumber } from '../../utils/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridSignature } from '../../constants/signature';
@@ -62,7 +62,7 @@ export function validateProps<TProps>(props: TProps, validators: PropValidator<T
   validators.forEach((validator) => {
     const message = validator(props);
     if (message) {
-      error(message);
+      errorOnce(message);
     }
   });
 }
