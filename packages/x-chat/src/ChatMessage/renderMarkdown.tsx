@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import Markdown, { RuleType, type MarkdownToJSX } from 'markdown-to-jsx';
+import Markdown, { RuleType } from 'markdown-to-jsx';
+import type { MarkdownToJSX } from 'markdown-to-jsx';
 import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { normalizeMarkdownForRender, safeUri } from '@mui/x-chat-headless/internals';
 import { ChatCodeBlock } from '../ChatCodeBlock';
@@ -58,12 +59,18 @@ const markdownOptions: MarkdownToJSX.Options = {
 // Public API
 // ---------------------------------------------------------------------------
 
+// Past this length we skip parsing: markdown-to-jsx is super-linear on inline syntax.
+const MAX_MARKDOWN_LENGTH = 50_000;
+
 /**
  * Renders a markdown string to React elements via `markdown-to-jsx`. Output stays
  * XSS-safe by construction (React elements, no `dangerouslySetInnerHTML`); only
  * link/image URLs are guarded, by {@link sanitizer}.
  */
 export function renderMarkdown(text: string): React.ReactNode {
+  if (text.length > MAX_MARKDOWN_LENGTH) {
+    return text;
+  }
   return <Markdown options={markdownOptions}>{normalizeMarkdownForRender(text)}</Markdown>;
 }
 
@@ -76,6 +83,9 @@ export function renderMarkdown(text: string): React.ReactNode {
 function StreamingMarkdownText({ text }: { text: string }): React.ReactElement {
   const repair = useStreamingMarkdownRepair();
   const source = React.useMemo(() => repair(text), [repair, text]);
+  if (source.length > MAX_MARKDOWN_LENGTH) {
+    return <React.Fragment>{source}</React.Fragment>;
+  }
   return <Markdown options={markdownOptions}>{source}</Markdown>;
 }
 

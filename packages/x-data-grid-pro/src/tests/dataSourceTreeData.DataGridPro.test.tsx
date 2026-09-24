@@ -10,6 +10,9 @@ import type {
   GridGetRowsParams,
   GridGetRowsResponse,
   GridGroupNode,
+  GridRowId,
+  GridRowModel,
+  GridUpdateRowParams,
 } from '@mui/x-data-grid-pro';
 import { actSleep, getCell, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -858,6 +861,186 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // Collapse the first parent row
     await user.click(within(cell).getByRole('button'));
   });
+  // https://github.com/mui/mui-x/issues/23009
+  describe('nested row updates', () => {
+    const NESTED_DATA: Record<string, any[]> = {
+      '[]': [
+        { id: 'p1', name: 'Parent 1', website: 'p1.example', descendantCount: 3 },
+        { id: 'p2', name: 'Parent 2', website: 'p2.example', descendantCount: 0 },
+      ],
+      '["Parent 1"]': [
+        { id: 'c1', name: 'Child 1', website: 'c1.example', descendantCount: 0 },
+        { id: 'c2', name: 'Child 2', website: 'c2.example', descendantCount: 0 },
+        { id: 'c3', name: 'Child 3', website: 'c3.example', descendantCount: 0 },
+      ],
+    };
+    // The parent row has a falsy id
+    const FALSY_ID_DATA: Record<string, any[]> = {
+      '[]': [{ id: 0, name: 'Parent 0', website: 'p0.example', descendantCount: 1 }],
+      '["Parent 0"]': [{ id: 1, name: 'Child', website: 'c.example', descendantCount: 0 }],
+    };
+
+    type NestedRowsTestProps = Partial<DataGridProProps> & {
+      data?: Record<string, any[]>;
+      withUpdateRow?: boolean;
+      onGetRows?: (params: GridGetRowsParams) => void;
+    };
+
+    function NestedRowsTest(props: NestedRowsTestProps) {
+      apiRef = useGridApiRef();
+      const { data = NESTED_DATA, withUpdateRow = false, onGetRows, ...other } = props;
+
+      const dataSource: GridDataSource = React.useMemo(
+        () => ({
+          getRows: async (params: GridGetRowsParams) => {
+            onGetRows?.(params);
+            const rows = data[JSON.stringify(params.groupKeys)] ?? [];
+            return { rows, rowCount: rows.length };
+          },
+          updateRow: withUpdateRow
+            ? async (params: GridUpdateRowParams) => params.updatedRow
+            : undefined,
+          getGroupKey: (row) => row.name,
+          getChildrenCount: (row) => row.descendantCount,
+        }),
+        [data, withUpdateRow, onGetRows],
+      );
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }, { field: 'website', editable: true }]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            treeData
+            disableVirtualization
+            {...other}
+          />
+        </div>
+      );
+    }
+
+    const getTree = () => apiRef.current!.state.rows.tree;
+    const getChildren = (id: GridRowId) => (getTree()[id] as GridGroupNode).children;
+
+    async function renderWithExpandedParent(props: NestedRowsTestProps = {}) {
+      const view = render(<NestedRowsTest {...props} />);
+      await waitFor(() => {
+        expect(getTree().p1).not.to.equal(undefined);
+      });
+      act(() => {
+        apiRef.current!.dataSource.fetchRows('p1');
+      });
+      await waitFor(() => {
+        expect(getChildren('p1')).to.deep.equal(['c1', 'c2', 'c3']);
+      });
+      return view;
+    }
+
+    async function editCell(id: GridRowId, field: string, value: string) {
+      act(() => {
+        apiRef.current!.startCellEditMode({ id, field });
+      });
+      await act(async () => {
+        await apiRef.current!.setEditCellValue({ id, field, value });
+      });
+      act(() => {
+        apiRef.current!.stopCellEditMode({ id, field });
+      });
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(id)[field]).to.equal(value);
+      });
+    }
+
+    it('should keep an updated nested row under its parent', async () => {
+      await renderWithExpandedParent();
+
+      act(() => {
+        apiRef.current!.updateRows([{ id: 'c1', website: 'updated' }]);
+      });
+
+      expect(getTree().c1.parent).to.equal('p1');
+      expect(getTree().c1.depth).to.equal(1);
+      expect(getChildren('p1')).to.deep.equal(['c1', 'c2', 'c3']);
+      expect(getChildren(GRID_ROOT_GROUP_ID)).to.deep.equal(['p1', 'p2']);
+    });
+
+    it('should keep the children order after re-fetching the root and the parent following a nested row update', async () => {
+      const getRowsSpy = vi.fn();
+      await renderWithExpandedParent({ onGetRows: getRowsSpy });
+
+      act(() => {
+        apiRef.current!.updateRows([{ id: 'c1', website: 'updated' }]);
+      });
+
+      const callsBeforeRefetch = getRowsSpy.mock.calls.length;
+      act(() => {
+        apiRef.current!.dataSource.fetchRows();
+      });
+      await waitFor(() => {
+        expect(getRowsSpy.mock.calls.length).to.equal(callsBeforeRefetch + 1);
+      });
+      act(() => {
+        apiRef.current!.dataSource.fetchRows('p1');
+      });
+      await waitFor(() => {
+        expect(getRowsSpy.mock.calls.length).to.equal(callsBeforeRefetch + 2);
+      });
+      // The children re-fetch resets the edited value
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('c1')?.website).to.equal('c1.example');
+      });
+
+      expect(getChildren('p1')).to.deep.equal(['c1', 'c2', 'c3']);
+      expect(getChildren(GRID_ROOT_GROUP_ID)).to.deep.equal(['p1', 'p2']);
+    });
+
+    it('should keep an edited nested row under its parent when using `processRowUpdate`', async () => {
+      const processRowUpdate = vi.fn((row: GridRowModel) => row);
+      await renderWithExpandedParent({ processRowUpdate });
+
+      await editCell('c1', 'website', 'edited');
+
+      expect(processRowUpdate.mock.calls.length).to.equal(1);
+      expect(getTree().c1.parent).to.equal('p1');
+      expect(getChildren('p1')).to.deep.equal(['c1', 'c2', 'c3']);
+    });
+
+    it('should keep an edited nested row under a parent with a falsy id when using `dataSource.updateRow`', async () => {
+      render(
+        <NestedRowsTest data={FALSY_ID_DATA} withUpdateRow defaultGroupingExpansionDepth={-1} />,
+      );
+      await waitFor(() => {
+        expect(getChildren(0)).to.deep.equal([1]);
+      });
+
+      await editCell(1, 'website', 'edited');
+
+      expect(getTree()[1].parent).to.equal(0);
+      expect(getChildren(0)).to.deep.equal([1]);
+    });
+
+    it('should fetch the children of a parent with a falsy id when expanding it', async () => {
+      const getRowsSpy = vi.fn();
+      const { user } = render(<NestedRowsTest data={FALSY_ID_DATA} onGetRows={getRowsSpy} />);
+      await waitFor(() => {
+        expect(getTree()[0]).not.to.equal(undefined);
+      });
+
+      const callsBeforeExpand = getRowsSpy.mock.calls.length;
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+
+      await waitFor(() => {
+        expect(getRowsSpy.mock.calls.length).to.equal(callsBeforeExpand + 1);
+      });
+      expect(getRowsSpy.mock.calls[callsBeforeExpand][0].groupKeys).to.deep.equal(['Parent 0']);
+      await waitFor(() => {
+        expect(getChildren(0)).to.deep.equal([1]);
+      });
+    });
+  });
+
   if (SUPPORTS_ACTIVITY) {
     // https://github.com/mui/mui-x/issues/23262
     describe('Activity', () => {

@@ -35,11 +35,11 @@ describe('<DataGridPro /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  function Test(props: Partial<DataGridProProps> & { width?: number; height?: number }) {
+  function Test(props: Partial<DataGridProProps> & { width?: number; wrapperHeight?: number }) {
     apiRef = useGridApiRef();
-    const { width = 300, height = 500, ...otherProps } = props;
+    const { width = 300, wrapperHeight = 500, ...otherProps } = props;
     return (
-      <div style={{ width, height }}>
+      <div style={{ width, height: wrapperHeight }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...otherProps} />
       </div>
     );
@@ -744,6 +744,27 @@ describe('<DataGridPro /> - Columns', () => {
       await waitFor(() => {
         expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 63]);
       });
+    });
+
+    // Regression test for https://github.com/mui/mui-x/issues/23234
+    it('should compute a stable width when the header text wraps to multiple lines', async () => {
+      render(
+        <Test
+          rows={rows}
+          columns={[{ field: 'brand', headerName: 'This is the brand column', width: 60 }]}
+          sx={{
+            [`& .${gridClasses.columnHeaderTitle}`]: {
+              whiteSpace: 'normal',
+              lineHeight: 1.2,
+            },
+          }}
+        />,
+      );
+      await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: true }));
+      const widthAfterFirstCall = parseInt(getColumnHeaderCell(0).style.width, 10);
+      await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: true }));
+      const widthAfterSecondCall = parseInt(getColumnHeaderCell(0).style.width, 10);
+      expect(widthAfterSecondCall).to.equal(widthAfterFirstCall);
     });
 
     it('should work with custom column header sort icon', async () => {

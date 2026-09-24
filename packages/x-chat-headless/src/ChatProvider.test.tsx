@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { act, renderHook } from '@mui/internal-test-utils';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { ChatAdapter } from './adapters';
 import { useChatRuntimeContext } from './internals/useChatRuntimeContext';
 import { useChatStore } from './hooks';
 import type { ChatPartRendererMap } from './renderers';
 import { chatSelectors } from './selectors';
-import { ChatStore, type ChatStoreParameters } from './store';
+import { ChatStore } from './store';
+import type { ChatStoreParameters } from './store';
 import type { ChatConversation, ChatMessage } from './types/chat-entities';
-import { ChatProvider, type ChatProviderProps } from './ChatProvider';
+import { ChatProvider } from './ChatProvider';
+import type { ChatProviderProps } from './ChatProvider';
 import { useChatStoreContext } from './internals/useChatStoreContext';
 
 const message1: ChatMessage = {

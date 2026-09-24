@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatStore } from '../hooks/useChatStore';
 import { chatSelectors } from '../selectors';
 import { useComposerContext } from './internals/ComposerContext';
-import { type ComposerAttachmentListOwnerState } from './composer.types';
+import type { ComposerAttachmentListOwnerState } from './composer.types';
 
 export interface ComposerAttachmentListSlots {
   attachmentList: React.ElementType;
