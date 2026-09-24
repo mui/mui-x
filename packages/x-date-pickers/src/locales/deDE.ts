@@ -48,9 +48,11 @@ const deDEPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `${timeViews[view] ?? view} auswählen. ${!formattedTime ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
-  minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
-  secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'Stunde' : timeViews.hours}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${Number(minutes) === 1 ? 'Minute' : timeViews.minutes}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds}  ${Number(seconds) === 1 ? 'Sekunde' : timeViews.seconds}`,
 
   // Digital clock labels
   selectViewText: (view) => `${timeViews[view]} auswählen`,

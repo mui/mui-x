@@ -47,9 +47,9 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Selecteer ${timeViews[view]}. ${!formattedTime ? 'Geen tijd geselecteerd' : `Geselecteerde tijd is ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} uren`,
-  minutesClockNumberText: (minutes) => `${minutes} minuten`,
-  secondsClockNumberText: (seconds) => `${seconds} seconden`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) > 1 ? 'uren' : 'uur'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) > 1 ? 'minuten' : 'minuut'}`,
+  secondsClockNumberText: (seconds) => `${seconds} ${Number(seconds) > 1 ? 'seconden' : 'seconde'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Selecteer ${timeViews[view]}`,

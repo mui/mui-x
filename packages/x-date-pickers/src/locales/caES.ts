@@ -47,9 +47,9 @@ const caESPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Selecciona ${views[view]}. ${!formattedTime ? 'Hora no seleccionada' : `L'hora seleccionada és ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} hores`,
-  minutesClockNumberText: (minutes) => `${minutes} minuts`,
-  secondsClockNumberText: (seconds) => `${seconds} segons`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) > 1 ? 'hores' : 'hora'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) > 1 ? 'minuts' : 'minut'}`,
+  secondsClockNumberText: (seconds) => `${seconds} ${Number(seconds) > 1 ? 'segons' : 'segon'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Seleccionar ${views[view]}`,

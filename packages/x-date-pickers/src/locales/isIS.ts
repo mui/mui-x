@@ -47,9 +47,11 @@ const isISPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Velja ${timeViews[view]}. ${!formattedTime ? 'Enginn tími valinn' : `Valinn tími er ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} klukkustundir`,
-  minutesClockNumberText: (minutes) => `${minutes} mínútur`,
-  secondsClockNumberText: (seconds) => `${seconds} sekúndur`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${Number(hours) === 1 ? 'klukkustund' : 'klukkustundir'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'mínúta' : 'mínútur'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'sekúnda' : 'sekúndur'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Velja ${timeViews[view]}`,

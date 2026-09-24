@@ -48,9 +48,11 @@ const roROPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Selectați ${timeViews[view] ?? view}. ${!formattedTime ? 'Nicio oră selectată' : `Ora selectată este ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
-  minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
-  secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'Oră' : timeViews.hours}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${Number(minutes) === 1 ? 'Minut' : timeViews.minutes}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds}  ${Number(seconds) === 1 ? 'Secundă' : timeViews.seconds}`,
 
   // Digital clock labels
   selectViewText: (view) => `Selectați ${timeViews[view]}`,
