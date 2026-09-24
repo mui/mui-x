@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { heIL } from './heIL';
+import { heIL } from '../heIL';
 
 const localeText = heIL.components.MuiEventCalendar.defaultProps.localeText;
 
