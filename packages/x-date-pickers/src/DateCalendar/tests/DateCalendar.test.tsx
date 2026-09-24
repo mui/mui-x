@@ -264,17 +264,15 @@ describe('<DateCalendar />', () => {
     it('should remove the exiting month label from the layout during the fade transition', () => {
       render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
 
-      // Use `fireEvent` to assert the transition state before the exit timer unmounts the old label.
+      // Use `fireEvent` to assert the transition state before the entering label finishes fading in.
       fireEvent.click(screen.getByTitle('Next month'));
 
       const labels = screen.getAllByTestId('calendar-month-and-year-text');
-      expect(labels).to.have.length(2);
+      expect(labels).to.have.length(1);
       expect(labels[0]).to.have.text('February 2019');
-      expect(labels[1]).to.have.text('January 2019');
 
-      // The exiting label must not push the entering label down.
-      expect(getComputedStyle(labels[1]).position).to.equal('absolute');
-      expect(labels[1].getBoundingClientRect().top).to.equal(labels[0].getBoundingClientRect().top);
+      // The exiting label unmounts synchronously, so it cannot push the entering label down.
+      expect(getComputedStyle(labels[0]).position).to.equal('static');
     });
 
     // test: https://github.com/mui/mui-x/issues/9736
@@ -290,16 +288,14 @@ describe('<DateCalendar />', () => {
       fireEvent.click(screen.getByTitle('Previous month'));
 
       const labels = screen.getAllByTestId('calendar-month-and-year-text');
-      expect(labels).to.have.length(2);
-      expect(labels[0]).to.have.text('February 2019');
-      expect(labels[1]).to.have.text('January 2019');
+      expect(labels).to.have.length(1);
+      expect(labels[0]).to.have.text('January 2019');
 
-      // The re-entering label participates in the layout even when it is not the first child.
-      expect(getComputedStyle(labels[0]).position).to.equal('absolute');
-      expect(getComputedStyle(labels[1]).position).to.equal('static');
+      // The re-entering label participates in the layout like any other single label.
+      expect(getComputedStyle(labels[0]).position).to.equal('static');
 
       // The re-entering label must keep its original size.
-      const activeRect = labels[1].getBoundingClientRect();
+      const activeRect = labels[0].getBoundingClientRect();
       expect(activeRect.width).to.equal(initialRect.width);
       expect(activeRect.height).to.equal(initialRect.height);
     });
