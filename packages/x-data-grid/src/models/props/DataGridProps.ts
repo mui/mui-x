@@ -505,6 +505,12 @@ export interface DataGridPropsWithoutDefaultValue<
    */
   scrollbarSize?: number;
   /**
+   * The height of the Data Grid.
+   * Accepts a number (pixels) or any valid CSS height value (for example `'50vh'`).
+   * When set, the Data Grid no longer needs a parent element with an explicit height.
+   */
+  height?: number | string;
+  /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
