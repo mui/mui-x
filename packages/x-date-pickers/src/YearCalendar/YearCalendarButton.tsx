@@ -20,6 +20,7 @@ export interface YearCalendarButtonProps {
   selected: boolean;
   disabled: boolean;
   autoFocus: boolean;
+  compact?: boolean;
   classes: Partial<YearCalendarClasses> | undefined;
   slots: YearCalendarSlots | undefined;
   slotProps: YearCalendarSlotProps | undefined;
@@ -90,6 +91,12 @@ const DefaultYearButton = styled('button', {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
+  variants: [
+    {
+      props: { isPickerCompact: true },
+      style: { height: 32, width: 60, borderRadius: 16 },
+    },
+  ],
 }));
 
 /**
@@ -110,6 +117,7 @@ export const YearCalendarButton = React.memo(function YearCalendarButton(
     onBlur,
     slots,
     slotProps,
+    compact,
     ...other
   } = props;
 
@@ -117,6 +125,7 @@ export const YearCalendarButton = React.memo(function YearCalendarButton(
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const ownerState: YearButtonOwnerState = {
     ...pickerOwnerState,
+    isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
     isYearDisabled: disabled,
     isYearSelected: selected,
   };

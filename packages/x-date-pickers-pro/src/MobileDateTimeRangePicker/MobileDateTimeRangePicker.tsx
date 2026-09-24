@@ -11,7 +11,9 @@ import type {
 } from '@mui/x-date-pickers/internals';
 import {
   DIALOG_WIDTH,
+  DIALOG_WIDTH_COMPACT,
   VIEW_HEIGHT,
+  VIEW_HEIGHT_COMPACT,
   isInternalTimeView,
   isDatePickerView,
   resolveDateTimeFormat,
@@ -39,7 +41,7 @@ import type { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
-import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { RANGE_VIEW_HEIGHT, RANGE_VIEW_HEIGHT_COMPACT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
 import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
@@ -55,30 +57,31 @@ const rendererInterceptor = function RendererInterceptor(
 ) {
   const { viewRenderers, popperView, rendererProps } = props;
   const { rangePosition } = usePickerRangePositionContext();
-  const { view, openTo, ...otherRendererProps } = rendererProps;
+  const { view, openTo, compact, ...otherRendererProps } = rendererProps;
 
   const finalProps = {
     ...otherRendererProps,
+    compact,
     sx: [
       {
-        width: DIALOG_WIDTH,
+        width: compact ? DIALOG_WIDTH_COMPACT : DIALOG_WIDTH,
         [`.${multiSectionDigitalClockSectionClasses.root}`]: {
           flex: 1,
           // account for the border on `MultiSectionDigitalClock`
-          maxHeight: VIEW_HEIGHT - 1,
+          maxHeight: (compact ? VIEW_HEIGHT_COMPACT : VIEW_HEIGHT) - 1,
           [`.${multiSectionDigitalClockSectionClasses.item}`]: {
             width: 'auto',
           },
         },
         [`&.${digitalClockClasses.root}`]: {
-          maxHeight: RANGE_VIEW_HEIGHT,
+          maxHeight: compact ? RANGE_VIEW_HEIGHT_COMPACT : RANGE_VIEW_HEIGHT,
           [`.${digitalClockClasses.item}`]: {
             justifyContent: 'center',
           },
         },
         [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}`]:
           {
-            maxHeight: RANGE_VIEW_HEIGHT - 1,
+            maxHeight: (compact ? RANGE_VIEW_HEIGHT_COMPACT : RANGE_VIEW_HEIGHT) - 1,
           },
       },
     ],
@@ -220,6 +223,11 @@ MobileDateTimeRangePicker.propTypes /* remove-proptypes */ = {
    * @default false
    */
   closeOnSelect: PropTypes.bool,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   /**
    * Position the current month is rendered in.
    * @default 1

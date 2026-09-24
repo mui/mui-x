@@ -64,9 +64,13 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export {
   DAY_SIZE,
+  DAY_SIZE_COMPACT,
   DAY_MARGIN,
+  DAY_MARGIN_COMPACT,
   DIALOG_WIDTH,
+  DIALOG_WIDTH_COMPACT,
   VIEW_HEIGHT,
+  VIEW_HEIGHT_COMPACT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from './constants/dimensions';
 

@@ -19,6 +19,7 @@ export interface MonthCalendarButtonProps {
   selected: boolean;
   disabled: boolean;
   autoFocus: boolean;
+  compact?: boolean;
   classes: Partial<MonthCalendarClasses> | undefined;
   slots: MonthCalendarSlots | undefined;
   slotProps: MonthCalendarSlotProps | undefined;
@@ -92,6 +93,12 @@ const DefaultMonthButton = styled('button', {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
+  variants: [
+    {
+      props: { isPickerCompact: true },
+      style: { height: 32, width: 60, borderRadius: 16 },
+    },
+  ],
 }));
 
 /**
@@ -112,6 +119,7 @@ export const MonthCalendarButton = React.memo(function MonthCalendarButton(
     onBlur,
     slots,
     slotProps,
+    compact,
     ...other
   } = props;
 
@@ -119,6 +127,7 @@ export const MonthCalendarButton = React.memo(function MonthCalendarButton(
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const ownerState: MonthButtonOwnerState = {
     ...pickerOwnerState,
+    isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
     isMonthDisabled: disabled,
     isMonthSelected: selected,
   };
