@@ -22,8 +22,18 @@ const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 const DOCS_ROOT = path.resolve(__dirname, '..');
 
 const babelConfig = {
-  presets: ['@babel/preset-typescript'],
+  presets: [
+    [
+      '@babel/preset-typescript',
+      // Babel 8 defaults this to `true`, which keeps imports that are only used as types.
+      // The transpiled demos must not carry them over, so keep the Babel 7 elision behavior.
+      { onlyRemoveTypeImports: false },
+    ],
+  ],
   plugins: [],
+  // `@babel/preset-typescript` no longer pulls in the JSX syntax for `.tsx` files in Babel 8,
+  // and the demos keep their JSX, so enable it on the parser rather than transforming it.
+  parserOpts: { plugins: ['jsx'] },
   generatorOpts: { retainLines: true },
   babelrc: false,
   configFile: false,

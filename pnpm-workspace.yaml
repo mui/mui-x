@@ -7,13 +7,13 @@ packages:
 
 catalog:
   '@atlaskit/pragmatic-drag-and-drop': ^3.1.0
-  '@babel/cli': ^7.29.7
-  '@babel/core': ^7.29.7
-  '@babel/plugin-transform-modules-commonjs': ^7.29.7
-  '@babel/plugin-transform-runtime': ^7.29.7
-  '@babel/preset-typescript': ^7.29.7
-  '@babel/runtime': ^7.29.7
-  '@babel/traverse': ^7.29.8
+  '@babel/cli': ^8.0.6
+  '@babel/core': ^8.0.6
+  '@babel/plugin-transform-modules-commonjs': ^8.0.1
+  '@babel/plugin-transform-runtime': ^8.0.6
+  '@babel/preset-typescript': ^8.0.1
+  '@babel/runtime': ^8.0.5
+  '@babel/traverse': ^8.0.6
   '@base-ui/react': ^1.8.0
   '@base-ui/utils': ^0.4.0
   '@date-fns/tz': ^1.5.0
@@ -85,7 +85,10 @@ catalog:
 
 engineStrict: true
 updateNotifier: false
-blockExoticSubdeps: true
+# TEMP: the pkg.pr.new overrides below resolve to tarball URLs, which pull their own
+# workspace deps in as URL subdeps. Restore `true` once mui-public#1875 merges and the
+# overrides block is removed.
+blockExoticSubdeps: false
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
@@ -115,6 +118,16 @@ allowBuilds:
   msw: false
 
 overrides:
+  # TEMP: pin to mui-public#1875's pkg.pr.new build until it merges and publishes a real
+  # Babel-8 @mui/internal-code-infra. Remove this whole block (and restore
+  # `blockExoticSubdeps: true` above) once that lands and this repo's own @mui/internal-*
+  # versions are bumped normally.
+  '@mui/internal-code-infra': 'https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@5be4332c9'
+  '@mui/internal-netlify-cache': 'https://pkg.pr.new/mui/mui-public/@mui/internal-netlify-cache@5be4332c9'
+  '@mui/internal-test-utils': 'https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@5be4332c9'
+  '@mui/internal-babel-plugin-display-name': 'https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-display-name@5be4332c9'
+  '@mui/internal-babel-plugin-minify-errors': 'https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-minify-errors@5be4332c9'
+  '@mui/internal-babel-plugin-resolve-imports': 'https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-resolve-imports@5be4332c9'
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
