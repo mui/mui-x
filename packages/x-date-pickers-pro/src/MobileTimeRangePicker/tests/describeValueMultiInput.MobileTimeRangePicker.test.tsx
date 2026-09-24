@@ -7,6 +7,7 @@ import {
   describeValue,
   getFieldSectionsContainer,
   openPicker,
+  multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
 import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
@@ -69,26 +70,11 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
       await user.click(await screen.findByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
 
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const hours = adapterToUse.format(
+      await multiSectionDigitalClockHandler.setViewValue(
+        user,
+        adapterToUse,
         newValue[setEndDate ? 1 : 0],
-        hasMeridiem ? 'hours12h' : 'hours24h',
       );
-      const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      await user.click(
-        await screen.findByRole('option', {
-          name: `${parseInt(hours, 10)} ${parseInt(hours, 10) === 1 ? 'hour' : 'hours'}`,
-        }),
-      );
-      await user.click(
-        await screen.findByRole('option', {
-          name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} ${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0]) === 1 ? 'minute' : 'minutes'}`,
-        }),
-      );
-      if (hasMeridiem) {
-        await user.click(
-          await screen.findByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
-        );
-      }
       // Close the picker
       if (!isOpened) {
         await user.keyboard('{Escape}');

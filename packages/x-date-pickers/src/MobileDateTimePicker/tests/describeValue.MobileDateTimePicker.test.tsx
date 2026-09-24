@@ -6,6 +6,7 @@ import {
   openPicker,
   describeValue,
   getFieldInputRoot,
+  multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
@@ -49,22 +50,7 @@ describe('<MobileDateTimePicker /> - Describe Value', () => {
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
       await user.click(screen.getByRole('button', { name: 'Next' }));
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
-      const hoursNumber = adapterToUse.getHours(newValue);
-      await user.click(
-        screen.getByRole('option', {
-          name: `${parseInt(hours, 10)} ${parseInt(hours, 10) === 1 ? 'hour' : 'hours'}`,
-        }),
-      );
-      await user.click(
-        screen.getByRole('option', {
-          name: `${adapterToUse.getMinutes(newValue)} ${adapterToUse.getMinutes(newValue) === 1 ? 'minute' : 'minutes'}`,
-        }),
-      );
-      if (hasMeridiem) {
-        await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
-      }
+      await multiSectionDigitalClockHandler.setViewValue(user, adapterToUse, newValue);
 
       // Close the picker
       if (!isOpened) {

@@ -6,6 +6,7 @@ import {
   expectFieldValue,
   describeValue,
   getFieldSectionsContainer,
+  multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
@@ -88,25 +89,11 @@ describe('<DesktopDateTimeRangePicker /> - Describe Value', () => {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           }),
         );
-        const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-        const hours = adapterToUse.format(
+        await multiSectionDigitalClockHandler.setViewValue(
+          user,
+          adapterToUse,
           newValue[setEndDate ? 1 : 0],
-          hasMeridiem ? 'hours12h' : 'hours24h',
         );
-        const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-        await user.click(
-          screen.getByRole('option', {
-            name: `${parseInt(hours, 10)} ${parseInt(hours, 10) === 1 ? 'hour' : 'hours'}`,
-          }),
-        );
-        await user.click(
-          screen.getByRole('option', {
-            name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} ${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0]) === 1 ? 'minute' : 'minutes'}`,
-          }),
-        );
-        if (hasMeridiem) {
-          await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
-        }
         if (setEndDate) {
           // Switch back to start date "range position" in case we'd need to repeat selection
           let previousViewButton = screen.queryByRole('button', { name: 'Open previous view' });

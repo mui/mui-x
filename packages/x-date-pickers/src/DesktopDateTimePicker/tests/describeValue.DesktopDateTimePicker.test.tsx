@@ -5,6 +5,7 @@ import {
   expectFieldValue,
   describeValue,
   getFieldInputRoot,
+  multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
@@ -45,22 +46,7 @@ describe('<DesktopDateTimePicker /> - Describe Value', () => {
         await user.click(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
-        const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-        const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
-        const hoursNumber = adapterToUse.getHours(newValue);
-        await user.click(
-          screen.getByRole('option', {
-            name: `${parseInt(hours, 10)} ${parseInt(hours, 10) === 1 ? 'hour' : 'hours'}`,
-          }),
-        );
-        await user.click(
-          screen.getByRole('option', {
-            name: `${adapterToUse.getMinutes(newValue)} ${adapterToUse.getMinutes(newValue) === 1 ? 'minute' : 'minutes'}`,
-          }),
-        );
-        if (hasMeridiem) {
-          await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
-        }
+        await multiSectionDigitalClockHandler.setViewValue(user, adapterToUse, newValue);
       } else {
         await selectSection('day');
         await pressKey('ArrowUp');
