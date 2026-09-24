@@ -10,6 +10,7 @@ import {
   dateLocaleFr,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import type { EventCalendarPreferences } from '@mui/x-scheduler/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { vi, describe, it, expect } from 'vitest';
@@ -163,6 +164,38 @@ describe('EventCalendar', () => {
   );
 
   describe('Preferences Menu', () => {
+    it('should call onPreferencesChange and apply the change when preferences are controlled', async () => {
+      const onPreferencesChange = vi.fn();
+      function ControlledCalendar() {
+        const [preferences, setPreferences] = React.useState<Partial<EventCalendarPreferences>>({
+          showWeekends: true,
+        });
+        return (
+          <EventCalendar
+            events={[]}
+            preferences={preferences}
+            onPreferencesChange={(next, eventDetails) => {
+              onPreferencesChange(next, eventDetails);
+              setPreferences(next);
+            }}
+          />
+        );
+      }
+
+      const { user } = render(<ControlledCalendar />);
+
+      expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
+
+      await openPreferencesMenu(user);
+      await toggleShowWeekends(user);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+
+      expect(onPreferencesChange.mock.calls.length).to.equal(1);
+      expect(onPreferencesChange.mock.lastCall?.[0]).to.deep.equal({ showWeekends: false });
+      expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
+    });
+
     it('should allow to show / hide the weekends using the UI in the week view', async () => {
       const { user } = render(<EventCalendar events={[]} />);
 

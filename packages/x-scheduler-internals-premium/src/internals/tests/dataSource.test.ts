@@ -1,4 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
+import type { Store } from '@base-ui/utils/store';
+import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventModelStructure,
@@ -8,6 +10,12 @@ import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { DEBOUNCE_MS } from '../utils/queue';
 
 const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
+
+// The parameterized store classes form a union type whose generic `set` method
+// cannot be invoked directly, so state seeding goes through a common supertype.
+function setErrors(store: Store<SchedulerState>, errors: SchedulerState['errors']) {
+  store.set('errors', errors);
+}
 
 // Basic types for testing
 interface TestEvent {
@@ -979,44 +987,49 @@ premiumStoreClasses.forEach((storeClass) => {
         const a = new Error('A');
         const b = new Error('B');
         const c = new Error('C');
-        const keyA = store.pushError(a);
-        const keyB = store.pushError(b);
-        const keyC = store.pushError(c);
+        setErrors(store, [
+          { error: a, key: '1' },
+          { error: b, key: '2' },
+          { error: c, key: '3' },
+        ]);
 
-        store.dismissError(keyB);
+        store.dismissError('2');
 
         expect(store.state.errors).toHaveLength(2);
-        expect(store.state.errors[0].key).to.equal(keyA);
+        expect(store.state.errors[0].key).to.equal('1');
         expect(store.state.errors[0].error).to.equal(a);
-        expect(store.state.errors[1].key).to.equal(keyC);
+        expect(store.state.errors[1].key).to.equal('3');
         expect(store.state.errors[1].error).to.equal(c);
       });
 
       it('should distinguish duplicate Error instances by key', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         const shared = new Error('shared');
-        const firstKey = store.pushError(shared);
-        const secondKey = store.pushError(shared);
+        setErrors(store, [
+          { error: shared, key: '1' },
+          { error: shared, key: '2' },
+        ]);
 
-        store.dismissError(firstKey);
+        store.dismissError('1');
 
         expect(store.state.errors).toHaveLength(1);
-        expect(store.state.errors[0].key).to.equal(secondKey);
+        expect(store.state.errors[0].key).to.equal('2');
         expect(store.state.errors[0].error).to.equal(shared);
       });
 
       it('should be a no-op when the key does not exist', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
-        const a = new Error('A');
-        const b = new Error('B');
-        store.pushError(a);
-        store.pushError(b);
+        const entries = [
+          { error: new Error('A'), key: '1' },
+          { error: new Error('B'), key: '2' },
+        ];
+        setErrors(store, entries);
 
         store.dismissError('does-not-exist');
 
         expect(store.state.errors).toHaveLength(2);
-        expect(store.state.errors[0].error).to.equal(a);
-        expect(store.state.errors[1].error).to.equal(b);
+        expect(store.state.errors[0]).to.equal(entries[0]);
+        expect(store.state.errors[1]).to.equal(entries[1]);
       });
     });
 

@@ -9,7 +9,10 @@ import type {
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventUpdatedProperties,
+} from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerAddDependencyResult,
@@ -20,10 +23,13 @@ import type {
   SchedulerDependenciesState,
   SchedulerLazyLoadingParameters,
 } from '../../models';
+import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
+import { computeAutoSchedulingCascade } from '../utils/auto-scheduling';
 import {
   classifyDependencyEvent,
   groupRetainedDependenciesBySource,
   isDependencyReadOnly,
+  isDependencyType,
 } from '../utils/dependency-utils';
 
 /**
@@ -97,24 +103,56 @@ export class SchedulerSchedulingPlugin<
   }
 
   /**
-   * Removes the dependencies referencing deleted events, in the same update.
+   * Removes the dependencies referencing deleted events and computes the
+   * auto-scheduling cascade for the updated ones, all in the same update. A batch
+   * whose cascade would need to move a read-only event is vetoed instead: nothing is
+   * applied, and the rejection is returned for the caller to surface.
    *
    * With a `dataSource`, event deletions are persisted asynchronously after this hook has
    * already emitted `onDependenciesChange`. If that persistence fails, the event survives but
    * its dependencies were already removed — a known v1 limitation, there is no rollback.
    */
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
-    const { deleted } = parameters;
-    if (!deleted || deleted.length === 0) {
-      return;
+    const { deleted, updated } = parameters;
+    const deletedSet = new Set(deleted);
+
+    // Cascade first: a vetoed batch must not have emitted the dependency cleanup.
+    let cascaded: SchedulerEventUpdatedProperties[] = [];
+    if (updated && updated.length > 0 && this.store.state.dependencyModelList.length > 0) {
+      const result = computeAutoSchedulingCascade({
+        adapter: this.store.state.adapter,
+        processedEventLookup: this.store.state.processedEventLookup,
+        activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
+          this.store.state,
+        ),
+        activeDependenciesByTarget: eventTimelinePremiumDependencySelectors.activeModelListByTarget(
+          this.store.state,
+        ),
+        isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
+        updated,
+        deleted: deletedSet,
+      });
+      if (result.blocked.length > 0) {
+        const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
+        return {
+          rejected: true as const,
+          error: /* minify-error-disabled */ new Error(
+            `This change would move the read-only event "${blockedEvent.title}", so it was not applied.`,
+          ),
+        };
+      }
+      cascaded = result.updated;
     }
 
-    const deletedSet = new Set(deleted);
-    const current = this.store.state.dependencyModelList;
-    const remaining = current.filter(
-      (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
-    );
-    this.updateDependenciesIfChanged(current, remaining);
+    if (deletedSet.size > 0) {
+      const current = this.store.state.dependencyModelList;
+      const remaining = current.filter(
+        (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
+      );
+      this.updateDependenciesIfChanged(current, remaining);
+    }
+
+    return cascaded.length > 0 ? { updated: cascaded } : undefined;
   };
 
   /**
@@ -147,11 +185,14 @@ export class SchedulerSchedulingPlugin<
 
     // Duplicate before cycle: on data that already contains a cycle, re-adding an
     // existing pair must report the duplicate (and select its arrow), not the cycle.
-    // Only `source`/`target` define identity while the type union has a single member;
-    // TODO(#22853): include `type` in the identity when the type union widens.
+    // The type is part of the identity: two events can be linked by several
+    // dependencies of different types.
     const duplicate = dependenciesBySource
       .get(properties.source)
-      ?.find((dependency) => dependency.target === properties.target);
+      ?.find(
+        (dependency) =>
+          dependency.target === properties.target && dependency.type === properties.type,
+      );
     if (duplicate) {
       return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
     }
@@ -217,6 +258,14 @@ export class SchedulerSchedulingPlugin<
     const hasDataSource = this.store.parameters.dataSource != null;
 
     for (const dependency of dependencyModelList) {
+      if (!isDependencyType(dependency.type)) {
+        warn(
+          [
+            `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown type "${String(dependency.type)}".`,
+            'It is kept in the data but ignored by the timeline.',
+          ].join('\n'),
+        );
+      }
       for (const eventId of [dependency.source, dependency.target]) {
         const status = classifyDependencyEvent(processedEventLookup, eventId);
         if (status === 'unknownEvent') {

@@ -211,7 +211,7 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
 }
 
 /**
- * Create an event model from a processed event using the provided model structure.
+ * Creates an event model from the creation properties using the provided model structure.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,

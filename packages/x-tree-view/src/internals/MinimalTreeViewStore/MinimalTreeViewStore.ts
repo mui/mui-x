@@ -1,4 +1,4 @@
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import { error as logError } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
@@ -172,7 +172,7 @@ export class MinimalTreeViewStore<
       updateModel,
     );
 
-    this.update(newState);
+    this.update(newState as State);
     this.parameters = parameters;
   }
 

@@ -132,6 +132,7 @@
         "returned": "GridRowSpacing"
       }
     },
+    "height": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "hideFooter": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterPagination": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" }, "default": "false" },

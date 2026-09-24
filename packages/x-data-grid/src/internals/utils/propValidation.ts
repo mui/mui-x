@@ -17,6 +17,16 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
       ].join('\n')) ||
     undefined,
   (props) =>
+    (props.height != null &&
+      props.autoHeight &&
+      [
+        'MUI X: `<DataGrid height={...} autoHeight={true} />` are not valid props.',
+        'You cannot use both the `height` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to its content.',
+        '',
+        'Please remove one of these two props.',
+      ].join('\n')) ||
+    undefined,
+  (props) =>
     (props.paginationMode === 'client' &&
       props.paginationMeta != null &&
       [
