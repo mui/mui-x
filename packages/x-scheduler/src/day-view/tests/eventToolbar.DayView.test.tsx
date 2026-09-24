@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, waitFor, within } from '@mui/internal-test-utils';
+import { screen, fireEvent, waitFor, within, act } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -198,7 +198,12 @@ describe('DayView - event toolbar', () => {
     const deleteButton = screen.getByRole('button', { name: 'Delete event' });
     // `fireEvent.click` alone doesn't focus the target the way a real pointer/keyboard
     // interaction would; focusing it first reflects what MUI's dialog actually captures on open.
-    deleteButton.focus();
+    // In a real browser this synchronously blurs whatever was focused before, which can update
+    // another MUI component's internal state (e.g. `ButtonBase`'s focus-visible tracking) outside
+    // of React's test-aware batching unless wrapped in `act`.
+    act(() => {
+      deleteButton.focus();
+    });
     fireEvent.click(deleteButton);
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
