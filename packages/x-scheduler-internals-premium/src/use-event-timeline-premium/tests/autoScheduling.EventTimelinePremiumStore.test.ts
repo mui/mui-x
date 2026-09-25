@@ -376,6 +376,34 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     });
   });
 
+  // Combines the scheduling cascade with an `eventModelStructure` date that can't be written
+  // back — the two features are tested separately everywhere else in this suite.
+  describe('unwritable date', () => {
+    it('should refuse the whole batch when a cascade would move a successor whose date is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { start: { getter: (event: any) => event.start } };
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      // Resizing `a` alone isn't a move (only `end` is submitted) — but the cascade pushes `b`'s
+      // whole range forward through the dependency, and that push carries both of `b`'s bounds
+      // together (a rigid shift), so `b`'s unwritable `start` refuses the entire batch instead of
+      // silently applying `a`'s resize while corrupting `b`.
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
+      }).toWarnDev([
+        'MUI X Scheduler: An event was not moved because a date could not be written back.\n' +
+          '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(result!.applied).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+  });
+
   describe('method: pasteEvent', () => {
     it('should keep the clipboard when a cut paste is rejected', () => {
       const onEventsChange = vi.fn();

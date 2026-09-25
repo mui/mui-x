@@ -57,7 +57,7 @@ import {
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
-import { dateToEventString, getOccurrenceEnd } from '../date-utils';
+import { dateToEventString, getOccurrenceEnd, normalizeAllDayBounds } from '../date-utils';
 import {
   getOccurrenceKey,
   getRecurringOccurrenceKey,
@@ -106,11 +106,68 @@ function toUpdateEventResult(result: {
 }
 
 /**
- * Shared by every writer that refuses a whole event (a creation, or a paste) because
- * `eventModelStructure` can't write one of its dates back to the model.
+ * Names the `eventModelStructure` date(s) — `start`, `end`, or both — that have a getter but no
+ * setter, so every writer that refuses a whole event (a creation, a move, or a paste) because of
+ * it can point at the specific property instead of a generic "start and / or end".
  */
-const DATES_NOT_WRITABLE_REASON =
-  '`eventModelStructure` declares `start` and / or `end` with a getter but no setter, so the dates cannot be written back to your event model. Add a `setter` to make them editable.';
+function datesNotWritableReason(state: SchedulerState): string {
+  const properties = (['start', 'end'] as const).filter(
+    (property) => !schedulerEventSelectors.isDateWritable(state, property),
+  );
+  const names = properties.map((property) => `\`${property}\``).join(' and ');
+  const pronoun = properties.length > 1 ? 'they' : 'it';
+  return `\`eventModelStructure\` declares ${names} with a getter but no setter, so ${pronoun} cannot be written back to your event model. Add a \`setter\` to make ${pronoun === 'it' ? 'it' : 'them'} editable.`;
+}
+
+function createDatesNotWritableError(state: SchedulerState): Error {
+  return /* minify-error-disabled */ new Error(datesNotWritableReason(state));
+}
+
+/**
+ * Whether `value` and `reference` land on the same bound: an instant comparison for a timed
+ * event, but a day comparison for an all-day one. `reference` is typically the data timezone's
+ * own bounds (what "unchanged" means, and what the cascade computes from), while `value` can be
+ * labeled in the display timezone (a resize handle, an `allDay`-toggling drag) — for an all-day
+ * event the two timezones can disagree on where a day starts, so snapping each side to its own
+ * day boundary first (`normalizeAllDayBounds`) is what makes the comparison timezone-fair.
+ */
+function isSameBound(
+  adapter: Adapter,
+  value: TemporalSupportedObject,
+  reference: TemporalSupportedObject,
+  property: 'start' | 'end',
+  allDay: boolean | undefined,
+): boolean {
+  const normalize = (bound: TemporalSupportedObject) =>
+    normalizeAllDayBounds(adapter, bound, bound, allDay)[property];
+  return adapter.isEqual(normalize(value), normalize(reference));
+}
+
+/**
+ * Whether `changes` is a rigid shift of both bounds away from `reference`, as opposed to a
+ * resize (only one bound truly moves) that happens to carry both keys — an `allDay`-toggling
+ * drag resubmits the untouched bound unchanged (`useDropTarget.ts`), and so does a cascaded
+ * successor, which always carries both of its bounds even when only one of them actually moved.
+ */
+function isDatesMove(
+  changes: SchedulerEventUpdatedProperties,
+  reference: { start: TemporalSupportedObject; end: TemporalSupportedObject },
+  allDay: boolean | undefined,
+  adapter: Adapter,
+): boolean {
+  if (!('start' in changes) || !('end' in changes)) {
+    return false;
+  }
+  const isRealChange = (
+    value: TemporalSupportedObject | undefined,
+    ref: TemporalSupportedObject,
+    property: 'start' | 'end',
+  ) => value == null || !isSameBound(adapter, value, ref, property, allDay);
+  return (
+    isRealChange(changes.start, reference.start, 'start') &&
+    isRealChange(changes.end, reference.end, 'end')
+  );
+}
 
 /**
  * Reads the Premium-only `dataSource` parameter (see `SchedulerLazyLoadingParameters`).
@@ -487,9 +544,10 @@ export class SchedulerStore<
 
   /**
    * Adds, updates and / or deletes events in the calendar.
-   * A batch the scheduling plugin vetoes is not applied nor emitted: the result then
-   * carries the `rejection` for the caller to surface, and empty lists. `updatedEntries`
-   * are the entries as applied, with the dates the plugin clamped or cascaded.
+   * A batch the scheduling plugin vetoes, or that moves a date `eventModelStructure` can't write
+   * back, is not applied nor emitted: the result then carries the `rejection` for the caller to
+   * surface, and empty lists. `updatedEntries` are the entries as applied — the dates the plugin
+   * clamped or cascaded, with any unwritable resize-style date already dropped.
    */
   protected updateEvents(parameters: UpdateEventsParameters): {
     deleted: SchedulerEventId[];
@@ -499,22 +557,6 @@ export class SchedulerStore<
     rejection: Error | null;
   } {
     const { deleted: deletedParam, updated: updatedParam = [], created = [] } = parameters;
-
-    // Refuses the whole call, not only `created`: `updated` / `deleted` in the same call can be
-    // the other half of the same edit (a recurring scope split truncates the series and creates
-    // the detached occurrence together), and applying one half while dropping the other would
-    // corrupt the series instead of leaving it untouched.
-    if (created.length > 0 && !schedulerEventSelectors.canWriteEventDates(this.state)) {
-      if (process.env.NODE_ENV !== 'production') {
-        for (const createdEvent of created) {
-          warnOnce([
-            `MUI X Scheduler: The event "${createdEvent.title}" was not created.`,
-            DATES_NOT_WRITABLE_REASON,
-          ]);
-        }
-      }
-      return { deleted: [], updated: [], updatedEntries: [], created: [], rejection: null };
-    }
 
     const eventDetails = createChangeEventDetails('none');
     const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
@@ -555,10 +597,29 @@ export class SchedulerStore<
       }
     }
 
+    // Checked after the plugin's contributions are merged in, so a cascaded successor (which
+    // always carries both `start` and `end`) is covered too — not only the caller's own entries.
+    // Refuses the whole call, not only the offending entry: `updated` / `deleted` / `created` in
+    // the same call can be one edit (a recurring scope split truncates the series and creates the
+    // detached occurrence together), and applying part of it while dropping the rest would
+    // corrupt the series instead of leaving it untouched.
+    const datesNotWritableRejection = this.checkDatesWritable(created, updated);
+    if (datesNotWritableRejection) {
+      return {
+        deleted: [],
+        updated: [],
+        updatedEntries: [],
+        created: [],
+        rejection: datesNotWritableRejection,
+      };
+    }
+
     const originalEventIds = schedulerEventSelectors.idList(this.state);
     const originalEventModelLookup = schedulerEventSelectors.modelLookup(this.state);
     const newEvents: TEvent[] = [];
     const updatedEvents: TEvent[] = [];
+    const updatedIds: SchedulerEventId[] = [];
+    const updatedEntries: SchedulerEventUpdatedProperties[] = [];
 
     if (deleted.size > 0 || updated.size > 0) {
       for (const eventId of originalEventIds) {
@@ -568,6 +629,12 @@ export class SchedulerStore<
         if (updated.has(eventId)) {
           const processedEvent = this.state.processedEventLookup.get(eventId)!;
           const changes = this.removeUnwritableDates(updated.get(eventId)!, processedEvent);
+          // Nothing survived the strip beyond `id`: a no-op, not an update — don't report it as
+          // applied, and don't emit an unchanged model as though it were.
+          if (Object.keys(changes).length <= 1) {
+            newEvents.push(originalEventModelLookup.get(eventId));
+            continue;
+          }
           const newEvent = getUpdatedEventModelFromChanges<TEvent>(
             originalEventModelLookup.get(eventId),
             changes,
@@ -577,6 +644,8 @@ export class SchedulerStore<
           );
           newEvents.push(newEvent);
           updatedEvents.push(newEvent);
+          updatedIds.push(eventId);
+          updatedEntries.push(changes);
         } else {
           newEvents.push(originalEventModelLookup.get(eventId));
         }
@@ -603,32 +672,40 @@ export class SchedulerStore<
       createdIds.push(response.id);
     }
 
-    if (process.env.NODE_ENV !== 'production') {
-      if (!this.parameters.onEventsChange && !hasDataSource(this.parameters)) {
-        warnOnce([
-          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
-          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
-          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
-        ]);
+    // Every entry that survived is accounted for above: a deletion, a real update, or a
+    // creation. If none did (e.g. the only update was stripped down to `{ id }`), there is
+    // nothing to write back — calling `onEventsChange` with an unchanged list would persist a
+    // no-op as though it were a real change.
+    const hasChanges = deleted.size > 0 || updatedIds.length > 0 || createdIds.length > 0;
+
+    if (hasChanges) {
+      if (process.env.NODE_ENV !== 'production') {
+        if (!this.parameters.onEventsChange && !hasDataSource(this.parameters)) {
+          warnOnce([
+            'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+            'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+            'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+          ]);
+        }
       }
+
+      this.parameters.onEventsChange?.(newEvents, eventDetails);
+
+      // Publish event for premium plugins (e.g., lazy loading) to sync caches
+      queueMicrotask(() =>
+        this.publishEvent('eventsUpdated', {
+          deleted: deletedParam ?? [],
+          updated: updatedEvents,
+          created: createdEvents,
+          newEvents,
+        }),
+      );
     }
-
-    this.parameters.onEventsChange?.(newEvents, eventDetails);
-
-    // Publish event for premium plugins (e.g., lazy loading) to sync caches
-    queueMicrotask(() =>
-      this.publishEvent('eventsUpdated', {
-        deleted: deletedParam ?? [],
-        updated: updatedEvents,
-        created: createdEvents,
-        newEvents,
-      }),
-    );
 
     return {
       deleted: deletedParam ?? [],
-      updated: Array.from(updated.keys()) as SchedulerEventId[],
-      updatedEntries: Array.from(updated.values()),
+      updated: updatedIds,
+      updatedEntries,
       created: createdIds,
       rejection: null,
     };
@@ -672,16 +749,21 @@ export class SchedulerStore<
   };
 
   /**
-   * Drops from `changes` the date whose `eventModelStructure` entry has no setter: it can't be
-   * written back to the consumer's model, and without this it would be written under the
-   * built-in key name instead, next to the custom fields, while the real field keeps the old
-   * value. Checked independently per property, so a mixed structure — a getter-only `start` next
-   * to a writable `end` — still applies the writable date. The rest of `changes` still applies,
-   * so an update that also touches the title isn't refused.
+   * Drops from `changes` a date whose `eventModelStructure` entry has no setter, so it doesn't
+   * get written under the built-in key next to the custom fields while the real field keeps the
+   * old value. Only for a resize-style change (one bound present) — `updateEvents` refuses a move
+   * outright instead of calling this. `reference` — what an unchanged value is compared against
+   * to skip the dev warning — defaults to `original`'s own bounds; the recurring "all" scope
+   * passes the edited occurrence's instead, since `original` there is the series (DTSTART, not
+   * the day being edited).
    */
   private removeUnwritableDates(
     changes: SchedulerEventUpdatedProperties,
     original: SchedulerProcessedEvent,
+    reference: { start: TemporalSupportedObject; end: TemporalSupportedObject } = {
+      start: original.dataTimezone.start.value,
+      end: original.dataTimezone.end.value,
+    },
   ): SchedulerEventUpdatedProperties {
     let result: SchedulerEventUpdatedProperties | undefined;
 
@@ -692,12 +774,21 @@ export class SchedulerStore<
 
       if (process.env.NODE_ENV !== 'production') {
         const { adapter } = this.state;
-        // The dialog resubmits the unchanged dates on every save, so only a real move is worth a
-        // warning. Compared against the display value (day-normalized for all-day events, unlike
-        // the raw data-timezone instant), which is what a resubmit actually mirrors.
+        // "Unchanged" means the same stored instant, so the default reference is the data
+        // timezone's own bounds — not the display timezone's, which for an all-day event is
+        // day-normalized in the display timezone and can disagree with the data timezone's
+        // normalization when the two differ (`isSameBound` reconciles the two by snapping each
+        // side to its own day boundary before comparing).
         const value = changes[property];
         const isRealChange =
-          value == null || !adapter.isEqual(value, original.displayTimezone[property].value);
+          value == null ||
+          !isSameBound(
+            adapter,
+            value,
+            reference[property],
+            property,
+            changes.allDay ?? original.allDay,
+          );
 
         if (isRealChange) {
           warnOnce([
@@ -712,6 +803,61 @@ export class SchedulerStore<
     }
 
     return result ?? changes;
+  }
+
+  /**
+   * Refuses the whole `updateEvents` batch — like a scheduling veto — when a created event, or a
+   * genuine move (both bounds actually changing, per `isDatesMove`) of an updated event, has a
+   * date `eventModelStructure` can't write back. Checked after the scheduling plugin's
+   * contributions are merged into `updated`, so a cascaded successor (which always carries both
+   * bounds) is covered too: partially applying it would turn an intended shift into a stretch. A
+   * resize-style update — only one bound truly changing, even if both keys are present because
+   * the caller resubmits the untouched one — isn't a move; `removeUnwritableDates` drops just the
+   * unwritable side for those instead.
+   */
+  private checkDatesWritable(
+    created: SchedulerEventCreationProperties[],
+    updated: Map<SchedulerEventId, SchedulerEventUpdatedProperties>,
+  ): Error | null {
+    if (schedulerEventSelectors.canWriteEventDates(this.state)) {
+      return null;
+    }
+
+    if (created.length > 0) {
+      // Once, not once per created event: several refused creations in the same batch (or a
+      // hundred events built with the same `eventModelStructure`) are one structural mistake, not
+      // one per event — per-instance feedback is what `rejection` is for.
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X Scheduler: An event was not created because a date could not be written back.',
+          datesNotWritableReason(this.state),
+        ]);
+      }
+      return createDatesNotWritableError(this.state);
+    }
+
+    const { adapter } = this.state;
+    for (const entry of updated.values()) {
+      const original = this.state.processedEventLookup.get(entry.id);
+      if (!original) {
+        continue;
+      }
+      const reference = {
+        start: original.dataTimezone.start.value,
+        end: original.dataTimezone.end.value,
+      };
+      if (isDatesMove(entry, reference, entry.allDay ?? original.allDay, adapter)) {
+        if (process.env.NODE_ENV !== 'production') {
+          warnOnce([
+            'MUI X Scheduler: An event was not moved because a date could not be written back.',
+            datesNotWritableReason(this.state),
+          ]);
+        }
+        return createDatesNotWritableError(this.state);
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -857,6 +1003,10 @@ export class SchedulerStore<
 
     let updatedEvents: UpdateEventsParameters;
     let changesInDataTimezone: SchedulerEventUpdatedProperties | null = null;
+    // The submitted changes with display-timezone bounds, after the same "all"-scope strip as
+    // `changesInDataTimezone` (see below) — what the editing-surface sync reads its start / end
+    // from, so it never resyncs to a date the model didn't actually end up with.
+    let changesForEditingSync: SchedulerEventUpdatedProperties | null = null;
     if (pendingRecurringEventOperation.kind === 'delete') {
       updatedEvents = recurringEventsPlugin.deleteRecurringEvent(
         adapter,
@@ -870,14 +1020,51 @@ export class SchedulerStore<
         originalEvent: original,
         changes: pendingRecurringEventOperation.changes,
       });
-      // "all" edits the series in place off `changes.start` / `.end` (e.g. realigning `byDay` to
-      // the new day) with no `created` entry for `updateEvents`'s atomic guard to catch, so an
-      // unwritable date must be stripped before the plugin computes from it, or the pattern would
-      // realign to a date that was never actually applied. "only-this" / "this-and-following" all
-      // detach into a `created` entry instead, which that guard already refuses wholesale — so
-      // stripping here too would only produce a second, redundant warning.
+      changesForEditingSync = pendingRecurringEventOperation.changes;
+      // "all" edits the series in place off `changes.start` / `.end` (e.g. realigning `byDay`),
+      // so an unwritable date has to be dealt with before the plugin computes from it, or the
+      // pattern would realign to a date that was never applied. "only-this" / "this-and-following"
+      // instead detach into a `created` entry, already covered by `updateEvents`'s own guard.
       if (scope === 'all') {
-        changesInDataTimezone = this.removeUnwritableDates(changesInDataTimezone, original);
+        const occurrenceEndInDataTimezone = getOccurrenceEnd({
+          adapter,
+          event: original,
+          occurrenceStart: occurrenceStartInDataTimezone,
+        });
+        // A genuine move (both bounds actually changing) is refused the same way `updateEvents`
+        // refuses one directly. Compared against the edited occurrence's own bounds, not
+        // `original`'s (the series, whose display start is DTSTART — a different day for every
+        // occurrence but the first).
+        const reference = {
+          start: occurrenceStartInDataTimezone,
+          end: occurrenceEndInDataTimezone,
+        };
+        const isMove = isDatesMove(
+          changesInDataTimezone,
+          reference,
+          changesInDataTimezone.allDay ?? original.allDay,
+          adapter,
+        );
+        if (isMove && !schedulerEventSelectors.canWriteEventDates(this.state)) {
+          if (process.env.NODE_ENV !== 'production') {
+            warnOnce([
+              'MUI X Scheduler: An event was not moved because a date could not be written back.',
+              datesNotWritableReason(this.state),
+            ]);
+          }
+          this.pushError(createDatesNotWritableError(this.state), { transient: true });
+          return;
+        }
+        changesInDataTimezone = this.removeUnwritableDates(
+          changesInDataTimezone,
+          original,
+          reference,
+        );
+        changesForEditingSync = this.removeUnwritableDates(
+          changesForEditingSync,
+          original,
+          reference,
+        );
       }
       updatedEvents = recurringEventsPlugin.updateRecurringEvent(
         adapter,
@@ -887,23 +1074,19 @@ export class SchedulerStore<
         scope,
       );
     }
-    const { created: createdIds } = this.updateEvents(updatedEvents);
-    // The plugin intended a creation (`only-this` / `this-and-following` detaches the occurrence
-    // into a new event) but `updateEvents` refused the whole call: nothing changed, so the
-    // editing surface is left exactly as it was instead of being resynced to a change that never
-    // applied.
-    const wasRefused = (updatedEvents.created?.length ?? 0) > 0 && createdIds.length === 0;
+    const { created: createdIds, rejection } = this.updateEvents(updatedEvents);
+    if (rejection) {
+      // No other surface for the rejection; the scope dialog already closed.
+      this.pushError(rejection, { transient: true });
+      return;
+    }
 
-    if (
-      pendingRecurringEventOperation.kind === 'update' &&
-      changesInDataTimezone != null &&
-      !wasRefused
-    ) {
+    if (pendingRecurringEventOperation.kind === 'update' && changesForEditingSync != null) {
       this.reconcileEditingOccurrence({
         original,
         occurrenceStart: occurrenceStartInDataTimezone,
-        changes: pendingRecurringEventOperation.changes,
-        changesInDataTimezone,
+        changes: changesForEditingSync,
+        changesInDataTimezone: changesInDataTimezone!,
         createdEvent: updatedEvents.created?.[0],
         createdEventId: createdIds[0],
       });
@@ -967,8 +1150,11 @@ export class SchedulerStore<
 
   /**
    * Pastes the copied or cut event with the provided changes.
-   * Returns the pasted event's id, or `null` when nothing was copied or the
-   * scheduling plugin vetoed a cut paste (the clipboard is then kept).
+   * Returns `null` when nothing was copied, the destination resource is read-only, a cut would
+   * move a read-only event's own dates, a date `eventModelStructure` can't write back is
+   * involved, or the scheduling plugin vetoes the paste — the clipboard is kept in every case but
+   * the first. Returns `undefined` on a cut with nothing left to apply once the changes are
+   * processed, which still clears the clipboard.
    */
   public pasteEvent = (
     changes: SchedulerEventPasteProperties,
@@ -981,6 +1167,8 @@ export class SchedulerStore<
     const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
     const cleanChanges: Partial<SchedulerEventUpdatedProperties> = { ...changes };
     const isMovingDates = cleanChanges.start != null;
+    // Narrowed on the property directly (not `isMovingDates`) so TypeScript can see
+    // `cleanChanges.start` is defined here.
     if (cleanChanges.start != null) {
       cleanChanges.end = adapter.addMilliseconds(
         cleanChanges.start,
@@ -1022,7 +1210,7 @@ export class SchedulerStore<
           );
         }
         if (!schedulerEventSelectors.canWriteEventDates(this.state)) {
-          return refuse(DATES_NOT_WRITABLE_REASON);
+          return refuse(datesNotWritableReason(this.state));
         }
       }
 
@@ -1040,7 +1228,7 @@ export class SchedulerStore<
     // A copy writes the whole model into a brand new event, so it always needs both dates
     // writable, whether or not this particular paste moves them.
     if (!schedulerEventSelectors.canWriteEventDates(this.state)) {
-      return refuse(DATES_NOT_WRITABLE_REASON);
+      return refuse(datesNotWritableReason(this.state));
     }
 
     const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;

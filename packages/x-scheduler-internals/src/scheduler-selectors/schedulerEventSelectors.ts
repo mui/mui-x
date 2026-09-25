@@ -74,9 +74,10 @@ const canWriteEventDatesSelector = (eventModelStructure: State['eventModelStruct
 /**
  * Whether an event's dates can be moved: the event, its resources and the scheduler are all
  * editable, and `eventModelStructure` can write both `start` and `end` back to the model.
- * All-or-nothing because a move (a drag, or a paste that lands on a new date) commits both dates
- * together (`{ id, start, end }`). A resize, which only touches one side, uses the per-property
- * check on `isResizable` instead.
+ * All-or-nothing because a drag commits both dates together (`{ id, start, end }`) — used by
+ * `isDraggable`. A resize, which only touches one side, uses the per-property check on
+ * `isResizable` instead; a paste re-derives the same all-or-nothing rule inline, since it also
+ * needs the event's own `readOnly` folded in only when the paste actually moves a date.
  */
 const canMoveDatesSelector = (state: State, eventId: SchedulerEventId) =>
   !isEventReadOnlySelector(state, eventId) && canWriteEventDatesSelector(state.eventModelStructure);
@@ -158,9 +159,10 @@ export const schedulerEventSelectors = {
   /** Used by writers where no event exists yet (a creation), or that write the whole model into a new one (a copy). */
   canWriteEventDates: (state: State) => canWriteEventDatesSelector(state.eventModelStructure),
   /**
-   * Whether `eventModelStructure` can write a single date back to the model. Used by the
-   * per-property guard in `updateEvents`, which drops only the date that can't be written instead
-   * of refusing the whole update.
+   * Whether `eventModelStructure` can write a single date back to the model. Used by
+   * `removeUnwritableDates`, which drops only the date that can't be written instead of refusing
+   * the whole update — called from `updateEvents` for a resize-style change, and from the
+   * recurring "all" scope path for an in-place edit.
    */
   isDateWritable: (state: State, property: SchedulerEventSide) =>
     !isPropertyMissingSetter(state.eventModelStructure, property),
