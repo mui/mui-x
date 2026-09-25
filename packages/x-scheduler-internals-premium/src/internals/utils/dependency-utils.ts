@@ -81,10 +81,12 @@ export function buildDependenciesState(
         const seen = new Set<SchedulerDependencyId>();
         for (const dependency of dependencies) {
           if (seen.has(dependency.id)) {
-            warnOnce([
-              `MUI X Scheduler: Two or more dependencies share the same id "${String(dependency.id)}".`,
-              'Dependency ids must be unique. Only the last dependency with a given id is used, the others are ignored.',
-            ]);
+            warnOnce(
+              [
+                `MUI X Scheduler: Two or more dependencies share the same id "${String(dependency.id)}".`,
+                'Dependency ids must be unique. Only the last dependency with a given id is used, the others are ignored.',
+              ].join('\n'),
+            );
           }
           seen.add(dependency.id);
         }

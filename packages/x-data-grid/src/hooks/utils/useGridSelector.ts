@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { RefObject } from '@mui/x-internals/types';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import type { GridStateCommunity } from '../../models/gridStateCommunity';
@@ -65,10 +65,12 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
   equals: <U = T>(a: U, b: U) => boolean = defaultCompare,
 ) {
   if (process.env.NODE_ENV !== 'production' && !apiRef.current.state) {
-    warnOnce([
-      'MUI X: `useGridSelector` has been called before the initialization of the state.',
-      'This hook can only be used inside the context of the grid.',
-    ]);
+    warnOnce(
+      [
+        'MUI X: `useGridSelector` has been called before the initialization of the state.',
+        'This hook can only be used inside the context of the grid.',
+      ].join('\n'),
+    );
   }
 
   const refs = useLazyRef<Refs<T>, never>(createRefs);
