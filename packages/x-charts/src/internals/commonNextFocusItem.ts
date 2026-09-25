@@ -209,7 +209,7 @@ export function createGetFirstIndexFocusedItem<
   /**
    * If true, series max index is defined by the current series length and not all series.
    */
-  useCurrentSeriesMaxLength: boolean = false,
+  useCurrentSeriesMaxLength: boolean = true,
 ) {
   return function getFirstIndexFocusedItem(
     currentItem: WorkingItem | null,
@@ -276,7 +276,7 @@ export function createGetLastIndexFocusedItem<
   /**
    * If true, series max index is defined by the current series length and not all series.
    */
-  useCurrentSeriesMaxLength: boolean = false,
+  useCurrentSeriesMaxLength: boolean = true,
 ) {
   return function getLastIndexFocusedItem(
     currentItem: WorkingItem | null,
@@ -458,7 +458,7 @@ export function createGetFirstSeriesFirstIndexFocusedItem<
   /**
    * If true, series max index is defined by the current series length and not all series.
    */
-  useCurrentSeriesMaxLength: boolean = false,
+  useCurrentSeriesMaxLength: boolean = true,
 ) {
   return function getFirstSeriesFirstIndexFocusedItem(
     _currentItem: WorkingItem | null,
@@ -510,7 +510,7 @@ export function createGetLastSeriesLastIndexFocusedItem<
   /**
    * If true, series max index is defined by the current series length and not all series.
    */
-  useCurrentSeriesMaxLength: boolean = false,
+  useCurrentSeriesMaxLength: boolean = true,
 ) {
   return function getLastSeriesLastIndexFocusedItem(
     _currentItem: WorkingItem | null,
