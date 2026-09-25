@@ -57,6 +57,27 @@ describe('<SparkLineChart />', () => {
       await waitFor(() => expect(onPointerChange.mock.lastCall?.[0]).not.to.equal(null));
     });
 
+    it('should let disableAxisListener override the computed default', async () => {
+      const onPointerChange = vi.fn();
+      const { user, container, setProps } = render(
+        <SparkLineChart data={data} width={100} height={100} disableAxisListener={false}>
+          <PointerListener onChange={onPointerChange} />
+        </SparkLineChart>,
+      );
+      const svg = container.querySelector('svg')!;
+      const center = getCenter(svg);
+
+      await user.pointer({ target: svg, coords: center });
+
+      await waitFor(() => expect(onPointerChange.mock.lastCall?.[0]).not.to.equal(null));
+
+      await user.pointer({ target: document.body, coords: { clientX: 0, clientY: 0 } });
+      setProps({ disableAxisListener: true, showTooltip: true });
+      await user.pointer({ target: svg, coords: { ...center, clientX: center.clientX + 10 } });
+
+      expect(onPointerChange.mock.lastCall?.[0]).to.equal(null);
+    });
+
     it('should show the axis tooltip with showTooltip', async () => {
       const { user, container } = render(
         <SparkLineChart data={data} width={100} height={100} showTooltip />,
