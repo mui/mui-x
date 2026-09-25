@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
+import { outsetFocusRing } from '@mui/x-internals/focusVisible';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type {
   MonthCalendarSlotProps,
@@ -72,6 +73,13 @@ const DefaultMonthButton = styled('button', {
       (theme.vars || theme).palette.action.hoverOpacity,
     ),
   },
+  ...(theme.focusVisible && {
+    '&:focus-visible': {
+      backgroundColor: 'transparent',
+      ...outsetFocusRing,
+      ...theme.focusVisible,
+    },
+  }),
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,

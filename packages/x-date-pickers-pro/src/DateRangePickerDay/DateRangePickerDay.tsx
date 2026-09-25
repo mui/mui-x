@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import { styled, useThemeProps } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
+import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -139,6 +139,11 @@ const selectedDayStyles = (theme: Theme) => ({
 
 const DISABLED_DAY_OPACITY = 0.6;
 
+const todayOutline = (theme: Theme) => ({
+  outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+  outlineOffset: -1,
+});
+
 const DateRangePickerDayRoot = styled(ButtonBase, {
   name: 'MuiDateRangePickerDay',
   slot: 'Root',
@@ -180,6 +185,13 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
   borderRadius: 'calc(var(--PickerDay-size) / 2)',
   padding: 0,
   position: 'relative',
+  ...(theme.focusVisible && {
+    [`&.${buttonBaseClasses.focusVisible}`]: {
+      outline: 'none',
+      outlineOffset: 0,
+      boxShadow: 'none',
+    },
+  }),
   marginLeft: 'var(--PickerDay-horizontalMargin)',
   marginRight: 'var(--PickerDay-horizontalMargin)',
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
@@ -240,8 +252,10 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         isDaySelected: false,
       },
       style: {
-        outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
-        outlineOffset: -1,
+        ...todayOutline(theme),
+        ...(theme.focusVisible && {
+          [`&.${buttonBaseClasses.focusVisible}`]: todayOutline(theme),
+        }),
       },
     },
     {

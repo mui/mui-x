@@ -10,12 +10,13 @@ import MuiCheckbox from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import type { TreeItemProps } from './TreeItem.types';
 import type { UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
 import { useTreeItem } from '../useTreeItem';
 import type { TreeItemClasses } from './treeItemClasses';
-import { getTreeItemUtilityClass } from './treeItemClasses';
+import { getTreeItemUtilityClass, treeItemClasses } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
@@ -67,6 +68,13 @@ export const TreeItemContent = styled('div', {
   '&[data-focused]': {
     backgroundColor: (theme.vars || theme).palette.action.focus,
   },
+  ...(theme.focusVisible && {
+    ...applyInsetFocusVisible(1),
+    [`.${treeItemClasses.root}:focus-visible > &`]: theme.focusVisible,
+    [`.${treeItemClasses.root}:focus-visible > &:not([data-selected])`]: {
+      backgroundColor: 'transparent',
+    },
+  }),
   '&[data-selected]': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.primary.main,

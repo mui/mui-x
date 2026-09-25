@@ -89,12 +89,14 @@ export const DigitalClockItem = styled(MenuItem, {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
-  '&.Mui-focusVisible': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity,
-    ),
-  },
+  ...(!theme.focusVisible && {
+    '&.Mui-focusVisible': {
+      backgroundColor: theme.alpha(
+        (theme.vars || theme).palette.primary.main,
+        (theme.vars || theme).palette.action.focusOpacity,
+      ),
+    },
+  }),
 }));
 
 type DigitalClockComponent = ((

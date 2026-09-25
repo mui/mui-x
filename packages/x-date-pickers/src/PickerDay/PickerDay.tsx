@@ -2,9 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import type { CSSInterpolation } from '@mui/material/styles';
+import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import { styled, useThemeProps } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
+import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -42,6 +42,11 @@ const useUtilityClasses = (
 
   return composeClasses(slots, getPickerDayUtilityClass, classes);
 };
+
+const todayOutline = (theme: Theme) => ({
+  outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
+  outlineOffset: -1,
+});
 
 const PickerDayRoot = styled(ButtonBase, {
   name: 'MuiPickerDay',
@@ -88,6 +93,13 @@ const PickerDayRoot = styled(ButtonBase, {
       (theme.vars || theme).palette.action.focusOpacity,
     ),
   },
+  ...(theme.focusVisible && {
+    [`&.${buttonBaseClasses.focusVisible}`]: {
+      outline: 'none',
+      outlineOffset: 0,
+      boxShadow: 'none',
+    },
+  }),
   marginLeft: 'var(--PickerDay-horizontalMargin)',
   marginRight: 'var(--PickerDay-horizontalMargin)',
   variants: [
@@ -135,8 +147,10 @@ const PickerDayRoot = styled(ButtonBase, {
         isDaySelected: false,
       },
       style: {
-        outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
-        outlineOffset: -1,
+        ...todayOutline(theme),
+        ...(theme.focusVisible && {
+          [`&.${buttonBaseClasses.focusVisible}`]: todayOutline(theme),
+        }),
       },
     },
   ],
