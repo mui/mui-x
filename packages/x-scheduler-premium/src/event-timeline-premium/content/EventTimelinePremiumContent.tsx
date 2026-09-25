@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { styled, useTheme } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
@@ -828,7 +829,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     titleCellClassName: classes.titleCell,
   });
 
-  useTimelineDragAutoScroll({
+  const dragViewportProps = useTimelineDragAutoScroll({
     scrollerRef: gridRef,
     pinnedLeftWidth: titleColumnWidth,
   });
@@ -877,11 +878,16 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       <EventTimelinePremiumVirtualizerContext.Provider value={virtualizer.store}>
         <TitleColumnWidthProvider value={reportTitleWidth}>
           <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-            <EventTimelinePremiumGrid
-              className={classes.grid}
-              {...scrollerProps}
-              ref={gridMergedRef}
-              onKeyDown={handleEventTabKeyDown}
+            <Draggable.Viewport
+              {...dragViewportProps}
+              render={
+                <EventTimelinePremiumGrid
+                  className={classes.grid}
+                  {...scrollerProps}
+                  ref={gridMergedRef}
+                  onKeyDown={handleEventTabKeyDown}
+                />
+              }
             >
               <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
                 <EventTimelinePremiumViewport {...viewportProps}>
@@ -908,7 +914,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                   <FillerRow />
                 </EventTimelinePremiumViewport>
               </EventTimelinePremiumScrollerContent>
-            </EventTimelinePremiumGrid>
+            </Draggable.Viewport>
             {hasScrollY && (
               <ScrollbarVertical
                 ref={scrollbarVerticalProps.ref}

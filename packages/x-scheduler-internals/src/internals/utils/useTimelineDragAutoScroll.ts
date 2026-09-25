@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
-import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
+import type { Draggable } from '@base-ui/react/draggable';
+import { schedulerDragKinds } from './schedulerDrag';
 
 /**
- * Registers pragmatic-drag-and-drop autoscroll on the timeline scroller, with the
+ * Registers Base UI auto-scroll on the timeline scroller, with the
  * left-edge hitbox shifted to start at the right of the pinned title column.
  *
  * The scroller spans the entire content width — the title column is overlaid via
@@ -26,7 +27,7 @@ export function useTimelineDragAutoScroll(params: {
   React.useEffect(() => {
     const scroller = scrollerRef.current;
     // The library warns when attached to a non-scrollable element, which is what
-    // jsdom reports because it doesn't lay out. Matches CalendarGridTimeScrollableContent.
+    // jsdom reports because it doesn't lay out.
     if (!scroller || process.env.NODE_ENV === 'test') {
       return undefined;
     }
@@ -45,11 +46,14 @@ export function useTimelineDragAutoScroll(params: {
       });
     };
 
-    const cleanupAutoScroll = autoScrollForElements({ element: scroller });
-
     return () => {
-      cleanupAutoScroll();
       delete (scroller as Partial<HTMLElement>).getBoundingClientRect;
     };
   }, [scrollerRef]);
+
+  const viewportProps: Draggable.Viewport.Props = {
+    accept: schedulerDragKinds,
+    disabled: process.env.NODE_ENV === 'test',
+  };
+  return viewportProps;
 }

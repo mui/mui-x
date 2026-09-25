@@ -1,3 +1,4 @@
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -612,11 +613,13 @@ describe('EventCalendar', () => {
       return {
         store,
         ...render(
-          <SchedulerStoreContext.Provider value={store as any}>
-            <SharedComponentsStyledContext.Provider value={{ classes: eventCalendarClasses }}>
-              <ErrorContainer />
-            </SharedComponentsStyledContext.Provider>
-          </SchedulerStoreContext.Provider>,
+          <Draggable.Provider>
+            <SchedulerStoreContext.Provider value={store as any}>
+              <SharedComponentsStyledContext.Provider value={{ classes: eventCalendarClasses }}>
+                <ErrorContainer />
+              </SharedComponentsStyledContext.Provider>
+            </SchedulerStoreContext.Provider>
+          </Draggable.Provider>,
         ),
       };
     }

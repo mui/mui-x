@@ -125,7 +125,6 @@ interface ResolutionSettings {
 interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
-  dragHandlerRef: React.RefObject<HTMLElement | null>;
   /**
    * Whether the header acts as a drag handle. `false` for the non-draggable mobile drawer.
    * @default true
@@ -222,7 +221,7 @@ export function FormContent(props: FormContentProps) {
 }
 
 function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
-  const { onClose, dragHandlerRef, isDraggable } = props;
+  const { onClose, isDraggable } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -564,11 +563,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         onInvalidCapture={handleFormInvalid}
         className={classes.eventDialogForm}
       >
-        <EventDialogHeader
-          onClose={onClose}
-          dragHandlerRef={dragHandlerRef}
-          isDraggable={isDraggable}
-        >
+        <EventDialogHeader onClose={onClose} isDraggable={isDraggable}>
           <TitleSection />
         </EventDialogHeader>
         {showRecurrence && RecurrenceTabRenderer && (

@@ -1,4 +1,5 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -27,7 +28,7 @@ export { buildDependency, resource1, resource2 };
  */
 export function mockAllEventRowBounds(width = 6720) {
   const rows = document.querySelectorAll<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
+    `.MuiEventTimeline-eventsCell[data-drop-target]`,
   );
   for (const row of rows) {
     mockElementBounds(row, { left: 0, width, height: 40 });
@@ -133,15 +134,17 @@ export function TestTimeline({
   const storeContextValue = store as any;
 
   return (
-    <SchedulerStoreContext.Provider value={storeContextValue}>
-      <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-        <EventEditingStyledContext.Provider value={styledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-            <EventTimelinePremiumContent />
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventTimelinePremiumStyledContext.Provider>
-    </SchedulerStoreContext.Provider>
+    <Draggable.Provider>
+      <SchedulerStoreContext.Provider value={storeContextValue}>
+        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+          <EventEditingStyledContext.Provider value={styledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
+              <EventTimelinePremiumContent />
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </SchedulerStoreContext.Provider>
+    </Draggable.Provider>
   );
 }
 

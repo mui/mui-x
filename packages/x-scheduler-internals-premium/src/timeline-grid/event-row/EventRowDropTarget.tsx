@@ -1,38 +1,38 @@
 'use client';
+import {
+  schedulerTimelineEventMoveKind,
+  schedulerTimelineEventResizeKind,
+  schedulerExternalEventKind,
+  SchedulerDropTarget,
+  dateToTimelineAxisOffsetMs,
+  timelineAxisOffsetToDate,
+} from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-internals/models';
-import {
-  useDropTarget,
-  dateToTimelineAxisOffsetMs,
-  timelineAxisOffsetToDate,
-} from '@mui/x-scheduler-internals/internals';
-import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
   EVENT_DRAG_PRECISION_MS,
 } from '@mui/x-scheduler-internals/constants';
-import type { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
+import { useTimelineGridEventRowContext } from './TimelineGridEventRowContext';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 
-const isValidDropTarget = buildIsValidDropTarget([
-  'TimelineGridEvent',
-  'TimelineGridEventResizeHandler',
-  'StandaloneEvent',
-]);
+const acceptedKinds = [
+  schedulerTimelineEventMoveKind,
+  schedulerTimelineEventResizeKind,
+  schedulerExternalEventKind,
+];
 
-export function useEventRowDropTarget(parameters: useEventRowDropTarget.Parameters) {
-  const { resourceId, addPropertiesToDroppedEvent } = parameters;
+export function EventRowDropTarget(props: EventRowDropTarget.Props) {
+  const { addPropertiesToDroppedEvent, render } = props;
+  const { resourceId } = useTimelineGridEventRowContext();
 
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
-
-  // Ref hooks
-  const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
@@ -41,31 +41,9 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   // hidden hours take no space, so px↔date conversions go through the axis helpers.
   const collectionDurationMs = config.durationMs;
 
-  const getCursorPositionInElementMs: TimelineGridEventRowContext['getCursorPositionInElementMs'] =
-    useStableCallback(({ input, elementRef }) => {
-      if (!ref.current || !elementRef.current) {
-        return 0;
-      }
-
-      const clientX = input.clientX;
-      const elementPosition = elementRef.current.getBoundingClientRect();
-      const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
-
-      // A cursor on (or past) either edge must not map beyond the axis: the offset
-      // would resolve into the day before or after the collection.
-      return Math.min(
-        Math.max(Math.round(collectionDurationMs * positionX), 0),
-        collectionDurationMs,
-      );
-    });
-
-  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input }) => {
-      if (!isValidDropTarget(data)) {
-        return undefined;
-      }
-
-      const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
+  const getEventDropData: SchedulerDropTarget.GetEventDropData = useStableCallback(
+    ({ source, getDataFromInside, getDataFromOutside, target }) => {
+      const cursorOffsetMs = Math.round(collectionDurationMs * target.getSnappedLocalPoint().x);
 
       const axisOffsetToDate = (offsetMs: number) => {
         const roundedOffset =
@@ -75,7 +53,11 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       };
 
       // Move a Timeline Event within the Timeline
-      if (data.source === 'TimelineGridEvent') {
+      if (schedulerTimelineEventMoveKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
         // `cursorOffsetMs - initialCursorPositionInEventMs` reconstructs the *rendered*
@@ -103,7 +85,11 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       }
 
       // Resize a Timeline Event
-      if (data.source === 'TimelineGridEventResizeHandler') {
+      if (schedulerTimelineEventResizeKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         if (data.side === 'start') {
           const cursorDate = axisOffsetToDate(cursorOffsetMs - data.initialCursorPositionInEventMs);
 
@@ -135,8 +121,9 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         }
       }
 
-      // Move a Standalone Event into the Time Grid
-      if (data.source === 'StandaloneEvent') {
+      // Move an external event into the Time Grid
+      if (schedulerExternalEventKind.matches(source)) {
+        const data = source.payload;
         // The new event starts at the cursor: cap the offset to the last slot of the
         // axis so a drop on the exact right edge does not create the event on the day
         // after the collection, where it would not be rendered at all.
@@ -151,32 +138,24 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
     },
   );
 
-  useDropTarget({
-    ref,
-    resourceId,
-    surfaceType: 'timeline',
-    getEventDropData,
-    isValidDropTarget,
-    addPropertiesToDroppedEvent,
-  });
-
-  return { getCursorPositionInElementMs, ref };
+  return (
+    <SchedulerDropTarget
+      resourceId={resourceId}
+      surfaceType="timeline"
+      getEventDropData={getEventDropData}
+      accept={acceptedKinds}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+      render={render}
+    />
+  );
 }
 
-export namespace useEventRowDropTarget {
-  export interface Parameters {
-    /**
-     * The id of the resource to drop the event onto.
-     */
-    resourceId: SchedulerResourceId;
+export namespace EventRowDropTarget {
+  export interface Props {
+    render: React.ReactElement;
     /**
      * Add properties to the event dropped in the row before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
-
-  export interface ReturnValue extends Pick<
-    TimelineGridEventRowContext,
-    'getCursorPositionInElementMs'
-  > {}
 }

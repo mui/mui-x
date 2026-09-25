@@ -6,6 +6,8 @@ import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import { schedulerDayEventMoveKind } from '../../internals/utils/schedulerDrag';
+import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
@@ -111,7 +113,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const getDragData = useStableCallback((input) => ({
     ...getSharedDragData(input),
-    source: 'CalendarGridDayEvent',
+    source: 'CalendarGridDayEvent' as const,
     draggedDay: getDraggedDay(input),
   }));
 
@@ -124,10 +126,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const {
     state,
-    preview,
+    draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
-    ref,
+    kind: schedulerDayEventMoveKind,
+    source: 'CalendarGridDayEvent',
     start,
     end,
     occurrenceKey,
@@ -175,8 +178,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   return (
     <CalendarGridDayEventContext.Provider value={contextValue}>
-      {element}
-      {preview.element}
+      <SchedulerDraggable {...draggableProps} render={element} />
     </CalendarGridDayEventContext.Provider>
   );
 });

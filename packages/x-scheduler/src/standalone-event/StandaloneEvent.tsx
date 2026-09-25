@@ -31,6 +31,9 @@ StandaloneEvent.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The event properties and optional duration. The Scheduler determines the dates from the drop position.
+   */
   data: PropTypes.shape({
     allDay: PropTypes.bool,
     className: PropTypes.string,
@@ -152,7 +155,7 @@ StandaloneEvent.propTypes /* remove-proptypes */ = {
     title: PropTypes.string.isRequired,
   }).isRequired,
   /**
-   * Callback fired when the event is dropped into the Event Calendar.
+   * Callback fired after the Scheduler handles the event drop.
    */
   onEventDrop: PropTypes.func,
   /**

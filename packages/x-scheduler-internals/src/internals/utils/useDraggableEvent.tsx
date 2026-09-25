@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/utils/disable-native-drag-preview';
 import { useStore } from '@base-ui/utils/store';
+import type { SchedulerEventDragPayload, SchedulerEventMoveData } from './schedulerDrag';
+import type { SchedulerDraggable } from './SchedulerDraggable';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -10,14 +10,15 @@ import {
 } from '../../scheduler-selectors';
 import type { SchedulerEventId } from '../../models';
 import type { useElementPositionInCollection } from './useElementPositionInCollection';
-import { useDragPreview } from './useDragPreview';
+import { SchedulerDragPreview } from './SchedulerDragPreview';
 import { useEvent } from './useEvent';
 
-export function useDraggableEvent(
-  parameters: useDraggableEvent.Parameters,
-): useDraggableEvent.ReturnValue {
+export function useDraggableEvent<TData extends SchedulerEventMoveData>(
+  parameters: useDraggableEvent.Parameters<TData>,
+): useDraggableEvent.ReturnValue<TData> {
   const {
-    ref,
+    source,
+    kind,
     start,
     end,
     occurrenceKey,
@@ -42,43 +43,33 @@ export function useDraggableEvent(
   // Feature hooks
   const { state: eventState } = useEvent({ start, end, occurrenceKey });
 
-  const preview = useDragPreview({
-    type: 'internal-event',
-    data: event,
-    renderDragPreview,
-    showPreviewOnDragStart: false,
-  });
-
   const state = {
     ...eventState,
     dragging: placeholderAction === 'internal-drag',
     resizing: placeholderAction === 'internal-resize',
   };
 
-  React.useEffect(() => {
-    if (!isDraggable || !ref.current) {
-      return;
-    }
+  const payload = React.useMemo(
+    () => ({ source, eventId, occurrenceKey }),
+    [source, eventId, occurrenceKey],
+  );
 
-    // eslint-disable-next-line consistent-return
-    return draggable({
-      element: ref.current,
-      getInitialData: ({ input }) => getDragData(input),
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDragStart: ({ location }) => {
-        preview.actions.onDragStart(location);
-      },
-      onDrag: ({ location }) => {
-        preview.actions.onDrag(location);
-      },
-      onDrop: () => {
-        store.setOccurrencePlaceholder(null);
-        preview.actions.onDrop();
-      },
-    });
-  }, [ref, getDragData, isDraggable, store, preview.actions]);
+  const draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'> = {
+    kind,
+    payload,
+    disabled: !isDraggable,
+    getDragData,
+    preview: (
+      <SchedulerDragPreview
+        type="internal-event"
+        data={event}
+        renderDragPreview={renderDragPreview}
+      />
+    ),
+    onMoveEnd: () => {
+      store.setOccurrencePlaceholder(null);
+    },
+  };
 
   // A bound clipped by the collection range or hidden by the daily hour window does not
   // render at its real position, so it must not expose a resize handle: the drop math
@@ -88,13 +79,15 @@ export function useDraggableEvent(
   // position.
   const contextValue: useDraggableEvent.ContextValue = React.useMemo(
     () => ({
+      eventId,
+      occurrenceKey,
       isEventStartClipped: position.startingBeforeEdge,
       isEventEndClipped: position.endingAfterEdge,
     }),
-    [position.startingBeforeEdge, position.endingAfterEdge],
+    [eventId, occurrenceKey, position.startingBeforeEdge, position.endingAfterEdge],
   );
 
-  return { state, preview, contextValue };
+  return { state, contextValue, draggableProps };
 }
 
 export namespace useDraggableEvent {
@@ -110,7 +103,7 @@ export namespace useDraggableEvent {
   }
 
   export interface PublicParameters
-    extends useEvent.Parameters, Pick<useDragPreview.Parameters, 'renderDragPreview'> {
+    extends useEvent.Parameters, Pick<SchedulerDragPreview.Props, 'renderDragPreview'> {
     /**
      * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
@@ -126,17 +119,15 @@ export namespace useDraggableEvent {
     occurrenceKey: string;
   }
 
-  export interface Parameters extends PublicParameters {
+  export interface Parameters<TData extends SchedulerEventMoveData> extends PublicParameters {
+    kind: SchedulerDraggable.Props<TData>['kind'];
+    source: SchedulerEventDragPayload<TData>['source'];
     /**
      * Gets the drag data.
      * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
      * @returns {any} The shared drag data.
      */
-    getDragData: (input: { clientX: number; clientY: number }) => any;
-    /**
-     * The ref to the event's root element.
-     */
-    ref: React.RefObject<HTMLDivElement | null>;
+    getDragData: SchedulerDraggable.Props<TData>['getDragData'];
     /**
      * The position the caller renders the event at. The clipping flags come from it, so a
      * single pass of the positioning arithmetic serves both rendering and resizing.
@@ -144,7 +135,8 @@ export namespace useDraggableEvent {
     position: useElementPositionInCollection.ReturnValue;
   }
 
-  export interface ReturnValue {
+  export interface ReturnValue<TData extends SchedulerEventMoveData> {
+    draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'>;
     /**
      * The state to pass to the useRenderElement hook.
      */
@@ -153,13 +145,11 @@ export namespace useDraggableEvent {
      * The context to access in useEventResizeHandler.
      */
     contextValue: ContextValue;
-    /**
-     * The drag preview to render when the dragged event is not over a valid drop target.
-     */
-    preview: useDragPreview.ReturnValue;
   }
 
   export interface ContextValue {
+    eventId: SchedulerEventId;
+    occurrenceKey: string;
     /**
      * Whether the event's start does not render at its real position: it is before the
      * collection start or hidden by the daily hour window.

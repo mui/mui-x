@@ -1,37 +1,39 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
+import {
+  schedulerDayEventMoveKind,
+  schedulerDayEventResizeKind,
+  schedulerTimeEventMoveKind,
+  schedulerExternalEventKind,
+} from '../../internals/utils/schedulerDrag';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { mergeDateAndTime } from '../../internals/utils/date-utils';
-import { useDropTarget } from '../../internals/utils/useDropTarget';
+import { SchedulerDropTarget } from '../../internals/utils/SchedulerDropTarget';
 
-const isValidDropTarget = buildIsValidDropTarget([
-  'CalendarGridDayEvent',
-  'CalendarGridDayEventResizeHandler',
-  'CalendarGridTimeEvent',
-  'StandaloneEvent',
-]);
+const acceptedKinds = [
+  schedulerDayEventMoveKind,
+  schedulerDayEventResizeKind,
+  schedulerTimeEventMoveKind,
+  schedulerExternalEventKind,
+];
 
-export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
-  const { value, addPropertiesToDroppedEvent } = parameters;
+export function DayCellDropTarget(props: DayCellDropTarget.Props) {
+  const { value, addPropertiesToDroppedEvent, render } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
 
-  // Ref hooks
-  const ref = React.useRef<HTMLDivElement>(null);
-
   // Feature hooks
-  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside }) => {
-      if (!isValidDropTarget(data)) {
-        return undefined;
-      }
-
+  const getEventDropData: SchedulerDropTarget.GetEventDropData = useStableCallback(
+    ({ source, getDataFromInside, getDataFromOutside }) => {
       // Move a Day Grid Event within the Day Grid
-      if (data.source === 'CalendarGridDayEvent') {
+      if (schedulerDayEventMoveKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         const offset = adapter.differenceInDays(value, data.draggedDay);
         return getDataFromInside(
           data,
@@ -41,7 +43,11 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       }
 
       // Resize a Day Grid Event
-      if (data.source === 'CalendarGridDayEventResizeHandler') {
+      if (schedulerDayEventResizeKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         if (data.side === 'start') {
           if (adapter.isAfter(value, adapter.endOfDay(data.end))) {
             return undefined;
@@ -73,7 +79,11 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       }
 
       // Move a Time Grid Event into the Day Grid
-      if (data.source === 'CalendarGridTimeEvent') {
+      if (schedulerTimeEventMoveKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         const cursorDate = adapter.startOfDay(
           adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs),
         );
@@ -85,8 +95,9 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         );
       }
 
-      // Move an Standalone Event into the Time Grid
-      if (data.source === 'StandaloneEvent') {
+      // Move an external event into the Time Grid
+      if (schedulerExternalEventKind.matches(source)) {
+        const data = source.payload;
         return getDataFromOutside(data, value);
       }
 
@@ -94,18 +105,22 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
     },
   );
 
-  useDropTarget({
-    surfaceType: 'day-grid',
-    ref,
-    getEventDropData,
-    isValidDropTarget,
-    addPropertiesToDroppedEvent,
-  });
-
-  return ref;
+  return (
+    <SchedulerDropTarget
+      surfaceType="day-grid"
+      getEventDropData={getEventDropData}
+      accept={acceptedKinds}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+      render={render}
+    />
+  );
 }
 
-export namespace useDayCellDropTarget {
+export namespace DayCellDropTarget {
+  export interface Props extends Parameters {
+    render: React.ReactElement;
+  }
+
   export interface Parameters {
     /**
      * The value of the cell.

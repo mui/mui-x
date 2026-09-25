@@ -1,71 +1,41 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import {
+  schedulerTimeEventMoveKind,
+  schedulerTimeEventResizeKind,
+  schedulerDayEventMoveKind,
+  schedulerExternalEventKind,
+} from '../../internals/utils/schedulerDrag';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
-import type { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
-import { useDropTarget } from '../../internals/utils/useDropTarget';
+import { useCalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
+import { SchedulerDropTarget } from '../../internals/utils/SchedulerDropTarget';
 import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
-const isValidDropTarget = buildIsValidDropTarget([
-  'CalendarGridTimeEvent',
-  'CalendarGridTimeEventResizeHandler',
-  'CalendarGridDayEvent',
-  'StandaloneEvent',
-]);
+const acceptedKinds = [
+  schedulerTimeEventMoveKind,
+  schedulerTimeEventResizeKind,
+  schedulerDayEventMoveKind,
+  schedulerExternalEventKind,
+];
 
-export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
-  const { start, end, addPropertiesToDroppedEvent } = parameters;
+export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
+  const { addPropertiesToDroppedEvent, render } = props;
+  const { start, end } = useCalendarGridTimeColumnContext();
 
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
-  // Ref hooks
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  const collectionStartTimestamp = adapter.getTime(start);
-  const collectionEndTimestamp = adapter.getTime(end);
-  const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
-
-  const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
-    useStableCallback(({ input, elementRef }) => {
-      if (!ref.current || !elementRef.current) {
-        return 0;
-      }
-
-      const clientY = input.clientY;
-      const elementPosition = elementRef.current.getBoundingClientRect();
-      const positionY = (clientY - elementPosition.y) / ref.current.offsetHeight;
-      const clampedPositionY = Math.max(0, Math.min(1, positionY));
-
-      return Math.round(collectionDurationMs * clampedPositionY);
-    });
-
-  const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
-    (input) => {
-      // Bail when the column isn't measurable yet — zero height makes `getCursorPositionInElementMs` return NaN.
-      if (!ref.current || ref.current.offsetHeight === 0) {
-        return null;
-      }
-      const offsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
-      const roundedOffsetMs =
-        Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-      return adapter.addMilliseconds(start, roundedOffsetMs);
-    },
-  );
-
-  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input }) => {
-      if (!isValidDropTarget(data)) {
-        return undefined;
-      }
-
-      const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
+  const getEventDropData: SchedulerDropTarget.GetEventDropData = useStableCallback(
+    ({ source, getDataFromInside, getDataFromOutside, target }) => {
+      const cursorOffsetMs = Math.round(
+        (adapter.getTime(end) - adapter.getTime(start)) * target.getSnappedLocalPoint().y,
+      );
 
       const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
         const roundedOffset =
@@ -75,7 +45,11 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       };
 
       // Move a Time Grid Event within the Time Grid
-      if (data.source === 'CalendarGridTimeEvent') {
+      if (schedulerTimeEventMoveKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
         let newStartDate = addOffsetToDate(
@@ -98,7 +72,11 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       }
 
       // Resize a Time Grid Event
-      if (data.source === 'CalendarGridTimeEventResizeHandler') {
+      if (schedulerTimeEventResizeKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         if (data.side === 'start') {
           let cursorDate = addOffsetToDate(
             start,
@@ -151,7 +129,11 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       }
 
       // Move a Day Grid Event into the Time Grid
-      if (data.source === 'CalendarGridDayEvent') {
+      if (schedulerDayEventMoveKind.matches(source)) {
+        const data = source.dragData;
+        if (!data) {
+          return undefined;
+        }
         const newStartDate = addOffsetToDate(start, cursorOffsetMs);
         const newEndDate = adapter.addMinutes(
           newStartDate,
@@ -161,8 +143,9 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         return getDataFromInside(data, newStartDate, newEndDate);
       }
 
-      // Move a Standalone Event into the Time Grid
-      if (data.source === 'StandaloneEvent') {
+      // Move an external event into the Time Grid
+      if (schedulerExternalEventKind.matches(source)) {
+        const data = source.payload;
         return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
       }
 
@@ -170,35 +153,23 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     },
   );
 
-  useDropTarget({
-    ref,
-    surfaceType: 'time-grid',
-    getEventDropData,
-    isValidDropTarget,
-    addPropertiesToDroppedEvent,
-  });
-
-  return { getCursorPositionInElementMs, getDateAtPointer, ref };
+  return (
+    <SchedulerDropTarget
+      surfaceType="time-grid"
+      getEventDropData={getEventDropData}
+      accept={acceptedKinds}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+      render={render}
+    />
+  );
 }
 
-export namespace useTimeDropTarget {
-  export interface Parameters {
-    /**
-     * The data and time at which the column starts.
-     */
-    start: TemporalSupportedObject;
-    /**
-     * The data and time at which the column ends.
-     */
-    end: TemporalSupportedObject;
+export namespace TimeColumnDropTarget {
+  export interface Props {
+    render: React.ReactElement;
     /**
      * Add properties to the event dropped in the column before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
-
-  export interface ReturnValue extends Pick<
-    CalendarGridTimeColumnContext,
-    'getCursorPositionInElementMs' | 'getDateAtPointer'
-  > {}
 }

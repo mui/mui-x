@@ -1,7 +1,11 @@
 'use client';
-import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
+import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
+import {
+  schedulerDependencyKind,
+  schedulerDependencyTargetKind,
+} from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -10,7 +14,6 @@ import type {
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
-import { isDependencyTerminalDrag } from '../event-dependency-terminal/dependencyTerminalDragData';
 
 /**
  * Registers an element of an event (its body, or one of its dependency terminals) as
@@ -21,46 +24,43 @@ import { isDependencyTerminalDrag } from '../event-dependency-terminal/dependenc
  * Declarative only: the drop itself is finalized by the creation monitor on the grid
  * root, which reads the hovered target from the drop target data.
  */
-export function useEventDependencyDropTarget(parameters: useEventDependencyDropTarget.Parameters) {
-  const { ref, eventId, occurrenceKey, resourceId, side = 'start' } = parameters;
+export function EventDependencyDropTarget(props: EventDependencyDropTarget.Props) {
+  const { eventId, occurrenceKey, resourceId, side = 'start', render } = props;
 
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, eventId);
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, eventId);
 
-  React.useEffect(() => {
-    if (!ref.current || !enabled) {
-      return undefined;
-    }
+  const payload = React.useMemo(
+    () => ({
+      dependencyTargetEventId: eventId,
+      dependencyTargetOccurrenceKey: occurrenceKey,
+      dependencyTargetResourceId: resourceId,
+      dependencyTargetSide: side,
+      dependencyTargetIsValid: !isRecurring && !isReadOnly,
+    }),
+    [eventId, occurrenceKey, resourceId, side, isRecurring, isReadOnly],
+  );
 
-    return dropTargetForElements({
-      element: ref.current,
-      getData: () => ({
-        dependencyTargetEventId: eventId,
-        dependencyTargetOccurrenceKey: occurrenceKey,
-        dependencyTargetResourceId: resourceId,
-        dependencyTargetSide: side,
-        dependencyTargetIsValid: !isRecurring && !isReadOnly,
-      }),
-      // Only the dependency gesture of this timeline lands here (rows keep handling
-      // the event drags — their allowlist ignores this source, and gestures born in
-      // another timeline on the page carry a different store), and an event cannot
-      // depend on itself.
-      canDrop: ({ source }) =>
-        isDependencyTerminalDrag(source.data) &&
-        source.data.storeContext === store &&
-        source.data.eventId !== eventId,
-    });
-  }, [ref, store, enabled, isRecurring, isReadOnly, eventId, occurrenceKey, resourceId, side]);
+  return (
+    <Draggable.Target
+      disabled={!enabled}
+      accept={schedulerDependencyKind}
+      kind={schedulerDependencyTargetKind}
+      payload={payload}
+      // Only dependency gestures from this timeline land here; an event cannot depend on itself.
+      canDrop={({ source }) =>
+        source.payload.storeContext === store && source.payload.eventId !== eventId
+      }
+      render={render}
+    />
+  );
 }
 
-export namespace useEventDependencyDropTarget {
-  export interface Parameters {
-    /**
-     * The ref to the event's root element.
-     */
-    ref: React.RefObject<HTMLDivElement | null>;
+export namespace EventDependencyDropTarget {
+  export interface Props {
+    render: React.ReactElement;
     eventId: SchedulerEventId;
     occurrenceKey: string;
     /**

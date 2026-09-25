@@ -1,63 +1,111 @@
-// Polyfill DragEvent and DataTransfer for JSDOM
-import '@atlaskit/pragmatic-drag-and-drop-unit-testing/drag-event-polyfill';
+import { fireEvent } from '@mui/internal-test-utils';
 
-// JSDOM lacks `document.elementsFromPoint`, which pragmatic's auto-scroll reads on every
-// animation frame during a drag. The resulting TypeError aborts the frame's remaining
-// callbacks — including pragmatic's throttled `onDrag` flush.
-if (typeof document !== 'undefined' && document.elementsFromPoint === undefined) {
-  document.elementsFromPoint = () => [];
+interface DragPointerOptions {
+  clientX?: number;
+  clientY?: number;
+  pointerType?: string;
+  mockHitTest?: boolean;
 }
 
-/**
- * Finds the nearest ancestor (or self) that is registered as a draggable element.
- * Pragmatic DnD sets `draggable="true"` on registered elements.
- */
-function findDraggableElement(element: Element): HTMLElement {
-  const draggable = element.closest('[draggable="true"]') as HTMLElement | null;
-  if (!draggable) {
-    throw new Error(
-      'Could not find a draggable ancestor. Make sure the element or one of its ancestors has draggable="true".',
-    );
+let restoreDragHitTest: (() => void) | undefined;
+let dragPoint = { clientX: 0, clientY: 0 };
+let hitElement: Element | null = null;
+
+function mockDragHitTest(element: Element) {
+  hitElement = element;
+  if (restoreDragHitTest) {
+    return;
   }
-  return draggable;
+  const doc = element.ownerDocument;
+  const original = Object.getOwnPropertyDescriptor(doc, 'elementFromPoint');
+  Object.defineProperty(doc, 'elementFromPoint', {
+    configurable: true,
+    value: () => hitElement,
+  });
+  restoreDragHitTest = () => {
+    if (original) {
+      Object.defineProperty(doc, 'elementFromPoint', original);
+    } else {
+      delete (doc as Partial<Document>).elementFromPoint;
+    }
+    restoreDragHitTest = undefined;
+    hitElement = null;
+  };
 }
 
-/**
- * Finds the nearest ancestor (or self) that is registered as a drop target.
- * Pragmatic DnD sets `data-drop-target-for-element` on registered drop target elements.
- */
-function findDropTargetElement(element: Element): HTMLElement {
-  const dropTarget = element.closest('[data-drop-target-for-element]') as HTMLElement | null;
-  if (!dropTarget) {
-    throw new Error(
-      'Could not find a drop target ancestor. Make sure the element or one of its ancestors is a registered drop target.',
-    );
-  }
-  return dropTarget;
-}
-
-function createDragEvent(
-  type: string,
-  options: { clientX?: number; clientY?: number } = {},
-): DragEvent {
-  return new DragEvent(type, {
+function dispatchDragPointer(type: string, element: Element, options: DragPointerOptions = {}) {
+  dragPoint = {
+    clientX: options.clientX ?? dragPoint.clientX,
+    clientY: options.clientY ?? dragPoint.clientY,
+  };
+  const event = new PointerEvent(type, {
     bubbles: true,
     cancelable: true,
-    clientX: options.clientX ?? 0,
-    clientY: options.clientY ?? 0,
-    dataTransfer: new DataTransfer(),
+    pointerId: 1,
+    pointerType: options.pointerType ?? 'mouse',
+    isPrimary: true,
+    button: 0,
+    buttons: type === 'pointerup' || type === 'pointercancel' ? 0 : 1,
+    ...dragPoint,
   });
+  fireEvent(element, event);
+}
+
+/** Starts a mouse drag at the supplied point, crossing the engine's activation threshold. */
+export function startDrag(element: Element, options: DragPointerOptions = {}) {
+  if (options.mockHitTest !== false) {
+    mockDragHitTest(element);
+  }
+  const clientX = options.clientX ?? 0;
+  const clientY = options.clientY ?? 0;
+  dispatchDragPointer('pointerdown', element, { ...options, clientX: clientX - 6, clientY });
+  dispatchDragPointer('pointermove', element, { ...options, clientX, clientY });
+}
+
+/** Moves an active drag over a target. Hit testing is mocked because jsdom has no layout. */
+export function moveDrag(element: Element, options: DragPointerOptions = {}) {
+  if (options.mockHitTest !== false) {
+    mockDragHitTest(element);
+  }
+  dispatchDragPointer('pointermove', element, options);
+}
+
+/** Releases over a target. Base UI flushes the pending move before committing the drop. */
+export function dropDrag(element: Element, options: DragPointerOptions = {}) {
+  if (options.mockHitTest !== false) {
+    mockDragHitTest(element);
+  }
+  dispatchDragPointer('pointerup', element, options);
+  // Pointer capture redirects the browser's compatibility click to the body.
+  // Deliver it so Base UI consumes it instead of swallowing a later test's click.
+  fireEvent(
+    element.ownerDocument.body,
+    new PointerEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      pointerId: 1,
+      pointerType: options.pointerType ?? 'mouse',
+      detail: 1,
+    }),
+  );
+  restoreDragHitTest?.();
+}
+
+/** Cancels the active drag and restores hit testing, including after an assertion fails. */
+export function cancelDrag() {
+  dispatchDragPointer('pointercancel', document.body);
+  restoreDragHitTest?.();
 }
 
 interface SimulateDragAndDropParameters {
   /**
    * The element being dragged (or a child of the draggable element).
-   * The closest ancestor with `draggable="true"` will be used as the drag source.
+   * The pointer press bubbles to the registered drag source.
    */
   source: Element;
   /**
    * The element to drop onto (or a child of the drop target element).
-   * The closest ancestor with `data-drop-target-for-element` will be used as the drop target.
+   * The closest ancestor with `data-drop-target` will be used as the drop target.
    */
   target: Element;
   /**
@@ -83,28 +131,14 @@ interface SimulateDragAndDropParameters {
    */
   targetClientY?: number;
   /**
-   * Stop after the `dragover`, leaving the drag in progress so the placeholder stays on screen and
+   * Stop after the pointer move, leaving the drag in progress so the placeholder stays on screen and
    * can be asserted on.
    * @default false
    */
   hold?: boolean;
 }
 
-/**
- * Simulates a complete drag-and-drop operation using native DragEvents.
- *
- * This works with @atlaskit/pragmatic-drag-and-drop because the library:
- * 1. Listens for `dragstart` on `document` and looks up `event.target` in a WeakMap of registered draggables
- * 2. Listens for `dragover`/`drop` on `document` and finds drop targets via `event.target.closest("[data-drop-target-for-element]")`
- *
- * @example
- * ```tsx
- * simulateDragAndDrop({
- *   source: screen.getByRole('button', { name: /my event/i }),
- *   target: dayGridCell,
- * });
- * ```
- */
+/** Simulates the pointer gesture used by Scheduler event moves and resize handles. */
 export function simulateDragAndDrop(parameters: SimulateDragAndDropParameters): void {
   const {
     source,
@@ -116,35 +150,11 @@ export function simulateDragAndDrop(parameters: SimulateDragAndDropParameters): 
     hold = false,
   } = parameters;
 
-  const sourceElement = findDraggableElement(source);
-  const targetElement = findDropTargetElement(target);
-
-  // 1. Start the drag on the source element
-  sourceElement.dispatchEvent(
-    createDragEvent('dragstart', { clientX: sourceClientX, clientY: sourceClientY }),
-  );
-
-  // 2. Enter the target (triggers drop target hierarchy detection)
-  targetElement.dispatchEvent(
-    createDragEvent('dragenter', { clientX: targetClientX, clientY: targetClientY }),
-  );
-
-  // 3. Drag over the target (updates placeholder position)
-  targetElement.dispatchEvent(
-    createDragEvent('dragover', { clientX: targetClientX, clientY: targetClientY }),
-  );
-
-  if (hold) {
-    return;
+  startDrag(source, { clientX: sourceClientX, clientY: sourceClientY });
+  moveDrag(target, { clientX: targetClientX, clientY: targetClientY });
+  if (!hold) {
+    dropDrag(target, { clientX: targetClientX, clientY: targetClientY });
   }
-
-  // 4. Drop on the target
-  targetElement.dispatchEvent(
-    createDragEvent('drop', { clientX: targetClientX, clientY: targetClientY }),
-  );
-
-  // 5. End the drag operation
-  sourceElement.dispatchEvent(createDragEvent('dragend'));
 }
 
 interface MockElementBoundsRect {
@@ -280,7 +290,13 @@ function ensurePointerCaptureMethods(element: HTMLElement): void {
 
 function createPointerEvent(
   type: string,
-  options: { clientX?: number; clientY?: number; pointerId?: number; button?: number } = {},
+  options: {
+    clientX?: number;
+    clientY?: number;
+    pointerId?: number;
+    button?: number;
+    pointerType?: string;
+  } = {},
 ): Event {
   const init = {
     bubbles: true,
@@ -288,6 +304,9 @@ function createPointerEvent(
     clientX: options.clientX ?? 0,
     clientY: options.clientY ?? 0,
     button: options.button ?? 0,
+    buttons: type === 'pointerup' || type === 'pointercancel' ? 0 : 1,
+    isPrimary: true,
+    pointerType: options.pointerType ?? 'touch',
   };
   // `PointerEvent` may be missing in JSDOM; fall back to a `MouseEvent` with a `pointerId`.
   if (typeof PointerEvent === 'function') {
@@ -295,6 +314,8 @@ function createPointerEvent(
   }
   const event = new MouseEvent(type, init) as any;
   event.pointerId = options.pointerId ?? 1;
+  event.pointerType = init.pointerType;
+  event.isPrimary = true;
   return event;
 }
 
@@ -313,6 +334,8 @@ interface SimulatePointerResizeParameters {
    * @default 1
    */
   pointerId?: number;
+  /** The input device, defaulting to touch. */
+  pointerType?: 'touch' | 'pen';
   /**
    * End with `pointercancel` instead of `pointerup`.
    * @default false
@@ -338,18 +361,28 @@ interface SimulatePointerResizeParameters {
  * ```
  */
 export function simulatePointerResize(parameters: SimulatePointerResizeParameters): void {
-  const { handle, to, from = {}, pointerId = 1, cancel = false, hold = false } = parameters;
+  const {
+    handle,
+    to,
+    from = {},
+    pointerId = 1,
+    pointerType = 'touch',
+    cancel = false,
+    hold = false,
+  } = parameters;
   ensurePointerCaptureMethods(handle);
 
   const down = { clientX: from.clientX ?? 0, clientY: from.clientY ?? 0 };
   const move = { clientX: to.clientX ?? down.clientX, clientY: to.clientY ?? down.clientY };
 
-  handle.dispatchEvent(createPointerEvent('pointerdown', { ...down, pointerId, button: 0 }));
-  handle.dispatchEvent(createPointerEvent('pointermove', { ...move, pointerId }));
+  handle.dispatchEvent(
+    createPointerEvent('pointerdown', { ...down, pointerId, pointerType, button: 0 }),
+  );
+  handle.dispatchEvent(createPointerEvent('pointermove', { ...move, pointerId, pointerType }));
   if (hold) {
     return;
   }
   handle.dispatchEvent(
-    createPointerEvent(cancel ? 'pointercancel' : 'pointerup', { ...move, pointerId }),
+    createPointerEvent(cancel ? 'pointercancel' : 'pointerup', { ...move, pointerId, pointerType }),
   );
 }

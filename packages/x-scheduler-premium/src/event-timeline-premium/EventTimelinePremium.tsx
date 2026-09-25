@@ -1,4 +1,5 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -136,15 +137,17 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventTimelinePremiumRoot
-                ref={forwardedRef}
-                className={clsx(classes.root, className)}
-                {...other}
-              >
-                <EventTimelinePremiumContent />
-                <ErrorContainer />
-                {watermark}
-              </EventTimelinePremiumRoot>
+              <Draggable.Provider>
+                <EventTimelinePremiumRoot
+                  ref={forwardedRef}
+                  className={clsx(classes.root, className)}
+                  {...other}
+                >
+                  <EventTimelinePremiumContent />
+                  <ErrorContainer />
+                  {watermark}
+                </EventTimelinePremiumRoot>
+              </Draggable.Provider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>

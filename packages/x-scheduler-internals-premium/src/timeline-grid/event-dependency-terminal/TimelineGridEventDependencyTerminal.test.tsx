@@ -1,6 +1,7 @@
+import { cancelDrag, startDrag } from 'test/utils/scheduler/dnd';
 import * as React from 'react';
-import { fireEvent, waitFor } from '@mui/internal-test-utils';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
+import { waitFor } from '@mui/internal-test-utils';
+import { Draggable } from '@base-ui/react/draggable';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import {
@@ -38,9 +39,13 @@ describe('<TimelineGrid.EventDependencyTerminal />', () => {
 
   it('should stamp its side into the drag data', async () => {
     const onDragStart = vi.fn();
-    const cleanup = monitorForElements({ onDragStart });
+    function Monitor() {
+      Draggable.useMonitor({ onMoveStart: onDragStart });
+      return null;
+    }
     render(
       <Wrapper>
+        <Monitor />
         <TimelineGrid.EventDependencyTerminal
           eventId="fake-id"
           occurrenceKey="fake-key"
@@ -50,17 +55,14 @@ describe('<TimelineGrid.EventDependencyTerminal />', () => {
       </Wrapper>,
     );
 
-    fireEvent.dragStart(document.querySelector('[data-dependency-terminal]')!, {
-      dataTransfer: new DataTransfer(),
-    });
+    startDrag(document.querySelector('[data-dependency-terminal]')!, {});
     await waitFor(() => {
       expect(onDragStart.mock.calls.length).to.equal(1);
     });
-    const { data } = onDragStart.mock.calls[0][0].source;
+    const { payload: data } = onDragStart.mock.calls[0][0].source;
     expect(data.sourceSide).to.equal('start');
     expect(data.eventId).to.equal('fake-id');
-    fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
-    cleanup();
+    cancelDrag();
   });
 
   it('should expose its occurrence key, resource and side through its data attributes', () => {

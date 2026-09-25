@@ -1,4 +1,12 @@
 'use client';
+import {
+  schedulerTimelineEventMoveKind,
+  SchedulerDraggable,
+  useDraggableEvent,
+  useOriginalOccurrence,
+  computeElementPositionInCollection,
+  dateToTimelineAxisOffsetMs,
+} from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
@@ -11,12 +19,6 @@ import type {
   SchedulerResourceId,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import {
-  useDraggableEvent,
-  useOriginalOccurrence,
-  computeElementPositionInCollection,
-  dateToTimelineAxisOffsetMs,
-} from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -28,7 +30,7 @@ import {
   eventTimelinePremiumPresetSelectors,
 } from '../../event-timeline-premium-selectors';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
-import { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
+import { EventDependencyDropTarget } from './EventDependencyDropTarget';
 
 const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
@@ -119,7 +121,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   const getDragData = useStableCallback((input) => ({
     ...getSharedDragData(input),
-    source: 'TimelineGridEvent',
+    source: 'TimelineGridEvent' as const,
   }));
 
   const elementPosition = React.useMemo(
@@ -137,10 +139,11 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   const {
     state,
-    preview,
+    draggableProps,
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
-    ref,
+    kind: schedulerTimelineEventMoveKind,
+    source: 'TimelineGridEvent',
     start,
     end,
     occurrenceKey,
@@ -156,8 +159,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     native: nativeButton,
     tabIndex: rowHasFocus ? 0 : -1,
   });
-
-  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
 
   const mergedState = {
     ...state,
@@ -190,8 +191,12 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   return (
     <TimelineGridEventContext.Provider value={contextValue}>
-      {element}
-      {preview.element}
+      <EventDependencyDropTarget
+        eventId={eventId}
+        occurrenceKey={occurrenceKey}
+        resourceId={rowResourceId}
+        render={<SchedulerDraggable {...draggableProps} render={element} />}
+      />
     </TimelineGridEventContext.Provider>
   );
 });

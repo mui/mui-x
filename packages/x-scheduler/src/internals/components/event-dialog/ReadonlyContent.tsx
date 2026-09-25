@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -33,18 +34,17 @@ const EventDialogTitle = styled(Typography, {
 type ReadonlyContentProps = {
   occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
-  dragHandlerRef: React.RefObject<HTMLElement | null>;
 };
 
 export default function ReadonlyContent(props: ReadonlyContentProps) {
-  const { occurrence, onClose, dragHandlerRef } = props;
+  const { occurrence, onClose } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
 
   return (
-    <ReadonlyContentDragContainer ref={dragHandlerRef}>
-      <EventDialogHeader onClose={onClose}>
+    <Draggable.Handle render={<ReadonlyContentDragContainer />}>
+      <EventDialogHeader onClose={onClose} isDraggable={false}>
         <EventDialogTitle
           variant="h6"
           id={`${schedulerId}-event-dialog-title`}
@@ -64,6 +64,6 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
           {localeText.closeButtonLabel}
         </Button>
       </EventDialogActions>
-    </ReadonlyContentDragContainer>
+    </Draggable.Handle>
   );
 }

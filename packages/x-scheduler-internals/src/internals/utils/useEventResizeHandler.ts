@@ -1,27 +1,73 @@
 'use client';
 import * as React from 'react';
-import { useDragHandle } from './useDragHandle';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { schedulerDropTargetKind } from './schedulerDrag';
+import type { SchedulerEventDragPayload, SchedulerEventResizeData } from './schedulerDrag';
+import type { SchedulerDraggable } from './SchedulerDraggable';
 import type { SchedulerEventSide } from '../../models';
+import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 
 /**
- * Native drag-and-drop resize for calendar events. This hook and the pointer-based resize
+ * Base UI drag-and-drop resize for calendar events. This hook and the pointer-based resize
  * ({@link useEventPointerResizeHandler}) run together on the same handle and share one `enabled`
  * (the edge is inside the collection). The mouse is served here; touch and pen are served by the
  * pointer hook, which bails on `pointerType === 'mouse'`.
  */
-export function useEventResizeHandler(
-  parameters: useEventResizeHandler.Parameters,
-): useEventResizeHandler.ReturnValue {
-  const { ref, side, enabled, getDragData } = parameters;
+export function useEventResizeHandler<TData extends SchedulerEventResizeData>(
+  parameters: useEventResizeHandler.Parameters<TData>,
+): useEventResizeHandler.ReturnValue<TData> {
+  const {
+    ref,
+    side,
+    enabled,
+    getDragData,
+    source,
+    kind,
+    eventId,
+    occurrenceKey,
+    directPointerResize = false,
+  } = parameters;
+
+  const store = useSchedulerStoreContext();
 
   const state: useEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
     [side],
   );
 
-  useDragHandle({ ref, enabled, getDragData });
+  const payload = React.useMemo(
+    () => ({ source, eventId, occurrenceKey }),
+    [source, eventId, occurrenceKey],
+  );
 
-  return { state };
+  const draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'> = {
+    kind,
+    payload,
+    disabled: !enabled,
+    getDragData,
+    // The direct resize handler owns touch and pen on time-grid events.
+    activation: directPointerResize ? { touch: false, pen: false } : undefined,
+    // The event root's `onMoveEnd` does not run for this nested handle. A drop on a Scheduler
+    // target is left to that target: it runs after this and may fall back to the placeholder.
+    onMoveEnd: (_, { canceled, location }) => {
+      if (
+        canceled ||
+        !location.current.targets.some((target) => schedulerDropTargetKind.matches(target))
+      ) {
+        store.setOccurrencePlaceholder(null);
+      }
+    },
+  };
+
+  useIsoLayoutEffect(() => {
+    // Base UI sets touch-action: manipulation when its ref registers the source.
+    // Resize handles must keep the page from panning during the direct gesture.
+    if (enabled) {
+      ref.current?.style.setProperty('touch-action', 'none');
+    }
+  }, [ref, enabled]);
+
+  return { state, draggableProps };
 }
 
 export namespace useEventResizeHandler {
@@ -43,13 +89,17 @@ export namespace useEventResizeHandler {
     side: SchedulerEventSide;
   }
 
-  export interface Parameters extends PublicParameters {
+  export interface Parameters<TData extends SchedulerEventResizeData>
+    extends PublicParameters, SchedulerEventDragPayload<TData> {
+    kind: SchedulerDraggable.Props<TData>['kind'];
+    /** Whether a separate pointer handler owns touch and pen resize gestures. */
+    directPointerResize?: boolean;
     /**
      * The ref to the event's resize handler root element.
      */
     ref: React.RefObject<HTMLDivElement | null>;
     /**
-     * Whether to attach the native drag-and-drop listeners (false when the side is clipped by the
+     * Whether to register the Base UI drag handler (false when the side is clipped by the
      * collection boundary). Shared with {@link useEventPointerResizeHandler} — it is never turned
      * off "because the pointer interaction is active".
      */
@@ -59,10 +109,11 @@ export namespace useEventResizeHandler {
      * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
      * @returns {any} The shared drag data.
      */
-    getDragData: (input: { clientX: number; clientY: number }) => any;
+    getDragData: SchedulerDraggable.Props<TData>['getDragData'];
   }
 
-  export interface ReturnValue {
+  export interface ReturnValue<TData extends SchedulerEventResizeData> {
+    draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'>;
     /**
      * The state to pass to the useRenderElement hook.
      */

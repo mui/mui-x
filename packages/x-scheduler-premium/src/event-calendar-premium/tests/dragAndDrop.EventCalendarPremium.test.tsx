@@ -97,7 +97,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     // 1px per minute, like the week view drag tests: the drop math reads the column bounds.
     const columns = Array.from(
       document.querySelectorAll<HTMLElement>(
-        '.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]',
+        '.MuiEventCalendar-dayTimeGridGrid [data-drop-target]',
       ),
     );
     for (const column of columns) {

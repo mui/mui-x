@@ -20,7 +20,7 @@ describe('CompactDayView - touch resize', () => {
 
   function getTimeGridColumn(): HTMLElement {
     return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]`,
+      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`,
     )!;
   }
 

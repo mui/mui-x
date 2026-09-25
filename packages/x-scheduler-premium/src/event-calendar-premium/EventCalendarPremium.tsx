@@ -1,4 +1,5 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
@@ -82,11 +83,13 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-                  {watermark}
-                </EventCalendarRoot>
-              </EventDialogProvider>
+              <Draggable.Provider>
+                <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+                  <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                    {watermark}
+                  </EventCalendarRoot>
+                </EventDialogProvider>
+              </Draggable.Provider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>

@@ -75,7 +75,7 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         event.preventDefault();
         store.deleteSelectedDependency();
       } else if (event.key === 'Escape') {
-        // Escape during an in-flight creation drag cancels the drag (pragmatic
+        // Escape during an in-flight creation drag cancels the drag (Base UI
         // handles it); one keystroke must not also drop the selection.
         if (store.state.dependencyCreation === null) {
           store.setSelectedDependencyId(null);
@@ -109,6 +109,12 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
           return;
         }
       }
+      // Starting another dependency drag keeps the current selection, including if
+      // the new gesture is canceled with Escape.
+      const terminal = isElement(target) ? target.closest('[data-dependency-terminal]') : null;
+      if (terminal && elementRef.current?.closest('[role="grid"]')?.contains(terminal)) {
+        return;
+      }
       store.setSelectedDependencyId(null);
       // Inside the timeline, dismissing the selection is this press's whole meaning:
       // the click it produces must not also create an event or open a dialog — the
@@ -121,8 +127,8 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       }
       // The one-shot listeners outlive this effect on purpose (deselecting tears it
       // down before the click arrives) and disarm themselves on the click, or on any
-      // signal that the press will not produce one (a drag, a canceled pointer, a
-      // keystroke).
+      // signal that the press will not produce one (a canceled pointer, a keystroke).
+      // A press that turns into a drag is disarmed by the next press or keystroke at the latest.
       function swallowClick(clickEvent: MouseEvent) {
         clickEvent.stopPropagation();
         disarm();
@@ -131,14 +137,12 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         armedDisarmRef.current = null;
         doc.removeEventListener('click', swallowClick, { capture: true });
         doc.removeEventListener('pointerdown', disarm, { capture: true });
-        doc.removeEventListener('dragstart', disarm, { capture: true });
         doc.removeEventListener('pointercancel', disarm, { capture: true });
         doc.removeEventListener('keydown', disarm, { capture: true });
       }
       armedDisarmRef.current = disarm;
       doc.addEventListener('click', swallowClick, { capture: true });
       doc.addEventListener('pointerdown', disarm, { capture: true });
-      doc.addEventListener('dragstart', disarm, { capture: true });
       doc.addEventListener('pointercancel', disarm, { capture: true });
       doc.addEventListener('keydown', disarm, { capture: true });
     };

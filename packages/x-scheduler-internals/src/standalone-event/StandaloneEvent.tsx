@@ -1,91 +1,90 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/utils/disable-native-drag-preview';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { Draggable } from '@base-ui/react/draggable';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
-import type { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
-import { useDragPreview } from '../internals/utils/useDragPreview';
+import { schedulerExternalEventKind } from '../internals/utils/schedulerDrag';
+import type { SchedulerExternalEventDragPayload } from '../internals/utils/schedulerDrag';
+import type {
+  SchedulerOccurrencePlaceholderExternalDragData,
+  RenderDragPreviewParameters,
+} from '../models';
+import { SchedulerFloatingPreview } from '../internals/utils/SchedulerDragPreview';
 
-export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
-  componentProps: StandaloneEvent.Props,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
+function StandaloneEventElement({
+  componentProps,
+  dragProps,
+  state,
+}: {
+  componentProps: StandaloneEvent.Props;
+  dragProps: React.ComponentPropsWithRef<'div'>;
+  state: StandaloneEvent.State;
+}) {
   const {
-    // Rendering props
     className,
     render,
     style,
-    // Internal props
     data,
     onEventDrop,
     renderDragPreview,
-    // Props forwarded to the DOM element
+    nativeButton = false,
     ...elementProps
   } = componentProps;
-
-  // TODO: Expose a real `interactive` prop
-  // to control whether the event should behave like a button
-  const isInteractive = true;
-
-  const ref = React.useRef<HTMLDivElement>(null);
-  const { getButtonProps, buttonRef } = useButton({
-    disabled: !isInteractive,
-    native: false,
-  });
-
-  const preview = useDragPreview({
-    type: 'standalone-event',
-    data,
-    renderDragPreview,
-    showPreviewOnDragStart: true,
-  });
-
-  const state: StandaloneEvent.State = React.useMemo(
-    () => ({ dragging: preview.state.isDragging }),
-    [preview.state.isDragging],
-  );
-
-  const getDragData = useStableCallback(() => ({
-    source: 'StandaloneEvent',
-    eventData: data,
-    onEventDrop,
-    eventId: data.id,
-    occurrenceKey: `external-${data.id}`,
-  }));
-
-  React.useEffect(() => {
-    return draggable({
-      element: ref.current!,
-      getInitialData: getDragData,
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDragStart: ({ location }) => {
-        preview.actions.onDragStart(location);
-      },
-      onDrag: ({ location }) => {
-        preview.actions.onDrag(location);
-      },
-      onDrop: () => {
-        preview.actions.onDrop();
-      },
-    });
-  }, [getDragData, preview.actions]);
-
+  const { ref, ...dragElementProps } = dragProps;
+  // TODO: Expose a real `interactive` prop to control button behavior.
+  const { getButtonProps, buttonRef } = useButton({ disabled: false, native: nativeButton });
   const element = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, buttonRef, ref],
-    props: [elementProps, getButtonProps],
+    ref: [ref, buttonRef],
+    props: [dragElementProps, elementProps, getButtonProps],
   });
+  return React.isValidElement<{ children?: React.ReactNode }>(element)
+    ? React.cloneElement(element, {
+        children: (
+          <React.Fragment>
+            {element.props.children}
+            <Draggable.Preview offset="pointer" style={{ pointerEvents: 'none' }}>
+              {({ location }) => (
+                <SchedulerFloatingPreview location={location}>
+                  {renderDragPreview({ type: 'standalone-event', data })}
+                </SchedulerFloatingPreview>
+              )}
+            </Draggable.Preview>
+          </React.Fragment>
+        ),
+      })
+    : element;
+}
 
+export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
+  props: StandaloneEvent.Props,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { data, onEventDrop } = props;
+  const handleEventDrop = useStableCallback(onEventDrop);
+  // The source's onMoveEnd runs before the target handles the drop. Let Scheduler
+  // call onEventDrop after creating the event, not merely after landing on a target.
+  const payload = React.useMemo<StandaloneEvent.DragData>(
+    () => ({ eventData: data, onEventDrop: handleEventDrop }),
+    [data, handleEventDrop],
+  );
   return (
-    <React.Fragment>
-      {element}
-      {preview.element}
-    </React.Fragment>
+    <Draggable.Provider>
+      <Draggable.Root
+        ref={forwardedRef}
+        kind={schedulerExternalEventKind}
+        payload={payload}
+        render={(dragProps, state) => (
+          <StandaloneEventElement
+            componentProps={props}
+            dragProps={dragProps}
+            state={{ dragging: state.dragging }}
+          />
+        )}
+      />
+    </Draggable.Provider>
   );
 });
 
@@ -97,23 +96,17 @@ export namespace StandaloneEvent {
     dragging: boolean;
   }
 
-  export interface Props
-    extends
-      BaseUIComponentProps<'div', State>,
-      NonNativeButtonProps,
-      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
-    data: SchedulerOccurrencePlaceholderExternalDragData;
+  export interface Props extends BaseUIComponentProps<'div', State>, NonNativeButtonProps {
     /**
-     * Callback fired when the event is dropped into the Event Calendar.
+     * The event properties and optional duration. The Scheduler determines the dates from the drop position.
+     */
+    data: SchedulerOccurrencePlaceholderExternalDragData;
+    renderDragPreview: (parameters: RenderDragPreviewParameters) => React.ReactNode;
+    /**
+     * Callback fired after the Scheduler handles the event drop.
      */
     onEventDrop?: () => void;
   }
 
-  export interface DragData {
-    source: 'StandaloneEvent';
-    eventId: string | number;
-    occurrenceKey: string;
-    eventData: SchedulerOccurrencePlaceholderExternalDragData;
-    onEventDrop?: () => void;
-  }
+  export type DragData = SchedulerExternalEventDragPayload;
 }

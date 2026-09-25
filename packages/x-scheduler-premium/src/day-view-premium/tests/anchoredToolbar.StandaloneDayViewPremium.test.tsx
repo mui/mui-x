@@ -41,7 +41,7 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
 
   function getTimeGridColumn(): HTMLElement {
     return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]`,
+      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`,
     )!;
   }
 

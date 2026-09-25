@@ -18,8 +18,8 @@
     "link-check": "tsx ./scripts/reportBrokenLinks.mts"
   },
   "dependencies": {
-    "@atlaskit/pragmatic-drag-and-drop": "catalog:",
     "@babel/core": "catalog:",
+    "@base-ui/react": "catalog:",
     "@date-fns/tz": "catalog:",
     "@docsearch/react": "^4.7.0",
     "@emotion/cache": "catalog:",

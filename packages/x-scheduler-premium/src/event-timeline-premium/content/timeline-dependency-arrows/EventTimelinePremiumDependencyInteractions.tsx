@@ -1,8 +1,9 @@
 'use client';
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useElementDragMarker } from '@mui/x-scheduler-internals/internals';
+import { schedulerDragKinds } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/models';
@@ -92,7 +93,7 @@ function DependencyInteractionsLayer() {
   );
 
   useDependencySelectionInteraction(svgRef);
-  useElementDragMarker(svgRef);
+  const activeDrag = Draggable.useActiveDrag(schedulerDragKinds);
 
   if (visibleArrows.length === 0 || eventsWidth <= 0 || height <= 0) {
     return null;
@@ -113,6 +114,7 @@ function DependencyInteractionsLayer() {
       ref={svgRef}
       aria-hidden
       data-dependency-interactions=""
+      data-drag-active={activeDrag ? '' : undefined}
       width={eventsWidth}
       height={height}
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}

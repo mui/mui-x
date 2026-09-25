@@ -7,7 +7,9 @@ import {
   clientYForTime,
   getResizeHandle,
   simulatePointerResize,
+  cancelDrag,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -26,11 +28,13 @@ describe('DayView - touch resize', () => {
   });
   afterEach(() => {
     window.matchMedia = originalMatchMedia;
+    cancelDrag();
+    vi.useRealTimers();
   });
 
   function getTimeGridColumn(): HTMLElement {
     return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]`,
+      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`,
     )!;
   }
 
@@ -68,6 +72,7 @@ describe('DayView - touch resize', () => {
     fireEvent.click(eventElement);
 
     const endHandle = getResizeHandle(eventElement, 'end');
+    expect(endHandle.style.touchAction).toBe('none');
 
     await act(async () => {
       simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
@@ -79,6 +84,56 @@ describe('DayView - touch resize', () => {
     expect(new Date(updatedEvents[0].start).getUTCHours()).to.equal(10);
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(16);
   });
+
+  it.each(['touch', 'pen'] as const)(
+    'keeps %s resizing in the direct gesture after Base UI activation',
+    async (pointerType) => {
+      const { onEventsChange } = renderResizableEvent();
+      const eventElement = getEvent();
+      fireEvent.click(eventElement);
+      const handle = getResizeHandle(eventElement, 'end');
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
+      await act(async () => {
+        simulatePointerResize({
+          handle,
+          pointerType,
+          from: { clientY: clientYForTime(0, 24, 11) },
+          to: { clientY: clientYForTime(0, 24, 11) },
+          hold: true,
+        });
+        // Hold still past the touch activation threshold before moving.
+        await vi.advanceTimersByTimeAsync(300);
+      });
+
+      fireEvent.pointerMove(handle, {
+        pointerId: 1,
+        pointerType,
+        isPrimary: true,
+        buttons: 1,
+        clientY: clientYForTime(0, 24, 16),
+      });
+      // JSDOM's capture shim records ownership; synthetic browser events do not
+      // create a native pointer for setPointerCapture to capture.
+      expect(handle.hasPointerCapture(1)).toBe(isJSDOM);
+      expect(document.querySelector('[data-dragging]')).toBe(null);
+      expect(onEventsChange).not.toHaveBeenCalled();
+
+      fireEvent.pointerUp(handle, {
+        pointerId: 1,
+        pointerType,
+        clientY: clientYForTime(0, 24, 16),
+      });
+      expect(onEventsChange).toHaveBeenCalledTimes(1);
+      expect(new Date(onEventsChange.mock.calls[0][0][0].end).getUTCHours()).toBe(16);
+
+      await act(async () => {
+        simulatePointerResize({ handle, pointerType, to: { clientY: clientYForTime(0, 24, 15) } });
+      });
+      expect(onEventsChange).toHaveBeenCalledTimes(2);
+      expect(new Date(onEventsChange.mock.calls[1][0][0].end).getUTCHours()).toBe(15);
+    },
+  );
 
   // The preview hosts the resize handles but must never be a focusable button, nor use
   // `aria-hidden` to hide one (an `aria-hidden-focus` violation).

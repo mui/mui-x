@@ -2,12 +2,17 @@ import * as React from 'react';
 import { styled, Theme } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
+import { Draggable } from '@base-ui/react/draggable';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
-import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
-// TODO: Estimate if we can avoid all imports from the internals package.
-import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
+import {
+  SchedulerEventOccurrence,
+  SchedulerOccurrencePlaceholderExternalDragData,
+} from '@mui/x-scheduler/models';
+import {
+  schedulerDayEventMoveKind,
+  schedulerTimeEventMoveKind,
+} from '@mui/x-scheduler/drag-and-drop';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -53,10 +58,25 @@ const ExternalEventPlaceholder = styled('div')(({ theme }) =>
   externalEventStyles(theme),
 );
 
-const isValidDropTarget = buildIsValidDropTarget([
-  'CalendarGridTimeEvent',
-  'CalendarGridDayEvent',
-]);
+const acceptedKinds = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind];
+
+function getExternalEvent(
+  data: { originalOccurrence: SchedulerEventOccurrence } | undefined,
+): SchedulerOccurrencePlaceholderExternalDragData | null {
+  if (!data) {
+    return null;
+  }
+
+  const {
+    displayTimezone: { start, end },
+    ...eventData
+  } = data.originalOccurrence;
+
+  return {
+    ...eventData,
+    duration: differenceInMinutes(end.value, start.value),
+  };
+}
 
 const initialExternalEvents: SchedulerOccurrencePlaceholderExternalDragData[] = [
   {
@@ -100,75 +120,53 @@ export default function ExternalDragAndDrop() {
     );
   };
 
-  const externalEventsContainerRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    if (!externalEventsContainerRef.current) {
-      return undefined;
-    }
-
-    return dropTargetForElements({
-      element: externalEventsContainerRef.current,
-      canDrop: (arg) => isValidDropTarget(arg.source.data),
-      onDragEnter: (args) => {
-        const data = args.source.data as any;
-        if (!isValidDropTarget(data)) {
-          return;
-        }
-
-        const {
-          displayTimezone: { start, end },
-          ...eventData
-        } = data.originalOccurrence;
-
-        setPlaceholder({
-          ...eventData,
-          duration: differenceInMinutes(end.value, start.value),
-        });
-      },
-      onDragLeave: () => {
-        setPlaceholder(null);
-      },
-      onDrop: () => {
-        if (placeholder == null) {
-          return;
-        }
-
-        setExternalEvents((prev) => [...prev, placeholder]);
-        setEvents((prev) => prev.filter((event) => event.id !== placeholder.id));
-        setPlaceholder(null);
-      },
-    });
-  });
-
   return (
-    <Container className="mui-x-scheduler">
-      <ExternalEventsContainer ref={externalEventsContainerRef}>
-        {externalEvents.map((event) => (
-          <StyledStandaloneEvent
-            key={event.id}
-            data={event}
-            onEventDrop={() => handleEventDropInsideEventCalendar(event)}
-          >
-            {event.title} ({event.duration} mins)
-          </StyledStandaloneEvent>
-        ))}
-        {placeholder != null && (
-          <ExternalEventPlaceholder data-placeholder>
-            {placeholder.title} ({placeholder.duration} mins)
-          </ExternalEventPlaceholder>
-        )}
-      </ExternalEventsContainer>
-      <div style={{ flexGrow: 1, height: 600 }}>
-        <EventCalendar
-          events={events}
-          resources={resources}
-          defaultVisibleDate={defaultVisibleDate}
-          onEventsChange={setEvents}
-          canDragEventsFromTheOutside
-          canDropEventsToTheOutside
-          defaultPreferences={{ isSidePanelOpen: false }}
-        />
-      </div>
-    </Container>
+    <Draggable.Provider>
+      <Container className="mui-x-scheduler">
+        <Draggable.Target
+          accept={acceptedKinds}
+          onDraggableEnter={({ source }) => {
+            setPlaceholder(getExternalEvent(source.dragData));
+          }}
+          onDraggableLeave={() => setPlaceholder(null)}
+          onDraggableDrop={({ source }) => {
+            const event = getExternalEvent(source.dragData);
+            if (event === null) {
+              return;
+            }
+            setExternalEvents((prev) => [...prev, event]);
+            setEvents((prev) => prev.filter((item) => item.id !== event.id));
+            setPlaceholder(null);
+          }}
+          render={<ExternalEventsContainer />}
+        >
+          {externalEvents.map((event) => (
+            <StyledStandaloneEvent
+              key={event.id}
+              data={event}
+              onEventDrop={() => handleEventDropInsideEventCalendar(event)}
+            >
+              {event.title} ({event.duration} mins)
+            </StyledStandaloneEvent>
+          ))}
+          {placeholder != null && (
+            <ExternalEventPlaceholder data-placeholder>
+              {placeholder.title} ({placeholder.duration} mins)
+            </ExternalEventPlaceholder>
+          )}
+        </Draggable.Target>
+        <div style={{ flexGrow: 1, height: 600 }}>
+          <EventCalendar
+            events={events}
+            resources={resources}
+            defaultVisibleDate={defaultVisibleDate}
+            onEventsChange={setEvents}
+            canDragEventsFromTheOutside
+            canDropEventsToTheOutside
+            defaultPreferences={{ isSidePanelOpen: false }}
+          />
+        </div>
+      </Container>
+    </Draggable.Provider>
   );
 }

@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { schedulerTimeEventResizeKind } from '../../internals/utils/schedulerDrag';
+import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
 import { useEventPointerResizeHandler } from '../../internals/utils/useEventPointerResizeHandler';
 import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
@@ -43,7 +45,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
       ...contextValue.getSharedDragData(input),
-      source: 'CalendarGridTimeEventResizeHandler',
+      source: 'CalendarGridTimeEventResizeHandler' as const,
       side,
     }));
 
@@ -61,7 +63,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       };
     });
 
-    // Shared by both resize handlers running together: native drag-and-drop serves the mouse, the
+    // Shared by both resize handlers running together: Base UI serves the mouse, the
     // pointer handler serves touch/pen, so one handle resizes from whatever pointer the user has.
     const enabled = isResizeHandlerEnabled({
       side,
@@ -69,7 +71,12 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       isEventEndClipped: contextValue.isEventEndClipped,
     });
 
-    const { state } = useEventResizeHandler({
+    const { state, draggableProps } = useEventResizeHandler({
+      kind: schedulerTimeEventResizeKind,
+      source: 'CalendarGridTimeEventResizeHandler',
+      eventId: contextValue.eventId,
+      occurrenceKey: contextValue.occurrenceKey,
+      directPointerResize: true,
       ref,
       side,
       enabled,
@@ -86,12 +93,14 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       addPropertiesToResizedEvent,
     });
 
-    return useRenderElement('div', componentProps, {
+    const element = useRenderElement('div', componentProps, {
       enabled,
       state,
       ref: [forwardedRef, ref],
       props: [elementProps],
     });
+
+    return element && <SchedulerDraggable {...draggableProps} render={element} />;
   },
 );
 

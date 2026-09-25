@@ -3,14 +3,14 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { schedulerDayEventResizeKind } from '../../internals/utils/schedulerDrag';
+import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
 import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
 import { useCalendarGridDayEventContext } from '../day-event/CalendarGridDayEventContext';
 import type { CalendarGridDayEvent } from '../day-event/CalendarGridDayEvent';
 import type { SchedulerEventSide } from '../../models';
 
-// Day-grid resize is native drag only; touch/pointer resize is a follow-up (add it like the time grid
-// via `useEventPointerResizeHandler` with a horizontal `getDateAtPointer`). Only `enabled` is shared.
 export const CalendarGridDayEventResizeHandler = React.forwardRef(
   function CalendarGridDayEventResizeHandler(
     componentProps: CalendarGridDayEventResizeHandler.Props,
@@ -36,7 +36,7 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
       ...contextValue.getSharedDragData(input),
-      source: 'CalendarGridDayEventResizeHandler',
+      source: 'CalendarGridDayEventResizeHandler' as const,
       side,
     }));
 
@@ -46,19 +46,25 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
       isEventEndClipped: contextValue.isEventEndClipped,
     });
 
-    const { state } = useEventResizeHandler({
+    const { state, draggableProps } = useEventResizeHandler({
+      kind: schedulerDayEventResizeKind,
+      source: 'CalendarGridDayEventResizeHandler',
+      eventId: contextValue.eventId,
+      occurrenceKey: contextValue.occurrenceKey,
       ref,
       side,
       enabled,
       getDragData,
     });
 
-    return useRenderElement('div', componentProps, {
+    const element = useRenderElement('div', componentProps, {
       enabled,
       state,
       ref: [forwardedRef, ref],
       props: [elementProps],
     });
+
+    return element && <SchedulerDraggable {...draggableProps} render={element} />;
   },
 );
 

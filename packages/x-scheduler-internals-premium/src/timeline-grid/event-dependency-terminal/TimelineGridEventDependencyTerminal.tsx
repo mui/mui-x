@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { Draggable } from '@base-ui/react/draggable';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import { useDragHandle } from '@mui/x-scheduler-internals/internals';
+import { schedulerDependencyKind } from '@mui/x-scheduler-internals/internals';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { useEventDependencyDropTarget } from '../event/useEventDependencyDropTarget';
+import { EventDependencyDropTarget } from '../event/EventDependencyDropTarget';
 import { TimelineGridEventDependencyTerminalDataAttributes } from './TimelineGridEventDependencyTerminalDataAttributes';
 
 /**
@@ -42,26 +42,22 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
     // Context hooks
     const store = useEventTimelinePremiumStoreContext();
 
-    // Ref hooks
-    const ref = React.useRef<HTMLDivElement>(null);
-
     // Feature hooks
-    const getDragData = useStableCallback(() => ({
-      eventId,
-      occurrenceKey,
-      resourceId,
-      sourceSide: side,
-      source: 'TimelineGridEventDependencyTerminal' as const,
-      // Identity discriminator: pragmatic monitors are page-global, so the monitor
-      // and the drop targets only react to gestures born in their own timeline.
-      storeContext: store,
-    }));
+    const payload = React.useMemo(
+      () => ({
+        eventId,
+        occurrenceKey,
+        resourceId,
+        sourceSide: side,
+        // Identity discriminator: Base UI monitors are page-global, so the monitor
+        // and the drop targets only react to gestures born in their own timeline.
+        storeContext: store,
+      }),
+      [eventId, occurrenceKey, resourceId, side, store],
+    );
 
-    useDragHandle({ ref, enabled: true, getDragData });
-    useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId, side });
-
-    return useRenderElement('div', componentProps, {
-      ref: [forwardedRef, ref],
+    const element = useRenderElement('div', componentProps, {
+      ref: forwardedRef,
       props: [
         elementProps,
         {
@@ -71,6 +67,33 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
         } as Record<string, string>,
       ],
     });
+
+    return (
+      <EventDependencyDropTarget
+        eventId={eventId}
+        occurrenceKey={occurrenceKey}
+        resourceId={resourceId}
+        side={side}
+        render={
+          <Draggable.Root
+            kind={schedulerDependencyKind}
+            payload={payload}
+            render={
+              React.isValidElement<{ children?: React.ReactNode }>(element)
+                ? React.cloneElement(element, {
+                    children: (
+                      <React.Fragment>
+                        {element.props.children}
+                        <Draggable.Preview disabled />
+                      </React.Fragment>
+                    ),
+                  })
+                : element
+            }
+          />
+        }
+      />
+    );
   },
 );
 

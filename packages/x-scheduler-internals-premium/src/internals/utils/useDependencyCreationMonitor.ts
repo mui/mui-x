@@ -1,15 +1,18 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-import type { DragLocationHistory, ElementDragType } from '@atlaskit/pragmatic-drag-and-drop/types';
+import { Draggable } from '@base-ui/react/draggable';
+import {
+  schedulerDependencyKind,
+  schedulerDependencyTargetKind,
+} from '@mui/x-scheduler-internals/internals';
+import type { SchedulerDependencyDragPayload } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/dependencyTerminalDragData';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import type { SchedulerDependencyRejectionReason } from '../../models';
 import { getDependencyType } from './dependency-utils';
@@ -32,22 +35,20 @@ interface DependencyDropTargetData {
 }
 
 function getDependencyDropTarget(
-  dropTargets: DragLocationHistory['current']['dropTargets'],
+  targets: Draggable.Location['targets'],
 ): DependencyDropTargetData | null {
-  for (const dropTarget of dropTargets) {
-    const eventId = dropTarget.data.dependencyTargetEventId;
-    if (typeof eventId === 'string' || typeof eventId === 'number') {
-      const occurrenceKey = dropTarget.data.dependencyTargetOccurrenceKey;
-      const resourceId = dropTarget.data.dependencyTargetResourceId;
-      return {
-        targetEventId: eventId,
-        targetOccurrenceKey: typeof occurrenceKey === 'string' ? occurrenceKey : null,
-        targetResourceId: typeof resourceId === 'string' ? resourceId : null,
-        // The event body registers the start edge; only a terminal can target the end.
-        targetSide: dropTarget.data.dependencyTargetSide === 'end' ? 'end' : 'start',
-        isValid: dropTarget.data.dependencyTargetIsValid === true,
-      };
+  for (const target of targets) {
+    if (!schedulerDependencyTargetKind.matches(target)) {
+      continue;
     }
+    const data = target.payload;
+    return {
+      targetEventId: data.dependencyTargetEventId,
+      targetOccurrenceKey: data.dependencyTargetOccurrenceKey,
+      targetResourceId: data.dependencyTargetResourceId,
+      targetSide: data.dependencyTargetSide,
+      isValid: data.dependencyTargetIsValid,
+    };
   }
   return null;
 }
@@ -69,87 +70,72 @@ const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
  * terminal.
  * A global monitor mounted by the grid root (rather than callbacks on the terminal's
  * draggable) so the gesture survives the source element being unmounted by
- * virtualization mid-drag; `canMonitor` scopes it back to this timeline's gestures.
+ * virtualization mid-drag. The source store scopes it to this timeline's gestures.
  */
 export function useDependencyCreationMonitor() {
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
 
-  React.useEffect(() => {
-    if (!enabled) {
-      return undefined;
+  const updateCreation = (
+    { source }: { source: Draggable.Root.Record<SchedulerDependencyDragPayload> },
+    { location }: { location: Draggable.LocationHistory },
+  ) => {
+    if (!enabled || source.payload.storeContext !== store) {
+      return;
     }
+    // Invalid targets (recurring or read-only events) never highlight or snap the
+    // rubber band.
+    const target = getDependencyDropTarget(location.current.targets);
+    const validTarget = target?.isValid ? target : null;
+    store.setDependencyCreation({
+      sourceEventId: source.payload.eventId,
+      sourceOccurrenceKey: source.payload.occurrenceKey,
+      sourceResourceId: source.payload.resourceId,
+      sourceSide: source.payload.sourceSide,
+      targetEventId: validTarget?.targetEventId ?? null,
+      targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
+      targetResourceId: validTarget?.targetResourceId ?? null,
+      targetSide: validTarget?.targetSide ?? null,
+    });
+  };
 
-    const updateCreation = ({
-      source,
-      location,
-    }: {
-      source: ElementDragType['payload'];
-      location: DragLocationHistory;
-    }) => {
-      if (!isDependencyTerminalDrag(source.data)) {
+  Draggable.useMonitor({
+    accept: schedulerDependencyKind,
+    onMoveStart: updateCreation,
+    // Only target changes touch the state: the cursor never enters it, the arrows
+    // layer follows the pointer through the DOM.
+    onTargetChange: updateCreation,
+    onMoveEnd: ({ source }, { location, canceled }) => {
+      if (!enabled || source.payload.storeContext !== store) {
         return;
       }
-      // Invalid targets (recurring or read-only events) never highlight or snap the
-      // rubber band.
-      const target = getDependencyDropTarget(location.current.dropTargets);
-      const validTarget = target?.isValid ? target : null;
-      store.setDependencyCreation({
-        sourceEventId: source.data.eventId,
-        sourceOccurrenceKey: source.data.occurrenceKey,
-        sourceResourceId: source.data.resourceId,
-        sourceSide: source.data.sourceSide,
-        targetEventId: validTarget?.targetEventId ?? null,
-        targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
-        targetResourceId: validTarget?.targetResourceId ?? null,
-        targetSide: validTarget?.targetSide ?? null,
+      store.setDependencyCreation(null);
+      const target = canceled ? null : getDependencyDropTarget(location.current.targets);
+      if (target === null) {
+        return;
+      }
+
+      const result = store.addDependency({
+        source: source.payload.eventId,
+        target: target.targetEventId,
+        type: getDependencyType(source.payload.sourceSide, target.targetSide),
       });
-    };
 
-    const cleanupMonitor = monitorForElements({
-      canMonitor: ({ source }) =>
-        isDependencyTerminalDrag(source.data) && source.data.storeContext === store,
-      onDragStart: updateCreation,
-      // Only target changes touch the state: the cursor never enters it, the arrows
-      // layer follows the pointer through the DOM.
-      onDropTargetChange: updateCreation,
-      onDrop: ({ source, location }) => {
-        // Canceling the drag (e.g. with Escape) fires `onDrop` with no drop target,
-        // so the gesture is discarded on the same path.
-        store.setDependencyCreation(null);
-
-        if (!isDependencyTerminalDrag(source.data)) {
-          return;
+      if (result.status === 'rejected') {
+        // A duplicate selects the existing arrow: the feedback points at the link
+        // that already covers the attempted connection.
+        if (result.reason === 'duplicateDependency') {
+          store.setSelectedDependencyId(result.dependencyId);
         }
-        const target = getDependencyDropTarget(location.current.dropTargets);
-        if (target === null) {
-          return;
-        }
-
-        const result = store.addDependency({
-          source: source.data.eventId,
-          target: target.targetEventId,
-          type: getDependencyType(source.data.sourceSide, target.targetSide),
+        store.pushError(/* minify-error-disabled */ new Error(REJECTION_MESSAGES[result.reason]), {
+          transient: true,
         });
+      }
+    },
+  });
 
-        if (result.status === 'rejected') {
-          // A duplicate selects the existing arrow: the feedback points at the link
-          // that already covers the attempted connection.
-          if (result.reason === 'duplicateDependency') {
-            store.setSelectedDependencyId(result.dependencyId);
-          }
-          store.pushError(
-            /* minify-error-disabled */ new Error(REJECTION_MESSAGES[result.reason]),
-            {
-              transient: true,
-            },
-          );
-        }
-      },
-    });
-
+  React.useEffect(() => {
     return () => {
-      cleanupMonitor();
       // A teardown mid-gesture (feature disabled, grid unmounted on a view switch)
       // would otherwise freeze the rubber band and the drag-source highlight.
       store.setDependencyCreation(null);

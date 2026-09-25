@@ -1,7 +1,9 @@
+import { cancelDrag, dropDrag } from 'test/utils/scheduler/dnd';
 import * as React from 'react';
-import { screen, within, act, fireEvent } from '@mui/internal-test-utils';
+import { screen, within, act } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
+import { Draggable } from '@base-ui/react/draggable';
+import { schedulerExternalEventKind } from '@mui/x-scheduler/drag-and-drop';
 import {
   adapter,
   createSchedulerRenderer,
@@ -249,7 +251,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         targetClientX: 160,
         hold: true,
       });
-      // pragmatic-drag-and-drop delivers `onDrag` on the next animation frame.
+      // Base UI delivers `onMove` on the next animation frame.
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => resolve());
       });
@@ -266,7 +268,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       expect(placeholder!.hasAttribute('inert')).to.equal(true);
     } finally {
       // Finish the held drag even when an assertion fails, so it does not leak into the next test.
-      fireEvent.dragEnd(eventElement);
+      cancelDrag();
     }
 
     expect(document.querySelector('.MuiEventTimeline-eventPlaceholder')).to.equal(null);
@@ -416,9 +418,20 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         target: sameRow,
         sourceClientX: 220,
         targetClientX: 1000,
+        hold: true,
+      });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
       });
     });
 
+    try {
+      expect(eventElement).to.have.attribute('data-resizing');
+      expect(eventElement).not.to.have.attribute('data-dragging');
+      dropDrag(sameRow, { clientX: 1000 });
+    } finally {
+      cancelDrag();
+    }
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     // Start should remain unchanged
@@ -792,12 +805,15 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       const handleEventsChange = vi.fn();
       await renderSettled(
         <div>
-          <StandaloneEvent
-            data={{ id: 'external-1', title: 'External Job', duration: 60 }}
-            renderDragPreview={() => null}
-          >
-            External Job
-          </StandaloneEvent>
+          <Draggable.Provider>
+            <Draggable.Root
+              kind={schedulerExternalEventKind}
+              payload={{ eventData: { id: 'external-1', title: 'External Job', duration: 60 } }}
+            >
+              External Job
+              <Draggable.Preview disabled />
+            </Draggable.Root>
+          </Draggable.Provider>
           <EventTimelinePremium
             resources={resources}
             events={[]}
@@ -837,12 +853,15 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       const handleEventsChange = vi.fn();
       await renderSettled(
         <div>
-          <StandaloneEvent
-            data={{ id: 'external-1', title: 'External Job', duration: 60 }}
-            renderDragPreview={() => null}
-          >
-            External Job
-          </StandaloneEvent>
+          <Draggable.Provider>
+            <Draggable.Root
+              kind={schedulerExternalEventKind}
+              payload={{ eventData: { id: 'external-1', title: 'External Job', duration: 60 } }}
+            >
+              External Job
+              <Draggable.Preview disabled />
+            </Draggable.Root>
+          </Draggable.Provider>
           <EventTimelinePremium
             resources={resources}
             events={[]}
@@ -882,12 +901,15 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       const handleEventsChange = vi.fn();
       await renderSettled(
         <div>
-          <StandaloneEvent
-            data={{ id: 'external-1', title: 'External Job', duration: 60 }}
-            renderDragPreview={() => null}
-          >
-            External Job
-          </StandaloneEvent>
+          <Draggable.Provider>
+            <Draggable.Root
+              kind={schedulerExternalEventKind}
+              payload={{ eventData: { id: 'external-1', title: 'External Job', duration: 60 } }}
+            >
+              External Job
+              <Draggable.Preview disabled />
+            </Draggable.Root>
+          </Draggable.Provider>
           <EventTimelinePremium
             resources={resources}
             events={[]}
