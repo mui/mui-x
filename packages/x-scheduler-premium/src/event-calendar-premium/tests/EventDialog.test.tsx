@@ -4,6 +4,7 @@ import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
+  dateLocaleFr,
   EventBuilder,
   utcJuly4AllDayBuilder,
   ResourceBuilder,
@@ -95,7 +96,11 @@ describe('<EventDialogContent open />', () => {
   const { render } = createSchedulerRenderer();
 
   // An event opened from a calendar displayed in another timezone.
-  function renderCrossTimezoneDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+  function renderCrossTimezoneDialog(
+    builder: EventBuilder,
+    displayTimezone: TemporalTimezone,
+    providerProps?: Partial<React.ComponentProps<typeof EventCalendarProvider>>,
+  ) {
     const onEventsChange = vi.fn();
     const event = builder.withDisplayTimezone(displayTimezone).build();
     const { user, setProps } = render(
@@ -105,6 +110,7 @@ describe('<EventDialogContent open />', () => {
         storeClass={PremiumTestStore}
         displayTimezone={displayTimezone}
         onEventsChange={onEventsChange}
+        {...providerProps}
       >
         <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
       </EventCalendarProvider>,
@@ -3340,6 +3346,16 @@ describe('<EventDialogContent open />', () => {
       });
 
       describe('Recurrence Custom behavior', () => {
+        async function openCustomMonthly(user: ReturnType<typeof render>['user']) {
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          await user.click(within(repeatGroup).getByRole('combobox'));
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+        }
+
         it('should render recurrence fields as disabled when not recurrent', async () => {
           const { user } = render(
             <EventCalendarProvider
@@ -3917,6 +3933,110 @@ describe('<EventDialogContent open />', () => {
             interval: 1,
             byDay: ['-1MO'],
           });
+        });
+
+        it('should build the monthly last week labels from the date locale, not from the weekday token', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              dateLocale={dateLocaleFr}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          // The aria label takes the full weekday name, the visible label the 3-letter one.
+          const toggle = screen.getByRole('button', {
+            name: 'lundi of the last week of the month',
+          });
+          expect(toggle).to.have.text('lun. last week');
+        });
+
+        it('should pass the weekday token and name to the monthly last week locale callbacks', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              localeText={{
+                recurrenceMonthlyLastWeekAriaLabel: ({ weekday, weekdayName }) =>
+                  `aria:${weekday}:${weekdayName}`,
+                recurrenceMonthlyLastWeekLabel: ({ weekday, weekdayName }) =>
+                  `label:${weekday}:${weekdayName}`,
+              }}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          // DEFAULT_EVENT is on Monday 2025-05-26, the last Monday of the month.
+          const toggle = screen.getByRole('button', { name: 'aria:monday:Monday' });
+          expect(toggle).to.have.text('label:monday:Mon');
+        });
+
+        it('should pass the weekday token and name to the monthly week number locale callbacks', async () => {
+          // 2025-05-05 is the first Monday of the month, so the ordinal is 1 instead of -1.
+          const builder = EventBuilder.new()
+            .title('Running')
+            .singleDay('2025-05-05T07:30:00Z', 45)
+            .resource(personalResource);
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[builder.build()]}
+              resources={resources}
+              localeText={{
+                recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday, weekdayName }) =>
+                  `aria:${ord}:${weekday}:${weekdayName}`,
+                recurrenceMonthlyWeekNumberLabel: ({ ord, weekday, weekdayName }) =>
+                  `label:${ord}:${weekday}:${weekdayName}`,
+              }}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+            </EventCalendarProvider>,
+          );
+
+          await openCustomMonthly(user);
+
+          const toggle = screen.getByRole('button', { name: 'aria:1:monday:Monday' });
+          expect(toggle).to.have.text('label:1:monday:Mon');
+        });
+
+        it('should derive the weekday token, name and saved rule from the event timezone', async () => {
+          // Tuesday 01:00 in Auckland is Monday 13:00 in UTC, both the display and the test timezone.
+          const builder = EventBuilder.new()
+            .title('Early call')
+            .withDataTimezone('Pacific/Auckland')
+            .span('2025-05-27T01:00:00', '2025-05-27T01:45:00')
+            .resource(personalResource);
+
+          const { user, onEventsChange } = renderCrossTimezoneDialog(builder, 'UTC', {
+            localeText: {
+              recurrenceMonthlyLastWeekAriaLabel: ({ weekday, weekdayName }) =>
+                `aria:${weekday}:${weekdayName}`,
+              recurrenceMonthlyLastWeekLabel: ({ weekday, weekdayName }) =>
+                `label:${weekday}:${weekdayName}`,
+            },
+          });
+
+          await openCustomMonthly(user);
+
+          // 2025-05-27 is the last Tuesday of May.
+          const toggle = screen.getByRole('button', { name: 'aria:tuesday:Tuesday' });
+          expect(toggle).to.have.text('label:tuesday:Tue');
+
+          await user.click(toggle);
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.mock.calls.length).to.equal(1);
+          expect(onEventsChange.mock.calls[0][0][0].rrule.byDay).to.deep.equal(['-1TU']);
         });
 
         it('should flip the recurrence Select to "Custom" when a detail field is edited', async () => {
