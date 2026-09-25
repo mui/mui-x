@@ -184,11 +184,7 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
       scroller.scrollTop = 55 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
-    // On a fast scroll the advance is deferred a few frames, so wait for the rendered
-    // set to actually change rather than for a row the leading buffer already holds.
-    await waitFor(() => {
-      expect([...localOffsets().keys()]).to.not.deep.equal(beforeKeys);
-    });
+    // The advance commits inside the scroll event, however fast the scroll.
     const after = localOffsets();
 
     // The context did advance...
