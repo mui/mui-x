@@ -2,11 +2,10 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { Draggable } from '@base-ui/react/draggable';
-import type { DragLocationHistory } from '@base-ui/react/draggable';
 
 const dialogDragKind = Draggable.createKind<undefined>('scheduler-dialog');
 
-const getDeltas = (location: DragLocationHistory) => {
+const getDeltas = (location: Draggable.LocationHistory) => {
   const deltaX = location.current.input.clientX - location.initial.input.clientX;
   const deltaY = location.current.input.clientY - location.initial.input.clientY;
   return { deltaX, deltaY };
@@ -28,7 +27,7 @@ export function useDraggableDialog(
 
   const draggableProps: Draggable.Root.Props = {
     kind: dialogDragKind,
-    onMove: ({ location }) => {
+    onMove: (_, { location }) => {
       const { deltaX, deltaY } = getDeltas(location);
 
       const x = offset.current.x + deltaX;
@@ -40,7 +39,7 @@ export function useDraggableDialog(
         mutateStyle(transform);
       }
     },
-    onMoveEnd: ({ location, canceled }) => {
+    onMoveEnd: (_, { location, canceled }) => {
       const { deltaX, deltaY } = getDeltas(location);
 
       if (!canceled) {

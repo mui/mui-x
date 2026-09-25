@@ -51,10 +51,7 @@ export function useTimelineDragAutoScroll(params: {
     };
   }, [scrollerRef]);
 
-  const viewportProps: Draggable.Viewport.Props<
-    Draggable.AcceptedDragPayload<typeof schedulerDragKinds>,
-    Draggable.AcceptedDragData<typeof schedulerDragKinds>
-  > = {
+  const viewportProps: Draggable.Viewport.Props = {
     accept: schedulerDragKinds,
     disabled: process.env.NODE_ENV === 'test',
   };

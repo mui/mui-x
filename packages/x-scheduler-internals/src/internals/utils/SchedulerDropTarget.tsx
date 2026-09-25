@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import type { DragSource, DropTargetRecord } from '@base-ui/react/draggable';
 import {
   schedulerExternalEventKind,
   schedulerEventResizeKinds,
@@ -20,6 +19,8 @@ import type {
 import type {
   EventDropData,
   schedulerEventDragKinds,
+  SchedulerEventDragData,
+  SchedulerEventDragPayload,
   SchedulerExternalEventDragPayload,
 } from './schedulerDrag';
 import type { SchedulerStoreInContext } from '../../use-scheduler-store-context';
@@ -97,13 +98,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
     };
   };
 
-  const getDropData = (
-    source: DragSource<
-      Draggable.AcceptedDragPayload<typeof schedulerEventDragKinds>,
-      Draggable.AcceptedDragData<typeof schedulerEventDragKinds>
-    >,
-    target: DropTargetRecord,
-  ) => {
+  const getDropData = (source: SchedulerDropTarget.Source, target: Draggable.Target.Record) => {
     const data = schedulerExternalEventKind.matches(source) ? source.payload : source.dragData;
     if (!data) {
       return undefined;
@@ -205,12 +200,15 @@ export namespace SchedulerDropTarget {
     start: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 
+  /** The drag source of any kind in `schedulerEventDragKinds`. */
+  export type Source = Draggable.Root.Record<
+    SchedulerEventDragPayload | SchedulerExternalEventDragPayload,
+    SchedulerEventDragData
+  >;
+
   export type GetEventDropData = (parameters: {
-    source: DragSource<
-      Draggable.AcceptedDragPayload<typeof schedulerEventDragKinds>,
-      Draggable.AcceptedDragData<typeof schedulerEventDragKinds>
-    >;
-    target: DropTargetRecord;
+    source: Source;
+    target: Draggable.Target.Record;
     getDataFromInside: GetDataFromInside;
     getDataFromOutside: GetDataFromOutside;
   }) => SchedulerOccurrencePlaceholder | undefined;

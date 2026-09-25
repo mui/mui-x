@@ -49,10 +49,10 @@ export function useEventResizeHandler<TData extends SchedulerEventResizeData>(
     activation: directPointerResize ? { touch: false, pen: false } : undefined,
     // The event root's `onMoveEnd` does not run for this nested handle. A drop on a Scheduler
     // target is left to that target: it runs after this and may fall back to the placeholder.
-    onMoveEnd: ({ canceled, location }) => {
+    onMoveEnd: (_, { canceled, location }) => {
       if (
         canceled ||
-        !location.current.dropTargets.some((target) => schedulerDropTargetKind.matches(target))
+        !location.current.targets.some((target) => schedulerDropTargetKind.matches(target))
       ) {
         store.setOccurrencePlaceholder(null);
       }

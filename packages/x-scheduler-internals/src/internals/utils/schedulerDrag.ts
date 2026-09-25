@@ -73,11 +73,11 @@ export const schedulerDayEventResizeKind =
 export const schedulerTimeEventResizeKind =
   createEventKind<CalendarGridTimeEventResizeHandler.DragData>('time-event-resize');
 // Keep the lookup in the declaration so premium can augment it after this package is built.
-export const schedulerTimelineEventMoveKind: Draggable.DragKind<
+export const schedulerTimelineEventMoveKind: Draggable.Kind<
   SchedulerEventDragPayload<Extract<EventDropData, { source: 'TimelineGridEvent' }>>,
   Extract<EventDropData, { source: 'TimelineGridEvent' }>
 > = createEventKind('timeline-event-move');
-export const schedulerTimelineEventResizeKind: Draggable.DragKind<
+export const schedulerTimelineEventResizeKind: Draggable.Kind<
   SchedulerEventDragPayload<Extract<EventDropData, { source: 'TimelineGridEventResizeHandler' }>>,
   Extract<EventDropData, { source: 'TimelineGridEventResizeHandler' }>
 > = createEventKind('timeline-event-resize');

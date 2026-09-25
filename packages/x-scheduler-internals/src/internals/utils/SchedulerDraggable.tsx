@@ -31,10 +31,10 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
             })
           : render
       }
-      onBeforeMoveStart={(context, details) => {
-        onBeforeMoveStart?.(context, details);
-        if (!details.isCanceled) {
-          context.source.updateDragData(getDragData(context.input));
+      onBeforeMoveStart={(value, eventDetails) => {
+        onBeforeMoveStart?.(value, eventDetails);
+        if (!eventDetails.isCanceled) {
+          value.source.updateDragData(getDragData(eventDetails.input));
         }
       }}
     />

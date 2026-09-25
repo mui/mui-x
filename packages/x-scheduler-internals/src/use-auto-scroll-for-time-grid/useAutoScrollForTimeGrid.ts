@@ -15,7 +15,7 @@ export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null
       return undefined;
     }
 
-    return manager.registerAutoScroller(element, () => ({
+    return manager.registerViewport(element, () => ({
       accept: [
         schedulerTimeEventMoveKind,
         schedulerTimeEventResizeKind,

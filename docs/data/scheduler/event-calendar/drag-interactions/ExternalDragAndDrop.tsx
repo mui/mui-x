@@ -5,7 +5,10 @@ import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { Draggable } from '@base-ui/react/draggable';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
-import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
+import {
+  SchedulerEventOccurrence,
+  SchedulerOccurrencePlaceholderExternalDragData,
+} from '@mui/x-scheduler/models';
 import {
   schedulerDayEventMoveKind,
   schedulerTimeEventMoveKind,
@@ -58,7 +61,7 @@ const ExternalEventPlaceholder = styled('div')(({ theme }) =>
 const acceptedKinds = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind];
 
 function getExternalEvent(
-  data: Draggable.AcceptedDragData<typeof acceptedKinds> | undefined,
+  data: { originalOccurrence: SchedulerEventOccurrence } | undefined,
 ): SchedulerOccurrencePlaceholderExternalDragData | null {
   if (!data) {
     return null;

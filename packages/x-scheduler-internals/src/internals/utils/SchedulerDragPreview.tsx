@@ -2,27 +2,26 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { Draggable } from '@base-ui/react/draggable';
-import type { DragLocationHistory } from '@base-ui/react/draggable';
 import type { RenderDragPreviewParameters } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { schedulerEventDragKinds, schedulerDropTargetKind } from './schedulerDrag';
 
-function isOutsideScheduler(location: DragLocationHistory) {
-  return !location.current.dropTargets.some((target) => schedulerDropTargetKind.matches(target));
+function isOutsideScheduler(location: Draggable.LocationHistory) {
+  return !location.current.targets.some((target) => schedulerDropTargetKind.matches(target));
 }
 
 /** Visibility changes only when the target changes; Base UI positions the floating preview. */
 export function SchedulerFloatingPreview(props: {
-  location: DragLocationHistory;
+  location: Draggable.LocationHistory;
   children: React.ReactNode;
 }) {
   const { location, children } = props;
   const [visible, setVisible] = React.useState(() => isOutsideScheduler(location));
   Draggable.useMonitor({
     accept: schedulerEventDragKinds,
-    onMoveStart: (event) => setVisible(isOutsideScheduler(event.location)),
-    onTargetChange: (event) => setVisible(isOutsideScheduler(event.location)),
+    onMoveStart: (_, { location }) => setVisible(isOutsideScheduler(location)),
+    onTargetChange: (_, { location }) => setVisible(isOutsideScheduler(location)),
   });
   return <div style={{ visibility: visible ? undefined : 'hidden' }}>{children}</div>;
 }

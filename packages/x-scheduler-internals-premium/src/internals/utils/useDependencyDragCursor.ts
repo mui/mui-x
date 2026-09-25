@@ -16,7 +16,7 @@ export function useDependencyDragCursor(
 
   Draggable.useMonitor({
     accept: schedulerDependencyKind,
-    onMove: ({ location, source }) => {
+    onMove: ({ source }, { location }) => {
       if (!enabled || source.payload.storeContext !== store) {
         return;
       }

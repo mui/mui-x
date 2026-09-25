@@ -6,7 +6,7 @@ import {
   schedulerDependencyKind,
   schedulerDependencyTargetKind,
 } from '@mui/x-scheduler-internals/internals';
-import type { DragLocationHistory, DragSource } from '@base-ui/react/draggable';
+import type { SchedulerDependencyDragPayload } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -35,13 +35,13 @@ interface DependencyDropTargetData {
 }
 
 function getDependencyDropTarget(
-  dropTargets: DragLocationHistory['current']['dropTargets'],
+  targets: Draggable.Location['targets'],
 ): DependencyDropTargetData | null {
-  for (const dropTarget of dropTargets) {
-    if (!schedulerDependencyTargetKind.matches(dropTarget)) {
+  for (const target of targets) {
+    if (!schedulerDependencyTargetKind.matches(target)) {
       continue;
     }
-    const data = dropTarget.payload;
+    const data = target.payload;
     return {
       targetEventId: data.dependencyTargetEventId,
       targetOccurrenceKey: data.dependencyTargetOccurrenceKey,
@@ -76,19 +76,16 @@ export function useDependencyCreationMonitor() {
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
 
-  const updateCreation = ({
-    source,
-    location,
-  }: {
-    source: DragSource<Draggable.AcceptedDragPayload<typeof schedulerDependencyKind>>;
-    location: DragLocationHistory;
-  }) => {
+  const updateCreation = (
+    { source }: { source: Draggable.Root.Record<SchedulerDependencyDragPayload> },
+    { location }: { location: Draggable.LocationHistory },
+  ) => {
     if (!enabled || source.payload.storeContext !== store) {
       return;
     }
     // Invalid targets (recurring or read-only events) never highlight or snap the
     // rubber band.
-    const target = getDependencyDropTarget(location.current.dropTargets);
+    const target = getDependencyDropTarget(location.current.targets);
     const validTarget = target?.isValid ? target : null;
     store.setDependencyCreation({
       sourceEventId: source.payload.eventId,
@@ -108,12 +105,12 @@ export function useDependencyCreationMonitor() {
     // Only target changes touch the state: the cursor never enters it, the arrows
     // layer follows the pointer through the DOM.
     onTargetChange: updateCreation,
-    onMoveEnd: ({ source, location, canceled }) => {
+    onMoveEnd: ({ source }, { location, canceled }) => {
       if (!enabled || source.payload.storeContext !== store) {
         return;
       }
       store.setDependencyCreation(null);
-      const target = canceled ? null : getDependencyDropTarget(location.current.dropTargets);
+      const target = canceled ? null : getDependencyDropTarget(location.current.targets);
       if (target === null) {
         return;
       }
