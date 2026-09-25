@@ -264,7 +264,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   // The meta of the columns of this render.
   // Can't get it from the store because the store gets it after the render.
   const columnPositions = api.columnsMeta.positions;
-  const columnsTotalWidth = roundToDecimalPlaces(api.columnsMeta.totalWidth, 1);
+  const columnsTotalWidth = api.columnsMeta.totalWidth;
 
   /*
    * Scroll context logic
@@ -981,7 +981,7 @@ function inputsSelector(
     columnBufferPx: params.virtualization.columnBufferPx,
     leftPinnedWidth: columnsMeta.pinnedLeftColumnsTotalWidth,
     rightPinnedWidth: columnsMeta.pinnedRightColumnsTotalWidth,
-    columnsTotalWidth: dimensions.contentSize.width,
+    columnsTotalWidth: columnsMeta.totalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
     viewportInnerHeight: dimensions.viewportInnerSize.height,
     lastRowHeight: lastRowId !== undefined ? api.rowsMeta.getRowHeight(lastRowId) : 0,
@@ -1513,8 +1513,7 @@ function isLowOnRenderedBuffer(
   const visibleLeft = Math.abs(scrollPosition.left) + columnsMeta.pinnedLeftColumnsTotalWidth;
   const visibleRight = visibleLeft + dimensions.viewportInnerSize.width;
   const renderedLeft = columnsMeta.positions[context.firstColumnIndex] ?? 0;
-  const renderedRight =
-    columnsMeta.positions[context.lastColumnIndex] ?? dimensions.contentSize.width;
+  const renderedRight = columnsMeta.positions[context.lastColumnIndex] ?? columnsMeta.totalWidth;
 
   if (
     context.firstColumnIndex > pinnedLeftCount &&

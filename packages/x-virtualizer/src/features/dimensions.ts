@@ -137,7 +137,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     topContainerHeight,
     bottomContainerHeight,
     contentSize: {
-      width: roundToDecimalPlaces(columnsMeta.totalWidth, 1),
+      width: columnsMeta.totalWidth,
       height: roundToDecimalPlaces(currentPageTotalHeight, 1),
     },
   };
@@ -185,7 +185,12 @@ function computeColumnsMeta(
     }
   }
 
-  return { positions, totalWidth, pinnedLeftColumnsTotalWidth, pinnedRightColumnsTotalWidth };
+  return {
+    positions,
+    totalWidth: roundToDecimalPlaces(totalWidth, 1),
+    pinnedLeftColumnsTotalWidth,
+    pinnedRightColumnsTotalWidth,
+  };
 }
 
 function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
@@ -246,8 +251,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       const containerNode = layout.refs.container.current;
       const rootSize = selectors.rootSize(store.state);
       const rowsMeta = selectors.rowsMeta(store.state);
-      const columnsMeta = selectors.columnsMeta(store.state);
-      const columnsTotalWidth = roundToDecimalPlaces(columnsMeta.totalWidth, 1);
+      const columnsTotalWidth = selectors.columnsMeta(store.state).totalWidth;
 
       // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
       // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
@@ -765,10 +769,7 @@ function useColumnsMeta(
     // notifying and let `updateDimensions` publish it with them, so that the listeners run once
     // and never see the new columns with the previous dimensions.
     const { dimensions } = store.state;
-    if (
-      dimensions.isReady &&
-      roundToDecimalPlaces(columnsMeta.totalWidth, 1) !== dimensions.contentSize.width
-    ) {
+    if (dimensions.isReady && columnsMeta.totalWidth !== dimensions.contentSize.width) {
       store.state = { ...store.state, columnsMeta };
       updateDimensions();
       return;

@@ -544,15 +544,16 @@ const horizontalGeometry = createSelectorMemoized(
   (renderContext, dimensions, columnsMeta) => {
     const {
       positions: columnPositions,
+      totalWidth,
       pinnedLeftColumnsTotalWidth: leftPinnedWidth,
       pinnedRightColumnsTotalWidth: rightPinnedWidth,
     } = columnsMeta;
-    const { contentSize, viewportInnerSize } = dimensions;
+    const { viewportInnerSize } = dimensions;
     const firstPosition = columnPositions[renderContext.firstColumnIndex] ?? 0;
     // `lastColumnIndex` is exclusive: past the last column, the window extends to the
     // pinned-right section (or the content end when there is none).
     const lastPosition =
-      columnPositions[renderContext.lastColumnIndex] ?? contentSize.width - rightPinnedWidth;
+      columnPositions[renderContext.lastColumnIndex] ?? totalWidth - rightPinnedWidth;
     // Pinned cells are in the row flow, so they count toward the rendered width and
     // the offset starts at the pinned-left cells.
     const renderedWidth = leftPinnedWidth + (lastPosition - firstPosition) + rightPinnedWidth;

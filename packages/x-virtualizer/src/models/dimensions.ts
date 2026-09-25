@@ -96,7 +96,7 @@ export interface ColumnsMetaState {
    */
   positions: number[];
   /**
-   * The sum of all column widths, the pinned columns included.
+   * The sum of all column widths, the pinned columns included, rounded to one decimal place.
    */
   totalWidth: number;
   /**
