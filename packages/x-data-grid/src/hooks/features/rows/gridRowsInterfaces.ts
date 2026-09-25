@@ -110,6 +110,10 @@ export interface GridRowsPartialUpdates {
   actions: { [action in GridRowsPartialUpdateAction]: GridRowId[] };
   idToActionLookup: { [id: GridRowId]: GridRowsPartialUpdateAction | undefined };
   groupKeys?: string[];
+  /**
+   * Every child of `parentId`, in the order the update provided them.
+   */
+  childrenOrder?: { parentId: GridRowId; ids: GridRowId[] };
 }
 
 export interface GridPinnedRowsState {

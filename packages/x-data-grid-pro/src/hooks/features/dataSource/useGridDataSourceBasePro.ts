@@ -140,7 +140,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (rowsToDelete.length > 0) {
         apiRef.current.updateNestedRows(rowsToDelete, groupPath);
       }
-      apiRef.current.updateNestedRows(rows, groupPath);
+      apiRef.current.updateNestedRows(rows, groupPath, { replaceChildrenOf: groupId });
     },
     [apiRef],
   );
@@ -394,7 +394,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
             rowsToDelete.push({ ...rowsLookup[parentRowId], _action: 'delete' });
           });
         }
-        apiRef.current.updateRows(response.rows.concat(rowsToDelete));
+        apiRef.current.updateNestedRows(response.rows.concat(rowsToDelete), [], {
+          replaceChildrenOf: GRID_ROOT_GROUP_ID,
+          throttle: true,
+        });
       }
 
       apiRef.current.unstable_applyPipeProcessors(
