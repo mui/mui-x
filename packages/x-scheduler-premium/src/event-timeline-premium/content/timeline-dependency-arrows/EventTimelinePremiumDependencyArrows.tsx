@@ -37,6 +37,11 @@ const DependencyArrowsSvg = styled('svg', {
   ...theme.applyStyles('dark', {
     color: (theme.vars || theme).palette.grey[600],
   }),
+  // Set by the interactions layer, which receives the pointer on the arrow's hit area.
+  '[data-dependency-id][data-hovered]:not([data-selected])': {
+    color: (theme.vars || theme).palette.text.secondary,
+    strokeWidth: DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH,
+  },
   '[data-dependency-id][data-selected]': {
     color: (theme.vars || theme).palette.error.main,
   },

@@ -60,6 +60,7 @@ import {
   EventTimelinePremiumDependencyGeometryProvider,
   EventTimelinePremiumDependencyInteractions,
   EventTimelinePremiumDependencyTerminals,
+  EventTimelinePremiumDependencyDialog,
 } from './timeline-dependency-arrows';
 
 const EventTimelinePremiumContentRoot = styled('section', {
@@ -903,6 +904,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                       {/* Last so the revealed terminals win their z-index ties and
                           paint above the arrows and their click hit-areas. */}
                       <EventTimelinePremiumDependencyTerminals />
+                      <EventTimelinePremiumDependencyDialog />
                     </EventTimelinePremiumDependencyGeometryProvider>
                   </RowContainer>
                   <FillerRow />

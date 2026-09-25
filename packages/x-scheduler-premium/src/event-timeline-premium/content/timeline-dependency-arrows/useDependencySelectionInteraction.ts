@@ -8,8 +8,9 @@ import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-intern
 
 /**
  * Targets whose keystrokes must never reach the arrows: form controls (native or
- * ARIA), editable regions, and anything inside a dialog — the event dialog opens on
- * top of the timeline while an arrow can still be selected underneath.
+ * ARIA), editable regions, and anything inside a dialog or a menu — the event dialog,
+ * the dependency dialog and the dependency context menu open on top of the timeline
+ * while an arrow is still selected underneath.
  */
 const GUARDED_KEY_TARGETS = [
   'input',
@@ -21,14 +22,15 @@ const GUARDED_KEY_TARGETS = [
   '[contenteditable]:not([contenteditable="false"])',
   'dialog',
   '[role="dialog"]',
+  '[role="menu"]',
 ].join(', ');
 
 /**
- * The dialog subset of the guard also applies to presses: a press inside the open
- * event dialog belongs to the dialog, it must neither deselect the arrow underneath
- * nor swallow the control's click.
+ * The dialog and menu subset of the guard also applies to presses: a press inside an
+ * open dialog or menu belongs to it, it must neither deselect the arrow underneath nor
+ * swallow the control's click.
  */
-const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"]';
+const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"], [role="menu"]';
 
 function isGuardedKeyTarget(event: KeyboardEvent): boolean {
   // At the document level `event.target` is retargeted to the shadow host, which
