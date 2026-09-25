@@ -21,6 +21,8 @@ import type {
 } from '@mui/x-charts/internals';
 import { useChartProExport } from '@mui/x-charts-pro/plugins';
 import type { UseChartProExportSignature } from '@mui/x-charts-pro/plugins';
+import { useChartPremiumExport } from '../internals/plugins/useChartPremiumExport';
+import type { UseChartPremiumExportSignature } from '../internals/plugins/useChartPremiumExport';
 
 export type RadialLineChartPluginSignatures = [
   UseChartZAxisSignature,
@@ -32,6 +34,7 @@ export type RadialLineChartPluginSignatures = [
   UseChartKeyboardNavigationSignature,
   UseChartItemClickSignature<'radialLine'>,
   UseChartProExportSignature,
+  UseChartPremiumExportSignature,
 ];
 
 export const RADIAL_LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<RadialLineChartPluginSignatures> =
@@ -45,4 +48,5 @@ export const RADIAL_LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<RadialLineC
     useChartKeyboardNavigation,
     useChartItemClick,
     useChartProExport,
+    useChartPremiumExport,
   ];

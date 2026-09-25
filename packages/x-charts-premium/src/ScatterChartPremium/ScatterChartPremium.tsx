@@ -31,7 +31,7 @@ import type { ChartsSlotPropsPro, ChartsSlotsPro } from '@mui/x-charts-pro/inter
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
 import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
-import { ChartsToolbarPro } from '../ChartsToolbarPro';
+import { ChartsToolbarPremium } from '../ChartsToolbarPremium';
 import { ScatterPlotPremium } from './ScatterPlotPremium';
 import { SCATTER_CHART_PREMIUM_PLUGINS } from './ScatterChartPremium.plugins';
 import type { ScatterChartPremiumPluginSignatures } from './ScatterChartPremium.plugins';
@@ -123,7 +123,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
   });
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPremium;
   const { className: chartsLayerContainerClassName, ...chartsSvgLayerProps } = chartsSurfaceProps;
 
   return (
@@ -175,8 +175,10 @@ ScatterChartPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      exportAsExcel: PropTypes.func.isRequired,
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      getDataAsExcel: PropTypes.func.isRequired,
       setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),

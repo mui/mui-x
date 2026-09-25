@@ -1,13 +1,27 @@
 import type { ProPluginsPerSeriesType } from '@mui/x-charts-pro/internals';
 import type { ChartAnyPluginSignature, ChartPublicAPI } from '@mui/x-charts/internals';
 import type { BarChartPremiumPluginSignatures } from '../BarChartPremium/BarChartPremium.plugins';
-import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
 import type { GeoPremiumPluginSignatures } from '../ChartsGeoDataProviderPremium/ChartsGeoDataProviderPremium.plugins';
+import type { ScatterChartPremiumPluginSignatures } from '../ScatterChartPremium/ScatterChartPremium.plugins';
+import type { HeatmapPremiumPluginSignatures } from '../HeatmapPremium/HeatmapPremium.plugins';
+import type { CandlestickChartPluginSignatures } from '../CandlestickChart/CandlestickChart.plugins';
+import type { RadialLineChartPluginSignatures } from '../RadialLineChart/RadialLineChart.plugins';
+import type { RadialBarChartPluginSignatures } from '../RadialBarChart/RadialBarChart.plugins';
 
-export type PremiumPluginsPerSeriesType = Omit<ProPluginsPerSeriesType, 'bar'> & {
+export type PremiumPluginsPerSeriesType = Omit<
+  ProPluginsPerSeriesType,
+  'bar' | 'scatter' | 'heatmap' | 'composition'
+> & {
   bar: BarChartPremiumPluginSignatures;
   rangeBar: BarChartPremiumPluginSignatures;
+  scatter: ScatterChartPremiumPluginSignatures;
+  heatmap: HeatmapPremiumPluginSignatures;
+  ohlc: CandlestickChartPluginSignatures;
+  radialLine: RadialLineChartPluginSignatures;
+  radialBar: RadialBarChartPluginSignatures;
   mapShape: GeoPremiumPluginSignatures;
+  composition: DefaultPluginSignatures;
 };
 
 /**

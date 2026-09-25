@@ -1,5 +1,13 @@
 {
   "props": {
+    "exportMenuItems": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: object) => React.ReactNode",
+        "describedArgs": ["params"],
+        "returned": "React.ReactNode"
+      }
+    },
     "rangeButtons": {
       "type": {
         "name": "arrayOf",
