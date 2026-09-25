@@ -1124,6 +1124,20 @@ describeTreeView<TreeViewAnyStore>(
             expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
             expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
           });
+
+          it('should follow the selection model, not the propagated status, with selectionPropagation.parents', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+              defaultExpandedItems: ['1'],
+              defaultSelectedItems: '1.1',
+              selectionPropagation: { parents: true },
+            });
+
+            // Item `1` is not in the selection model, even though its status is
+            // `selected` because its only child is selected.
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+            expect(view.getRoot()).to.have.attribute('aria-multiselectable', 'false');
+          });
         });
 
         describe('multi selection', () => {
@@ -1167,6 +1181,20 @@ describeTreeView<TreeViewAnyStore>(
 
             expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
             expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+          });
+
+          it('should follow the selection model, not the propagated status, with selectionPropagation.parents', () => {
+            const view = render({
+              multiSelect: true,
+              items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+              defaultExpandedItems: ['1'],
+              defaultSelectedItems: ['1.1', '1.2'],
+              selectionPropagation: { parents: true },
+            });
+
+            // Item `1` is not in the selection model, even though its status is
+            // `selected` because both of its children are selected.
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
           });
         });
       });
