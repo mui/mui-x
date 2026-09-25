@@ -3,7 +3,7 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { useVirtualizer, LayoutListSticky, type RowEntry } from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 const ROW_HEIGHT = 48;
 const VIEWPORT_HEIGHT = 400;
@@ -262,5 +262,48 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     expect(getWindowRowIds()).to.deep.equal(idsAfterCorrection);
+  });
+
+  it('keeps the window size at the end of the content whichever way the buffer points', async () => {
+    await renderList();
+    const scroller = screen.getByTestId('scroller');
+    const maxScrollTop = ROW_COUNT * ROW_HEIGHT - VIEWPORT_HEIGHT;
+
+    // The settle pass runs a second after the last context update. Fake timers skip the wait,
+    // and have to be installed before the scroll that arms it.
+    vi.useFakeTimers();
+    let sizeScrollingDown: number;
+    let sizeSettled: number;
+    let sizeScrollingUp: number;
+    try {
+      // Scrolling down into the end: the leading buffer has no rows left to cover below.
+      act(() => {
+        scroller.scrollTop = maxScrollTop;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      sizeScrollingDown = getWindowRowIds().length;
+      expectViewportCovered();
+
+      // The settle pass splits the buffer evenly.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1100);
+      });
+      sizeSettled = getWindowRowIds().length;
+      expectViewportCovered();
+
+      // Scrolling up allocates the whole buffer above the viewport.
+      act(() => {
+        scroller.scrollTop = maxScrollTop - ROW_HEIGHT;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      sizeScrollingUp = getWindowRowIds().length;
+      expectViewportCovered();
+    } finally {
+      vi.useRealTimers();
+    }
+
+    // Each boundary is row-quantized, allowing one row of play per boundary.
+    expect(Math.abs(sizeSettled - sizeScrollingDown)).to.be.at.most(2);
+    expect(Math.abs(sizeScrollingUp - sizeScrollingDown)).to.be.at.most(2);
   });
 });

@@ -1006,6 +1006,7 @@ function computeRenderContext(
       bufferAfter: scrollCache.buffer.rowAfter,
       positions: inputs.rowsMeta.positions,
       lastSize: inputs.lastRowHeight,
+      carryOverAtEdges: inputs.layoutMode === 'sticky',
     });
 
     if (!inputs.virtualizeColumnsWithAutoRowHeight) {
@@ -1087,6 +1088,10 @@ function deriveRenderContext(
   nextRenderContext: RenderContext,
   scrollCache: ScrollCache,
 ) {
+  // In sticky mode, a direction change moves the window without resizing it, which the buffers
+  // alone cannot promise at either end of the content: the part of the leading buffer past the
+  // last row would be dropped, and the rebalance when the scroll settles would unmount rows.
+  const carryOverAtEdges = inputs.layoutMode === 'sticky';
   const [firstRowToRender, lastRowToRender] = getIndexesToRender({
     firstIndex: nextRenderContext.firstRowIndex,
     lastIndex: nextRenderContext.lastRowIndex,
@@ -1096,6 +1101,7 @@ function deriveRenderContext(
     bufferAfter: scrollCache.buffer.rowAfter,
     positions: inputs.rowsMeta.positions,
     lastSize: inputs.lastRowHeight,
+    carryOverAtEdges,
   });
 
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
@@ -1107,6 +1113,7 @@ function deriveRenderContext(
     bufferAfter: scrollCache.buffer.columnAfter,
     positions: inputs.columnPositions,
     lastSize: inputs.lastColumnWidth,
+    carryOverAtEdges,
   });
 
   const firstColumnToRender = getFirstNonSpannedColumnToRender({
@@ -1199,6 +1206,7 @@ function getIndexesToRender({
   maxLastIndex,
   positions,
   lastSize,
+  carryOverAtEdges = false,
 }: {
   firstIndex: number;
   lastIndex: number;
@@ -1208,9 +1216,25 @@ function getIndexesToRender({
   maxLastIndex: number;
   positions: number[];
   lastSize: number;
+  /**
+   * Gives the part of a buffer that falls past either end of the content to the other side, so
+   * the rendered range keeps its size wherever the viewport is.
+   */
+  carryOverAtEdges?: boolean;
 }) {
-  const firstPosition = positions[firstIndex] - bufferBefore;
-  const lastPosition = positions[lastIndex] + bufferAfter;
+  let firstPosition = positions[firstIndex] - bufferBefore;
+  let lastPosition = positions[lastIndex] + bufferAfter;
+
+  if (carryOverAtEdges) {
+    const startEdge = positions[minFirstIndex] ?? 0;
+    const endEdge = positions[maxLastIndex] ?? (positions[positions.length - 1] ?? 0) + lastSize;
+    // `positions[lastIndex]` is undefined when the viewport reaches the last item.
+    const lastEdge = positions[lastIndex] ?? endEdge;
+    const unusedBefore = Math.max(0, startEdge - firstPosition);
+    const unusedAfter = Math.max(0, lastEdge + bufferAfter - endEdge);
+    firstPosition -= unusedAfter;
+    lastPosition = lastEdge + bufferAfter + unusedBefore;
+  }
 
   const firstIndexPadded = binarySearch(firstPosition, positions, {
     atStart: true,
