@@ -14,7 +14,9 @@ const defaultRows = Array.from({ length: ROW_COUNT }, (_, index) => ({
   model: { label: `Item ${index}` },
 }));
 
-function StickyList(props: { rows?: RowEntry[] }) {
+type VirtualizerApi = ReturnType<typeof useVirtualizer>['api'];
+
+function StickyList(props: { rows?: RowEntry[]; apiRef?: React.RefObject<VirtualizerApi | null> }) {
   const rows = props.rows ?? defaultRows;
   const refs = {
     container: React.useRef<HTMLDivElement>(null),
@@ -38,6 +40,10 @@ function StickyList(props: { rows?: RowEntry[] }) {
       </div>
     ),
   });
+
+  if (props.apiRef) {
+    props.apiRef.current = virtualizer.api;
+  }
 
   const containerProps = virtualizer.store.use(LayoutListSticky.selectors.containerProps);
   const contentProps = virtualizer.store.use(LayoutListSticky.selectors.contentProps);
@@ -70,7 +76,7 @@ function expectViewportCovered() {
   expect(windowRect.bottom).to.be.at.least(scrollerRect.bottom - 0.5);
 }
 
-function renderedRowIds() {
+function getWindowRowIds() {
   return Array.from(document.querySelectorAll<HTMLElement>('[data-testid="row"]')).map((node) =>
     Number(node.dataset.id),
   );
@@ -79,17 +85,20 @@ function renderedRowIds() {
 describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
   const { render } = createRenderer();
 
-  async function renderList(props?: { rows?: RowEntry[] }) {
+  async function renderList(props?: {
+    rows?: RowEntry[];
+    apiRef?: React.RefObject<VirtualizerApi | null>;
+  }) {
     const view = render(<StickyList {...props} />);
     await waitFor(() => {
-      expect(renderedRowIds().length).to.be.greaterThan(0);
+      expect(getWindowRowIds().length).to.be.greaterThan(0);
     });
     return view;
   }
 
   it('renders only a window of rows', async () => {
     await renderList();
-    expect(renderedRowIds().length).to.be.lessThan(ROW_COUNT / 10);
+    expect(getWindowRowIds().length).to.be.lessThan(ROW_COUNT / 10);
     expectViewportCovered();
   });
 
@@ -103,7 +112,7 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
     });
     // The virtualizer hasn't received the scroll event yet: the stale window must
     // already cover the viewport through sticky clamping alone.
-    expect(renderedRowIds()).not.to.include(500);
+    expect(getWindowRowIds()).not.to.include(500);
     expectViewportCovered();
 
     // Once the virtualizer catches up, the correct rows are rendered in place.
@@ -111,7 +120,7 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(renderedRowIds()).to.include(500);
+      expect(getWindowRowIds()).to.include(500);
     });
     expectViewportCovered();
 
@@ -129,21 +138,21 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(renderedRowIds()).to.include(500);
+      expect(getWindowRowIds()).to.include(500);
     });
 
     const scrollTop = 250 * ROW_HEIGHT;
     act(() => {
       scroller.scrollTop = scrollTop;
     });
-    expect(renderedRowIds()).not.to.include(250);
+    expect(getWindowRowIds()).not.to.include(250);
     expectViewportCovered();
 
     await act(async () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(renderedRowIds()).to.include(250);
+      expect(getWindowRowIds()).to.include(250);
     });
     expectViewportCovered();
 
@@ -165,7 +174,7 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
       scroller.dispatchEvent(new Event('scroll'));
     });
     await waitFor(() => {
-      expect(renderedRowIds()).to.include(40);
+      expect(getWindowRowIds()).to.include(40);
     });
 
     const localOffsets = () => {
@@ -200,10 +209,58 @@ describe.skipIf(isJSDOM)('<LayoutListSticky />', () => {
   it('keeps sticky positioning inert when all rows fit in the viewport', async () => {
     await renderList({ rows: defaultRows.slice(0, 3) });
     await waitFor(() => {
-      expect(renderedRowIds().length).to.equal(3);
+      expect(getWindowRowIds().length).to.equal(3);
     });
     const windowStyle = screen.getByTestId('window').style;
     expect(windowStyle.top).to.equal('0px');
     expect(windowStyle.bottom).to.equal('0px');
+  });
+
+  it('renders the window for a written scroll position without waiting for its scroll event', async () => {
+    const apiRef = React.createRef<VirtualizerApi | null>();
+    await renderList({ apiRef });
+    const scroller = screen.getByTestId('scroller');
+
+    act(() => {
+      scroller.scrollTop = 400 * ROW_HEIGHT;
+      apiRef.current!.syncScrollPosition();
+    });
+
+    expect(getWindowRowIds()).to.include(400);
+    expectViewportCovered();
+  });
+
+  it('keeps the scroll direction across a written correction', async () => {
+    const apiRef = React.createRef<VirtualizerApi | null>();
+    await renderList({ apiRef });
+    const scroller = screen.getByTestId('scroller');
+
+    await act(async () => {
+      scroller.scrollTop = 100 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    // Scrolling down: the whole buffer is allocated below the viewport.
+    act(() => {
+      scroller.scrollTop = 101 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const idsScrollingDown = getWindowRowIds();
+    expect(Math.min(...idsScrollingDown)).to.be.at.least(100);
+
+    // A correction that moves the position up by a row is not the user scrolling up, so the
+    // buffer stays below the viewport rather than moving above it.
+    act(() => {
+      scroller.scrollTop = 100 * ROW_HEIGHT;
+      apiRef.current!.syncScrollPosition();
+    });
+    expect(Math.min(...getWindowRowIds())).to.be.at.least(99);
+    expectViewportCovered();
+
+    // The scroll event the write echoes carries no movement.
+    const idsAfterCorrection = getWindowRowIds();
+    act(() => {
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.deep.equal(idsAfterCorrection);
   });
 });

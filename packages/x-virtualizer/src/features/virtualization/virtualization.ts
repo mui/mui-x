@@ -329,15 +329,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     [store, onRenderContextChange],
   );
 
-  // `isSettlePass` marks the run scheduled by the scroll timeout below. It is the only
-  // caller that knows the scroll stopped: a scroll event carrying no movement is not a
-  // reliable signal, since writing `scrollTop` also echoes one back.
-  const triggerUpdateRenderContext = useEventCallback((isSettlePass: boolean = false) => {
-    const scroller = layout.refs.scroller.current;
-    if (!scroller) {
-      return undefined;
-    }
-
+  const readScrollPosition = (scroller: HTMLElement) => {
     const dimensions = Dimensions.selectors.dimensions(store.state);
     const maxScrollTop = Math.ceil(
       dimensions.contentSize.height - dimensions.viewportInnerSize.height,
@@ -347,12 +339,24 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     );
 
     // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce
-    const newScroll = {
+    return {
       top: clamp(scroller.scrollTop, 0, maxScrollTop),
       left: isRtl
         ? clamp(scroller.scrollLeft, -Math.abs(maxScrollLeft), 0)
         : clamp(scroller.scrollLeft, 0, maxScrollLeft),
     };
+  };
+
+  // `isSettlePass` marks the run scheduled by the scroll timeout below. It is the only
+  // caller that knows the scroll stopped: a scroll event carrying no movement is not a
+  // reliable signal, since writing `scrollTop` also echoes one back.
+  const triggerUpdateRenderContext = useEventCallback((isSettlePass: boolean = false) => {
+    const scroller = layout.refs.scroller.current;
+    if (!scroller) {
+      return undefined;
+    }
+
+    const newScroll = readScrollPosition(scroller);
 
     const dx = newScroll.left - scrollPosition.current.left;
     const dy = newScroll.top - scrollPosition.current.top;
@@ -511,6 +515,37 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
   const scheduleUpdateRenderContext = () => {
     isUpdateScheduled.current = true;
+  };
+
+  /**
+   * Adopts the scroller's current position as one the consumer wrote, and renders the window
+   * for it. A corrective write, such as one keeping the content anchored while row heights
+   * change, is not the user scrolling: it keeps the scroll direction and the buffers allocated
+   * for it. Otherwise the engine would learn the position only from the scroll event the write
+   * echoes a task later, and read it as a scroll in whichever direction the correction went.
+   * The echoed event then carries no movement. Safe to call from a layout effect: the window
+   * is committed through the store rather than flushed synchronously.
+   */
+  const syncScrollPosition = () => {
+    const scroller = layout.refs.scroller.current;
+    if (!scroller) {
+      return;
+    }
+
+    scrollPosition.current = readScrollPosition(scroller);
+    forceUpdateRenderContext();
+
+    // `updateRenderContext` publishes the position only alongside a new render context.
+    const state = store.state.virtualization;
+    if (
+      state.scrollPosition.current.top !== scrollPosition.current.top ||
+      state.scrollPosition.current.left !== scrollPosition.current.left
+    ) {
+      store.set('virtualization', {
+        ...state,
+        scrollPosition: { current: { ...scrollPosition.current } },
+      });
+    }
   };
 
   const handleScroll = useEventCallback(() => {
@@ -856,6 +891,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     setPanels,
     forceUpdateRenderContext,
     scheduleUpdateRenderContext,
+    syncScrollPosition,
     ...createSpanningAPI(),
   };
 }
