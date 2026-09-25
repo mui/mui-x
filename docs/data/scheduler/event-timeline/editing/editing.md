@@ -44,6 +44,22 @@ Set `eventCreation.interaction` to `"double-click"` to open the creation form wh
 
 {{"demo": "EventCreationInteraction.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Event deletion
+
+Deleting an event asks for confirmation first, through a dialog with a Cancel and a Delete event action. With [recurring events](/x/react-scheduler/recurring-events/), deleting a recurring event opens the recurring scope dialog instead, which already asks the user to confirm a scope before applying the change—no second prompt is shown on top of it.
+
+Use the `eventDeletion` prop to customize this behavior.
+
+### Skip the confirmation dialog
+
+Pass `eventDeletion={{ confirmation: false }}` to delete events immediately, without asking for confirmation:
+
+```tsx
+<EventTimelinePremium eventDeletion={{ confirmation: false }} />
+```
+
+{{"demo": "EventDeletionConfirmation.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Event dialog
 
 Clicking an event or creating a new one opens the event dialog.

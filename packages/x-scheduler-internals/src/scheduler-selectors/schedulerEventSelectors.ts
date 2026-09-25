@@ -8,7 +8,7 @@ import type {
 } from '../models';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { resolveResourceProperty } from './schedulerResourceSelectors';
-import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
+import { DEFAULT_EVENT_CREATION_CONFIG, DEFAULT_EVENT_DELETION_CONFIG } from '../constants';
 import { getPrimaryResourceId } from '../internals/utils/event-utils';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
@@ -76,6 +76,15 @@ export const schedulerEventSelectors = {
         ...creationConfig,
       };
     },
+  ),
+  /**
+   * Normalizes `eventDeletion`, filling in the default of any key that is missing or `undefined`.
+   */
+  deletionConfig: createSelectorMemoized(
+    (state: State) => state.eventDeletion,
+    (eventDeletion) => ({
+      confirmation: eventDeletion?.confirmation ?? DEFAULT_EVENT_DELETION_CONFIG.confirmation,
+    }),
   ),
   /**
    * Gets the default duration (in minutes) for newly created events.

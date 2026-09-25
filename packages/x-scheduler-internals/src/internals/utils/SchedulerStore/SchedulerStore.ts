@@ -38,6 +38,7 @@ import type {
   SchedulerInstanceName,
   SchedulerEditingMode,
   SchedulerEventEditingStartEventDetails,
+  RequestEventDeletionParameters,
 } from './SchedulerStore.types';
 import { processDate } from '../../../process-date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -179,6 +180,7 @@ export class SchedulerStore<
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
+      pendingDeleteConfirmation: null,
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -231,6 +233,9 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
+      // Left as-is (including `undefined`); `schedulerEventSelectors.deletionConfig` fills in
+      // the defaults.
+      eventDeletion: parameters.eventDeletion,
       displayTimezone: parameters.displayTimezone ?? 'default',
     };
   }
@@ -715,19 +720,18 @@ export class SchedulerStore<
 
   /**
    * Deletes an occurrence from a UI surface: a recurring one opens the scope dialog, any other
-   * goes straight to `deleteEvent`. `onDelete` runs once the delete applied.
-   * @returns Whether the delete applied immediately (`false` when the scope dialog opened).
+   * goes through `requestEventDeletion`. `onDelete` runs once the delete actually applied.
    */
   public deleteOccurrence = (
     occurrence: SchedulerRenderableEventOccurrence,
     onDelete?: () => void,
-  ): boolean => {
+  ) => {
     // Not loaded yet: a `dataSource` persist of the event (e.g. a split) is still in flight.
     // Neither path can act on it, a scope confirmation reads the stored event.
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     if (liveEvent == null) {
       this.pushError(createEventNotLoadedError(), { transient: true });
-      return false;
+      return;
     }
     const isRecurring =
       this.state.recurringEventsPlugin != null &&
@@ -739,11 +743,10 @@ export class SchedulerStore<
         eventId: occurrence.id,
         onSubmit: onDelete,
       });
-      return false;
+      return;
     }
-    this.deleteEvent(occurrence.id);
-    onDelete?.();
-    return true;
+
+    this.requestEventDeletion({ eventId: occurrence.id, onSubmit: onDelete });
   };
 
   /**
@@ -837,6 +840,36 @@ export class SchedulerStore<
    */
   public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
+  };
+
+  /**
+   * Requests deletion of an event, opening the confirmation dialog when configured.
+   */
+  public requestEventDeletion = ({ eventId, onSubmit }: RequestEventDeletionParameters) => {
+    const { confirmation } = schedulerEventSelectors.deletionConfig(this.state);
+    if (!confirmation) {
+      this.deleteEvent(eventId);
+      onSubmit?.();
+      return;
+    }
+
+    this.set('pendingDeleteConfirmation', { eventId, onSubmit });
+  };
+
+  /**
+   * Resolves the pending event deletion request, deleting the event if confirmed.
+   */
+  public resolveEventDeletion = (confirmed: boolean) => {
+    const pending = this.state.pendingDeleteConfirmation;
+    if (!pending) {
+      return;
+    }
+
+    this.set('pendingDeleteConfirmation', null);
+    if (confirmed) {
+      this.deleteEvent(pending.eventId);
+      pending.onSubmit?.();
+    }
   };
 
   /**

@@ -11,6 +11,7 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
 interface UseEventContextMenuItemsParameters {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -20,19 +21,6 @@ interface UseEventContextMenuItemsParameters {
   onEditingCanceled?: () => void;
   /** Forwarded to `startEditing` for Edit — see `EventEditingTriggerProps`. */
   stableAnchor?: HTMLElement | null;
-}
-
-/**
- * The nearest surviving focusable ancestor of an event about to be removed from the DOM — the
- * grid column/cell it lives in, which (unlike the event itself) doesn't unmount on delete.
- *
- * An immediate delete removes `anchorEl` from the DOM in the same commit that closes the menu.
- * MUI's `Menu` tries to restore focus to the element that had it when the menu opened (`anchorEl`
- * itself here), but since that node is now detached, the restore silently fails and focus is lost
- * to `<body>`. Falling back to this ancestor keeps a keyboard user's place in the grid.
- */
-function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
-  return anchorEl.parentElement?.closest<HTMLElement>('[tabindex]') ?? null;
 }
 
 /**
@@ -69,17 +57,9 @@ export function useEventContextMenuItems(
     }
   };
 
-  // Recurring events open the scope dialog; single events delete immediately.
-  // No confirmation step here either — see #18025.
   const handleDelete = () => {
     onRequestClose();
-    // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`. Only the
-    // immediate delete needs it; the scope dialog manages its own focus.
-    const focusFallback = getFocusFallback(anchorEl);
-    const deletedImmediately = store.deleteOccurrence(occurrence);
-    if (deletedImmediately) {
-      focusFallback?.focus();
-    }
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchorEl);
   };
 
   const EditIcon = isReadOnly ? SearchRounded : EditRounded;
