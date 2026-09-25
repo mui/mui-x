@@ -34,30 +34,6 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
-// Beyond this gap, the previous scroll event says nothing about the current speed: a jump
-// after an idle period would read as a fling and defer the advance with nothing to cover it.
-const MAX_VELOCITY_SAMPLE_GAP_MS = 100;
-
-// For fast scrolls in sticky mode, defer the render-context advance by a number of
-// frames so the window isn't re-rendered mid-fling (the inverse-sticky clamp shows stale
-// content meanwhile); faster scrolls defer more. Below the lowest threshold, updates
-// commit immediately. Ordered by descending speed - the first match wins.
-const SCROLL_DELAY_LEVELS: ReadonlyArray<{ minVelocityPxPerMs: number; frames: number }> = [
-  { minVelocityPxPerMs: 28, frames: 6 },
-  { minVelocityPxPerMs: 20, frames: 4 },
-  { minVelocityPxPerMs: 16, frames: 2 },
-  { minVelocityPxPerMs: 8, frames: 1 },
-];
-
-function scrollDelayFrames(velocityPxPerMs: number): number {
-  for (const level of SCROLL_DELAY_LEVELS) {
-    if (velocityPxPerMs >= level.minVelocityPxPerMs) {
-      return level.frames;
-    }
-  }
-  return 0;
-}
-
 export type VirtualizationParams = {
   /** @default false */
   isRtl?: boolean;
@@ -283,19 +259,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<RenderContext | undefined>(undefined);
-  // Frames deferral of sticky render-context advances during fast scroll
-  const deferredStickyFrame = React.useRef(0);
-  const deferredFramesRemaining = React.useRef(0);
-  const forceStickyCommit = React.useRef(false);
-  const lastScrollTimestamp = React.useRef(0);
-  React.useEffect(
-    () => () => {
-      if (deferredStickyFrame.current !== 0) {
-        cancelAnimationFrame(deferredStickyFrame.current);
-      }
-    },
-    [],
-  );
   const scrollCache = useLazyRef(() =>
     createScrollCache(
       isRtl,
@@ -366,15 +329,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     [store, onRenderContextChange],
   );
 
-  // `isSettlePass` marks the run scheduled by the scroll timeout below. It is the only
-  // caller that knows the scroll stopped: a scroll event carrying no movement is not a
-  // reliable signal, since writing `scrollTop` also echoes one back.
-  const triggerUpdateRenderContext = useEventCallback((isSettlePass: boolean = false) => {
-    const scroller = layout.refs.scroller.current;
-    if (!scroller) {
-      return undefined;
-    }
-
+  const readScrollPosition = (scroller: HTMLElement) => {
     const dimensions = Dimensions.selectors.dimensions(store.state);
     const maxScrollTop = Math.ceil(
       dimensions.contentSize.height - dimensions.viewportInnerSize.height,
@@ -384,32 +339,44 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     );
 
     // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce
-    const newScroll = {
+    return {
       top: clamp(scroller.scrollTop, 0, maxScrollTop),
       left: isRtl
         ? clamp(scroller.scrollLeft, -Math.abs(maxScrollLeft), 0)
         : clamp(scroller.scrollLeft, 0, maxScrollLeft),
     };
+  };
+
+  // `isSettlePass` marks the run scheduled by the scroll timeout below. It is the only
+  // caller that knows the scroll stopped: a scroll event carrying no movement is not a
+  // reliable signal, since writing `scrollTop` also echoes one back.
+  const triggerUpdateRenderContext = useEventCallback((isSettlePass: boolean = false) => {
+    const scroller = layout.refs.scroller.current;
+    if (!scroller) {
+      return undefined;
+    }
+
+    const newScroll = readScrollPosition(scroller);
 
     const dx = newScroll.left - scrollPosition.current.left;
     const dy = newScroll.top - scrollPosition.current.top;
-
-    const now = performance.now();
-    const dtSinceLastScroll = now - lastScrollTimestamp.current;
-    lastScrollTimestamp.current = now;
-    // Zero on the first event and after a long gap, so neither reads as fast. The delta
-    // can also land in the same tick as the previous one — `performance.now()` is
-    // coarsened to 1ms on some engines — which would divide by zero.
-    const rowVelocity =
-      dtSinceLastScroll > 0 && dtSinceLastScroll < MAX_VELOCITY_SAMPLE_GAP_MS
-        ? Math.abs(dy) / dtSinceLastScroll
-        : 0;
 
     const isScrolling = dx !== 0 || dy !== 0;
 
     scrollPosition.current = newScroll;
 
-    const direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE;
+    // A pass that observes no movement keeps the current direction. Writing `scrollTop`
+    // echoes a scroll event with no delta, and reading it as a stop would rebalance the
+    // buffers and commit, only for the next event to reallocate them and commit again.
+    // Only the settle pass knows that the scroll stopped.
+    let direction: ScrollDirection;
+    if (isScrolling) {
+      direction = ScrollDirection.forDelta(dx, dy);
+    } else if (isSettlePass) {
+      direction = ScrollDirection.NONE;
+    } else {
+      direction = scrollCache.direction;
+    }
 
     const didChangeDirection = scrollCache.direction !== direction;
 
@@ -451,54 +418,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         scrollPosition: { current: { ...scrollPosition.current } },
       });
       return renderContext;
-    }
-
-    // Fast sticky scroll: advancing the render context mid-fling re-renders the window
-    // and competes with the compositor. Instead keep showing the current (stale) window
-    // — the inverse-sticky clamp covers the viewport — and defer the advance by a
-    // velocity-scaled number of animation frames (faster flings defer more), then commit
-    // the latest scroll position. Direction changes (which reallocate the buffer) and
-    // the settle pass always commit immediately; a deferral in flight re-enters with
-    // `forceStickyCommit` set, so at most one commit runs per deferral window.
-    const isDeferralPending = deferredStickyFrame.current !== 0;
-    if (
-      layoutMode === 'sticky' &&
-      !forceStickyCommit.current &&
-      !didChangeDirection &&
-      !isSettlePass &&
-      (isDeferralPending || scrollDelayFrames(rowVelocity) > 0)
-    ) {
-      if (!isDeferralPending) {
-        deferredFramesRemaining.current = scrollDelayFrames(rowVelocity);
-        const advanceOneFrame = () => {
-          deferredFramesRemaining.current -= 1;
-          if (deferredFramesRemaining.current > 0) {
-            deferredStickyFrame.current = requestAnimationFrame(advanceOneFrame);
-            return;
-          }
-          deferredStickyFrame.current = 0;
-          forceStickyCommit.current = true;
-          try {
-            triggerUpdateRenderContext(false);
-          } finally {
-            forceStickyCommit.current = false;
-          }
-        };
-        deferredStickyFrame.current = requestAnimationFrame(advanceOneFrame);
-      }
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        anchorTop: anchorTopFor(store, layoutMode, renderContext, isSettled),
-        scrollPosition: { current: { ...scrollPosition.current } },
-      });
-      return renderContext;
-    }
-
-    // Committing now (direction change, settle, or slow scroll): drop any deferral
-    // still counting down so it can't fire a redundant commit afterward.
-    if (deferredStickyFrame.current !== 0) {
-      cancelAnimationFrame(deferredStickyFrame.current);
-      deferredStickyFrame.current = 0;
     }
 
     // Render a new context
@@ -596,6 +515,37 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
   const scheduleUpdateRenderContext = () => {
     isUpdateScheduled.current = true;
+  };
+
+  /**
+   * Adopts the scroller's current position as one the consumer wrote, and renders the window
+   * for it. A corrective write, such as one keeping the content anchored while row heights
+   * change, is not the user scrolling: it keeps the scroll direction and the buffers allocated
+   * for it. Otherwise the engine would learn the position only from the scroll event the write
+   * echoes a task later, and read it as a scroll in whichever direction the correction went.
+   * The echoed event then carries no movement. Safe to call from a layout effect: the window
+   * is committed through the store rather than flushed synchronously.
+   */
+  const syncScrollPosition = () => {
+    const scroller = layout.refs.scroller.current;
+    if (!scroller) {
+      return;
+    }
+
+    scrollPosition.current = readScrollPosition(scroller);
+    forceUpdateRenderContext();
+
+    // `updateRenderContext` publishes the position only alongside a new render context.
+    const state = store.state.virtualization;
+    if (
+      state.scrollPosition.current.top !== scrollPosition.current.top ||
+      state.scrollPosition.current.left !== scrollPosition.current.left
+    ) {
+      store.set('virtualization', {
+        ...state,
+        scrollPosition: { current: { ...scrollPosition.current } },
+      });
+    }
   };
 
   const handleScroll = useEventCallback(() => {
@@ -941,6 +891,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     setPanels,
     forceUpdateRenderContext,
     scheduleUpdateRenderContext,
+    syncScrollPosition,
     ...createSpanningAPI(),
   };
 }
@@ -1055,6 +1006,7 @@ function computeRenderContext(
       bufferAfter: scrollCache.buffer.rowAfter,
       positions: inputs.rowsMeta.positions,
       lastSize: inputs.lastRowHeight,
+      carryOverAtEdges: inputs.layoutMode === 'sticky',
     });
 
     if (!inputs.virtualizeColumnsWithAutoRowHeight) {
@@ -1136,6 +1088,10 @@ function deriveRenderContext(
   nextRenderContext: RenderContext,
   scrollCache: ScrollCache,
 ) {
+  // In sticky mode, a direction change moves the window without resizing it, which the buffers
+  // alone cannot promise at either end of the content: the part of the leading buffer past the
+  // last row would be dropped, and the rebalance when the scroll settles would unmount rows.
+  const carryOverAtEdges = inputs.layoutMode === 'sticky';
   const [firstRowToRender, lastRowToRender] = getIndexesToRender({
     firstIndex: nextRenderContext.firstRowIndex,
     lastIndex: nextRenderContext.lastRowIndex,
@@ -1145,6 +1101,7 @@ function deriveRenderContext(
     bufferAfter: scrollCache.buffer.rowAfter,
     positions: inputs.rowsMeta.positions,
     lastSize: inputs.lastRowHeight,
+    carryOverAtEdges,
   });
 
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
@@ -1156,6 +1113,7 @@ function deriveRenderContext(
     bufferAfter: scrollCache.buffer.columnAfter,
     positions: inputs.columnPositions,
     lastSize: inputs.lastColumnWidth,
+    carryOverAtEdges,
   });
 
   const firstColumnToRender = getFirstNonSpannedColumnToRender({
@@ -1248,6 +1206,7 @@ function getIndexesToRender({
   maxLastIndex,
   positions,
   lastSize,
+  carryOverAtEdges = false,
 }: {
   firstIndex: number;
   lastIndex: number;
@@ -1257,9 +1216,25 @@ function getIndexesToRender({
   maxLastIndex: number;
   positions: number[];
   lastSize: number;
+  /**
+   * Gives the part of a buffer that falls past either end of the content to the other side, so
+   * the rendered range keeps its size wherever the viewport is.
+   */
+  carryOverAtEdges?: boolean;
 }) {
-  const firstPosition = positions[firstIndex] - bufferBefore;
-  const lastPosition = positions[lastIndex] + bufferAfter;
+  let firstPosition = positions[firstIndex] - bufferBefore;
+  let lastPosition = positions[lastIndex] + bufferAfter;
+
+  if (carryOverAtEdges) {
+    const startEdge = positions[minFirstIndex] ?? 0;
+    const endEdge = positions[maxLastIndex] ?? (positions[positions.length - 1] ?? 0) + lastSize;
+    // `positions[lastIndex]` is undefined when the viewport reaches the last item.
+    const lastEdge = positions[lastIndex] ?? endEdge;
+    const unusedBefore = Math.max(0, startEdge - firstPosition);
+    const unusedAfter = Math.max(0, lastEdge + bufferAfter - endEdge);
+    firstPosition -= unusedAfter;
+    lastPosition = lastEdge + bufferAfter + unusedBefore;
+  }
 
   const firstIndexPadded = binarySearch(firstPosition, positions, {
     atStart: true,
