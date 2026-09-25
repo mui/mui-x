@@ -354,8 +354,8 @@ catalogs:
       specifier: 19.3.0
       version: 19.3.0
     react-router:
-      specifier: ^8.3.1
-      version: 8.3.1
+      specifier: ^8.4.0
+      version: 8.4.0
     react-transition-group:
       specifier: ^4.4.5
       version: 4.4.5
@@ -2408,7 +2408,7 @@ importers:
         version: 19.3.0(react@19.3.0)
       react-router:
         specifier: 'catalog:'
-        version: 8.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 8.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -2525,7 +2525,7 @@ importers:
         version: 19.3.0(react@19.3.0)
       react-router:
         specifier: 'catalog:'
-        version: 8.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 8.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -2657,7 +2657,7 @@ importers:
         version: 19.3.0(react@19.3.0)
       react-router:
         specifier: 'catalog:'
-        version: 8.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 8.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -5422,6 +5422,9 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@remix-run/route-pattern@0.22.1':
+    resolution: {integrity: sha512-czdGJWh09Lapvcqt7Vb09KlrU2PhRJ8xQaI+AItTuD9aDJ5MAgxnS38lnys6Ll+6RJEqPiaUqTwIQhVLwFvv+w==}
 
   '@rolldown/binding-android-arm-eabi@1.2.6':
     resolution: {integrity: sha512-b+jTcARdTiFLI6jB4a5XjTm0RWd6KcRfQj/I2356fxUZemiho9zQLxo0RtCuMDAyKcLo6cEltkgbQp6d1+sjjQ==}
@@ -10064,8 +10067,8 @@ packages:
   react-is@19.2.8:
     resolution: {integrity: sha512-s5un28nYxKJw5gvUHyW5PCC28CvBqLu9r3cWgzHT4Vo/5fqqkFcdRYsGcKf50WMPpjjFZS5d76fn3YCo2njKwQ==}
 
-  react-router@8.3.1:
-    resolution: {integrity: sha512-TEOpiO2g0TJHEOJeRVv4amUFun9v1npCKszvcquNvzETUtJ8udV86ah5eFoHT7g26bsBvT6EiIhqulR8eDF++A==}
+  react-router@8.4.0:
+    resolution: {integrity: sha512-JtydAkBvU9UTEe5qNC+POhu+ZBNM7rlKY2IegwXc7Idj7xfRG16x5RZrw3mju+XlqBxfvb2ky9P3jUp9WyWC1g==}
     engines: {node: '>=22.22.0'}
     peerDependencies:
       react: '>=19.2.7'
@@ -14713,6 +14716,8 @@ snapshots:
       csstype: 3.2.3
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
+
+  '@remix-run/route-pattern@0.22.1': {}
 
   '@rolldown/binding-android-arm-eabi@1.2.6':
     optional: true
@@ -20083,8 +20088,9 @@ snapshots:
 
   react-is@19.2.8: {}
 
-  react-router@8.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  react-router@8.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
     dependencies:
+      '@remix-run/route-pattern': 0.22.1
       cookie-es: 3.1.1
       react: 19.3.0
     optionalDependencies:
