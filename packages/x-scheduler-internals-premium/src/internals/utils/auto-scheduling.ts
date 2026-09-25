@@ -221,11 +221,13 @@ export function computeAutoSchedulingCascade(
         break;
       }
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
-          'Auto-scheduling processed the updated event with the cycle unresolved, so its members may keep violating each other.',
-          'Fix the `dependencies` data — `addDependency()` rejects dependencies that would create a cycle.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
+            'Auto-scheduling processed the updated event with the cycle unresolved, so its members may keep violating each other.',
+            'Fix the `dependencies` data — `addDependency()` rejects dependencies that would create a cycle.',
+          ].join('\n'),
+        );
       }
       ready.push(stalledSeed);
     }
@@ -264,11 +266,13 @@ export function computeAutoSchedulingCascade(
 
   if (process.env.NODE_ENV !== 'production') {
     if (processed.size < members.size) {
-      warnOnce([
-        'MUI X Scheduler: The dependencies provided via props contain a cycle.',
-        'Auto-scheduling left the events on the cycle (and the ones behind it) unmoved.',
-        'Fix the `dependencies` data — `addDependency()` rejects dependencies that would create a cycle.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Scheduler: The dependencies provided via props contain a cycle.',
+          'Auto-scheduling left the events on the cycle (and the ones behind it) unmoved.',
+          'Fix the `dependencies` data — `addDependency()` rejects dependencies that would create a cycle.',
+        ].join('\n'),
+      );
     }
   }
 

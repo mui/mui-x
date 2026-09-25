@@ -51,8 +51,14 @@ export const multiSectionDigitalClockHandler: ViewHandler<TimeView> = {
     const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
     const hoursLabel = parseInt(adapter.format(value, hasMeridiem ? 'hours12h' : 'hours24h'), 10);
     const minutesLabel = adapter.getMinutes(value).toString();
-    await user.click(screen.getByRole('option', { name: `${hoursLabel} hours` }));
-    await user.click(screen.getByRole('option', { name: `${minutesLabel} minutes` }));
+    await user.click(
+      screen.getByRole('option', { name: `${hoursLabel} ${hoursLabel === 1 ? 'hour' : 'hours'}` }),
+    );
+    await user.click(
+      screen.getByRole('option', {
+        name: `${minutesLabel} ${Number(minutesLabel) === 1 ? 'minute' : 'minutes'}`,
+      }),
+    );
     if (hasMeridiem) {
       await user.click(
         screen.getByRole('option', {

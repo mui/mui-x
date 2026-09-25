@@ -167,6 +167,10 @@ StaticDatePicker.propTypes /* remove-proptypes */ = {
    */
   onAccept: PropTypes.func,
   /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
+  /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
@@ -180,7 +184,8 @@ StaticDatePicker.propTypes /* remove-proptypes */ = {
   /**
    * Callback fired when component requests to be closed.
    * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
-   * @deprecated Please avoid using as it will be removed in next major version.
+   * @deprecated Use `onCancel` or `onAccept` instead, depending on the action you want to react to.
+   * This callback will be removed in the next major version.
    */
   onClose: PropTypes.func,
   /**
