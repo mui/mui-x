@@ -18,7 +18,10 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependencyCreation,
   SchedulerDependencyCreationProperties,
+  SchedulerDependencyEditor,
   SchedulerDependencyId,
+  SchedulerDependencyUpdatedProperties,
+  SchedulerUpdateDependencyResult,
 } from '../models';
 import type {
   EventTimelinePremiumState,
@@ -167,6 +170,7 @@ const mapper: SchedulerParametersToStateMapper<
       ...buildDependenciesState(parameters.dependencies),
       areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
       dependencyCreation: null,
+      dependencyEditor: null,
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
       preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
       shouldEventRequireResource,
@@ -186,7 +190,7 @@ const mapper: SchedulerParametersToStateMapper<
       // Disabling the feature discards its in-flight gesture: kept in the raw state
       // it would come back on screen if the feature is re-enabled. The selection is
       // cleared by the store effect, which can check the selected type.
-      ...(areDependenciesEnabled ? null : { dependencyCreation: null }),
+      ...(areDependenciesEnabled ? null : { dependencyCreation: null, dependencyEditor: null }),
       shouldEventRequireResource,
       hasInitialized: true,
     };
@@ -249,16 +253,40 @@ export class EventTimelinePremiumStore<
         this.setSelection(null);
       }
     };
+    // Same for the dependency open in the dialog: its form must not come back on screen.
+    const closeInactiveDependencyEditor = () => {
+      const { dependencyEditor, dependencyModelLookup, processedEventLookup } = this.state;
+      if (dependencyEditor === null) {
+        return;
+      }
+      const dependency = dependencyModelLookup.get(dependencyEditor.dependencyId);
+      if (dependency === undefined || !isDependencyActive(processedEventLookup, dependency)) {
+        this.closeDependencyEditor();
+      }
+    };
+    const clearInactiveDependencyState = () => {
+      clearInactiveDependencySelection();
+      closeInactiveDependencyEditor();
+    };
     this.disposables.defer(
       this.registerStoreEffect(
         (state) => state.dependencyModelLookup,
-        clearInactiveDependencySelection,
+        clearInactiveDependencyState,
       ),
     );
     this.disposables.defer(
+      this.registerStoreEffect((state) => state.processedEventLookup, clearInactiveDependencyState),
+    );
+
+    // One editing surface at a time: editing an event closes the dependency dialog.
+    this.disposables.defer(
       this.registerStoreEffect(
-        (state) => state.processedEventLookup,
-        clearInactiveDependencySelection,
+        (state) => state.editingOccurrence,
+        (previous, next) => {
+          if (previous === null && next !== null) {
+            this.closeDependencyEditor();
+          }
+        },
       ),
     );
 
@@ -354,6 +382,16 @@ export class EventTimelinePremiumStore<
   ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
 
   /**
+   * Changes the properties of an existing dependency.
+   * Rejects an unknown id, a read-only endpoint event and a duplicate — see the returned
+   * `SchedulerUpdateDependencyResult`.
+   */
+  public updateDependency = (
+    dependencyId: SchedulerDependencyId,
+    changes: SchedulerDependencyUpdatedProperties,
+  ): SchedulerUpdateDependencyResult => this.scheduling.updateDependency(dependencyId, changes);
+
+  /**
    * Deletes a dependency. Returns `false` when the deletion was refused: the id is
    * unknown, or an endpoint event is read-only.
    */
@@ -379,6 +417,29 @@ export class EventTimelinePremiumStore<
    */
   public setSelectedDependencyId = (dependencyId: SchedulerDependencyId | null) => {
     this.setSelection(dependencyId === null ? null : { type: 'dependency', id: dependencyId });
+  };
+
+  /**
+   * Opens the dependency dialog on a dependency, anchored at `anchor`. Closes the event
+   * editing surface: only one dialog is open at a time.
+   */
+  public openDependencyEditor = (
+    dependencyId: SchedulerDependencyId,
+    anchor: SchedulerDependencyEditor['anchor'],
+  ) => {
+    if (this.state.editingOccurrence !== null) {
+      this.stopEditing();
+    }
+    this.set('dependencyEditor', { dependencyId, anchor });
+  };
+
+  /**
+   * Closes the dependency dialog.
+   */
+  public closeDependencyEditor = () => {
+    if (this.state.dependencyEditor !== null) {
+      this.set('dependencyEditor', null);
+    }
   };
 
   /**

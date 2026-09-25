@@ -668,6 +668,146 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
     });
   });
 
+  describe('method: updateDependency', () => {
+    it('should emit onDependenciesChange with the new type', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([
+        { ...DEP_AB, type: 'StartToStart' },
+      ]);
+    });
+
+    it('should not emit onDependenciesChange when nothing changes', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'FinishToStart' }).status).to.equal('updated');
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should reject an unknown dependency', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('nope', { type: 'StartToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'unknownDependency',
+      });
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should reject a type change duplicating another dependency between the same events', () => {
+      const onDependenciesChange = vi.fn();
+      const depSS: SchedulerDependency = { ...DEP_AB, id: 'dep-2', type: 'StartToStart' };
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB, depSS], onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'duplicateDependency',
+        dependencyId: 'dep-2',
+      });
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should reject a dependency with a read-only event', () => {
+      const onDependenciesChange = vi.fn();
+      const readOnlyEventB = EventBuilder.new().id('event-b').readOnly().build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, readOnlyEventB],
+          dependencies: [DEP_AB],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'readOnlyEvent',
+        eventId: 'event-b',
+      });
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+  });
+
+  describe('method: openDependencyEditor', () => {
+    it('should open the dependency dialog at the given anchor', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+
+      store.openDependencyEditor('dep-1', { x: 10, y: 20 });
+
+      expect(eventTimelinePremiumDependencySelectors.editor(store.state)).to.deep.equal({
+        dependencyId: 'dep-1',
+        anchor: { x: 10, y: 20 },
+      });
+
+      store.closeDependencyEditor();
+      expect(eventTimelinePremiumDependencySelectors.editor(store.state)).to.equal(null);
+    });
+
+    it('should stop editing an event, and close when an event starts being edited', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      const occurrence = EventBuilder.new().id('event-a').toOccurrence();
+
+      store.startEditing(occurrence, 'armed');
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+      expect(store.state.editingOccurrence).to.equal(null);
+
+      store.startEditing(occurrence, 'armed');
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the dependency is removed', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the feature is disabled', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+  });
+
   describe('referential integrity', () => {
     it('should remove the dependencies of a deleted event in the same update', () => {
       const onDependenciesChange = vi.fn();

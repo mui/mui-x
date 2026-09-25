@@ -115,6 +115,29 @@ export type SchedulerAddDependencyResult =
   | { status: 'rejected'; reason: 'cyclicDependency' };
 
 /**
+ * Properties to change on an existing dependency with `updateDependency()`.
+ */
+export type SchedulerDependencyUpdatedProperties = Partial<Pick<SchedulerDependency, 'type'>>;
+
+export type SchedulerUpdateDependencyResult =
+  | { status: 'updated' }
+  | { status: 'rejected'; reason: 'unknownDependency' }
+  | { status: 'rejected'; reason: 'readOnlyEvent'; eventId: SchedulerEventId }
+  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId };
+
+/**
+ * The dependency open in the dependency dialog, and where the dialog is anchored.
+ */
+export interface SchedulerDependencyEditor {
+  dependencyId: SchedulerDependencyId;
+  /**
+   * The point the dialog is anchored to, in the coordinates of the dependency overlays:
+   * `x` from the start of the events area, `y` in absolute row-space.
+   */
+  anchor: { x: number; y: number };
+}
+
+/**
  * State slice holding the dependencies collection.
  */
 export interface SchedulerDependenciesState {

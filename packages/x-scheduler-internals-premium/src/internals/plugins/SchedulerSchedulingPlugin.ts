@@ -21,7 +21,9 @@ import type {
   SchedulerDependencyId,
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
+  SchedulerDependencyUpdatedProperties,
   SchedulerLazyLoadingParameters,
+  SchedulerUpdateDependencyResult,
 } from '../../models';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
 import { computeAutoSchedulingCascade } from '../utils/auto-scheduling';
@@ -204,6 +206,51 @@ export class SchedulerSchedulingPlugin<
     const dependency: SchedulerDependency = { ...properties, id: generateId('dependency') };
     this.updateDependencies([...this.store.state.dependencyModelList, dependency]);
     return { status: 'added', id: dependency.id };
+  };
+
+  /**
+   * Changes the properties of an existing dependency.
+   * Rejects an unknown id, a dependency with a read-only endpoint event, and a type change
+   * duplicating another dependency between the same events. An update keeps the source
+   * and target, so it cannot close a cycle.
+   * Implementation of the store's `updateDependency()` — call it through the store.
+   */
+  public updateDependency = (
+    dependencyId: SchedulerDependencyId,
+    changes: SchedulerDependencyUpdatedProperties,
+  ): SchedulerUpdateDependencyResult => {
+    const { dependencyModelLookup, dependencyModelList } = this.store.state;
+    const dependency = dependencyModelLookup.get(dependencyId);
+    if (dependency === undefined) {
+      return { status: 'rejected', reason: 'unknownDependency' };
+    }
+    for (const eventId of [dependency.source, dependency.target]) {
+      if (schedulerEventSelectors.isReadOnly(this.store.state, eventId)) {
+        return { status: 'rejected', reason: 'readOnlyEvent', eventId };
+      }
+    }
+
+    const updated: SchedulerDependency = { ...dependency, ...changes };
+    if (updated.type === dependency.type) {
+      return { status: 'updated' };
+    }
+
+    const duplicate = groupRetainedDependenciesBySource(dependencyModelLookup)
+      .get(updated.source)
+      ?.find(
+        (entry) =>
+          entry.id !== dependencyId &&
+          entry.target === updated.target &&
+          entry.type === updated.type,
+      );
+    if (duplicate) {
+      return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
+    }
+
+    this.updateDependencies(
+      dependencyModelList.map((entry) => (entry.id === dependencyId ? updated : entry)),
+    );
+    return { status: 'updated' };
   };
 
   /**

@@ -126,6 +126,14 @@ export const eventTimelinePremiumDependencySelectors = {
     return selectedId === null ? null : (state.dependencyModelLookup.get(selectedId) ?? null);
   },
   /**
+   * The dependency open in the dependency dialog and its anchor, or `null`.
+   * Masked by membership like `selectedId`.
+   */
+  editor: (state: State) => {
+    const editor = state.dependencyEditor;
+    return editor !== null && state.dependencyModelLookup.has(editor.dependencyId) ? editor : null;
+  },
+  /**
    * Whether the dependency cannot be deleted because one of its events is read-only.
    * Unknown ids resolve to `false`.
    */
