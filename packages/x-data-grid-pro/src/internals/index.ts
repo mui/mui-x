@@ -58,6 +58,7 @@ export {
   gridDataSourceLoadingIdSelector,
 } from '../hooks/features/dataSource/gridDataSourceSelector';
 export { getGroupKeys } from '../hooks/features/dataSource/utils';
+export type { GridDataSourceNestedLazyLoaderPrivateApi } from '../hooks/features/dataSource/models';
 
 export type {
   GridExperimentalProFeatures,
