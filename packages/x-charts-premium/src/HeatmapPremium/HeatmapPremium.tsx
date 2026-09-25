@@ -13,6 +13,7 @@ import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
+import type { ChartPublicAPI } from '@mui/x-charts/internals';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
@@ -22,7 +23,8 @@ import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 export interface HeatmapPremiumSlots extends HeatmapSlots {}
 export interface HeatmapPremiumSlotProps extends HeatmapSlotProps {}
 
-export interface HeatmapPremiumProps extends HeatmapProps {
+export interface HeatmapPremiumProps extends Omit<HeatmapProps, 'apiRef'> {
+  apiRef?: React.RefObject<ChartPublicAPI<HeatmapPremiumPluginSignatures> | undefined>;
   /**
    * The type of renderer to use for the heatmap plot.
    * - `svg-single`: Renders every scatter item in a `<rect />` element.
@@ -93,8 +95,10 @@ HeatmapPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      exportAsExcel: PropTypes.func.isRequired,
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      getDataAsExcel: PropTypes.func.isRequired,
       setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
     }),
