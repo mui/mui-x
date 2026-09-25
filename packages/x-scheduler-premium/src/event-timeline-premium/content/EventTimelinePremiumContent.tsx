@@ -734,7 +734,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   // Build virtualizer column model: one pinned title column + one column per tick.
   const { tickCount, tickWidth } = config;
-  const columnsTotalWidth = titleColumnWidth + tickCount * tickWidth;
 
   // Row heights mirror the CSS. The cell stretches to fit overlapping events
   // (`--lane-count` lanes), so we need the per-resource lane count.
@@ -777,8 +776,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     dimensions: {
       rowHeight: defaultRowHeight,
       topPinnedHeight: headerHeight,
-      columnsTotalWidth,
-      leftPinnedWidth: titleColumnWidth,
     },
     virtualization: { layoutMode: 'controlled' },
     rows,

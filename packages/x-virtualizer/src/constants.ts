@@ -1,4 +1,4 @@
-export const DEFAULT_COLUMNS = [{ field: 'DEFAULT_COLUMN' }];
+export const DEFAULT_COLUMNS = [{ field: 'DEFAULT_COLUMN', computedWidth: 0 }];
 
 export const DEFAULT_PARAMS = {
   resizeThrottleMs: 100,
@@ -6,9 +6,6 @@ export const DEFAULT_PARAMS = {
 
   dimensions: {
     autoHeight: false,
-    columnsTotalWidth: 0,
-    leftPinnedWidth: 0,
-    rightPinnedWidth: 0,
     topPinnedHeight: 0,
     bottomPinnedHeight: 0,
   },

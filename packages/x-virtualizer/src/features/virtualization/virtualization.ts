@@ -227,7 +227,7 @@ export type VirtualizationLayoutParams = {
 function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, api: RequiredAPI) {
   const {
     layout,
-    dimensions: { rowHeight, columnsTotalWidth = 0 },
+    dimensions: { rowHeight },
     virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
     colspan,
     initialState,
@@ -260,6 +260,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const layoutMode = useStore(store, selectors.layoutMode);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
+
+  // The meta of the columns of this render.
+  // Can't get it from the store because the store gets it after the render.
+  const columnPositions = api.columnsMeta.positions;
+  const columnsTotalWidth = api.columnsMeta.totalWidth;
 
   /*
    * Scroll context logic
@@ -587,6 +592,9 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     }
   });
 
+  // Columns can move, resize or get pinned without changing the dimensions.
+  useStoreEffect(store, Dimensions.selectors.columnsMeta, forceUpdateRenderContext);
+
   useEnhancedEffect(() => {
     if (isUpdateScheduled.current) {
       forceUpdateRenderContext();
@@ -683,7 +691,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     }
 
     const rowElements: React.ReactNode[] = [];
-    const columnPositions = Dimensions.selectors.columnPositions(store.state, columns);
 
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
@@ -956,6 +963,7 @@ function inputsSelector(
   layoutMode: VirtualizationState['layoutMode'],
 ) {
   const dimensions = Dimensions.selectors.dimensions(store.state);
+  const columnsMeta = Dimensions.selectors.columnsMeta(store.state);
   const rows = params.rows;
   const range = params.range;
   const columns = params.columns;
@@ -971,15 +979,15 @@ function inputsSelector(
     autoHeight: dimensions.autoHeight,
     rowBufferPx: params.virtualization.rowBufferPx,
     columnBufferPx: params.virtualization.columnBufferPx,
-    leftPinnedWidth: dimensions.leftPinnedWidth,
-    rightPinnedWidth: dimensions.rightPinnedWidth,
-    columnsTotalWidth: dimensions.columnsTotalWidth,
+    leftPinnedWidth: columnsMeta.pinnedLeftColumnsTotalWidth,
+    rightPinnedWidth: columnsMeta.pinnedRightColumnsTotalWidth,
+    columnsTotalWidth: columnsMeta.totalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
     viewportInnerHeight: dimensions.viewportInnerSize.height,
     lastRowHeight: lastRowId !== undefined ? api.rowsMeta.getRowHeight(lastRowId) : 0,
     lastColumnWidth: lastColumn?.computedWidth ?? 0,
     rowsMeta: Dimensions.selectors.rowsMeta(store.state),
-    columnPositions: Dimensions.selectors.columnPositions(store.state, params.columns),
+    columnPositions: columnsMeta.positions,
     rows,
     range,
     pinnedColumns: params.pinnedColumns,
@@ -1498,14 +1506,14 @@ function isLowOnRenderedBuffer(
     return true;
   }
 
-  const columnPositions = Dimensions.selectors.columnPositions(store.state, params.columns);
+  const columnsMeta = Dimensions.selectors.columnsMeta(store.state);
   const pinnedLeftCount = params.pinnedColumns?.left.length ?? 0;
   const pinnedRightCount = params.pinnedColumns?.right.length ?? 0;
 
-  const visibleLeft = Math.abs(scrollPosition.left) + dimensions.leftPinnedWidth;
+  const visibleLeft = Math.abs(scrollPosition.left) + columnsMeta.pinnedLeftColumnsTotalWidth;
   const visibleRight = visibleLeft + dimensions.viewportInnerSize.width;
-  const renderedLeft = columnPositions[context.firstColumnIndex] ?? 0;
-  const renderedRight = columnPositions[context.lastColumnIndex] ?? dimensions.columnsTotalWidth;
+  const renderedLeft = columnsMeta.positions[context.firstColumnIndex] ?? 0;
+  const renderedRight = columnsMeta.positions[context.lastColumnIndex] ?? columnsMeta.totalWidth;
 
   if (
     context.firstColumnIndex > pinnedLeftCount &&
