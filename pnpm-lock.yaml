@@ -183,7 +183,7 @@ catalogs:
       specifier: ^8.0.1
       version: 8.0.1
     '@babel/runtime':
-      specifier: ^8.0.5
+      specifier: ^8.0.0
       version: 8.0.5
     '@babel/traverse':
       specifier: ^8.0.6
