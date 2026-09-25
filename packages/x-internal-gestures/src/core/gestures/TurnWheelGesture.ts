@@ -140,18 +140,18 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     totalDeltaZ: 0,
   };
 
-  protected readonly isSinglePhase!: true;
+  declare protected readonly isSinglePhase: true;
 
-  protected readonly eventType!: TurnWheelEvent;
+  declare protected readonly eventType: TurnWheelEvent;
 
-  protected readonly optionsType!: TurnWheelGestureOptions<GestureName>;
+  declare protected readonly optionsType: TurnWheelGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<
+  declare protected readonly mutableOptionsType: Omit<
     typeof this.optionsType,
     'name' | 'pointerMode' | 'pointerOptions' | 'passive'
   >;
 
-  protected readonly mutableStateType!: Partial<typeof this.state>;
+  declare protected readonly mutableStateType: Partial<typeof this.state>;
 
   /**
    * Scaling factor for delta values

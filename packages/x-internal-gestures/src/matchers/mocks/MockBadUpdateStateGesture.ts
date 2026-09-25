@@ -7,15 +7,15 @@ export class MockBadUpdateStateGesture extends Gesture<string> {
     startPosition: { x: 0, y: 0 },
   };
 
-  protected readonly isSinglePhase!: false;
+  declare protected readonly isSinglePhase: false;
 
-  protected readonly eventType!: never;
+  declare protected readonly eventType: never;
 
-  protected readonly optionsType!: never;
+  declare protected readonly optionsType: never;
 
-  protected readonly mutableOptionsType!: never;
+  declare protected readonly mutableOptionsType: never;
 
-  protected readonly mutableStateType!: MockState;
+  declare protected readonly mutableStateType: MockState;
 
   protected resetState(): void {
     this.state = {

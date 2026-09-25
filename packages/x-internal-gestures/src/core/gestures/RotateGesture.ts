@@ -78,15 +78,15 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
     lastDelta: 0,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare protected readonly isSinglePhase: false;
 
-  protected readonly eventType!: RotateEvent;
+  declare protected readonly eventType: RotateEvent;
 
-  protected readonly optionsType!: RotateGestureOptions<GestureName>;
+  declare protected readonly optionsType: RotateGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: Omit<
+  declare protected readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     'startAngle' | 'lastAngle' | 'lastTime' | 'velocity' | 'lastDelta'
   >;
