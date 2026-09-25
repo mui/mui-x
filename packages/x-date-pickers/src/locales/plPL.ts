@@ -9,6 +9,19 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'popołudnie',
 };
 
+// Polish has 3 count-based forms: 1, 2-4 (excluding 12-14), and everything else
+function getPluralForm(count: number, one: string, few: string, many: string) {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+  if (count === 1) {
+    return one;
+  }
+  if (lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14)) {
+    return few;
+  }
+  return many;
+}
+
 const plPLPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Poprzedni miesiąc',
@@ -47,9 +60,12 @@ const plPLPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Wybierz ${timeViews[view]}. ${!formattedTime ? 'Nie wybrano czasu' : `Wybrany czas to ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} godzin`,
-  minutesClockNumberText: (minutes) => `${minutes} minut`,
-  secondsClockNumberText: (seconds) => `${seconds} sekund`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralForm(Number(hours), 'godzina', 'godziny', 'godzin')}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralForm(Number(minutes), 'minuta', 'minuty', 'minut')}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralForm(Number(seconds), 'sekunda', 'sekundy', 'sekund')}`,
 
   // Digital clock labels
   selectViewText: (view) => `Wybierz ${timeViews[view]}`,

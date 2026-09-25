@@ -18,9 +18,6 @@ const weekdayNames: Record<SchedulerWeekday, string> = {
   saturday: 'суббота',
 };
 
-const getWeekdayName = (weekDay: string) =>
-  weekDay in weekdayNames ? weekdayNames[weekDay as SchedulerWeekday] : weekDay;
-
 const recurringWeekdayNames = {
   sunday: 'по воскресеньям',
   monday: 'по понедельникам',
@@ -82,13 +79,13 @@ const ruRUDialog: SchedulerDialogTranslations = {
     `Повторяется еженедельно ${recurringWeekdayNames[weekday]}`,
   recurrenceMonthlyFrequencyLabel: 'мес.',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `${dayNumber}-е число месяца`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) =>
-    `${getWeekdayName(weekDay)} последней недели месяца`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay}, последняя неделя`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekday }) =>
+    `${weekdayNames[weekday]} последней недели месяца`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName}, последняя неделя`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Повторяется ежемесячно ${dayNumber}-го числа`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) =>
-    `${getWeekdayName(weekDay)} ${weekOrdinalNames[ord]} недели месяца`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay}, ${ord}-я неделя`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday }) =>
+    `${weekdayNames[weekday]} ${weekOrdinalNames[ord]} недели месяца`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName}, ${ord}-я неделя`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'В',
   recurrenceYearlyFrequencyLabel: 'г.',
   recurrenceYearlyPresetLabel: (date) => `Повторяется ежегодно ${date}`,
