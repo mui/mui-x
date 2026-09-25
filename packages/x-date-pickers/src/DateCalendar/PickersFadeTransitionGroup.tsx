@@ -56,11 +56,11 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
         appear={false}
         mountOnEnter
         unmountOnExit
+        exit={false}
         key={transKey}
         timeout={{
           appear: theme.transitions.duration.enteringScreen,
           enter: theme.transitions.duration.enteringScreen,
-          exit: 0,
         }}
       >
         {children}

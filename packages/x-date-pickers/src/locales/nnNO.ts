@@ -47,9 +47,11 @@ const nnNOPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Vel ${timeViews[view]}. ${!formattedTime ? 'Ingen tid vald' : `Vald tid er ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} timar`,
-  minutesClockNumberText: (minutes) => `${minutes} minuttar`,
-  secondsClockNumberText: (seconds) => `${seconds} sekundar`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'time' : 'timar'}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${Number(minutes) === 1 ? 'minutt' : 'minuttar'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'sekund' : 'sekundar'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Vel ${timeViews[view]}`,

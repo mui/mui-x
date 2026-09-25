@@ -94,6 +94,7 @@
         }
       }
     },
+    "onCancel": { "description": "Callback fired when the Cancel action is triggered." },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
