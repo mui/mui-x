@@ -147,7 +147,7 @@
     "vite": "catalog:",
     "vitest": "catalog:",
     "yargs": "catalog:",
-    "zod": "4.6.4"
+    "zod": "4.6.5"
   },
   "config": {
     "valeVersion": "3.21.0"
