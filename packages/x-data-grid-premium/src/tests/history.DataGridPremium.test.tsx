@@ -96,6 +96,29 @@ describe('<DataGridPremium /> - History', () => {
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
     });
+
+    it('should undo a cell edit on a page other than the first', async () => {
+      const { user } = render(
+        <Test
+          pagination
+          initialState={{ pagination: { paginationModel: { page: 1, pageSize: 3 } } }}
+          pageSizeOptions={[3]}
+        />,
+      );
+      const originalValue = apiRef.current!.getRow(3).currencyPair;
+      const cell = getCell(3, 2);
+      await user.dblClick(cell);
+      await user.keyboard('10000');
+      await user.click(getCell(4, 2));
+
+      let result: boolean | undefined;
+      await act(async () => {
+        result = await apiRef.current!.history.undo();
+      });
+
+      expect(result).to.equal(true);
+      expect(apiRef.current!.getRow(3).currencyPair).to.equal(originalValue);
+    });
   });
 
   describe('Row updates through API', () => {
