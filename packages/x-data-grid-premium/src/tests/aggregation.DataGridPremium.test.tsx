@@ -592,6 +592,42 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });
+
+    it('should remove the aggregation when selecting the empty "Aggregation" select value', async () => {
+      const onAggregationModelChange = vi.fn();
+      const { user } = await render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'max', category1: 'size' } } }}
+          onAggregationModelChange={onAggregationModelChange}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+
+      await act(async () => apiRef.current?.showColumnMenu('id'));
+
+      await user.click(screen.getByLabelText('Aggregation'));
+      await user.click(
+        within(
+          screen.getByRole('listbox', {
+            name: 'Aggregation',
+          }),
+        ).getByText('...'),
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '']);
+      // The other column keeps its own aggregation.
+      expect(getColumnValues(1)).to.deep.equal([
+        'Cat A',
+        'Cat A',
+        'Cat A',
+        'Cat A',
+        'Cat A',
+        'Cat B',
+        '6' /* Agg */,
+      ]);
+      expect(onAggregationModelChange.mock.lastCall?.[0]).to.deep.equal({ category1: 'size' });
+    });
   });
 
   describe('prop: aggregatedRows', () => {
