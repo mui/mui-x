@@ -17,12 +17,14 @@ function warnIfHostElementRowSlot(
     return;
   }
   if (typeof value === 'string') {
-    warnOnce([
-      `MUI X: The \`${slotName}\` slot was given a host element (e.g. \`'div'\`).`,
-      `The ${slotName} is a self-suppressing row component: it reads \`messageId\`/\`index\`/\`items\` and renders only at its boundary, returning \`null\` otherwise.`,
-      `A host element ignores those props (leaking them onto the DOM node) and renders on every message row.`,
-      `Pass a component, or \`null\` to hide the slot entirely.`,
-    ]);
+    warnOnce(
+      [
+        `MUI X: The \`${slotName}\` slot was given a host element (e.g. \`'div'\`).`,
+        `The ${slotName} is a self-suppressing row component: it reads \`messageId\`/\`index\`/\`items\` and renders only at its boundary, returning \`null\` otherwise.`,
+        `A host element ignores those props (leaking them onto the DOM node) and renders on every message row.`,
+        `Pass a component, or \`null\` to hide the slot entirely.`,
+      ].join('\n'),
+    );
   }
 }
 
@@ -34,11 +36,13 @@ function warnIfDividerSlotWithoutFeature(
     return;
   }
   if (hasCustomization) {
-    warnOnce([
-      `MUI X: A \`${slotName}\` slot or slotProps entry was provided, but the \`${slotName}\` feature is disabled.`,
-      `Dividers are opt-in and render nothing unless enabled, so the customization has no effect.`,
-      `Pass \`features={{ ${slotName}: true }}\` to render it.`,
-    ]);
+    warnOnce(
+      [
+        `MUI X: A \`${slotName}\` slot or slotProps entry was provided, but the \`${slotName}\` feature is disabled.`,
+        `Dividers are opt-in and render nothing unless enabled, so the customization has no effect.`,
+        `Pass \`features={{ ${slotName}: true }}\` to render it.`,
+      ].join('\n'),
+    );
   }
 }
 

@@ -114,18 +114,22 @@ export function useEventDialogFormField(
 ): UseEventDialogFormFieldReturnValue<unknown> {
   if (process.env.NODE_ENV !== 'production') {
     if (!BUILT_IN_FORM_KEYS.has(key) && isBuiltInEventProperty(key)) {
-      warnOnce([
-        `MUI X Scheduler: useEventDialogFormField() received the key "${key}", which is a built-in event property.`,
-        'The edit is dropped on save, so the field cannot be persisted.',
-        'Use a custom key that does not collide with the event model.',
-      ]);
+      warnOnce(
+        [
+          `MUI X Scheduler: useEventDialogFormField() received the key "${key}", which is a built-in event property.`,
+          'The edit is dropped on save, so the field cannot be persisted.',
+          'Use a custom key that does not collide with the event model.',
+        ].join('\n'),
+      );
     }
     if (BUILT_IN_FORM_KEYS.has(key) && parameters.defaultValue !== undefined) {
-      warnOnce([
-        `MUI X Scheduler: useEventDialogFormField() received a \`defaultValue\` for the built-in key "${key}".`,
-        'Built-in keys are always seeded from the event being edited, so the default is never applied.',
-        'Remove the `defaultValue`, or use a custom key if you meant to add a field of your own.',
-      ]);
+      warnOnce(
+        [
+          `MUI X Scheduler: useEventDialogFormField() received a \`defaultValue\` for the built-in key "${key}".`,
+          'Built-in keys are always seeded from the event being edited, so the default is never applied.',
+          'Remove the `defaultValue`, or use a custom key if you meant to add a field of your own.',
+        ].join('\n'),
+      );
     }
   }
 

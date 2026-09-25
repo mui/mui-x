@@ -1,7 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useYScale } from '../hooks';
 import { DEFAULT_SPACING, DEFAULT_SPACING_MIDDLE_OTHER_AXIS, ReferenceLineRoot } from './common';
 import type { CommonChartsReferenceLineProps } from './common';
@@ -103,9 +103,8 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
 
   if (yPosition === undefined) {
     if (process.env.NODE_ENV !== 'production') {
-      warnOnce(
+      errorOnce(
         `MUI X Charts: the value ${y} does not exist in the data of y axis with id ${axisId}.`,
-        'error',
       );
     }
     return null;

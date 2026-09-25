@@ -95,13 +95,14 @@ This flag tells the message list that an additional page of history can be fetch
 
 The chat store exposes the history pagination state—readable from `useChat()` or via `chatSelectors`:
 
-| Store field        | Type                  | Description                                                                     |
-| :----------------- | :-------------------- | :------------------------------------------------------------------------------ |
-| `hasMoreHistory`   | `boolean`             | Whether more history is available                                               |
-| `isLoadingHistory` | `boolean`             | Whether a history fetch is currently in flight (initial page or older messages) |
-| `historyCursor`    | `Cursor \| undefined` | Pagination cursor for history loading                                           |
+| Store field        | Type                                         | Description                                                                     |
+| :----------------- | :------------------------------------------- | :------------------------------------------------------------------------------ |
+| `hasMoreHistory`   | `boolean`                                    | Whether more history is available                                               |
+| `isLoadingHistory` | `boolean`                                    | Whether a history fetch is currently in flight (initial page or older messages) |
+| `historyStatus`    | `'idle' \| 'loading' \| 'loaded' \| 'error'` | Lifecycle of the initial history page for the active conversation               |
+| `historyCursor`    | `Cursor \| undefined`                        | Pagination cursor for history loading                                           |
 
-All three fields are readable through `useChat()` or the corresponding selectors (`selectHasMoreHistory`, `selectIsLoadingHistory`).
+All four fields are readable through `useChat()` or the corresponding selectors (`selectHasMoreHistory`, `selectIsLoadingHistory`, `selectHistoryStatus`).
 
 ## Loading older messages
 
@@ -132,7 +133,7 @@ const { isLoadingHistory } = useChat();
 ```
 
 `isLoadingHistory` is `true` whenever a history fetch for the active conversation is in flight—both the initial page fetched when a conversation opens and the older pages fetched when the user scrolls to the top.
-Its initial value is `false`, so server-rendered markup is stable; the flag flips after mount while the first page is being fetched.
+When the provider mounts with an active conversation and an adapter that implements `listMessages`, the flag starts as `true`, so the first render already reflects the pending fetch. Otherwise it starts as `false`.
 Switching conversations resets the flag along with the rest of the message state.
 One edge case: with controlled `messages` and `setActiveConversation(undefined)`, the flag can stay `true` briefly until the in-flight request settles.
 
