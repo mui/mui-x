@@ -46,7 +46,7 @@
     "checkboxColDef": {
       "type": {
         "name": "shape",
-        "description": "{ aggregable?: bool, align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', allowFormulas?: bool, availableAggregationFunctions?: Array&lt;string&gt;, cellClassName?: func<br>&#124;&nbsp;string, chartable?: bool, colSpan?: func<br>&#124;&nbsp;number, description?: string, disableColumnMenu?: bool, disableExport?: bool, disableReorder?: bool, display?: 'flex'<br>&#124;&nbsp;'text', editable?: bool, examples?: array, filterable?: bool, filterOperators?: Array&lt;{ getApplyFilterFn: func, getValueAsString?: func, headerLabel?: string, InputComponent?: elementType, InputComponentProps?: object, label?: string, requiresFilterValue?: bool, value: string }&gt;, flex?: number, getApplyQuickFilterFn?: func, getSortComparator?: func, groupable?: bool, groupingValueGetter?: func, groupingValueSetter?: func, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, hideable?: bool, hideSortIcons?: bool, maxWidth?: number, minWidth?: number, pastedValueParser?: func, pinnable?: bool, pivotable?: bool, preProcessEditCellProps?: func, renderCell?: func, renderEditCell?: func, renderHeader?: func, renderHeaderFilter?: func, resizable?: bool, rowHeader?: bool, rowSpanValueGetter?: func, sortable?: bool, sortComparator?: func, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, valueFormatter?: func, valueGetter?: func, valueParser?: func, valueSetter?: func, width?: number }"
+        "description": "{ aggregable?: bool, align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', allowFormulas?: bool, availableAggregationFunctions?: Array&lt;string&gt;, cellClassName?: func<br>&#124;&nbsp;string, chartable?: bool, colSpan?: func<br>&#124;&nbsp;number, computed?: bool, description?: string, disableColumnMenu?: bool, disableExport?: bool, disableReorder?: bool, display?: 'flex'<br>&#124;&nbsp;'text', editable?: bool, examples?: array, filterable?: bool, filterOperators?: Array&lt;{ getApplyFilterFn: func, getValueAsString?: func, headerLabel?: string, InputComponent?: elementType, InputComponentProps?: object, label?: string, requiresFilterValue?: bool, value: string }&gt;, flex?: number, getApplyQuickFilterFn?: func, getSortComparator?: func, groupable?: bool, groupingValueGetter?: func, groupingValueSetter?: func, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, hideable?: bool, hideSortIcons?: bool, maxWidth?: number, minWidth?: number, pastedValueParser?: func, pinnable?: bool, pivotable?: bool, preProcessEditCellProps?: func, renderCell?: func, renderEditCell?: func, renderHeader?: func, renderHeaderFilter?: func, resizable?: bool, rowHeader?: bool, rowSpanValueGetter?: func, sortable?: bool, sortComparator?: func, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, valueFormatter?: func, valueGetter?: func, valueParser?: func, valueSetter?: func, width?: number }"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -58,6 +58,13 @@
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
+    "computedColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
+    "computedColumns": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ description?: string, field: string, formula: string, headerName: string, numberFormat?: { compactDisplay?: 'long'<br>&#124;&nbsp;'short', currency?: string, currencyDisplay?: 'code'<br>&#124;&nbsp;'name'<br>&#124;&nbsp;'narrowSymbol'<br>&#124;&nbsp;'symbol', currencySign?: 'accounting'<br>&#124;&nbsp;'standard', localeMatcher?: 'best fit'<br>&#124;&nbsp;'lookup', maximumFractionDigits?: number, maximumSignificantDigits?: number, minimumFractionDigits?: number, minimumIntegerDigits?: number, minimumSignificantDigits?: number, notation?: 'compact'<br>&#124;&nbsp;'engineering'<br>&#124;&nbsp;'scientific'<br>&#124;&nbsp;'standard', numberingSystem?: string, roundingIncrement?: 1<br>&#124;&nbsp;2<br>&#124;&nbsp;5<br>&#124;&nbsp;10<br>&#124;&nbsp;20<br>&#124;&nbsp;25<br>&#124;&nbsp;50<br>&#124;&nbsp;100<br>&#124;&nbsp;200<br>&#124;&nbsp;250<br>&#124;&nbsp;500<br>&#124;&nbsp;1000<br>&#124;&nbsp;2000<br>&#124;&nbsp;2500<br>&#124;&nbsp;5000, roundingMode?: 'ceil'<br>&#124;&nbsp;'expand'<br>&#124;&nbsp;'floor'<br>&#124;&nbsp;'halfCeil'<br>&#124;&nbsp;'halfEven'<br>&#124;&nbsp;'halfExpand'<br>&#124;&nbsp;'halfFloor'<br>&#124;&nbsp;'halfTrunc'<br>&#124;&nbsp;'trunc', roundingPriority?: 'auto'<br>&#124;&nbsp;'lessPrecision'<br>&#124;&nbsp;'morePrecision', signDisplay?: 'always'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'exceptZero'<br>&#124;&nbsp;'negative'<br>&#124;&nbsp;'never', style?: 'currency'<br>&#124;&nbsp;'decimal'<br>&#124;&nbsp;'percent'<br>&#124;&nbsp;'unit', trailingZeroDisplay?: 'auto'<br>&#124;&nbsp;'stripIfInteger', unit?: string, unitDisplay?: 'long'<br>&#124;&nbsp;'narrow'<br>&#124;&nbsp;'short', useGrouping?: 'always'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'false'<br>&#124;&nbsp;'min2'<br>&#124;&nbsp;'true'<br>&#124;&nbsp;bool }, type: 'boolean'<br>&#124;&nbsp;'date'<br>&#124;&nbsp;'dateTime'<br>&#124;&nbsp;'number'<br>&#124;&nbsp;'string' }&gt;"
+      }
+    },
     "dataSource": {
       "type": {
         "name": "shape",
@@ -90,6 +97,7 @@
     "disableColumnResize": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSelector": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnSorting": { "type": { "name": "bool" }, "default": "false" },
+    "disableComputedColumns": { "type": { "name": "bool" }, "default": "false" },
     "disableDensitySelector": { "type": { "name": "bool" }, "default": "false" },
     "disableEval": { "type": { "name": "bool" }, "default": "false" },
     "disableFormulaAutocomplete": { "type": { "name": "bool" }, "default": "false" },
@@ -233,7 +241,7 @@
     "historyValidationEvents": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'activeChartIdChange'<br>&#124;&nbsp;'activeStrategyProcessorChange'<br>&#124;&nbsp;'aggregationLookupSet'<br>&#124;&nbsp;'aggregationModelChange'<br>&#124;&nbsp;'aiAssistantActiveConversationIndexChange'<br>&#124;&nbsp;'aiAssistantConversationsChange'<br>&#124;&nbsp;'cellClick'<br>&#124;&nbsp;'cellDoubleClick'<br>&#124;&nbsp;'cellDragEnter'<br>&#124;&nbsp;'cellDragOver'<br>&#124;&nbsp;'cellEditStart'<br>&#124;&nbsp;'cellEditStop'<br>&#124;&nbsp;'cellFocusIn'<br>&#124;&nbsp;'cellFocusOut'<br>&#124;&nbsp;'cellKeyDown'<br>&#124;&nbsp;'cellKeyUp'<br>&#124;&nbsp;'cellModeChange'<br>&#124;&nbsp;'cellModesModelChange'<br>&#124;&nbsp;'cellMouseDown'<br>&#124;&nbsp;'cellMouseOver'<br>&#124;&nbsp;'cellMouseUp'<br>&#124;&nbsp;'cellSelectionChange'<br>&#124;&nbsp;'chartSynchronizationStateChange'<br>&#124;&nbsp;'clipboardCopy'<br>&#124;&nbsp;'clipboardPasteEnd'<br>&#124;&nbsp;'clipboardPasteStart'<br>&#124;&nbsp;'columnGroupHeaderBlur'<br>&#124;&nbsp;'columnGroupHeaderFocus'<br>&#124;&nbsp;'columnGroupHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderBlur'<br>&#124;&nbsp;'columnHeaderClick'<br>&#124;&nbsp;'columnHeaderContextMenu'<br>&#124;&nbsp;'columnHeaderDoubleClick'<br>&#124;&nbsp;'columnHeaderDragEnd'<br>&#124;&nbsp;'columnHeaderDragEndNative'<br>&#124;&nbsp;'columnHeaderDragEnter'<br>&#124;&nbsp;'columnHeaderDragOver'<br>&#124;&nbsp;'columnHeaderDragStart'<br>&#124;&nbsp;'columnHeaderEnter'<br>&#124;&nbsp;'columnHeaderFocus'<br>&#124;&nbsp;'columnHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderLeave'<br>&#124;&nbsp;'columnHeaderOut'<br>&#124;&nbsp;'columnHeaderOver'<br>&#124;&nbsp;'columnIndexChange'<br>&#124;&nbsp;'columnOrderChange'<br>&#124;&nbsp;'columnResize'<br>&#124;&nbsp;'columnResizeStart'<br>&#124;&nbsp;'columnResizeStop'<br>&#124;&nbsp;'columnsChange'<br>&#124;&nbsp;'columnSeparatorDoubleClick'<br>&#124;&nbsp;'columnSeparatorMouseDown'<br>&#124;&nbsp;'columnVisibilityModelChange'<br>&#124;&nbsp;'columnWidthChange'<br>&#124;&nbsp;'debouncedResize'<br>&#124;&nbsp;'densityChange'<br>&#124;&nbsp;'detailPanelsExpandedRowIdsChange'<br>&#124;&nbsp;'excelExportStateChange'<br>&#124;&nbsp;'fetchRows'<br>&#124;&nbsp;'filteredRowsSet'<br>&#124;&nbsp;'filterModelChange'<br>&#124;&nbsp;'formulaEvaluated'<br>&#124;&nbsp;'headerFilterBlur'<br>&#124;&nbsp;'headerFilterClick'<br>&#124;&nbsp;'headerFilterKeyDown'<br>&#124;&nbsp;'headerFilterMouseDown'<br>&#124;&nbsp;'headerSelectionCheckboxChange'<br>&#124;&nbsp;'menuClose'<br>&#124;&nbsp;'menuOpen'<br>&#124;&nbsp;'paginationMetaChange'<br>&#124;&nbsp;'paginationModelChange'<br>&#124;&nbsp;'pinnedColumnsChange'<br>&#124;&nbsp;'pivotModeChange'<br>&#124;&nbsp;'pivotModelChange'<br>&#124;&nbsp;'pivotPanelOpenChange'<br>&#124;&nbsp;'preferencePanelClose'<br>&#124;&nbsp;'preferencePanelOpen'<br>&#124;&nbsp;'redo'<br>&#124;&nbsp;'renderedRowsIntervalChange'<br>&#124;&nbsp;'resize'<br>&#124;&nbsp;'rootMount'<br>&#124;&nbsp;'rowClick'<br>&#124;&nbsp;'rowCountChange'<br>&#124;&nbsp;'rowDoubleClick'<br>&#124;&nbsp;'rowDragEnd'<br>&#124;&nbsp;'rowDragOver'<br>&#124;&nbsp;'rowDragStart'<br>&#124;&nbsp;'rowEditStart'<br>&#124;&nbsp;'rowEditStop'<br>&#124;&nbsp;'rowExpansionChange'<br>&#124;&nbsp;'rowGroupingModelChange'<br>&#124;&nbsp;'rowModesModelChange'<br>&#124;&nbsp;'rowMouseEnter'<br>&#124;&nbsp;'rowMouseLeave'<br>&#124;&nbsp;'rowMouseOut'<br>&#124;&nbsp;'rowMouseOver'<br>&#124;&nbsp;'rowOrderChange'<br>&#124;&nbsp;'rowSelectionChange'<br>&#124;&nbsp;'rowSelectionCheckboxChange'<br>&#124;&nbsp;'rowsScrollEnd'<br>&#124;&nbsp;'rowsScrollEndIntersection'<br>&#124;&nbsp;'rowsSet'<br>&#124;&nbsp;'scrollPositionChange'<br>&#124;&nbsp;'sidebarClose'<br>&#124;&nbsp;'sidebarOpen'<br>&#124;&nbsp;'sortedRowsSet'<br>&#124;&nbsp;'sortModelChange'<br>&#124;&nbsp;'stateChange'<br>&#124;&nbsp;'strategyAvailabilityChange'<br>&#124;&nbsp;'undo'<br>&#124;&nbsp;'unmount'<br>&#124;&nbsp;'viewportInnerSizeChange'<br>&#124;&nbsp;'virtualScrollerContentSizeChange'<br>&#124;&nbsp;'virtualScrollerTouchMove'<br>&#124;&nbsp;'virtualScrollerWheel'&gt;"
+        "description": "Array&lt;'activeChartIdChange'<br>&#124;&nbsp;'activeStrategyProcessorChange'<br>&#124;&nbsp;'aggregationLookupSet'<br>&#124;&nbsp;'aggregationModelChange'<br>&#124;&nbsp;'aiAssistantActiveConversationIndexChange'<br>&#124;&nbsp;'aiAssistantConversationsChange'<br>&#124;&nbsp;'cellClick'<br>&#124;&nbsp;'cellDoubleClick'<br>&#124;&nbsp;'cellDragEnter'<br>&#124;&nbsp;'cellDragOver'<br>&#124;&nbsp;'cellEditStart'<br>&#124;&nbsp;'cellEditStop'<br>&#124;&nbsp;'cellFocusIn'<br>&#124;&nbsp;'cellFocusOut'<br>&#124;&nbsp;'cellKeyDown'<br>&#124;&nbsp;'cellKeyUp'<br>&#124;&nbsp;'cellModeChange'<br>&#124;&nbsp;'cellModesModelChange'<br>&#124;&nbsp;'cellMouseDown'<br>&#124;&nbsp;'cellMouseOver'<br>&#124;&nbsp;'cellMouseUp'<br>&#124;&nbsp;'cellSelectionChange'<br>&#124;&nbsp;'chartSynchronizationStateChange'<br>&#124;&nbsp;'clipboardCopy'<br>&#124;&nbsp;'clipboardPasteEnd'<br>&#124;&nbsp;'clipboardPasteStart'<br>&#124;&nbsp;'columnGroupHeaderBlur'<br>&#124;&nbsp;'columnGroupHeaderFocus'<br>&#124;&nbsp;'columnGroupHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderBlur'<br>&#124;&nbsp;'columnHeaderClick'<br>&#124;&nbsp;'columnHeaderContextMenu'<br>&#124;&nbsp;'columnHeaderDoubleClick'<br>&#124;&nbsp;'columnHeaderDragEnd'<br>&#124;&nbsp;'columnHeaderDragEndNative'<br>&#124;&nbsp;'columnHeaderDragEnter'<br>&#124;&nbsp;'columnHeaderDragOver'<br>&#124;&nbsp;'columnHeaderDragStart'<br>&#124;&nbsp;'columnHeaderEnter'<br>&#124;&nbsp;'columnHeaderFocus'<br>&#124;&nbsp;'columnHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderLeave'<br>&#124;&nbsp;'columnHeaderOut'<br>&#124;&nbsp;'columnHeaderOver'<br>&#124;&nbsp;'columnIndexChange'<br>&#124;&nbsp;'columnOrderChange'<br>&#124;&nbsp;'columnResize'<br>&#124;&nbsp;'columnResizeStart'<br>&#124;&nbsp;'columnResizeStop'<br>&#124;&nbsp;'columnsChange'<br>&#124;&nbsp;'columnSeparatorDoubleClick'<br>&#124;&nbsp;'columnSeparatorMouseDown'<br>&#124;&nbsp;'columnVisibilityModelChange'<br>&#124;&nbsp;'columnWidthChange'<br>&#124;&nbsp;'computedColumnsChange'<br>&#124;&nbsp;'debouncedResize'<br>&#124;&nbsp;'densityChange'<br>&#124;&nbsp;'detailPanelsExpandedRowIdsChange'<br>&#124;&nbsp;'excelExportStateChange'<br>&#124;&nbsp;'fetchRows'<br>&#124;&nbsp;'filteredRowsSet'<br>&#124;&nbsp;'filterModelChange'<br>&#124;&nbsp;'formulaEvaluated'<br>&#124;&nbsp;'headerFilterBlur'<br>&#124;&nbsp;'headerFilterClick'<br>&#124;&nbsp;'headerFilterKeyDown'<br>&#124;&nbsp;'headerFilterMouseDown'<br>&#124;&nbsp;'headerSelectionCheckboxChange'<br>&#124;&nbsp;'menuClose'<br>&#124;&nbsp;'menuOpen'<br>&#124;&nbsp;'paginationMetaChange'<br>&#124;&nbsp;'paginationModelChange'<br>&#124;&nbsp;'pinnedColumnsChange'<br>&#124;&nbsp;'pivotModeChange'<br>&#124;&nbsp;'pivotModelChange'<br>&#124;&nbsp;'pivotPanelOpenChange'<br>&#124;&nbsp;'preferencePanelClose'<br>&#124;&nbsp;'preferencePanelOpen'<br>&#124;&nbsp;'redo'<br>&#124;&nbsp;'renderedRowsIntervalChange'<br>&#124;&nbsp;'resize'<br>&#124;&nbsp;'rootMount'<br>&#124;&nbsp;'rowClick'<br>&#124;&nbsp;'rowCountChange'<br>&#124;&nbsp;'rowDoubleClick'<br>&#124;&nbsp;'rowDragEnd'<br>&#124;&nbsp;'rowDragOver'<br>&#124;&nbsp;'rowDragStart'<br>&#124;&nbsp;'rowEditStart'<br>&#124;&nbsp;'rowEditStop'<br>&#124;&nbsp;'rowExpansionChange'<br>&#124;&nbsp;'rowGroupingModelChange'<br>&#124;&nbsp;'rowModesModelChange'<br>&#124;&nbsp;'rowMouseEnter'<br>&#124;&nbsp;'rowMouseLeave'<br>&#124;&nbsp;'rowMouseOut'<br>&#124;&nbsp;'rowMouseOver'<br>&#124;&nbsp;'rowOrderChange'<br>&#124;&nbsp;'rowSelectionChange'<br>&#124;&nbsp;'rowSelectionCheckboxChange'<br>&#124;&nbsp;'rowsScrollEnd'<br>&#124;&nbsp;'rowsScrollEndIntersection'<br>&#124;&nbsp;'rowsSet'<br>&#124;&nbsp;'scrollPositionChange'<br>&#124;&nbsp;'sidebarClose'<br>&#124;&nbsp;'sidebarOpen'<br>&#124;&nbsp;'sortedRowsSet'<br>&#124;&nbsp;'sortModelChange'<br>&#124;&nbsp;'stateChange'<br>&#124;&nbsp;'strategyAvailabilityChange'<br>&#124;&nbsp;'undo'<br>&#124;&nbsp;'unmount'<br>&#124;&nbsp;'viewportInnerSizeChange'<br>&#124;&nbsp;'virtualScrollerContentSizeChange'<br>&#124;&nbsp;'virtualScrollerTouchMove'<br>&#124;&nbsp;'virtualScrollerWheel'&gt;"
       },
       "default": "['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']"
     },
@@ -481,6 +489,13 @@
       "signature": {
         "type": "function(params: GridColumnResizeParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onComputedColumnsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridComputedColumnsModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
       }
     },
     "onDataSourceError": {
@@ -1461,6 +1476,18 @@
       "class": null
     },
     {
+      "name": "computedColumnIcon",
+      "description": "Icon used for the computed columns entry points (column menu, panel).",
+      "default": "GridComputedColumnIcon",
+      "class": null
+    },
+    {
+      "name": "computedColumnsPanelBackIcon",
+      "description": "Icon displayed in the back button of the computed columns panel editor.",
+      "default": "GridArrowBackIcon",
+      "class": null
+    },
+    {
       "name": "pivotSearchClearIcon",
       "description": "Icon used for the clear button in the sidebar search field",
       "default": "GridClearIcon",
@@ -1829,6 +1856,18 @@
       "isGlobal": false
     },
     {
+      "key": "cell--computed",
+      "className": "MuiDataGridPremium-cell--computed",
+      "description": "Styles applied to the cell element if the cell belongs to a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "cell--computedError",
+      "className": "MuiDataGridPremium-cell--computedError",
+      "description": "Styles applied to the cell element if the formula of its computed column evaluates to an error for the row (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
       "key": "cell--editable",
       "className": "MuiDataGridPremium-cell--editable",
       "description": "Styles applied to the cell element if the cell is editable.",
@@ -2021,6 +2060,18 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeader--computed",
+      "className": "MuiDataGridPremium-columnHeader--computed",
+      "description": "Styles applied to the column header if the column is a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--computedInvalid",
+      "className": "MuiDataGridPremium-columnHeader--computedInvalid",
+      "description": "Styles applied to the column header if the formula of its computed column is invalid (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader--dragging",
       "className": "MuiDataGridPremium-columnHeader--dragging",
       "description": "Styles applied to the floating column header element when it is dragged.",
@@ -2210,6 +2261,84 @@
       "key": "columnsManagementSearchInput",
       "className": "MuiDataGridPremium-columnsManagementSearchInput",
       "description": "Styles applied to the columns management search input element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnHeaderBadge",
+      "className": "MuiDataGridPremium-computedColumnHeaderBadge",
+      "description": "Styles applied to the `ƒx` badge in the column header of a computed column (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanel",
+      "className": "MuiDataGridPremium-computedColumnsPanel",
+      "description": "Styles applied to the computed columns panel root element (Premium computed columns).",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelEditor",
+      "className": "MuiDataGridPremium-computedColumnsPanelEditor",
+      "description": "Styles applied to the computed columns panel editor view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelEmpty",
+      "className": "MuiDataGridPremium-computedColumnsPanelEmpty",
+      "description": "Styles applied to the empty state of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelField",
+      "className": "MuiDataGridPremium-computedColumnsPanelField",
+      "description": "Styles applied to the field rows of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelFooter",
+      "className": "MuiDataGridPremium-computedColumnsPanelFooter",
+      "description": "Styles applied to the footer of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelFormula",
+      "className": "MuiDataGridPremium-computedColumnsPanelFormula",
+      "description": "Styles applied to the formula surface of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelHeader",
+      "className": "MuiDataGridPremium-computedColumnsPanelHeader",
+      "description": "Styles applied to the computed columns panel header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelList",
+      "className": "MuiDataGridPremium-computedColumnsPanelList",
+      "description": "Styles applied to the computed columns panel list view element.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelListItem",
+      "className": "MuiDataGridPremium-computedColumnsPanelListItem",
+      "description": "Styles applied to each item of the computed columns panel list.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelPreview",
+      "className": "MuiDataGridPremium-computedColumnsPanelPreview",
+      "description": "Styles applied to the preview element of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelReference",
+      "className": "MuiDataGridPremium-computedColumnsPanelReference",
+      "description": "Styles applied to the reference pane (columns and functions to insert) of the computed columns panel editor.",
+      "isGlobal": false
+    },
+    {
+      "key": "computedColumnsPanelValidation",
+      "className": "MuiDataGridPremium-computedColumnsPanelValidation",
+      "description": "Styles applied to the validation block of the computed columns panel editor.",
       "isGlobal": false
     },
     {

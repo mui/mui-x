@@ -93,6 +93,14 @@ When using a Data Source, `clipboardPasteEnd` is not tracked and the other two e
 
 If you use a Data Source that doesn't have an `updateRow` method, then the history event handler list is empty and the feature is disabled.
 
+When [computed columns](/x/react-data-grid/computed-columns/) are available—the formula feature is injected and neither `disableComputedColumns`, `disableFormulas`, nor `dataSource` is set—the following event is tracked as well, whether or not the grid has editable cells:
+
+- `computedColumnsChange` - Tracks changes made to the computed columns model: adding, editing, or removing a computed column from the panel, the column menu, or the API
+
+Undoing the removal of a computed column restores it with its previous position, width, and visibility.
+Model changes made from code—`apiRef.current.restoreState()` or a new value of the controlled `computedColumns` prop—are tracked too.
+To leave them out, provide your own map through the `historyEventHandlers` prop without the `computedColumnsChange` handler.
+
 :::warning
 Default handlers invalidate the stack if the data is not visible to the user anymore due to filtering, grouping, page change, etc.
 
@@ -126,7 +134,7 @@ Return a row whose visible values match what the user entered to keep the change
 ## Custom history event handlers
 
 Provide your own map of the history event handlers via the `historyEventHandlers` prop to change the default handlers or to track more events and add them to the undo/redo stack.
-Use default handler exports (like `createCellEditHistoryHandler()`) to create a map that can combine:
+Use default handler exports (like `createCellEditHistoryHandler()` or `createComputedColumnsHistoryHandler()`) to create a map that can combine:
 
 - default handlers
 - your own handlers replacing default handlers

@@ -119,6 +119,28 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
     expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
   });
 
+  it('does not accept a suggestion when Enter confirms an IME composition', async () => {
+    const { user } = await render(<Test />);
+    await user.dblClick(getCell(0, 3));
+    const editable = getCellEditable(0, 3);
+
+    typeFormula(editable, '=SU');
+    await waitFor(() => {
+      expect(getListbox()).not.to.equal(null);
+    });
+
+    fireEvent.compositionStart(editable);
+    fireEvent.keyDown(editable, { key: 'Enter', keyCode: 229, isComposing: true });
+    await microtasks();
+
+    // Neither the popup nor the grid took the key: same edit value (the DOM is
+    // not rebuilt during a composition, so it would not tell), still editing.
+    expect(apiRef.current!.state.editRows[0].total.value).to.equal('=SU');
+    expect(getCellEditable(0, 3).textContent).to.equal('=SU');
+    expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+    expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+  });
+
   it('moves the highlight with ArrowDown instead of navigating the grid', async () => {
     const { user } = await render(<Test />);
     await user.dblClick(getCell(0, 3));

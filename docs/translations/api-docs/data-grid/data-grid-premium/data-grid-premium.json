@@ -73,6 +73,12 @@
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
     },
+    "computedColDef": {
+      "description": "The column definition properties applied to the columns generated from the <code>computedColumns</code> model. Pass a function to return different properties for each computed column."
+    },
+    "computedColumns": {
+      "description": "Set the computed columns of the grid: read-only columns whose value is a formula evaluated for every row from the other fields of the same row. Has no effect unless the formula feature is provided through <code>featureDependencies</code>."
+    },
     "dataSource": { "description": "Data source object." },
     "dataSourceCache": { "description": "Data source cache object." },
     "dataSourceKeepPreviousData": {
@@ -113,6 +119,9 @@
     },
     "disableColumnSorting": {
       "description": "If <code>true</code>, the column sorting feature will be disabled."
+    },
+    "disableComputedColumns": {
+      "description": "If <code>true</code>, the computed columns are disabled: the columns of the <code>computedColumns</code> model are not added to the grid and the UI to manage them is hidden."
     },
     "disableDensitySelector": {
       "description": "If <code>true</code>, the density selector is disabled."
@@ -651,6 +660,13 @@
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
+    "onComputedColumnsChange": {
+      "description": "Callback fired when the computed columns model changes.",
+      "typeDescriptions": {
+        "model": { "name": "model", "description": "The new computed columns model." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
+      }
+    },
     "onDataSourceError": {
       "description": "Callback fired when a data source request fails.",
       "typeDescriptions": {
@@ -1168,6 +1184,16 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
     },
+    "cell--computed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the cell belongs to a computed column (Premium computed columns)"
+    },
+    "cell--computedError": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the formula of its computed column evaluates to an error for the row (Premium computed columns)"
+    },
     "cell--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -1315,6 +1341,16 @@
       "nodeName": "the column header",
       "conditions": "<code>headerAlign=\"right\"</code>"
     },
+    "columnHeader--computed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the column is a computed column (Premium computed columns)"
+    },
+    "columnHeader--computedInvalid": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the formula of its computed column is invalid (Premium computed columns)"
+    },
     "columnHeader--dragging": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the floating column header element",
@@ -1442,6 +1478,58 @@
     "columnsManagementSearchInput": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management search input element"
+    },
+    "computedColumnHeaderBadge": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the <code>ƒx</code> badge in the column header of a computed column (Premium computed columns)"
+    },
+    "computedColumnsPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel root element (Premium computed columns)"
+    },
+    "computedColumnsPanelEditor": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel editor view element"
+    },
+    "computedColumnsPanelEmpty": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty state of the computed columns panel list"
+    },
+    "computedColumnsPanelField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the field rows of the computed columns panel editor"
+    },
+    "computedColumnsPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the footer of the computed columns panel editor"
+    },
+    "computedColumnsPanelFormula": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formula surface of the computed columns panel editor"
+    },
+    "computedColumnsPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel header element"
+    },
+    "computedColumnsPanelList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel list view element"
+    },
+    "computedColumnsPanelListItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each item of the computed columns panel list"
+    },
+    "computedColumnsPanelPreview": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preview element of the computed columns panel editor"
+    },
+    "computedColumnsPanelReference": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the reference pane (columns and functions to insert) of the computed columns panel editor"
+    },
+    "computedColumnsPanelValidation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the validation block of the computed columns panel editor"
     },
     "container--bottom": {
       "description": "Styles applied to {{nodeName}}.",
@@ -2090,6 +2178,8 @@
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
     "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
+    "computedColumnIcon": "Icon used for the computed columns entry points (column menu, panel).",
+    "computedColumnsPanelBackIcon": "Icon displayed in the back button of the computed columns panel editor.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",

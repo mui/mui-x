@@ -126,6 +126,10 @@ import {
   useGridChartsIntegration,
 } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 import { historyStateInitializer, useGridHistory } from '../hooks/features/history/useGridHistory';
+import {
+  computedColumnsStateInitializer,
+  useGridComputedColumns,
+} from '../hooks/features/computedColumns/useGridComputedColumns';
 
 registerMultiSelectColumnType();
 
@@ -202,8 +206,11 @@ export const useDataGridPremiumComponent = (
   useGridRowSelectionPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
-  useGridAggregationPreProcessors(apiRef, props);
+  // Before the aggregation pre-processors: the computed columns injected by the
+  // formula feature must exist by the time aggregation wraps the aggregated columns.
+  // The two features wrap disjoint column properties, so their order is otherwise free.
   useFormulaPreProcessors(apiRef, props);
+  useGridAggregationPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
@@ -220,6 +227,9 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(cellSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props, key);
+  // Before `columnsStateInitializer`: the computed columns are injected from
+  // the model while the columns state initializes.
+  useGridInitializeState(computedColumnsStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props, key);
   useGridInitializeState(sidebarStateInitializer, apiRef, props);
   useGridInitializeState(pivotingStateInitializer, apiRef, props);
@@ -250,6 +260,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(historyStateInitializer, apiRef, props);
 
   useGridSidebar(apiRef, props);
+  useGridComputedColumns(apiRef, props);
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);

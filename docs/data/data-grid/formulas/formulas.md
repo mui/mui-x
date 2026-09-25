@@ -17,6 +17,9 @@ Edit a quantity, a unit price, or a discount, and watch the line amount, the sub
 For the complete formula language—operators, cell references, ranges, built-in functions, and error values—see the [Syntax reference](/x/react-data-grid/formula-syntax/) page.
 The [Formula engine](/x/react-data-grid/formula-engine/) page explains how evaluation works and how to register custom functions.
 
+A cell formula is a value of one cell.
+To apply one formula to every row of the grid instead—a read-only column managed from the toolbar, the column menu, or code—see the [Computed columns](/x/react-data-grid/computed-columns/) page.
+
 ## Enabling formulas
 
 The formula runtime—the parser, the evaluation engine, and the formula editor—is not bundled with the grid, so applications that do not use formulas do not pay for it in bundle size.
@@ -50,7 +53,7 @@ const rows = [{ id: 1, price: 2, quantity: 3, total: '=price * quantity' }];
 ```
 
 Without `allowFormulas`, values starting with `=` render as plain strings.
-To store a literal string starting with `=` in a formula column, prefix it with an apostrophe: `'=not a formula`.
+To store a literal string starting with `=` in a column with `allowFormulas`, prefix it with an apostrophe: `'=not a formula`.
 
 Use the `disableFormulas` prop to turn evaluation off at runtime for the whole grid—unlike omitting `featureDependencies`, it can be toggled while the grid is mounted.
 
@@ -217,8 +220,9 @@ Setting it to `false` exports grid formulas as live formulas, but also lets such
 - Ranges and `COLUMN_VALUES` never cover pinned rows—reference their cells individually instead.
 - A range window does not grow or shrink when rows are added or removed. A plain (anchored) window keeps its geometry relative to its formula and a `$` (fixed) window keeps its view positions, so an inserted row that sorts into the middle of a window changes which rows it covers.
 - The formula editor does not support in-editor undo—the grid-level undo and redo of committed values work as usual.
-- A formula column's own `valueGetter` is ignored for its formula cells (a development-mode warning points this out); it applies normally to plain cells in the column.
+- The `valueGetter` of a column with `allowFormulas` is ignored for its formula cells (a development-mode warning points this out); it applies normally to plain cells in the column.
 - Clipboard copy places evaluated values on the clipboard—use the [fill handle](#fill-handle) to replicate formulas inside the grid.
+- A formula belongs to one cell. To evaluate the same formula for every row, use a [computed column](/x/react-data-grid/computed-columns/) rather than filling a column with formulas.
 
 ## API
 
