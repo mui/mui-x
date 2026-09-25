@@ -361,7 +361,18 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
     scrollPosition.current = newScroll;
 
-    const direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE;
+    // A pass that observes no movement keeps the current direction. Writing `scrollTop`
+    // echoes a scroll event with no delta, and reading it as a stop would rebalance the
+    // buffers and commit, only for the next event to reallocate them and commit again.
+    // Only the settle pass knows that the scroll stopped.
+    let direction: ScrollDirection;
+    if (isScrolling) {
+      direction = ScrollDirection.forDelta(dx, dy);
+    } else if (isSettlePass) {
+      direction = ScrollDirection.NONE;
+    } else {
+      direction = scrollCache.direction;
+    }
 
     const didChangeDirection = scrollCache.direction !== direction;
 

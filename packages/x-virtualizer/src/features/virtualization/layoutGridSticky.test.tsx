@@ -716,33 +716,78 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     const heightAtRest = rect('outer-window').height;
 
-    // From rest each measured scroll reverses direction, so it commits immediately
-    // (direction changes are never frame-deferred) and the height is stable to read.
-    act(() => {
-      scroller.scrollTop = 150 * ROW_HEIGHT;
-      scroller.dispatchEvent(new Event('scroll'));
-    });
-    const heightScrollingDown = rect('outer-window').height;
-    expectInnerViewportCovered();
+    // The settle pass runs a second after the last context update. Fake timers skip the
+    // wait, and have to be installed before the scroll that arms it.
+    vi.useFakeTimers();
+    let heightScrollingDown: number;
+    let heightScrollingUp: number;
+    let heightSettled: number;
+    try {
+      // From rest each measured scroll reverses direction, so it commits immediately and
+      // the height is stable to read.
+      act(() => {
+        scroller.scrollTop = 150 * ROW_HEIGHT;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      heightScrollingDown = rect('outer-window').height;
+      expectInnerViewportCovered();
 
-    act(() => {
-      scroller.scrollTop = 149 * ROW_HEIGHT;
-      scroller.dispatchEvent(new Event('scroll'));
-    });
-    const heightScrollingUp = rect('outer-window').height;
-    expectInnerViewportCovered();
+      act(() => {
+        scroller.scrollTop = 149 * ROW_HEIGHT;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      heightScrollingUp = rect('outer-window').height;
+      expectInnerViewportCovered();
 
-    // A zero-delta event settles the direction back to NONE: the buffer rebalances
-    // to symmetric without resizing the window.
-    act(() => {
-      scroller.dispatchEvent(new Event('scroll'));
-    });
-    const heightSettled = rect('outer-window').height;
-    expectInnerViewportCovered();
+      // The settle pass returns the direction to NONE: the buffer rebalances to symmetric
+      // without resizing the window.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1100);
+      });
+      heightSettled = rect('outer-window').height;
+      expectInnerViewportCovered();
+    } finally {
+      vi.useRealTimers();
+    }
 
     expect(Math.abs(heightScrollingDown - heightAtRest)).to.be.at.most(2 * ROW_HEIGHT);
     expect(Math.abs(heightScrollingUp - heightScrollingDown)).to.be.at.most(2 * ROW_HEIGHT);
     expect(Math.abs(heightSettled - heightScrollingDown)).to.be.at.most(2 * ROW_HEIGHT);
+  });
+
+  it('keeps the scroll direction across a scroll event with no movement', async () => {
+    // Writing `scrollTop` echoes a scroll event that carries no delta. Reading it as a
+    // stop would rebalance the buffers and commit, and the next event would reallocate
+    // them toward the scroll and commit again.
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+
+    await act(async () => {
+      scroller.scrollTop = 100 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(getWindowRowIds()).to.include(100);
+    });
+
+    // Scroll down: the whole buffer moves below the viewport.
+    act(() => {
+      scroller.scrollTop = 101 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const idsScrollingDown = getWindowRowIds();
+
+    act(() => {
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.deep.equal(idsScrollingDown);
+
+    // Still scrolling down, within the leading buffer: no direction change to commit.
+    act(() => {
+      scroller.scrollTop = 102 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.deep.equal(idsScrollingDown);
   });
 
   it('defers render context updates until the leading buffer runs low', async () => {
