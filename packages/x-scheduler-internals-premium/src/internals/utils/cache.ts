@@ -22,6 +22,11 @@ export interface SchedulerDataSourceCache<TEvent extends object> {
    */
   hasCoverage: (start: number, end: number) => boolean;
   /**
+   * Returns the smallest range covering the parts of the requested time range that are not cached,
+   * or `null` when it is fully covered.
+   */
+  getMissingRange: (start: number, end: number) => { start: number; end: number } | null;
+  /**
    * Saves the events and marks the specific range as "loaded".
    */
   setRange: (start: number, end: number, events: TEvent[]) => void;
@@ -84,38 +89,46 @@ export class SchedulerDataSourceCacheDefault<
   }
 
   hasCoverage(start: number, end: number): boolean {
+    return this.getMissingRange(start, end) === null;
+  }
+
+  getMissingRange(start: number, end: number): { start: number; end: number } | null {
     const now = Date.now();
 
     // 1. Filter out expired ranges immediately
     this.loadedRanges = this.loadedRanges.filter((r) => r.expiry > now);
 
-    // 2. Check if the requested interval is fully covered by the union of valid ranges
     const sortedRanges = [...this.loadedRanges].sort((a, b) => a.start - b.start);
 
-    let coveredUntil = start;
-
+    // 2. Walk forward from `start` to find the first instant that is not covered
+    let missingStart = start;
     for (const range of sortedRanges) {
-      // Skip ranges that end before the segment we care about
-      if (range.end <= coveredUntil) {
+      if (range.end < missingStart) {
         continue;
       }
-
-      // If there's a gap between what we have covered and the next range's start, fail
-      if (range.start > coveredUntil) {
-        return false;
+      if (range.start > missingStart) {
+        break;
       }
-
-      // Now we know range.start <= coveredUntil < range.end, so extend coverage
-      coveredUntil = range.end + 1;
-
-      // Early exit: we've covered the target range
-      if (coveredUntil >= end) {
-        return true;
+      missingStart = range.end + 1;
+      if (missingStart > end) {
+        return null;
       }
     }
 
-    // If after consuming all ranges we didn't reach `end`, it's not fully covered
-    return coveredUntil >= end;
+    // 3. Walk backward from `end` to find the last instant that is not covered
+    let missingEnd = end;
+    for (let i = sortedRanges.length - 1; i >= 0; i -= 1) {
+      const range = sortedRanges[i];
+      if (range.start > missingEnd) {
+        continue;
+      }
+      if (range.end < missingEnd) {
+        break;
+      }
+      missingEnd = range.start - 1;
+    }
+
+    return { start: missingStart, end: missingEnd };
   }
 
   setRange(start: number, end: number, newEvents: TEvent[]) {

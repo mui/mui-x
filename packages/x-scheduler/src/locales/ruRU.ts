@@ -181,6 +181,9 @@ const ruRUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   weekAbbreviation: 'Нед.',
   weekNumberAriaLabel: (weekNumber) => `Неделя ${weekNumber}`,
 
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Заканчивается ${endDate}`,
 
