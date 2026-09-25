@@ -13,6 +13,7 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import type { SchedulerDependencySourceDescription } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
@@ -149,14 +150,25 @@ const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHa
   },
 });
 
-// TODO(dependencies public flip, #23420): move to localeText. Hardcoded while the feature has
+// TODO(dependencies public flip, #23420): move to localeText, together with the lag sentence
+// built below, whose unit names and plural are English too. Hardcoded while the feature has
 // no public API.
-const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<SchedulerDependencyType, (title: string) => string> = {
-  FinishToStart: (title) => `Cannot start until ${title} finishes.`,
-  StartToStart: (title) => `Cannot start until ${title} starts.`,
-  FinishToFinish: (title) => `Cannot finish until ${title} finishes.`,
-  StartToFinish: (title) => `Cannot finish until ${title} starts.`,
+const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<
+  SchedulerDependencyType,
+  (title: string, lag: string) => string
+> = {
+  FinishToStart: (title, lag) => `Cannot start until ${lag}${title} finishes.`,
+  StartToStart: (title, lag) => `Cannot start until ${lag}${title} starts.`,
+  FinishToFinish: (title, lag) => `Cannot finish until ${lag}${title} finishes.`,
+  StartToFinish: (title, lag) => `Cannot finish until ${lag}${title} starts.`,
 };
+
+function describeDependencySource(source: SchedulerDependencySourceDescription): string {
+  const { lag } = source;
+  const lagText =
+    lag === null ? '' : `${lag.amount} ${lag.unit}${lag.amount === 1 ? '' : 's'} after `;
+  return DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title, lagText);
+}
 
 export const EventTimelinePremiumEvent = React.forwardRef(function EventTimelinePremiumEvent(
   props: EventTimelinePremiumEventProps,
@@ -279,9 +291,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         // through the self-referential `aria-labelledby`; the `aria-describedby`
         // reference still picks it up.
         <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
-          {dependencySources
-            .map((source) => DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title))
-            .join(' ')}
+          {dependencySources.map(describeDependencySource).join(' ')}
         </span>
       )}
       {isRecurring && (

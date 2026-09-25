@@ -29,8 +29,31 @@ import {
   classifyDependencyEvent,
   groupRetainedDependenciesBySource,
   isDependencyReadOnly,
+  getDependencyLagIssue,
   isDependencyType,
 } from '../utils/dependency-utils';
+import type { SchedulerDependencyLagIssue } from '../utils/dependency-utils';
+
+const DEPENDENCY_LAG_WARNINGS: Record<
+  SchedulerDependencyLagIssue,
+  (dependency: SchedulerDependency) => string[]
+> = {
+  negative: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has a negative lag (${String(dependency.lag)}).`,
+    'Lead (negative lag) is not supported yet, so the lag is ignored.',
+    'Use a positive whole number, or remove the lag.',
+  ],
+  notAWholeNumber: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has a lag that is not a whole number (${String(dependency.lag)}).`,
+    'A fractional lag cannot be expressed in its unit, so it is ignored.',
+    'Round it, or express it in a smaller `lagUnit`.',
+  ],
+  unknownUnit: (dependency) => [
+    `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown lag unit "${String(dependency.lagUnit)}".`,
+    'The lag cannot be applied, so it is ignored.',
+    'Use one of "minute", "hour", "day" or "week".',
+  ],
+};
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
@@ -261,6 +284,10 @@ export class SchedulerSchedulingPlugin<
           `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown type "${String(dependency.type)}".`,
           'It is kept in the data but ignored by the timeline.',
         ]);
+      }
+      const lagIssue = getDependencyLagIssue(dependency);
+      if (lagIssue !== null) {
+        warnOnce(DEPENDENCY_LAG_WARNINGS[lagIssue](dependency));
       }
       for (const eventId of [dependency.source, dependency.target]) {
         const status = classifyDependencyEvent(processedEventLookup, eventId);

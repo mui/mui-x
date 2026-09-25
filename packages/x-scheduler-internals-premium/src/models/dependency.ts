@@ -24,6 +24,19 @@ export type SchedulerDependencyType =
   'FinishToStart' | 'StartToStart' | 'FinishToFinish' | 'StartToFinish';
 
 /**
+ * The units a dependency lag can be expressed in.
+ */
+export type SchedulerDependencyLagUnit = 'minute' | 'hour' | 'day' | 'week';
+
+/**
+ * The lag of a dependency once resolved, as the amount and unit the engine applies.
+ */
+export interface SchedulerResolvedDependencyLag {
+  amount: number;
+  unit: SchedulerDependencyLagUnit;
+}
+
+/**
  * A dependency between two events, referencing them by id.
  * `source` is the predecessor and `target` the successor, whatever the type.
  */
@@ -44,6 +57,18 @@ export interface SchedulerDependency {
    * The type of the dependency.
    */
   type: SchedulerDependencyType;
+  /**
+   * The calendar time the successor waits after the constraining edge of the
+   * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
+   * An invalid lag is ignored with a warning.
+   * @default 0
+   */
+  lag?: number;
+  /**
+   * The unit of `lag`.
+   * @default 'day'
+   */
+  lagUnit?: SchedulerDependencyLagUnit;
 }
 
 /**

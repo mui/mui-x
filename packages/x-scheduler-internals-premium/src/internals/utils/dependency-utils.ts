@@ -1,5 +1,7 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
+import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerEventId,
@@ -9,8 +11,10 @@ import type {
 import type {
   SchedulerDependency,
   SchedulerDependenciesState,
+  SchedulerResolvedDependencyLag,
   SchedulerDependencyId,
   SchedulerDependencyEventRejectionReason,
+  SchedulerDependencyLagUnit,
   SchedulerDependencyType,
 } from '../../models';
 
@@ -44,6 +48,103 @@ export function getDependencyEdges(type: SchedulerDependencyType): SchedulerDepe
  */
 export function isDependencyType(type: unknown): type is SchedulerDependencyType {
   return typeof type === 'string' && Object.hasOwn(DEPENDENCY_EDGES, type);
+}
+
+const DEPENDENCY_LAG_ADDERS: Record<
+  SchedulerDependencyLagUnit,
+  (adapter: Adapter, date: TemporalSupportedObject, amount: number) => TemporalSupportedObject
+> = {
+  minute: (adapter, date, amount) => adapter.addMinutes(date, amount),
+  hour: (adapter, date, amount) => adapter.addHours(date, amount),
+  day: (adapter, date, amount) => adapter.addDays(date, amount),
+  week: (adapter, date, amount) => adapter.addWeeks(date, amount),
+};
+
+function isDependencyLagUnit(unit: unknown): unit is SchedulerDependencyLagUnit {
+  return typeof unit === 'string' && Object.hasOwn(DEPENDENCY_LAG_ADDERS, unit);
+}
+
+export type SchedulerDependencyLagIssue = 'negative' | 'notAWholeNumber' | 'unknownUnit';
+
+/**
+ * Why the lag of a dependency is ignored, or `null` when it is usable: a lag must be a
+ * whole number of a supported unit, and lead (a negative lag) is not supported yet.
+ */
+export function getDependencyLagIssue(
+  dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
+): SchedulerDependencyLagIssue | null {
+  const { lag, lagUnit } = dependency;
+  // Without an amount the unit configures nothing, so an unknown one is not worth a warning.
+  if (lag == null || lag === 0) {
+    return null;
+  }
+  if (typeof lag !== 'number' || !Number.isInteger(lag)) {
+    return 'notAWholeNumber';
+  }
+  if (lag < 0) {
+    return 'negative';
+  }
+  return lagUnit != null && !isDependencyLagUnit(lagUnit) ? 'unknownUnit' : null;
+}
+
+/**
+ * The lag of a dependency as the engine applies it (days by default), or `null` when the
+ * dependency has no usable lag.
+ */
+export function getDependencyLag(
+  dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
+): SchedulerResolvedDependencyLag | null {
+  const amount = dependency.lag ?? 0;
+  if (amount === 0 || getDependencyLagIssue(dependency) !== null) {
+    return null;
+  }
+  return { amount, unit: dependency.lagUnit ?? 'day' };
+}
+
+const DEPENDENCY_LAG_UNIT_IN_DAYS: Record<SchedulerDependencyLagUnit, number> = {
+  minute: 1 / (24 * 60),
+  hour: 1 / 24,
+  day: 1,
+  week: 7,
+};
+
+// The lag as an all-day event can carry it: whole days, rounded down. An all-day event
+// has no time of day, so a lag shorter than a day cannot be honored and adds nothing.
+function getWholeDayDependencyLag(
+  lag: SchedulerResolvedDependencyLag | null,
+): SchedulerResolvedDependencyLag | null {
+  if (lag === null) {
+    return null;
+  }
+  const days = Math.floor(lag.amount * DEPENDENCY_LAG_UNIT_IN_DAYS[lag.unit]);
+  return days === 0 ? null : { amount: days, unit: 'day' };
+}
+
+/**
+ * The lag the engine makes a successor wait, or `null` when it waits nothing. The single
+ * definition shared by the engine and the accessible description, so the announced wait
+ * is always the one taken.
+ */
+export function getEffectiveDependencyLag(
+  dependency: Pick<SchedulerDependency, 'lag' | 'lagUnit'>,
+  isAllDaySuccessor: boolean | undefined,
+): SchedulerResolvedDependencyLag | null {
+  const lag = getDependencyLag(dependency);
+  return isAllDaySuccessor ? getWholeDayDependencyLag(lag) : lag;
+}
+
+/**
+ * Adds a dependency lag to a date, in the timezone of the date.
+ */
+export function addDependencyLag(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  lag: SchedulerResolvedDependencyLag | null,
+): TemporalSupportedObject {
+  if (lag === null) {
+    return date;
+  }
+  return DEPENDENCY_LAG_ADDERS[lag.unit](adapter, date, lag.amount);
 }
 
 /**
