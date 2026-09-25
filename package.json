@@ -79,7 +79,7 @@
     "@mui/internal-babel-plugin-display-name": "2.0.1-canary.0",
     "@mui/internal-babel-plugin-minify-errors": "3.0.1-canary.0",
     "@mui/internal-bundle-size-checker": "1.1.1-canary.0",
-    "@mui/internal-code-infra": "0.1.1-canary.0",
+    "@mui/internal-code-infra": "0.1.1-canary.1",
     "@mui/internal-api-docs-builder": "1.0.4-canary.3",
     "@mui/internal-markdown": "3.0.11-canary.3",
     "@mui/internal-netlify-cache": "0.1.1-canary.0",
