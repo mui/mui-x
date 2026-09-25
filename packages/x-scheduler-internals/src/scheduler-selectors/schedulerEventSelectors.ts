@@ -78,15 +78,12 @@ export const schedulerEventSelectors = {
     },
   ),
   /**
-   * Normalizes `eventDeletion` into a full config, filling in defaults for any key the
-   * consumer didn't set. Unlike `creationConfig`, deletion cannot be disabled entirely (there is
-   * no `false` case) — only `confirmation` can be turned off.
+   * Normalizes `eventDeletion`, filling in the default of any key that is missing or `undefined`.
    */
   deletionConfig: createSelectorMemoized(
     (state: State) => state.eventDeletion,
     (eventDeletion) => ({
-      ...DEFAULT_EVENT_DELETION_CONFIG,
-      ...eventDeletion,
+      confirmation: eventDeletion?.confirmation ?? DEFAULT_EVENT_DELETION_CONFIG.confirmation,
     }),
   ),
   /**

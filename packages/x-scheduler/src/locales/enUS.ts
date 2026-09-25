@@ -20,6 +20,7 @@ const enUSDialog: EventEditingLocaleText = {
   eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Delete event',
   deleteConfirmationTitle: 'Delete this event?',
+  deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
   editEvent: 'Edit event',
   showEventDetails: 'Show details',
   eventContextMenuAriaLabel: 'Event actions',

@@ -704,21 +704,18 @@ export class SchedulerStore<
 
   /**
    * Deletes an occurrence from a UI surface: a recurring one opens the scope dialog, any other
-   * goes through `requestEventDeletion` (the delete confirmation dialog, unless opted out of via
-   * `eventDeletion={{ confirmation: false }}`). `onDelete` runs once the delete actually applied.
-   * @returns Whether the delete applied immediately (`false` when the scope dialog or the delete
-   * confirmation dialog opened instead).
+   * goes through `requestEventDeletion`. `onDelete` runs once the delete actually applied.
    */
   public deleteOccurrence = (
     occurrence: SchedulerRenderableEventOccurrence,
     onDelete?: () => void,
-  ): boolean => {
+  ) => {
     // Not loaded yet: a `dataSource` persist of the event (e.g. a split) is still in flight.
     // Neither path can act on it, a scope confirmation reads the stored event.
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     if (liveEvent == null) {
       this.pushError(createEventNotLoadedError(), { transient: true });
-      return false;
+      return;
     }
     const isRecurring =
       this.state.recurringEventsPlugin != null &&
@@ -730,12 +727,10 @@ export class SchedulerStore<
         eventId: occurrence.id,
         onSubmit: onDelete,
       });
-      return false;
+      return;
     }
 
-    const { confirmation } = schedulerEventSelectors.deletionConfig(this.state);
     this.requestEventDeletion({ eventId: occurrence.id, onSubmit: onDelete });
-    return !confirmation;
   };
 
   /**

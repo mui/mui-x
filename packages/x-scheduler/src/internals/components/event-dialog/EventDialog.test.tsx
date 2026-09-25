@@ -480,6 +480,30 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
     }
 
+    // `renderDialogProvider`'s fixed `events` array never actually removes the event from the DOM
+    // on delete (the store warns if nothing feeds `onEventsChange` back into it), which can't
+    // exercise what happens to focus once an occurrence really unmounts. This one is controlled.
+    function renderStatefulDialogProvider(providerProps: Record<string, unknown> = {}) {
+      function StatefulProvider() {
+        const [events, setEvents] = React.useState<SchedulerEvent[]>([DEFAULT_EVENT]);
+        return (
+          <EventCalendarProvider
+            events={events}
+            onEventsChange={setEvents}
+            resources={resources}
+            visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+            {...providerProps}
+          >
+            <EventDialogProvider>
+              <MonthView />
+            </EventDialogProvider>
+          </EventCalendarProvider>
+        );
+      }
+
+      return render(<StatefulProvider />);
+    }
+
     it('should open the delete confirmation dialog instead of deleting immediately when the dialog Delete event is clicked', async () => {
       const onEventsChange = vi.fn();
       const { user } = renderDialogProvider({ onEventsChange });
@@ -524,23 +548,39 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByLabelText(/event title/i)).to.have.value(DEFAULT_EVENT.title);
     });
 
-    it('should not lose focus to <body> after a confirmed Delete: it falls back to the owning grid cell', async () => {
-      const onEventsChange = vi.fn();
-      const { user } = renderDialogProvider({ onEventsChange });
+    it('should move focus to the owning grid cell after a confirmed Delete', async () => {
+      const { user } = renderStatefulDialogProvider();
+      const cell = screen.getByText(DEFAULT_EVENT.title).closest<HTMLElement>('[role="gridcell"]')!;
 
       await user.click(screen.getByText(DEFAULT_EVENT.title));
       await user.click(await screen.findByRole('button', { name: 'Delete event' }));
       const dialog = screen.getByRole('dialog', { name: /delete this event/i });
       await user.click(within(dialog).getByRole('button', { name: 'Delete event' }));
 
+      // Confirms the event actually unmounts here, so the assertion below exercises the real
+      // focus-loss scenario, not a no-op.
       await waitFor(() => {
-        expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+        expect(screen.queryByText(DEFAULT_EVENT.title)).to.equal(null);
       });
       // The fallback focus is deferred past the dialog's own focus trap releasing.
       await waitFor(() => {
-        expect(document.activeElement).to.have.attribute('tabindex', '0');
+        expect(document.activeElement).to.equal(cell);
       });
-      expect(document.activeElement).not.to.equal(document.body);
+    });
+
+    it('should move focus to the owning grid cell after a delete with no confirmation', async () => {
+      const { user } = renderStatefulDialogProvider({ eventDeletion: { confirmation: false } });
+      const cell = screen.getByText(DEFAULT_EVENT.title).closest<HTMLElement>('[role="gridcell"]')!;
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+
+      await waitFor(() => {
+        expect(screen.queryByText(DEFAULT_EVENT.title)).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
     });
 
     it('should return focus to the dialog Delete event button after Cancel', async () => {
@@ -552,11 +592,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.click(deleteButton);
       await user.click(screen.getByRole('button', { name: 'Cancel' }));
 
+      // The dialog closes through an exit transition, so it lingers in the DOM for a tick —
+      // asserting before it's gone would only catch focus still sitting inside it.
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      });
       // Nothing was deleted, so MUI's own restore-on-close returns focus to the dialog's Delete
       // event button — the element that had it when the confirmation dialog opened.
-      await waitFor(() => {
-        expect(document.activeElement).to.equal(deleteButton);
-      });
+      expect(document.activeElement).to.equal(deleteButton);
     });
 
     it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', async () => {

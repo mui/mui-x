@@ -26,7 +26,10 @@ import {
 import { EventContextMenuProvider } from '../event-context-menu';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 import { AnchoredEventToolbar } from '../event-toolbar';
-import { DeleteConfirmationDialog } from '../delete-confirmation-dialog';
+import {
+  DeleteConfirmationDialog,
+  DeleteConfirmationDialogHostContext,
+} from '../delete-confirmation-dialog';
 import ReadonlyContent from './ReadonlyContent';
 
 const EventDialogRoot = styled(Dialog, {
@@ -197,7 +200,9 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
     >
       <EventEditingProvider surface="dialog">
-        <EventContextMenuProvider>{children}</EventContextMenuProvider>
+        <DeleteConfirmationDialogHostContext.Provider value>
+          <EventContextMenuProvider>{children}</EventContextMenuProvider>
+        </DeleteConfirmationDialogHostContext.Provider>
         <AnchoredEventToolbarSurface />
         <EventDialogSurface />
         <DeleteConfirmationDialog />

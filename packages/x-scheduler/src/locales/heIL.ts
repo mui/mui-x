@@ -85,6 +85,7 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   eventActionsToolbarAriaLabel: 'פעולות באירוע',
   deleteEvent: 'מחיקת האירוע',
   deleteConfirmationTitle: 'למחוק את האירוע הזה?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
   editEvent: 'עריכת האירוע',
   showEventDetails: 'הצגת פרטים',
   eventContextMenuAriaLabel: 'פעולות באירוע',

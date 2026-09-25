@@ -1,1 +1,4 @@
-export { DeleteConfirmationDialog } from './DeleteConfirmationDialog';
+export {
+  DeleteConfirmationDialog,
+  DeleteConfirmationDialogHostContext,
+} from './DeleteConfirmationDialog';

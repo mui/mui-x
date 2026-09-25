@@ -139,6 +139,18 @@ describe('EventContextMenu', () => {
     expect(document.body.textContent).to.contain('Morning Meeting');
   });
 
+  it('should describe the delete confirmation dialog with its message', () => {
+    renderEvent();
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    expect(screen.getDescriptionOf(dialog).textContent).to.equal(
+      'This action is irreversible. Are you sure you want to proceed?',
+    );
+  });
+
   it('should delete the event once Delete event is confirmed in the dialog', async () => {
     const { onEventsChange } = renderEvent();
 
@@ -222,8 +234,9 @@ describe('EventContextMenu', () => {
     expect(onEventsChange.mock.calls.length).to.equal(0);
   });
 
-  it('should not lose focus to <body> after a confirmed Delete: it falls back to the owning grid column', async () => {
+  it('should move focus to the owning grid column after a confirmed Delete', async () => {
     renderStatefulEvent();
+    const column = getEvent().closest<HTMLElement>('[role="gridcell"]')!;
 
     fireEvent.contextMenu(getEvent());
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
@@ -237,9 +250,23 @@ describe('EventContextMenu', () => {
 
     // The fallback focus is deferred past the dialog's own focus trap releasing.
     await waitFor(() => {
-      expect(document.activeElement).to.have.attribute('tabindex', '0');
+      expect(document.activeElement).to.equal(column);
     });
-    expect(document.activeElement).not.to.equal(document.body);
+  });
+
+  it('should move focus to the owning grid column after a delete with no confirmation', async () => {
+    renderStatefulEvent({ eventDeletion: { confirmation: false } });
+    const column = getEvent().closest<HTMLElement>('[role="gridcell"]')!;
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(column);
+    });
   });
 
   it('should return focus to the event after Cancel', async () => {

@@ -500,7 +500,8 @@ export interface SchedulerEventCreationConfig {
 
 export interface SchedulerEventDeletionConfig {
   /**
-   * Whether a confirmation dialog is shown before deleting a non-recurring event.
+   * Whether a confirmation dialog is shown before deleting an event.
+   * Recurring events handled by the recurring scope dialog are not asked twice.
    * @default true
    */
   confirmation: boolean;

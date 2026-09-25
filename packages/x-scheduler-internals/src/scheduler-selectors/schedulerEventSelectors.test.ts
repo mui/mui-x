@@ -126,6 +126,16 @@ describe('schedulerEventSelectors', () => {
       });
     });
 
+    it('should keep the default when `confirmation` is explicitly `undefined`', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventDeletion: { confirmation: undefined },
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal(
+        DEFAULT_EVENT_DELETION_CONFIG,
+      );
+    });
+
     it('should fill in `confirmation` when props.eventDeletion is an empty object', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],

@@ -11,7 +11,7 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
-import { getFocusFallback } from '../../utils/focus-utils';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
 interface UseEventContextMenuItemsParameters {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -57,20 +57,9 @@ export function useEventContextMenuItems(
     }
   };
 
-  // Recurring events open the scope dialog; non-recurring events go through the delete
-  // confirmation dialog (unless `eventDeletion={{ confirmation: false }}`). Either way, focus is
-  // only restored once the deletion actually applies — see `getFocusFallback`.
   const handleDelete = () => {
     onRequestClose();
-    // Captured before the delete unmounts `anchorEl` — see `getFocusFallback`.
-    const focusFallback = getFocusFallback(anchorEl);
-    store.deleteOccurrence(occurrence, () => {
-      // `onDelete` may fire synchronously (an immediate delete) or later, from the scope dialog's
-      // or the confirmation dialog's own click handler — while its focus trap is still mounted.
-      // An immediate `.focus()` call there gets pulled straight back into the trap. Deferring past
-      // the current task lets the dialog actually close first, so the fallback focus sticks.
-      setTimeout(() => focusFallback?.focus());
-    });
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchorEl);
   };
 
   const EditIcon = isReadOnly ? SearchRounded : EditRounded;

@@ -574,7 +574,7 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('Method: deleteOccurrence', () => {
-      it('should delete a non-recurring occurrence immediately and report it when confirmation is off', () => {
+      it('should delete a non-recurring occurrence immediately when confirmation is off', () => {
         const onEventsChange = vi.fn();
         const onDelete = vi.fn();
         const builder = EventBuilder.new();
@@ -590,7 +590,7 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(true);
+        store.deleteOccurrence(builder.toOccurrence(), onDelete);
         expect(onDelete.mock.calls.length).to.equal(1);
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
       });
@@ -606,7 +606,7 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(false);
+        store.deleteOccurrence(builder.toOccurrence(), onDelete);
         expect(onDelete.mock.calls.length).to.equal(0);
         expect(onEventsChange.mock.calls.length).to.equal(0);
         expect(store.state.pendingDeleteConfirmation).to.deep.equal({
@@ -676,7 +676,7 @@ storeClasses.forEach((storeClass) => {
           ]);
 
           // The rule is ignored without the plugin, so there is no scope to ask for.
-          expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(true);
+          store.deleteOccurrence(builder.toOccurrence(), onDelete);
           expect(onDelete.mock.calls.length).to.equal(1);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
         },
@@ -702,7 +702,7 @@ storeClasses.forEach((storeClass) => {
 
           // No plugin to open a scope dialog with, so this goes through the confirmation dialog
           // like any other non-recurring delete, not straight to `deleteEvent`.
-          expect(store.deleteOccurrence(builder.toOccurrence(), onDelete)).to.equal(false);
+          store.deleteOccurrence(builder.toOccurrence(), onDelete);
           expect(onDelete.mock.calls.length).to.equal(0);
           expect(onEventsChange.mock.calls.length).to.equal(0);
           expect(store.state.pendingRecurringEventOperation).to.equal(null);
@@ -733,7 +733,7 @@ storeClasses.forEach((storeClass) => {
           const occurrence = builder.toOccurrence();
 
           // Nothing is deleted until the user picks a scope; `onDelete` waits for it too.
-          expect(store.deleteOccurrence(occurrence, onDelete)).to.equal(false);
+          store.deleteOccurrence(occurrence, onDelete);
           expect(onDelete.mock.calls.length).to.equal(0);
           expect(onEventsChange.mock.calls.length).to.equal(0);
           expect(store.state.pendingRecurringEventOperation).to.deep.include({
@@ -773,7 +773,7 @@ storeClasses.forEach((storeClass) => {
             adapter,
           );
 
-          expect(store.deleteOccurrence(staleOccurrence)).to.equal(true);
+          store.deleteOccurrence(staleOccurrence);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
         },
       );
@@ -790,7 +790,7 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        expect(store.deleteOccurrence(pendingOccurrence, onDelete)).to.equal(false);
+        store.deleteOccurrence(pendingOccurrence, onDelete);
         expect(onDelete.mock.calls.length).to.equal(0);
         expect(onEventsChange.mock.calls.length).to.equal(0);
         expect(store.state.pendingRecurringEventOperation).to.equal(null);

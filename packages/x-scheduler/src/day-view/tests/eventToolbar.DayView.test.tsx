@@ -32,7 +32,7 @@ describe('DayView - event toolbar', () => {
   // `renderEvent`'s fixed array never actually removes the event from the DOM on delete (the
   // store warns if nothing feeds `onEventsChange` back into it), which can't exercise what
   // happens once an occurrence really unmounts. This one is fully controlled instead.
-  function renderStatefulEvent() {
+  function renderStatefulEvent(extraProps: Record<string, unknown> = {}) {
     const initialEvent = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -41,7 +41,14 @@ describe('DayView - event toolbar', () => {
 
     function StatefulDayView() {
       const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
-      return <StandaloneDayView events={events} resources={[]} onEventsChange={setEvents} />;
+      return (
+        <StandaloneDayView
+          events={events}
+          resources={[]}
+          onEventsChange={setEvents}
+          {...extraProps}
+        />
+      );
     }
 
     render(<StatefulDayView />);
@@ -168,9 +175,10 @@ describe('DayView - event toolbar', () => {
     expect(screen.getByRole('button', { name: 'Edit event' })).not.to.equal(null);
   });
 
-  it('should not lose focus to <body> after a confirmed Delete: it falls back to the owning grid column', async () => {
+  it('should move focus to the owning grid column after a confirmed Delete', async () => {
     window.matchMedia = createMatchMedia(true);
     renderStatefulEvent();
+    const column = getEvent().closest<HTMLElement>('[role="gridcell"]')!;
 
     fireEvent.click(getEvent());
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
@@ -185,9 +193,24 @@ describe('DayView - event toolbar', () => {
 
     // The fallback focus is deferred past the dialog's own focus trap releasing.
     await waitFor(() => {
-      expect(document.activeElement).to.have.attribute('tabindex', '0');
+      expect(document.activeElement).to.equal(column);
     });
-    expect(document.activeElement).not.to.equal(document.body);
+  });
+
+  it('should move focus to the owning grid column after a delete with no confirmation', async () => {
+    window.matchMedia = createMatchMedia(true);
+    renderStatefulEvent({ eventDeletion: { confirmation: false } });
+    const column = getEvent().closest<HTMLElement>('[role="gridcell"]')!;
+
+    fireEvent.click(getEvent());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(column);
+    });
   });
 
   it('should return focus to the toolbar Delete button after Cancel', async () => {
@@ -207,11 +230,14 @@ describe('DayView - event toolbar', () => {
     fireEvent.click(deleteButton);
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
+    // The dialog closes through an exit transition, so it lingers in the DOM for a tick — asserting
+    // before it's gone would only catch focus still sitting inside it.
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
     // Nothing was deleted, so MUI's own restore-on-close returns focus to the toolbar's Delete
     // button — the element that had it when the confirmation dialog opened.
-    await waitFor(() => {
-      expect(document.activeElement).to.equal(deleteButton);
-    });
+    expect(document.activeElement).to.equal(deleteButton);
   });
 
   it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {

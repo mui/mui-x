@@ -51,6 +51,7 @@ const ruRUDialog: Partial<EventEditingLocaleText> = {
   eventActionsToolbarAriaLabel: 'Действия с событием',
   deleteEvent: 'Удалить событие',
   // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
   editEvent: 'Редактировать событие',
   showEventDetails: 'Показать подробности',
   eventContextMenuAriaLabel: 'Действия с событием',
