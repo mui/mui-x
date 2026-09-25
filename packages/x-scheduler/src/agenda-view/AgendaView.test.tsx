@@ -12,19 +12,17 @@ import { vi, describe, it, expect } from 'vitest';
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
 
-  it('should reference resolvable header IDs in each event aria-labelledby', () => {
+  it('should name each event with its title, time range and date', () => {
     const event = EventBuilder.new().title('My Event').build();
 
     render(
       <EventCalendar events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
     );
 
-    const eventButton = screen.getByRole('button', { name: /My Event/i });
-    const tokens = (eventButton.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
-    expect(tokens.length).to.be.greaterThan(0);
-    tokens.forEach((token) => {
-      expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(null);
+    const eventButton = screen.getByRole('button', {
+      name: 'My Event, 12:00 AM to 1:00 AM, Thursday, July 3rd, 2025',
     });
+    expect(eventButton).not.to.have.attribute('aria-labelledby');
   });
 
   describe('multi-resource events', () => {

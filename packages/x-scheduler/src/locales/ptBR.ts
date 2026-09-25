@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const ptBRDialog: Partial<EventEditingLocaleText> = {
+const ptBRDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Cor do evento',
   // colorSectionLabel: 'Color',
@@ -79,7 +80,23 @@ const ptBRDialog: Partial<EventEditingLocaleText> = {
   title: 'Aplicar esta alteração a:',
 };
 
-const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const ptBREvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const ptBRCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Recursos',
 
@@ -122,7 +139,6 @@ const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `Próximo(a) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
-  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
@@ -141,13 +157,14 @@ const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Título do recurso',
 };
 
-const ptBRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const ptBRTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Título do recurso',
 };
 
 export const ptBR: SchedulerLocalization = getSchedulerLocalization({
   dialog: ptBRDialog,
+  event: ptBREvent,
   calendar: ptBRCalendar,
   timeline: ptBRTimeline,
 });

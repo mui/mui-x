@@ -123,7 +123,72 @@ export interface EventEditingLocaleText {
   title: string;
 }
 
-export interface EventCalendarLocaleText extends EventEditingLocaleText {
+/**
+ * The parts `eventAriaLabel` composes into the accessible name of an event.
+ */
+export interface SchedulerEventAriaLabelParts {
+  /**
+   * The title of the event. Empty when the event has none, which the default composition skips.
+   */
+  title: string;
+  /**
+   * When the event happens within the day: a time range, or the all-day sentence.
+   * Not set when the event spans several days at a time, since `date` then carries the times.
+   * @example "7:30 AM to 8:30 AM"
+   */
+  when?: string;
+  /**
+   * The day the event happens on, or the range of days it spans.
+   * @example "Monday, May 26th, 2025"
+   */
+  date: string;
+  /**
+   * The resource the event belongs to. Not set when it has none.
+   */
+  resource?: string;
+  /**
+   * Set when the event is a recurring one.
+   */
+  recurring?: string;
+}
+
+/**
+ * Strings that build the accessible name of an event, shared by the Event Calendar and the
+ * Event Timeline.
+ */
+export interface SchedulerEventLocaleText {
+  /**
+   * Time range of a timed event that starts and ends on the same day.
+   * @example "7:30 AM to 8:30 AM"
+   */
+  eventAriaLabelTimeRange: (start: string, end: string) => string;
+  /**
+   * Range of an event that spans several days. Receives a date on both sides for an all-day
+   * event, and a date followed by a time for a timed one.
+   * @example "From Monday, May 26th, 2025 to Wednesday, May 28th, 2025"
+   */
+  eventAriaLabelDateRange: (start: string, end: string) => string;
+  /**
+   * Announced instead of the time range for an all-day event.
+   */
+  eventAriaLabelAllDay: string;
+  /**
+   * Appended to the name of a recurring event.
+   */
+  eventAriaLabelRecurring: string;
+  /**
+   * Resource the event belongs to.
+   * @example "Resource: Sport"
+   */
+  resourceAriaLabel: (resourceName: string) => string;
+  /**
+   * Composes the parts into the event name. Locales can reorder them or change the separator.
+   * @example "Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Resource: Sport, Recurring"
+   */
+  eventAriaLabel: (parts: SchedulerEventAriaLabelParts) => string;
+}
+
+export interface EventCalendarLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // ResourcesTree
   resourcesLabel: string;
 
@@ -168,7 +233,6 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText {
   hiddenEvents: (hiddenEventsCount: number) => string;
   nextTimeSpan: (view: CalendarView) => string;
   previousTimeSpan: (view: CalendarView) => string;
-  resourceAriaLabel: (resourceName: string) => string;
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;
 
@@ -187,7 +251,7 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText {
   timelineResourceTitleHeader: string;
 }
 
-export interface EventTimelineLocaleText extends EventEditingLocaleText {
+export interface EventTimelineLocaleText extends EventEditingLocaleText, SchedulerEventLocaleText {
   // Timeline title sub grid
   timelineResourceTitleHeader: string;
 }

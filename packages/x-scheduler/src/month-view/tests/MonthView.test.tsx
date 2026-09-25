@@ -7,6 +7,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  getAllEventsByTitle,
   ResourceBuilder,
   SchedulerStoreRunner,
   withinEventCalendarToolbar,
@@ -193,20 +194,21 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should reference resolvable header IDs in each event aria-labelledby', async () => {
+    it('should name each event in the popover with its title, time range and date', async () => {
       const { popover } = await renderAndOpenPopover();
 
       const eventButtons = within(popover).getAllByRole('button');
-      expect(eventButtons.length).to.be.greaterThan(0);
 
+      expect(eventButtons.map((button) => button.getAttribute('aria-label'))).to.deep.equal([
+        'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1st, 2025',
+        'Event 2, 9:00 AM to 10:00 AM, Thursday, May 1st, 2025',
+        'Event 3, 10:00 AM to 11:00 AM, Thursday, May 1st, 2025',
+        'Event 4, 11:00 AM to 12:00 PM, Thursday, May 1st, 2025',
+        'Event 5, 12:00 PM to 1:00 PM, Thursday, May 1st, 2025',
+        'Event 6, 1:00 PM to 2:00 PM, Thursday, May 1st, 2025',
+      ]);
       eventButtons.forEach((button) => {
-        const tokens = (button.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
-        expect(tokens.length).to.be.greaterThan(0);
-        tokens.forEach((token) => {
-          expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(
-            null,
-          );
-        });
+        expect(button).not.to.have.attribute('aria-labelledby');
       });
     });
 
@@ -460,6 +462,43 @@ describe('<MonthView />', () => {
         .build(),
     ];
 
+    it('should announce a multi-day timed event as a single date and time range', () => {
+      const trip = EventBuilder.new()
+        .title('Trip')
+        .span('2025-05-05T07:30:00Z', '2025-05-07T17:00:00Z')
+        .build();
+
+      render(
+        <EventCalendarProvider events={[trip]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Trip, From Monday, May 5th, 2025 7:30 AM to Wednesday, May 7th, 2025 5:00 PM',
+        }),
+      ).not.to.equal(null);
+    });
+
+    it('should announce an all-day event as a date range instead of a time range', () => {
+      render(
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Multi-day Conference, All day, From Monday, May 5th, 2025 to Wednesday, May 7th, 2025',
+        }),
+      ).not.to.equal(null);
+    });
+
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider
@@ -516,7 +555,7 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEventOccurrences = screen.getAllByLabelText('Grid Row Test');
+      const allEventOccurrences = getAllEventsByTitle('Grid Row Test');
       const mainEvent = allEventOccurrences.find(
         (event) => event.getAttribute('aria-hidden') !== 'true',
       );
@@ -559,9 +598,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText('Event 1');
-      const event2Elements = screen.getAllByLabelText('Event 2');
-      const event3Elements = screen.getAllByLabelText('Event 3');
+      const event1Elements = getAllEventsByTitle('Event 1');
+      const event2Elements = getAllEventsByTitle('Event 2');
+      const event3Elements = getAllEventsByTitle('Event 3');
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -589,9 +628,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const mainEvent = screen
-        .getAllByLabelText('Three Day Event')
-        .find((el) => el.getAttribute('aria-hidden') !== 'true');
+      const mainEvent = getAllEventsByTitle('Three Day Event').find(
+        (el) => el.getAttribute('aria-hidden') !== 'true',
+      );
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];
 
@@ -608,13 +647,20 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const eventInstances = screen.getAllByLabelText('Multiple week event');
+      const eventInstances = getAllEventsByTitle('Multiple week event');
 
       const visibleInstances = eventInstances.filter(
         (el) => el.getAttribute('aria-hidden') !== 'true',
       );
 
       expect(visibleInstances).toHaveLength(2);
+      // Each segment announces the whole event, not the slice of it that its row shows.
+      visibleInstances.forEach((instance) => {
+        expect(instance).to.have.attribute(
+          'aria-label',
+          'Multiple week event, All day, From Monday, May 19th, 2025 to Tuesday, May 27th, 2025',
+        );
+      });
     });
   });
 

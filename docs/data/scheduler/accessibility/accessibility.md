@@ -67,11 +67,26 @@ Weekday column headers carry a `role="columnheader"` with an `aria-label` contai
 
 ### Events
 
-Each event element has an `aria-labelledby` that composes the day column header ID and the event's own title element ID, so a screen reader announces the day context alongside the event title.
+Each event element has `role="button"` and an `aria-label` that announces, in order: the event title, when it happens within the day, the day itself, the resource, and whether it recurs.
+The previews rendered while creating, dragging or resizing an event are inert: they are not focusable and carry no name.
+The visible content of the event (which varies with the view, the available space, and the variant) is not part of the accessible name, so every event is announced the same way.
 
-Multi-day events are rendered once as the main (visible) element and additionally as invisible placeholder elements in the spanned cells. The placeholder elements carry `aria-hidden="true"` so assistive technologies see only one announcement per event.
+| Event               | Accessible name                                                                    |
+| :------------------ | :--------------------------------------------------------------------------------- |
+| Timed, single day   | `"Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025"`                            |
+| All day, single day | `"Conference, All day, Monday, May 26th, 2025"`                                    |
+| All day, multi-day  | `"Conference, All day, From Monday, May 26th, 2025 to Wednesday, May 28th, 2025"`  |
+| Timed, multi-day    | `"Trip, From Monday, May 26th, 2025 7:30 AM to Wednesday, May 28th, 2025 5:00 PM"` |
+| With a resource     | `"Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Resource: Sport"`           |
+| Recurring           | `"Running, 7:30 AM to 8:30 AM, Monday, May 26th, 2025, Recurring"`                 |
 
-The resource color indicator inside an event uses `role="img"` with an `aria-label` describing the resource (for example, `"Resource: Sport"`). When no resource is assigned the label falls back to the localized `noResourceAriaLabel` value.
+Times follow the 12-hour or 24-hour preference, and dates use the adapter's localized full date format.
+Each sentence comes from a [locale text](#localization-of-aria-labels) key, and `eventAriaLabel` composes the parts, so a locale can reorder them or change the separator.
+On the Event Timeline, the announced resource is the one of the row the event is rendered in.
+
+Multi-day events are rendered once per row they span, plus invisible placeholder elements in the other spanned cells. The placeholders carry `aria-hidden="true"`, and every visible segment announces the same name, which is the full range of the event.
+
+The resource color indicator inside an event is decorative (`aria-hidden="true"`); the resource is announced through the `resourceAriaLabel` part of the event name.
 
 Recurring event icons are `aria-hidden="true"` as they are decorative.
 
@@ -162,8 +177,8 @@ The dialog is labeled by its event title via `aria-labelledby`.
 
 When a month cell has more events than can be displayed, a **"X more"** button opens a popover listing all events for that day.
 
-- The popover header element carries an `aria-label` with the full formatted date (for example, `"Monday, May 26"`).
-- Each event inside the popover uses `aria-labelledby` that composes the popover header ID and the event title element ID, so screen readers announce the day context alongside the event title.
+- The popover header shows the full formatted date (for example, `"Monday, May 26"`).
+- Each event inside the popover has the same `aria-label` as in the grid (see [Events](#events)).
 - Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. On a mouse/trackpad, <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead of activating the event directly.
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
 - Deleting an event from the popover's context menu does not close the popover.
@@ -209,11 +224,18 @@ The following keys are specifically relevant to accessibility:
   showEventDetails: 'Show details',
 
   // Events
-  noResourceAriaLabel: 'No specific resource',
+  eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  eventAriaLabelAllDay: 'All day',
+  eventAriaLabelRecurring: 'Recurring',
   resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
-  hiddenEvents: (count) => `${count} more..`,
+  // Composes the name. `date` is always set; `when` is the time range or "All day", and is
+  // left out when the event spans several days, since `date` then carries the times.
+  eventAriaLabel: ({ title, when, date, resource, recurring }) =>
+    [title, when, date, resource, recurring].filter(Boolean).join(', '),
 
   // Month view
+  hiddenEvents: (count) => `${count} more..`,
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
 
   // Mini calendar

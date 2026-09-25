@@ -2,19 +2,17 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { useId } from '@base-ui/utils/useId';
 import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
-  schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
@@ -186,35 +184,23 @@ export const EventItem = React.forwardRef(function EventItem(
   props: EventItemProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    occurrence,
-    date,
-    ariaLabelledBy,
-    id: idProp,
-    variant = 'regular',
-    className,
-    onClick,
-    ...other
-  } = props;
+  const { occurrence, date, variant = 'regular', className, onClick, ...other } = props;
 
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
-  // State hooks
-  const id = useId(idProp);
-
   // Selector hooks
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    getPrimaryResourceId(occurrence.resource),
-  );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
+  const accessibleName = useEventAccessibleName({
+    occurrence,
+    isRecurring,
+    localeText,
+  });
 
   const adapter = useAdapterContext();
   const startsBeforeDay =
@@ -229,15 +215,7 @@ export const EventItem = React.forwardRef(function EventItem(
       case 'compact':
         return (
           <React.Fragment>
-            <ResourceLegendColor
-              className={classes.resourceLegendColor}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <ResourceLegendColor className={classes.resourceLegendColor} aria-hidden="true" />
             <EventItemLinesClamp
               className={classes.eventItemLinesClamp}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -266,15 +244,7 @@ export const EventItem = React.forwardRef(function EventItem(
       case 'regular':
         return (
           <React.Fragment>
-            <ResourceLegendColor
-              className={classes.resourceLegendColor}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <ResourceLegendColor className={classes.resourceLegendColor} aria-hidden="true" />
             <EventItemLinesClamp
               className={classes.eventItemLinesClamp}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -295,7 +265,7 @@ export const EventItem = React.forwardRef(function EventItem(
             'Check the component documentation for supported variants.',
         );
     }
-  }, [variant, resource?.title, localeText, formatTime, occurrence, classes]);
+  }, [variant, formatTime, occurrence, classes]);
 
   return (
     <Button
@@ -304,11 +274,10 @@ export const EventItem = React.forwardRef(function EventItem(
       render={
         <EventItemCard
           ref={forwardedRef}
-          id={id}
           data-variant={variant}
           data-palette={color}
           data-editing={isEditing || undefined}
-          aria-labelledby={`${ariaLabelledBy} ${id}`}
+          aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
           {...other}

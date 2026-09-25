@@ -22,8 +22,4 @@ export interface EventItemProps extends Omit<React.HTMLAttributes<HTMLDivElement
    * 'compact': displays the resource legend, event title alongside the event time on a neutral background.
    */
   variant: 'filled' | 'compact' | 'regular';
-  /**
-   * ID of the header this event is associated with (for aria-labelledby).
-   */
-  ariaLabelledBy: string;
 }

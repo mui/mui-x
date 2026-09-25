@@ -13,6 +13,8 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  getAllEventsByTitle,
+  getEventByTitle,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import type {
@@ -395,7 +397,7 @@ describe('<EventTimelinePremium />', () => {
 
       await renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
 
-      const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
+      const recurringEventElements = getAllEventsByTitle(recurringEvent.title);
       expect(recurringEventElements.length).to.be.greaterThan(0);
       recurringEventElements.forEach((element) => {
         expect(
@@ -403,7 +405,7 @@ describe('<EventTimelinePremium />', () => {
         ).not.to.equal(null);
       });
 
-      const singleEventElement = screen.getByLabelText(singleEvent.title);
+      const singleEventElement = getEventByTitle(singleEvent.title);
       expect(
         singleEventElement.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
       ).to.equal(null);
@@ -419,16 +421,16 @@ describe('<EventTimelinePremium />', () => {
 
       const { user } = await renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
 
-      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      const occurrences = getAllEventsByTitle(recurringEvent.title);
       expect(occurrences.length).to.be.greaterThan(1);
       const clickedOccurrenceKey = occurrences[0].getAttribute('data-occurrence-key');
       expect(clickedOccurrenceKey).not.to.equal(null);
 
       await user.click(occurrences[0]);
 
-      const editedOccurrences = screen
-        .getAllByLabelText(recurringEvent.title)
-        .filter((occurrence) => occurrence.hasAttribute('data-editing'));
+      const editedOccurrences = getAllEventsByTitle(recurringEvent.title).filter((occurrence) =>
+        occurrence.hasAttribute('data-editing'),
+      );
       expect(editedOccurrences).to.have.length(1);
       expect(editedOccurrences[0].getAttribute('data-occurrence-key')).to.equal(
         clickedOccurrenceKey,
@@ -445,20 +447,20 @@ describe('<EventTimelinePremium />', () => {
 
       const { user } = await renderTimeline({ events: [recurringEvent], preset: 'dayAndMonth' });
 
-      const occurrences = screen.getAllByLabelText(recurringEvent.title);
+      const occurrences = getAllEventsByTitle(recurringEvent.title);
       await user.click(occurrences[0]);
       expect(
-        screen
-          .getAllByLabelText(recurringEvent.title)
-          .filter((occurrence) => occurrence.hasAttribute('data-editing')),
+        getAllEventsByTitle(recurringEvent.title).filter((occurrence) =>
+          occurrence.hasAttribute('data-editing'),
+        ),
       ).to.have.length(1);
 
       await user.click(screen.getByRole('button', { name: 'Close' }));
 
       expect(
-        screen
-          .getAllByLabelText(recurringEvent.title)
-          .filter((occurrence) => occurrence.hasAttribute('data-editing')),
+        getAllEventsByTitle(recurringEvent.title).filter((occurrence) =>
+          occurrence.hasAttribute('data-editing'),
+        ),
       ).to.have.length(0);
     });
 
@@ -467,7 +469,7 @@ describe('<EventTimelinePremium />', () => {
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
       await renderTimeline({ preset: 'dayAndHour' });
 
-      const eventElement = screen.getByLabelText(event1.title);
+      const eventElement = getEventByTitle(event1.title);
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -482,7 +484,7 @@ describe('<EventTimelinePremium />', () => {
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
       await renderTimeline({ preset: 'dayAndMonth' });
 
-      const eventElement = screen.getByLabelText(event3.title);
+      const eventElement = getEventByTitle(event3.title);
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -503,7 +505,7 @@ describe('<EventTimelinePremium />', () => {
 
       await renderTimeline({ preset: 'dayAndWeek' });
 
-      const eventElement = screen.getByLabelText(event1.title);
+      const eventElement = getEventByTitle(event1.title);
       expect(eventElement).not.to.equal(null);
       const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
@@ -532,7 +534,7 @@ describe('<EventTimelinePremium />', () => {
         parseFloat(grid.style.getPropertyValue('--unit-count'));
       const monthWidth = totalWidth / 36;
 
-      const event1Element = screen.getByLabelText(event1.title);
+      const event1Element = getEventByTitle(event1.title);
       expect(event1Element).not.to.equal(null);
       const xPositioning = event1Element.style.getPropertyValue('--x-position');
 
@@ -540,7 +542,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition).to.be.lessThanOrEqual(monthWidth); // first month
 
-      const nextMonthEventElement = screen.getByLabelText('Next month');
+      const nextMonthEventElement = getEventByTitle('Next month');
       expect(nextMonthEventElement).not.to.equal(null);
       const xPositioning2 = nextMonthEventElement.style.getPropertyValue('--x-position');
 
@@ -563,7 +565,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({ events: [thisYearEvent, nextYearEvent], preset: 'year' });
 
       const totalWidth = 30 * 200;
-      const thisYearEventElement = screen.getByLabelText(thisYearEvent.title);
+      const thisYearEventElement = getEventByTitle(thisYearEvent.title);
       expect(thisYearEventElement).not.to.equal(null);
       const xPositioning = thisYearEventElement.style.getPropertyValue('--x-position');
 
@@ -571,7 +573,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(eventPosition).to.be.lessThanOrEqual(200); // 2025
 
-      const nextYearEventElement = screen.getByLabelText(nextYearEvent.title);
+      const nextYearEventElement = getEventByTitle(nextYearEvent.title);
       expect(nextYearEventElement).not.to.equal(null);
       const xPositioning2 = nextYearEventElement.style.getPropertyValue('--x-position');
 
@@ -1332,6 +1334,125 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.mock.lastCall?.[1].trigger.isConnected).to.equal(false);
       expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(row);
       expect(row.isConnected).to.equal(true);
+    });
+  });
+
+  describe('accessible name', () => {
+    it('should name each event with its title, time range, date and the resource of its row', async () => {
+      const team = ResourceBuilder.new().id('team').title('Team').build();
+      const standup = EventBuilder.new()
+        .title('Standup')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(team)
+        .build();
+
+      await renderTimeline({ resources: [team], events: [standup] });
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Standup, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: Team',
+        }),
+      ).not.to.equal(null);
+    });
+
+    it('should announce the resource of the row an event is rendered in', async () => {
+      const shared = EventBuilder.new()
+        .title('Shared')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([engineering, design])
+        .build();
+
+      await renderTimeline({ events: [shared] });
+
+      const inEngineering = within(
+        document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement,
+      ).getByRole('button');
+      const inDesign = within(
+        document.querySelector(`[data-resource-id="${design.id}"]`) as HTMLElement,
+      ).getByRole('button');
+
+      expect(inEngineering).toHaveAccessibleName(
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+      );
+      expect(inDesign).toHaveAccessibleName(
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${design.title}`,
+      );
+    });
+
+    it('should name a multi-day event with a single date and time range', async () => {
+      const trip = EventBuilder.new()
+        .title('Trip')
+        .span('2025-07-03T07:30:00Z', '2025-07-05T17:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [trip], preset: 'dayAndMonth' });
+
+      expect(getEventByTitle('Trip')).toHaveAccessibleName(
+        `Trip, From Thursday, July 3rd, 2025 7:30 AM to Saturday, July 5th, 2025 5:00 PM, Resource: ${engineering.title}`,
+      );
+    });
+
+    it('should name an all-day event with its date range instead of a time range', async () => {
+      const conference = EventBuilder.new()
+        .title('Conference')
+        .span('2025-07-03', '2025-07-05', { allDay: true })
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [conference], preset: 'dayAndMonth' });
+
+      expect(getEventByTitle('Conference')).toHaveAccessibleName(
+        `Conference, All day, From Thursday, July 3rd, 2025 to Saturday, July 5th, 2025, Resource: ${engineering.title}`,
+      );
+    });
+
+    it('should name events with the locale text of the timeline', async () => {
+      const standup = EventBuilder.new()
+        .title('Reunión')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({
+        events: [standup],
+        localeText: { eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}` },
+      });
+
+      expect(getEventByTitle('Reunión')).toHaveAccessibleName(
+        `Reunión, de 9:00 AM a 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+      );
+    });
+
+    it('should append "Recurring" to the name of a recurring event only', async () => {
+      const recurringEvent = EventBuilder.new()
+        .title('Recurring timeline event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .recurrent('DAILY')
+        .build();
+      const singleEvent = EventBuilder.new()
+        .title('Single timeline event')
+        .singleDay('2025-07-03T11:00:00Z')
+        .resource(engineering)
+        .build();
+
+      await renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
+
+      expect(
+        screen.getByRole('button', {
+          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}, Recurring`,
+        }),
+      ).not.to.equal(null);
+      expect(getEventByTitle(singleEvent.title)).toHaveAccessibleName(
+        `${singleEvent.title}, 11:00 AM to 12:00 PM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+      );
+      // Each occurrence announces its own date, not the date of the series.
+      expect(
+        screen.getByRole('button', {
+          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Friday, July 4th, 2025, Resource: ${engineering.title}, Recurring`,
+        }),
+      ).not.to.equal(null);
     });
   });
 });
