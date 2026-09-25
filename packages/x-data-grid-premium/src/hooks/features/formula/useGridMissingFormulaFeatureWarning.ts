@@ -24,13 +24,15 @@ export function useGridMissingFormulaFeatureWarning(
       !!props.slotProps?.toolbar?.formulaBar ||
       props.columns?.some((column) => column.allowFormulas === true) === true;
     if (usesFormulaProps) {
-      warnOnce([
-        'MUI X Data Grid: Formula-related props were provided, but the formula feature is missing.',
-        'Without it, `=` cell values render as raw strings and the formula props have no effect.',
-        'Import the feature from `@mui/x-data-grid-premium/formula` and pass it to the grid:',
-        '`<DataGridPremium featureDependencies={{ formula: formulaFeature }} />`.',
-        'See https://mui.com/x/react-data-grid/formulas/.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Data Grid: Formula-related props were provided, but the formula feature is missing.',
+          'Without it, `=` cell values render as raw strings and the formula props have no effect.',
+          'Import the feature from `@mui/x-data-grid-premium/formula` and pass it to the grid:',
+          '`<DataGridPremium featureDependencies={{ formula: formulaFeature }} />`.',
+          'See https://mui.com/x/react-data-grid/formulas/.',
+        ].join('\n'),
+      );
     }
   }, [
     hasFormulaFeature,

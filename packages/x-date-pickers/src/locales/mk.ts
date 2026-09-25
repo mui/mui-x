@@ -41,9 +41,12 @@ const mkPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Select ${view}. ${!formattedTime ? 'Нема избрано време' : `Избраното време е ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} часа`,
-  minutesClockNumberText: (minutes) => `${minutes} минути`,
-  secondsClockNumberText: (seconds) => `${seconds} секунди`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${Number(hours) % 10 === 1 && Number(hours) % 100 !== 11 ? 'час' : 'часа'}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${Number(minutes) % 10 === 1 && Number(minutes) % 100 !== 11 ? 'минута' : 'минути'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) % 10 === 1 && Number(seconds) % 100 !== 11 ? 'секунда' : 'секунди'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Избери ${view}`,
