@@ -163,9 +163,30 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
       return;
     }
 
+    // An item that cannot be selected stays out of the model,
+    // but the items below it are new too and must be selected.
+    const itemsToPropagate: TreeViewItemId[] = [];
+    const registerNewItem = (itemId: TreeViewItemId) => {
+      if (selectionSelectors.canItemBeSelected(this.store.state, itemId)) {
+        itemsToPropagate.push(itemId);
+      } else {
+        itemsSelectors.itemOrderedChildrenIds(this.store.state, itemId).forEach(registerNewItem);
+      }
+    };
+    newItemIds.forEach(registerNewItem);
+
+    if (itemsToPropagate.length === 0) {
+      return;
+    }
+
+    // A new item can already be in the model, keep propagating to its subtree but don't add it twice.
+    const itemsToAddToModel = itemsToPropagate.filter(
+      (itemId) => !selectionSelectors.isItemSelected(this.store.state, itemId),
+    );
+
     // Only propagate to the new items, the rest of the parent's subtree is already up to date.
-    const newModel = selectionSelectors.selectedItems(this.store.state).concat(newItemIds);
-    this.setSelectedItems(null, newModel, newItemIds);
+    const newModel = selectionSelectors.selectedItems(this.store.state).concat(itemsToAddToModel);
+    this.setSelectedItems(null, newModel, itemsToPropagate);
   };
 
   /**

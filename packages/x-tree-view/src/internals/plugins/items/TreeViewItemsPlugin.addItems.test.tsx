@@ -143,6 +143,52 @@ describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
       expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1', '1.1', '1.2', '1.2.1']);
     });
 
+    it('should not select the new items that cannot be selected', () => {
+      const onSelectedItemsChange = vi.fn();
+
+      const view = render({
+        items: [{ id: '1', children: [{ id: '1.1' }] }],
+        multiSelect: true,
+        selectionPropagation: { descendants: true },
+        defaultSelectedItems: ['1', '1.1'],
+        isItemSelectionDisabled: (item: any) => item.id === '1.3',
+        onSelectedItemsChange,
+      });
+
+      act(() => {
+        view.apiRef.current.addItems({
+          items: [
+            { id: '1.2', disabled: true, children: [{ id: '1.2.1' }] },
+            { id: '1.3', children: [{ id: '1.3.1' }] },
+            { id: '1.4' },
+          ],
+          parentId: '1',
+        });
+      });
+
+      // `1.2` is disabled, so its subtree is disabled too.
+      // `1.3` is not selectable, but its children still are.
+      expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1', '1.1', '1.3.1', '1.4']);
+    });
+
+    it('should not add a new item that is already selected to the model twice', () => {
+      const onSelectedItemsChange = vi.fn();
+
+      const view = render({
+        items: [{ id: '1', children: [{ id: '1.1' }] }],
+        multiSelect: true,
+        selectionPropagation: { descendants: true },
+        defaultSelectedItems: ['1', '1.1', '1.2'],
+        onSelectedItemsChange,
+      });
+
+      act(() => {
+        view.apiRef.current.addItems({ items: [{ id: '1.2' }], parentId: '1' });
+      });
+
+      expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1', '1.1', '1.2']);
+    });
+
     it('should only toggle the new items, not the whole parent subtree', () => {
       const onItemSelectionToggle = vi.fn();
 
