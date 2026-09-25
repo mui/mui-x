@@ -7,13 +7,13 @@ packages:
 
 catalog:
   '@atlaskit/pragmatic-drag-and-drop': ^3.1.0
-  '@babel/cli': ^7.29.7
-  '@babel/core': ^7.29.7
-  '@babel/plugin-transform-modules-commonjs': ^7.29.7
-  '@babel/plugin-transform-runtime': ^7.29.7
-  '@babel/preset-typescript': ^7.29.7
-  '@babel/runtime': ^7.29.7
-  '@babel/traverse': ^7.29.8
+  '@babel/cli': ^8.0.6
+  '@babel/core': ^8.0.6
+  '@babel/plugin-transform-modules-commonjs': ^8.0.1
+  '@babel/plugin-transform-runtime': ^8.0.6
+  '@babel/preset-typescript': ^8.0.1
+  '@babel/runtime': ^8.0.0
+  '@babel/traverse': ^8.0.6
   '@base-ui/react': ^1.8.0
   '@base-ui/utils': ^0.4.0
   '@date-fns/tz': ^1.5.0
@@ -21,7 +21,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.4.0
-  '@mui/internal-test-utils': 2.0.18-canary.36
+  '@mui/internal-test-utils': 2.1.1-canary.0
   '@mui/internal-core-docs': 9.1.2-canary.3
   '@mui/material': 9.4.0
   '@mui/stylis-plugin-rtl': 9.4.0

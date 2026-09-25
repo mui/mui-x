@@ -72,15 +72,15 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     lastPosition: null,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare protected readonly isSinglePhase: false;
 
-  protected readonly eventType!: MoveEvent;
+  declare protected readonly eventType: MoveEvent;
 
-  protected readonly optionsType!: MoveGestureOptions<GestureName>;
+  declare protected readonly optionsType: MoveGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: never;
+  declare protected readonly mutableStateType: never;
 
   /**
    * Movement threshold in pixels that must be exceeded before the gesture activates.
