@@ -130,9 +130,21 @@ This is the state users see when they start a new conversation.
 
 :::info
 **Loading vs. empty:** these are distinct states.
-Render the skeleton while a fetch is in flight (your loading flag is `true`), and the empty state only once the fetch resolves with `messages.length === 0`.
-Rendering the empty state during the fetch causes a flash of "How can I help you?" before history appears.
+`historyStatus` from `useChat()` or `useChatStatus()` tells them apart: it is `'loading'` from the first render until the initial page resolves, then `'loaded'` (or `'error'`).
+Render the skeleton while it is `'loading'`, and the empty state only once it is `'loaded'` with no messages.
+`ChatBox` does this for you and never shows its empty state while the initial page is loading.
 :::
+
+```tsx
+const { historyStatus, messages } = useChat();
+
+if (historyStatus === 'loading') {
+  return <ChatMessageSkeleton aria-hidden />;
+}
+if (messages.length === 0) {
+  return <MyEmptyState />;
+}
+```
 
 The message area below is intentionally empty — only the conversation header and the composer render:
 

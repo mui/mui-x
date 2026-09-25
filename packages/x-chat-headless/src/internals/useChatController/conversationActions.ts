@@ -42,6 +42,7 @@ export function createConversationActions<Cursor = string>(params: {
       if (shouldResetMessages) {
         store.resetMessages();
       }
+      store.setHistoryStatus('idle');
       return;
     }
 
@@ -49,6 +50,7 @@ export function createConversationActions<Cursor = string>(params: {
       if (shouldResetMessages) {
         store.resetMessages();
       }
+      store.setHistoryStatus('idle');
       return;
     }
 
@@ -59,6 +61,7 @@ export function createConversationActions<Cursor = string>(params: {
     historyLoadRequestIdRef.current += 1;
     const historyRequestId = historyLoadRequestIdRef.current;
     store.setHistoryLoading(true);
+    store.setHistoryStatus('loading');
 
     try {
       const result = await runtimeRef.current.adapter.listMessages({
@@ -78,6 +81,7 @@ export function createConversationActions<Cursor = string>(params: {
         cursor: result.cursor,
         hasMore: result.hasMore ?? false,
       });
+      store.setHistoryStatus('loaded');
       store.setError(null);
     } catch (error) {
       if (
@@ -87,6 +91,7 @@ export function createConversationActions<Cursor = string>(params: {
         return;
       }
 
+      store.setHistoryStatus('error');
       setRuntimeError(
         createRuntimeError(
           'HISTORY_ERROR',
