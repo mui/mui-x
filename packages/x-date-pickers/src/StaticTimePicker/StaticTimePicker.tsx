@@ -6,9 +6,8 @@ import type { StaticTimePickerProps } from './StaticTimePicker.types';
 import type { TimePickerViewRenderers } from '../TimePicker/shared';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateTime } from '../validation';
+import { useTimeManager } from '../managers';
 
 type StaticTimePickerComponent = ((
   props: StaticTimePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -28,6 +27,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker(
   inProps: StaticTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const manager = useTimeManager();
   const defaultizedProps = useTimePickerDefaultizedProps<TimeView, StaticTimePickerProps>(
     inProps,
     'MuiStaticTimePicker',
@@ -62,9 +62,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker(
   const { renderPicker } = useStaticPicker<TimeView, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'time',
-    validator: validateTime,
+    manager,
     steps: null,
   });
 

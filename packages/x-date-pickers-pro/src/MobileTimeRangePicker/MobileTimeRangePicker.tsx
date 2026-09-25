@@ -22,13 +22,12 @@ import {
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { rangeValueManager } from '../internals/utils/valueManagers';
 import type { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { SingleInputTimeRangeField } from '../SingleInputTimeRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
-import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { useTimeRangeManager } from '../managers';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
 import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
@@ -83,6 +82,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useTimeRangeManager();
 
   // Props with the default values common to all time range pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<MobileTimeRangePickerProps>(
@@ -134,9 +134,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker(
   const { renderPicker } = useMobileRangePicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'time',
-    validator: validateTimeRange,
+    manager,
     rendererInterceptor,
     steps: STEPS,
   });
