@@ -45,3 +45,4 @@ export * from './gridFilterOperator';
 
 // Utils shared across the X packages
 export type { PropsFromSlot } from '@mui/x-internals/slots';
+export type { StylesheetErrorReason } from '@mui/x-internals/export';

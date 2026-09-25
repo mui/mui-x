@@ -1,4 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
+import type { StylesheetErrorReason } from '@mui/x-internals/export';
 import type { GridRowId } from './gridRows';
 import type { GridApiCommon } from './api';
 import type { GridApiCommunity } from './api/gridApiCommunity';
@@ -145,6 +146,21 @@ export interface GridPrintExportOptions extends GridExportOptions {
    * @default true
    */
   copyStyles?: boolean;
+  /**
+   * Callback function that is called when a stylesheet, or a stylesheet it imports, fails to load in the print window,
+   * for example if a request fails or a Content Security Policy blocks it.
+   * Return or resolve to `false` to cancel the export without an error.
+   * Throw or reject to make the export fail with that error.
+   * Return anything else to continue the export, so the result may be missing some styles.
+   * If not provided, the export continues and the failure is logged as a warning in development.
+   * @param {HTMLLinkElement} element The stylesheet link element that failed to load, or whose import failed to load.
+   * @param {StylesheetErrorReason} reason `'content-security-policy'` if the Content Security Policy blocked the stylesheet, `'load-error'` if the request failed or a stylesheet it imports failed to load.
+   * @returns {Promise<boolean | void> | boolean | void} `false` to cancel the export. If a promise is returned, the export waits for it to settle before proceeding.
+   */
+  onStylesheetError?: (
+    element: HTMLLinkElement,
+    reason: StylesheetErrorReason,
+  ) => Promise<boolean | void> | boolean | void;
   /**
    * One or more classes passed to the print window.
    */

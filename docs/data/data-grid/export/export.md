@@ -236,6 +236,41 @@ If rows are selected when exporting, the checkboxes will not be included in the 
 <ExportPrint options={{ includeCheckboxes: true }} />
 ```
 
+### Stylesheets that fail to load
+
+When a stylesheet, or a stylesheet it imports, fails to load in the print window, for example because a request fails or a Content Security Policy blocks it, the print continues.
+The result may be missing some styles, and a warning is logged in development.
+
+To handle the failure yourself, use the `onStylesheetError` callback.
+It receives the `<link>` element that failed to load, or whose import failed to load, and the reason: `'content-security-policy'` if a Content Security Policy blocked the stylesheet, or `'load-error'` if the request failed or a stylesheet it imports failed to load.
+The callback's return value decides what happens next:
+
+- Return or resolve to `false` to cancel the print. The print dialog doesn't open, the Data Grid is restored, no error is logged, and the promise returned by `apiRef.current.exportDataAsPrint()` resolves.
+- Throw an error or reject to make the print fail. The print dialog doesn't open, the Data Grid is restored, and the promise returned by `apiRef.current.exportDataAsPrint()` rejects with that error.
+- Return anything else to continue the print.
+- Return a promise to make the print wait for it, for example while you add replacement styles to `link.ownerDocument`.
+
+With the toolbar, the print is started for you, so cancel with `false` and report the failure from the callback:
+
+```jsx
+// Default toolbar:
+<DataGrid
+  slotProps={{
+    toolbar: {
+      printOptions: {
+        onStylesheetError: (link) => {
+          showNotification(`The stylesheet ${link.href} failed to load.`);
+          return false;
+        },
+      },
+    },
+  }}
+/>
+
+// Custom trigger:
+<ExportPrint options={{ onStylesheetError: (link) => console.warn(link.href) }} />
+```
+
 For more options to customize the print export, please visit the [`printOptions` API page](/x/api/data-grid/grid-print-export-options/).
 
 ## Custom export format

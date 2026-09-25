@@ -1,4 +1,7 @@
 import type { ChartPluginSignature } from '@mui/x-charts/internals';
+import type { StylesheetErrorReason } from '@mui/x-internals/export';
+
+export type { StylesheetErrorReason };
 
 export interface UseChartProExportParameters {}
 
@@ -31,8 +34,25 @@ export interface ChartExportOptions {
   /**
    * A nonce to be used for Content Security Policy (CSP) compliance.
    * If provided, this nonce will be added to any style elements created during the export process.
+   * Required when the CSP restricts styles with a nonce, otherwise the export fails because the
+   * copied styles are blocked.
    */
   nonce?: string;
+  /**
+   * Callback function that is called when a stylesheet, or a stylesheet it imports, fails to load in the export document,
+   * for example if a request fails or a Content Security Policy blocks it.
+   * Return or resolve to `false` to cancel the export without an error.
+   * Throw or reject to make the export fail with that error.
+   * Return anything else to continue the export, so the result may be missing some styles.
+   * If not provided, the export continues and the failure is logged as a warning in development.
+   * @param {HTMLLinkElement} element The stylesheet link element that failed to load, or whose import failed to load.
+   * @param {StylesheetErrorReason} reason `'content-security-policy'` if the Content Security Policy blocked the stylesheet, `'load-error'` if the request failed or a stylesheet it imports failed to load.
+   * @returns {Promise<boolean | void> | boolean | void} `false` to cancel the export. If a promise is returned, the export waits for it to settle before proceeding.
+   */
+  onStylesheetError?: (
+    element: HTMLLinkElement,
+    reason: StylesheetErrorReason,
+  ) => Promise<boolean | void> | boolean | void;
 }
 
 /**
@@ -74,17 +94,17 @@ export interface UseChartProExportPublicApi {
   /**
    * Opens the browser's print dialog, which can be used to print the chart or export it as PDF.
    * @param {ChartPrintExportOptions} options Options to customize the print export.
-   * @returns {void}
+   * @returns {Promise<void>} A promise that rejects if the export fails.
    */
-  exportAsPrint: (options?: ChartPrintExportOptions) => void;
+  exportAsPrint: (options?: ChartPrintExportOptions) => Promise<void>;
   /**
    * Exports the chart as an image.
    * If the provided `type` is not supported by the browser, it will default to `image/png`.
    *
    * @param {ChartPrintExportOptions} options Options to customize the print export.
-   * @returns {void}
+   * @returns {Promise<void>} A promise that rejects if the export fails.
    */
-  exportAsImage: (options?: ChartImageExportOptions) => void;
+  exportAsImage: (options?: ChartImageExportOptions) => Promise<void>;
 }
 
 export interface UseChartProExportInstance extends UseChartProExportPublicApi {}
