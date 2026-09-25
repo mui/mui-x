@@ -31,9 +31,16 @@ const babelConfig = {
     ],
   ],
   plugins: [],
-  // `@babel/preset-typescript` no longer pulls in the JSX syntax for `.tsx` files in Babel 8,
-  // and the demos keep their JSX, so enable it on the parser rather than transforming it.
-  parserOpts: { plugins: ['jsx'] },
+  overrides: [
+    {
+      // `@babel/preset-typescript` no longer pulls in the JSX syntax for `.tsx` files in Babel 8,
+      // and the demos keep their JSX, so enable it on the parser rather than transforming it.
+      // Only for `.tsx`: in a `.ts` demo the JSX parser would misread `<T>(x: T) => x` and
+      // `<number>value`.
+      test: /\.tsx$/,
+      parserOpts: { plugins: ['jsx'] },
+    },
+  ],
   generatorOpts: { retainLines: true },
   babelrc: false,
   configFile: false,

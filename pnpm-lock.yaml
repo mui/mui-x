@@ -476,12 +476,6 @@ importers:
       '@sinonjs/fake-timers':
         specifier: 15.4.0
         version: 15.4.0
-      '@types/babel__core':
-        specifier: 7.20.5
-        version: 7.20.5
-      '@types/babel__traverse':
-        specifier: 7.28.0
-        version: 7.28.0
       '@types/node':
         specifier: 22.20.2
         version: 22.20.2
@@ -1596,6 +1590,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 8.0.5
+      '@base-ui/utils':
+        specifier: 'catalog:'
+        version: 0.4.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0)
