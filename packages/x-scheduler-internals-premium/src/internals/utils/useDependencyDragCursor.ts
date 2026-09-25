@@ -14,7 +14,7 @@ export function useDependencyDragCursor(
 ) {
   const store = useEventTimelinePremiumStoreContext();
 
-  Draggable.useDragMonitor({
+  Draggable.useMonitor({
     accept: schedulerDependencyKind,
     onMove: ({ location, source }) => {
       if (!enabled || source.payload.storeContext !== store) {

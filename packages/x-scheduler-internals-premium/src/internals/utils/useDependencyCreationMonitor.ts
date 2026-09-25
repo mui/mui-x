@@ -102,7 +102,7 @@ export function useDependencyCreationMonitor() {
     });
   };
 
-  Draggable.useDragMonitor({
+  Draggable.useMonitor({
     accept: schedulerDependencyKind,
     onMoveStart: updateCreation,
     // Only target changes touch the state: the cursor never enters it, the arrows

@@ -19,7 +19,7 @@ export function SchedulerFloatingPreview(props: {
 }) {
   const { location, children } = props;
   const [visible, setVisible] = React.useState(() => isOutsideScheduler(location));
-  Draggable.useDragMonitor({
+  Draggable.useMonitor({
     accept: schedulerEventDragKinds,
     onMoveStart: (event) => setVisible(isOutsideScheduler(event.location)),
     onTargetChange: (event) => setVisible(isOutsideScheduler(event.location)),

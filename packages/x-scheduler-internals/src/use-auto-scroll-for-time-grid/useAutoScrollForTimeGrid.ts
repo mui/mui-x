@@ -8,7 +8,7 @@ import {
 } from '../internals/utils/schedulerDrag';
 
 export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null>): void {
-  const manager = Draggable.useDragDropManager();
+  const manager = Draggable.useManager();
   React.useEffect(() => {
     const element = ref.current;
     if (!element) {

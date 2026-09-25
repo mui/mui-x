@@ -40,7 +40,7 @@ describe('<TimelineGrid.EventDependencyTerminal />', () => {
   it('should stamp its side into the drag data', async () => {
     const onDragStart = vi.fn();
     function Monitor() {
-      Draggable.useDragMonitor({ onMoveStart: onDragStart });
+      Draggable.useMonitor({ onMoveStart: onDragStart });
       return null;
     }
     render(
