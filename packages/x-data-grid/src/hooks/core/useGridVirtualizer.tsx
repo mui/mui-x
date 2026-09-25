@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
-import { useStoreEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import {
   useVirtualizer,
   Dimensions,
@@ -13,7 +13,7 @@ import {
   EMPTY_RENDER_CONTEXT,
 } from '@mui/x-virtualizer';
 import type { VirtualizerParams } from '@mui/x-virtualizer';
-import { useFirstRender } from '../utils/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
@@ -352,7 +352,7 @@ export function useGridVirtualizer() {
   // initialization code runs between those two moments.
   //
   // TODO(v9): Remove this
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
       virtualizer.store.state.dimensions,
       headerHeight,

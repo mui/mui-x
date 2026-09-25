@@ -36,6 +36,20 @@ function createAttachment(overrides: Partial<ChatDraftAttachment> = {}): ChatDra
 }
 
 describe('ChatStore', () => {
+  it('starts the history as pending only when an active conversation has a history loader', () => {
+    const pending = new ChatStore({ initialActiveConversationId: 'c1', hasHistoryLoader: true });
+    expect(pending.state.historyStatus).toBe('loading');
+    expect(pending.state.isLoadingHistory).toBe(true);
+
+    const noLoader = new ChatStore({ initialActiveConversationId: 'c1' });
+    expect(noLoader.state.historyStatus).toBe('idle');
+    expect(noLoader.state.isLoadingHistory).toBe(false);
+
+    const noConversation = new ChatStore({ hasHistoryLoader: true });
+    expect(noConversation.state.historyStatus).toBe('idle');
+    expect(noConversation.state.isLoadingHistory).toBe(false);
+  });
+
   it('normalizes default messages and conversations during construction', () => {
     const store = new ChatStore({
       initialMessages: [message1, message2],
@@ -56,6 +70,7 @@ describe('ChatStore', () => {
     expect(store.state.isStreaming).toBe(false);
     expect(store.state.hasMoreHistory).toBe(false);
     expect(store.state.isLoadingHistory).toBe(false);
+    expect(store.state.historyStatus).toBe('idle');
     expect(store.state.historyCursor).toBeUndefined();
     expect(store.state.composerValue).toBe('');
     expect(store.state.composerIsComposing).toBe(false);
@@ -696,6 +711,7 @@ describe('ChatStore', () => {
       isStreaming: true,
       hasMoreHistory: true,
       isLoadingHistory: true,
+      historyStatus: 'loaded',
       historyCursor: 'cursor-1',
       error: {
         code: 'STREAM_ERROR',
@@ -712,6 +728,7 @@ describe('ChatStore', () => {
     expect(store.state.isStreaming).toBe(false);
     expect(store.state.hasMoreHistory).toBe(false);
     expect(store.state.isLoadingHistory).toBe(false);
+    expect(store.state.historyStatus).toBe('idle');
     expect(store.state.historyCursor).toBeUndefined();
     expect(store.state.messageErrorsById).toEqual({});
     expect(store.state.error).toBeNull();

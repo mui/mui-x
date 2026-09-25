@@ -4,13 +4,14 @@ import { styled } from '@mui/material/styles';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
-import reactMajor from '@mui/x-internals/reactMajor';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
@@ -28,7 +29,9 @@ import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremium
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 
 // React 18 drops `inert={true}` as an unknown boolean attribute and React 19 drops `inert=""`.
-const INERT_PROPS = (reactMajor >= 19 ? { inert: true } : { inert: '' }) as { inert?: boolean };
+const INERT_PROPS = (isReactVersionAtLeast(19) ? { inert: true } : { inert: '' }) as {
+  inert?: boolean;
+};
 
 const ARROW_DEPTH = 8; // px - depth of the chevron point
 const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
@@ -257,6 +260,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}

@@ -10,6 +10,17 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Odpoledne',
 };
 
+// Czech has 3 count-based forms: 1, 2-4, and 0 or 5+
+function getPluralSuffix(count: number, one: string, few: string, many: string) {
+  if (count === 1) {
+    return one;
+  }
+  if (count > 1 && count < 5) {
+    return few;
+  }
+  return many;
+}
+
 const csCZPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Předchozí měsíc',
@@ -48,9 +59,12 @@ const csCZPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `${timeViews[view] ?? view} vybrány. ${!formattedTime ? 'Není vybrán čas' : `Vybraný čas je ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} hodin`,
-  minutesClockNumberText: (minutes) => `${minutes} minut`,
-  secondsClockNumberText: (seconds) => `${seconds} sekund`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralSuffix(Number(hours), 'hodina', 'hodiny', 'hodin')}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralSuffix(Number(minutes), 'minuta', 'minuty', 'minut')}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralSuffix(Number(seconds), 'sekunda', 'sekundy', 'sekund')}`,
 
   // Digital clock labels
   selectViewText: (view) => `Vyberte ${timeViews[view]}`,

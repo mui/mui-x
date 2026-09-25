@@ -2,35 +2,28 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerWeekday,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
 
-// Callbacks receive both stable English tokens and date-locale weekday strings.
-const weekdays = [
-  ['sunday', 'sun', 'ראשון', 'א'],
-  ['monday', 'mon', 'שני', 'ב'],
-  ['tuesday', 'tue', 'שלישי', 'ג'],
-  ['wednesday', 'wed', 'רביעי', 'ד'],
-  ['thursday', 'thu', 'חמישי', 'ה'],
-  ['friday', 'fri', 'שישי', 'ו'],
-  ['saturday', 'sat', 'שבת', 'ש'],
-];
+// Saturday has no letter form, so it is always written in full.
+const weekdays: Record<SchedulerWeekday, { full: string; letter?: string }> = {
+  sunday: { full: 'ראשון', letter: 'א' },
+  monday: { full: 'שני', letter: 'ב' },
+  tuesday: { full: 'שלישי', letter: 'ג' },
+  wednesday: { full: 'רביעי', letter: 'ד' },
+  thursday: { full: 'חמישי', letter: 'ה' },
+  friday: { full: 'שישי', letter: 'ו' },
+  saturday: { full: 'שבת' },
+};
 
-function localizeWeekday(value: string, abbreviated = false): string {
-  const normalized = value
-    .trim()
-    .toLowerCase()
-    .replace(/^יום\s+/, '')
-    .replace(/['’׳.]/g, '');
-  const weekday = weekdays.filter((names) => names.indexOf(normalized) !== -1)[0];
-  if (!weekday) {
-    return value;
-  }
-  return abbreviated && weekday[2] !== 'שבת' ? `יום ${weekday[3]}׳` : `יום ${weekday[2]}`;
+function localizeWeekday(weekday: SchedulerWeekday, abbreviated = false): string {
+  const { full, letter } = weekdays[weekday];
+  return abbreviated && letter ? `יום ${letter}׳` : `יום ${full}`;
 }
 
-function monthlyWeekday(ord: number, weekday: string, abbreviated = false): string {
+function monthlyWeekday(ord: number, weekday: SchedulerWeekday, abbreviated = false): string {
   const ordinals: Record<number, string> = {
     1: 'הראשון',
     2: 'השני',
@@ -107,16 +100,18 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'כל',
   recurrenceRepeatLabel: 'תדירות החזרה',
   recurrenceTabLabel: 'חזרה',
+  recurrenceTimezoneLabel: (timezone) => `אזור זמן: ${timezone}`,
+  recurrenceLabelTimezoneSuffix: (timezone) => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'חזרה',
   recurrenceWeeklyFrequencyLabel: 'שבועות',
   recurrenceWeeklyPresetLabel: ({ weekday }) => `מדי שבוע ב${localizeWeekday(weekday)}`,
   recurrenceMonthlyFrequencyLabel: 'חודשים',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `ב־${dayNumber} בחודש`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => monthlyWeekday(-1, weekDay),
-  recurrenceMonthlyLastWeekLabel: (weekDay) => monthlyWeekday(-1, weekDay, true),
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekday }) => monthlyWeekday(-1, weekday),
+  recurrenceMonthlyLastWeekLabel: ({ weekday }) => monthlyWeekday(-1, weekday, true),
   recurrenceMonthlyPresetLabel: (dayNumber) => `ב־${dayNumber} בכל חודש`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => monthlyWeekday(ord, weekDay),
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => monthlyWeekday(ord, weekDay, true),
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday }) => monthlyWeekday(ord, weekday),
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekday }) => monthlyWeekday(ord, weekday, true),
   recurrenceWeeklyMonthlySpecificInputsLabel: 'מועד החזרה',
   recurrenceYearlyFrequencyLabel: 'שנים',
   recurrenceYearlyPresetLabel: (date) => `מדי שנה ב־${localizeDate(date)}`,

@@ -498,6 +498,22 @@ describe('MessageListRoot roving focus', () => {
     expect(status).to.have.text('Response complete');
   });
 
+  it('announces the start of a response when the list mounts mid-stream', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        messages={[
+          createMessage('m1', 'user'),
+          { ...createMessage('m2', 'assistant', ''), status: 'streaming' },
+        ]}
+      >
+        <MessageListRoot renderItem={renderMessageItem} />
+      </ChatRoot>,
+    );
+
+    expect(screen.getByRole('status')).to.have.text('Assistant is responding');
+  });
+
   it('does not share focus restoration with the conversation list', async () => {
     function Harness() {
       const [open, setOpen] = React.useState(true);

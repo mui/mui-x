@@ -75,6 +75,7 @@ export const usePicker = <
     autoFocus,
     name,
     keepOpenDuringFieldFocus,
+    onCancel,
   } = props;
 
   const { className, sx, ...propsToForwardToView } = props;
@@ -141,12 +142,15 @@ export const usePicker = <
 
   const acceptValueChanges = useEventCallback(() => setValue(value, { source: 'view' }));
 
-  const cancelValueChanges = useEventCallback(() =>
+  const cancelValueChanges = useEventCallback(() => {
     setValue(state.lastCommittedValue, {
       skipPublicationIfPristine: true,
       source: 'view',
-    }),
-  );
+      shouldClose: false,
+    });
+    onCancel?.();
+    setOpen(false);
+  });
 
   const dismissViews = useEventCallback(() => {
     setValue(value, {

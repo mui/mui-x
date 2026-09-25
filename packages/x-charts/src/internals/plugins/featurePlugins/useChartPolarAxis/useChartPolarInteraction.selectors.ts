@@ -1,5 +1,5 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoizedWithOptions } from '@base-ui/utils/store';
 import type {
   AxisId,
   AxisItemIdentifier,

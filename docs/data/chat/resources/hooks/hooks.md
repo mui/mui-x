@@ -106,6 +106,7 @@ const {
   isStreaming, // boolean
   hasMoreHistory, // boolean
   isLoadingHistory, // boolean — true while a history fetch is in flight
+  historyStatus, // 'idle' | 'loading' | 'loaded' | 'error' — initial history page lifecycle
   error, // ChatError | null
 
   // Actions
@@ -151,13 +152,14 @@ function QuickChat() {
 ### `useChatStatus()`
 
 A lightweight hook for status indicators.
-It subscribes only to `isStreaming`, `hasMoreHistory`, `isLoadingHistory`, `error`, and `typingUserIds` — making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
+It subscribes only to `isStreaming`, `hasMoreHistory`, `isLoadingHistory`, `historyStatus`, `error`, and `typingUserIds` — making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
 
 ```ts
 const {
   isStreaming, // boolean
   hasMoreHistory, // boolean
   isLoadingHistory, // boolean — true while a history fetch is in flight
+  historyStatus, // 'idle' | 'loading' | 'loaded' | 'error' — initial history page lifecycle
   error, // ChatError | null
   typingUserIds, // string[] — users currently typing in the active conversation
 } = useChatStatus();

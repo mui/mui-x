@@ -1,4 +1,4 @@
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { isNumber } from '../../utils/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridSignature } from '../../constants/signature';
@@ -12,6 +12,16 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
       [
         'MUI X: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
         'You cannot use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
+        '',
+        'Please remove one of these two props.',
+      ].join('\n')) ||
+    undefined,
+  (props) =>
+    (props.height != null &&
+      props.autoHeight &&
+      [
+        'MUI X: `<DataGrid height={...} autoHeight={true} />` are not valid props.',
+        'You cannot use both the `height` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to its content.',
         '',
         'Please remove one of these two props.',
       ].join('\n')) ||
@@ -52,7 +62,7 @@ export function validateProps<TProps>(props: TProps, validators: PropValidator<T
   validators.forEach((validator) => {
     const message = validator(props);
     if (message) {
-      warnOnce(message, 'error');
+      errorOnce(message);
     }
   });
 }

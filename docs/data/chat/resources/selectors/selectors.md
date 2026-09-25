@@ -22,19 +22,20 @@ import { chatSelectors, useChatStore } from '@mui/x-chat/headless';
 
 These selectors read a single field from the store and return it directly:
 
-| Selector               | Return type                        | Description                          |
-| :--------------------- | :--------------------------------- | :----------------------------------- |
-| `messageIds`           | `string[]`                         | Ordered message IDs                  |
-| `messagesById`         | `Record<string, ChatMessage>`      | Message map by ID                    |
-| `conversationIds`      | `string[]`                         | Ordered conversation IDs             |
-| `conversationsById`    | `Record<string, ChatConversation>` | Conversation map by ID               |
-| `activeConversationId` | `string \| undefined`              | Active conversation ID               |
-| `isStreaming`          | `boolean`                          | Whether a stream is active           |
-| `hasMoreHistory`       | `boolean`                          | Whether more history can be loaded   |
-| `isLoadingHistory`     | `boolean`                          | Whether a history fetch is in flight |
-| `error`                | `ChatError \| null`                | Current runtime error                |
-| `composerValue`        | `string`                           | Current draft text                   |
-| `composerAttachments`  | `ChatDraftAttachment[]`            | Draft attachments                    |
+| Selector               | Return type                                  | Description                           |
+| :--------------------- | :------------------------------------------- | :------------------------------------ |
+| `messageIds`           | `string[]`                                   | Ordered message IDs                   |
+| `messagesById`         | `Record<string, ChatMessage>`                | Message map by ID                     |
+| `conversationIds`      | `string[]`                                   | Ordered conversation IDs              |
+| `conversationsById`    | `Record<string, ChatConversation>`           | Conversation map by ID                |
+| `activeConversationId` | `string \| undefined`                        | Active conversation ID                |
+| `isStreaming`          | `boolean`                                    | Whether a stream is active            |
+| `hasMoreHistory`       | `boolean`                                    | Whether more history can be loaded    |
+| `isLoadingHistory`     | `boolean`                                    | Whether a history fetch is in flight  |
+| `historyStatus`        | `'idle' \| 'loading' \| 'loaded' \| 'error'` | Lifecycle of the initial history page |
+| `error`                | `ChatError \| null`                          | Current runtime error                 |
+| `composerValue`        | `string`                                     | Current draft text                    |
+| `composerAttachments`  | `ChatDraftAttachment[]`                      | Draft attachments                     |
 
 ## Derived selectors
 
@@ -68,11 +69,11 @@ When reading typing users for the active conversation, use `chatSelectors.typing
 The hooks `useMessageIds()`, `useMessage(id)`, and others are convenience wrappers around `useChatStore()` + `chatSelectors`.
 When you need a custom derived value, use the store directly:
 
-`useChatStore()` returns the chat `Store` instance. To subscribe a component to a selector, pass both to `useStore()` from `@mui/x-internals/store` — the same subscription utility the built-in hooks use internally. This import is the supported way to read the store with a selector.
+`useChatStore()` returns the chat `Store` instance. To subscribe a component to a selector, pass both to `useStore()` from `@base-ui/utils/store` — the same subscription utility the built-in hooks use internally. This import is the supported way to read the store with a selector.
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { createSelectorMemoized, useStore } from '@mui/x-internals/store';
+import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 
 const failedMessageCount = createSelectorMemoized(
   chatSelectors.messages,

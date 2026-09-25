@@ -1,1 +1,0 @@
-export { fastArrayCompare } from './fastArrayCompare';
