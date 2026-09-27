@@ -18,7 +18,7 @@ For the complete formula language—operators, cell references, ranges, built-in
 The [Formula engine](/x/react-data-grid/formula-engine/) page explains how evaluation works and how to register custom functions.
 
 A cell formula is a value of one cell.
-To apply one formula to every row of the grid instead—a read-only column managed from the toolbar, the column menu, or code—see the [Computed columns](/x/react-data-grid/computed-columns/) page.
+To apply one formula to every row of the grid instead (a read-only column managed from the toolbar, the column menu, or code) see the [Computed columns](/x/react-data-grid/computed-columns/) page.
 
 ## Enabling formulas
 

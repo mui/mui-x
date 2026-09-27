@@ -93,12 +93,12 @@ When using a Data Source, `clipboardPasteEnd` is not tracked and the other two e
 
 If you use a Data Source that doesn't have an `updateRow` method, then the history event handler list is empty and the feature is disabled.
 
-When [computed columns](/x/react-data-grid/computed-columns/) are available—the formula feature is injected and neither `disableComputedColumns`, `disableFormulas`, nor `dataSource` is set—the following event is tracked as well, whether or not the grid has editable cells:
+When [computed columns](/x/react-data-grid/computed-columns/) are available (conditions: the formula feature is injected and neither `disableComputedColumns`, `disableFormulas`, nor `dataSource` is set) the following event is tracked as well, whether or not the grid has editable cells:
 
 - `computedColumnsChange` - Tracks changes made to the computed columns model: adding, editing, or removing a computed column from the panel, the column menu, or the API
 
 Undoing the removal of a computed column restores it with its previous position, width, and visibility.
-Model changes made from code—`apiRef.current.restoreState()` or a new value of the controlled `computedColumns` prop—are tracked too.
+Model changes made from code — through `apiRef.current.restoreState()` or a new value of the controlled `computedColumns` prop — are tracked too.
 To leave them out, provide your own map through the `historyEventHandlers` prop without the `computedColumnsChange` handler.
 
 :::warning

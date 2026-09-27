@@ -138,6 +138,8 @@ const [computedColumns, setComputedColumns] =
 />;
 ```
 
+[Undo and redo](/x/react-data-grid/undo-redo/) of a controlled model rely on the parent applying the model passed to `onComputedColumnsChange`: a step is considered done once the model has been requested, so a parent that drops it leaves the history out of sync with the grid until the next change of the model.
+
 In the demo below, the model is shown under the grid.
 Open the panel to add, edit, or remove a column and watch it change; the **Total pay** column references the two other computed columns.
 

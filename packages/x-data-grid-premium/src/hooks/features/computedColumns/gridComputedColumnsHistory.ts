@@ -148,6 +148,10 @@ export const createComputedColumnsHistoryHandler = (
       // it still ignores every event as part of this operation (a parent updated from a
       // click is flushed at the first `await`), so `store()` cannot be the one finishing
       // it: the restoration waits for the `columnsChange` that hydrates the echoed model.
+      // The operation itself resolves once the model has been requested: a controlled
+      // parent is expected to apply the model it is handed, as for every controlled model
+      // of the grid. A parent that drops it leaves the step resolved, and `canUndo()` and
+      // `canRedo()` optimistic, until the next real change.
       const echo = { model, columns };
       cache.historyEcho = echo;
       const unsubscribe = apiRef.current.subscribeEvent('columnsChange', () => {
