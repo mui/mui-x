@@ -256,20 +256,24 @@ export class SchedulerStore<
         const initialIsControlled = this.initialParameters?.[controlledProp] !== undefined;
 
         if (initialIsControlled !== isControlled) {
-          warnOnce([
-            `MUI X Scheduler: A component is changing the ${
-              initialIsControlled ? '' : 'un'
-            }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: A component is changing the ${
+                initialIsControlled ? '' : 'un'
+              }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
+              'Elements should not switch from uncontrolled to controlled (or vice versa).',
+              `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
+              "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+              'More info: https://fb.me/react-controlled-components',
+            ].join('\n'),
+          );
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warnOnce([
-            `MUI X Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
-            `To suppress this warning opt to use a controlled ${this.instanceName}.`,
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
+              `To suppress this warning opt to use a controlled ${this.instanceName}.`,
+            ].join('\n'),
+          );
         }
       }
     };
@@ -489,10 +493,12 @@ export class SchedulerStore<
     if (process.env.NODE_ENV !== 'production') {
       for (const id of deleted) {
         if (updated.has(id)) {
-          warnOnce([
-            `MUI X Scheduler: id "${String(id)}" appears in both \`deleted\` and \`updated\`.`,
-            'These two arrays must be disjoint, otherwise the order of operations is undefined.',
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: id "${String(id)}" appears in both \`deleted\` and \`updated\`.`,
+              'These two arrays must be disjoint, otherwise the order of operations is undefined.',
+            ].join('\n'),
+          );
         }
       }
     }
@@ -570,11 +576,13 @@ export class SchedulerStore<
 
     if (process.env.NODE_ENV !== 'production') {
       if (!this.parameters.onEventsChange && !hasDataSource(this.parameters)) {
-        warnOnce([
-          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
-          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
-          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+            'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+            'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+          ].join('\n'),
+        );
       }
     }
 
@@ -623,10 +631,12 @@ export class SchedulerStore<
   public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
     if (this.state.recurringEventsPlugin == null && calendarEvent.rrule) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          ].join('\n'),
+        );
       }
       return this.updateEvents({ created: [{ ...calendarEvent, rrule: undefined }] }).created[0];
     }
@@ -652,10 +662,12 @@ export class SchedulerStore<
 
     if (this.state.recurringEventsPlugin == null && calendarEvent.rrule != null) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          ].join('\n'),
+        );
       }
       return toUpdateEventResult(
         this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
@@ -671,10 +683,12 @@ export class SchedulerStore<
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
     if (this.state.recurringEventsPlugin == null) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: Recurring event updates are a premium feature.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: Recurring event updates are a premium feature.',
+            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          ].join('\n'),
+        );
       }
       return;
     }
@@ -687,10 +701,12 @@ export class SchedulerStore<
   public deleteRecurringEvent = (params: DeleteRecurringEventParameters) => {
     if (this.state.recurringEventsPlugin == null) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: Recurring event deletions are a premium feature.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: Recurring event deletions are a premium feature.',
+            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          ].join('\n'),
+        );
       }
       return;
     }

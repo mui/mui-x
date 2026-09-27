@@ -10,11 +10,13 @@ export interface TypingActionsRuntimeRef<Cursor = string> {
 }
 
 function warnSetTypingFailed(): void {
-  warnOnce([
-    'MUI X Chat: An `adapter.setTyping()` call failed while sending an outbound typing signal.',
-    'Typing signals are advisory and best-effort, so the failure was swallowed and the call is not retried.',
-    'Make `setTyping()` resilient (handle network errors) if the remote "is typing…" state must stay accurate.',
-  ]);
+  warnOnce(
+    [
+      'MUI X Chat: An `adapter.setTyping()` call failed while sending an outbound typing signal.',
+      'Typing signals are advisory and best-effort, so the failure was swallowed and the call is not retried.',
+      'Make `setTyping()` resilient (handle network errors) if the remote "is typing…" state must stay accurate.',
+    ].join('\n'),
+  );
 }
 
 /**

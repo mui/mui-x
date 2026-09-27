@@ -77,15 +77,19 @@ export const useGridComputedColumnsPreProcessors = (
         !props.disableComputedColumns
       ) {
         if (hasDataSource) {
-          warnOnce([
-            'MUI X Data Grid: Computed columns are not supported with the `dataSource` prop.',
-            'The `computedColumns` model is kept, but its columns are not added to the grid.',
-          ]);
+          warnOnce(
+            [
+              'MUI X Data Grid: Computed columns are not supported with the `dataSource` prop.',
+              'The `computedColumns` model is kept, but its columns are not added to the grid.',
+            ].join('\n'),
+          );
         } else if (pivotActive) {
-          warnOnce([
-            'MUI X Data Grid: Computed columns are not supported while pivoting is active.',
-            'They are removed from the grid and come back when pivoting is deactivated.',
-          ]);
+          warnOnce(
+            [
+              'MUI X Data Grid: Computed columns are not supported while pivoting is active.',
+              'They are removed from the grid and come back when pivoting is deactivated.',
+            ].join('\n'),
+          );
         }
       }
 
@@ -135,20 +139,24 @@ export const useGridComputedColumnsPreProcessors = (
         if (isReservedComputedColumnField(field)) {
           // The lookup is a plain object: such a field would read as an existing column
           // here and in every consumer of the lookup. The validation reports it.
-          warnOnce([
-            `MUI X Data Grid: The computed column "${field}" uses a reserved field name, so it is not added to the grid.`,
-            'A field cannot be named after a member of `Object.prototype`.',
-            'Change the `field` of the computed column definition.',
-          ]);
+          warnOnce(
+            [
+              `MUI X Data Grid: The computed column "${field}" uses a reserved field name, so it is not added to the grid.`,
+              'A field cannot be named after a member of `Object.prototype`.',
+              'Change the `field` of the computed column definition.',
+            ].join('\n'),
+          );
           continue;
         }
         const existing = columnsState.lookup[field];
         if (existing !== undefined && !existing.computed) {
-          warnOnce([
-            `MUI X Data Grid: The computed column "${field}" uses the field of an existing column, so it is not added to the grid.`,
-            'Each computed column needs a field that no other column uses.',
-            'Change the `field` of the computed column definition.',
-          ]);
+          warnOnce(
+            [
+              `MUI X Data Grid: The computed column "${field}" uses the field of an existing column, so it is not added to the grid.`,
+              'Each computed column needs a field that no other column uses.',
+              'Change the `field` of the computed column definition.',
+            ].join('\n'),
+          );
           continue;
         }
 

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import reactMajor from '@mui/x-internals/reactMajor';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 
 export default function useRefCallback(fn: (node: HTMLDivElement) => (() => void) | undefined) {
   const refCleanup = React.useRef<() => void | undefined>(undefined);
@@ -14,7 +14,7 @@ export default function useRefCallback(fn: (node: HTMLDivElement) => (() => void
 
     refCleanup.current = fn(node);
 
-    if (reactMajor >= 19) {
+    if (isReactVersionAtLeast(19)) {
       /* eslint-disable-next-line consistent-return */
       return refCleanup.current;
     }

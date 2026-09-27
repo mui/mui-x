@@ -43,15 +43,17 @@ const removeDuplicateFields = (model: GridComputedColumnsModel): GridComputedCol
     return model;
   }
 
-  warnOnce([
-    `MUI X Data Grid: The computed columns model contains several definitions for the same field (${Array.from(
-      duplicates,
-    )
-      .map((field) => `"${field}"`)
-      .join(', ')}).`,
-    'Each computed column needs a unique field, so only the first definition of each field is kept.',
-    'Use `updateComputedColumn()` to change an existing computed column.',
-  ]);
+  warnOnce(
+    [
+      `MUI X Data Grid: The computed columns model contains several definitions for the same field (${Array.from(
+        duplicates,
+      )
+        .map((field) => `"${field}"`)
+        .join(', ')}).`,
+      'Each computed column needs a unique field, so only the first definition of each field is kept.',
+      'Use `updateComputedColumn()` to change an existing computed column.',
+    ].join('\n'),
+  );
 
   const seen = new Set<string>();
   return model.filter((definition) => {
@@ -238,21 +240,25 @@ export const useGridComputedColumns = (
   >(
     (field, options) => {
       if (!isAvailable) {
-        warnOnce([
-          'MUI X Data Grid: `showComputedColumnEditor()` was called, but computed columns are not available, so the call was ignored.',
-          'Computed columns need the formula feature passed through `featureDependencies={{ formula: formulaFeature }}`.',
-          'They are turned off by the `disableComputedColumns`, `disableFormulas` and `dataSource` props.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Data Grid: `showComputedColumnEditor()` was called, but computed columns are not available, so the call was ignored.',
+            'Computed columns need the formula feature passed through `featureDependencies={{ formula: formulaFeature }}`.',
+            'They are turned off by the `disableComputedColumns`, `disableFormulas` and `dataSource` props.',
+          ].join('\n'),
+        );
         return;
       }
       if (gridPivotActiveSelector(apiRef)) {
         // No computed column exists while pivoting is active (they are injected again
         // when it is deactivated): nothing to preview, nothing to place.
-        warnOnce([
-          'MUI X Data Grid: `showComputedColumnEditor()` was called while pivoting is active, so the call was ignored.',
-          'Computed columns are not added to the grid while pivoting is active.',
-          'Deactivate pivoting before opening the computed column editor.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Data Grid: `showComputedColumnEditor()` was called while pivoting is active, so the call was ignored.',
+            'Computed columns are not added to the grid while pivoting is active.',
+            'Deactivate pivoting before opening the computed column editor.',
+          ].join('\n'),
+        );
         return;
       }
 

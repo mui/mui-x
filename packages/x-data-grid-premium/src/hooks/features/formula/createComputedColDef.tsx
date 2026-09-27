@@ -80,10 +80,12 @@ function createNumberFormatter(definition: GridComputedColumnDefinition) {
   try {
     return new Intl.NumberFormat(undefined, definition.numberFormat);
   } catch (error) {
-    warnOnce([
-      `MUI X Data Grid: The \`numberFormat\` of the computed column "${definition.field}" is not a valid \`Intl.NumberFormat\` options object, so the values are rendered without it.`,
-      error instanceof Error ? error.message : '',
-    ]);
+    warnOnce(
+      [
+        `MUI X Data Grid: The \`numberFormat\` of the computed column "${definition.field}" is not a valid \`Intl.NumberFormat\` options object, so the values are rendered without it.`,
+        error instanceof Error ? error.message : '',
+      ].join('\n'),
+    );
     return null;
   }
 }
