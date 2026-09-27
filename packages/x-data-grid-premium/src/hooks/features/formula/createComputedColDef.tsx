@@ -17,8 +17,12 @@ import type {
   GridColumnHeaderClassNamePropType,
   GridComparatorFn,
   GridFilterOperator,
+  GridRenderCellParams,
+  GridValidRowModel,
   GridValueGetter,
 } from '@mui/x-data-grid-pro';
+import { GridFooterCell } from '@mui/x-data-grid-pro/internals';
+import type { GridAggregationCellMeta } from '@mui/x-data-grid-pro/internals';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {
   GridComputedColumnDefinition,
@@ -55,6 +59,19 @@ export interface GridComputedColumnGetters {
 export function isComputedErrorValue(value: unknown): boolean {
   return typeof value === 'string' && FORMULA_ERROR_CODE_SET.has(value);
 }
+
+/**
+ * Tells whether the evaluated result of a row is an error, as opposed to a text
+ * result that happens to read like an error code. The value alone cannot tell
+ * the two apart; the rendering asks the runtime, which memoized the result.
+ * @param {GridValidRowModel} row The row of the cell.
+ * @returns {boolean} Whether the result of the row is an error.
+ */
+export type GridComputedErrorRowPredicate = (row: GridValidRowModel) => boolean;
+
+const IS_ERROR_ROW_BY_VALUE: GridComputedErrorRowPredicate = () => true;
+
+const NULL_CHECK_OPERATORS: ReadonlySet<string> = new Set(['isEmpty', 'isNotEmpty']);
 
 function createNumberFormatter(definition: GridComputedColumnDefinition) {
   if (definition.type !== 'number' || definition.numberFormat === undefined) {
@@ -98,8 +115,9 @@ function createGetSortComparator(
 
 /**
  * The operators of the non-text types expect values of their type — the date
- * operators call `getTime()` — so the error codes never reach them.
- * Text columns filter on the code like on any other text.
+ * operators call `getTime()` — so the error codes never reach them. The two
+ * null checks expect nothing: an error is a value the cell shows, so it is not
+ * empty, as in the text columns, which filter on the code like on any other text.
  */
 function createFilterOperators(
   type: GridComputedColumnType,
@@ -108,17 +126,22 @@ function createFilterOperators(
   if (type === 'string' || typeColDef.filterOperators === undefined) {
     return typeColDef.filterOperators as GridFilterOperator[] | undefined;
   }
-  return typeColDef.filterOperators.map((operator) => ({
-    ...operator,
-    getApplyFilterFn: (filterItem, column) => {
-      const applyFilterFn = operator.getApplyFilterFn(filterItem, column);
-      if (!applyFilterFn) {
-        return applyFilterFn;
-      }
-      return (value, row, colDef, apiRef) =>
-        isComputedErrorValue(value) ? false : applyFilterFn(value, row, colDef, apiRef);
-    },
-  })) as GridFilterOperator[];
+  return typeColDef.filterOperators.map((operator) => {
+    if (NULL_CHECK_OPERATORS.has(operator.value)) {
+      return operator;
+    }
+    return {
+      ...operator,
+      getApplyFilterFn: (filterItem, column) => {
+        const applyFilterFn = operator.getApplyFilterFn(filterItem, column);
+        if (!applyFilterFn) {
+          return applyFilterFn;
+        }
+        return (value, row, colDef, apiRef) =>
+          isComputedErrorValue(value) ? false : applyFilterFn(value, row, colDef, apiRef);
+      },
+    };
+  }) as GridFilterOperator[];
 }
 
 /**
@@ -149,11 +172,15 @@ function createGetApplyQuickFilterFn(
   };
 }
 
-const computedCellClassName = (params: GridCellParams) =>
-  clsx(
-    gridClasses['cell--computed'],
-    isComputedErrorValue(params.value) && gridClasses['cell--computedError'],
-  );
+function createCellClassName(isErrorRow: GridComputedErrorRowPredicate) {
+  return (params: GridCellParams) =>
+    clsx(
+      gridClasses['cell--computed'],
+      isComputedErrorValue(params.value) &&
+        isErrorRow(params.row) &&
+        gridClasses['cell--computedError'],
+    );
+}
 
 function getComputedHeaderClassName(invalid: boolean): string {
   return clsx(
@@ -172,16 +199,24 @@ export function withComputedHeaderClassName(baseColDef: GridColDef, invalid: boo
 /**
  * Creates the read-only column of a computed column definition,
  * without the `computedColDef` overrides.
+ * @param {GridComputedColumnDefinition} definition The definition of the column.
+ * @param {GridComputedColumnGetters} getters The getters bridging the column to the runtime.
+ * @param {boolean} invalid Whether the formula of the definition is invalid.
+ * @param {GridComputedErrorRowPredicate} isErrorRow Tells whether the result of a row is an error;
+ * by default every value equal to an error code is one (the editor preview never renders cells).
+ * @returns {GridColDef} The column.
  */
 export function createComputedBaseColDef(
   definition: GridComputedColumnDefinition,
   getters: GridComputedColumnGetters,
   invalid: boolean = false,
+  isErrorRow: GridComputedErrorRowPredicate = IS_ERROR_ROW_BY_VALUE,
 ): GridColDef {
   const typeColDef = COMPUTED_COLUMN_TYPE_COL_DEFS[definition.type] ?? GRID_STRING_COL_DEF;
   const numberFormatter = createNumberFormatter(definition);
   const typeValueFormatter = typeColDef.valueFormatter;
   const typeRenderCell = typeColDef.renderCell;
+  const cellClassName = createCellClassName(isErrorRow);
 
   return {
     ...typeColDef,
@@ -205,12 +240,17 @@ export function createComputedBaseColDef(
     getSortComparator: createGetSortComparator(typeColDef),
     filterOperators: createFilterOperators(definition.type, typeColDef),
     getApplyQuickFilterFn: createGetApplyQuickFilterFn(definition.type, typeColDef),
-    cellClassName: computedCellClassName,
+    cellClassName,
     headerClassName: getComputedHeaderClassName(invalid),
     // Returning `undefined` makes the cell render its formatted value.
-    renderCell: (params) => {
-      if (isComputedErrorValue(params.value)) {
+    renderCell: (params: GridRenderCellParams & { aggregation?: GridAggregationCellMeta }) => {
+      if (isComputedErrorValue(params.value) && isErrorRow(params.row)) {
         return <GridComputedErrorCell {...params} />;
+      }
+      // The aggregation wrapper only renders the footer cell of a column without
+      // `renderCell`; this one takes over, as the boolean type renderer does.
+      if (params.aggregation?.position === 'footer') {
+        return <GridFooterCell {...params} />;
       }
       return typeRenderCell ? typeRenderCell(params) : undefined;
     },
@@ -218,14 +258,15 @@ export function createComputedBaseColDef(
 }
 
 function mergeCellClassNames(
+  base: GridCellClassNamePropType | undefined,
   override: GridCellClassNamePropType | undefined,
-): GridCellClassNamePropType {
+): GridCellClassNamePropType | undefined {
   if (override === undefined) {
-    return computedCellClassName;
+    return base;
   }
   return (params) =>
     clsx(
-      computedCellClassName(params),
+      typeof base === 'function' ? base(params) : base,
       typeof override === 'function' ? override(params) : override,
     );
 }
@@ -246,7 +287,9 @@ function mergeHeaderClassNames(
 
 /**
  * Applies the `computedColDef` prop on top of the base column.
- * The properties that make the column a computed column cannot be overridden.
+ * The properties that make the column a computed column cannot be overridden:
+ * the three getters are the only way to the evaluated value (the grid hands a
+ * replacement `row[field]`, which a synthetic column never has).
  */
 export function applyComputedColDefOverrides(
   baseColDef: GridColDef,
@@ -268,7 +311,9 @@ export function applyComputedColDefOverrides(
     allowFormulas: false,
     valueGetter: baseColDef.valueGetter,
     valueSetter: undefined,
-    cellClassName: mergeCellClassNames(overrides.cellClassName),
+    groupingValueGetter: baseColDef.groupingValueGetter,
+    rowSpanValueGetter: baseColDef.rowSpanValueGetter,
+    cellClassName: mergeCellClassNames(baseColDef.cellClassName, overrides.cellClassName),
     headerClassName: mergeHeaderClassNames(baseColDef.headerClassName, overrides.headerClassName),
   } as GridColDef;
 }

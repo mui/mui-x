@@ -179,6 +179,63 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(apiRef.current!.getCellValue(0, 'text')).to.equal('2');
     });
 
+    it('should report a `NaN`, an infinite number or an invalid date passed through as `#VALUE!`', async () => {
+      await render(
+        <Test
+          columns={[
+            { field: 'amount', type: 'number' },
+            { field: 'day', type: 'date' },
+          ]}
+          rows={[
+            { id: 0, amount: 5, day: new Date(2024, 0, 2) },
+            { id: 1, amount: Number.NaN, day: new Date('garbage') },
+            { id: 2, amount: Number.POSITIVE_INFINITY, day: null },
+            { id: 3, amount: 1, day: null },
+          ]}
+          computedColumns={[
+            {
+              field: 'pass',
+              headerName: 'Pass',
+              formula: '=amount',
+              type: 'number',
+              numberFormat: { style: 'currency', currency: 'USD' },
+            },
+            { field: 'when', headerName: 'When', formula: '=day', type: 'date' },
+          ]}
+        />,
+      );
+      expect(getColumnValuesOf('pass')).to.deep.equal(['$5.00', '#VALUE!', '#VALUE!', '$1.00']);
+      expect(getColumnValuesOf('when')).to.deep.equal(['1/2/2024', '#VALUE!', '', '']);
+      // The number comparator never sees `NaN`: the order stays consistent.
+      act(() => apiRef.current!.sortColumn('pass', 'asc'));
+      expect(getColumnValuesOf('pass')).to.deep.equal(['$1.00', '$5.00', '#VALUE!', '#VALUE!']);
+      act(() => apiRef.current!.sortColumn('pass', 'desc'));
+      expect(getColumnValuesOf('pass')).to.deep.equal(['$5.00', '$1.00', '#VALUE!', '#VALUE!']);
+    });
+
+    it('should render a text result equal to an error code as text', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, price: 4, quantity: 0 },
+            { id: 1, price: 4, quantity: 2 },
+          ]}
+          computedColumns={[
+            ratio,
+            { field: 'label', headerName: 'Label', formula: '="#DIV/0!"', type: 'string' },
+          ]}
+        />,
+      );
+      const ratioIndex = getFields().indexOf('ratio');
+      const labelIndex = getFields().indexOf('label');
+      expect(getColumnValuesOf('label')).to.deep.equal(['#DIV/0!', '#DIV/0!']);
+      expect(getCell(0, ratioIndex)).to.have.class(gridClasses['cell--computedError']);
+      expect(getCell(0, ratioIndex).querySelector('[title]')).not.to.equal(null);
+      expect(getCell(0, labelIndex)).to.have.class(gridClasses['cell--computed']);
+      expect(getCell(0, labelIndex)).not.to.have.class(gridClasses['cell--computedError']);
+      expect(getCell(0, labelIndex).querySelector('[title]')).to.equal(null);
+    });
+
     it('should evaluate formulas that cannot run per row to an error in every row', async () => {
       await render(
         <Test
@@ -536,6 +593,22 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValuesOf('item')).to.deep.equal(['Apple']);
     });
 
+    it('should count the errors as values for the `isEmpty` and `isNotEmpty` operators', async () => {
+      await render(<Test rows={rowsWithError} computedColumns={[ratio]} />);
+      act(() =>
+        apiRef.current!.setFilterModel({ items: [{ field: 'ratio', operator: 'isNotEmpty' }] }),
+      );
+      expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Banana', 'Cherry']);
+      act(() =>
+        apiRef.current!.setFilterModel({ items: [{ field: 'ratio', operator: 'isEmpty' }] }),
+      );
+      expect(getColumnValuesOf('item')).to.deep.equal([]);
+      act(() =>
+        apiRef.current!.setFilterModel({ items: [{ field: 'ratio', operator: '>', value: '1' }] }),
+      );
+      expect(getColumnValuesOf('item')).to.deep.equal(['Apple']);
+    });
+
     it('should not pass the errors to the operators of a date column', async () => {
       await render(
         <Test
@@ -615,6 +688,10 @@ describe('<DataGridPremium /> - Computed columns', () => {
         />,
       );
       expect(getColumnValuesOf('total')).to.deep.equal(['6', '50', '8', '64']);
+      // The footer renders the footer cell, like a column without `renderCell`.
+      expect(getCell(3, getFields().indexOf('total')).firstElementChild).to.have.class(
+        gridClasses.footerCell,
+      );
 
       act(() => apiRef.current!.updateComputedColumn('total', { formula: '=price + quantity' }));
       expect(getColumnValuesOf('total')).to.deep.equal(['5', '15', '6', '26']);
@@ -846,6 +923,31 @@ describe('<DataGridPremium /> - Computed columns', () => {
       const index = getFields().indexOf('total');
       expect(getCell(0, index).style.height).to.equal('calc(var(--height) * 2)');
       expect(getCell(2, index).style.height).to.equal('');
+    });
+
+    it('should not let `computedColDef` replace the grouping and row spanning getters', async () => {
+      await render(
+        <Test
+          rowSpanning
+          rows={[
+            { id: 0, price: 2, quantity: 3 },
+            { id: 1, price: 3, quantity: 2 },
+            { id: 2, price: 4, quantity: 2 },
+          ]}
+          computedColumns={[total]}
+          computedColDef={{
+            // Both receive `row[field]`, which a synthetic column never has.
+            groupingValueGetter: () => 'one bucket',
+            rowSpanValueGetter: () => 'one span',
+          }}
+          initialState={{ rowGrouping: { model: ['total'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['6 (2)', '', '', '8 (1)', '']);
+      const index = getFields().indexOf('total');
+      expect(getCell(1, index).style.height).to.equal('calc(var(--height) * 2)');
+      expect(getCell(4, index).style.height).to.equal('');
     });
   });
 

@@ -63,8 +63,10 @@ function toResolvedValue(result: GridFormulaResult): FormulaScalar | FormulaErro
  * The column is rendered, sorted, filtered and exported with the column type of
  * the definition, and the non-text types only accept values of their own type
  * (the date formatters throw on anything else), so a result of another type is
- * an error of the row. Shared with the editor preview, which shows the result
- * the way the cell will.
+ * an error of the row. A bare field reference passes the row value through
+ * untouched, so the gate is as strict as the engine's own: a number is finite,
+ * a date is valid. Shared with the editor preview, which shows the result the
+ * way the cell will.
  */
 export function coerceComputedResult(
   result: GridFormulaResult,
@@ -77,14 +79,14 @@ export function coerceComputedResult(
   let matches: boolean;
   switch (type) {
     case 'number':
-      matches = typeof value === 'number';
+      matches = typeof value === 'number' && Number.isFinite(value);
       break;
     case 'boolean':
       matches = typeof value === 'boolean';
       break;
     case 'date':
     case 'dateTime':
-      matches = value instanceof Date;
+      matches = value instanceof Date && !Number.isNaN(value.getTime());
       break;
     default: {
       if (typeof value === 'string') {
@@ -292,7 +294,16 @@ function buildComputedColumnRecord(
       }
     : createComputedGetters(apiRef, definition.field);
 
-  const baseColDef = createComputedBaseColDef(definition, getters, staticResult !== null);
+  // The cell renders as an error when the memoized result is one, not when a text
+  // result reads like an error code.
+  const isErrorRow = (row: GridValidRowModel) =>
+    evaluateComputedCell(apiRef, row, definition.field).type === 'error';
+  const baseColDef = createComputedBaseColDef(
+    definition,
+    getters,
+    staticResult !== null,
+    isErrorRow,
+  );
   return {
     definition,
     ast: parse.ast,

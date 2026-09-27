@@ -5,6 +5,7 @@ import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridComputedColumnsModel } from '../computedColumns/gridComputedColumnsInterfaces';
 import { createFormulaFunctionRegistry } from './engine';
 import {
+  coerceComputedResult,
   ensureComputedColumnRecords,
   evaluateComputedCell,
   resetComputedResults,
@@ -131,5 +132,27 @@ describe('gridComputedColumnsRuntime', () => {
     expect(getEvaluations()).to.equal(ROW_COUNT);
     // Catastrophic-regression bound only: it catches an evaluation per comparison.
     expect(elapsed).to.be.lessThan(5_000);
+  });
+
+  describe('coerceComputedResult', () => {
+    const value = (v: unknown) => ({ type: 'value', value: v }) as const;
+
+    it('should only accept finite numbers as the result of a number column', () => {
+      expect(coerceComputedResult(value(5), 'number')).to.deep.equal(value(5));
+      expect(coerceComputedResult(value(null), 'number')).to.deep.equal(value(null));
+      [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY].forEach((number) => {
+        const result = coerceComputedResult(value(number), 'number');
+        expect(result.type).to.equal('error');
+        expect((result as { code: string }).code).to.equal('#VALUE!');
+      });
+    });
+
+    it('should only accept valid dates as the result of a date column', () => {
+      const date = new Date(2024, 0, 2);
+      expect(coerceComputedResult(value(date), 'date')).to.deep.equal(value(date));
+      const result = coerceComputedResult(value(new Date('garbage')), 'dateTime');
+      expect(result.type).to.equal('error');
+      expect((result as { code: string }).code).to.equal('#VALUE!');
+    });
   });
 });

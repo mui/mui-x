@@ -119,7 +119,7 @@ To customize them, pass a partial column definition—or a function returning on
 />
 ```
 
-The `field`, `type`, `editable`, `allowFormulas`, `valueGetter`, and `valueSetter` properties are owned by the feature and cannot be overridden; `cellClassName` and `headerClassName` are merged with the classes of the feature.
+The `field`, `type`, `editable`, `allowFormulas`, `valueGetter`, `valueSetter`, `groupingValueGetter`, and `rowSpanValueGetter` properties are owned by the feature and cannot be overridden; `cellClassName` and `headerClassName` are merged with the classes of the feature.
 
 The generated column definitions carry a `computed: true` flag, which lets you tell them apart from the other columns—in a custom column menu, for instance.
 
@@ -208,7 +208,7 @@ In the demo below, **Unit price** shows `#DIV/0!` for the regions without sales,
 
 {{"demo": "ComputedColumnsErrors.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Errors are values of the column: sorting places them after every other value in both directions, the filter operators of a `number`, `boolean`, `date`, or `dateTime` column never match them, the quick filter matches their code as text, and export writes the code.
+Errors are values of the column: sorting places them after every other value in both directions, the filter operators of a `number`, `boolean`, `date`, or `dateTime` column never match them (except _is not empty_, which counts an error as a value), the quick filter matches their code as text, and export writes the code.
 
 ## Working with other features
 
@@ -242,7 +242,7 @@ The undo and redo shortcuts typed in the text fields of the panel keep their nat
 - Sorting and filtering by a computed column are not re-applied when its formula or the `formulaFunctions` prop changes; aggregation, row grouping, and row spanning are. This is the same rule as for cell formulas.
 - A cell formula that reads a computed column which in turn reads a cell formula is refreshed on the next update of its row, not immediately.
 - Excel export writes the evaluated values of computed columns, not live formulas.
-- In a `string` column, a result equal to an error code, such as `"#REF!"`, is treated as an error by sorting.
+- In a `string` column, a result equal to an error code, such as `"#REF!"`, is treated as an error by sorting and by the quick filter; the cell itself renders it as text.
 - A change of the `computedColDef` prop applies the next time the columns are updated.
 - Validation messages are localized when a definition is validated: after a change of `localeText` at runtime, the issues listed in the panel and in the badge tooltip keep the previous language until the columns are next updated.
 - The display format is limited to number formats; date and time results use the default formatting of their column type, and `Intl.NumberFormat` uses the locale of the browser.
