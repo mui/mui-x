@@ -201,6 +201,31 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
     expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
   });
 
+  it('closes the signature help on the first Escape and cancels the edit on the second', async () => {
+    const { user } = await render(<Test />);
+    await user.dblClick(getCell(0, 3));
+    const editable = getCellEditable(0, 3);
+
+    typeFormula(editable, '=ROUND(');
+    await waitFor(() => {
+      expect(document.body.textContent).to.contain('ROUND(value, [digits])');
+    });
+    expect(getListbox()).to.equal(null);
+
+    fireEvent.keyDown(editable, { key: 'Escape' });
+    await waitFor(() => {
+      expect(document.body.textContent).not.to.contain('ROUND(value, [digits])');
+    });
+    // The edit is still active after the first Escape closed the signature help.
+    expect(getCellEditable(0, 3)).not.to.equal(null);
+    expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');
+
+    fireEvent.keyDown(getCellEditable(0, 3), { key: 'Escape' });
+    await microtasks();
+    expect(apiRef.current!.getCellMode(0, 'total')).to.equal('view');
+    expect(apiRef.current!.getRow(0).total).to.equal('=price * quantity');
+  });
+
   it('commits a completed formula on Enter without re-accepting a suggestion', async () => {
     const { user } = await render(<Test processRowUpdate={(row) => row} />);
     await user.dblClick(getCell(0, 3));

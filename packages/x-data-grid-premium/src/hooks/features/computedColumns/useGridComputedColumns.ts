@@ -13,6 +13,7 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { GridSidebarValue } from '../sidebar/gridSidebarInterfaces';
+import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 import type {
   GridComputedColumnsApi,
   GridComputedColumnsModel,
@@ -241,6 +242,16 @@ export const useGridComputedColumns = (
           'MUI X Data Grid: `showComputedColumnEditor()` was called, but computed columns are not available, so the call was ignored.',
           'Computed columns need the formula feature passed through `featureDependencies={{ formula: formulaFeature }}`.',
           'They are turned off by the `disableComputedColumns`, `disableFormulas` and `dataSource` props.',
+        ]);
+        return;
+      }
+      if (gridPivotActiveSelector(apiRef)) {
+        // No computed column exists while pivoting is active (they are injected again
+        // when it is deactivated): nothing to preview, nothing to place.
+        warnOnce([
+          'MUI X Data Grid: `showComputedColumnEditor()` was called while pivoting is active, so the call was ignored.',
+          'Computed columns are not added to the grid while pivoting is active.',
+          'Deactivate pivoting before opening the computed column editor.',
         ]);
         return;
       }

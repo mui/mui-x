@@ -41,7 +41,7 @@ import { ComputedColumnsPanelTrigger } from '@mui/x-data-grid-premium';
 `<ComputedColumnsPanelTrigger />` is a button that opens and closes the computed columns panel.
 It renders the `baseButton` slot.
 
-The trigger renders nothing when computed columns are not available: when the formula feature is not injected through `featureDependencies`, or when the `disableComputedColumns`, `disableFormulas`, or `dataSource` prop is set.
+The trigger renders nothing when computed columns are not available: when the formula feature is not injected through `featureDependencies`, when the `disableComputedColumns`, `disableFormulas`, or `dataSource` prop is set, or while pivoting is active.
 
 ## Custom elements
 

@@ -315,6 +315,58 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       );
     });
 
+    it('applies a formula edit of a stored column whose field the shape rules reject', async () => {
+      const unitPrice = { ...total, field: 'unit-price', headerName: 'Unit price' };
+      await render(<Test initialState={{ computedColumns: { model: [unitPrice] } }} />);
+      expect(getFields()).to.include('unit-price');
+      await openEditor('unit-price');
+
+      // The shape issue is reported, but the field is locked: it must not block the edit.
+      expect(getFieldInput().disabled).to.equal(true);
+      expect(getValidationMessages()).to.deep.equal([
+        'Use letters, digits and underscores, starting with a letter or an underscore.',
+      ]);
+      expect(getButton('Apply')).to.have.property('disabled', false);
+
+      typeFormula('=price * 3');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+      expect(getModel()).to.deep.equal([{ ...unitPrice, formula: '=price * 3' }]);
+      expect(getSidebar().open).to.equal(false);
+    });
+
+    it('applies a formula edit of a stored column whose field reads as a cell address', async () => {
+      const q1 = { ...total, field: 'q1', headerName: 'Q1' };
+      await render(<Test formulaA1Notation initialState={{ computedColumns: { model: [q1] } }} />);
+      await openEditor('q1');
+      expect(getValidationMessages()).to.deep.equal([
+        'This field name reads as a cell address. Choose a longer name.',
+      ]);
+      expect(getButton('Apply')).to.have.property('disabled', false);
+      typeFormula('=price * 3');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+      expect(getModel()[0].formula).to.equal('=price * 3');
+    });
+
+    it('keeps blocking a stored column whose field a data column already uses', async () => {
+      const collision = { ...total, field: 'price', headerName: 'Price twice' };
+      expect(() => {
+        originalRender(<Test initialState={{ computedColumns: { model: [collision] } }} />);
+      }).toWarnDev([
+        'MUI X Data Grid: The computed column "price" uses the field of an existing column',
+      ]);
+      await microtasks();
+      await openEditor('price');
+      expect(getValidationMessages()).to.include('A column with the field "price" already exists.');
+      expect(getButton('Apply')).to.have.property('disabled', true);
+      typeFormula('=quantity * 3');
+      expect(getValidationMessages()).to.deep.equal([
+        'A column with the field "price" already exists.',
+      ]);
+      expect(getButton('Apply')).to.have.property('disabled', true);
+    });
+
     it('applies the edited definition and keeps the field', async () => {
       const onComputedColumnsChange = vi.fn();
       await render(
@@ -949,6 +1001,55 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await microtasks();
       expect(getSidebar().open).to.equal(false);
       expect(trigger.getAttribute('aria-expanded')).to.equal(null);
+    });
+
+    it('keeps the ids of the sidebar when the panel is shown again from the API', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      const trigger = getTrigger()!;
+      fireEvent.click(trigger);
+      await microtasks();
+      const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+      expect(trigger.getAttribute('aria-controls')).to.equal(sidebar.id);
+
+      // The column menu's "Edit computed column" opens the editor through the API.
+      await openEditor('total');
+      expect(getSidebar().open).to.equal(true);
+      expect(getNameInput().value).to.equal('Total');
+      expect(sidebar.id).to.equal(trigger.getAttribute('aria-controls'));
+      expect(document.getElementById(trigger.getAttribute('aria-controls')!)).to.equal(sidebar);
+      expect(sidebar.getAttribute('aria-labelledby')).to.equal(trigger.id);
+    });
+
+    it('is hidden while pivoting is active and the editor cannot be opened', async () => {
+      expect(() => {
+        originalRender(
+          <Test
+            showToolbar
+            initialState={{
+              computedColumns: { model: [total] },
+              pivoting: {
+                enabled: true,
+                model: { rows: [{ field: 'item' }], columns: [], values: [] },
+              },
+            }}
+          />,
+        );
+      }).toWarnDev([
+        'MUI X Data Grid: Computed columns are not supported while pivoting is active.',
+      ]);
+      await microtasks();
+      expect(getTrigger()).to.equal(null);
+      expect(() => {
+        act(() => apiRef.current!.showComputedColumnEditor('total'));
+      }).toWarnDev([
+        'MUI X Data Grid: `showComputedColumnEditor()` was called while pivoting is active',
+      ]);
+      expect(getSidebar().open).to.equal(false);
+
+      await act(async () => apiRef.current!.setPivotActive(false));
+      expect(getTrigger()).not.to.equal(null);
+      await openEditor('total');
+      expect(getSidebar().open).to.equal(true);
     });
 
     it('is hidden when computed columns are not available', async () => {
@@ -1880,6 +1981,42 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await microtasks();
       expect(getSidebar().open).to.equal(true);
       expect(within(getPanel()!).getByText('Computed columns')).not.to.equal(null);
+    });
+
+    it('closes the signature help on Escape and keeps the draft', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      typeName('Renamed');
+      const editable = getFormulaEditable();
+      await act(async () => editable.focus());
+      editable.textContent = '=ROUND(';
+      placeCaretAtEnd();
+      fireEvent.input(editable);
+      // The reference pane lists the same signature: probe the popup, portaled
+      // next to the grid, not inside it.
+      const gridRoot = document.querySelector(`.${gridClasses.root}`)!;
+      const getPopupText = () =>
+        Array.from(document.body.children)
+          .filter((node) => !node.contains(gridRoot))
+          .map((node) => node.textContent)
+          .join('');
+      await waitFor(() => {
+        expect(getPopupText()).to.contain('ROUND(value, [digits])');
+      });
+
+      fireEvent.keyDown(editable, { key: 'Escape' });
+      await waitFor(() => {
+        expect(getPopupText()).not.to.contain('ROUND(value, [digits])');
+      });
+      expect(getSidebar().open).to.equal(true);
+      expect(getNameInput().value).to.equal('Renamed');
+      expect(getFormulaEditable().textContent).to.equal('=ROUND(');
+
+      // The second Escape cancels the draft.
+      fireEvent.keyDown(getFormulaEditable(), { key: 'Escape' });
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(getModel()).to.deep.equal([total]);
     });
 
     it('applies on Ctrl/Cmd+Enter from any field', async () => {

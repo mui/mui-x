@@ -658,6 +658,20 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         if (isComposingKeyEvent(event)) {
           return;
         }
+        // Escape belongs to the popup whenever it shows — the options list or the
+        // signature help alone: the first Escape closes it, a second one reaches the
+        // host and cancels. Keyed on `showPopup`, so a popup that is not rendered
+        // (`popupDisabled`) does not swallow the key.
+        if (event.key === 'Escape') {
+          if (showPopup) {
+            event.preventDefault();
+            event.stopPropagation();
+            setOpen(false);
+            return;
+          }
+          onCancelKey?.(event);
+          return;
+        }
         if (open && hasList) {
           switch (event.key) {
             case 'ArrowDown':
@@ -699,13 +713,6 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
               }
               return;
             }
-            case 'Escape':
-              // First Escape closes the list; a second (list closed) reaches the
-              // host and cancels the edit.
-              event.preventDefault();
-              event.stopPropagation();
-              setOpen(false);
-              return;
             default:
               return;
           }
@@ -716,11 +723,19 @@ const GridFormulaEditable = React.forwardRef<GridFormulaEditableHandle, GridForm
         if (event.key === 'Enter') {
           event.preventDefault();
           onCommitKey?.(event);
-        } else if (event.key === 'Escape') {
-          onCancelKey?.(event);
         }
       },
-      [acceptOption, activeIndex, hasList, onCancelKey, onCommitKey, open, options, suggestion],
+      [
+        acceptOption,
+        activeIndex,
+        hasList,
+        onCancelKey,
+        onCommitKey,
+        open,
+        options,
+        showPopup,
+        suggestion,
+      ],
     );
 
     const handleKeyUp = React.useCallback(

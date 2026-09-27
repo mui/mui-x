@@ -9,6 +9,7 @@ import type { GridSlotProps } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridComputedColumnsPanelOpenSelector } from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
+import { gridPivotActiveSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridSidebarValue } from '../../hooks/features/sidebar';
 
 export interface ComputedColumnsPanelState {
@@ -33,7 +34,8 @@ export type ComputedColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'],
  * A button that opens and closes the computed columns panel.
  * It renders the `baseButton` slot.
  * It renders nothing when computed columns are not available (the formula feature
- * is missing, or `disableComputedColumns`, `disableFormulas` or `dataSource` is set).
+ * is missing, or `disableComputedColumns`, `disableFormulas` or `dataSource` is set)
+ * and while pivoting is active.
  *
  * Demos:
  *
@@ -52,14 +54,17 @@ const ComputedColumnsPanelTrigger = forwardRef<HTMLButtonElement, ComputedColumn
     const panelId = useId();
     const apiRef = useGridApiContext();
     const open = useGridSelector(apiRef, gridComputedColumnsPanelOpenSelector);
+    const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
+    // Like the column menu item: no computed column exists while pivoting is active.
     const isAvailable =
       rootProps.featureDependencies?.formula !== undefined &&
       !rootProps.disableComputedColumns &&
       !rootProps.disableFormulas &&
-      !rootProps.dataSource;
+      !rootProps.dataSource &&
+      !pivotActive;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {

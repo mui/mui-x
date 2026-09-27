@@ -218,7 +218,7 @@ Every feature reads the evaluated value of a computed cell through the column de
 - **Export** to CSV and Excel, print, and clipboard copy write the evaluated value; Excel export writes the value even with `escapeFormulas: false`.
 - **Aggregation** functions apply to the computed values, from the column menu or the `aggregationModel`, and a computed column can be **grouped** by, or used for **row spanning**, like any column.
 - **Cell formulas** can reference a computed column by field (`=total * 1.2`), and a computed column can reference a column that contains cell formulas: the formula results are the values it reads.
-- **Pivoting** does not include computed columns: while pivot mode is active they are not added to the grid, and the model is kept for when pivoting is turned off.
+- **Pivoting** does not include computed columns: while pivot mode is active they are not added to the grid, the toolbar trigger and the column menu items are hidden, `showComputedColumnEditor()` is ignored, and the model is kept for when pivoting is turned off.
 - **Editing**: a computed cell never enters edit mode. Double-clicking it or pressing <kbd class="key">Enter</kbd> opens the editor of the column instead.
 
 Computed values are evaluated lazily and memoized per row: nothing is computed until a cell is read, and a row is re-evaluated only when it changes.

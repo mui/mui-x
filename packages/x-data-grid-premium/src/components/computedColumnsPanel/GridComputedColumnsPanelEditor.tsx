@@ -548,8 +548,26 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     [apiRef, columnLookup, draftDefinition, isEditing, storedDefinition],
   );
 
+  // The shape rules guard the fields the editor creates. The field of a stored column is
+  // locked (`updateComputedColumn` cannot change it), so a shape issue of a field brought
+  // from code (`unit-price`, an A1-like `q1`) is reported but does not block an edit of the
+  // formula — the user would have no way out but Delete.
+  const hasBlockingIssue = React.useCallback(
+    (result: GridComputedColumnValidationResult, definition: GridComputedColumnDefinition) =>
+      result.issues.some(
+        (issue) =>
+          !(
+            isEditing &&
+            definition.field === storedDefinition.field &&
+            (issue.code === 'fieldInvalid' || issue.code === 'fieldA1Like')
+          ),
+      ),
+    [isEditing, storedDefinition],
+  );
+
   const { currency: currencyInvalid, decimals: decimalsInvalid } = isFormatInvalid(draft);
-  const canApply = validation.valid && !currencyInvalid && !decimalsInvalid;
+  const canApply =
+    !hasBlockingIssue(validation, draftDefinition) && !currencyInvalid && !decimalsInvalid;
   const showValidation = (dirty || isEditing) && validation.issues.length > 0;
 
   // ----- Preview (debounced, through the cell path) -----
@@ -766,10 +784,13 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
         if (
           formatInvalid.currency ||
           formatInvalid.decimals ||
-          !apiRef.current.validateComputedColumnDefinition!(
+          hasBlockingIssue(
+            apiRef.current.validateComputedColumnDefinition!(
+              definition,
+              isEditing ? { ignoreField: storedDefinition.field } : undefined,
+            ),
             definition,
-            isEditing ? { ignoreField: storedDefinition.field } : undefined,
-          ).valid
+          )
         ) {
           // The new type brings back format fields that were hidden (and not
           // checked): show them instead of saving what the user cannot see.
@@ -796,6 +817,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     draft,
     draftDefinition,
     expression,
+    hasBlockingIssue,
     isEditing,
     onDone,
     previewRowId,
