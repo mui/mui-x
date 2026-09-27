@@ -4,6 +4,7 @@ import { describe, it, expect } from 'vitest';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridComputedColumnsModel } from '../computedColumns/gridComputedColumnsInterfaces';
 import { createFormulaFunctionRegistry } from './engine';
+import type { FormulaScalar } from './engine';
 import {
   coerceComputedResult,
   ensureComputedColumnRecords,
@@ -135,7 +136,7 @@ describe('gridComputedColumnsRuntime', () => {
   });
 
   describe('coerceComputedResult', () => {
-    const value = (v: unknown) => ({ type: 'value', value: v }) as const;
+    const value = (v: FormulaScalar) => ({ type: 'value', value: v }) as const;
 
     it('should only accept finite numbers as the result of a number column', () => {
       expect(coerceComputedResult(value(5), 'number')).to.deep.equal(value(5));

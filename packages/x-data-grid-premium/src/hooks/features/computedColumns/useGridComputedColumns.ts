@@ -197,9 +197,11 @@ export const useGridComputedColumns = (
             return definition;
           }
           const next = { ...definition, ...changes, field };
-          // An `undefined` change removes the property (`numberFormat: undefined` clears the format).
+          // An `undefined` change removes the property (`numberFormat: undefined` clears the
+          // format) — except the field, which a change cannot touch (a wider-typed `changes`
+          // may carry an own `field: undefined` key).
           for (const key of Object.keys(changes) as (keyof typeof changes)[]) {
-            if (changes[key] === undefined) {
+            if ((key as string) !== 'field' && changes[key] === undefined) {
               delete next[key];
             }
           }

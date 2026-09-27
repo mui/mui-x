@@ -409,6 +409,8 @@ export const useGridFormula = (
           apiRef.current.caches.formula!,
           gridColumnLookupSelector(apiRef),
           a1NotationActive,
+          // The editor validates every keystroke: a draft is not interned.
+          { intern: false },
         ),
         options,
       ),

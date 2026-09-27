@@ -23,4 +23,10 @@ describe('deriveComputedColumnField', () => {
     expect(deriveComputedColumnField('Price', ['price', 'price2'])).to.equal('price3');
     expect(deriveComputedColumnField('', ['computed'])).to.equal('computed2');
   });
+
+  it('never derives a field named after a member of `Object.prototype`', () => {
+    expect(deriveComputedColumnField('Constructor', [])).to.equal('constructor2');
+    expect(deriveComputedColumnField('to string', [])).to.equal('toString2');
+    expect(deriveComputedColumnField('Value of', ['valueOf2'])).to.equal('valueOf3');
+  });
 });

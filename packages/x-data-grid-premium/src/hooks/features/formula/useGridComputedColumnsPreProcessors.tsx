@@ -12,6 +12,7 @@ import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridStatePremium } from '../../../models/gridStatePremium';
 import type { GridComputedColumnsModel } from '../computedColumns/gridComputedColumnsInterfaces';
+import { isReservedComputedColumnField } from '../computedColumns/deriveComputedColumnField';
 import { ensureFormulaInternalCache } from './gridFormulaUtils';
 import { ensureComputedColumnRecords } from './gridComputedColumnsRuntime';
 import { validateComputedColumnRecords } from './gridComputedColumnsValidation';
@@ -131,6 +132,16 @@ export const useGridComputedColumnsPreProcessors = (
       // ascending order once the other columns are placed, each lands exactly.
       const pendingInsertions: { field: string; index: number }[] = [];
       for (const [field, record] of records) {
+        if (isReservedComputedColumnField(field)) {
+          // The lookup is a plain object: such a field would read as an existing column
+          // here and in every consumer of the lookup. The validation reports it.
+          warnOnce([
+            `MUI X Data Grid: The computed column "${field}" uses a reserved field name, so it is not added to the grid.`,
+            'A field cannot be named after a member of `Object.prototype`.',
+            'Change the `field` of the computed column definition.',
+          ]);
+          continue;
+        }
         const existing = columnsState.lookup[field];
         if (existing !== undefined && !existing.computed) {
           warnOnce([

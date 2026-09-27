@@ -94,6 +94,38 @@ describe('gridComputedColumnsValidation', () => {
       expect(validate({ field: '_total_1' }).valid).to.equal(true);
     });
 
+    it('should report a field named after a member of `Object.prototype`', () => {
+      const { validate } = createHarness();
+      ['constructor', 'toString', 'hasOwnProperty', '__proto__'].forEach((field) => {
+        expect(validate({ field }).issues.map((issue) => issue.code)).to.deep.equal([
+          'fieldInvalid',
+        ]);
+      });
+    });
+
+    it('should not intern a draft formula and keep interning the stored ones', () => {
+      const { apiRef, cache, lookup } = createHarness([define('total', '=price * quantity')]);
+      const interned: string[] = [];
+      const { parse } = cache.parser;
+      cache.parser.parse = (expression) => {
+        interned.push(expression);
+        return parse(expression);
+      };
+      const draft = {
+        field: 'draft',
+        headerName: 'Draft',
+        formula: '=pri',
+        type: 'number',
+      } as const;
+      validateComputedColumnDefinition(
+        draft,
+        createComputedColumnValidationScope(apiRef, cache, lookup, false, { intern: false }),
+      );
+      expect(interned).to.deep.equal([]);
+      validateComputedColumnRecords(apiRef, cache, lookup, false, undefined);
+      expect(interned).to.deep.equal(['price * quantity']);
+    });
+
     it('should report the field of a data column and the field of another computed column', () => {
       const { validate } = createHarness([define('total', '=price * quantity')]);
       expect(validate({ field: 'price', formula: '=quantity' }).issues).to.deep.equal([

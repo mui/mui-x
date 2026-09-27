@@ -11,6 +11,7 @@ import {
   gridComputedColumnsPanelOpenSelector,
   gridSidebarStateSelector,
   gridClasses,
+  gridColumnFieldsSelector,
 } from '@mui/x-data-grid-premium';
 import type {
   DataGridPremiumProps,
@@ -257,6 +258,31 @@ describe('<DataGridPremium /> - Computed columns model', () => {
       expect(getModel()).to.deep.equal([{ ...total, formula: '=price + quantity' }, doubled]);
       // Untouched definitions keep their identity.
       expect(getModel()[1]).to.equal(doubled);
+    });
+
+    it('`updateComputedColumn` should keep the field when `changes` carries an own `field: undefined` key', () => {
+      render(
+        <Test
+          featureDependencies={{ formula: formulaFeature }}
+          initialState={{
+            computedColumns: { model: [{ ...total, numberFormat: { style: 'percent' } }] },
+          }}
+        />,
+      );
+      act(() =>
+        apiRef.current!.updateComputedColumn('total', {
+          headerName: 'Renamed',
+          numberFormat: undefined,
+          field: undefined,
+        } as Partial<GridComputedColumnDefinition>),
+      );
+      expect(getModel()).to.deep.equal([{ ...total, headerName: 'Renamed' }]);
+      expect(gridColumnFieldsSelector(apiRef as RefObject<GridApi>)).to.deep.equal([
+        'id',
+        'price',
+        'quantity',
+        'total',
+      ]);
     });
 
     it('`updateComputedColumn` and `removeComputedColumn` should ignore unknown fields', () => {

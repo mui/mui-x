@@ -303,6 +303,18 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getFieldInput().value).to.equal('price2');
     });
 
+    it('avoids the members of `Object.prototype` when deriving the field and rejects them when typed', async () => {
+      await render(<Test />);
+      await openEditor(null);
+
+      typeName('Constructor');
+      expect(getFieldInput().value).to.equal('constructor2');
+      fireEvent.change(getFieldInput(), { target: { value: 'constructor' } });
+      expect(getValidationMessages()).to.include(
+        'Use letters, digits and underscores, starting with a letter or an underscore.',
+      );
+    });
+
     it('applies the edited definition and keeps the field', async () => {
       const onComputedColumnsChange = vi.fn();
       await render(

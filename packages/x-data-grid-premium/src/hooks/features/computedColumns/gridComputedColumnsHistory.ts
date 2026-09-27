@@ -175,7 +175,10 @@ export const createComputedColumnsHistoryHandler = (
     store: (model: GridComputedColumnsModel) => {
       const cache = getCache();
       const previousModel = cache.previousModel ?? [];
-      if (previousModel === model) {
+      // A model equal to the previous one is not a step: a new but identical array reaches
+      // here from an inline `computedColumns` prop on every parent render, from an add of a
+      // field the dedupe dropped, or from an update that changed nothing.
+      if (previousModel === model || isDeepEqual(previousModel, model)) {
         return null;
       }
 

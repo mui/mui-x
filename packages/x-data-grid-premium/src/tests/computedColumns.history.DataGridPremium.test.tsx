@@ -161,6 +161,24 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(canRedo()).to.equal(false);
     });
 
+    it('does not record a change that leaves the model equal to the previous one', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      expect(canUndo()).to.equal(false);
+
+      // The dedupe drops the duplicate, the model is a new but equal array.
+      expect(() => {
+        act(() => api().addComputedColumn({ ...total, formula: '=1' }));
+      }).toWarnDev(['MUI X Data Grid: The computed columns model contains several definitions']);
+      expect(canUndo()).to.equal(false);
+
+      await act(async () => api().updateComputedColumn('total', {}));
+      await act(async () => api().updateComputedColumn('total', { headerName: 'Total' }));
+      expect(canUndo()).to.equal(false);
+
+      await act(async () => api().updateComputedColumn('total', { headerName: 'Sum' }));
+      expect(canUndo()).to.equal(true);
+    });
+
     it('records an edit as one step and restores the previous values in the cells', async () => {
       await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
       expect(getColumnValuesOf('total')).to.deep.equal(['6', '50', '8']);
@@ -637,6 +655,42 @@ describe('<DataGridPremium /> - Computed columns history', () => {
         />
       );
     }
+
+    let bumpParent: () => void = () => {};
+
+    function InlineModel() {
+      const [model, setModel] = React.useState<GridComputedColumnsModel>([]);
+      const [, setTick] = React.useState(0);
+      bumpParent = () => setTick((tick) => tick + 1);
+      // A new but deep-equal model on every render of the parent.
+      return (
+        <Test
+          computedColumns={model.map((definition) => ({ ...definition }))}
+          onComputedColumnsChange={setModel}
+        />
+      );
+    }
+
+    it('does not record a step when an inline `computedColumns` prop is re-created equal', async () => {
+      await render(<InlineModel />);
+      await act(async () => api().addComputedColumn(total));
+      expect(getStackSize()).to.equal(1);
+
+      await act(async () => bumpParent());
+      await act(async () => bumpParent());
+      expect(getStackSize()).to.equal(1);
+      expect(canUndo()).to.equal(true);
+
+      await undo();
+      expect(getModel()).to.deep.equal([]);
+      expect(canRedo()).to.equal(true);
+      // The re-render does not truncate the redo history either.
+      await act(async () => bumpParent());
+      expect(canRedo()).to.equal(true);
+      await redo();
+      expect(getModel()).to.deep.equal([total]);
+      expect(getStackSize()).to.equal(1);
+    });
 
     it('records exactly one step under an inline `isCellEditable` with a controlled model', async () => {
       await render(<InlineEditable />);

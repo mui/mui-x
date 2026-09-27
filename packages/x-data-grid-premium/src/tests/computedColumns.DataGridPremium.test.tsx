@@ -285,6 +285,21 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['item', 'price', 'quantity']);
       expect(getColumnValuesOf('price')).to.deep.equal(['2', '10', '4']);
     });
+
+    it('should skip a definition whose field is a member of `Object.prototype`, warn and report it', async () => {
+      expect(() => {
+        originalRender(<Test computedColumns={[{ ...total, field: 'constructor' }]} />);
+      }).toWarnDev([
+        'MUI X Data Grid: The computed column "constructor" uses a reserved field name',
+      ]);
+      await microtasks();
+      expect(getColumnHeadersTextContent()).to.deep.equal(['item', 'price', 'quantity']);
+      expect(
+        unwrapPrivateAPI<GridPrivateApiPremium, GridApi>(apiRef.current!).getComputedColumnIssues!(
+          'constructor',
+        ).map((issue) => issue.code),
+      ).to.deep.equal(['fieldInvalid']);
+    });
   });
 
   describe('model updates', () => {

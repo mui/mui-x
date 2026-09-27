@@ -7,11 +7,13 @@ import type {
   GridComputedColumnValidationIssue,
   GridComputedColumnValidationResult,
 } from '../computedColumns/gridComputedColumnsInterfaces';
+import { isReservedComputedColumnField } from '../computedColumns/deriveComputedColumnField';
 import {
   collectFunctionCallIssues,
   extractFormulaDependencies,
   getFormulaExpression,
   orderForRecompute,
+  parseFormula,
 } from './engine';
 import type { FormulaErrorCode, FormulaFunctionRegistry, FormulaParser } from './engine';
 import { applyComputedColDefOverrides, withComputedHeaderClassName } from './createComputedColDef';
@@ -28,6 +30,12 @@ const A1_LIKE_FIELD_REGEX = /^[a-zA-Z]{1,3}\d+$/;
 const FUNCTION_NAME_REGEX = /^[A-Za-z_][A-Za-z0-9_.]*/;
 
 export const COMPUTED_COLUMN_CYCLE_PATH_SEPARATOR = ' → ';
+
+/**
+ * A draft is parsed once and thrown away: the interning parser would keep one
+ * entry per keystroke for the lifetime of the grid.
+ */
+const DRAFT_PARSER: FormulaParser = { parse: parseFormula, clear: () => {} };
 
 /**
  * What a definition is validated against.
@@ -70,6 +78,10 @@ export interface GridComputedColumnVerdict {
  * @param {GridFormulaInternalCache} cache The internal cache of the formula feature.
  * @param {Record<string, GridColDef>} columnsLookup The columns to validate against.
  * @param {boolean} a1Notation If `true`, A1 notation is active.
+ * @param {object} [options] The options.
+ * @param {boolean} [options.intern] If `false`, the formulas are parsed without the interning
+ * parser of the cache: for drafts, which are parsed once (default `true`, for the stored
+ * formulas, which every hydration parses again).
  * @returns {GridComputedColumnValidationScope} The validation scope.
  */
 export function createComputedColumnValidationScope(
@@ -77,6 +89,7 @@ export function createComputedColumnValidationScope(
   cache: GridFormulaInternalCache,
   columnsLookup: Record<string, GridColDef>,
   a1Notation: boolean,
+  options: { intern?: boolean } = {},
 ): GridComputedColumnValidationScope {
   const { records } = cache.computedColumns;
   const columnFields = new Set<string>();
@@ -98,7 +111,7 @@ export function createComputedColumnValidationScope(
 
   return {
     getLocaleText: apiRef.current.getLocaleText,
-    parser: cache.parser,
+    parser: options.intern === false ? DRAFT_PARSER : cache.parser,
     functions: cache.registry,
     a1Notation,
     columnFields,
@@ -182,7 +195,7 @@ export function getComputedColumnVerdict(
       code: 'fieldRequired',
       message: getLocaleText('computedColumnErrorFieldRequired'),
     });
-  } else if (!VALID_FIELD_REGEX.test(field)) {
+  } else if (!VALID_FIELD_REGEX.test(field) || isReservedComputedColumnField(field)) {
     issues.push({
       code: 'fieldInvalid',
       message: getLocaleText('computedColumnErrorFieldInvalid'),
