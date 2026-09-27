@@ -341,6 +341,90 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumn('total').valueGetter).not.to.equal(valueGetter);
     });
 
+    describe('columns signature', () => {
+      const createProbe = () => {
+        const apply = vi.fn((args: any[]) => args[0]);
+        const PROBE = { name: 'PROBE', minArgs: 1, maxArgs: 1, apply };
+        return { apply, functions: { ...GRID_FORMULA_FUNCTIONS, PROBE } as any };
+      };
+      const probed: GridComputedColumnDefinition = {
+        field: 'double',
+        headerName: 'Double',
+        formula: '=PROBE(price) * 2',
+        type: 'number',
+      };
+      const priceColumn: DataGridPremiumProps['columns'][number] = {
+        field: 'price',
+        type: 'number',
+      };
+      const extraColumn = (valueGetter: () => string): DataGridPremiumProps['columns'][number] => ({
+        field: 'extra',
+        valueGetter,
+      });
+
+      it('should not re-evaluate when an unrelated column gets a new `valueGetter`', async () => {
+        const probe = createProbe();
+        const { setProps } = await render(
+          <Test
+            columns={[priceColumn, extraColumn(() => 'a')]}
+            formulaFunctions={probe.functions}
+            initialState={{
+              computedColumns: { model: [probed] },
+              rowGrouping: { model: ['double'] },
+              aggregation: { model: { price: 'sum' } },
+            }}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+        const applications = probe.apply.mock.calls.length;
+        const treeRebuilds = vi.fn();
+        apiRef.current!.subscribeEvent('activeStrategyProcessorChange', (name) => {
+          if (name === 'rowTreeCreation') {
+            treeRebuilds();
+          }
+        });
+
+        setProps({ columns: [priceColumn, extraColumn(() => 'b')] });
+        await microtasks();
+        expect(probe.apply.mock.calls.length).to.equal(applications);
+        expect(treeRebuilds).toHaveBeenCalledTimes(0);
+        expect(getColumnValuesOf('double')).to.deep.equal(['', '4', '', '20', '', '8', '']);
+      });
+
+      it('should re-evaluate when a referenced column gets a new `valueGetter`', async () => {
+        const probe = createProbe();
+        const { setProps } = await render(
+          <Test
+            columns={[priceColumn]}
+            formulaFunctions={probe.functions}
+            initialState={{ computedColumns: { model: [probed] } }}
+          />,
+        );
+        expect(getColumnValuesOf('double')).to.deep.equal(['4', '20', '8']);
+        const applications = probe.apply.mock.calls.length;
+
+        setProps({ columns: [{ ...priceColumn, valueGetter: (value: number) => value * 10 }] });
+        await microtasks();
+        expect(getColumnValuesOf('double')).to.deep.equal(['40', '200', '80']);
+        expect(probe.apply.mock.calls.length).to.be.greaterThan(applications);
+      });
+
+      it('should re-evaluate when a referenced column appears', async () => {
+        const { setProps } = await render(
+          <Test
+            computedColumns={[
+              { field: 'bonus2', headerName: 'Bonus', formula: '=bonus + 1', type: 'number' },
+            ]}
+          />,
+        );
+        expect(getColumnValuesOf('bonus2')).to.deep.equal(['#REF!', '#REF!', '#REF!']);
+
+        setProps({ columns: [...baselineProps.columns, { field: 'bonus', type: 'number' }] });
+        await microtasks();
+        expect(getColumnValuesOf('bonus2')).to.deep.equal(['1', '1', '1']);
+      });
+    });
+
     it('should re-evaluate when `formulaFunctions` changes', async () => {
       const definition: GridComputedColumnDefinition = {
         field: 'custom',
@@ -1246,6 +1330,85 @@ describe('<DataGridPremium /> - Computed columns', () => {
       await microtasks();
       expect(getFields()).to.include('total');
       expect(getColumnValuesOf('total')).to.deep.equal(['6', '50', '8']);
+    });
+
+    describe('model changes while pivoting is active', () => {
+      const pivotModel = {
+        rows: [{ field: 'item' }],
+        columns: [],
+        values: [{ field: 'price', aggFunc: 'sum' }],
+      };
+      const getModel = () => gridComputedColumnsSelector(apiRef as RefObject<GridApi>);
+      const getModelFields = () => getModel().map((definition) => definition.field);
+      // The columns are removed (and the warning printed) when pivoting activates.
+      const activatePivot = () => {
+        expect(() => {
+          act(() => apiRef.current!.setPivotActive(true));
+        }).toWarnDev([
+          'MUI X Data Grid: Computed columns are not supported while pivoting is active.',
+        ]);
+        return microtasks();
+      };
+
+      it('should keep a definition added or removed while pivoting is active', async () => {
+        await render(
+          <Test initialState={{ computedColumns: { model: [total] } }} pivotModel={pivotModel} />,
+        );
+        await activatePivot();
+        expect(getFields()).not.to.include('total');
+
+        await act(async () => apiRef.current!.addComputedColumn(ratio));
+        await act(async () => apiRef.current!.removeComputedColumn('total'));
+        expect(getModelFields()).to.deep.equal(['ratio']);
+        // The state exported during pivoting reports the live model.
+        expect(apiRef.current!.exportState().computedColumns?.model).to.deep.equal([ratio]);
+
+        await act(async () => apiRef.current!.setPivotActive(false));
+        expect(getModelFields()).to.deep.equal(['ratio']);
+        expect(getFields()).to.include('ratio');
+        expect(getFields()).not.to.include('total');
+        expect(getColumnValuesOf('ratio')).to.deep.equal(['0.667', '2', '2']);
+      });
+
+      it('should not record a history step when pivoting is deactivated', async () => {
+        await render(
+          <Test initialState={{ computedColumns: { model: [total] } }} pivotModel={pivotModel} />,
+        );
+        await activatePivot();
+        await act(async () => apiRef.current!.addComputedColumn(ratio));
+        await act(async () => apiRef.current!.setPivotActive(false));
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(getModelFields()).to.deep.equal(['total']);
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      });
+
+      it('should not send the previous model back to a controlled parent', async () => {
+        const onComputedColumnsChange = vi.fn();
+        function Controlled() {
+          const [model, setModel] = React.useState<GridComputedColumnsModel>([total]);
+          return (
+            <Test
+              computedColumns={model}
+              onComputedColumnsChange={(nextModel) => {
+                onComputedColumnsChange(nextModel);
+                setModel(nextModel);
+              }}
+              pivotModel={pivotModel}
+            />
+          );
+        }
+        await render(<Controlled />);
+        await activatePivot();
+        await act(async () => apiRef.current!.addComputedColumn(ratio));
+        await act(async () => apiRef.current!.setPivotActive(false));
+        expect(onComputedColumnsChange).toHaveBeenCalledTimes(1);
+        expect(getModelFields()).to.deep.equal(['total', 'ratio']);
+        expect(getFields()).to.include('ratio');
+      });
     });
   });
 });

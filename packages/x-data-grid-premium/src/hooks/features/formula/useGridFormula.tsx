@@ -61,6 +61,7 @@ import {
   areFormulaFieldsEqual,
   areFormulaFunctionRecordsEqual,
   computeColumnsSignature,
+  haveComputedInputsChanged,
   ensureFormulaInternalCache,
   getEffectiveFormulaFunctions,
   getFormulaFields,
@@ -525,10 +526,16 @@ export const useGridFormula = (
       // field order itself and exits cheaply when nothing moved.
       triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
     } else {
+      const previousSignature = cache.lastColumnsSignature;
       cache.lastColumnsSignature = columnsSignature;
-      // The computed columns read the other columns through their `valueGetter`,
-      // and their own getters change with their formula.
-      const computedColumnsChanged = signatureChanged && cache.computedColumns.records.size > 0;
+      // The computed columns read the referenced columns through their `valueGetter`,
+      // and their own getters change with their formula: only a change of those
+      // inputs drops the memoized results (an unrelated column re-created with an
+      // inline getter on every parent render does not).
+      const computedColumnsChanged =
+        signatureChanged &&
+        cache.computedColumns.records.size > 0 &&
+        haveComputedInputsChanged(columnsSignature, previousSignature, cache.computedColumns);
       if (computedColumnsChanged) {
         resetComputedResults(cache);
       }

@@ -171,6 +171,34 @@ export function areColumnsSignaturesEqual(
   return true;
 }
 
+/**
+ * Whether a columns signature change touches the inputs of the computed columns:
+ * a referenced field appearing or disappearing (`#REF!` ⇄ value) or getting a
+ * new `valueGetter` (its read path), or a computed column's own getter changing
+ * with its formula. An unrelated column with an inline getter does not.
+ * @param {Map<string, unknown>} next The current columns signature.
+ * @param {Map<string, unknown>} previous The signature the results were memoized with.
+ * @param {GridComputedColumnsRuntimeCache} runtime The computed columns runtime cache.
+ * @returns {boolean} `true` when the memoized computed results may be stale.
+ */
+export function haveComputedInputsChanged(
+  next: Map<string, unknown>,
+  previous: Map<string, unknown>,
+  runtime: GridComputedColumnsRuntimeCache,
+): boolean {
+  for (const field of runtime.referencedFields) {
+    if (next.has(field) !== previous.has(field) || next.get(field) !== previous.get(field)) {
+      return true;
+    }
+  }
+  for (const field of runtime.records.keys()) {
+    if (next.get(field) !== previous.get(field)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function areFormulaFunctionRecordsEqual(
   a: Record<string, GridFormulaFunctionDefinition>,
   b: Record<string, GridFormulaFunctionDefinition>,
