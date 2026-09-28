@@ -157,11 +157,21 @@ export async function exportImage(
       );
     }
 
-    await drawDocument(iframe.contentDocument!, canvas, {
-      // Handle retina displays: https://github.com/cburgmer/rasterizeHTML.js/blob/262b3404d1c469ce4a7750a2976dec09b8ae2d6c/examples/retina.html#L71
-      zoom: ratio,
-      nonce,
-    });
+    try {
+      await drawDocument(iframe.contentDocument!, canvas, {
+        // Handle retina displays: https://github.com/cburgmer/rasterizeHTML.js/blob/262b3404d1c469ce4a7750a2976dec09b8ae2d6c/examples/retina.html#L71
+        zoom: ratio,
+        nonce,
+      });
+    } catch (error) {
+      /* `rasterizehtml` rejects with a plain object, which gives the caller no stack. */
+      throw new Error(
+        `MUI X Charts: Failed to render the chart as an image.\n` +
+          `The chart is drawn through an image with a \`data:\` or \`blob:\` URL, so a Content Security Policy needs \`img-src 'self' data: blob:\`.\n` +
+          `See https://mui.com/x/react-charts/content-security-policy/ for more details.`,
+        { cause: error },
+      );
+    }
   } finally {
     iframe.remove();
   }
