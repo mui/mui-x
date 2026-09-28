@@ -176,7 +176,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const { classes, localeText } = useEventTimelinePremiumStyledContext();
+  const { classes, localeText, getEventAriaLabel } = useEventTimelinePremiumStyledContext();
   const { slots, slotProps } = useSchedulerSlots<
     EventTimelinePremiumSlots,
     EventTimelinePremiumSlotProps
@@ -201,12 +201,19 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Feature hooks
   const id = useId(idProp);
-  const accessibleName = useEventAccessibleName({
+  const defaultAccessibleName = useEventAccessibleName({
     occurrence,
     isRecurring,
     resourceName: rowResource?.title ?? null,
     localeText,
   });
+  const accessibleName = getEventAriaLabel
+    ? getEventAriaLabel({
+        occurrence,
+        resource: rowResource!,
+        defaultAriaLabel: defaultAccessibleName,
+      })
+    : defaultAccessibleName;
 
   const EventContent = slots.timelineEventContent;
   const content = EventContent ? (

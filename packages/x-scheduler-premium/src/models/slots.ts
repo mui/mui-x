@@ -47,7 +47,8 @@ export interface EventTimelinePremiumSlots extends SchedulerSlots {
    * The content of an event block.
    * It replaces the title text and is rendered inside the block, so the block keeps its
    * geometry, its drag and resize handles, and its button semantics.
-   * The content doesn't change the accessible name of the event, which is built from its data.
+   * The content doesn't change the accessible name of the event, which is built from its data:
+   * use `getEventAriaLabel` to announce the details it adds.
    * @default the occurrence title
    */
   timelineEventContent?: React.ComponentType<

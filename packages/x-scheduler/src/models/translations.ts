@@ -133,7 +133,7 @@ export interface SchedulerEventAriaLabelParts {
   title: string;
   /**
    * When the event happens within the day: a time range, or the all-day sentence.
-   * Not set when the event spans several days at a time, since `date` then carries the times.
+   * Not set for a timed event that spans several days, since `date` then carries the times.
    * @example "7:30 AM to 8:30 AM"
    */
   when?: string;

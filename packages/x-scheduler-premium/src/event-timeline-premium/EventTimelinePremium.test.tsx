@@ -72,6 +72,7 @@ describe('<EventTimelinePremium />', () => {
     onEventEditingStart?: React.ComponentProps<typeof EventTimelinePremium>['onEventEditingStart'];
     slots?: EventTimelinePremiumSlots;
     slotProps?: EventTimelinePremiumSlotProps;
+    getEventAriaLabel?: React.ComponentProps<typeof EventTimelinePremium>['getEventAriaLabel'];
   }) {
     const view = await renderSettled(
       <EventTimelinePremium
@@ -92,6 +93,7 @@ describe('<EventTimelinePremium />', () => {
         onEventEditingStart={options?.onEventEditingStart}
         slots={options?.slots}
         slotProps={options?.slotProps}
+        getEventAriaLabel={options?.getEventAriaLabel}
       />,
     );
     return view;
@@ -1421,6 +1423,36 @@ describe('<EventTimelinePremium />', () => {
 
       expect(getEventByTitle('Reunión')).toHaveAccessibleName(
         `Reunión, de 9:00 AM a 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+      );
+    });
+
+    it('should name events with getEventAriaLabel, given the occurrence, the row resource and the default name', async () => {
+      const shared = EventBuilder.new()
+        .id('ticket-1')
+        .title('Shared')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resources([engineering, design])
+        .build();
+
+      await renderTimeline({
+        events: [shared],
+        getEventAriaLabel: ({ occurrence, resource, defaultAriaLabel }) =>
+          `${defaultAriaLabel}, ${occurrence.id} in ${resource.title}`,
+      });
+
+      const defaultName = 'Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025';
+      const inEngineering = within(
+        document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement,
+      ).getByRole('button');
+      const inDesign = within(
+        document.querySelector(`[data-resource-id="${design.id}"]`) as HTMLElement,
+      ).getByRole('button');
+
+      expect(inEngineering).toHaveAccessibleName(
+        `${defaultName}, Resource: ${engineering.title}, ticket-1 in ${engineering.title}`,
+      );
+      expect(inDesign).toHaveAccessibleName(
+        `${defaultName}, Resource: ${design.title}, ticket-1 in ${design.title}`,
       );
     });
 
