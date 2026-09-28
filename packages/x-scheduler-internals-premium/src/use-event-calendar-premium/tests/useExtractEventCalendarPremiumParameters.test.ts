@@ -21,6 +21,7 @@ const allParameters: Record<keyof EventCalendarPremiumParameters<any, any>, unkn
   displayTimezone: 'displayTimezone',
   eventColor: 'eventColor',
   eventCreation: 'eventCreation',
+  eventDeletion: 'eventDeletion',
   eventModelStructure: 'eventModelStructure',
   events: 'events',
   onCollapsedResourcesChange: 'onCollapsedResourcesChange',

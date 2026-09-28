@@ -163,6 +163,13 @@ StandaloneWeekView.propTypes /* remove-proptypes */ = {
     PropTypes.bool,
   ]),
   /**
+   * Configures how events are deleted.
+   * @default { confirmation: true }
+   */
+  eventDeletion: PropTypes.shape({
+    confirmation: PropTypes.bool,
+  }),
+  /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.

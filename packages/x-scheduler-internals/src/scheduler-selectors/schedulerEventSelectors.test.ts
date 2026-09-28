@@ -7,7 +7,7 @@ import {
 import { describe, it, expect } from 'vitest';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
-import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
+import { DEFAULT_EVENT_CREATION_CONFIG, DEFAULT_EVENT_DELETION_CONFIG } from '../constants';
 
 const defaultEvent = EventBuilder.new().build();
 const readOnlyEvent = EventBuilder.new().id(defaultEvent.id).readOnly().build();
@@ -101,6 +101,49 @@ describe('schedulerEventSelectors', () => {
         eventCreation: true,
       });
       expect(schedulerEventSelectors.creationConfig(state)).to.equal(false);
+    });
+  });
+
+  describe('deletionConfig', () => {
+    it('should return the default config when props.eventDeletion is not defined', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal(
+        DEFAULT_EVENT_DELETION_CONFIG,
+      );
+    });
+
+    it('should merge the default config with props.eventDeletion when it is an object', () => {
+      const customConfig = { confirmation: false };
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventDeletion: customConfig,
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal({
+        ...DEFAULT_EVENT_DELETION_CONFIG,
+        ...customConfig,
+      });
+    });
+
+    it('should keep the default when `confirmation` is explicitly `undefined`', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventDeletion: { confirmation: undefined },
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal(
+        DEFAULT_EVENT_DELETION_CONFIG,
+      );
+    });
+
+    it('should fill in `confirmation` when props.eventDeletion is an empty object', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventDeletion: {},
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal(
+        DEFAULT_EVENT_DELETION_CONFIG,
+      );
     });
   });
 

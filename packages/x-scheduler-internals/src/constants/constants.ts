@@ -1,4 +1,8 @@
-import type { SchedulerEventColor, SchedulerEventCreationConfig } from '../models';
+import type {
+  SchedulerEventColor,
+  SchedulerEventCreationConfig,
+  SchedulerEventDeletionConfig,
+} from '../models';
 
 export const EVENT_CREATION_PRECISION_MINUTE = 30;
 
@@ -33,4 +37,8 @@ export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 export const DEFAULT_EVENT_CREATION_CONFIG: SchedulerEventCreationConfig = {
   interaction: 'click',
   duration: 30,
+};
+
+export const DEFAULT_EVENT_DELETION_CONFIG: SchedulerEventDeletionConfig = {
+  confirmation: true,
 };

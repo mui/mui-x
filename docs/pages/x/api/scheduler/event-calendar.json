@@ -56,6 +56,10 @@
         "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
+    "eventDeletion": {
+      "type": { "name": "shape", "description": "{ confirmation?: bool }" },
+      "default": "{ confirmation: true }"
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
