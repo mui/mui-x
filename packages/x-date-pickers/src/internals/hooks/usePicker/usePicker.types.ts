@@ -77,6 +77,10 @@ export interface UsePickerBaseProps<
    */
   onAccept?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
   /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel?: () => void;
+  /**
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be used.
    */

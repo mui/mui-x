@@ -44,12 +44,14 @@ export const useField = <
 
   if (process.env.NODE_ENV !== 'production') {
     if ((forwardedProps as any).enableAccessibleFieldDOMStructure != null) {
-      warnOnce([
-        'MUI X: The `enableAccessibleFieldDOMStructure` prop has been removed.',
-        'The accessible DOM structure is now the default and only option.',
-        'You can safely remove the prop from your code.',
-        'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v8/).',
-      ]);
+      warnOnce(
+        [
+          'MUI X: The `enableAccessibleFieldDOMStructure` prop has been removed.',
+          'The accessible DOM structure is now the default and only option.',
+          'You can safely remove the prop from your code.',
+          'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v8/).',
+        ].join('\n'),
+      );
     }
   }
 
