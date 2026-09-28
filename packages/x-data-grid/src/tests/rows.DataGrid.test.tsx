@@ -11,6 +11,7 @@ import {
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { iconButtonClasses } from '@mui/material/IconButton';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Portal from '@mui/material/Portal';
 import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
@@ -377,6 +378,76 @@ describe('<DataGrid /> - Rows', () => {
 
         expect(actionButton).to.have.class(iconButtonClasses.sizeLarge);
         expect(icon).to.have.class(svgIconClasses.fontSizeInherit);
+      });
+
+      it('should render an anchor tag when href is set', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="details" href="/details/1" />,
+            ]}
+          />,
+        );
+        const actionLink = screen.getByRole('link', { name: 'details' });
+        expect(actionLink.tagName).to.equal('A');
+        expect(actionLink).to.have.attribute('href', '/details/1');
+      });
+
+      it('should render an anchor tag in the menu when href is set', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} label="details" href="/details/1" showInMenu />,
+            ]}
+          />,
+        );
+        await user.click(screen.getByRole('button', { name: 'more' }));
+        const actionLink = screen.getByRole('menuitem', { name: 'details' });
+        expect(actionLink.tagName).to.equal('A');
+        expect(actionLink).to.have.attribute('href', '/details/1');
+      });
+
+      it('should not override an explicit component when href is set', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem
+                key={1}
+                icon={<span />}
+                label="details"
+                href="/details/1"
+                component="span"
+              />,
+            ]}
+          />,
+        );
+        expect(screen.queryByRole('link', { name: 'details' })).to.equal(null);
+        expect(screen.getByLabelText('details').tagName).to.equal('SPAN');
+      });
+
+      it('should respect a themed LinkComponent when href is set', () => {
+        const LinkComponent = React.forwardRef<HTMLAnchorElement, any>((props, ref) => (
+          <a {...props} ref={ref} data-testid="themed-link" aria-label="themed link" />
+        ));
+        const theme = createTheme({
+          components: {
+            MuiButtonBase: {
+              defaultProps: {
+                LinkComponent,
+              },
+            },
+          },
+        });
+        render(
+          <ThemeProvider theme={theme}>
+            <TestCase
+              getActions={() => [
+                <GridActionsCellItem key={1} icon={<span />} label="details" href="/details/1" />,
+              ]}
+            />
+          </ThemeProvider>,
+        );
+        expect(screen.getByTestId('themed-link')).to.have.attribute('href', '/details/1');
       });
 
       it('should show in a menu the actions marked as showInMenu', async () => {
@@ -1751,6 +1822,19 @@ describe('<DataGrid /> - Rows', () => {
         [
           'MUI X: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
           'You cannot use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
+          '',
+          'Please remove one of these two props.',
+        ].join('\n'),
+      );
+    });
+
+    it('should throw a console error if height is used with autoHeight', () => {
+      expect(() => {
+        render(<TestCase height={300} autoHeight />);
+      }).toErrorDev(
+        [
+          'MUI X: `<DataGrid height={...} autoHeight={true} />` are not valid props.',
+          'You cannot use both the `height` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to its content.',
           '',
           'Please remove one of these two props.',
         ].join('\n'),

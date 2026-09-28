@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
-import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
@@ -17,16 +16,11 @@ import type {
 } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
-import {
-  schedulerEventSelectors,
-  schedulerOccurrencePlaceholderSelectors,
-} from '../../scheduler-selectors';
-import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
+import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
-import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
-import { generateOccurrenceFromEvent } from '../../internals/utils/event-utils';
+import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
@@ -45,10 +39,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // Internal props
     start,
     end,
+    dataTimezone,
     eventId,
     occurrenceKey,
     renderDragPreview,
-    id: idProp,
     isDraggable = false,
     nativeButton = false,
     // Props forwarded to the DOM element
@@ -62,18 +56,14 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { id: rootId } = useCalendarGridRootContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
-  const { index: cellIndex, hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
+  const { hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
   const hasPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isDefined);
-
-  // State hooks
-  const id = useId(idProp);
 
   // Feature hooks
   const getDraggedDay = useStableCallback((input: { clientX: number }) => {
@@ -93,21 +83,19 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     );
   });
 
-  const firstEventOfSeries = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-
-  const originalOccurrence = generateOccurrenceFromEvent({
-    event: firstEventOfSeries,
+  const getOriginalOccurrence = useOriginalOccurrence({
     eventId,
     occurrenceKey,
     start,
     end,
+    dataTimezone,
   });
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
     () => ({
       eventId,
       occurrenceKey,
-      originalOccurrence,
+      originalOccurrence: getOriginalOccurrence(),
       start: start.value,
       end: end.value,
     }),
@@ -155,8 +143,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Rendering hooks
 
-  const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
-
   const contextValue: CalendarGridDayEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
@@ -168,8 +154,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     props: [
       elementProps,
       {
-        id,
-        'aria-labelledby': `${columnHeaderId} ${id}`,
         style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
       },
       getButtonProps,
@@ -195,7 +179,8 @@ export namespace CalendarGridDayEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {}
+      useDraggableEvent.PublicParameters,
+      Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {}
 
   export interface SharedDragData {
     eventId: SchedulerEventId;

@@ -4,19 +4,21 @@ import { styled } from '@mui/material/styles';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
-import reactMajor from '@mui/x-internals/reactMajor';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   EventDragPreview,
   getPaletteVariants,
+  useEventAccessibleName,
   useSchedulerSlots,
 } from '@mui/x-scheduler/internals';
 import type {
@@ -28,7 +30,9 @@ import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremium
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 
 // React 18 drops `inert={true}` as an unknown boolean attribute and React 19 drops `inert=""`.
-const INERT_PROPS = (reactMajor >= 19 ? { inert: true } : { inert: '' }) as { inert?: boolean };
+const INERT_PROPS = (isReactVersionAtLeast(19) ? { inert: true } : { inert: '' }) as {
+  inert?: boolean;
+};
 
 const ARROW_DEPTH = 8; // px - depth of the chevron point
 const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
@@ -163,7 +167,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 ) {
   const {
     occurrence,
-    ariaLabelledBy,
     className,
     variant,
     id: idProp,
@@ -175,7 +178,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const { classes } = useEventTimelinePremiumStyledContext();
+  const { classes, localeText, getEventAriaLabel } = useEventTimelinePremiumStyledContext();
   const { slots, slotProps } = useSchedulerSlots<
     EventTimelinePremiumSlots,
     EventTimelinePremiumSlotProps
@@ -200,6 +203,19 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Feature hooks
   const id = useId(idProp);
+  const defaultAccessibleName = useEventAccessibleName({
+    occurrence,
+    isRecurring,
+    resourceName: rowResource?.title ?? null,
+    localeText,
+  });
+  const accessibleName = getEventAriaLabel
+    ? getEventAriaLabel({
+        occurrence,
+        resource: rowResource!,
+        defaultAriaLabel: defaultAccessibleName,
+      })
+    : defaultAccessibleName;
 
   const EventContent = slots.timelineEventContent;
   const content = EventContent ? (
@@ -218,7 +234,6 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     start: occurrence.displayTimezone.start,
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
-    'aria-labelledby': `${ariaLabelledBy} ${id}`,
     className: clsx(className, occurrence.className),
     style: {
       '--number-of-lines': 1,
@@ -257,8 +272,10 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       elementPosition={elementPosition}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      aria-label={accessibleName}
       {...sharedProps}
       aria-describedby={dependencySources.length > 0 ? `${id}-dependencies` : undefined}
       className={clsx(sharedProps.className, classes.event)}
@@ -273,9 +290,8 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         {content}
       </EventTimelinePremiumEventLinesClamp>
       {dependencySources.length > 0 && (
-        // `aria-hidden` keeps the description out of the name-from-content computed
-        // through the self-referential `aria-labelledby`; the `aria-describedby`
-        // reference still picks it up.
+        // Visually hidden, and `aria-hidden` so it is announced through the `aria-describedby`
+        // reference above rather than as a child of the event.
         <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
           {dependencySources
             .map((source) => DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title))

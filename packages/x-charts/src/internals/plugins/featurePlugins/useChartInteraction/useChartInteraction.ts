@@ -1,5 +1,5 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 import type { ChartPlugin } from '../../models';
 import type {
   Coordinate,

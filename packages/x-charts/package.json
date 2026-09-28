@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-charts-vendor": "workspace:^",
     "@mui/x-internal-gestures": "workspace:^",

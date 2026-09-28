@@ -423,6 +423,12 @@ DataGridRaw.propTypes /* remove-proptypes */ = {
    */
   getRowSpacing: PropTypes.func,
   /**
+   * The height of the Data Grid.
+   * Accepts a number (pixels) or any valid CSS height value (for example `'50vh'`).
+   * When set, the Data Grid no longer needs a parent element with an explicit height.
+   */
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */

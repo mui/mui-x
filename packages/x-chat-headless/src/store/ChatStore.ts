@@ -1,4 +1,4 @@
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import type {
   ChatConversation,
   ChatDraftAttachment,
@@ -8,7 +8,7 @@ import type {
   ChatUser,
 } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
-import type { ChatInternalState } from '../types/chat-state';
+import type { ChatHistoryStatus, ChatInternalState } from '../types/chat-state';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorGetterProps {
@@ -37,6 +37,11 @@ export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorG
   activeConversationId?: string;
   /** Internal flag used to distinguish a controlled `undefined` active conversation from an uncontrolled model. */
   activeConversationIdControlled?: boolean;
+  /**
+   * Internal flag set when the adapter implements `listMessages`.
+   * Lets the store start in the `'loading'` history status so the first paint doesn't show an empty thread.
+   */
+  hasHistoryLoader?: boolean;
   /** The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided. */
   initialActiveConversationId?: string;
   onActiveConversationChange?: (conversationId: string | undefined) => void;
@@ -210,6 +215,9 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       activeConversationId,
       composerValue,
     } = deriveStateFromParameters(parameters);
+    // The initial history fetch starts in a passive effect; mark it pending up front
+    // so the first committed frame can't be mistaken for an empty conversation.
+    const isHistoryPending = activeConversationId != null && parameters.hasHistoryLoader === true;
 
     super({
       conversationIds,
@@ -223,7 +231,8 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       isStreaming: false,
       streamingConversationId: undefined,
       hasMoreHistory: false,
-      isLoadingHistory: false,
+      isLoadingHistory: isHistoryPending,
+      historyStatus: isHistoryPending ? 'loading' : 'idle',
       historyCursor: undefined,
       composerValue,
       composerIsComposing: false,
@@ -281,7 +290,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     }
 
     this.parameters = parameters;
-    this.update(newState);
+    this.update(newState as ChatInternalState<Cursor>);
   };
 
   /**
@@ -542,6 +551,10 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.set('isLoadingHistory', value);
   };
 
+  public setHistoryStatus = (value: ChatHistoryStatus) => {
+    this.set('historyStatus', value);
+  };
+
   public setActiveStreamAbortController = (value: AbortController | null) => {
     this.set('activeStreamAbortController', value);
   };
@@ -604,6 +617,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       streamingConversationId: undefined,
       hasMoreHistory: false,
       isLoadingHistory: false,
+      historyStatus: 'idle',
       historyCursor: undefined,
       error: null,
     });
