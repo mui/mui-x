@@ -32,6 +32,7 @@ export function checkStyleSheetsLoaded(exportDoc: Document) {
       `MUI X Charts: The Content Security Policy blocked the styles copied to the export document.\n` +
         `The chart cannot be exported because the export process needs to read those styles.\n` +
         `Set the \`nonce\` export option to the nonce used by your Content Security Policy, or set the \`copyStyles\` export option to \`false\` to export the chart without the page styles.\n` +
+        `A policy that allows styles by hash instead of by nonce always blocks them, because the export rebuilds the styles from the page rules and their hashes no longer match, so \`copyStyles\` is the only option there.\n` +
         `See https://mui.com/x/react-charts/content-security-policy/ for more details.`,
     );
   }
