@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, onTestFinished } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 import { checkStyleSheetsLoaded } from './exportImage';
 
 describe('checkStyleSheetsLoaded', () => {
@@ -35,5 +36,36 @@ describe('checkStyleSheetsLoaded', () => {
     const exportDocument = createDocumentWithStyle('', null);
 
     expect(() => checkStyleSheetsLoaded(exportDocument)).not.to.throw();
+  });
+
+  /* JSDOM doesn't enforce a Content Security Policy, so only a browser shows that a blocked style has no sheet. */
+  describe.skipIf(isJSDOM)('with a real Content Security Policy', () => {
+    function createBlockedDocument(nonce?: string) {
+      const iframe = document.createElement('iframe');
+      document.body.appendChild(iframe);
+      onTestFinished(() => iframe.remove());
+      const exportDocument = iframe.contentDocument!;
+      const meta = exportDocument.createElement('meta');
+      meta.httpEquiv = 'Content-Security-Policy';
+      meta.content = "style-src 'nonce-export'";
+      exportDocument.head.appendChild(meta);
+      const style = exportDocument.createElement('style');
+      if (nonce) {
+        style.setAttribute('nonce', nonce);
+      }
+      style.textContent = 'body { margin: 0; }';
+      exportDocument.head.appendChild(style);
+      return exportDocument;
+    }
+
+    it('throws when the policy blocks a copied style', () => {
+      expect(() => checkStyleSheetsLoaded(createBlockedDocument())).to.throw(
+        /Content Security Policy/,
+      );
+    });
+
+    it('does not throw when the copied style carries the nonce', () => {
+      expect(() => checkStyleSheetsLoaded(createBlockedDocument('export'))).not.to.throw();
+    });
   });
 });
