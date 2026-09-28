@@ -47,7 +47,7 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
       <rootProps.slots.baseIconButton
         size="small"
         aria-label={label}
-        component={component ?? (href ? 'a' : undefined)}
+        component={component}
         href={href}
         {...other}
         onClick={handleClick}
