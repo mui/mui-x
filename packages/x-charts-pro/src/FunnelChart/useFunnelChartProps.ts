@@ -47,8 +47,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
         [
           `MUI X Charts: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
           `Ensure that the categoryAxis position is set to '${isHorizontal ? 'top' : 'left'}' or '${isHorizontal ? 'bottom' : 'right'}' for ${isHorizontal ? 'horizontal' : 'vertical'} layout.\n`,
-        ],
-        'warning',
+        ].join('\n'),
       );
     }
   }

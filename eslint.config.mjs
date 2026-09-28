@@ -309,6 +309,13 @@ export default defineConfig(
     },
   },
 
+  {
+    files: [`packages/**/*${EXTENSION_TS}`],
+    rules: {
+      'mui-x/no-computed-key-with-rest': 'error',
+    },
+  },
+
   // TODO remove, shouldn't disable prop-type generation rule.
   // lot of public components are missing it.
   {

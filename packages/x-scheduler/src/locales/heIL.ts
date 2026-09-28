@@ -1,36 +1,30 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
+import type { SchedulerWeekday } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-// Callbacks receive both stable English tokens and date-locale weekday strings.
-const weekdays = [
-  ['sunday', 'sun', 'ראשון', 'א'],
-  ['monday', 'mon', 'שני', 'ב'],
-  ['tuesday', 'tue', 'שלישי', 'ג'],
-  ['wednesday', 'wed', 'רביעי', 'ד'],
-  ['thursday', 'thu', 'חמישי', 'ה'],
-  ['friday', 'fri', 'שישי', 'ו'],
-  ['saturday', 'sat', 'שבת', 'ש'],
-];
+// Saturday has no letter form, so it is always written in full.
+const weekdays: Record<SchedulerWeekday, { full: string; letter?: string }> = {
+  sunday: { full: 'ראשון', letter: 'א' },
+  monday: { full: 'שני', letter: 'ב' },
+  tuesday: { full: 'שלישי', letter: 'ג' },
+  wednesday: { full: 'רביעי', letter: 'ד' },
+  thursday: { full: 'חמישי', letter: 'ה' },
+  friday: { full: 'שישי', letter: 'ו' },
+  saturday: { full: 'שבת' },
+};
 
-function localizeWeekday(value: string, abbreviated = false): string {
-  const normalized = value
-    .trim()
-    .toLowerCase()
-    .replace(/^יום\s+/, '')
-    .replace(/['’׳.]/g, '');
-  const weekday = weekdays.filter((names) => names.indexOf(normalized) !== -1)[0];
-  if (!weekday) {
-    return value;
-  }
-  return abbreviated && weekday[2] !== 'שבת' ? `יום ${weekday[3]}׳` : `יום ${weekday[2]}`;
+function localizeWeekday(weekday: SchedulerWeekday, abbreviated = false): string {
+  const { full, letter } = weekdays[weekday];
+  return abbreviated && letter ? `יום ${letter}׳` : `יום ${full}`;
 }
 
-function monthlyWeekday(ord: number, weekday: string, abbreviated = false): string {
+function monthlyWeekday(ord: number, weekday: SchedulerWeekday, abbreviated = false): string {
   const ordinals: Record<number, string> = {
     1: 'הראשון',
     2: 'השני',
@@ -71,7 +65,7 @@ const viewNames = {
   agenda: 'סדר יום',
 };
 
-const heILDialog: Partial<EventEditingLocaleText> = {
+const heILDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'צבע האירוע',
   colorSectionLabel: 'צבע',
@@ -114,11 +108,11 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   recurrenceWeeklyPresetLabel: ({ weekday }) => `מדי שבוע ב${localizeWeekday(weekday)}`,
   recurrenceMonthlyFrequencyLabel: 'חודשים',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `ב־${dayNumber} בחודש`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => monthlyWeekday(-1, weekDay),
-  recurrenceMonthlyLastWeekLabel: (weekDay) => monthlyWeekday(-1, weekDay, true),
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekday }) => monthlyWeekday(-1, weekday),
+  recurrenceMonthlyLastWeekLabel: ({ weekday }) => monthlyWeekday(-1, weekday, true),
   recurrenceMonthlyPresetLabel: (dayNumber) => `ב־${dayNumber} בכל חודש`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => monthlyWeekday(ord, weekDay),
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => monthlyWeekday(ord, weekDay, true),
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekday }) => monthlyWeekday(ord, weekday),
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekday }) => monthlyWeekday(ord, weekday, true),
   recurrenceWeeklyMonthlySpecificInputsLabel: 'מועד החזרה',
   recurrenceYearlyFrequencyLabel: 'שנים',
   recurrenceYearlyPresetLabel: (date) => `מדי שנה ב־${localizeDate(date)}`,
@@ -144,7 +138,23 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   title: 'על אילו אירועים להחיל את השינוי?',
 };
 
-const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const heILEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const heILCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'משאבים',
 
@@ -199,7 +209,6 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
       month: 'החודש הקודם',
       agenda: 'התקופה הקודמת',
     })[view],
-  resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
   weekAbbreviation: 'שב׳',
   weekNumberAriaLabel: (weekNumber) => `שבוע ${weekNumber}`,
 
@@ -221,13 +230,14 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'שם המשאב',
 };
 
-const heILTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const heILTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'שם המשאב',
 };
 
 export const heIL: SchedulerLocalization = getSchedulerLocalization({
   dialog: heILDialog,
+  event: heILEvent,
   calendar: heILCalendar,
   timeline: heILTimeline,
 });

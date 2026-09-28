@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const trTRDialog: Partial<EventEditingLocaleText> = {
+const trTRDialog: SchedulerDialogTranslations = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // colorSectionLabel: 'Color',
@@ -51,11 +52,21 @@ const trTRDialog: Partial<EventEditingLocaleText> = {
   // }) => `Repeats weekly on ${weekdayName}`,
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
-  // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,
-  // recurrenceMonthlyLastWeekLabel: weekDay => `${weekDay} last week`,
+  // recurrenceMonthlyLastWeekAriaLabel: ({
+  //   weekdayName
+  // }) => `${weekdayName} of the last week of the month`,
+  // recurrenceMonthlyLastWeekLabel: ({
+  //   weekdayName
+  // }) => `${weekdayName} last week`,
   // recurrenceMonthlyPresetLabel: dayNumber => `Repeats monthly on day ${dayNumber}`,
-  // recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} week ${ord} of the month`,
-  // recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} week ${ord}`,
+  // recurrenceMonthlyWeekNumberAriaLabel: ({
+  //   ord,
+  //   weekdayName
+  // }) => `${weekdayName} week ${ord} of the month`,
+  // recurrenceMonthlyWeekNumberLabel: ({
+  //   ord,
+  //   weekdayName
+  // }) => `${weekdayName} week ${ord}`,
   // recurrenceWeeklyMonthlySpecificInputsLabel: 'On',
   // recurrenceYearlyFrequencyLabel: 'years',
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
@@ -80,7 +91,23 @@ const trTRDialog: Partial<EventEditingLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const trTRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const trTREvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const trTRCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -118,7 +145,6 @@ const trTRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
-  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
   // AgendaView
@@ -135,13 +161,14 @@ const trTRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const trTRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const trTRTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };
 
 export const trTR: SchedulerLocalization = getSchedulerLocalization({
   dialog: trTRDialog,
+  event: trTREvent,
   calendar: trTRCalendar,
   timeline: trTRTimeline,
 });

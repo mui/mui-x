@@ -516,7 +516,6 @@ function EventList({
   occurrences: EventTimelinePremiumLayoutOccurrence[];
 }) {
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
-  const { schedulerId } = useEventTimelinePremiumStyledContext();
 
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
   const store = useEventTimelinePremiumStoreContext();
@@ -539,7 +538,6 @@ function EventList({
               <EventTimelinePremiumEvent
                 occurrence={occurrence}
                 elementPosition={occurrence.timelinePosition}
-                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
                 variant="regular"
                 resourceId={resourceId}
               />
@@ -561,7 +559,6 @@ function EventRowContent({
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }) {
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId } = useEventTimelinePremiumStyledContext();
   const { rowRef } = useTimelineGridEventRowContext();
   const { startEditing } = useEventEditingContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
@@ -593,7 +590,6 @@ function EventRowContent({
         <EventTimelinePremiumEvent
           ref={placeholderRef}
           occurrence={placeholder}
-          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
           variant="placeholder"
           resourceId={resourceId}
         />
