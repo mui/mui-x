@@ -427,7 +427,7 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should respect a themed LinkComponent when href is set', () => {
         const LinkComponent = React.forwardRef<HTMLAnchorElement, any>((props, ref) => (
-          <a {...props} ref={ref} data-testid="themed-link" />
+          <a {...props} ref={ref} data-testid="themed-link" aria-label="themed link" />
         ));
         const theme = createTheme({
           components: {
