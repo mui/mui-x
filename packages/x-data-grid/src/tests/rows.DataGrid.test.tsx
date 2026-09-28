@@ -11,6 +11,7 @@ import {
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { iconButtonClasses } from '@mui/material/IconButton';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Portal from '@mui/material/Portal';
 import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
@@ -422,6 +423,31 @@ describe('<DataGrid /> - Rows', () => {
         );
         expect(screen.queryByRole('link', { name: 'details' })).to.equal(null);
         expect(screen.getByLabelText('details').tagName).to.equal('SPAN');
+      });
+
+      it('should respect a themed LinkComponent when href is set', () => {
+        const LinkComponent = React.forwardRef<HTMLAnchorElement, any>((props, ref) => (
+          <a {...props} ref={ref} data-testid="themed-link" />
+        ));
+        const theme = createTheme({
+          components: {
+            MuiButtonBase: {
+              defaultProps: {
+                LinkComponent,
+              },
+            },
+          },
+        });
+        render(
+          <ThemeProvider theme={theme}>
+            <TestCase
+              getActions={() => [
+                <GridActionsCellItem key={1} icon={<span />} label="details" href="/details/1" />,
+              ]}
+            />
+          </ThemeProvider>,
+        );
+        expect(screen.getByTestId('themed-link')).to.have.attribute('href', '/details/1');
       });
 
       it('should show in a menu the actions marked as showInMenu', async () => {
