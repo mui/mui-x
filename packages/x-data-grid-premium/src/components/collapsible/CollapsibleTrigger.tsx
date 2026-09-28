@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import clsx from 'clsx';
@@ -46,10 +45,7 @@ const CollapsibleTriggerRoot = styled('button', {
     cursor: 'pointer',
   },
   ...(theme.focusVisible
-    ? {
-        ...applyInsetFocusVisible(1),
-        '&:focus-visible': theme.focusVisible,
-      }
+    ? { '&:focus-visible': theme.focusVisible }
     : {
         '&:focus-visible': {
           outline: `2px solid ${vars.colors.interactive.selected}`,

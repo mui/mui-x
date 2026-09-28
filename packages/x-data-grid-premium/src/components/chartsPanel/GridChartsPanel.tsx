@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
 import type { GridChartsConfigurationOptions } from '@mui/x-internals/types';
-import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import { useGridSelector, vars } from '@mui/x-data-grid-pro/internals';
 import { GridMenu, GridOverlay } from '@mui/x-data-grid-pro';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -75,10 +74,7 @@ const GridChartsPanelChartSelection = styled('button', {
     backgroundColor: vars.colors.interactive.hover,
   },
   ...(theme.focusVisible
-    ? {
-        ...applyInsetFocusVisible(1),
-        '&:focus-visible': theme.focusVisible,
-      }
+    ? { '&:focus-visible': theme.focusVisible }
     : {
         '&:focus-visible': {
           backgroundColor: vars.colors.interactive.hover,

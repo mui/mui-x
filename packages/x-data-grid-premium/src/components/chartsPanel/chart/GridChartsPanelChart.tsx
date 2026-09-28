@@ -55,7 +55,7 @@ const GridChartTypeButton = styled('button', {
   name: 'MuiDataGrid',
   slot: 'ChartTypeSelectorButton',
   shouldForwardProp: (prop) => prop !== 'isSelected',
-})<ChartTypeButtonProps>(({ isSelected }) => {
+})<ChartTypeButtonProps>(({ isSelected, theme }) => {
   return {
     backgroundColor: isSelected
       ? `color-mix(in srgb, ${vars.colors.interactive.selected} calc(${vars.colors.interactive.selectedOpacity} * 100%), ${vars.colors.background.base})`
@@ -81,6 +81,7 @@ const GridChartTypeButton = styled('button', {
         ? `color-mix(in srgb, ${vars.colors.interactive.selected} calc(${vars.colors.interactive.selectedOpacity} * 100%), ${vars.colors.background.base})`
         : vars.colors.interactive.hover,
     },
+    ...(theme.focusVisible && { '&:focus-visible': theme.focusVisible }),
   };
 });
 
