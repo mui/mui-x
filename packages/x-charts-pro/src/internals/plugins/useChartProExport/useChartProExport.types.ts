@@ -94,7 +94,7 @@ export interface UseChartProExportPublicApi {
   /**
    * Opens the browser's print dialog, which can be used to print the chart or export it as PDF.
    * @param {ChartPrintExportOptions} options Options to customize the print export.
-   * @returns {Promise<void>} A promise that rejects if the export fails.
+   * @returns {Promise<void>} A promise that resolves once the print dialog has been shown, which in most browsers means once it's closed, and rejects if the export fails.
    */
   exportAsPrint: (options?: ChartPrintExportOptions) => Promise<void>;
   /**

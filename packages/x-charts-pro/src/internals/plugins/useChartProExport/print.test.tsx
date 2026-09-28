@@ -20,7 +20,7 @@ describe.skipIf(isJSDOM)('printChart', () => {
     );
   }
 
-  it('resolves once the print dialog is opened', async () => {
+  it('resolves once the print dialog has been shown', async () => {
     const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
     let printed = false;
 
