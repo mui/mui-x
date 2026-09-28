@@ -142,7 +142,7 @@ The callback's return value decides what happens next:
 - Throw an error or reject to make the export fail with that error.
 - Return anything else to continue the export.
 
-If the callback returns a promise, the export waits for it, for example while you add replacement styles to `link.ownerDocument`.
+If the callback returns a promise, the export waits for it. This can be useful if you want to add replacement styles to `link.ownerDocument`.
 See [Handling export errors](#handling-export-errors) for how a cancelled or failed export is reported.
 
 When using the toolbar, you can provide `onStylesheetError` as an option using `slotProps`:

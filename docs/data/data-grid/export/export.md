@@ -248,7 +248,7 @@ The callback's return value decides what happens next:
 - Return or resolve to `false` to cancel the print. The print dialog doesn't open, the Data Grid is restored, no error is logged, and the promise returned by `apiRef.current.exportDataAsPrint()` resolves.
 - Throw an error or reject to make the print fail. The print dialog doesn't open, the Data Grid is restored, and the promise returned by `apiRef.current.exportDataAsPrint()` rejects with that error.
 - Return anything else to continue the print.
-- Return a promise to make the print wait for it, for example while you add replacement styles to `link.ownerDocument`.
+- Return a promise to make the print wait for it. This can be useful if you want to add replacement styles to `link.ownerDocument`.
 
 With the toolbar, the print is started for you, so cancel with `false` and report the failure from the callback:
 
