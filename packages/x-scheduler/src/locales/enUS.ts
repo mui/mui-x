@@ -2,6 +2,7 @@ import type {
   EventEditingLocaleText,
   EventCalendarLocaleText,
   EventTimelineLocaleText,
+  SchedulerEventLocaleText,
 } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
@@ -81,7 +82,21 @@ const enUSDialog: EventEditingLocaleText = {
   title: 'Apply this change to:',
 };
 
-const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> = {
+const enUSEvent: SchedulerEventLocaleText = {
+  // Event accessible name
+  eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  eventAriaLabelAllDay: 'All day',
+  eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
+  eventAriaLabel: ({ title, when, date, resource, recurring }) =>
+    [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const enUSCalendar: Omit<
+  EventCalendarLocaleText,
+  keyof EventEditingLocaleText | keyof SchedulerEventLocaleText
+> = {
   // ResourcesTree
   resourcesLabel: 'Resources',
 
@@ -125,7 +140,6 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,
   nextTimeSpan: (timeSpan) => `Next ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Previous ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Resource: ${resourceName}`,
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
 
@@ -144,13 +158,17 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventEditingLocaleText> 
   timelineResourceTitleHeader: 'Resource title',
 };
 
-const enUSTimeline: Omit<EventTimelineLocaleText, keyof EventEditingLocaleText> = {
+const enUSTimeline: Omit<
+  EventTimelineLocaleText,
+  keyof EventEditingLocaleText | keyof SchedulerEventLocaleText
+> = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Resource title',
 };
 
 export const enUS: SchedulerLocalization = getSchedulerLocalization({
   dialog: enUSDialog,
+  event: enUSEvent,
   calendar: enUSCalendar,
   timeline: enUSTimeline,
 });
