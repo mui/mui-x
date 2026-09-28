@@ -25,11 +25,13 @@ export function getInitialScrollTime(
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      warnOnce([
-        `MUI X Scheduler: \`${source}\` received an invalid \`initialScrollTime\` (${initialScrollTime}).`,
-        `\`initialScrollTime\` must be a displayed hour (${startTime} to ${endTime - 1}).`,
-        'Falling back to the default (7 AM when it is displayed, otherwise `startTime`).',
-      ]);
+      warnOnce(
+        [
+          `MUI X Scheduler: \`${source}\` received an invalid \`initialScrollTime\` (${initialScrollTime}).`,
+          `\`initialScrollTime\` must be a displayed hour (${startTime} to ${endTime - 1}).`,
+          'Falling back to the default (7 AM when it is displayed, otherwise `startTime`).',
+        ].join('\n'),
+      );
     }
   }
 
