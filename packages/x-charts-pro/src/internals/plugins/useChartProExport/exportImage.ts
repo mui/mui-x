@@ -21,9 +21,11 @@ export const getDrawDocument = async () => {
 /**
  * A style element that the Content Security Policy blocked has no `sheet`, which makes the export
  * fail with an error that doesn't point to the actual problem.
+ * `rasterizehtml` reads the rules of every style element in the document, so this checks all of
+ * them, not only the copied ones.
  */
 export function checkStyleSheetsLoaded(exportDoc: Document) {
-  const blockedStyle = Array.from(exportDoc.head.querySelectorAll('style')).some(
+  const blockedStyle = Array.from(exportDoc.querySelectorAll('style')).some(
     (style) => style.textContent && style.sheet === null,
   );
 
@@ -117,7 +119,6 @@ export async function exportImage(
           if (loaded.includes(false)) {
             return false;
           }
-          checkStyleSheetsLoaded(exportDoc);
         }
 
         await copyCanvasesContent(element, elementClone);
@@ -135,6 +136,11 @@ export async function exportImage(
       return;
     }
     await onBeforeExport(iframe);
+
+    if (copyStyles) {
+      /* After `onBeforeExport`, so that styles it adds are checked too. */
+      checkStyleSheetsLoaded(iframe.contentDocument!);
+    }
 
     const drawDocument = await drawDocumentPromise;
 

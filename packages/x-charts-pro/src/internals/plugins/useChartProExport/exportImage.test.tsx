@@ -212,4 +212,28 @@ describe.skipIf(isJSDOM)('exportImage', () => {
     expect(vi.mocked(HTMLAnchorElement.prototype.click).mock.calls.length).to.equal(0);
     expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
   });
+
+  it('rejects when a style added by `onBeforeExport` has no sheet', async () => {
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+
+    render(<Chart apiRef={apiRef} />);
+
+    const iframeCount = document.querySelectorAll('iframe').length;
+
+    await act(async () => {
+      await expect(
+        apiRef.current!.exportAsImage({
+          onBeforeExport: (iframe) => {
+            const style = iframe.contentDocument!.createElement('style');
+            /* A style the Content Security Policy blocks has no sheet. `type` reproduces that without a policy. */
+            style.type = 'text/less';
+            style.textContent = 'body { margin: 0; }';
+            iframe.contentDocument!.body.appendChild(style);
+          },
+        }),
+      ).rejects.toThrow(/Content Security Policy/);
+    });
+
+    expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+  });
 });
