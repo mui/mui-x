@@ -206,7 +206,9 @@ Higher values produce sharper images at the cost of a larger file size.
 When omitted, the export uses the larger of `window.devicePixelRatio` and `2`, guaranteeing a minimum 2x resolution on standard-DPI displays without regressing higher-DPI exports.
 
 ```tsx
-apiRef.current?.exportAsImage({ pixelRatio: 3 });
+apiRef.current?.exportAsImage({ pixelRatio: 3 }).catch((error) => {
+  // Report the failed export.
+});
 ```
 
 ### Handling export errors
