@@ -16,8 +16,7 @@ You enable it once on the Material UI theme, and the Data Grid picks it up—th
 const theme = createTheme({ focusVisible: true });
 ```
 
-Pass an object instead of `true` to choose the color, width, or offset.
-See [Focus visible](/material-ui/customization/focus-visible/) for everything the option accepts.
+See [Focus visible](/material-ui/customization/focus-visible/) for customization details.
 
 ## Usage
 
