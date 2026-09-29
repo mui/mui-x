@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { platform } from '@base-ui/utils/platform';
 import type { Draggable } from '@base-ui/react/draggable';
 import { schedulerExternalEventKind } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -29,14 +28,9 @@ export function useTimelineDragAutoScroll(params: {
   const { scrollerRef, pinnedLeftWidth } = params;
   const store = useEventTimelinePremiumStoreContext();
 
-  const pinnedLeftWidthRef = React.useRef(pinnedLeftWidth);
-  pinnedLeftWidthRef.current = pinnedLeftWidth;
-
   React.useEffect(() => {
     const scroller = scrollerRef.current;
-    // The library warns when attached to a non-scrollable element, which is what
-    // jsdom reports because it doesn't lay out.
-    if (!scroller || platform.env.jsdom) {
+    if (!scroller) {
       return undefined;
     }
 
@@ -45,11 +39,10 @@ export function useTimelineDragAutoScroll(params: {
       Element.prototype.getBoundingClientRect;
     scroller.getBoundingClientRect = function shiftedGetBoundingClientRect() {
       const rect = nativeGetBoundingClientRect.call(this);
-      const shift = pinnedLeftWidthRef.current;
       return DOMRect.fromRect({
-        x: rect.x + shift,
+        x: rect.x + pinnedLeftWidth,
         y: rect.y,
-        width: Math.max(0, rect.width - shift),
+        width: Math.max(0, rect.width - pinnedLeftWidth),
         height: rect.height,
       });
     };
@@ -57,7 +50,7 @@ export function useTimelineDragAutoScroll(params: {
     return () => {
       delete (scroller as Partial<HTMLElement>).getBoundingClientRect;
     };
-  }, [scrollerRef]);
+  }, [scrollerRef, pinnedLeftWidth]);
 
   const viewportProps: Draggable.Viewport.Props = {
     accept: [
@@ -66,7 +59,6 @@ export function useTimelineDragAutoScroll(params: {
       schedulerExternalEventKind,
       store.dependencyDragKind,
     ],
-    disabled: platform.env.jsdom,
   };
   return viewportProps;
 }

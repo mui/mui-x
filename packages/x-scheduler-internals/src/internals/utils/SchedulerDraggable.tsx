@@ -10,9 +10,9 @@ import { withDragPreview } from './withDragPreview';
  * Captures the occurrence and grab position once for an event move or resize,
  * and clears the placeholder when the drag does not land on a Scheduler target.
  */
-export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
-  TData extends SchedulerEventDragData,
->(props: SchedulerDraggable.Props<TData>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+export function SchedulerDraggable<TData extends SchedulerEventDragData>(
+  props: SchedulerDraggable.Props<TData>,
+) {
   const {
     getDragData,
     render,
@@ -28,7 +28,6 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
   return (
     <Draggable.Root
       {...other}
-      ref={forwardedRef}
       render={withDragPreview(render, preview)}
       onBeforeMoveStart={(value, eventDetails) => {
         onBeforeMoveStart?.(value, eventDetails);
@@ -45,9 +44,7 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
       }}
     />
   );
-}) as <TData extends SchedulerEventDragData>(
-  props: SchedulerDraggable.Props<TData> & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element;
+}
 
 export namespace SchedulerDraggable {
   export interface Props<TData extends SchedulerEventDragData> extends Omit<

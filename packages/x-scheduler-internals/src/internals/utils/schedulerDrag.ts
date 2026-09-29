@@ -12,7 +12,11 @@ import type { CalendarGridDayEventResizeHandler } from '../../calendar-grid/day-
 import type { CalendarGridTimeEvent } from '../../calendar-grid/time-event/CalendarGridTimeEvent';
 import type { CalendarGridTimeEventResizeHandler } from '../../calendar-grid/time-event-resize-handler/CalendarGridTimeEventResizeHandler';
 
-/** Identifies the occurrence an event move or resize started from. */
+/**
+ * Identifies the occurrence an event move or resize started from.
+ * The kinds keep a payload on purpose: with `undefined`, `Draggable.Target accept` no longer
+ * infers the drag data of the accepted kinds, and `source.dragData` types as `unknown`.
+ */
 export interface SchedulerEventDragPayload {
   eventId: SchedulerEventId;
   occurrenceKey: string;
@@ -39,11 +43,6 @@ export interface SchedulerAxisEventDragData extends SchedulerEventDragData {
    * How far from the start of the event the pointer grabbed it, in milliseconds of the axis.
    */
   initialCursorPositionInEventMs: number;
-}
-
-/** The snapshot captured when an event resize starts. */
-export interface SchedulerEventResizeDragData extends SchedulerEventDragData {
-  side: SchedulerEventSide;
 }
 
 /** The snapshot captured when an event resize starts on an axis surface. */

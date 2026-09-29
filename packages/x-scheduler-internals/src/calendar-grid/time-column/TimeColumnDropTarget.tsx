@@ -44,9 +44,6 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
   const getEventDropDates: SchedulerDropTarget.GetEventDropDates = ({ source, target }) => {
     // Move a Day Grid Event into the Time Grid
     if (schedulerDayEventMoveKind.matches(source)) {
-      if (!source.dragData) {
-        return undefined;
-      }
       const newStartDate = getLinearPointerDate({ target, surface });
       return {
         start: newStartDate,

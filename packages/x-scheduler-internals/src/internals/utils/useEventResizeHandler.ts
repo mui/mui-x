@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { Draggable } from '@base-ui/react/draggable';
 import type { SchedulerEventDragData, SchedulerEventDragPayload } from './schedulerDrag';
 import type { SchedulerDraggable } from './SchedulerDraggable';
@@ -32,10 +31,11 @@ export function useEventResizeHandler<TEventData extends SchedulerEventDragData>
   const { eventId, occurrenceKey } = context;
   const payload = React.useMemo(() => ({ eventId, occurrenceKey }), [eventId, occurrenceKey]);
 
-  const getDragData = useStableCallback((input: { clientX: number; clientY: number }) => ({
+  // Read again when the drag is about to start, so it always sees the latest event.
+  const getDragData = (input: { clientX: number; clientY: number }) => ({
     ...getEventDragData(input),
     side,
-  }));
+  });
 
   const draggableProps: Omit<
     SchedulerDraggable.Props<TEventData & { side: SchedulerEventSide }>,

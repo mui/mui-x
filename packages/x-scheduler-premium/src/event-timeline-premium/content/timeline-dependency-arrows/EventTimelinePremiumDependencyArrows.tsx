@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useDependencyDragCursor } from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
@@ -95,8 +95,6 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   // layout-effect registration keeps it in sync with the committed viewBox across a
   // virtualizer update mid-drag.
   const followCursor = creationPath !== null && !creationPath.snapped;
-  const followCursorRef = React.useRef(followCursor);
-  followCursorRef.current = followCursor;
   const lastCursorRef = React.useRef<{ clientX: number; clientY: number } | null>(null);
   if (creation === null) {
     lastCursorRef.current = null;
@@ -108,7 +106,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
       lastCursorRef.current = { clientX, clientY };
       const svg = svgRef.current;
       const line = dragLineRef.current;
-      if (!followCursorRef.current || svg === null || line === null) {
+      if (!followCursor || svg === null || line === null) {
         return;
       }
       // The svg rect folds in both scroll offsets; `offsetTop` maps the client point
@@ -119,9 +117,17 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
       const y = clientY - rect.top + offsetTop;
       line.setAttribute('d', `M ${sourceX} ${sourceY} L ${x} ${y}`);
     },
-    [sourceX, sourceY, offsetTop],
+    [followCursor, sourceX, sourceY, offsetTop],
   );
-  useDependencyDragCursor(creation !== null, followCursorMove);
+  // The monitor reads the latest callback before paint, so the cursor never causes a render.
+  Draggable.useMonitor({
+    accept: store.dependencyDragKind,
+    onMove: (_, { location }) => {
+      if (creation !== null) {
+        followCursorMove(location.current.input.clientX, location.current.input.clientY);
+      }
+    },
+  });
   // Redraw from the last tracked cursor when the line just un-snapped (or the
   // geometry shifted): the frame that un-snapped it already delivered its cursor move
   // while the line was still snapped, so waiting for the next move leaves a blink.
