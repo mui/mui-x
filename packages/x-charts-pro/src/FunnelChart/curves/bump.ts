@@ -9,7 +9,7 @@ import type { FunnelCurveGenerator, CurveOptions, Point } from './curve.types';
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/bump.js
  */
 export class Bump implements FunnelCurveGenerator {
-  private context: CanvasRenderingContext2D;
+  declare private context: CanvasRenderingContext2D;
 
   private isHorizontal: boolean = false;
 

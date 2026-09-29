@@ -39,9 +39,9 @@ export class MockGoodGesture extends Gesture<string> {
   public extra = () => {};
 
   // Add custom properties for testing complex options
-  public complexOption?: { nestedValue: number; enabled: boolean };
+  declare public complexOption?: { nestedValue: number; enabled: boolean };
 
-  public arrayOption?: string[];
+  declare public arrayOption?: string[];
 
   public clone(overrides?: Record<string, unknown>): MockGoodGesture {
     return new MockGoodGesture({
