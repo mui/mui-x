@@ -126,25 +126,31 @@ export const usePicker = <
     getStepNavigation,
   });
 
-  const [shouldResetField, setShouldResetField] = React.useState(false);
+  const [pendingFieldReset, setPendingFieldReset] = React.useState<{
+    valueBeforeClear: TValue;
+  } | null>(null);
 
   const clearValue = useEventCallback(() => {
     setValue(valueManager.emptyValue, { source: 'view' });
-    setShouldResetField(true);
+    setPendingFieldReset({ valueBeforeClear: value });
   });
 
   // Reset the partially typed sections once the empty value reaches the field.
   // With an empty value, the field's `clearValue` does not publish a change.
+  // A controlled value can arrive in a later render, so the reset waits for the next value.
   useEnhancedEffect(() => {
-    if (!shouldResetField) {
+    if (pendingFieldReset == null) {
       return;
     }
 
-    setShouldResetField(false);
     if (valueManager.areValuesEqual(adapter, value, valueManager.emptyValue)) {
+      setPendingFieldReset(null);
       internalFieldRef.current?.clearValue();
+    } else if (!valueManager.areValuesEqual(adapter, value, pendingFieldReset.valueBeforeClear)) {
+      // Another value replaced the cleared value.
+      setPendingFieldReset(null);
     }
-  }, [shouldResetField, value, valueManager, adapter]);
+  }, [pendingFieldReset, value, valueManager, adapter]);
 
   const setValueToToday = useEventCallback(() =>
     setValue(valueManager.getTodayValue(adapter, timezone, valueType), {
