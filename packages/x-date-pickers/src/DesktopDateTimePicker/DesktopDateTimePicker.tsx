@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import Divider from '@mui/material/Divider';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import type { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { validateDateTime, extractValidationProps } from '../validation';
+import { extractValidationProps } from '../validation';
 import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
+import { useDateTimeManager } from '../managers';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 import type { PickerOwnerState } from '../models';
 import {
@@ -106,6 +106,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateTimeManager();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<DesktopDateTimePickerProps>(
@@ -172,9 +173,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker(
   const { renderPicker } = useDesktopPicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date-time',
-    validator: validateDateTime,
+    manager,
     rendererInterceptor,
     steps: null,
   });
