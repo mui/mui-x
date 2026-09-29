@@ -61,22 +61,20 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     dataTimezone,
   });
 
-  const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
-    (input) => {
-      const initialCursorPositionInEventMs =
-        Math.max(adapter.getTime(columnStart) - start.timestamp, 0) +
-        getCursorPositionInElementMs({ input, elementRef: ref });
+  const getDragData: CalendarGridTimeEventContext['getDragData'] = useStableCallback((input) => {
+    const initialCursorPositionInEventMs =
+      Math.max(adapter.getTime(columnStart) - start.timestamp, 0) +
+      getCursorPositionInElementMs({ input, elementRef: ref });
 
-      return {
-        eventId,
-        occurrenceKey,
-        originalOccurrence: getOriginalOccurrence(),
-        start: start.value,
-        end: end.value,
-        initialCursorPositionInEventMs,
-      };
-    },
-  );
+    return {
+      eventId,
+      occurrenceKey,
+      originalOccurrence: getOriginalOccurrence(),
+      start: start.value,
+      end: end.value,
+      initialCursorPositionInEventMs,
+    };
+  });
 
   const elementPosition = useElementPositionInCollection({
     start,
@@ -97,7 +95,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     eventId,
     isDraggable,
     renderDragPreview,
-    getDragData: getSharedDragData,
+    getDragData,
     position: elementPosition,
   });
 
@@ -108,8 +106,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   });
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
-    () => ({ ...draggableEventContextValue, getSharedDragData }),
-    [draggableEventContextValue, getSharedDragData],
+    () => ({ ...draggableEventContextValue, getDragData }),
+    [draggableEventContextValue, getDragData],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -152,9 +150,7 @@ export namespace CalendarGridTimeEvent {
     interactive?: boolean;
   }
 
-  export interface SharedDragData extends SchedulerEventDragData {
+  export interface DragData extends SchedulerEventDragData {
     initialCursorPositionInEventMs: number;
   }
-
-  export interface DragData extends SharedDragData {}
 }

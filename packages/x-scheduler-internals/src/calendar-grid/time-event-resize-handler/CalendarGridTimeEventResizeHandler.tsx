@@ -41,7 +41,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
 
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
-      ...contextValue.getSharedDragData(input),
+      ...contextValue.getDragData(input),
       side,
     }));
 
@@ -80,7 +80,7 @@ export namespace CalendarGridTimeEventResizeHandler {
   export interface Props
     extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {}
 
-  export interface DragData extends CalendarGridTimeEvent.SharedDragData {
+  export interface DragData extends CalendarGridTimeEvent.DragData {
     side: SchedulerEventSide;
   }
 }

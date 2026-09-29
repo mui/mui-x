@@ -96,26 +96,24 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     dataTimezone,
   });
 
-  const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
-    (input) => {
-      // Measured on the axis so it stays consistent with the cursor offsets when a
-      // trimmed hour window compresses the days.
-      const offsetBeforeRowStart = Math.max(
-        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
-        0,
-      );
-      const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
-      return {
-        eventId,
-        occurrenceKey,
-        originalOccurrence: getOriginalOccurrence(),
-        start: start.value,
-        end: end.value,
-        initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
-        sourceResourceId: rowResourceId,
-      };
-    },
-  );
+  const getDragData: TimelineGridEventContext['getDragData'] = useStableCallback((input) => {
+    // Measured on the axis so it stays consistent with the cursor offsets when a
+    // trimmed hour window compresses the days.
+    const offsetBeforeRowStart = Math.max(
+      -dateToTimelineAxisOffsetMs(adapter, config, start.value),
+      0,
+    );
+    const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
+    return {
+      eventId,
+      occurrenceKey,
+      originalOccurrence: getOriginalOccurrence(),
+      start: start.value,
+      end: end.value,
+      initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
+      sourceResourceId: rowResourceId,
+    };
+  });
 
   const elementPosition = React.useMemo(
     () =>
@@ -142,7 +140,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     eventId,
     isDraggable,
     renderDragPreview,
-    getDragData: getSharedDragData,
+    getDragData,
     position: elementPosition,
   });
 
@@ -160,8 +158,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   };
 
   const contextValue: TimelineGridEventContext = React.useMemo(
-    () => ({ ...draggableEventContextValue, getSharedDragData }),
-    [draggableEventContextValue, getSharedDragData],
+    () => ({ ...draggableEventContextValue, getDragData }),
+    [draggableEventContextValue, getDragData],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -209,7 +207,7 @@ export namespace TimelineGridEvent {
     elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 
-  export interface SharedDragData extends SchedulerEventDragData {
+  export interface DragData extends SchedulerEventDragData {
     /**
      * Cursor offset from the event start, in axis milliseconds.
      */
@@ -219,6 +217,4 @@ export namespace TimelineGridEvent {
      */
     sourceResourceId: SchedulerResourceId;
   }
-
-  export interface DragData extends SharedDragData {}
 }

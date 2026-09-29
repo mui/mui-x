@@ -34,7 +34,7 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
 
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
-      ...contextValue.getSharedDragData(input),
+      ...contextValue.getDragData(input),
       side,
     }));
 
@@ -71,7 +71,7 @@ export namespace TimelineGridEventResizeHandler {
   export interface Props
     extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {}
 
-  export interface DragData extends TimelineGridEvent.SharedDragData {
+  export interface DragData extends TimelineGridEvent.DragData {
     side: SchedulerEventSide;
   }
 }

@@ -5,11 +5,11 @@ import type { TimelineGridEvent } from './TimelineGridEvent';
 
 export interface TimelineGridEventContext extends useDraggableEvent.ContextValue {
   /**
-   * Gets the drag data shared by the TimelineGrid.Event and TimelineGrid.EventResizeHandler parts.
+   * Gets the drag data of the TimelineGrid.Event, which its TimelineGrid.EventResizeHandler parts extend.
    * @param {{ clientX: number }} input The input object provided by the drag and drop library for the current event.
-   * @returns {TimelineGridEvent.SharedDragData} The shared drag data.
+   * @returns {TimelineGridEvent.DragData} The drag data.
    */
-  getSharedDragData: (input: { clientX: number }) => TimelineGridEvent.SharedDragData;
+  getDragData: (input: { clientX: number }) => TimelineGridEvent.DragData;
 }
 
 export const TimelineGridEventContext = React.createContext<TimelineGridEventContext | undefined>(
