@@ -197,6 +197,9 @@ export const useGridDataSourceNestedLazyLoader = (
   const rowsStale = React.useRef<boolean>(false);
   const draggedRowId = React.useRef<GridRowId | null>(null);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  // `false` after unmount. A request that settles later must not restart the polling,
+  // because no cleanup would clear that interval.
+  const isPollingAllowed = React.useRef(true);
   // Snapshot of the row tree taken right before a sort/filter triggered reset.
   // Used by nested data updates that fire later in the auto-expansion chain so
   // they can preserve expansion state below the first level.
@@ -327,7 +330,7 @@ export const useGridDataSourceNestedLazyLoader = (
   const startPolling = useEventCallback(() => {
     stopPolling();
 
-    if (props.dataSourceRevalidateMs <= 0) {
+    if (!isPollingAllowed.current || props.dataSourceRevalidateMs <= 0) {
       return;
     }
 
@@ -1143,6 +1146,14 @@ export const useGridDataSourceNestedLazyLoader = (
       stopPolling();
     }
   }, [isStrategyActive, props.dataSourceRevalidateMs, stopPolling]);
+
+  React.useEffect(() => {
+    isPollingAllowed.current = true;
+    return () => {
+      isPollingAllowed.current = false;
+      stopPolling();
+    };
+  }, [stopPolling]);
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {

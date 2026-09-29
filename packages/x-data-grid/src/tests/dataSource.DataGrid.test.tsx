@@ -12,7 +12,7 @@ import type {
   GridLogicOperator,
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
-import { actSleep, getCell } from 'test/utils/helperFn';
+import { actSleep, getCell, sleep } from 'test/utils/helperFn';
 import { vi, describe, it, expect } from 'vitest';
 import type { Mock } from 'vitest';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
@@ -746,6 +746,39 @@ describe('<DataGrid /> - Data source', () => {
       await waitFor(() => {
         expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
       });
+    });
+
+    it('should not restart the polling when a revalidation settles after unmount', async () => {
+      const revalidation = Promise.withResolvers<GridGetRowsResponse>();
+      let requestCount = 0;
+      // The first request loads the rows, the revalidations stay in flight until the unmount.
+      const getRows = vi.fn(() => {
+        requestCount += 1;
+        return requestCount === 1
+          ? Promise.resolve({ rows: [], rowCount: 0 })
+          : revalidation.promise;
+      });
+      const { unmount } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'id' }]}
+            dataSource={{ getRows }}
+            dataSourceCache={null}
+            dataSourceRevalidateMs={1}
+          />
+        </div>,
+      );
+      await waitFor(() => {
+        expect(getRows.mock.calls.length).to.be.greaterThan(1);
+      });
+
+      unmount();
+      await act(async () => {
+        revalidation.resolve({ rows: [], rowCount: 0 });
+      });
+      const callCountAfterUnmount = getRows.mock.calls.length;
+      await sleep(50);
+      expect(getRows.mock.calls.length).to.equal(callCountAfterUnmount);
     });
   });
 
