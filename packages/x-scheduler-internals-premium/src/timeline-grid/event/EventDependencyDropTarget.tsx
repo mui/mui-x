@@ -35,13 +35,7 @@ function EnabledEventDependencyDropTarget(props: EventDependencyDropTarget.Props
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, eventId);
 
   const payload = React.useMemo(
-    () => ({
-      dependencyTargetEventId: eventId,
-      dependencyTargetOccurrenceKey: occurrenceKey,
-      dependencyTargetResourceId: resourceId,
-      dependencyTargetSide: side,
-      dependencyTargetIsValid: !isRecurring && !isReadOnly,
-    }),
+    () => ({ eventId, occurrenceKey, resourceId, side, isValid: !isRecurring && !isReadOnly }),
     [eventId, occurrenceKey, resourceId, side, isRecurring, isReadOnly],
   );
 

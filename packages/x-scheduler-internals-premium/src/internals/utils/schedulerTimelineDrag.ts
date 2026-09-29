@@ -33,11 +33,20 @@ export interface SchedulerDependencyDragPayload {
 
 /** Identifies the event edge a create-dependency drag can land on. */
 export interface SchedulerDependencyTargetPayload {
-  dependencyTargetEventId: SchedulerEventId;
-  dependencyTargetOccurrenceKey: string;
-  dependencyTargetResourceId: SchedulerResourceId;
-  dependencyTargetSide: SchedulerEventSide;
-  dependencyTargetIsValid: boolean;
+  eventId: SchedulerEventId;
+  occurrenceKey: string;
+  resourceId: SchedulerResourceId;
+  /**
+   * The edge of the target the drop lands on: the hovered terminal's, or the start
+   * edge on the event body.
+   */
+  side: SchedulerEventSide;
+  /**
+   * `false` for a recurring or read-only event: hovering it gives no highlight or
+   * snap, but a drop still goes through `addDependency` so its rejection reaches the
+   * user.
+   */
+  isValid: boolean;
 }
 
 export const schedulerDependencyTargetKind = Draggable.createKind<SchedulerDependencyTargetPayload>(

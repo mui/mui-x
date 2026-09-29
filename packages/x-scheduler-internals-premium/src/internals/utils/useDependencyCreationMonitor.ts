@@ -2,11 +2,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { Draggable } from '@base-ui/react/draggable';
-import type {
-  SchedulerEventId,
-  SchedulerEventSide,
-  SchedulerResourceId,
-} from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import type { SchedulerDependencyRejectionReason } from '../../models';
@@ -14,40 +9,8 @@ import { getDependencyType } from './dependency-utils';
 import { schedulerDependencyTargetKind } from './schedulerTimelineDrag';
 import type { SchedulerDependencyDragPayload } from './schedulerTimelineDrag';
 
-interface DependencyDropTargetData {
-  targetEventId: SchedulerEventId;
-  targetOccurrenceKey: string | null;
-  targetResourceId: SchedulerResourceId | null;
-  /**
-   * The edge of the target the drop lands on: the hovered terminal's, or the start
-   * edge on the event body.
-   */
-  targetSide: SchedulerEventSide;
-  /**
-   * `false` for a recurring or read-only event: hovering it gives no highlight or
-   * snap, but a drop still goes through `addDependency` so its rejection reaches the
-   * user.
-   */
-  isValid: boolean;
-}
-
-function getDependencyDropTarget(
-  targets: Draggable.Location['targets'],
-): DependencyDropTargetData | null {
-  for (const target of targets) {
-    if (!schedulerDependencyTargetKind.matches(target)) {
-      continue;
-    }
-    const data = target.payload;
-    return {
-      targetEventId: data.dependencyTargetEventId,
-      targetOccurrenceKey: data.dependencyTargetOccurrenceKey,
-      targetResourceId: data.dependencyTargetResourceId,
-      targetSide: data.dependencyTargetSide,
-      isValid: data.dependencyTargetIsValid,
-    };
-  }
-  return null;
+function getDependencyTargetPayload(target: Draggable.Target.Record | null) {
+  return target !== null && schedulerDependencyTargetKind.matches(target) ? target.payload : null;
 }
 
 // TODO(dependencies public flip, #23420): source these messages from the locale text so the
@@ -73,26 +36,29 @@ export function useDependencyCreationMonitor() {
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
 
-  const updateCreation = (
-    { source }: { source: Draggable.Root.Record<SchedulerDependencyDragPayload> },
-    { location }: { location: Draggable.LocationHistory },
-  ) => {
+  const updateCreation = ({
+    source,
+    target,
+  }: {
+    source: Draggable.Root.Record<SchedulerDependencyDragPayload>;
+    target: Draggable.Target.Record | null;
+  }) => {
     if (!enabled) {
       return;
     }
     // Invalid targets (recurring or read-only events) never highlight or snap the
     // rubber band.
-    const target = getDependencyDropTarget(location.current.targets);
-    const validTarget = target?.isValid ? target : null;
+    const targetPayload = getDependencyTargetPayload(target);
+    const validTarget = targetPayload?.isValid ? targetPayload : null;
     store.setDependencyCreation({
       sourceEventId: source.payload.eventId,
       sourceOccurrenceKey: source.payload.occurrenceKey,
       sourceResourceId: source.payload.resourceId,
       sourceSide: source.payload.sourceSide,
-      targetEventId: validTarget?.targetEventId ?? null,
-      targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
-      targetResourceId: validTarget?.targetResourceId ?? null,
-      targetSide: validTarget?.targetSide ?? null,
+      targetEventId: validTarget?.eventId ?? null,
+      targetOccurrenceKey: validTarget?.occurrenceKey ?? null,
+      targetResourceId: validTarget?.resourceId ?? null,
+      targetSide: validTarget?.side ?? null,
     });
   };
 
@@ -102,20 +68,21 @@ export function useDependencyCreationMonitor() {
     // Only target changes touch the state: the cursor never enters it, the arrows
     // layer follows the pointer through the DOM.
     onTargetChange: updateCreation,
-    onMoveEnd: ({ source }, { location, canceled }) => {
+    onMoveEnd: ({ source, target }) => {
       if (!enabled) {
         return;
       }
       store.setDependencyCreation(null);
-      const target = canceled ? null : getDependencyDropTarget(location.current.targets);
-      if (target === null) {
+      // The target is null when the drag was canceled or released outside every target.
+      const targetPayload = getDependencyTargetPayload(target);
+      if (targetPayload === null) {
         return;
       }
 
       const result = store.addDependency({
         source: source.payload.eventId,
-        target: target.targetEventId,
-        type: getDependencyType(source.payload.sourceSide, target.targetSide),
+        target: targetPayload.eventId,
+        type: getDependencyType(source.payload.sourceSide, targetPayload.side),
       });
 
       if (result.status === 'rejected') {
