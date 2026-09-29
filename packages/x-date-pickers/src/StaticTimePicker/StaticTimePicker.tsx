@@ -7,7 +7,15 @@ import type { TimePickerViewRenderers } from '../TimePicker/shared';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { useTimeManager } from '../managers';
+import { validateTime } from '../validation';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+
+// Static pickers render no field, so they skip the field-only manager members.
+const manager = {
+  valueType: 'time' as const,
+  validator: validateTime,
+  internal_valueManager: singleItemValueManager,
+};
 
 type StaticTimePickerComponent = ((
   props: StaticTimePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -27,7 +35,6 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker(
   inProps: StaticTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const manager = useTimeManager();
   const defaultizedProps = useTimePickerDefaultizedProps<TimeView, StaticTimePickerProps>(
     inProps,
     'MuiStaticTimePicker',

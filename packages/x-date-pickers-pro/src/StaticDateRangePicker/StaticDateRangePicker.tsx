@@ -6,7 +6,15 @@ import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
 import type { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { useDateRangeManager } from '../managers';
+import { validateDateRange } from '../validation';
+import { rangeValueManager } from '../internals/utils/valueManagers';
+
+// Static pickers render no field, so they skip the field-only manager members.
+const manager = {
+  valueType: 'date' as const,
+  validator: validateDateRange,
+  internal_valueManager: rangeValueManager,
+};
 
 type StaticDateRangePickerComponent = ((
   props: StaticDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -26,7 +34,6 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
   inProps: StaticDateRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const manager = useDateRangeManager();
   const defaultizedProps = useDateRangePickerDefaultizedProps<StaticDateRangePickerProps>(
     inProps,
     'MuiStaticDateRangePicker',
