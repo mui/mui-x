@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { useRadarMetricData } from './useRadarMetricData';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../../ChartsText/defaultTextPlacement';
 import { ChartsText } from '../../ChartsText';
+import { getInlineTypographyStyle } from '../../internals/getInlineTypographyStyle';
 
 function RadarMetricLabels() {
   const { corners } = useRadarMetricData();
@@ -21,7 +22,7 @@ function RadarMetricLabels() {
           stroke="none"
           text={label}
           style={{
-            ...theme.typography.caption,
+            ...getInlineTypographyStyle(theme.typography.caption),
             fontSize: 12,
             lineHeight: 1.25,
             textAnchor: getDefaultTextAnchor(180 + angle),
