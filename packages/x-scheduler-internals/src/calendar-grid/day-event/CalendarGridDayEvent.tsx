@@ -6,16 +6,12 @@ import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { schedulerDayEventMoveKind } from '../../internals/utils/schedulerDrag';
+import type { SchedulerEventDragData } from '../../internals/utils/schedulerDrag';
 import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
-import type {
-  SchedulerEventId,
-  SchedulerEventOccurrence,
-  SchedulerResourceId,
-  TemporalSupportedObject,
-} from '../../models';
+import type { TemporalSupportedObject } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
@@ -105,7 +101,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const getDragData = useStableCallback((input) => ({
     ...getSharedDragData(input),
-    source: 'CalendarGridDayEvent' as const,
     draggedDay: getDraggedDay(input),
   }));
 
@@ -122,7 +117,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     contextValue: draggableEventContextValue,
   } = useDraggableEvent({
     kind: schedulerDayEventMoveKind,
-    source: 'CalendarGridDayEvent',
     start,
     end,
     occurrenceKey,
@@ -184,17 +178,9 @@ export namespace CalendarGridDayEvent {
       useDraggableEvent.PublicParameters,
       Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {}
 
-  export interface SharedDragData {
-    eventId: SchedulerEventId;
-    occurrenceKey: string;
-    originalOccurrence: SchedulerEventOccurrence;
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
-    sourceResourceId?: SchedulerResourceId;
-  }
+  export interface SharedDragData extends SchedulerEventDragData {}
 
   export interface DragData extends SharedDragData {
-    source: 'CalendarGridDayEvent';
     draggedDay: TemporalSupportedObject;
   }
 }

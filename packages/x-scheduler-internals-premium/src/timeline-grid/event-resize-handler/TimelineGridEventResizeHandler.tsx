@@ -1,6 +1,5 @@
 'use client';
 import {
-  schedulerTimelineEventResizeKind,
   SchedulerDraggable,
   useEventResizeHandler,
   isResizeHandlerEnabled,
@@ -12,6 +11,7 @@ import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
 import { useTimelineGridEventContext } from '../event/TimelineGridEventContext';
 import type { TimelineGridEvent } from '../event/TimelineGridEvent';
+import { schedulerTimelineEventResizeKind } from '../../internals/utils/schedulerTimelineDrag';
 
 export const TimelineGridEventResizeHandler = React.forwardRef(
   function TimelineGridEventResizeHandler(
@@ -32,13 +32,9 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
     // Context hooks
     const contextValue = useTimelineGridEventContext();
 
-    // Ref hooks
-    const ref = React.useRef<HTMLDivElement>(null);
-
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
       ...contextValue.getSharedDragData(input),
-      source: 'TimelineGridEventResizeHandler' as const,
       side,
     }));
 
@@ -50,19 +46,18 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
 
     const { state, draggableProps } = useEventResizeHandler({
       kind: schedulerTimelineEventResizeKind,
-      source: 'TimelineGridEventResizeHandler',
       eventId: contextValue.eventId,
       occurrenceKey: contextValue.occurrenceKey,
-      ref,
       side,
       enabled,
       getDragData,
+      dragCursor: 'ew-resize',
     });
 
     const element = useRenderElement('div', componentProps, {
       enabled,
       state,
-      ref: [forwardedRef, ref],
+      ref: forwardedRef,
       props: [elementProps],
     });
 
@@ -77,7 +72,6 @@ export namespace TimelineGridEventResizeHandler {
     extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {}
 
   export interface DragData extends TimelineGridEvent.SharedDragData {
-    source: 'TimelineGridEventResizeHandler';
     side: SchedulerEventSide;
   }
 }

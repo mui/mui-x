@@ -1,4 +1,4 @@
-import { screen, act, fireEvent } from '@mui/internal-test-utils';
+import { screen, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import {
   createMatchMedia,
   createSchedulerRenderer,
@@ -7,14 +7,15 @@ import {
   clientYForTime,
   getResizeHandle,
   simulatePointerResize,
+  dropDrag,
   cancelDrag,
 } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 /**
- * Arming and pointer resize are device-adaptive, so they work in the normal Day View too. Driven via
- * {@link simulatePointerResize}, whose non-`mouse` events take the pointer-resize path.
+ * Arming and touch resize are device-adaptive, so they work in the normal Day View too. Driven via
+ * {@link simulatePointerResize}, which presses the handle with a finger or a pen.
  */
 
 describe('DayView - touch resize', () => {
@@ -28,7 +29,6 @@ describe('DayView - touch resize', () => {
   afterEach(() => {
     window.matchMedia = originalMatchMedia;
     cancelDrag();
-    vi.useRealTimers();
   });
 
   function getTimeGridColumn(): HTMLElement {
@@ -47,8 +47,9 @@ describe('DayView - touch resize', () => {
 
     render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
 
-    // Geometry resolver maps pointer Y to a time via the column's bounds.
+    // The column maps pointer Y to a time, and the event tells where the pointer grabbed it.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
+    mockElementBounds(getEvent(), { top: clientYForTime(0, 24, 10), height: 60, width: 200 });
 
     return { onEventsChange };
   }
@@ -71,10 +72,13 @@ describe('DayView - touch resize', () => {
     fireEvent.click(eventElement);
 
     const endHandle = getResizeHandle(eventElement, 'end');
-    expect(endHandle.style.touchAction).toBe('none');
 
     await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -85,52 +89,66 @@ describe('DayView - touch resize', () => {
   });
 
   it.each(['touch', 'pen'] as const)(
-    'keeps %s resizing in the direct gesture after Base UI activation',
+    'resizes with %s from the first contact, without a hold',
     async (pointerType) => {
       const { onEventsChange } = renderResizableEvent();
       const eventElement = getEvent();
       fireEvent.click(eventElement);
       const handle = getResizeHandle(eventElement, 'end');
-      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 
       await act(async () => {
         simulatePointerResize({
           handle,
           pointerType,
           from: { clientY: clientYForTime(0, 24, 11) },
-          to: { clientY: clientYForTime(0, 24, 11) },
+          to: { clientY: clientYForTime(0, 24, 16) },
           hold: true,
         });
-        // Hold still past the touch activation threshold before moving.
-        await vi.advanceTimersByTimeAsync(300);
       });
 
-      fireEvent.pointerMove(handle, {
-        pointerId: 1,
-        pointerType,
-        isPrimary: true,
-        buttons: 1,
-        clientY: clientYForTime(0, 24, 16),
+      await waitFor(() => {
+        expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).not.toBe(null);
       });
-      expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).not.toBe(null);
-      expect(document.querySelector('[data-dragging]')).toBe(null);
+      expect(handle.hasAttribute('data-dragging')).toBe(true);
       expect(onEventsChange).not.toHaveBeenCalled();
 
-      fireEvent.pointerUp(handle, {
-        pointerId: 1,
-        pointerType,
-        clientY: clientYForTime(0, 24, 16),
+      await act(async () => {
+        dropDrag(getTimeGridColumn(), { clientY: clientYForTime(0, 24, 16), pointerType });
       });
       expect(onEventsChange).toHaveBeenCalledTimes(1);
       expect(new Date(onEventsChange.mock.calls[0][0][0].end).getUTCHours()).toBe(16);
 
+      // The events are uncontrolled here, so the event still ends at 11:00 and a second resize works.
       await act(async () => {
-        simulatePointerResize({ handle, pointerType, to: { clientY: clientYForTime(0, 24, 15) } });
+        simulatePointerResize({
+          handle,
+          pointerType,
+          from: { clientY: clientYForTime(0, 24, 11) },
+          to: { clientY: clientYForTime(0, 24, 15) },
+        });
       });
       expect(onEventsChange).toHaveBeenCalledTimes(2);
       expect(new Date(onEventsChange.mock.calls[1][0][0].end).getUTCHours()).toBe(15);
     },
   );
+
+  it('keeps the resize on its column when the finger drifts sideways', async () => {
+    const { onEventsChange } = renderResizableEvent();
+    const eventElement = getEvent();
+    fireEvent.click(eventElement);
+
+    await act(async () => {
+      simulatePointerResize({
+        handle: getResizeHandle(eventElement, 'end'),
+        from: { clientX: 100, clientY: clientYForTime(0, 24, 11) },
+        // Far beyond the 200px wide column.
+        to: { clientX: 900, clientY: clientYForTime(0, 24, 16) },
+      });
+    });
+
+    expect(onEventsChange).toHaveBeenCalledTimes(1);
+    expect(new Date(onEventsChange.mock.calls[0][0][0].end).getUTCHours()).toBe(16);
+  });
 
   // The preview hosts the resize handles but must never be a focusable button, nor use
   // `aria-hidden` to hide one (an `aria-hidden-focus` violation).
@@ -144,13 +162,18 @@ describe('DayView - touch resize', () => {
     await act(async () => {
       simulatePointerResize({
         handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
         to: { clientY: clientYForTime(0, 24, 16) },
         hold: true,
       });
     });
 
+    await waitFor(() => {
+      expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).not.to.equal(
+        null,
+      );
+    });
     const placeholder = document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')!;
-    expect(placeholder).not.to.equal(null);
     expect(placeholder).not.to.have.attribute('role');
     expect(placeholder).not.to.have.attribute('tabindex');
     expect(placeholder).not.to.have.attribute('aria-hidden');
@@ -168,6 +191,7 @@ describe('DayView - touch resize', () => {
     await act(async () => {
       simulatePointerResize({
         handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
         to: { clientY: clientYForTime(0, 24, 16) },
         cancel: true,
       });

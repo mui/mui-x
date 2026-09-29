@@ -11,10 +11,8 @@ import type {
   SchedulerOccurrencePlaceholderExternalDragData,
   RenderDragPreviewParameters,
 } from '../models';
-import {
-  SchedulerFloatingPreview,
-  schedulerPreviewStyle,
-} from '../internals/utils/SchedulerDragPreview';
+import { SchedulerDragPreview } from '../internals/utils/SchedulerDragPreview';
+import { withDragPreview } from '../internals/utils/withDragPreview';
 
 function StandaloneEventElement({
   componentProps,
@@ -43,22 +41,12 @@ function StandaloneEventElement({
     ref: [ref, buttonRef],
     props: [dragElementProps, elementProps, getButtonProps],
   });
-  return React.isValidElement<{ children?: React.ReactNode }>(element)
-    ? React.cloneElement(element, {
-        children: (
-          <React.Fragment>
-            {element.props.children}
-            <Draggable.Preview offset="pointer" style={schedulerPreviewStyle}>
-              {({ location }) => (
-                <SchedulerFloatingPreview location={location}>
-                  {renderDragPreview({ type: 'standalone-event', data })}
-                </SchedulerFloatingPreview>
-              )}
-            </Draggable.Preview>
-          </React.Fragment>
-        ),
-      })
-    : element;
+  return withDragPreview(
+    element,
+    <SchedulerDragPreview>
+      {() => renderDragPreview({ type: 'standalone-event', data })}
+    </SchedulerDragPreview>,
+  );
 }
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(

@@ -11,6 +11,9 @@ import {
   cancelDrag,
 } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '../../event-calendar-provider';
+import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
+import type { SchedulerStoreInContext } from '../../use-scheduler-store-context';
+import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 import { useDraggableEvent } from './useDraggableEvent';
 import { SchedulerDraggable } from './SchedulerDraggable';
@@ -23,7 +26,6 @@ const accept = [schedulerDayEventMoveKind];
 
 function Source() {
   const { draggableProps } = useDraggableEvent<CalendarGridDayEvent.DragData>({
-    source: 'CalendarGridDayEvent',
     kind: schedulerDayEventMoveKind,
     eventId: occurrence.id,
     occurrenceKey: occurrence.key,
@@ -33,7 +35,6 @@ function Source() {
     isDraggable: true,
     renderDragPreview: () => null,
     getDragData: () => ({
-      source: 'CalendarGridDayEvent',
       eventId: occurrence.id,
       occurrenceKey: occurrence.key,
       originalOccurrence: occurrence,
@@ -43,6 +44,12 @@ function Source() {
     }),
   });
   return <SchedulerDraggable {...draggableProps} render={<div data-testid="source" />} />;
+}
+
+function StoreProbe({ onStore }: { onStore: (store: SchedulerStoreInContext<any, any>) => void }) {
+  const store = useSchedulerStoreContext();
+  React.useEffect(() => onStore(store), [store, onStore]);
+  return null;
 }
 
 describe('useDraggableEvent', () => {
@@ -86,5 +93,55 @@ describe('useDraggableEvent', () => {
     expect(
       adapter.isEqual(adapter.date(onEventsChange.mock.calls[0][0][0].start, 'default'), start),
     ).toBe(true);
+  });
+
+  it('should clear the placeholder unless the drag lands on a Scheduler target', async () => {
+    let store!: SchedulerStoreInContext<any, any>;
+    const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
+    const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+    render(
+      <EventCalendarProvider events={[builder.build()]} resources={[]}>
+        <StoreProbe
+          onStore={(value) => {
+            store = value;
+          }}
+        />
+        <Source />
+        <SchedulerDropTarget
+          surfaceType="day-grid"
+          accept={accept}
+          getEventDropData={({ source, getDataFromInside }) =>
+            getDataFromInside(source.dragData!, start, end)
+          }
+          render={<div data-testid="target" />}
+        />
+        <div data-testid="elsewhere" />
+      </EventCalendarProvider>,
+    );
+    const getPlaceholder = () => schedulerOccurrencePlaceholderSelectors.value(store.state);
+
+    // Canceled over a target.
+    startDrag(screen.getByTestId('source'));
+    await act(async () => {
+      moveDrag(screen.getByTestId('target'), { clientX: 100 });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    expect(getPlaceholder()).not.toBe(null);
+    cancelDrag();
+    expect(getPlaceholder()).toBe(null);
+
+    // Released outside every target.
+    startDrag(screen.getByTestId('source'));
+    await act(async () => {
+      moveDrag(screen.getByTestId('target'), { clientX: 100 });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    expect(getPlaceholder()).not.toBe(null);
+    dropDrag(document.body, { clientX: 300 });
+    expect(getPlaceholder()).toBe(null);
   });
 });

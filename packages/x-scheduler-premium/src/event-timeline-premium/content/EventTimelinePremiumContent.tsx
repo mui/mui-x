@@ -35,7 +35,7 @@ import {
   useEventEditingContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals/internals';
+import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals-premium/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';

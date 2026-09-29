@@ -2,10 +2,17 @@ import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { afterEach, describe, expect, it } from 'vitest';
-import { createSchedulerRenderer, startDrag, moveDrag, cancelDrag } from 'test/utils/scheduler';
+import {
+  createSchedulerRenderer,
+  ResourceBuilder,
+  startDrag,
+  moveDrag,
+  cancelDrag,
+} from 'test/utils/scheduler';
 import { absorbObserverFrames } from 'test/utils/scheduler/absorb-observer-frames';
 import { isJSDOM } from 'test/utils/skipIf';
-import { schedulerExternalEventKind } from './schedulerDrag';
+import { schedulerExternalEventKind } from '@mui/x-scheduler-internals/internals';
+import { EventTimelinePremiumProvider } from '../../event-timeline-premium-provider';
 import { useTimelineDragAutoScroll } from './useTimelineDragAutoScroll';
 
 function Timeline() {
@@ -38,9 +45,9 @@ describe.skipIf(isJSDOM)('timeline drag auto-scroll', () => {
 
   it('should scroll at the events edge and exclude the pinned title column', async () => {
     const view = render(
-      <Draggable.Provider>
+      <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
         <Timeline />
-      </Draggable.Provider>,
+      </EventTimelinePremiumProvider>,
     );
     const grid = screen.getByTestId('timeline');
     expect(grid.getBoundingClientRect().left).toBe(80);

@@ -68,8 +68,9 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
 
   function renderResizableRecurringEvent({
     start = '2025-07-03T10:00:00Z',
+    displayStartHour = 10,
     displayTimezone,
-  }: { start?: string; displayTimezone?: TemporalTimezone } = {}) {
+  }: { start?: string; displayStartHour?: number; displayTimezone?: TemporalTimezone } = {}) {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .id('event-1')
@@ -88,8 +89,13 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
       />,
     );
 
-    // Geometry resolver maps pointer Y to a time via the column's bounds.
+    // The column maps pointer Y to a time, and the event tells where the pointer grabbed it.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
+    mockElementBounds(screen.getByRole('button', { name: /Daily Standup/i }), {
+      top: clientYForTime(0, 24, displayStartHour),
+      height: 60,
+      width: 200,
+    });
 
     return { user, onEventsChange };
   }
@@ -123,7 +129,11 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
 
     const endHandle = getResizeHandle(eventElement, 'end');
     await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     // The recurring resize defers the commit to the scope dialog instead of applying immediately.
@@ -142,13 +152,18 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     // The visible day is July 2 in New York; the July 3 02:00 UTC occurrence shows on it at 22:00.
     const { user, onEventsChange } = renderResizableRecurringEvent({
       start: '2025-07-03T02:00:00Z',
+      displayStartHour: 22,
       displayTimezone: 'America/New_York',
     });
     const eventElement = armEvent();
 
     const startHandle = getResizeHandle(eventElement, 'start');
     await act(async () => {
-      simulatePointerResize({ handle: startHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: startHandle,
+        from: { clientY: clientYForTime(0, 24, 22) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     await screen.findByText(/Apply this change to:/i);
@@ -172,7 +187,11 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
 
     const endHandle = getResizeHandle(eventElement, 'end');
     await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     await screen.findByText(/Apply this change to:/i);
@@ -189,7 +208,11 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
 
     const endHandle = getResizeHandle(eventElement, 'end');
     await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     await screen.findByText(/Apply this change to:/i);

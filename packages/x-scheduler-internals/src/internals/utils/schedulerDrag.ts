@@ -2,36 +2,39 @@ import { Draggable } from '@base-ui/react/draggable';
 import type {
   EventSurfaceType,
   SchedulerEventId,
+  SchedulerEventOccurrence,
   SchedulerEventSide,
   SchedulerResourceId,
   SchedulerOccurrencePlaceholderExternalDragData,
+  TemporalSupportedObject,
 } from '../../models';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 import type { CalendarGridDayEventResizeHandler } from '../../calendar-grid/day-event-resize-handler/CalendarGridDayEventResizeHandler';
 import type { CalendarGridTimeEvent } from '../../calendar-grid/time-event/CalendarGridTimeEvent';
 import type { CalendarGridTimeEventResizeHandler } from '../../calendar-grid/time-event-resize-handler/CalendarGridTimeEventResizeHandler';
 
-interface EventDropDataLookupBase {
-  CalendarGridTimeEvent: CalendarGridTimeEvent.DragData;
-  CalendarGridTimeEventResizeHandler: CalendarGridTimeEventResizeHandler.DragData;
-  CalendarGridDayEvent: CalendarGridDayEvent.DragData;
-  CalendarGridDayEventResizeHandler: CalendarGridDayEventResizeHandler.DragData;
-  ExternalEvent: SchedulerExternalEventDragPayload;
+/** Identifies the occurrence an event move or resize started from. */
+export interface SchedulerEventDragPayload {
+  eventId: SchedulerEventId;
+  occurrenceKey: string;
 }
 
-export interface EventDropDataLookup extends EventDropDataLookupBase {}
+/** The snapshot captured when an event move or resize starts. */
+export interface SchedulerEventDragData extends SchedulerEventDragPayload {
+  originalOccurrence: SchedulerEventOccurrence;
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
+  /**
+   * The id of the resource row the occurrence was dragged from.
+   * Only rows that know which resource they represent, such as the Event Timeline Premium, report it.
+   */
+  sourceResourceId?: SchedulerResourceId;
+}
 
-export type EventDropData = EventDropDataLookup[keyof EventDropDataLookup];
-
-export type SchedulerEventResizeData = Extract<EventDropData, { side: SchedulerEventSide }>;
-export type SchedulerEventMoveData = Exclude<
-  EventDropData,
-  SchedulerEventResizeData | SchedulerExternalEventDragPayload
->;
-export type SchedulerEventDragData = SchedulerEventMoveData | SchedulerEventResizeData;
-export type SchedulerEventDragPayload<
-  TData extends SchedulerEventDragData = SchedulerEventDragData,
-> = Pick<TData, 'source' | 'eventId' | 'occurrenceKey'>;
+/** The snapshot captured when an event resize starts. */
+export interface SchedulerEventResizeDragData extends SchedulerEventDragData {
+  side: SchedulerEventSide;
+}
 
 /** Data supplied by an external draggable that creates an event in Scheduler. */
 export interface SchedulerExternalEventDragPayload {
@@ -41,77 +44,30 @@ export interface SchedulerExternalEventDragPayload {
   onEventDrop?: () => void;
 }
 
-export interface SchedulerDependencyDragPayload {
-  eventId: SchedulerEventId;
-  occurrenceKey: string;
-  resourceId: SchedulerResourceId;
-  sourceSide: SchedulerEventSide;
-  storeContext: unknown;
-}
-
-export interface SchedulerDependencyTargetPayload {
-  dependencyTargetEventId: SchedulerEventId;
-  dependencyTargetOccurrenceKey: string;
-  dependencyTargetResourceId: SchedulerResourceId;
-  dependencyTargetSide: SchedulerEventSide;
-  dependencyTargetIsValid: boolean;
-}
-
-// Global kinds let separately mounted calendars, timelines, and external events interact.
-function createEventKind<TData extends SchedulerEventDragData>(key: string) {
-  return Draggable.createGlobalKind<SchedulerEventDragPayload<TData>, TData>(
-    `@mui/x-scheduler/${key}`,
-  );
+export function createSchedulerEventKind<TData extends SchedulerEventDragData>(name: string) {
+  return Draggable.createKind<SchedulerEventDragPayload, TData>(`scheduler-${name}`);
 }
 
 export const schedulerDayEventMoveKind =
-  createEventKind<CalendarGridDayEvent.DragData>('day-event-move');
+  createSchedulerEventKind<CalendarGridDayEvent.DragData>('day-event-move');
 export const schedulerTimeEventMoveKind =
-  createEventKind<CalendarGridTimeEvent.DragData>('time-event-move');
+  createSchedulerEventKind<CalendarGridTimeEvent.DragData>('time-event-move');
 export const schedulerDayEventResizeKind =
-  createEventKind<CalendarGridDayEventResizeHandler.DragData>('day-event-resize');
+  createSchedulerEventKind<CalendarGridDayEventResizeHandler.DragData>('day-event-resize');
 export const schedulerTimeEventResizeKind =
-  createEventKind<CalendarGridTimeEventResizeHandler.DragData>('time-event-resize');
-// Keep the lookup in the declaration so premium can augment it after this package is built.
-export const schedulerTimelineEventMoveKind: Draggable.Kind<
-  SchedulerEventDragPayload<Extract<EventDropData, { source: 'TimelineGridEvent' }>>,
-  Extract<EventDropData, { source: 'TimelineGridEvent' }>
-> = createEventKind('timeline-event-move');
-export const schedulerTimelineEventResizeKind: Draggable.Kind<
-  SchedulerEventDragPayload<Extract<EventDropData, { source: 'TimelineGridEventResizeHandler' }>>,
-  Extract<EventDropData, { source: 'TimelineGridEventResizeHandler' }>
-> = createEventKind('timeline-event-resize');
+  createSchedulerEventKind<CalendarGridTimeEventResizeHandler.DragData>('time-event-resize');
+
+// A global kind, unlike the others: the source is often a consumer's own draggable, possibly
+// bundled separately from the Scheduler targets that accept it.
 export const schedulerExternalEventKind = Draggable.createGlobalKind<
   SchedulerExternalEventDragPayload,
   never
 >('@mui/x-scheduler/external-event');
-export const schedulerDependencyKind = Draggable.createGlobalKind<SchedulerDependencyDragPayload>(
-  '@mui/x-scheduler/dependency',
-);
 
-export const schedulerEventMoveKinds: (
-  | typeof schedulerDayEventMoveKind
-  | typeof schedulerTimeEventMoveKind
-  | typeof schedulerTimelineEventMoveKind
-)[] = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind, schedulerTimelineEventMoveKind];
-export const schedulerEventResizeKinds: (
-  | typeof schedulerDayEventResizeKind
-  | typeof schedulerTimeEventResizeKind
-  | typeof schedulerTimelineEventResizeKind
-)[] = [schedulerDayEventResizeKind, schedulerTimeEventResizeKind, schedulerTimelineEventResizeKind];
-export const schedulerEventDragKinds: (
-  | (typeof schedulerEventMoveKinds)[number]
-  | (typeof schedulerEventResizeKinds)[number]
-  | typeof schedulerExternalEventKind
-)[] = [...schedulerEventMoveKinds, ...schedulerEventResizeKinds, schedulerExternalEventKind];
-export const schedulerDragKinds: (
-  (typeof schedulerEventDragKinds)[number] | typeof schedulerDependencyKind
-)[] = [...schedulerEventDragKinds, schedulerDependencyKind];
+/** The kinds of the events dragged out of the calendar grids. */
+export const schedulerEventMoveKinds = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind];
 
-export const schedulerDropTargetKind = Draggable.createGlobalKind<{
+/** Marks every Scheduler drop target, whatever it accepts. */
+export const schedulerDropTargetKind = Draggable.createKind<{
   surfaceType: EventSurfaceType;
-}>('@mui/x-scheduler/target');
-export const schedulerDependencyTargetKind =
-  Draggable.createGlobalKind<SchedulerDependencyTargetPayload>(
-    '@mui/x-scheduler/dependency-target',
-  );
+}>('scheduler-target');

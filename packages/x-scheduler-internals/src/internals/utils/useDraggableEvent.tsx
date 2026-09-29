@@ -1,24 +1,22 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerEventDragPayload, SchedulerEventMoveData } from './schedulerDrag';
+import type { SchedulerEventDragData } from './schedulerDrag';
 import type { SchedulerDraggable } from './SchedulerDraggable';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../../scheduler-selectors';
-import type { SchedulerEventId } from '../../models';
+import type { RenderDragPreviewParameters, SchedulerEventId } from '../../models';
 import type { useElementPositionInCollection } from './useElementPositionInCollection';
-import { schedulerDropTargetKind } from './schedulerDrag';
 import { SchedulerDragPreview } from './SchedulerDragPreview';
 import { useEvent } from './useEvent';
 
-export function useDraggableEvent<TData extends SchedulerEventMoveData>(
+export function useDraggableEvent<TData extends SchedulerEventDragData>(
   parameters: useDraggableEvent.Parameters<TData>,
 ): useDraggableEvent.ReturnValue<TData> {
   const {
-    source,
     kind,
     start,
     end,
@@ -40,6 +38,7 @@ export function useDraggableEvent<TData extends SchedulerEventMoveData>(
     occurrenceKey,
   );
   const event = useStore(store, schedulerEventSelectors.processedEvent, eventId)!;
+  const canDropOutside = useStore(store, schedulerEventSelectors.canDropEventsToTheOutside);
 
   // Feature hooks
   const { state: eventState } = useEvent({ start, end, occurrenceKey });
@@ -50,10 +49,7 @@ export function useDraggableEvent<TData extends SchedulerEventMoveData>(
     resizing: placeholderAction === 'internal-resize',
   };
 
-  const payload = React.useMemo(
-    () => ({ source, eventId, occurrenceKey }),
-    [source, eventId, occurrenceKey],
-  );
+  const payload = React.useMemo(() => ({ eventId, occurrenceKey }), [eventId, occurrenceKey]);
 
   const draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'> = {
     kind,
@@ -61,21 +57,10 @@ export function useDraggableEvent<TData extends SchedulerEventMoveData>(
     disabled: !isDraggable,
     getDragData,
     preview: (
-      <SchedulerDragPreview
-        type="internal-event"
-        data={event}
-        renderDragPreview={renderDragPreview}
-      />
+      <SchedulerDragPreview disabled={!canDropOutside}>
+        {() => renderDragPreview({ type: 'internal-event', data: event })}
+      </SchedulerDragPreview>
     ),
-    // Targets run after the source and may commit the last valid placeholder.
-    onMoveEnd: (_, { canceled, location }) => {
-      if (
-        canceled ||
-        !location.current.targets.some((target) => schedulerDropTargetKind.matches(target))
-      ) {
-        store.setOccurrencePlaceholder(null);
-      }
-    },
   };
 
   // A bound clipped by the collection range or hidden by the daily hour window does not
@@ -109,8 +94,13 @@ export namespace useDraggableEvent {
     resizing: boolean;
   }
 
-  export interface PublicParameters
-    extends useEvent.Parameters, Pick<SchedulerDragPreview.Props, 'renderDragPreview'> {
+  export interface PublicParameters extends useEvent.Parameters {
+    /**
+     * Renders the preview that follows the pointer outside the Scheduler.
+     * @param {RenderDragPreviewParameters} parameters The dragged event.
+     * @returns {React.ReactNode} The content of the preview.
+     */
+    renderDragPreview: (parameters: RenderDragPreviewParameters) => React.ReactNode;
     /**
      * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
@@ -126,9 +116,8 @@ export namespace useDraggableEvent {
     occurrenceKey: string;
   }
 
-  export interface Parameters<TData extends SchedulerEventMoveData> extends PublicParameters {
+  export interface Parameters<TData extends SchedulerEventDragData> extends PublicParameters {
     kind: SchedulerDraggable.Props<TData>['kind'];
-    source: SchedulerEventDragPayload<TData>['source'];
     /**
      * Gets the drag data.
      * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
@@ -142,7 +131,7 @@ export namespace useDraggableEvent {
     position: useElementPositionInCollection.ReturnValue;
   }
 
-  export interface ReturnValue<TData extends SchedulerEventMoveData> {
+  export interface ReturnValue<TData extends SchedulerEventDragData> {
     draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'>;
     /**
      * The state to pass to the useRenderElement hook.

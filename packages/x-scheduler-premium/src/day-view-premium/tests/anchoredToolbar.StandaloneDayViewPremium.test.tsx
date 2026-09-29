@@ -93,7 +93,11 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
 
     const endHandle = getResizeHandle(originalEvent, 'end');
     await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     await screen.findByText(/Apply this change to:/i);

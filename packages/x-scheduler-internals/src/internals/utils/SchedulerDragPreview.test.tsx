@@ -2,56 +2,52 @@ import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  cancelDrag,
-  createSchedulerRenderer,
-  moveDrag,
-  startDrag,
-  EventBuilder,
-} from 'test/utils/scheduler';
+import { cancelDrag, createSchedulerRenderer, moveDrag, startDrag } from 'test/utils/scheduler';
 import { schedulerDayEventMoveKind, schedulerDropTargetKind } from './schedulerDrag';
 import { SchedulerDragPreview } from './SchedulerDragPreview';
-import { EventCalendarProvider } from '../../event-calendar-provider';
 
 const PreviewContext = React.createContext('missing context');
-const event = EventBuilder.new().toProcessed();
-const payload = {
-  source: 'CalendarGridDayEvent' as const,
-  eventId: event.id,
-  occurrenceKey: 'event',
-};
+const payload = { eventId: 'event', occurrenceKey: 'event' };
 
 function PreviewContent() {
   return <span>{React.useContext(PreviewContext)}</span>;
 }
 
-function Source({ renderPreview }: { renderPreview: () => React.ReactNode }) {
+function Source({
+  renderPreview,
+  disabled,
+}: {
+  renderPreview: () => React.ReactNode;
+  disabled?: boolean;
+}) {
   return (
     <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload} data-testid="source">
       Source
-      <SchedulerDragPreview type="internal-event" data={event} renderDragPreview={renderPreview} />
+      <SchedulerDragPreview disabled={disabled}>{renderPreview}</SchedulerDragPreview>
     </Draggable.Root>
   );
 }
 
 function Fixture({
   showSource = true,
+  disabled,
   renderPreview,
 }: {
   showSource?: boolean;
+  disabled?: boolean;
   renderPreview: () => React.ReactNode;
 }) {
   return (
     <PreviewContext.Provider value="Custom preview">
-      <EventCalendarProvider events={[]} resources={[]} canDropEventsToTheOutside>
-        {showSource && <Source renderPreview={renderPreview} />}
+      <Draggable.Provider>
+        {showSource && <Source renderPreview={renderPreview} disabled={disabled} />}
         <Draggable.Target
           accept={schedulerDayEventMoveKind}
           kind={schedulerDropTargetKind}
           payload={{ surfaceType: 'day-grid' }}
           data-testid="target"
         />
-      </EventCalendarProvider>
+      </Draggable.Provider>
     </PreviewContext.Provider>
   );
 }
@@ -98,5 +94,15 @@ describe('Scheduler floating drag preview', () => {
     expect(screen.getByText('Custom preview')).toBeVisible();
     cancelDrag();
     await waitFor(() => expect(screen.queryByText('Custom preview')).toBe(null));
+  });
+
+  it('should show no preview when disabled, and still run the drag', async () => {
+    const renderPreview = vi.fn(() => <PreviewContent />);
+    render(<Fixture renderPreview={renderPreview} disabled />);
+    await act(async () => startDrag(screen.getByTestId('source')));
+    await moveTo(screen.getByTestId('target'), 100);
+    expect(screen.queryByText('Custom preview')).toBe(null);
+    expect(renderPreview).not.toHaveBeenCalled();
+    expect(screen.getByTestId('source').hasAttribute('data-dragging')).toBe(true);
   });
 });

@@ -1,11 +1,7 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import {
-  schedulerExternalEventKind,
-  schedulerEventResizeKinds,
-  schedulerDropTargetKind,
-} from './schedulerDrag';
+import { schedulerExternalEventKind, schedulerDropTargetKind } from './schedulerDrag';
 import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
@@ -17,8 +13,6 @@ import type {
   SchedulerResourceId,
 } from '../../models';
 import type {
-  EventDropData,
-  schedulerEventDragKinds,
   SchedulerEventDragData,
   SchedulerEventDragPayload,
   SchedulerExternalEventDragPayload,
@@ -33,16 +27,6 @@ import {
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import { useAdapterContext } from '../../use-adapter-context';
 import { getPrimaryResourceId } from './event-utils';
-
-// Not every drag source exposes `sourceResourceId` (only rows that know which
-// resource they represent, e.g. the Event Timeline Premium, can report it) —
-// it's declared as optional on each drag data contract, so this normalizes
-// `undefined` to `null` rather than narrowing anything.
-function getSourceResourceId(
-  data: Exclude<EventDropData, SchedulerExternalEventDragPayload>,
-): SchedulerResourceId | null {
-  return data.sourceResourceId ?? null;
-}
 
 export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
   const {
@@ -69,7 +53,8 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
-        sourceResourceId: getSourceResourceId(data),
+        // Not every source reports the resource it was dragged from.
+        sourceResourceId: data.sourceResourceId ?? null,
         resourceId:
           resourceId === undefined
             ? (getPrimaryResourceId(data.originalOccurrence.resource) ?? null)
@@ -103,9 +88,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
     if (!data) {
       return undefined;
     }
-    const type = schedulerEventResizeKinds.some((kind) => kind.matches(source))
-      ? 'internal-resize'
-      : 'internal-drag';
+    const type = 'side' in data ? 'internal-resize' : 'internal-drag';
     return getEventDropData({
       source,
       target,
@@ -114,20 +97,18 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
     });
   };
 
-  const canDrop = React.useCallback(
-    ({ source }: { source: SchedulerDropTarget.Source }) =>
-      !schedulerExternalEventKind.matches(source) ||
-      schedulerEventSelectors.canDragEventsFromTheOutside(store.state),
-    [store],
-  );
-
   return (
     <Draggable.Target
       accept={accept}
       kind={schedulerDropTargetKind}
       payload={payload}
       render={render}
-      canDrop={canDrop}
+      canDrop={({ source }) =>
+        !schedulerExternalEventKind.matches(source) ||
+        schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
+      }
+      // Nothing styles the target while a drag is over it.
+      trackDragOver={false}
       onDraggableMove={({ source, target }) => {
         const newPlaceholder = getDropData(source, target);
         if (newPlaceholder) {
@@ -173,7 +154,7 @@ export namespace SchedulerDropTarget {
   export interface Props {
     render: React.ReactElement;
     surfaceType: EventSurfaceType;
-    accept: typeof schedulerEventDragKinds;
+    accept: Draggable.Accept<SchedulerDropTarget.Source['payload'], SchedulerEventDragData>;
     getEventDropData: GetEventDropData;
     /**
      * Add properties to the event dropped in the element before storing it in the store.
@@ -188,7 +169,7 @@ export namespace SchedulerDropTarget {
   }
 
   export type GetDataFromInside = (
-    data: Exclude<EventDropData, SchedulerExternalEventDragPayload>,
+    data: SchedulerEventDragData,
     newStart: TemporalSupportedObject,
     newEnd: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
@@ -198,7 +179,7 @@ export namespace SchedulerDropTarget {
     start: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 
-  /** The drag source of any kind in `schedulerEventDragKinds`. */
+  /** The drag source of any kind the target accepts. */
   export type Source = Draggable.Root.Record<
     SchedulerEventDragPayload | SchedulerExternalEventDragPayload,
     SchedulerEventDragData

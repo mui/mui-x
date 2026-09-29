@@ -68,8 +68,6 @@ const getTouchResizeHandleStyles = (): CSSObject => ({
   border: '2px solid var(--event-on-surface-subtle-primary)',
   zIndex: 3,
   cursor: 'ns-resize',
-  // Block scroll/zoom during the resize gesture.
-  touchAction: 'none',
   '&::before': {
     content: '""',
     position: 'absolute',

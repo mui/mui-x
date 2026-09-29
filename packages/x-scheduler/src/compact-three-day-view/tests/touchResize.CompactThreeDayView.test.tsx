@@ -63,10 +63,15 @@ describe('CompactThreeDayView - touch resize & arming', () => {
     // Map pointer Y to a time via the bounds of the event's own column, not a sibling day.
     const column = morning.closest<HTMLElement>('[data-drop-target]')!;
     mockElementBounds(column, { top: 0, height: 1440, width: 200 });
+    mockElementBounds(morning, { top: clientYForTime(0, 24, 10), height: 60, width: 200 });
 
     const endHandle = getResizeHandle(morning, 'end');
     await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     expect(onEventsChange.mock.calls.length).to.equal(1);

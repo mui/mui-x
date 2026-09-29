@@ -2,11 +2,6 @@
 import { useStore } from '@base-ui/utils/store';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import {
-  schedulerDependencyKind,
-  schedulerDependencyTargetKind,
-} from '@mui/x-scheduler-internals/internals';
-import type { SchedulerDependencyDragPayload } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -15,6 +10,7 @@ import type {
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
+import { schedulerDependencyTargetKind } from '../../internals/utils/schedulerTimelineDrag';
 
 /**
  * Registers an element of an event (its body, or one of its dependency terminals) as
@@ -49,19 +45,16 @@ function EnabledEventDependencyDropTarget(props: EventDependencyDropTarget.Props
     [eventId, occurrenceKey, resourceId, side, isRecurring, isReadOnly],
   );
 
-  const canDrop = React.useCallback(
-    ({ source }: { source: Draggable.Root.Record<SchedulerDependencyDragPayload> }) =>
-      source.payload.storeContext === store && source.payload.eventId !== eventId,
-    [store, eventId],
-  );
-
   return (
     <Draggable.Target
-      accept={schedulerDependencyKind}
+      // Only the dependency gestures of this timeline land here.
+      accept={store.dependencyDragKind}
       kind={schedulerDependencyTargetKind}
       payload={payload}
-      // Only dependency gestures from this timeline land here; an event cannot depend on itself.
-      canDrop={canDrop}
+      // An event cannot depend on itself.
+      canDrop={({ source }) => source.payload.eventId !== eventId}
+      // Nothing styles the target while a drag is over it: the store drives the highlight.
+      trackDragOver={false}
       render={render}
     />
   );

@@ -264,85 +264,31 @@ export function getResizeHandle(eventElement: HTMLElement, side: 'start' | 'end'
   return handle;
 }
 
-/**
- * Stubs the pointer-capture methods JSDOM lacks. Tracks captured ids so `hasPointerCapture` reflects
- * prior set/release calls; a constant `false` would skip the handler's capture-release and
- * unmount-mid-gesture teardown branches.
- */
-function ensurePointerCaptureMethods(element: HTMLElement): void {
-  const target = element as any;
-  if (
-    typeof target.setPointerCapture === 'function' &&
-    typeof target.hasPointerCapture === 'function' &&
-    typeof target.releasePointerCapture === 'function'
-  ) {
-    return;
-  }
-  const capturedPointers = new Set<number>();
-  target.setPointerCapture = (pointerId: number) => {
-    capturedPointers.add(pointerId);
-  };
-  target.releasePointerCapture = (pointerId: number) => {
-    capturedPointers.delete(pointerId);
-  };
-  target.hasPointerCapture = (pointerId: number) => capturedPointers.has(pointerId);
-}
-
-function createPointerEvent(
-  type: string,
-  options: {
-    clientX?: number;
-    clientY?: number;
-    pointerId?: number;
-    button?: number;
-    pointerType?: string;
-  } = {},
-): Event {
-  const init = {
-    bubbles: true,
-    cancelable: true,
-    clientX: options.clientX ?? 0,
-    clientY: options.clientY ?? 0,
-    button: options.button ?? 0,
-    buttons: type === 'pointerup' || type === 'pointercancel' ? 0 : 1,
-    isPrimary: true,
-    pointerType: options.pointerType ?? 'touch',
-  };
-  // `PointerEvent` may be missing in JSDOM; fall back to a `MouseEvent` with a `pointerId`.
-  if (typeof PointerEvent === 'function') {
-    return new PointerEvent(type, { ...init, pointerId: options.pointerId ?? 1 });
-  }
-  const event = new MouseEvent(type, init) as any;
-  event.pointerId = options.pointerId ?? 1;
-  event.pointerType = init.pointerType;
-  event.isPrimary = true;
-  return event;
-}
-
 interface SimulatePointerResizeParameters {
   /** The resize handle element (carries `data-start` / `data-end`). */
   handle: HTMLElement;
-  /** Final pointer position (gesture end). */
+  /** Final pointer position (gesture end). Its `clientY` decides the time under the pointer. */
   to: { clientX?: number; clientY?: number };
   /**
-   * Initial pointer position (gesture start).
+   * Initial pointer position (gesture start). Pair it with {@link mockElementBounds} on the event
+   * element: the resize keeps the distance between this point and the edge it grabbed.
    * @default { clientX: 0, clientY: 0 }
    */
   from?: { clientX?: number; clientY?: number };
   /**
-   * Pointer id for the gesture.
-   * @default 1
+   * The drop target under the pointer, defaulting to the closest ancestor of the handle that is one.
+   * Pair it with {@link mockElementBounds} so the gesture maps to a known time.
    */
-  pointerId?: number;
+  target?: Element;
   /** The input device, defaulting to touch. */
   pointerType?: 'touch' | 'pen';
   /**
-   * End with `pointercancel` instead of `pointerup`.
+   * Cancel the gesture instead of releasing the pointer.
    * @default false
    */
   cancel?: boolean;
   /**
-   * Stop after the `pointermove`, leaving the gesture in progress so the resize placeholder stays on
+   * Stop after the pointer move, leaving the gesture in progress so the resize placeholder stays on
    * screen and can be asserted on.
    * @default false
    */
@@ -350,39 +296,39 @@ interface SimulatePointerResizeParameters {
 }
 
 /**
- * Simulates a pointer resize gesture (pointerdown → pointermove → pointerup/cancel) for the touch
- * resize path (`useEventPointerResizeHandler`). Pair with {@link mockElementBounds} on the column so
- * the gesture maps to a known time.
+ * Simulates a touch or pen resize: press the handle, move over the column, release.
+ * Touch and pen resizes start on the first contact, unlike the mouse, which crosses a threshold.
  *
  * @example
  * ```tsx
  * const handle = getResizeHandle(eventElement, 'end');
- * simulatePointerResize({ handle, to: { clientY: clientYForTime(0, 24, 15) } });
+ * simulatePointerResize({
+ *   handle,
+ *   from: { clientY: clientYForTime(0, 24, 11) },
+ *   to: { clientY: clientYForTime(0, 24, 15) },
+ * });
  * ```
  */
 export function simulatePointerResize(parameters: SimulatePointerResizeParameters): void {
-  const {
-    handle,
-    to,
-    from = {},
-    pointerId = 1,
-    pointerType = 'touch',
-    cancel = false,
-    hold = false,
-  } = parameters;
-  ensurePointerCaptureMethods(handle);
+  const { handle, to, from = {}, pointerType = 'touch', cancel = false, hold = false } = parameters;
+  const target = parameters.target ?? handle.closest('[data-drop-target]');
+  if (!target) {
+    throw new Error('Could not find the drop target of the resize handle.');
+  }
 
   const down = { clientX: from.clientX ?? 0, clientY: from.clientY ?? 0 };
   const move = { clientX: to.clientX ?? down.clientX, clientY: to.clientY ?? down.clientY };
 
-  handle.dispatchEvent(
-    createPointerEvent('pointerdown', { ...down, pointerId, pointerType, button: 0 }),
-  );
-  handle.dispatchEvent(createPointerEvent('pointermove', { ...move, pointerId, pointerType }));
+  // The drag starts on the press, so the first move is already over the target.
+  mockDragHitTest(handle);
+  dispatchDragPointer('pointerdown', handle, { ...down, pointerType });
+  moveDrag(target, { ...move, pointerType });
   if (hold) {
     return;
   }
-  handle.dispatchEvent(
-    createPointerEvent(cancel ? 'pointercancel' : 'pointerup', { ...move, pointerId, pointerType }),
-  );
+  if (cancel) {
+    cancelDrag();
+    return;
+  }
+  dropDrag(target, { ...move, pointerType });
 }

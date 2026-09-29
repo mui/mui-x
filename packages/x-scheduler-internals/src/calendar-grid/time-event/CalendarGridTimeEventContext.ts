@@ -9,7 +9,7 @@ export interface CalendarGridTimeEventContext extends useDraggableEvent.ContextV
    * @param {{ clientY: number }} [input] Pointer position for the grab offset; omit it for pointer-based resize to skip the layout measurement.
    * @returns {CalendarGridTimeEvent.SharedDragData} The shared drag data.
    */
-  getSharedDragData: (input?: { clientY: number }) => CalendarGridTimeEvent.SharedDragData;
+  getSharedDragData: (input: { clientY: number }) => CalendarGridTimeEvent.SharedDragData;
 }
 
 export const CalendarGridTimeEventContext = React.createContext<

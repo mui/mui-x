@@ -31,6 +31,8 @@ export function useDraggableDialog(
 
   const draggableProps: Draggable.Root.Props = {
     kind: dialogDragKind,
+    // The header shows the same cursor at rest.
+    dragCursor: 'move',
     onMove: (_, { location }) => {
       const { deltaX, deltaY } = getDeltas(location);
 

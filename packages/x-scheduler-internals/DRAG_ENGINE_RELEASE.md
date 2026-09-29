@@ -22,22 +22,21 @@ Keep the drag kinds on `internals` until the engine and its types are released.
   consumers need to name, and decide whether `allDay` should replace the internal `day`
   vocabulary before committing to public kind names or IDs.
 
-## Base UI follow-ups
+## Base UI follow-ups
 
 These changes require a new upstream release or preview before Scheduler can use them.
 
 - Let `Draggable.Root` accept a preview declaration or append its children to the render
-  element. Then remove the child cloning in `SchedulerDraggable`, `StandaloneEvent`, and
-  `TimelineGridEventDependencyTerminal`.
-- Add a monitor predicate such as `canMonitor` so dependency monitors can filter by store
-  instance before receiving callbacks.
+  element. Then remove `withDragPreview`, which clones the render element to add the preview.
 - Support an inset auto-scroll hitbox or a bounds callback. Then remove the timeline's
   `getBoundingClientRect` override for its pinned title column.
-- Derive gesture styles from enabled pointer activations. Then remove the resize handle's
-  layout effect that restores `touch-action: none` for direct touch and pen resizing.
 
 ## Intentional behavior
 
 Dialog headers now support Base UI's touch long press. Title inputs and close buttons inside
 that handle remain interactive, and compact drawers continue to disable dragging.
 Mouse and touch regression tests cover the handle and its form controls.
+
+Time-grid resize handles start a resize on the first touch or pen contact, through the
+engine's `immediate` activation. The engine blocks page scroll once the drag is active, so the
+handle no longer overrides `touch-action`. Verify this on a real iOS device before publishing.

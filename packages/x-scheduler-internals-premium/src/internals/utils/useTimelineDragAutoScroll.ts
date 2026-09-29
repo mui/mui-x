@@ -2,7 +2,12 @@
 import * as React from 'react';
 import { platform } from '@base-ui/utils/platform';
 import type { Draggable } from '@base-ui/react/draggable';
-import { schedulerDragKinds } from './schedulerDrag';
+import { schedulerExternalEventKind } from '@mui/x-scheduler-internals/internals';
+import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
+import {
+  schedulerTimelineEventMoveKind,
+  schedulerTimelineEventResizeKind,
+} from './schedulerTimelineDrag';
 
 /**
  * Returns props for a Base UI viewport on the timeline scroller, with the
@@ -22,6 +27,7 @@ export function useTimelineDragAutoScroll(params: {
   pinnedLeftWidth: number;
 }) {
   const { scrollerRef, pinnedLeftWidth } = params;
+  const store = useEventTimelinePremiumStoreContext();
 
   const pinnedLeftWidthRef = React.useRef(pinnedLeftWidth);
   pinnedLeftWidthRef.current = pinnedLeftWidth;
@@ -54,7 +60,12 @@ export function useTimelineDragAutoScroll(params: {
   }, [scrollerRef]);
 
   const viewportProps: Draggable.Viewport.Props = {
-    accept: schedulerDragKinds,
+    accept: [
+      schedulerTimelineEventMoveKind,
+      schedulerTimelineEventResizeKind,
+      schedulerExternalEventKind,
+      store.dependencyDragKind,
+    ],
     disabled: platform.env.jsdom,
   };
   return viewportProps;

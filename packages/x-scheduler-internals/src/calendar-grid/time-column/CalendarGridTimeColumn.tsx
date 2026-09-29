@@ -8,7 +8,7 @@ import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
-import { EVENT_CREATION_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
@@ -67,19 +67,6 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
       return Math.round(collectionDurationMs * clampedPositionY);
     });
-
-  const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
-    (input) => {
-      // Bail when the column isn't measurable yet — zero height makes `getCursorPositionInElementMs` return NaN.
-      if (!cellRef.current || cellRef.current.offsetHeight === 0) {
-        return null;
-      }
-      const offsetMs = getCursorPositionInElementMs({ input, elementRef: cellRef });
-      const roundedOffsetMs =
-        Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-      return adapter.addMilliseconds(start, roundedOffsetMs);
-    },
-  );
 
   const eventCreationProps = useEventCreation(({ event, creationConfig }) => {
     const offsetMs = getCursorPositionInElementMs({
@@ -157,17 +144,8 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       dayEndMinute,
       hasFocus,
       getCursorPositionInElementMs,
-      getDateAtPointer,
     }),
-    [
-      start,
-      end,
-      dayStartMinute,
-      dayEndMinute,
-      hasFocus,
-      getCursorPositionInElementMs,
-      getDateAtPointer,
-    ],
+    [start, end, dayStartMinute, dayEndMinute, hasFocus, getCursorPositionInElementMs],
   );
 
   const keyboardProps = {

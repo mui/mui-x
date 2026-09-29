@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Draggable } from '@base-ui/react/draggable';
 import { act, screen } from '@mui/internal-test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -9,16 +8,13 @@ import {
   moveDrag,
   startDrag,
 } from 'test/utils/scheduler';
+import { EventCalendarProvider } from '../../event-calendar-provider';
 import { SchedulerDraggable } from './SchedulerDraggable';
 import { schedulerDayEventMoveKind } from './schedulerDrag';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 
 const occurrence = EventBuilder.new().fullDay('2025-07-03').toOccurrence();
-const payload = {
-  source: 'CalendarGridDayEvent' as const,
-  eventId: occurrence.id,
-  occurrenceKey: occurrence.key,
-};
+const payload = { eventId: occurrence.id, occurrenceKey: occurrence.key };
 const snapshot: CalendarGridDayEvent.DragData = {
   ...payload,
   originalOccurrence: occurrence,
@@ -37,7 +33,7 @@ function Fixture({
   onBeforeMoveStart?: SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['onBeforeMoveStart'];
 }) {
   return (
-    <Draggable.Provider>
+    <EventCalendarProvider events={[]} resources={[]}>
       <SchedulerDraggable
         kind={schedulerDayEventMoveKind}
         payload={payload}
@@ -46,7 +42,7 @@ function Fixture({
         onBeforeMoveStart={onBeforeMoveStart}
         render={<div data-testid="source">Event</div>}
       />
-    </Draggable.Provider>
+    </EventCalendarProvider>
   );
 }
 

@@ -2,11 +2,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { Draggable } from '@base-ui/react/draggable';
-import {
-  schedulerDependencyKind,
-  schedulerDependencyTargetKind,
-} from '@mui/x-scheduler-internals/internals';
-import type { SchedulerDependencyDragPayload } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -16,6 +11,8 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import type { SchedulerDependencyRejectionReason } from '../../models';
 import { getDependencyType } from './dependency-utils';
+import { schedulerDependencyTargetKind } from './schedulerTimelineDrag';
+import type { SchedulerDependencyDragPayload } from './schedulerTimelineDrag';
 
 interface DependencyDropTargetData {
   targetEventId: SchedulerEventId;
@@ -68,9 +65,9 @@ const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
 /**
  * Handles the whole create-dependency drag gesture, from any terminal to any event or
  * terminal.
- * A global monitor mounted by the grid root (rather than callbacks on the terminal's
- * draggable) so the gesture survives the source element being unmounted by
- * virtualization mid-drag. The source store scopes it to this timeline's gestures.
+ * A monitor mounted by the grid root rather than callbacks on the terminal's draggable:
+ * virtualization can unmount the terminal mid-drag, and its cleanup would reset the gesture.
+ * The store's own drag kind scopes the monitor to this timeline's gestures.
  */
 export function useDependencyCreationMonitor() {
   const store = useEventTimelinePremiumStoreContext();
@@ -80,7 +77,7 @@ export function useDependencyCreationMonitor() {
     { source }: { source: Draggable.Root.Record<SchedulerDependencyDragPayload> },
     { location }: { location: Draggable.LocationHistory },
   ) => {
-    if (!enabled || source.payload.storeContext !== store) {
+    if (!enabled) {
       return;
     }
     // Invalid targets (recurring or read-only events) never highlight or snap the
@@ -100,13 +97,13 @@ export function useDependencyCreationMonitor() {
   };
 
   Draggable.useMonitor({
-    accept: schedulerDependencyKind,
+    accept: store.dependencyDragKind,
     onMoveStart: updateCreation,
     // Only target changes touch the state: the cursor never enters it, the arrows
     // layer follows the pointer through the DOM.
     onTargetChange: updateCreation,
     onMoveEnd: ({ source }, { location, canceled }) => {
-      if (!enabled || source.payload.storeContext !== store) {
+      if (!enabled) {
         return;
       }
       store.setDependencyCreation(null);

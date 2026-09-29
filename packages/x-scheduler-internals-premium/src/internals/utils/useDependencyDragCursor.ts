@@ -1,6 +1,5 @@
 'use client';
 import { Draggable } from '@base-ui/react/draggable';
-import { schedulerDependencyKind } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 
 /**
@@ -15,9 +14,9 @@ export function useDependencyDragCursor(
   const store = useEventTimelinePremiumStoreContext();
 
   Draggable.useMonitor({
-    accept: schedulerDependencyKind,
-    onMove: ({ source }, { location }) => {
-      if (!enabled || source.payload.storeContext !== store) {
+    accept: store.dependencyDragKind,
+    onMove: (_, { location }) => {
+      if (!enabled) {
         return;
       }
       onCursorMove(location.current.input.clientX, location.current.input.clientY);

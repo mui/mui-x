@@ -4,7 +4,6 @@ import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { schedulerDragKinds } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/models';
@@ -102,8 +101,9 @@ function DependencyInteractionsLayer() {
       svgRef.current?.setAttribute('data-drag-active', '');
     }
   });
+  // Any drag mutes the hit-areas, not only the Scheduler ones: they would hide the drop targets
+  // under the pointer from the engine's hit test.
   Draggable.useMonitor({
-    accept: schedulerDragKinds,
     onMoveStart: () => {
       draggingRef.current = true;
       svgRef.current?.setAttribute('data-drag-active', '');

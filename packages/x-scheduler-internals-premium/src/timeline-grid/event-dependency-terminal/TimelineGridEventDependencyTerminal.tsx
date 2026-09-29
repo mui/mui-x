@@ -6,7 +6,7 @@ import type {
   SchedulerEventSide,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import { schedulerDependencyKind } from '@mui/x-scheduler-internals/internals';
+import { withDragPreview } from '@mui/x-scheduler-internals/internals';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -44,16 +44,8 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
 
     // Feature hooks
     const payload = React.useMemo(
-      () => ({
-        eventId,
-        occurrenceKey,
-        resourceId,
-        sourceSide: side,
-        // Identity discriminator: Base UI monitors are page-global, so the monitor
-        // and the drop targets only react to gestures born in their own timeline.
-        storeContext: store,
-      }),
-      [eventId, occurrenceKey, resourceId, side, store],
+      () => ({ eventId, occurrenceKey, resourceId, sourceSide: side }),
+      [eventId, occurrenceKey, resourceId, side],
     );
 
     const element = useRenderElement('div', componentProps, {
@@ -76,20 +68,9 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
         side={side}
         render={
           <Draggable.Root
-            kind={schedulerDependencyKind}
+            kind={store.dependencyDragKind}
             payload={payload}
-            render={
-              React.isValidElement<{ children?: React.ReactNode }>(element)
-                ? React.cloneElement(element, {
-                    children: (
-                      <React.Fragment>
-                        {element.props.children}
-                        <Draggable.Preview disabled />
-                      </React.Fragment>
-                    ),
-                  })
-                : element
-            }
+            render={withDragPreview(element, <Draggable.Preview disabled />)}
           />
         }
       />
