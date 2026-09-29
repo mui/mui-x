@@ -56,12 +56,57 @@ function isIndexInvalid(
     return false;
   }
 
-  warnOnce([
-    `MUI X: The \`${indexName}\` value passed to \`scrollToIndexes\` is invalid.`,
-    `Use an integer between ${min} and ${max}${isPaginated ? ' for the current page' : ''}.`,
-  ]);
+  warnOnce(
+    [
+      `MUI X: The \`${indexName}\` value passed to \`scrollToIndexes\` is invalid.`,
+      `Use an integer between ${min} and ${max}${isPaginated ? ' for the current page' : ''}.`,
+      indexName === 'rowIndex'
+        ? '`rowIndex` is an index in the full filtered and sorted row list, not relative to the current page.'
+        : '`colIndex` is an index in the visible columns.',
+      'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
+    ].join('\n'),
+  );
 
   return true;
+}
+
+function getRowIndexBounds(apiRef: RefObject<GridPrivateApiCommunity>, visibleRowCount: number) {
+  const pagination = gridPaginationSelector(apiRef);
+
+  if (pagination.enabled && pagination.paginationMode === 'server') {
+    // Only the current page is loaded, so the offset maps the absolute index onto it.
+    const rowIndexOffset = pagination.paginationModel.page * pagination.paginationModel.pageSize;
+
+    return {
+      firstRowIndex: rowIndexOffset,
+      lastRowIndex: rowIndexOffset + visibleRowCount - 1,
+      rowIndexOffset,
+      rowIndexLookupOffset: rowIndexOffset,
+      isPaginated: true,
+    };
+  }
+
+  const paginationRange = pagination.enabled ? gridPaginationRowRangeSelector(apiRef) : null;
+
+  if (paginationRange) {
+    // Expanded groups make a page span more rows than `pageSize`, so `page * pageSize`
+    // is not its first row.
+    return {
+      firstRowIndex: paginationRange.firstRowIndex,
+      lastRowIndex: paginationRange.lastRowIndex,
+      rowIndexOffset: paginationRange.firstRowIndex,
+      rowIndexLookupOffset: 0,
+      isPaginated: true,
+    };
+  }
+
+  return {
+    firstRowIndex: 0,
+    lastRowIndex: visibleRowCount - 1,
+    rowIndexOffset: 0,
+    rowIndexLookupOffset: 0,
+    isPaginated: pagination.enabled,
+  };
 }
 
 /**
@@ -93,34 +138,8 @@ export const useGridScroll = (apiRef: RefObject<GridPrivateApiCommunity>): void 
 
       // State, not `props.pagination`: the state is what `getRowIndexRelativeToAllRows` reads
       // to build these indexes, and the props lead it by a render.
-      const pagination = gridPaginationSelector(apiRef);
-      const isPaginated = pagination.enabled;
-
-      let firstRowIndex = 0;
-      let lastRowIndex = visibleSortedRows.length - 1;
-      let rowIndexOffset = 0;
-      let rowIndexInVisibleSortedRows = rowIndex;
-
-      if (rowIndex !== undefined && isPaginated) {
-        if (pagination.paginationMode === 'server') {
-          // Only the current page is loaded, so the offset maps the absolute index onto it.
-          const { page, pageSize } = pagination.paginationModel;
-          rowIndexOffset = page * pageSize;
-          firstRowIndex = rowIndexOffset;
-          lastRowIndex = firstRowIndex + visibleSortedRows.length - 1;
-          rowIndexInVisibleSortedRows = rowIndex - rowIndexOffset;
-        } else {
-          // Expanded groups make a page span more rows than `pageSize`, so `page * pageSize`
-          // is not its first row.
-          const paginationRange = gridPaginationRowRangeSelector(apiRef);
-
-          if (paginationRange) {
-            firstRowIndex = paginationRange.firstRowIndex;
-            lastRowIndex = paginationRange.lastRowIndex;
-            rowIndexOffset = paginationRange.firstRowIndex;
-          }
-        }
-      }
+      const { firstRowIndex, lastRowIndex, rowIndexOffset, rowIndexLookupOffset, isPaginated } =
+        getRowIndexBounds(apiRef, visibleSortedRows.length);
 
       // Per axis, so an invalid index cancels only its own axis and both warnings are emitted.
       const hasInvalidRowIndex = isIndexInvalid(
@@ -134,10 +153,8 @@ export const useGridScroll = (apiRef: RefObject<GridPrivateApiCommunity>): void 
 
       const targetRowIndex = hasInvalidRowIndex ? undefined : rowIndex;
       const targetColIndex = hasInvalidColIndex ? undefined : colIndex;
-
-      if (hasInvalidRowIndex) {
-        rowIndexInVisibleSortedRows = undefined;
-      }
+      const rowIndexInVisibleSortedRows =
+        targetRowIndex === undefined ? undefined : targetRowIndex - rowIndexLookupOffset;
 
       logger.debug(`Scrolling to cell at row ${targetRowIndex}, col: ${targetColIndex} `);
 
