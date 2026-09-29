@@ -102,8 +102,7 @@ export const selectorChartsInteractionRotationAxisIndex = createSelector(
 export const selectorChartsInteractionRotationAxisIndexes = createSelectorMemoized(
   selectorChartsInteractionRotationAngle,
   selectorChartRotationAxis,
-  optionalGetAxisIds,
-  (rotation, rotationAxis, ids) =>
+  (rotation, rotationAxis, ids: AxisId[] | undefined) =>
     rotation === null
       ? null
       : indexGetter(rotation, rotationAxis, ids ?? rotationAxis.axisIds, 'rotation'),
@@ -197,8 +196,7 @@ export const selectorChartsInteractionRadiusAxisIndex = createSelector(
 export const selectorChartsInteractionRadiusAxisIndexes = createSelectorMemoized(
   selectorChartsInteractionRadius,
   selectorChartRadiusAxis,
-  optionalGetAxisIds,
-  (radius, radiusAxis, ids) =>
+  (radius, radiusAxis, ids: AxisId[] | undefined) =>
     radius === null ? null : indexGetter(radius, radiusAxis, ids ?? radiusAxis.axisIds, 'radius'),
 );
 
