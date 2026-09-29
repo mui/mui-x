@@ -126,15 +126,25 @@ export const usePicker = <
     getStepNavigation,
   });
 
+  const [shouldResetField, setShouldResetField] = React.useState(false);
+
   const clearValue = useEventCallback(() => {
-    if (
-      valueManager.areValuesEqual(adapter, value, valueManager.emptyValue) &&
-      internalFieldRef.current?.clearValue
-    ) {
-      internalFieldRef.current.clearValue();
-    }
     setValue(valueManager.emptyValue, { source: 'view' });
+    setShouldResetField(true);
   });
+
+  // Reset the partially typed sections once the empty value reaches the field.
+  // With an empty value, the field's `clearValue` does not publish a change.
+  useEnhancedEffect(() => {
+    if (!shouldResetField) {
+      return;
+    }
+
+    setShouldResetField(false);
+    if (valueManager.areValuesEqual(adapter, value, valueManager.emptyValue)) {
+      internalFieldRef.current?.clearValue();
+    }
+  }, [shouldResetField, value, valueManager, adapter]);
 
   const setValueToToday = useEventCallback(() =>
     setValue(valueManager.getTodayValue(adapter, timezone, valueType), {

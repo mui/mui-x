@@ -633,6 +633,44 @@ describe('<DesktopDateRangePicker />', () => {
             },
           );
         });
+
+        it.each(['start', 'end'] as const)(
+          'should clear the partial text typed in the %s date when the other date has a value',
+          async (position) => {
+            const onChange = vi.fn();
+            const onAccept = vi.fn();
+            const date = adapterToUse.date('2018-01-06');
+            const { user } = render(
+              <DesktopDateRangePicker
+                defaultValue={position === 'start' ? [null, date] : [date, null]}
+                onChange={onChange}
+                onAccept={onAccept}
+                slots={{ field }}
+                slotProps={{ actionBar: { actions: ['clear'] } }}
+              />,
+            );
+
+            const monthSection = screen.getAllByRole('spinbutton', { name: 'Month' })[
+              position === 'start' ? 0 : 1
+            ];
+            await user.click(monthSection);
+            await user.keyboard('12');
+            expect(monthSection).to.have.text('12');
+
+            await openPicker(user, { type: 'date-range', initialFocus: 'start', fieldType });
+            onChange.mockClear();
+            onAccept.mockClear();
+            await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+            expect(onChange.mock.calls.length).to.equal(1);
+            expect(onChange.mock.lastCall?.[0]).to.deep.equal([null, null]);
+            expect(onAccept.mock.calls.length).to.equal(1);
+            expect(onAccept.mock.lastCall?.[0]).to.deep.equal([null, null]);
+            emptyFieldValues.forEach((emptyFieldValue, index) => {
+              expectFieldValue(getFieldSectionsContainer(index), emptyFieldValue);
+            });
+          },
+        );
       });
     });
 
