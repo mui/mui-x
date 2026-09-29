@@ -53,6 +53,8 @@ describe('<DataGrid /> - Scrolling', () => {
         [
           'MUI X: The `rowIndex` value passed to `scrollToIndexes` is invalid.',
           'Use an integer between 3 and 5 for the current page.',
+          '`rowIndex` is an index in the full filtered and sorted row list, not relative to the current page.',
+          'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
         ].join('\n'),
       );
       expect(result).to.equal(false);
@@ -74,6 +76,8 @@ describe('<DataGrid /> - Scrolling', () => {
         [
           'MUI X: The `colIndex` value passed to `scrollToIndexes` is invalid.',
           'Use an integer between 0 and 0.',
+          '`colIndex` is an index in the visible columns.',
+          'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
         ].join('\n'),
       );
       expect(result).to.equal(false);
@@ -101,6 +105,8 @@ describe('<DataGrid /> - Scrolling', () => {
         [
           'MUI X: The `colIndex` value passed to `scrollToIndexes` is invalid.',
           'Use an integer between 0 and 0.',
+          '`colIndex` is an index in the visible columns.',
+          'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
         ].join('\n'),
       );
       expect(result).to.equal(true);
@@ -123,10 +129,14 @@ describe('<DataGrid /> - Scrolling', () => {
         [
           'MUI X: The `rowIndex` value passed to `scrollToIndexes` is invalid.',
           'Use an integer between 0 and 0 for the current page.',
+          '`rowIndex` is an index in the full filtered and sorted row list, not relative to the current page.',
+          'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
         ].join('\n'),
         [
           'MUI X: The `colIndex` value passed to `scrollToIndexes` is invalid.',
           'Use an integer between 0 and 0.',
+          '`colIndex` is an index in the visible columns.',
+          'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
         ].join('\n'),
       ]);
       expect(result).to.equal(false);
@@ -162,6 +172,8 @@ describe('<DataGrid /> - Scrolling', () => {
         [
           'MUI X: The `rowIndex` value passed to `scrollToIndexes` is invalid.',
           'Use an integer between 0 and 0 for the current page.',
+          '`rowIndex` is an index in the full filtered and sorted row list, not relative to the current page.',
+          'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
         ].join('\n'),
       );
       expect(result).to.equal(false);
@@ -183,6 +195,8 @@ describe('<DataGrid /> - Scrolling', () => {
         [
           'MUI X: The `rowIndex` value passed to `scrollToIndexes` is invalid.',
           'Use an integer between 0 and 0 for the current page.',
+          '`rowIndex` is an index in the full filtered and sorted row list, not relative to the current page.',
+          'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
         ].join('\n'),
       );
       expect(result).to.equal(false);
@@ -220,6 +234,8 @@ describe('<DataGrid /> - Scrolling', () => {
         [
           'MUI X: The `rowIndex` value passed to `scrollToIndexes` is invalid.',
           'Use an integer between 3 and 5 for the current page.',
+          '`rowIndex` is an index in the full filtered and sorted row list, not relative to the current page.',
+          'See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells.',
         ].join('\n'),
       );
       expect(result).to.equal(false);
