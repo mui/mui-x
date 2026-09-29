@@ -24,6 +24,7 @@ Every interactive element in the Data Grid uses the ring: toolbar buttons, menu 
 They all match, and they all follow the theme.
 
 Nothing changes until you opt in.
+Tab through the demo below to see the focus indicator.
 
 {{"demo": "FocusVisibleDataGrid.js", "bg": "inline"}}
 
