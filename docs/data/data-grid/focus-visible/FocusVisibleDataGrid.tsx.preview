@@ -1,0 +1,5 @@
+<ThemeProvider theme={theme}>
+  <Box sx={{ height: 400, width: '100%' }}>
+    <DataGridPremium rows={rows} columns={columns} showToolbar pivotPanelOpen />
+  </Box>
+</ThemeProvider>

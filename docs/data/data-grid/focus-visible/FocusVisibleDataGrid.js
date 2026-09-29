@@ -1,0 +1,34 @@
+import * as React from 'react';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+
+const columns = [
+  { field: 'name', headerName: 'Name', width: 140 },
+  { field: 'team', headerName: 'Team', width: 120 },
+  { field: 'score', headerName: 'Score', type: 'number', width: 100 },
+];
+
+const rows = Array.from({ length: 12 }, (_, index) => ({
+  id: index,
+  name: `Person ${index}`,
+  team: index % 2 ? 'Alpha' : 'Beta',
+  score: (index * 7) % 40,
+}));
+
+export default function FocusVisibleDataGrid() {
+  // Inherit the theme from the docs site (dark/light mode)
+  const existingTheme = useTheme();
+  const theme = React.useMemo(
+    () => createTheme({ focusVisible: true }, existingTheme),
+    [existingTheme],
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Box sx={{ height: 400, width: '100%' }}>
+        <DataGridPremium rows={rows} columns={columns} showToolbar pivotPanelOpen />
+      </Box>
+    </ThemeProvider>
+  );
+}

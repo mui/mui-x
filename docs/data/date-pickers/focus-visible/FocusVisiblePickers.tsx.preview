@@ -1,0 +1,8 @@
+<ThemeProvider theme={theme}>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+      <DateCalendar openTo="year" />
+      <DateCalendar openTo="month" views={['month']} />
+    </Box>
+  </LocalizationProvider>
+</ThemeProvider>
