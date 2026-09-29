@@ -21,8 +21,8 @@ export const EVENT_DRAG_PRECISION_MINUTE = 15;
 export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTE * 60 * 1000;
 
 /**
- * How far, in pixels, a finger or pen must travel from where a drag started before the drop
- * changes an event. A press on a resize handle starts a drag at once, so a tap is one too.
+ * How far, in pixels, a finger or pen must travel from where a time grid resize started before the
+ * drop changes the event. A press on the handle starts the drag at once, so a tap is one too.
  */
 export const EVENT_DRAG_TAP_SLOP_PX = 5;
 

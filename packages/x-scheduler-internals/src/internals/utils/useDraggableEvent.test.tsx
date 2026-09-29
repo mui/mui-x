@@ -93,6 +93,39 @@ describe('useDraggableEvent', () => {
     ).toBe(true);
   });
 
+  it('should commit a pen drop that ends within 5px of where the drag activated', async () => {
+    const onEventsChange = vi.fn();
+    const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
+    const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+    render(
+      <EventCalendarProvider
+        events={[builder.build()]}
+        resources={[]}
+        onEventsChange={onEventsChange}
+      >
+        <Source />
+        <SchedulerDropTarget
+          surfaceType="day-grid"
+          accept={accept}
+          getEventDropDates={() => ({ start, end })}
+          render={<div data-testid="target" />}
+        />
+      </EventCalendarProvider>,
+    );
+
+    // The pen presses at x=94, and the drag activates once it has moved 6px.
+    startDrag(screen.getByTestId('source'), { clientX: 100, pointerType: 'pen' });
+    await act(async () => {
+      moveDrag(screen.getByTestId('target'), { clientX: 101, pointerType: 'pen' });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    dropDrag(screen.getByTestId('target'), { clientX: 102, pointerType: 'pen' });
+
+    expect(onEventsChange).toHaveBeenCalledTimes(1);
+  });
+
   it('should clear the placeholder unless the drag lands on a Scheduler target', async () => {
     let store!: SchedulerStoreInContext<any, any>;
     const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);

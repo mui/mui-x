@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import { schedulerExternalEventKind, schedulerDropTargetKind } from './schedulerDrag';
+import {
+  schedulerExternalEventKind,
+  schedulerDropTargetKind,
+  schedulerTimeEventResizeKind,
+} from './schedulerDrag';
 import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
@@ -30,12 +34,15 @@ import { getPrimaryResourceId } from './event-utils';
 import { EVENT_DRAG_TAP_SLOP_PX } from '../../constants';
 
 /**
- * Whether a finger or pen drag has not left the spot where it started.
- * The mouse never starts a drag without moving, so it is never a tap.
+ * Whether a touch or pen resize has not left the spot where it started.
+ * A press on a time grid resize handle starts a drag at once, so a tap on it is a drag too.
+ * Other drags start after some movement or a hold, and the engine reports where they started
+ * moving as their start, so the distance from it says nothing about a tap. The mouse always
+ * moves before a drag starts.
  */
-function isTap(location: Draggable.LocationHistory) {
+function isTap(source: SchedulerDropTarget.Source, location: Draggable.LocationHistory) {
   const { initial, current } = location;
-  if (current.input.pointerType === 'mouse') {
+  if (!schedulerTimeEventResizeKind.matches(source) || current.input.pointerType === 'mouse') {
     return false;
   }
   return (
@@ -130,7 +137,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
       // Nothing styles the target while a drag is over it.
       trackDragOver={false}
       onDraggableMove={({ source, target }, { location }) => {
-        if (isTap(location)) {
+        if (isTap(source, location)) {
           return;
         }
         const newPlaceholder = getDropData(source, target);
@@ -139,7 +146,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
         }
       }}
       onDraggableDrop={({ source, target }, { location }) => {
-        if (isTap(location)) {
+        if (isTap(source, location)) {
           store.setOccurrencePlaceholder(null);
           return;
         }
