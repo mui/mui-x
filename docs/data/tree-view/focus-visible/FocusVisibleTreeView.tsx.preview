@@ -1,5 +1,11 @@
 <ThemeProvider theme={theme}>
-  <Box sx={{ minHeight: 200, minWidth: 250 }}>
-    <RichTreeView items={MUI_X_PRODUCTS} defaultExpandedItems={['grid']} />
+  <Box sx={{ minHeight: 260, minWidth: 250 }}>
+    <RichTreeView
+      items={MUI_X_PRODUCTS}
+      defaultExpandedItems={['grid']}
+      defaultSelectedItems={['grid-pro']}
+      checkboxSelection
+      multiSelect
+    />
   </Box>
 </ThemeProvider>

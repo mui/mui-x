@@ -33,14 +33,27 @@ export default function FocusVisibleTreeView() {
   // Inherit the theme from the docs site (dark/light mode)
   const existingTheme = useTheme();
   const theme = React.useMemo(
-    () => createTheme({ focusVisible: true }, existingTheme),
+    () =>
+      createTheme(
+        {
+          focusVisible: true,
+          components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+        },
+        existingTheme,
+      ),
     [existingTheme],
   );
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: 200, minWidth: 250 }}>
-        <RichTreeView items={MUI_X_PRODUCTS} defaultExpandedItems={['grid']} />
+      <Box sx={{ minHeight: 260, minWidth: 250 }}>
+        <RichTreeView
+          items={MUI_X_PRODUCTS}
+          defaultExpandedItems={['grid']}
+          defaultSelectedItems={['grid-pro']}
+          checkboxSelection
+          multiSelect
+        />
       </Box>
     </ThemeProvider>
   );
