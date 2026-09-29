@@ -179,7 +179,7 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   label?: string;
   color?: 'default' | 'inherit' | 'primary';
   edge?: 'start' | 'end' | false;
-};
+} & LinkableComponentProps;
 
 export type ToggleButtonProps = Omit<CommonProps, 'onChange'> & {
   selected?: boolean;
@@ -210,6 +210,24 @@ export type MenuItemProps = CommonProps & {
   selected?: boolean;
   value?: number | string | readonly string[];
   style?: React.CSSProperties;
+} & LinkableComponentProps;
+
+/**
+ * Props shared by components that can render as a link, either by setting
+ * `href` directly, or by overriding `component` (for example with a router `Link`).
+ */
+type LinkableComponentProps = {
+  /** The component used for the root node. Either a string to use an HTML element or a component. */
+  component?: React.ElementType;
+  /** The URL to link to. If set, and `component` is not set, the component renders as an anchor tag. */
+  href?: string;
+  /** Where to display the linked URL, as the name for a browsing context. */
+  target?: React.HTMLAttributeAnchorTarget;
+  /**
+   * The relationship of the linked URL.
+   * Set it to `noopener noreferrer` when `target` is set to `_blank` to avoid a security issue.
+   */
+  rel?: string;
 };
 
 type BasePlacement = 'top' | 'bottom' | 'left' | 'right';

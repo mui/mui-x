@@ -109,7 +109,8 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   const store = useEventTimelinePremium(parameters);
   const classes = useUtilityClasses(classesProp);
 
-  const { localeText, resourceColumnLabel, apiRef, slots, slotProps, ...other } = forwardedProps;
+  const { localeText, resourceColumnLabel, getEventAriaLabel, apiRef, slots, slotProps, ...other } =
+    forwardedProps;
   useInitializeApiRef(store, apiRef);
 
   const schedulerId = useId();
@@ -120,8 +121,14 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   );
 
   const timelineStyledContextValue = React.useMemo(
-    () => ({ schedulerId, classes, localeText: mergedLocaleText, resourceColumnLabel }),
-    [schedulerId, classes, mergedLocaleText, resourceColumnLabel],
+    () => ({
+      schedulerId,
+      classes,
+      localeText: mergedLocaleText,
+      resourceColumnLabel,
+      getEventAriaLabel,
+    }),
+    [schedulerId, classes, mergedLocaleText, resourceColumnLabel, getEventAriaLabel],
   );
 
   const editingStyledContextValue = React.useMemo(
@@ -321,6 +328,13 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * @default []
    */
   events: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Returns the accessible name of an event block.
+   * Use it to announce details rendered through the `timelineEventContent` slot.
+   * @param {EventTimelineGetEventAriaLabelParameters} parameters The occurrence, its row resource and the default name.
+   * @returns {string} The accessible name of the event block.
+   */
+  getEventAriaLabel: PropTypes.func,
   /**
    * Set the locale text of the Event Timeline.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)

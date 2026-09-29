@@ -35,7 +35,6 @@ export function displaySetTreeDataPathWarning(operationName: string): void {
     warnOnce(
       `MUI X: ${operationName} requires \`setTreeDataPath()\` prop to update row data paths. ` +
         'Please provide a `setTreeDataPath()` function to enable this feature.',
-      'warning',
     );
   }
 }

@@ -47,9 +47,10 @@ const itITPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Seleziona ${views[view]}. ${!formattedTime ? 'Nessun orario selezionato' : `L'ora selezionata è ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} ore`,
-  minutesClockNumberText: (minutes) => `${minutes} minuti`,
-  secondsClockNumberText: (seconds) => `${seconds} secondi`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'ora' : 'ore'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'minuto' : 'minuti'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'secondo' : 'secondi'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Seleziona ${views[view]}`,

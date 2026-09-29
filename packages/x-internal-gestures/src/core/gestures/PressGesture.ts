@@ -88,15 +88,15 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
     pressThresholdReached: false,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare protected readonly isSinglePhase: false;
 
-  protected readonly eventType!: PressEvent;
+  declare protected readonly eventType: PressEvent;
 
-  protected readonly optionsType!: PressGestureOptions<GestureName>;
+  declare protected readonly optionsType: PressGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: Omit<
+  declare protected readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     'startCentroid' | 'lastPosition' | 'timerId' | 'startTime' | 'pressThresholdReached'
   >;
