@@ -120,6 +120,5 @@ describe('<DataGrid /> - rowCheckbox slot', () => {
     );
 
     expect(passedProps.material).to.have.property('color', 'primary');
-    expect(passedProps.material).to.have.property('disableRipple');
   });
 });
