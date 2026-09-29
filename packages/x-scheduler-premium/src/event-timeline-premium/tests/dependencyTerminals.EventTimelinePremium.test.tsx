@@ -978,7 +978,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       moveDrag(target, {});
       moveDrag(target, {});
 
-      // Pragmatic-dnd processes drag events asynchronously.
+      // Base UI processes drag moves on animation frames.
       await waitFor(() => {
         expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
@@ -1030,7 +1030,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         clientY: 40,
       });
 
-      // Pragmatic publishes the drag start asynchronously; the svg must mount on it
+      // Base UI publishes the drag start; the svg must mount on it
       // even though there is no line to draw yet — its rect is what the line needs.
       await waitFor(() => {
         expect(store.state.dependencyCreation).not.to.equal(null);
@@ -1684,7 +1684,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(store.state.dependencyCreation).to.equal(null);
 
-      // Unmounting does not deliver a native dragend: end the gesture so Base UI's
+      // End the active pointer gesture before unmounting so Base UI's
       // global drag state does not leak into the next test.
       cancelDrag();
     });

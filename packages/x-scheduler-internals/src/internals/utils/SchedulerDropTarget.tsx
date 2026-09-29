@@ -114,22 +114,20 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
     });
   };
 
+  const canDrop = React.useCallback(
+    ({ source }: { source: SchedulerDropTarget.Source }) =>
+      !schedulerExternalEventKind.matches(source) ||
+      schedulerEventSelectors.canDragEventsFromTheOutside(store.state),
+    [store],
+  );
+
   return (
     <Draggable.Target
       accept={accept}
       kind={schedulerDropTargetKind}
       payload={payload}
       render={render}
-      canDrop={({ source }) => {
-        if (
-          schedulerExternalEventKind.matches(source) &&
-          !schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
-        ) {
-          return false;
-        }
-
-        return true;
-      }}
+      canDrop={canDrop}
       onDraggableMove={({ source, target }) => {
         const newPlaceholder = getDropData(source, target);
         if (newPlaceholder) {

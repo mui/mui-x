@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
+import { platform } from '@base-ui/utils/platform';
 import type { Draggable } from '@base-ui/react/draggable';
 import { schedulerDragKinds } from './schedulerDrag';
 
 /**
- * Registers Base UI auto-scroll on the timeline scroller, with the
+ * Returns props for a Base UI viewport on the timeline scroller, with the
  * left-edge hitbox shifted to start at the right of the pinned title column.
+ * Spread the returned props onto the scroller's `Draggable.Viewport`.
  *
  * The scroller spans the entire content width — the title column is overlaid via
  * `position: absolute` — so the autoscroller's default left-edge hitbox sits over
@@ -28,7 +30,7 @@ export function useTimelineDragAutoScroll(params: {
     const scroller = scrollerRef.current;
     // The library warns when attached to a non-scrollable element, which is what
     // jsdom reports because it doesn't lay out.
-    if (!scroller || process.env.NODE_ENV === 'test') {
+    if (!scroller || platform.env.jsdom) {
       return undefined;
     }
 
@@ -53,7 +55,7 @@ export function useTimelineDragAutoScroll(params: {
 
   const viewportProps: Draggable.Viewport.Props = {
     accept: schedulerDragKinds,
-    disabled: process.env.NODE_ENV === 'test',
+    disabled: platform.env.jsdom,
   };
   return viewportProps;
 }

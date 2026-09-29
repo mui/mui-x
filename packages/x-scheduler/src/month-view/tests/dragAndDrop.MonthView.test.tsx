@@ -15,7 +15,7 @@ describe('MonthView - Drag and Drop', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
   afterEach(cancelDrag);
 
-  it('keeps multi-day previews in each week crossed by the dragged occurrence', async () => {
+  it('should keep multi-day previews in each week crossed by the dragged occurrence', async () => {
     const event = EventBuilder.new()
       .title('Multi-week preview')
       .span('2025-07-03T00:00:00Z', '2025-07-05T23:59:59Z', { allDay: true })

@@ -6,10 +6,7 @@ import { Draggable } from '@base-ui/react/draggable';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 
-import {
-  schedulerDayEventMoveKind,
-  schedulerTimeEventMoveKind,
-} from '@mui/x-scheduler/drag-and-drop';
+import { schedulerEventMoveKinds } from '@mui/x-scheduler/internals';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -54,8 +51,6 @@ const StyledStandaloneEvent = styled(StandaloneEvent)(({ theme }) =>
 const ExternalEventPlaceholder = styled('div')(({ theme }) =>
   externalEventStyles(theme),
 );
-
-const acceptedKinds = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind];
 
 function getExternalEvent(data) {
   if (!data) {
@@ -116,7 +111,7 @@ export default function ExternalDragAndDrop() {
     <Draggable.Provider>
       <Container className="mui-x-scheduler">
         <Draggable.Target
-          accept={acceptedKinds}
+          accept={schedulerEventMoveKinds}
           onDraggableEnter={({ source }) => {
             setPlaceholder(getExternalEvent(source.dragData));
           }}

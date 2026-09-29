@@ -10,6 +10,8 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
   const {
     getDragData,
     render,
+    // An explicit disabled preview suppresses Base UI's default source clone.
+    // Resize handles, dialogs, and dependency terminals use it when they draw their own feedback.
     preview = <Draggable.Preview disabled />,
     onBeforeMoveStart,
     ...other

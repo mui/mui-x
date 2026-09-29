@@ -9,7 +9,6 @@ import {
   simulatePointerResize,
   cancelDrag,
 } from 'test/utils/scheduler';
-import { isJSDOM } from 'test/utils/skipIf';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -113,9 +112,7 @@ describe('DayView - touch resize', () => {
         buttons: 1,
         clientY: clientYForTime(0, 24, 16),
       });
-      // JSDOM's capture shim records ownership; synthetic browser events do not
-      // create a native pointer for setPointerCapture to capture.
-      expect(handle.hasPointerCapture(1)).toBe(isJSDOM);
+      expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).not.toBe(null);
       expect(document.querySelector('[data-dragging]')).toBe(null);
       expect(onEventsChange).not.toHaveBeenCalled();
 

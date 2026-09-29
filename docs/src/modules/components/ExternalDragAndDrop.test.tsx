@@ -19,7 +19,7 @@ describe.each([
   const { renderSettled } = createSchedulerRenderer();
   afterEach(cancelDrag);
 
-  it('hides the floating preview over Scheduler and transfers an external item on drop', async () => {
+  it('should hide the floating preview over Scheduler and transfer an external item on drop', async () => {
     await renderSettled(<Demo />);
     const source = screen.getByText('External Event 1 (30 mins)');
     const externalList = source.parentElement!;
@@ -53,7 +53,7 @@ describe.each([
     expect(screen.getAllByText('External Event 1').length).toBeGreaterThan(0);
   });
 
-  it('keeps the external item when its drag is canceled', async () => {
+  it('should keep the external item when its drag is canceled', async () => {
     await renderSettled(<Demo />);
     const source = screen.getByText('External Event 1 (30 mins)');
     await act(async () => startDrag(source));
@@ -63,7 +63,7 @@ describe.each([
     expect(screen.queryByText('External Event 1', { exact: true })).toBe(null);
   });
 
-  it('transfers a scheduled event to the external container', async () => {
+  it('should transfer a scheduled event to the external container', async () => {
     await renderSettled(<Demo />);
     const target = screen.getByText('External Event 1 (30 mins)').parentElement!;
     const source = screen.getAllByText(title)[0];
@@ -79,7 +79,7 @@ describe.each([
     expect(target.querySelector('[data-placeholder]')).toBe(null);
   });
 
-  it('clears the hover placeholder on cancellation without transferring the event', async () => {
+  it('should clear the hover placeholder on cancellation without transferring the event', async () => {
     await renderSettled(<Demo />);
     const target = screen.getByText('External Event 1 (30 mins)').parentElement!;
     const source = screen.getAllByText(title)[0];

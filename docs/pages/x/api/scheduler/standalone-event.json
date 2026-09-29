@@ -7,6 +7,7 @@
       },
       "required": true
     },
+    "nativeButton": { "type": { "name": "bool" }, "default": "false" },
     "onEventDrop": { "type": { "name": "func" } },
     "sx": {
       "type": {

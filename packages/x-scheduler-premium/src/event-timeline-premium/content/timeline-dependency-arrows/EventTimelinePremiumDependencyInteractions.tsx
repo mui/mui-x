@@ -93,7 +93,11 @@ function DependencyInteractionsLayer() {
   );
 
   useDependencySelectionInteraction(svgRef);
-  const activeDrag = Draggable.useActiveDrag(schedulerDragKinds);
+  Draggable.useMonitor({
+    accept: schedulerDragKinds,
+    onMoveStart: () => svgRef.current?.setAttribute('data-drag-active', ''),
+    onMoveEnd: () => svgRef.current?.removeAttribute('data-drag-active'),
+  });
 
   if (visibleArrows.length === 0 || eventsWidth <= 0 || height <= 0) {
     return null;
@@ -114,7 +118,6 @@ function DependencyInteractionsLayer() {
       ref={svgRef}
       aria-hidden
       data-dependency-interactions=""
-      data-drag-active={activeDrag ? '' : undefined}
       width={eventsWidth}
       height={height}
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}

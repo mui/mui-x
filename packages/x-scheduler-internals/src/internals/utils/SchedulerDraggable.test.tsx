@@ -54,7 +54,7 @@ describe('Scheduler drag snapshots', () => {
   const { render } = createSchedulerRenderer();
   afterEach(cancelDrag);
 
-  it('does not capture a snapshot when the pickup is canceled', () => {
+  it('should not capture a snapshot when the pickup is canceled', () => {
     const getDragData = vi.fn(() => snapshot);
     const onBeforeMoveStart = vi.fn<
       NonNullable<SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['onBeforeMoveStart']>
@@ -72,7 +72,7 @@ describe('Scheduler drag snapshots', () => {
     expect(getDragData).toHaveBeenCalledTimes(1);
   });
 
-  it('captures once per gesture and keeps the snapshot across source rerenders', async () => {
+  it('should capture once per gesture and keep the snapshot across source rerenders', async () => {
     const getDragData = vi.fn(() => snapshot);
     const onMove = vi.fn();
     const view = render(<Fixture getDragData={getDragData} onMove={onMove} />);

@@ -7,6 +7,12 @@ import {
   schedulerExternalEventKind,
 } from '../internals/utils/schedulerDrag';
 
+const viewportOptions = {
+  accept: [schedulerTimeEventMoveKind, schedulerTimeEventResizeKind, schedulerExternalEventKind],
+  overflowMargin: { top: 160, bottom: 160 },
+};
+const getViewportOptions = () => viewportOptions;
+
 export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null>): void {
   const manager = Draggable.useManager();
   React.useEffect(() => {
@@ -15,18 +21,8 @@ export function useAutoScrollForTimeGrid(ref: React.RefObject<HTMLElement | null
       return undefined;
     }
 
-    return manager.registerViewport(element, () => ({
-      accept: [
-        schedulerTimeEventMoveKind,
-        schedulerTimeEventResizeKind,
-        schedulerExternalEventKind,
-      ],
-      overflowMargin: { top: 160, bottom: 160 },
-      onDragScroll: ({ direction }, details) => {
-        if (direction === 'horizontal') {
-          details.cancel();
-        }
-      },
-    }));
+    // The time grid only overflows vertically. Let native overflow select the axis;
+    // canceling horizontal scroll would keep the engine's frame loop engaged.
+    return manager.registerViewport(element, getViewportOptions);
   }, [manager, ref]);
 }

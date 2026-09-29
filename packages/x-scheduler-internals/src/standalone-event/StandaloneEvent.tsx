@@ -11,7 +11,10 @@ import type {
   SchedulerOccurrencePlaceholderExternalDragData,
   RenderDragPreviewParameters,
 } from '../models';
-import { SchedulerFloatingPreview } from '../internals/utils/SchedulerDragPreview';
+import {
+  SchedulerFloatingPreview,
+  schedulerPreviewStyle,
+} from '../internals/utils/SchedulerDragPreview';
 
 function StandaloneEventElement({
   componentProps,
@@ -45,7 +48,7 @@ function StandaloneEventElement({
         children: (
           <React.Fragment>
             {element.props.children}
-            <Draggable.Preview offset="pointer" style={{ pointerEvents: 'none' }}>
+            <Draggable.Preview offset="pointer" style={schedulerPreviewStyle}>
               {({ location }) => (
                 <SchedulerFloatingPreview location={location}>
                   {renderDragPreview({ type: 'standalone-event', data })}
@@ -101,6 +104,11 @@ export namespace StandaloneEvent {
      * The event properties and optional duration. The Scheduler determines the dates from the drop position.
      */
     data: SchedulerOccurrencePlaceholderExternalDragData;
+    /**
+     * Whether the rendered element is a native button.
+     * @default false
+     */
+    nativeButton?: boolean;
     renderDragPreview: (parameters: RenderDragPreviewParameters) => React.ReactNode;
     /**
      * Callback fired after the Scheduler handles the event drop.

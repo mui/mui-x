@@ -18,8 +18,8 @@ import type {
 } from '../../models';
 
 /**
- * Pointer-based resize for calendar events. Unlike {@link useEventResizeHandler} (native
- * drag-and-drop, needs a long-press on touch), this responds to a plain touch + drag.
+ * Pointer-based resize for calendar events. The Base UI handler {@link useEventResizeHandler} handles mouse input;
+ * this handler responds to a plain touch or pen drag.
  *
  * Surface-agnostic: geometry comes from `getDateAtPointer` and surface semantics from
  * `surfaceType`/`getResizeSession`, so one hook drives any surface.

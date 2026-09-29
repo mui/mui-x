@@ -6,6 +6,7 @@ import {
   schedulerDependencyKind,
   schedulerDependencyTargetKind,
 } from '@mui/x-scheduler-internals/internals';
+import type { SchedulerDependencyDragPayload } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -25,10 +26,15 @@ import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-pr
  * root, which reads the hovered target from the drop target data.
  */
 export function EventDependencyDropTarget(props: EventDependencyDropTarget.Props) {
+  const store = useEventTimelinePremiumStoreContext();
+  const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
+  return enabled ? <EnabledEventDependencyDropTarget {...props} /> : props.render;
+}
+
+function EnabledEventDependencyDropTarget(props: EventDependencyDropTarget.Props) {
   const { eventId, occurrenceKey, resourceId, side = 'start', render } = props;
 
   const store = useEventTimelinePremiumStoreContext();
-  const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, eventId);
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, eventId);
 
@@ -43,16 +49,19 @@ export function EventDependencyDropTarget(props: EventDependencyDropTarget.Props
     [eventId, occurrenceKey, resourceId, side, isRecurring, isReadOnly],
   );
 
+  const canDrop = React.useCallback(
+    ({ source }: { source: Draggable.Root.Record<SchedulerDependencyDragPayload> }) =>
+      source.payload.storeContext === store && source.payload.eventId !== eventId,
+    [store, eventId],
+  );
+
   return (
     <Draggable.Target
-      disabled={!enabled}
       accept={schedulerDependencyKind}
       kind={schedulerDependencyTargetKind}
       payload={payload}
       // Only dependency gestures from this timeline land here; an event cannot depend on itself.
-      canDrop={({ source }) =>
-        source.payload.storeContext === store && source.payload.eventId !== eventId
-      }
+      canDrop={canDrop}
       render={render}
     />
   );

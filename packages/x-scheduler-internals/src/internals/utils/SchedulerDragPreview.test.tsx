@@ -69,7 +69,7 @@ describe('Scheduler floating drag preview', () => {
   const { render } = createSchedulerRenderer();
   afterEach(cancelDrag);
 
-  it('keeps context and switches visibility when entering and leaving Scheduler targets', async () => {
+  it('should keep context and switch visibility when entering and leaving Scheduler targets', async () => {
     const renderPreview = vi.fn(() => <PreviewContent />);
     render(<Fixture renderPreview={renderPreview} />);
     await act(async () => startDrag(screen.getByTestId('source')));
@@ -87,7 +87,7 @@ describe('Scheduler floating drag preview', () => {
     await waitFor(() => expect(screen.queryByText('Custom preview')).toBe(null));
   });
 
-  it('keeps the floating preview when virtualization unmounts the source', async () => {
+  it('should keep the floating preview when virtualization unmounts the source', async () => {
     const renderPreview = () => <PreviewContent />;
     const view = render(<Fixture renderPreview={renderPreview} />);
     await act(async () => startDrag(screen.getByTestId('source')));

@@ -387,9 +387,6 @@ importers:
 
   .:
     devDependencies:
-      '@atlaskit/pragmatic-drag-and-drop-unit-testing':
-        specifier: 2.1.0
-        version: 2.1.0
       '@babel/core':
         specifier: 'catalog:'
         version: 7.29.7(supports-color@11.0.0)
@@ -2767,9 +2764,6 @@ packages:
   '@asamuzakjp/dom-selector@8.3.2':
     resolution: {integrity: sha512-93Z1N+BQNXysodoicpOIyNh2drHfz/CTf9nnT0FEx72GJcIiwgydD7tGAr78j41LsYn3hlRn+LdGPuBLn1Bl8Q==}
     engines: {node: ^22.13.0 || >=24.0.0}
-
-  '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.1.0':
-    resolution: {integrity: sha512-wgJ6NI5trVtZhtBep9sOBqRbNBdnjFrOc30bWJWitZuZe+H31UB21w2ry1UthpHdFeIesu3Arev8tU3GqDFa3g==}
 
   '@babel/cli@7.29.7':
     resolution: {integrity: sha512-/75HwRbAYPqXv/Ax1h7Fg3IZfXgdU98jnA8H93/m/QBaPV3Hp5ICoLqzGYye1yHBCgpmXvtqgSUN8oOKX5tojQ==}
@@ -11770,10 +11764,6 @@ snapshots:
       css-tree: 3.2.1
       is-potential-custom-element-name: 1.0.1
       lru-cache: 11.5.2
-
-  '@atlaskit/pragmatic-drag-and-drop-unit-testing@2.1.0':
-    dependencies:
-      '@babel/runtime': 7.29.7
 
   '@babel/cli@7.29.7(@babel/core@7.29.7(supports-color@11.0.0))':
     dependencies:

@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui/utils/store';
 import { Draggable } from '@base-ui/react/draggable';
 import type { RenderDragPreviewParameters } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { schedulerEventDragKinds, schedulerDropTargetKind } from './schedulerDrag';
+
+export const schedulerPreviewStyle: React.CSSProperties = { pointerEvents: 'none' };
 
 function isOutsideScheduler(location: Draggable.LocationHistory) {
   return !location.current.targets.some((target) => schedulerDropTargetKind.matches(target));
@@ -30,15 +31,16 @@ export function SchedulerFloatingPreview(props: {
 export function SchedulerDragPreview(props: SchedulerDragPreview.Props) {
   const { renderDragPreview, data, type } = props;
   const store = useSchedulerStoreContext();
-  const enabled = useStore(store, schedulerEventSelectors.canDropEventsToTheOutside);
 
   return (
-    <Draggable.Preview disabled={!enabled} offset="pointer" style={{ pointerEvents: 'none' }}>
-      {({ location }) => (
-        <SchedulerFloatingPreview location={location}>
-          {renderDragPreview({ data, type })}
-        </SchedulerFloatingPreview>
-      )}
+    <Draggable.Preview offset="pointer" style={schedulerPreviewStyle}>
+      {({ location }) =>
+        schedulerEventSelectors.canDropEventsToTheOutside(store.state) ? (
+          <SchedulerFloatingPreview location={location}>
+            {renderDragPreview({ data, type })}
+          </SchedulerFloatingPreview>
+        ) : null
+      }
     </Draggable.Preview>
   );
 }

@@ -11,6 +11,10 @@ const getDeltas = (location: Draggable.LocationHistory) => {
   return { deltaX, deltaY };
 };
 
+/**
+ * Moves the dialog from its header handle. Touch uses Base UI's long-press activation;
+ * form controls inside the handle remain interactive. Compact drawers disable dragging.
+ */
 export function useDraggableDialog(
   elementRef: React.RefObject<HTMLElement | null>,
   mutateStyle: (style: string) => void,

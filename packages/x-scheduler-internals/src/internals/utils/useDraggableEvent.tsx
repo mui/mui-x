@@ -10,6 +10,7 @@ import {
 } from '../../scheduler-selectors';
 import type { SchedulerEventId } from '../../models';
 import type { useElementPositionInCollection } from './useElementPositionInCollection';
+import { schedulerDropTargetKind } from './schedulerDrag';
 import { SchedulerDragPreview } from './SchedulerDragPreview';
 import { useEvent } from './useEvent';
 
@@ -66,8 +67,14 @@ export function useDraggableEvent<TData extends SchedulerEventMoveData>(
         renderDragPreview={renderDragPreview}
       />
     ),
-    onMoveEnd: () => {
-      store.setOccurrencePlaceholder(null);
+    // Targets run after the source and may commit the last valid placeholder.
+    onMoveEnd: (_, { canceled, location }) => {
+      if (
+        canceled ||
+        !location.current.targets.some((target) => schedulerDropTargetKind.matches(target))
+      ) {
+        store.setOccurrencePlaceholder(null);
+      }
     },
   };
 

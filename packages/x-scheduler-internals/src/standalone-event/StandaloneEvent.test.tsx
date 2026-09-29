@@ -22,7 +22,7 @@ describe('<StandaloneEvent />', () => {
   );
   afterEach(cancelDrag);
 
-  it('forwards Root dragging state to render, className and style for only the active source', async () => {
+  it('should forward Root dragging state to render, className and style for only the active source', async () => {
     const data = EventBuilder.new().toProcessed();
     render(
       <div>
@@ -54,7 +54,7 @@ describe('<StandaloneEvent />', () => {
     expect(first.style.opacity).toBe('1');
   });
 
-  it('preserves custom render children and preview context without a Scheduler provider', async () => {
+  it('should preserve custom render children and preview context without a Scheduler provider', async () => {
     const Context = React.createContext('missing context');
     function Preview() {
       return <span>{React.useContext(Context)}</span>;
@@ -76,7 +76,7 @@ describe('<StandaloneEvent />', () => {
     expect(screen.queryByText('External preview')).toBe(null);
   });
 
-  it('supports a native button render and forwards its ref', () => {
+  it('should support a native button render and forwards its ref', () => {
     const ref = React.createRef<HTMLDivElement>();
     render(
       <StandaloneEvent

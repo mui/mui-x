@@ -9,7 +9,7 @@ import {
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 
 /**
  * Returns all time grid column drop targets (`[data-drop-target]`)
@@ -61,9 +61,10 @@ const JULY_3_COLUMN_INDEX = 4;
 const JULY_4_COLUMN_INDEX = 5;
 
 describe('WeekView - Drag and Drop', () => {
+  afterEach(cancelDrag);
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
-  it('discards the event move when the pointer gesture is canceled', async () => {
+  it('should discard the event move when the pointer gesture is canceled', async () => {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .title('Canceled meeting')
@@ -78,15 +79,20 @@ describe('WeekView - Drag and Drop', () => {
         target: getDayGridCell(4),
         hold: true,
       });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
     });
+    expect(document.querySelector('.MuiEventCalendar-dayGridEventPlaceholder')).not.toBe(null);
     cancelDrag();
+    expect(document.querySelector('.MuiEventCalendar-dayGridEventPlaceholder')).toBe(null);
     expect(onEventsChange).not.toHaveBeenCalled();
     expect(
       screen.getByRole('button', { name: /Canceled meeting/i }).hasAttribute('data-dragging'),
     ).toBe(false);
   });
 
-  it('discards the resize placeholder when the pointer gesture is canceled', async () => {
+  it('should discard the resize placeholder when the pointer gesture is canceled', async () => {
     const onEventsChange = vi.fn();
     const event = EventBuilder.new()
       .title('Canceled resize')

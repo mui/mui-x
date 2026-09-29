@@ -155,6 +155,11 @@ StandaloneEvent.propTypes /* remove-proptypes */ = {
     title: PropTypes.string.isRequired,
   }).isRequired,
   /**
+   * Whether the rendered element is a native button.
+   * @default false
+   */
+  nativeButton: PropTypes.bool,
+  /**
    * Callback fired after the Scheduler handles the event drop.
    */
   onEventDrop: PropTypes.func,

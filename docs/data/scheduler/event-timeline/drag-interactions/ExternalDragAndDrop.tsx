@@ -9,7 +9,7 @@ import {
   SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholderExternalDragData,
 } from '@mui/x-scheduler/models';
-import { schedulerTimelineEventMoveKind } from '@mui/x-scheduler-premium/drag-and-drop';
+import { schedulerEventMoveKinds } from '@mui/x-scheduler-premium/internals';
 import {
   defaultVisibleDate,
   initialEvents,
@@ -54,8 +54,6 @@ const StyledStandaloneEvent = styled(StandaloneEvent)(({ theme }) =>
 const ExternalEventPlaceholder = styled('div')(({ theme }) =>
   externalEventStyles(theme),
 );
-
-const acceptedKinds = [schedulerTimelineEventMoveKind];
 
 function getExternalEvent(
   data: { originalOccurrence: SchedulerEventOccurrence } | undefined,
@@ -121,7 +119,7 @@ export default function ExternalDragAndDrop() {
     <Draggable.Provider>
       <Container className="mui-x-scheduler">
         <Draggable.Target
-          accept={acceptedKinds}
+          accept={schedulerEventMoveKinds}
           onDraggableEnter={({ source }) => {
             setPlaceholder(getExternalEvent(source.dragData));
           }}

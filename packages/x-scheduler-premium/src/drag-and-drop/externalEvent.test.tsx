@@ -4,7 +4,7 @@ import { screen, act } from '@mui/internal-test-utils';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { schedulerExternalEventKind } from '@mui/x-scheduler/drag-and-drop';
+import { schedulerExternalEventKind } from '@mui/x-scheduler/internals';
 import {
   createSchedulerRenderer,
   getMonthViewCell,
@@ -41,7 +41,7 @@ describe('External Scheduler drag kind', () => {
   const { renderSettled } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
   afterEach(cancelDrag);
 
-  it('creates multi-day calendar previews and drops from a custom source', async () => {
+  it('should create multi-day calendar previews and drop from a custom source', async () => {
     const onEventDrop = vi.fn();
     const onEventsChange = vi.fn();
     await renderSettled(
@@ -74,7 +74,7 @@ describe('External Scheduler drag kind', () => {
     expect(onEventDrop).toHaveBeenCalledTimes(1);
   });
 
-  it('uses the latest StandaloneEvent callback after a rerender during a drag', async () => {
+  it('should use the latest StandaloneEvent callback after a rerender during a drag', async () => {
     const data = { id: 'external', title: 'External job', duration: 60 };
     const onEventsChange = vi.fn();
     function Fixture({ onEventDrop }: { onEventDrop: () => void }) {
@@ -111,7 +111,7 @@ describe('External Scheduler drag kind', () => {
     expect(onEventsChange.mock.calls[0][0][0].title).toBe('External job');
   });
 
-  it('does not notify StandaloneEvent when the target has event creation disabled', async () => {
+  it('should not notify StandaloneEvent when the target has event creation disabled', async () => {
     const onEventDrop = vi.fn();
     const onEventsChange = vi.fn();
     await renderSettled(
@@ -171,7 +171,7 @@ describe('External Scheduler drag kind', () => {
     },
   );
 
-  it('drops into a timeline resource row from a separate provider', async () => {
+  it('should drop into a timeline resource row from a separate provider', async () => {
     const resource = ResourceBuilder.new().build();
     const onEventDrop = vi.fn();
     const onEventsChange = vi.fn();

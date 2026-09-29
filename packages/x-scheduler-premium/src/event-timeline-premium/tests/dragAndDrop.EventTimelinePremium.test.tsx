@@ -3,7 +3,7 @@ import * as React from 'react';
 import { screen, within, act } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { Draggable } from '@base-ui/react/draggable';
-import { schedulerExternalEventKind } from '@mui/x-scheduler/drag-and-drop';
+import { schedulerExternalEventKind } from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
