@@ -35,10 +35,13 @@ const trimmedSurface: LinearDropSurface = {
 
 const occurrence = EventBuilder.new().toOccurrence();
 
-function createTarget(fraction: number) {
-  // Only what the helper reads, on either axis.
+function createTarget(fraction: number, axis: 'x' | 'y') {
+  // Only what the helper reads. The other axis holds a different value, so reading it shows.
   return {
-    getSnappedLocalPoint: () => ({ x: fraction, y: fraction }),
+    getSnappedLocalPoint: () => ({
+      x: axis === 'x' ? fraction : 0.123,
+      y: axis === 'y' ? fraction : 0.987,
+    }),
   } as unknown as Draggable.Target.Record;
 }
 
@@ -68,7 +71,7 @@ function move(surface: LinearDropSurface, source: SchedulerDropTarget.Source, fr
   return getLinearEventDropDates({
     adapter,
     source,
-    target: createTarget(fraction),
+    target: createTarget(fraction, surface.axis),
     surface,
     moveKind: schedulerTimeEventMoveKind,
     resizeKind: schedulerTimeEventResizeKind,
@@ -130,6 +133,14 @@ describe('getLinearEventDropDates', () => {
       expect(dates.end).toEqualDateTime(at(10.25));
     });
 
+    it('should clamp an end that the grab offset pushes past the window', () => {
+      // Grabbed 15 minutes before the end and released at the edge of the day: the pointer
+      // puts the end 15 minutes after midnight.
+      const source = createSource(schedulerTimeEventResizeKind, getDragData(10, 11, 45, 'end'));
+      const dates = move(daySurface, source, 1)!;
+      expect(dates.end).toEqualDateTime(at(24));
+    });
+
     it('should keep the end inside the window', () => {
       const source = createSource(schedulerTimeEventResizeKind, getDragData(10, 11, 60, 'end'));
       const dates = move(daySurface, source, 1)!;
@@ -156,7 +167,7 @@ describe('getLinearEventDropDates', () => {
       const dates = getLinearEventDropDates({
         adapter,
         source,
-        target: createTarget(9 / 24),
+        target: createTarget(9 / 24, 'y'),
         surface: daySurface,
         moveKind: schedulerTimeEventMoveKind,
         resizeKind: schedulerTimeEventResizeKind,
@@ -170,10 +181,10 @@ describe('getLinearEventDropDates', () => {
     it('should stop one slot before the end of the axis', () => {
       // Rounding alone would send the last minutes of the day to the midnight after it.
       expect(
-        getLinearPointerDate({ target: createTarget(1), surface: daySurface }),
+        getLinearPointerDate({ target: createTarget(1, 'y'), surface: daySurface }),
       ).toEqualDateTime(at(23.75));
       expect(
-        getLinearPointerDate({ target: createTarget(23.95 / 24), surface: daySurface }),
+        getLinearPointerDate({ target: createTarget(23.95 / 24, 'y'), surface: daySurface }),
       ).toEqualDateTime(at(23.75));
     });
   });
