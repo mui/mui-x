@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { describe, it, expect } from 'vitest';
 
@@ -120,49 +121,41 @@ describe('<DataGrid /> - rowCheckbox slot', () => {
     );
 
     expect(passedProps.material).to.have.property('color', 'primary');
-    expect(passedProps.material).to.have.property('disableRipple');
   });
 
-  it('should leave disableRipple unset on an enabled checkbox so the theme decides', () => {
-    let passedProps: any;
-    function CustomBaseCheckbox(props: any) {
-      passedProps = props;
-      return <div data-testid="custom-base-checkbox" />;
+  describe('ripple', () => {
+    // The ripple mounts lazily, so it only appears in the DOM after an interaction.
+    async function clickRowCheckbox(user: any) {
+      const checkbox = screen.getAllByRole('checkbox')[1].closest('.MuiButtonBase-root')!;
+      await user.click(checkbox);
+      return checkbox;
     }
 
-    render(
+    const grid = (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           rows={[{ id: 1, name: 'John' }]}
           columns={[{ field: 'name' }]}
           checkboxSelection
-          slots={{ baseCheckbox: CustomBaseCheckbox }}
         />
-      </div>,
+      </div>
     );
 
-    expect(passedProps.material.disableRipple).to.equal(undefined);
-  });
+    it('should render the ripple by default', async () => {
+      const { user } = render(grid);
+      const checkbox = await clickRowCheckbox(user);
 
-  it('should disable the ripple on a checkbox that is not selectable', () => {
-    let passedProps: any;
-    function CustomBaseCheckbox(props: any) {
-      passedProps = props;
-      return <div data-testid="custom-base-checkbox" />;
-    }
+      expect(checkbox.querySelector('.MuiTouchRipple-root')).not.to.equal(null);
+    });
 
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          rows={[{ id: 1, name: 'John' }]}
-          columns={[{ field: 'name' }]}
-          checkboxSelection
-          isRowSelectable={() => false}
-          slots={{ baseCheckbox: CustomBaseCheckbox }}
-        />
-      </div>,
-    );
+    it('should not render the ripple when the theme disables it', async () => {
+      const theme = createTheme({
+        components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+      });
+      const { user } = render(<ThemeProvider theme={theme}>{grid}</ThemeProvider>);
+      const checkbox = await clickRowCheckbox(user);
 
-    expect(passedProps.material.disableRipple).to.equal(true);
+      expect(checkbox.querySelector('.MuiTouchRipple-root')).to.equal(null);
+    });
   });
 });

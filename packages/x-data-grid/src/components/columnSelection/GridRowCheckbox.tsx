@@ -13,10 +13,7 @@ const GridRowCheckbox = forwardRef<HTMLButtonElement, GridRowCheckboxProps>(
       <rootProps.slots.baseCheckbox
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
-        material={{
-          disableRipple: props.disabled || undefined,
-          ...material,
-        }}
+        material={material}
         ref={ref}
       />
     );
