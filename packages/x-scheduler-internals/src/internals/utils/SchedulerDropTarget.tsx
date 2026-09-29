@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import {
   schedulerExternalEventKind,
   schedulerDropTargetKind,
@@ -90,6 +91,13 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
     };
   };
 
+  // A stable identity: the engine re-resolves the hovered targets whenever `canDrop` changes.
+  const canDrop = useStableCallback(({ source }: { source: SchedulerDropTarget.Source }) =>
+    schedulerExternalEventKind.matches(source)
+      ? schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
+      : 'store' in source.payload && source.payload.store === store,
+  );
+
   const getDropData = (
     source: SchedulerDropTarget.Source,
     target: Draggable.Target.Record,
@@ -130,10 +138,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
       accept={accept}
       kind={schedulerDropTargetKind}
       render={render}
-      canDrop={({ source }) =>
-        !schedulerExternalEventKind.matches(source) ||
-        schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
-      }
+      canDrop={canDrop}
       // Nothing styles the target while a drag is over it.
       trackDragOver={false}
       onDraggableMove={({ source, target }, { location }) => {

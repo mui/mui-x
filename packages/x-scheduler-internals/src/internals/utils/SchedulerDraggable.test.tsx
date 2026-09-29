@@ -14,7 +14,7 @@ import { schedulerDayEventMoveKind } from './schedulerDrag';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 
 const occurrence = EventBuilder.new().fullDay('2025-07-03').toOccurrence();
-const payload = { eventId: occurrence.id, occurrenceKey: occurrence.key };
+const payload = { eventId: occurrence.id, occurrenceKey: occurrence.key, store: null };
 const snapshot: CalendarGridDayEvent.DragData = {
   ...payload,
   originalOccurrence: occurrence,
@@ -26,11 +26,9 @@ const snapshot: CalendarGridDayEvent.DragData = {
 function Fixture({
   getDragData,
   onMove,
-  onBeforeMoveStart,
 }: {
   getDragData: SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['getDragData'];
   onMove?: SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['onMove'];
-  onBeforeMoveStart?: SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['onBeforeMoveStart'];
 }) {
   return (
     <EventCalendarProvider events={[]} resources={[]}>
@@ -39,7 +37,6 @@ function Fixture({
         payload={payload}
         getDragData={getDragData}
         onMove={onMove}
-        onBeforeMoveStart={onBeforeMoveStart}
         render={<div data-testid="source">Event</div>}
       />
     </EventCalendarProvider>
@@ -49,24 +46,6 @@ function Fixture({
 describe('Scheduler drag snapshots', () => {
   const { render } = createSchedulerRenderer();
   afterEach(cancelDrag);
-
-  it('should not capture a snapshot when the pickup is canceled', () => {
-    const getDragData = vi.fn(() => snapshot);
-    const onBeforeMoveStart = vi.fn<
-      NonNullable<SchedulerDraggable.Props<CalendarGridDayEvent.DragData>['onBeforeMoveStart']>
-    >((_, details) => details.cancel());
-    const view = render(
-      <Fixture getDragData={getDragData} onBeforeMoveStart={onBeforeMoveStart} />,
-    );
-    startDrag(screen.getByTestId('source'));
-    expect(onBeforeMoveStart).toHaveBeenCalledTimes(1);
-    expect(getDragData).not.toHaveBeenCalled();
-
-    cancelDrag();
-    view.setProps({ onBeforeMoveStart: undefined });
-    startDrag(screen.getByTestId('source'));
-    expect(getDragData).toHaveBeenCalledTimes(1);
-  });
 
   it('should capture once per gesture and keep the snapshot across source rerenders', async () => {
     const getDragData = vi.fn(() => snapshot);
@@ -92,5 +71,36 @@ describe('Scheduler drag snapshots', () => {
     cancelDrag();
     startDrag(screen.getByTestId('source'));
     expect(nextGetDragData).toHaveBeenCalledTimes(1);
+  });
+
+  // Resize handles draw their own feedback: Base UI's default clone of the source would repeat it.
+  it('should not show a clone of the source while it is dragged without a preview', async () => {
+    render(<Fixture getDragData={() => snapshot} />);
+    startDrag(screen.getByTestId('source'));
+    await act(async () => {
+      moveDrag(document.body, { clientX: 100 });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    expect(screen.getAllByText('Event')).toHaveLength(1);
+  });
+
+  // A `Draggable.Target` that wraps it in `render` clones it with a ref. React 17 and 18 only hand
+  // that ref to a `forwardRef` component, so a drop target on the timeline event body depends on it.
+  it('should forward its ref to the element it renders', () => {
+    const ref = React.createRef<HTMLDivElement>();
+    render(
+      <EventCalendarProvider events={[]} resources={[]}>
+        <SchedulerDraggable
+          ref={ref}
+          kind={schedulerDayEventMoveKind}
+          payload={payload}
+          getDragData={() => snapshot}
+          render={<div data-testid="source">Event</div>}
+        />
+      </EventCalendarProvider>,
+    );
+    expect(ref.current).toBe(screen.getByTestId('source'));
   });
 });

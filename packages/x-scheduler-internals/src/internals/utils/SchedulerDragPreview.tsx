@@ -16,9 +16,9 @@ function SchedulerFloatingPreview(props: {
 }) {
   const { location, children } = props;
   const [visible, setVisible] = React.useState(() => isOutsideScheduler(location));
-  // The preview only exists during its own drag, so the monitor needs no `accept`.
+  // The preview only exists during its own drag, so the monitor needs no `accept`. The drag has
+  // started by the time it mounts, and the initial state reads where it started.
   Draggable.useMonitor({
-    onMoveStart: (_, { location: nextLocation }) => setVisible(isOutsideScheduler(nextLocation)),
     onTargetChange: (_, { location: nextLocation }) => setVisible(isOutsideScheduler(nextLocation)),
   });
   return <div style={{ visibility: visible ? undefined : 'hidden' }}>{children}</div>;

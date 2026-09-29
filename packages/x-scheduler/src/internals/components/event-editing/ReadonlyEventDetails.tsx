@@ -38,6 +38,8 @@ const ReadonlyDetailsRoot = styled('div', {
   padding: theme.spacing(0, 3),
   flexDirection: 'column',
   gap: theme.spacing(2),
+  // The dialog turns its whole read-only content into a drag handle, which disables selection.
+  userSelect: 'text',
 }));
 
 const RecurrenceLabelContainer = styled('div', {

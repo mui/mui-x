@@ -355,6 +355,78 @@ describe('WeekView - Drag and Drop', () => {
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(4);
   });
 
+  it('should give an all-day event dropped in the time grid the default event duration', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('All Day Event')
+      .fullDay('2025-07-03')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView
+        events={[event]}
+        resources={[]}
+        eventCreation={{ duration: 90 }}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const eventElement = screen.getByRole('button', { name: /All Day Event/i });
+    mockElementBounds(eventElement, { left: 0, width: 100 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getTimeGridColumns()[JULY_3_COLUMN_INDEX],
+        sourceClientX: 50,
+        targetClientY: clientYForTime(0, 24, 14),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvent = handleEventsChange.mock.calls[0][0][0];
+    expect(new Date(updatedEvent.start).toISOString()).to.equal('2025-07-03T14:00:00.000Z');
+    expect(new Date(updatedEvent.end).toISOString()).to.equal('2025-07-03T15:30:00.000Z');
+  });
+
+  it('should start an all-day event dropped at the end of a day one slot before the day ends', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('All Day Event')
+      .fullDay('2025-07-03')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const eventElement = screen.getByRole('button', { name: /All Day Event/i });
+    mockElementBounds(eventElement, { left: 0, width: 100 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getTimeGridColumns()[JULY_3_COLUMN_INDEX],
+        sourceClientX: 50,
+        targetClientY: 1440,
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    // The last quarter of the day: the event starts where the grid still renders it.
+    expect(new Date(handleEventsChange.mock.calls[0][0][0].start).toISOString()).to.equal(
+      '2025-07-03T23:45:00.000Z',
+    );
+  });
+
   it('should resize a time event end to a later time', async () => {
     const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
@@ -392,6 +464,43 @@ describe('WeekView - Drag and Drop', () => {
     // End should have moved later
     const newEndHour = new Date(updatedEvents[0].end).getUTCHours();
     expect(newEndHour).to.not.equal(11);
+  });
+
+  it('should commit a mouse resize that ends within a few pixels of where it started', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .resizable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    // Ten minutes per pixel: a few pixels are half an hour.
+    for (const column of getTimeGridColumns()) {
+      mockElementBounds(column, { top: 0, height: 144, width: 200 });
+    }
+
+    // The event spans 10:00 to 11:00, and the pointer grabs its bottom edge.
+    const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
+    mockElementBounds(eventElement, { top: 60, height: 6, width: 100 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: getResizeHandle(eventElement, 'end'),
+        target: getTimeGridColumns()[JULY_3_COLUMN_INDEX],
+        sourceClientY: 66,
+        targetClientY: 69,
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    expect(new Date(handleEventsChange.mock.calls[0][0][0].end).toISOString()).to.equal(
+      '2025-07-03T11:30:00.000Z',
+    );
   });
 
   it('should resize a time event start to an earlier time', async () => {

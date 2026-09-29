@@ -3,12 +3,16 @@ import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
+  cancelDrag,
+  dropDrag,
+  startDrag,
   EventBuilder,
   utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -24,7 +28,7 @@ import {
   useEventDialogFormField,
   useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { Mock } from 'vitest';
 import type { SchedulerSlotProps, SchedulerSlots } from '../../../models/slots';
 import { MonthView } from '../../../month-view';
@@ -498,6 +502,80 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     ]);
 
     expect(screen.queryByText(/repeats/i)).to.equal(null);
+  });
+
+  describe('drag', () => {
+    afterEach(cancelDrag);
+
+    function renderDialog() {
+      render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+          <EventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+      return { dialog: screen.getByRole('dialog'), header: document.querySelector('header')! };
+    }
+
+    it('should move from its header', () => {
+      const { dialog, header } = renderDialog();
+
+      startDrag(header);
+      dropDrag(header, { clientX: 30, clientY: 20 });
+
+      expect(dialog.style.transform).to.equal('translate(30px, 20px)');
+    });
+
+    it('should not move from its content, so the form keeps its own pointer gestures', () => {
+      const { dialog } = renderDialog();
+      const form = dialog.querySelector('form')!;
+
+      startDrag(form);
+      dropDrag(form, { clientX: 30, clientY: 20 });
+
+      // Positioned at its anchor, and not moved.
+      expect(dialog.style.transform).to.equal('none');
+    });
+
+    it('should return to its anchored position when the window is resized', () => {
+      const { dialog, header } = renderDialog();
+      startDrag(header);
+      dropDrag(header, { clientX: 30, clientY: 20 });
+
+      act(() => {
+        window.dispatchEvent(new Event('resize'));
+      });
+
+      expect(dialog.style.transform).to.equal('none');
+    });
+  });
+
+  it.skipIf(isJSDOM)('should keep the details of a readonly event selectable', () => {
+    const readonlyEvent: SchedulerEvent = EventBuilder.new()
+      .title('Running')
+      .description('Morning run')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .resource(personalResource)
+      .readOnly()
+      .build();
+
+    render(
+      <EventCalendarProvider events={[readonlyEvent]} resources={resources}>
+        <EventDialogContent
+          open
+          {...defaultProps}
+          occurrence={EventBuilder.new()
+            .id(readonlyEvent.id)
+            .title(readonlyEvent.title)
+            .description('Morning run')
+            .span(readonlyEvent.start, readonlyEvent.end)
+            .resource(personalResource)
+            .toOccurrence()}
+        />
+      </EventCalendarProvider>,
+    );
+
+    // The whole content of the dialog is a drag handle, which the engine makes unselectable.
+    expect(getComputedStyle(screen.getByText('Morning run')).userSelect).to.equal('text');
   });
 
   it('should warn and strip the rrule when createEvent is called with one', () => {

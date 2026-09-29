@@ -1,5 +1,5 @@
 import type { Draggable } from '@base-ui/react/draggable';
-import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import { EVENT_DRAG_PRECISION_MS } from '../../constants';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { TemporalSupportedObject } from '../../models';
 import { schedulerExternalEventKind } from './schedulerDrag';
@@ -136,7 +136,6 @@ export function getLinearEventDropDates<
         start: data.start,
         end: data.end,
         cursorDate,
-        precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
       });
     }
 
@@ -156,7 +155,6 @@ export function getLinearEventDropDates<
       start: data.start,
       end: data.end,
       cursorDate,
-      precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
     });
   }
 

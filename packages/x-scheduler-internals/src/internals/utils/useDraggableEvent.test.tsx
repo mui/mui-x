@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { act, screen } from '@mui/internal-test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -18,7 +19,7 @@ import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/Calenda
 import { useDraggableEvent } from './useDraggableEvent';
 import { SchedulerDraggable } from './SchedulerDraggable';
 import { SchedulerDropTarget } from './SchedulerDropTarget';
-import { schedulerDayEventMoveKind } from './schedulerDrag';
+import { schedulerDayEventMoveKind, schedulerExternalEventKind } from './schedulerDrag';
 
 const builder = EventBuilder.new().fullDay('2025-07-03').draggable(true);
 const occurrence = builder.toOccurrence();
@@ -175,6 +176,97 @@ describe('useDraggableEvent', () => {
   });
 });
 
+describe('SchedulerDropTarget when the pointer leaves it', () => {
+  const { render } = createSchedulerRenderer();
+  afterEach(cancelDrag);
+
+  const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
+  const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+
+  function ExternalSource() {
+    return (
+      <Draggable.Root
+        kind={schedulerExternalEventKind}
+        payload={{ eventData: { id: 'external', title: 'External' } }}
+        render={<div data-testid="source" />}
+      >
+        <Draggable.Preview disabled />
+      </Draggable.Root>
+    );
+  }
+
+  function setup(parameters: { external?: boolean; canDropEventsToTheOutside?: boolean }) {
+    const { external = false, canDropEventsToTheOutside = false } = parameters;
+    let store!: SchedulerStoreInContext<any, any>;
+    render(
+      <EventCalendarProvider
+        events={[builder.build()]}
+        resources={[]}
+        canDropEventsToTheOutside={canDropEventsToTheOutside}
+        canDragEventsFromTheOutside
+      >
+        <StoreProbe
+          onStore={(value) => {
+            store = value;
+          }}
+        />
+        {external ? <ExternalSource /> : <Source />}
+        <SchedulerDropTarget
+          surfaceType="day-grid"
+          accept={[schedulerDayEventMoveKind, schedulerExternalEventKind]}
+          getEventDropDates={() => (external ? { start } : { start, end })}
+          render={<div data-testid="target" />}
+        />
+      </EventCalendarProvider>,
+    );
+    return () => schedulerOccurrencePlaceholderSelectors.value(store.state);
+  }
+
+  async function moveTo(element: Element, clientX: number) {
+    await act(async () => {
+      moveDrag(element, { clientX });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+  }
+
+  it('should hide the placeholder of a dragged event when it can be dropped outside', async () => {
+    const getPlaceholder = setup({ canDropEventsToTheOutside: true });
+    startDrag(screen.getByTestId('source'));
+    await moveTo(screen.getByTestId('target'), 100);
+    expect(getPlaceholder()).toMatchObject({ type: 'internal-drag' });
+    expect(getPlaceholder()).not.toMatchObject({ isHidden: true });
+
+    await moveTo(document.body, 300);
+
+    expect(getPlaceholder()).toMatchObject({ isHidden: true });
+  });
+
+  it('should keep the placeholder of a dragged event when it cannot be dropped outside', async () => {
+    const getPlaceholder = setup({ canDropEventsToTheOutside: false });
+    startDrag(screen.getByTestId('source'));
+    await moveTo(screen.getByTestId('target'), 100);
+    expect(getPlaceholder()).toMatchObject({ type: 'internal-drag' });
+
+    await moveTo(document.body, 300);
+
+    expect(getPlaceholder()).not.toMatchObject({ isHidden: true });
+  });
+
+  it('should hide the placeholder of an external item', async () => {
+    const getPlaceholder = setup({ external: true });
+    startDrag(screen.getByTestId('source'));
+    await moveTo(screen.getByTestId('target'), 100);
+    expect(getPlaceholder()).toMatchObject({ type: 'external-drag' });
+    expect(getPlaceholder()).not.toMatchObject({ isHidden: true });
+
+    await moveTo(document.body, 300);
+
+    expect(getPlaceholder()).toMatchObject({ isHidden: true });
+  });
+});
+
 // Virtualization unmounts and remounts rows and events while a drag auto-scrolls the timeline.
 describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
   const { render } = createSchedulerRenderer();
@@ -291,5 +383,65 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
     dropDrag(screen.getByTestId('target'), { clientX: 110 });
 
     expect(onEventsChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('should ignore a drop on another Scheduler and clear the placeholder', async () => {
+    // Two calendars on the page, both showing the event.
+    let store!: SchedulerStoreInContext<any, any>;
+    const onEventsChangeOther = vi.fn();
+    const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
+    const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+    render(
+      <React.Fragment>
+        <EventCalendarProvider events={[builder.build()]} resources={[]}>
+          <StoreProbe
+            onStore={(value) => {
+              store = value;
+            }}
+          />
+          <Source />
+          <SchedulerDropTarget
+            surfaceType="day-grid"
+            accept={accept}
+            getEventDropDates={() => ({ start, end })}
+            render={<div data-testid="own-target" />}
+          />
+        </EventCalendarProvider>
+        <EventCalendarProvider
+          events={[builder.build()]}
+          resources={[]}
+          onEventsChange={onEventsChangeOther}
+        >
+          <SchedulerDropTarget
+            surfaceType="day-grid"
+            accept={accept}
+            getEventDropDates={() => ({ start, end })}
+            render={<div data-testid="other-target" />}
+          />
+        </EventCalendarProvider>
+      </React.Fragment>,
+    );
+    const getPlaceholder = () => schedulerOccurrencePlaceholderSelectors.value(store.state);
+
+    startDrag(screen.getByTestId('source'));
+    await act(async () => {
+      moveDrag(screen.getByTestId('own-target'), { clientX: 100 });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+    expect(getPlaceholder()).not.toBe(null);
+    await act(async () => {
+      moveDrag(screen.getByTestId('other-target'), { clientX: 200 });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+
+    dropDrag(screen.getByTestId('other-target'), { clientX: 210 });
+
+    // The other Scheduler does not know this event, so it takes no part in the drag.
+    expect(onEventsChangeOther).not.toHaveBeenCalled();
+    expect(getPlaceholder()).toBe(null);
   });
 });

@@ -23,7 +23,7 @@ function TimeGrid() {
     <React.Fragment>
       <Draggable.Root
         kind={schedulerTimeEventMoveKind}
-        payload={{ eventId: 'event', occurrenceKey: 'event' }}
+        payload={{ eventId: 'event', occurrenceKey: 'event', store: null }}
         data-testid="event"
         style={{ position: 'fixed', left: 300, top: 0, width: 100, height: 40 }}
       >
@@ -32,7 +32,7 @@ function TimeGrid() {
       </Draggable.Root>
       <Draggable.Root
         kind={schedulerDayEventMoveKind}
-        payload={{ eventId: 'day', occurrenceKey: 'day' }}
+        payload={{ eventId: 'day', occurrenceKey: 'day', store: null }}
         data-testid="day-event"
       >
         Day event
@@ -40,14 +40,14 @@ function TimeGrid() {
       </Draggable.Root>
       <Draggable.Root
         kind={schedulerTimeEventResizeKind}
-        payload={{ eventId: 'event', occurrenceKey: 'event' }}
+        payload={{ eventId: 'event', occurrenceKey: 'event', store: null }}
         data-testid="time-resize"
       >
         <Draggable.Preview disabled />
       </Draggable.Root>
       <Draggable.Root
         kind={schedulerDayEventResizeKind}
-        payload={{ eventId: 'event', occurrenceKey: 'event' }}
+        payload={{ eventId: 'event', occurrenceKey: 'event', store: null }}
         data-testid="day-resize"
       >
         <Draggable.Preview disabled />

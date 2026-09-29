@@ -1,3 +1,4 @@
+import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { SchedulerEventSide, TemporalSupportedObject } from '../../models';
 
@@ -15,10 +16,10 @@ export function isResizeHandlerEnabled(parameters: {
 }
 
 /**
- * Clamps the moving edge so the event keeps at least `precisionMinute` of duration, leaving the
- * fixed edge untouched. Shared by the time grid and timeline drop targets.
+ * Clamps the moving edge so the event keeps at least one drag precision step of duration, leaving
+ * the fixed edge untouched. Shared by the time grid and timeline drop targets.
  *
- * `precisionMinute` is the snap step reused as the minimum duration — intentionally the same value.
+ * The snap step is reused as the minimum duration — intentionally the same value.
  */
 export function clampResizedEventEdge(parameters: {
   adapter: Adapter;
@@ -35,22 +36,18 @@ export function clampResizedEventEdge(parameters: {
    * The candidate date under the pointer for the moving edge.
    */
   cursorDate: TemporalSupportedObject;
-  /**
-   * The minimum duration, in minutes, the event must keep.
-   */
-  precisionMinute: number;
 }): { start: TemporalSupportedObject; end: TemporalSupportedObject } {
-  const { adapter, side, start, end, cursorDate, precisionMinute } = parameters;
+  const { adapter, side, start, end, cursorDate } = parameters;
 
   if (side === 'start') {
     // Keep one precision step between the new start and the fixed end.
-    const maxStartDate = adapter.addMinutes(end, -precisionMinute);
+    const maxStartDate = adapter.addMinutes(end, -EVENT_DRAG_PRECISION_MINUTE);
     const newStart = adapter.isBefore(cursorDate, maxStartDate) ? cursorDate : maxStartDate;
     return { start: newStart, end };
   }
 
   // Keep one precision step between the fixed start and the new end.
-  const minEndDate = adapter.addMinutes(start, precisionMinute);
+  const minEndDate = adapter.addMinutes(start, EVENT_DRAG_PRECISION_MINUTE);
   const newEnd = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
   return { start, end: newEnd };
 }

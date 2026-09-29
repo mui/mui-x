@@ -41,7 +41,6 @@ describe('isResizeHandlerEnabled', () => {
 describe('clampResizedEventEdge', () => {
   const start = adapter.date('2024-01-15T10:00:00', 'default');
   const end = adapter.date('2024-01-15T11:00:00', 'default');
-  const precisionMinute = 15;
 
   describe('side: start', () => {
     it('should move the start to the cursor when it keeps the minimum duration', () => {
@@ -52,7 +51,6 @@ describe('clampResizedEventEdge', () => {
         start,
         end,
         cursorDate,
-        precisionMinute,
       });
       expect(result.start).toEqualDateTime(cursorDate);
       expect(result.end).toEqualDateTime(end);
@@ -67,7 +65,6 @@ describe('clampResizedEventEdge', () => {
         start,
         end,
         cursorDate,
-        precisionMinute,
       });
       expect(result.start).toEqualDateTime(adapter.date('2024-01-15T10:45:00', 'default'));
       expect(result.end).toEqualDateTime(end);
@@ -83,7 +80,6 @@ describe('clampResizedEventEdge', () => {
         start,
         end,
         cursorDate,
-        precisionMinute,
       });
       expect(result.start).toEqualDateTime(start);
       expect(result.end).toEqualDateTime(cursorDate);
@@ -98,7 +94,6 @@ describe('clampResizedEventEdge', () => {
         start,
         end,
         cursorDate,
-        precisionMinute,
       });
       expect(result.start).toEqualDateTime(start);
       expect(result.end).toEqualDateTime(adapter.date('2024-01-15T10:15:00', 'default'));

@@ -44,6 +44,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   return (
     <Draggable.Handle render={<ReadonlyContentDragContainer />}>
+      {/* The whole section is the drag handle, so the header must not add a second one. */}
       <EventDialogHeader onClose={onClose} isDraggable={false}>
         <EventDialogTitle
           variant="h6"

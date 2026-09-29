@@ -14,6 +14,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { withDragPreview } from '@mui/x-scheduler-internals/internals';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import type { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
 import type { EventEditingOptionalRenderers } from '../event-editing';
@@ -75,12 +76,10 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   return (
     <Draggable.Root
       {...draggableProps}
-      render={
-        <EventDialogPaper {...other} ref={nodeRef} className={className}>
-          {other.children}
-          <Draggable.Preview disabled />
-        </EventDialogPaper>
-      }
+      render={withDragPreview(
+        <EventDialogPaper {...other} ref={nodeRef} className={className} />,
+        <Draggable.Preview disabled />,
+      )}
     />
   );
 } as any as DialogProps['PaperComponent'];

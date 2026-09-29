@@ -1,5 +1,6 @@
 'use client';
 import { useStore } from '@base-ui/utils/store';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import type {
@@ -11,6 +12,7 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import { schedulerDependencyTargetKind } from '../../internals/utils/schedulerTimelineDrag';
+import type { SchedulerDependencyDragPayload } from '../../internals/utils/schedulerTimelineDrag';
 
 /**
  * Registers an element of an event (its body, or one of its dependency terminals) as
@@ -19,11 +21,12 @@ import { schedulerDependencyTargetKind } from '../../internals/utils/schedulerTi
  * highlight or the snapped preview, but dropping on one surfaces the rejection instead
  * of dissolving the gesture in silence.
  * Declarative only: the drop itself is finalized by the creation monitor on the grid
- * root, which reads the hovered target from the drop target data.
+ * root, which reads the hovered target's payload.
  */
 export function EventDependencyDropTarget(props: EventDependencyDropTarget.Props) {
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
+  // Without dependencies no event registers a drop target. Toggling them remounts the events.
   return enabled ? <EnabledEventDependencyDropTarget {...props} /> : props.render;
 }
 
@@ -39,14 +42,20 @@ function EnabledEventDependencyDropTarget(props: EventDependencyDropTarget.Props
     [eventId, occurrenceKey, resourceId, side, isRecurring, isReadOnly],
   );
 
+  // An event cannot depend on itself. A stable identity: the engine re-resolves the hovered
+  // targets whenever `canDrop` changes.
+  const canDrop = useStableCallback(
+    ({ source }: Draggable.Target.ResolutionContext<SchedulerDependencyDragPayload>) =>
+      source.payload.eventId !== eventId,
+  );
+
   return (
     <Draggable.Target
       // Only the dependency gestures of this timeline land here.
       accept={store.dependencyDragKind}
       kind={schedulerDependencyTargetKind}
       payload={payload}
-      // An event cannot depend on itself.
-      canDrop={({ source }) => source.payload.eventId !== eventId}
+      canDrop={canDrop}
       // Nothing styles the target while a drag is over it: the store drives the highlight.
       trackDragOver={false}
       render={render}

@@ -12,7 +12,7 @@ import {
 import { useDraggableDialog } from './useDraggableDialog';
 
 function TestDialog() {
-  const { elementRef, draggableProps } = useDraggableDialog();
+  const { elementRef, resetDrag, draggableProps } = useDraggableDialog();
   return (
     <Draggable.Root {...draggableProps} ref={elementRef} data-testid="dialog">
       <Draggable.Handle data-testid="handle">
@@ -21,6 +21,9 @@ function TestDialog() {
         <button type="button">Close</button>
       </Draggable.Handle>
       <div data-testid="content">Dialog content</div>
+      <button type="button" onClick={resetDrag}>
+        Reset
+      </button>
       <Draggable.Preview disabled />
     </Draggable.Root>
   );
@@ -47,6 +50,26 @@ describe('useDraggableDialog', () => {
     startDrag(handle);
     dropDrag(handle, { clientX: 10, clientY: 15 });
     expect(dialog.style.transform).toBe('translate(40px, 35px)');
+  });
+
+  it('should return to its initial position when reset', () => {
+    render(
+      <Draggable.Provider>
+        <TestDialog />
+      </Draggable.Provider>,
+    );
+    const dialog = screen.getByTestId('dialog');
+    const handle = screen.getByTestId('handle');
+    startDrag(handle);
+    dropDrag(handle, { clientX: 30, clientY: 20 });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Reset' }));
+    expect(dialog.style.transform).toBe('none');
+
+    // The next drag starts from the initial position again.
+    startDrag(handle);
+    dropDrag(handle, { clientX: 10, clientY: 5 });
+    expect(dialog.style.transform).toBe('translate(10px, 5px)');
   });
 
   it('should restore the last completed position when Escape cancels a drag', () => {

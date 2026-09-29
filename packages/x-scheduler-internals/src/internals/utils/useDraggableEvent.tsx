@@ -49,7 +49,10 @@ export function useDraggableEvent<TData extends SchedulerEventDragData>(
     resizing: placeholderAction === 'internal-resize',
   };
 
-  const payload = React.useMemo(() => ({ eventId, occurrenceKey }), [eventId, occurrenceKey]);
+  const payload = React.useMemo(
+    () => ({ eventId, occurrenceKey, store }),
+    [eventId, occurrenceKey, store],
+  );
 
   const draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'> = {
     kind,

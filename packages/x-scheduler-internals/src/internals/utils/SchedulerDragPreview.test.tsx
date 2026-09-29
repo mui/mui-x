@@ -7,7 +7,7 @@ import { schedulerDayEventMoveKind, schedulerDropTargetKind } from './schedulerD
 import { SchedulerDragPreview } from './SchedulerDragPreview';
 
 const PreviewContext = React.createContext('missing context');
-const payload = { eventId: 'event', occurrenceKey: 'event' };
+const payload = { eventId: 'event', occurrenceKey: 'event', store: null };
 
 function PreviewContent() {
   return <span>{React.useContext(PreviewContext)}</span>;

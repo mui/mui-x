@@ -6,6 +6,7 @@ import type { SchedulerDraggable } from './SchedulerDraggable';
 import type { useDraggableEvent } from './useDraggableEvent';
 import { isResizeHandlerEnabled } from './resize-utils';
 import type { SchedulerEventSide } from '../../models';
+import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 
 /**
  * Base UI drag-and-drop resize for calendar events, for any pointer type.
@@ -28,8 +29,12 @@ export function useEventResizeHandler<TEventData extends SchedulerEventDragData>
     [side],
   );
 
+  const store = useSchedulerStoreContext();
   const { eventId, occurrenceKey } = context;
-  const payload = React.useMemo(() => ({ eventId, occurrenceKey }), [eventId, occurrenceKey]);
+  const payload = React.useMemo(
+    () => ({ eventId, occurrenceKey, store }),
+    [eventId, occurrenceKey, store],
+  );
 
   // Read again when the drag is about to start, so it always sees the latest event.
   const getDragData = (input: { clientX: number; clientY: number }) => ({

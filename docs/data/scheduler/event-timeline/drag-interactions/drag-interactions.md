@@ -160,7 +160,7 @@ Use `onDraggableDrop` to read `source.dragData.originalOccurrence` and update th
 The move kinds accept events dragged from the calendar views and the timeline, and exclude resize gestures.
 
 This integration is experimental until Base UI releases its drag engine.
-Use the same Base UI preview version as Scheduler, as shown in this repository's `pnpm-workspace.yaml`.
+It needs a Base UI version that includes the drag engine, which has not been released yet.
 The previous `@mui/x-scheduler-internals/build-is-valid-drop-target` helper has been removed.
 Replace it with a `Draggable.Target` that accepts the Scheduler move kinds.
 

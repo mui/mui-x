@@ -34,9 +34,7 @@ export function useTimelineDragAutoScroll(params: {
       return undefined;
     }
 
-    const nativeGetBoundingClientRect =
-      Object.getOwnPropertyDescriptor(Element.prototype, 'getBoundingClientRect')?.value ??
-      Element.prototype.getBoundingClientRect;
+    const nativeGetBoundingClientRect = Element.prototype.getBoundingClientRect;
     scroller.getBoundingClientRect = function shiftedGetBoundingClientRect() {
       const rect = nativeGetBoundingClientRect.call(this);
       return DOMRect.fromRect({

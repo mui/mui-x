@@ -20,6 +20,11 @@ import type { CalendarGridTimeEventResizeHandler } from '../../calendar-grid/tim
 export interface SchedulerEventDragPayload {
   eventId: SchedulerEventId;
   occurrenceKey: string;
+  /**
+   * The store of the Scheduler the drag started in. Two Schedulers on a page share the drag
+   * engine, and an event only moves within its own.
+   */
+  store: unknown;
 }
 
 /** The snapshot captured when an event move or resize starts. */

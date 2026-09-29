@@ -90,7 +90,7 @@ export function DayCellDropTarget(props: DayCellDropTarget.Props) {
       return shiftByDays(data, adapter.differenceInDays(value, cursorDate));
     }
 
-    // Move an external event into the Time Grid
+    // Move an external event into the Day Grid
     if (schedulerExternalEventKind.matches(source)) {
       return { start: value };
     }

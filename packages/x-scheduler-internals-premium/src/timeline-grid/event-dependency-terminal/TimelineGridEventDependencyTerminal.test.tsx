@@ -9,10 +9,11 @@ import {
   describeConformance,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 
 describe('<TimelineGrid.EventDependencyTerminal />', () => {
   const { render } = createSchedulerRenderer();
+  afterEach(cancelDrag);
 
   // The terminal reads the store context to stamp the drag data with its timeline.
   function Wrapper({ children }: { children: React.ReactNode }) {
@@ -62,7 +63,6 @@ describe('<TimelineGrid.EventDependencyTerminal />', () => {
     const { payload: data } = onDragStart.mock.calls[0][0].source;
     expect(data.sourceSide).to.equal('start');
     expect(data.eventId).to.equal('fake-id');
-    cancelDrag();
   });
 
   it('should expose its occurrence key, resource and side through its data attributes', () => {
