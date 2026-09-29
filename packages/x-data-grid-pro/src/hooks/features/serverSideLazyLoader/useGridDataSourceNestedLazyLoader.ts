@@ -1134,11 +1134,16 @@ export const useGridDataSourceNestedLazyLoader = (
   );
 
   React.useEffect(() => {
+    const rootElement = privateApiRef.current.rootElementRef?.current ?? null;
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
+      // `<Activity mode="hidden">` keeps the root connected and lets the queued fetch run.
+      if (!rootElement?.isConnected) {
+        debouncedFetchRows.clear();
+      }
     };
-  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
+  }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
 
   React.useEffect(() => {
     if (!isStrategyActive || props.dataSourceRevalidateMs <= 0) {
