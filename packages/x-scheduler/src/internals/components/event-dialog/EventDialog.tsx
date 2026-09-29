@@ -67,19 +67,8 @@ interface PaperComponentProps extends PaperProps {
 
 // 1. Setup the Draggable Paper Logic
 const PaperComponent = function PaperComponent(props: PaperComponentProps) {
-  const nodeRef = React.useRef<HTMLDivElement>(null);
-
-  const mutateStyle = React.useCallback(
-    (style: string) => {
-      if (nodeRef.current) {
-        nodeRef.current.style.transform = style;
-      }
-    },
-    [nodeRef],
-  );
-
   const { anchor, className, ...other } = props;
-  const { resetDrag, draggableProps } = useDraggableDialog(nodeRef, mutateStyle);
+  const { elementRef: nodeRef, resetDrag, draggableProps } = useDraggableDialog();
 
   useAnchoredPosition({ anchor, popupRef: nodeRef, onReposition: resetDrag });
 

@@ -15,18 +15,21 @@ const getDeltas = (location: Draggable.LocationHistory) => {
  * Moves the dialog from its header handle. Touch uses Base UI's long-press activation;
  * form controls inside the handle remain interactive. Compact drawers disable dragging.
  */
-export function useDraggableDialog(
-  elementRef: React.RefObject<HTMLElement | null>,
-  mutateStyle: (style: string) => void,
-) {
+export function useDraggableDialog() {
+  // The ref of the element the dialog moves, which is also the element that renders the root.
+  const elementRef = React.useRef<HTMLDivElement>(null);
   const offset = React.useRef({ x: 0, y: 0 });
+
+  const setTransform = (transform: string) => {
+    const element = elementRef.current;
+    if (element) {
+      element.style.transform = transform;
+    }
+  };
 
   const resetDrag = useStableCallback(() => {
     offset.current = { x: 0, y: 0 };
-    const element = elementRef.current;
-    if (element) {
-      mutateStyle('none');
-    }
+    setTransform('none');
   });
 
   const draggableProps: Draggable.Root.Props = {
@@ -35,15 +38,7 @@ export function useDraggableDialog(
     dragCursor: 'move',
     onMove: (_, { location }) => {
       const { deltaX, deltaY } = getDeltas(location);
-
-      const x = offset.current.x + deltaX;
-      const y = offset.current.y + deltaY;
-
-      const currentElement = elementRef.current;
-      if (currentElement) {
-        const transform = `translate(${x}px, ${y}px)`;
-        mutateStyle(transform);
-      }
+      setTransform(`translate(${offset.current.x + deltaX}px, ${offset.current.y + deltaY}px)`);
     },
     onMoveEnd: (_, { location, canceled }) => {
       const { deltaX, deltaY } = getDeltas(location);
@@ -52,9 +47,9 @@ export function useDraggableDialog(
         offset.current.x += deltaX;
         offset.current.y += deltaY;
       }
-      mutateStyle(`translate(${offset.current.x}px, ${offset.current.y}px)`);
+      setTransform(`translate(${offset.current.x}px, ${offset.current.y}px)`);
     },
   };
 
-  return { resetDrag, draggableProps };
+  return { elementRef, resetDrag, draggableProps };
 }

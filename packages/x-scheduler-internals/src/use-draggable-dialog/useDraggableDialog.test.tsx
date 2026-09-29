@@ -12,10 +12,7 @@ import {
 import { useDraggableDialog } from './useDraggableDialog';
 
 function TestDialog() {
-  const elementRef = React.useRef<HTMLDivElement>(null);
-  const { draggableProps } = useDraggableDialog(elementRef, (transform) => {
-    elementRef.current!.style.transform = transform;
-  });
+  const { elementRef, draggableProps } = useDraggableDialog();
   return (
     <Draggable.Root {...draggableProps} ref={elementRef} data-testid="dialog">
       <Draggable.Handle data-testid="handle">
