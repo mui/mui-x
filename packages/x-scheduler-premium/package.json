@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "9.0.0-beta.10",
+  "version": "9.0.0-beta.12",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
@@ -63,9 +63,9 @@
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
     "@mui/x-license": "workspace:^",
-    "@mui/x-scheduler": "workspace:^",
-    "@mui/x-scheduler-internals": "workspace:^",
-    "@mui/x-scheduler-internals-premium": "workspace:^",
+    "@mui/x-scheduler": "workspace:*",
+    "@mui/x-scheduler-internals": "workspace:*",
+    "@mui/x-scheduler-internals-premium": "workspace:*",
     "@mui/x-virtualizer": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"

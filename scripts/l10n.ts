@@ -53,7 +53,7 @@ const packagesWithL10n = [
     constantsRelativePath: 'packages/x-scheduler/src/locales/enUS.ts',
     localesRelativePath: 'packages/x-scheduler/src/locales',
     documentationReportPath: 'docs/data/scheduler/localization/data.json',
-    objectNames: ['Dialog', 'Calendar', 'Timeline'],
+    objectNames: ['Dialog', 'Event', 'Calendar', 'Timeline'],
   },
 ];
 
@@ -75,7 +75,7 @@ function git(args: any) {
   });
 }
 
-function plugin(existingTranslations: Translations): babel.PluginObj {
+function plugin(existingTranslations: Translations): babel.PluginObject {
   return {
     visitor: {
       VariableDeclarator: {

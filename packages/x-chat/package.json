@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-chat",
-  "version": "9.0.0-alpha.17",
+  "version": "9.0.0-alpha.18",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Chat components.",
   "license": "MIT",
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-chat-headless": "workspace:*",
     "@mui/x-internals": "workspace:*",

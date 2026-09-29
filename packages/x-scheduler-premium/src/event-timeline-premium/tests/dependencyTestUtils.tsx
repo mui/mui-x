@@ -14,22 +14,46 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
 } from '@mui/x-scheduler/internals';
-import { DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import { DEFAULT_TESTING_VISIBLE_DATE, mockElementBounds } from 'test/utils/scheduler';
+import { buildDependency, resource1, resource2 } from './dependencyGeometryTestUtils';
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 
-export const resource1 = ResourceBuilder.new().id('r1').title('Resource 1').build();
-export const resource2 = ResourceBuilder.new().id('r2').title('Resource 2').build();
+export { buildDependency, resource1, resource2 };
+
+/**
+ * Applies mock bounds to all timeline event rows, so jsdom drops resolve positions.
+ */
+export function mockAllEventRowBounds(width = 6720) {
+  const rows = document.querySelectorAll<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
+  );
+  for (const row of rows) {
+    mockElementBounds(row, { left: 0, width, height: 40 });
+  }
+  return rows;
+}
+
+/**
+ * Returns the timeline event row for a given resource id.
+ */
+export function getEventRow(resourceId: string): HTMLElement {
+  const row = document.querySelector<HTMLElement>(
+    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
+  );
+  if (!row) {
+    throw /* minify-error-disabled */ new Error(
+      `Could not find event row for resource "${resourceId}"`,
+    );
+  }
+  return row;
+}
 
 // Module scope so the identity survives re-renders: the store compares the resources
 // parameter by reference, and a fresh array on every render would rebuild the whole
 // resource state a real consumer keeps.
 const defaultResources = [resource1, resource2];
-
-export function buildDependency(id: string, source: string, target: string): SchedulerDependency {
-  return { id, source, target, type: 'FinishToStart' };
-}
 
 const styledContextValue = {
   schedulerId: 'test-timeline',
@@ -176,11 +200,13 @@ function TimelineHost({
  * Binds the dependency timeline harness to a renderer created with
  * `createSchedulerRenderer` inside the suite.
  */
-export function createDependencyTimelineRenderer(render: (element: React.ReactElement) => any) {
-  function renderTimeline(parameters: RenderTimelineParameters) {
+export function createDependencyTimelineRenderer(
+  renderSettled: (element: React.ReactElement) => Promise<any>,
+) {
+  async function renderTimeline(parameters: RenderTimelineParameters) {
     let store!: EventTimelinePremiumStore<any, any>;
 
-    const view = render(
+    const view = await renderSettled(
       <TimelineHost
         {...parameters}
         onStoreReady={(mountedStore) => {

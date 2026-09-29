@@ -5,7 +5,8 @@ import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 const dataLength = 1_400;
 const data = Array.from({ length: dataLength }).map((_, i) => ({
   x: i,
-  y: 50 + Math.sin(i / 5) * 25,
+  // Ensure the narrow x/y zoom benchmarks have a visible point.
+  y: i === dataLength / 2 ? 50.025 : 50 + Math.sin(i / 5) * 25,
 }));
 
 const xData = data.map((d) => d.x);

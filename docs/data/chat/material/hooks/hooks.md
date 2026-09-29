@@ -80,6 +80,7 @@ const {
   isStreaming, // boolean
   hasMoreHistory, // boolean
   isLoadingHistory, // boolean — true while a history fetch is in flight
+  historyStatus, // 'idle' | 'loading' | 'loaded' | 'error' — initial history page lifecycle
   error, // ChatError | null
 
   // Actions
@@ -119,13 +120,14 @@ function QuickChat() {
 ### `useChatStatus()`
 
 A lightweight hook for status indicators.
-It subscribes only to `isStreaming`, `hasMoreHistory`, `isLoadingHistory`, `error`, and `typingUserIds`—making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
+It subscribes only to `isStreaming`, `hasMoreHistory`, `isLoadingHistory`, `historyStatus`, `error`, and `typingUserIds`—making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
 
 ```ts
 const {
   isStreaming, // boolean
   hasMoreHistory, // boolean
   isLoadingHistory, // boolean — true while a history fetch is in flight
+  historyStatus, // 'idle' | 'loading' | 'loaded' | 'error' — initial history page lifecycle
   error, // ChatError | null
   typingUserIds, // string[] — users currently typing in the active conversation
 } = useChatStatus();
@@ -292,11 +294,11 @@ Returns the underlying `ChatStore<Cursor>` instance directly.
 const store: ChatStore<Cursor> = useChatStore();
 ```
 
-Use it with `useStore()` from `@mui/x-internals/store` to create a custom subscription:
+Use it with `useStore()` from `@base-ui/utils/store` to create a custom subscription:
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 
 function MessageCounter() {
   const store = useChatStore();

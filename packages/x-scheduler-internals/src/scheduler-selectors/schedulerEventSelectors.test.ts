@@ -1,9 +1,11 @@
 import {
+  adapterFr,
   EventBuilder,
   ResourceBuilder,
   getEventCalendarStateFromParameters,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 
@@ -11,6 +13,45 @@ const defaultEvent = EventBuilder.new().build();
 const readOnlyEvent = EventBuilder.new().id(defaultEvent.id).readOnly().build();
 
 describe('schedulerEventSelectors', () => {
+  describe('processedEventRangeIndex', () => {
+    it('should reuse the index until its date-processing inputs change', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+      });
+      const index = schedulerEventSelectors.processedEventRangeIndex(state);
+
+      expect(schedulerEventSelectors.processedEventRangeIndex(state)).to.equal(index);
+      expect(
+        schedulerEventSelectors.processedEventRangeIndex({
+          ...state,
+          isLoading: !state.isLoading,
+        }),
+      ).to.equal(index);
+      expect(
+        schedulerEventSelectors.processedEventRangeIndex({
+          ...state,
+          recurringEventsPlugin: schedulerRecurringEventsPlugin,
+        }),
+      ).not.to.equal(index);
+      const stateWithDifferentEvents = getEventCalendarStateFromParameters({
+        events: [readOnlyEvent],
+      });
+      expect(
+        schedulerEventSelectors.processedEventRangeIndex(stateWithDifferentEvents),
+      ).not.to.equal(index);
+      const stateInAnotherTimezone = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        displayTimezone: 'Europe/Paris',
+      });
+      expect(schedulerEventSelectors.processedEventRangeIndex(stateInAnotherTimezone)).not.to.equal(
+        index,
+      );
+      expect(
+        schedulerEventSelectors.processedEventRangeIndex({ ...state, adapter: adapterFr }),
+      ).not.to.equal(index);
+    });
+  });
+
   describe('creationConfig', () => {
     it('should return the default config when props.eventCreation is not defined', () => {
       const state = getEventCalendarStateFromParameters({

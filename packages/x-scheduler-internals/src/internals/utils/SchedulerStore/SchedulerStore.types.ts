@@ -53,6 +53,13 @@ export interface SchedulerEditingState {
    * the dialog surface opens in `'armed'` on a coarse pointer and directly in `'edit'` otherwise.
    */
   mode: SchedulerEditingMode;
+  /**
+   * The stored model's data-timezone bounds (as timestamps) when the occurrence's times were
+   * last refreshed from a committed change. A bound the model still holds is a change awaiting
+   * persistence (a `dataSource` write in flight), which the editing surface resends; a bound
+   * the host moved since is kept.
+   */
+  modelBounds?: { start: number; end: number };
 }
 
 export interface SchedulerState<TEvent extends object = any> {
@@ -374,11 +381,6 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   readOnly?: boolean;
   /**
-   * Data source for fetching events asynchronously.
-   * When provided, events are fetched through the data source instead of the `events` prop.
-   */
-  dataSource?: SchedulerDataSource<TEvent>;
-  /**
    * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.
@@ -426,6 +428,8 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
 export type UpdateRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the update before the update is applied.
+   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
+   * the identity the occurrence expansion keys on.
    */
   occurrenceStart: TemporalSupportedObject;
   /**
@@ -444,6 +448,8 @@ export type UpdateRecurringEventParameters = {
 export type DeleteRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the deletion.
+   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
+   * the identity the occurrence expansion keys on.
    */
   occurrenceStart: TemporalSupportedObject;
   /**
@@ -505,6 +511,14 @@ export interface UpdateEventsParameters {
   created?: SchedulerEventCreationProperties[];
   updated?: SchedulerEventUpdatedProperties[];
 }
+
+/**
+ * Outcome of `updateEvent`: applied, with the changes as the batch applied them (the
+ * scheduling plugin can clamp the dates), or vetoed by that plugin with the error to surface.
+ */
+export type SchedulerUpdateEventResult =
+  | { applied: true; changes: SchedulerEventUpdatedProperties }
+  | { applied: false; rejection: Error };
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
 

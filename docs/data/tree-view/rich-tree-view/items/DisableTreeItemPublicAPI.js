@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, TreeItemContent } from '@mui/x-tree-view/TreeItem';
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../../datasets/disabledAndEditableProducts';
 
 function CustomContent({
   children,

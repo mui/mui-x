@@ -46,6 +46,9 @@ export function useExtractRichTreeViewParameters<
     isItemEditable,
     domStructure,
 
+    // Render-only props
+    loading,
+
     // Forwarded props
     ...forwardedProps
   } = props;
@@ -125,5 +128,6 @@ export function useExtractRichTreeViewParameters<
     slotProps,
     parameters,
     forwardedProps,
+    loading,
   };
 }

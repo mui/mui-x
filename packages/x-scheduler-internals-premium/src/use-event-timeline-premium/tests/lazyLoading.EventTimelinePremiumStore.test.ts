@@ -1,6 +1,6 @@
-import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
+import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -51,7 +51,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
   it('should fetch the visible range on the first mount notification', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -61,13 +61,13 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
     expect(store.state.eventIdList).to.have.length(1);
   });
 
   it('should NOT fetch before updateStateFromParameters is called', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -82,12 +82,12 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.called).to.equal(false);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(0);
   });
 
   it('should fetch a new range when visibleDate moves outside of the cached range', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -96,13 +96,13 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     store.goToNextVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
   });
 
   it('should not overwrite the visible range with a late-arriving fetch from a stale range', async () => {
@@ -126,7 +126,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     ];
     let callIndex = 0;
     const dataSource = {
-      getEvents: spy(
+      getEvents: vi.fn(
         () =>
           new Promise<TestEvent[]>((resolve) => {
             callIndex += 1;
@@ -149,7 +149,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
 
     resolveB(eventsB);
     await flushEffect();
@@ -184,7 +184,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     ];
     let callIndex = 0;
     const dataSource = {
-      getEvents: spy(
+      getEvents: vi.fn(
         () =>
           new Promise<TestEvent[]>((resolve) => {
             callIndex += 1;
@@ -210,7 +210,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     store.setPreset('monthAndYear', noopUIEvent);
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
 
     resolveB(augustOnly);
     await flushEffect();
@@ -225,7 +225,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
   it('should NOT fetch again when visibleDate changes but the range stays the same', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -234,7 +234,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // `dayAndHour` snaps the range to startOfDay(visibleDate), so moving a few hours within the same day keeps it identical.
     const sameDayLater = adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 5);
@@ -243,12 +243,12 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 
   it('should fetch a new range when the preset changes', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, defaultPreset: 'dayAndHour' as const, dataSource };
@@ -257,19 +257,19 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     store.setPreset('monthAndYear', noopUIEvent);
 
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
   });
 
   it('should coalesce multiple range-changing updates within the same tick into a single fetch', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -278,7 +278,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     // Two synchronous navigations within the same tick. Without coalescing, the
     // effect captures a different range on each fire and schedules two microtasks,
@@ -289,7 +289,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
 
     // Third navigation AFTER the microtask drained. Catches regressions where
     // `isFetchScheduled` isn't reset and the lazy loader freezes after the first batch.
@@ -297,7 +297,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.callCount).to.equal(3);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(3);
   });
 
   it('should not crash and not fetch anything when no dataSource is provided', async () => {
@@ -318,7 +318,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
   it('should reuse cached events when navigating back to a previously fetched range', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -327,23 +327,23 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
 
     store.goToNextVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
-    expect(dataSource.getEvents.calledTwice).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
 
     store.goToPreviousVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.getEvents.callCount).to.equal(2);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
   });
 
   it('should fire the initial fetch without waiting for the debounce window', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
+      getEvents: vi.fn(async () => buildEvents()),
       persistEvents: noopPersistEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
@@ -354,13 +354,13 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushEffect();
     await vi.advanceTimersByTimeAsync(50);
 
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 
   it('should clear state.errors after a successful fetch', async () => {
     let callCount = 0;
     const dataSource = {
-      getEvents: spy(() => {
+      getEvents: vi.fn(() => {
         callCount += 1;
         if (callCount === 1) {
           return Promise.reject(new Error('Transient'));
@@ -386,8 +386,14 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
   it('should call dataSource.persistEvents and sync cache when eventsUpdated is published', async () => {
     const dataSource = {
-      getEvents: spy(async () => buildEvents()),
-      persistEvents: spy(async () => ({ success: true })),
+      getEvents: vi.fn(async () => buildEvents()),
+      persistEvents: vi.fn(
+        async (_params: {
+          deleted: SchedulerEventId[];
+          updated: TestEvent[];
+          created: TestEvent[];
+        }) => ({ success: true }),
+      ),
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
@@ -412,8 +418,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(dataSource.persistEvents.calledOnce).to.equal(true);
-    const arg = dataSource.persistEvents.firstCall.firstArg;
+    expect(dataSource.persistEvents.mock.calls.length).to.equal(1);
+    const arg = dataSource.persistEvents.mock.calls[0][0];
     expect(arg.deleted).to.deep.equal([]);
     expect(arg.created).to.deep.equal([]);
     expect(arg.updated).to.deep.equal([updatedEvent]);
@@ -422,6 +428,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     // updated event becomes visible without an extra fetch.
     const titles = store.state.eventModelList.map((event: any) => event.title);
     expect(titles).to.include('Renamed');
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
   });
 });

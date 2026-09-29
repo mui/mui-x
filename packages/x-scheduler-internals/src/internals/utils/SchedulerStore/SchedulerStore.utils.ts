@@ -211,7 +211,7 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
 }
 
 /**
- * Create an event model from a processed event using the provided model structure.
+ * Creates an event model from the creation properties using the provided model structure.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
@@ -450,10 +450,12 @@ export function buildEventsState<TEvent extends object, TResource extends object
 
     if (alreadySeen) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          `MUI X Scheduler: Two or more events share the same id "${String(id)}".`,
-          'Event ids must be unique. Only the last event with a given id is kept, the others are ignored.',
-        ]);
+        warnOnce(
+          [
+            `MUI X Scheduler: Two or more events share the same id "${String(id)}".`,
+            'Event ids must be unique. Only the last event with a given id is kept, the others are ignored.',
+          ].join('\n'),
+        );
       }
     } else {
       if (

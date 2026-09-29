@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import type { ChatConversation } from '../types/chat-entities';
 import { getDataAttributes } from '../internals/getDataAttributes';
-import { type ConversationListItemOwnerState } from './conversationList.types';
+import type { ConversationListItemOwnerState } from './conversationList.types';
 
 export interface ConversationListItemSlots {
   root: React.ElementType;

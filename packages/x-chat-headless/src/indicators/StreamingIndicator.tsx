@@ -1,15 +1,13 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import type { ChatMessage } from '../types/chat-entities';
-import {
-  useStreamingIndicatorVisibility,
-  type StreamingIndicatorMode,
-} from '../hooks/useStreamingIndicatorVisibility';
+import { useStreamingIndicatorVisibility } from '../hooks/useStreamingIndicatorVisibility';
+import type { StreamingIndicatorMode } from '../hooks/useStreamingIndicatorVisibility';
 import { useMessageContext } from '../message/internals/MessageContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
-import { type StreamingIndicatorOwnerState } from './indicators.types';
+import type { StreamingIndicatorOwnerState } from './indicators.types';
 
 export interface StreamingIndicatorSlots {
   root: React.ElementType;

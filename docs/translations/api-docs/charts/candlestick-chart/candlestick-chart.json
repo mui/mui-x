@@ -18,6 +18,12 @@
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
+    "focusItemOnClick": {
+      "description": "If <code>true</code>, clicking an item immediately shows the keyboard focus indicator on it. By default, clicking sets the item that keyboard navigation starts from, but the focus indicator stays hidden until the user presses a key."
+    },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."

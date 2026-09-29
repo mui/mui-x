@@ -27,6 +27,14 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
 );
 
 /**
+ * Serializes a date as a UTC instant. A date labeled in the event's data timezone
+ * stringifies with an offset suffix, which `resolveEventDate` re-reads as wall time.
+ */
+function toInstantString(adapter: Adapter, value: Parameters<Adapter['toJsDate']>[0]): string {
+  return adapter.toJsDate(value).toISOString();
+}
+
+/**
  * Minimal event builder for tests.
  *
  * Scope:
@@ -47,8 +55,8 @@ export class EventBuilder {
     this.event = {
       id,
       title: `Event ${id}`,
-      start: start.toISOString(),
-      end: end.toISOString(),
+      start: toInstantString(this.adapter, start),
+      end: toInstantString(this.adapter, end),
       description: `Event ${id} description`,
     };
   }
@@ -182,7 +190,7 @@ export class EventBuilder {
     const startDate = resolveEventDate(start, dataTimezone, this.adapter);
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
     this.event.start = start;
-    this.event.end = endDate.toISOString();
+    this.event.end = toInstantString(this.adapter, endDate);
     return this;
   }
 
@@ -193,8 +201,8 @@ export class EventBuilder {
   fullDay(date: string) {
     const dataTimezone = this.event.timezone ?? 'default';
     const d = resolveEventDate(date, dataTimezone, this.adapter);
-    this.event.start = this.adapter.startOfDay(d).toISOString();
-    this.event.end = this.adapter.endOfDay(d).toISOString();
+    this.event.start = toInstantString(this.adapter, this.adapter.startOfDay(d));
+    this.event.end = toInstantString(this.adapter, this.adapter.endOfDay(d));
     this.event.allDay = true;
     return this;
   }
@@ -274,8 +282,8 @@ export class EventBuilder {
 
     const occurrenceModel: SchedulerEvent = {
       ...this.event,
-      start: rawStart.toISOString(),
-      end: rawEnd.toISOString(),
+      start: toInstantString(this.adapter, rawStart),
+      end: toInstantString(this.adapter, rawEnd),
     };
 
     const processed = processEvent(

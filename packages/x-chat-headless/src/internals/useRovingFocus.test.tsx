@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useRovingFocus, type UseRovingFocusParameters } from './useRovingFocus';
+import { useRovingFocus } from './useRovingFocus';
+import type { UseRovingFocusParameters } from './useRovingFocus';
 
 const { render } = createRenderer();
 

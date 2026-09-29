@@ -266,6 +266,7 @@ export default defineConfig(
       `packages/x-date-pickers{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-scheduler{,-*}/**/*${EXTENSION_TS}`,
       `packages/x-tree-view{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-chat{,-*}/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/consistent-type-imports': [
@@ -305,6 +306,13 @@ export default defineConfig(
         tsconfigRootDir: dirname,
         projectService: true,
       },
+    },
+  },
+
+  {
+    files: [`packages/**/*${EXTENSION_TS}`],
+    rules: {
+      'mui-x/no-computed-key-with-rest': 'error',
     },
   },
 
