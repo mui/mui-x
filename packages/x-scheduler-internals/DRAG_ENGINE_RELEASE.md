@@ -22,7 +22,7 @@ Keep the drag kinds on `internals` until the engine and its types are released.
   consumers need to name, and decide whether `allDay` should replace the internal `day`
   vocabulary before committing to public kind names or IDs.
 
-## Base UI follow-ups
+## Base UI follow-ups
 
 These changes require a new upstream release or preview before Scheduler can use them.
 
@@ -40,3 +40,8 @@ Mouse and touch regression tests cover the handle and its form controls.
 Time-grid resize handles start a resize on the first touch or pen contact, through the
 engine's `immediate` activation. The engine blocks page scroll once the drag is active, so the
 handle no longer overrides `touch-action`. Verify this on a real iOS device before publishing.
+
+A time-grid resize locks the pointer to the column it started in, for every pointer type.
+A mouse resize can no longer extend into the next day's column. Releasing a touch or pen resize
+outside every column, for example below the grid, cancels it instead of committing the time
+clamped to the day boundary.

@@ -27,6 +27,24 @@ import {
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import { useAdapterContext } from '../../use-adapter-context';
 import { getPrimaryResourceId } from './event-utils';
+import { EVENT_DRAG_TAP_SLOP_PX } from '../../constants';
+
+/**
+ * Whether a finger or pen drag has not left the spot where it started.
+ * The mouse never starts a drag without moving, so it is never a tap.
+ */
+function isTap(location: Draggable.LocationHistory) {
+  const { initial, current } = location;
+  if (current.input.pointerType === 'mouse') {
+    return false;
+  }
+  return (
+    Math.hypot(
+      current.input.clientX - initial.input.clientX,
+      current.input.clientY - initial.input.clientY,
+    ) < EVENT_DRAG_TAP_SLOP_PX
+  );
+}
 
 export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
   const {
@@ -109,13 +127,20 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
       }
       // Nothing styles the target while a drag is over it.
       trackDragOver={false}
-      onDraggableMove={({ source, target }) => {
+      onDraggableMove={({ source, target }, { location }) => {
+        if (isTap(location)) {
+          return;
+        }
         const newPlaceholder = getDropData(source, target);
         if (newPlaceholder) {
           store.setOccurrencePlaceholder(newPlaceholder);
         }
       }}
-      onDraggableDrop={({ source, target }) => {
+      onDraggableDrop={({ source, target }, { location }) => {
+        if (isTap(location)) {
+          store.setOccurrencePlaceholder(null);
+          return;
+        }
         const dropData = getDropData(source, target);
 
         const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);

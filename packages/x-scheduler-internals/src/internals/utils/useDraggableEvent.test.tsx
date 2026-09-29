@@ -145,3 +145,124 @@ describe('useDraggableEvent', () => {
     expect(getPlaceholder()).toBe(null);
   });
 });
+
+// Virtualization unmounts and remounts rows and events while a drag auto-scrolls the timeline.
+describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
+  const { render } = createSchedulerRenderer();
+  afterEach(cancelDrag);
+
+  const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
+  const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
+
+  function Fixture({
+    showSource = true,
+    showTarget = true,
+    onEventsChange,
+    onStore,
+  }: {
+    showSource?: boolean;
+    showTarget?: boolean;
+    onEventsChange: () => void;
+    onStore: (store: SchedulerStoreInContext<any, any>) => void;
+  }) {
+    return (
+      <EventCalendarProvider
+        events={[builder.build()]}
+        resources={[]}
+        onEventsChange={onEventsChange}
+        canDropEventsToTheOutside
+      >
+        <StoreProbe onStore={onStore} />
+        {showSource && <Source />}
+        {showTarget && (
+          <SchedulerDropTarget
+            surfaceType="day-grid"
+            accept={accept}
+            getEventDropData={({ source, getDataFromInside }) =>
+              getDataFromInside(source.dragData!, start, end)
+            }
+            render={<div data-testid="target" />}
+          />
+        )}
+      </EventCalendarProvider>
+    );
+  }
+
+  async function moveTo(element: Element, clientX: number) {
+    await act(async () => {
+      moveDrag(element, { clientX });
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+  }
+
+  function setup(props: { showSource?: boolean; showTarget?: boolean } = {}) {
+    const onEventsChange = vi.fn();
+    let store!: SchedulerStoreInContext<any, any>;
+    const view = render(
+      <Fixture
+        {...props}
+        onEventsChange={onEventsChange}
+        onStore={(value) => {
+          store = value;
+        }}
+      />,
+    );
+    return {
+      view,
+      onEventsChange,
+      getPlaceholder: () => schedulerOccurrencePlaceholderSelectors.value(store.state),
+    };
+  }
+
+  it('should still commit the drop when the source unmounted', async () => {
+    const { view, onEventsChange } = setup();
+    startDrag(screen.getByTestId('source'));
+    await moveTo(screen.getByTestId('target'), 100);
+    view.setProps({ showSource: false });
+    expect(screen.queryByTestId('source')).toBe(null);
+
+    dropDrag(screen.getByTestId('target'), { clientX: 110 });
+
+    expect(onEventsChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('should clear the placeholder when the source unmounted and the drag is released outside', async () => {
+    const { view, getPlaceholder } = setup();
+    startDrag(screen.getByTestId('source'));
+    await moveTo(screen.getByTestId('target'), 100);
+    expect(getPlaceholder()).not.toBe(null);
+    view.setProps({ showSource: false });
+
+    dropDrag(document.body, { clientX: 300 });
+
+    expect(getPlaceholder()).toBe(null);
+  });
+
+  it('should hide the placeholder when the hovered target unmounts, then clear it on an outside release', async () => {
+    const { view, onEventsChange, getPlaceholder } = setup();
+    startDrag(screen.getByTestId('source'));
+    await moveTo(screen.getByTestId('target'), 100);
+    expect(getPlaceholder()).not.toBe(null);
+    expect(getPlaceholder()).not.toMatchObject({ isHidden: true });
+    view.setProps({ showTarget: false });
+    expect(getPlaceholder()).toMatchObject({ isHidden: true });
+
+    dropDrag(document.body, { clientX: 300 });
+
+    expect(getPlaceholder()).toBe(null);
+    expect(onEventsChange).not.toHaveBeenCalled();
+  });
+
+  it('should let a target that mounts after the last move take the drop', async () => {
+    const { view, onEventsChange } = setup({ showTarget: false });
+    startDrag(screen.getByTestId('source'));
+    await moveTo(document.body, 100);
+    view.setProps({ showTarget: true });
+
+    dropDrag(screen.getByTestId('target'), { clientX: 110 });
+
+    expect(onEventsChange).toHaveBeenCalledTimes(1);
+  });
+});

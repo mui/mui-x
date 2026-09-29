@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { screen, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import {
   createMatchMedia,
@@ -37,7 +39,7 @@ describe('DayView - touch resize', () => {
     )!;
   }
 
-  function renderResizableEvent(onEventsChange = vi.fn()) {
+  function renderResizableEvent(onEventsChange = vi.fn(), beside: React.ReactNode = null) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -45,7 +47,12 @@ describe('DayView - touch resize', () => {
       .resizable(true)
       .build();
 
-    render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    render(
+      <React.Fragment>
+        {beside}
+        <StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />
+      </React.Fragment>,
+    );
 
     // The column maps pointer Y to a time, and the event tells where the pointer grabbed it.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
@@ -132,8 +139,53 @@ describe('DayView - touch resize', () => {
     },
   );
 
-  it('keeps the resize on its column when the finger drifts sideways', async () => {
-    const { onEventsChange } = renderResizableEvent();
+  it.each(['touch', 'pen'] as const)(
+    'does not change an event when its handle is only tapped with %s',
+    async (pointerType) => {
+      const onEventsChange = vi.fn();
+      // Not on the 15 minute grid, so any commit would round it.
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Morning Meeting')
+        .singleDay('2025-07-03T10:07:00Z', 60)
+        .resizable(true)
+        .build();
+      render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+      mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
+      mockElementBounds(getEvent(), { top: 607, height: 60, width: 200 });
+      const eventElement = getEvent();
+      fireEvent.click(eventElement);
+
+      await act(async () => {
+        simulatePointerResize({
+          handle: getResizeHandle(eventElement, 'end'),
+          pointerType,
+          from: { clientY: 667 },
+          // A finger jitters a pixel or two without meaning to move.
+          to: { clientY: 669 },
+          hold: true,
+        });
+      });
+      expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).toBe(null);
+
+      await act(async () => {
+        dropDrag(getTimeGridColumn(), { clientY: 669, pointerType });
+      });
+      expect(onEventsChange).not.toHaveBeenCalled();
+    },
+  );
+
+  it('keeps the pointer on the column where the resize started when the finger drifts sideways', async () => {
+    const pointerXs: number[] = [];
+    function PointerXMonitor() {
+      Draggable.useMonitor({
+        onMoveEnd: (_, { location }) => {
+          pointerXs.push(location.current.input.clientX);
+        },
+      });
+      return null;
+    }
+    const { onEventsChange } = renderResizableEvent(vi.fn(), <PointerXMonitor />);
     const eventElement = getEvent();
     fireEvent.click(eventElement);
 
@@ -146,6 +198,8 @@ describe('DayView - touch resize', () => {
       });
     });
 
+    // The engine reads the pointer through the axis lock, so the column under it never changes.
+    expect(pointerXs).toEqual([100]);
     expect(onEventsChange).toHaveBeenCalledTimes(1);
     expect(new Date(onEventsChange.mock.calls[0][0][0].end).getUTCHours()).toBe(16);
   });
