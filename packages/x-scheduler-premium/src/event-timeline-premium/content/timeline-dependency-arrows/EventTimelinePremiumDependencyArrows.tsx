@@ -123,8 +123,8 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   );
   useDependencyDragCursor(creation !== null, followCursorMove);
   // Redraw from the last tracked cursor when the line just un-snapped (or the
-  // geometry shifted): the drag frame of the same dragover was already canceled by
-  // Base UI's drop-target update, so waiting for the next one leaves a blink.
+  // geometry shifted): the frame that un-snapped it already delivered its cursor move
+  // while the line was still snapped, so waiting for the next move leaves a blink.
   useIsoLayoutEffect(() => {
     if (followCursor && lastCursorRef.current !== null) {
       followCursorMove(lastCursorRef.current.clientX, lastCursorRef.current.clientY);

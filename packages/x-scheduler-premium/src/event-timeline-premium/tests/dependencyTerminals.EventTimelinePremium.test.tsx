@@ -612,7 +612,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       moveDrag(target, {});
       moveDrag(target, {});
 
-      // A native drag suppresses the hover: the target's terminals must show by state
+      // A drag captures the pointer, which suppresses the hover: the target's terminals must show by state
       // so the user can drop on the edge they want.
       await waitFor(() => {
         expect(getTerminal('Event B', undefined, 'start')!.hasAttribute('data-visible')).to.equal(

@@ -16,7 +16,7 @@ export function isResizeHandlerEnabled(parameters: {
 
 /**
  * Clamps the moving edge so the event keeps at least `precisionMinute` of duration, leaving the
- * fixed edge untouched. Shared by the native and pointer resize paths.
+ * fixed edge untouched. Shared by the time grid and timeline drop targets.
  *
  * `precisionMinute` is the snap step reused as the minimum duration — intentionally the same value.
  */

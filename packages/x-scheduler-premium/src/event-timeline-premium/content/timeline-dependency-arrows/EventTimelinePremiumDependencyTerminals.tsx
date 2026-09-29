@@ -242,7 +242,7 @@ function DependencyTerminalsLayerImpl() {
     },
   );
 
-  // A native drag suppresses pointer events, so the hover goes stale: at gesture start
+  // A drag captures the pointer on the body, so the hover goes stale: at gesture start
   // only the gesture's terminals (owned by the render) keep their reveal, at gesture
   // end the tracking resets and the next pointerover rebuilds it.
   React.useEffect(() => {
