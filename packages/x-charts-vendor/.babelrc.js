@@ -82,8 +82,8 @@ module.exports = function getBabelConfig(api) {
       [
         '@babel/plugin-transform-runtime',
         {
-          // any package needs to declare 8.0.0 as a runtime dependency. default is ^8.0.0
-          version: babelRuntimeVersion || '^8.0.0',
+          // Let the plugin use all the helpers available in the installed runtime version.
+          version: babelRuntimeVersion,
         },
       ],
     ],
