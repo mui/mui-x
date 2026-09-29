@@ -139,9 +139,8 @@ const selectedDayStyles = (theme: Theme) => ({
 
 const DISABLED_DAY_OPACITY = 0.6;
 
-const todayOutline = (theme: Theme) => ({
-  outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
-  outlineOffset: -1,
+const todayMarker = (theme: Theme) => ({
+  boxShadow: `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
 });
 
 const DateRangePickerDayRoot = styled(ButtonBase, {
@@ -185,13 +184,6 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
   borderRadius: 'calc(var(--PickerDay-size) / 2)',
   padding: 0,
   position: 'relative',
-  ...(theme.focusVisible && {
-    [`&.${buttonBaseClasses.focusVisible}`]: {
-      outline: 'none',
-      outlineOffset: 0,
-      boxShadow: 'none',
-    },
-  }),
   marginLeft: 'var(--PickerDay-horizontalMargin)',
   marginRight: 'var(--PickerDay-horizontalMargin)',
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
@@ -252,9 +244,9 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
         isDaySelected: false,
       },
       style: {
-        ...todayOutline(theme),
+        ...todayMarker(theme),
         ...(theme.focusVisible && {
-          [`&.${buttonBaseClasses.focusVisible}`]: todayOutline(theme),
+          [`&.${buttonBaseClasses.focusVisible}`]: todayMarker(theme),
         }),
       },
     },

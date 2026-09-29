@@ -43,9 +43,8 @@ const useUtilityClasses = (
   return composeClasses(slots, getPickerDayUtilityClass, classes);
 };
 
-const todayOutline = (theme: Theme) => ({
-  outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
-  outlineOffset: -1,
+const todayMarker = (theme: Theme) => ({
+  boxShadow: `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
 });
 
 const PickerDayRoot = styled(ButtonBase, {
@@ -93,13 +92,6 @@ const PickerDayRoot = styled(ButtonBase, {
       (theme.vars || theme).palette.action.focusOpacity,
     ),
   },
-  ...(theme.focusVisible && {
-    [`&.${buttonBaseClasses.focusVisible}`]: {
-      outline: 'none',
-      outlineOffset: 0,
-      boxShadow: 'none',
-    },
-  }),
   marginLeft: 'var(--PickerDay-horizontalMargin)',
   marginRight: 'var(--PickerDay-horizontalMargin)',
   variants: [
@@ -147,9 +139,9 @@ const PickerDayRoot = styled(ButtonBase, {
         isDaySelected: false,
       },
       style: {
-        ...todayOutline(theme),
+        ...todayMarker(theme),
         ...(theme.focusVisible && {
-          [`&.${buttonBaseClasses.focusVisible}`]: todayOutline(theme),
+          [`&.${buttonBaseClasses.focusVisible}`]: todayMarker(theme),
         }),
       },
     },

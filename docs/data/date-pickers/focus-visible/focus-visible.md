@@ -37,21 +37,28 @@ Clicking a button won't show it—use the Tab and arrow keys.
 Where a component previously marked focus with a background tint, the ring replaces that tint rather than stacking on top of it.
 Pointer focus is unaffected: clicking doesn't match `:focus-visible`, so it looks exactly as it did before.
 
-## Day cells
+## Day cells and the "today" marker
 
-Day cells deliberately **don't** take the themed ring—they render identically whether or not you opt in.
+Day cells take the themed ring like everything else, and the "today" marker survives underneath it.
 
-A day cell already spends its `outline` on the "today" marker, and `outline` is a single CSS property that can only render one value.
-The themed ring wins on specificity, so a focused "today" would lose its marker and become indistinguishable from any other focused day—precisely when a keyboard user most needs to tell them apart.
+That needed one change: the marker used to be drawn with `outline`, which is the same single CSS property the ring uses, so only one of them could ever render.
+The marker is now drawn with an equivalent inset `box-shadow`, leaving `outline` free for the ring.
+A focused "today" therefore shows both—the ring around the cell, the marker inside it.
 
-Rather than trade the marker for the ring, the day cell keeps both of its existing affordances: the "today" outline, and the background tint on focus.
+:::warning
+If you previously overrode the "today" marker through `outline` on the `.MuiPickerDay-today` class, switch that override to `box-shadow`.
+The rendered result is unchanged for everyone else, opted in or not.
+:::
+
 This applies to the range day of the [Date Range Picker](/x/react-date-pickers/date-range-picker/) as well.
 
-## Inset ring
+## Inset rings
 
-The year button's ring is inset—drawn just inside the button's edge rather than just outside it.
+Two surfaces draw the ring just inside their edge rather than just outside it, because an outset ring would be clipped there:
 
-The year list is a scroller with almost no horizontal padding, so arrowing through it parks the focused year flush against the visible edge, where an outset ring would be clipped.
+- **The year button.** The year list is a scroller with almost no padding, so arrowing through it parks the focused year flush against the visible edge.
+- **The calendar header's view-switch button.** Its label container is `overflow: hidden` and the button sits flush against three of its sides.
+
 Every other picker surface keeps the outset ring, because nothing clips it.
 
 ## The clock
