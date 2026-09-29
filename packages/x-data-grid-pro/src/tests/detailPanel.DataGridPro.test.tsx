@@ -751,21 +751,17 @@ describe('<DataGridPro /> - Detail panel', () => {
     // Samples the flex column width once per frame, after the frame's rendering
     // steps (layout, ResizeObserver callbacks, paint), so a width that was
     // painted and reverted later is still observed.
-    const sampleFlexWidthPerFrame = (frames: number) =>
-      new Promise<number[]>((resolve) => {
-        const widths: number[] = [];
-        const tick = () => {
-          setTimeout(() => {
-            widths.push(getFlexHeader().offsetWidth);
-            if (widths.length >= frames) {
-              resolve(widths);
-            } else {
-              requestAnimationFrame(tick);
-            }
-          });
-        };
-        requestAnimationFrame(tick);
-      });
+    // Each frame gets its own `act()` scope: React 18 holds all commits until an
+    // async `act()` scope ends, so one scope would only sample the stale DOM.
+    const sampleFlexWidthPerFrame = async (frames: number) => {
+      const widths: number[] = [];
+      for (let i = 0; i < frames; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await act(() => nextFrame());
+        widths.push(getFlexHeader().offsetWidth);
+      }
+      return widths;
+    };
 
     const waitForReady = () =>
       waitFor(() => {
@@ -783,7 +779,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
         // 15 frames cover the resize throttle window, during which the
         // transient scrollbar reservation used to be painted.
-        const widths = await act(() => sampleFlexWidthPerFrame(15));
+        const widths = await sampleFlexWidthPerFrame(15);
 
         expect(widths, `sampled widths: ${widths.join(', ')}`).to.deep.equal(
           widths.map(() => initialWidth),
@@ -844,7 +840,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         // throttle window when the second panel expands.
         await act(() => nextFrame());
         await act(() => apiRef.current!.toggleDetailPanel(1));
-        const widths = await act(() => sampleFlexWidthPerFrame(15));
+        const widths = await sampleFlexWidthPerFrame(15);
 
         expect(widths, `sampled widths: ${widths.join(', ')}`).to.deep.equal(
           widths.map(() => initialWidth),
