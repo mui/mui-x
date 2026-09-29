@@ -381,8 +381,8 @@ catalogs:
       specifier: ^5.0.0
       version: 5.0.0
     yargs:
-      specifier: ^18.1.0
-      version: 18.1.0
+      specifier: ^18.2.0
+      version: 18.2.0
 
 overrides:
   stylis: ^4.4.0
@@ -628,7 +628,7 @@ importers:
         version: 5.0.0(@opentelemetry/api@1.9.1)(@types/node@22.20.2)(@vitest/browser-playwright@5.0.0)(@vitest/coverage-v8@5.0.0)(@vitest/ui@5.0.0)(jsdom@30.0.1)(vite@8.3.0(@types/node@22.20.2)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.12)(yaml@2.9.0))
       yargs:
         specifier: 'catalog:'
-        version: 18.1.0
+        version: 18.2.0
       zod:
         specifier: 4.6.4
         version: 4.6.4
@@ -1374,7 +1374,7 @@ importers:
         version: 17.4.0(@babel/preset-env@7.29.7(@babel/core@8.0.6)(supports-color@11.0.0))(supports-color@11.0.0)
       yargs:
         specifier: 'catalog:'
-        version: 18.1.0
+        version: 18.2.0
     devDependencies:
       '@mui/x-internals':
         specifier: workspace:^
@@ -12084,8 +12084,8 @@ packages:
     resolution: {integrity: sha512-4UEqdc2RYGHZc7Doyqkrqiln3p9X2DZVxaGbwhn2pi7MrRagKaOcIKe8L3OxYcbhXLgLFUS3zAYuQjKBQgmuNg==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=23}
 
-  yargs@18.1.0:
-    resolution: {integrity: sha512-2rAgRKu54VsHkqI0/tYkmluGXHD4KW7yZoycuqDQ15QOTnc2VVfy0nN/1eMhnQLO00A+dwtK20xuCnc1YGeUyg==}
+  yargs@18.2.0:
+    resolution: {integrity: sha512-9OpKOLeaoNFecEp7P6iYbzze/5CqWoH7N3SMs/6y1XF4nMvFMspEGZzJ6uFi9MmQwXhyzqYoSEKO3tvA3Z/o2w==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=23}
 
   yocto-queue@0.1.0:
@@ -14771,7 +14771,7 @@ snapshots:
       piscina: 5.3.2
       rollup-plugin-visualizer: 7.1.1(rolldown@1.2.6)
       vite: 8.3.0(@types/node@22.20.2)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.12)(yaml@2.9.0)
-      yargs: 18.1.0
+      yargs: 18.2.0
       zod: 4.6.4
     transitivePeerDependencies:
       - '@types/node'
@@ -14879,7 +14879,7 @@ snapshots:
       unified-lint-rule: 3.0.1
       unist-util-visit: 5.1.0
       yaml: 2.9.1
-      yargs: 18.1.0
+      yargs: 18.2.0
     optionalDependencies:
       typescript: '@typescript/typescript6@6.0.2'
     transitivePeerDependencies:
@@ -14979,7 +14979,7 @@ snapshots:
       unified: 11.0.5
       unist-util-visit: 5.1.0
       vscode-oniguruma: 2.0.1
-      yargs: 18.1.0
+      yargs: 18.2.0
       zx: 8.8.5
     optionalDependencies:
       '@types/react': 19.3.0
@@ -21675,7 +21675,7 @@ snapshots:
       open: 11.0.4
       picomatch: 4.0.7
       source-map: 0.8.0
-      yargs: 18.1.0
+      yargs: 18.2.0
     optionalDependencies:
       rolldown: 1.2.6
 
@@ -23136,7 +23136,7 @@ snapshots:
       y18n: 5.0.8
       yargs-parser: 22.0.0
 
-  yargs@18.1.0:
+  yargs@18.2.0:
     dependencies:
       cliui: 9.0.1
       escalade: 3.2.0
