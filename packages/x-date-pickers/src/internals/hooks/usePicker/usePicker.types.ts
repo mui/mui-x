@@ -172,6 +172,11 @@ export interface UsePickerProps<
   sx?: SxProps<Theme>;
 }
 
+export type UsePickerManager<TValue extends PickerValidValue, TExternalProps extends {}> = Pick<
+  PickerManager<TValue, InferError<TExternalProps>, TExternalProps, any>,
+  'valueType' | 'validator' | 'internal_valueManager'
+>;
+
 export interface UsePickerParameters<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
@@ -180,7 +185,7 @@ export interface UsePickerParameters<
   ref: React.ForwardedRef<HTMLDivElement> | undefined;
   localeText: PickersInputLocaleText | undefined;
   variant: PickerVariant;
-  manager: PickerManager<TValue, InferError<TExternalProps>, any, any>;
+  manager: UsePickerManager<TValue, TExternalProps>;
   autoFocusView: boolean;
   viewContainerRole: 'dialog' | 'tooltip' | null;
   /**
