@@ -5,14 +5,13 @@ import {
   gridVisibleColumnFieldsSelector,
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid-pro';
-import { getRowIndexRelativeToAllRows } from '@mui/x-data-grid-pro/internals';
+import { asReplaceUpdates, getRowIndexRelativeToAllRows } from '@mui/x-data-grid-pro/internals';
 import type {
   GridCellEditStopParams,
   GridRowEditStopParams,
   GridEvents,
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
-import { asReplaceUpdates } from '@mui/x-data-grid-pro/internals';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {
