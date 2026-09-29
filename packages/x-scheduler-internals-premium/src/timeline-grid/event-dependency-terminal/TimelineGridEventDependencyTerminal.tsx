@@ -10,27 +10,15 @@ import { useDragHandle } from '@mui/x-scheduler-internals/internals';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
+import { useEventDependencyDropTarget } from '../event/useEventDependencyDropTarget';
 import { TimelineGridEventDependencyTerminalDataAttributes } from './TimelineGridEventDependencyTerminalDataAttributes';
 
 /**
- * Narrows a drag payload to this handle's drag data — the one definition shared by
- * the creation monitor and the event drop targets. A local narrow rather than a
- * `buildIsValidDropTarget` guard: the terminal drag never produces an occurrence
- * placeholder, so it does not register in `EventDropDataLookup`.
- */
-export function isDependencyTerminalDrag(
-  data: any,
-): data is TimelineGridEventDependencyTerminal.DragData {
-  return data.source === 'TimelineGridEventDependencyTerminal';
-}
-
-/**
- * The terminal on the end edge of an event: dragging it onto another event creates a
- * `FinishToStart` dependency. Positioned by the caller (it does not live inside the
- * event element), which is also responsible for only rendering it when the
- * dependencies feature applies to its event. The drag lifecycle is handled by a global
- * monitor mounted by the grid root (not here) so the gesture survives this element
- * being unmounted by virtualization mid-drag.
+ * The terminal on one edge of an event: dragging it onto another event or terminal
+ * creates a dependency whose type follows the two edges. It is a drop target too, so
+ * a gesture can pick the target edge. Positioned by the caller, which only renders it
+ * when the feature applies to its event. The drag lifecycle lives in the grid root's
+ * monitor, so the gesture survives this element being unmounted mid-drag.
  */
 export const TimelineGridEventDependencyTerminal = React.forwardRef(
   function TimelineGridEventDependencyTerminal(
@@ -70,6 +58,7 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
     }));
 
     useDragHandle({ ref, enabled: true, getDragData });
+    useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId, side });
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef, ref],
@@ -78,6 +67,7 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
         {
           [TimelineGridEventDependencyTerminalDataAttributes.dependencyTerminal]: occurrenceKey,
           [TimelineGridEventDependencyTerminalDataAttributes.resourceId]: String(resourceId),
+          [TimelineGridEventDependencyTerminalDataAttributes.side]: side,
         } as Record<string, string>,
       ],
     });
@@ -102,31 +92,10 @@ export namespace TimelineGridEventDependencyTerminal {
      */
     resourceId: SchedulerResourceId;
     /**
-     * The event edge the terminal sits on — the edge of the predecessor the created
-     * dependency starts from. Only `'end'` is exercised while `FinishToStart` is the
-     * only dependency type; the start-edge terminals arrive with the other types.
+     * The event edge the terminal sits on: the predecessor edge a dependency dragged
+     * from it starts from, and the successor edge a dependency dropped on it ends on.
      * @default 'end'
      */
     side?: SchedulerEventSide;
-  }
-
-  export interface DragData {
-    eventId: SchedulerEventId;
-    occurrenceKey: string;
-    /**
-     * The resource of the row appearance the gesture started from.
-     */
-    resourceId: SchedulerResourceId;
-    /**
-     * The edge of the source event the gesture started from. Combined with the drop
-     * edge, it determines the created dependency's type.
-     */
-    sourceSide: SchedulerEventSide;
-    source: 'TimelineGridEventDependencyTerminal';
-    /**
-     * The store of the timeline the gesture started in, compared by identity so
-     * several timelines on one page don't react to each other's gestures.
-     */
-    storeContext: unknown;
   }
 }

@@ -8,8 +8,9 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
-import type { DependencyAnchorResolver, DependencyArrowPoint } from './dependencyArrowGeometry';
-import { getEventEdgeAnchor, DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowGeometry';
+import type { DependencyAnchorResolver, DependencyArrowPoint } from './dependencyAnchorResolver';
+import { getEventEdgeAnchor } from './dependencyAnchorResolver';
+import { DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowRouting';
 import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
@@ -17,7 +18,7 @@ import {
 
 const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
 const DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH = 2;
-// TODO(dependencies public flip): add a `dependencyArrows` utility class and assert the
+// TODO(dependencies public flip, #23420): add a `dependencyArrows` utility class and assert the
 // slot in the theme augmentation. The overlay only carries data attributes while the
 // feature has no public API.
 const DependencyArrowsSvg = styled('svg', {
@@ -195,9 +196,9 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
 }
 
 /**
- * The path of the provisional arrow: a straight dashed line from the end edge of the
- * gesture's source occurrence to the cursor, turning solid (still straight) and
- * snapping to the start edge of the hovered target when there is one — the routed
+ * The path of the provisional arrow: a straight dashed line from the dragged edge of
+ * the gesture's source occurrence to the cursor, turning solid (still straight) and
+ * snapping to the targeted edge of the hovered target when there is one — the routed
  * arrow only appears once the dependency is actually created. Pure: the cursor
  * position never enters the state, the unsnapped line is driven through the DOM.
  */
@@ -220,11 +221,11 @@ function getCreationPath(
     return null;
   }
 
-  if (creation.targetEventId !== null) {
+  if (creation.targetEventId !== null && creation.targetSide !== null) {
     const target = getEventEdgeAnchor(
       resolver,
       creation.targetEventId,
-      'start',
+      creation.targetSide,
       creation.targetOccurrenceKey,
       creation.targetResourceId,
     );

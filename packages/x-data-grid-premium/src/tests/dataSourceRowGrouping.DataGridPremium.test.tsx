@@ -198,6 +198,71 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
     });
   });
 
+  // https://github.com/mui/mui-x/issues/23009
+  it('should keep an updated leaf row under its group', async () => {
+    const dataSource: GridDataSource = {
+      getRows: async (params: GridGetRowsParams) => {
+        if (params.groupKeys!.length === 0) {
+          const rootRows = [
+            { id: 'company-A', group: 'A', descendantCount: 2 },
+            { id: 'company-B', group: 'B', descendantCount: 0 },
+          ];
+          return { rows: rootRows, rowCount: rootRows.length };
+        }
+        if (params.groupKeys![0] === 'A') {
+          const companyChildren = [
+            { id: 'A-1', trader: 'Trader 1', descendantCount: 0 },
+            { id: 'A-2', trader: 'Trader 2', descendantCount: 0 },
+          ];
+          return { rows: companyChildren, rowCount: companyChildren.length };
+        }
+        return { rows: [], rowCount: 0 };
+      },
+      getGroupKey: (row) => row.group,
+      getChildrenCount: (row) => row.descendantCount,
+    };
+
+    function TestComponent() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            apiRef={apiRef}
+            columns={[{ field: 'company' }, { field: 'trader' }]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            disableVirtualization
+            rowGroupingModel={['company']}
+          />
+        </div>
+      );
+    }
+
+    render(<TestComponent />);
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.tree['company-A']).not.to.equal(undefined);
+    });
+
+    const getCompanyChildren = () =>
+      (apiRef.current!.state.rows.tree['company-A'] as GridGroupNode).children;
+    act(() => {
+      apiRef.current!.dataSource.fetchRows('company-A');
+    });
+    await waitFor(() => {
+      expect(getCompanyChildren()).to.deep.equal(['A-1', 'A-2']);
+    });
+
+    act(() => {
+      apiRef.current!.updateRows([{ id: 'A-1', trader: 'Trader 1 (edited)' }]);
+    });
+
+    expect(apiRef.current!.state.rows.tree['A-1'].parent).to.equal('company-A');
+    expect(getCompanyChildren()).to.deep.equal(['A-1', 'A-2']);
+    expect(
+      (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children,
+    ).to.deep.equal(['company-A', 'company-B']);
+  });
+
   describe('Nested lazy loading', () => {
     type RowGroupingRow = {
       id: string;

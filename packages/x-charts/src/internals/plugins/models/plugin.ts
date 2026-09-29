@@ -1,4 +1,4 @@
-import type { Store } from '@mui/x-internals/store';
+import type { Store } from '@base-ui/utils/store';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import type { ChartCorePluginSignatures } from '../corePlugins';
 import type { ChartState } from './chart';

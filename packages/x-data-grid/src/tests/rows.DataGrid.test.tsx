@@ -11,6 +11,7 @@ import {
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { iconButtonClasses } from '@mui/material/IconButton';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Portal from '@mui/material/Portal';
 import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
@@ -317,8 +318,45 @@ describe('<DataGrid /> - Rows', () => {
             ]}
           />,
         );
-        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
         expect(screen.queryByText('print')).to.equal(null);
+      });
+
+      it('should not apply menu roles to always-visible actions', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="delete" />,
+              <GridActionsCellItem key={2} icon={<span />} label="print" />,
+            ]}
+          />,
+        );
+        expect(screen.queryByRole('menu')).to.equal(null);
+        expect(screen.queryByRole('menuitem')).to.equal(null);
+        expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'print' })).not.to.equal(null);
+      });
+
+      it('should apply menu roles only to the opened menu', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="delete" />,
+              <GridActionsCellItem key={2} label="print" showInMenu />,
+            ]}
+          />,
+        );
+        expect(screen.queryByRole('menu')).to.equal(null);
+        expect(screen.queryByRole('menuitem')).to.equal(null);
+
+        const moreButton = screen.getByRole('button', { name: 'more' });
+        expect(moreButton).to.have.attribute('aria-haspopup', 'menu');
+        expect(moreButton).to.have.attribute('aria-expanded', 'false');
+
+        await user.click(moreButton);
+        expect(moreButton).to.have.attribute('aria-expanded', 'true');
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
       });
 
       it('should let the icon inherit the action button size', () => {
@@ -335,11 +373,81 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
 
-        const actionButton = screen.getByRole('menuitem', { name: 'delete' });
+        const actionButton = screen.getByRole('button', { name: 'delete' });
         const icon = screen.getByTestId('delete-icon');
 
         expect(actionButton).to.have.class(iconButtonClasses.sizeLarge);
         expect(icon).to.have.class(svgIconClasses.fontSizeInherit);
+      });
+
+      it('should render an anchor tag when href is set', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="details" href="/details/1" />,
+            ]}
+          />,
+        );
+        const actionLink = screen.getByRole('link', { name: 'details' });
+        expect(actionLink.tagName).to.equal('A');
+        expect(actionLink).to.have.attribute('href', '/details/1');
+      });
+
+      it('should render an anchor tag in the menu when href is set', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} label="details" href="/details/1" showInMenu />,
+            ]}
+          />,
+        );
+        await user.click(screen.getByRole('button', { name: 'more' }));
+        const actionLink = screen.getByRole('menuitem', { name: 'details' });
+        expect(actionLink.tagName).to.equal('A');
+        expect(actionLink).to.have.attribute('href', '/details/1');
+      });
+
+      it('should not override an explicit component when href is set', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem
+                key={1}
+                icon={<span />}
+                label="details"
+                href="/details/1"
+                component="span"
+              />,
+            ]}
+          />,
+        );
+        expect(screen.queryByRole('link', { name: 'details' })).to.equal(null);
+        expect(screen.getByLabelText('details').tagName).to.equal('SPAN');
+      });
+
+      it('should respect a themed LinkComponent when href is set', () => {
+        const LinkComponent = React.forwardRef<HTMLAnchorElement, any>((props, ref) => (
+          <a {...props} ref={ref} data-testid="themed-link" aria-label="themed link" />
+        ));
+        const theme = createTheme({
+          components: {
+            MuiButtonBase: {
+              defaultProps: {
+                LinkComponent,
+              },
+            },
+          },
+        });
+        render(
+          <ThemeProvider theme={theme}>
+            <TestCase
+              getActions={() => [
+                <GridActionsCellItem key={1} icon={<span />} label="details" href="/details/1" />,
+              ]}
+            />
+          </ThemeProvider>,
+        );
+        expect(screen.getByTestId('themed-link')).to.have.attribute('href', '/details/1');
       });
 
       it('should show in a menu the actions marked as showInMenu', async () => {
@@ -349,7 +457,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(screen.queryByText('print')).to.equal(null);
-        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        await user.click(screen.getByRole('button', { name: 'more' }));
         expect(screen.queryByText('print')).not.to.equal(null);
       });
 
@@ -360,7 +468,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
-        await user.click(screen.getByRole('menuitem', { name: 'print' }));
+        await user.click(screen.getByRole('button', { name: 'print' }));
         expect(getRow(0)).not.to.have.class('Mui-selected');
       });
 
@@ -373,7 +481,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
-        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        await user.click(screen.getByRole('button', { name: 'more' }));
         expect(screen.queryByText('print')).not.to.equal(null);
 
         await user.click(screen.getByText('print'));
@@ -387,7 +495,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
-        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        await user.click(screen.getByRole('button', { name: 'more' }));
         expect(getRow(0)).not.to.have.class('Mui-selected');
       });
 
@@ -398,18 +506,18 @@ describe('<DataGrid /> - Rows', () => {
             getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
           />,
         );
-        expect(screen.queryAllByRole('menu')).to.have.length(2);
+        expect(screen.queryAllByRole('menu')).to.have.length(0);
 
-        const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
+        const more1 = screen.getAllByRole('button', { name: 'more' })[0];
         await user.click(more1);
         await waitFor(() => {
-          expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+          expect(screen.queryAllByRole('menu')).to.have.length(1);
         });
 
-        const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
+        const more2 = screen.getAllByRole('button', { name: 'more' })[1];
         await user.click(more2);
         await waitFor(() => {
-          expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+          expect(screen.queryAllByRole('menu')).to.have.length(1);
         });
       });
 
@@ -423,7 +531,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(getActiveCell()).to.equal('0-0');
 
         await user.keyboard('{ArrowRight}');
-        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        const printButton = screen.getByRole('button', { name: 'print' });
         expect(printButton).toHaveFocus();
 
         await user.keyboard('{ArrowLeft}');
@@ -439,7 +547,7 @@ describe('<DataGrid /> - Rows', () => {
             ]}
           />,
         );
-        const moreButton = screen.getByRole('menuitem', { name: 'more' });
+        const moreButton = screen.getByRole('button', { name: 'more' });
         await user.click(moreButton);
 
         const printButton = screen.queryByRole('menuitem', { name: 'print' });
@@ -460,11 +568,11 @@ describe('<DataGrid /> - Rows', () => {
         expect(getActiveCell()).to.equal('0-0');
 
         await user.keyboard('{ArrowRight}');
-        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        const printButton = screen.getByRole('button', { name: 'print' });
         expect(printButton).toHaveFocus();
 
         await user.keyboard('{ArrowRight}');
-        const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+        const deleteButton = screen.getByRole('button', { name: 'delete' });
         expect(deleteButton).toHaveFocus();
 
         await user.keyboard('{ArrowLeft}');
@@ -472,6 +580,53 @@ describe('<DataGrid /> - Rows', () => {
 
         await user.keyboard('{ArrowLeft}');
         expect(firstCell).toHaveFocus();
+      });
+
+      it('should allow to navigate between actions that do not forward their props', async () => {
+        function CustomAction() {
+          return <button type="button">custom</button>;
+        }
+
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <CustomAction key={1} />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
+            ]}
+          />,
+        );
+        await user.click(getCell(0, 0));
+        expect(getActiveCell()).to.equal('0-0');
+
+        await user.keyboard('{ArrowRight}');
+        const customButton = screen.getByRole('button', { name: 'custom' });
+        expect(customButton).toHaveFocus();
+
+        await user.keyboard('{ArrowRight}');
+        expect(screen.getByRole('button', { name: 'delete' })).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(customButton).toHaveFocus();
+      });
+
+      it('should not move the focus out of the open menu with the arrow keys', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="print" />,
+              <GridActionsCellItem key={2} icon={<span />} label="delete" />,
+              <GridActionsCellItem key={3} label="copy" showInMenu />,
+            ]}
+          />,
+        );
+        await user.click(screen.getByRole('button', { name: 'more' }));
+
+        const copyItem = screen.getByRole('menuitem', { name: 'copy' });
+        expect(copyItem).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(copyItem).toHaveFocus();
+        expect(screen.queryByRole('menu')).not.to.equal(null);
       });
 
       it('should not move focus to first item when clicking in another item', async () => {
@@ -483,7 +638,7 @@ describe('<DataGrid /> - Rows', () => {
             ]}
           />,
         );
-        const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+        const deleteButton = screen.getByRole('button', { name: 'delete' });
         await user.click(deleteButton);
         expect(deleteButton).toHaveFocus();
       });
@@ -504,8 +659,8 @@ describe('<DataGrid /> - Rows', () => {
         await user.keyboard('{ArrowRight}');
         expect(secondCell).to.have.property('tabIndex', -1);
 
-        const printButton = screen.getByRole('menuitem', { name: 'print' });
-        const menuButton = screen.getByRole('menuitem', { name: 'more' });
+        const printButton = screen.getByRole('button', { name: 'print' });
+        const menuButton = screen.getByRole('button', { name: 'more' });
         expect(printButton).to.have.property('tabIndex', 0);
         expect(menuButton).to.have.property('tabIndex', -1);
 
@@ -540,8 +695,8 @@ describe('<DataGrid /> - Rows', () => {
           );
         }
         const { user } = render(<Test />);
-        await user.click(screen.getByRole('menuitem', { name: 'delete' }));
-        expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+        expect(screen.getByRole('button', { name: 'print' })).toHaveFocus();
       });
 
       it('should focus the last button if the currently focused button is removed', async () => {
@@ -553,14 +708,14 @@ describe('<DataGrid /> - Rows', () => {
             ]}
           />,
         );
-        await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
-        expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
+        await user.click(screen.getByRole('button', { name: 'delete' })); // Sets focusedButtonIndex=1
+        expect(screen.getByRole('button', { name: 'delete' })).toHaveFocus();
         await act(async () => {
           setProps({
             getActions: () => [<GridActionsCellItem key={1} icon={<span />} label="print" />],
           }); // Sets focusedButtonIndex=0
         });
-        expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+        expect(screen.getByRole('button', { name: 'print' })).toHaveFocus();
       });
     });
 
@@ -594,8 +749,49 @@ describe('<DataGrid /> - Rows', () => {
             )}
           />,
         );
-        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
         expect(screen.queryByText('print')).to.equal(null);
+      });
+
+      it('should not apply menu roles to always-visible actions', () => {
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menu')).to.equal(null);
+        expect(screen.queryByRole('menuitem')).to.equal(null);
+        expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'print' })).not.to.equal(null);
+      });
+
+      it('should apply menu roles only to the opened menu', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menu')).to.equal(null);
+        expect(screen.queryByRole('menuitem')).to.equal(null);
+
+        const moreButton = screen.getByRole('button', { name: 'more' });
+        expect(moreButton).to.have.attribute('aria-haspopup', 'menu');
+        expect(moreButton).to.have.attribute('aria-expanded', 'false');
+
+        await user.click(moreButton);
+        expect(moreButton).to.have.attribute('aria-expanded', 'true');
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
       });
 
       it('should show in a menu the actions marked as showInMenu', async () => {
@@ -609,7 +805,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(screen.queryByText('print')).to.equal(null);
-        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        await user.click(screen.getByRole('button', { name: 'more' }));
         expect(screen.queryByText('print')).not.to.equal(null);
       });
 
@@ -624,7 +820,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
-        await user.click(screen.getByRole('menuitem', { name: 'print' }));
+        await user.click(screen.getByRole('button', { name: 'print' }));
         expect(getRow(0)).not.to.have.class('Mui-selected');
       });
 
@@ -639,7 +835,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
-        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        await user.click(screen.getByRole('button', { name: 'more' }));
         expect(screen.queryByText('print')).not.to.equal(null);
 
         await user.click(screen.getByText('print'));
@@ -657,7 +853,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(getRow(0)).not.to.have.class('Mui-selected');
-        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        await user.click(screen.getByRole('button', { name: 'more' }));
         expect(getRow(0)).not.to.have.class('Mui-selected');
       });
 
@@ -672,18 +868,18 @@ describe('<DataGrid /> - Rows', () => {
             )}
           />,
         );
-        expect(screen.queryAllByRole('menu')).to.have.length(2);
+        expect(screen.queryAllByRole('menu')).to.have.length(0);
 
-        const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
+        const more1 = screen.getAllByRole('button', { name: 'more' })[0];
         await user.click(more1);
         await waitFor(() => {
-          expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+          expect(screen.queryAllByRole('menu')).to.have.length(1);
         });
 
-        const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
+        const more2 = screen.getAllByRole('button', { name: 'more' })[1];
         await user.click(more2);
         await waitFor(() => {
-          expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+          expect(screen.queryAllByRole('menu')).to.have.length(1);
         });
       });
 
@@ -701,7 +897,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(getActiveCell()).to.equal('0-0');
 
         await user.keyboard('{ArrowRight}');
-        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        const printButton = screen.getByRole('button', { name: 'print' });
         expect(printButton).toHaveFocus();
 
         await user.keyboard('{ArrowLeft}');
@@ -719,7 +915,7 @@ describe('<DataGrid /> - Rows', () => {
             )}
           />,
         );
-        const moreButton = screen.getByRole('menuitem', { name: 'more' });
+        const moreButton = screen.getByRole('button', { name: 'more' });
         await user.click(moreButton);
 
         const printButton = screen.queryByRole('menuitem', { name: 'print' });
@@ -742,11 +938,11 @@ describe('<DataGrid /> - Rows', () => {
         expect(getActiveCell()).to.equal('0-0');
 
         await user.keyboard('{ArrowRight}');
-        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        const printButton = screen.getByRole('button', { name: 'print' });
         expect(printButton).toHaveFocus();
 
         await user.keyboard('{ArrowRight}');
-        const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+        const deleteButton = screen.getByRole('button', { name: 'delete' });
         expect(deleteButton).toHaveFocus();
 
         await user.keyboard('{ArrowLeft}');
@@ -754,6 +950,57 @@ describe('<DataGrid /> - Rows', () => {
 
         await user.keyboard('{ArrowLeft}');
         expect(firstCell).toHaveFocus();
+      });
+
+      it('should allow to navigate between actions that do not forward their props', async () => {
+        function CustomAction() {
+          return <button type="button">custom</button>;
+        }
+
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params} suppressChildrenValidation>
+                <CustomAction />
+                <GridActionsCellItem icon={<span />} label="delete" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        await user.click(getCell(0, 0));
+        expect(getActiveCell()).to.equal('0-0');
+
+        await user.keyboard('{ArrowRight}');
+        const customButton = screen.getByRole('button', { name: 'custom' });
+        expect(customButton).toHaveFocus();
+
+        await user.keyboard('{ArrowRight}');
+        expect(screen.getByRole('button', { name: 'delete' })).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(customButton).toHaveFocus();
+      });
+
+      it('should not move the focus out of the open menu with the arrow keys', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem label="copy" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        await user.click(screen.getByRole('button', { name: 'more' }));
+
+        const copyItem = screen.getByRole('menuitem', { name: 'copy' });
+        expect(copyItem).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(copyItem).toHaveFocus();
+        expect(screen.queryByRole('menu')).not.to.equal(null);
       });
 
       it('should not move focus to first item when clicking in another item', async () => {
@@ -767,7 +1014,7 @@ describe('<DataGrid /> - Rows', () => {
             )}
           />,
         );
-        const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+        const deleteButton = screen.getByRole('button', { name: 'delete' });
         await user.click(deleteButton);
         expect(deleteButton).toHaveFocus();
       });
@@ -790,8 +1037,8 @@ describe('<DataGrid /> - Rows', () => {
         await user.keyboard('{ArrowRight}');
         expect(secondCell).to.have.property('tabIndex', -1);
 
-        const printButton = screen.getByRole('menuitem', { name: 'print' });
-        const menuButton = screen.getByRole('menuitem', { name: 'more' });
+        const printButton = screen.getByRole('button', { name: 'print' });
+        const menuButton = screen.getByRole('button', { name: 'more' });
         expect(printButton).to.have.property('tabIndex', 0);
         expect(menuButton).to.have.property('tabIndex', -1);
 
@@ -825,8 +1072,8 @@ describe('<DataGrid /> - Rows', () => {
           );
         }
         const { user } = render(<Test />);
-        await user.click(screen.getByRole('menuitem', { name: 'delete' }));
-        expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+        expect(screen.getByRole('button', { name: 'print' })).toHaveFocus();
       });
 
       it('should focus the last button if the currently focused button is removed', async () => {
@@ -840,8 +1087,8 @@ describe('<DataGrid /> - Rows', () => {
             )}
           />,
         );
-        await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
-        expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
+        await user.click(screen.getByRole('button', { name: 'delete' })); // Sets focusedButtonIndex=1
+        expect(screen.getByRole('button', { name: 'delete' })).toHaveFocus();
         await act(async () => {
           setProps({
             renderCell: (params: GridRenderCellParams) => (
@@ -851,7 +1098,7 @@ describe('<DataGrid /> - Rows', () => {
             ),
           }); // Sets focusedButtonIndex=0
         });
-        expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+        expect(screen.getByRole('button', { name: 'print' })).toHaveFocus();
       });
 
       it('should show a warning when using invalid child types without `suppressChildrenValidation`', () => {
@@ -890,7 +1137,7 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         expect(screen.queryByText('Custom Action')).not.to.equal(null);
-        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'print' })).not.to.equal(null);
       });
 
       it('should allow mixing custom elements with GridActionsCellItem when `suppressChildrenValidation` is true', () => {
@@ -916,8 +1163,8 @@ describe('<DataGrid /> - Rows', () => {
         );
         expect(screen.queryByText('O')).not.to.equal(null);
         expect(screen.queryByText('Custom')).not.to.equal(null);
-        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
-        expect(screen.queryByRole('menuitem', { name: 'more' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'more' })).not.to.equal(null);
       });
 
       it('should allow React.Fragment as children', () => {
@@ -933,8 +1180,8 @@ describe('<DataGrid /> - Rows', () => {
             )}
           />,
         );
-        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
-        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'print' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
       });
 
       it('should allow nested React.Fragment as children', () => {
@@ -953,9 +1200,9 @@ describe('<DataGrid /> - Rows', () => {
             )}
           />,
         );
-        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
-        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
-        expect(screen.queryByRole('menuitem', { name: 'copy' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'print' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('button', { name: 'copy' })).not.to.equal(null);
       });
     });
   });
@@ -1575,6 +1822,19 @@ describe('<DataGrid /> - Rows', () => {
         [
           'MUI X: `<DataGrid autoPageSize={true} autoHeight={true} />` are not valid props.',
           'You cannot use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.',
+          '',
+          'Please remove one of these two props.',
+        ].join('\n'),
+      );
+    });
+
+    it('should throw a console error if height is used with autoHeight', () => {
+      expect(() => {
+        render(<TestCase height={300} autoHeight />);
+      }).toErrorDev(
+        [
+          'MUI X: `<DataGrid height={...} autoHeight={true} />` are not valid props.',
+          'You cannot use both the `height` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to its content.',
           '',
           'Please remove one of these two props.',
         ].join('\n'),

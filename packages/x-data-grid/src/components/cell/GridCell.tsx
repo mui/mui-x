@@ -10,7 +10,7 @@ import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { focusElement } from '../../utils/focusElement';
@@ -260,6 +260,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName, params, event);
 
@@ -272,6 +277,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      // The row might have been deleted during the click
+      if (!apiRef.current.getRow(rowId)) {
+        return;
+      }
+
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName, params, event);
       if (onMouseDown) {

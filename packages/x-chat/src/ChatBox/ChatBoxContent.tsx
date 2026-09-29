@@ -1,18 +1,19 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { useChat, useMessageIds, useConversations } from '@mui/x-chat-headless';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import {
+  useChat,
+  useMessageIds,
+  useConversations,
   ChatLayout,
   markChatLayoutPane,
   useChatLocaleText,
   useChatVariant,
-  type ChatSuggestion,
-  type ChatVariant,
 } from '@mui/x-chat-headless';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
+import type { ChatSuggestion, ChatVariant } from '@mui/x-chat-headless';
 import { styled } from '../internals/zero-styled';
 import { ChatConversation } from '../ChatConversation/ChatConversation';
 import { ChatConversationHeader } from '../ChatConversation/ChatConversationHeader';
@@ -28,10 +29,12 @@ import { ChatComposerAttachButton } from '../ChatComposer/ChatComposerAttachButt
 import { ChatComposerAttachmentList } from '../ChatComposer/ChatComposerAttachmentList';
 import { ChatComposerToolbar } from '../ChatComposer/ChatComposerToolbar';
 import { ChatComposerHelperText } from '../ChatComposer/ChatComposerHelperText';
-import { ChatMessageList, type ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
+import { ChatMessageList } from '../ChatMessageList/ChatMessageList';
+import type { ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
 import { DefaultMessageItem } from '../ChatMessageList/DefaultMessageItem';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
-import { ChatSuggestions, type ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
+import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
+import type { ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
 import type {
   ChatBoxFeatures,
   ChatBoxLayoutMode,
@@ -666,7 +669,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       : (slotProps.emptyState ?? {});
 
   const autoScrollProp = features?.autoScroll ?? true;
-  const { activeConversationId, setActiveConversation } = useChat();
+  const { activeConversationId, historyStatus, setActiveConversation } = useChat();
 
   const containerWidth = useContainerWidth(rootElement);
   const normalizedBreakpoints = React.useMemo(
@@ -722,11 +725,17 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   // returns a stable reference, so forwarding it does not churn row memoization.
   const renderedItemIds = (messageListItems ?? messageIds) as string[];
 
-  const isEmptyThread = renderedItemIds.length === 0;
+  // While the initial history page is in flight an empty id list means "not loaded yet",
+  // not "empty conversation" — rendering the empty state here would flash before messages arrive.
+  const isHistoryPending = historyStatus === 'loading';
+  const isEmptyThread = renderedItemIds.length === 0 && !isHistoryPending;
   const showCustomEmptyState = isEmptyThread && Boolean(CustomEmptyStateComponent);
   const showDefaultEmptyState = isEmptyThread && !CustomEmptyStateComponent && !showSuggestions;
   const showCenterSuggestions = isEmptyThread && !CustomEmptyStateComponent && showSuggestions;
-  const showAboveComposerSuggestions = showSuggestions && !showCenterSuggestions;
+  const showAboveComposerSuggestions =
+    showSuggestions &&
+    !showCenterSuggestions &&
+    !(isHistoryPending && renderedItemIds.length === 0);
 
   const restoreDrawerFocus = React.useCallback(() => {
     const drawerOpener = drawerOpenerRef.current;

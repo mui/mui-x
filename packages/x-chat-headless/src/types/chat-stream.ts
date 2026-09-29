@@ -1,3 +1,4 @@
+import type { ChatUser } from './chat-entities';
 import type { ChatDataPartMap, ChatMessageMetadata } from './chat-type-registry';
 import type {
   ChatKnownDataPartType,
@@ -10,7 +11,7 @@ import type {
 export interface ChatStartMessageChunk {
   type: 'start';
   messageId: string;
-  author?: import('./chat-entities').ChatUser;
+  author?: ChatUser;
 }
 
 export interface ChatFinishMessageChunk {

@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessageContext } from './internals/MessageContext';
-import { type MessageAuthorLabelOwnerState } from './message.types';
+import type { MessageAuthorLabelOwnerState } from './message.types';
 
 export interface MessageAuthorLabelSlots {
   authorLabel: React.ElementType;

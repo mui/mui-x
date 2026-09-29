@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import {
   ConversationListRoot,
   markChatLayoutPane,
@@ -13,26 +13,26 @@ import {
   ConversationListTimestamp,
   ConversationListUnreadBadge,
   ConversationListItemActions,
-  type ConversationListRootProps,
-  type ConversationListRootSlots,
-  type ConversationListRootSlotProps,
-  type ConversationListItemProps,
-  type ConversationListItemAvatarProps,
-  type ConversationListItemContentProps,
-  type ConversationListTitleProps,
-  type ConversationListPreviewProps,
-  type ConversationListTimestampProps,
-  type ConversationListUnreadBadgeProps,
-  type ConversationListItemActionsProps,
-  type ConversationListItemOwnerState,
-  type ConversationListVariant,
+} from '@mui/x-chat-headless';
+import type {
+  ConversationListRootProps,
+  ConversationListRootSlots,
+  ConversationListRootSlotProps,
+  ConversationListItemProps,
+  ConversationListItemAvatarProps,
+  ConversationListItemContentProps,
+  ConversationListTitleProps,
+  ConversationListPreviewProps,
+  ConversationListTimestampProps,
+  ConversationListUnreadBadgeProps,
+  ConversationListItemActionsProps,
+  ConversationListItemOwnerState,
+  ConversationListVariant,
 } from '@mui/x-chat-headless';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatConversationListUtilityClasses,
-  type ChatConversationListClasses,
-} from './chatConversationListClasses';
+import { useChatConversationListUtilityClasses } from './chatConversationListClasses';
+import type { ChatConversationListClasses } from './chatConversationListClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationList');

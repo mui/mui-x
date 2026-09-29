@@ -123,14 +123,6 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    */
   collapsedResources: PropTypes.object,
   /**
-   * Data source for fetching events asynchronously.
-   * When provided, events are fetched through the data source instead of the `events` prop.
-   */
-  dataSource: PropTypes.shape({
-    getEvents: PropTypes.func.isRequired,
-    persistEvents: PropTypes.func.isRequired,
-  }),
-  /**
    * The locale object from `date-fns` used to format dates.
    * This affects day names, month names, week start day, and other locale-dependent formatting.
    * Import a locale from `date-fns/locale` and pass it to this prop.
@@ -351,16 +343,19 @@ EventCalendar.propTypes /* remove-proptypes */ = {
   /**
    * Configuration applied to each view, keyed by the view name.
    * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid.
-   * @example { week: { startTime: 8, endTime: 20 } }
+   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
+   * scrolls to on mount.
+   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig: PropTypes.shape({
     day: PropTypes.shape({
       endTime: PropTypes.number,
+      initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
     }),
     week: PropTypes.shape({
       endTime: PropTypes.number,
+      initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
     }),
   }),

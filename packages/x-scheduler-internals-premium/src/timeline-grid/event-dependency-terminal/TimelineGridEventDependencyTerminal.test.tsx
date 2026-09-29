@@ -63,7 +63,7 @@ describe('<TimelineGrid.EventDependencyTerminal />', () => {
     cleanup();
   });
 
-  it('should expose its occurrence key and resource through its data attributes', () => {
+  it('should expose its occurrence key, resource and side through its data attributes', () => {
     render(
       <Wrapper>
         <TimelineGrid.EventDependencyTerminal
@@ -76,7 +76,7 @@ describe('<TimelineGrid.EventDependencyTerminal />', () => {
 
     expect(
       document.querySelector(
-        '[data-dependency-terminal="fake-key"][data-resource-id="fake-resource"]',
+        '[data-dependency-terminal="fake-key"][data-resource-id="fake-resource"][data-side="end"]',
       ),
     ).not.to.equal(null);
   });

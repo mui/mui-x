@@ -11,6 +11,16 @@ import {
   findPagesMarkdown,
 } from '@mui/internal-api-docs-builder';
 
+function getSlotInterfaceName(name: string): string | undefined {
+  if (name === 'StandaloneEvent') {
+    return undefined;
+  }
+  if (name === 'EventTimelinePremium') {
+    return 'EventTimelinePremiumSlots';
+  }
+  return 'SchedulerSlots';
+}
+
 export function getComponentInfo(filename: string): ComponentInfo {
   const { name } = extractPackageFile(filename);
   let srcInfo: null | ReturnType<ComponentInfo['readFile']> = null;
@@ -23,8 +33,9 @@ export function getComponentInfo(filename: string): ComponentInfo {
     muiName: getMuiName(name),
     // The scheduler components share one slots interface instead of each declaring a
     // `<ComponentName>Slots`, which is what the builder looks for by default.
+    // The Event Timeline extends it with its own slots.
     // `StandaloneEvent` is the only public component that takes no slots.
-    slotInterfaceName: name === 'StandaloneEvent' ? undefined : 'SchedulerSlots',
+    slotInterfaceName: getSlotInterfaceName(name),
     apiPathname: `/x/api/scheduler/${kebabCase(name)}`,
     apiPagesDirectory: path.join(process.cwd(), `docs/pages/x/api/scheduler`),
     readFile: () => {

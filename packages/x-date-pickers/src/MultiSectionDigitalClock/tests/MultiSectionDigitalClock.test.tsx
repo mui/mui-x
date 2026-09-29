@@ -29,7 +29,7 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(screen.getByRole('option', { name: '0 minutes' })).to.have.attribute('tabindex', '-1');
       expect(screen.getByRole('option', { name: 'AM' })).to.have.attribute('tabindex', '-1');
       // check that the relevant time based on the `referenceDate` is focusable
-      expect(screen.getByRole('option', { name: '1 hours' })).to.have.attribute('tabindex', '0');
+      expect(screen.getByRole('option', { name: '1 hour' })).to.have.attribute('tabindex', '0');
       expect(screen.getByRole('option', { name: '30 minutes' })).to.have.attribute('tabindex', '0');
       expect(screen.getByRole('option', { name: 'PM' })).to.have.attribute('tabindex', '0');
 

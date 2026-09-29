@@ -71,10 +71,32 @@ This feature is currently supported by the following charts: line, bar, pie, sca
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the chart highlights a value item that can be modified with arrow navigation.
 
-|                                                                  Keys | Description                   |
-| --------------------------------------------------------------------: | :---------------------------- |
-| <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
-|    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
+:::info
+The key assignments in the table below apply to Windows and Linux users.
+
+On macOS replace:
+
+- <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
+- <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
+
+Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
+
+- <kbd class="key">Page Up</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd></kbd>
+- <kbd class="key">Page Down</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd></kbd>
+- <kbd class="key">Home</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd></kbd>
+- <kbd class="key">End</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd></kbd>
+
+:::
+
+|                                                                  Keys | Description                                                |
+| --------------------------------------------------------------------: | :--------------------------------------------------------- |
+| <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series                              |
+|    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series                                  |
+|               <kbd class="key">Home</kbd>, <kbd class="key">End</kbd> | Moves focus to the first/last item of the series           |
+|    <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Home</kbd></kbd> | Moves focus to the first item of the first series          |
+|     <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">End</kbd></kbd> | Moves focus to the last item of the last series            |
+|                                        <kbd class="key">Page Up</kbd> | Moves focus to the first series, keeping the item position |
+|                                      <kbd class="key">Page Down</kbd> | Moves focus to the last series, keeping the item position  |
 
 ### Start from a clicked item
 
@@ -107,6 +129,16 @@ components: {
   },
 }
 ```
+
+### Zooming and panning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+Charts with zoom enabled accept keyboard zoom and pan, so a keyboard-only user can reach the data outside the visible window.
+
+While the chart is focused, <kbd class="key">+</kbd> and <kbd class="key">-</kbd> zoom, <kbd class="key">0</kbd> resets the zoom, and <kbd class="key">Shift</kbd>+ arrow keys pan.
+The arrow keys keep moving the focus between items when pressed without <kbd class="key">Shift</kbd>.
+The visible range is announced in a live region each time it changes from the keyboard.
+
+See [Keyboard zoom and pan](/x/react-charts/zoom-and-pan/#keyboard-zoom-and-pan) for the complete list of keys and the interaction configuration.
 
 ### Activating the focused item
 

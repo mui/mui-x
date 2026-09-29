@@ -1,4 +1,4 @@
-import { bench, describe } from 'vitest';
+import { describe, test } from 'vitest';
 import {
   computeElementPositionInCollection,
   getTimelineAxisDurationMs,
@@ -55,61 +55,65 @@ function addLanePositionsToOccurrences(occurrences: SchedulerEventOccurrence[]) 
 export const benchmarkResult = { value: undefined as unknown };
 
 describe('event timeline resource layout', () => {
-  bench('derive layout with geometry recomputed by each mounted consumer', () => {
-    let result = 0;
+  test('layout derivation', { timeout: 0 }, async ({ bench }) => {
+    await bench.compare(
+      bench('derive layout with geometry recomputed by each mounted consumer', () => {
+        let result = 0;
 
-    // The virtualizer needs every resource's lane count.
-    for (const { occurrences } of groupedOccurrences) {
-      result += computeOccurrencesMaxIndex(occurrences);
-    }
+        // The virtualizer needs every resource's lane count.
+        for (const { occurrences } of groupedOccurrences) {
+          result += computeOccurrencesMaxIndex(occurrences);
+        }
 
-    // Mounted rows derive lanes once, while the list and event independently derive geometry.
-    for (const { occurrences } of groupedOccurrences.slice(0, 10)) {
-      const positionedOccurrences = addLanePositionsToOccurrences(occurrences);
-      for (const occurrence of positionedOccurrences) {
-        const parameters = {
-          start: occurrence.displayTimezone.start,
-          end: occurrence.displayTimezone.end,
-          collection: config,
-          durationMs,
-        };
-        result += computeElementPositionInCollection(adapter, parameters).duration;
-        result += computeElementPositionInCollection(adapter, parameters).duration;
-      }
-    }
+        // Mounted rows derive lanes once, while the list and event independently derive geometry.
+        for (const { occurrences } of groupedOccurrences.slice(0, 10)) {
+          const positionedOccurrences = addLanePositionsToOccurrences(occurrences);
+          for (const occurrence of positionedOccurrences) {
+            const parameters = {
+              start: occurrence.displayTimezone.start,
+              end: occurrence.displayTimezone.end,
+              collection: config,
+              durationMs,
+            };
+            result += computeElementPositionInCollection(adapter, parameters).duration;
+            result += computeElementPositionInCollection(adapter, parameters).duration;
+          }
+        }
 
-    // Dependency geometry only derives lanes for involved resources.
-    for (const { occurrences } of groupedOccurrences.slice(0, 2)) {
-      result += Object.keys(computeOccurrencesFirstIndexLookup(occurrences)).length;
-    }
+        // Dependency geometry only derives lanes for involved resources.
+        for (const { occurrences } of groupedOccurrences.slice(0, 2)) {
+          result += Object.keys(computeOccurrencesFirstIndexLookup(occurrences)).length;
+        }
 
-    benchmarkResult.value = result;
-  });
+        benchmarkResult.value = result;
+      }),
 
-  bench('derive lazy layout with geometry shared by mounted consumers', () => {
-    let result = 0;
+      bench('derive lazy layout with geometry shared by mounted consumers', () => {
+        let result = 0;
 
-    // The virtualizer needs every resource's lane count.
-    for (const { occurrences } of groupedOccurrences) {
-      result += computeOccurrencesMaxIndex(occurrences);
-    }
+        // The virtualizer needs every resource's lane count.
+        for (const { occurrences } of groupedOccurrences) {
+          result += computeOccurrencesMaxIndex(occurrences);
+        }
 
-    // Mounted rows derive lanes and geometry once, then share both with their children.
-    for (const { occurrences } of groupedOccurrences.slice(0, 10)) {
-      const positionedOccurrences = addLanePositionsToOccurrences(occurrences);
-      result += addTimelinePositionsToOccurrences({
-        adapter,
-        config,
-        occurrences: positionedOccurrences,
-        positionByOccurrenceKey: null,
-      }).length;
-    }
+        // Mounted rows derive lanes and geometry once, then share both with their children.
+        for (const { occurrences } of groupedOccurrences.slice(0, 10)) {
+          const positionedOccurrences = addLanePositionsToOccurrences(occurrences);
+          result += addTimelinePositionsToOccurrences({
+            adapter,
+            config,
+            occurrences: positionedOccurrences,
+            positionByOccurrenceKey: null,
+          }).length;
+        }
 
-    // Dependency geometry only derives lanes for involved resources.
-    for (const { occurrences } of groupedOccurrences.slice(0, 2)) {
-      result += Object.keys(computeOccurrencesFirstIndexLookup(occurrences)).length;
-    }
+        // Dependency geometry only derives lanes for involved resources.
+        for (const { occurrences } of groupedOccurrences.slice(0, 2)) {
+          result += Object.keys(computeOccurrencesFirstIndexLookup(occurrences)).length;
+        }
 
-    benchmarkResult.value = result;
+        benchmarkResult.value = result;
+      }),
+    );
   });
 });

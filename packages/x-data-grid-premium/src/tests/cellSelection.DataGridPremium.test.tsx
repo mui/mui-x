@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { RefObject } from '@mui/x-internals/types';
-import { spyApi, getCell, grid } from 'test/utils/helperFn';
+import { spyApi, getCell, grid, microtasks } from 'test/utils/helperFn';
 import { createRenderer, act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
@@ -184,6 +184,76 @@ describe('<DataGridPremium /> - Cell selection', () => {
         currencyPair: true,
         price1M: true,
       });
+    });
+
+    it('should not select the row reordering cells', async () => {
+      const { user } = render(<TestDataGridSelection rowReordering />);
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      const cellSelectionModel = apiRef.current!.getCellSelectionModel();
+      expect(Object.keys(cellSelectionModel)).to.have.length(4);
+      expect(cellSelectionModel['0']).to.deep.equal({
+        id: true,
+        currencyPair: true,
+        price1M: true,
+      });
+    });
+
+    it('should not select skeleton rows when rows are loaded lazily', async () => {
+      const { user } = render(
+        <TestDataGridSelection
+          sortingMode="server"
+          filterMode="server"
+          paginationMode="server"
+          rowsLoadingMode="server"
+          rowCount={10}
+        />,
+      );
+      const cell = getCell(0, 0);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        '3',
+      ]);
+    });
+
+    it('should not select group footer rows', async () => {
+      const columns: GridColDef[] = [
+        { field: 'id' },
+        { field: 'category' },
+        { field: 'value', type: 'number' },
+      ];
+      const rows = [
+        { id: 0, category: 'Cat A', value: 5 },
+        { id: 1, category: 'Cat A', value: 10 },
+        { id: 2, category: 'Cat B', value: 15 },
+      ];
+      const { user } = render(
+        <TestDataGridSelection
+          columns={columns}
+          rows={rows}
+          initialState={{
+            rowGrouping: { model: ['category'] },
+            aggregation: { model: { value: 'sum' } },
+          }}
+          getAggregationPosition={() => 'footer'}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      const cell = getCell(0, 1);
+      await user.click(cell);
+      fireEvent.keyDown(cell, { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal([
+        '0',
+        '1',
+        '2',
+        'auto-generated-row-category/Cat A',
+        'auto-generated-row-category/Cat B',
+      ]);
     });
 
     it('should reset the selection when a cell is clicked afterwards', async () => {
@@ -586,6 +656,61 @@ describe('<DataGridPremium /> - Cell selection', () => {
         expect(getCell(2, 0)).to.have.class('Mui-selected');
         expect(getCell(2, 1)).to.have.class('Mui-selected');
         expect(getCell(2, 2)).to.have.class('Mui-selected');
+      });
+
+      it('should not select cells of non-selectable columns inside the range', async () => {
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'actions', type: 'actions', getActions: () => [] },
+          { field: 'name' },
+        ];
+        const rows = [
+          { id: 0, name: 'Alice' },
+          { id: 1, name: 'Bob' },
+        ];
+        render(<TestDataGridSelection columns={columns} rows={rows} />);
+        act(() =>
+          apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 1, field: 'name' }),
+        );
+        expect(apiRef.current?.getCellSelectionModel()).to.deep.equal({
+          '0': { id: true, name: true },
+          '1': { id: true, name: true },
+        });
+      });
+
+      it('should not select cells of group footer rows inside the range', async () => {
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'category' },
+          { field: 'value', type: 'number' },
+        ];
+        const rows = [
+          { id: 0, category: 'Cat A', value: 5 },
+          { id: 1, category: 'Cat A', value: 10 },
+          { id: 2, category: 'Cat B', value: 15 },
+        ];
+        render(
+          <TestDataGridSelection
+            columns={columns}
+            rows={rows}
+            initialState={{
+              rowGrouping: { model: ['category'] },
+              aggregation: { model: { value: 'sum' } },
+            }}
+            getAggregationPosition={() => 'footer'}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+        await microtasks();
+        await act(() =>
+          apiRef.current?.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'value' }),
+        );
+        expect(Object.keys(apiRef.current!.getCellSelectionModel())).to.deep.equal([
+          '0',
+          '1',
+          '2',
+          'auto-generated-row-category/Cat B',
+        ]);
       });
     });
 

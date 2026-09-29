@@ -191,6 +191,38 @@ function Timeline() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Custom event content
+
+Use the `timelineEventContent` slot to replace the text rendered inside an event block.
+The slot receives the `occurrence`, the `resource` of the row it is rendered in and the `variant` of the block.
+It is placed inside the block, so the block keeps its geometry, its drag and resize handles, and its button semantics.
+
+{{"demo": "EventContentSlot.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The slot also renders in the placeholder that previews a drag, a resize or a creation, with `variant` set to `"placeholder"` and an `occurrence` carrying the pending dates.
+
+The slot doesn't change the accessible name of the event, which is built from its title, dates, resource, and recurrence.
+To announce the details the slot adds, pass `getEventAriaLabel`: it receives the `occurrence`, the row `resource` and the `defaultAriaLabel`, and returns the name to use.
+The demo above appends the ticket code to the default name.
+The block is a button, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
+
+### Typing custom slot props
+
+Pass extra props to the slot through `slotProps.timelineEventContent` and type them by augmenting the `TimelineEventContentPropsOverrides` interface:
+
+```tsx
+declare module '@mui/x-scheduler-premium/models' {
+  interface TimelineEventContentPropsOverrides {
+    showCode?: boolean;
+  }
+}
+
+<EventTimelinePremium
+  slots={{ timelineEventContent: EventContent }}
+  slotProps={{ timelineEventContent: { showCode: true } }}
+/>;
+```
+
 ## Event constraints 🚧
 
 :::warning

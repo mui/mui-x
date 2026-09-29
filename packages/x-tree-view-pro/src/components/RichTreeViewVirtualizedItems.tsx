@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import type { Virtualizer } from '@mui/x-virtualizer';
 import { LayoutList, useVirtualizer } from '@mui/x-virtualizer';
-import { createSelectorMemoized, useStore } from '@mui/x-internals/store';
+import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import type { RichTreeViewItemsProps } from '@mui/x-tree-view/internals';

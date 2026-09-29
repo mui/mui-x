@@ -1,0 +1,48 @@
+{
+  "props": {
+    "children": { "type": { "name": "node" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "ownerState": {
+      "type": {
+        "name": "shape",
+        "description": "{ index: number, isCheckboxSelectionEnabled: bool, itemDepth: number, itemsCount: number }"
+      }
+    }
+  },
+  "name": "TreeItemLoader",
+  "imports": [
+    "import { TreeItemLoader } from '@mui/x-tree-view/TreeItemLoader';",
+    "import { TreeItemLoader } from '@mui/x-tree-view';",
+    "import { TreeItemLoader } from '@mui/x-tree-view-pro';"
+  ],
+  "classes": [
+    {
+      "key": "checkbox",
+      "className": "MuiTreeItemLoader-checkbox",
+      "description": "Styles applied to the checkbox placeholder element of the default content.",
+      "isGlobal": false
+    },
+    {
+      "key": "iconContainer",
+      "className": "MuiTreeItemLoader-iconContainer",
+      "description": "Styles applied to the icon gutter element of the default content.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiTreeItemLoader-label",
+      "description": "Styles applied to the label placeholder element of the default content.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiTreeItemLoader-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiTreeItemLoader",
+  "filename": "/packages/x-tree-view/src/TreeItemLoader/TreeItemLoader.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy loading <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>"
+}

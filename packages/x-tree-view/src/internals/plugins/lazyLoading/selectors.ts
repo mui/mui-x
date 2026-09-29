@@ -20,7 +20,13 @@ export const lazyLoadingSelectors = {
    * Checks whether an item is loading.
    */
   isItemLoading: (state: RichTreeViewState<any, any>, itemId: TreeViewItemId | null) =>
-    state.lazyLoadedItems?.loading[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? false,
+    state.lazyLoadedItems?.loading[itemId ?? TREE_VIEW_ROOT_PARENT_ID] != null,
+  /**
+   * Gets the expected children count of an item currently loading its children.
+   * Returns `-1` when the count is unknown or the item is not loading.
+   */
+  itemLoadingChildrenCount: (state: RichTreeViewState<any, any>, itemId: TreeViewItemId | null) =>
+    state.lazyLoadedItems?.loading[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? -1,
   /**
    * Checks whether an item has errors.
    */

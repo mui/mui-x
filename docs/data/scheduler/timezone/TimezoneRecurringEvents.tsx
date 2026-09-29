@@ -17,6 +17,10 @@ export default function TimezoneRecurringEvents() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
+        viewConfig={{
+          week: { initialScrollTime: 0 },
+          day: { initialScrollTime: 0 },
+        }}
         displayTimezone="Europe/Paris"
       />
     </div>

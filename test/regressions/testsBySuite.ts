@@ -57,7 +57,7 @@ const docsImports = import.meta.glob<React.ComponentType>(
     // Exclude shared utility files that don't have a default export
     '!docs/data/**/shared/*',
 
-    // Streaming demos conflict with sinon fake timers (cancelAnimationFrame on native timer)
+    // Streaming demos conflict with the fake timers (cancelAnimationFrame on native timer)
     '!docs/data/chat/core/examples/controlled-state/ControlledStateHeadlessChat',
 
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.

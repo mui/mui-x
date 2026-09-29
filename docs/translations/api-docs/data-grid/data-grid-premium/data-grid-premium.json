@@ -282,6 +282,9 @@
     "headerFilters": {
       "description": "If <code>true</code>, the header filters feature is enabled."
     },
+    "height": {
+      "description": "The height of the Data Grid. Accepts a number (pixels) or any valid CSS height value (for example <code>&#39;50vh&#39;</code>). When set, the Data Grid no longer needs a parent element with an explicit height."
+    },
     "hideFooter": { "description": "If <code>true</code>, the footer component is hidden." },
     "hideFooterPagination": {
       "description": "If <code>true</code>, the pagination component in the footer is hidden."

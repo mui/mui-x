@@ -62,7 +62,7 @@ describe('<DayView />', () => {
       return getDayTimeGrid().querySelector<HTMLElement>(`.${eventCalendarClasses.timeGridEvent}`)!;
     }
 
-    it('marks a 15-minute event as under fifteen minutes and under an hour (<= 15 boundary)', () => {
+    it('should mark a 15-minute event as under fifteen minutes and under an hour (<= 15 boundary)', () => {
       const event = EventBuilder.new().span('2025-07-03T10:00:00Z', '2025-07-03T10:15:00Z').build();
       renderWithProviders(<DayView />, [event]);
 
@@ -71,7 +71,7 @@ describe('<DayView />', () => {
       expect(root).to.have.attribute('data-under-hour', 'true');
     });
 
-    it('marks a 30-minute event as under an hour but not under fifteen minutes (< 30 boundary)', () => {
+    it('should mark a 30-minute event as under an hour but not under fifteen minutes', () => {
       const event = EventBuilder.new().span('2025-07-03T10:00:00Z', '2025-07-03T10:30:00Z').build();
       renderWithProviders(<DayView />, [event]);
 
@@ -80,7 +80,7 @@ describe('<DayView />', () => {
       expect(root).to.have.attribute('data-under-hour', 'true');
     });
 
-    it('does not mark a 60-minute event as under an hour ([30, 60) boundary)', () => {
+    it('should not mark a 60-minute event as under an hour', () => {
       const event = EventBuilder.new().span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z').build();
       renderWithProviders(<DayView />, [event]);
 
