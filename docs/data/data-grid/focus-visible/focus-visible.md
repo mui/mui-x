@@ -16,33 +16,18 @@ You enable it once on the Material UI theme, and the Data Grid picks it up—th
 const theme = createTheme({ focusVisible: true });
 ```
 
-See [Focus visible](/material-ui/customization/focus-visible/) for customization details.
+See Material UI's [focus visible](/material-ui/customization/focus-visible/) page for customization details.
 
 ## Usage
 
 Every interactive element in the Data Grid uses the ring: toolbar buttons, menu items, checkboxes, pagination, and the controls inside each panel.
-They all match, and they all follow the theme.
 
 Nothing changes until you opt in.
 Tab through the demo below to see the focus indicator.
 
 {{"demo": "FocusVisibleDataGrid.js", "bg": "inline"}}
 
-:::info
-The ring is for keyboard users. Clicking won't show it—press <kbd class="key">Tab</kbd>.
-
-The demos on this page opt out of the ripple to show only the focus visible indicator.
-:::
-
 :::warning
 **Cells and column headers are the exception.** They keep their own focus ring, which `theme.focusVisible` doesn't change.
 That ring marks the cell you're on, and it has to stay visible after a click as well as after keyboard navigation, so it follows a different rule.
-
-To restyle it, override this CSS variable on the Grid root:
-
-```css
---DataGrid-t-color-interactive-focus
-```
-
-See [Styling](/x/react-data-grid/style/) for where to put it.
 :::

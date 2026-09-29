@@ -24,7 +24,10 @@ export default function FocusVisibleDataGrid() {
       createTheme(
         {
           focusVisible: true,
-          components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+          components: {
+            MuiButtonBase: { defaultProps: { disableRipple: true } },
+            MuiCheckbox: { defaultProps: { disableRipple: true } },
+          },
         },
         existingTheme,
       ),
