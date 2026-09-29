@@ -53,6 +53,7 @@ export default function FocusVisibleTreeView() {
           defaultSelectedItems={['grid-pro']}
           checkboxSelection
           multiSelect
+          isItemEditable
         />
       </Box>
     </ThemeProvider>

@@ -6,6 +6,7 @@
       defaultSelectedItems={['grid-pro']}
       checkboxSelection
       multiSelect
+      isItemEditable
     />
   </Box>
 </ThemeProvider>

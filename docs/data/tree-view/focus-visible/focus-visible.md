@@ -27,6 +27,7 @@ The ring marks the row you're on, so it takes over from the background tint that
 
 Nothing changes until you opt in.
 Tab into the demo below, then use the arrow keys to see the focus indicator.
+Press <kbd class="key">Enter</kbd> on an item to rename it—the input takes the ring too.
 
 {{"demo": "FocusVisibleTreeView.js", "bg": "inline"}}
 
