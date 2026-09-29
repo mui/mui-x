@@ -3,6 +3,7 @@ import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { schedulerDragKinds } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
@@ -93,10 +94,24 @@ function DependencyInteractionsLayer() {
   );
 
   useDependencySelectionInteraction(svgRef);
+  // Re-applied on every render: the svg unmounts while its arrows are culled, so one
+  // remounting mid-drag must keep the mark.
+  const draggingRef = React.useRef(false);
+  useIsoLayoutEffect(() => {
+    if (draggingRef.current) {
+      svgRef.current?.setAttribute('data-drag-active', '');
+    }
+  });
   Draggable.useMonitor({
     accept: schedulerDragKinds,
-    onMoveStart: () => svgRef.current?.setAttribute('data-drag-active', ''),
-    onMoveEnd: () => svgRef.current?.removeAttribute('data-drag-active'),
+    onMoveStart: () => {
+      draggingRef.current = true;
+      svgRef.current?.setAttribute('data-drag-active', '');
+    },
+    onMoveEnd: () => {
+      draggingRef.current = false;
+      svgRef.current?.removeAttribute('data-drag-active');
+    },
   });
 
   if (visibleArrows.length === 0 || eventsWidth <= 0 || height <= 0) {

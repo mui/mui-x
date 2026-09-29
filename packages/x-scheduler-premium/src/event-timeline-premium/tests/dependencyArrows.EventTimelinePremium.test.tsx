@@ -539,9 +539,9 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         clientY: rect.top + rect.height / 2,
         mockHitTest: false,
       });
-      // The drag start (and end) perturb layout; keep the observer deliveries acted.
-      await absorbObserverFrames();
       try {
+        // The drag start (and end) perturb layout; keep the observer deliveries acted.
+        await absorbObserverFrames();
         await during();
       } finally {
         cancelDrag();
@@ -600,7 +600,9 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
 
       // Mid-drag, the hit-areas must not intercept the pointer (see the overlay's CSS).
-      await withDrag(getEventElement(farSuccessor.title), async () => {
+      // The predecessor is dragged: the successor sits inside the scroller's right-edge
+      // auto-scroll zone, where the press point would scroll the timeline away.
+      await withDrag(getEventElement(farPredecessor.title), async () => {
         await waitFor(() => {
           expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
         });
@@ -618,7 +620,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       await renderFarTimelineWithArrow();
       const probe = probeAt(getHitPath().getBoundingClientRect());
 
-      await withDrag(getEventElement(farSuccessor.title), async () => {
+      await withDrag(getEventElement(farPredecessor.title), async () => {
         // Cull the arrow out of the render window and back: the remounted svg must
         // come back muted, not with re-armed hit-areas.
         act(() => {
