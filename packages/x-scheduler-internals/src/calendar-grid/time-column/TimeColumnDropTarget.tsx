@@ -7,12 +7,14 @@ import {
   schedulerExternalEventKind,
 } from '../../internals/utils/schedulerDrag';
 import { useAdapterContext } from '../../use-adapter-context';
-import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
+import type { SchedulerEvent } from '../../models';
 import { useCalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { SchedulerDropTarget } from '../../internals/utils/SchedulerDropTarget';
-import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
-import { roundToDragPrecision } from '../../internals/utils/drag-utils';
-import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
+import {
+  getLinearEventDropDates,
+  getLinearPointerDate,
+} from '../../internals/utils/getLinearEventDropDates';
+import type { LinearDropSurface } from '../../internals/utils/getLinearEventDropDates';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
@@ -31,119 +33,39 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
+  const surface: LinearDropSurface = {
+    axis: 'y',
+    durationMs: adapter.getTime(end) - adapter.getTime(start),
+    offsetToDate: (offsetMs) => adapter.addMilliseconds(start, offsetMs),
+    dateToOffset: (date) => adapter.getTime(date) - adapter.getTime(start),
+    bounds: { start, end },
+  };
+
   const getEventDropDates: SchedulerDropTarget.GetEventDropDates = ({ source, target }) => {
-    const cursorOffsetMs = Math.round(
-      (adapter.getTime(end) - adapter.getTime(start)) * target.getSnappedLocalPoint().y,
-    );
-
-    const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) =>
-      adapter.addMilliseconds(date, roundToDragPrecision(offsetMs));
-
-    // Move a Time Grid Event within the Time Grid
-    if (schedulerTimeEventMoveKind.matches(source)) {
-      const data = source.dragData;
-      if (!data) {
-        return undefined;
-      }
-      const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
-
-      let newStartDate = addOffsetToDate(
-        start,
-        cursorOffsetMs - data.initialCursorPositionInEventMs,
-      );
-
-      // Clamp the event to stay within the time grid bounds
-      if (adapter.isBefore(newStartDate, start)) {
-        newStartDate = start;
-      }
-      const maxStartDate = adapter.addMilliseconds(end, -eventDurationMs);
-      if (adapter.isAfter(newStartDate, maxStartDate)) {
-        newStartDate = maxStartDate;
-      }
-
-      const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
-
-      return { start: newStartDate, end: newEndDate };
-    }
-
-    // Resize a Time Grid Event
-    if (schedulerTimeEventResizeKind.matches(source)) {
-      const data = source.dragData;
-      if (!data) {
-        return undefined;
-      }
-      if (data.side === 'start') {
-        let cursorDate = addOffsetToDate(
-          start,
-          cursorOffsetMs - data.initialCursorPositionInEventMs,
-        );
-
-        // Clamp to the time grid bounds
-        if (adapter.isBefore(cursorDate, start)) {
-          cursorDate = start;
-        }
-
-        // Ensure the new start date is not after or too close to the end date.
-        const { start: newStartDate } = clampResizedEventEdge({
-          adapter,
-          side: 'start',
-          start: data.start,
-          end: data.end,
-          cursorDate,
-          precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
-        });
-
-        return { start: newStartDate, end: data.end };
-      }
-
-      if (data.side === 'end') {
-        const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
-
-        let cursorDate = addOffsetToDate(
-          start,
-          cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
-        );
-
-        // Clamp to the time grid bounds
-        if (adapter.isAfter(cursorDate, end)) {
-          cursorDate = end;
-        }
-
-        // Ensure the new end date is not before or too close to the start date.
-        const { end: newEndDate } = clampResizedEventEdge({
-          adapter,
-          side: 'end',
-          start: data.start,
-          end: data.end,
-          cursorDate,
-          precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
-        });
-
-        return { start: data.start, end: newEndDate };
-      }
-    }
-
     // Move a Day Grid Event into the Time Grid
     if (schedulerDayEventMoveKind.matches(source)) {
-      const data = source.dragData;
-      if (!data) {
+      if (!source.dragData) {
         return undefined;
       }
-      const newStartDate = addOffsetToDate(start, cursorOffsetMs);
-      const newEndDate = adapter.addMinutes(
-        newStartDate,
-        schedulerEventSelectors.defaultEventDuration(store.state),
-      );
-
-      return { start: newStartDate, end: newEndDate };
+      const newStartDate = getLinearPointerDate({ target, surface });
+      return {
+        start: newStartDate,
+        end: adapter.addMinutes(
+          newStartDate,
+          schedulerEventSelectors.defaultEventDuration(store.state),
+        ),
+      };
     }
 
-    // Move an external event into the Time Grid
-    if (schedulerExternalEventKind.matches(source)) {
-      return { start: addOffsetToDate(start, cursorOffsetMs) };
-    }
-
-    return undefined;
+    // Move or resize a Time Grid Event, or drop an external event
+    return getLinearEventDropDates({
+      adapter,
+      source,
+      target,
+      surface,
+      moveKind: schedulerTimeEventMoveKind,
+      resizeKind: schedulerTimeEventResizeKind,
+    });
   };
 
   return (

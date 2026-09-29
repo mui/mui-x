@@ -5,7 +5,7 @@ import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { schedulerTimeEventMoveKind } from '../../internals/utils/schedulerDrag';
-import type { SchedulerEventDragData } from '../../internals/utils/schedulerDrag';
+import type { SchedulerAxisEventDragData } from '../../internals/utils/schedulerDrag';
 import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
@@ -148,7 +148,5 @@ export namespace CalendarGridTimeEvent {
     interactive?: boolean;
   }
 
-  export interface DragData extends SchedulerEventDragData {
-    initialCursorPositionInEventMs: number;
-  }
+  export interface DragData extends SchedulerAxisEventDragData {}
 }

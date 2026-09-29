@@ -7,6 +7,7 @@ export * from './dom-utils';
 export * from './SchedulerDropTarget';
 export * from './useEventResizeHandler';
 export * from './resize-utils';
+export * from './getLinearEventDropDates';
 export * from './useElementPositionInCollection';
 export * from './timeline-axis';
 export * from './useEvent';

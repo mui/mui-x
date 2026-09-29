@@ -30,8 +30,24 @@ export interface SchedulerEventDragData {
   sourceResourceId?: SchedulerResourceId;
 }
 
+/**
+ * The snapshot of an event dragged on a surface where the pointer maps to a date along one axis,
+ * such as a day column or a timeline row.
+ */
+export interface SchedulerAxisEventDragData extends SchedulerEventDragData {
+  /**
+   * How far from the start of the event the pointer grabbed it, in milliseconds of the axis.
+   */
+  initialCursorPositionInEventMs: number;
+}
+
 /** The snapshot captured when an event resize starts. */
 export interface SchedulerEventResizeDragData extends SchedulerEventDragData {
+  side: SchedulerEventSide;
+}
+
+/** The snapshot captured when an event resize starts on an axis surface. */
+export interface SchedulerAxisEventResizeDragData extends SchedulerAxisEventDragData {
   side: SchedulerEventSide;
 }
 

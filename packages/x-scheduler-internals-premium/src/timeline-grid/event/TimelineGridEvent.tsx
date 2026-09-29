@@ -14,7 +14,7 @@ import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type {
-  SchedulerEventDragData,
+  SchedulerAxisEventDragData,
   useElementPositionInCollection,
 } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -205,11 +205,7 @@ export namespace TimelineGridEvent {
     elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 
-  export interface DragData extends SchedulerEventDragData {
-    /**
-     * Cursor offset from the event start, in axis milliseconds.
-     */
-    initialCursorPositionInEventMs: number;
+  export interface DragData extends SchedulerAxisEventDragData {
     /**
      * The id of the resource row the occurrence was dragged from.
      */
