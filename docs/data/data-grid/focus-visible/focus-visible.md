@@ -30,6 +30,8 @@ Tab through the demo below to see the focus indicator.
 
 :::info
 The ring is for keyboard users. Clicking won't show it—press <kbd class="key">Tab</kbd>.
+
+The demos on this page opt out of the ripple to show only the focus visible indicator.
 :::
 
 :::warning

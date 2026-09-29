@@ -20,7 +20,14 @@ export default function FocusVisibleDataGrid() {
   // Inherit the theme from the docs site (dark/light mode)
   const existingTheme = useTheme();
   const theme = React.useMemo(
-    () => createTheme({ focusVisible: true }, existingTheme),
+    () =>
+      createTheme(
+        {
+          focusVisible: true,
+          components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+        },
+        existingTheme,
+      ),
     [existingTheme],
   );
 
