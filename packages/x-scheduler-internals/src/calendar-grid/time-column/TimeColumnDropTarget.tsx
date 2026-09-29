@@ -11,7 +11,8 @@ import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { useCalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { SchedulerDropTarget } from '../../internals/utils/SchedulerDropTarget';
 import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
-import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import { roundToDragPrecision } from '../../internals/utils/drag-utils';
+import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
@@ -30,22 +31,13 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
-  const getEventDropData: SchedulerDropTarget.GetEventDropData = ({
-    source,
-    getDataFromInside,
-    getDataFromOutside,
-    target,
-  }) => {
+  const getEventDropDates: SchedulerDropTarget.GetEventDropDates = ({ source, target }) => {
     const cursorOffsetMs = Math.round(
       (adapter.getTime(end) - adapter.getTime(start)) * target.getSnappedLocalPoint().y,
     );
 
-    const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
-      const roundedOffset =
-        Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-
-      return adapter.addMilliseconds(date, roundedOffset);
-    };
+    const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) =>
+      adapter.addMilliseconds(date, roundToDragPrecision(offsetMs));
 
     // Move a Time Grid Event within the Time Grid
     if (schedulerTimeEventMoveKind.matches(source)) {
@@ -71,7 +63,7 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
 
       const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
 
-      return getDataFromInside(data, newStartDate, newEndDate);
+      return { start: newStartDate, end: newEndDate };
     }
 
     // Resize a Time Grid Event
@@ -101,7 +93,7 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
           precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
         });
 
-        return getDataFromInside(data, newStartDate, data.end);
+        return { start: newStartDate, end: data.end };
       }
 
       if (data.side === 'end') {
@@ -127,7 +119,7 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
           precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
         });
 
-        return getDataFromInside(data, data.start, newEndDate);
+        return { start: data.start, end: newEndDate };
       }
     }
 
@@ -143,13 +135,12 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
         schedulerEventSelectors.defaultEventDuration(store.state),
       );
 
-      return getDataFromInside(data, newStartDate, newEndDate);
+      return { start: newStartDate, end: newEndDate };
     }
 
     // Move an external event into the Time Grid
     if (schedulerExternalEventKind.matches(source)) {
-      const data = source.payload;
-      return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
+      return { start: addOffsetToDate(start, cursorOffsetMs) };
     }
 
     return undefined;
@@ -158,7 +149,7 @@ export function TimeColumnDropTarget(props: TimeColumnDropTarget.Props) {
   return (
     <SchedulerDropTarget
       surfaceType="time-grid"
-      getEventDropData={getEventDropData}
+      getEventDropDates={getEventDropDates}
       accept={acceptedKinds}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       render={render}

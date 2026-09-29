@@ -91,8 +91,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
     () => ({
-      eventId,
-      occurrenceKey,
       originalOccurrence: getOriginalOccurrence(),
       start: start.value,
       end: end.value,

@@ -60,9 +60,7 @@ describe('useDraggableEvent', () => {
     const onEventsChange = vi.fn();
     const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
     const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
-    const getEventDropData = vi.fn<SchedulerDropTarget.GetEventDropData>(
-      ({ source, getDataFromInside }) => getDataFromInside(source.dragData!, start, end),
-    );
+    const getEventDropDates = vi.fn<SchedulerDropTarget.GetEventDropDates>(() => ({ start, end }));
     render(
       <EventCalendarProvider
         events={[builder.build()]}
@@ -73,7 +71,7 @@ describe('useDraggableEvent', () => {
         <SchedulerDropTarget
           surfaceType="day-grid"
           accept={accept}
-          getEventDropData={getEventDropData}
+          getEventDropDates={getEventDropDates}
           render={<div data-testid="target" />}
         />
       </EventCalendarProvider>,
@@ -85,9 +83,9 @@ describe('useDraggableEvent', () => {
         requestAnimationFrame(() => resolve());
       });
     });
-    expect(getEventDropData).toHaveBeenCalled();
+    expect(getEventDropDates).toHaveBeenCalled();
     expect(onEventsChange).not.toHaveBeenCalled();
-    getEventDropData.mockReturnValue(undefined);
+    getEventDropDates.mockReturnValue(undefined);
     dropDrag(screen.getByTestId('target'), { clientX: 110 });
     expect(onEventsChange).toHaveBeenCalledTimes(1);
     expect(
@@ -110,9 +108,7 @@ describe('useDraggableEvent', () => {
         <SchedulerDropTarget
           surfaceType="day-grid"
           accept={accept}
-          getEventDropData={({ source, getDataFromInside }) =>
-            getDataFromInside(source.dragData!, start, end)
-          }
+          getEventDropDates={() => ({ start, end })}
           render={<div data-testid="target" />}
         />
         <div data-testid="elsewhere" />
@@ -178,9 +174,7 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
           <SchedulerDropTarget
             surfaceType="day-grid"
             accept={accept}
-            getEventDropData={({ source, getDataFromInside }) =>
-              getDataFromInside(source.dragData!, start, end)
-            }
+            getEventDropDates={() => ({ start, end })}
             render={<div data-testid="target" />}
           />
         )}

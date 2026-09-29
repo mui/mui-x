@@ -67,8 +67,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
       getCursorPositionInElementMs({ input, elementRef: ref });
 
     return {
-      eventId,
-      occurrenceKey,
       originalOccurrence: getOriginalOccurrence(),
       start: start.value,
       end: end.value,

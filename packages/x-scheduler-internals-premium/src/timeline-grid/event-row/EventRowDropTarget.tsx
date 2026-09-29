@@ -4,6 +4,8 @@ import {
   SchedulerDropTarget,
   dateToTimelineAxisOffsetMs,
   timelineAxisOffsetToDate,
+  clampResizedEventEdge,
+  roundToDragPrecision,
 } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
@@ -42,20 +44,11 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
   // hidden hours take no space, so px↔date conversions go through the axis helpers.
   const collectionDurationMs = config.durationMs;
 
-  const getEventDropData: SchedulerDropTarget.GetEventDropData = ({
-    source,
-    getDataFromInside,
-    getDataFromOutside,
-    target,
-  }) => {
+  const getEventDropDates: SchedulerDropTarget.GetEventDropDates = ({ source, target }) => {
     const cursorOffsetMs = Math.round(collectionDurationMs * target.getSnappedLocalPoint().x);
 
-    const axisOffsetToDate = (offsetMs: number) => {
-      const roundedOffset =
-        Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-
-      return timelineAxisOffsetToDate(adapter, config, roundedOffset);
-    };
+    const axisOffsetToDate = (offsetMs: number) =>
+      timelineAxisOffsetToDate(adapter, config, roundToDragPrecision(offsetMs));
 
     // Move a Timeline Event within the Timeline
     if (schedulerTimelineEventMoveKind.matches(source)) {
@@ -84,7 +77,7 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
       // real start and end both shift by the same amount as their rendered anchors.
       const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
 
-      return getDataFromInside(data, newStartDate, newEndDate);
+      return { start: newStartDate, end: newEndDate };
     }
 
     // Resize a Timeline Event
@@ -97,10 +90,14 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
         const cursorDate = axisOffsetToDate(cursorOffsetMs - data.initialCursorPositionInEventMs);
 
         // Ensure the new start date is not after or too close to the end date.
-        const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
-        const newStartDate = adapter.isBefore(cursorDate, maxStartDate) ? cursorDate : maxStartDate;
-
-        return getDataFromInside(data, newStartDate, data.end);
+        return clampResizedEventEdge({
+          adapter,
+          side: 'start',
+          start: data.start,
+          end: data.end,
+          cursorDate,
+          precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
+        });
       }
 
       if (data.side === 'end') {
@@ -115,24 +112,24 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
         );
 
         // Ensure the new end date is not before or too close to the start date.
-        const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
-        const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
-
-        return getDataFromInside(data, data.start, newEndDate);
+        return clampResizedEventEdge({
+          adapter,
+          side: 'end',
+          start: data.start,
+          end: data.end,
+          cursorDate,
+          precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
+        });
       }
     }
 
     // Move an external event into the Time Grid
     if (schedulerExternalEventKind.matches(source)) {
-      const data = source.payload;
       // The new event starts at the cursor: cap the offset to the last slot of the
       // axis so a drop on the exact right edge does not create the event on the day
       // after the collection, where it would not be rendered at all.
       const lastStartOffsetMs = collectionDurationMs - EVENT_DRAG_PRECISION_MS;
-      return getDataFromOutside(
-        data,
-        axisOffsetToDate(Math.min(cursorOffsetMs, lastStartOffsetMs)),
-      );
+      return { start: axisOffsetToDate(Math.min(cursorOffsetMs, lastStartOffsetMs)) };
     }
 
     return undefined;
@@ -142,7 +139,7 @@ export function EventRowDropTarget(props: EventRowDropTarget.Props) {
     <SchedulerDropTarget
       resourceId={resourceId}
       surfaceType="timeline"
-      getEventDropData={getEventDropData}
+      getEventDropDates={getEventDropDates}
       accept={acceptedKinds}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       render={render}

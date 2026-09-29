@@ -50,7 +50,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
   const {
     surfaceType,
     resourceId = null,
-    getEventDropData,
+    getEventDropDates,
     accept,
     addPropertiesToDroppedEvent,
     render,
@@ -58,29 +58,11 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
 
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
-  const payload = React.useMemo(() => ({ surfaceType }), [surfaceType]);
 
-  const getDataFromInside =
-    (type: 'internal-drag' | 'internal-resize'): SchedulerDropTarget.GetDataFromInside =>
-    (data, newStart, newEnd) => {
-      return {
-        type,
-        surfaceType,
-        start: newStart,
-        end: newEnd,
-        eventId: data.eventId,
-        occurrenceKey: data.occurrenceKey,
-        originalOccurrence: data.originalOccurrence,
-        // Not every source reports the resource it was dragged from.
-        sourceResourceId: data.sourceResourceId ?? null,
-        resourceId:
-          resourceId === undefined
-            ? (getPrimaryResourceId(data.originalOccurrence.resource) ?? null)
-            : resourceId,
-      };
-    };
-
-  const getDataFromOutside: SchedulerDropTarget.GetDataFromOutside = (data, start) => {
+  const getExternalDropData = (
+    payload: SchedulerExternalEventDragPayload,
+    start: TemporalSupportedObject,
+  ): SchedulerOccurrencePlaceholderExternalDrag | undefined => {
     const eventCreationConfig = schedulerEventSelectors.creationConfig(store.state);
     if (eventCreationConfig === false) {
       return undefined;
@@ -91,35 +73,55 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
       surfaceType,
       start,
       // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
-      end: adapter.addMinutes(start, data.eventData.duration ?? eventCreationConfig.duration),
-      eventData: data.eventData,
-      onEventDrop: data.onEventDrop,
+      end: adapter.addMinutes(start, payload.eventData.duration ?? eventCreationConfig.duration),
+      eventData: payload.eventData,
+      onEventDrop: payload.onEventDrop,
       resourceId:
         resourceId === undefined
-          ? (getPrimaryResourceId(data.eventData.resource) ?? null)
+          ? (getPrimaryResourceId(payload.eventData.resource) ?? null)
           : resourceId,
     };
   };
 
-  const getDropData = (source: SchedulerDropTarget.Source, target: Draggable.Target.Record) => {
-    const data = schedulerExternalEventKind.matches(source) ? source.payload : source.dragData;
-    if (!data) {
+  const getDropData = (
+    source: SchedulerDropTarget.Source,
+    target: Draggable.Target.Record,
+  ): SchedulerOccurrencePlaceholder | undefined => {
+    const dates = getEventDropDates({ source, target });
+    if (!dates) {
       return undefined;
     }
-    const type = 'side' in data ? 'internal-resize' : 'internal-drag';
-    return getEventDropData({
-      source,
-      target,
-      getDataFromInside: getDataFromInside(type),
-      getDataFromOutside,
-    });
+
+    if (schedulerExternalEventKind.matches(source)) {
+      return getExternalDropData(source.payload, dates.start);
+    }
+
+    const data = source.dragData;
+    if (!data || !dates.end) {
+      return undefined;
+    }
+    const { originalOccurrence } = data;
+    return {
+      type: 'side' in data ? 'internal-resize' : 'internal-drag',
+      surfaceType,
+      start: dates.start,
+      end: dates.end,
+      eventId: originalOccurrence.id,
+      occurrenceKey: originalOccurrence.key,
+      originalOccurrence,
+      // Not every source reports the resource it was dragged from.
+      sourceResourceId: data.sourceResourceId ?? null,
+      resourceId:
+        resourceId === undefined
+          ? (getPrimaryResourceId(originalOccurrence.resource) ?? null)
+          : resourceId,
+    };
   };
 
   return (
     <Draggable.Target
       accept={accept}
       kind={schedulerDropTargetKind}
-      payload={payload}
       render={render}
       canDrop={({ source }) =>
         !schedulerExternalEventKind.matches(source) ||
@@ -180,7 +182,7 @@ export namespace SchedulerDropTarget {
     render: React.ReactElement;
     surfaceType: EventSurfaceType;
     accept: Draggable.Accept<SchedulerDropTarget.Source['payload'], SchedulerEventDragData>;
-    getEventDropData: GetEventDropData;
+    getEventDropDates: GetEventDropDates;
     /**
      * Add properties to the event dropped in the element before storing it in the store.
      */
@@ -193,29 +195,25 @@ export namespace SchedulerDropTarget {
     resourceId?: SchedulerResourceId | null;
   }
 
-  export type GetDataFromInside = (
-    data: SchedulerEventDragData,
-    newStart: TemporalSupportedObject,
-    newEnd: TemporalSupportedObject,
-  ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
-
-  export type GetDataFromOutside = (
-    data: SchedulerExternalEventDragPayload,
-    start: TemporalSupportedObject,
-  ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
-
   /** The drag source of any kind the target accepts. */
   export type Source = Draggable.Root.Record<
     SchedulerEventDragPayload | SchedulerExternalEventDragPayload,
     SchedulerEventDragData
   >;
 
-  export type GetEventDropData = (parameters: {
+  /**
+   * The dates a drag would give the event if it were dropped on the target, from where the
+   * pointer is. The dates of an external event omit `end`, since its duration decides it.
+   */
+  export interface DropDates {
+    start: TemporalSupportedObject;
+    end?: TemporalSupportedObject;
+  }
+
+  export type GetEventDropDates = (parameters: {
     source: Source;
     target: Draggable.Target.Record;
-    getDataFromInside: GetDataFromInside;
-    getDataFromOutside: GetDataFromOutside;
-  }) => SchedulerOccurrencePlaceholder | undefined;
+  }) => DropDates | undefined;
 }
 
 /**

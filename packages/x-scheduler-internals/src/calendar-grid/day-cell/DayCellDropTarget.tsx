@@ -10,6 +10,7 @@ import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { mergeDateAndTime } from '../../internals/utils/date-utils';
 import { SchedulerDropTarget } from '../../internals/utils/SchedulerDropTarget';
+import type { SchedulerEventDragData } from '../../internals/utils/schedulerDrag';
 
 const acceptedKinds = [
   schedulerDayEventMoveKind,
@@ -25,23 +26,20 @@ export function DayCellDropTarget(props: DayCellDropTarget.Props) {
   const adapter = useAdapterContext();
 
   // Feature hooks
-  const getEventDropData: SchedulerDropTarget.GetEventDropData = ({
-    source,
-    getDataFromInside,
-    getDataFromOutside,
-  }) => {
+  // Moves the event by whole days, keeping its time of day.
+  const shiftByDays = (data: SchedulerEventDragData, offset: number) => ({
+    start: offset === 0 ? data.start : adapter.addDays(data.start, offset),
+    end: offset === 0 ? data.end : adapter.addDays(data.end, offset),
+  });
+
+  const getEventDropDates: SchedulerDropTarget.GetEventDropDates = ({ source }) => {
     // Move a Day Grid Event within the Day Grid
     if (schedulerDayEventMoveKind.matches(source)) {
       const data = source.dragData;
       if (!data) {
         return undefined;
       }
-      const offset = adapter.differenceInDays(value, data.draggedDay);
-      return getDataFromInside(
-        data,
-        offset === 0 ? data.start : adapter.addDays(data.start, offset),
-        offset === 0 ? data.end : adapter.addDays(data.end, offset),
-      );
+      return shiftByDays(data, adapter.differenceInDays(value, data.draggedDay));
     }
 
     // Resize a Day Grid Event
@@ -61,7 +59,7 @@ export function DayCellDropTarget(props: DayCellDropTarget.Props) {
         } else {
           newStart = mergeDateAndTime(adapter, value, data.start);
         }
-        return getDataFromInside(data, newStart, data.end);
+        return { start: newStart, end: data.end };
       }
 
       if (data.side === 'end') {
@@ -76,7 +74,7 @@ export function DayCellDropTarget(props: DayCellDropTarget.Props) {
           draggedDay = mergeDateAndTime(adapter, value, data.end);
         }
 
-        return getDataFromInside(data, data.start, draggedDay);
+        return { start: data.start, end: draggedDay };
       }
     }
 
@@ -89,18 +87,12 @@ export function DayCellDropTarget(props: DayCellDropTarget.Props) {
       const cursorDate = adapter.startOfDay(
         adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs),
       );
-      const offset = adapter.differenceInDays(value, cursorDate);
-      return getDataFromInside(
-        data,
-        offset === 0 ? data.start : adapter.addDays(data.start, offset),
-        offset === 0 ? data.end : adapter.addDays(data.end, offset),
-      );
+      return shiftByDays(data, adapter.differenceInDays(value, cursorDate));
     }
 
     // Move an external event into the Time Grid
     if (schedulerExternalEventKind.matches(source)) {
-      const data = source.payload;
-      return getDataFromOutside(data, value);
+      return { start: value };
     }
 
     return undefined;
@@ -109,7 +101,7 @@ export function DayCellDropTarget(props: DayCellDropTarget.Props) {
   return (
     <SchedulerDropTarget
       surfaceType="day-grid"
-      getEventDropData={getEventDropData}
+      getEventDropDates={getEventDropDates}
       accept={acceptedKinds}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       render={render}

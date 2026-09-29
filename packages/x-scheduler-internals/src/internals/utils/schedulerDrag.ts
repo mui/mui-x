@@ -1,6 +1,5 @@
 import { Draggable } from '@base-ui/react/draggable';
 import type {
-  EventSurfaceType,
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
@@ -20,7 +19,7 @@ export interface SchedulerEventDragPayload {
 }
 
 /** The snapshot captured when an event move or resize starts. */
-export interface SchedulerEventDragData extends SchedulerEventDragPayload {
+export interface SchedulerEventDragData {
   originalOccurrence: SchedulerEventOccurrence;
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
@@ -68,6 +67,4 @@ export const schedulerExternalEventKind = Draggable.createGlobalKind<
 export const schedulerEventMoveKinds = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind];
 
 /** Marks every Scheduler drop target, whatever it accepts. */
-export const schedulerDropTargetKind = Draggable.createKind<{
-  surfaceType: EventSurfaceType;
-}>('scheduler-target');
+export const schedulerDropTargetKind = Draggable.createKind('scheduler-target');

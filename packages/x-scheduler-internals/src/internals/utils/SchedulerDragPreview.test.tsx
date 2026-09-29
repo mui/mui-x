@@ -44,7 +44,6 @@ function Fixture({
         <Draggable.Target
           accept={schedulerDayEventMoveKind}
           kind={schedulerDropTargetKind}
-          payload={{ surfaceType: 'day-grid' }}
           data-testid="target"
         />
       </Draggable.Provider>
