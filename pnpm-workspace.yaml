@@ -85,6 +85,7 @@ catalog:
 
 engineStrict: true
 updateNotifier: false
+autoDedupe: true
 blockExoticSubdeps: true
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
