@@ -3,7 +3,6 @@ import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/models';
@@ -53,8 +52,8 @@ const DependencyInteractionsSvg = styled('svg', {
     cursor: 'pointer',
     color: (theme.vars || theme).palette.error.main,
   },
-  // The overlay is no drop target's ancestor: a dragover landing on a hit-area would
-  // refuse the drop right over an arrow, so any drag mutes every opted-in child.
+  // The overlay is no drop target's ancestor: a hit-area under the pointer would hide the
+  // drop target beneath it from the engine, so any drag mutes every opted-in child.
   '&[data-drag-active] *': {
     pointerEvents: 'none',
   },
@@ -93,26 +92,10 @@ function DependencyInteractionsLayer() {
   );
 
   useDependencySelectionInteraction(svgRef);
-  // Re-applied on every render: the svg unmounts while its arrows are culled, so one
-  // remounting mid-drag must keep the mark.
-  const draggingRef = React.useRef(false);
-  useIsoLayoutEffect(() => {
-    if (draggingRef.current) {
-      svgRef.current?.setAttribute('data-drag-active', '');
-    }
-  });
   // Any drag mutes the hit-areas, not only the Scheduler ones: they would hide the drop targets
-  // under the pointer from the engine's hit test.
-  Draggable.useMonitor({
-    onMoveStart: () => {
-      draggingRef.current = true;
-      svgRef.current?.setAttribute('data-drag-active', '');
-    },
-    onMoveEnd: () => {
-      draggingRef.current = false;
-      svgRef.current?.removeAttribute('data-drag-active');
-    },
-  });
+  // under the pointer from the engine's hit test. Read from the engine, so an svg that mounts
+  // mid-drag, as its arrows come into view, is muted too.
+  const isDragging = Draggable.useActiveDrag() !== null;
 
   if (visibleArrows.length === 0 || eventsWidth <= 0 || height <= 0) {
     return null;
@@ -133,6 +116,7 @@ function DependencyInteractionsLayer() {
       ref={svgRef}
       aria-hidden
       data-dependency-interactions=""
+      data-drag-active={isDragging ? '' : undefined}
       width={eventsWidth}
       height={height}
       viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}
