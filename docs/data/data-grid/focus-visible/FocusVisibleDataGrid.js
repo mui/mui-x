@@ -9,7 +9,7 @@ const columns = [
   { field: 'score', headerName: 'Score', type: 'number', width: 100 },
 ];
 
-const rows = Array.from({ length: 12 }, (_, index) => ({
+const rows = Array.from({ length: 24 }, (_, index) => ({
   id: index,
   name: `Person ${index}`,
   team: index % 2 ? 'Alpha' : 'Beta',
@@ -26,8 +26,17 @@ export default function FocusVisibleDataGrid() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ height: 400, width: '100%' }}>
-        <DataGridPremium rows={rows} columns={columns} showToolbar pivotPanelOpen />
+      <Box sx={{ height: 460, width: '100%' }}>
+        <DataGridPremium
+          rows={rows}
+          columns={columns}
+          showToolbar
+          pivotPanelOpen
+          checkboxSelection
+          pagination
+          pageSizeOptions={[5, 10]}
+          initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+        />
       </Box>
     </ThemeProvider>
   );
