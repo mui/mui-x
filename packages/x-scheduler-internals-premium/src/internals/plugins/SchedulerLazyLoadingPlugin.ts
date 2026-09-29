@@ -190,9 +190,9 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
+    const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
     let isStale = false;
     try {
-      const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
       const events = await dataSource.getEvents(range.start, range.end);
 
       // Drop the result if a more recent range has been requested since this
@@ -226,6 +226,11 @@ export class SchedulerLazyLoadingPlugin<
       });
     } catch (error) {
       if (this.disposables.disposed) {
+        return;
+      }
+      // The user already left this range, so its error is dropped too.
+      if (this.latestRequestedRangeKey !== fetchedRangeKey) {
+        isStale = true;
         return;
       }
       this.store.pushError(error);

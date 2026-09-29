@@ -1,5 +1,5 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import type { EventCalendarVisibleRange } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarFetchRange } from '@mui/x-scheduler-internals/models';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
 import type {
   EventCalendarPremiumState,
@@ -45,16 +45,16 @@ export class EventCalendarPremiumLazyLoadingPlugin<
  * Returns the range to fetch for the registered view, spanning whole days,
  * or `null` when there is nothing to fetch.
  */
-function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarVisibleRange | null {
+function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarFetchRange | null {
   const { viewDefinition, adapter } = state;
   if (!viewDefinition) {
     return null;
   }
 
   const calendarState = state as EventCalendarState;
-  let range: EventCalendarVisibleRange;
-  if (viewDefinition.visibleRangeSelector) {
-    range = viewDefinition.visibleRangeSelector(calendarState);
+  let range: EventCalendarFetchRange;
+  if (viewDefinition.fetchRangeSelector) {
+    range = viewDefinition.fetchRangeSelector(calendarState);
   } else {
     const days = viewDefinition.visibleDaysSelector(calendarState);
     if (days.length === 0) {

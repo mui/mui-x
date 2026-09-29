@@ -17,10 +17,10 @@ export interface EventCalendarViewDefinition {
    * The range to fetch from the data source.
    * Defaults to the span of the visible days.
    */
-  visibleRangeSelector?: (state: EventCalendarState) => EventCalendarVisibleRange;
+  fetchRangeSelector?: (state: EventCalendarState) => EventCalendarFetchRange;
 }
 
-export interface EventCalendarVisibleRange {
+export interface EventCalendarFetchRange {
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
 }

@@ -7,7 +7,7 @@ import {
 } from '../scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import type { EventCalendarVisibleRange, SchedulerProcessedDate } from '../models';
+import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
 
@@ -125,11 +125,11 @@ export const eventCalendarAgendaSelectors = {
   /**
    * The range to fetch: the base days, or the whole horizon when hiding the empty days.
    */
-  visibleRange: createSelectorMemoized(
+  fetchRange: createSelectorMemoized(
     baseVisibleDays,
     horizonEnd,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-    (baseDays, horizon, showEmptyDaysInAgenda): EventCalendarVisibleRange => ({
+    (baseDays, horizon, showEmptyDaysInAgenda): EventCalendarFetchRange => ({
       start: baseDays[0].value,
       end: showEmptyDaysInAgenda ? baseDays[baseDays.length - 1].value : horizon,
     }),

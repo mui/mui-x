@@ -247,7 +247,7 @@ describe('eventCalendarEventSelectors', () => {
     });
   });
 
-  describe('visibleRange', () => {
+  describe('fetchRange', () => {
     it('should end on the last weekday of the base days when weekends are hidden and showEmptyDaysInAgenda=true', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -258,7 +258,7 @@ describe('eventCalendarEventSelectors', () => {
         },
       });
 
-      const range = eventCalendarAgendaSelectors.visibleRange(state);
+      const range = eventCalendarAgendaSelectors.fetchRange(state);
 
       expect(adapter.isSameDay(range.end, adapter.date('2025-07-11Z', 'default'))).to.equal(true);
     });
@@ -273,7 +273,7 @@ describe('eventCalendarEventSelectors', () => {
         },
       });
 
-      const range = eventCalendarAgendaSelectors.visibleRange(state);
+      const range = eventCalendarAgendaSelectors.fetchRange(state);
 
       expect(adapter.isSameDay(range.start, adapter.date('2024-01-01Z', 'default'))).to.equal(true);
       expect(adapter.isSameDay(range.end, adapter.date('2024-01-12Z', 'default'))).to.equal(true);
@@ -289,7 +289,7 @@ describe('eventCalendarEventSelectors', () => {
         },
       });
 
-      const range = eventCalendarAgendaSelectors.visibleRange(state);
+      const range = eventCalendarAgendaSelectors.fetchRange(state);
 
       expect(adapter.isSameDay(range.start, adapter.date('2024-01-01Z', 'default'))).to.equal(true);
       expect(adapter.isSameDay(range.end, adapter.date('2024-06-28Z', 'default'))).to.equal(true);
@@ -313,9 +313,9 @@ describe('eventCalendarEventSelectors', () => {
       });
       const loadingState: EventCalendarState = { ...stateWithEvents, isLoading: true };
 
-      const reference = eventCalendarAgendaSelectors.visibleRange(emptyState);
+      const reference = eventCalendarAgendaSelectors.fetchRange(emptyState);
       for (const state of [stateWithEvents, loadingState]) {
-        const range = eventCalendarAgendaSelectors.visibleRange(state);
+        const range = eventCalendarAgendaSelectors.fetchRange(state);
         expect(adapter.isEqual(range.start, reference.start)).to.equal(true);
         expect(adapter.isEqual(range.end, reference.end)).to.equal(true);
       }

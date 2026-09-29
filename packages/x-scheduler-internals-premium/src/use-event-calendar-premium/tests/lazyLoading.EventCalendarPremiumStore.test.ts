@@ -5,6 +5,7 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
@@ -41,14 +42,14 @@ const DEFAULT_PARAMS = {
 };
 
 // Build a minimal `visibleDaysSelector` returning a `dayCount`-day window starting at the
-// store's current `visibleDate`. The plugin only reads `value` and `key`; `timestamp`
+// store's current `visibleDate` in the display timezone. The plugin only reads `value` and `key`; `timestamp`
 // and `minutesInDay` are filled in to satisfy `SchedulerProcessedDate`.
 const buildViewDefinition = (dayCount = 7): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
   visibleDaysSelector: (state: any): SchedulerProcessedDate[] => {
     const days: SchedulerProcessedDate[] = [];
     for (let i = 0; i < dayCount; i += 1) {
-      const value = adapter.addDays(state.visibleDate, i);
+      const value = adapter.addDays(schedulerOtherSelectors.visibleDate(state), i);
       days.push({
         value,
         key: String(adapter.getTime(value)),
@@ -262,6 +263,91 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(store.state.isLoading).to.equal(false);
   });
 
+  it('should keep loading when a stale fetch rejects while the latest one is pending', async () => {
+    let rejectA: (error: Error) => void = () => {};
+    let resolveB: (events: TestEvent[]) => void = () => {};
+    let callIndex = 0;
+    const dataSource = {
+      getEvents: vi.fn(
+        () =>
+          new Promise<TestEvent[]>((resolve, reject) => {
+            callIndex += 1;
+            if (callIndex === 1) {
+              rejectA = reject;
+            } else {
+              resolveB = resolve;
+            }
+          }),
+      ),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    store.setViewDefinition(buildViewDefinition());
+    await flushEffect();
+    await flushDebounce();
+
+    // Navigate to B before A rejects.
+    store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
+
+    rejectA(new Error('Network error'));
+    await flushEffect();
+    expect(store.state.isLoading).to.equal(true);
+    expect(store.state.errors).to.have.length(0);
+
+    resolveB([]);
+    await flushEffect();
+    expect(store.state.isLoading).to.equal(false);
+  });
+
+  it('should stop loading when the display timezone changes while a fetch is pending', async () => {
+    let resolveA: (events: TestEvent[]) => void = () => {};
+    let resolveB: (events: TestEvent[]) => void = () => {};
+    let callIndex = 0;
+    const dataSource = {
+      getEvents: vi.fn(
+        () =>
+          new Promise<TestEvent[]>((resolve) => {
+            callIndex += 1;
+            if (callIndex === 1) {
+              resolveA = resolve;
+            } else {
+              resolveB = resolve;
+            }
+          }),
+      ),
+      persistEvents: noopPersistEvents,
+    };
+    const parameters = {
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: adapter.date('2025-07-01T12:00:00Z', 'default'),
+      displayTimezone: 'UTC',
+    };
+    const store = new EventCalendarPremiumStore(parameters, adapter);
+    store.setViewDefinition(buildViewDefinition());
+    await flushEffect();
+    await flushDebounce();
+
+    // Same calendar days, but different timestamps.
+    store.updateStateFromParameters(
+      { ...parameters, displayTimezone: 'America/New_York' },
+      adapter,
+    );
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.mock.calls.length).to.equal(2);
+
+    resolveA([]);
+    await flushEffect();
+    resolveB(buildEvents());
+    await flushEffect();
+    expect(store.state.isLoading).to.equal(false);
+    expect(store.state.eventIdList).to.have.length(1);
+  });
+
   it('should not fetch again when the visible date moves within the same day', async () => {
     const dataSource = {
       getEvents: vi.fn(
@@ -315,7 +401,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     const agendaViewDefinition: any = {
       siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
       visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
-      visibleRangeSelector: eventCalendarAgendaSelectors.visibleRange,
+      fetchRangeSelector: eventCalendarAgendaSelectors.fetchRange,
     };
 
     it('should not fetch when a view without a range selector has no visible day', async () => {
