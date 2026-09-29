@@ -45,10 +45,7 @@ export interface UseStaticRangePickerProps<
 export interface UseStaticRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
-> extends Pick<
-  UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
-  'valueManager' | 'valueType' | 'validator' | 'ref'
-> {
+> extends Pick<UsePickerParameters<PickerRangeValue, TView, TExternalProps>, 'manager' | 'ref'> {
   props: TExternalProps;
   /**
    * Steps available for the picker.
