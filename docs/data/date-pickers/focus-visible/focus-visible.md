@@ -41,14 +41,11 @@ Pointer focus is unaffected: clicking doesn't match `:focus-visible`, so it look
 
 Day cells take the themed ring like everything else, and the "today" marker survives underneath it.
 
-That needed one change: the marker used to be drawn with `outline`, which is the same single CSS property the ring uses, so only one of them could ever render.
-The marker is now drawn with an equivalent inset `box-shadow`, leaving `outline` free for the ring.
+The marker is normally drawn with `outline`, which is the same single CSS property the ring uses, so the two can't both render.
+While a day cell is focused, the marker is redrawn as an inset `box-shadow` instead, leaving `outline` free for the ring.
 A focused "today" therefore shows both—the ring around the cell, the marker inside it.
 
-:::warning
-If you previously overrode the "today" marker through `outline` on the `.MuiPickerDay-today` class, switch that override to `box-shadow`.
-The rendered result is unchanged for everyone else, opted in or not.
-:::
+Nothing changes if you don't opt in: the marker keeps using `outline`, so an override on the `.MuiPickerDay-today` class still applies as before.
 
 This applies to the range day of the [Date Range Picker](/x/react-date-pickers/date-range-picker/) as well.
 
