@@ -6,9 +6,16 @@ import type { DatePickerViewRenderers } from '../DatePicker/shared';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateDate } from '../validation';
 import type { DateView } from '../models';
+import { validateDate } from '../validation';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+
+// Static pickers render no field, so they skip the field-only manager members.
+const manager = {
+  valueType: 'date' as const,
+  validator: validateDate,
+  internal_valueManager: singleItemValueManager,
+};
 
 type StaticDatePickerComponent = ((
   props: StaticDatePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -60,9 +67,7 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker(
   const { renderPicker } = useStaticPicker<DateView, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date',
-    validator: validateDate,
+    manager,
     steps: null,
   });
 
