@@ -38,10 +38,8 @@ export const usePicker = <
 >({
   ref,
   props,
-  valueManager,
-  valueType,
+  manager,
   variant,
-  validator,
   onPopperExited,
   autoFocusView,
   rendererInterceptor: RendererInterceptor,
@@ -50,6 +48,8 @@ export const usePicker = <
   getStepNavigation,
 }: UsePickerParameters<TValue, TView, TExternalProps>): UsePickerReturnValue<TValue> => {
   type TError = InferError<TExternalProps>;
+
+  const { internal_valueManager: valueManager, valueType, validator } = manager;
 
   const {
     // View props
@@ -103,8 +103,7 @@ export const usePicker = <
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
     useValueAndOpenStates<TValue, TView, TExternalProps>({
       props,
-      valueManager,
-      validator,
+      manager,
     });
 
   const {
