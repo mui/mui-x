@@ -1,13 +1,11 @@
 'use client';
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { schedulerTimeEventResizeKind } from '../../internals/utils/schedulerDrag';
 import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
-import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
 import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
 import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
 import type { SchedulerEventSide } from '../../models';
@@ -39,25 +37,11 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
     // Context hooks
     const contextValue = useCalendarGridTimeEventContext();
 
-    // Feature hooks
-    const getDragData = useStableCallback((input) => ({
-      ...contextValue.getDragData(input),
-      side,
-    }));
-
-    const enabled = isResizeHandlerEnabled({
-      side,
-      isEventStartClipped: contextValue.isEventStartClipped,
-      isEventEndClipped: contextValue.isEventEndClipped,
-    });
-
-    const { state, draggableProps } = useEventResizeHandler({
+    const { state, enabled, draggableProps } = useEventResizeHandler({
+      context: contextValue,
+      getEventDragData: contextValue.getDragData,
       kind: schedulerTimeEventResizeKind,
-      eventId: contextValue.eventId,
-      occurrenceKey: contextValue.occurrenceKey,
       side,
-      enabled,
-      getDragData,
       activation: TOUCH_AND_PEN_ACTIVATION,
       modifiers: Draggable.restrictToVerticalAxis,
       dragCursor: 'ns-resize',

@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { schedulerDayEventResizeKind } from '../../internals/utils/schedulerDrag';
 import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
-import { isResizeHandlerEnabled } from '../../internals/utils/resize-utils';
 import { useCalendarGridDayEventContext } from '../day-event/CalendarGridDayEventContext';
 import type { CalendarGridDayEvent } from '../day-event/CalendarGridDayEvent';
 import type { SchedulerEventSide } from '../../models';
@@ -30,25 +28,11 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
     // Context hooks
     const contextValue = useCalendarGridDayEventContext();
 
-    // Feature hooks
-    const getDragData = useStableCallback((input) => ({
-      ...contextValue.getSharedDragData(input),
-      side,
-    }));
-
-    const enabled = isResizeHandlerEnabled({
-      side,
-      isEventStartClipped: contextValue.isEventStartClipped,
-      isEventEndClipped: contextValue.isEventEndClipped,
-    });
-
-    const { state, draggableProps } = useEventResizeHandler({
+    const { state, enabled, draggableProps } = useEventResizeHandler({
+      context: contextValue,
+      getEventDragData: contextValue.getSharedDragData,
       kind: schedulerDayEventResizeKind,
-      eventId: contextValue.eventId,
-      occurrenceKey: contextValue.occurrenceKey,
       side,
-      enabled,
-      getDragData,
       dragCursor: 'ew-resize',
     });
 

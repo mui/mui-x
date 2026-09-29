@@ -1,11 +1,6 @@
 'use client';
-import {
-  SchedulerDraggable,
-  useEventResizeHandler,
-  isResizeHandlerEnabled,
-} from '@mui/x-scheduler-internals/internals';
+import { SchedulerDraggable, useEventResizeHandler } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
@@ -32,25 +27,11 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
     // Context hooks
     const contextValue = useTimelineGridEventContext();
 
-    // Feature hooks
-    const getDragData = useStableCallback((input) => ({
-      ...contextValue.getDragData(input),
-      side,
-    }));
-
-    const enabled = isResizeHandlerEnabled({
-      side,
-      isEventStartClipped: contextValue.isEventStartClipped,
-      isEventEndClipped: contextValue.isEventEndClipped,
-    });
-
-    const { state, draggableProps } = useEventResizeHandler({
+    const { state, enabled, draggableProps } = useEventResizeHandler({
+      context: contextValue,
+      getEventDragData: contextValue.getDragData,
       kind: schedulerTimelineEventResizeKind,
-      eventId: contextValue.eventId,
-      occurrenceKey: contextValue.occurrenceKey,
       side,
-      enabled,
-      getDragData,
       dragCursor: 'ew-resize',
     });
 

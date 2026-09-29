@@ -1,35 +1,46 @@
 'use client';
 import * as React from 'react';
-import type { SchedulerEventDragPayload, SchedulerEventResizeDragData } from './schedulerDrag';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import type { Draggable } from '@base-ui/react/draggable';
+import type { SchedulerEventDragData, SchedulerEventDragPayload } from './schedulerDrag';
 import type { SchedulerDraggable } from './SchedulerDraggable';
+import type { useDraggableEvent } from './useDraggableEvent';
+import { isResizeHandlerEnabled } from './resize-utils';
 import type { SchedulerEventSide } from '../../models';
 
 /**
  * Base UI drag-and-drop resize for calendar events, for any pointer type.
+ * `TEventData` is the drag data of the event whose edge the handler resizes.
  */
-export function useEventResizeHandler<TData extends SchedulerEventResizeDragData>(
-  parameters: useEventResizeHandler.Parameters<TData>,
-): useEventResizeHandler.ReturnValue<TData> {
-  const {
+export function useEventResizeHandler<TEventData extends SchedulerEventDragData>(
+  parameters: useEventResizeHandler.Parameters<TEventData>,
+): useEventResizeHandler.ReturnValue<TEventData> {
+  const { context, getEventDragData, kind, side, activation, modifiers, dragCursor } = parameters;
+
+  // A side clipped by the collection boundary does not render at its real position.
+  const enabled = isResizeHandlerEnabled({
     side,
-    enabled,
-    getDragData,
-    kind,
-    eventId,
-    occurrenceKey,
-    activation,
-    modifiers,
-    dragCursor,
-  } = parameters;
+    isEventStartClipped: context.isEventStartClipped,
+    isEventEndClipped: context.isEventEndClipped,
+  });
 
   const state: useEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
     [side],
   );
 
+  const { eventId, occurrenceKey } = context;
   const payload = React.useMemo(() => ({ eventId, occurrenceKey }), [eventId, occurrenceKey]);
 
-  const draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'> = {
+  const getDragData = useStableCallback((input: { clientX: number; clientY: number }) => ({
+    ...getEventDragData(input),
+    side,
+  }));
+
+  const draggableProps: Omit<
+    SchedulerDraggable.Props<TEventData & { side: SchedulerEventSide }>,
+    'render'
+  > = {
     kind,
     payload,
     disabled: !enabled,
@@ -39,7 +50,7 @@ export function useEventResizeHandler<TData extends SchedulerEventResizeDragData
     dragCursor,
   };
 
-  return { state, draggableProps };
+  return { state, enabled, draggableProps };
 }
 
 export namespace useEventResizeHandler {
@@ -61,36 +72,41 @@ export namespace useEventResizeHandler {
     side: SchedulerEventSide;
   }
 
-  export interface Parameters<TData extends SchedulerEventResizeDragData>
-    extends PublicParameters, SchedulerEventDragPayload {
-    kind: SchedulerDraggable.Props<TData>['kind'];
+  export interface Parameters<TEventData extends SchedulerEventDragData> extends PublicParameters {
     /**
-     * Whether to register the Base UI drag handler (false when the side is clipped by the
-     * collection boundary).
+     * The context of the event the handler belongs to.
      */
-    enabled: boolean;
+    context: useDraggableEvent.ContextValue;
     /**
-     * Gets the drag data.
+     * Gets the drag data of the event. The handler adds its `side`.
      * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
-     * @returns {any} The shared drag data.
+     * @returns {any} The drag data of the event.
      */
-    getDragData: SchedulerDraggable.Props<TData>['getDragData'];
+    getEventDragData: (input: { clientX: number; clientY: number }) => TEventData;
+    kind: Draggable.Kind<SchedulerEventDragPayload, TEventData & { side: SchedulerEventSide }>;
     /**
      * When a press on the handle starts a resize.
      */
-    activation?: SchedulerDraggable.Props<TData>['activation'];
+    activation?: SchedulerDraggable.Props<TEventData & { side: SchedulerEventSide }>['activation'];
     /**
      * Constrains the pointer position the resize reads.
      */
-    modifiers?: SchedulerDraggable.Props<TData>['modifiers'];
+    modifiers?: SchedulerDraggable.Props<TEventData & { side: SchedulerEventSide }>['modifiers'];
     /**
      * The cursor shown over the page while the mouse or pen resizes.
      */
-    dragCursor?: SchedulerDraggable.Props<TData>['dragCursor'];
+    dragCursor?: SchedulerDraggable.Props<TEventData & { side: SchedulerEventSide }>['dragCursor'];
   }
 
-  export interface ReturnValue<TData extends SchedulerEventResizeDragData> {
-    draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'>;
+  export interface ReturnValue<TEventData extends SchedulerEventDragData> {
+    draggableProps: Omit<
+      SchedulerDraggable.Props<TEventData & { side: SchedulerEventSide }>,
+      'render'
+    >;
+    /**
+     * Whether the handler renders and can start a resize.
+     */
+    enabled: boolean;
     /**
      * The state to pass to the useRenderElement hook.
      */
