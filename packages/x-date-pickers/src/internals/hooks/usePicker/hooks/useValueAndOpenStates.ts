@@ -81,7 +81,7 @@ export function useValueAndOpenStates<
           ].join('\n'),
         );
       }
-    }, [JSON.stringify(defaultValue)]);
+    }, [JSON.stringify(defaultValueProp)]);
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
