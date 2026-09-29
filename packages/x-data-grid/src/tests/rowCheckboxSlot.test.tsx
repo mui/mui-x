@@ -122,4 +122,47 @@ describe('<DataGrid /> - rowCheckbox slot', () => {
     expect(passedProps.material).to.have.property('color', 'primary');
     expect(passedProps.material).to.have.property('disableRipple');
   });
+
+  it('should leave disableRipple unset on an enabled checkbox so the theme decides', () => {
+    let passedProps: any;
+    function CustomBaseCheckbox(props: any) {
+      passedProps = props;
+      return <div data-testid="custom-base-checkbox" />;
+    }
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[{ id: 1, name: 'John' }]}
+          columns={[{ field: 'name' }]}
+          checkboxSelection
+          slots={{ baseCheckbox: CustomBaseCheckbox }}
+        />
+      </div>,
+    );
+
+    expect(passedProps.material.disableRipple).to.equal(undefined);
+  });
+
+  it('should disable the ripple on a checkbox that is not selectable', () => {
+    let passedProps: any;
+    function CustomBaseCheckbox(props: any) {
+      passedProps = props;
+      return <div data-testid="custom-base-checkbox" />;
+    }
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[{ id: 1, name: 'John' }]}
+          columns={[{ field: 'name' }]}
+          checkboxSelection
+          isRowSelectable={() => false}
+          slots={{ baseCheckbox: CustomBaseCheckbox }}
+        />
+      </div>,
+    );
+
+    expect(passedProps.material.disableRipple).to.equal(true);
+  });
 });
