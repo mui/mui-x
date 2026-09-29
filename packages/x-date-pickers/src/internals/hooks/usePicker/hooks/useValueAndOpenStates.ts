@@ -3,10 +3,15 @@ import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../../models';
-import type { PickerSelectionState, UsePickerManager, UsePickerProps, UsePickerState } from '../usePicker.types';
+import type {
+  PickerSelectionState,
+  UsePickerManager,
+  UsePickerProps,
+  UsePickerState,
+} from '../usePicker.types';
 import { useControlledValue } from '../../useControlledValue';
 import { usePickerAdapter } from '../../../../hooks/usePickerAdapter';
-import type { InferError, PickerChangeHandlerContext, PickerManager } from '../../../../models';
+import type { InferError, PickerChangeHandlerContext } from '../../../../models';
 import type { SetValueActionOptions } from '../../../components/PickerProvider';
 import { useValidation } from '../../../../validation';
 
