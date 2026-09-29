@@ -108,8 +108,8 @@ export const useGridDataSourceLazyLoader = (
   );
   const draggedRowId = React.useRef<GridRowId | null>(null);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-  // `false` after unmount. A request that settles later must not restart the polling,
-  // because no cleanup would clear that interval.
+  const pollingParamsRef = React.useRef<Partial<GridGetRowsParams> | null>(null);
+  // `false` while Activity is hidden or after unmount, so a late response cannot restart polling.
   const isPollingAllowed = React.useRef(true);
 
   const fetchRows = React.useCallback(
@@ -149,8 +149,10 @@ export const useGridDataSourceLazyLoader = (
 
   const startPolling = useEventCallback((params: Partial<GridGetRowsParams>) => {
     stopPolling();
+    // Keep the range even if the response arrives while Activity is hidden.
+    pollingParamsRef.current = params;
 
-    if (!isPollingAllowed.current || props.dataSourceRevalidateMs <= 0) {
+    if (!isPollingAllowed.current || !isStrategyActive || props.dataSourceRevalidateMs <= 0) {
       return;
     }
 
@@ -605,11 +607,14 @@ export const useGridDataSourceLazyLoader = (
 
   React.useEffect(() => {
     isPollingAllowed.current = true;
+    if (pollingParamsRef.current) {
+      startPolling(pollingParamsRef.current);
+    }
     return () => {
       isPollingAllowed.current = false;
       stopPolling();
     };
-  }, [stopPolling]);
+  }, [startPolling, stopPolling]);
 
   // A new `dataSource` reference is a full restart in `useGridDataSourceBase` (rows and cache
   // cleared, first page refetched), so end-of-data must be re-evaluated like on a re-query.

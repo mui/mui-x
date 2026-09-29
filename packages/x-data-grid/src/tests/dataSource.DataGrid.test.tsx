@@ -455,6 +455,48 @@ describe('<DataGrid /> - Data source', () => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
+      it.each([
+        { settleWhileHidden: false, strict: false },
+        { settleWhileHidden: true, strict: false },
+        { settleWhileHidden: false, strict: true },
+        { settleWhileHidden: true, strict: true },
+      ])(
+        'should resume polling when the Activity becomes visible (settleWhileHidden=$settleWhileHidden, strict=$strict)',
+        async ({ settleWhileHidden, strict }) => {
+          const { promise, resolve } = Promise.withResolvers<void>();
+          const localFetchRowsSpy = vi.fn();
+          const { setProps } = render(
+            <TestDataSource
+              stallResponsePromise={promise}
+              dataSourceCache={null}
+              dataSourceRevalidateMs={10}
+              onFetchRows={localFetchRowsSpy}
+            />,
+            { strict },
+          );
+          await waitFor(() => expect(localFetchRowsSpy).toHaveBeenCalledTimes(1));
+
+          if (!settleWhileHidden) {
+            await act(async () => resolve());
+          }
+          await waitFor(() =>
+            expect(localFetchRowsSpy.mock.calls.length).to.be.above(settleWhileHidden ? 0 : 1),
+          );
+
+          await act(async () => setProps({ activityMode: 'hidden' }));
+          await act(async () => resolve());
+          await waitFor(() => expect(apiRef.current?.getRowsCount()).to.be.above(0));
+          const callCountWhileHidden = localFetchRowsSpy.mock.calls.length;
+          await actSleep(30);
+          expect(localFetchRowsSpy.mock.calls.length).to.equal(callCountWhileHidden);
+
+          await act(async () => setProps({ activityMode: 'visible' }));
+          await waitFor(() =>
+            expect(localFetchRowsSpy.mock.calls.length).to.be.above(callCountWhileHidden),
+          );
+        },
+      );
+
       it('should re-fetch the data when the Activity becomes visible after a failed request', async () => {
         const onDataSourceError = vi.fn();
         const { setProps } = render(

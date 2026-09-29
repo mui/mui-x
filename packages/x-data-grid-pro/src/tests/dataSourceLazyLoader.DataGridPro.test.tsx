@@ -113,6 +113,68 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     transformGetRowsResponse = defaultTransformGetRowsResponse;
   });
 
+  if ('Activity' in React) {
+    it.each([
+      { treeData: false, settleWhileHidden: false },
+      { treeData: false, settleWhileHidden: true },
+      { treeData: true, settleWhileHidden: false },
+      { treeData: true, settleWhileHidden: true },
+    ])(
+      'should resume polling when the Activity becomes visible (treeData=$treeData, settleWhileHidden=$settleWhileHidden)',
+      async ({ treeData, settleWhileHidden }) => {
+        const { promise, resolve } = Promise.withResolvers<GridGetRowsResponse>();
+        const response = { rows: [{ id: 1, name: 'One', childrenCount: 0 }], rowCount: 1 };
+        const getRows = vi.fn().mockReturnValueOnce(promise).mockResolvedValue(response);
+        const dataSource: GridDataSource = {
+          getRows,
+          getGroupKey: (row) => row.name,
+          getChildrenCount: (row) => row.childrenCount,
+        };
+
+        function Test({ mode = 'visible' }: { mode?: 'visible' | 'hidden' }) {
+          apiRef = useGridApiRef();
+          return (
+            <React.Activity mode={mode}>
+              <div style={{ width: 300, height: gridHeight }}>
+                <DataGridPro
+                  apiRef={apiRef}
+                  columns={[{ field: 'name' }]}
+                  dataSource={dataSource}
+                  dataSourceCache={null}
+                  dataSourceRevalidateMs={10}
+                  lazyLoading
+                  treeData={treeData}
+                />
+              </div>
+            </React.Activity>
+          );
+        }
+
+        const { setProps } = render(<Test />);
+        await waitFor(() => expect(getRows).toHaveBeenCalledTimes(1));
+
+        if (!settleWhileHidden) {
+          await act(async () => resolve(response));
+        }
+        await waitFor(() =>
+          expect(getRows.mock.calls.length).to.be.above(settleWhileHidden ? 0 : 1),
+        );
+
+        await act(async () => setProps({ mode: 'hidden' }));
+        await act(async () => resolve(response));
+        await waitFor(() => expect(apiRef.current?.getRowsCount()).to.equal(1));
+        // Allow any already queued lazy-loading debounce to finish before checking the pause.
+        await actSleep(30);
+        const callCountWhileHidden = getRows.mock.calls.length;
+        await actSleep(30);
+        expect(getRows.mock.calls.length).to.equal(callCountWhileHidden);
+
+        await act(async () => setProps({ mode: 'visible' }));
+        await waitFor(() => expect(getRows.mock.calls.length).to.be.above(callCountWhileHidden));
+      },
+    );
+  }
+
   it('should load the first page initially', async () => {
     render(<TestDataSourceLazyLoader />);
     await waitFor(() => {
@@ -349,6 +411,57 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       expect(localFetchRowsSpy.mock.calls.length).to.equal(0);
       vi.useRealTimers();
+    });
+
+    it('should not restart polling when a queued revalidation settles after unmount', async () => {
+      const response = { rows: [{ id: 1, name: 'Before' }], rowCount: 1 };
+      const revalidation = Promise.withResolvers<GridGetRowsResponse>();
+      const getRows = vi.fn().mockResolvedValue(response);
+      const { setProps, unmount } = render(
+        <TestDataSourceLazyLoader
+          columns={[{ field: 'name' }]}
+          dataSource={{ getRows }}
+          lazyLoadingRequestThrottleMs={0}
+        />,
+      );
+      await waitFor(() => expect(apiRef.current?.getRow(1)?.name).to.equal('Before'));
+
+      vi.useFakeTimers();
+      onTestFinished(() => {
+        vi.clearAllTimers();
+        vi.useRealTimers();
+      });
+      getRows.mockReturnValue(revalidation.promise);
+      setProps({ dataSourceCache: null, dataSourceRevalidateMs: 10 });
+
+      // Queue the lazy loader's debounced fetch, then unmount before it starts.
+      // A fetch already in flight at unmount is discarded by the base request-ID check,
+      // so its response would never exercise the lazy loader's polling guard.
+      act(() => {
+        apiRef.current!.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 0,
+          lastRowIndex: 2,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+        vi.advanceTimersByTime(0);
+      });
+      const callCountBeforeUnmount = getRows.mock.calls.length;
+      unmount();
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
+      expect(getRows.mock.calls.length).to.equal(callCountBeforeUnmount + 1);
+
+      await act(async () => {
+        // Changed data avoids the lazy loader's unchanged-response early return.
+        revalidation.resolve({ rows: [{ id: 1, name: 'After' }], rowCount: 1 });
+      });
+      const callCountAfterResponse = getRows.mock.calls.length;
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(50);
+      });
+      expect(getRows.mock.calls.length).to.equal(callCountAfterResponse);
     });
 
     it('should use the current viewport range when fetchRows is called via the API without params', async () => {
@@ -1055,6 +1168,59 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(localFetchRowsSpy.mock.calls.length).to.equal(0);
 
       vi.useRealTimers();
+    });
+
+    it('should not restart polling when a child revalidation settles after unmount', async () => {
+      const revalidation = Promise.withResolvers<GridGetRowsResponse>();
+      const rootResponse = {
+        rows: [{ id: 'A', name: 'A', childrenCount: 1 }],
+        rowCount: 1,
+      };
+      const childResponse = {
+        rows: [{ id: 'A-0', name: 'Child', childrenCount: 0 }],
+        rowCount: 1,
+      };
+      const getRows = vi.fn<GridDataSource['getRows']>((params) =>
+        Promise.resolve(params.groupKeys?.length ? childResponse : rootResponse),
+      );
+      const { setProps, unmount } = render(
+        <TestNestedDataSourceLazyLoader
+          onFetchRows={vi.fn()}
+          dataSource={{
+            getRows,
+            getGroupKey: (row) => row.name,
+            getChildrenCount: (row) => row.childrenCount,
+          }}
+          defaultGroupingExpansionDepth={1}
+        />,
+      );
+      await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
+
+      vi.useFakeTimers();
+      onTestFinished(() => {
+        vi.clearAllTimers();
+        vi.useRealTimers();
+      });
+      getRows.mockImplementation((params) =>
+        params.groupKeys?.length ? revalidation.promise : Promise.resolve(rootResponse),
+      );
+      setProps({ dataSourceCache: null, dataSourceRevalidateMs: 10 });
+      const callCountBeforeRevalidation = getRows.mock.calls.length;
+      await act(async () => {
+        await apiRef.current!.dataSource.fetchRows('A', { showChildrenLoading: false });
+      });
+      expect(getRows.mock.calls.length).to.equal(callCountBeforeRevalidation + 1);
+      expect(getRows.mock.lastCall![0].groupKeys).to.deep.equal(['A']);
+
+      unmount();
+      await act(async () => {
+        revalidation.resolve(childResponse);
+      });
+      const callCountAfterResponse = getRows.mock.calls.length;
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(50);
+      });
+      expect(getRows.mock.calls.length).to.equal(callCountAfterResponse);
     });
 
     it('should update same-id rows without losing nested selection', async () => {
