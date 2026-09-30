@@ -128,11 +128,11 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
 
   public lib = 'moment';
 
-  public moment: typeof defaultMoment;
+  declare public moment: typeof defaultMoment;
 
-  public locale?: string;
+  declare public locale?: string;
 
-  public formats: AdapterFormats;
+  declare public formats: AdapterFormats;
 
   public escapedCharacters = { start: '[', end: ']' };
 

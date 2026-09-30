@@ -67,7 +67,7 @@ export class SchedulerSchedulingPlugin<
     SchedulerDependenciesParameters &
     SchedulerLazyLoadingParameters<TEvent>,
 > implements SchedulerSchedulingPluginInterface {
-  protected store: SchedulerStore<TEvent, any, State, Parameters>;
+  declare protected store: SchedulerStore<TEvent, any, State, Parameters>;
 
   protected readonly disposables = new DisposableStack();
 

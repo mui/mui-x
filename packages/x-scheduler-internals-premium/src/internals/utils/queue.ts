@@ -47,13 +47,13 @@ export class SchedulerDataManager {
 
   private settledRequests: Set<string> = new Set();
 
-  private adapter: Adapter;
+  declare private adapter: Adapter;
 
-  private maxConcurrentRequests: number;
+  declare private maxConcurrentRequests: number;
 
-  private maxQueuedRequests: number;
+  declare private maxQueuedRequests: number;
 
-  private debounceMs: number;
+  declare private debounceMs: number;
 
   private readonly disposables = new DisposableStack();
 
@@ -66,7 +66,7 @@ export class SchedulerDataManager {
 
   private pendingDebounceResolve: (() => void) | null = null;
 
-  private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
+  declare private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
 
   public get disposed(): boolean {
     return this.disposables.disposed;
