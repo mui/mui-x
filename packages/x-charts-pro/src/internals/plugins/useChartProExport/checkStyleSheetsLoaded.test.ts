@@ -90,6 +90,10 @@ describe('checkStyleSheetsLoaded', () => {
       expect(() => checkStyleSheetsLoaded(createLinkDocument(), 'export')).not.to.throw();
     });
 
+    it('does not throw without a stylesheet link', () => {
+      expect(() => checkStyleSheetsLoaded(createPolicyDocument())).not.to.throw();
+    });
+
     it('does not leave the style used for the check in the document', () => {
       const exportDocument = createLinkDocument();
 
