@@ -122,31 +122,31 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
   /**
    * Duration required for press recognition
    */
-  private pressDuration: number;
+  declare private pressDuration: number;
 
   /**
    * Maximum distance a pointer can move during press for it to still be considered a press
    */
-  private pressMaxDistance: number;
+  declare private pressMaxDistance: number;
 
   /**
    * Maximum time between press completion and drag start
    */
-  private dragTimeout: number;
+  declare private dragTimeout: number;
 
   /**
    * Movement threshold for drag activation
    */
-  private dragThreshold: number;
+  declare private dragThreshold: number;
 
   /**
    * Allowed directions for the drag gesture
    */
-  private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
+  declare private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
 
-  private pressGesture: PressGesture<GestureName>;
+  declare private pressGesture: PressGesture<GestureName>;
 
-  private panGesture: PanGesture<GestureName>;
+  declare private panGesture: PanGesture<GestureName>;
 
   constructor(options: PressAndDragGestureOptions<GestureName>) {
     super(options);

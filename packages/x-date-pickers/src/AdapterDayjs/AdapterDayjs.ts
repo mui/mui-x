@@ -148,9 +148,9 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   public lib = 'dayjs';
 
-  public locale?: string;
+  declare public locale?: string;
 
-  public formats: AdapterFormats;
+  declare public formats: AdapterFormats;
 
   public escapedCharacters = { start: '[', end: ']' };
 

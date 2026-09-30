@@ -104,12 +104,12 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
   /**
    * Duration in milliseconds required to hold before the press gesture is recognized
    */
-  private duration: number;
+  declare private duration: number;
 
   /**
    * Maximum distance a pointer can move for a gesture to still be considered a press
    */
-  private maxDistance: number;
+  declare private maxDistance: number;
 
   constructor(options: PressGestureOptions<GestureName>) {
     super(options);
