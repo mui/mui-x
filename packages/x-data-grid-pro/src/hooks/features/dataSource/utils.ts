@@ -27,9 +27,9 @@ export class NestedDataManager {
 
   private fetchParams: Map<GridRowId, GridGetRowsParamsPro> = new Map();
 
-  private api: GridPrivateApiPro;
+  declare private api: GridPrivateApiPro;
 
-  private maxConcurrentRequests: number;
+  declare private maxConcurrentRequests: number;
 
   constructor(
     privateApiRef: RefObject<GridPrivateApiPro>,

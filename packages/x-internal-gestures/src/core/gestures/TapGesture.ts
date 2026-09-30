@@ -95,12 +95,12 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
   /**
    * Maximum distance a pointer can move for a gesture to still be considered a tap
    */
-  private maxDistance: number;
+  declare private maxDistance: number;
 
   /**
    * Number of consecutive taps to detect
    */
-  private taps: number;
+  declare private taps: number;
 
   constructor(options: TapGestureOptions<GestureName>) {
     super(options);

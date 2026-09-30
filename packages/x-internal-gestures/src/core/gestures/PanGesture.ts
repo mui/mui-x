@@ -147,13 +147,13 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
    * Movement threshold in pixels that must be exceeded before the gesture activates.
    * Higher values reduce false positive gesture detection for small movements.
    */
-  protected threshold: number;
+  declare protected threshold: number;
 
   /**
    * Allowed directions for the pan gesture
    * Default allows all directions
    */
-  private direction: Array<'up' | 'down' | 'left' | 'right'>;
+  declare private direction: Array<'up' | 'down' | 'left' | 'right'>;
 
   constructor(options: PanGestureOptions<GestureName>) {
     super(options);

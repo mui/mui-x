@@ -117,13 +117,13 @@ export type PointerManagerOptions = {
  */
 export class PointerManager {
   /** Root element where pointer events are captured */
-  private root: HTMLElement;
+  declare private root: HTMLElement;
 
   /** CSS touch-action property value applied to the root element */
-  private touchAction: string;
+  declare private touchAction: string;
 
   /** Whether to use passive event listeners */
-  private passive: boolean;
+  declare private passive: boolean;
 
   /** Whether to prevent interrupt events like blur or contextmenu */
   private preventEventInterruption: boolean = true;
