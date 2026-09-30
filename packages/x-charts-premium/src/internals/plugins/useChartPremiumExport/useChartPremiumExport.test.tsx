@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { act, createRenderer } from '@mui/internal-test-utils';
 import { vi, describe, it, expect, beforeEach, onTestFinished } from 'vitest';
+import type { ChartSeriesType } from '@mui/x-charts/internals';
 import { BarChartPremium } from '../../../BarChartPremium';
+import { BAR_CHART_PREMIUM_PLUGINS } from '../../../BarChartPremium/BarChartPremium.plugins';
+import type { BarChartPremiumPluginSignatures } from '../../../BarChartPremium/BarChartPremium.plugins';
 import { ChartsContainerPremium } from '../../../ChartsContainerPremium';
 import type { ChartPremiumApi } from '../../../context';
-import { DEFAULT_PLUGINS } from '../allPlugins';
-import type { DefaultPluginSignatures } from '../allPlugins';
 import { useChartPremiumExport } from './useChartPremiumExport';
 import type { UseChartPremiumExportSignature } from './useChartPremiumExport.types';
 
 // The plugin is opt-in, so both the list and the api type name it explicitly.
-const PLUGINS = [...DEFAULT_PLUGINS, useChartPremiumExport];
+const PLUGINS = [...BAR_CHART_PREMIUM_PLUGINS, useChartPremiumExport] as const;
 
-type ExportApi = ChartPremiumApi<
-  undefined,
-  [...DefaultPluginSignatures, UseChartPremiumExportSignature]
->;
+type Signatures = [...BarChartPremiumPluginSignatures, UseChartPremiumExportSignature];
+
+type ExportApi = ChartPremiumApi<undefined, Signatures>;
 
 const createApiRef = (): React.RefObject<ExportApi | undefined> => ({ current: undefined });
 
@@ -81,7 +81,7 @@ describe('useChartPremiumExport', () => {
     it('merges bar and line series into one sheet', async () => {
       const apiRef = createApiRef();
       render(
-        <ChartsContainerPremium
+        <ChartsContainerPremium<ChartSeriesType, Signatures>
           apiRef={apiRef}
           plugins={PLUGINS}
           width={300}
@@ -107,7 +107,7 @@ describe('useChartPremiumExport', () => {
     it('writes one sheet per column signature in a composition', async () => {
       const apiRef = createApiRef();
       render(
-        <ChartsContainerPremium
+        <ChartsContainerPremium<ChartSeriesType, Signatures>
           apiRef={apiRef}
           plugins={PLUGINS}
           width={300}
@@ -131,7 +131,7 @@ describe('useChartPremiumExport', () => {
     it('passes options through to the extractors', async () => {
       const apiRef = createApiRef();
       render(
-        <ChartsContainerPremium
+        <ChartsContainerPremium<ChartSeriesType, Signatures>
           apiRef={apiRef}
           plugins={PLUGINS}
           width={300}
@@ -157,7 +157,7 @@ describe('useChartPremiumExport', () => {
     it('resolves to null when the chart has no data', async () => {
       const apiRef = createApiRef();
       render(
-        <ChartsContainerPremium
+        <ChartsContainerPremium<ChartSeriesType, Signatures>
           apiRef={apiRef}
           plugins={PLUGINS}
           width={300}
@@ -174,7 +174,7 @@ describe('useChartPremiumExport', () => {
 
   describe('exportAsExcel', () => {
     const chart = (apiRef: React.RefObject<ExportApi | undefined>) => (
-      <ChartsContainerPremium
+      <ChartsContainerPremium<ChartSeriesType, Signatures>
         apiRef={apiRef}
         plugins={PLUGINS}
         width={300}
@@ -225,7 +225,7 @@ describe('useChartPremiumExport', () => {
     it('does not download when the chart has no data', async () => {
       const apiRef = createApiRef();
       render(
-        <ChartsContainerPremium
+        <ChartsContainerPremium<ChartSeriesType, Signatures>
           apiRef={apiRef}
           plugins={PLUGINS}
           width={300}
