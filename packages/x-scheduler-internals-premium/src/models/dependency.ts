@@ -60,6 +60,8 @@ export interface SchedulerDependency {
   /**
    * The calendar time the successor waits after the constraining edge of the
    * predecessor, as a whole number of `lagUnit`, applied in the successor's timezone.
+   * For an all-day successor, the lag is rounded down to whole days, so a lag shorter
+   * than a day is ignored.
    * An invalid lag is ignored with a warning.
    * @default 0
    */

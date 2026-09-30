@@ -80,7 +80,7 @@ export interface AutoSchedulingCascadeResult {
  * Push-only: events only move later, and pre-existing violations stay as-is. A seed whose
  * entry moves `start` is being placed by the user and is clamped forward by all its
  * predecessors; a seed whose entry only moves `end` is clamped by the predecessors bounding
- * its end; everything else is pushed only by predecessors whose bounding edge advances in
+ * its end; everything else is pushed only by predecessors whose lagged bound advances in
  * the same batch. A `timezone` change moves the effective dates of wall-time events.
  * Timed events keep their duration, except that a resize keeps the edge it did not touch
  * as long as that edge is not the violated one. All-day events shift by whole days, and a
@@ -118,12 +118,6 @@ export function computeAutoSchedulingCascade(
   // Seeds whose entry only moves `end` (an end resize): clamped by their end bounds,
   // keeping their start when it can.
   const endResizedSeeds = new Set<SchedulerEventId>();
-  // Events whose start / end moves later in this pass; only these push the successors
-  // bound by that edge.
-  const advanced: Record<SchedulerEventSide, Set<SchedulerEventId>> = {
-    start: new Set(),
-    end: new Set(),
-  };
   // Seeds whose entry changes the data timezone: their emitted dates go through the
   // store's serialization in the old timezone.
   const timezoneChanges = new Map<
@@ -266,16 +260,6 @@ export function computeAutoSchedulingCascade(
       newDates.set(eventId, shifted);
       cascaded.push({ id: eventId, ...toEntryDates(eventId, shifted) });
     }
-    const settled = newDates.get(eventId);
-    if (settled !== undefined) {
-      const current = resolveCurrentDates(eventId)!;
-      if (settled.startTimestamp > current.startTimestamp) {
-        advanced.start.add(eventId);
-      }
-      if (settled.endTimestamp > current.endTimestamp) {
-        advanced.end.add(eventId);
-      }
-    }
 
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
       const { target } = dependency;
@@ -344,7 +328,9 @@ export function computeAutoSchedulingCascade(
   // The earliest start and end the predecessors of `eventId` allow, in the timezone of
   // `base`. A repositioned seed is being placed by the user: every active predecessor
   // constrains it. An end-resized seed is constrained by the predecessors bounding its
-  // end. Anything else is pushed only by predecessors whose bounding edge advanced.
+  // end. Anything else is pushed only by predecessors whose lagged bound advanced: a lag
+  // in days is added on the wall clock, so across a DST fall-back the bound can advance
+  // while the predecessor moves earlier.
   function collectBounds(
     eventId: SchedulerEventId,
     base: ResolvedDates,
@@ -359,21 +345,26 @@ export function computeAutoSchedulingCascade(
         continue;
       }
       const edges = getDependencyEdges(dependency.type);
-      let sourceDates: ResolvedDates | null = null;
-      if (advanced[edges.source].has(sourceId)) {
-        sourceDates = newDates.get(sourceId)!;
-      } else if (constrainedByAll || (constrainedOnEnd && edges.target === 'end')) {
-        sourceDates = newDates.get(sourceId) ?? resolveCurrentDates(sourceId);
-      }
-      if (sourceDates === null) {
-        continue;
-      }
-      const reference = adapter.setTimezone(sourceDates[edges.source], timezone);
       const lag = getEffectiveDependencyLag(dependency, base.allDay);
-      required[edges.target] = later(
-        required[edges.target],
-        toBound(addDependencyLag(adapter, reference, lag)),
-      );
+      const boundFrom = (sourceDates: ResolvedDates) =>
+        toBound(
+          addDependencyLag(adapter, adapter.setTimezone(sourceDates[edges.source], timezone), lag),
+        );
+      const settledDates = processed.has(sourceId) ? newDates.get(sourceId) : undefined;
+      const currentDates = resolveCurrentDates(sourceId);
+      let bound: Bound | null = null;
+      if (constrainedByAll || (constrainedOnEnd && edges.target === 'end')) {
+        const sourceDates = newDates.get(sourceId) ?? currentDates;
+        bound = sourceDates === null ? null : boundFrom(sourceDates);
+      } else if (settledDates !== undefined) {
+        const nextBound = boundFrom(settledDates);
+        if (currentDates === null || nextBound.timestamp > boundFrom(currentDates).timestamp) {
+          bound = nextBound;
+        }
+      }
+      if (bound !== null) {
+        required[edges.target] = later(required[edges.target], bound);
+      }
     }
     return required;
   }
@@ -431,7 +422,9 @@ export function computeAutoSchedulingCascade(
     const duration = base.endTimestamp - base.startTimestamp;
     let candidate = required.start;
     if (required.end !== null) {
-      candidate = later(candidate, toBound(adapter.addMilliseconds(required.end.date, -duration)));
+      // Rounded first: the end is written at second resolution too.
+      const endBound = roundUpToSecond(required.end.date);
+      candidate = later(candidate, toBound(adapter.addMilliseconds(endBound, -duration)));
     }
     // A violated edge always leaves a candidate.
     const newStart = roundUpToSecond(candidate!.date);
