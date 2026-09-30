@@ -291,7 +291,7 @@ export class SchedulerSchedulingPlugin<
       }
       const lagIssue = getDependencyLagIssue(dependency);
       if (lagIssue !== null) {
-        warnOnce(DEPENDENCY_LAG_WARNINGS[lagIssue](dependency));
+        warnOnce(DEPENDENCY_LAG_WARNINGS[lagIssue](dependency).join('\n'));
       }
       for (const eventId of [dependency.source, dependency.target]) {
         const status = classifyDependencyEvent(processedEventLookup, eventId);
