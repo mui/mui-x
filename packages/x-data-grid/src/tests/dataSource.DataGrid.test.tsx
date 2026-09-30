@@ -12,7 +12,7 @@ import type {
   GridLogicOperator,
   GridGetRowsResponse,
 } from '@mui/x-data-grid';
-import { actSleep, getCell } from 'test/utils/helperFn';
+import { actSleep, getCell, sleep } from 'test/utils/helperFn';
 import { vi, describe, it, expect } from 'vitest';
 import type { Mock } from 'vitest';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
@@ -455,6 +455,48 @@ describe('<DataGrid /> - Data source', () => {
         expect(fetchRowsSpy.mock.calls.length).to.equal(1);
       });
 
+      it.each([
+        { settleWhileHidden: false, strict: false },
+        { settleWhileHidden: true, strict: false },
+        { settleWhileHidden: false, strict: true },
+        { settleWhileHidden: true, strict: true },
+      ])(
+        'should resume polling when the Activity becomes visible (settleWhileHidden=$settleWhileHidden, strict=$strict)',
+        async ({ settleWhileHidden, strict }) => {
+          const { promise, resolve } = Promise.withResolvers<void>();
+          const localFetchRowsSpy = vi.fn();
+          const { setProps } = render(
+            <TestDataSource
+              stallResponsePromise={promise}
+              dataSourceCache={null}
+              dataSourceRevalidateMs={10}
+              onFetchRows={localFetchRowsSpy}
+            />,
+            { strict },
+          );
+          await waitFor(() => expect(localFetchRowsSpy).toHaveBeenCalledTimes(1));
+
+          if (!settleWhileHidden) {
+            await act(async () => resolve());
+          }
+          await waitFor(() =>
+            expect(localFetchRowsSpy.mock.calls.length).to.be.above(settleWhileHidden ? 0 : 1),
+          );
+
+          await act(async () => setProps({ activityMode: 'hidden' }));
+          await act(async () => resolve());
+          await waitFor(() => expect(apiRef.current?.getRowsCount()).to.be.above(0));
+          const callCountWhileHidden = localFetchRowsSpy.mock.calls.length;
+          await actSleep(30);
+          expect(localFetchRowsSpy.mock.calls.length).to.equal(callCountWhileHidden);
+
+          await act(async () => setProps({ activityMode: 'visible' }));
+          await waitFor(() =>
+            expect(localFetchRowsSpy.mock.calls.length).to.be.above(callCountWhileHidden),
+          );
+        },
+      );
+
       it('should re-fetch the data when the Activity becomes visible after a failed request', async () => {
         const onDataSourceError = vi.fn();
         const { setProps } = render(
@@ -746,6 +788,39 @@ describe('<DataGrid /> - Data source', () => {
       await waitFor(() => {
         expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
       });
+    });
+
+    it('should not restart the polling when a revalidation settles after unmount', async () => {
+      const revalidation = Promise.withResolvers<GridGetRowsResponse>();
+      let requestCount = 0;
+      // The first request loads the rows, the revalidations stay in flight until the unmount.
+      const getRows = vi.fn(() => {
+        requestCount += 1;
+        return requestCount === 1
+          ? Promise.resolve({ rows: [], rowCount: 0 })
+          : revalidation.promise;
+      });
+      const { unmount } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[{ field: 'id' }]}
+            dataSource={{ getRows }}
+            dataSourceCache={null}
+            dataSourceRevalidateMs={1}
+          />
+        </div>,
+      );
+      await waitFor(() => {
+        expect(getRows.mock.calls.length).to.be.greaterThan(1);
+      });
+
+      unmount();
+      await act(async () => {
+        revalidation.resolve({ rows: [], rowCount: 0 });
+      });
+      const callCountAfterUnmount = getRows.mock.calls.length;
+      await sleep(50);
+      expect(getRows.mock.calls.length).to.equal(callCountAfterUnmount);
     });
   });
 
