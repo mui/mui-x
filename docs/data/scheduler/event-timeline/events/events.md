@@ -201,7 +201,9 @@ It is placed inside the block, so the block keeps its geometry, its drag and res
 
 The slot also renders in the placeholder that previews a drag, a resize or a creation, with `variant` set to `"placeholder"` and an `occurrence` carrying the pending dates.
 
-The content of the slot is part of the accessible name of the event, so keep some text in it.
+The slot doesn't change the accessible name of the event, which is built from its title, dates, resource, and recurrence.
+To announce the details the slot adds, pass `getEventAriaLabel`: it receives the `occurrence`, the row `resource` and the `defaultAriaLabel`, and returns the name to use.
+The demo above appends the ticket code to the default name.
 The block is a button, so keep the content presentational (text, icons, a tooltip) rather than adding links or buttons of its own.
 
 ### Typing custom slot props

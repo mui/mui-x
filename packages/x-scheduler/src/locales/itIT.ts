@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const itITDialog: Partial<EventEditingLocaleText> = {
+const itITDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Colore evento',
   // colorSectionLabel: 'Color',
@@ -81,7 +82,23 @@ const itITDialog: Partial<EventEditingLocaleText> = {
   title: 'Applica questa modifica a:',
 };
 
-const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const itITEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Risorsa: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const itITCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Risorse',
 
@@ -124,7 +141,6 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} altri..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} successivo`,
   previousTimeSpan: (timeSpan) => `${timeSpan} precedente`,
-  resourceAriaLabel: (resourceName) => `Risorsa: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Settimana ${weekNumber}`,
 
@@ -143,13 +159,14 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Titolo risorsa',
 };
 
-const itITTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const itITTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titolo risorsa',
 };
 
 export const itIT: SchedulerLocalization = getSchedulerLocalization({
   dialog: itITDialog,
+  event: itITEvent,
   calendar: itITCalendar,
   timeline: itITTimeline,
 });
