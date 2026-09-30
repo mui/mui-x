@@ -2,7 +2,6 @@
   "name": "eslint-plugin-mui-x",
   "private": true,
   "description": "Custom eslint rules for MUI X.",
-  "license": "MIT",
   "type": "module",
   "main": "src/index.mjs",
   "dependencies": {
