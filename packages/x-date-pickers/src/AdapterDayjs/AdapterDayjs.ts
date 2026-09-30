@@ -302,7 +302,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
    * and an invalid value formats to `Invalid Date`.
    */
   private getWallClock = (value: Dayjs) => {
-    const wallClock = this.setLocaleToValue(dayjs.utc(value.format('YYYY-MM-DDTHH:mm:ss.SSS')));
+    const wallClock = dayjs.utc(value.format('YYYY-MM-DDTHH:mm:ss.SSS'));
 
     return wallClock.isValid() ? wallClock : null;
   };
@@ -331,47 +331,6 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     return value.set('date', expectedDayOfMonth);
-  };
-
-  /**
-   * `dayjs` computes `startOf` and `endOf` on a value bound to a timezone by formatting it, applying the
-   * change in the system timezone, then converting back. That last conversion is unreliable on the dates
-   * described by `isAffectedByLocalMeanTime`: `startOf('day')` keeps the seconds of the offset, and
-   * `endOf('month')` returns the first instant of the next month.
-   *
-   * The setters are not affected, so we compute the expected wall clock on a plain UTC value and rebuild
-   * the result with them whenever `dayjs` returned something else. `dayjs` stays in charge on every
-   * other date, which keeps the DST handling it already does.
-   * See https://github.com/mui/mui-x/issues/23301
-   */
-  private alignToWallClock = (
-    value: Dayjs,
-    result: Dayjs,
-    getExpectedWallClock: (wallClock: Dayjs) => Dayjs,
-  ) => {
-    if (!this.isAffectedByLocalMeanTime(value)) {
-      return result;
-    }
-
-    const wallClock = this.getWallClock(value);
-    const resultWallClock = this.getWallClock(result);
-    if (wallClock === null || resultWallClock === null) {
-      return result;
-    }
-
-    const expectedWallClock = getExpectedWallClock(wallClock);
-    if (resultWallClock.valueOf() === expectedWallClock.valueOf()) {
-      return result;
-    }
-
-    let alignedValue = this.setYear(value, expectedWallClock.year());
-    alignedValue = this.setMonth(alignedValue, expectedWallClock.month());
-    alignedValue = this.setDate(alignedValue, expectedWallClock.date());
-    alignedValue = this.setHours(alignedValue, expectedWallClock.hour());
-    alignedValue = this.setMinutes(alignedValue, expectedWallClock.minute());
-    alignedValue = this.setSeconds(alignedValue, expectedWallClock.second());
-
-    return this.setMilliseconds(alignedValue, expectedWallClock.millisecond());
   };
 
   public date = <T extends string | null | undefined>(
@@ -581,55 +540,35 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public startOfYear = (value: Dayjs) => {
-    return this.alignToWallClock(value, this.adjustOffset(value.startOf('year')), (wallClock) =>
-      wallClock.startOf('year'),
-    );
+    return this.adjustOffset(value.startOf('year'));
   };
 
   public startOfMonth = (value: Dayjs) => {
-    return this.alignToWallClock(value, this.adjustOffset(value.startOf('month')), (wallClock) =>
-      wallClock.startOf('month'),
-    );
+    return this.adjustOffset(value.startOf('month'));
   };
 
   public startOfWeek = (value: Dayjs) => {
-    return this.alignToWallClock(
-      value,
-      this.adjustOffset(this.setLocaleToValue(value).startOf('week')),
-      (wallClock) => wallClock.startOf('week'),
-    );
+    return this.adjustOffset(this.setLocaleToValue(value).startOf('week'));
   };
 
   public startOfDay = (value: Dayjs) => {
-    return this.alignToWallClock(value, this.adjustOffset(value.startOf('day')), (wallClock) =>
-      wallClock.startOf('day'),
-    );
+    return this.adjustOffset(value.startOf('day'));
   };
 
   public endOfYear = (value: Dayjs) => {
-    return this.alignToWallClock(value, this.adjustOffset(value.endOf('year')), (wallClock) =>
-      wallClock.endOf('year'),
-    );
+    return this.adjustOffset(value.endOf('year'));
   };
 
   public endOfMonth = (value: Dayjs) => {
-    return this.alignToWallClock(value, this.adjustOffset(value.endOf('month')), (wallClock) =>
-      wallClock.endOf('month'),
-    );
+    return this.adjustOffset(value.endOf('month'));
   };
 
   public endOfWeek = (value: Dayjs) => {
-    return this.alignToWallClock(
-      value,
-      this.adjustOffset(this.setLocaleToValue(value).endOf('week')),
-      (wallClock) => wallClock.endOf('week'),
-    );
+    return this.adjustOffset(this.setLocaleToValue(value).endOf('week'));
   };
 
   public endOfDay = (value: Dayjs) => {
-    return this.alignToWallClock(value, this.adjustOffset(value.endOf('day')), (wallClock) =>
-      wallClock.endOf('day'),
-    );
+    return this.adjustOffset(value.endOf('day'));
   };
 
   public addYears = (value: Dayjs, amount: number) => {
