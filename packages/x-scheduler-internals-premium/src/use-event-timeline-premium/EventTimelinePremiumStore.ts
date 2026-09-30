@@ -202,9 +202,9 @@ export class EventTimelinePremiumStore<
   EventTimelinePremiumState,
   EventTimelinePremiumStoreParameters<TEvent, TResource>
 > {
-  public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
+  declare public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
 
-  public scheduling: SchedulerSchedulingPlugin<
+  declare public scheduling: SchedulerSchedulingPlugin<
     TEvent,
     EventTimelinePremiumState,
     EventTimelinePremiumStoreParameters<TEvent, TResource>

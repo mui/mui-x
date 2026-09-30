@@ -66,7 +66,7 @@ type CSVRowOptions = {
   csvOptions: CSVOptions;
 };
 class CSVRow {
-  options: CSVRowOptions;
+  declare options: CSVRowOptions;
 
   rowString = '';
 

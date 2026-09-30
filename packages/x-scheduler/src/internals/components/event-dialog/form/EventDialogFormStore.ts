@@ -160,24 +160,24 @@ export class EventDialogFormStore<
    */
   private validatorsRevision = 0;
 
-  private parameters: EventDialogFormParameters<TValues>;
+  declare private parameters: EventDialogFormParameters<TValues>;
 
   /**
    * Values the form was seeded with, used to detect edited fields.
    */
-  private readonly initialValues: TValues;
+  declare private readonly initialValues: TValues;
 
   /**
    * The occurrence the editing session targets. Constant for the lifetime of the store.
    */
-  public readonly occurrence: SchedulerRenderableEventOccurrence;
+  declare public readonly occurrence: SchedulerRenderableEventOccurrence;
 
   /**
    * Whether the resource picker of the editing session is single- or multi-select.
    * Constant for the lifetime of the store: the resource Select and the submit
    * logic must read the same value.
    */
-  public readonly resourceSelectionMode: ResourceSelectionMode;
+  declare public readonly resourceSelectionMode: ResourceSelectionMode;
 
   constructor(initialValues: TValues, parameters: EventDialogFormParameters<TValues>) {
     super({ values: { ...initialValues }, errors: {}, isSubmitting: false });
