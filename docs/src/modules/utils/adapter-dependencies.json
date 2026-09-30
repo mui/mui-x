@@ -1,9 +1,0 @@
-{
-  "date-fns": "4.1.0",
-  "date-fns-jalali": "4.1.0-0",
-  "dayjs": "1.11.13",
-  "luxon": "3.6.1",
-  "moment": "2.30.1",
-  "moment-hijri": "3.0.0",
-  "moment-jalaali": "0.10.4"
-}

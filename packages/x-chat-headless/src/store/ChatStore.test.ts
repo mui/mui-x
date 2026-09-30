@@ -36,6 +36,20 @@ function createAttachment(overrides: Partial<ChatDraftAttachment> = {}): ChatDra
 }
 
 describe('ChatStore', () => {
+  it('starts the history as pending only when an active conversation has a history loader', () => {
+    const pending = new ChatStore({ initialActiveConversationId: 'c1', hasHistoryLoader: true });
+    expect(pending.state.historyStatus).toBe('loading');
+    expect(pending.state.isLoadingHistory).toBe(true);
+
+    const noLoader = new ChatStore({ initialActiveConversationId: 'c1' });
+    expect(noLoader.state.historyStatus).toBe('idle');
+    expect(noLoader.state.isLoadingHistory).toBe(false);
+
+    const noConversation = new ChatStore({ hasHistoryLoader: true });
+    expect(noConversation.state.historyStatus).toBe('idle');
+    expect(noConversation.state.isLoadingHistory).toBe(false);
+  });
+
   it('normalizes default messages and conversations during construction', () => {
     const store = new ChatStore({
       initialMessages: [message1, message2],
@@ -55,10 +69,13 @@ describe('ChatStore', () => {
     expect(store.state.activeConversationId).toBeUndefined();
     expect(store.state.isStreaming).toBe(false);
     expect(store.state.hasMoreHistory).toBe(false);
+    expect(store.state.isLoadingHistory).toBe(false);
+    expect(store.state.historyStatus).toBe('idle');
     expect(store.state.historyCursor).toBeUndefined();
     expect(store.state.composerValue).toBe('');
     expect(store.state.composerIsComposing).toBe(false);
     expect(store.state.composerAttachments).toEqual([]);
+    expect(store.state.messageErrorsById).toEqual({});
     expect(store.state.error).toBeNull();
   });
 
@@ -139,6 +156,24 @@ describe('ChatStore', () => {
     });
   });
 
+  it('removeMessage also clears its message-scoped error', () => {
+    const store = new ChatStore({
+      initialMessages: [message1, message2],
+    });
+
+    store.setMessageError('m1', {
+      code: 'SEND_ERROR',
+      message: 'Failed',
+      source: 'send',
+      recoverable: true,
+      details: { messageId: 'm1' },
+    });
+
+    store.removeMessage('m1');
+
+    expect(store.state.messageErrorsById).toEqual({});
+  });
+
   it('prependMessages inserts unique ids at the front and refreshes duplicate message models', () => {
     const store = new ChatStore({
       initialMessages: [message2],
@@ -170,6 +205,39 @@ describe('ChatStore', () => {
     expect(store.state.messageIds).toEqual(['m2']);
     expect(store.state.messagesById).toEqual({
       m2: message2,
+    });
+  });
+
+  it('setMessages prunes message-scoped errors for removed messages', () => {
+    const store = new ChatStore({
+      initialMessages: [message1, message2],
+    });
+
+    store.setMessageError('m1', {
+      code: 'SEND_ERROR',
+      message: 'Failed m1',
+      source: 'send',
+      recoverable: true,
+      details: { messageId: 'm1' },
+    });
+    store.setMessageError('m2', {
+      code: 'SEND_ERROR',
+      message: 'Failed m2',
+      source: 'send',
+      recoverable: true,
+      details: { messageId: 'm2' },
+    });
+
+    store.setMessages([message2]);
+
+    expect(store.state.messageErrorsById).toEqual({
+      m2: {
+        code: 'SEND_ERROR',
+        message: 'Failed m2',
+        source: 'send',
+        recoverable: true,
+        details: { messageId: 'm2' },
+      },
     });
   });
 
@@ -253,7 +321,7 @@ describe('ChatStore', () => {
     });
   });
 
-  it('setActiveConversation, setStreaming, and setError update their flags', () => {
+  it('setActiveConversation, setStreaming, setError, and setMessageError update their flags', () => {
     const store = new ChatStore();
     const error: ChatError = {
       code: 'STREAM_ERROR',
@@ -261,14 +329,23 @@ describe('ChatStore', () => {
       source: 'stream',
       recoverable: true,
     };
+    const messageError: ChatError = {
+      code: 'SEND_ERROR',
+      message: 'Message failed',
+      source: 'send',
+      recoverable: true,
+      details: { messageId: 'm1' },
+    };
 
     store.setActiveConversation('c1');
     store.setStreaming(true);
     store.setError(error);
+    store.setMessageError('m1', messageError);
 
     expect(store.state.activeConversationId).toBe('c1');
     expect(store.state.isStreaming).toBe(true);
     expect(store.state.error).toEqual(error);
+    expect(store.state.messageErrorsById).toEqual({ m1: messageError });
   });
 
   it('setHistoryState updates history cursor and pagination flags', () => {
@@ -281,6 +358,18 @@ describe('ChatStore', () => {
 
     expect(store.state.historyCursor).toBe('cursor-1');
     expect(store.state.hasMoreHistory).toBe(true);
+  });
+
+  it('setHistoryLoading toggles the history loading flag', () => {
+    const store = new ChatStore();
+
+    expect(store.state.isLoadingHistory).toBe(false);
+
+    store.setHistoryLoading(true);
+    expect(store.state.isLoadingHistory).toBe(true);
+
+    store.setHistoryLoading(false);
+    expect(store.state.isLoadingHistory).toBe(false);
   });
 
   it('setComposerValue updates the composer model', () => {
@@ -354,6 +443,7 @@ describe('ChatStore', () => {
       messages: [message1],
       conversations: [conversation1],
       activeConversationId: 'c1',
+      activeConversationIdControlled: true,
       composerValue: 'Draft one',
     });
 
@@ -366,6 +456,7 @@ describe('ChatStore', () => {
       messages: [message1],
       conversations: [conversation1],
       activeConversationId: 'c1',
+      activeConversationIdControlled: true,
       composerValue: 'Draft one',
     });
 
@@ -543,6 +634,21 @@ describe('ChatStore', () => {
     expect(store.state.activeStreamAbortController).toBeNull();
   });
 
+  it('disposeEffect aborts and clears active streaming state', () => {
+    const store = new ChatStore();
+    const abortController = new AbortController();
+
+    store.setActiveStreamAbortController(abortController);
+    store.setStreaming(true);
+
+    const cleanup = store.disposeEffect();
+    cleanup();
+
+    expect(abortController.signal.aborted).toBe(true);
+    expect(store.state.activeStreamAbortController).toBeNull();
+    expect(store.state.isStreaming).toBe(false);
+  });
+
   it('setTypingUser is idempotent when called with the same value', () => {
     const store = new ChatStore();
 
@@ -593,8 +699,19 @@ describe('ChatStore', () => {
           status: 'queued',
         },
       ],
+      messageErrorsById: {
+        m1: {
+          code: 'SEND_ERROR',
+          message: 'Per-message failure',
+          source: 'send',
+          recoverable: true,
+          details: { messageId: 'm1' },
+        },
+      },
       isStreaming: true,
       hasMoreHistory: true,
+      isLoadingHistory: true,
+      historyStatus: 'loaded',
       historyCursor: 'cursor-1',
       error: {
         code: 'STREAM_ERROR',
@@ -610,7 +727,10 @@ describe('ChatStore', () => {
     expect(store.state.messagesById).toEqual({});
     expect(store.state.isStreaming).toBe(false);
     expect(store.state.hasMoreHistory).toBe(false);
+    expect(store.state.isLoadingHistory).toBe(false);
+    expect(store.state.historyStatus).toBe('idle');
     expect(store.state.historyCursor).toBeUndefined();
+    expect(store.state.messageErrorsById).toEqual({});
     expect(store.state.error).toBeNull();
     expect(store.state.conversationIds).toEqual(['c1']);
     expect(store.state.conversationsById).toEqual({

@@ -8,13 +8,14 @@
   "properties": {
     "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },
+    "colorAxisId": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
     },
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {
-        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
+        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the color value.<br />   */<br />  colorValue?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the size value.<br />   */<br />  sizeValue?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   * @deprecated Use `colorValue` instead.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
       }
     },
     "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
@@ -29,7 +30,12 @@
         "description": "{<br />  /**<br />   * The size of the preview marker in pixels.<br />   * @default 1<br />   */<br />  markerSize?: number<br />}"
       }
     },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "sizeAxisId": { "type": { "description": "string" } },
+    "valueFormatter": {
+      "type": {
+        "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"
+      }
+    },
     "valueGetter": {
       "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; ScatterValueType" }
     },

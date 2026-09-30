@@ -1,57 +1,10 @@
-import * as React from 'react';
-import { createSelector, useStore } from '@mui/x-internals/store';
-import {
-  TreeViewItemId,
-  TreeViewCancellableEvent,
-  TreeViewCancellableEventHandler,
-} from '../../../models';
+import type * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
+import type { TreeViewCancellableEvent, TreeViewCancellableEventHandler } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { TreeViewAnyStore, TreeViewItemPlugin } from '../../models';
+import type { TreeViewAnyStore, TreeViewItemPlugin } from '../../models';
 import { itemsSelectors } from '../items/selectors';
 import { selectionSelectors } from './selectors';
-import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
-
-const selectorCheckboxSelectionStatus = createSelector(
-  (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) => {
-    if (selectionSelectors.isItemSelected(state, itemId)) {
-      return 'checked';
-    }
-
-    let hasSelectedDescendant = false;
-    let hasUnSelectedDescendant = false;
-
-    const traverseDescendants = (itemToTraverseId: TreeViewItemId) => {
-      if (itemToTraverseId !== itemId) {
-        if (selectionSelectors.isItemSelected(state, itemToTraverseId)) {
-          hasSelectedDescendant = true;
-        } else {
-          hasUnSelectedDescendant = true;
-        }
-      }
-
-      itemsSelectors.itemOrderedChildrenIds(state, itemToTraverseId).forEach(traverseDescendants);
-    };
-
-    traverseDescendants(itemId);
-
-    const shouldSelectBasedOnDescendants = selectionSelectors.propagationRules(state).parents;
-    if (shouldSelectBasedOnDescendants) {
-      if (hasSelectedDescendant && hasUnSelectedDescendant) {
-        return 'indeterminate';
-      }
-      if (hasSelectedDescendant && !hasUnSelectedDescendant) {
-        return 'checked';
-      }
-      return 'empty';
-    }
-
-    if (hasSelectedDescendant) {
-      return 'indeterminate';
-    }
-
-    return 'empty';
-  },
-);
 
 export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { itemId } = props;
@@ -65,29 +18,45 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
     itemId,
   );
   const canItemBeSelected = useStore(store, selectionSelectors.canItemBeSelected, itemId);
-  const selectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
+  const isItemDisabled = useStore(store, itemsSelectors.isItemDisabled, itemId);
+  const isItemSelectable = useStore(store, selectionSelectors.isItemSelectable, itemId);
+  const selectionStatus = useStore(store, selectionSelectors.itemSelectionStatus, itemId);
+  const isItemSelected = useStore(store, selectionSelectors.isItemSelected, itemId);
+
+  // An item is "inherently not selectable" when disabled or excluded via isItemSelectionDisabled,
+  // regardless of the global disableSelection flag. Such items must not have aria-checked.
+  const isItemInherentlyNotSelectable = isItemDisabled || !isItemSelectable;
 
   return {
     propsEnhancers: {
       root: (): UseTreeItemRootSlotPropsFromSelection => {
         // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-        let ariaChecked: React.AriaAttributes['aria-checked'];
-        if (selectionStatus === 'checked') {
-          // - each selected node has aria-checked set to true.
-          ariaChecked = true;
-        } else if (selectionStatus === 'indeterminate') {
-          ariaChecked = 'mixed';
+        // `aria-checked` belongs to the tree variant with checkboxes; a tree without
+        // checkboxes conveys selection through `aria-selected` instead.
+        let value: React.AriaAttributes['aria-checked'];
+        if (isItemInherentlyNotSelectable) {
+          // - if the tree contains nodes that are not selectable, the attribute is not present on those nodes.
+          value = undefined;
+        } else if (isCheckboxSelectionEnabled ? selectionStatus === 'selected' : isItemSelected) {
+          // - each selected node has the attribute set to true.
+          // Without checkboxes, only the selection model (not selection propagated from
+          // descendants) decides `aria-selected`, so it stays in sync with the highlight.
+          value = true;
+        } else if (isCheckboxSelectionEnabled && selectionStatus === 'indeterminate') {
+          value = 'mixed';
         } else if (!canItemBeSelected) {
-          // - if the tree contains nodes that are not selectable, aria-checked is not present on those nodes.
-          ariaChecked = undefined;
+          // disableSelection=true with an unselected item: the attribute is not present.
+          value = undefined;
         } else {
-          // - all nodes that are selectable but not selected have aria-checked set to false.
-          ariaChecked = false;
+          // - all nodes that are selectable but not selected have the attribute set to false.
+          value = false;
         }
 
-        return {
-          'aria-checked': ariaChecked,
-        };
+        return isCheckboxSelectionEnabled
+          ? { 'aria-checked': value, 'aria-selected': undefined }
+          : // aria-selected has no tri-state value, so an indeterminate item (a parent
+            // with some but not all descendants selected) is reported as not selected.
+            { 'aria-checked': undefined, 'aria-selected': value === 'mixed' ? false : value };
       },
       checkbox: ({
         externalEventHandlers,
@@ -113,7 +82,7 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
           onChange: handleChange,
           visible: isCheckboxSelectionEnabled && isFeatureEnabledForItem,
           disabled: !canItemBeSelected,
-          checked: selectionStatus === 'checked',
+          checked: selectionStatus === 'selected',
           indeterminate: selectionStatus === 'indeterminate',
         };
       },
@@ -123,6 +92,7 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
 
 interface UseTreeItemRootSlotPropsFromSelection {
   'aria-checked': React.AriaAttributes['aria-checked'];
+  'aria-selected': React.AriaAttributes['aria-selected'];
 }
 
 interface UseTreeItemCheckboxSlotPropsFromSelection {

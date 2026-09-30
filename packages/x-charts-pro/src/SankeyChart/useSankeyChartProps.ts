@@ -4,7 +4,8 @@ import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import type { SankeyChartProps } from './SankeyChart';
 import type { ChartsContainerProProps } from '../ChartsContainerPro';
-import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
+import { SANKEY_CHART_PLUGINS } from './SankeyChart.plugins';
+import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 /**
  * A helper function that extracts SankeyChartProps from the input props

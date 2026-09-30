@@ -1,6 +1,8 @@
 import type {
   GridApiCommon,
+  GridCallbackDetails,
   GridColumnReorderApi,
+  GridControlledStateReasonLookup,
   GridRowMultiSelectionApi,
   GridRowProApi,
 } from '@mui/x-data-grid';
@@ -45,3 +47,9 @@ export interface GridPrivateApiPro
     GridInfiniteLoaderPrivateApi,
     GridRowReorderPrivateApi,
     GridDataSourcePrivateApiPro {}
+
+/**
+ * The details passed to the callbacks of Data Grid Pro, with `apiRef` typed to `GridApiPro`.
+ */
+export type GridCallbackDetailsPro<K extends keyof GridControlledStateReasonLookup = any> =
+  GridCallbackDetails<K, GridApiPro>;

@@ -9,28 +9,30 @@ githubLabel: 'scope: chat'
 
 <p class="description">Customize the headless primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior.</p>
 
+The demo below replaces multiple headless slots in a single surface:
+
 {{"demo": "../examples/slot-customization/SlotCustomization.js", "hideToolbar": true}}
 
 ## Customization model
 
-`@mui/x-chat/headless` is designed to let you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
+The `@mui/x-chat/headless` package lets you keep the shipped semantics and interaction logic while replacing most of the rendered structure.
 
-The main tools are:
+The headless layer exposes three customization tools:
 
-- `slots` to replace structural subcomponents
-- `slotProps` to pass props into those replacements
-- owner state to style custom slots based on runtime-aware structural state
+- Use `slots` to replace structural subcomponents.
+- Use `slotProps` to pass props into those replacements.
+- Use owner state to style custom slots based on runtime-aware structural state.
 
-## `slots`
+## Replacing slots
 
 Use `slots` when you want to replace the element or React component used for a specific region.
 
-Examples:
+Common slot replacements include:
 
-- replace the conversation list root with a custom container
-- replace the conversation row component while preserving listbox behavior
-- replace the composer attach button or hidden file input
-- replace the unread marker label or scroll-to-bottom badge
+- Replace the conversation list root with a custom container.
+- Replace the conversation row component while preserving listbox behavior.
+- Replace the composer attach button or hidden file input.
+- Replace the unread marker label or scroll-to-bottom badge.
 
 ```tsx
 <ConversationList.Root
@@ -41,7 +43,7 @@ Examples:
 />
 ```
 
-## `slotProps`
+## Passing props to slots
 
 Use `slotProps` when you want to keep the slot structure but add attributes, styling hooks, or local event behavior.
 
@@ -62,18 +64,18 @@ Use `slotProps` when you want to keep the slot structure but add attributes, sty
 
 ## Owner state
 
-Custom slot components receive owner state that describes the structural state of the primitive.
+Read the owner state passed to custom slot components to style each primitive based on its runtime structural state.
 
-Common examples include:
+Owner state covers:
 
-- conversation item state such as `selected`, `unread`, and `focused`
-- thread state such as `conversationId` and `hasConversation`
-- message-list state such as `isAtBottom` and `messageCount`
-- message state such as `role`, `status`, `streaming`, and `isGrouped`
-- composer state such as `hasValue`, `isSubmitting`, `isStreaming`, and `attachmentCount`
-- indicator state such as typing users, unread boundaries, and unseen-message counts
+- Conversation item state such as `selected`, `unread`, and `focused`.
+- Thread state such as `conversationId` and `hasConversation`.
+- Message-list state such as `isAtBottom` and `messageCount`.
+- Message state such as `role`, `status`, `streaming`, and `isGrouped`.
+- Composer state such as `hasValue`, `isSubmitting`, `isStreaming`, and `attachmentCount`.
+- Indicator state such as typing users, unread boundaries, and unseen-message counts.
 
-### Owner-state example
+### Owner state example
 
 ```tsx
 const CustomSendButton = React.forwardRef(function CustomSendButton(props, ref) {
@@ -92,46 +94,48 @@ const CustomSendButton = React.forwardRef(function CustomSendButton(props, ref) 
 
 This pattern is the main bridge between the headless package and a product-specific visual language.
 
-## Replace slots or rebuild from core
+## Choosing between slot replacement and custom composition
 
 :::info
-If you need a ready-made visual design, use the [Material layer](/x/react-chat/material/). If you want full control over the DOM, use the [Core layer](/x/react-chat/core/). The headless layer sits between the two: it gives you structural primitives with built-in semantics and interaction behavior while leaving visual decisions to your code.
+If you need a ready-made visual design, use the [Material layer](/x/react-chat/).
+If you want full control over the DOM, use the [Core layer](/x/react-chat/core/).
+The headless layer sits between the two—it provides structural primitives with built-in semantics and interaction behavior while leaving visual decisions to the app layer.
 :::
 
 Use slot replacement when:
 
-- the shipped behavior is correct
-- the overall structure is close to what you need
-- you want the package to keep handling semantics, focus, and state-derived structural logic
+- The shipped behavior is correct.
+- The overall structure is close to what you need.
+- You want the package to keep handling semantics, focus, and state-derived structural logic.
 
 Use headless primitives or custom composition when:
 
-- the interaction model changes substantially
-- the component hierarchy is fundamentally different
-- the built-in keyboard or list behavior no longer matches the product surface
+- The interaction model changes substantially.
+- The component hierarchy is fundamentally different.
+- The built-in keyboard or list behavior no longer matches the product surface.
 
 ## Styling strategy
 
-The headless docs stay design-system agnostic on purpose.
-Typical styling approaches include:
+The headless layer stays design-system agnostic.
+Common styling approaches include:
 
-- utility classes
-- CSS Modules
-- CSS-in-JS wrappers
-- custom design-system components passed through slots
+- Utility classes.
+- CSS Modules.
+- CSS-in-JS wrappers.
+- Custom design-system components passed through slots.
 
-The important boundary is:
+The headless boundary is clear:
 
-- headless owns runtime state and contracts
-- headless owns structure, semantics, and interaction behavior
-- your app owns visual design
+- Headless owns runtime state and contracts.
+- Headless owns structure, semantics, and interaction behavior.
+- The app owns visual design.
 
 ## See also
 
-- Continue with [Conversation list](/x/react-chat/headless/conversation-list/) to see owner state on row-level slots.
-- Continue with [Messages](/x/react-chat/headless/messages/) for selective message-part replacement.
-- Continue with [Slot customization](/x/react-chat/headless/examples/slot-customization/) for a full demo that replaces multiple slots in one surface.
+- See [Conversation list](/x/react-chat/headless/conversation-list/) for owner state on row-level slots.
+- See [Messages](/x/react-chat/headless/messages/) for selective message-part replacement.
+- See [Slot customization](/x/react-chat/headless/examples/slot-customization/) for a demo that replaces multiple slots in one surface.
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

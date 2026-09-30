@@ -29,7 +29,7 @@ export abstract class BaseReorderOperation {
  * trying each operation in order until one succeeds or all fail.
  */
 export class RowReorderExecutor {
-  private operations: BaseReorderOperation[];
+  declare private operations: BaseReorderOperation[];
 
   constructor(operations: BaseReorderOperation[]) {
     this.operations = operations;
@@ -46,12 +46,13 @@ export class RowReorderExecutor {
       }
     }
 
-    warnOnce(
-      [
-        'MUI X: The parameters provided to the API method resulted in a no-op.',
-        'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-ordering/',
-      ],
-      'warning',
-    );
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(
+        [
+          'MUI X: The parameters provided to the API method resulted in a no-op.',
+          'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-ordering/',
+        ].join('\n'),
+      );
+    }
   }
 }

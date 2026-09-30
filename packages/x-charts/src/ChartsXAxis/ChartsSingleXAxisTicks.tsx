@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
-import { useIsHydrated } from '../hooks/useIsHydrated';
+import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import type { ChartsXAxisProps } from '../models/axis';
 import type { OrdinalTimeTicks } from '../models/timeTicks';

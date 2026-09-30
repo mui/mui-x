@@ -3,16 +3,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
-import { MobileTimePickerProps } from './MobileTimePicker.types';
-import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
+import type { MobileTimePickerProps } from './MobileTimePicker.types';
+import type { TimePickerViewRenderers } from '../TimePicker/shared';
+import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { extractValidationProps, validateTime } from '../validation';
-import { PickerOwnerState, TimeView } from '../models';
+import { extractValidationProps } from '../validation';
+import type { PickerOwnerState, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
+import { useTimeManager } from '../managers';
 
 type MobileTimePickerComponent = ((
   props: MobileTimePickerProps<TimeView> & React.RefAttributes<HTMLDivElement>,
@@ -33,6 +34,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useTimeManager();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<TimeView, MobileTimePickerProps<TimeView>>(
@@ -75,16 +77,14 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker(
   const { renderPicker } = useMobilePicker<TimeView, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'time',
-    validator: validateTime,
+    manager,
     steps: null,
   });
 
   return renderPicker();
 }) as MobileTimePickerComponent;
 
-MobileTimePicker.propTypes = {
+MobileTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -205,6 +205,10 @@ MobileTimePicker.propTypes = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

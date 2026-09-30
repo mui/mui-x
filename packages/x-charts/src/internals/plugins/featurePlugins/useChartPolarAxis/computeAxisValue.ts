@@ -1,30 +1,30 @@
-import type { ContinuousScaleName, AxisConfig, ScaleName } from '../../../../models';
+import type { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
-  type ChartsAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
   isContinuousScaleConfig,
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type PolarAxisConfig,
-  type ComputedAxis,
 } from '../../../../models/axis';
-import {
-  type ChartSeriesType,
-  type PolarChartSeriesType,
-} from '../../../../models/seriesType/config';
+import type {
+  ChartsAxisProps,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  PolarAxisConfig,
+  ComputedAxis,
+} from '../../../../models/axis';
+import type { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
-import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { deg2rad } from '../../../angleConversion';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { scaleBand, scalePoint } from '../../../scales';
-import { type ComputedAxisConfig } from '../useChartCartesianAxis';
+import { getPercentageValue } from '../../../getPercentageValue';
+import type { ComputedAxisConfig } from '../useChartCartesianAxis';
 import { EPSILON } from '../../../../utils/epsilon';
 
 type RotationConfig = PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>;
@@ -49,10 +49,11 @@ function getRange(
     return { range: angles, isFullCircle };
   }
   const availableRadius = Math.min(drawingArea.height, drawingArea.width) / 2;
+  const { minRadius, maxRadius } = axis as RadiusConfig;
   return {
     range: [
-      (axis as RadiusConfig).minRadius ?? 0,
-      (axis as RadiusConfig).maxRadius ?? availableRadius,
+      minRadius === undefined ? 0 : getPercentageValue(minRadius, availableRadius),
+      maxRadius === undefined ? availableRadius : getPercentageValue(maxRadius, availableRadius),
     ],
     isFullCircle: false,
   };
@@ -74,13 +75,13 @@ type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> =
 
 export function computeAxisValue<SeriesType extends ChartSeriesType>(
   options: ComputeCommonParams<SeriesType> & {
-    axis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+    axis?: PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
     axisDirection: 'radius';
   },
 ): ComputeResult<ChartsRadiusAxisProps>;
 export function computeAxisValue<SeriesType extends ChartSeriesType>(
   options: ComputeCommonParams<SeriesType> & {
-    axis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+    axis?: PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
     axisDirection: 'rotation';
   },
 ): ComputeResult<ChartsRotationAxisProps>;
@@ -91,7 +92,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
   seriesConfig,
   axisDirection,
 }: ComputeCommonParams<SeriesType> & {
-  axis?: AxisConfig<ScaleName, any, ChartsAxisProps>[];
+  axis?: PolarAxisConfig[];
   axisDirection: 'radius' | 'rotation';
 }) {
   if (allAxis === undefined) {
@@ -110,7 +111,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
 
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const axis = eachAxis as Readonly<PolarAxisConfig>;
     const { range, isFullCircle } = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(

@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', flex: 1 },
-  { field: 'lastName', headerName: 'Last name', flex: 1 },
+  { field: 'firstName', headerName: 'First name', flex: 1, rowHeader: true },
+  { field: 'lastName', headerName: 'Last name', flex: 1, rowHeader: true },
   { field: 'age', headerName: 'Age', type: 'number' as const, width: 80 },
   { field: 'email', headerName: 'Email', flex: 2 },
 ];

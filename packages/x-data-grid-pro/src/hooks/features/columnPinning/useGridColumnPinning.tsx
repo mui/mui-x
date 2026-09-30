@@ -8,18 +8,20 @@ import {
   gridColumnPositionsSelector,
   useGridApiMethod,
   useGridEvent,
-  type GridEventListener,
   GridPinnedColumnPosition,
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid';
+import type { GridEventListener } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
   gridPinnedColumnsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
-  type GridPipeProcessor,
-  type GridRestoreStatePreProcessingContext,
-  type GridStateInitializer,
-  type GridPinnedColumnFields,
+} from '@mui/x-data-grid/internals';
+import type {
+  GridPipeProcessor,
+  GridRestoreStatePreProcessingContext,
+  GridStateInitializer,
+  GridPinnedColumnFields,
 } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { GridInitialStatePro } from '../../../models/gridStatePro';

@@ -2,37 +2,12 @@ import Box from '@mui/material/Box';
 import { styled, alpha } from '@mui/material/styles';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
+import { MUI_X_PRODUCTS } from '../../datasets/products';
 
-const MUI_X_PRODUCTS: TreeViewDefaultItemModelProperties[] = [
-  {
-    id: 'grid',
-    label: 'Data Grid',
-    children: [
-      { id: 'grid-community', label: '@mui/x-data-grid' },
-      { id: 'grid-pro', label: '@mui/x-data-grid-pro' },
-      { id: 'grid-premium', label: '@mui/x-data-grid-premium' },
-    ],
-  },
-  {
-    id: 'pickers',
-    label: 'Date and Time Pickers',
-    children: [
-      { id: 'pickers-community', label: '@mui/x-date-pickers' },
-      { id: 'pickers-pro', label: '@mui/x-date-pickers-pro' },
-    ],
-  },
-  {
-    id: 'charts',
-    label: 'Charts',
-    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
-  },
-  {
-    id: 'tree-view',
-    label: 'Tree View',
-    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
-  },
-];
+const CONNECTOR_LINE_WIDTH = 1;
+const CONNECTOR_LINE_CENTER = 17.5;
+const CONNECTOR_LINE_LEFT = CONNECTOR_LINE_CENTER - CONNECTOR_LINE_WIDTH / 2;
+const CONNECTOR_GAP = 16;
 
 const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
   color: theme.palette.grey[200],
@@ -57,9 +32,9 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
     }),
   },
   [`& .${treeItemClasses.groupTransition}`]: {
-    marginLeft: 15,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+    marginLeft: CONNECTOR_LINE_LEFT,
+    paddingLeft: CONNECTOR_GAP,
+    borderLeft: `${CONNECTOR_LINE_WIDTH}px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
   ...theme.applyStyles('light', {
     color: theme.palette.grey[800],

@@ -1,16 +1,17 @@
-import { type ChartPluginSignature } from '../../models';
-import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
-import {
-  type ScaleName,
-  type AxisConfig,
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type RadiusAxis,
-  type RotationAxis,
-  type ChartsAxisData,
+import type { ChartPluginSignature } from '../../models';
+import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import type {
+  ScaleName,
+  PolarAxisConfig,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  RadiusAxis,
+  RotationAxis,
+  ChartsAxisData,
 } from '../../../../models/axis';
-import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { type UseChartInteractionSignature } from '../useChartInteraction';
+import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { UseChartInteractionSignature } from '../useChartInteraction';
+import type { ChartsActivationEvent } from '../../../../models/events';
 
 export interface UseChartPolarAxisInstance {
   /**
@@ -62,18 +63,18 @@ export interface UseChartPolarAxisParameters {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
-  onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
+  onAxisClick?: (event: ChartsActivationEvent, data: null | ChartsAxisData) => void;
 }
 
 export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters & {};
 
 export interface UseChartPolarAxisState {
   polarAxis: {
-    rotation: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
-    radius: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+    rotation: PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+    radius: PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
   };
 }
 

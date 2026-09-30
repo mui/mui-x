@@ -1,16 +1,16 @@
 import type { TypographyProps } from '@mui/material/Typography';
 import type { StackProps } from '@mui/material/Stack';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
-import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import { PickerManagerFieldInternalProps } from '@mui/x-date-pickers/internals';
-import {
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+import type { FieldOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerManagerFieldInternalProps } from '@mui/x-date-pickers/internals';
+import type {
   FieldType,
   MultiInputFieldRefs,
   RangeFieldSeparatorProps,
   RangePosition,
 } from '../../../models';
-import { PickerAnyRangeManager } from '../../models/managers';
+import type { PickerAnyRangeManager } from '../../models/managers';
 
 export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
   MultiInputFieldRefs &

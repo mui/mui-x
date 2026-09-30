@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-import { isJSDOM } from '@mui/x-internals/platform';
+import { isJSDOM } from 'test/utils/skipIf';
 import { getTelemetryEnvConfig } from './config';
 
 describe.runIf(isJSDOM)('Telemetry: getTelemetryConfig', () => {

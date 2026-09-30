@@ -1,4 +1,4 @@
-import { type AllSeriesType } from '../../../models/seriesType';
+import type { AllSeriesType } from '../../../models/seriesType';
 
 export function getSeriesWithDefaultValues(
   seriesData: AllSeriesType<'bar'>,

@@ -1,6 +1,6 @@
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 import { clockPointerClasses } from '@mui/x-date-pickers/TimeClock';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 
 export const getClockTouchEvent = (
   value: number | string,
@@ -30,6 +30,28 @@ export const getClockTouchEvent = (
       },
     ],
   };
+};
+
+/**
+ * Fires a pointer event on the clock mask using coordinates produced by
+ * `getClockTouchEvent`. Those coordinates are relative to the clock origin, so
+ * they are offset by the live mask rect to resolve to the correct angle wherever
+ * the clock is rendered (the rect is `0, 0` in jsdom but real in the browser).
+ */
+export const fireClockPointerEvent = (
+  clock: Element,
+  phase: 'pointerDown' | 'pointerMove' | 'pointerUp',
+  clockEvent: ReturnType<typeof getClockTouchEvent>,
+) => {
+  const rect = clock.getBoundingClientRect();
+  const { clientX, clientY } = clockEvent.changedTouches[0];
+  fireEvent[phase](clock, {
+    pointerId: 1,
+    button: 0,
+    isPrimary: true,
+    clientX: rect.left + clientX,
+    clientY: rect.top + clientY,
+  });
 };
 
 export const getTimeClockValue = () => {

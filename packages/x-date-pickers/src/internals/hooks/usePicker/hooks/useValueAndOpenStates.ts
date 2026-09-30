@@ -2,13 +2,18 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValueManager } from '../../../models';
-import { PickerSelectionState, UsePickerProps, UsePickerState } from '../usePicker.types';
+import type { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../../models';
+import type {
+  PickerSelectionState,
+  UsePickerManager,
+  UsePickerProps,
+  UsePickerState,
+} from '../usePicker.types';
 import { useControlledValue } from '../../useControlledValue';
 import { usePickerAdapter } from '../../../../hooks/usePickerAdapter';
-import { InferError, PickerChangeHandlerContext } from '../../../../models';
-import { SetValueActionOptions } from '../../../components/PickerProvider';
-import { useValidation, Validator } from '../../../../validation';
+import type { InferError, PickerChangeHandlerContext } from '../../../../models';
+import type { SetValueActionOptions } from '../../../components/PickerProvider';
+import { useValidation } from '../../../../validation';
 
 export function useValueAndOpenStates<
   TValue extends PickerValidValue,
@@ -17,7 +22,8 @@ export function useValueAndOpenStates<
 >(parameters: UsePickerDateStateParameters<TValue, TView, TExternalProps>) {
   type TError = InferError<TExternalProps>;
 
-  const { props, valueManager, validator } = parameters;
+  const { props, manager } = parameters;
+  const { internal_valueManager: valueManager, validator } = manager;
   const {
     value: valueProp,
     defaultValue: defaultValueProp,
@@ -38,11 +44,13 @@ export function useValueAndOpenStates<
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
-      warnOnce([
-        'MUI X: The `renderInput` prop has been removed in version 6.0 of the Date and Time Pickers.',
-        'You can replace it with the `textField` component slot in most cases.',
-        'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v5/#input-renderer-required-in-v5).',
-      ]);
+      warnOnce(
+        [
+          'MUI X: The `renderInput` prop has been removed in version 6.0 of the Date and Time Pickers.',
+          'You can replace it with the `textField` component slot in most cases.',
+          'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v5/#input-renderer-required-in-v5).',
+        ].join('\n'),
+      );
     }
   }
 
@@ -74,7 +82,7 @@ export function useValueAndOpenStates<
           ].join('\n'),
         );
       }
-    }, [JSON.stringify(defaultValue)]);
+    }, [JSON.stringify(defaultValueProp)]);
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
@@ -251,6 +259,5 @@ interface UsePickerDateStateParameters<
   TExternalProps extends UsePickerProps<TValue, TView, any, any>,
 > {
   props: TExternalProps;
-  valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
-  validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
+  manager: UsePickerManager<TValue, TExternalProps>;
 }

@@ -1,22 +1,11 @@
 import * as React from 'react';
 import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
 import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import descriptions from 'docs/translations/api-docs/data-grid/grid-aggregation-function-data-source.json';
 import jsonPageContent from './grid-aggregation-function-data-source.json';
 
-export default function Page(props) {
-  const { descriptions } = props;
+export default function Page() {
   return (
     <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />
   );
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docs/translations/api-docs/data-grid/',
-    false,
-    /\.\/grid-aggregation-function-data-source.*.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
-  return { props: { descriptions } };
 }

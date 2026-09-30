@@ -29,7 +29,7 @@ const sparklineColumnType = {
 };
 
 const columns = [
-  { field: 'name', headerName: 'Package name', width: 180 },
+  { field: 'name', headerName: 'Package name', width: 180, rowHeader: true },
   {
     field: 'monthlyDownloads',
     ...sparklineColumnType,

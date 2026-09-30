@@ -4,6 +4,7 @@ export enum DataSourceRowsUpdateStrategy {
   Default = 'set-flat-rows',
   LazyLoading = 'replace-row-range',
   GroupedData = 'set-grouped-rows',
+  LazyLoadedGroupedData = 'replace-grouped-row-range',
 }
 
 /**
@@ -12,7 +13,7 @@ export enum DataSourceRowsUpdateStrategy {
  * 2. Merging multiple cache entries into a single response to get the required chunk (cache `get`)
  */
 export class CacheChunkManager {
-  private chunkSize: number;
+  declare private chunkSize: number;
 
   /**
    * @param chunkSize The number of rows to store in each cache entry.

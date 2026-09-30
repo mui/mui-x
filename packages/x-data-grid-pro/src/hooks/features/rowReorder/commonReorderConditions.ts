@@ -1,8 +1,5 @@
-import {
-  gridExpandedSortedRowIndexLookupSelector,
-  gridRowTreeSelector,
-  type GridGroupNode,
-} from '@mui/x-data-grid';
+import { gridExpandedSortedRowIndexLookupSelector, gridRowTreeSelector } from '@mui/x-data-grid';
+import type { GridGroupNode } from '@mui/x-data-grid';
 import type { ReorderValidationContext as Ctx } from './models';
 
 /**

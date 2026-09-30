@@ -1,5 +1,5 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSection, InferFieldSection } from '../../../models';
+import type { FieldSection, InferFieldSection } from '../../../models';
 import {
   changeSectionValueFormat,
   cleanDigitSectionValue,
@@ -11,8 +11,8 @@ import {
   removeLocalizedDigits,
   isStringNumber,
 } from './useField.utils';
-import { UseFieldStateReturnValue } from './useFieldState';
-import { PickerValidValue } from '../../models';
+import type { UseFieldStateReturnValue } from './useFieldState';
+import type { PickerValidValue } from '../../models';
 import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 
 const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(

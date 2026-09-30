@@ -5,8 +5,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DesktopDateTimePicker } from '../DesktopDateTimePicker';
-import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
-import { DateTimePickerProps } from './DateTimePicker.types';
+import type { MobileDateTimePickerProps } from '../MobileDateTimePicker';
+import { MobileDateTimePicker } from '../MobileDateTimePicker';
+import type { DateTimePickerProps } from './DateTimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type DateTimePickerComponent = ((
@@ -41,7 +42,7 @@ const DateTimePicker = React.forwardRef(function DateTimePicker(
   return <MobileDateTimePicker ref={ref} {...(other as MobileDateTimePickerProps)} />;
 }) as DateTimePickerComponent;
 
-DateTimePicker.propTypes = {
+DateTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -219,6 +220,10 @@ DateTimePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
+  /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
@@ -304,7 +309,7 @@ DateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

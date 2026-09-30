@@ -75,7 +75,7 @@ function ActionsCell(props) {
 }
 
 const columns = [
-  { field: 'name', type: 'string' },
+  { field: 'name', type: 'string', rowHeader: true },
   {
     field: 'bio',
     type: 'longText',

@@ -46,6 +46,7 @@ const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
+    rowHeader: true,
     width: 150,
     renderCell: RenderDate,
   },

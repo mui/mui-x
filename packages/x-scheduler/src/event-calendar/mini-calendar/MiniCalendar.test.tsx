@@ -1,7 +1,7 @@
-import { spy } from 'sinon';
 import { screen, waitFor, within } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('MiniCalendar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26T10:00:00Z') });
@@ -95,7 +95,7 @@ describe('MiniCalendar', () => {
     });
 
     it('should call onVisibleDateChange when clicking a day', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
       const { user } = render(
         <EventCalendar events={[]} onVisibleDateChange={onVisibleDateChange} defaultView="week" />,
       );
@@ -108,11 +108,11 @@ describe('MiniCalendar', () => {
       expect(day15Button).not.to.equal(undefined);
       await user.click(day15Button!);
 
-      expect(onVisibleDateChange.calledOnce).to.equal(true);
+      expect(onVisibleDateChange.mock.calls.length).to.equal(1);
     });
 
     it('should not change the view when clicking a day', async () => {
-      const onViewChange = spy();
+      const onViewChange = vi.fn();
       const { user } = render(
         <EventCalendar events={[]} onViewChange={onViewChange} defaultView="week" />,
       );
@@ -125,7 +125,7 @@ describe('MiniCalendar', () => {
       await user.click(day15Button!);
 
       // onViewChange should NOT be called (view should remain week)
-      expect(onViewChange.called).to.equal(false);
+      expect(onViewChange.mock.calls.length).to.equal(0);
     });
 
     it('should sync mini calendar month when scheduler visibleDate changes', async () => {
@@ -205,6 +205,50 @@ describe('MiniCalendar', () => {
       );
       expect(mondayHeader).not.to.equal(undefined);
     });
+
+    it('should set aria-rowcount and aria-colcount on the grid root', () => {
+      render(<EventCalendar events={[]} />);
+
+      const grid = getMiniCalendar();
+      expect(grid.getAttribute('aria-colcount')).to.equal('7');
+      // 1 header row + 6 week rows
+      expect(grid.getAttribute('aria-rowcount')).to.equal('7');
+    });
+
+    it('should set aria-rowindex on weekday header row and each week row', () => {
+      render(<EventCalendar events={[]} />);
+
+      const miniCalendar = getMiniCalendar();
+      const rows = within(miniCalendar).getAllByRole('row');
+      // 1 weekday header row + 6 week rows
+      expect(rows.length).to.equal(7);
+      rows.forEach((row, i) => {
+        expect(row.getAttribute('aria-rowindex')).to.equal(String(i + 1));
+      });
+    });
+
+    it('should set aria-colindex on weekday header cells from 1 to 7', () => {
+      render(<EventCalendar events={[]} />);
+
+      const miniCalendar = getMiniCalendar();
+      const weekdayHeaders = within(miniCalendar).getAllByRole('columnheader');
+      expect(weekdayHeaders.length).to.equal(7);
+      weekdayHeaders.forEach((header, i) => {
+        expect(header.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+    });
+
+    it('should set aria-colindex on each day cell from 1 to 7', () => {
+      render(<EventCalendar events={[]} />);
+
+      const miniCalendar = getMiniCalendar();
+      const dayCells = within(miniCalendar).getAllByRole('gridcell');
+      // 6 weeks × 7 days = 42 day cells
+      expect(dayCells.length).to.equal(42);
+      dayCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String((i % 7) + 1));
+      });
+    });
   });
 
   describe('Side panel visibility', () => {
@@ -223,6 +267,38 @@ describe('MiniCalendar', () => {
         const openSidePanelButton = screen.queryByRole('button', { name: /open side panel/i });
         expect(openSidePanelButton).not.to.equal(null);
       });
+    });
+  });
+
+  describe('weekStartsOn preference', () => {
+    function getFirstWeekdayHeader() {
+      const miniCalendar = getMiniCalendar();
+      return within(miniCalendar).getAllByRole('columnheader')[0];
+    }
+
+    it('should show Sunday as the first weekday header when weekStartsOn is 0', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 0 }} />);
+
+      expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/sunday/i);
+    });
+
+    it('should show Monday as the first weekday header when weekStartsOn is 1', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 1 }} />);
+
+      expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/monday/i);
+    });
+
+    it('should show Saturday as the first weekday header when weekStartsOn is 6', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 6 }} />);
+
+      expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/saturday/i);
+    });
+
+    it('should always render exactly 7 weekday headers regardless of weekStartsOn', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 6 }} />);
+
+      const miniCalendar = getMiniCalendar();
+      expect(within(miniCalendar).getAllByRole('columnheader').length).to.equal(7);
     });
   });
 });

@@ -1,5 +1,6 @@
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 import { PickersCalendarHeader } from './PickersCalendarHeader';
 import { pickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 

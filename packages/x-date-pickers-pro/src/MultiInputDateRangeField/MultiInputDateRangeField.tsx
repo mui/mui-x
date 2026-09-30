@@ -1,16 +1,15 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import PropTypes from 'prop-types';
-import { useDateRangeManager, UseDateRangeManagerReturnValue } from '../managers';
+import type { UseDateRangeManagerReturnValue } from '../managers';
+import { useDateRangeManager } from '../managers';
+import type { MultiInputRangeFieldProps } from '../internals/utils/createMultiInputRangeField';
 import {
   // The alias is needed to have the doc gen working.
   createMultiInputRangeField as createMultiInputDateRangeField,
-  MultiInputRangeFieldProps,
 } from '../internals/utils/createMultiInputRangeField';
-import {
-  getMultiInputDateRangeFieldUtilityClass,
-  MultiInputDateRangeFieldClasses,
-} from './multiInputDateRangeFieldClasses';
+import type { MultiInputDateRangeFieldClasses } from './multiInputDateRangeFieldClasses';
+import { getMultiInputDateRangeFieldUtilityClass } from './multiInputDateRangeFieldClasses';
 
 export interface MultiInputDateRangeFieldProps extends MultiInputRangeFieldProps<UseDateRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
@@ -40,7 +39,7 @@ const MultiInputDateRangeField = createMultiInputDateRangeField({
   useManager: useDateRangeManager,
 }) as MultiInputDateRangeFieldComponent;
 
-MultiInputDateRangeField.propTypes = {
+MultiInputDateRangeField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -247,7 +246,7 @@ MultiInputDateRangeField.propTypes = {
   /**
    * If `true`, the CSS flexbox `gap` is used instead of applying `margin` to children.
    *
-   * While CSS `gap` removes the [known limitations](https://mui.com/joy-ui/react-stack/#limitations),
+   * While CSS `gap` removes the known limitations,
    * it is not fully supported in some browsers. We recommend checking https://caniuse.com/?search=flex%20gap before using this flag.
    *
    * To enable this flag globally, follow the [theme's default props](https://mui.com/material-ui/customization/theme-components/#default-props) configuration.

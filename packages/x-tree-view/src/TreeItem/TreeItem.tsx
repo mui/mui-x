@@ -5,19 +5,23 @@ import clsx from 'clsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import Collapse from '@mui/material/Collapse';
-import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
+import type { CheckboxProps } from '@mui/material/Checkbox';
+import MuiCheckbox from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { TreeItemProps } from './TreeItem.types';
-import { useTreeItem, UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
-import { getTreeItemUtilityClass, TreeItemClasses } from './treeItemClasses';
+import type { TreeItemProps } from './TreeItem.types';
+import type { UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
+import { useTreeItem } from '../useTreeItem';
+import type { TreeItemClasses } from './treeItemClasses';
+import { getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
 import { useTreeViewStyleContext } from '../internals/TreeViewProvider';
+import { TREE_ITEM_ICON_CONTAINER_WIDTH_PX } from '../internals/constants';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -116,7 +120,7 @@ export const TreeItemIconContainer = styled('div', {
   name: 'MuiTreeItem',
   slot: 'IconContainer',
 })({
-  width: 16,
+  width: TREE_ITEM_ICON_CONTAINER_WIDTH_PX,
   display: 'flex',
   flexShrink: 0,
   justifyContent: 'center',
@@ -384,7 +388,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   );
 }) as TreeItemComponent;
 
-TreeItem.propTypes = {
+TreeItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

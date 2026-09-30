@@ -1,6 +1,6 @@
 import type * as React from 'react';
 import type { EventManager, EventListenerOptions } from '@mui/x-internals/EventManager';
-import type { Store } from '@mui/x-internals/store';
+import type { Store } from '@base-ui/utils/store';
 import type { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import type { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
@@ -90,9 +90,9 @@ export interface GridCorePrivateApi<
   headerFiltersElementRef?: React.RefObject<HTMLDivElement | null>;
   register: <
     V extends 'public' | 'private',
-    T extends V extends 'public'
+    T extends (V extends 'public'
       ? Partial<GridPublicApi>
-      : Partial<Omit<GridPrivateApi, keyof GridPublicApi>>,
+      : Partial<Omit<GridPrivateApi, keyof GridPublicApi>>),
   >(
     visibility: V,
     methods: T,

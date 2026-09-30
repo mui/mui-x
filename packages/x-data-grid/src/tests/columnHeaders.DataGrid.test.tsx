@@ -1,6 +1,7 @@
 import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

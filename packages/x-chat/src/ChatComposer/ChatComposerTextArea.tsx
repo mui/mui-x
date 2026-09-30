@@ -2,10 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { ComposerTextArea, type ComposerTextAreaProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { ComposerTextArea } from '@mui/x-chat-headless';
+import type { ComposerTextAreaProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatComposerUtilityClasses } from './chatComposerClasses';
+import type { ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerTextArea');
 
@@ -63,29 +66,31 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
         ref={ref}
         {...other}
         slots={{
-          input: slots?.input ?? ChatComposerTextAreaStyled,
           ...slots,
+          input: slots?.input ?? ChatComposerTextAreaStyled,
         }}
         slotProps={{
           ...slotProps,
-          input: {
-            className: clsx(classes.textArea, className),
-            sx,
-            ...(maxRows != null
-              ? {
-                  style: MAX_ROWS_STYLE,
-                  rows: 1,
-                }
-              : {}),
-            ...slotProps?.input,
-          } as any,
+          input: mergeSlotProps(
+            {
+              className: clsx(classes.textArea, className),
+              sx,
+              ...(maxRows != null
+                ? {
+                    style: MAX_ROWS_STYLE,
+                    rows: 1,
+                  }
+                : {}),
+            },
+            slotProps?.input,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatComposerTextArea.propTypes = {
+ChatComposerTextArea.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

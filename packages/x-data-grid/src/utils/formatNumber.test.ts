@@ -1,5 +1,6 @@
+import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { formatNumber } from './getGridLocalization';
-import { isJSDOM } from './isJSDOM';
 
 describe('formatNumber', () => {
   it('should format numbers with thousands separators', () => {

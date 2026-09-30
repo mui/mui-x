@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridPrintExportOptions } from '../../models/gridExport';
@@ -39,7 +40,9 @@ const ExportPrint = forwardRef<HTMLButtonElement, ExportPrintProps>(
     const apiRef = useGridApiContext();
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      apiRef.current.exportDataAsPrint(options);
+      apiRef.current.exportDataAsPrint(options).catch((error) => {
+        console.error('MUI X Data Grid: Error exporting the grid as print:', error);
+      });
       onClick?.(event);
     };
 
@@ -54,7 +57,7 @@ const ExportPrint = forwardRef<HTMLButtonElement, ExportPrintProps>(
   },
 );
 
-ExportPrint.propTypes = {
+ExportPrint.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -77,6 +80,7 @@ ExportPrint.propTypes = {
     hideFooter: PropTypes.bool,
     hideToolbar: PropTypes.bool,
     includeCheckboxes: PropTypes.bool,
+    onStylesheetError: PropTypes.func,
     pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   }),
   /**

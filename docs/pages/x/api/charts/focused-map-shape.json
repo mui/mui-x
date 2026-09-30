@@ -1,0 +1,13 @@
+{
+  "props": {},
+  "name": "FocusedMapShape",
+  "imports": [
+    "import { FocusedMapShape } from '@mui/x-charts-premium/Map';",
+    "import { FocusedMapShape } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiFocusedMapShape",
+  "filename": "/packages/x-charts-premium/src/Map/FocusedMapShape.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/map/\">Charts - Map <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
+}

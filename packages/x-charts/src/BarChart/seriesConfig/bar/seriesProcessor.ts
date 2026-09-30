@@ -2,8 +2,8 @@ import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { DefaultizedBarSeriesType } from '../../../models';
 import { getStackingGroups } from '../../../internals/stacking';
-import { type DatasetElementType, type DatasetType } from '../../../models/seriesType/config';
-import { type SeriesId } from '../../../models/seriesType/common';
+import type { DatasetElementType, DatasetType } from '../../../models/seriesType/config';
+import type { SeriesId } from '../../../models/seriesType/common';
 import type { SeriesProcessor } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 type BarDataset = DatasetType<number | null>;
@@ -37,7 +37,9 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
           d3Dataset[index][id] = value;
         }
       });
-    } else if (dataset === undefined) {
+    } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         `MUI X Charts: Bar series with id="${id}" has no data. ` +
           'The chart cannot render this series without data. ' +
@@ -50,6 +52,8 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
         const dataKey = series[id].dataKey;
 
         if (!dataKey && !series[id].valueGetter) {
+          // TODO: fix mui/no-guarded-throw
+          // eslint-disable-next-line mui/no-guarded-throw
           throw new Error(
             `MUI X Charts: Bar series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
               'When using the dataset prop, each series must have a dataKey or valueGetter to identify which dataset values to use. ' +

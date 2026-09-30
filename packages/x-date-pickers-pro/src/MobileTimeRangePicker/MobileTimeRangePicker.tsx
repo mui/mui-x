@@ -3,15 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import refType from '@mui/utils/refType';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import {
-  DIALOG_WIDTH,
+import type {
   PickerRangeValue,
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
-  resolveTimeFormat,
   TimeViewWithMeridiem,
-  VIEW_HEIGHT,
 } from '@mui/x-date-pickers/internals';
+import { DIALOG_WIDTH, resolveTimeFormat, VIEW_HEIGHT } from '@mui/x-date-pickers/internals';
 import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
@@ -22,17 +20,16 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '@mui/x-date-pickers/timeViewRenderers';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { rangeValueManager } from '../internals/utils/valueManagers';
-import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
+import type { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { SingleInputTimeRangeField } from '../SingleInputTimeRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
-import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { useTimeRangeManager } from '../managers';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
-import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
 const STEPS: PickerRangeStep[] = [
   { views: null, rangePosition: 'start' },
@@ -85,6 +82,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useTimeRangeManager();
 
   // Props with the default values common to all time range pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<MobileTimeRangePickerProps>(
@@ -136,9 +134,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker(
   const { renderPicker } = useMobileRangePicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'time',
-    validator: validateTimeRange,
+    manager,
     rendererInterceptor,
     steps: STEPS,
   });
@@ -146,7 +142,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker(
   return renderPicker();
 }) as MobileTimeRangePickerComponent;
 
-MobileTimeRangePicker.propTypes = {
+MobileTimeRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -268,6 +264,10 @@ MobileTimeRangePicker.propTypes = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

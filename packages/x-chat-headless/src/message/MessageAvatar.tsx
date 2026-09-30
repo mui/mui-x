@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessageContext } from './internals/MessageContext';
-import { type MessageAvatarOwnerState } from './message.types';
+import type { MessageAvatarOwnerState } from './message.types';
 
 export interface MessageAvatarSlots {
   avatar: React.ElementType;
@@ -35,8 +35,8 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
     ...other
   } = props as MessageAvatarProps & { ownerState?: MessageAvatarOwnerState };
   const ownerState = useMessageContext();
-  const avatarUrl = ownerState.message?.author?.avatarUrl;
-  const displayName = ownerState.message?.author?.displayName;
+  const avatarUrl = ownerState.resolvedAuthor?.avatarUrl;
+  const displayName = ownerState.resolvedAuthor?.displayName;
   void ownerStateProp;
 
   const Avatar = slots?.avatar ?? 'div';

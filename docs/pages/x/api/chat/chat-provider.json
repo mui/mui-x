@@ -11,6 +11,5 @@
   "muiName": "MuiChatProvider",
   "filename": "/packages/x-chat-headless/src/ChatProvider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/\">Chat - Headless</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/\">Chat - Headless</a></li></ul>"
 }

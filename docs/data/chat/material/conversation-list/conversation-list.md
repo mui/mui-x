@@ -3,18 +3,18 @@ productId: x-chat
 title: Chat - Conversation list
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
+components: ChatConversationList
 ---
 
 # Chat - Conversation list
 
-<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.</p>
+<p class="description">Customize the conversation sidebar with themed slots, slot overrides, and fully custom item renderers.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
-The following demo shows a multi-conversation layout with the conversation list in action:
+The following demo shows a multi-conversation layout with `features={{ conversationList: true }}` enabled:
 
 {{"demo": "../examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
@@ -34,7 +34,7 @@ ChatConversationList              ← scrolling listbox (role="listbox")
     unreadBadge                   ← count badge (primary.main background)
 ```
 
-All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually — instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
+All visual slots are owned by a single `ChatConversationList` instance. You don't need to compose subcomponents manually—instead, replace any slot through the `slots` prop directly on `ChatConversationList`.
 
 ## Slot reference
 
@@ -55,7 +55,7 @@ All visual slots are owned by a single `ChatConversationList` instance. You do n
 
 Because the Material UI layer fills all slot defaults at instantiation, overriding a single slot only affects that region without disturbing the others.
 
-## ownerState and how state flows
+## State flow through `ownerState`
 
 The item and all its sub-slots receive an `ownerState` prop that carries the current row's interaction state alongside the full conversation object.
 
@@ -70,7 +70,7 @@ The item and all its sub-slots receive an `ownerState` prop that carries the cur
 
 The `selected` flag drives the row background (`palette.action.selected`). The `unread` flag drives bold title typography. The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
 
-Because the full `conversation` object is included, custom slot components can directly read fields such as `conversation.title`, `conversation.metadata`, `conversation.unreadCount`, and `conversation.lastMessageAt` without additional selectors.
+Because the full `conversation` object is included, custom slot components can read fields such as `conversation.title`, `conversation.metadata`, `conversation.unreadCount`, and `conversation.lastMessageAt` without additional selectors.
 
 ### Root ownerState
 
@@ -89,7 +89,7 @@ The `ownerState` prop arrives directly on the component because the Material UI
 
 ## Overriding the item content layout
 
-Replace `itemContent` when you want to change the structural layout of the title and preview region — for example to add a participant count or an icon:
+Replace `itemContent` to change the structural layout of the title and preview region—for example, to add a participant count or an icon:
 
 {{"demo": "RichItemContent.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -132,7 +132,7 @@ const theme = createTheme({
 });
 ```
 
-Theme overrides apply globally across your application and are the lowest-friction option when you only need visual adjustments.
+Theme overrides apply globally across the application and are the lowest-friction option for visual-only adjustments.
 
 ## Controlling the list width
 
@@ -162,9 +162,15 @@ The `conversation` object in `ownerState` lets you derive everything you need to
 
 ## Accessibility notes
 
-The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row. Roving focus is managed automatically: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
+The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row.
+Roving focus is managed automatically: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, `PageUp`, `PageDown`, and `Enter` are handled automatically.
+The [message list](/x/react-chat/material/message-list/#accessibility) shares the same roving model, so both lists feel identical to keyboard users.
 
-Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved. Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.
+When rendered inside `ChatBox`, the sidebar pane is exposed as a `navigation` landmark named through the locale text system (`conversationListLandmarkLabel`), alongside the thread `region` and composer `form` landmarks—so assistive technology can jump directly between the sidebar, the thread, and the composer.
+On narrow layouts the sidebar becomes a modal drawer: the header menu button exposes `aria-haspopup="dialog"` and `aria-expanded`, focus is trapped inside the drawer, and <kbd>Escape</kbd> closes it and restores focus to the button.
+
+Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved.
+Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.
 
 Pass `aria-label` to the root through `slotProps`:
 
@@ -174,9 +180,9 @@ Pass `aria-label` to the root through `slotProps`:
 
 ## See also
 
-- [Thread](/x/react-chat/material/thread/) for the conversation thread surface and its composition model.
-- [Customization](/x/react-chat/material/customization/) for the full slot and slotProps reference.
-- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for a two-pane inbox demo using controlled state.
+- See [Thread](/x/react-chat/material/thread/) for details.
+- See [Customization](/x/react-chat/material/customization/) for details.
+- See [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) for details.
 
 ## API
 

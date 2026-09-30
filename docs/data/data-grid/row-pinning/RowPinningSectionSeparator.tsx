@@ -58,7 +58,7 @@ export default function RowPinningSectionSeparator() {
 }
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', width: 150 },
+  { field: 'name', headerName: 'Name', width: 150, rowHeader: true },
   { field: 'city', headerName: 'City', width: 150 },
   { field: 'username', headerName: 'Username' },
   { field: 'email', headerName: 'Email', width: 200 },

@@ -2,10 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { ComposerToolbar, type ComposerToolbarProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { ComposerToolbar } from '@mui/x-chat-headless';
+import type { ComposerToolbarProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import { useChatComposerUtilityClasses } from './chatComposerClasses';
+import type { ChatComposerClasses } from './chatComposerClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerToolbar');
 
@@ -37,23 +40,25 @@ const ChatComposerToolbar = React.forwardRef<HTMLDivElement, ChatComposerToolbar
         ref={ref}
         {...other}
         slots={{
-          toolbar: slots?.toolbar ?? ChatComposerToolbarStyled,
           ...slots,
+          toolbar: slots?.toolbar ?? ChatComposerToolbarStyled,
         }}
         slotProps={{
           ...slotProps,
-          toolbar: {
-            className: clsx(classes.toolbar, className),
-            sx,
-            ...(slotProps?.toolbar as object),
-          } as any,
+          toolbar: mergeSlotProps(
+            {
+              className: clsx(classes.toolbar, className),
+              sx,
+            },
+            slotProps?.toolbar,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatComposerToolbar.propTypes = {
+ChatComposerToolbar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

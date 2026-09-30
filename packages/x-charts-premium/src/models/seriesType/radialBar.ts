@@ -11,7 +11,7 @@ import type { DefaultizedProps } from '@mui/x-internals/types';
 
 export interface RadialBarSeriesType
   extends
-    CommonSeriesType<number | null, 'bar'>,
+    CommonSeriesType<'radialBar'>,
     RadialSeriesType,
     StackableSeriesType,
     CommonBarSeriesType {

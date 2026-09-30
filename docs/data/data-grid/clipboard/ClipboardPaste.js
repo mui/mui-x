@@ -7,6 +7,7 @@ export default function ClipboardPaste() {
     rowLength: 100,
     maxColumns: 20,
     editable: true,
+    multiSelect: true,
   });
 
   const initialState = {

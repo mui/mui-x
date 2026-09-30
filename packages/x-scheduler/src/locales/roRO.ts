@@ -1,22 +1,28 @@
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
-  EventDialogLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
 } from '../utils/getSchedulerLocalization';
 
-const roRODialog: Partial<EventDialogLocaleText> = {
+const roRODialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Culoarea evenimentului',
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Dată și oră',
   resourceColorSectionLabel: 'Resursă și culoare',
   allDayLabel: 'Toată ziua',
   closeButtonAriaLabel: 'Închide',
   closeButtonLabel: 'Închide',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Șterge evenimentul',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descriere',
   endDateLabel: 'Data de sfârșit',
   endTimeLabel: 'Ora de sfârșit',
@@ -37,27 +43,36 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceEveryLabel: 'La fiecare',
   recurrenceRepeatLabel: 'Repetă',
   recurrenceTabLabel: 'Recurență',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Recurență',
   recurrenceWeeklyFrequencyLabel: 'săptămâni',
-  recurrenceWeeklyPresetLabel: (weekday) => `Se repetă săptămânal în ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repetă săptămânal în ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'luni',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Ziua ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} din ultima săptămână a lunii`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} ultima săptămână`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} din ultima săptămână a lunii`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} ultima săptămână`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Se repetă lunar în ziua ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} săptămâna ${ord} a lunii`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} săptămâna ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName} săptămâna ${ord} a lunii`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} săptămâna ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'În',
   recurrenceYearlyFrequencyLabel: 'ani',
   recurrenceYearlyPresetLabel: (date) => `Se repetă anual pe ${date}`,
   noResourceAriaLabel: 'Fără resursă',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Resursă',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
-  startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
+  startDateAfterEndDateError: 'Data de sfârșit nu poate fi înainte de data de început.',
   startDateLabel: 'Data de început',
+  startTimeAfterEndTimeError: 'Ora de sfârșit trebuie să fie după ora de început.',
   startTimeLabel: 'Ora de început',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Toate evenimentele',
   cancel: 'Anulează',
   confirm: 'Confirmă',
@@ -67,12 +82,25 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   title: 'Aplică această modificare la:',
 };
 
-const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ascunde evenimentele pentru ${resourceName}`,
+const roROEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Resursă: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const roROCalendar: SchedulerCalendarTranslations = {
+  // ResourcesTree
   resourcesLabel: 'Resurse',
-  resourcesLegendSectionLabel: 'Legendă resurse',
-  showEventsLabel: (resourceName) => `Afișează evenimentele pentru ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agendă',
@@ -91,6 +119,9 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Închide panoul lateral',
   openSidePanel: 'Deschide panoul lateral',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12 ore (1:00PM)',
   hour24h: '24 de ore (13:00)',
@@ -100,15 +131,16 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afișează numărul săptămânii',
   timeFormat: 'Formatul orei',
   viewSpecificOptions: (view) => `Opțiuni pentru vizualizarea ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toată ziua',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `Încă ${hiddenEventsCount}..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} următoare`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterioară`,
-  resourceAriaLabel: (resourceName) => `Resursă: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Săptămâna ${weekNumber}`,
 
@@ -120,17 +152,21 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarGoToPreviousMonth: 'Afișează luna anterioară în calendar',
   miniCalendarGoToNextMonth: 'Afișează luna următoare în calendar',
 
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',
 };
 
-const roROTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const roROTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titlul resursei',
 };
 
 export const roRO: SchedulerLocalization = getSchedulerLocalization({
   dialog: roRODialog,
+  event: roROEvent,
   calendar: roROCalendar,
   timeline: roROTimeline,
 });

@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'timer',
@@ -47,9 +47,11 @@ const nbNOPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Velg ${timeViews[view]}. ${!formattedTime ? 'Ingen tid valgt' : `Valgt tid er ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} timer`,
-  minutesClockNumberText: (minutes) => `${minutes} minutter`,
-  secondsClockNumberText: (seconds) => `${seconds} sekunder`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'time' : 'timer'}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${Number(minutes) === 1 ? 'minutt' : 'minutter'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'sekund' : 'sekunder'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Velg ${timeViews[view]}`,

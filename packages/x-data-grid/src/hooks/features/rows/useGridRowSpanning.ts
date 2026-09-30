@@ -12,8 +12,10 @@ import type { GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridRowSpanningPrivateApi } from '../../../models/api/gridRowApi';
 import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gridRowSpanningUtils';
 import { useGridEvent } from '../../utils/useGridEvent';
+import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { runIf } from '../../../utils/utils';
 import { useRunOncePerLoop } from '../../utils/useRunOncePerLoop';
 
@@ -248,6 +250,11 @@ export const useGridRowSpanning = (
   useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
   useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
   useGridEvent(apiRef, 'rowExpansionChange', runIf(props.rowSpanning, resetRowSpanningState));
+
+  const rowSpanningPrivateApi: GridRowSpanningPrivateApi = {
+    resetRowSpanningState: runIf(props.rowSpanning, resetRowSpanningState),
+  };
+  useGridApiMethod(apiRef, rowSpanningPrivateApi, 'private');
 
   React.useEffect(() => {
     const store = apiRef.current.virtualizer?.store;

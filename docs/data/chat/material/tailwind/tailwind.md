@@ -7,14 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Tailwind CSS
 
-<p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
+<p class="description">Style the Chat with Tailwind CSS utility classes on the headless primitives from <code>@mui/x-chat/headless</code>.</p>
 
-`@mui/x-chat` ships structural chat primitives with zero built-in styles.
+`@mui/x-chat/headless` ships structural Chat primitives with zero built-in styles.
 Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
 
 ## Installation
 
-Install the package alongside Tailwind:
+Install `@mui/x-chat` alongside Tailwind CSS:
 
 <codeblock storageKey="package-manager">
 
@@ -32,9 +32,9 @@ yarn add @mui/x-chat
 
 </codeblock>
 
-## Namespace API
+## Using namespace imports
 
-Structural primitives are available as namespace exports for clean dot-notation usage:
+Structural primitives are exported as namespaces so you can compose them with dot notation:
 
 ```tsx
 import {
@@ -45,7 +45,7 @@ import {
   Conversation,
   ConversationList,
   Indicators,
-} from '@mui/x-chat';
+} from '@mui/x-chat/headless';
 
 // Usage
 <Chat.Root>
@@ -114,7 +114,7 @@ Use Tailwind's attribute selectors to style state variations without JavaScript:
 | `Composer.Root`         | `data-streaming` | present / absent                 | Response in progress                |
 | `ConversationList.Item` | `data-active`    | present / absent                 | Currently selected conversation     |
 
-## Slot props for custom elements
+## Replacing inner elements with slot props
 
 Use the `slots` and `slotProps` props to replace inner elements while keeping behavior intact:
 
@@ -132,9 +132,9 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 />
 ```
 
-## Complete demo: chat shell
+## Complete demo: Chat shell
 
-The following interactive demo shows a fully functional chat styled entirely with Tailwind CSS utility classes, using the structural primitives from `@mui/x-chat`:
+The demo below shows a Chat styled entirely with Tailwind CSS utility classes on the structural primitives from `@mui/x-chat/headless`:
 
 {{"demo": "TailwindChatDemo.js", "bg": "inline", "defaultCodeOpen": false, "iframe": true, "height": 500}}
 

@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
@@ -8,13 +7,14 @@ import {
   getClockTouchEvent,
 } from 'test/utils/pickers';
 import { hasTouchSupport } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer();
 
   describe('picker state', () => {
     it('should fire a change event when meridiem changes', async () => {
-      const handleChange = spy();
+      const handleChange = vi.fn();
       const { user } = render(
         <MobileTimePicker
           ampm
@@ -28,14 +28,14 @@ describe('<MobileTimePicker />', () => {
 
       await user.click(buttonPM);
 
-      expect(handleChange.callCount).to.equal(1);
-      expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
+      expect(handleChange.mock.calls.length).to.equal(1);
+      expect(handleChange.mock.calls[0][0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
     });
 
     it.skipIf(!hasTouchSupport)('should call onChange when selecting each view', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue = adapterToUse.date('2018-01-01');
 
       const { user } = render(
@@ -49,33 +49,41 @@ describe('<MobileTimePicker />', () => {
 
       await openPicker(user, { type: 'time' });
 
-      // Change the hours
-      const hourClockEvent = getClockTouchEvent(11, '12hours');
+      // `getClockTouchEvent` returns coordinates relative to the clock origin;
+      // turn them into viewport coordinates using the live mask rect so the
+      // selection resolves correctly wherever the clock is rendered (the rect is
+      // `0, 0` in jsdom but reflects the actual position in the browser).
+      const getClockCoords = (clockEvent: ReturnType<typeof getClockTouchEvent>) => {
+        const rect = screen.getByTestId('clock').getBoundingClientRect();
+        return {
+          clientX: rect.left + clockEvent.changedTouches[0].clientX,
+          clientY: rect.top + clockEvent.changedTouches[0].clientY,
+        };
+      };
 
+      // Change the hours
       await user.pointer([
         {
           keys: '[TouchA]',
           target: screen.getByTestId('clock'),
-          coords: hourClockEvent.changedTouches[0],
+          coords: getClockCoords(getClockTouchEvent(11, '12hours')),
         },
       ]);
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
 
       // Change the minutes
-      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
-
       await user.pointer([
         {
           keys: '[TouchA]',
           target: screen.getByTestId('clock'),
-          coords: minuteClockEvent.changedTouches[0],
+          coords: getClockCoords(getClockTouchEvent(53, 'minutes')),
         },
       ]);
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:53:00'));
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(2);
+      expect(onChange.mock.lastCall?.[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:53:00'));
+      expect(onAccept.mock.calls.length).to.equal(0);
+      expect(onClose.mock.calls.length).to.equal(0);
     });
   });
 });

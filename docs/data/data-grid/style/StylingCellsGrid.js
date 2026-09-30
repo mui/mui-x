@@ -5,6 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 const columns = [
   {
     field: 'name',
+    rowHeader: true,
     cellClassName: 'super-app-theme--cell',
   },
   {

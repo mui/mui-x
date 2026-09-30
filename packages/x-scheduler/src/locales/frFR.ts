@@ -1,22 +1,28 @@
+import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
 import type {
-  EventDialogLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
-import {
-  getSchedulerLocalization,
-  type SchedulerLocalization,
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
 } from '../utils/getSchedulerLocalization';
 
-const frFRDialog: Partial<EventDialogLocaleText> = {
+const frFRDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: "Couleur de l'événement",
+  // colorSectionLabel: 'Color',
   dateTimeSectionLabel: 'Date et heure',
   resourceColorSectionLabel: 'Ressource et couleur',
   allDayLabel: 'Toute la journée',
   closeButtonAriaLabel: 'Fermer',
   closeButtonLabel: 'Fermer',
+  // editEventButtonAriaLabel: 'Edit event',
+  // deleteEventButtonAriaLabel: 'Delete event',
+  // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: "Supprimer l'événement",
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Description',
   endDateLabel: 'Date de fin',
   endTimeLabel: 'Heure de fin',
@@ -37,27 +43,36 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   recurrenceEveryLabel: 'Chaque',
   recurrenceRepeatLabel: 'Répéter',
   recurrenceTabLabel: 'Récurrence',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Récurrence',
   recurrenceWeeklyFrequencyLabel: 'semaines',
-  recurrenceWeeklyPresetLabel: (weekday) => `Se répète chaque semaine le ${weekday}`,
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se répète chaque semaine le ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'mois',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Jour ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} de la dernière semaine du mois`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} dernière semaine`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} de la dernière semaine du mois`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} dernière semaine`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Se répète tous les mois le ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} semaine ${ord} du mois`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} semaine ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName} semaine ${ord} du mois`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} semaine ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'Le',
   recurrenceYearlyFrequencyLabel: 'années',
   recurrenceYearlyPresetLabel: (date) => `Se répète tous les ans le ${date}`,
   noResourceAriaLabel: 'Aucune ressource',
+  // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Enregistrer',
-  startDateAfterEndDateError: 'La date/heure de début doit être antérieure à la date/heure de fin.',
+  startDateAfterEndDateError: 'La date de fin ne peut pas être antérieure à la date de début.',
   startDateLabel: 'Date de début',
+  startTimeAfterEndTimeError: "L'heure de fin doit être postérieure à l'heure de début.",
   startTimeLabel: 'Heure de début',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Tous les évènements',
   cancel: 'Annuler',
   confirm: 'Confirmer',
@@ -67,12 +82,25 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   title: 'Appliquer ce changement à :',
 };
 
-const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Masquer les événements de ${resourceName}`,
+const frFREvent: SchedulerEventTranslations = {
+  // Event accessible name
+  eventAriaLabelTimeRange: (start, end) => `de ${start} à ${end}`,
+  eventAriaLabelDateRange: (start, end) => `Du ${start} au ${end}`,
+  eventAriaLabelAllDay: 'Toute la journée',
+  eventAriaLabelRecurring: 'Récurrent',
+  resourceAriaLabel: (resourceName) => `Ressource : ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const frFRCalendar: SchedulerCalendarTranslations = {
+  // ResourcesTree
   resourcesLabel: 'Ressources',
-  resourcesLegendSectionLabel: 'Légende des ressources',
-  showEventsLabel: (resourceName) => `Afficher les événements de ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',
@@ -91,6 +119,9 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   closeSidePanel: 'Fermer le panneau latéral',
   openSidePanel: 'Ouvrir le panneau latéral',
 
+  // SidePanelDrawer (small screens)
+  // openMenu: 'Open menu',
+
   // Preferences menu
   amPm12h: '12 heures (1:00PM)',
   hour24h: '24 heures (13:00)',
@@ -100,15 +131,16 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afficher le numéro de semaine',
   timeFormat: "Format de l'heure",
   viewSpecificOptions: (view) => `Options de la vue ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toute la journée',
-
-  // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} de plus..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} suivant(e)`,
   previousTimeSpan: (timeSpan) => `${timeSpan} précédent(e)`,
-  resourceAriaLabel: (resourceName) => `Ressource : ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semaine ${weekNumber}`,
 
@@ -120,17 +152,21 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   miniCalendarGoToPreviousMonth: 'Afficher le mois précédent dans le calendrier',
   miniCalendarGoToNextMonth: 'Afficher le mois suivant dans le calendrier',
 
+  // Main calendar region
+  // calendarContentAriaLabel: 'Calendar content',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',
 };
 
-const frFRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventDialogLocaleText>> = {
+const frFRTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titre de la ressource',
 };
 
 export const frFR: SchedulerLocalization = getSchedulerLocalization({
   dialog: frFRDialog,
+  event: frFREvent,
   calendar: frFRCalendar,
   timeline: frFRTimeline,
 });

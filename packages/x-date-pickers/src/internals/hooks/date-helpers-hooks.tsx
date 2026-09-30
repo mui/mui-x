@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { PickerOnChangeFn } from './useViews';
+import type { PickerOnChangeFn } from './useViews';
 import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
-import { PickerSelectionState } from './usePicker';
-import { PickersTimezone, PickerValidDate } from '../../models';
+import type { PickerSelectionState } from './usePicker';
+import type { PickersTimezone, PickerValidDate } from '../../models';
 import { usePickerAdapter } from '../../hooks/usePickerAdapter';
 
 export interface MonthValidationOptions {
@@ -46,7 +46,7 @@ export function usePreviousMonthDisabled(
     const firstEnabledMonth = adapter.startOfMonth(
       disablePast && adapter.isAfter(now, minDate) ? now : minDate,
     );
-    return !adapter.isBefore(firstEnabledMonth, month);
+    return !adapter.isBefore(firstEnabledMonth, adapter.startOfMonth(month));
   }, [disablePast, minDate, month, adapter, timezone]);
 }
 

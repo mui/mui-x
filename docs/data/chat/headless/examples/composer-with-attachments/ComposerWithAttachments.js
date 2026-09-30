@@ -94,12 +94,12 @@ function ComposerDemoBody() {
             <Message.Root
               messageId={id}
               slotProps={{
-                root: demoSlotProps.messageRoot,
+                root: demoSlotProps.message,
               }}
             >
               <Message.Avatar
                 slotProps={{
-                  avatar: demoSlotProps.messageAvatar,
+                  avatar: demoSlotProps.avatar,
                   image: demoSlotProps.messageAvatarImage,
                 }}
               />
@@ -153,7 +153,7 @@ function ComposerDemoBody() {
               />
               <Message.Meta
                 slotProps={{
-                  meta: demoSlotProps.messageMeta,
+                  meta: demoSlotProps.meta,
                 }}
               />
             </Message.Root>
@@ -162,7 +162,7 @@ function ComposerDemoBody() {
       />
       <Composer.Root
         slotProps={{
-          root: demoSlotProps.composerRoot,
+          root: demoSlotProps.composer,
         }}
       >
         <AttachmentPreviewList />
@@ -220,7 +220,7 @@ function ComposerDemoBody() {
           <Composer.SendButton
             data-variant="primary"
             slotProps={{
-              sendButton: demoSlotProps.composerSendButton,
+              sendButton: demoSlotProps.send,
             }}
           >
             Send message

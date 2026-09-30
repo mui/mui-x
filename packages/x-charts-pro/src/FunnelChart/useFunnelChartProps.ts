@@ -1,17 +1,19 @@
 'use client';
 import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
-import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
-import { type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { type ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import { defaultizeMargin, type XAxis, type YAxis } from '@mui/x-charts/internals';
-import { type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import type { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import type { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
+import { defaultizeMargin } from '@mui/x-charts/internals';
+import type { XAxis, YAxis } from '@mui/x-charts/internals';
+import type { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
-import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
-import { type FunnelPlotProps } from './FunnelPlot';
+import { FUNNEL_CHART_PLUGINS } from './FunnelChart.plugins';
+import type { FunnelChartPluginSignatures } from './FunnelChart.plugins';
+import type { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
-import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import type { ChartsContainerProProps } from '../ChartsContainerPro';
 
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
@@ -45,8 +47,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
         [
           `MUI X Charts: the categoryAxis position is set to '${categoryAxis.position}' but the series layout is ${isHorizontal ? 'horizontal' : 'vertical'}.`,
           `Ensure that the categoryAxis position is set to '${isHorizontal ? 'top' : 'left'}' or '${isHorizontal ? 'bottom' : 'right'}' for ${isHorizontal ? 'horizontal' : 'vertical'} layout.\n`,
-        ],
-        'warning',
+        ].join('\n'),
       );
     }
   }

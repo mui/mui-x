@@ -1,10 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridSlotProps } from '../../models';
-import { type QuickFilterState, useQuickFilterContext } from './QuickFilterContext';
+import { useQuickFilterContext } from './QuickFilterContext';
+import type { QuickFilterState } from './QuickFilterContext';
 
 export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'className'> & {
   /**
@@ -59,7 +61,7 @@ const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
   },
 );
 
-QuickFilterClear.propTypes = {
+QuickFilterClear.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -69,10 +71,23 @@ QuickFilterClear.propTypes = {
    */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   color: PropTypes.oneOf(['default', 'inherit', 'primary']),
+  /**
+   * The component used for the root node. Either a string to use an HTML element or a component.
+   */
+  component: PropTypes.elementType,
   disabled: PropTypes.bool,
   edge: PropTypes.oneOf(['end', 'start', false]),
+  /**
+   * The URL to link to. If set, and `component` is not set, the component renders as an anchor tag.
+   */
+  href: PropTypes.string,
   id: PropTypes.string,
   label: PropTypes.string,
+  /**
+   * The relationship of the linked URL.
+   * Set it to `noopener noreferrer` when `target` is set to `_blank` to avoid a security issue.
+   */
+  rel: PropTypes.string,
   /**
    * A function to customize rendering of the component.
    */
@@ -81,6 +96,10 @@ QuickFilterClear.propTypes = {
   size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
   tabIndex: PropTypes.number,
+  /**
+   * Where to display the linked URL, as the name for a browsing context.
+   */
+  target: PropTypes.string,
   title: PropTypes.string,
   touchRippleRef: PropTypes.any,
 } as any;

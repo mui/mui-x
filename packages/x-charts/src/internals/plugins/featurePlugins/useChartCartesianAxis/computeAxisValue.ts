@@ -1,33 +1,32 @@
-import { type ScaleBand, type NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import type { ScaleBand, NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
-import { type ContinuousScaleName, type ScaleName } from '../../../../models';
-import {
-  type ChartsXAxisProps,
-  type ChartsAxisProps,
-  type ChartsYAxisProps,
-  isBandScaleConfig,
-  isPointScaleConfig,
-  type AxisId,
-  type DefaultedXAxis,
-  type DefaultedYAxis,
-  type DefaultedAxis,
-  type AxisValueFormatterContext,
-  type ComputedAxis,
-  type D3Scale,
+import type { ContinuousScaleName, ScaleName } from '../../../../models';
+import { isBandScaleConfig, isPointScaleConfig } from '../../../../models/axis';
+import type {
+  ChartsXAxisProps,
+  ChartsAxisProps,
+  ChartsYAxisProps,
+  AxisId,
+  DefaultedXAxis,
+  DefaultedYAxis,
+  DefaultedAxis,
+  AxisValueFormatterContext,
+  ComputedAxis,
+  D3Scale,
 } from '../../../../models/axis';
-import {
-  type CartesianChartSeriesType,
-  type ChartSeriesType,
+import type {
+  CartesianChartSeriesType,
+  ChartSeriesType,
 } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '../../../colorScale';
 import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import type { ChartDrawingArea } from '../../../../hooks';
-import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
-import { type ComputedAxisConfig } from './useChartCartesianAxis.types';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
-import { type ZoomData } from './zoom.types';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { ComputedAxisConfig } from './useChartCartesianAxis.types';
+import type { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import type { ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 import {

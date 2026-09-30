@@ -1,7 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type ChartSeriesDefaultized, type ChartsSeriesConfig } from '../models/seriesType/config';
-import { type SeriesId } from '../models/seriesType/common';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import type { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
+import type { SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
 import { useStore } from './store/useStore';
@@ -44,10 +44,12 @@ export const selectorSeriesOfType = createSelectorMemoized(
     if (process.env.NODE_ENV !== 'production' && failedIds.length > 0) {
       const formattedIds = failedIds.map((v) => JSON.stringify(v)).join(', ');
       const fnName = `use${seriesType.charAt(0).toUpperCase()}${seriesType.slice(1)}Series`;
-      warnOnce([
-        `MUI X Charts: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
-        `Make sure that they exist and their series are using the "${seriesType}" series type.`,
-      ]);
+      warnOnce(
+        [
+          `MUI X Charts: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
+          `Make sure that they exist and their series are using the "${seriesType}" series type.`,
+        ].join('\n'),
+      );
     }
     return result;
   },
@@ -64,7 +66,5 @@ export const useSeriesOfType = <T extends keyof ChartsSeriesConfig>(
 ) => {
   const store = useStore();
   return store.use(selectorSeriesOfType, seriesType, seriesId) as
-    | ChartSeriesDefaultized<T>
-    | ChartSeriesDefaultized<T>[]
-    | undefined;
+    ChartSeriesDefaultized<T> | ChartSeriesDefaultized<T>[] | undefined;
 };

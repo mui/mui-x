@@ -1,9 +1,10 @@
-import * as React from 'react';
-import { FormControlProps } from '@mui/material/FormControl';
-import { FormHelperTextProps } from '@mui/material/FormHelperText';
-import { InputLabelProps } from '@mui/material/InputLabel';
-import { TextFieldVariants } from '@mui/material/TextField';
-import {
+import type * as React from 'react';
+import type { FormControlProps } from '@mui/material/FormControl';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
+import type { InputLabelProps } from '@mui/material/InputLabel';
+import type { TextFieldVariants } from '@mui/material/TextField';
+import type { WithDataAttributes } from '@mui/utils/types';
+import type {
   PickersInputBaseProps,
   PickersInputPropsUsedByField,
 } from './PickersInputBase/PickersInputBase.types';
@@ -41,11 +42,11 @@ export interface PickersTextFieldSlots {
 }
 
 export interface PickersTextFieldSlotProps<InputPropsType extends PickersInputBaseProps> {
-  root?: Partial<FormControlProps>;
-  input?: Partial<InputPropsType>;
-  inputLabel?: Partial<InputLabelProps>;
-  htmlInput?: React.ComponentPropsWithRef<'input'>;
-  formHelperText?: Partial<FormHelperTextProps>;
+  root?: WithDataAttributes<Partial<FormControlProps>>;
+  input?: WithDataAttributes<Partial<InputPropsType>>;
+  inputLabel?: WithDataAttributes<Partial<InputLabelProps>>;
+  htmlInput?: WithDataAttributes<React.ComponentPropsWithRef<'input'>>;
+  formHelperText?: WithDataAttributes<Partial<FormHelperTextProps>>;
 }
 
 export interface PickersTextFieldSlotsAndSlotProps<InputPropsType extends PickersInputBaseProps> {

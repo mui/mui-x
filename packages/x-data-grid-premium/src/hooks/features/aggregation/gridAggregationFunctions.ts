@@ -18,10 +18,6 @@ const sumAgg: GridAggregationFunction<unknown, number> = {
 
 const avgAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {
-    if (values.length === 0) {
-      return null;
-    }
-
     let sum = 0;
     let valuesCount = 0;
     for (let i = 0; i < values.length; i += 1) {
@@ -32,7 +28,7 @@ const avgAgg: GridAggregationFunction<unknown, number> = {
       }
     }
 
-    if (sum === 0) {
+    if (valuesCount === 0) {
       return null;
     }
 

@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'годин',
@@ -8,6 +8,19 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   seconds: 'секунд',
   meridiem: 'Південь',
 };
+
+// Ukrainian has 3 count-based forms, selected by the last digit(s) of the count
+function getPluralForm(count: number, one: string, few: string, many: string) {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+  if (lastDigit === 1 && lastTwoDigits !== 11) {
+    return one;
+  }
+  if (lastDigit > 1 && lastDigit < 5 && (lastTwoDigits < 12 || lastTwoDigits > 14)) {
+    return few;
+  }
+  return many;
+}
 
 const ukUAPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
@@ -47,9 +60,12 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Вибрати ${timeViews[view]}. ${!formattedTime ? 'Час не вибраний' : `Вибрано час ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} годин`,
-  minutesClockNumberText: (minutes) => `${minutes} хвилин`,
-  secondsClockNumberText: (seconds) => `${seconds} секунд`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralForm(Number(hours), 'година', 'години', 'годин')}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralForm(Number(minutes), 'хвилина', 'хвилини', 'хвилин')}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralForm(Number(seconds), 'секунда', 'секунди', 'секунд')}`,
 
   // Digital clock labels
   selectViewText: (view) => `Вибрати ${timeViews[view]}`,

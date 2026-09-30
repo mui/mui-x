@@ -8,6 +8,7 @@ import {
   BuildFieldInteractionsResponse,
   createPickerRenderer,
 } from 'test/utils/pickers';
+import { describe } from 'vitest';
 
 type AdapterTestRunner<P extends {}> = (
   params: ReturnType<typeof createPickerRenderer> & BuildFieldInteractionsResponse<P>,

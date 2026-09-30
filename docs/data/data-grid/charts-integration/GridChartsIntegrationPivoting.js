@@ -18,6 +18,7 @@ export default function GridChartsIntegrationPivoting() {
     dataSet: 'Commodity',
     rowLength: 1000,
     editable: true,
+    multiSelect: true,
   });
   const apiRef = useGridApiRef();
 

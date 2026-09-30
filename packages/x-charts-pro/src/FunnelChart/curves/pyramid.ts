@@ -1,4 +1,4 @@
-import { type FunnelCurveGenerator, type CurveOptions, type Point } from './curve.types';
+import type { FunnelCurveGenerator, CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
 import { lerpX, lerpY } from './utils';
 
@@ -9,7 +9,7 @@ import { lerpX, lerpY } from './utils';
  * with the option to add a gap between sections while also properly handling the border radius.
  */
 export class Pyramid implements FunnelCurveGenerator {
-  private context: CanvasRenderingContext2D;
+  declare private context: CanvasRenderingContext2D;
 
   private position: number = 0;
 

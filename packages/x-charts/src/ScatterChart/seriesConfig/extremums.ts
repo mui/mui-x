@@ -1,4 +1,4 @@
-import { type CartesianExtremumGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { CartesianExtremumGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
@@ -8,6 +8,10 @@ export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
 
   for (const seriesId in series) {
     if (!Object.hasOwn(series, seriesId)) {
+      continue;
+    }
+
+    if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
       continue;
     }
 
@@ -54,6 +58,10 @@ export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
 
   for (const seriesId in series) {
     if (!Object.hasOwn(series, seriesId)) {
+      continue;
+    }
+
+    if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
       continue;
     }
 

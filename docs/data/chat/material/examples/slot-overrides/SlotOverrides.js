@@ -2,11 +2,11 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import { ChatBox, ChatMessageContent } from '@mui/x-chat';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 
 /**
  * A custom message content component that wraps the default ChatMessageContent
@@ -43,7 +43,7 @@ const PaperBubble = React.forwardRef(function PaperBubble(
 });
 
 /**
- * A custom messageContent slot that delegates to the default ChatMessageContent
+ * A custom content slot that delegates to the default ChatMessageContent
  * but swaps the inner bubble slot for PaperBubble.
  */
 const CustomMessageContent = React.forwardRef(
@@ -63,7 +63,7 @@ const CustomMessageContent = React.forwardRef(
 
 const adapter = createEchoAdapter({
   respond: (text) =>
-    `Received: "${text}". This reply uses a Paper component as the message bubble — swapped in via slots.messageContent.`,
+    `Received: "${text}". This reply uses a Paper component as the message bubble — swapped in via slots.content.`,
 });
 
 export default function SlotOverrides() {
@@ -73,7 +73,9 @@ export default function SlotOverrides() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ messageContent: CustomMessageContent }}
+      slots={{
+        messageContent: CustomMessageContent,
+      }}
       sx={{
         height: 500,
         border: '1px solid',

@@ -20,13 +20,12 @@
       "name": "area",
       "description": "The component that renders the area.",
       "default": "AnimatedArea",
-      "class": null
+      "class": "MuiLineChart-area"
     }
   ],
   "classes": [],
   "muiName": "MuiAreaElement",
   "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>"
 }

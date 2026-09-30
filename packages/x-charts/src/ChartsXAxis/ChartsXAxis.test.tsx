@@ -3,6 +3,8 @@ import { screen } from '@mui/internal-test-utils';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { describe, it, expect } from 'vitest';
 
 describe('<ChartsXAxis />', () => {
   const { render } = createRenderer();
@@ -46,5 +48,26 @@ describe('<ChartsXAxis />', () => {
 
     const root = container.querySelector(`.${axisClasses.root}.custom-x-axis`);
     expect(root).not.to.equal(null);
+  });
+
+  // https://github.com/mui/mui-x/issues/23697
+  it('should not warn when the theme typography has responsive styles', () => {
+    const baseTheme = createTheme();
+    const theme = createTheme(baseTheme, {
+      typography: {
+        caption: { [baseTheme.breakpoints.up('md')]: { fontSize: '0.875rem' } },
+        body1: { [baseTheme.breakpoints.up('md')]: { fontSize: '1.125rem' } },
+      },
+    });
+
+    expect(() =>
+      render(
+        <ThemeProvider theme={theme}>
+          <ChartsContainer {...defaultProps}>
+            <ChartsXAxis />
+          </ChartsContainer>
+        </ThemeProvider>,
+      ),
+    ).not.toErrorDev();
   });
 });

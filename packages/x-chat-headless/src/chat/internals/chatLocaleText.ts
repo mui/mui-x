@@ -9,6 +9,8 @@ export interface ChatLocaleText {
   composerSendButtonLabel: string;
   composerAttachButtonLabel: string;
   composerAttachInputLabel: string;
+  composerAttachmentFallbackLabel: string;
+  composerRemoveAttachmentLabel(fileName: string): string;
   messageCopyButtonLabel: string;
   messageCopyCodeButtonLabel: string;
   messageCopiedCodeButtonLabel: string;
@@ -40,8 +42,31 @@ export interface ChatLocaleText {
   messageListLabel: string;
   messageLabel: string;
   conversationHeaderMenuLabel: string;
+  conversationHeaderBackLabel: string;
+  conversationHeaderCloseLabel: string;
   conversationHeaderNewChatLabel: string;
   conversationHeaderSettingsLabel: string;
+  /** Default author label used when a message's `role` is `'user'` and no
+   * displayName was resolved from `message.author`, members, or `currentUser`. */
+  messageAuthorUserLabel: string;
+  /** Default author label used when a message's `role` is `'assistant'`
+   * and no displayName was resolved from `message.author` or members. */
+  messageAuthorAssistantLabel: string;
+  /** Default author label used when a message's `role` is `'system'`
+   * and no displayName was resolved from `message.author` or members. */
+  messageAuthorSystemLabel: string;
+  /** Accessible name of the conversations sidebar `navigation` landmark. */
+  conversationListLandmarkLabel: string;
+  /** Accessible name of the active-conversation (thread) `region` landmark. */
+  threadLandmarkLabel: string;
+  /** Accessible name of the composer `form` landmark. */
+  composerLandmarkLabel: string;
+  /** Accessible name of a message's actions container. */
+  messageActionsLabel: string;
+  /** Announced (politely) when the assistant starts streaming a response. */
+  responseStreamingStartedAnnouncement: string;
+  /** Announced (politely) when a streaming response completes. */
+  responseStreamingCompletedAnnouncement: string;
 }
 
 function getUserLabel(user: ChatLocaleTypingUser) {
@@ -84,10 +109,10 @@ const messageStatusLabels: Record<ChatMessageStatus, string> = {
 };
 
 const toolStateLabels: Record<ChatToolInvocationState, string> = {
-  'input-streaming': 'Running...',
-  'input-available': 'Running...',
+  'input-streaming': 'Running…',
+  'input-available': 'Running…',
   'approval-requested': 'Awaiting approval',
-  'approval-responded': 'Running...',
+  'approval-responded': 'Running…',
   'output-available': 'Completed',
   'output-error': 'Failed',
   'output-denied': 'Denied',
@@ -99,15 +124,17 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   composerSendButtonLabel: 'Send message',
   composerAttachButtonLabel: 'Add attachment',
   composerAttachInputLabel: 'Upload file',
+  composerAttachmentFallbackLabel: 'Attachment',
+  composerRemoveAttachmentLabel: (fileName) => `Remove ${fileName}`,
   messageCopyButtonLabel: 'Copy',
   messageCopyCodeButtonLabel: 'Copy code',
   messageCopiedCodeButtonLabel: 'Copied',
   messageEditedLabel: 'Edited',
   messageDeletedLabel: 'Deleted',
   messageReasoningLabel: 'Reasoning',
-  messageReasoningStreamingLabel: 'Thinking...',
-  messageToolInputLabel: 'Input',
-  messageToolOutputLabel: 'Output',
+  messageReasoningStreamingLabel: 'Thinking…',
+  messageToolInputLabel: 'Tool called',
+  messageToolOutputLabel: 'Tool result',
   messageToolApproveButtonLabel: 'Approve',
   messageToolDenyButtonLabel: 'Deny',
   conversationListNoConversationsLabel: 'No conversations',
@@ -119,7 +146,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   threadNoMessagesLabel: 'No messages yet',
   threadNoMessagesHelperText: 'Type a message to get started',
   genericErrorLabel: 'Something went wrong',
-  loadingLabel: 'Loading...',
+  loadingLabel: 'Loading…',
   messageStatusLabel: (status) => messageStatusLabels[status],
   toolStateLabel: (state) => toolStateLabels[state],
   messageTimestampLabel: (dateTime) => formatMessageTimestamp(dateTime),
@@ -138,6 +165,17 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageListLabel: 'Message log',
   messageLabel: 'Message',
   conversationHeaderMenuLabel: 'Open conversations',
+  conversationHeaderBackLabel: 'Back to conversations',
+  conversationHeaderCloseLabel: 'Close conversations',
   conversationHeaderNewChatLabel: 'New chat',
   conversationHeaderSettingsLabel: 'Settings',
+  messageAuthorUserLabel: 'User',
+  messageAuthorAssistantLabel: 'Assistant',
+  messageAuthorSystemLabel: 'System',
+  conversationListLandmarkLabel: 'Conversations',
+  threadLandmarkLabel: 'Conversation',
+  composerLandmarkLabel: 'Message composer',
+  messageActionsLabel: 'Message actions',
+  responseStreamingStartedAnnouncement: 'Assistant is responding',
+  responseStreamingCompletedAnnouncement: 'Response complete',
 };

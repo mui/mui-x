@@ -1,5 +1,5 @@
 import { config } from 'react-transition-group';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   microtasks,
@@ -12,16 +12,14 @@ import {
 } from 'test/utils/helperFn';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  type GridApi,
   GridPreferencePanelsValue,
-  type GridRowsProp,
   useGridApiRef,
   GridLogicOperator,
 } from '@mui/x-data-grid-premium';
-import { spy } from 'sinon';
+import type { DataGridPremiumProps, GridApi, GridRowsProp } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -87,6 +85,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
         expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+        expect(getCell(0, 0)).to.have.attribute('role', 'rowheader');
       });
 
       it('should not react to initial state updates', () => {
@@ -105,7 +104,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
     describe('prop: rowGroupingModel', () => {
       it('should not call onRowGroupingModelChange on initialisation or on rowGroupingModel prop change', () => {
-        const onRowGroupingModelChange = spy();
+        const onRowGroupingModelChange = vi.fn();
 
         const { setProps } = render(
           <Test
@@ -114,10 +113,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(onRowGroupingModelChange.callCount).to.equal(0);
+        expect(onRowGroupingModelChange.mock.calls.length).to.equal(0);
         setProps({ rowGroupingModel: ['category2'] });
 
-        expect(onRowGroupingModelChange.callCount).to.equal(0);
+        expect(onRowGroupingModelChange.mock.calls.length).to.equal(0);
       });
 
       it('should allow to update the row grouping model from the outside', () => {
@@ -251,6 +250,35 @@ describe('<DataGridPremium /> - Row grouping', () => {
         '',
       ]);
     });
+
+    // Regression test for https://github.com/mui/mui-x/issues/22310
+    it('should not crash when grouping values match Object.prototype property names', () => {
+      render(
+        <Test
+          rows={[
+            { id: 0, category1: 'constructor', category2: 'Cat 1' },
+            { id: 1, category1: 'constructor', category2: 'Cat 2' },
+            { id: 2, category1: '__proto__', category2: 'Cat 1' },
+            { id: 3, category1: 'toString', category2: 'Cat 2' },
+            { id: 4, category1: 'hasOwnProperty', category2: 'Cat 1' },
+          ]}
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal([
+        'constructor (2)',
+        '',
+        '',
+        '__proto__ (1)',
+        '',
+        'toString (1)',
+        '',
+        'hasOwnProperty (1)',
+        '',
+      ]);
+    });
   });
 
   describe('colDef: groupingValueGetter & valueGetter', () => {
@@ -372,6 +400,69 @@ describe('<DataGridPremium /> - Row grouping', () => {
         '',
       ]);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+    });
+  });
+
+  describe('colDef: multiSelect', () => {
+    const multiSelectRows: GridRowsProp = [
+      { id: 0, tags: ['React', 'TypeScript'] },
+      { id: 1, tags: ['TypeScript', 'React'] },
+      { id: 2, tags: ['React', 'Node.js'] },
+    ];
+
+    it('groups rows sharing the same set of values (order-insensitive by default)', () => {
+      render(
+        <Test
+          rows={multiSelectRows}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js'],
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['tags'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // ['React', 'TypeScript'] and ['TypeScript', 'React'] share the same sorted key → one group.
+      expect(getColumnValues(0)).to.deep.equal([
+        'React,TypeScript (2)',
+        '',
+        '',
+        'Node.js,React (1)',
+        '',
+      ]);
+    });
+
+    it('uses user-provided groupingValueGetter to override the default order-insensitive behavior', () => {
+      render(
+        <Test
+          rows={multiSelectRows}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js'],
+              groupingValueGetter: (value: (string | number)[]) =>
+                !Array.isArray(value) || value.length === 0 ? null : value.join('|'),
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['tags'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // Order-sensitive custom getter → ['React','TypeScript'] and ['TypeScript','React'] split.
+      expect(getColumnValues(0)).to.deep.equal([
+        'React|TypeScript (1)',
+        '',
+        'TypeScript|React (1)',
+        '',
+        'React|Node.js (1)',
+        '',
+      ]);
     });
   });
 
@@ -1348,11 +1439,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
 
-      const onFilteredRowsSet = spy();
+      const onFilteredRowsSet = vi.fn();
       apiRef.current?.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
-      expect(onFilteredRowsSet.callCount).to.equal(0);
+      expect(onFilteredRowsSet.mock.calls.length).to.equal(0);
     });
 
     it('should not apply filters when the row is collapsed', () => {
@@ -1365,11 +1456,11 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
 
-      const onFilteredRowsSet = spy();
+      const onFilteredRowsSet = vi.fn();
       apiRef.current?.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
-      expect(onFilteredRowsSet.callCount).to.equal(0);
+      expect(onFilteredRowsSet.mock.calls.length).to.equal(0);
     });
   });
 

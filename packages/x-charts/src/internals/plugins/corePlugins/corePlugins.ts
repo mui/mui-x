@@ -1,21 +1,22 @@
-import { type UseChartAnimationSignature, useChartAnimation } from './useChartAnimation';
-import { type UseChartDimensionsSignature, useChartDimensions } from './useChartDimensions';
-import { type UseChartElementRefSignature, useChartElementRef } from './useChartElementRef';
-import {
-  type UseChartExperimentalFeaturesSignature,
-  useChartExperimentalFeatures,
-} from './useChartExperimentalFeature';
-import { type UseChartIdSignature, useChartId, type UseChartIdParameters } from './useChartId';
-import {
-  type UseChartSeriesConfigSignature,
-  useChartSeriesConfig,
-  type UseChartSeriesConfigParameters,
+import { useChartAnimation } from './useChartAnimation';
+import type { UseChartAnimationSignature } from './useChartAnimation';
+import { useChartDimensions } from './useChartDimensions';
+import type { UseChartDimensionsSignature } from './useChartDimensions';
+import { useChartElementRef } from './useChartElementRef';
+import type { UseChartElementRefSignature } from './useChartElementRef';
+import { useChartExperimentalFeatures } from './useChartExperimentalFeature';
+import type { UseChartExperimentalFeaturesSignature } from './useChartExperimentalFeature';
+import { useChartId } from './useChartId';
+import type { UseChartIdSignature, UseChartIdParameters } from './useChartId';
+import { useChartSeriesConfig } from './useChartSeriesConfig';
+import type {
+  UseChartSeriesConfigSignature,
+  UseChartSeriesConfigParameters,
 } from './useChartSeriesConfig';
-import { type UseChartSeriesSignature, useChartSeries } from './useChartSeries';
-import {
-  type UseChartInteractionListenerSignature,
-  useChartInteractionListener,
-} from './useChartInteractionListener';
+import { useChartSeries } from './useChartSeries';
+import type { UseChartSeriesSignature } from './useChartSeries';
+import { useChartInteractionListener } from './useChartInteractionListener';
+import type { UseChartInteractionListenerSignature } from './useChartInteractionListener';
 import type { ChartSeriesType } from '../../../models/seriesType/config';
 
 /**

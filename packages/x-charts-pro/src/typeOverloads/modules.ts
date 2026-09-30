@@ -6,6 +6,8 @@ import type {
   ComputedXAxis,
   ComputedYAxis,
   ZoomOptions,
+  BarSamplingMethod,
+  SamplingMethod,
 } from '@mui/x-charts/internals';
 import type {
   DefaultizedFunnelSeriesType,
@@ -95,6 +97,16 @@ declare module '@mui/x-charts/internals' {
       };
       highlightIdentifier: SankeyItemIdentifier;
     };
+  }
+
+  interface BarSeriesExtension {
+    /** Bar `sampling` method. */
+    samplingMethod: BarSamplingMethod;
+  }
+
+  interface LineSeriesExtension {
+    /** Line `sampling` method. */
+    samplingMethod: SamplingMethod;
   }
 
   interface DefaultizedZoomOptions extends Required<ZoomOptions> {

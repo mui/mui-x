@@ -1,4 +1,4 @@
-import { PickerValidDate } from '../../models/pickers';
+import type { PickerValidDate } from '../../models/pickers';
 
 /**
  * The type that the `value` and `defaultValue` props can receive on non-range components (date, time and date-time).

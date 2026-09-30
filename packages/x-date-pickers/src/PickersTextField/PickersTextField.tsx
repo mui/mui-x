@@ -11,17 +11,15 @@ import useId from '@mui/utils/useId';
 import InputLabel from '@mui/material/InputLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import {
-  getPickersTextFieldUtilityClass,
-  PickersTextFieldClasses,
-} from './pickersTextFieldClasses';
-import { PickersTextFieldProps } from './PickersTextField.types';
+import type { PickersTextFieldClasses } from './pickersTextFieldClasses';
+import { getPickersTextFieldUtilityClass } from './pickersTextFieldClasses';
+import type { PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from './PickersOutlinedInput';
 import { PickersFilledInput } from './PickersFilledInput';
 import { PickersInput } from './PickersInput';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
 import { PickerTextFieldOwnerStateContext } from './usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../models/fields';
+import type { PickerTextFieldOwnerState } from '../models/fields';
 
 const VARIANT_COMPONENT = {
   standard: PickersInput,
@@ -77,12 +75,14 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       legacyProps.InputLabelProps ||
       legacyProps.FormHelperTextProps
     ) {
-      warnOnce([
-        'MUI X: `PickersTextField` no longer supports the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
-        'They are silently dropped, which can hide configuration bugs in JavaScript codebases that do not benefit from TypeScript checks.',
-        'Use `slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel` and `slotProps.formHelperText` instead.',
-        'You can run the `migrate-text-field-props` codemod to migrate automatically.',
-      ]);
+      warnOnce(
+        [
+          'MUI X: `PickersTextField` no longer supports the `InputProps`, `inputProps`, `InputLabelProps` and `FormHelperTextProps` props.',
+          'They are silently dropped, which can hide configuration bugs in JavaScript codebases that do not benefit from TypeScript checks.',
+          'Use `slotProps.input`, `slotProps.htmlInput`, `slotProps.inputLabel` and `slotProps.formHelperText` instead.',
+          'You can run the `migrate-text-field-props` codemod to migrate automatically.',
+        ].join('\n'),
+      );
     }
   }
 
@@ -104,6 +104,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     elements,
     areAllSectionsEmpty,
     onClick,
+    onMouseDown,
     onKeyDown,
     onKeyUp,
     onPaste,
@@ -222,6 +223,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           elements={elements}
           areAllSectionsEmpty={areAllSectionsEmpty}
           onClick={onClick}
+          onMouseDown={onMouseDown}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
           onInput={onInput}
@@ -266,7 +268,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
   );
 });
 
-PickersTextField.propTypes = {
+PickersTextField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -360,6 +362,7 @@ PickersTextField.propTypes = {
   onFocus: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
   /**

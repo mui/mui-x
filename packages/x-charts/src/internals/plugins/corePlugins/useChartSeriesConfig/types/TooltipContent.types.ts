@@ -1,14 +1,10 @@
 import type { CartesianChartSeriesType } from '../../../../../models';
-import {
-  type ChartsTooltipClasses,
-  type ItemTooltip,
-  type SeriesItem,
-} from '../../../../../ChartsTooltip';
+import type { ChartsTooltipClasses, ItemTooltip, SeriesItem } from '../../../../../ChartsTooltip';
 import type {
   ChartSeriesType,
   PolarChartSeriesType,
 } from '../../../../../models/seriesType/config';
-import { type ItemTooltipWithMultipleValues } from './tooltipGetter.types';
+import type { ItemTooltipWithMultipleValues } from './tooltipGetter.types';
 
 export interface AxisTooltipContentProps<
   T extends CartesianChartSeriesType | PolarChartSeriesType,

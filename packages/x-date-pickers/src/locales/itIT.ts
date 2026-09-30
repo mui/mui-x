@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'le ore',
@@ -42,14 +42,15 @@ const itITPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Seleziona data e orario',
   timePickerToolbarTitle: 'Seleziona orario',
   dateRangePickerToolbarTitle: 'Seleziona intervallo di date',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Seleziona intervallo di orari',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Seleziona ${views[view]}. ${!formattedTime ? 'Nessun orario selezionato' : `L'ora selezionata è ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} ore`,
-  minutesClockNumberText: (minutes) => `${minutes} minuti`,
-  secondsClockNumberText: (seconds) => `${seconds} secondi`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'ora' : 'ore'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'minuto' : 'minuti'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'secondo' : 'secondi'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Seleziona ${views[view]}`,
@@ -65,7 +66,10 @@ const itITPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Scegli la data, la data selezionata è ${formattedDate}` : 'Scegli la data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Scegli l'ora, l'ora selezionata è ${formattedTime}` : "Scegli l'ora",
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Scegli l'intervallo, l'intervallo selezionato è ${formattedRange}`
+      : "Scegli l'intervallo",
   fieldClearLabel: 'Cancella valore',
 
   // Table labels

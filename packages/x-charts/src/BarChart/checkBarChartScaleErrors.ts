@@ -1,7 +1,7 @@
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { type AxisId, type ComputedXAxis, type ComputedYAxis } from '../models/axis';
-import { type SeriesId } from '../models/seriesType/common';
+import type { AxisId, ComputedXAxis, ComputedYAxis } from '../models/axis';
+import type { SeriesId } from '../models/seriesType/common';
 
 const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
   const axisName = `${axisDirection}-axis`;
@@ -56,12 +56,11 @@ export function checkBarChartScaleErrors(
   }
   if (process.env.NODE_ENV !== 'production') {
     if (discreteAxisConfig.data.length < seriesDataLength) {
-      warnOnce(
+      errorOnce(
         [
           `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${seriesDataLength} values).`,
           'The axis data should have at least the same length than the series using it.',
-        ],
-        'error',
+        ].join('\n'),
       );
     }
   }

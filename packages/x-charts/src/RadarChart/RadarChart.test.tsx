@@ -1,7 +1,9 @@
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
-import { RadarChart, type RadarChartProps } from '@mui/x-charts/RadarChart';
-import { vi } from 'vitest';
+import { RadarChart } from '@mui/x-charts/RadarChart';
+import type { RadarChartProps } from '@mui/x-charts/RadarChart';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { vi, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsTooltipClasses } from '../ChartsTooltip';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
@@ -25,6 +27,36 @@ describe('<RadarChart />', () => {
     testComponentPropWith: 'div',
     refInstanceof: window.HTMLDivElement,
   }));
+
+  describe('legend', () => {
+    const getGridTemplateAreas = (container: HTMLElement) =>
+      window
+        .getComputedStyle(container.firstElementChild!)
+        .gridTemplateAreas.replace(/\s+/g, ' ')
+        .trim();
+
+    it('should place the legend at the bottom when slotProps.legend.position is bottom', () => {
+      const { container } = render(
+        <RadarChart
+          {...radarConfig}
+          slotProps={{ legend: { position: { vertical: 'bottom', horizontal: 'center' } } }}
+        />,
+      );
+
+      expect(getGridTemplateAreas(container)).to.equal('"chart" "legend"');
+    });
+
+    it('should place the legend on the side when slotProps.legend.direction is vertical', () => {
+      const { container } = render(
+        <RadarChart
+          {...radarConfig}
+          slotProps={{ legend: { direction: 'vertical', position: { horizontal: 'start' } } }}
+        />,
+      );
+
+      expect(getGridTemplateAreas(container)).to.equal('"legend chart"');
+    });
+  });
 
   it('should render "No Data" overlay when series prop is an empty array', () => {
     render(<RadarChart height={100} width={100} series={[]} radar={{ metrics: [] }} />);
@@ -145,4 +177,23 @@ describe('<RadarChart />', () => {
       });
     },
   );
+
+  // https://github.com/mui/mui-x/issues/23697
+  it('should not warn when the theme typography has responsive styles', () => {
+    const baseTheme = createTheme();
+    const theme = createTheme(baseTheme, {
+      typography: {
+        caption: { [baseTheme.breakpoints.up('md')]: { fontSize: '0.875rem' } },
+        body1: { [baseTheme.breakpoints.up('md')]: { fontSize: '1.125rem' } },
+      },
+    });
+
+    expect(() =>
+      render(
+        <ThemeProvider theme={theme}>
+          <RadarChart {...radarConfig} />
+        </ThemeProvider>,
+      ),
+    ).not.toErrorDev();
+  });
 });

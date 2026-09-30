@@ -32,6 +32,7 @@ export default function ServerSideDataGridAggregationRowGrouping() {
       maxColumns: 10,
       dataSet: 'Commodity',
       editable: true,
+      multiSelect: true,
       visibleFields: VISIBLE_COLUMNS,
     });
 

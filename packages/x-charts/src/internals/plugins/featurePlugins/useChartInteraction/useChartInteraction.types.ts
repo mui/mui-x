@@ -1,4 +1,6 @@
 import type { ChartPluginSignature } from '../../models';
+import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export type Coordinate = { x: number; y: number };
 
@@ -21,6 +23,17 @@ export interface UseChartInteractionInstance {
    * @returns {void}
    */
   setLastUpdateSource: (interaction: InteractionUpdateSource) => void;
+  /**
+   * Set the item the pointer is over.
+   * @param {SeriesItemIdentifierWithType} item The item under the pointer.
+   */
+  setHoveredItem: (item: SeriesItemIdentifierWithType<ChartSeriesType>) => void;
+  /**
+   * Remove the item the pointer was over.
+   * @param {SeriesItemIdentifierWithType} itemToRemove Only clears the item when it is the current
+   * one. Omit to clear unconditionally.
+   */
+  clearHoveredItem: (itemToRemove?: SeriesItemIdentifierWithType<ChartSeriesType>) => void;
   /**
    * Handle pointer enter event on the chart Surface.
    */
@@ -47,6 +60,13 @@ export interface UseChartInteractionState {
      * Used to decide if highlight should be based on pointer position or keyboard navigation.
      */
     lastUpdate: InteractionUpdateSource;
+    /**
+     * The item the pointer is currently over.
+     *
+     * Unlike the highlighted and the tooltip items, this one is never controlled, so it always
+     * reflects the pointer. That is what makes it usable to resolve what a click landed on.
+     */
+    hoveredItem: SeriesItemIdentifierWithType<ChartSeriesType> | null;
   };
 }
 

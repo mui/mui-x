@@ -1,5 +1,12 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "RadialLineHighlightPlot",
   "imports": [
     "import { RadialLineHighlightPlot } from '@mui/x-charts-premium/RadialLineChart';",
@@ -10,6 +17,5 @@
   "muiName": "MuiRadialLineHighlightPlot",
   "filename": "/packages/x-charts-premium/src/RadialLineChart/RadialLineHighlightPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>"
 }

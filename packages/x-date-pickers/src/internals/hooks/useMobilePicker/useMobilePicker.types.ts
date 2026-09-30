@@ -1,23 +1,23 @@
-import * as React from 'react';
-import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { BasePickerProps } from '../../models/props/basePickerProps';
-import {
+import type * as React from 'react';
+import type { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { BasePickerProps } from '../../models/props/basePickerProps';
+import type {
   PickersModalDialogSlots,
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
-import { UsePickerParameters, UsePickerNonStaticProps, UsePickerProps } from '../usePicker';
-import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
-import {
+import type { UsePickerParameters, UsePickerNonStaticProps, UsePickerProps } from '../usePicker';
+import type { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
+import type {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
   PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import {
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import type {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
 } from '../../components/PickerFieldUI';
-import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
+import type { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseMobilePickerSlots
   extends
@@ -66,10 +66,7 @@ export interface UseMobilePickerProps<
 export interface UseMobilePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobilePickerProps<TView, any, TExternalProps>,
-> extends Pick<
-  UsePickerParameters<PickerValue, TView, TExternalProps>,
-  'valueManager' | 'valueType' | 'validator' | 'ref'
-> {
+> extends Pick<UsePickerParameters<PickerValue, TView, TExternalProps>, 'manager' | 'ref'> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

@@ -71,7 +71,7 @@ function DetailPanelContent({ row: rowProp }: { row: Email }) {
 }
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'From' },
+  { field: 'name', headerName: 'From', rowHeader: true },
   { field: 'email', headerName: 'Email', width: 200 },
   { field: 'subject', headerName: 'Subject', width: 300 },
   { field: 'date', type: 'date', headerName: 'Date' },

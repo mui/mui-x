@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { SimpleTreeViewProps } from './SimpleTreeView.types';
-import { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
-import { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
+import type { SimpleTreeViewProps } from './SimpleTreeView.types';
+import type { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
+import type { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
 
 export function useExtractSimpleTreeViewParameters<Multiple extends boolean | undefined>(
   props: SimpleTreeViewProps<Multiple>,

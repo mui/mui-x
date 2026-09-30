@@ -1,14 +1,12 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import type {
   UseChartVisibilityManagerSignature,
   VisibilityIdentifierWithType,
   VisibilityMap,
 } from './useChartVisibilityManager.types';
-import { type ChartOptionalRootSelector } from '../../utils/selectors';
-import {
-  selectorChartSeriesConfig,
-  type ChartSeriesConfig,
-} from '../../corePlugins/useChartSeriesConfig';
+import type { ChartOptionalRootSelector } from '../../utils/selectors';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { serializeIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/serializeIdentifier';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 

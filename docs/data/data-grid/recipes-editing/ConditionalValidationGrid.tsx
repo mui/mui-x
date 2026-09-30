@@ -50,7 +50,13 @@ const rows: GridRowsProp = [
 
 export default function ConditionalValidationGrid() {
   const columns: GridColDef[] = [
-    { field: 'expense', headerName: 'Expense', width: 160, editable: true },
+    {
+      field: 'expense',
+      headerName: 'Expense',
+      width: 160,
+      editable: true,
+      rowHeader: true,
+    },
     {
       field: 'price',
       headerName: 'Price',

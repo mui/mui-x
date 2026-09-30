@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'klukkustundir',
@@ -8,6 +8,11 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   seconds: 'sekúndur',
   meridiem: 'eftirmiðdagur',
 };
+
+// Icelandic uses the singular for counts ending in 1, except those ending in 11
+function isSingular(count: number) {
+  return count % 10 === 1 && count % 100 !== 11;
+}
 
 const isISPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
@@ -47,9 +52,12 @@ const isISPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Velja ${timeViews[view]}. ${!formattedTime ? 'Enginn tími valinn' : `Valinn tími er ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} klukkustundir`,
-  minutesClockNumberText: (minutes) => `${minutes} mínútur`,
-  secondsClockNumberText: (seconds) => `${seconds} sekúndur`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${isSingular(Number(hours)) ? 'klukkustund' : 'klukkustundir'}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${isSingular(Number(minutes)) ? 'mínúta' : 'mínútur'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${isSingular(Number(seconds)) ? 'sekúnda' : 'sekúndur'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Velja ${timeViews[view]}`,

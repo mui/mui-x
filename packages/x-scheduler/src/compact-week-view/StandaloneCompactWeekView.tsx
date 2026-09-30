@@ -1,0 +1,58 @@
+'use client';
+import * as React from 'react';
+import { useThemeProps } from '@mui/material/styles';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
+import type { StandaloneCompactWeekViewProps } from './CompactWeekView.types';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
+import { EventDialogProvider } from '../internals/components/event-dialog';
+import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
+import { CompactWeekView } from './CompactWeekView';
+
+/**
+ * A touch-optimized Week View (7 days) for narrow widths that can be used outside of the
+ * Event Calendar.
+ */
+const StandaloneCompactWeekView = React.forwardRef(function StandaloneCompactWeekView<
+  TEvent extends object,
+  TResource extends object,
+>(
+  inProps: StandaloneCompactWeekViewProps<TEvent, TResource>,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
+
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
+
+  const { localeText, slots, slotProps, ...other } = forwardedProps;
+
+  return (
+    <ResponsiveTypographyContainer>
+      <EventCalendarProvider
+        {...parameters}
+        localeText={localeText}
+        slots={slots}
+        slotProps={slotProps}
+      >
+        <EventDialogProvider>
+          <CompactWeekView ref={forwardedRef} {...other} />
+        </EventDialogProvider>
+      </EventCalendarProvider>
+    </ResponsiveTypographyContainer>
+  );
+}) as StandaloneCompactWeekViewComponent;
+
+export { StandaloneCompactWeekView };
+
+interface StandaloneCompactWeekViewComponent {
+  <TEvent extends object, TResource extends object>(
+    props: StandaloneCompactWeekViewProps<TEvent, TResource> & {
+      ref?: React.ForwardedRef<HTMLDivElement>;
+    },
+  ): React.JSX.Element;
+  propTypes?: any;
+}

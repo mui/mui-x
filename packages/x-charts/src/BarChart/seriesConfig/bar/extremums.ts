@@ -29,11 +29,15 @@ const getValueExtremum =
     return Object.keys(series)
       .filter((seriesId) => {
         const axisId = direction === 'x' ? series[seriesId].xAxisId : series[seriesId].yAxisId;
+
+        if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
+          return false;
+        }
         return axisId === axis.id || (isDefaultAxis && axisId === undefined);
       })
       .reduce(
         (acc, seriesId) => {
-          const { stackedData } = series[seriesId];
+          const { stackedData, visibleStackedData } = series[seriesId];
 
           const filter = getFilters?.({
             currentAxisId: axis.id,
@@ -42,7 +46,9 @@ const getValueExtremum =
             seriesYAxisId: series[seriesId].yAxisId,
           });
 
-          const [seriesMin, seriesMax] = stackedData?.reduce(
+          const stackedDataToUse =
+            axis.domainSeries === 'visible' ? visibleStackedData : stackedData;
+          const [seriesMin, seriesMax] = stackedDataToUse?.reduce(
             (seriesAcc, values, index) => {
               if (
                 filter &&

@@ -1,6 +1,6 @@
-import { RichTreeViewClassKey } from '../RichTreeView';
-import { SimpleTreeViewClassKey } from '../SimpleTreeView';
-import { TreeItemClassKey } from '../TreeItem';
+import type { RichTreeViewClassKey } from '../RichTreeView';
+import type { SimpleTreeViewClassKey } from '../SimpleTreeView';
+import type { TreeItemClassKey } from '../TreeItem';
 
 // prettier-ignore
 export interface TreeViewComponentNameToClassKey {

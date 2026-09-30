@@ -5,6 +5,7 @@ import { GridColDef, DataGrid, GridCellParams } from '@mui/x-data-grid';
 const columns: GridColDef[] = [
   {
     field: 'name',
+    rowHeader: true,
     cellClassName: 'super-app-theme--cell',
   },
   {

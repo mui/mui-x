@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import { Unstable_RadialLineChart as RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
+import { RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';
 
 type HighlightOptions = 'none' | 'item' | 'series';
 type FadeOptions = 'none' | 'series' | 'global';
@@ -26,7 +26,14 @@ const params = {
       stack: 'total',
     },
   ],
-  rotationAxis: [{ scaleType: 'point' as const, data: [1, 2, 3, 4, 5] }],
+  rotationAxis: [
+    {
+      scaleType: 'point' as const,
+      data: [1, 2, 3, 4, 5],
+      position: 'none' as const,
+    },
+  ],
+  radiusAxis: [{ position: 'none' as const }],
   height: 400,
   grid: { rotation: true, radius: true },
 };

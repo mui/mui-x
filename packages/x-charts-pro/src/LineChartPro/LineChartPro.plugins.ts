@@ -1,30 +1,30 @@
 import {
   useChartZAxis,
-  type UseChartZAxisSignature,
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
   useChartTooltip,
-  type UseChartTooltipSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
   useChartBrush,
-  type UseChartBrushSignature,
-  type ConvertSignaturesIntoPlugins,
   useChartVisibilityManager,
-  type UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  type UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
-import {
-  useChartProZoom,
-  type UseChartProZoomSignature,
-} from '../internals/plugins/useChartProZoom';
+import type {
+  UseChartZAxisSignature,
+  UseChartCartesianAxisSignature,
+  UseChartTooltipSignature,
+  UseChartInteractionSignature,
+  UseChartHighlightSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartBrushSignature,
+  ConvertSignaturesIntoPlugins,
+  UseChartVisibilityManagerSignature,
+} from '@mui/x-charts/internals';
+import { useChartProExport } from '../internals/plugins/useChartProExport';
+import type { UseChartProExportSignature } from '../internals/plugins/useChartProExport';
+import { useChartProZoom } from '../internals/plugins/useChartProZoom';
+import type { UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import { useChartProSampling } from '../internals/plugins/useChartProSampling';
+import type { UseChartProSamplingSignature } from '../internals/plugins/useChartProSampling';
 
 export type LineChartProPluginSignatures = [
   UseChartZAxisSignature,
@@ -36,6 +36,7 @@ export type LineChartProPluginSignatures = [
   UseChartVisibilityManagerSignature<'line'>,
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
+  UseChartProSamplingSignature,
   UseChartProExportSignature,
 ];
 
@@ -49,5 +50,6 @@ export const LINE_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<LineChartProPl
   useChartVisibilityManager,
   useChartKeyboardNavigation,
   useChartProZoom,
+  useChartProSampling,
   useChartProExport,
 ];

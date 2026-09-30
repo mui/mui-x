@@ -1,4 +1,4 @@
-import { RichTreeViewProClassKey } from '../RichTreeViewPro';
+import type { RichTreeViewProClassKey } from '../RichTreeViewPro';
 
 export interface TreeViewProComponentNameToClassKey {
   MuiRichTreeViewPro: RichTreeViewProClassKey;

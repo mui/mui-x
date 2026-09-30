@@ -15,7 +15,7 @@ import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { TreeItemLabelInput } from '@mui/x-tree-view/TreeItemLabelInput';
-import { MUI_X_PRODUCTS } from './products';
+import { MUI_X_PRODUCTS } from '../datasets/disabledAndEditableProducts';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   { id, itemId, label, disabled, children }: TreeItemProps,

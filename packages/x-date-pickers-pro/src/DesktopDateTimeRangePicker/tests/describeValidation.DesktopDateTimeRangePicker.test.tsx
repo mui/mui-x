@@ -1,4 +1,5 @@
 import { createPickerRenderer, describeRangeValidation } from 'test/utils/pickers';
+import { describe } from 'vitest';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker /> - Describe Validation', () => {

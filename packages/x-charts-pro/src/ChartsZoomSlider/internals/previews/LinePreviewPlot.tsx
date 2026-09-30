@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
-  type AxisId,
   useStore,
   useLinePlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  type SeriesId,
+  selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
+import type { AxisId, SeriesId, ZoomMap } from '@mui/x-charts/internals';
 import type { PreviewPlotProps } from './PreviewPlot.types';
 
 interface LinePreviewPlotProps extends Pick<PreviewPlotProps, 'axisId' | 'seriesIds'> {}
@@ -73,6 +73,19 @@ function useLinePreviewData(axisId: AxisId) {
 
   const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
   const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
+  const zoomOptions = store.use(selectorChartAxisZoomOptionsLookup, axisId);
 
-  return useLinePlotData(xAxes, yAxes);
+  // The preview is a full-range overview, so sample against its own range and width rather than the
+  // active zoom — otherwise the main chart's zoom would change the preview's point density.
+  const samplingOverride = React.useMemo(() => {
+    const range = xAxes[axisId]?.scale.range() ?? [0, 0];
+    return {
+      zoomMap: new Map([
+        [axisId, { axisId, start: zoomOptions.minStart, end: zoomOptions.maxEnd }],
+      ]) as ZoomMap,
+      availableSize: Math.abs(range[range.length - 1] - range[0]),
+    };
+  }, [xAxes, axisId, zoomOptions.minStart, zoomOptions.maxEnd]);
+
+  return useLinePlotData(xAxes, yAxes, samplingOverride);
 }

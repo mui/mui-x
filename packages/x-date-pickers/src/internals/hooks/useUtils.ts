@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { PickersTimezone, PickerValidDate } from '../../models';
+import type { PickersTimezone, PickerValidDate } from '../../models';
 import { useLocalizationContext, usePickerAdapter } from '../../hooks/usePickerAdapter';
 
 export const useDefaultDates = () => useLocalizationContext().defaultDates;

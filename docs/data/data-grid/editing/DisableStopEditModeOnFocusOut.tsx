@@ -29,7 +29,7 @@ export default function DisableStopEditModeOnFocusOut() {
 }
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'name', headerName: 'Name', width: 180, editable: true, rowHeader: true },
   {
     field: 'age',
     headerName: 'Age',

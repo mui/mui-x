@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useMessageContext } from './internals/MessageContext';
-import { type MessageAuthorLabelOwnerState } from './message.types';
+import type { MessageAuthorLabelOwnerState } from './message.types';
 
 export interface MessageAuthorLabelSlots {
   authorLabel: React.ElementType;
@@ -19,11 +19,7 @@ export interface MessageAuthorLabelProps extends React.HTMLAttributes<HTMLSpanEl
 }
 
 function getAuthorLabel(ownerState: MessageAuthorLabelOwnerState): string | null {
-  const { message, role } = ownerState;
-  if (!message) {
-    return null;
-  }
-  return message.author?.displayName ?? message.author?.id ?? role ?? null;
+  return ownerState.resolvedAuthor?.displayName ?? null;
 }
 
 type MessageAuthorLabelComponent = ((

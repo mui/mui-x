@@ -1,4 +1,4 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import type {
   CartesianSeriesType,
@@ -7,8 +7,8 @@ import type {
   SeriesId,
   StackableSeriesType,
 } from './common';
-import { type DatasetElementType } from './config';
-import { type CurveType } from '../curve';
+import type { DatasetElementType } from './config';
+import type { CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
@@ -70,10 +70,13 @@ export interface CommonLineSeriesType {
   strictStepCurve?: boolean;
   /**
    * Define which items of the series should display a mark.
-   * If can be a boolean that applies to all items.
+   * It can be a boolean that applies to all items.
+   * It can be `'start'` or `'end'` to only display a mark on the first or last item. Such marks reuse
+   * the line highlight element, so they are replaced by the highlighted item when the pointer
+   * highlights a value.
    * Or a callback that gets some item properties and returns true if the item should be displayed.
    */
-  showMark?: boolean | ((params: ShowMarkParams) => boolean);
+  showMark?: boolean | 'start' | 'end' | ((params: ShowMarkParams) => boolean);
   /**
    * The shape of the mark elements.
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
@@ -104,11 +107,7 @@ export interface CommonLineSeriesType {
 }
 
 export interface LineSeriesType
-  extends
-    CommonSeriesType<number | null, 'line'>,
-    CartesianSeriesType,
-    StackableSeriesType,
-    CommonLineSeriesType {
+  extends CommonSeriesType<'line'>, CartesianSeriesType, StackableSeriesType, CommonLineSeriesType {
   type: 'line';
   /**
    * Defines how stacked series handle negative values.
@@ -131,9 +130,23 @@ export type LineItemIdentifier = {
   type: 'line';
   seriesId: SeriesId;
   /**
-   * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
+   * The index of the data point closest to the pointer along the x-axis.
+   * `dataIndex` can be `undefined` if the pointer position cannot be associated with a data point.
    */
   dataIndex?: number;
+};
+
+/**
+ * An object that identifies a single line together with the data point the interaction targets.
+ * Used for item interactions that always resolve a data point, like `onItemClick`.
+ */
+export type LineItemClickIdentifier = {
+  type: 'line';
+  seriesId: SeriesId;
+  /**
+   * The index of the data point closest to the pointer along the x-axis.
+   */
+  dataIndex: number;
 };
 
 export interface DefaultizedLineSeriesType extends DefaultizedProps<

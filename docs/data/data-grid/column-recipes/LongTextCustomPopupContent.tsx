@@ -93,7 +93,7 @@ const MarkdownPreview = styled('div')(({ theme }) => ({
 }));
 
 const columns: GridColDef[] = [
-  { field: 'title', headerName: 'Title', width: 180 },
+  { field: 'title', headerName: 'Title', width: 180, rowHeader: true },
   {
     field: 'notes',
     headerName: 'Notes (with character count)',

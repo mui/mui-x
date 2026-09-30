@@ -2,12 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useForkRef from '@mui/utils/useForkRef';
-import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useRegisterToolbarButton } from '@mui/x-internals/ToolbarContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { GridSlotProps } from '../../models';
-import { useToolbarContext } from './ToolbarContext';
 
 export type ToolbarButtonProps = GridSlotProps['baseIconButton'] & {
   /**
@@ -30,60 +30,25 @@ export type ToolbarButtonProps = GridSlotProps['baseIconButton'] & {
  */
 const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const { render, onKeyDown, onFocus, disabled, 'aria-disabled': ariaDisabled, ...other } = props;
-    const id = useId();
+    const {
+      render,
+      onKeyDown,
+      onFocus,
+      onBlur,
+      disabled,
+      'aria-disabled': ariaDisabled,
+      ...other
+    } = props;
     const rootProps = useGridRootProps();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const handleRef = useForkRef(buttonRef, ref);
-    const {
-      focusableItemId,
-      registerItem,
-      unregisterItem,
-      onItemKeyDown,
-      onItemFocus,
-      onItemDisabled,
-    } = useToolbarContext();
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-      onItemKeyDown(event);
-      onKeyDown?.(event);
-    };
-
-    const handleFocus = (event: React.FocusEvent<HTMLButtonElement>) => {
-      onItemFocus(id!);
-      onFocus?.(event);
-    };
-
-    React.useEffect(() => {
-      registerItem(id!, buttonRef);
-      return () => unregisterItem(id!);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const previousDisabled = React.useRef(disabled);
-    React.useEffect(() => {
-      if (previousDisabled.current !== disabled && disabled === true) {
-        onItemDisabled(id!, disabled);
-      }
-      previousDisabled.current = disabled;
-    }, [disabled, id, onItemDisabled]);
-
-    const previousAriaDisabled = React.useRef(ariaDisabled);
-    React.useEffect(() => {
-      if (previousAriaDisabled.current !== ariaDisabled && ariaDisabled === true) {
-        onItemDisabled(id!, true);
-      }
-      previousAriaDisabled.current = ariaDisabled;
-    }, [ariaDisabled, id, onItemDisabled]);
+    const { tabIndex, ...toolbarButtonProps } = useRegisterToolbarButton(props, buttonRef);
 
     const element = useComponentRenderer(rootProps.slots.baseIconButton, render, {
       ...rootProps.slotProps?.baseIconButton,
-      tabIndex: focusableItemId === id ? 0 : -1,
+      tabIndex,
       ...other,
-      disabled,
-      'aria-disabled': ariaDisabled,
-      onKeyDown: handleKeyDown,
-      onFocus: handleFocus,
+      ...toolbarButtonProps,
       ref: handleRef,
     });
 
@@ -91,17 +56,30 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   },
 );
 
-ToolbarButton.propTypes = {
+ToolbarButton.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   className: PropTypes.string,
   color: PropTypes.oneOf(['default', 'inherit', 'primary']),
+  /**
+   * The component used for the root node. Either a string to use an HTML element or a component.
+   */
+  component: PropTypes.elementType,
   disabled: PropTypes.bool,
   edge: PropTypes.oneOf(['end', 'start', false]),
+  /**
+   * The URL to link to. If set, and `component` is not set, the component renders as an anchor tag.
+   */
+  href: PropTypes.string,
   id: PropTypes.string,
   label: PropTypes.string,
+  /**
+   * The relationship of the linked URL.
+   * Set it to `noopener noreferrer` when `target` is set to `_blank` to avoid a security issue.
+   */
+  rel: PropTypes.string,
   /**
    * A function to customize rendering of the component.
    */
@@ -110,6 +88,10 @@ ToolbarButton.propTypes = {
   size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
   tabIndex: PropTypes.number,
+  /**
+   * Where to display the linked URL, as the name for a browsing context.
+   */
+  target: PropTypes.string,
   title: PropTypes.string,
   touchRippleRef: PropTypes.any,
 } as any;

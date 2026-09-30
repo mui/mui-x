@@ -33,6 +33,11 @@ export type GridFilterInputValueProps<
   tabIndex?: number;
   disabled?: boolean;
   className?: string;
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce?: boolean;
 
   slotProps?: {
     root: T;

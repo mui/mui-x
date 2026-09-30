@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
-import { getChatLayoutPaneKind, type ChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
+import type { SlotComponentProps } from '@mui/utils/types';
+import { getChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
+import type { ChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
 
 export interface ChatLayoutSlots {
   root: React.ElementType;
@@ -153,8 +154,11 @@ export const ChatLayout = React.forwardRef(function ChatLayout(
     },
     additionalProps: {
       style: {
+        display: 'flex',
+        flexDirection: 'column',
         minHeight: 0,
         minWidth: 0,
+        overflow: 'hidden',
       },
     },
   });
@@ -166,8 +170,12 @@ export const ChatLayout = React.forwardRef(function ChatLayout(
     },
     additionalProps: {
       style: {
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
         minHeight: 0,
         minWidth: 0,
+        overflow: 'hidden',
       },
     },
   });

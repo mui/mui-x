@@ -1,4 +1,4 @@
-import { Unstable_CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
+import { CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
 import GOOGL from '../dataset/GOOGL.json';
 
 const dataset = GOOGL.map((entry) => ({

@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import reactMajor from '@mui/x-internals/reactMajor';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
-import { type SeriesId } from '../models/seriesType/common';
+import type { SeriesId } from '../models/seriesType/common';
 import { getSymbol } from '../internals/getSymbol';
 import { useUtilityClasses as useLineUtilityClasses } from './lineClasses';
 
@@ -48,8 +48,9 @@ function LineHighlightElement(props: LineHighlightElementProps) {
         };
 
   // React 18 does not recognize `transformOrigin` and React 19 does not recognize `transform-origin`
-  const transformOrigin =
-    reactMajor > 18 ? { transformOrigin: `${x} ${y}` } : { 'transform-origin': `${x} ${y}` };
+  const transformOrigin = isReactVersionAtLeast(19)
+    ? { transformOrigin: `${x} ${y}` }
+    : { 'transform-origin': `${x} ${y}` };
 
   return (
     <Element
@@ -64,12 +65,11 @@ function LineHighlightElement(props: LineHighlightElementProps) {
   );
 }
 
-LineHighlightElement.propTypes = {
+LineHighlightElement.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   seriesId: PropTypes.string.isRequired,
   shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
     .isRequired,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import type { FieldChangeHandler } from './useField.types';
-import {
+import type {
   PickerAnyManager,
   PickerManagerError,
   PickerManagerFieldInternalProps,

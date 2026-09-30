@@ -56,7 +56,7 @@ export const GridRootStyles = styled('div', {
     });
     return overrides;
   },
-})<{ ownerState: OwnerState }>(() => {
+})<{ ownerState: OwnerState }>(({ ownerState }) => {
   const apiRef = useGridPrivateApiContext();
   const shouldShowBorderTopRightRadius = useGridSelector(
     apiRef,
@@ -78,6 +78,12 @@ export const GridRootStyles = styled('div', {
     hover: vars.colors.interactive.hover,
     selected: selectedColor,
     selectedHover: selectedColor,
+    // Pinned cells cover the scrolled cells behind them, so their fallback must
+    // stay opaque. Translucent overlay colors would let those cells bleed through
+    // in browsers without `color-mix()` support (https://github.com/mui/mui-x/issues/18273).
+    pinnedHover: pinnedBackground,
+    pinnedSelected: pinnedBackground,
+    pinnedSelectedHover: pinnedBackground,
   };
 
   const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity, fallbackColors.hover);
@@ -98,37 +104,32 @@ export const GridRootStyles = styled('div', {
     pinnedBackground,
     hoverColor,
     hoverOpacity,
-    fallbackColors.hover,
+    fallbackColors.pinnedHover,
   );
   const pinnedSelectedBackground = mix(
     pinnedBackground,
     selectedColor,
     selectedOpacity,
-    fallbackColors.selected,
+    fallbackColors.pinnedSelected,
   );
   const pinnedSelectedHoverBackground = mix(
     pinnedBackground,
     selectedHoverColor,
     selectedHoverOpacity,
-    fallbackColors.selectedHover,
+    fallbackColors.pinnedSelectedHover,
   );
 
   const getPinnedBackgroundStyles = (backgroundColor: string) => ({
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       backgroundColor,
       '&.Mui-selected': {
-        backgroundColor: mix(
-          backgroundColor,
-          selectedBackground,
-          selectedOpacity,
-          fallbackColors.selected,
-        ),
+        backgroundColor: mix(backgroundColor, selectedBackground, selectedOpacity, backgroundColor),
         '&:hover': {
           backgroundColor: mix(
             backgroundColor,
             selectedHoverBackground,
             selectedHoverOpacity,
-            fallbackColors.selectedHover,
+            backgroundColor,
           ),
         },
       },
@@ -171,7 +172,10 @@ export const GridRootStyles = styled('div', {
     '--DataGrid-bottomContainerHeight': '0px',
     '--DataGrid-horizontalFiller': '0px',
 
-    flex: 1,
+    // flex-grow stays on to still fill a flex-row parent's width; flex-shrink: 0
+    // plus maxHeight below stop a flex-column parent from resizing the root away
+    // from the requested height. See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+    flex: ownerState.height != null ? '1 0 auto' : 1,
     boxSizing: 'border-box',
     position: 'relative',
     borderWidth: '1px',
@@ -182,14 +186,18 @@ export const GridRootStyles = styled('div', {
     color: vars.colors.foreground.base,
     font: vars.typography.font.body,
     outline: 'none',
-    height: '100%',
+    height: ownerState.height ?? '100%',
+    maxHeight: ownerState.height,
     display: 'flex',
     minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
     minHeight: 0,
     flexDirection: 'column',
     overflow: 'hidden',
-    overflowAnchor: 'none', // Keep the same scrolling position
     transform: 'translate(0, 0)', // Create a stacking context to keep scrollbars from showing on top
+
+    [`& .${c.virtualScroller}`]: {
+      overflowAnchor: 'none', // Keep the same scrolling position
+    },
 
     // Use `css` tagged template so the ignore-comment remains a sibling of the
     // `:first-child` rule in the stylis AST. Previously, the comment was embedded
@@ -208,6 +216,7 @@ export const GridRootStyles = styled('div', {
     [`&.${c.autosizing}`]: {
       [`& .${c.columnHeaderTitleContainerContent} > *`]: {
         overflow: 'visible !important',
+        whiteSpace: 'nowrap !important',
       },
       '@media (hover: hover)': {
         [`& .${c.menuIcon}`]: {
@@ -230,6 +239,16 @@ export const GridRootStyles = styled('div', {
       [`& .${c['columnHeader--filter']}`]: {
         flex: 'none !important',
         width: 'unset !important',
+      },
+      [`& .${c.multiSelectCell}`]: {
+        width: 'max-content',
+        overflow: 'visible',
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
       },
     },
     [`&.${c.withSidePanel}`]: {
@@ -587,6 +606,25 @@ export const GridRootStyles = styled('div', {
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
       whiteSpace: 'initial',
       lineHeight: 'inherit',
+    },
+    [`& .${c['row--dynamicHeight']}`]: {
+      [`& .${c.multiSelectCell}, .${c.editMultiSelectCell}`]: {
+        flexWrap: 'wrap',
+      },
+    },
+    [`& .${c.cell}[aria-rowspan]:not([aria-rowspan="1"])`]: {
+      [`& .${c.multiSelectCell}`]: {
+        alignItems: 'flex-start',
+        alignContent: 'flex-start',
+        flexWrap: 'wrap',
+        paddingTop: 8,
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
+      },
     },
     [`& .${c.cellEmpty}`]: {
       flex: 1,

@@ -7,22 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Indicators in context
 
-<p class="description">Place typing, unread, and scroll indicators into a real thread layout instead of documenting them in isolation.</p>
+<p class="description">Compose typing, unread, and scroll-to-bottom indicators inside a realistic thread layout.</p>
 
-This demo shows that indicators are structural affordances, not floating utilities.
-Their value is clearest when they are rendered exactly where the thread layout expects them.
-
-That is why this page keeps them inside a realistic thread rather than presenting them as isolated widgets.
-
-- `Indicators.TypingIndicator`
-- `Indicators.UnreadMarker`
-- `Indicators.ScrollToBottomAffordance`
-- thread header placement
-- message-list row placement
+Indicators are structural affordances rather than floating utilities, so their placement inside the thread layout is part of their behavior.
+The demo below shows where each indicator belongs in a realistic thread:
 
 {{"demo": "IndicatorsInContext.js"}}
 
-## Key primitives
+## Placement reference
 
 - `Indicators.TypingIndicator` near the thread header or composer
 - `Indicators.UnreadMarker` inside the message row pipeline
@@ -31,21 +23,21 @@ That is why this page keeps them inside a realistic thread rather than presentin
 
 ## Implementation notes
 
-- Keep the example tied to a real thread so the placement rules are obvious.
+- Tie indicators to a real thread so placement rules stay obvious.
 - Show unread and typing state at the same time so the reader can see that the indicators solve different problems.
-- Keep the layout realistic enough to justify the scroll affordance rather than presenting it as an isolated button.
+- Keep the surrounding layout realistic so the scroll affordance has a reason to appear.
 
 ## When to use this pattern
 
 Use this pattern when:
 
-- the thread needs a visible unread boundary
-- typing activity should be surfaced inline
-- the scroll position is no longer always pinned to the latest message
+- The thread needs a visible unread boundary.
+- Typing activity should be surfaced inline.
+- The scroll position is no longer pinned to the latest message.
 
 This pattern is common in shared support queues, collaborative assistant surfaces, and any thread where users routinely scroll away from the newest message.
 
-## What to pay attention to
+## Placement rules
 
 - `TypingIndicator` belongs near thread-level context such as the header or composer area.
 - `UnreadMarker` belongs in the row pipeline because it marks a message boundary, not a global thread status.
@@ -53,7 +45,7 @@ This pattern is common in shared support queues, collaborative assistant surface
 
 ## See also
 
-- Continue with [Indicators](/x/react-chat/headless/indicators/) for the reference page.
+- See [Indicators](/x/react-chat/headless/indicators/) for details.
 
 ## API
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { ChartsProvider } from '../context/ChartsProvider';
 
 // JSDOM doesn't implement SVGElement

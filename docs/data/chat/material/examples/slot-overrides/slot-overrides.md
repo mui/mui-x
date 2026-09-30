@@ -7,19 +7,19 @@ githubLabel: 'scope: chat'
 
 # Chat - Slot overrides
 
-<p class="description">Replace individual subcomponents inside <code>ChatBox</code> using the <code>slots</code> prop.</p>
+<p class="description">Swap individual subcomponents of the Chat with your own implementations to customize rendering and layout.</p>
 
 The `slots` prop lets you swap any internal component in `ChatBox` with your own implementation.
-This demo replaces the message bubble with a `Paper`-based component that uses MUI elevation and border styles.
+The demo below replaces the message bubble with a `Paper`-based component that uses Material UI elevation and border styles:
 
-- `slots.messageContent` accepting a custom component that wraps the default `ChatMessageContent`
-- The inner `bubble` slot of `ChatMessageContent` replaced with a MUI `Paper` component
-- `ownerState.role` used to differentiate user and assistant bubble styling
-- `sx` on `Paper` using theme tokens (`primary.main`, `background.paper`, `divider`) for consistent colors
+- A custom `slots.content` wraps the default `ChatMessageContent`.
+- The inner `bubble` slot of `ChatMessageContent` is replaced with a Material UI `Paper` component.
+- `ownerState.role` differentiates user and assistant bubble styling.
+- `sx` on `Paper` uses theme tokens (`primary.main`, `background.paper`, `divider`) for consistent colors.
 
 {{"demo": "SlotOverrides.js", "bg": "inline"}}
 
-## The wrapping pattern
+## Wrapping the default slot
 
 The recommended way to override a slot is to wrap the default component and replace only its inner slots:
 
@@ -41,11 +41,11 @@ const CustomMessageContent = React.forwardRef(
 <ChatBox slots={{ messageContent: CustomMessageContent }} />;
 ```
 
-This keeps the default rendering behavior — part iteration, reasoning blocks, source citations, tool invocations — and only changes the visual container.
+This keeps the default rendering behavior—part iteration, reasoning blocks, source citations, and tool invocations—and only changes the visual container.
 
-## ownerState
+## Styling slots with `ownerState`
 
-Slot components receive an `ownerState` prop from the MUI styled system.
+Slot components receive an `ownerState` prop from the Material UI styled system.
 For message-related slots, `ownerState.role` is `'user'` or `'assistant'`:
 
 ```tsx
@@ -59,7 +59,7 @@ function MyBubble({ ownerState, children, ...props }) {
 }
 ```
 
-Forward `ownerState` destructuring to avoid passing it to DOM elements that don't support it.
+Destructure `ownerState` before spreading remaining props so it never reaches DOM elements that don't support it.
 
 ## Implementation notes
 
@@ -69,8 +69,8 @@ Forward `ownerState` destructuring to avoid passing it to DOM elements that don'
 
 ## See also
 
-- [Customization](/x/react-chat/material/customization/) for the full table of available slot keys and their default components
-- [Custom theme](/x/react-chat/material/examples/custom-theme/) for rethemeing without replacing components
+- See [Customization](/x/react-chat/material/customization/) for details on the available slot keys and their default components.
+- See [Custom theme](/x/react-chat/material/examples/custom-theme/) for details on retheming without replacing components.
 
 ## API
 

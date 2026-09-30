@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useComposerContext } from './internals/ComposerContext';
-import { type ComposerHelperTextOwnerState } from './composer.types';
+import type { ComposerHelperTextOwnerState } from './composer.types';
 
 export interface ComposerHelperTextSlots {
   helperText: React.ElementType;
@@ -52,5 +52,13 @@ export const ComposerHelperText = React.forwardRef(function ComposerHelperText(
     return null;
   }
 
-  return <HelperText {...rootProps}>{content}</HelperText>;
+  const resolvedRole =
+    (rootProps as React.HTMLAttributes<HTMLDivElement>).role ??
+    (composer.error ? 'alert' : undefined);
+
+  return (
+    <HelperText {...rootProps} role={resolvedRole}>
+      {content}
+    </HelperText>
+  );
 }) as ComposerHelperTextComponent;

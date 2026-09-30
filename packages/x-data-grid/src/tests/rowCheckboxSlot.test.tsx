@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
+import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - rowCheckbox slot', () => {
   const { render } = createRenderer();
@@ -119,6 +121,41 @@ describe('<DataGrid /> - rowCheckbox slot', () => {
     );
 
     expect(passedProps.material).to.have.property('color', 'primary');
-    expect(passedProps.material).to.have.property('disableRipple');
+  });
+
+  describe('ripple', () => {
+    // The ripple mounts lazily, so it only appears in the DOM after an interaction.
+    async function clickRowCheckbox(user: any) {
+      const checkbox = screen.getAllByRole('checkbox')[1].closest('.MuiButtonBase-root')!;
+      await user.click(checkbox);
+      return checkbox;
+    }
+
+    const grid = (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[{ id: 1, name: 'John' }]}
+          columns={[{ field: 'name' }]}
+          checkboxSelection
+        />
+      </div>
+    );
+
+    it('should render the ripple by default', async () => {
+      const { user } = render(grid);
+      const checkbox = await clickRowCheckbox(user);
+
+      expect(checkbox.querySelector('.MuiTouchRipple-root')).not.to.equal(null);
+    });
+
+    it('should not render the ripple when the theme disables it', async () => {
+      const theme = createTheme({
+        components: { MuiButtonBase: { defaultProps: { disableRipple: true } } },
+      });
+      const { user } = render(<ThemeProvider theme={theme}>{grid}</ThemeProvider>);
+      const checkbox = await clickRowCheckbox(user);
+
+      expect(checkbox.querySelector('.MuiTouchRipple-root')).to.equal(null);
+    });
   });
 });

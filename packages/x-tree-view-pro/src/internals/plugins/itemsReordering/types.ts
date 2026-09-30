@@ -1,4 +1,4 @@
-import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
+import type { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 
 export interface TreeViewItemReorderPosition {
   parentId: string | null;

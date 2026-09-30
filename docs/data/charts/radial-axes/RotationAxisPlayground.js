@@ -1,0 +1,123 @@
+import Box from '@mui/material/Box';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
+import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
+import { ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
+import { ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
+import { ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
+
+export default function RotationAxisPlayground() {
+  return (
+    <ChartsUsageDemo
+      componentName="RotationAxis"
+      data={{
+        disableLine: { knob: 'switch', defaultValue: false },
+        disableTicks: { knob: 'switch', defaultValue: false },
+        disableTickLabel: { knob: 'switch', defaultValue: false },
+        tickPosition: {
+          knob: 'select',
+          options: ['after', 'before'],
+          defaultValue: 'after',
+        },
+        tickLabelPosition: {
+          knob: 'select',
+          options: ['after', 'before'],
+          defaultValue: 'after',
+        },
+        position: {
+          knob: 'select',
+          options: ['inside', 'outside'],
+          defaultValue: 'outside',
+        },
+        tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
+        rotationTickNumber: { knob: 'number', defaultValue: 8, min: 0, max: 20 },
+        startAngle: {
+          knob: 'number',
+          defaultValue: -90,
+          min: -360,
+          max: 400,
+          step: 10,
+        },
+        endAngle: {
+          knob: 'number',
+          defaultValue: 180,
+          min: -360,
+          max: 400,
+          step: 10,
+        },
+        minRadius: { knob: 'number', defaultValue: 30, min: 0, step: 10 },
+        maxRadius: { knob: 'number', defaultValue: 130, min: 50, step: 10 },
+      }}
+      renderDemo={(props) => (
+        <Box
+          sx={{
+            width: '100%',
+            height: 300,
+          }}
+        >
+          <ChartsRadialDataProvider
+            height={400}
+            rotationAxis={[
+              {
+                min: 0,
+                max: 360,
+                startAngle: props.startAngle,
+                endAngle: props.endAngle,
+                tickNumber: props.rotationTickNumber,
+              },
+            ]}
+            radiusAxis={[
+              {
+                min: 0,
+                max: 100,
+                minRadius: props.minRadius,
+                maxRadius: props.maxRadius,
+              },
+            ]}
+          >
+            <ChartsLayerContainer>
+              <ChartsSvgLayer>
+                <ChartsRadialGrid rotation radius />
+                <ChartsRotationAxis
+                  disableLine={props.disableLine}
+                  disableTicks={props.disableTicks}
+                  disableTickLabel={props.disableTickLabel}
+                  position={props.position}
+                  tickSize={props.tickSize}
+                  tickLabelPosition={props.tickLabelPosition}
+                  tickPosition={props.tickPosition}
+                />
+              </ChartsSvgLayer>
+            </ChartsLayerContainer>
+          </ChartsRadialDataProvider>
+        </Box>
+      )}
+      getCode={({ props }) => `<ChartsRadialDataProvider
+  rotationAxis={[{
+    startAngle: ${props.startAngle},
+    endAngle: ${props.endAngle},
+    tickNumber: ${props.rotationTickNumber},
+${[
+  `tickSize: ${props.tickSize},`,
+  props.disableLine && 'disableLine: true,',
+  props.disableTicks && 'disableTicks: true,',
+  props.disableTickLabel && 'disableTickLabel: true,',
+  props.position && `position: "${props.position}",`,
+  props.tickPosition && `tickPosition: "${props.tickPosition}",`,
+  props.tickLabelPosition && `tickLabelPosition: "${props.tickLabelPosition}",`,
+]
+  .filter(Boolean)
+  .map((line) => `    ${line}`)
+  .join('\n')}
+  }]}
+  radiusAxis={[{
+    minRadius: ${props.minRadius},
+    maxRadius: ${props.maxRadius},
+  }]}
+>
+  <ChartsRadialGrid rotation radius />
+  <ChartsRotationAxis />
+</ChartsRadialDataProvider>`}
+    />
+  );
+}

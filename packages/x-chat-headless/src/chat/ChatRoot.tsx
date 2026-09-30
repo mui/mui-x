@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
-import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
+import type { SlotComponentProps } from '@mui/utils/types';
+import { ChatProvider } from '../ChatProvider';
+import type { ChatProviderProps } from '../ChatProvider';
 import type { ChatLocaleText } from './internals/chatLocaleText';
 import { ChatLocaleProvider } from './internals/ChatLocaleContext';
-import { ChatVariantProvider, type ChatVariant } from './internals/ChatVariantContext';
-import { ChatDensityProvider, type ChatDensity } from './internals/ChatDensityContext';
+import { ChatVariantProvider } from './internals/ChatVariantContext';
+import type { ChatVariant } from './internals/ChatVariantContext';
+import { ChatDensityProvider } from './internals/ChatDensityContext';
+import type { ChatDensity } from './internals/ChatDensityContext';
 
 export interface ChatRootSlots {
   root: React.ElementType;
@@ -51,6 +54,10 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
   props: ChatRootProps<Cursor>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
+    props,
+    'activeConversationId',
+  );
   const {
     children,
     slots,
@@ -61,6 +68,10 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     density,
     members,
     currentUser,
+    roleDisplayNames,
+    getMessageAuthorId,
+    getMessageAuthorDisplayName,
+    getMessageAuthorAvatarUrl,
     messages,
     initialMessages,
     onMessagesChange,
@@ -80,6 +91,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     streamFlushInterval,
     partRenderers,
     storeClass,
+    features,
     ...other
   } = props;
 
@@ -99,13 +111,16 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       adapter={adapter}
       members={members}
       currentUser={currentUser}
+      getMessageAuthorId={getMessageAuthorId}
+      getMessageAuthorDisplayName={getMessageAuthorDisplayName}
+      getMessageAuthorAvatarUrl={getMessageAuthorAvatarUrl}
       messages={messages}
       initialMessages={initialMessages}
       onMessagesChange={onMessagesChange}
       conversations={conversations}
       initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
-      activeConversationId={activeConversationId}
+      {...(isActiveConversationIdControlled ? { activeConversationId } : {})}
       initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}
@@ -118,6 +133,8 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       streamFlushInterval={streamFlushInterval}
       partRenderers={partRenderers}
       storeClass={storeClass}
+      roleDisplayNames={roleDisplayNames}
+      features={features}
     >
       <ChatLocaleProvider localeText={localeText}>
         {(() => {

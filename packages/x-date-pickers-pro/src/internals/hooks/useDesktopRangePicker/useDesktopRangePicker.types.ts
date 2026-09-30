@@ -1,6 +1,6 @@
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
-import {
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type {
   PickerPopperSlots,
   PickerPopperSlotProps,
   UsePickerProps,
@@ -9,16 +9,16 @@ import {
   PickerFieldUISlotsFromContext,
   PickerFieldUISlotPropsFromContext,
 } from '@mui/x-date-pickers/internals';
-import {
+import type {
   ExportedPickersLayoutSlotProps,
   ExportedPickersLayoutSlots,
 } from '@mui/x-date-pickers/PickersLayout';
-import {
+import type {
   NonStaticRangePickerProps,
   NonStaticRangePickerHookParameters,
   UseRangePickerProps,
 } from '../../models';
-import { PickerRangeFieldSlotProps } from '../../../models';
+import type { PickerRangeFieldSlotProps } from '../../../models';
 
 export interface UseDesktopRangePickerSlots
   extends

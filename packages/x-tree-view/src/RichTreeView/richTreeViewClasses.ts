@@ -1,11 +1,14 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewStyleContext';
+import type { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewStyleContext';
 
 export interface RichTreeViewClasses extends Omit<
   TreeViewClasses,
   'itemDragAndDropOverlay' | 'itemErrorIcon' | 'itemLoadingIcon'
-> {}
+> {
+  /** Styles applied to each item loader element. */
+  itemLoader: string;
+}
 
 export type RichTreeViewClassKey = keyof RichTreeViewClasses;
 
@@ -22,4 +25,5 @@ export const richTreeViewClasses: RichTreeViewClasses = generateUtilityClasses('
   'itemLabel',
   'itemCheckbox',
   'itemLabelInput',
+  'itemLoader',
 ]);

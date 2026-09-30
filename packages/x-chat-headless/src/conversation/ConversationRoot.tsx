@@ -1,13 +1,14 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useConversations } from '../hooks/useConversation';
 import type { ChatConversation } from '../types/chat-entities';
 import { markChatLayoutPane } from '../chat/internals/chatLayoutPaneKind';
+import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { ConversationContextProvider } from './internals/ConversationContext';
-import { type ConversationRootOwnerState } from './conversation.types';
+import type { ConversationRootOwnerState } from './conversation.types';
 
 export interface ConversationRootSlots {
   root: React.ElementType;
@@ -48,6 +49,7 @@ export const ConversationRoot = markChatLayoutPane(
   ) {
     const { children, slots, slotProps, ...other } = props;
     const { activeConversationId } = useChat();
+    const localeText = useChatLocaleText();
     const conversations = useConversations();
     const conversation = React.useMemo(
       () => getActiveConversation(conversations, activeConversationId),
@@ -69,6 +71,11 @@ export const ConversationRoot = markChatLayoutPane(
       ownerState,
       additionalProps: {
         ref,
+        // Landmark for the active-conversation (thread) area, so assistive
+        // technology can jump between the conversations sidebar, the thread,
+        // and the composer.
+        role: 'region',
+        'aria-label': localeText.threadLandmarkLabel,
       },
     });
 

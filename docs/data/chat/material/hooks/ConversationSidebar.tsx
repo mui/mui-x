@@ -14,11 +14,11 @@ import { ChatProvider, useConversations, useChat } from '@mui/x-chat/headless';
 import {
   createEchoAdapter,
   syncConversationPreview,
-} from 'docs/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 import {
   inboxConversations,
   inboxThreads,
-} from 'docs/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 import type {
   ChatConversation as ChatConversationType,
   ChatMessage,

@@ -1,4 +1,5 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
 import { ChartsDataProvider } from '../ChartsDataProvider';
 

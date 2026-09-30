@@ -26,6 +26,7 @@ const columns = [
   {
     field: 'name',
     headerName: 'Name',
+    rowHeader: true,
     width: 200,
     editable: true,
   },

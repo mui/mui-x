@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'ώρες',
@@ -47,9 +47,10 @@ const elGRPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Επιλέξτε ${views[view]}. ${!formattedTime ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} ώρες`,
-  minutesClockNumberText: (minutes) => `${minutes} λεπτά`,
-  secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'ώρα' : 'ώρες'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'λεπτό' : 'λεπτά'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'δευτερόλεπτο' : 'δευτερόλεπτα'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Επιλέξτε ${views[view]}`,

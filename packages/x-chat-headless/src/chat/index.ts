@@ -1,5 +1,7 @@
 export { ChatRoot } from './ChatRoot';
 export { ChatLayout } from './ChatLayout';
+export { markChatLayoutPane } from './internals/chatLayoutPaneKind';
+export type { ChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
 export { CHAT_DEFAULT_LOCALE_TEXT } from './internals/chatLocaleText';
 export type { ChatLocaleText, ChatLocaleTypingUser } from './internals/chatLocaleText';
 export { useChatLocaleText } from './internals/ChatLocaleContext';

@@ -4,17 +4,19 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
 import Divider from '@mui/material/Divider';
-import {
-  isDatePickerView,
-  isInternalTimeView,
+import type {
   PickerViewRenderer,
-  resolveDateTimeFormat,
   PickerRangeValue,
   PickerViewRendererLookup,
   PickerRendererInterceptorProps,
 } from '@mui/x-date-pickers/internals';
+import {
+  isDatePickerView,
+  isInternalTimeView,
+  resolveDateTimeFormat,
+} from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -26,18 +28,17 @@ import {
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { rangeValueManager } from '../internals/utils/valueManagers';
-import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
+import type { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
-import { validateDateTimeRange } from '../validation';
-import { DateTimeRangePickerView } from '../internals/models';
+import type { DateTimeRangePickerView } from '../internals/models';
+import { useDateTimeRangeManager } from '../managers';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
-import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 import { resolveReferenceDate } from '../internals/utils/date-range-manager';
 
 const STEPS: PickerRangeStep[] = [
@@ -117,6 +118,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateTimeRangeManager();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<DesktopDateTimeRangePickerProps>(
     inProps,
@@ -180,9 +182,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   const { renderPicker } = useDesktopRangePicker<DateTimeRangePickerView, typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'date-time',
-    validator: validateDateTimeRange,
+    manager,
     rendererInterceptor,
     steps: STEPS,
   });
@@ -190,7 +190,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   return renderPicker();
 }) as DesktopDateRangePickerComponent;
 
-DesktopDateTimeRangePicker.propTypes = {
+DesktopDateTimeRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -378,6 +378,10 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
+  /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
@@ -464,7 +468,7 @@ DesktopDateTimeRangePicker.propTypes = {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading: PropTypes.func,
   /**

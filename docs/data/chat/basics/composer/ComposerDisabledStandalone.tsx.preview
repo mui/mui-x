@@ -1,0 +1,4 @@
+<ComposerDemoShell
+  composerProps={{ disabled: true }}
+  helperText="Disabled state comes from ChatComposer and makes the entire draft surface inert."
+/>

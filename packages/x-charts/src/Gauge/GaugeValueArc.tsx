@@ -54,7 +54,7 @@ function GaugeValueArc({
   );
 }
 
-GaugeValueArc.propTypes = {
+GaugeValueArc.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -99,7 +99,7 @@ function AnimatedGaugeValueArc({
   return <StyledPath {...animatedProps} transform={`translate(${cx}, ${cy})`} {...other} />;
 }
 
-AnimatedGaugeValueArc.propTypes = {
+AnimatedGaugeValueArc.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

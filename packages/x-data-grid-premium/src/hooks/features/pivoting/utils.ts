@@ -1,13 +1,12 @@
-import {
-  type GridColDef,
-  type GridColumnGroup,
-  type GridColumnNode,
-  type GridRowModel,
-  isLeaf,
-  type GridSingleSelectColDef,
-  gridStringOrNumberComparator,
-  type GridLocaleTextApi,
-  type GridGroupingColDefOverrideParams,
+import { isLeaf, gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
+import type {
+  GridColDef,
+  GridColumnGroup,
+  GridColumnNode,
+  GridRowModel,
+  GridSingleSelectColDef,
+  GridLocaleTextApi,
+  GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { getDefaultColTypeDef } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
@@ -262,7 +261,10 @@ export const createPivotPropsFromRows = ({
           colValue = String(colValue);
         }
 
-        const formattedHeaderName = apiRef.current.getRowFormattedValue(row, column) || colValue;
+        // Coerce to a string because of React 18's prop-type check
+        const formattedHeaderName = String(
+          apiRef.current.getRowFormattedValue(row, column) || colValue,
+        );
         columnGroupPath.push(colValue);
         const groupId = columnGroupPath.join(COLUMN_GROUP_ID_SEPARATOR);
 

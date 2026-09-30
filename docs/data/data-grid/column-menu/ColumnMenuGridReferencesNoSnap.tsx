@@ -37,7 +37,6 @@ function PlanIcon(props: { plan?: string }) {
     <a
       href={planProps.href}
       target="_blank"
-      rel="noopener"
       aria-label={planProps.title}
       title={planProps.title}
     >
@@ -79,6 +78,7 @@ const columns: GridColDef[] = [
   {
     field: 'slot',
     headerName: 'Slot',
+    rowHeader: true,
     width: 240,
     renderCell: (params: GridRenderCellParams<any, string>) => (
       <ComponentTag value={params.value} plan={params.row.plan} />

@@ -162,4 +162,89 @@ describe('TurnWheel Gesture', () => {
       min: -1000,
     });
   });
+
+  describe('passive option', () => {
+    function getWheelPassive(addEventListenerSpy: ReturnType<typeof vi.spyOn>): boolean {
+      const wheelCall = addEventListenerSpy.mock.calls.find((call: any) => call[0] === 'wheel');
+      expect(wheelCall).toBeDefined();
+      const options = wheelCall![2];
+      expect(typeof options).toBe('object');
+      return (options as AddEventListenerOptions).passive!;
+    }
+
+    function setupWithOptions(options: { preventDefault?: boolean; passive?: boolean }) {
+      const localTarget = document.createElement('div');
+      container.appendChild(localTarget);
+      const spy = vi.spyOn(localTarget, 'addEventListener');
+
+      const manager = new GestureManager({
+        gestures: [
+          new TurnWheelGesture({
+            name: 'turnWheel',
+            ...options,
+          }),
+        ],
+      });
+      manager.registerElement('turnWheel', localTarget);
+
+      return { manager, passive: getWheelPassive(spy) };
+    }
+
+    it('should default passive to true when preventDefault is false', () => {
+      const { manager, passive } = setupWithOptions({ preventDefault: false });
+      expect(passive).toBe(true);
+      manager.destroy();
+    });
+
+    it('should default passive to false when preventDefault is true', () => {
+      const { manager, passive } = setupWithOptions({ preventDefault: true });
+      expect(passive).toBe(false);
+      manager.destroy();
+    });
+
+    it('should respect explicit passive=true when preventDefault is false', () => {
+      const { manager, passive } = setupWithOptions({
+        preventDefault: false,
+        passive: true,
+      });
+      expect(passive).toBe(true);
+      manager.destroy();
+    });
+
+    it('should respect explicit passive=false when preventDefault is false', () => {
+      const { manager, passive } = setupWithOptions({
+        preventDefault: false,
+        passive: false,
+      });
+      expect(passive).toBe(false);
+      manager.destroy();
+    });
+
+    it('should force passive to false when preventDefault is true even if passive=true is passed', () => {
+      const { manager, passive } = setupWithOptions({
+        preventDefault: true,
+        passive: true,
+      });
+      expect(passive).toBe(false);
+      manager.destroy();
+    });
+
+    it('should preserve passive option when cloning', () => {
+      const original = new TurnWheelGesture({
+        name: 'turnWheel',
+        preventDefault: false,
+        passive: true,
+      });
+
+      const localTarget = document.createElement('div');
+      container.appendChild(localTarget);
+      const spy = vi.spyOn(localTarget, 'addEventListener');
+
+      const manager = new GestureManager({ gestures: [original] });
+      manager.registerElement('turnWheel', localTarget);
+
+      expect(getWheelPassive(spy)).toBe(true);
+      manager.destroy();
+    });
+  });
 });

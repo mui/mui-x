@@ -59,6 +59,17 @@ export type TurnWheelGestureOptions<GestureName extends string> = GestureOptions
   invert?: boolean;
 
   /**
+   * Whether the underlying `wheel` event listener is registered as passive.
+   * When `true`, neither the gesture nor any consumer can call
+   * `event.preventDefault()` on the source wheel event.
+   * Set to `false` if you need to call `preventDefault()` on the
+   * `srcEvent` from the emitted gesture event yourself.
+   * Forced to `false` when `preventDefault` is `true`.
+   * @default true
+   */
+  passive?: boolean;
+
+  /**
    * Wheel events happen on mouse mode only.
    */
   pointerMode?: never;
@@ -129,48 +140,54 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     totalDeltaZ: 0,
   };
 
-  protected readonly isSinglePhase!: true;
+  declare protected readonly isSinglePhase: true;
 
-  protected readonly eventType!: TurnWheelEvent;
+  declare protected readonly eventType: TurnWheelEvent;
 
-  protected readonly optionsType!: TurnWheelGestureOptions<GestureName>;
+  declare protected readonly optionsType: TurnWheelGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<
+  declare protected readonly mutableOptionsType: Omit<
     typeof this.optionsType,
-    'name' | 'pointerMode' | 'pointerOptions'
+    'name' | 'pointerMode' | 'pointerOptions' | 'passive'
   >;
 
-  protected readonly mutableStateType!: Partial<typeof this.state>;
+  declare protected readonly mutableStateType: Partial<typeof this.state>;
 
   /**
    * Scaling factor for delta values
    * Values > 1 increase sensitivity, values < 1 decrease sensitivity
    */
-  private sensitivity: number;
+  declare private sensitivity: number;
 
   /**
    * Maximum value for totalDelta values
    * Limits how large the accumulated wheel deltas can be
    */
-  private max: number;
+  declare private max: number;
 
   /**
    * Minimum value for totalDelta values
    * Sets a lower bound for accumulated wheel deltas
    */
-  private min: number;
+  declare private min: number;
 
   /**
    * Initial value for totalDelta values
    * Sets the starting value for delta trackers
    */
-  private initialDelta: number;
+  declare private initialDelta: number;
 
   /**
    * Whether to invert the direction of delta changes
    * When true, reverses the sign of deltaX, deltaY, and deltaZ values
    */
-  private invert: boolean;
+  declare private invert: boolean;
+
+  /**
+   * Whether the underlying wheel listener is registered as passive.
+   * Defaults to `true`; forced to `false` when `preventDefault` is `true`.
+   */
+  declare private passive: boolean;
 
   constructor(options: TurnWheelGestureOptions<GestureName>) {
     super(options);
@@ -179,6 +196,9 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     this.min = options.min ?? Number.MIN_SAFE_INTEGER;
     this.initialDelta = options.initialDelta ?? 0;
     this.invert = options.invert ?? false;
+    // If `preventDefault` is true, we must set `passive` to false to allow calling `preventDefault()` on the source event.
+    // Otherwise, default to `true` (passive) and let consumers opt out to call `preventDefault()` themselves.
+    this.passive = this.preventDefault ? false : (options.passive ?? true);
 
     this.state.totalDeltaX = this.initialDelta;
     this.state.totalDeltaY = this.initialDelta;
@@ -195,6 +215,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
       min: this.min,
       initialDelta: this.initialDelta,
       invert: this.invert,
+      passive: this.passive,
       requiredKeys: [...this.requiredKeys],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
@@ -212,11 +233,15 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
 
     // Add event listener directly to the element
     // @ts-expect-error, WheelEvent is correct.
-    this.element.addEventListener('wheel', this.handleWheelEvent);
+    this.element.addEventListener('wheel', this.handleWheelEvent, {
+      // Provide the `passive` value to prevent inconsistencies between chrome and safari
+      // See https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#passive
+      passive: this.passive,
+    });
   }
 
   public destroy(): void {
-    // Remove the element-specific event listener
+    // Remove the element-specific event listener.
     // @ts-expect-error, WheelEvent is correct.
     this.element.removeEventListener('wheel', this.handleWheelEvent);
     this.resetState();
@@ -257,24 +282,23 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     const pointers = this.pointerManager.getPointers() || new Map();
     const pointersArray = Array.from(pointers.values());
 
-    // Update total deltas with scaled values
-    this.state.totalDeltaX += event.deltaX * this.sensitivity * (this.invert ? -1 : 1);
-    this.state.totalDeltaY += event.deltaY * this.sensitivity * (this.invert ? -1 : 1);
-    this.state.totalDeltaZ += event.deltaZ * this.sensitivity * (this.invert ? -1 : 1);
-
-    // Apply proper min/max clamping for each axis
-    // Ensure values stay between min and max bounds
-    (['totalDeltaX', 'totalDeltaY', 'totalDeltaZ'] as const).forEach((axis) => {
-      // First clamp at the minimum bound
-      if (this.state[axis] < this.min) {
-        this.state[axis] = this.min;
-      }
-
-      // Then clamp at the maximum bound
-      if (this.state[axis] > this.max) {
-        this.state[axis] = this.max;
-      }
-    });
+    // Update total deltas with scaled values, clamped to [min, max].
+    // Inlined per axis to avoid allocating an array and a closure on every
+    // wheel event, which is a high-frequency event.
+    const scale = this.sensitivity * (this.invert ? -1 : 1);
+    const { min, max } = this;
+    this.state.totalDeltaX = Math.min(
+      max,
+      Math.max(min, this.state.totalDeltaX + event.deltaX * scale),
+    );
+    this.state.totalDeltaY = Math.min(
+      max,
+      Math.max(min, this.state.totalDeltaY + event.deltaY * scale),
+    );
+    this.state.totalDeltaZ = Math.min(
+      max,
+      Math.max(min, this.state.totalDeltaZ + event.deltaZ * scale),
+    );
 
     // Emit the wheel event
     this.emitWheelEvent(pointersArray, event);

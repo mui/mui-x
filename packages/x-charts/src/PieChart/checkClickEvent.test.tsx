@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 
 const config = {

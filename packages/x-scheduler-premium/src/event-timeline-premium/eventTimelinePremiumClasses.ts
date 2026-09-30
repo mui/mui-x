@@ -1,8 +1,20 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { EventDialogClasses, eventDialogClassKeys } from '@mui/x-scheduler/internals';
+import type {
+  EventDialogClasses,
+  EventContextMenuClasses,
+  ErrorContainerClasses,
+  EventSkeletonClasses,
+} from '@mui/x-scheduler/internals';
+import {
+  eventDialogClassKeys,
+  eventContextMenuClassKeys,
+  errorContainerClassKeys,
+  eventSkeletonClassKeys,
+} from '@mui/x-scheduler/internals';
 
-export interface EventTimelinePremiumClasses extends EventDialogClasses {
+export interface EventTimelinePremiumClasses
+  extends EventDialogClasses, EventContextMenuClasses, ErrorContainerClasses, EventSkeletonClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the content section element. */
@@ -25,18 +37,14 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   eventsHeaderCell: string;
   /** Styles applied to the events header cell content element. */
   eventsHeaderCellContent: string;
-  /** Styles applied to the title sub-grid element. */
-  titleSubGrid: string;
-  /** Styles applied to the events sub-grid wrapper element. */
-  eventsSubGridWrapper: string;
-  /** Styles applied to the events sub-grid element. */
-  eventsSubGrid: string;
-  /** Styles applied to the events sub-grid row element. */
-  eventsSubGridRow: string;
+  /** Styles applied to the events cell element in a body row. */
+  eventsCell: string;
   /** Styles applied to the title cell row element. */
   titleCellRow: string;
   /** Styles applied to the title cell element. */
   titleCell: string;
+  /** Styles applied to the title cell content wrapper element. */
+  titleCellContent: string;
   /** Styles applied to the title cell legend color element. */
   titleCellLegendColor: string;
   /** Styles applied to the current time indicator element. */
@@ -75,12 +83,10 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'titleHeaderCell',
     'eventsHeaderCell',
     'eventsHeaderCellContent',
-    'titleSubGrid',
-    'eventsSubGridWrapper',
-    'eventsSubGrid',
-    'eventsSubGridRow',
+    'eventsCell',
     'titleCellRow',
     'titleCell',
+    'titleCellContent',
     'titleCellLegendColor',
     'currentTimeIndicator',
     'currentTimeIndicatorCircle',
@@ -89,6 +95,9 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'eventResizeHandler',
     'eventLinesClamp',
     'eventRecurringIcon',
+    ...errorContainerClassKeys,
+    ...eventSkeletonClassKeys,
     ...eventDialogClassKeys,
+    ...eventContextMenuClassKeys,
   ],
 );

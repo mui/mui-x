@@ -164,9 +164,7 @@ export function sankey<
   let align = sankeyJustify;
   let sort: undefined;
   let linkSort:
-    | ((a: SankeyLinkMinimal<{}, {}>, b: SankeyLinkMinimal<{}, {}>) => number)
-    | null
-    | undefined;
+    ((a: SankeyLinkMinimal<{}, {}>, b: SankeyLinkMinimal<{}, {}>) => number) | null | undefined;
   let nodes = defaultNodes;
   let links = defaultLinks;
   let iterations = 6;

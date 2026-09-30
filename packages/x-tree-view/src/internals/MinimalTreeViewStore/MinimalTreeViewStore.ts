@@ -1,18 +1,19 @@
-import { Store } from '@mui/x-internals/store';
-import { warnOnce } from '@mui/x-internals/warning';
+import { Store } from '@base-ui/utils/store';
+import { errorOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
+  DisposableStack,
+  disposeSymbol,
+  unwrapSuppressedErrors,
+} from '@mui/x-internals/disposable';
+import type {
   TreeViewModelUpdater,
   MinimalTreeViewParameters,
   TreeViewParametersToStateMapper,
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
-import { TreeViewValidItem } from '../../models';
-import {
-  createMinimalInitialState,
-  createTreeViewDefaultId,
-  deriveStateFromParameters,
-} from './MinimalTreeViewStore.utils';
+import type { TreeViewValidItem } from '../../models';
+import { createMinimalInitialState, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';
@@ -20,7 +21,7 @@ import { TreeViewItemsPlugin } from '../plugins/items/TreeViewItemsPlugin';
 import { TreeViewSelectionPlugin } from '../plugins/selection/TreeViewSelectionPlugin';
 import { TreeViewExpansionPlugin } from '../plugins/expansion';
 import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
-import {
+import type {
   TreeViewEventEvent,
   TreeViewEventListener,
   TreeViewEventParameters,
@@ -38,27 +39,37 @@ export class MinimalTreeViewStore<
 > extends Store<State> {
   private initialParameters: Parameters | null = null;
 
-  private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
+  declare private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
-  private eventManager = new EventManager();
+  // Owns the store's teardown. Declared first so the resources below register
+  // against it during field initialization; disposed by `useDisposable` on
+  // unmount (see `[disposeSymbol]`). `public` so plugins can register their own
+  // subscriptions against it (hidden from the context store type).
+  public readonly disposables = new DisposableStack();
 
-  public instanceName: string;
+  private eventManager = this.disposables.adopt(new EventManager(), (manager) =>
+    manager.removeAllListeners(),
+  );
 
-  public parameters: Parameters;
+  declare public instanceName: string;
 
-  public timeoutManager = new TimeoutManager();
+  declare public parameters: Parameters;
+
+  public timeoutManager = this.disposables.adopt(new TimeoutManager(), (manager) =>
+    manager.clearAll(),
+  );
 
   public itemPluginManager = new TreeViewItemPluginManager<this>();
 
-  public items: TreeViewItemsPlugin<R>;
+  declare public items: TreeViewItemsPlugin<R>;
 
-  public focus: TreeViewFocusPlugin;
+  declare public focus: TreeViewFocusPlugin;
 
-  public expansion: TreeViewExpansionPlugin;
+  declare public expansion: TreeViewExpansionPlugin;
 
-  public selection: TreeViewSelectionPlugin<Multiple>;
+  declare public selection: TreeViewSelectionPlugin<Multiple>;
 
-  public keyboardNavigation: TreeViewKeyboardNavigationPlugin;
+  declare public keyboardNavigation: TreeViewKeyboardNavigationPlugin;
 
   public constructor(
     parameters: Parameters,
@@ -117,7 +128,7 @@ export class MinimalTreeViewStore<
         const initialIsControlled = this.initialParameters?.[controlledProp] !== undefined;
 
         if (initialIsControlled !== isControlled) {
-          warnOnce(
+          errorOnce(
             [
               `MUI X Tree View: A component is changing the ${
                 initialIsControlled ? '' : 'un'
@@ -126,16 +137,14 @@ export class MinimalTreeViewStore<
               `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
               "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
               'More info: https://fb.me/react-controlled-components',
-            ],
-            'error',
+            ].join('\n'),
           );
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warnOnce(
+          errorOnce(
             [
               `MUI X Tree View: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
               `To suppress this warning opt to use a controlled ${this.instanceName}.`,
-            ],
-            'error',
+            ].join('\n'),
           );
         }
       }
@@ -146,8 +155,8 @@ export class MinimalTreeViewStore<
     updateModel(newMinimalState, 'expandedItems', 'defaultExpandedItems');
     updateModel(newMinimalState, 'selectedItems', 'defaultSelectedItems');
 
-    if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
-      newMinimalState.treeId = createTreeViewDefaultId();
+    if (this.state.treeId !== parameters.defaultId) {
+      newMinimalState.treeId = parameters.defaultId;
     }
 
     if (
@@ -163,16 +172,37 @@ export class MinimalTreeViewStore<
       updateModel,
     );
 
-    this.update(newState);
+    this.update(newState as State);
     this.parameters = parameters;
   }
 
   /**
-   * Returns a cleanup function that need to be called when the store is destroyed.
+   * Runs mount-time side effects that must not happen during render (the store
+   * is created during render by `useDisposable`). No-op by default; overridden
+   * by stores that kick off work on mount (e.g. lazy-loading fetches). Safe to
+   * call more than once (StrictMode replays mount effects).
    */
-  public disposeEffect = () => {
-    return this.timeoutManager.clearAll;
-  };
+  public mountEffect = () => {};
+
+  /**
+   * Disposes the store synchronously when the component unmounts. `useDisposable`
+   * handles React StrictMode's simulated unmount, so this runs once on real unmount.
+   */
+  [disposeSymbol](): void {
+    if (this.disposables.disposed) {
+      return;
+    }
+    try {
+      this.disposables.dispose();
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          'MUI X Tree View: error while disposing the store.',
+          ...unwrapSuppressedErrors(error),
+        );
+      }
+    }
+  }
 
   /**
    * Whether updates based on `props.items` change should be ignored.
@@ -190,13 +220,15 @@ export class MinimalTreeViewStore<
   ) => {
     let previousValue = selector(this.state);
 
-    this.subscribe((state) => {
-      const nextValue = selector(state);
-      if (nextValue !== previousValue) {
-        effect(previousValue, nextValue);
-        previousValue = nextValue;
-      }
-    });
+    this.disposables.defer(
+      this.subscribe((state) => {
+        const nextValue = selector(state);
+        if (nextValue !== previousValue) {
+          effect(previousValue, nextValue);
+          previousValue = nextValue;
+        }
+      }),
+    );
   };
 
   /**

@@ -1,5 +1,6 @@
 import { scaleBand } from '@mui/x-charts/internals';
 import { scaleLinear } from '@mui/x-charts-vendor/d3-scale';
+import { describe, it, expect } from 'vitest';
 import { getValueToPositionMapper } from './getValueToPositionMapper';
 
 describe('getValueToPositionMapper', () => {

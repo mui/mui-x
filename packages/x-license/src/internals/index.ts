@@ -13,4 +13,3 @@ export {
   clearLicenseStatusCache,
 } from '../useLicenseVerifier/useLicenseVerifier';
 export * from '../verifyLicense/verifyLicense';
-export * from '../test-keys';

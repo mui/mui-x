@@ -6,7 +6,7 @@ import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DesktopDatePicker } from '../DesktopDatePicker';
 import { MobileDatePicker } from '../MobileDatePicker';
-import { DatePickerProps } from './DatePicker.types';
+import type { DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type DatePickerComponent = ((
@@ -41,7 +41,7 @@ const DatePicker = React.forwardRef(function DatePicker(
   return <MobileDatePicker ref={ref} {...other} />;
 }) as DatePickerComponent;
 
-DatePicker.propTypes = {
+DatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -181,6 +181,10 @@ DatePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
+  /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
@@ -266,7 +270,7 @@ DatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

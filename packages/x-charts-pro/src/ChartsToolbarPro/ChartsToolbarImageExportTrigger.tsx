@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
 import { useChartProApiContext } from '../context';
-import { type ChartImageExportOptions } from '../internals/plugins/useChartProExport';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import type { ChartImageExportOptions } from '../internals/plugins/useChartProExport';
+import type { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 
 export interface ChartsToolbarImageExportOptions
   extends Omit<ChartImageExportOptions, 'type'>, Required<Pick<ChartImageExportOptions, 'type'>> {}
@@ -40,7 +41,9 @@ const ChartsToolbarImageExportTrigger = forwardRef<
   const apiRef = useChartProApiContext();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    apiRef.current.exportAsImage(options);
+    apiRef.current.exportAsImage(options).catch((error) => {
+      console.error('MUI X Charts: Error exporting chart as image:', error);
+    });
     onClick?.(event);
   };
 
@@ -54,7 +57,7 @@ const ChartsToolbarImageExportTrigger = forwardRef<
   return <React.Fragment>{element}</React.Fragment>;
 });
 
-ChartsToolbarImageExportTrigger.propTypes = {
+ChartsToolbarImageExportTrigger.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -72,6 +75,8 @@ ChartsToolbarImageExportTrigger.propTypes = {
     fileName: PropTypes.string,
     nonce: PropTypes.string,
     onBeforeExport: PropTypes.func,
+    onStylesheetError: PropTypes.func,
+    pixelRatio: PropTypes.number,
     quality: PropTypes.number,
     type: PropTypes.string.isRequired,
   }),

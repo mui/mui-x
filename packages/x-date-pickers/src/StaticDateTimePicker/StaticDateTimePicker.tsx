@@ -1,18 +1,18 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
+import type { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateDateTime } from '../validation';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import type { PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { mergeSx } from '../internals/utils/utils';
 import {
   multiSectionDigitalClockClasses,
@@ -20,9 +20,16 @@ import {
 } from '../MultiSectionDigitalClock';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { digitalClockClasses } from '../DigitalClock';
-import { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
+import type { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
 import { DATE_VIEWS } from '../internals/utils/date-utils';
 import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
+
+// Static pickers render no field, so they skip the field-only manager members.
+const manager = {
+  valueType: 'date-time' as const,
+  validator: validateDateTime,
+  internal_valueManager: singleItemValueManager,
+};
 
 const STEPS: PickerStep[] = [{ views: DATE_VIEWS }, { views: EXPORTED_TIME_VIEWS }];
 
@@ -125,16 +132,14 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   const { renderPicker } = useStaticPicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date-time',
-    validator: validateDateTime,
+    manager,
     steps: STEPS,
   });
 
   return renderPicker();
 }) as StaticDateTimePickerComponent;
 
-StaticDateTimePicker.propTypes = {
+StaticDateTimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -270,6 +275,10 @@ StaticDateTimePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
+  /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
@@ -283,7 +292,8 @@ StaticDateTimePicker.propTypes = {
   /**
    * Callback fired when component requests to be closed.
    * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
-   * @deprecated Please avoid using as it will be removed in next major version.
+   * @deprecated Use `onCancel` or `onAccept` instead, depending on the action you want to react to.
+   * This callback will be removed in the next major version.
    */
   onClose: PropTypes.func,
   /**
@@ -341,7 +351,7 @@ StaticDateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

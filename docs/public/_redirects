@@ -3,6 +3,9 @@
 # Avoid conflicts with the other Next.js apps hosted under https://mui.com/
 /x/_next/* /_next/:splat 200
 
+# Shortlink to Netlify deploy previews
+/x/pr/:number https://deploy-preview-:number--material-ui-x.netlify.app/ 302
+
 # For links that we can't edit later on, for example hosted in the code published on npm or sent by email
 
 # should all be prefixed with x-
@@ -75,10 +78,13 @@
 /x/api/charts/pie-series-type/ /x/api/charts/pie-series/ 301
 /x/api/charts/scatter-series-type/ /x/api/charts/scatter-series/ 301
 # 2026
+/x/react-chat/customization/ /x/react-chat/customization/overview/ 301
+/x/api/x-chat/* /x/api/chat/:splat 301
 /x/api/charts/chart-container/ /x/api/charts/charts-container/ 301
 /x/api/charts/chart-container-pro/ /x/api/charts/charts-container-pro/ 301
 /x/api/charts/chart-container-premium/ /x/api/charts/charts-container-premium/ 301
 /x/api/charts/chart-data-provider/ /x/api/charts/charts-data-provider/ 301
 /x/api/charts/chart-data-provider-pro/ /x/api/charts/charts-data-provider-pro/ 301
 /x/api/charts/chart-data-provider-premium/ /x/api/charts/charts-data-provider-premium/ 301
+/x/react-scheduler/event-timeline/views/ /x/react-scheduler/event-timeline/presets/ 301
 # Proxies

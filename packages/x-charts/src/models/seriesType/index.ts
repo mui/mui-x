@@ -48,6 +48,7 @@ export type {
   MarkShape,
   LineSeriesType,
   LineItemIdentifier,
+  LineItemClickIdentifier,
   DefaultizedLineSeriesType,
 } from './line';
 export type {

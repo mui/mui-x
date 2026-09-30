@@ -2,8 +2,7 @@
 import * as React from 'react';
 import type { ChatAdapter } from '../../adapters';
 import type { ChatPartRendererMap } from '../../renderers';
-import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from '../../types';
-import type { ChatError } from '../../types/chat-error';
+import type { ChatOnData, ChatOnError, ChatOnFinish, ChatOnToolCall } from '../../types';
 import type { ChatRuntimeActions } from '../useChatController';
 
 export interface ChatRuntimeContextValue<Cursor = string> {
@@ -11,7 +10,7 @@ export interface ChatRuntimeContextValue<Cursor = string> {
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
-  onError?: (error: ChatError) => void;
+  onError?: ChatOnError;
   partRenderers: ChatPartRendererMap;
   actions: ChatRuntimeActions<Cursor>;
 }

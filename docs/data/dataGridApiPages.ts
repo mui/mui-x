@@ -65,6 +65,10 @@ const dataGridApiPages: MuiPage[] = [
     title: 'GridFilterPanel',
   },
   {
+    pathname: '/x/api/data-grid/grid-filter-panel-base',
+    title: 'GridFilterPanelBase',
+  },
+  {
     pathname: '/x/api/data-grid/grid-toolbar-quick-filter',
     title: 'GridToolbarQuickFilter',
   },

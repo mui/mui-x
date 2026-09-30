@@ -4,7 +4,8 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { type PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
+import { usePromptFieldContext } from './PromptFieldContext';
+import type { PromptFieldState } from './PromptFieldContext';
 
 export type PromptFieldSendProps = Omit<GridSlotProps['baseIconButton'], 'className'> & {
   /**
@@ -59,7 +60,7 @@ const PromptFieldSend = forwardRef<HTMLButtonElement, PromptFieldSendProps>(
   },
 );
 
-PromptFieldSend.propTypes = {
+PromptFieldSend.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -69,10 +70,23 @@ PromptFieldSend.propTypes = {
    */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   color: PropTypes.oneOf(['default', 'inherit', 'primary']),
+  /**
+   * The component used for the root node. Either a string to use an HTML element or a component.
+   */
+  component: PropTypes.elementType,
   disabled: PropTypes.bool,
   edge: PropTypes.oneOf(['end', 'start', false]),
+  /**
+   * The URL to link to. If set, and `component` is not set, the component renders as an anchor tag.
+   */
+  href: PropTypes.string,
   id: PropTypes.string,
   label: PropTypes.string,
+  /**
+   * The relationship of the linked URL.
+   * Set it to `noopener noreferrer` when `target` is set to `_blank` to avoid a security issue.
+   */
+  rel: PropTypes.string,
   /**
    * A function to customize rendering of the component.
    */
@@ -81,6 +95,10 @@ PromptFieldSend.propTypes = {
   size: PropTypes.oneOf(['large', 'medium', 'small']),
   style: PropTypes.object,
   tabIndex: PropTypes.number,
+  /**
+   * Where to display the linked URL, as the name for a browsing context.
+   */
+  target: PropTypes.string,
   title: PropTypes.string,
   touchRippleRef: PropTypes.any,
 } as any;

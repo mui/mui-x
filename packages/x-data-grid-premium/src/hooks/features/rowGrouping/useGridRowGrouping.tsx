@@ -2,7 +2,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  type GridEventListener,
   useGridEvent,
   useGridApiMethod,
   gridColumnLookupSelector,
@@ -10,15 +9,17 @@ import {
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
   gridExpandedSortedRowIndexLookupSelector,
-  type ReorderValidationContext,
 } from '@mui/x-data-grid-pro';
+import type { GridEventListener, ReorderValidationContext } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
-  type GridPipeProcessor,
-  type GridRestoreStatePreProcessingContext,
-  type GridStateInitializer,
   GridStrategyGroup,
   RowGroupingStrategy,
+} from '@mui/x-data-grid-pro/internals';
+import type {
+  GridPipeProcessor,
+  GridRestoreStatePreProcessingContext,
+  GridStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -71,6 +72,7 @@ export const useGridRowGrouping = (
     | 'slotProps'
     | 'slots'
     | 'dataSource'
+    | 'lazyLoading'
     | 'treeData'
     | 'isValidRowReorder'
   >,
@@ -254,14 +256,18 @@ export const useGridRowGrouping = (
         }
 
         if (props.dataSource && !params.rowNode.childrenExpanded) {
-          apiRef.current.dataSource.fetchRows(params.id);
+          if (props.lazyLoading) {
+            apiRef.current.setRowChildrenExpansion(params.id, true);
+          } else {
+            apiRef.current.dataSource.fetchRows(params.id);
+          }
           return;
         }
 
         apiRef.current.setRowChildrenExpansion(params.id, !params.rowNode.childrenExpanded);
       }
     },
-    [apiRef, props.rowGroupingColumnMode, props.dataSource],
+    [apiRef, props.rowGroupingColumnMode, props.dataSource, props.lazyLoading],
   );
 
   const checkGroupingColumnsModelDiff = React.useCallback<

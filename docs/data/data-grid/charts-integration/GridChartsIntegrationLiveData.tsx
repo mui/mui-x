@@ -18,7 +18,7 @@ import { AxisConfig } from '@mui/x-charts/models';
 
 const columns: GridColDef[] = [
   { field: 'id' },
-  { field: 'process', headerName: 'Process', width: 150 },
+  { field: 'process', headerName: 'Process', width: 150, rowHeader: true },
   {
     field: 'cpu',
     headerName: 'CPU',

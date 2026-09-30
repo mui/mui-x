@@ -17,24 +17,30 @@ const babel = require('@babel/core');
 const prettier = require('prettier');
 const yargs = require('yargs');
 const { hideBin } = require('yargs/helpers');
-const ts = require('typescript');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
 const DOCS_ROOT = path.resolve(__dirname, '..');
-const tsConfigPath = path.resolve(DOCS_ROOT, './tsconfig.json');
-const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
-  fs.readFileSync(filePath).toString(),
-);
-
-const tsConfigFileContent = ts.parseJsonConfigFileContent(
-  tsConfigFile.config,
-  ts.sys,
-  path.dirname(tsConfigPath),
-);
 
 const babelConfig = {
-  presets: ['@babel/preset-typescript'],
+  presets: [
+    [
+      '@babel/preset-typescript',
+      // Babel 8 defaults this to `true`, which keeps imports that are only used as types.
+      // The transpiled demos must not carry them over, so keep the Babel 7 elision behavior.
+      { onlyRemoveTypeImports: false },
+    ],
+  ],
   plugins: [],
+  overrides: [
+    {
+      // `@babel/preset-typescript` no longer pulls in the JSX syntax for `.tsx` files in Babel 8,
+      // and the demos keep their JSX, so enable it on the parser rather than transforming it.
+      // Only for `.tsx`: in a `.ts` demo the JSX parser would misread `<T>(x: T) => x` and
+      // `<number>value`.
+      test: /\.tsx$/,
+      parserOpts: { plugins: ['jsx'] },
+    },
+  ],
   generatorOpts: { retainLines: true },
   babelrc: false,
   configFile: false,
@@ -88,7 +94,7 @@ const previewOverride = {
   'docs/data/charts/sankey/SankeyDetailedDataStructure.tsx': { maxLines: 30 },
 };
 
-async function transpileFile(tsxPath, program, ignoreCache = false) {
+async function transpileFile(tsxPath, ignoreCache = false) {
   const jsPath = tsxPath.replace(/\.tsx?$/, '.js');
   try {
     if (!ignoreCache) {
@@ -154,15 +160,10 @@ async function main(argv) {
     ...(await getFiles(path.join(workspaceRoot, 'docs/data'), true)), // new structure
   ];
 
-  const program = ts.createProgram({
-    rootNames: tsxFiles,
-    options: tsConfigFileContent.options,
-  });
-
   let successful = 0;
   let failed = 0;
   let skipped = 0;
-  (await Promise.all(tsxFiles.map((file) => transpileFile(file, program, cacheDisabled)))).forEach(
+  (await Promise.all(tsxFiles.map((file) => transpileFile(file, cacheDisabled)))).forEach(
     (result) => {
       switch (result) {
         case TranspileResult.Success: {
@@ -205,7 +206,7 @@ async function main(argv) {
 
   tsxFiles.forEach((filePath) => {
     fs.watchFile(filePath, { interval: 500 }, async () => {
-      if ((await transpileFile(filePath, program, true)) === 0) {
+      if ((await transpileFile(filePath, true)) === 0) {
         console.log('Success - %s', filePath);
       }
     });

@@ -1,5 +1,5 @@
 import { DateTime, Info } from 'luxon';
-import {
+import type {
   AdapterFormats,
   AdapterOptions,
   DateBuilderReturnType,
@@ -121,9 +121,9 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
 
   public lib = 'luxon';
 
-  public locale: string;
+  declare public locale: string;
 
-  public formats: AdapterFormats;
+  declare public formats: AdapterFormats;
 
   public escapedCharacters = { start: "'", end: "'" };
 

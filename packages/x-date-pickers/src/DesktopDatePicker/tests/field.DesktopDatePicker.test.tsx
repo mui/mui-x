@@ -1,11 +1,13 @@
-import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import type { DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
   buildFieldInteractions,
   expectFieldValue,
   adapterToUse,
-  describeAdapters,
 } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { describe, it } from 'vitest';
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {

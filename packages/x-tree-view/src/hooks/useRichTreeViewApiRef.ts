@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { TreeViewDefaultItemModelProperties, TreeViewValidItem } from '../models';
-import { TreeViewPublicAPI } from '../internals/models';
-import { RichTreeViewStore } from '../internals/RichTreeViewStore';
+import type { TreeViewDefaultItemModelProperties, TreeViewValidItem } from '../models';
+import type { TreeViewPublicAPI } from '../internals/models';
+import type { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
 /**
  * Creates the ref to pass to the `apiRef` prop of the `RichTreeView` component.

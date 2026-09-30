@@ -2,9 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { MessageAuthorLabel, type MessageAuthorLabelProps } from '@mui/x-chat-headless';
+import { MessageAuthorLabel } from '@mui/x-chat-headless';
+import type { MessageAuthorLabelProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import type { ChatMessageClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageAuthorLabel');
 
@@ -37,22 +40,24 @@ const ChatMessageAuthorLabel = React.forwardRef<HTMLSpanElement, ChatMessageAuth
         ref={ref}
         {...other}
         slots={{
-          authorLabel: slots?.authorLabel ?? ChatMessageAuthorLabelStyled,
           ...slots,
+          authorLabel: slots?.authorLabel ?? ChatMessageAuthorLabelStyled,
         }}
         slotProps={{
           ...slotProps,
-          authorLabel: {
-            className: clsx(classes.authorLabel, className),
-            ...(slotProps?.authorLabel as object),
-          } as any,
+          authorLabel: mergeSlotProps(
+            {
+              className: clsx(classes.authorLabel, className),
+            },
+            slotProps?.authorLabel,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatMessageAuthorLabel.propTypes = {
+ChatMessageAuthorLabel.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

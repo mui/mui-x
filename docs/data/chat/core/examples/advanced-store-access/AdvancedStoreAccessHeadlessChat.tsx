@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import {
   ChatProvider,
   chatSelectors,
@@ -209,7 +209,7 @@ function AdvancedMetrics() {
           fullWidth
           value={composer.value}
           onChange={(event) => composer.setValue(event.target.value)}
-          placeholder="Type a message..."
+          placeholder="Type a message…"
         />
         <Button
           variant="contained"

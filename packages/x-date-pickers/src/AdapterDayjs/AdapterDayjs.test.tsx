@@ -1,10 +1,10 @@
-import dayjs, { Dayjs } from 'dayjs';
-import { spy, stub } from 'sinon';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { screen } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
+import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   expectFieldValue,
   createPickerRenderer,
@@ -17,6 +17,7 @@ import 'dayjs/locale/de';
 // We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
+import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
 describe('<AdapterDayjs />', () => {
   const commonParams = {
@@ -59,16 +60,80 @@ describe('<AdapterDayjs />', () => {
       // comparisons against plain `dayjs()` dates (for which `getTimezone()`
       // returns `'system'`) went through an unnecessary `setTimezone` conversion
       // that could shift the day across midnight. CI runs in UTC, so the non-UTC
-      // branch is only reachable by stubbing `dayjs.tz.guess()`. The Sinon
-      // default sandbox is restored by the global `afterEach` in
-      // `test/setupVitest.ts`, so no manual cleanup is needed.
-      stub(dayjs.tz, 'guess').returns('America/New_York');
+      // branch is only reachable by stubbing `dayjs.tz.guess()`.
+      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/New_York');
+      onTestFinished(() => guess.mockRestore());
 
       const adapter = new AdapterDayjs();
       const resolvedDate = adapter.date(TEST_DATE_ISO_STRING, 'system') as Dayjs;
 
       expect(adapter.getTimezone(resolvedDate)).to.equal('system');
       expect(adapter.isSameDay(resolvedDate, dayjs(TEST_DATE_ISO_STRING))).to.equal(true);
+    });
+
+    // `Asia/Kolkata` is used because the affected zones depend on the system timezone, and the tests
+    // run with `TZ=UTC`. See https://github.com/mui/mui-x/issues/23163
+    describe('Dates predating the timezone standardization', () => {
+      const adapter = new AdapterDayjs();
+      // The wall clock of this date in `Asia/Kolkata` is `2026-08-06 01:41`.
+      const getDate = () => adapter.date('2026-08-05T20:11:00Z', 'Asia/Kolkata') as Dayjs;
+
+      it('setYear: should only change the year', () => {
+        expect(
+          adapter.formatByString(adapter.setYear(getDate(), 202), 'YYYY-MM-DD HH:mm'),
+        ).to.equal('0202-08-06 01:41');
+      });
+
+      it('setMonth: should only change the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.setMonth(adapter.setYear(getDate(), 202), 2),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0202-03-06 01:41');
+      });
+
+      it('addYears: should keep the day of the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.addYears(adapter.setYear(getDate(), 202), 1),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0203-08-06 01:41');
+      });
+
+      it('addMonths: should keep the day of the month', () => {
+        expect(
+          adapter.formatByString(
+            adapter.addMonths(adapter.setYear(getDate(), 202), 1),
+            'YYYY-MM-DD HH:mm',
+          ),
+        ).to.equal('0202-09-06 01:41');
+      });
+
+      it('setMonth: should still clamp the day of the month on a shorter month', () => {
+        const endOfJanuary = adapter.setDate(
+          adapter.setMonth(adapter.setYear(getDate(), 202), 0),
+          31,
+        );
+
+        expect(adapter.formatByString(adapter.setMonth(endOfJanuary, 1), 'YYYY-MM-DD')).to.equal(
+          '0202-02-28',
+        );
+      });
+
+      it('setYear: should support years that do not round-trip through the ISO format', () => {
+        const result = adapter.setYear(getDate(), 10000);
+
+        expect(adapter.isValid(result)).to.equal(true);
+        expect(adapter.formatByString(result, 'MM-DD HH:mm')).to.equal('08-06 01:41');
+      });
+
+      it('setYear: should keep an invalid date invalid', () => {
+        expect(adapter.isValid(adapter.setYear(adapter.getInvalidDate() as Dayjs, 2020))).to.equal(
+          false,
+        );
+      });
     });
 
     it('should not mutate `$offset` on plain `dayjs()` values when `dayjs.tz.guess()` is non-UTC (regression #21669)', () => {
@@ -82,7 +147,8 @@ describe('<AdapterDayjs />', () => {
       // picker to silently shift the picked hour by one when the user clicked
       // 04:00 AM. CI runs in UTC so the guess has to be stubbed to a non-UTC
       // zone to reproduce the drift.
-      stub(dayjs.tz, 'guess').returns('America/Los_Angeles');
+      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/Los_Angeles');
+      onTestFinished(() => guess.mockRestore());
 
       const adapter = new AdapterDayjs();
       const noon = adapter.date('2026-03-08T12:00:00', 'system') as Dayjs;
@@ -103,7 +169,8 @@ describe('<AdapterDayjs />', () => {
     });
 
     it('should not mutate `$offset` on plain `dayjs()` values across `addMonths` (regression #21669)', () => {
-      stub(dayjs.tz, 'guess').returns('America/Los_Angeles');
+      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/Los_Angeles');
+      onTestFinished(() => guess.mockRestore());
 
       const adapter = new AdapterDayjs();
       const winter = adapter.date('2026-01-15T12:00:00', 'system') as Dayjs;
@@ -130,7 +197,8 @@ describe('<AdapterDayjs />', () => {
       // (no `$offset`), so we manually shape the value to mirror the
       // non-UTC `now` shape and stub `dayjs.tz.guess()` so the `'system'`
       // path resolves to LA.
-      stub(dayjs.tz, 'guess').returns('America/Los_Angeles');
+      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/Los_Angeles');
+      onTestFinished(() => guess.mockRestore());
 
       const now = dayjs('2026-03-08T12:58:00') as Dayjs;
       // @ts-ignore - mirror the construction-time PDT offset that LA env
@@ -197,9 +265,10 @@ describe('<AdapterDayjs />', () => {
         // those plain values, which corrupted the underlying instant. The
         // regression made clicking "04:00 AM" silently produce a different
         // hour. We stub `dayjs.tz.guess()` so the path runs in CI's UTC env.
-        stub(dayjs.tz, 'guess').returns('America/Los_Angeles');
+        const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/Los_Angeles');
+        onTestFinished(() => guess.mockRestore());
 
-        const onChange = spy();
+        const onChange = vi.fn();
         const { user } = render(
           <DigitalClock
             onChange={onChange}
@@ -211,7 +280,7 @@ describe('<AdapterDayjs />', () => {
 
         await user.click(screen.getByRole('option', { name: '04:00 AM' }));
 
-        const result = onChange.lastCall.firstArg as Dayjs;
+        const result = onChange.mock.lastCall![0] as Dayjs;
         expect(adapter.getHours(result)).to.equal(4);
         // CI runs in TZ=UTC, so a plain dayjs value reports as 'UTC' (since
         // `dayjs.isUTC()` is true in that env). The key regression invariant

@@ -3,13 +3,13 @@ import { useChartId } from '../hooks/useChartId';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { cleanId } from '../internals/cleanId';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { type SeriesId } from '../models/seriesType/common';
-import {
-  type ComputedAxisConfig,
-  type UseChartCartesianAxisSignature,
+import type { SeriesId } from '../models/seriesType/common';
+import type {
+  ComputedAxisConfig,
+  UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
-import { type AxisId } from '../models/axis';
+import type { ChartsXAxisProps, ChartsYAxisProps } from '../models';
+import type { AxisId } from '../models/axis';
 import getColor from './seriesConfig/getColor';
 import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
@@ -63,7 +63,8 @@ export function useMarkPlotData(
           hidden,
         } = series[seriesId];
 
-        if (!showMark) {
+        // `'start'` and `'end'` marks are rendered by the `LineHighlightPlot` using the highlight element.
+        if (!showMark || showMark === 'start' || showMark === 'end') {
           continue;
         }
 
@@ -77,6 +78,8 @@ export function useMarkPlotData(
 
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
+            // TODO: fix mui/no-guarded-throw
+            // eslint-disable-next-line mui/no-guarded-throw
             throw new Error(
               `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY

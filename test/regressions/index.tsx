@@ -5,8 +5,11 @@ import { Globals } from '@react-spring/web';
 // eslint-disable-next-line import/no-relative-packages
 import '../utils/setupFakeClock';
 import { LicenseInfo } from '@mui/x-license';
-import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/internals';
+import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
+import { resetRandomGenerators } from '@mui/x-data-grid-generator';
+import loadFonts from '@mui/internal-test-utils/loadFonts';
 import TestViewer from './TestViewer';
+import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';
 
 (globalThis as any).MUI_TEST_ENV = true;
@@ -21,6 +24,7 @@ declare global {
   interface Window {
     muiFixture: {
       allTests: { url: string }[];
+      fontsReady: Promise<void>;
       isReady: boolean;
       navigate: (test: string) => void;
     };
@@ -33,6 +37,24 @@ const allTests = Object.values(testsBySuite).flatMap((suite) =>
 
 window.muiFixture = {
   allTests,
+  // `index.test.ts` awaits this in `navigateToTest`, before any fixture mounts.
+  // `display=swap` is dropped on purpose: it paints fallback text first, and the
+  // font files Google serves are identical without it.
+  fontsReady: loadFonts({
+    stylesheets: [
+      'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400',
+    ],
+    faces: [
+      ...[300, 400, 500, 700].map((weight) => ({ family: 'Roboto', weight })),
+      { family: 'Roboto', weight: 400, style: 'italic' },
+    ],
+    subsets: [
+      { name: 'latin', text: ' ' },
+      // Chart demos label standard deviations, e.g.
+      // `docs/data/charts/composition/BellCurveOverlay.js`.
+      { name: 'greek', text: 'σ' },
+    ],
+  }),
   isReady: false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
@@ -51,7 +73,12 @@ function Root() {
 
   const navigate = useNavigate();
   React.useEffect(() => {
-    window.muiFixture.navigate = navigate;
+    window.muiFixture.navigate = (path) => {
+      // Each demo should observe the same seeded random sequence regardless
+      // of what was rendered before on this page.
+      resetRandomGenerators();
+      navigate(path);
+    };
     window.muiFixture.isReady = true;
   }, [navigate]);
 
@@ -99,11 +126,13 @@ function App() {
         const isDataGridTest =
           suite.startsWith('docs-data-grid') || suite === 'test-regressions-data-grid';
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
+        const isOverviewTest = suite.startsWith('test-regressions-overviews-');
 
         const chartTestNeedsToAdvanceTime = (test: Test) =>
           test.path.includes('Interaction') ||
           test.path.includes('PrintChart') ||
-          test.path.includes('ExportChartAsImage');
+          test.path.includes('ExportChartAsImage') ||
+          test.path.includes('ImageExportAutoSize');
 
         return {
           path: suite,
@@ -116,7 +145,13 @@ function App() {
                 shouldAdvanceTime={isDataGridTest || chartTestNeedsToAdvanceTime(test)}
                 path={computePath(test)}
               >
-                <test.case />
+                {isOverviewTest ? (
+                  <OverviewWrapper>
+                    <test.case />
+                  </OverviewWrapper>
+                ) : (
+                  <test.case />
+                )}
               </TestViewer>
             ),
           })),

@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 // Translation map for Clock Label
 const timeViews: Record<TimeViewWithMeridiem, string> = {
@@ -9,6 +9,19 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   seconds: 'секунды',
   meridiem: 'меридием',
 };
+
+// Russian has 3 count-based forms, selected by the last digit(s) of the count
+function getPluralForm(count: number, one: string, few: string, many: string) {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+  if (lastDigit === 1 && lastTwoDigits !== 11) {
+    return one;
+  }
+  if (lastDigit > 1 && lastDigit < 5 && (lastTwoDigits < 12 || lastTwoDigits > 14)) {
+    return few;
+  }
+  return many;
+}
 
 const ruRUPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
@@ -48,9 +61,12 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Выбрать ${timeViews[view]}. ${!formattedTime ? 'Время не выбрано' : `Выбрано время ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} часов`,
-  minutesClockNumberText: (minutes) => `${minutes} минут`,
-  secondsClockNumberText: (seconds) => `${seconds} секунд`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralForm(Number(hours), 'час', 'часа', 'часов')}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralForm(Number(minutes), 'минута', 'минуты', 'минут')}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralForm(Number(seconds), 'секунда', 'секунды', 'секунд')}`,
 
   // Digital clock labels
   selectViewText: (view) => `Выбрать ${timeViews[view]}`,

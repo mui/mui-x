@@ -2,8 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { warnOnce } from '@mui/x-internals/warning';
-import { styled, useThemeProps, type SxProps, type Theme } from '@mui/material/styles';
+import { errorOnce } from '@mui/x-internals/warning';
+import { styled, useThemeProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { useUtilityClasses } from '../ChartsSurface/chartsSurfaceClasses';
@@ -12,8 +13,8 @@ import {
   selectorChartPropsWidth,
 } from '../internals/plugins/corePlugins/useChartDimensions';
 import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
-import { type UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
-import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartsContext } from '../context/ChartsProvider';
 import { useChartsLayerContainerRef } from '../hooks';
 import { useRegisterPointerInteractions } from '../internals/plugins/featurePlugins/shared/useRegisterPointerInteractions';
@@ -87,19 +88,21 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
           'type' in child &&
           child.type === ChartsSurface
         ) {
-          warnOnce(
+          errorOnce(
             'MUI X Charts: ChartsSurface should not be used inside ChartsLayerContainer. Render a ChartsSvgLayer instead.',
-            'error',
           );
         }
       });
     }
 
     return (
+      // `role="none"` is an alias for `role="presentation"`, but aria-query treats them differently.
+      // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090
+      // eslint-disable-next-line jsx-a11y/role-supports-aria-props
       <ChartsLayerContainerDiv
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
-        role="presentation"
+        role="none"
         aria-label={title}
         aria-describedby={desc ? descId : undefined}
         className={clsx(classes.root, className)}
@@ -129,7 +132,7 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
   },
 );
 
-ChartsLayerContainer.propTypes = {
+ChartsLayerContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

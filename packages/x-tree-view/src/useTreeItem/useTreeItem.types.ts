@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
-import { TreeViewPublicAPI, TreeViewAnyStore } from '../internals/models';
+import type * as React from 'react';
+import type { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
+import type { TreeViewPublicAPI, TreeViewAnyStore } from '../internals/models';
 
 export interface UseTreeItemParameters {
   /**
@@ -129,6 +129,10 @@ export interface UseTreeItemStatus {
   expanded: boolean;
   focused: boolean;
   selected: boolean;
+  /**
+   * `true` when the item is not selected but some of its selectable descendants are.
+   */
+  indeterminate?: boolean;
   disabled: boolean;
   editing: boolean;
   editable: boolean;

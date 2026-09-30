@@ -1,6 +1,7 @@
 [
   { "name": "Chat", "kind": "Variable" },
   { "name": "ChatLayout", "kind": "Variable" },
+  { "name": "ChatLayoutPaneKind", "kind": "TypeAlias" },
   { "name": "ChatLayoutProps", "kind": "Interface" },
   { "name": "ChatLayoutSlotProps", "kind": "Interface" },
   { "name": "ChatLayoutSlots", "kind": "Interface" },
@@ -60,6 +61,7 @@
   { "name": "ConversationListUnreadBadgeProps", "kind": "Interface" },
   { "name": "getDefaultMessagePartRenderer", "kind": "Function" },
   { "name": "Indicators", "kind": "Variable" },
+  { "name": "markChatLayoutPane", "kind": "Function" },
   { "name": "Message", "kind": "Variable" },
   { "name": "MessageActions", "kind": "Variable" },
   { "name": "MessageActionsProps", "kind": "Interface" },

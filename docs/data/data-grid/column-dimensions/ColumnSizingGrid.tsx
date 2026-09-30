@@ -14,7 +14,13 @@ export default function ColumnSizingGrid() {
       <DataGrid
         columns={[
           { field: 'id' },
-          { field: 'username', width: 125, minWidth: 150, maxWidth: 200 },
+          {
+            field: 'username',
+            width: 125,
+            minWidth: 150,
+            maxWidth: 200,
+            rowHeader: true,
+          },
           { field: 'age', resizable: false },
         ]}
         rows={rows}

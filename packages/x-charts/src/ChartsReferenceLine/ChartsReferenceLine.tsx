@@ -1,8 +1,10 @@
 'use client';
 import PropTypes from 'prop-types';
-import { ChartsXReferenceLine, type ChartsXReferenceLineProps } from './ChartsXReferenceLine';
-import { ChartsYReferenceLine, type ChartsYReferenceLineProps } from './ChartsYReferenceLine';
-import { type XOR } from '../internals/ts-generic';
+import { ChartsXReferenceLine } from './ChartsXReferenceLine';
+import type { ChartsXReferenceLineProps } from './ChartsXReferenceLine';
+import { ChartsYReferenceLine } from './ChartsYReferenceLine';
+import type { ChartsYReferenceLineProps } from './ChartsYReferenceLine';
+import type { XOR } from '../internals/ts-generic';
 
 type ChartsReferenceLineProps<TValue extends string | number | Date = string | number | Date> = XOR<
   ChartsXReferenceLineProps<TValue>,
@@ -33,7 +35,7 @@ function ChartsReferenceLine(props: ChartsReferenceLineProps) {
   return <ChartsYReferenceLine {...props} />;
 }
 
-ChartsReferenceLine.propTypes = {
+ChartsReferenceLine.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

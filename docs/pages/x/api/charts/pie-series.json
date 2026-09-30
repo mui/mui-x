@@ -44,6 +44,10 @@
     "paddingAngle": { "type": { "description": "number" }, "default": "0" },
     "sortingValues": { "type": { "description": "ChartsPieSorting" }, "default": "'none'" },
     "startAngle": { "type": { "description": "number" }, "default": "0" },
-    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } }
+    "valueFormatter": {
+      "type": {
+        "description": "SeriesValueFormatter&lt;ChartsSeriesConfig[SeriesType]['valueType']&gt;"
+      }
+    }
   }
 }

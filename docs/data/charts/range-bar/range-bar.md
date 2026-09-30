@@ -94,6 +94,15 @@ See [Bars—Animation](/x/react-charts/bars/#animation) for details.
 
 {{"demo": "RangeBarAnimation.js"}}
 
+## Performance
+
+For larger datasets, `BarChartPremium` supports a WebGL renderer that draws all range bars from a single `<canvas>` element.
+Set the `renderer` prop to `"webgl"` to enable it.
+
+The same trade-offs as the bar chart [WebGL renderer](/x/react-charts/bars/#webgl-renderer) apply.
+
+{{"demo": "WebGLRangeBars.js"}}
+
 ## Composition
 
 Use `ChartDataProviderPremium` to provide `series`, `xAxis`, and `yAxis` props for composition.
