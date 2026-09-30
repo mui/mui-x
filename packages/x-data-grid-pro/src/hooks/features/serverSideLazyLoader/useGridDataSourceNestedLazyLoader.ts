@@ -197,6 +197,8 @@ export const useGridDataSourceNestedLazyLoader = (
   const rowsStale = React.useRef<boolean>(false);
   const draggedRowId = React.useRef<GridRowId | null>(null);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  // `false` while Activity is hidden or after unmount, so a late response cannot restart polling.
+  const isPollingAllowed = React.useRef(true);
   // Snapshot of the row tree taken right before a sort/filter triggered reset.
   // Used by nested data updates that fire later in the auto-expansion chain so
   // they can preserve expansion state below the first level.
@@ -327,7 +329,7 @@ export const useGridDataSourceNestedLazyLoader = (
   const startPolling = useEventCallback(() => {
     stopPolling();
 
-    if (props.dataSourceRevalidateMs <= 0) {
+    if (!isPollingAllowed.current || !isStrategyActive || props.dataSourceRevalidateMs <= 0) {
       return;
     }
 
@@ -1132,17 +1134,31 @@ export const useGridDataSourceNestedLazyLoader = (
   );
 
   React.useEffect(() => {
+    const rootElement = privateApiRef.current.rootElementRef?.current ?? null;
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
+      // `<Activity mode="hidden">` keeps the root connected and lets the queued fetch run.
+      if (!rootElement?.isConnected) {
+        debouncedFetchRows.clear();
+      }
     };
-  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
+  }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
 
   React.useEffect(() => {
     if (!isStrategyActive || props.dataSourceRevalidateMs <= 0) {
       stopPolling();
     }
   }, [isStrategyActive, props.dataSourceRevalidateMs, stopPolling]);
+
+  React.useEffect(() => {
+    isPollingAllowed.current = true;
+    startPolling();
+    return () => {
+      isPollingAllowed.current = false;
+      stopPolling();
+    };
+  }, [startPolling, stopPolling]);
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
