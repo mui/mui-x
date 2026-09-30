@@ -45,7 +45,7 @@ export default function FocusVisibleTreeView() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ minHeight: 260, minWidth: 250 }}>
+      <Box sx={{ minHeight: 260, minWidth: 300 }}>
         <RichTreeView
           items={MUI_X_PRODUCTS}
           defaultExpandedItems={['grid']}
