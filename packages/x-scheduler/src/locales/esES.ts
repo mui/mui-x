@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const esESDialog: Partial<EventEditingLocaleText> = {
+const esESDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Color del evento',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descripción',
   endDateLabel: 'Fecha de fin',
   endTimeLabel: 'Hora de fin',
@@ -39,22 +43,28 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Cada',
   recurrenceRepeatLabel: 'Repetir',
   recurrenceTabLabel: 'Recurrencia',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Recurrencia',
   recurrenceWeeklyFrequencyLabel: 'semanas',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Se repite semanalmente el ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'meses',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Día ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} de la última semana del mes`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} última semana`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} de la última semana del mes`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} última semana`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Se repite mensualmente el día ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} semana ${ord} del mes`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} semana ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName} semana ${ord} del mes`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} semana ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'El',
   recurrenceYearlyFrequencyLabel: 'años',
   recurrenceYearlyPresetLabel: (date) => `Se repite anualmente el ${date}`,
   noResourceAriaLabel: 'Sin recurso',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Recurso',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   requiredResourceError: 'Debes seleccionar un recurso.',
   saveChanges: 'Guardar',
   startDateAfterEndDateError: 'La fecha de fin no puede ser anterior a la fecha de inicio.',
@@ -72,7 +82,23 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   title: 'Aplicar este cambio a:',
 };
 
-const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const esESEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}`,
+  eventAriaLabelDateRange: (start, end) => `Del ${start} al ${end}`,
+  eventAriaLabelAllDay: 'Todo el día',
+  eventAriaLabelRecurring: 'Recurrente',
+  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const esESCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Recursos',
 
@@ -115,7 +141,6 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} más..`,
   nextTimeSpan: (timeSpan) => `Siguiente ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
-  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
@@ -134,13 +159,14 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Nombre del recurso',
 };
 
-const esESTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const esESTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nombre del recurso',
 };
 
 export const esES: SchedulerLocalization = getSchedulerLocalization({
   dialog: esESDialog,
+  event: esESEvent,
   calendar: esESCalendar,
   timeline: esESTimeline,
 });

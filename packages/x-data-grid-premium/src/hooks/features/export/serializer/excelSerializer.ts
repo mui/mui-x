@@ -19,6 +19,7 @@ import {
   createValueOptionsSheetIfNeeded,
   getExcelJs,
 } from './utils';
+import type { FormulaExcelExportLayout } from '../../formula/gridFormulaExcelExport';
 import type { SerializedColumns, SerializedRow, ValueOptionsData } from './utils';
 
 export type { ExcelExportInitEvent } from './utils';
@@ -66,10 +67,12 @@ export const serializeRowUnsafe = (
   apiRef: RefObject<GridPrivateApiPremium>,
   defaultValueOptionsFormulae: { [field: string]: { address: string } },
   options: Pick<BuildExcelOptions, 'escapeFormulas'>,
+  formulaExport: FormulaExcelExportLayout | null = null,
 ): SerializedRow => {
   const serializedRow: SerializedRow['row'] = {};
   const dataValidation: SerializedRow['dataValidation'] = {};
   const mergedCells: SerializedRow['mergedCells'] = [];
+  const formulas: NonNullable<SerializedRow['formulas']> = {};
 
   const row = apiRef.current.getRow(id);
   const rowNode = apiRef.current.getRowNode(id);
@@ -147,10 +150,12 @@ export const serializeRowUnsafe = (
         const formattedValue = apiRef.current.getRowFormattedValue(row, castColumn);
         if (process.env.NODE_ENV !== 'production') {
           if (String(formattedValue) === '[object Object]') {
-            warnOnce([
-              'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
-              'You can provide a `valueFormatter` with a string representation to be used.',
-            ]);
+            warnOnce(
+              [
+                'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
+                'You can provide a `valueFormatter` with a string representation to be used.',
+              ].join('\n'),
+            );
           }
         }
         if (isObject<{ label: any }>(formattedValue)) {
@@ -193,10 +198,12 @@ export const serializeRowUnsafe = (
         cellValue = apiRef.current.getRowFormattedValue(row, column);
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellValue) === '[object Object]') {
-            warnOnce([
-              'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
-              'You can provide a `valueFormatter` with a string representation to be used.',
-            ]);
+            warnOnce(
+              [
+                'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
+                'You can provide a `valueFormatter` with a string representation to be used.',
+              ].join('\n'),
+            );
           }
         }
         break;
@@ -212,6 +219,16 @@ export const serializeRowUnsafe = (
     if (typeof cellValue !== 'undefined') {
       serializedRow[column.field] = cellValue;
     }
+
+    // A live formula cell overlays its plain value with a real Excel formula.
+    // The value above stays as the fallback (used when the cell is not a formula
+    // or its formula cannot be expressed against the export layout).
+    if (formulaExport) {
+      const cellFormula = apiRef.current.getCellExcelFormula?.(formulaExport, id, column.field);
+      if (cellFormula) {
+        formulas[column.field] = cellFormula;
+      }
+    }
   });
 
   return {
@@ -219,6 +236,7 @@ export const serializeRowUnsafe = (
     dataValidation,
     outlineLevel,
     mergedCells,
+    ...(Object.keys(formulas).length > 0 ? { formulas } : {}),
   };
 };
 
@@ -357,9 +375,28 @@ export async function buildExcel(
   );
   createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
+  // Formulas are exported as real Excel formulas only when injection-escaping is
+  // off (`escapeFormulas: false`) — that flag already governs whether `=`-content
+  // may be live in the export. Layout maps identities to this sheet's coordinates.
+  // The layout builder is a private API seam registered by the injected formula
+  // feature — without the feature the export stays value-only.
+  const formulaExport = options.escapeFormulas
+    ? null
+    : (apiRef.current.createFormulaExcelExportLayout?.(columns, rowIds, {
+        includeHeaders,
+        includeColumnGroupsHeaders,
+      }) ?? null);
+
   apiRef.current.resetColSpan();
   rowIds.forEach((id) => {
-    const serializedRow = serializeRowUnsafe(id, columns, apiRef, valueOptionsData, options);
+    const serializedRow = serializeRowUnsafe(
+      id,
+      columns,
+      apiRef,
+      valueOptionsData,
+      options,
+      formulaExport,
+    );
     addSerializedRowToWorksheet(serializedRow, worksheet);
   });
   apiRef.current.resetColSpan();

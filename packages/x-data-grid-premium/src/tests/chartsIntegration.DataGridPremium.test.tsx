@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import type { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
@@ -17,6 +16,7 @@ import type {
   GridApiPremium,
   GridValidRowModel,
 } from '@mui/x-data-grid-premium';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../constants/columnGroups';
 import type { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
@@ -117,7 +117,7 @@ const configurationOptions: GridChartsConfigurationOptions = {
 
 describe('<DataGridPremium /> - Charts Integration', () => {
   const { render } = createRenderer();
-  const renderSpy = spy();
+  const renderSpy = vi.fn();
 
   let apiRef: RefObject<GridApiPremium | null>;
   let integrationContext: GridChartsIntegrationContextValue | null = null;
@@ -156,7 +156,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
   }
 
   beforeEach(() => {
-    renderSpy.resetHistory();
+    renderSpy.mockClear();
   });
 
   describe('GridChartsIntegrationContextProvider', () => {
@@ -728,9 +728,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
     it('should intercept rendering with custom renderer', async () => {
       render(<Test initialState={baseInitialState} />);
 
-      expect(renderSpy.called).to.equal(true);
+      expect(renderSpy.mock.calls.length).to.be.greaterThan(0);
       await waitFor(() => {
-        expect(renderSpy.lastCall.firstArg.chartStateLookup.test.dimensions[0].id).to.equal(
+        expect(renderSpy.mock.lastCall?.[0].chartStateLookup.test.dimensions[0].id).to.equal(
           'category1',
         );
       });
@@ -739,15 +739,15 @@ describe('<DataGridPremium /> - Charts Integration', () => {
     it('should trigger another render when the context is updated', async () => {
       render(<Test initialState={baseInitialState} />);
 
-      renderSpy.resetHistory();
-      expect(renderSpy.callCount).to.equal(0);
+      renderSpy.mockClear();
+      expect(renderSpy.mock.calls.length).to.equal(0);
 
       act(() => {
         apiRef!.current?.sortColumn('amount', 'desc');
       });
 
       await waitFor(() => {
-        expect(renderSpy.callCount).to.be.greaterThan(0);
+        expect(renderSpy.mock.calls.length).to.be.greaterThan(0);
       });
     });
   });

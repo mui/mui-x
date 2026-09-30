@@ -9,7 +9,6 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import * as React from 'react';
-import { spy } from 'sinon';
 import {
   DataGridPro,
   GRID_TREE_DATA_GROUPING_FIELD,
@@ -24,6 +23,7 @@ import type {
   GridPaginationModel,
   GridColDef,
 } from '@mui/x-data-grid-pro';
+import { vi, describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -301,16 +301,16 @@ describe('<DataGridPro /> - Tree data', () => {
 
   describe('prop: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
-      const isGroupExpandedByDefault = spy((node: GridGroupNode) => node.id === 'A');
+      const isGroupExpandedByDefault = vi.fn((node: GridGroupNode) => node.id === 'A');
 
       render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
-      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 4 : 8); // Should not be called on leaves
+      expect(isGroupExpandedByDefault.mock.calls.length).to.equal(reactMajor >= 19 ? 4 : 8); // Should not be called on leaves
       const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current?.state.rows
         .tree.A as GridGroupNode;
-      const callForNodeA = isGroupExpandedByDefault
-        .getCalls()
-        .find((call) => call.firstArg.id === node.id)!;
-      expect(callForNodeA.firstArg).to.deep.includes(node);
+      const callForNodeA = isGroupExpandedByDefault.mock.calls.find(
+        (call) => call[0].id === node.id,
+      )!;
+      expect(callForNodeA[0]).to.deep.includes(node);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
     });
 

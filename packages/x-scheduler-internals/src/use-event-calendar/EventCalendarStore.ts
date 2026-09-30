@@ -1,4 +1,3 @@
-import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
@@ -59,11 +58,13 @@ function warnIfShouldEventRequireResourceMisconfigured(
   resources: readonly unknown[] | undefined,
 ) {
   if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
-    warnOnce([
-      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
-      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
-    ]);
+    warnOnce(
+      [
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+      ].join('\n'),
+    );
   }
 }
 
@@ -110,18 +111,18 @@ const mapper: SchedulerParametersToStateMapper<
 /**
  * Base class that can be extended by premium stores.
  * Accepts instanceName as a parameter to allow subclasses to provide their own instance name.
+ * `Parameters` is generic so premium stores can widen it with their own parameters.
  */
 export class ExtendableEventCalendarStore<
   TEvent extends object,
   TResource extends object,
-> extends SchedulerStore<
-  TEvent,
-  TResource,
-  EventCalendarState,
-  EventCalendarParameters<TEvent, TResource>
-> {
+  Parameters extends EventCalendarParameters<TEvent, TResource> = EventCalendarParameters<
+    TEvent,
+    TResource
+  >,
+> extends SchedulerStore<TEvent, TResource, EventCalendarState, Parameters> {
   public constructor(
-    parameters: EventCalendarParameters<TEvent, TResource>,
+    parameters: Parameters,
     adapter: Adapter,
     instanceName: SchedulerInstanceName,
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
@@ -189,18 +190,19 @@ export class ExtendableEventCalendarStore<
 
     const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
     const canSetView = viewProp === undefined && hasViewChange;
-    if (canSetVisibleDate || canSetView) {
-      this.update({
-        ...(canSetVisibleDate ? { visibleDate } : undefined),
-        ...(canSetView ? { view } : undefined),
-      });
+    if (canSetVisibleDate && canSetView) {
+      this.update({ visibleDate, view });
+    } else if (canSetVisibleDate) {
+      this.update({ visibleDate });
+    } else if (canSetView) {
+      this.update({ view });
     }
   };
 
   private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
     const siblingVisibleDateGetter = this.state.viewDefinition?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
-      warn(
+      warnOnce(
         'MUI X Scheduler: No definition found for the current view. Please use useEventCalendarView in your custom view.',
       );
       return;
@@ -218,7 +220,7 @@ export class ExtendableEventCalendarStore<
   public setView = (view: CalendarView, event: Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
     if (process.env.NODE_ENV !== 'production' && viewProp !== undefined && !onViewChange) {
-      warn(
+      warnOnce(
         'MUI X Scheduler: EventCalendar is controlled (received a `view` prop) but `onViewChange` is not provided. View changes will be silently ignored.',
       );
     }
@@ -256,6 +258,15 @@ export class ExtendableEventCalendarStore<
    */
   public setPreferences = (partialPreferences: Partial<EventCalendarPreferences>, event: Event) => {
     const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      preferencesProp !== undefined &&
+      !onPreferencesChange
+    ) {
+      warnOnce(
+        'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided. Preference changes will be silently ignored.',
+      );
+    }
 
     const updated = {
       ...this.state.preferences,

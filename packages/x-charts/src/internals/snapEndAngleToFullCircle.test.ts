@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { snapEndAngleToFullCircle } from './snapEndAngleToFullCircle';
 
 const TAU = 2 * Math.PI;

@@ -3,6 +3,7 @@ import type { GridColDef, GridApi, DataGridProProps } from '@mui/x-data-grid-pro
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { includeRowSelection } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

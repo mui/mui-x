@@ -1,4 +1,5 @@
 import { renderHook } from '@mui/internal-test-utils';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { useBlockScrollWhileArmed } from './useBlockScrollWhileArmed';
 
 const IGNORE_SELECTOR = '.resize-handle';

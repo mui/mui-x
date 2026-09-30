@@ -5,6 +5,7 @@ import type { DataGridProProps, GridApi } from '@mui/x-data-grid-pro';
 import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import { getCell, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe.skipIf(isJSDOM)('<DataGridPro /> - Row spanning', () => {
   const { render } = createRenderer();

@@ -109,7 +109,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
     if (event.key === 'Enter' && event.target === event.currentTarget && triggerKeyboardCreation) {
       event.preventDefault();
-      triggerKeyboardCreation();
+      triggerKeyboardCreation(event.nativeEvent);
     }
   };
 
@@ -132,7 +132,6 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       end,
       dayStartMinute,
       dayEndMinute,
-      index,
       hasFocus,
       getCursorPositionInElementMs,
       getDateAtPointer,
@@ -142,7 +141,6 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       end,
       dayStartMinute,
       dayEndMinute,
-      index,
       hasFocus,
       getCursorPositionInElementMs,
       getDateAtPointer,

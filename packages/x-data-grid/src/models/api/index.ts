@@ -9,6 +9,7 @@ export type {
   GridRowApi,
   GridRowProApi,
   GridRowProPrivateApi,
+  GridRowSpanningPrivateApi,
 } from './gridRowApi';
 export type { GridRowsMetaApi } from './gridRowsMetaApi';
 export * from './gridRowSelectionApi';

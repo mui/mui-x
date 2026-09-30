@@ -3,13 +3,11 @@ import * as React from 'react';
 import type { ChatAdapter } from './adapters';
 import { useChatController } from './internals/useChatController';
 import { useChatInstance } from './internals/useChatInstance';
-import {
-  ChatRuntimeContext,
-  type ChatRuntimeContextValue,
-} from './internals/useChatRuntimeContext';
+import { ChatRuntimeContext } from './internals/useChatRuntimeContext';
+import type { ChatRuntimeContextValue } from './internals/useChatRuntimeContext';
 import type { ChatPartRendererMap } from './renderers';
 import { defaultPartRenderers } from './renderers/defaultPartRenderers';
-import { type ChatStoreConstructor, type ChatStoreParameters } from './store';
+import type { ChatStoreConstructor, ChatStoreParameters } from './store';
 import type { ChatOnData, ChatOnError, ChatOnFinish, ChatOnToolCall } from './types';
 import { ChatStoreContext } from './internals/useChatStoreContext';
 
@@ -45,7 +43,7 @@ export interface ChatFeatures {
 
 export interface ChatProviderProps<Cursor = string> extends Omit<
   ChatStoreParameters<Cursor>,
-  'activeConversationIdControlled'
+  'activeConversationIdControlled' | 'hasHistoryLoader'
 > {
   children?: React.ReactNode;
   adapter: ChatAdapter<Cursor>;
@@ -106,6 +104,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     onComposerValueChange,
   } = props;
 
+  const hasHistoryLoader = adapter.listMessages != null;
   const parameters = React.useMemo(
     () => ({
       members,
@@ -120,6 +119,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       initialConversations,
       activeConversationId,
       activeConversationIdControlled: isActiveConversationIdControlled,
+      hasHistoryLoader,
       initialActiveConversationId,
       composerValue,
       initialComposerValue,
@@ -141,6 +141,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       initialConversations,
       activeConversationId,
       isActiveConversationIdControlled,
+      hasHistoryLoader,
       initialActiveConversationId,
       composerValue,
       initialComposerValue,

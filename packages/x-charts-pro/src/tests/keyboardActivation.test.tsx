@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';

@@ -3,6 +3,7 @@ import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/schedu
 import { screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../../internals/components/EventCalendarProvider';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../internals/utils/test-utils';
@@ -31,6 +32,21 @@ describe('<PreferencesMenu />', () => {
     );
 
     expect(getPreferencesMenu()).not.to.equal(null);
+  });
+
+  it('should expose aria-expanded reflecting the menu open state', async () => {
+    const { user } = render(
+      <EventCalendarProvider events={[]}>
+        <PreferencesMenu />
+      </EventCalendarProvider>,
+    );
+
+    const button = getPreferencesMenu()!;
+    expect(button).to.have.attribute('aria-expanded', 'false');
+
+    await openPreferencesMenu(user);
+
+    expect(button).to.have.attribute('aria-expanded', 'true');
   });
 
   it('should not render the menu when the config equals false', async () => {

@@ -1,9 +1,11 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
 import { processDate } from '../process-date';
 import type { SchedulerProcessedEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
+import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const days = [
@@ -17,7 +19,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days,
-        events,
+        eventRangeIndex: createEventRangeIndex(events, adapter, false),
         visibleResources: {},
         displayTimezone: 'default',
         recurringEventsPlugin: null,

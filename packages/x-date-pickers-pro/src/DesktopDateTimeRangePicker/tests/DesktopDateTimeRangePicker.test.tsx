@@ -6,7 +6,7 @@ import {
   getFieldSectionsContainer,
   expectFieldValue,
 } from 'test/utils/pickers';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DesktopDateTimeRangePicker } from '@mui/x-date-pickers-pro/DesktopDateTimeRangePicker';
 
 describe('<DesktopDateTimeRangePicker />', () => {

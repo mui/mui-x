@@ -5,6 +5,7 @@ import {
   describeRangeValidation,
   setValueOnFieldInput,
 } from 'test/utils/pickers';
+import { describe } from 'vitest';
 
 describe('<MultiInputDateTimeRangeField /> - Describe Validation', () => {
   const { render } = createPickerRenderer();

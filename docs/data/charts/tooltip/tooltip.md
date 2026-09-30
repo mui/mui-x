@@ -218,6 +218,15 @@ Otherwise no tooltip will be shown.
 
 {{"demo": "ControlledAxisTooltip.js"}}
 
+### Synchronizing tooltips across charts
+
+To compare values at the same position across stacked charts, share the highlighted axis between them and render a single tooltip for all of them.
+
+Each chart receives the same `highlightedAxis` state and updates it with `onHighlightedAxisChange`, so hovering one chart moves the crosshair on every chart.
+The built-in tooltip is turned off with `slotProps={{ tooltip: { trigger: 'none' } }}`, and one tooltip reads the value of every chart at the shared `dataIndex`.
+
+{{"demo": "SynchronizedTooltip.js"}}
+
 ## Creating a tooltip
 
 To aid in creating a custom tooltip, the library exports helpers which are explained in the sections that follow:

@@ -1,5 +1,6 @@
 import { renderHook } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { usePolarGeometry } from './usePolarGeometry';
 import { useDrawingArea } from './useDrawingArea';
 import { useRotationAxis, useRadiusAxis } from './useAxis';

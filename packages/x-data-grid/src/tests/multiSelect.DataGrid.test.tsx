@@ -3,6 +3,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+import { describe, it, expect } from 'vitest';
 
 // `multiSelect` is a Pro/Premium-only column type. Importing a Pro/Premium grid registers it in
 // the shared core column-type registry, so this suite (where Pro is loaded via the test setup)

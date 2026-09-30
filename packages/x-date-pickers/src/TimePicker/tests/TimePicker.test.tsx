@@ -1,6 +1,7 @@
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<TimePicker />', () => {
   const { render } = createPickerRenderer();

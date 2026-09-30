@@ -2,8 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { MessageListDateDivider, type MessageListDateDividerProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { MessageListDateDivider } from '@mui/x-chat-headless';
+import type { MessageListDateDividerProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { mergeSlotProps } from '../internals/mergeSlotProps';

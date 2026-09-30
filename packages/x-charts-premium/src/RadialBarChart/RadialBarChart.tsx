@@ -127,10 +127,11 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
     children,
   } = useRadialBarChartProps(props);
 
+  const { apiRef, ...containerProps } = chartsContainerProps;
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'radialBar',
     RadialBarChartPluginSignatures
-  >(chartsContainerProps);
+  >(containerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
@@ -138,6 +139,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
   return (
     <ChartsRadialDataProviderPremium<'radialBar', RadialBarChartPluginSignatures>
       {...chartsDataProviderProps}
+      apiRef={apiRef}
       seriesConfig={seriesConfig}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
@@ -344,7 +346,7 @@ RadialBarChart.propTypes /* remove-proptypes */ = {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
-   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {ChartsActivationEvent} event The event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,

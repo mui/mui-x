@@ -56,7 +56,7 @@
       "isPremiumPlan": true
     },
     "exportDataAsPrint": {
-      "type": { "description": "(options?: GridPrintExportOptions) =&gt; void" },
+      "type": { "description": "(options?: GridPrintExportOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
     "exportState": {
@@ -596,7 +596,9 @@
       "required": true
     },
     "updateRows": {
-      "type": { "description": "(updates: GridRowModelUpdate[]) =&gt; void" },
+      "type": {
+        "description": "(updates: Array&lt;GridRowModelUpdate | GridRowModelReplace&gt;) =&gt; void"
+      },
       "required": true
     },
     "upsertFilterItem": {

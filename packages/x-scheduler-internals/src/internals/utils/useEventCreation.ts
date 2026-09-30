@@ -31,10 +31,13 @@ export function useEventCreation(
     if (target !== event.currentTarget && target.closest('button, [role="button"]')) {
       return;
     }
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      ...getCreationPlaceholder({ event, creationConfig }),
-    });
+    store.setOccurrencePlaceholder(
+      {
+        type: 'creation',
+        ...getCreationPlaceholder({ event, creationConfig }),
+      },
+      event.nativeEvent,
+    );
   };
 
   if (creationConfig.interaction === 'double-click') {

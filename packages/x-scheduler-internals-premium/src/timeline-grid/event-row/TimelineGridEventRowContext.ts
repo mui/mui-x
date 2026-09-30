@@ -9,6 +9,11 @@ export interface TimelineGridEventRowContext {
    */
   resourceId: SchedulerResourceId;
   /**
+   * The row's root element. It outlives the row's transient children (e.g. the creation
+   * placeholder), so it can anchor UI that must survive their unmount.
+   */
+  rowRef: React.RefObject<HTMLDivElement | null>;
+  /**
    * Whether this row currently owns focus within the grid.
    * When `true`, interactive children (e.g. events) should use `tabIndex={0}`
    * so they are reachable via Tab; when `false`, they should use `tabIndex={-1}`.

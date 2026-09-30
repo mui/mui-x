@@ -8,6 +8,7 @@ import type {
 import type { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarLocaleText } from '../models/translations';
 import type { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
+import type { SchedulerSlotsAndSlotProps } from '../models/slots';
 
 export interface WeekViewProps extends ExportedDayTimeGridProps {}
 
@@ -20,12 +21,14 @@ export interface StandaloneWeekViewProps<TEvent extends object, TResource extend
       | keyof EventCalendarSchedulerParametersOverrides
       | CollapsibleResourcesParameterKeys
     >,
-    EventCalendarSchedulerParametersOverrides {
+    EventCalendarSchedulerParametersOverrides,
+    SchedulerSlotsAndSlotProps {
   /**
    * Configuration applied to the view, keyed by the view name.
    * For the `week` view, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid.
-   * @example { week: { startTime: 8, endTime: 20 } }
+   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
+   * scrolls to on mount.
+   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig?: Pick<EventCalendarViewConfig, 'week'>;
   /**

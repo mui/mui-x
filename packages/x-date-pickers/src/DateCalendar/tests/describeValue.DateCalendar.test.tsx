@@ -3,6 +3,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { pickerDayClasses } from '@mui/x-date-pickers/PickerDay';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { adapterToUse, createPickerRenderer, describeValue } from 'test/utils/pickers';
+import { describe, expect } from 'vitest';
 
 describe('<DateCalendar /> - Describe Value', () => {
   const { render } = createPickerRenderer();

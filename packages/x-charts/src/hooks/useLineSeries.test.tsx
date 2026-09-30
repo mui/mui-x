@@ -1,6 +1,7 @@
 import { renderHook } from '@mui/internal-test-utils';
 import type { RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { useLineSeries, useLineSeriesContext } from './useLineSeries';
 import type { DefaultizedLineSeriesType, LineSeriesType } from '../models';
 import { LineChart } from '../LineChart';

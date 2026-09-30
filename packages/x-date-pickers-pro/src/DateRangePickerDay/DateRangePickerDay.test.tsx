@@ -8,6 +8,7 @@ import type { DateRangePickerDayProps } from '@mui/x-date-pickers-pro/DateRangeP
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateRangePickerDay />', () => {
   const { render } = createPickerRenderer();

@@ -35,6 +35,7 @@ const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedPr
     useIsCellEditable,
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
+    useColumnHeaderAdornment: () => null,
   },
 };
 const packageInfo = {
@@ -518,6 +519,12 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    * @default false
    */
   headerFilters: PropTypes.bool,
+  /**
+   * The height of the Data Grid.
+   * Accepts a number (pixels) or any valid CSS height value (for example `'50vh'`).
+   * When set, the Data Grid no longer needs a parent element with an explicit height.
+   */
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -1026,7 +1033,7 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
    * @param {{ rowId: GridRowId }} params Additional parameters.
-   * @returns {Promise<R> | R} The final values to update the row.
+   * @returns {Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>} The final values to update the row, or a `{ _action: 'replace', row }` update to store `row` as the new row without merging.
    */
   processRowUpdate: PropTypes.func,
   /**

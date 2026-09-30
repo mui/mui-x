@@ -4,9 +4,9 @@ import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce, warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
+import { GRID_ROOT_GROUP_ID, getReplaceRow, isReplaceUpdate } from '../rows/gridRowsUtils';
 import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
@@ -90,6 +90,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   // Requests that are still running and will apply their response when they settle.
   const pendingRequestCount = React.useRef(0);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  // `false` while Activity is hidden or after unmount, so a late response cannot restart polling.
+  const isPollingAllowed = React.useRef(true);
 
   const onDataSourceErrorProp = props.onDataSourceError;
   const revalidateMs = props.dataSourceRevalidateMs;
@@ -132,7 +134,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         gridColumnLookupSelector(apiRef),
       );
 
-      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
+      if (parentId != null && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
         options.fetchRowChildren?.([parentId], [fetchParams], showChildrenLoading);
         return;
       }
@@ -198,13 +200,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
               }),
             );
           } else if (process.env.NODE_ENV !== 'production') {
-            warnOnce(
+            errorOnce(
               [
                 'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',
                 'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
-              ],
-              'error',
+              ].join('\n'),
             );
           }
         }
@@ -315,7 +316,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const startPolling = useEventCallback(() => {
     stopPolling();
-    if (revalidateMs <= 0 || !standardRowsUpdateStrategyActive) {
+    if (!isPollingAllowed.current || revalidateMs <= 0 || !standardRowsUpdateStrategyActive) {
       return;
     }
     pollingIntervalRef.current = setInterval(revalidate, revalidateMs);
@@ -359,16 +360,26 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       try {
         const finalRowUpdate = await dataSourceUpdateRow(params);
-        if (typeof handleEditRowOption === 'function') {
-          handleEditRowOption(params, finalRowUpdate);
-          return finalRowUpdate;
-        }
-        if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
+        // `dataSource.updateRow()` can resolve with a `{ _action: 'replace', row }` update.
+        // The row update methods unwrap it themselves, everything else works with the row it
+        // holds: comparing the envelope with the previous row would never match.
+        const updatedRow =
+          finalRowUpdate && isReplaceUpdate(finalRowUpdate)
+            ? getReplaceRow(finalRowUpdate)
+            : finalRowUpdate;
+
+        if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
           // Reset the outdated cache, only if the row is _actually_ updated
           apiRef.current.dataSource.cache.clear();
         }
-        apiRef.current.updateNestedRows([finalRowUpdate], []);
-        return finalRowUpdate;
+
+        if (typeof handleEditRowOption === 'function') {
+          handleEditRowOption(params, finalRowUpdate);
+        } else {
+          apiRef.current.updateNestedRows([finalRowUpdate], []);
+        }
+
+        return updatedRow;
       } catch (errorThrown) {
         if (typeof onDataSourceErrorProp === 'function') {
           onDataSourceErrorProp(
@@ -379,13 +390,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
             }),
           );
         } else if (process.env.NODE_ENV !== 'production') {
-          warnOnce(
+          errorOnce(
             [
               'MUI X: A call to `dataSource.updateRow()` threw an error which was not handled because `onDataSourceError()` is missing.',
               'To handle the error pass a callback to the `onDataSourceError` prop, for example `<DataGrid onDataSourceError={(error) => ...} />`.',
               'For more detail, see https://mui.com/x/react-data-grid/server-side-data/#error-handling.',
-            ],
-            'error',
+            ].join('\n'),
           );
         }
         throw errorThrown; // Let the caller handle the error further
@@ -464,7 +474,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     }
   }, [revalidateMs, stopPolling]);
 
-  React.useEffect(() => stopPolling, [stopPolling]);
+  React.useEffect(() => {
+    isPollingAllowed.current = true;
+    // Activity reconnects effects without refetching rows that have already arrived.
+    if (rowsAreUpToDate.current) {
+      startPolling();
+    }
+    return () => {
+      isPollingAllowed.current = false;
+      stopPolling();
+    };
+  }, [startPolling, stopPolling]);
 
   const lastApiRef = React.useRef(apiRef);
   const lastStrategy = React.useRef(currentStrategy);
@@ -536,11 +556,13 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       (currentStrategy === DataSourceRowsUpdateStrategy.GroupedData ||
         currentStrategy === DataSourceRowsUpdateStrategy.LazyLoadedGroupedData)
     ) {
-      warnOnce([
-        'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
-        'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
-        'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
-      ]);
+      warnOnce(
+        [
+          'MUI X: The `dataSourceKeepPreviousData` prop only applies to flat data.',
+          'It is ignored when tree data or row grouping is enabled, because the rows are always reset on refetch to keep their order consistent with the response.',
+          'For more details, see https://mui.com/x/react-data-grid/server-side-data/#keep-previous-data-while-fetching.',
+        ].join('\n'),
+      );
     }
   }, [props.dataSourceKeepPreviousData, currentStrategy]);
 

@@ -26,6 +26,7 @@ export function useExtractEventTimelinePremiumParameters<
     eventModelStructure,
     events,
     onCollapsedResourcesChange,
+    onEventEditingStart,
     onEventsChange,
     onPresetChange,
     onVisibleDateChange,
@@ -64,6 +65,7 @@ export function useExtractEventTimelinePremiumParameters<
       eventModelStructure,
       events,
       onCollapsedResourcesChange,
+      onEventEditingStart,
       onEventsChange,
       onPresetChange,
       onVisibleDateChange,
@@ -103,6 +105,7 @@ export function useExtractEventTimelinePremiumParameters<
       eventModelStructure,
       events,
       onCollapsedResourcesChange,
+      onEventEditingStart,
       onEventsChange,
       onPresetChange,
       onVisibleDateChange,
@@ -119,7 +122,7 @@ export function useExtractEventTimelinePremiumParameters<
       visibleDate,
       visibleResources,
     ],
-  );
+  ) satisfies Record<keyof EventTimelinePremiumParameters<TEvent, TResource>, unknown>;
 
   return {
     parameters,

@@ -14,6 +14,7 @@ import {
 import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
 import type { EventTimelinePremiumPresetConfig } from '@mui/x-scheduler-internals-premium/models';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 
 function getTitleColumnWidth(): number {
   const grid = screen.getByRole('grid');
@@ -25,11 +26,11 @@ function getTitleColumnWidth(): number {
 // title cells; jsdom doesn't implement layout, so these assertions only work in
 // the browser project.
 describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
-  const { render } = createSchedulerRenderer({
+  const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  function renderTimeline(
+  async function renderTimeline(
     resources: SchedulerResource[],
     hostWidth: number = 1200,
     options: {
@@ -37,7 +38,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       presetConfig?: EventTimelinePremiumPresetConfig;
     } = {},
   ) {
-    return render(
+    const view = await renderSettled(
       <div style={{ width: hostWidth, height: 600 }}>
         <EventTimelinePremium
           resources={resources}
@@ -49,13 +50,14 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         />
       </div>,
     );
+    return view;
   }
 
   describe('title column auto-sizing', () => {
     it('should grow the title column to fit a longer resource title', async () => {
       const short = ResourceBuilder.new().title('A').build();
 
-      const { rerender } = renderTimeline([short]);
+      const { rerender } = await renderTimeline([short]);
 
       let shortWidth = 0;
       await waitFor(() => {
@@ -90,7 +92,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       const huge = ResourceBuilder.new().title('X'.repeat(500)).build();
 
       const hostWidth = 1200;
-      renderTimeline([huge], hostWidth);
+      await renderTimeline([huge], hostWidth);
 
       await waitFor(() => {
         // Cap is containerWidth / 4. Allow a small tolerance: containerWidth is the
@@ -107,7 +109,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
     it('should keep the title column at the minimum width for empty/short titles', async () => {
       const tiny = ResourceBuilder.new().title('A').build();
 
-      renderTimeline([tiny]);
+      await renderTimeline([tiny]);
 
       await waitFor(() => {
         // The minWidth wired into useTitleColumnWidth is 50; the header label
@@ -134,7 +136,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         .span('2025-07-04T08:00:00', '2025-07-04T12:00:00')
         .build();
 
-      renderTimeline([resource], 1200, { events: [fullDay], presetConfig: PRESET_CONFIG });
+      await renderTimeline([resource], 1200, { events: [fullDay], presetConfig: PRESET_CONFIG });
 
       await waitFor(() => {
         expect(getTitleColumnWidth()).to.be.greaterThan(0);
@@ -167,7 +169,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         .span('2025-07-06T14:00:00', '2025-07-06T20:00:00')
         .build();
 
-      render(
+      await renderSettled(
         <div style={{ width: 1200, height: 300 }}>
           <EventTimelinePremium
             resources={resources}
@@ -225,7 +227,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
       // should overflow.
       const only = ResourceBuilder.new().title('A').build();
 
-      render(
+      await renderSettled(
         <div style={{ width: 8000, height: 600 }}>
           <EventTimelinePremium
             resources={[only]}
@@ -252,7 +254,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
         ResourceBuilder.new().title(`Resource ${i}`).build(),
       );
 
-      render(
+      await renderSettled(
         <div style={{ width: 600, height: 400 }}>
           <EventTimelinePremium
             resources={many}

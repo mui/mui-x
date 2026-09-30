@@ -1,4 +1,5 @@
 import { act, renderHook } from '@mui/internal-test-utils';
+import { describe, it, expect } from 'vitest';
 import { TITLE_HEADER_KEY, useTitleColumnWidth } from './useTitleColumnWidth';
 
 type Row = { id: string };

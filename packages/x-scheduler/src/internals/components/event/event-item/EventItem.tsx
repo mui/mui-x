@@ -2,25 +2,29 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { useId } from '@base-ui/utils/useId';
 import { useStore } from '@base-ui/utils/store';
 import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
-  schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
-import { ARROW_DEPTH, LEFT_ARROW_CLIP, RIGHT_ARROW_CLIP, BOTH_ARROWS_CLIP } from '../arrowClips';
+import {
+  ARROW_DEPTH,
+  LEFT_ARROW_CLIP,
+  RIGHT_ARROW_CLIP,
+  BOTH_ARROWS_CLIP,
+  getArrowFocusVisibleStyles,
+} from '../arrowClips';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -28,6 +32,7 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
+  cursor: 'pointer',
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
@@ -37,7 +42,6 @@ const EventItemCard = styled('div', {
   },
   '&[data-variant="compact"], &[data-variant="regular"]': {
     containerType: 'inline-size',
-    cursor: 'pointer',
     height: 'fit-content',
   },
   '&[data-variant="filled"]': {
@@ -68,9 +72,7 @@ const EventItemCard = styled('div', {
     '&[data-starting-before-edge][data-ending-after-edge]': {
       clipPath: BOTH_ARROWS_CLIP,
     },
-  },
-  '&[data-variant="regular"]': {
-    cursor: 'pointer',
+    ...getArrowFocusVisibleStyles(theme.shape.borderRadius),
   },
   '&[data-editing]': {
     backgroundColor: 'var(--event-surface-selected)',
@@ -182,35 +184,23 @@ export const EventItem = React.forwardRef(function EventItem(
   props: EventItemProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    occurrence,
-    date,
-    ariaLabelledBy,
-    id: idProp,
-    variant = 'regular',
-    className,
-    onClick,
-    ...other
-  } = props;
+  const { occurrence, date, variant = 'regular', className, onClick, ...other } = props;
 
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
-  // State hooks
-  const id = useId(idProp);
-
   // Selector hooks
-  const resource = useStore(
-    store,
-    schedulerResourceSelectors.processedResource,
-    getPrimaryResourceId(occurrence.resource),
-  );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
+  const accessibleName = useEventAccessibleName({
+    occurrence,
+    isRecurring,
+    localeText,
+  });
 
   const adapter = useAdapterContext();
   const startsBeforeDay =
@@ -225,15 +215,7 @@ export const EventItem = React.forwardRef(function EventItem(
       case 'compact':
         return (
           <React.Fragment>
-            <ResourceLegendColor
-              className={classes.resourceLegendColor}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <ResourceLegendColor className={classes.resourceLegendColor} aria-hidden="true" />
             <EventItemLinesClamp
               className={classes.eventItemLinesClamp}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -247,46 +229,22 @@ export const EventItem = React.forwardRef(function EventItem(
                 </EventItemTitle>
               </EventItemCardContent>
             </EventItemLinesClamp>
-            {isRecurring && (
-              <EventItemRecurringIcon
-                className={classes.eventItemRecurringIcon}
-                aria-hidden="true"
-                fontSize="small"
-              />
-            )}
           </React.Fragment>
         );
 
       case 'filled':
         return (
-          <React.Fragment>
-            <EventItemLinesClamp
-              className={classes.eventItemLinesClamp}
-              style={{ '--number-of-lines': 1 } as React.CSSProperties}
-            >
-              <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
-            </EventItemLinesClamp>
-            {isRecurring && (
-              <EventItemRecurringIcon
-                className={classes.eventItemRecurringIcon}
-                aria-hidden="true"
-                fontSize="small"
-              />
-            )}
-          </React.Fragment>
+          <EventItemLinesClamp
+            className={classes.eventItemLinesClamp}
+            style={{ '--number-of-lines': 1 } as React.CSSProperties}
+          >
+            <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
+          </EventItemLinesClamp>
         );
       case 'regular':
         return (
           <React.Fragment>
-            <ResourceLegendColor
-              className={classes.resourceLegendColor}
-              role="img"
-              aria-label={
-                resource?.title
-                  ? localeText.resourceAriaLabel(resource.title)
-                  : localeText.noResourceAriaLabel
-              }
-            />
+            <ResourceLegendColor className={classes.resourceLegendColor} aria-hidden="true" />
             <EventItemLinesClamp
               className={classes.eventItemLinesClamp}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -298,13 +256,6 @@ export const EventItem = React.forwardRef(function EventItem(
                 </EventItemTitle>
               </EventItemCardContent>
             </EventItemLinesClamp>
-            {isRecurring && (
-              <EventItemRecurringIcon
-                className={classes.eventItemRecurringIcon}
-                aria-hidden="true"
-                fontSize="small"
-              />
-            )}
           </React.Fragment>
         );
       default:
@@ -314,7 +265,7 @@ export const EventItem = React.forwardRef(function EventItem(
             'Check the component documentation for supported variants.',
         );
     }
-  }, [variant, resource?.title, localeText, formatTime, occurrence, isRecurring, classes]);
+  }, [variant, formatTime, occurrence, classes]);
 
   return (
     <Button
@@ -323,11 +274,10 @@ export const EventItem = React.forwardRef(function EventItem(
       render={
         <EventItemCard
           ref={forwardedRef}
-          id={id}
           data-variant={variant}
           data-palette={color}
           data-editing={isEditing || undefined}
-          aria-labelledby={`${ariaLabelledBy} ${id}`}
+          aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}
           {...other}
@@ -337,6 +287,13 @@ export const EventItem = React.forwardRef(function EventItem(
     >
       <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
         {content}
+        {isRecurring && (
+          <EventItemRecurringIcon
+            className={classes.eventItemRecurringIcon}
+            aria-hidden="true"
+            fontSize="small"
+          />
+        )}
       </EventItemCardWrapper>
     </Button>
   );

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
 import type { RefObject } from '@mui/x-internals/types';
 import {
   getDefaultGridFilterModel,
@@ -31,6 +30,7 @@ import {
   sleep,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DataGridPro /> - Filter', () => {
   const { render } = createRenderer();
@@ -188,7 +188,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   it('should call `getColumnForNewFilter` when filters are added', () => {
-    const getColumnForNewFilter = spy();
+    const getColumnForNewFilter = vi.fn();
     render(
       <TestCase
         initialState={{
@@ -205,12 +205,12 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(getColumnForNewFilter.callCount).to.equal(2);
+    expect(getColumnForNewFilter.mock.calls.length).to.equal(2);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
     fireEvent.click(addButton);
-    expect(getColumnForNewFilter.callCount).to.equal(4);
+    expect(getColumnForNewFilter.mock.calls.length).to.equal(4);
     fireEvent.click(addButton);
-    expect(getColumnForNewFilter.callCount).to.equal(6);
+    expect(getColumnForNewFilter.mock.calls.length).to.equal(6);
   });
 
   it('should pass columns filtered by `filterColumn` to filters column list', () => {
@@ -471,7 +471,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   it("should call onFilterModelChange with reason=changeLogicOperator when the logic operator changes but doesn't change the state", () => {
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
     const newModel: GridFilterModel = {
       items: [
         {
@@ -497,7 +497,7 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.callCount).to.equal(0);
+    expect(onFilterModelChange.mock.calls.length).to.equal(0);
     expect(getColumnValues(0)).to.deep.equal([]);
 
     // The first combo is hidden and we include hidden elements to make the query faster
@@ -506,13 +506,13 @@ describe('<DataGridPro /> - Filter', () => {
       screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[0],
     );
     fireEvent.change(input!, { target: { value: 'or' } });
-    expect(onFilterModelChange.callCount).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('changeLogicOperator');
+    expect(onFilterModelChange.mock.calls.length).to.equal(1);
+    expect(onFilterModelChange.mock.lastCall?.[1].reason).to.equal('changeLogicOperator');
     expect(getColumnValues(0)).to.deep.equal([]);
   });
 
   it('should call onFilterModelChange with reason=upsertFilterItem when the value is emptied', async () => {
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
     render(
       <TestCase
         onFilterModelChange={onFilterModelChange}
@@ -531,18 +531,18 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.callCount).to.equal(0);
+    expect(onFilterModelChange.mock.calls.length).to.equal(0);
     fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '' } });
 
     await waitFor(() => {
-      expect(onFilterModelChange.callCount).to.equal(1);
+      expect(onFilterModelChange.mock.calls.length).to.equal(1);
     });
 
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
+    expect(onFilterModelChange.mock.lastCall?.[1].reason).to.equal('upsertFilterItem');
   });
 
   it('should call onFilterModelChange with reason=deleteFilterItem when a filter is removed', () => {
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
     render(
       <TestCase
         onFilterModelChange={onFilterModelChange}
@@ -567,14 +567,14 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.callCount).to.equal(0);
+    expect(onFilterModelChange.mock.calls.length).to.equal(0);
     fireEvent.click(screen.queryAllByRole('button', { name: 'Delete' })[0]);
-    expect(onFilterModelChange.callCount).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('deleteFilterItem');
+    expect(onFilterModelChange.mock.calls.length).to.equal(1);
+    expect(onFilterModelChange.mock.lastCall?.[1].reason).to.equal('deleteFilterItem');
   });
 
   it('should call onFilterModelChange with reason=upsertFilterItems when a filter is added', () => {
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
     render(
       <TestCase
         onFilterModelChange={onFilterModelChange}
@@ -586,14 +586,14 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.callCount).to.equal(0);
+    expect(onFilterModelChange.mock.calls.length).to.equal(0);
     fireEvent.click(screen.getByRole('button', { name: /Add filter/i }));
-    expect(onFilterModelChange.callCount).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
+    expect(onFilterModelChange.mock.calls.length).to.equal(1);
+    expect(onFilterModelChange.mock.lastCall?.[1].reason).to.equal('upsertFilterItems');
   });
 
   it('should publish filterModelChange with the reason whenever the model changes', () => {
-    const listener = spy();
+    const listener = vi.fn();
     render(
       <TestCase
         initialState={{
@@ -602,10 +602,10 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     apiRef.current?.subscribeEvent('filterModelChange', listener);
-    expect(listener.callCount).to.equal(0);
+    expect(listener.mock.calls.length).to.equal(0);
     fireEvent.click(screen.getByRole('button', { name: /Add filter/i }));
-    expect(listener.callCount).to.equal(1);
-    expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
+    expect(listener.mock.calls.length).to.equal(1);
+    expect(listener.mock.lastCall?.[1].reason).to.equal('upsertFilterItems');
   });
 
   it('should only select visible rows', () => {
@@ -864,7 +864,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should update the filter state when the model is not set, but the onChange is set', () => {
-      const onModelChange = spy();
+      const onModelChange = vi.fn();
       render(
         <TestCase
           onFilterModelChange={onModelChange}
@@ -876,14 +876,14 @@ describe('<DataGridPro /> - Filter', () => {
           }}
         />,
       );
-      expect(onModelChange.callCount).to.equal(0);
+      expect(onModelChange.mock.calls.length).to.equal(0);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
-      expect(onModelChange.callCount).to.equal(1);
-      expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
-      expect(onModelChange.lastCall.firstArg.logicOperator).to.deep.equal(GridLogicOperator.And);
+      expect(onModelChange.mock.calls.length).to.equal(1);
+      expect(onModelChange.mock.lastCall?.[0].items.length).to.deep.equal(2);
+      expect(onModelChange.mock.lastCall?.[0].logicOperator).to.deep.equal(GridLogicOperator.And);
     });
 
     it('should control filter state when the model and the onChange are set', () => {
@@ -964,7 +964,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should call `onFilterModelChange` when filters are updated', async () => {
-      const onFilterModelChange = spy();
+      const onFilterModelChange = vi.fn();
       render(<TestCase onFilterModelChange={onFilterModelChange} headerFilters />);
 
       const filterCell = getColumnHeaderCell(0, 1);
@@ -973,12 +973,12 @@ describe('<DataGridPro /> - Filter', () => {
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
 
       await waitFor(() => {
-        expect(onFilterModelChange.callCount).to.equal(1);
+        expect(onFilterModelChange.mock.calls.length).to.equal(1);
       });
     });
 
     it('should allow to change the operator from operator menu', () => {
-      const onFilterModelChange = spy();
+      const onFilterModelChange = vi.fn();
       render(
         <TestCase
           initialState={{
@@ -1006,8 +1006,8 @@ describe('<DataGridPro /> - Filter', () => {
       fireEvent.click(within(filterCell).getByLabelText('Operator'));
       fireEvent.click(screen.getByRole('menuitem', { name: 'Equals' }));
 
-      expect(onFilterModelChange.callCount).to.equal(1);
-      expect(onFilterModelChange.lastCall.firstArg.items[0].operator).to.equal('equals');
+      expect(onFilterModelChange.mock.calls.length).to.equal(1);
+      expect(onFilterModelChange.mock.lastCall?.[0].items[0].operator).to.equal('equals');
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
@@ -1234,7 +1234,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should allow temporary invalid values while updating the number filter', async () => {
-      const changeSpy = spy();
+      const changeSpy = vi.fn();
       const { user } = render(
         <TestCase
           rows={[
@@ -1260,23 +1260,23 @@ describe('<DataGridPro /> - Filter', () => {
 
       await user.keyboard('0');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0);
+      expect(changeSpy.mock.lastCall?.[0].items[0].value).to.equal(0);
 
       await user.keyboard('.');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0); // 0.
+      expect(changeSpy.mock.lastCall?.[0].items[0].value).to.equal(0); // 0.
 
       await user.keyboard('1');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
-      await waitFor(() => expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0.1)); // 0.1
+      await waitFor(() => expect(changeSpy.mock.lastCall?.[0].items[0].value).to.equal(0.1)); // 0.1
 
       await user.keyboard('e');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['-10', '10', '100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined); // 0.1e
+      expect(changeSpy.mock.lastCall?.[0].items[0].value).to.equal(undefined); // 0.1e
 
       await user.keyboard('2');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(10); // 0.1e2
+      expect(changeSpy.mock.lastCall?.[0].items[0].value).to.equal(10); // 0.1e2
     });
 
     it('should allow to navigate to the header filter cell when there are no rows', async () => {

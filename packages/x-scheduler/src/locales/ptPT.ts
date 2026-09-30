@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const ptPTDialog: Partial<EventEditingLocaleText> = {
+const ptPTDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Cor do evento',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const ptPTDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Descrição',
   endDateLabel: 'Data de fim',
   endTimeLabel: 'Hora de fim',
@@ -39,22 +43,26 @@ const ptPTDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'A cada',
   recurrenceRepeatLabel: 'Repetir',
   recurrenceTabLabel: 'Recorrência',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Recorrência',
   recurrenceWeeklyFrequencyLabel: 'semanas',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Repete semanalmente (${weekdayName})`,
   recurrenceMonthlyFrequencyLabel: 'meses',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dia ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} da última semana do mês`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} da última semana`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) => `${weekdayName} da última semana do mês`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} da última semana`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Repete mensalmente no dia ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${ord}ª ${weekDay} do mês`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${ord}ª ${weekDay}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) => `${ord}ª ${weekdayName} do mês`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${ord}ª ${weekdayName}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'Em',
   recurrenceYearlyFrequencyLabel: 'anos',
   recurrenceYearlyPresetLabel: (date) => `Repete anualmente em ${date}`,
   noResourceAriaLabel: 'Sem recurso',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Recurso',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Guardar',
   startDateAfterEndDateError: 'A data de fim não pode ser anterior à data de início.',
@@ -72,7 +80,23 @@ const ptPTDialog: Partial<EventEditingLocaleText> = {
   title: 'Aplicar esta alteração a:',
 };
 
-const ptPTCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const ptPTEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const ptPTCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Recursos',
 
@@ -115,7 +139,6 @@ const ptPTCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `${timeSpan} seguinte`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
-  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
@@ -134,13 +157,14 @@ const ptPTCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Título do recurso',
 };
 
-const ptPTTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const ptPTTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Título do recurso',
 };
 
 export const ptPT: SchedulerLocalization = getSchedulerLocalization({
   dialog: ptPTDialog,
+  event: ptPTEvent,
   calendar: ptPTCalendar,
   timeline: ptPTTimeline,
 });

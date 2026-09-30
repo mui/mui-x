@@ -5,6 +5,7 @@ import {
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
+import { describe } from 'vitest';
 
 describe('<TimelineGrid.Cell />', () => {
   const { render } = createSchedulerRenderer();

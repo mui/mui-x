@@ -1,14 +1,16 @@
-import { spy } from 'sinon';
 import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  getAllEventsByTitle,
+  getEventNamePattern,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { vi, describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 
@@ -92,7 +94,7 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEvents = screen.getAllByLabelText(multiDayEvent.title);
+      const allEvents = getAllEventsByTitle(multiDayEvent.title);
       const mainEvent = allEvents.find((event) => event.getAttribute('aria-hidden') !== 'true');
       const invisibleEvents = allEvents.filter(
         (event) => event.getAttribute('aria-hidden') === 'true',
@@ -132,9 +134,9 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText(event1.title);
-      const event2Elements = screen.getAllByLabelText(event2.title);
-      const event3Elements = screen.getAllByLabelText(event3.title);
+      const event1Elements = getAllEventsByTitle(event1.title);
+      const event2Elements = getAllEventsByTitle(event2.title);
+      const event3Elements = getAllEventsByTitle(event3.title);
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -168,7 +170,7 @@ describe('<WeekView />', () => {
       const allDayRow = within(allDayGridContainer).getByRole('row');
 
       const mainEvent = within(allDayRow)
-        .getAllByLabelText(fourDayEvent.title)
+        .getAllByLabelText(getEventNamePattern(fourDayEvent.title))
         .find((el) => el.getAttribute('aria-hidden') !== 'true');
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];
@@ -225,7 +227,7 @@ describe('<WeekView />', () => {
 
   describe('time navigation', () => {
     it('should go to start of previous week when clicking on the Previous Week button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -237,13 +239,13 @@ describe('<WeekView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous week/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
     it('should go to start of next week when clicking on the Next Week button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -255,7 +257,7 @@ describe('<WeekView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next week/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });

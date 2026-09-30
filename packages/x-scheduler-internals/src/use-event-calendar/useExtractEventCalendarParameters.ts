@@ -1,4 +1,3 @@
-/* eslint-disable react-compiler/react-compiler -- intentional `react-hooks/exhaustive-deps` disable below */
 import * as React from 'react';
 import type { EventCalendarParameters } from './EventCalendarStore.types';
 
@@ -25,14 +24,15 @@ export function useExtractEventCalendarParameters<
     eventModelStructure,
     events,
     onCollapsedResourcesChange,
+    onEventEditingStart,
     onEventsChange,
+    onPreferencesChange,
     onViewChange,
     onVisibleDateChange,
     onVisibleResourcesChange,
     preferences,
     preferencesMenuConfig,
     readOnly,
-    dataSource,
     shouldEventRequireResource,
     resourceModelStructure,
     resources,
@@ -64,14 +64,15 @@ export function useExtractEventCalendarParameters<
       eventModelStructure,
       events,
       onCollapsedResourcesChange,
+      onEventEditingStart,
       onEventsChange,
+      onPreferencesChange,
       onViewChange,
       onVisibleDateChange,
       onVisibleResourcesChange,
       preferences,
       preferencesMenuConfig,
       readOnly,
-      dataSource,
       shouldEventRequireResource,
       resourceModelStructure,
       resources,
@@ -82,11 +83,6 @@ export function useExtractEventCalendarParameters<
       visibleDate,
       visibleResources,
     }),
-    // `dataSource` is intentionally excluded. It's re-read on every fetch, but the
-    // cache + dataManager are pinned to the original instance, so runtime swaps are
-    // only partially reactive — consumers should remount to swap. Including it in
-    // deps would invalidate the memo every render for inline `{ getEvents, persistEvents }`.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       areEventsDraggable,
       areEventsResizable,
@@ -105,7 +101,9 @@ export function useExtractEventCalendarParameters<
       eventModelStructure,
       events,
       onCollapsedResourcesChange,
+      onEventEditingStart,
       onEventsChange,
+      onPreferencesChange,
       onViewChange,
       onVisibleDateChange,
       onVisibleResourcesChange,
@@ -122,7 +120,7 @@ export function useExtractEventCalendarParameters<
       visibleDate,
       visibleResources,
     ],
-  );
+  ) satisfies Record<keyof EventCalendarParameters<TEvent, TResource>, unknown>;
 
   return {
     parameters,

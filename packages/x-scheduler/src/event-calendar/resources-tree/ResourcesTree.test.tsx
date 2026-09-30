@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { waitFor } from '@mui/internal-test-utils';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { createSchedulerRenderer, ResourceBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('ResourcesTree', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });
@@ -123,7 +123,7 @@ describe('ResourcesTree', () => {
     });
 
     it('should collapse on toggle click and call onCollapsedResourcesChange when uncontrolled', async () => {
-      const onCollapsedResourcesChange = spy();
+      const onCollapsedResourcesChange = vi.fn();
       const { user, container } = render(
         <EventCalendar
           events={[]}
@@ -137,7 +137,7 @@ describe('ResourcesTree', () => {
       await waitFor(() => {
         expect(getTreeItem(container, 'tennis')).to.equal(null);
       });
-      expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ sport: true });
+      expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ sport: true });
     });
 
     it('should re-expand a collapsed parent when the toggle is clicked again', async () => {
@@ -157,7 +157,7 @@ describe('ResourcesTree', () => {
     });
 
     it('should call onCollapsedResourcesChange without collapsing when controlled', async () => {
-      const onCollapsedResourcesChange = spy();
+      const onCollapsedResourcesChange = vi.fn();
       const { user, container } = render(
         <EventCalendar
           events={[]}
@@ -171,7 +171,7 @@ describe('ResourcesTree', () => {
 
       // Controlled: the tree stays expanded until the prop changes, but the callback fires.
       expect(getTreeItem(container, 'tennis')).not.to.equal(null);
-      expect(onCollapsedResourcesChange.lastCall.firstArg).to.deep.equal({ sport: true });
+      expect(onCollapsedResourcesChange.mock.lastCall?.[0]).to.deep.equal({ sport: true });
     });
 
     it('should collapse when the controlled collapsedResources prop changes', async () => {

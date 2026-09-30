@@ -1,9 +1,11 @@
 export * from './event-drag-preview';
 export * from './event-editing';
+export * from './event-context-menu';
 export * from './event-dialog';
 export * from './error-container';
 export * from './event-skeleton';
 export * from './SharedComponentsStyledContext';
+export * from './SchedulerSlotsContext';
 
 export { EventCalendarProvider } from './EventCalendarProvider';
 export { ResponsiveTypographyContainer } from './ResponsiveTypographyContainer';

@@ -5,6 +5,8 @@ import type {
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
   SchedulerEventId,
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
   SchedulerEventModelStructure,
   SchedulerEventUpdatedProperties,
   SchedulerOccurrencePlaceholder,
@@ -51,6 +53,13 @@ export interface SchedulerEditingState {
    * the dialog surface opens in `'armed'` on a coarse pointer and directly in `'edit'` otherwise.
    */
   mode: SchedulerEditingMode;
+  /**
+   * The stored model's data-timezone bounds (as timestamps) when the occurrence's times were
+   * last refreshed from a committed change. A bound the model still holds is a change awaiting
+   * persistence (a `dataSource` write in flight), which the editing surface resends; a bound
+   * the host moved since is kept.
+   */
+  modelBounds?: { start: number; end: number };
 }
 
 export interface SchedulerState<TEvent extends object = any> {
@@ -246,6 +255,9 @@ export interface SchedulerDataSource<TEvent extends object> {
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events?: readonly TEvent[];
@@ -369,17 +381,24 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   readOnly?: boolean;
   /**
-   * Data source for fetching events asynchronously.
-   * When provided, events are fetched through the data source instead of the `events` prop.
-   */
-  dataSource?: SchedulerDataSource<TEvent>;
-  /**
    * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.
    * If an object, event creation is enabled with the provided configuration.
    */
   eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
+  /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart?: (
+    occurrence: SchedulerRenderableEventOccurrence,
+    eventDetails: SchedulerEventEditingStartEventDetails,
+  ) => void;
   /**
    * The timezone used to display events in the scheduler.
    *
@@ -409,6 +428,8 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
 export type UpdateRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the update before the update is applied.
+   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
+   * the identity the occurrence expansion keys on.
    */
   occurrenceStart: TemporalSupportedObject;
   /**
@@ -427,6 +448,8 @@ export type UpdateRecurringEventParameters = {
 export type DeleteRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the deletion.
+   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
+   * the identity the occurrence expansion keys on.
    */
   occurrenceStart: TemporalSupportedObject;
   /**
@@ -489,7 +512,43 @@ export interface UpdateEventsParameters {
   updated?: SchedulerEventUpdatedProperties[];
 }
 
+/**
+ * Outcome of `updateEvent`: applied, with the changes as the batch applied them (the
+ * scheduling plugin can clamp the dates), or vetoed by that plugin with the error to surface.
+ */
+export type SchedulerUpdateEventResult =
+  | { applied: true; changes: SchedulerEventUpdatedProperties }
+  | { applied: false; rejection: Error };
+
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
+
+/**
+ * Properties shared by every `onEventEditingStart` reason on top of the Base UI change details.
+ */
+interface SchedulerEventEditingStartCustomProperties {
+  /**
+   * An element that stays in the DOM after the callback returns, even when it cancels.
+   * Position custom UI against it rather than `trigger`, which some flows unmount right
+   * after a canceled activation.
+   */
+  anchor: HTMLElement | undefined;
+}
+
+export type SchedulerEventEditingStartEventDetails =
+  | BaseUIChangeEventDetails<
+      'edit',
+      SchedulerEventEditingStartCustomProperties & { occurrence: SchedulerEventOccurrence }
+    >
+  | BaseUIChangeEventDetails<
+      'view',
+      SchedulerEventEditingStartCustomProperties & { occurrence: SchedulerEventOccurrence }
+    >
+  | BaseUIChangeEventDetails<
+      'creation',
+      SchedulerEventEditingStartCustomProperties & {
+        occurrence: SchedulerEventOccurrencePlaceholder;
+      }
+    >;
 
 /**
  * The unique identifier for each scheduler store type.

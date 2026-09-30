@@ -4,6 +4,7 @@ import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 function WrappedDateCalendar(
   props: Omit<DateCalendarProps, 'value' | 'onChange'> & { initialValue: PickerValidDate },

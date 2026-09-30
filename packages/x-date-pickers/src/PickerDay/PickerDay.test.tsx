@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { PickerDay, pickerDayClasses as classes } from '@mui/x-date-pickers/PickerDay';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<PickerDay />', () => {
   const { render } = createPickerRenderer();
@@ -31,7 +31,7 @@ describe('<PickerDay />', () => {
   );
 
   it('selects the date on click, Enter and Space', async () => {
-    const handleDaySelect = spy();
+    const handleDaySelect = vi.fn();
     const day = adapterToUse.date();
     const { user } = render(
       <PickerDay
@@ -53,8 +53,8 @@ describe('<PickerDay />', () => {
 
     await user.click(targetDay);
 
-    expect(handleDaySelect.callCount).to.equal(1);
-    expect(handleDaySelect.args[0][0]).toEqualDateTime(day);
+    expect(handleDaySelect.mock.calls.length).to.equal(1);
+    expect(handleDaySelect.mock.calls[0][0]).toEqualDateTime(day);
   });
 
   it('renders the day of the month by default', () => {

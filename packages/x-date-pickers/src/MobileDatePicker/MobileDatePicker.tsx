@@ -8,12 +8,12 @@ import type { MobileDatePickerProps } from './MobileDatePicker.types';
 import type { DatePickerViewRenderers } from '../DatePicker/shared';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { extractValidationProps, validateDate } from '../validation';
+import { extractValidationProps } from '../validation';
 import type { DateView, PickerOwnerState } from '../models';
 import { DateField } from '../DateField';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import { useDateManager } from '../managers';
 
 type MobileDatePickerComponent = ((
   props: MobileDatePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -34,6 +34,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateManager();
 
   // Props with the default values common to all date pickers
   const defaultizedProps = useDatePickerDefaultizedProps<MobileDatePickerProps>(
@@ -73,9 +74,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker(
   const { renderPicker } = useMobilePicker<DateView, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date',
-    validator: validateDate,
+    manager,
     steps: null,
   });
 
@@ -215,6 +214,10 @@ MobileDatePicker.propTypes /* remove-proptypes */ = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

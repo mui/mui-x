@@ -7,6 +7,7 @@ import { screen, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { CompactDayView } from '@mui/x-scheduler/compact-day-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { describe, it, expect } from 'vitest';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 
@@ -131,6 +132,16 @@ describe('<CompactDayView />', () => {
           viewConfig: { day: { startTime: 20, endTime: 8 } },
         });
       }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid hour range']);
+    });
+
+    it('should forward `initialScrollTime` from the `day` key', () => {
+      // The warning proves the prop reaches the grid.
+      clearWarningsCache();
+      expect(() => {
+        renderWithProviders(<CompactDayView />, [], {
+          viewConfig: { day: { startTime: 8, endTime: 20, initialScrollTime: 6 } },
+        });
+      }).toWarnDev(['MUI X Scheduler: `viewConfig.day` received an invalid `initialScrollTime`']);
     });
   });
 });

@@ -1,5 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { HeatmapPlot, heatmapClasses } from '@mui/x-charts-pro/Heatmap';
+import { describe, it, expect } from 'vitest';
 import { Heatmap } from './Heatmap';
 
 describe('<HeatmapPlot />', () => {

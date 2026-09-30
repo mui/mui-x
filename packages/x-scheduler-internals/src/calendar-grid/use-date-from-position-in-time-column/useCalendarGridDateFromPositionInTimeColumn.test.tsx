@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { renderHook } from '@mui/internal-test-utils';
 import { adapter } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { CalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useCalendarGridGetDateFromPositionInColumn } from './useCalendarGridDateFromPositionInTimeColumn';
 
@@ -10,7 +11,6 @@ describe('useCalendarGridDateFromPositionInTimeColumn', () => {
   function Wrapper({ children }: { children: React.ReactNode }) {
     const value: CalendarGridTimeColumnContext = React.useMemo(
       () => ({
-        index: 0,
         hasFocus: false,
         start: START,
         end: adapter.addHours(START, 12),

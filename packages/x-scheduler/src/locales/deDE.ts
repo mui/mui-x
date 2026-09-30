@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const deDEDialog: Partial<EventEditingLocaleText> = {
+const deDEDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Ereignisfarbe',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Ereignis löschen',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Beschreibung',
   endDateLabel: 'Enddatum',
   endTimeLabel: 'Endzeit',
@@ -39,22 +43,28 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Jede',
   recurrenceRepeatLabel: 'Wiederholen',
   recurrenceTabLabel: 'Wiederholung',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Wiederholung',
   recurrenceWeeklyFrequencyLabel: 'Wochen',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Wird wöchentlich am ${weekdayName} wiederholt`,
   recurrenceMonthlyFrequencyLabel: 'Monate',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Tag ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} der letzten Woche des Monats`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} letzte Woche`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} der letzten Woche des Monats`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} letzte Woche`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Wird monatlich am Tag ${dayNumber} wiederholt`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} Woche ${ord} des Monats`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} Woche ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName} Woche ${ord} des Monats`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} Woche ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'Am',
   recurrenceYearlyFrequencyLabel: 'Jahre',
   recurrenceYearlyPresetLabel: (date) => `Wird jährlich am ${date} wiederholt`,
   noResourceAriaLabel: 'Keine Ressource',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
   startDateAfterEndDateError: 'Das Enddatum darf nicht vor dem Startdatum liegen.',
@@ -72,7 +82,23 @@ const deDEDialog: Partial<EventEditingLocaleText> = {
   title: 'Diese Änderung anwenden auf:',
 };
 
-const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const deDEEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Ressource: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const deDECalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Ressourcen',
 
@@ -115,7 +141,6 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} weitere..`,
   nextTimeSpan: (timeSpan) => `Nächste(r) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Vorherige(r) ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Ressource: ${resourceName}`,
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Woche ${weekNumber}`,
 
@@ -134,13 +159,14 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Ressourcentitel',
 };
 
-const deDETimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const deDETimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressourcentitel',
 };
 
 export const deDE: SchedulerLocalization = getSchedulerLocalization({
   dialog: deDEDialog,
+  event: deDEEvent,
   calendar: deDECalendar,
   timeline: deDETimeline,
 });

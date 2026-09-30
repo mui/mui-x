@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const zhCNDialog: Partial<EventEditingLocaleText> = {
+const zhCNDialog: SchedulerDialogTranslations = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const zhCNDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   // descriptionLabel: 'Description',
   // endDateLabel: 'End date',
   // endTimeLabel: 'End time',
@@ -39,6 +43,8 @@ const zhCNDialog: Partial<EventEditingLocaleText> = {
   // recurrenceEveryLabel: 'Every',
   // recurrenceRepeatLabel: 'Repeat',
   // recurrenceTabLabel: 'Recurrence',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
   // recurrenceWeeklyPresetLabel: ({
@@ -46,17 +52,29 @@ const zhCNDialog: Partial<EventEditingLocaleText> = {
   // }) => `Repeats weekly on ${weekdayName}`,
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
-  // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,
-  // recurrenceMonthlyLastWeekLabel: weekDay => `${weekDay} last week`,
+  // recurrenceMonthlyLastWeekAriaLabel: ({
+  //   weekdayName
+  // }) => `${weekdayName} of the last week of the month`,
+  // recurrenceMonthlyLastWeekLabel: ({
+  //   weekdayName
+  // }) => `${weekdayName} last week`,
   // recurrenceMonthlyPresetLabel: dayNumber => `Repeats monthly on day ${dayNumber}`,
-  // recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} week ${ord} of the month`,
-  // recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} week ${ord}`,
+  // recurrenceMonthlyWeekNumberAriaLabel: ({
+  //   ord,
+  //   weekdayName
+  // }) => `${weekdayName} week ${ord} of the month`,
+  // recurrenceMonthlyWeekNumberLabel: ({
+  //   ord,
+  //   weekdayName
+  // }) => `${weekdayName} week ${ord}`,
   // recurrenceWeeklyMonthlySpecificInputsLabel: 'On',
   // recurrenceYearlyFrequencyLabel: 'years',
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
   // noResourceAriaLabel: 'No specific resource',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   // resourceLabel: 'Resource',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
   // startDateAfterEndDateError: 'End date cannot be before start date.',
@@ -73,7 +91,23 @@ const zhCNDialog: Partial<EventEditingLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const zhCNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const zhCNEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const zhCNCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -111,7 +145,6 @@ const zhCNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
-  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
   // EventItem
@@ -126,13 +159,14 @@ const zhCNCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const zhCNTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const zhCNTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };
 
 export const zhCN: SchedulerLocalization = getSchedulerLocalization({
   dialog: zhCNDialog,
+  event: zhCNEvent,
   calendar: zhCNCalendar,
   timeline: zhCNTimeline,
 });

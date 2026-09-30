@@ -1,8 +1,8 @@
 'use client';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/TimelineGridEventDependencyTerminal';
+import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/dependencyTerminalDragData';
 
 /**
  * Calls `onCursorMove` with the client coordinates on every frame of this timeline's

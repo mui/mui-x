@@ -1,4 +1,5 @@
 import { clearWarningsCache } from '@mui/x-internals/warning';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { getDisplayedHourRange } from './getDisplayedHourRange';
 
 const SOURCE = 'viewConfig.week';

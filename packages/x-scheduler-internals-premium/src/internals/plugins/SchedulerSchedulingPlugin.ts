@@ -9,6 +9,10 @@ import type {
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import type {
+  SchedulerEventId,
+  SchedulerEventUpdatedProperties,
+} from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerAddDependencyResult,
@@ -17,8 +21,16 @@ import type {
   SchedulerDependencyId,
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
+  SchedulerLazyLoadingParameters,
 } from '../../models';
-import { classifyDependencyEvent, isDependencyReadOnly } from '../utils/dependency-utils';
+import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
+import { computeAutoSchedulingCascade } from '../utils/auto-scheduling';
+import {
+  classifyDependencyEvent,
+  groupRetainedDependenciesBySource,
+  isDependencyReadOnly,
+  isDependencyType,
+} from '../utils/dependency-utils';
 
 /**
  * Plugin that provides event-scheduling support (dependencies).
@@ -28,7 +40,9 @@ import { classifyDependencyEvent, isDependencyReadOnly } from '../utils/dependen
 export class SchedulerSchedulingPlugin<
   TEvent extends object,
   State extends SchedulerState & SchedulerDependenciesState,
-  Parameters extends SchedulerParameters<TEvent, any> & SchedulerDependenciesParameters,
+  Parameters extends SchedulerParameters<TEvent, any> &
+    SchedulerDependenciesParameters &
+    SchedulerLazyLoadingParameters<TEvent>,
 > implements SchedulerSchedulingPluginInterface {
   protected store: SchedulerStore<TEvent, any, State, Parameters>;
 
@@ -61,11 +75,13 @@ export class SchedulerSchedulingPlugin<
   private updateDependencies(newDependencies: SchedulerDependency[]) {
     if (process.env.NODE_ENV !== 'production') {
       if (!this.store.parameters.onDependenciesChange) {
-        warnOnce([
-          'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
-          'The `dependencies` prop is fully controlled, so without it the changes are lost and the UI does not update.',
-          'Pass an `onDependenciesChange` handler that updates the `dependencies` prop.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: A dependency update was ignored because no `onDependenciesChange` handler is provided.',
+            'The `dependencies` prop is fully controlled, so without it the changes are lost and the UI does not update.',
+            'Pass an `onDependenciesChange` handler that updates the `dependencies` prop.',
+          ].join('\n'),
+        );
       }
     }
 
@@ -87,30 +103,64 @@ export class SchedulerSchedulingPlugin<
   }
 
   /**
-   * Removes the dependencies referencing deleted events, in the same update.
+   * Removes the dependencies referencing deleted events and computes the
+   * auto-scheduling cascade for the updated ones, all in the same update. A batch
+   * whose cascade would need to move a read-only event is vetoed instead: nothing is
+   * applied, and the rejection is returned for the caller to surface.
    *
    * With a `dataSource`, event deletions are persisted asynchronously after this hook has
    * already emitted `onDependenciesChange`. If that persistence fails, the event survives but
    * its dependencies were already removed — a known v1 limitation, there is no rollback.
    */
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
-    const { deleted } = parameters;
-    if (!deleted || deleted.length === 0) {
-      return;
+    const { deleted, updated } = parameters;
+    const deletedSet = new Set(deleted);
+
+    // Cascade first: a vetoed batch must not have emitted the dependency cleanup.
+    let cascaded: SchedulerEventUpdatedProperties[] = [];
+    if (updated && updated.length > 0 && this.store.state.dependencyModelList.length > 0) {
+      const result = computeAutoSchedulingCascade({
+        adapter: this.store.state.adapter,
+        processedEventLookup: this.store.state.processedEventLookup,
+        activeDependenciesBySource: eventTimelinePremiumDependencySelectors.activeModelListBySource(
+          this.store.state,
+        ),
+        activeDependenciesByTarget: eventTimelinePremiumDependencySelectors.activeModelListByTarget(
+          this.store.state,
+        ),
+        isEventReadOnly: (eventId) => schedulerEventSelectors.isReadOnly(this.store.state, eventId),
+        updated,
+        deleted: deletedSet,
+      });
+      if (result.blocked.length > 0) {
+        const blockedEvent = this.store.state.processedEventLookup.get(result.blocked[0])!;
+        return {
+          rejected: true as const,
+          error: /* minify-error-disabled */ new Error(
+            `This change would move the read-only event "${blockedEvent.title}", so it was not applied.`,
+          ),
+        };
+      }
+      cascaded = result.updated;
     }
 
-    const deletedSet = new Set(deleted);
-    const current = this.store.state.dependencyModelList;
-    const remaining = current.filter(
-      (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
-    );
-    this.updateDependenciesIfChanged(current, remaining);
+    if (deletedSet.size > 0) {
+      const current = this.store.state.dependencyModelList;
+      const remaining = current.filter(
+        (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
+      );
+      this.updateDependenciesIfChanged(current, remaining);
+    }
+
+    return cascaded.length > 0 ? { updated: cascaded } : undefined;
   };
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown, recurring or read-only event, or
-   * duplicating an existing dependency.
+   * Rejects dependencies referencing an unknown, recurring or read-only event,
+   * duplicating an existing dependency, or closing a cycle.
+   * The guards read the controlled `dependencies` value, so two adds in the same
+   * tick are not validated against each other.
    * Implementation of the store's `addDependency()` — call it through the store.
    */
   public addDependency = (
@@ -127,20 +177,62 @@ export class SchedulerSchedulingPlugin<
       }
     }
 
-    // Only `source`/`target` define identity while the type union has a single member;
-    // TODO(#22853): include `type` in the identity when the type union widens.
-    const duplicate = this.store.state.dependencyModelList.find(
-      (dependency) =>
-        dependency.source === properties.source && dependency.target === properties.target,
+    // Grouped from the lookup, not the raw list: with duplicate ids only the last
+    // entry per id exists for the feature, so a shadowed edge must not reject an add.
+    const dependenciesBySource = groupRetainedDependenciesBySource(
+      this.store.state.dependencyModelLookup,
     );
+
+    // Duplicate before cycle: on data that already contains a cycle, re-adding an
+    // existing pair must report the duplicate (and select its arrow), not the cycle.
+    // The type is part of the identity: two events can be linked by several
+    // dependencies of different types.
+    const duplicate = dependenciesBySource
+      .get(properties.source)
+      ?.find(
+        (dependency) =>
+          dependency.target === properties.target && dependency.type === properties.type,
+      );
     if (duplicate) {
       return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
+    }
+
+    if (this.isCreatingCycle(dependenciesBySource, properties.source, properties.target)) {
+      return { status: 'rejected', reason: 'cyclicDependency' };
     }
 
     const dependency: SchedulerDependency = { ...properties, id: generateId('dependency') };
     this.updateDependencies([...this.store.state.dependencyModelList, dependency]);
     return { status: 'added', id: dependency.id };
   };
+
+  /**
+   * Whether adding `source → target` would close a cycle: `target` already reaches
+   * `source` (a self-loop is the zero-length path). Walks every dependency, not only
+   * the active ones — a dormant cycle becomes live when its endpoint reactivates.
+   */
+  private isCreatingCycle(
+    dependenciesBySource: Map<SchedulerEventId, SchedulerDependency[]>,
+    source: SchedulerEventId,
+    target: SchedulerEventId,
+  ): boolean {
+    const stack: SchedulerEventId[] = [target];
+    const visited = new Set<SchedulerEventId>();
+    while (stack.length > 0) {
+      const eventId = stack.pop()!;
+      if (eventId === source) {
+        return true;
+      }
+      if (visited.has(eventId)) {
+        continue;
+      }
+      visited.add(eventId);
+      for (const dependency of dependenciesBySource.get(eventId) ?? []) {
+        stack.push(dependency.target);
+      }
+    }
+    return false;
+  }
 
   /**
    * Deletes a dependency, returning whether it was deleted. Refused (`false`) for an
@@ -166,20 +258,32 @@ export class SchedulerSchedulingPlugin<
     const hasDataSource = this.store.parameters.dataSource != null;
 
     for (const dependency of dependencyModelList) {
+      if (!isDependencyType(dependency.type)) {
+        warnOnce(
+          [
+            `MUI X Scheduler: The dependency "${String(dependency.id)}" has the unknown type "${String(dependency.type)}".`,
+            'It is kept in the data but ignored by the timeline.',
+          ].join('\n'),
+        );
+      }
       for (const eventId of [dependency.source, dependency.target]) {
         const status = classifyDependencyEvent(processedEventLookup, eventId);
         if (status === 'unknownEvent') {
           if (!hasDataSource) {
-            warnOnce([
-              `MUI X Scheduler: The dependency "${String(dependency.id)}" references the unknown event "${String(eventId)}".`,
-              'It is kept in the data but ignored by the timeline.',
-            ]);
+            warnOnce(
+              [
+                `MUI X Scheduler: The dependency "${String(dependency.id)}" references the unknown event "${String(eventId)}".`,
+                'It is kept in the data but ignored by the timeline.',
+              ].join('\n'),
+            );
           }
         } else if (status === 'recurringEvent') {
-          warnOnce([
-            `MUI X Scheduler: The dependency "${String(dependency.id)}" references the recurring event "${String(eventId)}".`,
-            'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: The dependency "${String(dependency.id)}" references the recurring event "${String(eventId)}".`,
+              'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
+            ].join('\n'),
+          );
         }
       }
     }

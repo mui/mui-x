@@ -1,6 +1,7 @@
 import { expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { it, expect } from 'vitest';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
   const { start: startChar, end: endChar } = adapter.escapedCharacters;

@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import type {
@@ -151,8 +150,6 @@ export const MonthView = React.memo(
     const store = useEventCalendarStoreContext();
 
     // Ref hooks
-    const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useMergedRefs(forwardedRef, containerRef);
     const cellRef = React.useRef<HTMLDivElement>(null);
 
     // Selector hooks
@@ -195,7 +192,7 @@ export const MonthView = React.memo(
     return (
       <MonthViewRoot
         {...props}
-        ref={handleRef}
+        ref={forwardedRef}
         className={clsx(props.className, classes.monthView)}
       >
         <MoreEventsPopoverProvider>

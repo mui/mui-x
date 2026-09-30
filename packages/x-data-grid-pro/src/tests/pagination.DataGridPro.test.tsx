@@ -4,6 +4,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { describe, it, expect } from 'vitest';
 import type { GridApiPro } from '../models/gridApiPro';
 
 describe('<DataGridPro /> - Pagination', () => {

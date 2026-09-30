@@ -6,6 +6,11 @@ import {
   eventDialogClassKeys,
   eventDialogSlots,
 } from '../internals/components/event-dialog/eventDialogClasses';
+import type { EventContextMenuClasses } from '../internals/components/event-context-menu/eventContextMenuClasses';
+import {
+  eventContextMenuClassKeys,
+  eventContextMenuSlots,
+} from '../internals/components/event-context-menu/eventContextMenuClasses';
 import type { ErrorContainerClasses } from '../internals/components/error-container/errorContainerClasses';
 import {
   errorContainerClassKeys,
@@ -18,7 +23,7 @@ import {
 } from '../internals/components/event-skeleton/eventSkeletonClasses';
 
 export interface EventCalendarClasses
-  extends EventDialogClasses, ErrorContainerClasses, EventSkeletonClasses {
+  extends EventDialogClasses, EventContextMenuClasses, ErrorContainerClasses, EventSkeletonClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the side panel element. */
@@ -450,6 +455,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     ...errorContainerClassKeys,
     ...eventSkeletonClassKeys,
     ...eventDialogClassKeys,
+    ...eventContextMenuClassKeys,
   ],
 );
 
@@ -596,6 +602,7 @@ const slots = {
   ...errorContainerSlots,
   ...eventSkeletonSlots,
   ...eventDialogSlots,
+  ...eventContextMenuSlots,
 };
 
 /**

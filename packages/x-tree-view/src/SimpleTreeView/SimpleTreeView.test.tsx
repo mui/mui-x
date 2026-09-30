@@ -3,6 +3,7 @@ import { createRenderer, screen } from '@mui/internal-test-utils';
 import { SimpleTreeView, simpleTreeViewClasses as classes } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe, it, expect } from 'vitest';
 
 describe('<SimpleTreeView />', () => {
   const { render } = createRenderer();

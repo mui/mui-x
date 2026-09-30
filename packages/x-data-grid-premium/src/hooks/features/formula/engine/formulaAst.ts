@@ -1,0 +1,173 @@
+import type { FormulaRowId, FormulaSourceSpan } from './formulaTypes';
+
+/**
+ * Names that are part of the formula grammar and cannot be used as function names.
+ */
+export const FORMULA_RESERVED_NAMES: readonly string[] = [
+  'REF',
+  'COLUMN',
+  'ROW',
+  'COLUMN_POSITION',
+  'ROW_POSITION',
+  'FIELD',
+  'RANGE_REF',
+  'COLUMN_FROM',
+  'ROW_FROM',
+  'COLUMN_TO',
+  'ROW_TO',
+  'FIXED',
+  'ANCHOR',
+  'COLUMN_VALUES',
+  'TRUE',
+  'FALSE',
+];
+
+interface FormulaAstBase {
+  span: FormulaSourceSpan;
+}
+
+export interface FormulaNumberLiteralNode extends FormulaAstBase {
+  type: 'numberLiteral';
+  value: number;
+}
+
+export interface FormulaStringLiteralNode extends FormulaAstBase {
+  type: 'stringLiteral';
+  value: string;
+}
+
+export interface FormulaBooleanLiteralNode extends FormulaAstBase {
+  type: 'booleanLiteral';
+  value: boolean;
+}
+
+/**
+ * Same-row reference: a bare identifier (`price`) or `FIELD("unit price")`.
+ */
+export interface FormulaFieldRefNode extends FormulaAstBase {
+  type: 'fieldRef';
+  field: string;
+}
+
+/**
+ * Per-axis selectors. Positional-ness is per-axis, not per-node, so mixed refs
+ * like the editor's `A$1` (stable column + positional row) stay encodable.
+ * Positions are 1-based: columns in visible column order, rows in
+ * sorted + filtered data-row order.
+ */
+export type FormulaColumnSelector =
+  | { kind: 'field'; field: string } // COLUMN("total")
+  | { kind: 'position'; index: number }; // COLUMN_POSITION(2)
+
+export type FormulaRowSelector =
+  | { kind: 'id'; id: FormulaRowId } // ROW("order-1001") | ROW(42)
+  | { kind: 'position'; index: number }; // ROW_POSITION(1)
+
+/**
+ * `REF(<column selector>, <row selector>)`.
+ */
+export interface FormulaCellRefNode extends FormulaAstBase {
+  type: 'cellRef';
+  column: FormulaColumnSelector;
+  row: FormulaRowSelector;
+}
+
+/**
+ * One axis of a `RANGE_REF()` window endpoint.
+ *
+ * - `position`: a 1-based view position. `fixed: true` (the canonical `$`,
+ *   spelled `FIXED(...)`) also pins the axis against the fill handle / paste
+ *   offset; a non-fixed position axis shifts by the fill delta.
+ * - `anchor` (spelled `ANCHOR(delta)`): a signed offset from the cell that owns
+ *   the formula — the Sheets model for a plain (no-`$`) endpoint. It resolves to
+ *   `ownerPosition + delta` against the current view, so the window moves with
+ *   the formula under sorting/filtering/reordering, and it copies verbatim on
+ *   fill/paste (offsets are inherently relative). An anchor axis is never
+ *   `FIXED` — the parser rejects the combination.
+ */
+export type FormulaRangeAxis =
+  { kind: 'position'; index: number; fixed: boolean } | { kind: 'anchor'; delta: number };
+
+/**
+ * `RANGE_REF(COLUMN_FROM(c1), ROW_FROM(r1), COLUMN_TO(c2), ROW_TO(r2))` — the
+ * inclusive window over the current view. `position` endpoints outside the view
+ * clip to the available rows/columns instead of erroring; `anchor` endpoints
+ * are strict — an axis that resolves without an owner position or outside the
+ * data band makes the whole range `#REF!` (a relative window either keeps its
+ * geometry or reports that it cannot).
+ */
+export interface FormulaRangeRefNode extends FormulaAstBase {
+  type: 'rangeRef';
+  columnFrom: FormulaRangeAxis;
+  rowFrom: FormulaRangeAxis;
+  columnTo: FormulaRangeAxis;
+  rowTo: FormulaRangeAxis;
+}
+
+/**
+ * `COLUMN_VALUES("total")` — every value of the field over the current
+ * sorted + filtered row set.
+ */
+export interface FormulaColumnValuesNode extends FormulaAstBase {
+  type: 'columnValues';
+  field: string;
+}
+
+export interface FormulaUnaryExpressionNode extends FormulaAstBase {
+  type: 'unaryExpression';
+  operator: '-' | '+';
+  operand: FormulaAstNode;
+}
+
+export type FormulaBinaryOperator =
+  '+' | '-' | '*' | '/' | '^' | '&' | '=' | '<>' | '<' | '<=' | '>' | '>=';
+
+/**
+ * Binary operator precedence, lowest first. All binary operators are
+ * left-associative, including `^` (Excel-compatible: `2^3^2 = 64`).
+ * Unary `-`/`+` bind tighter than `^` (Excel-compatible: `-2^2 = 4`).
+ * Single source of truth for the parser and the serializer's minimal
+ * parenthesization — they must never diverge or round-trips corrupt.
+ */
+export const FORMULA_BINARY_PRECEDENCE: Record<FormulaBinaryOperator, number> = {
+  '=': 1,
+  '<>': 1,
+  '<': 1,
+  '<=': 1,
+  '>': 1,
+  '>=': 1,
+  '&': 2,
+  '+': 3,
+  '-': 3,
+  '*': 4,
+  '/': 4,
+  '^': 5,
+};
+
+export interface FormulaBinaryExpressionNode extends FormulaAstBase {
+  type: 'binaryExpression';
+  operator: FormulaBinaryOperator;
+  left: FormulaAstNode;
+  right: FormulaAstNode;
+}
+
+export interface FormulaFunctionCallNode extends FormulaAstBase {
+  type: 'functionCall';
+  /**
+   * Normalized to uppercase at parse time.
+   */
+  name: string;
+  args: FormulaAstNode[];
+}
+
+export type FormulaAstNode =
+  | FormulaNumberLiteralNode
+  | FormulaStringLiteralNode
+  | FormulaBooleanLiteralNode
+  | FormulaFieldRefNode
+  | FormulaCellRefNode
+  | FormulaRangeRefNode
+  | FormulaColumnValuesNode
+  | FormulaUnaryExpressionNode
+  | FormulaBinaryExpressionNode
+  | FormulaFunctionCallNode;

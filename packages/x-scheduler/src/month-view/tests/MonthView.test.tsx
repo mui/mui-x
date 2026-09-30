@@ -1,14 +1,21 @@
-import { spy } from 'sinon';
+import { config } from 'react-transition-group';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  getAllEventsByTitle,
   ResourceBuilder,
+  SchedulerStoreRunner,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
-import { screen, within, waitFor } from '@mui/internal-test-utils';
+import { act, screen, within, waitFor } from '@mui/internal-test-utils';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
+import { vi, describe, it, expect } from 'vitest';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
 import { EventDialogProvider } from '../../internals/components/event-dialog';
@@ -69,8 +76,8 @@ describe('<MonthView />', () => {
   });
 
   it('should move to the day view when a day is clicked', async () => {
-    const handleViewChange = spy();
-    const handleVisibleDateChange = spy();
+    const handleViewChange = vi.fn();
+    const handleVisibleDateChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         {...standaloneDefaults}
@@ -85,10 +92,10 @@ describe('<MonthView />', () => {
     const button = screen.getByRole('button', { name: '15' });
     await user.click(button);
 
-    expect(handleViewChange.calledOnce).to.equal(true);
-    expect(handleViewChange.firstCall.firstArg).to.equal('day');
-    expect(handleVisibleDateChange.calledOnce).to.equal(true);
-    expect(handleVisibleDateChange.firstCall.firstArg).toEqualDateTime(
+    expect(handleViewChange.mock.calls.length).to.equal(1);
+    expect(handleViewChange.mock.calls[0][0]).to.equal('day');
+    expect(handleVisibleDateChange.mock.calls.length).to.equal(1);
+    expect(handleVisibleDateChange.mock.calls[0][0]).toEqualDateTime(
       adapter.date('2025-05-15T00:00:00Z', 'default'),
     );
   });
@@ -117,18 +124,27 @@ describe('<MonthView />', () => {
   });
 
   describe('Event keyboard accessibility in "more events" popover', () => {
-    async function renderAndOpenPopover() {
-      const { user } = render(
-        <EventCalendarProvider events={manyEvents} resources={[]}>
+    async function renderAndOpenPopover({
+      theme,
+      ...providerProps
+    }: Partial<React.ComponentProps<typeof EventCalendarProvider>> & { theme?: Theme } = {}) {
+      const calendar = (
+        <EventCalendarProvider events={manyEvents} resources={[]} {...providerProps}>
           <EventDialogProvider>
             <MonthView />
           </EventDialogProvider>
-        </EventCalendarProvider>,
+        </EventCalendarProvider>
       );
+      // The theme goes in a wrapper so `setProps` still reaches the calendar provider.
+      const { user, setProps } = render(calendar, {
+        wrapper: theme
+          ? ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          : undefined,
+      });
       const moreButton = await screen.findByRole('button', { name: /more/i });
       await user.click(moreButton);
       const popover = await screen.findByRole('presentation');
-      return { user, popover };
+      return { user, setProps, popover };
     }
 
     it('should have tabindex and role="button" on events in the popover', async () => {
@@ -157,7 +173,7 @@ describe('<MonthView />', () => {
       });
     });
 
-    it('should allow Space key to activate events in the popover', async () => {
+    it('should open the event context menu on Space, and Edit from there activates the event', async () => {
       const { user, popover } = await renderAndOpenPopover();
 
       const firstEventButton = within(popover).getAllByRole('button')[0];
@@ -167,25 +183,93 @@ describe('<MonthView />', () => {
       await user.keyboard(' ');
 
       await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+      });
+      expect(screen.queryByRole('dialog')).to.equal(null);
+
+      await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+
+      await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
     });
 
-    it('should reference resolvable header IDs in each event aria-labelledby', async () => {
+    it('should name each event in the popover with its title, time range and date', async () => {
       const { popover } = await renderAndOpenPopover();
 
       const eventButtons = within(popover).getAllByRole('button');
-      expect(eventButtons.length).to.be.greaterThan(0);
 
+      expect(eventButtons.map((button) => button.getAttribute('aria-label'))).to.deep.equal([
+        'Event 1, 8:00 AM to 9:00 AM, Thursday, May 1st, 2025',
+        'Event 2, 9:00 AM to 10:00 AM, Thursday, May 1st, 2025',
+        'Event 3, 10:00 AM to 11:00 AM, Thursday, May 1st, 2025',
+        'Event 4, 11:00 AM to 12:00 PM, Thursday, May 1st, 2025',
+        'Event 5, 12:00 PM to 1:00 PM, Thursday, May 1st, 2025',
+        'Event 6, 1:00 PM to 2:00 PM, Thursday, May 1st, 2025',
+      ]);
       eventButtons.forEach((button) => {
-        const tokens = (button.getAttribute('aria-labelledby') ?? '').split(' ').filter(Boolean);
-        expect(tokens.length).to.be.greaterThan(0);
-        tokens.forEach((token) => {
-          expect(document.getElementById(token), `aria-labelledby token "${token}"`).not.to.equal(
-            null,
-          );
-        });
+        expect(button).not.to.have.attribute('aria-labelledby');
       });
+    });
+
+    it('should close the popover when `onEventEditingStart` cancels an activation from it', async () => {
+      const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
+        eventDetails.cancel(),
+      );
+      const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      expect(firstEventButton.isConnected).to.equal(false);
+      const moreButton = screen.getByRole('button', { name: /more/i });
+      expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(firstEventButton);
+      expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(moreButton);
+      expect(moreButton.isConnected).to.equal(true);
+    });
+
+    it('should keep the "+N more" button as `anchor` when the cancellation comes from the armed toolbar', async () => {
+      // A coarse pointer arms first instead of opening the dialog, so the callback only fires
+      // on the toolbar's Edit — after the popover item became the built-in toolbar's anchor.
+      const originalMatchMedia = window.matchMedia;
+      window.matchMedia = (() =>
+        ({
+          matches: true,
+          addEventListener: () => {},
+          removeEventListener: () => {},
+        }) as any) as any;
+      try {
+        const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
+          eventDetails.cancel(),
+        );
+        const { user, popover } = await renderAndOpenPopover({ onEventEditingStart });
+
+        const firstEventButton = within(popover).getAllByRole('button')[0];
+        await user.click(firstEventButton);
+        expect(onEventEditingStart.mock.calls.length).to.equal(0);
+
+        const editButton = screen.getByRole('button', { name: 'Edit event' });
+        await user.click(editButton);
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        await waitFor(() => {
+          expect(document.body.contains(popover)).to.equal(false);
+        });
+
+        expect(firstEventButton.isConnected).to.equal(false);
+        const moreButton = screen.getByRole('button', { name: /more/i });
+        expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(editButton);
+        expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(moreButton);
+        expect(moreButton.isConnected).to.equal(true);
+      } finally {
+        window.matchMedia = originalMatchMedia;
+      }
     });
 
     it('should stay open while editing and close once the editing surface closes', async () => {
@@ -210,6 +294,147 @@ describe('<MonthView />', () => {
       await waitFor(() => {
         expect(document.body.contains(popover)).to.equal(false);
       });
+    });
+
+    it('should return focus to the trigger when the editing dialog is submitted', async () => {
+      const onEventsChange = vi.fn();
+      const { user, popover } = await renderAndOpenPopover({ onEventsChange });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+      await screen.findByRole('dialog');
+
+      // Typed into the title field rather than sent to whatever holds focus, which the dialog's
+      // focus trap settles at different moments across React versions.
+      const titleInput = await screen.findByLabelText(/event title/i);
+      await user.type(titleInput, '{Enter}');
+
+      // The dialog closing is only meaningful if the form actually submitted.
+      await waitFor(() => {
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+      });
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).to.equal(null);
+      });
+
+      // The popover closes with the editing surface, taking the focused event with it.
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      // Focus has to land back on the calendar, or the next Tab goes to the browser chrome.
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
+      });
+    });
+
+    it('should return focus to the day cell when the trigger is gone by the time the dialog is submitted', async () => {
+      // Emptying the day on submit unmounts the "+N more" button. Assigned after the render
+      // because it needs `setProps`.
+      let emptyTheDay = () => {};
+      const { user, setProps, popover } = await renderAndOpenPopover({
+        onEventsChange: () => emptyTheDay(),
+      });
+      emptyTheDay = () => setProps({ events: manyEvents.slice(0, 1) });
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      await user.click(firstEventButton);
+      await screen.findByRole('dialog');
+
+      const titleInput = await screen.findByLabelText(/event title/i);
+      await user.type(titleInput, '{Enter}');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /more/i })).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      const may1Cell = screen
+        .getAllByRole('gridcell')
+        .find((cell) => within(cell).queryByText(/may 1/i));
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(may1Cell);
+      });
+    });
+
+    it('should leave focus alone when it moved out of the popover while it was closing', async () => {
+      // Re-enable transitions and force a duration: the popover's `auto` duration measures 0 in
+      // jsdom, and the exit has to last long enough to move focus while it plays.
+      config.disabled = false;
+      const { user, popover } = await renderAndOpenPopover({
+        theme: createTheme({
+          components: { MuiPopover: { defaultProps: { transitionDuration: 300 } } },
+        }),
+      });
+
+      await user.keyboard('{Escape}');
+
+      // The popover is on its way out but still mounted, and its focus trap is already released.
+      expect(document.body.contains(popover), 'the popover exited too fast to move focus').to.equal(
+        true,
+      );
+      const movedTo = screen.getByRole('button', { name: '15' });
+      await act(async () => {
+        movedTo.focus();
+      });
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      expect(document.activeElement).to.equal(movedTo);
+    });
+
+    it('should return focus to the trigger when the popover is dismissed without editing', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      await user.keyboard('{Escape}');
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(screen.getByRole('button', { name: /more/i }));
+      });
+    });
+  });
+
+  describe('creation placeholder updates', () => {
+    it('should not re-fire `onEventEditingStart` when the built-in form updates the creation placeholder', async () => {
+      let store: AnyEventCalendarStore | null = null;
+      const onEventEditingStart = vi.fn();
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={[]} onEventEditingStart={onEventEditingStart}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext as any}
+            onMount={(s) => {
+              store = s;
+            }}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getAllByRole('gridcell')[10]);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+
+      // Mirrors the built-in form pushing a date change into the draft while the dialog is open.
+      const placeholder = store!.state.occurrencePlaceholder!;
+      await act(async () => {
+        store!.setOccurrencePlaceholder({
+          ...placeholder,
+          end: adapter.addHours(placeholder.end, -1),
+        });
+      });
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
   });
 
@@ -236,6 +461,43 @@ describe('<MonthView />', () => {
         .title('Multiple week event')
         .build(),
     ];
+
+    it('should announce a multi-day timed event as a single date and time range', () => {
+      const trip = EventBuilder.new()
+        .title('Trip')
+        .span('2025-05-05T07:30:00Z', '2025-05-07T17:00:00Z')
+        .build();
+
+      render(
+        <EventCalendarProvider events={[trip]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Trip, From Monday, May 5th, 2025 7:30 AM to Wednesday, May 7th, 2025 5:00 PM',
+        }),
+      ).not.to.equal(null);
+    });
+
+    it('should announce an all-day event as a date range instead of a time range', () => {
+      render(
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Multi-day Conference, All day, From Monday, May 5th, 2025 to Wednesday, May 7th, 2025',
+        }),
+      ).not.to.equal(null);
+    });
 
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
@@ -293,7 +555,7 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEventOccurrences = screen.getAllByLabelText('Grid Row Test');
+      const allEventOccurrences = getAllEventsByTitle('Grid Row Test');
       const mainEvent = allEventOccurrences.find(
         (event) => event.getAttribute('aria-hidden') !== 'true',
       );
@@ -336,9 +598,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText('Event 1');
-      const event2Elements = screen.getAllByLabelText('Event 2');
-      const event3Elements = screen.getAllByLabelText('Event 3');
+      const event1Elements = getAllEventsByTitle('Event 1');
+      const event2Elements = getAllEventsByTitle('Event 2');
+      const event3Elements = getAllEventsByTitle('Event 3');
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -366,9 +628,9 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const mainEvent = screen
-        .getAllByLabelText('Three Day Event')
-        .find((el) => el.getAttribute('aria-hidden') !== 'true');
+      const mainEvent = getAllEventsByTitle('Three Day Event').find(
+        (el) => el.getAttribute('aria-hidden') !== 'true',
+      );
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];
 
@@ -385,13 +647,20 @@ describe('<MonthView />', () => {
         </EventCalendarProvider>,
       );
 
-      const eventInstances = screen.getAllByLabelText('Multiple week event');
+      const eventInstances = getAllEventsByTitle('Multiple week event');
 
       const visibleInstances = eventInstances.filter(
         (el) => el.getAttribute('aria-hidden') !== 'true',
       );
 
       expect(visibleInstances).toHaveLength(2);
+      // Each segment announces the whole event, not the slice of it that its row shows.
+      visibleInstances.forEach((instance) => {
+        expect(instance).to.have.attribute(
+          'aria-label',
+          'Multiple week event, All day, From Monday, May 19th, 2025 to Tuesday, May 27th, 2025',
+        );
+      });
     });
   });
 
@@ -446,7 +715,7 @@ describe('<MonthView />', () => {
 
   describe('time navigation', () => {
     it('should go to start of previous month when clicking on the Previous Month button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -460,13 +729,13 @@ describe('<MonthView />', () => {
       const toolbar = withinEventCalendarToolbar();
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /previous month/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
     it('should go to start of next month when clicking on the Next Month button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -480,7 +749,7 @@ describe('<MonthView />', () => {
       const toolbar = withinEventCalendarToolbar();
       // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within toolbar
       await user.click(toolbar.getByRole('button', { name: /next month/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });

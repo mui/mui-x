@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { lineClasses } from '@mui/x-charts/LineChart';
+import { describe, it, expect } from 'vitest';
 import { LineChartPro } from './LineChartPro';
 
 // Count the drawing commands of the main line path (the one carrying `lineClasses.line`).

@@ -7,6 +7,7 @@ import {
   describeValue,
 } from 'test/utils/pickers';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe, expect } from 'vitest';
 
 describe('<TimeClock /> - Describe Value', () => {
   const { render } = createPickerRenderer();

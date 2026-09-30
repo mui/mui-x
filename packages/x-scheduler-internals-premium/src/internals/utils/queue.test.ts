@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { adapter } from 'test/utils/scheduler';
@@ -34,7 +33,7 @@ describe('SchedulerDataManager - queue() debounce coalescing', () => {
   });
 
   it('should coalesce rapid distinct ranges to the latest one when the debounce fires', async () => {
-    const fetchFn = spy(noopFetch);
+    const fetchFn = vi.fn(noopFetch);
     const dataManager = new SchedulerDataManager(adapter, fetchFn, { debounceMs: DEBOUNCE_MS });
 
     const july = rangeJuly();
@@ -48,12 +47,12 @@ describe('SchedulerDataManager - queue() debounce coalescing', () => {
     await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
     await last;
 
-    expect(fetchFn.calledOnce).to.equal(true);
-    expect(fetchFn.firstCall.args[0]).toEqual(september);
+    expect(fetchFn.mock.calls.length).to.equal(1);
+    expect(fetchFn.mock.calls[0][0]).toEqual(september);
   });
 
   it('should fetch the staged range after the debounce when a single call is made', async () => {
-    const fetchFn = spy(noopFetch);
+    const fetchFn = vi.fn(noopFetch);
     const dataManager = new SchedulerDataManager(adapter, fetchFn, { debounceMs: DEBOUNCE_MS });
 
     const july = rangeJuly();
@@ -62,12 +61,12 @@ describe('SchedulerDataManager - queue() debounce coalescing', () => {
     await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
     await promise;
 
-    expect(fetchFn.calledOnce).to.equal(true);
-    expect(fetchFn.firstCall.args[0]).toEqual(july);
+    expect(fetchFn.mock.calls.length).to.equal(1);
+    expect(fetchFn.mock.calls[0][0]).toEqual(july);
   });
 
   it('should preserve all ranges submitted in a single queue() call', async () => {
-    const fetchFn = spy(noopFetch);
+    const fetchFn = vi.fn(noopFetch);
     const dataManager = new SchedulerDataManager(adapter, fetchFn, { debounceMs: DEBOUNCE_MS });
 
     const july = rangeJuly();
@@ -77,14 +76,14 @@ describe('SchedulerDataManager - queue() debounce coalescing', () => {
     await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
     await promise;
 
-    expect(fetchFn.calledTwice).to.equal(true);
-    const fetchedRanges = [fetchFn.firstCall.args[0], fetchFn.secondCall.args[0]];
+    expect(fetchFn.mock.calls.length).to.equal(2);
+    const fetchedRanges = [fetchFn.mock.calls[0][0], fetchFn.mock.calls[1][0]];
     expect(fetchedRanges).to.deep.include(july);
     expect(fetchedRanges).to.deep.include(august);
   });
 
   it('should fetch a range only once when the same range is queued twice within the debounce window', async () => {
-    const fetchFn = spy(noopFetch);
+    const fetchFn = vi.fn(noopFetch);
     const dataManager = new SchedulerDataManager(adapter, fetchFn, { debounceMs: DEBOUNCE_MS });
 
     const july = rangeJuly();
@@ -94,7 +93,7 @@ describe('SchedulerDataManager - queue() debounce coalescing', () => {
     await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
     await last;
 
-    expect(fetchFn.calledOnce).to.equal(true);
-    expect(fetchFn.firstCall.args[0]).toEqual(july);
+    expect(fetchFn.mock.calls.length).to.equal(1);
+    expect(fetchFn.mock.calls[0][0]).toEqual(july);
   });
 });

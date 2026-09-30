@@ -1,4 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { iterate } from './iterate';
 
 describe('iterate()', () => {

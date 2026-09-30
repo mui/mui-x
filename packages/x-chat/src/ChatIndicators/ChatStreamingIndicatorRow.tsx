@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import {
   MessageContextProvider,
   chatSelectors,
@@ -8,14 +8,13 @@ import {
   useChatStore,
   useChatVariant,
   useStreamingIndicatorVisibility,
-  type ChatMessage,
-  type MessageOwnerState,
-  type StreamingIndicatorMode,
 } from '@mui/x-chat-headless';
+import type { ChatMessage, MessageOwnerState, StreamingIndicatorMode } from '@mui/x-chat-headless';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { styled } from '../internals/zero-styled';
 import { ChatMessageAvatar } from '../ChatMessage/ChatMessageAvatar';
-import { ChatStreamingIndicator, type ChatStreamingIndicatorProps } from './ChatStreamingIndicator';
+import { ChatStreamingIndicator } from './ChatStreamingIndicator';
+import type { ChatStreamingIndicatorProps } from './ChatStreamingIndicator';
 import { useChatStreamingIndicatorUtilityClasses } from './chatStreamingIndicatorClasses';
 
 export interface ChatStreamingIndicatorRowProps {

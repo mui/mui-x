@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { useStoreEffect } from '@mui/x-internals/store';
+import useEventCallback from '@mui/utils/useEventCallback';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import type { ChartPlugin } from '../../models';
 import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
@@ -17,6 +18,31 @@ import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { getAxisClickPayload } from './getAxisClickPayload';
+import { useDefaultTickLabelStyle } from '../../../useDefaultTickLabelStyle';
+import type { ChartsActivationEvent } from '../../../../models/events';
+import type { ComputeResult } from './computeAxisValue';
+import type { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import {
+  isItemActivationKey,
+  selectorChartsIsKeyboardActivationEnabled,
+  selectorChartsKeyboardXAxisIndex,
+  selectorChartsKeyboardYAxisIndex,
+} from '../useChartKeyboardNavigation';
+
+/**
+ * Narrows an axis item to one the axis actually has a value for.
+ * Axes unrelated to the focused series can exist with empty data, so the index must resolve.
+ */
+function hasAxisValueAt(
+  axes: ComputeResult<ChartsAxisProps>['axis'],
+  item: AxisItemIdentifier | undefined,
+): item is AxisItemIdentifier & { dataIndex: number } {
+  return (
+    item !== undefined &&
+    item.dataIndex !== undefined &&
+    axes[item.axisId]?.data?.[item.dataIndex] !== undefined
+  );
+}
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -26,18 +52,23 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   const { chartsLayerContainerRef } = instance;
   const { xAxis, yAxis, dataset, onHighlightedAxisChange, onTooltipAxisChange, axesGap } = params;
 
+  const defaultTickLabelStyle = useDefaultTickLabelStyle();
+
+  useEnhancedEffect(() => {
+    store.set('cartesianAxis', { ...store.state.cartesianAxis, defaultTickLabelStyle });
+  }, [defaultTickLabelStyle, store]);
+
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
       .filter((axis) => axis.id)
       .map((axis) => axis.id);
     const duplicates = new Set(ids.filter((id, index) => ids.indexOf(id) !== index));
     if (duplicates.size > 0) {
-      warnOnce(
+      errorOnce(
         [
           `MUI X Charts: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
           `Please make sure that each axis has a unique id.`,
         ].join('\n'),
-        'error',
       );
     }
   }
@@ -89,8 +120,9 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       axesGap,
       x: defaultizeXAxis(xAxis, dataset, axesGap),
       y: defaultizeYAxis(yAxis, dataset, axesGap),
+      defaultTickLabelStyle,
     });
-  }, [xAxis, yAxis, dataset, axesGap, store]);
+  }, [xAxis, yAxis, dataset, axesGap, defaultTickLabelStyle, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -236,6 +268,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   }, [
     params.onAxisClick,
     processedSeries,
+    store,
     chartsLayerContainerRef,
     xAxisWithScale,
     xAxisIds,
@@ -245,6 +278,67 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     usedYAxis,
     instance,
   ]);
+
+  /**
+   * Kept separate from the pointer effect: this listener must survive re-renders, so it reads the
+   * axes and the callback when the key is pressed rather than closing over them. Re-subscribing per
+   * render would drop keystrokes landing between a keyboard navigation update and its commit.
+   */
+  const handleKeyboardActivation = useEventCallback((event: KeyboardEvent) => {
+    const onAxisClick = params.onAxisClick;
+
+    if (
+      !onAxisClick ||
+      // Ignore the auto-repeat while the key is held: a pointer click does not repeat either.
+      event.repeat ||
+      !isItemActivationKey(event) ||
+      !selectorChartsIsKeyboardActivationEnabled(store.state)
+    ) {
+      return;
+    }
+
+    const { axis: xAxes } = selectorChartXAxis(store.state);
+    const { axis: yAxes } = selectorChartYAxis(store.state);
+    const xAxisItem = selectorChartsKeyboardXAxisIndex(store.state);
+    const yAxisItem = selectorChartsKeyboardYAxisIndex(store.state);
+    const focusedAxisItem = hasAxisValueAt(xAxes, xAxisItem)
+      ? { item: xAxisItem, isXAxis: true }
+      : hasAxisValueAt(yAxes, yAxisItem) && { item: yAxisItem, isXAxis: false };
+
+    if (!focusedAxisItem) {
+      return;
+    }
+
+    const payload = getAxisClickPayload({
+      axisId: focusedAxisItem.item.axisId,
+      dataIndex: focusedAxisItem.item.dataIndex,
+      isXAxis: focusedAxisItem.isXAxis,
+      axes: focusedAxisItem.isXAxis ? xAxes : yAxes,
+      processedSeries: selectorChartSeriesProcessed(store.state),
+    });
+
+    if (payload === null) {
+      return;
+    }
+
+    event.preventDefault();
+    // The callback only describes the pointer event unless the user augments the types.
+    onAxisClick(event as unknown as ChartsActivationEvent, payload);
+  });
+
+  React.useEffect(() => {
+    const element = chartsLayerContainerRef.current;
+
+    if (element === null) {
+      return undefined;
+    }
+
+    element.addEventListener('keydown', handleKeyboardActivation);
+
+    return () => {
+      element.removeEventListener('keydown', handleKeyboardActivation);
+    };
+  }, [chartsLayerContainerRef, handleKeyboardActivation]);
 
   return {};
 };

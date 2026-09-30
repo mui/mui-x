@@ -1,5 +1,5 @@
 import { geoPath } from '@mui/x-charts-vendor/d3-geo';
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { TooltipItemPositionSelector } from '@mui/x-charts/internals';
 import { selectorChartsTooltipItem } from '@mui/x-charts/internals';
 import {

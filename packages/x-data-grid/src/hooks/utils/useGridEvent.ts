@@ -27,17 +27,19 @@ let cleanupTokensCounter = 0;
 export function useGridEvent<Api extends GridApiCommon, E extends GridEvents>(
   apiRef: RefObject<Api>,
   eventName: E,
-  handler?: GridEventListener<E>,
+  handler?: GridEventListener<E, Api>,
   options?: EventListenerOptions,
 ) {
   const objectRetainedByReact = React.useState(ObjectToBeRetainedByReact.create)[0];
   const subscription = React.useRef<(() => void) | null>(null);
-  const handlerRef = React.useRef<GridEventListener<E> | undefined>(null);
+  const handlerRef = React.useRef<GridEventListener<E, Api> | undefined>(null);
   handlerRef.current = handler;
   const cleanupTokenRef = React.useRef<UnregisterToken | null>(null);
 
   if (!subscription.current && handlerRef.current) {
-    const enhancedHandler: GridEventListener<E> = (params, event, details) => {
+    // The event system is typed against `GridApiCommon`, while the handler can be typed
+    // against the package-specific API: `any` bridges the two at this single boundary.
+    const enhancedHandler: GridEventListener<E, any> = (params, event, details) => {
       // Check for the existence of the event once more to avoid Safari 26 issue
       // https://github.com/mui/mui-x/issues/20159
       if (event && !event.defaultMuiPrevented) {
@@ -71,7 +73,7 @@ export function useGridEvent<Api extends GridApiCommon, E extends GridEvents>(
 
   React.useEffect(() => {
     if (!subscription.current && handlerRef.current) {
-      const enhancedHandler: GridEventListener<E> = (params, event, details) => {
+      const enhancedHandler: GridEventListener<E, any> = (params, event, details) => {
         // Check for the existence of the event once more to avoid Safari 26 issue
         // https://github.com/mui/mui-x/issues/20159
         if (event && !event.defaultMuiPrevented) {
@@ -101,7 +103,7 @@ const OPTIONS_IS_FIRST: EventListenerOptions = { isFirst: true };
 export function useGridEventPriority<Api extends GridApiCommon, E extends GridEvents>(
   apiRef: RefObject<Api>,
   eventName: E,
-  handler?: GridEventListener<E>,
+  handler?: GridEventListener<E, Api>,
 ) {
   useGridEvent(apiRef, eventName, handler, OPTIONS_IS_FIRST);
 }

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import {
   getChartPoint,
   getCartesianAxisIndex,
@@ -9,6 +9,7 @@ import {
   selectorChartsInteractionIsInitialized,
   defaultizeXAxis,
   defaultizeYAxis,
+  useDefaultTickLabelStyle,
 } from '@mui/x-charts/internals';
 import type { ChartPlugin } from '@mui/x-charts/internals';
 import type { PointerGestureEventData } from '@mui/x-internal-gestures/core';
@@ -23,18 +24,19 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   const { chartsLayerContainerRef } = instance;
   const { xAxis, yAxis, dataset, gap } = params;
 
+  const defaultTickLabelStyle = useDefaultTickLabelStyle();
+
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
       .filter((axis) => axis.id)
       .map((axis) => axis.id);
     const duplicates = new Set(ids.filter((id, index) => ids.indexOf(id) !== index));
     if (duplicates.size > 0) {
-      warnOnce(
+      errorOnce(
         [
           `MUI X Charts: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
           `Please make sure that each axis has a unique id.`,
         ].join('\n'),
-        'error',
       );
     }
   }
@@ -58,9 +60,10 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
         axesGap: 0,
         x: defaultizeXAxis(xAxis, dataset, 0),
         y: defaultizeYAxis(yAxis, dataset, 0),
+        defaultTickLabelStyle,
       },
     });
-  }, [drawingArea, xAxis, yAxis, dataset, store, gap]);
+  }, [drawingArea, xAxis, yAxis, dataset, store, gap, defaultTickLabelStyle]);
 
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;

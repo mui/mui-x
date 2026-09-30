@@ -1,4 +1,5 @@
 import jscodeshift from 'jscodeshift';
+import { describe, it, expect } from 'vitest';
 import transform, { testConfig } from './index';
 
 const allFiles = [testConfig].map((config) => config().specFiles).flat();

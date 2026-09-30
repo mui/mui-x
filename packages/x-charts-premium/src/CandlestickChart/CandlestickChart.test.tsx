@@ -1,5 +1,6 @@
 import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
 import { CandlestickChart } from './CandlestickChart';
 
 /**
@@ -92,4 +93,25 @@ describe('<CandlestickChart /> - Visibility', () => {
       });
     },
   );
+});
+
+describe('<CandlestickChart /> - Keyboard', () => {
+  const { render } = createRenderer();
+
+  it('should take the keyboard focus', async () => {
+    const { user, container } = render(
+      <CandlestickChart
+        height={300}
+        width={300}
+        series={[{ id: 'series-1', data: sampleData }]}
+        xAxis={[{ id: 'x', data: ['A', 'B', 'C'], zoom: { minSpan: 1, filterMode: 'discard' } }]}
+      />,
+    );
+
+    await user.keyboard('{Tab}');
+
+    // Without the keyboard navigation plugin the chart renders no accessibility proxy, so `Tab`
+    // skips it and the keyboard interactions it hosts are unreachable.
+    expect(container.contains(document.activeElement)).to.equal(true);
+  });
 });

@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
-import { useStoreEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import {
   useVirtualizer,
   Dimensions,
@@ -13,7 +13,7 @@ import {
   EMPTY_RENDER_CONTEXT,
 } from '@mui/x-virtualizer';
 import type { VirtualizerParams } from '@mui/x-virtualizer';
-import { useFirstRender } from '../utils/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
@@ -92,6 +92,18 @@ export function useGridVirtualizer() {
   const apiRef = useGridPrivateApiContext();
   const { listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  // Convert visible row-header columns to their indexes once per column-model change. Each GridRow
+  // uses this ordered list to render those cells even when they fall outside its horizontal render
+  // context. This keeps the row-identifying cells available to assistive technology while scrolling.
+  const retainedColumnIndexes = React.useMemo(() => {
+    const indexes: number[] = [];
+    visibleColumns.forEach((column, index) => {
+      if (column.rowHeader) {
+        indexes.push(index);
+      }
+    });
+    return indexes;
+  }, [visibleColumns]);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
@@ -303,6 +315,7 @@ export function useGridVirtualizer() {
           rowHeight={params.baseRowHeight}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
+          retainedColumnIndexes={retainedColumnIndexes}
           firstColumnIndex={params.firstColumnIndex}
           lastColumnIndex={params.lastColumnIndex}
           focusedColumnIndex={params.focusedColumnIndex}
@@ -320,6 +333,7 @@ export function useGridVirtualizer() {
         hasFiller,
         isRowSelected,
         pinnedColumns,
+        retainedColumnIndexes,
         RowSlot,
         rowSlotProps,
         verticalScrollbarWidth,
@@ -338,7 +352,7 @@ export function useGridVirtualizer() {
   // initialization code runs between those two moments.
   //
   // TODO(v9): Remove this
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
       virtualizer.store.state.dimensions,
       headerHeight,

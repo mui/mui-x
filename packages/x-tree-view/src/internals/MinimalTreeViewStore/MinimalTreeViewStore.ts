@@ -1,5 +1,5 @@
-import { Store } from '@mui/x-internals/store';
-import { warnOnce } from '@mui/x-internals/warning';
+import { Store } from '@base-ui/utils/store';
+import { errorOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
   DisposableStack,
@@ -13,11 +13,7 @@ import type {
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
 import type { TreeViewValidItem } from '../../models';
-import {
-  createMinimalInitialState,
-  createTreeViewDefaultId,
-  deriveStateFromParameters,
-} from './MinimalTreeViewStore.utils';
+import { createMinimalInitialState, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';
@@ -132,7 +128,7 @@ export class MinimalTreeViewStore<
         const initialIsControlled = this.initialParameters?.[controlledProp] !== undefined;
 
         if (initialIsControlled !== isControlled) {
-          warnOnce(
+          errorOnce(
             [
               `MUI X Tree View: A component is changing the ${
                 initialIsControlled ? '' : 'un'
@@ -141,16 +137,14 @@ export class MinimalTreeViewStore<
               `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
               "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
               'More info: https://fb.me/react-controlled-components',
-            ],
-            'error',
+            ].join('\n'),
           );
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warnOnce(
+          errorOnce(
             [
               `MUI X Tree View: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
               `To suppress this warning opt to use a controlled ${this.instanceName}.`,
-            ],
-            'error',
+            ].join('\n'),
           );
         }
       }
@@ -161,8 +155,8 @@ export class MinimalTreeViewStore<
     updateModel(newMinimalState, 'expandedItems', 'defaultExpandedItems');
     updateModel(newMinimalState, 'selectedItems', 'defaultSelectedItems');
 
-    if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
-      newMinimalState.treeId = createTreeViewDefaultId();
+    if (this.state.treeId !== parameters.defaultId) {
+      newMinimalState.treeId = parameters.defaultId;
     }
 
     if (
@@ -178,7 +172,7 @@ export class MinimalTreeViewStore<
       updateModel,
     );
 
-    this.update(newState);
+    this.update(newState as State);
     this.parameters = parameters;
   }
 

@@ -11,10 +11,38 @@ export type GridRowsProp<R extends GridValidRowModel = GridValidRowModel> = Read
  */
 export type GridRowModel<R extends GridValidRowModel = GridValidRowModel> = R;
 
+/**
+ * @deprecated Use `GridRowModelUpdate` or `GridRowModelReplace` instead.
+ */
 export type GridUpdateAction = 'delete';
 
 export interface GridRowModelUpdate extends GridRowModel {
-  _action?: GridUpdateAction;
+  /**
+   * - `'delete'` removes the row.
+   * - `undefined` (default) performs a shallow, `Object.assign`-style partial merge into
+   *   the existing row, which produces a new object.
+   *
+   * To store an object as the row without merging, see [[GridRowModelReplace]].
+   */
+  _action?: 'delete';
+}
+
+/**
+ * A row update that stores `row` as-is instead of merging it into the existing row.
+ * Use this when the row is a class instance (e.g. one with `#private` fields) whose
+ * prototype chain and object identity must be preserved across the update:
+ * `apiRef.current.getRow(id)` then returns the very object provided in `row`.
+ * Any field missing from `row` is removed from the stored row, because a replace is
+ * never a merge.
+ * It can be passed to `updateRows()` or returned from `processRowUpdate()`.
+ */
+export interface GridRowModelReplace<R extends GridValidRowModel = GridValidRowModel> {
+  _action: 'replace';
+  /**
+   * The object stored as the new row, verbatim. Pass the instance itself — spreading it
+   * (`{ ...row }`) creates a plain object and defeats the purpose.
+   */
+  row: R;
 }
 
 /**

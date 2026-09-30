@@ -1,7 +1,7 @@
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { Heatmap } from './Heatmap';
 import { heatmapClasses } from './heatmapClasses';
@@ -120,6 +120,50 @@ describe('Heatmap - onItemClick', () => {
       value: 6,
       xIndex: 1,
       yIndex: 2,
+    });
+  });
+});
+
+describe('<Heatmap /> - keyboard navigation', () => {
+  const { render } = createRenderer();
+
+  const config = {
+    series: [
+      {
+        data: [
+          [0, 0, 1],
+          [1, 0, 2],
+          [0, 1, 3],
+          [1, 1, 4],
+        ],
+      },
+    ],
+    xAxis: [{ data: ['A', 'B'] }],
+    yAxis: [{ data: ['C', 'D'] }],
+    width: 300,
+    height: 300,
+  } as const;
+
+  it('should prevent the browser default even when the focus does not move', () => {
+    const { container } = render(<Heatmap {...config} />);
+
+    const element = container.querySelector<HTMLElement>('[tabindex="0"]')!;
+    act(() => {
+      element.focus();
+    });
+
+    // Press each key twice so the second press happens while already at the boundary.
+    (['Home', 'End', 'PageUp', 'PageDown'] as const).forEach((key) => {
+      let event: KeyboardEvent;
+      act(() => {
+        element.dispatchEvent(
+          new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }),
+        );
+        event = new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+        element.dispatchEvent(event);
+      });
+
+      expect(event!.defaultPrevented, key).to.equal(true);
     });
   });
 });

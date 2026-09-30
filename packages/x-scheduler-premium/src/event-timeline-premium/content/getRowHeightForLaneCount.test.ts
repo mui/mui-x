@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import { describe, it, expect } from 'vitest';
 import { getEventsCellLaneMinHeight, getRowHeightForLaneCount } from './rowGeometry';
 
 // These helpers mirror the EventsCell CSS in JS so the virtualizer can reserve the

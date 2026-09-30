@@ -11,6 +11,7 @@ import {
   TEST_DATE_ISO_STRING,
   buildFieldInteractions,
 } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {

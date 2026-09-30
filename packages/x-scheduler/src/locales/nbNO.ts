@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const nbNODialog: Partial<EventEditingLocaleText> = {
+const nbNODialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Hendelsesfarge',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Slett hendelse',
+  // editEvent: 'Edit event',
+  // showEventDetails: 'Show details',
+  // eventContextMenuAriaLabel: 'Event actions',
   descriptionLabel: 'Beskrivelse',
   endDateLabel: 'Sluttdato',
   endTimeLabel: 'Sluttidspunkt',
@@ -39,22 +43,27 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Hver',
   recurrenceRepeatLabel: 'Gjenta',
   recurrenceTabLabel: 'Gjentakelse',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Gjentakelse',
   recurrenceWeeklyFrequencyLabel: 'uker',
   recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Gjentas ukentlig på ${weekdayName}`,
   recurrenceMonthlyFrequencyLabel: 'måneder',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dag ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} i siste uke av måneden`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} siste uke`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) => `${weekdayName} i siste uke av måneden`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName} siste uke`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Gjentas månedlig på dag ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} uke ${ord} av måneden`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} uke ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName} uke ${ord} av måneden`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName} uke ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'På',
   recurrenceYearlyFrequencyLabel: 'år',
   recurrenceYearlyPresetLabel: (date) => `Gjentas årlig den ${date}`,
   noResourceAriaLabel: 'Ingen spesifikk ressurs',
   // selectColorAriaLabel: color => `Select ${color} as event color`,
   resourceLabel: 'Ressurs',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
   startDateAfterEndDateError: 'Sluttdato kan ikke være før startdato.',
@@ -72,7 +81,23 @@ const nbNODialog: Partial<EventEditingLocaleText> = {
   title: 'Bruk denne endringen på:',
 };
 
-const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const nbNOEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Ressurs: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const nbNOCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Ressurser',
 
@@ -115,7 +140,6 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} til..`,
   nextTimeSpan: (timeSpan) => `Neste ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Forrige ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Ressurs: ${resourceName}`,
   weekAbbreviation: 'U',
   weekNumberAriaLabel: (weekNumber) => `Uke ${weekNumber}`,
 
@@ -134,13 +158,14 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Ressurstittel',
 };
 
-const nbNOTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const nbNOTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',
 };
 
 export const nbNO: SchedulerLocalization = getSchedulerLocalization({
   dialog: nbNODialog,
+  event: nbNOEvent,
   calendar: nbNOCalendar,
   timeline: nbNOTimeline,
 });

@@ -1,4 +1,5 @@
 import { getEventCalendarStateFromParameters } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { eventCalendarViewSelectors } from './eventCalendarViewSelectors';
 
 describe('eventCalendarViewSelectors', () => {

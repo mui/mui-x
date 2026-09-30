@@ -28,11 +28,16 @@ const StandaloneCompactThreeDayView = React.forwardRef(function StandaloneCompac
     typeof props
   >(props);
 
-  const { localeText, ...other } = forwardedProps;
+  const { localeText, slots, slotProps, ...other } = forwardedProps;
 
   return (
     <ResponsiveTypographyContainer>
-      <EventCalendarProvider {...parameters} localeText={localeText}>
+      <EventCalendarProvider
+        {...parameters}
+        localeText={localeText}
+        slots={slots}
+        slotProps={slotProps}
+      >
         <EventDialogProvider>
           <CompactThreeDayView ref={forwardedRef} {...other} />
         </EventDialogProvider>

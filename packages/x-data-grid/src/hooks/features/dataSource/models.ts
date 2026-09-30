@@ -4,7 +4,12 @@ import type {
   GridUpdateRowParams,
   GridGetRowsOptions,
 } from '../../../models/gridDataSource';
-import type { GridRowId, GridRowModel } from '../../../models/gridRows';
+import type {
+  GridRowId,
+  GridRowModel,
+  GridRowModelReplace,
+  GridRowModelUpdate,
+} from '../../../models/gridRows';
 import type { GridDataSourceCacheDefaultConfig } from './cache';
 
 /**
@@ -60,5 +65,8 @@ export interface GridDataSourceBaseOptions {
     showChildrenLoading?: boolean,
   ) => void;
   clearDataSourceState?: () => void;
-  handleEditRow?: (params: GridUpdateRowParams, updatedRow: GridRowModel) => void;
+  handleEditRow?: (
+    params: GridUpdateRowParams,
+    rowUpdate: GridRowModelUpdate | GridRowModelReplace,
+  ) => void;
 }

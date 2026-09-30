@@ -10,8 +10,10 @@ import {
   dateLocaleFr,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import type { EventCalendarPreferences } from '@mui/x-scheduler/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { vi, describe, it, expect } from 'vitest';
 import { ErrorContainer } from '../internals/components/error-container';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import {
@@ -36,6 +38,56 @@ describe('EventCalendar', () => {
     .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
     .build();
 
+  it('should announce the primary resource of the event', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const other = ResourceBuilder.new().id('other').title('Other').build();
+    const running = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+      .resources([sport, other])
+      .build();
+
+    render(<EventCalendar events={[running]} resources={[sport, other]} />);
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025, Resource: Sport',
+      }),
+    ).not.to.equal(null);
+  });
+
+  it('should keep the resource color indicator out of the accessibility tree', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const running = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+      .resource(sport)
+      .build();
+
+    render(<EventCalendar events={[running]} resources={[sport]} defaultView="month" />);
+
+    const indicators = document.querySelectorAll(`.${eventCalendarClasses.eventColorIndicator}`);
+    expect(indicators.length).to.be.greaterThan(0);
+    indicators.forEach((indicator) => {
+      expect(indicator).to.have.attribute('aria-hidden', 'true');
+      expect(indicator).not.to.have.attribute('role');
+      expect(indicator).not.to.have.attribute('aria-label');
+    });
+  });
+
+  it('should translate the event accessible name through localeText', () => {
+    render(
+      <EventCalendar
+        events={[event1]}
+        localeText={{ eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}` }}
+      />,
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday, May 26th, 2025' }),
+    ).not.to.equal(null);
+  });
+
   // TODO: Move in a test file specific to the TimeGrid component.
   it('should render events in the correct column', () => {
     render(<EventCalendar events={[event1, event2]} />);
@@ -49,8 +101,15 @@ describe('EventCalendar', () => {
     expect(mondayEvent.textContent).to.equal('Running 7:30 AM');
     expect(tuesdayEvent.textContent).to.equal('Weekly4:00 PM - 5:00 PM');
 
-    expect(mondayEvent.getAttribute('aria-labelledby')).to.include('header-cell-1');
-    expect(tuesdayEvent.getAttribute('aria-labelledby')).to.include('header-cell-2');
+    expect(mondayEvent).to.have.attribute(
+      'aria-label',
+      'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025',
+    );
+    expect(tuesdayEvent).to.have.attribute(
+      'aria-label',
+      'Weekly, 4:00 PM to 5:00 PM, Tuesday, May 27th, 2025',
+    );
+    expect(mondayEvent).not.to.have.attribute('aria-labelledby');
 
     expect(screen.getByRole('columnheader', { name: /Monday 26/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Tuesday 27/i })).not.to.equal(null);
@@ -162,6 +221,38 @@ describe('EventCalendar', () => {
   );
 
   describe('Preferences Menu', () => {
+    it('should call onPreferencesChange and apply the change when preferences are controlled', async () => {
+      const onPreferencesChange = vi.fn();
+      function ControlledCalendar() {
+        const [preferences, setPreferences] = React.useState<Partial<EventCalendarPreferences>>({
+          showWeekends: true,
+        });
+        return (
+          <EventCalendar
+            events={[]}
+            preferences={preferences}
+            onPreferencesChange={(next, eventDetails) => {
+              onPreferencesChange(next, eventDetails);
+              setPreferences(next);
+            }}
+          />
+        );
+      }
+
+      const { user } = render(<ControlledCalendar />);
+
+      expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
+
+      await openPreferencesMenu(user);
+      await toggleShowWeekends(user);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+
+      expect(onPreferencesChange.mock.calls.length).to.equal(1);
+      expect(onPreferencesChange.mock.lastCall?.[0]).to.deep.equal({ showWeekends: false });
+      expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
+    });
+
     it('should allow to show / hide the weekends using the UI in the week view', async () => {
       const { user } = render(<EventCalendar events={[]} />);
 
@@ -282,7 +373,7 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to change the time format using the UI in the week view', async () => {
-      const { user } = render(<EventCalendar events={[]} />);
+      const { user } = render(<EventCalendar events={[event1]} />);
 
       // 12 hours format should be visible by default
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
@@ -294,6 +385,11 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
+
+      expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
+        'aria-label',
+        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+      );
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
@@ -317,6 +413,10 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
+      expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
+        'aria-label',
+        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+      );
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
@@ -441,6 +541,132 @@ describe('EventCalendar', () => {
     });
   });
 
+  describe('onEventEditingStart', () => {
+    it('should be called with the occurrence when activating an event and still open the built-in dialog', async () => {
+      const onEventEditingStart = vi.fn();
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      const eventButton = screen.getByRole('button', { name: /Running/i });
+      await user.click(eventButton);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.lastCall?.[0].id).to.equal(event1.id);
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('edit');
+      expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(eventButton);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels', async () => {
+      const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Running/i }));
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels a keyboard activation', async () => {
+      const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[event1]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      const eventButton = screen.getByRole('button', { name: /Running/i });
+      eventButton.focus();
+      expect(eventButton).to.equal(document.activeElement);
+      await user.keyboard('{Enter}');
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should keep the built-in dialog closed when the handler cancels an event creation', async () => {
+      const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[]} defaultView="month" onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(withinMonthView().getAllByRole('gridcell')[10]);
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
+      expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('click');
+      const draft = onEventEditingStart.mock.lastCall?.[1].occurrence;
+      expect(draft.allDay).to.equal(true);
+      expect(draft.displayTimezone.start.timestamp).to.be.lessThan(
+        draft.displayTimezone.end.timestamp,
+      );
+      expect(onEventEditingStart.mock.lastCall?.[1].trigger).to.equal(
+        withinMonthView().getAllByRole('gridcell')[10],
+      );
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should report a `view` reason when the whole calendar is read-only', async () => {
+      const onEventEditingStart = vi.fn();
+      const { user } = render(
+        <EventCalendar events={[event1]} readOnly onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Running/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('view');
+    });
+
+    it('should report a `view` reason when the event belongs to a read-only resource', async () => {
+      const readOnlyResource = ResourceBuilder.new().areEventsReadOnly().build();
+      const lockedEvent = EventBuilder.new()
+        .title('Locked')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .resource(readOnlyResource)
+        .build();
+      const onEventEditingStart = vi.fn();
+      const { user } = render(
+        <EventCalendar
+          events={[lockedEvent]}
+          resources={[readOnlyResource]}
+          onEventEditingStart={onEventEditingStart}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Locked/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('view');
+    });
+
+    it('should keep the built-in view-only dialog closed when the handler cancels a read-only activation', async () => {
+      const readOnlyEvent = EventBuilder.new()
+        .title('Locked')
+        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+        .readOnly()
+        .build();
+      const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+      const { user } = render(
+        <EventCalendar events={[readOnlyEvent]} onEventEditingStart={onEventEditingStart} />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /Locked/i }));
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('view');
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+  });
+
   describe('ErrorContainer', () => {
     function renderErrorContainer(initialErrors: Error[]) {
       const store = new EventCalendarStore({ events: [] }, adapter);
@@ -500,6 +726,25 @@ describe('EventCalendar', () => {
       await waitFor(() => {
         expect(screen.getByText('Shared error')).not.to.equal(null);
       });
+    });
+  });
+
+  describe('data source', () => {
+    // Lazy loading is Premium-only, so `dataSource` is not part of the community props.
+    it('should keep rendering the events prop when a dataSource is passed through JavaScript', () => {
+      const dataSource = {
+        getEvents: () => new Promise<never[]>(() => {}),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      expect(() => {
+        render(<EventCalendar events={[event1]} {...({ dataSource } as any)} />);
+      }).toErrorDev('React does not recognize the `dataSource` prop on a DOM element.');
+
+      expect(screen.getByRole('button', { name: /Running/i })).not.to.equal(null);
+      expect(document.querySelectorAll(`.${eventCalendarClasses.eventSkeleton}`).length).to.equal(
+        0,
+      );
     });
   });
 });

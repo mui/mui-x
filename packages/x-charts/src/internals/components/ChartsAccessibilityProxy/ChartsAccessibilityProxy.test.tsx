@@ -1,6 +1,7 @@
 import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { describe, it, expect } from 'vitest';
 
 describe('<ChartsAccessibilityProxy />', () => {
   const { render } = createRenderer();

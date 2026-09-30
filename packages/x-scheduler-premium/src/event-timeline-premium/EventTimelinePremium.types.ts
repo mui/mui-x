@@ -5,7 +5,12 @@ import type {
   EventTimelinePremiumStore,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
+import type {
+  SchedulerRenderableEventOccurrence,
+  SchedulerResource,
+} from '@mui/x-scheduler-internals/models';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import type { EventTimelinePremiumSlotsAndSlotProps } from '../models/slots';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 
 export type EventTimelinePremiumApiRef<
@@ -15,8 +20,26 @@ export type EventTimelinePremiumApiRef<
   Partial<SchedulerPublicAPI<EventTimelinePremiumStore<TEvent, TResource>>> | undefined
 >;
 
+export interface EventTimelineGetEventAriaLabelParameters {
+  /**
+   * The occurrence rendered by the event block.
+   */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * The resource of the row the block is rendered in, without its `children`.
+   */
+  resource: Omit<SchedulerResource, 'children'>;
+  /**
+   * The accessible name built from the occurrence and the `localeText`.
+   */
+  defaultAriaLabel: string;
+}
+
 export interface EventTimelinePremiumProps<TEvent extends object, TResource extends object>
-  extends React.HTMLAttributes<HTMLDivElement>, EventTimelinePremiumParameters<TEvent, TResource> {
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
+    EventTimelinePremiumParameters<TEvent, TResource>,
+    EventTimelinePremiumSlotsAndSlotProps {
   /**
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    * @default true
@@ -42,6 +65,13 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    * When provided, this takes priority over `localeText.timelineResourceTitleHeader`.
    */
   resourceColumnLabel?: string;
+  /**
+   * Returns the accessible name of an event block.
+   * Use it to announce details rendered through the `timelineEventContent` slot.
+   * @param {EventTimelineGetEventAriaLabelParameters} parameters The occurrence, its row resource and the default name.
+   * @returns {string} The accessible name of the event block.
+   */
+  getEventAriaLabel?: (parameters: EventTimelineGetEventAriaLabelParameters) => string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

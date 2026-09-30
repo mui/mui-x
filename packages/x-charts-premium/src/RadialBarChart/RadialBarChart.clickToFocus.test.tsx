@@ -3,6 +3,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';
 import { chartsSvgLayerClasses } from '@mui/x-charts/ChartsSvgLayer';
 import { RadialBarChart, radialBarClasses } from '@mui/x-charts-premium/RadialBarChart';
+import { describe, it, expect } from 'vitest';
 
 // Radial bars are resolved by a container hit test, so the clicks need real coordinates.
 describe.skipIf(isJSDOM)('<RadialBarChart /> - click to focus', () => {

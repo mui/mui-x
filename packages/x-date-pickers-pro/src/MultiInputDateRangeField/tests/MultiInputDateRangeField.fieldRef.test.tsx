@@ -3,6 +3,7 @@ import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDate
 import type { FieldRef } from '@mui/x-date-pickers/models';
 import { createPickerRenderer } from 'test/utils/pickers';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe, it, expect } from 'vitest';
 
 describe('<MultiInputDateRangeField /> - fieldRef', () => {
   const { render } = createPickerRenderer();

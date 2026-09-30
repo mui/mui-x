@@ -5,6 +5,7 @@ import {
   describeConformance,
   ResourceBuilder,
 } from 'test/utils/scheduler';
+import { describe } from 'vitest';
 
 describe('<TimelineGrid.CurrentTimeIndicator />', () => {
   const { render } = createSchedulerRenderer();

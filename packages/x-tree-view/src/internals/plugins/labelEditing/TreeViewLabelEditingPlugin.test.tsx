@@ -1,6 +1,7 @@
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import type { ExtendableRichTreeViewStore } from '@mui/x-tree-view/internals';
+import { describe, it, expect } from 'vitest';
 
 describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
   'useTreeViewLabel plugin',
