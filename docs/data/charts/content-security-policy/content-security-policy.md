@@ -68,5 +68,6 @@ When the copied styles are blocked, the image export fails with an error telling
 The image export also inlines stylesheets loaded with a `<link>` element into style elements, so it fails the same way without the nonce, even when the policy allows those stylesheets.
 Set the `copyStyles` option to `false` to export the chart without the page styles instead.
 
-Stylesheets loaded with a `<link>` element that the policy blocks are skipped, and a warning naming the stylesheet and the `nonce` option is logged in development.
+Stylesheets loaded with a `<link>` element that the policy blocks are skipped in the print export, and a warning naming the stylesheet and the `nonce` option is logged in development.
+The image export fails with the `nonce` error instead, as described above.
 To handle them yourself, use the [`onStylesheetError`](/x/react-charts/export/#stylesheets-that-fail-to-load) export option, which receives `'content-security-policy'` as the reason for these stylesheets.
