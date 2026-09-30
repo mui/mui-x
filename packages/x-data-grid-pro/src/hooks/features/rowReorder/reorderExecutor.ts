@@ -29,7 +29,7 @@ export abstract class BaseReorderOperation {
  * trying each operation in order until one succeeds or all fail.
  */
 export class RowReorderExecutor {
-  private operations: BaseReorderOperation[];
+  declare private operations: BaseReorderOperation[];
 
   constructor(operations: BaseReorderOperation[]) {
     this.operations = operations;
