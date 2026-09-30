@@ -29,8 +29,6 @@ import type {
   UseChartProExportSignature,
   UseChartProZoomSignature,
 } from '@mui/x-charts-pro/plugins';
-import { useChartPremiumExport } from './useChartPremiumExport';
-import type { UseChartPremiumExportSignature } from './useChartPremiumExport';
 
 export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
@@ -43,7 +41,6 @@ export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeries
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
-  UseChartPremiumExportSignature,
   UseProgressiveRenderingSignature,
 ];
 
@@ -61,7 +58,6 @@ export const ALL_PLUGINS = [
   useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
-  useChartPremiumExport,
   useProgressiveRendering,
 ];
 
@@ -76,7 +72,6 @@ export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSe
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
-  UseChartPremiumExportSignature,
   UseProgressiveRenderingSignature,
 ];
 
@@ -93,6 +88,5 @@ export const DEFAULT_PLUGINS = [
   useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
-  useChartPremiumExport,
   useProgressiveRendering,
 ];
