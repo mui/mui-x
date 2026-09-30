@@ -242,7 +242,8 @@ ChartsToolbarPro.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   /**
    * Extra items rendered at the end of the export menu.
-   * @param {object} params Contains `onClose`, which closes the export menu.
+   * @param {object} params The render params.
+   * @param {Function} params.onClose Closes the export menu.
    * @returns {React.ReactNode} The menu items.
    */
   exportMenuItems: PropTypes.func,

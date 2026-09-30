@@ -23,27 +23,23 @@ The exporting feature is available for the following charts:
 
 ## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-Premium charts can also export the data behind the chart as an Excel file.
-The export menu gains a **Download as Excel** entry, which writes one row per data point.
+Premium charts can also export the data behind the chart as an Excel file, writing one row per data point.
+
+This export is opt-in: add the `useChartPremiumExport` plugin to a composed chart, as described in the [plugins page](/x/react-charts/plugins/).
+Charts that leave it out never load the Excel code.
+With the plugin registered, `ChartsToolbarPremium` adds a **Download as Excel** entry to the export menu.
 
 {{"demo": "ExportChartAsExcel.js"}}
 
-Use the `excelExportOptions` toolbar prop to customize the file, or to remove the entry with `disableToolbarButton`:
+Use the `excelExportOptions` prop to customize the file, or to remove the entry with `disableToolbarButton`:
 
 ```tsx
-<BarChartPremium
-  showToolbar
-  slotProps={{ toolbar: { excelExportOptions: { fileName: 'revenue' } } }}
-/>
+<ChartsToolbarPremium excelExportOptions={{ fileName: 'revenue' }} />
 ```
 
 The same export is available on `apiRef`, together with `getDataAsExcel` for the workbook itself:
 
 ```tsx
-const apiRef = useChartPremiumApiRef<'bar'>();
-
-<BarChartPremium apiRef={apiRef} {...props} />;
-
 await apiRef.current?.exportAsExcel({ fileName: 'revenue' });
 ```
 

@@ -3,8 +3,8 @@
     "exportMenuItems": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object) => React.ReactNode",
-        "describedArgs": ["params"],
+        "type": "function(params: object, params.onClose: Function) => React.ReactNode",
+        "describedArgs": ["params", "params.onClose"],
         "returned": "React.ReactNode"
       }
     },

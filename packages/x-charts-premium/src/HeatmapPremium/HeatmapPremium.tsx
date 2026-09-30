@@ -7,7 +7,7 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FocusedHeatmapCell, HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';
 import type { HeatmapProps, HeatmapSlots, HeatmapSlotProps } from '@mui/x-charts-pro/Heatmap';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsToolbarPremium } from '../ChartsToolbarPremium';
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
@@ -52,7 +52,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   } = useHeatmapPremiumProps(props);
 
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
-  const Toolbar = slots?.toolbar ?? ChartsToolbarPremium;
+  const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
   const renderer = heatmapPlotPremiumProps.renderer;
 
   return (

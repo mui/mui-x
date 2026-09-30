@@ -22,6 +22,7 @@ import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { useScatterChartProps } from '@mui/x-charts/internals';
+import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import type {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -31,7 +32,6 @@ import type { ChartsSlotPropsPro, ChartsSlotsPro } from '@mui/x-charts-pro/inter
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { useChartsContainerPremiumProps } from '../ChartsContainerPremium/useChartsContainerPremiumProps';
 import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
-import { ChartsToolbarPremium } from '../ChartsToolbarPremium';
 import { ScatterPlotPremium } from './ScatterPlotPremium';
 import { SCATTER_CHART_PREMIUM_PLUGINS } from './ScatterChartPremium.plugins';
 import type { ScatterChartPremiumPluginSignatures } from './ScatterChartPremium.plugins';
@@ -123,7 +123,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
   });
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPremium;
+  const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
   const { className: chartsLayerContainerClassName, ...chartsSvgLayerProps } = chartsSurfaceProps;
 
   return (

@@ -8,6 +8,7 @@ import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import type { ChartsToolbarProProps } from '@mui/x-charts-pro/ChartsToolbarPro';
 import type { ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import { ChartsToolbarExcelExportTrigger } from './ChartsToolbarExcelExportTrigger';
+import { useChartPremiumApiContext } from '../context/useChartPremiumApiContext';
 import type { ChartExcelExportOptions } from '../internals/plugins/useChartPremiumExport';
 
 export interface ChartsToolbarPremiumExcelExportOptions extends ChartExcelExportOptions {
@@ -32,9 +33,15 @@ export interface ChartsToolbarPremiumProps extends Omit<ChartsToolbarProProps, '
 function ChartsToolbarPremium({ excelExportOptions, ...other }: ChartsToolbarPremiumProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
   const { localeText } = useChartsLocalization();
+  const apiRef = useChartPremiumApiContext();
 
   const renderExportMenuItems = React.useCallback(
     ({ onClose }: { onClose: () => void }) => {
+      // `useChartPremiumExport` is opt-in. Read at open time, so mount order does not matter.
+      if (!apiRef.current?.exportAsExcel) {
+        return null;
+      }
+
       const MenuItem = slots.baseMenuItem;
 
       return (
@@ -47,7 +54,7 @@ function ChartsToolbarPremium({ excelExportOptions, ...other }: ChartsToolbarPre
         </ChartsToolbarExcelExportTrigger>
       );
     },
-    [slots.baseMenuItem, slotProps?.baseMenuItem, excelExportOptions, localeText],
+    [apiRef, slots.baseMenuItem, slotProps?.baseMenuItem, excelExportOptions, localeText],
   );
 
   return (

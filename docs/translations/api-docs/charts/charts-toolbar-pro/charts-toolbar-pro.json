@@ -4,10 +4,8 @@
     "exportMenuItems": {
       "description": "Extra items rendered at the end of the export menu.",
       "typeDescriptions": {
-        "params": {
-          "name": "params",
-          "description": "Contains <code>onClose</code>, which closes the export menu."
-        },
+        "params": { "name": "params", "description": "The render params." },
+        "params.onClose": { "name": "params.onClose", "description": "Closes the export menu." },
         "React.ReactNode": { "name": "React.ReactNode", "description": "The menu items." }
       }
     },
