@@ -8,6 +8,7 @@ import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import type { ChartsToolbarProProps } from '@mui/x-charts-pro/ChartsToolbarPro';
 import type { ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import { ChartsToolbarExcelExportTrigger } from './ChartsToolbarExcelExportTrigger';
+import type { ChartPremiumApiWithExcelExport } from './ChartsToolbarExcelExportTrigger';
 import { useChartPremiumApiContext } from '../context/useChartPremiumApiContext';
 import type { ChartExcelExportOptions } from '../internals/plugins/useChartPremiumExport';
 
@@ -33,7 +34,7 @@ export interface ChartsToolbarPremiumProps extends Omit<ChartsToolbarProProps, '
 function ChartsToolbarPremium({ excelExportOptions, ...other }: ChartsToolbarPremiumProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
   const { localeText } = useChartsLocalization();
-  const apiRef = useChartPremiumApiContext();
+  const apiRef = useChartPremiumApiContext<ChartPremiumApiWithExcelExport>();
 
   const renderExportMenuItems = React.useCallback(
     ({ onClose }: { onClose: () => void }) => {

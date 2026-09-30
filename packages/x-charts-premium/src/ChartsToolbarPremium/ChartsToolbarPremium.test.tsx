@@ -5,12 +5,16 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { BarChartPremium } from '../BarChartPremium';
+import { BAR_CHART_PREMIUM_PLUGINS } from '../BarChartPremium/BarChartPremium.plugins';
+import type { BarChartPremiumPluginSignatures } from '../BarChartPremium/BarChartPremium.plugins';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { ChartsToolbarPremium } from './ChartsToolbarPremium';
-import { DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartPremiumExport } from '../internals/plugins/useChartPremiumExport';
+import type { UseChartPremiumExportSignature } from '../internals/plugins/useChartPremiumExport';
 
-const PLUGINS = [...DEFAULT_PLUGINS, useChartPremiumExport];
+const PLUGINS = [...BAR_CHART_PREMIUM_PLUGINS, useChartPremiumExport] as const;
+
+type Signatures = [...BarChartPremiumPluginSignatures, UseChartPremiumExportSignature];
 
 describe('<ChartsToolbarPremium />', () => {
   const { render } = createRenderer();
@@ -37,7 +41,7 @@ describe('<ChartsToolbarPremium />', () => {
   });
 
   const chart = (toolbarProps = {}) => (
-    <ChartsDataProviderPremium
+    <ChartsDataProviderPremium<'bar', Signatures>
       plugins={PLUGINS}
       width={300}
       height={200}

@@ -6,7 +6,15 @@ import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
 import type { ChartsSlotPropsPro, ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import { useChartPremiumApiContext } from '../context/useChartPremiumApiContext';
-import type { ChartExcelExportOptions } from '../internals/plugins/useChartPremiumExport';
+import type { ChartPremiumApi } from '../context/ChartPremiumApi';
+import type {
+  ChartExcelExportOptions,
+  UseChartPremiumExportPublicApi,
+} from '../internals/plugins/useChartPremiumExport';
+
+/** `useChartPremiumExport` is opt-in, so its methods are optional on the context api. */
+export type ChartPremiumApiWithExcelExport = ChartPremiumApi &
+  Partial<UseChartPremiumExportPublicApi>;
 
 export type ChartsToolbarExcelExportTriggerProps = ChartsSlotPropsPro['baseButton'] & {
   /**
@@ -36,7 +44,7 @@ const ChartsToolbarExcelExportTrigger = forwardRef<
 >(function ChartsToolbarExcelExportTrigger(props, ref) {
   const { render, options, onExport, onClick, ...other } = props;
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
-  const apiRef = useChartPremiumApiContext();
+  const apiRef = useChartPremiumApiContext<ChartPremiumApiWithExcelExport>();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const exportAsExcel = onExport ?? apiRef.current?.exportAsExcel;
