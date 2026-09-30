@@ -116,8 +116,13 @@ export const useGridDataSourcePremium = (
       const rowTree = gridRowTreeSelector(apiRef);
       const groupKeys = getGroupKeys(rowTree, params.rowId) as string[];
       apiRef.current.updateNestedRows([rowUpdate], groupKeys);
-      // To refresh the aggregation values of all parent rows and the footer row, recursively re-fetch all parent levels
-      fetchParents(rowTree, params.rowId, apiRef.current.dataSource.fetchRows);
+      // To refresh the aggregation values of all parent rows and the footer row, recursively re-fetch all parent levels.
+      // The root level stays incremental: invalidating it would rebuild the tree and scroll to the top.
+      fetchParents(rowTree, params.rowId, (id) =>
+        id === GRID_ROOT_GROUP_ID
+          ? apiRef.current.fetchRootRowsIncremental()
+          : apiRef.current.dataSource.fetchRows(id),
+      );
     },
     [apiRef],
   );
@@ -286,8 +291,11 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   useGridEvent(
     apiRef,
     'aggregationModelChange',
-    runIf(!pivotActive, () => debouncedFetchRows()),
+    // Only the aggregated values change, not the tree shape, so this stays incremental:
+    // invalidating would rebuild the tree and scroll back to the top.
+    runIf(!pivotActive, () => apiRef.current.fetchRootRowsIncremental()),
   );
+  // Pivoting changes the group fields, so rebuilding the tree is intended here.
   useGridEvent(
     apiRef,
     'pivotModeChange',
