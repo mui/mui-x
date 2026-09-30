@@ -35,10 +35,12 @@ export function processEvent(
 
   if (recurringEventsPlugin == null && model.rrule != null) {
     if (process.env.NODE_ENV !== 'production') {
-      warnOnce([
-        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ].join('\n'),
+      );
     }
   }
 

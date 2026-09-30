@@ -381,8 +381,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(rruleDraft);
 
-  const weekday = getWeekdayToken(adapter, ruleStart.value);
-
   const recurrenceOptions = ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map(
     (value) => ({
       value,
@@ -423,13 +421,18 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const ordinal = monthlyRef.ord;
     const dayOfMonthLabel = localeText.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
     const isLast = ordinal === -1;
-    const weekdayShort = adapter.formatByString(monthlyRef.date, 'ccc');
+    const weekday = getWeekdayToken(adapter, monthlyRef.date);
+    const ariaParams = { weekday, weekdayName: adapter.format(monthlyRef.date, 'weekday') };
+    const labelParams = {
+      weekday,
+      weekdayName: adapter.format(monthlyRef.date, 'weekday3Letters'),
+    };
     const weekAriaLabel = isLast
-      ? localeText.recurrenceMonthlyLastWeekAriaLabel(weekday)
-      : localeText.recurrenceMonthlyWeekNumberAriaLabel?.(ordinal, weekday);
+      ? localeText.recurrenceMonthlyLastWeekAriaLabel(ariaParams)
+      : localeText.recurrenceMonthlyWeekNumberAriaLabel?.({ ...ariaParams, ord: ordinal });
     const weekLabel = isLast
-      ? localeText.recurrenceMonthlyLastWeekLabel(weekdayShort)
-      : localeText.recurrenceMonthlyWeekNumberLabel?.(ordinal, weekdayShort);
+      ? localeText.recurrenceMonthlyLastWeekLabel(labelParams)
+      : localeText.recurrenceMonthlyWeekNumberLabel?.({ ...labelParams, ord: ordinal });
 
     return [
       {
@@ -443,7 +446,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         label: weekLabel,
       },
     ];
-  }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, localeText, weekday]);
+  }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, localeText]);
 
   const monthlyMode: 'byMonthDay' | 'byDay' = rruleDraft.byDay?.length ? 'byDay' : 'byMonthDay';
 

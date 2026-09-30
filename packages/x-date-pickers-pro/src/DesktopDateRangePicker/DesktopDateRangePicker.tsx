@@ -7,13 +7,12 @@ import type { PickerViewRendererLookup, PickerRangeValue } from '@mui/x-date-pic
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { rangeValueManager } from '../internals/utils/valueManagers';
 import type { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
-import { validateDateRange } from '../validation';
+import { useDateRangeManager } from '../managers';
 
 type DesktopDateRangePickerComponent = ((
   props: DesktopDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -34,6 +33,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateRangeManager();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<DesktopDateRangePickerProps>(
@@ -75,9 +75,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker(
   const { renderPicker } = useDesktopRangePicker<'day', typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'date',
-    validator: validateDateRange,
+    manager,
     steps: null,
   });
 
