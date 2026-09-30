@@ -122,7 +122,7 @@ declare module '@mui/x-date-pickers/models' {
 export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapter<string> {
   public lib = 'moment-hijri';
 
-  public moment: typeof defaultHMoment;
+  declare public moment: typeof defaultHMoment;
 
   public isTimezoneCompatible = false;
 

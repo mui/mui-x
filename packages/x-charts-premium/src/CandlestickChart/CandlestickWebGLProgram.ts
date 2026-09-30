@@ -35,13 +35,13 @@ type WickProgram = {
 export class CandlestickWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
 
-  private readonly quadBuffer: WebGLBuffer;
+  declare private readonly quadBuffer: WebGLBuffer;
 
-  private readonly wickGeometryBuffer: WebGLBuffer;
+  declare private readonly wickGeometryBuffer: WebGLBuffer;
 
-  private readonly candle: CandleProgram;
+  declare private readonly candle: CandleProgram;
 
-  private readonly wick: WickProgram;
+  declare private readonly wick: WickProgram;
 
   constructor(private gl: WebGL2RenderingContext) {
     /* Enable blending for transparency

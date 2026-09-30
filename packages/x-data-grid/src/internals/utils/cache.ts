@@ -2,11 +2,7 @@ import { getKeyDefault } from '../../hooks/features/dataSource/cache';
 import type { GridGetRowsParams, GridGetRowsResponse } from '../../models/gridDataSource';
 
 export class TestCache {
-  private cache: Map<string, GridGetRowsResponse>;
-
-  constructor() {
-    this.cache = new Map();
-  }
+  private cache: Map<string, GridGetRowsResponse> = new Map();
 
   set(key: GridGetRowsParams, value: GridGetRowsResponse) {
     this.cache.set(getKeyDefault(key), value);
