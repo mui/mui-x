@@ -748,11 +748,8 @@ describe('<DataGridPro /> - Detail panel', () => {
         requestAnimationFrame(() => resolve());
       });
 
-    // Samples the flex column width once per frame, after the frame's rendering
-    // steps (layout, ResizeObserver callbacks, paint), so a width that was
-    // painted and reverted later is still observed.
-    // Each frame gets its own `act()` scope: React 18 holds all commits until an
-    // async `act()` scope ends, so one scope would only sample the stale DOM.
+    // Samples the width once per frame, after paint. Each frame gets its own `act()` scope,
+    // because React 18 holds commits until an async `act()` scope ends.
     const sampleFlexWidthPerFrame = async (frames: number) => {
       const widths: number[] = [];
       for (let i = 0; i < frames; i += 1) {
