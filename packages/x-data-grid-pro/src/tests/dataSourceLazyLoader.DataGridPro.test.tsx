@@ -205,7 +205,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         }
 
         const { setProps } = render(<Test />);
-        await waitFor(() => expect(apiRef.current?.getRow(1)).not.to.equal(null));
+        await waitFor(() => expect(apiRef.current?.getRow(1)?.id).to.equal(1));
         const callCountBeforeSort = getRows.mock.calls.length;
 
         // Queue the sort fetch and hide the grid before the fetch runs.
