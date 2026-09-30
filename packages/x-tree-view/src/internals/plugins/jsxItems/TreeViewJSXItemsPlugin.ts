@@ -6,7 +6,7 @@ import { selectionSelectors } from '../selection/selectors';
 import { jsxItemsitemWrapper, useJSXItemsItemPlugin } from './itemPlugin';
 
 export class TreeViewJSXItemsPlugin {
-  private store: SimpleTreeViewStore<any>;
+  declare private store: SimpleTreeViewStore<any>;
 
   /**
    * Tracks which component instance owns each item id,
