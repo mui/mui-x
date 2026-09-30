@@ -148,9 +148,9 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   public lib = 'dayjs';
 
-  public locale?: string;
+  declare public locale?: string;
 
-  public formats: AdapterFormats;
+  declare public formats: AdapterFormats;
 
   public escapedCharacters = { start: '[', end: ']' };
 
@@ -239,12 +239,14 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     if (localeObject === undefined) {
       /* v8 ignore start */
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X: Your locale has not been found.',
-          'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale.',
-          "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
-          'fallback on English locale.',
-        ]);
+        warnOnce(
+          [
+            'MUI X: Your locale has not been found.',
+            'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale.',
+            "Or you forget to import the locale from 'dayjs/locale/{localeUsed}'",
+            'fallback on English locale.',
+          ].join('\n'),
+        );
       }
       /* v8 ignore stop */
       localeObject = locales.en;

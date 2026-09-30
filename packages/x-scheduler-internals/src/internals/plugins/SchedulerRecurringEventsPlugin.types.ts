@@ -27,17 +27,6 @@ export interface SchedulerRecurringEventsPluginInterface {
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**
-   * Projects a recurrence rule from its data timezone to a different timezone.
-   * The returned rule is a derived representation intended for UI purposes only.
-   */
-  projectRRuleToTimezone(
-    adapter: Adapter,
-    rrule: SchedulerProcessedEventRecurrenceRule,
-    targetTimezone: TemporalTimezone,
-    seriesStartDataTimezone: TemporalSupportedObject,
-  ): SchedulerProcessedEventRecurrenceRule;
-
-  /**
    * Expands a recurring event into the occurrences that fall within the visible range,
    * honoring COUNT/UNTIL boundaries and EXDATE exclusions.
    */
@@ -73,8 +62,8 @@ export interface SchedulerRecurringEventsPluginInterface {
   ): UpdateEventsParameters;
 
   /**
-   * Normalizes display-timezone changes (start/end/rrule) back to the event's data
-   * timezone before they are persisted.
+   * Relabels the display-timezone dates of an update (start/end/exDates) into the event's
+   * data timezone before they are persisted. The rule is already expressed there.
    */
   applyDataTimezoneToEventUpdate(params: {
     adapter: Adapter;
@@ -85,6 +74,7 @@ export interface SchedulerRecurringEventsPluginInterface {
   /**
    * Builds the recurrence presets (Daily / Weekly / Monthly / Yearly)
    * the user can choose from when editing an event.
+   * `date` is the event's start in its own timezone.
    */
   computePresets(
     adapter: Adapter,
@@ -94,6 +84,7 @@ export interface SchedulerRecurringEventsPluginInterface {
   /**
    * Determines which preset (if any) the given rule corresponds to.
    * Returns 'custom' if the rule does not match any preset, or `null` if no rule is provided.
+   * `occurrenceStart` is the occurrence's start in the event's timezone.
    */
   getDefaultPresetKey(
     adapter: Adapter,

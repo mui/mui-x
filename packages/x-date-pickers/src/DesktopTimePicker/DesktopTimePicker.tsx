@@ -3,13 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import type { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import type { TimePickerViewRenderers } from '../TimePicker/shared';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { extractValidationProps, validateTime } from '../validation';
+import { extractValidationProps } from '../validation';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import {
   renderDigitalClockTimeView,
@@ -19,6 +18,7 @@ import type { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
 import type { TimeView, PickerOwnerState } from '../models';
+import { useTimeManager } from '../managers';
 
 type DesktopTimePickerComponent = ((
   props: DesktopTimePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -39,6 +39,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useTimeManager();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
@@ -103,9 +104,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker(
   const { renderPicker } = useDesktopPicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'time',
-    validator: validateTime,
+    manager,
     steps: null,
   });
 
@@ -233,6 +232,10 @@ DesktopTimePicker.propTypes /* remove-proptypes */ = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

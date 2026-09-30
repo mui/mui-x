@@ -16,6 +16,18 @@ export const schedulerOtherSelectors = {
    * The editing surfaces (dialog / drawer) read from here.
    */
   editingOccurrence: (state: State) => state.editingOccurrence?.occurrence ?? null,
+  /**
+   * The stored model's bounds when the edited occurrence's times were last refreshed (see
+   * `SchedulerEditingState.modelBounds`), or `null` when the occurrence with the given key is
+   * not the edited one or its times were never refreshed.
+   */
+  editingModelBounds: (state: State, occurrenceKey: string | undefined) => {
+    const editing = state.editingOccurrence;
+    if (editing == null || occurrenceKey == null || editing.occurrence.key !== occurrenceKey) {
+      return null;
+    }
+    return editing.modelBounds ?? null;
+  },
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
