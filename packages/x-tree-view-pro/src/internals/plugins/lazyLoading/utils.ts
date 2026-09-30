@@ -22,9 +22,9 @@ export class NestedDataManager<R extends TreeViewValidItem<R>> {
 
   private settledRequests: Set<TreeViewItemId> = new Set();
 
-  private lazyLoadingPlugin: TreeViewLazyLoadingPlugin<R>;
+  declare private lazyLoadingPlugin: TreeViewLazyLoadingPlugin<R>;
 
-  private maxConcurrentRequests: number;
+  declare private maxConcurrentRequests: number;
 
   constructor(
     lazyLoadingPlugin: TreeViewLazyLoadingPlugin<R>,

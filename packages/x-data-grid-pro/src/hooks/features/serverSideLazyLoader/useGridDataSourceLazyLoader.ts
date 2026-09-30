@@ -108,6 +108,9 @@ export const useGridDataSourceLazyLoader = (
   );
   const draggedRowId = React.useRef<GridRowId | null>(null);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollingParamsRef = React.useRef<Partial<GridGetRowsParams> | null>(null);
+  // `false` while Activity is hidden or after unmount, so a late response cannot restart polling.
+  const isPollingAllowed = React.useRef(true);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -146,8 +149,10 @@ export const useGridDataSourceLazyLoader = (
 
   const startPolling = useEventCallback((params: Partial<GridGetRowsParams>) => {
     stopPolling();
+    // Keep the range even if the response arrives while Activity is hidden.
+    pollingParamsRef.current = params;
 
-    if (props.dataSourceRevalidateMs <= 0) {
+    if (!isPollingAllowed.current || !isStrategyActive || props.dataSourceRevalidateMs <= 0) {
       return;
     }
 
@@ -587,11 +592,16 @@ export const useGridDataSourceLazyLoader = (
   );
 
   React.useEffect(() => {
+    const rootElement = privateApiRef.current.rootElementRef?.current ?? null;
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
+      // `<Activity mode="hidden">` keeps the root connected and lets the queued fetch run.
+      if (!rootElement?.isConnected) {
+        debouncedFetchRows.clear();
+      }
     };
-  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
+  }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
 
   // Stop polling when dataSourceRevalidateMs is set to 0
   React.useEffect(() => {
@@ -600,7 +610,16 @@ export const useGridDataSourceLazyLoader = (
     }
   }, [props.dataSourceRevalidateMs, stopPolling]);
 
-  React.useEffect(() => stopPolling, [stopPolling]);
+  React.useEffect(() => {
+    isPollingAllowed.current = true;
+    if (pollingParamsRef.current) {
+      startPolling(pollingParamsRef.current);
+    }
+    return () => {
+      isPollingAllowed.current = false;
+      stopPolling();
+    };
+  }, [startPolling, stopPolling]);
 
   // A new `dataSource` reference is a full restart in `useGridDataSourceBase` (rows and cache
   // cleared, first page refetched), so end-of-data must be re-evaluated like on a re-query.

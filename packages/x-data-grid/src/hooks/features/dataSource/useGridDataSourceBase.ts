@@ -90,6 +90,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   // Requests that are still running and will apply their response when they settle.
   const pendingRequestCount = React.useRef(0);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  // `false` while Activity is hidden or after unmount, so a late response cannot restart polling.
+  const isPollingAllowed = React.useRef(true);
 
   const onDataSourceErrorProp = props.onDataSourceError;
   const revalidateMs = props.dataSourceRevalidateMs;
@@ -314,7 +316,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const startPolling = useEventCallback(() => {
     stopPolling();
-    if (revalidateMs <= 0 || !standardRowsUpdateStrategyActive) {
+    if (!isPollingAllowed.current || revalidateMs <= 0 || !standardRowsUpdateStrategyActive) {
       return;
     }
     pollingIntervalRef.current = setInterval(revalidate, revalidateMs);
@@ -472,7 +474,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     }
   }, [revalidateMs, stopPolling]);
 
-  React.useEffect(() => stopPolling, [stopPolling]);
+  React.useEffect(() => {
+    isPollingAllowed.current = true;
+    // Activity reconnects effects without refetching rows that have already arrived.
+    if (rowsAreUpToDate.current) {
+      startPolling();
+    }
+    return () => {
+      isPollingAllowed.current = false;
+      stopPolling();
+    };
+  }, [startPolling, stopPolling]);
 
   const lastApiRef = React.useRef(apiRef);
   const lastStrategy = React.useRef(currentStrategy);
