@@ -65,6 +65,7 @@ Pass the nonce to the `printOptions` and `imageExportOptions` props of the `tool
 ```
 
 When the copied styles are blocked, the image export fails with an error telling you to set the `nonce` option, and the print export produces an unstyled chart.
+The image export also inlines stylesheets loaded with a `<link>` element into style elements, so it fails the same way without the nonce, even when the policy allows those stylesheets.
 Set the `copyStyles` option to `false` to export the chart without the page styles instead.
 
 Stylesheets loaded with a `<link>` element that the policy blocks are skipped, and a warning naming the stylesheet and the `nonce` option is logged in development.

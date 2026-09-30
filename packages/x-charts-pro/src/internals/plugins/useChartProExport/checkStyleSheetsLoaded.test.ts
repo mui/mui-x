@@ -40,7 +40,7 @@ describe('checkStyleSheetsLoaded', () => {
 
   /* JSDOM doesn't enforce a Content Security Policy, so only a browser shows that a blocked style has no sheet. */
   describe.skipIf(isJSDOM)('with a real Content Security Policy', () => {
-    function createBlockedDocument(nonce?: string) {
+    function createPolicyDocument() {
       const iframe = document.createElement('iframe');
       document.body.appendChild(iframe);
       onTestFinished(() => iframe.remove());
@@ -49,12 +49,26 @@ describe('checkStyleSheetsLoaded', () => {
       meta.httpEquiv = 'Content-Security-Policy';
       meta.content = "style-src 'nonce-export'";
       exportDocument.head.appendChild(meta);
+      return exportDocument;
+    }
+
+    function createBlockedDocument(nonce?: string) {
+      const exportDocument = createPolicyDocument();
       const style = exportDocument.createElement('style');
       if (nonce) {
         style.setAttribute('nonce', nonce);
       }
       style.textContent = 'body { margin: 0; }';
       exportDocument.head.appendChild(style);
+      return exportDocument;
+    }
+
+    function createLinkDocument() {
+      const exportDocument = createPolicyDocument();
+      const link = exportDocument.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'data:text/css,';
+      exportDocument.head.appendChild(link);
       return exportDocument;
     }
 
@@ -66,6 +80,22 @@ describe('checkStyleSheetsLoaded', () => {
 
     it('does not throw when the copied style carries the nonce', () => {
       expect(() => checkStyleSheetsLoaded(createBlockedDocument('export'))).not.to.throw();
+    });
+
+    it('throws when the policy blocks the style that inlines a stylesheet link', () => {
+      expect(() => checkStyleSheetsLoaded(createLinkDocument())).to.throw(/`nonce` export option/);
+    });
+
+    it('does not throw for a stylesheet link when the nonce is provided', () => {
+      expect(() => checkStyleSheetsLoaded(createLinkDocument(), 'export')).not.to.throw();
+    });
+
+    it('does not leave the style used for the check in the document', () => {
+      const exportDocument = createLinkDocument();
+
+      checkStyleSheetsLoaded(exportDocument, 'export');
+
+      expect(exportDocument.querySelector('style')).to.equal(null);
     });
   });
 });
