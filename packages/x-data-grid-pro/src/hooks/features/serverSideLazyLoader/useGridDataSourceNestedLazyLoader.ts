@@ -38,6 +38,7 @@ import {
   runIf,
   DataSourceRowsUpdateStrategy,
   useGridDataSourceFilterModelChange,
+  useGridDataSourcePolling,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor, GridTreeDepths } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
@@ -196,7 +197,6 @@ export const useGridDataSourceNestedLazyLoader = (
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const rowsStale = React.useRef<boolean>(false);
   const draggedRowId = React.useRef<GridRowId | null>(null);
-  const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
   // Snapshot of the row tree taken right before a sort/filter triggered reset.
   // Used by nested data updates that fire later in the auto-expansion chain so
   // they can preserve expansion state below the first level.
@@ -317,25 +317,19 @@ export const useGridDataSourceNestedLazyLoader = (
     });
   });
 
-  const stopPolling = React.useCallback(() => {
-    if (pollingIntervalRef.current !== null) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
-    }
-  }, []);
-
-  const startPolling = useEventCallback(() => {
-    stopPolling();
-
-    if (props.dataSourceRevalidateMs <= 0) {
-      return;
-    }
-
-    pollingIntervalRef.current = setInterval(() => {
-      const { firstRowToRender, lastRowToRender } = renderedRowsIntervalCache.current;
-      revalidateRows(firstRowToRender, lastRowToRender);
-    }, props.dataSourceRevalidateMs);
+  const { startPolling: startPollingWith, stopPolling } = useGridDataSourcePolling({
+    revalidateMs: props.dataSourceRevalidateMs,
+    isActive: isStrategyActive,
   });
+
+  const startPolling = React.useCallback(
+    () =>
+      startPollingWith(() => {
+        const { firstRowToRender, lastRowToRender } = renderedRowsIntervalCache.current;
+        revalidateRows(firstRowToRender, lastRowToRender);
+      }),
+    [startPollingWith, revalidateRows],
+  );
 
   /**
    * Drops a parent's children past `rowCount`, for the paths where `replaceNestedRows` has no
@@ -1132,11 +1126,16 @@ export const useGridDataSourceNestedLazyLoader = (
   );
 
   React.useEffect(() => {
+    const rootElement = privateApiRef.current.rootElementRef?.current ?? null;
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
+      // `<Activity mode="hidden">` keeps the root connected and lets the queued fetch run.
+      if (!rootElement?.isConnected) {
+        debouncedFetchRows.clear();
+      }
     };
-  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
+  }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
 
   React.useEffect(() => {
     if (!isStrategyActive || props.dataSourceRevalidateMs <= 0) {
