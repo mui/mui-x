@@ -468,7 +468,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           lazyLoadingRequestThrottleMs={0}
         />,
       );
-      await waitFor(() => expect(apiRef.current?.getRow(1)).not.to.equal(null));
+      await waitFor(() => expect(apiRef.current?.getRow(1)?.id).to.equal(1));
 
       vi.useFakeTimers();
       setProps({ dataSourceCache: null, dataSourceRevalidateMs: 10 });
