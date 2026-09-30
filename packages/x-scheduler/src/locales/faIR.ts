@@ -42,6 +42,8 @@ const faIRDialog: Partial<EventEditingLocaleText> = {
   // recurrenceEveryLabel: 'Every',
   // recurrenceRepeatLabel: 'Repeat',
   // recurrenceTabLabel: 'Recurrence',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   // recurrenceMainSelectCustomLabel: 'Recurrence',
   // recurrenceWeeklyFrequencyLabel: 'weeks',
   // recurrenceWeeklyPresetLabel: ({
@@ -49,11 +51,21 @@ const faIRDialog: Partial<EventEditingLocaleText> = {
   // }) => `Repeats weekly on ${weekdayName}`,
   // recurrenceMonthlyFrequencyLabel: 'months',
   // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
-  // recurrenceMonthlyLastWeekAriaLabel: weekDay => `${weekDay} of the last week of the month`,
-  // recurrenceMonthlyLastWeekLabel: weekDay => `${weekDay} last week`,
+  // recurrenceMonthlyLastWeekAriaLabel: ({
+  //   weekdayName
+  // }) => `${weekdayName} of the last week of the month`,
+  // recurrenceMonthlyLastWeekLabel: ({
+  //   weekdayName
+  // }) => `${weekdayName} last week`,
   // recurrenceMonthlyPresetLabel: dayNumber => `Repeats monthly on day ${dayNumber}`,
-  // recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay} week ${ord} of the month`,
-  // recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} week ${ord}`,
+  // recurrenceMonthlyWeekNumberAriaLabel: ({
+  //   ord,
+  //   weekdayName
+  // }) => `${weekdayName} week ${ord} of the month`,
+  // recurrenceMonthlyWeekNumberLabel: ({
+  //   ord,
+  //   weekdayName
+  // }) => `${weekdayName} week ${ord}`,
   // recurrenceWeeklyMonthlySpecificInputsLabel: 'On',
   // recurrenceYearlyFrequencyLabel: 'years',
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,

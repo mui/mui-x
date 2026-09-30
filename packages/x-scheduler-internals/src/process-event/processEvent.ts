@@ -35,26 +35,18 @@ export function processEvent(
 
   if (recurringEventsPlugin == null && model.rrule != null) {
     if (process.env.NODE_ENV !== 'production') {
-      warnOnce([
-        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ].join('\n'),
+      );
     }
   }
 
   const parsedDataRRule =
     recurringEventsPlugin && model.rrule
       ? recurringEventsPlugin.parseRRule(adapter, model.rrule, dataTimezone)
-      : undefined;
-
-  const displayTimezoneRRule =
-    recurringEventsPlugin && parsedDataRRule
-      ? recurringEventsPlugin.projectRRuleToTimezone(
-          adapter,
-          parsedDataRRule,
-          displayTimezone,
-          startInstant,
-        )
       : undefined;
 
   return {
@@ -72,7 +64,6 @@ export function processEvent(
       start: processDate(displayBounds.start, adapter),
       end: processDate(displayBounds.end, adapter),
       timezone: displayTimezone,
-      rrule: displayTimezoneRRule,
       exDates: exDatesInDisplayTz,
     },
     resource: model.resource,

@@ -245,6 +245,25 @@ describe('<DateField /> - Selection', () => {
       expect(onSelectedSectionsChange.mock.calls).to.deep.equal([[2]]);
     });
 
+    it('should not move DOM focus when a controlled `selectedSections` rejects the click', () => {
+      // Regression test: the mousedown handler used to focus the clicked
+      // section unconditionally, even when a controlled `selectedSections`
+      // kept the previous section selected.
+      const onSelectedSectionsChange = vi.fn();
+      const view = renderWithProps({
+        autoFocus: true,
+        selectedSections: 0,
+        onSelectedSectionsChange,
+      });
+      expect(getCleanedSelectedContent()).to.equal('MM');
+
+      const year = view.getSection(2);
+      fireEvent.mouseDown(year);
+
+      expect(onSelectedSectionsChange).toHaveBeenCalledWith(2);
+      expect(getCleanedSelectedContent()).to.equal('MM');
+    });
+
     it('should preserve the all-sections selection when clicking the sections container', async () => {
       const view = renderWithProps({});
       await view.selectSection('month');

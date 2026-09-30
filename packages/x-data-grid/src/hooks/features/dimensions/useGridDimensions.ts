@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { platform } from '@base-ui/utils/platform';
 import type { RefObject } from '@mui/x-internals/types';
-import { useStoreEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import type { GridEventListener } from '../../../models/events';
 import type { ElementSize } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -36,6 +36,7 @@ type RootProps = Pick<
   | 'pagination'
   | 'paginationMode'
   | 'autoHeight'
+  | 'height'
   | 'getRowHeight'
   | 'rowHeight'
   | 'resizeThrottleMs'
@@ -148,7 +149,13 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       if (!getRootDimensions().isReady) {
         return;
       }
-      if (size.height === 0 && !errorShown.current && !props.autoHeight && !platform.env.jsdom) {
+      if (
+        size.height === 0 &&
+        props.height == null &&
+        !errorShown.current &&
+        !props.autoHeight &&
+        !platform.env.jsdom
+      ) {
         logger.error(
           [
             'The parent DOM element of the Data Grid has an empty height.',

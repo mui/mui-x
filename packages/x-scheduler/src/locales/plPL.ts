@@ -42,6 +42,8 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Co',
   recurrenceRepeatLabel: 'Powtarzaj',
   recurrenceTabLabel: 'Powtarzanie',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Powtarzanie',
   recurrenceWeeklyFrequencyLabel: 'tygodnie',
   recurrenceWeeklyPresetLabel: ({ weekday }) => {
@@ -58,11 +60,13 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   },
   recurrenceMonthlyFrequencyLabel: 'miesiące',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dzień ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} w ostatnim tygodniu miesiąca`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay}, ostatni tydzień`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} w ostatnim tygodniu miesiąca`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName}, ostatni tydzień`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Powtarza się co miesiąc w dniu ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay}, tydzień ${ord} miesiąca`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay}, tydzień ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName}, tydzień ${ord} miesiąca`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName}, tydzień ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'W',
   recurrenceYearlyFrequencyLabel: 'lata',
   recurrenceYearlyPresetLabel: (date) => `Powtarza się co roku w ${date}`,

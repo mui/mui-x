@@ -2,21 +2,22 @@ import * as React from 'react';
 import { act, createRenderer } from '@mui/internal-test-utils';
 import { vi, describe, it, expect, beforeEach, onTestFinished } from 'vitest';
 import { BarChartPremium } from '../../../BarChartPremium';
-import { ScatterChartPremium } from '../../../ScatterChartPremium';
-import { HeatmapPremium } from '../../../HeatmapPremium';
-import { CandlestickChart } from '../../../CandlestickChart';
 import { ChartsContainerPremium } from '../../../ChartsContainerPremium';
 import type { ChartPremiumApi } from '../../../context';
+import { DEFAULT_PLUGINS } from '../allPlugins';
+import type { DefaultPluginSignatures } from '../allPlugins';
+import { useChartPremiumExport } from './useChartPremiumExport';
+import type { UseChartPremiumExportSignature } from './useChartPremiumExport.types';
 
-type ApiRef<T extends Parameters<typeof createApiRef>[0]> = React.RefObject<
-  ChartPremiumApi<T> | undefined
+// The plugin is opt-in, so both the list and the api type name it explicitly.
+const PLUGINS = [...DEFAULT_PLUGINS, useChartPremiumExport];
+
+type ExportApi = ChartPremiumApi<
+  undefined,
+  [...DefaultPluginSignatures, UseChartPremiumExportSignature]
 >;
 
-function createApiRef<T extends 'bar' | 'scatter' | 'heatmap' | 'ohlc' | 'composition'>(
-  _type: T,
-): ApiRef<T> {
-  return { current: undefined };
-}
+const createApiRef = (): React.RefObject<ExportApi | undefined> => ({ current: undefined });
 
 describe('useChartPremiumExport', () => {
   const { render } = createRenderer();
@@ -42,12 +43,47 @@ describe('useChartPremiumExport', () => {
     });
   });
 
-  describe('getDataAsExcel', () => {
-    it('merges bar and line series into one sheet', async () => {
-      const apiRef = createApiRef('bar');
+  describe('registration', () => {
+    it('is absent from a composition that does not opt in', async () => {
+      const apiRef = createApiRef();
       render(
         <ChartsContainerPremium
-          apiRef={apiRef as ApiRef<'composition'>}
+          apiRef={apiRef as any}
+          width={300}
+          height={200}
+          series={[{ type: 'bar', id: 'sales', data: [1, 2] }]}
+          xAxis={[{ data: ['A', 'B'], scaleType: 'band' }]}
+        />,
+      );
+
+      expect((apiRef.current as any).getDataAsExcel).to.equal(undefined);
+      expect((apiRef.current as any).exportAsExcel).to.equal(undefined);
+    });
+
+    it('is absent from the single-component charts, which take no plugin list', async () => {
+      const apiRef = createApiRef();
+      render(
+        <BarChartPremium
+          apiRef={apiRef as any}
+          width={300}
+          height={200}
+          series={[{ label: 'Sales', data: [1, 2] }]}
+          xAxis={[{ data: ['A', 'B'] }]}
+        />,
+      );
+
+      expect((apiRef.current as any).getDataAsExcel).to.equal(undefined);
+      expect((apiRef.current as any).exportAsExcel).to.equal(undefined);
+    });
+  });
+
+  describe('getDataAsExcel', () => {
+    it('merges bar and line series into one sheet', async () => {
+      const apiRef = createApiRef();
+      render(
+        <ChartsContainerPremium
+          apiRef={apiRef}
+          plugins={PLUGINS}
           width={300}
           height={200}
           series={[
@@ -68,28 +104,12 @@ describe('useChartPremiumExport', () => {
       expect(worksheet.getCell('C5').value).to.equal(4);
     });
 
-    it('is exposed on BarChartPremium', async () => {
-      const apiRef = createApiRef('bar');
-      render(
-        <BarChartPremium
-          apiRef={apiRef}
-          width={300}
-          height={200}
-          series={[{ label: 'Sales', data: [1, 2] }]}
-          xAxis={[{ data: ['A', 'B'] }]}
-        />,
-      );
-
-      const workbook = await act(() => apiRef.current!.getDataAsExcel());
-
-      expect(workbook!.worksheets[0].getCell('C3').value).to.equal(2);
-    });
-
     it('writes one sheet per column signature in a composition', async () => {
-      const apiRef = createApiRef('composition');
+      const apiRef = createApiRef();
       render(
         <ChartsContainerPremium
           apiRef={apiRef}
+          plugins={PLUGINS}
           width={300}
           height={200}
           series={[
@@ -108,69 +128,19 @@ describe('useChartPremiumExport', () => {
       ]);
     });
 
-    it('is exposed on ScatterChartPremium', async () => {
-      const apiRef = createApiRef('scatter');
-      render(
-        <ScatterChartPremium
-          apiRef={apiRef}
-          width={300}
-          height={200}
-          series={[{ label: 'Points', data: [{ x: 1, y: 2 }] }]}
-        />,
-      );
-
-      const workbook = await act(() => apiRef.current!.getDataAsExcel());
-
-      expect(workbook!.worksheets[0].name).to.equal('scatter');
-    });
-
-    it('is exposed on HeatmapPremium, which overrides the Pro plugin list', async () => {
-      const apiRef = createApiRef('heatmap');
-      render(
-        <HeatmapPremium
-          apiRef={apiRef}
-          width={300}
-          height={200}
-          series={[{ data: [[0, 0, 4]] }]}
-          xAxis={[{ data: ['Jan'] }]}
-          yAxis={[{ data: ['Mon'] }]}
-        />,
-      );
-
-      const workbook = await act(() => apiRef.current!.getDataAsExcel());
-
-      expect(workbook!.worksheets[0].name).to.equal('heatmap');
-    });
-
-    it('is exposed on CandlestickChart', async () => {
-      const apiRef = createApiRef('ohlc');
-      render(
-        <CandlestickChart
-          apiRef={apiRef}
-          width={300}
-          height={200}
-          series={[{ data: [[1, 2, 0, 1]] }]}
-          xAxis={[{ data: ['A'] }]}
-        />,
-      );
-
-      const workbook = await act(() => apiRef.current!.getDataAsExcel());
-
-      expect(workbook!.worksheets[0].name).to.equal('ohlc');
-    });
-
     it('passes options through to the extractors', async () => {
-      const apiRef = createApiRef('bar');
+      const apiRef = createApiRef();
       render(
-        <BarChartPremium
+        <ChartsContainerPremium
           apiRef={apiRef}
+          plugins={PLUGINS}
           width={300}
           height={200}
           series={[
-            { id: 'visible', label: 'Visible', data: [1] },
-            { id: 'hidden', label: 'Hidden', data: [2] },
+            { type: 'bar', id: 'visible', label: 'Visible', data: [1] },
+            { type: 'bar', id: 'hidden', label: 'Hidden', data: [2] },
           ]}
-          xAxis={[{ data: ['A'] }]}
+          xAxis={[{ data: ['A'], scaleType: 'band' }]}
           hiddenItems={[{ type: 'bar', seriesId: 'hidden' }]}
         />,
       );
@@ -185,8 +155,16 @@ describe('useChartPremiumExport', () => {
     });
 
     it('resolves to null when the chart has no data', async () => {
-      const apiRef = createApiRef('bar');
-      render(<BarChartPremium apiRef={apiRef} width={300} height={200} series={[]} />);
+      const apiRef = createApiRef();
+      render(
+        <ChartsContainerPremium
+          apiRef={apiRef}
+          plugins={PLUGINS}
+          width={300}
+          height={200}
+          series={[]}
+        />,
+      );
 
       const workbook = await act(() => apiRef.current!.getDataAsExcel());
 
@@ -195,17 +173,20 @@ describe('useChartPremiumExport', () => {
   });
 
   describe('exportAsExcel', () => {
+    const chart = (apiRef: React.RefObject<ExportApi | undefined>) => (
+      <ChartsContainerPremium
+        apiRef={apiRef}
+        plugins={PLUGINS}
+        width={300}
+        height={200}
+        series={[{ type: 'bar', id: 'sales', data: [1] }]}
+        xAxis={[{ data: ['A'], scaleType: 'band' }]}
+      />
+    );
+
     it('downloads an .xlsx named after the fileName option', async () => {
-      const apiRef = createApiRef('bar');
-      render(
-        <BarChartPremium
-          apiRef={apiRef}
-          width={300}
-          height={200}
-          series={[{ data: [1] }]}
-          xAxis={[{ data: ['A'] }]}
-        />,
-      );
+      const apiRef = createApiRef();
+      render(chart(apiRef));
 
       await act(() => apiRef.current!.exportAsExcel({ fileName: 'sales' }));
 
@@ -218,16 +199,8 @@ describe('useChartPremiumExport', () => {
       onTestFinished(() => {
         document.title = title;
       });
-      const apiRef = createApiRef('bar');
-      render(
-        <BarChartPremium
-          apiRef={apiRef}
-          width={300}
-          height={200}
-          series={[{ data: [1] }]}
-          xAxis={[{ data: ['A'] }]}
-        />,
-      );
+      const apiRef = createApiRef();
+      render(chart(apiRef));
 
       await act(() => apiRef.current!.exportAsExcel());
 
@@ -240,16 +213,8 @@ describe('useChartPremiumExport', () => {
       onTestFinished(() => {
         document.title = title;
       });
-      const apiRef = createApiRef('bar');
-      render(
-        <BarChartPremium
-          apiRef={apiRef}
-          width={300}
-          height={200}
-          series={[{ data: [1] }]}
-          xAxis={[{ data: ['A'] }]}
-        />,
-      );
+      const apiRef = createApiRef();
+      render(chart(apiRef));
 
       await act(() => apiRef.current!.exportAsExcel());
       await act(() => apiRef.current!.exportAsExcel({ fileName: '' }));
@@ -258,8 +223,16 @@ describe('useChartPremiumExport', () => {
     });
 
     it('does not download when the chart has no data', async () => {
-      const apiRef = createApiRef('bar');
-      render(<BarChartPremium apiRef={apiRef} width={300} height={200} series={[]} />);
+      const apiRef = createApiRef();
+      render(
+        <ChartsContainerPremium
+          apiRef={apiRef}
+          plugins={PLUGINS}
+          width={300}
+          height={200}
+          series={[]}
+        />,
+      );
 
       await act(() => apiRef.current!.exportAsExcel());
 

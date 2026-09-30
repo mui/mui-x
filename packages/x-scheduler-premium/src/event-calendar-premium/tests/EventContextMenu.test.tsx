@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { screen, fireEvent } from '@mui/internal-test-utils';
-import { adapter, createSchedulerRenderer, EventBuilder, StoreSpy } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  EventBuilder,
+  StoreSpy,
+  utcJuly4AllDayBuilder,
+} from 'test/utils/scheduler';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
@@ -73,6 +79,53 @@ describe('EventContextMenu - recurring events (Premium)', () => {
 
     expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
     expect(deleteEventSpy?.mock.calls.length).to.equal(0);
+    expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
+  });
+
+  it('should identify the deleted occurrence by its data-timezone start from another timezone', () => {
+    const weeklyEventBuilder = utcJuly4AllDayBuilder()
+      .title('Weekly sync')
+      .recurrent('WEEKLY')
+      .withDisplayTimezone('America/New_York');
+    const occurrence = weeklyEventBuilder.toOccurrence();
+
+    let deleteRecurringEventSpy: MockInstance | undefined;
+
+    render(
+      <EventCalendarProvider
+        events={[weeklyEventBuilder.build()]}
+        resources={[]}
+        storeClass={PremiumTestStore}
+        displayTimezone="America/New_York"
+      >
+        <StoreSpy
+          Context={SchedulerStoreContext}
+          method="deleteRecurringEvent"
+          onSpyReady={(sp) => {
+            deleteRecurringEventSpy = sp;
+          }}
+        />
+        <EventEditingProvider surface="dialog">
+          <EventContextMenuProvider>
+            <EventContextMenuTrigger occurrence={occurrence}>
+              <button type="button">Weekly sync</button>
+            </EventContextMenuTrigger>
+          </EventContextMenuProvider>
+        </EventEditingProvider>
+        <RecurringScopeDialog />
+      </EventCalendarProvider>,
+    );
+
+    fireEvent.contextMenu(screen.getByRole('button', { name: 'Weekly sync' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    // The display bounds of this occurrence normalize to New York July 3rd; the
+    // exception must land on the event's own July 4th.
+    expect(deleteRecurringEventSpy?.mock.calls.length).to.equal(1);
+    expect(adapter.getTime(deleteRecurringEventSpy!.mock.lastCall![0].occurrenceStart)).to.equal(
+      adapter.getTime(adapter.date('2025-07-04T00:00:00', 'UTC')),
+    );
+    // The recurring branch defers to the scope dialog instead of deleting right away.
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
   });
 });

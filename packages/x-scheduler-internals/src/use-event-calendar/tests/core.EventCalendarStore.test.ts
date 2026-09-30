@@ -1,4 +1,9 @@
-import { adapter, ResourceBuilder } from 'test/utils/scheduler';
+import {
+  adapter,
+  EventBuilder,
+  ResourceBuilder,
+  utcJuly4AllDayBuilder,
+} from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { vi, describe, it, expect } from 'vitest';
@@ -8,7 +13,7 @@ import {
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
-import type { CalendarView } from '../../models';
+import type { CalendarView, SchedulerEventOccurrence } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -242,7 +247,7 @@ describe('Core - EventCalendarStore', () => {
         const start = adapter.date('2024-01-15T10:00:00', 'default');
         const end = adapter.date('2024-01-15T11:30:00', 'default');
 
-        store.setEditingOccurrenceTimes(start, end);
+        store.setEditingOccurrenceTimes({ start, end });
 
         const editing = store.state.editingOccurrence!;
         expect(editing.occurrence.displayTimezone.start.value).toEqualDateTime(start);
@@ -253,12 +258,53 @@ describe('Core - EventCalendarStore', () => {
       it('should be a no-op when nothing is being edited', () => {
         const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
-        store.setEditingOccurrenceTimes(
-          adapter.date('2024-01-15T10:00:00', 'default'),
-          adapter.date('2024-01-15T11:30:00', 'default'),
-        );
+        store.setEditingOccurrenceTimes({
+          start: adapter.date('2024-01-15T10:00:00', 'default'),
+          end: adapter.date('2024-01-15T11:30:00', 'default'),
+        });
 
         expect(store.state.editingOccurrence).to.equal(null);
+      });
+
+      it('should keep the data bounds on the committed instants', () => {
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = EventBuilder.new(adapter)
+          .withDataTimezone('UTC')
+          .withDisplayTimezone('America/New_York')
+          .singleDay('2024-01-15T15:00:00Z', 60)
+          .toOccurrence();
+        store.startEditing(edited, 'armed');
+        const start = adapter.date('2024-01-15T14:00:00Z', 'default');
+        const end = adapter.date('2024-01-15T16:00:00Z', 'default');
+
+        store.setEditingOccurrenceTimes({ start, end });
+
+        const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
+        expect(editing.displayTimezone.start.timestamp).to.equal(adapter.getTime(start));
+        expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        // A rule added from the dialog is built on the data-timezone start.
+        expect(editing.dataTimezone.start.timestamp).to.equal(adapter.getTime(start));
+        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(adapter.getTimezone(editing.dataTimezone.start.value)).to.equal('UTC');
+      });
+
+      it('should keep a bound left out on its stored value in both timezones', () => {
+        // July 4 00:00 UTC is displayed on July 3 in New York: an end-only resize must not
+        // re-read the untouched start from its displayed day.
+        const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+        const edited = utcJuly4AllDayBuilder()
+          .withDisplayTimezone('America/New_York')
+          .toOccurrence();
+        store.startEditing(edited, 'armed');
+        const end = adapter.addDays(edited.displayTimezone.end.value, 1);
+
+        store.setEditingOccurrenceTimes({ end });
+
+        const editing = store.state.editingOccurrence!.occurrence as SchedulerEventOccurrence;
+        expect(editing.displayTimezone.start).to.equal(edited.displayTimezone.start);
+        expect(editing.dataTimezone.start).to.equal(edited.dataTimezone.start);
+        expect(editing.displayTimezone.end.timestamp).to.equal(adapter.getTime(end));
+        expect(editing.dataTimezone.end.timestamp).to.equal(adapter.getTime(end));
       });
     });
 

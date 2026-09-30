@@ -82,15 +82,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('cancel action', () => {
-      it('should call onClose and onChange with the initial value', async () => {
+      it('should call onChange, onCancel and onClose with the initial value, in that order', async () => {
         const onChange = vi.fn();
         const onAccept = vi.fn();
         const onClose = vi.fn();
+        const onCancel = vi.fn();
 
         const { selectSection, pressKey, user } = renderWithProps({
           onChange,
           onAccept,
           onClose,
+          onCancel,
           open: true,
           defaultValue: values[0],
           slotProps: { actionBar: { actions: ['cancel', 'nextOrAccept'] } },
@@ -119,18 +121,28 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         }
         expect(onAccept.mock.calls.length).to.equal(0);
         expect(onClose.mock.calls.length).to.equal(1);
+        expect(onCancel.mock.calls.length).to.equal(1);
+        // `onCancel` fires in the same slot `onAccept` occupies on the accept flow: after the value reset, before the close.
+        expect(onChange.mock.invocationCallOrder.at(-1)).to.be.lessThan(
+          onCancel.mock.invocationCallOrder[0],
+        );
+        expect(onCancel.mock.invocationCallOrder[0]).to.be.lessThan(
+          onClose.mock.invocationCallOrder[0],
+        );
       });
 
       it('should not call onChange if no prior value modification', async () => {
         const onChange = vi.fn();
         const onAccept = vi.fn();
         const onClose = vi.fn();
+        const onCancel = vi.fn();
 
         const { user } = render(
           <ElementToTest
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
+            onCancel={onCancel}
             open
             value={values[0]}
             slotProps={{ actionBar: { actions: ['cancel'] } }}
@@ -143,6 +155,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onChange.mock.calls.length).to.equal(0);
         expect(onAccept.mock.calls.length).to.equal(0);
         expect(onClose.mock.calls.length).to.equal(1);
+        expect(onCancel.mock.calls.length).to.equal(1);
       });
     });
 

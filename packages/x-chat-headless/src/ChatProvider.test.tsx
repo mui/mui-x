@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { act, renderHook } from '@mui/internal-test-utils';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { ChatAdapter } from './adapters';
 import { useChatRuntimeContext } from './internals/useChatRuntimeContext';

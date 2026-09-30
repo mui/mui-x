@@ -48,17 +48,21 @@ Either provide a data property to the series or use the dataset prop.`,
         if (typeof start !== 'number' || typeof end !== 'number') {
           if (process.env.NODE_ENV !== 'production') {
             if (start !== null) {
-              warnOnce([
-                `MUI X Charts: Your dataset key "start" is used for plotting a range bar, but contains non-numerical elements.`,
-                'Range bars only support numbers.',
-              ]);
+              warnOnce(
+                [
+                  `MUI X Charts: Your dataset key "start" is used for plotting a range bar, but contains non-numerical elements.`,
+                  'Range bars only support numbers.',
+                ].join('\n'),
+              );
             }
 
             if (end !== null) {
-              warnOnce([
-                `MUI X Charts: Your dataset key "end" is used for plotting a range bar, but contains non-numerical elements.`,
-                'Range bars only support numbers.',
-              ]);
+              warnOnce(
+                [
+                  `MUI X Charts: Your dataset key "end" is used for plotting a range bar, but contains non-numerical elements.`,
+                  'Range bars only support numbers.',
+                ].join('\n'),
+              );
             }
           }
           return null;
