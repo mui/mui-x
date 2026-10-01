@@ -30,19 +30,20 @@ export class SchedulerLazyLoadingPlugin<
     (() => { start: TemporalSupportedObject; end: TemporalSupportedObject } | null) | null = null;
 
   /**
-   * Range key of the most recently requested fetch. Used to skip stale fetches:
-   * if a request resolves while a different range has been requested since, its
-   * cache write + state update are dropped so the latest range's data isn't
-   * polluted by stale, possibly-deleted events.
+   * The most recent request.
    */
-  private latestRequestedRangeKey: string | null = null;
-
-  /**
-   * Range the view asked for in the most recent request, before trimming the cached parts.
-   */
-  private latestRequestedRange: {
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
+  private latestRequest: {
+    /**
+     * The range the view asked for, before trimming the parts already cached.
+     */
+    range: { start: TemporalSupportedObject; end: TemporalSupportedObject };
+    /**
+     * Range key of the fetch sent to the data source. Used to skip stale fetches:
+     * if a request resolves while a different range has been requested since, its
+     * cache write + state update are dropped so the latest range's data isn't
+     * polluted by stale, possibly-deleted events.
+     */
+    fetchKey: string;
   } | null = null;
 
   protected readonly disposables = new DisposableStack();
@@ -105,7 +106,7 @@ export class SchedulerLazyLoadingPlugin<
 
       this.disposables.defer(this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated));
       this.disposables.defer(() => {
-        this.latestRequestedRangeKey = null;
+        this.latestRequest = null;
         this.pendingComputeRange = null;
         this.cache = null;
         this.dataManager = null;
@@ -133,8 +134,10 @@ export class SchedulerLazyLoadingPlugin<
         // A fully covered range still goes through the queue so the cache-hit branch runs.
         const missingRange = getMissingRange(adapter, cache, range);
         const rangeToFetch = missingRange ?? range;
-        this.latestRequestedRange = range;
-        this.latestRequestedRangeKey = `${adapter.getTime(rangeToFetch.start)}:${adapter.getTime(adapter.endOfDay(rangeToFetch.end))}`;
+        this.latestRequest = {
+          range,
+          fetchKey: `${adapter.getTime(rangeToFetch.start)}:${adapter.getTime(adapter.endOfDay(rangeToFetch.end))}`,
+        };
 
         // Flip `isLoading` synchronously so the skeleton shows immediately,
         // before any debounce delay on the queued path.
@@ -205,12 +208,13 @@ export class SchedulerLazyLoadingPlugin<
       null;
     try {
       const events = await dataSource.getEvents(range.start, range.end);
+      const latestRequest = this.latestRequest;
 
       // Drop the result if a more recent range has been requested since this
       // fetch started — its events are now stale relative to the latest range
       // (e.g. a server-side delete could be hidden by re-introducing them).
       // The latest fetch owns `isLoading`, so this one leaves it untouched.
-      if (this.latestRequestedRangeKey !== fetchedRangeKey) {
+      if (latestRequest?.fetchKey !== fetchedRangeKey) {
         isStale = true;
         return;
       }
@@ -221,9 +225,8 @@ export class SchedulerLazyLoadingPlugin<
         events ?? [],
       );
       // The cached part of a trimmed request can expire while it is pending.
-      const requestedRange = this.latestRequestedRange;
-      if (requestedRange && getMissingRange(adapter, cache, requestedRange) !== null) {
-        rangeToRefetch = requestedRange;
+      if (getMissingRange(adapter, cache, latestRequest.range) !== null) {
+        rangeToRefetch = latestRequest.range;
       }
       // Build from the full cache so disjoint already-cached ranges stay visible
       // when the visible range expands to cover them.
@@ -245,7 +248,7 @@ export class SchedulerLazyLoadingPlugin<
         return;
       }
       // The user already left this range, so its error is dropped too.
-      if (this.latestRequestedRangeKey !== fetchedRangeKey) {
+      if (this.latestRequest?.fetchKey !== fetchedRangeKey) {
         isStale = true;
         return;
       }
