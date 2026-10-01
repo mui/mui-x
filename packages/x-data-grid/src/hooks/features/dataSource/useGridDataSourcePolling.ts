@@ -8,7 +8,7 @@ interface UseGridDataSourcePollingOptions {
    */
   revalidateMs: number;
   /**
-   * If `false`, the polling does not start.
+   * The polling is off when it is `false`.
    */
   isActive: boolean;
   /**
@@ -51,6 +51,12 @@ export const useGridDataSourcePolling = ({
 
     pollingIntervalRef.current = setInterval(callback, revalidateMs);
   });
+
+  React.useEffect(() => {
+    if (!isActive || revalidateMs <= 0) {
+      stopPolling();
+    }
+  }, [isActive, revalidateMs, stopPolling]);
 
   const canResume = useEventCallback(shouldResume);
 
