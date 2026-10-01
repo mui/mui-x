@@ -52,7 +52,7 @@
     "@mui/x-chat-headless": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
-    "markdown-to-jsx": "^9.10.2",
+    "markdown-to-jsx": "^9.10.3",
     "prop-types": "catalog:",
     "remend": "^1.3.1"
   },

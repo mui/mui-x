@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "eventsource-parser": "^4.1.0",
+    "eventsource-parser": "^4.1.1",
     "p-queue": "^9.3.3"
   },
   "peerDependencies": {
@@ -36,7 +36,7 @@
     "@types/node": "22.20.2",
     "rimraf": "catalog:",
     "vitest": "catalog:",
-    "zod": "4.6.4"
+    "zod": "4.6.5"
   },
   "exports": {
     ".": "./src/index.ts"
