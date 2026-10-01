@@ -302,7 +302,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
    * and an invalid value formats to `Invalid Date`.
    */
   private getWallClock = (value: Dayjs) => {
-    const wallClock = dayjs.utc(value.format('YYYY-MM-DDTHH:mm:ss.SSS'));
+    const wallClock = dayjs.utc(value.locale('en').format('YYYY-MM-DDTHH:mm:ss.SSS'));
 
     return wallClock.isValid() ? wallClock : null;
   };

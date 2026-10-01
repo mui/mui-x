@@ -1,5 +1,7 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
+import preParsePostFormat from 'dayjs/plugin/preParsePostFormat';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
@@ -12,10 +14,11 @@ import {
 } from 'test/utils/pickers';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
+import 'dayjs/locale/ar';
 // We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
-import { vi, onTestFinished, describe, it, expect } from 'vitest';
+import { vi, onTestFinished, beforeEach, describe, it, expect } from 'vitest';
 
 describe('<AdapterDayjs />', () => {
   const commonParams = {
@@ -157,6 +160,57 @@ describe('<AdapterDayjs />', () => {
 
       it('getDaysInMonth: should support `UTC` values bound to a timezone with `dayjs.tz`', () => {
         expect(adapter.getDaysInMonth(dayjs.tz('1890-03-10 12:00', 'UTC'))).to.equal(31);
+      });
+
+      describe('Localized digits', () => {
+        const { render, adapter: adapterAr } = createPickerRenderer({
+          adapterName: 'dayjs',
+          locale: { code: 'ar' },
+        });
+        const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
+        const getValue = () => dayjs.tz('1960-08-15 12:30', 'America/New_York').locale('ar');
+
+        beforeEach(() => {
+          const originalLocale = dayjs.locale();
+          dayjs.locale('en');
+          onTestFinished(() => {
+            dayjs.locale(originalLocale);
+          });
+
+          // Restore the prototype after each test because Day.js plugins are global.
+          dayjs.extend((option, dayjsClass, dayjsFactory) => {
+            const originalPrototype = Object.getOwnPropertyDescriptors(dayjsClass.prototype);
+            onTestFinished(() => {
+              Object.defineProperties(dayjsClass.prototype, originalPrototype);
+            });
+            preParsePostFormat(option, dayjsClass, dayjsFactory);
+          });
+        });
+
+        it('getDaysInMonth: should support localized digits without changing the value locale', () => {
+          const value = getValue();
+
+          expect(adapterAr.getDaysInMonth(value)).to.equal(31);
+          expect(value.locale()).to.equal('ar');
+          expect(value.format('YYYY-MM-DD')).to.equal('١٩٦٠-٠٨-١٥');
+        });
+
+        it('should increment the day of the month with localized digits', async () => {
+          const view = renderWithProps({
+            defaultValue: getValue(),
+            format: 'MM/DD/YYYY',
+            timezone: 'America/New_York',
+          });
+
+          expectFieldValue(view.getSectionsContainer(), '٠٨/١٥/١٩٦٠');
+          await view.selectSection('day');
+
+          await view.user.keyboard('{ArrowUp}');
+          expectFieldValue(view.getSectionsContainer(), '٠٨/١٦/١٩٦٠');
+
+          await view.user.keyboard('{ArrowUp}');
+          expectFieldValue(view.getSectionsContainer(), '٠٨/١٧/١٩٦٠');
+        });
       });
     });
   });
