@@ -64,7 +64,7 @@
     }
   },
   "slotDescriptions": {
-    "formHelperText": "The component used for the form helper text slot. Always rendered as an ARIA live region; a custom component must forward <code>role</code> and render its root even without children.",
+    "formHelperText": "The component used for the form helper text slot. Always rendered as an ARIA live region; a custom component must forward <code>aria-live</code> and render its root even without children.",
     "htmlInput": "The component rendered as the underlying hidden <code>&lt;input&gt;</code> element.",
     "input": "The component used for the input slot. Defaults to one of <code>PickersInput</code>, <code>PickersFilledInput</code>, <code>PickersOutlinedInput</code> based on <code>variant</code>.",
     "inputLabel": "The component used for the input label slot.",

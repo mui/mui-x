@@ -264,8 +264,13 @@ const PickersTextField = React.forwardRef(function PickersTextField(
             ...(slotProps?.htmlInput !== undefined && { htmlInput: slotProps.htmlInput }),
           }}
         />
-        {/* A named live region (the group) re-announces its label on every mutation, see #23101 */}
-        <FormHelperTextComponent id={helperTextId} role="status" {...slotProps?.formHelperText}>
+        {/* Live region here, not on the named group (#23101). No `role="status"`: Firefox + NVDA then skip the description. */}
+        <FormHelperTextComponent
+          id={helperTextId}
+          aria-live="polite"
+          aria-atomic="true"
+          {...slotProps?.formHelperText}
+        >
           {helperText}
         </FormHelperTextComponent>
       </RootComponent>

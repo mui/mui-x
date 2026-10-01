@@ -107,9 +107,10 @@ describe('<PickersTextField /> - slot forwarding', () => {
 
 describe('<PickersTextField /> - helper text live region', () => {
   const { render } = createPickerRenderer();
+  const slotProps = { formHelperText: { 'data-testid': 'helper' } };
 
   it.each(['standard', 'filled', 'outlined'] as const)(
-    'should not make the labeled group a live region (%s)',
+    'should make the helper text the live region instead of the labeled group (%s)',
     (variant) => {
       render(
         <PickersTextField
@@ -117,36 +118,42 @@ describe('<PickersTextField /> - helper text live region', () => {
           variant={variant}
           label="My label"
           helperText="Helper"
+          slotProps={slotProps}
         />,
       );
 
       const group = screen.getByRole('group', { name: 'My label', description: 'Helper' });
       expect(group).not.to.have.attribute('aria-live');
-      const status = screen.getByRole('status');
-      expect(status).to.have.text('Helper');
-      expect(status).not.to.have.attribute('aria-labelledby');
-      expect(status).not.to.have.attribute('aria-label');
+      const helper = screen.getByTestId('helper');
+      expect(helper).to.have.text('Helper');
+      expect(helper).to.have.attribute('aria-live', 'polite');
+      expect(helper).not.to.have.attribute('role');
       expect(screen.getAllByText('Helper')).to.have.length(1);
     },
   );
 
   it('should keep the live region mounted across helper text changes', () => {
     const { setProps } = render(
-      <PickersTextField {...PICKERS_TEXT_FIELD_STUB_PROPS} label="My label" helperText="" />,
+      <PickersTextField
+        {...PICKERS_TEXT_FIELD_STUB_PROPS}
+        label="My label"
+        helperText=""
+        slotProps={slotProps}
+      />,
     );
 
-    const status = screen.getByRole('status');
-    expect(status).to.have.text('');
+    const helper = screen.getByTestId('helper');
+    expect(helper).to.have.text('');
     expect(screen.getByRole('group')).not.to.have.attribute('aria-describedby');
 
     setProps({ helperText: 'Your date is not valid' });
-    expect(screen.getByRole('status')).to.equal(status);
-    expect(status).to.have.text('Your date is not valid');
-    expect(screen.getByRole('group')).to.have.attribute('aria-describedby', status.id);
+    expect(screen.getByTestId('helper')).to.equal(helper);
+    expect(helper).to.have.text('Your date is not valid');
+    expect(screen.getByRole('group')).to.have.attribute('aria-describedby', helper.id);
 
     setProps({ helperText: undefined });
-    expect(screen.getByRole('status')).to.equal(status);
-    expect(status).to.have.text('');
+    expect(screen.getByTestId('helper')).to.equal(helper);
+    expect(helper).to.have.text('');
   });
 
   it('should mount a custom `slots.formHelperText` as the live region without helper text', () => {
@@ -160,17 +167,19 @@ describe('<PickersTextField /> - helper text live region', () => {
       />,
     );
 
-    expect(screen.getByTestId('custom-helper')).to.have.attribute('role', 'status');
+    expect(screen.getByTestId('custom-helper')).to.have.attribute('aria-live', 'polite');
   });
 
   it.skipIf(isJSDOM)('should not reserve space for an empty helper text', () => {
-    const { setProps } = render(<PickersTextField {...PICKERS_TEXT_FIELD_STUB_PROPS} />);
+    const { setProps } = render(
+      <PickersTextField {...PICKERS_TEXT_FIELD_STUB_PROPS} slotProps={slotProps} />,
+    );
 
-    const status = screen.getByRole('status');
-    expect(window.getComputedStyle(status).marginTop).to.equal('0px');
+    const helper = screen.getByTestId('helper');
+    expect(window.getComputedStyle(helper).marginTop).to.equal('0px');
 
     setProps({ helperText: 'Helper' });
-    expect(window.getComputedStyle(status).marginTop).not.to.equal('0px');
+    expect(window.getComputedStyle(helper).marginTop).not.to.equal('0px');
   });
 });
 
