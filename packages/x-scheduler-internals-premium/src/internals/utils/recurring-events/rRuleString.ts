@@ -158,7 +158,9 @@ export function parseRRule(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.parse(rruleObject.UNTIL, getAdapterCache(adapter).untilFormat, timezone);
+    // The trailing `Z` makes the value a UTC instant (RFC 5545): read it in UTC, then
+    // move it to the event's timezone like the other dates of the rule.
+    const parsed = adapter.parse(rruleObject.UNTIL, getAdapterCache(adapter).untilFormat, 'UTC');
 
     if (!adapter.isValid(parsed)) {
       throw new Error(
@@ -168,7 +170,7 @@ export function parseRRule(
       );
     }
 
-    rrule.until = parsed;
+    rrule.until = adapter.setTimezone(parsed, timezone);
   }
 
   return rrule;

@@ -69,6 +69,22 @@ describe('recurring-events/rRuleString', () => {
       expect(adapter.isValid(result.until!)).to.equal(true);
     });
 
+    it('should read a UNTIL ending in Z as a UTC instant, like the object input', () => {
+      const fromString = parseRRule(
+        adapter,
+        'FREQ=DAILY;UNTIL=20250315T000000Z',
+        'America/New_York',
+      );
+      const fromObject = parseRRule(
+        adapter,
+        { freq: 'DAILY', until: '2025-03-15T00:00:00Z' },
+        'America/New_York',
+      );
+
+      expect(adapter.getTime(fromString.until!)).to.equal(adapter.getTime(fromObject.until!));
+      expect(adapter.getTimezone(fromString.until!)).to.equal('America/New_York');
+    });
+
     it('should sort BYDAY values in standard order regardless of input order', () => {
       const result = parseRRule(adapter, 'FREQ=WEEKLY;BYDAY=FR,MO,WE', 'default');
       expect(result.byDay).to.deep.equal(['MO', 'WE', 'FR']);
