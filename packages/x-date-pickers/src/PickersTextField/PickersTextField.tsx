@@ -34,6 +34,13 @@ const PickersTextFieldRoot = styled(FormControl, {
   maxWidth: '100%',
 });
 
+// Always rendered to act as a live region, so the empty state must not reserve space.
+const PickersTextFieldHelperText = styled(FormHelperText)({
+  '&:empty': {
+    marginTop: 0,
+  },
+});
+
 const useUtilityClasses = (
   classes: Partial<PickersTextFieldClasses> | undefined,
   ownerState: PickerTextFieldOwnerState,
@@ -181,7 +188,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
   const PickersInputComponent = slots?.input ?? VARIANT_COMPONENT[variant];
   const RootComponent = slots?.root ?? PickersTextFieldRoot;
   const InputLabelComponent = slots?.inputLabel ?? InputLabel;
-  const FormHelperTextComponent = slots?.formHelperText ?? FormHelperText;
+  const FormHelperTextComponent = slots?.formHelperText ?? PickersTextFieldHelperText;
 
   const inputAdditionalProps: Record<string, any> = {};
   if (variant === 'outlined') {
@@ -245,7 +252,6 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           role="group"
           aria-labelledby={inputLabelId}
           aria-describedby={helperTextId}
-          aria-live={helperTextId ? 'polite' : undefined}
           data-active-range-position={dataActiveRangePosition}
           {...inputAdditionalProps}
           {...inputSlotProps}
@@ -258,11 +264,10 @@ const PickersTextField = React.forwardRef(function PickersTextField(
             ...(slotProps?.htmlInput !== undefined && { htmlInput: slotProps.htmlInput }),
           }}
         />
-        {helperText && (
-          <FormHelperTextComponent id={helperTextId} {...slotProps?.formHelperText}>
-            {helperText}
-          </FormHelperTextComponent>
-        )}
+        {/* A named live region (the group) re-announces its label on every mutation, see #23101 */}
+        <FormHelperTextComponent id={helperTextId} role="status" {...slotProps?.formHelperText}>
+          {helperText}
+        </FormHelperTextComponent>
       </RootComponent>
     </PickerTextFieldOwnerStateContext.Provider>
   );

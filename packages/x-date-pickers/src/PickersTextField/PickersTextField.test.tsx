@@ -2,6 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { PickersTextField, pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { createPickerRenderer, PICKERS_TEXT_FIELD_STUB_PROPS } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 
 describe('<PickersTextField /> - slot forwarding', () => {
@@ -101,6 +102,75 @@ describe('<PickersTextField /> - slot forwarding', () => {
     );
 
     expect(screen.getByTestId('custom-helper')).to.have.text('Helper');
+  });
+});
+
+describe('<PickersTextField /> - helper text live region', () => {
+  const { render } = createPickerRenderer();
+
+  it.each(['standard', 'filled', 'outlined'] as const)(
+    'should not make the labeled group a live region (%s)',
+    (variant) => {
+      render(
+        <PickersTextField
+          {...PICKERS_TEXT_FIELD_STUB_PROPS}
+          variant={variant}
+          label="My label"
+          helperText="Helper"
+        />,
+      );
+
+      const group = screen.getByRole('group', { name: 'My label', description: 'Helper' });
+      expect(group).not.to.have.attribute('aria-live');
+      const status = screen.getByRole('status');
+      expect(status).to.have.text('Helper');
+      expect(status).not.to.have.attribute('aria-labelledby');
+      expect(status).not.to.have.attribute('aria-label');
+      expect(screen.getAllByText('Helper')).to.have.length(1);
+    },
+  );
+
+  it('should keep the live region mounted across helper text changes', () => {
+    const { setProps } = render(
+      <PickersTextField {...PICKERS_TEXT_FIELD_STUB_PROPS} label="My label" helperText="" />,
+    );
+
+    const status = screen.getByRole('status');
+    expect(status).to.have.text('');
+    expect(screen.getByRole('group')).not.to.have.attribute('aria-describedby');
+
+    setProps({ helperText: 'Your date is not valid' });
+    expect(screen.getByRole('status')).to.equal(status);
+    expect(status).to.have.text('Your date is not valid');
+    expect(screen.getByRole('group')).to.have.attribute('aria-describedby', status.id);
+
+    setProps({ helperText: undefined });
+    expect(screen.getByRole('status')).to.equal(status);
+    expect(status).to.have.text('');
+  });
+
+  it('should mount a custom `slots.formHelperText` as the live region without helper text', () => {
+    const CustomHelperText = React.forwardRef<HTMLDivElement, any>((props, ref) => (
+      <div ref={ref} data-testid="custom-helper" {...props} />
+    ));
+    render(
+      <PickersTextField
+        {...PICKERS_TEXT_FIELD_STUB_PROPS}
+        slots={{ formHelperText: CustomHelperText }}
+      />,
+    );
+
+    expect(screen.getByTestId('custom-helper')).to.have.attribute('role', 'status');
+  });
+
+  it.skipIf(isJSDOM)('should not reserve space for an empty helper text', () => {
+    const { setProps } = render(<PickersTextField {...PICKERS_TEXT_FIELD_STUB_PROPS} />);
+
+    const status = screen.getByRole('status');
+    expect(window.getComputedStyle(status).marginTop).to.equal('0px');
+
+    setProps({ helperText: 'Helper' });
+    expect(window.getComputedStyle(status).marginTop).not.to.equal('0px');
   });
 });
 
