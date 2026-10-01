@@ -192,7 +192,7 @@ jobs:
           pathspec: docs/src docs/data
       - run:
           name: Tests TypeScript definitions
-          command: pnpm typescript:ci
+          command: pnpm typescript
   test_e2e:
     <<: *default-job
     executor:
