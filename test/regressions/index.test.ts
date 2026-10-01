@@ -88,6 +88,12 @@ const TEST_RULES: RouteRule[] = [
     waitForSelector: '[data-testid="map-images-ready"]',
   },
   {
+    test: '/docs-charts-map/MarsMap',
+    // `MapImagePlot` renders its `<image>` only after the texture loads and is
+    // reprojected. The `<img>` wait below does not see that load.
+    waitForSelector: 'svg image',
+  },
+  {
     test: '/test-regressions-charts/ImageExportAutoSize',
     // The exported image is screenshotted by a dedicated `test` block below.
     enabled: false,
