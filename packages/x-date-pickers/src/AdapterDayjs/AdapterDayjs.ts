@@ -293,30 +293,41 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * On dates predating the timezone standardization, IANA falls back on the Local Mean Time of the
-   * location, whose offset is not a round number of minutes (`Asia/Kolkata` is `GMT+05:53:28`).
-   * `dayjs` then moves the day of the month when only the year or the month was meant to change.
+   * Before a timezone was standardized, IANA falls back on the Local Mean Time of the location, whose
+   * offset is not a round number of minutes (`Asia/Kolkata` is `GMT+05:53:28`). `dayjs` mishandles those
+   * offsets. Only values bound to a timezone with `dayjs.tz` are affected, including `dayjs.tz(value, 'UTC')`.
+   */
+  private isAffectedByLocalMeanTime = (value: Dayjs) => {
+    const zone = (value as Dayjs & { $x?: { $timezone?: string } }).$x?.$timezone;
+
+    return this.hasUTCPlugin() && this.hasTimezonePlugin() && !!zone;
+  };
+
+  /**
+   * The number of days in the month of the value, read from its own year and month fields.
+   * A clone is not reliable: before 1.11.14, `dayjs` can give it other fields (https://github.com/iamkun/dayjs/pull/2505).
+   */
+  private getDaysInMonthFromFields = (value: Dayjs) => {
+    const lastDayOfMonth = new Date(0);
+    lastDayOfMonth.setUTCFullYear(value.year(), value.month() + 1, 0);
+
+    return lastDayOfMonth.getUTCDate();
+  };
+
+  /**
+   * On the dates described by `isAffectedByLocalMeanTime`, `dayjs` moves the day of the month when only
+   * the year or the month was meant to change.
    * `daysInMonth()` is unusable on such a value because it derives from the equally broken
-   * `endOf('month')`, hence computing it on a plain UTC value instead.
+   * `endOf('month')`, hence computing it from the fields instead.
    * See https://github.com/mui/mui-x/issues/23163
    */
   private restoreDayOfMonth = (value: Dayjs, reference: Dayjs) => {
-    const timezone = this.getTimezone(value);
-    // `system` and `UTC` values keep an offset that matches their instant, so they are never affected.
-    if (!this.hasUTCPlugin() || timezone === 'system' || timezone === 'UTC') {
-      return value;
-    }
-
-    const wallClock = dayjs.utc(value.format('YYYY-MM-DDTHH:mm:ss.SSS'));
-
-    // Years above 9999 don't round-trip through the ISO format, and an invalid value formats to
-    // `Invalid Date`. Both would make the comparison below `NaN`.
-    if (!wallClock.isValid()) {
+    if (!this.isAffectedByLocalMeanTime(value) || !value.isValid()) {
       return value;
     }
 
     // A shorter target month legitimately clamps the day (`Jan 31` + 1 month is `Feb 28`).
-    const expectedDayOfMonth = Math.min(reference.date(), wallClock.daysInMonth());
+    const expectedDayOfMonth = Math.min(reference.date(), this.getDaysInMonthFromFields(value));
     if (value.date() === expectedDayOfMonth) {
       return value;
     }
@@ -647,6 +658,12 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public getDaysInMonth = (value: Dayjs) => {
+    // `daysInMonth()` derives from `endOf('month')`, which is broken on the dates described by
+    // `isAffectedByLocalMeanTime` and returns `1` there.
+    if (this.isAffectedByLocalMeanTime(value)) {
+      return this.getDaysInMonthFromFields(value);
+    }
+
     return value.daysInMonth();
   };
 
