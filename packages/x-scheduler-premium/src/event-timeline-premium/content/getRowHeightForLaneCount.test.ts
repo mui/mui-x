@@ -26,6 +26,16 @@ describe('row-height invariant', () => {
     expect(getRowHeightForLaneCount(theme, 3)).to.be.closeTo(128.06, 1e-6);
   });
 
+  it('should read a body2 font size given in px, or as a number, without converting it from rem', () => {
+    const remHeight = getEventsCellLaneMinHeight(theme);
+    expect(
+      getEventsCellLaneMinHeight(createTheme({ typography: { body2: { fontSize: '14px' } } })),
+    ).to.be.closeTo(remHeight, 1e-6);
+    expect(
+      getEventsCellLaneMinHeight(createTheme({ typography: { body2: { fontSize: 14 } } })),
+    ).to.be.closeTo(remHeight, 1e-6);
+  });
+
   it('getRowHeightForLaneCount treats 0 and negative lane counts as one lane', () => {
     const oneLane = getRowHeightForLaneCount(theme, 1);
     expect(getRowHeightForLaneCount(theme, 0)).to.equal(oneLane);
