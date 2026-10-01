@@ -1,5 +1,5 @@
-import { cancelDrag, startDrag } from 'test/utils/scheduler/dnd';
-import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { cancelDrag, moveDragAndWait, startDrag } from 'test/utils/scheduler/dnd';
+import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   absorbObserverFrames,
@@ -7,6 +7,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  ExternalEventSource,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { createTheme } from '@mui/material/styles';
@@ -678,6 +679,46 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
         await waitFor(() => {
           expect(probeButton().closest('[data-dependency-interactions]')).to.equal(null);
         });
+        expect(getButton()).not.to.equal(null);
+      });
+
+      await waitFor(() => {
+        expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
+      });
+    });
+
+    it('should mute the delete button of a selected arrow during an external drag', async () => {
+      await renderFarTimelineWithArrow();
+      // A list of external events in a non-modal dialog: pressing one keeps the selection, like
+      // any press inside a dialog.
+      await renderSettled(
+        <div role="dialog">
+          <ExternalEventSource eventData={{ id: 'external', title: 'External job' }} />
+        </div>,
+      );
+
+      fireEvent.click(getHitPath());
+      const getButton = () =>
+        document.querySelector<SVGGElement>('[data-dependency-delete-button]')!;
+      await waitFor(() => {
+        expect(getButton()).not.to.equal(null);
+      });
+      const probeButton = () => probeAt(getButton().getBoundingClientRect())();
+      const probeHitArea = probeAt(getHitPath().getBoundingClientRect());
+      expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
+
+      // The external drag comes from another provider: the timeline mutes its surfaces for any drag.
+      await withDrag(screen.getByTestId('external-source'), async () => {
+        const buttonRect = getButton().getBoundingClientRect();
+        await moveDragAndWait(getGrid(), {
+          clientX: buttonRect.left + buttonRect.width / 2,
+          clientY: buttonRect.top + buttonRect.height / 2,
+          mockHitTest: false,
+        });
+        await waitFor(() => {
+          expect(probeButton().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+        expect(probeHitArea().closest('[data-dependency-interactions]')).to.equal(null);
         expect(getButton()).not.to.equal(null);
       });
 

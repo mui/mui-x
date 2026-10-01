@@ -155,13 +155,11 @@ When `canDragEventsFromTheOutside` is `true`, you can drop events created with `
 When `canDropEventsToTheOutside` is `true`, you can drag events out of the Event Calendar.
 
 External drop containers use Base UI's `Draggable.Target` inside a `Draggable.Provider`.
-Import `Draggable` from `@base-ui/react/draggable` and pass `schedulerEventMoveKinds` from `@mui/x-scheduler/internals` to the target's `accept` prop.
+Import `Draggable` from `@base-ui/react/draggable` and pass `schedulerCalendarEventMoveKinds` from `@mui/x-scheduler/internals` to the target's `accept` prop.
 Use `onDraggableDrop` to read `source.dragData.originalOccurrence` and update the event list.
 The move kinds accept events dragged from the calendar views and exclude resize gestures.
 
 This integration is experimental until Base UI releases its drag engine.
 It needs a Base UI version that includes the drag engine, which has not been released yet.
-The previous `@mui/x-scheduler-internals/build-is-valid-drop-target` helper has been removed.
-Replace it with a `Draggable.Target` that accepts the Scheduler move kinds.
 
 {{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": true}}

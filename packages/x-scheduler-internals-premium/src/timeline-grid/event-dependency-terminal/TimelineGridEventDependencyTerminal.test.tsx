@@ -1,4 +1,4 @@
-import { cancelDrag, startDrag } from 'test/utils/scheduler/dnd';
+import { startDrag } from 'test/utils/scheduler/dnd';
 import * as React from 'react';
 import { waitFor } from '@mui/internal-test-utils';
 import { Draggable } from '@base-ui/react/draggable';
@@ -9,11 +9,10 @@ import {
   describeConformance,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { vi, describe, it, expect, afterEach } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<TimelineGrid.EventDependencyTerminal />', () => {
   const { render } = createSchedulerRenderer();
-  afterEach(cancelDrag);
 
   // The terminal reads the store context to stamp the drag data with its timeline.
   function Wrapper({ children }: { children: React.ReactNode }) {

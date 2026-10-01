@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Draggable } from '@base-ui/react/draggable';
-import { act, screen } from '@mui/internal-test-utils';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { screen } from '@mui/internal-test-utils';
+import { describe, expect, it, vi } from 'vitest';
 import {
   adapter,
   createSchedulerRenderer,
   EventBuilder,
+  ExternalEventSource,
   startDrag,
-  moveDrag,
+  moveDragAndWait,
   dropDrag,
   cancelDrag,
 } from 'test/utils/scheduler';
@@ -32,17 +32,11 @@ function Source() {
     occurrenceKey: occurrence.key,
     start: occurrence.displayTimezone.start,
     end: occurrence.displayTimezone.end,
+    dataTimezone: occurrence.dataTimezone,
     position: { position: 0, duration: 1, startingBeforeEdge: false, endingAfterEdge: false },
     isDraggable: true,
     renderDragPreview: () => null,
-    getDragData: () => ({
-      eventId: occurrence.id,
-      occurrenceKey: occurrence.key,
-      originalOccurrence: occurrence,
-      start: occurrence.displayTimezone.start.value,
-      end: occurrence.displayTimezone.end.value,
-      draggedDay: occurrence.displayTimezone.start.value,
-    }),
+    getExtraDragData: () => ({ draggedDay: occurrence.displayTimezone.start.value }),
   });
   return <SchedulerDraggable {...draggableProps} render={<div data-testid="source" />} />;
 }
@@ -55,7 +49,6 @@ function StoreProbe({ onStore }: { onStore: (store: SchedulerStoreInContext<any,
 
 describe('useDraggableEvent', () => {
   const { render } = createSchedulerRenderer();
-  afterEach(cancelDrag);
 
   it('should commit the last preview when the drop position returns no data', async () => {
     const onEventsChange = vi.fn();
@@ -78,12 +71,7 @@ describe('useDraggableEvent', () => {
       </EventCalendarProvider>,
     );
     startDrag(screen.getByTestId('source'));
-    await act(async () => {
-      moveDrag(screen.getByTestId('target'), { clientX: 100 });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(getEventDropDates).toHaveBeenCalled();
     expect(onEventsChange).not.toHaveBeenCalled();
     getEventDropDates.mockReturnValue(undefined);
@@ -116,12 +104,7 @@ describe('useDraggableEvent', () => {
 
     // The pen presses at x=94, and the drag activates once it has moved 6px.
     startDrag(screen.getByTestId('source'), { clientX: 100, pointerType: 'pen' });
-    await act(async () => {
-      moveDrag(screen.getByTestId('target'), { clientX: 101, pointerType: 'pen' });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 101, pointerType: 'pen' });
     dropDrag(screen.getByTestId('target'), { clientX: 102, pointerType: 'pen' });
 
     expect(onEventsChange).toHaveBeenCalledTimes(1);
@@ -152,24 +135,14 @@ describe('useDraggableEvent', () => {
 
     // Canceled over a target.
     startDrag(screen.getByTestId('source'));
-    await act(async () => {
-      moveDrag(screen.getByTestId('target'), { clientX: 100 });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(getPlaceholder()).not.toBe(null);
     cancelDrag();
     expect(getPlaceholder()).toBe(null);
 
     // Released outside every target.
     startDrag(screen.getByTestId('source'));
-    await act(async () => {
-      moveDrag(screen.getByTestId('target'), { clientX: 100 });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(getPlaceholder()).not.toBe(null);
     dropDrag(document.body, { clientX: 300 });
     expect(getPlaceholder()).toBe(null);
@@ -178,22 +151,9 @@ describe('useDraggableEvent', () => {
 
 describe('SchedulerDropTarget when the pointer leaves it', () => {
   const { render } = createSchedulerRenderer();
-  afterEach(cancelDrag);
 
   const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
   const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
-
-  function ExternalSource() {
-    return (
-      <Draggable.Root
-        kind={schedulerExternalEventKind}
-        payload={{ eventData: { id: 'external', title: 'External' } }}
-        render={<div data-testid="source" />}
-      >
-        <Draggable.Preview disabled />
-      </Draggable.Root>
-    );
-  }
 
   function setup(parameters: { external?: boolean; canDropEventsToTheOutside?: boolean }) {
     const { external = false, canDropEventsToTheOutside = false } = parameters;
@@ -210,7 +170,14 @@ describe('SchedulerDropTarget when the pointer leaves it', () => {
             store = value;
           }}
         />
-        {external ? <ExternalSource /> : <Source />}
+        {external ? (
+          <ExternalEventSource
+            eventData={{ id: 'external', title: 'External' }}
+            data-testid="source"
+          />
+        ) : (
+          <Source />
+        )}
         <SchedulerDropTarget
           surfaceType="day-grid"
           accept={[schedulerDayEventMoveKind, schedulerExternalEventKind]}
@@ -222,23 +189,14 @@ describe('SchedulerDropTarget when the pointer leaves it', () => {
     return () => schedulerOccurrencePlaceholderSelectors.value(store.state);
   }
 
-  async function moveTo(element: Element, clientX: number) {
-    await act(async () => {
-      moveDrag(element, { clientX });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
-  }
-
   it('should hide the placeholder of a dragged event when it can be dropped outside', async () => {
     const getPlaceholder = setup({ canDropEventsToTheOutside: true });
     startDrag(screen.getByTestId('source'));
-    await moveTo(screen.getByTestId('target'), 100);
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(getPlaceholder()).toMatchObject({ type: 'internal-drag' });
     expect(getPlaceholder()).not.toMatchObject({ isHidden: true });
 
-    await moveTo(document.body, 300);
+    await moveDragAndWait(document.body, { clientX: 300 });
 
     expect(getPlaceholder()).toMatchObject({ isHidden: true });
   });
@@ -246,10 +204,10 @@ describe('SchedulerDropTarget when the pointer leaves it', () => {
   it('should keep the placeholder of a dragged event when it cannot be dropped outside', async () => {
     const getPlaceholder = setup({ canDropEventsToTheOutside: false });
     startDrag(screen.getByTestId('source'));
-    await moveTo(screen.getByTestId('target'), 100);
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(getPlaceholder()).toMatchObject({ type: 'internal-drag' });
 
-    await moveTo(document.body, 300);
+    await moveDragAndWait(document.body, { clientX: 300 });
 
     expect(getPlaceholder()).not.toMatchObject({ isHidden: true });
   });
@@ -257,11 +215,11 @@ describe('SchedulerDropTarget when the pointer leaves it', () => {
   it('should hide the placeholder of an external item', async () => {
     const getPlaceholder = setup({ external: true });
     startDrag(screen.getByTestId('source'));
-    await moveTo(screen.getByTestId('target'), 100);
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(getPlaceholder()).toMatchObject({ type: 'external-drag' });
     expect(getPlaceholder()).not.toMatchObject({ isHidden: true });
 
-    await moveTo(document.body, 300);
+    await moveDragAndWait(document.body, { clientX: 300 });
 
     expect(getPlaceholder()).toMatchObject({ isHidden: true });
   });
@@ -270,7 +228,6 @@ describe('SchedulerDropTarget when the pointer leaves it', () => {
 // Virtualization unmounts and remounts rows and events while a drag auto-scrolls the timeline.
 describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
   const { render } = createSchedulerRenderer();
-  afterEach(cancelDrag);
 
   const start = adapter.addDays(occurrence.displayTimezone.start.value, 1);
   const end = adapter.addDays(occurrence.displayTimezone.end.value, 1);
@@ -307,15 +264,6 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
     );
   }
 
-  async function moveTo(element: Element, clientX: number) {
-    await act(async () => {
-      moveDrag(element, { clientX });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
-  }
-
   function setup(props: { showSource?: boolean; showTarget?: boolean } = {}) {
     const onEventsChange = vi.fn();
     let store!: SchedulerStoreInContext<any, any>;
@@ -338,7 +286,7 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
   it('should still commit the drop when the source unmounted', async () => {
     const { view, onEventsChange } = setup();
     startDrag(screen.getByTestId('source'));
-    await moveTo(screen.getByTestId('target'), 100);
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     view.setProps({ showSource: false });
     expect(screen.queryByTestId('source')).toBe(null);
 
@@ -350,7 +298,7 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
   it('should clear the placeholder when the source unmounted and the drag is released outside', async () => {
     const { view, getPlaceholder } = setup();
     startDrag(screen.getByTestId('source'));
-    await moveTo(screen.getByTestId('target'), 100);
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(getPlaceholder()).not.toBe(null);
     view.setProps({ showSource: false });
 
@@ -362,7 +310,7 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
   it('should hide the placeholder when the hovered target unmounts, then clear it on an outside release', async () => {
     const { view, onEventsChange, getPlaceholder } = setup();
     startDrag(screen.getByTestId('source'));
-    await moveTo(screen.getByTestId('target'), 100);
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(getPlaceholder()).not.toBe(null);
     expect(getPlaceholder()).not.toMatchObject({ isHidden: true });
     view.setProps({ showTarget: false });
@@ -377,7 +325,7 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
   it('should let a target that mounts after the last move take the drop', async () => {
     const { view, onEventsChange } = setup({ showTarget: false });
     startDrag(screen.getByTestId('source'));
-    await moveTo(document.body, 100);
+    await moveDragAndWait(document.body, { clientX: 100 });
     view.setProps({ showTarget: true });
 
     dropDrag(screen.getByTestId('target'), { clientX: 110 });
@@ -424,19 +372,9 @@ describe('useDraggableEvent when the virtualizer unmounts mid-drag', () => {
     const getPlaceholder = () => schedulerOccurrencePlaceholderSelectors.value(store.state);
 
     startDrag(screen.getByTestId('source'));
-    await act(async () => {
-      moveDrag(screen.getByTestId('own-target'), { clientX: 100 });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    await moveDragAndWait(screen.getByTestId('own-target'), { clientX: 100 });
     expect(getPlaceholder()).not.toBe(null);
-    await act(async () => {
-      moveDrag(screen.getByTestId('other-target'), { clientX: 200 });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    await moveDragAndWait(screen.getByTestId('other-target'), { clientX: 200 });
 
     dropDrag(screen.getByTestId('other-target'), { clientX: 210 });
 

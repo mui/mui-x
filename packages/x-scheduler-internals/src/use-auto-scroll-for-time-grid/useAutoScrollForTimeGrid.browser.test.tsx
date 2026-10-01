@@ -1,8 +1,14 @@
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { screen, waitFor } from '@mui/internal-test-utils';
-import { describe, it, expect, afterEach, vi } from 'vitest';
-import { createSchedulerRenderer, startDrag, moveDrag, cancelDrag } from 'test/utils/scheduler';
+import { describe, it, expect, vi } from 'vitest';
+import {
+  createSchedulerRenderer,
+  startDrag,
+  moveDrag,
+  cancelDrag,
+  ExternalEventSource,
+} from 'test/utils/scheduler';
 import { absorbObserverFrames } from 'test/utils/scheduler/absorb-observer-frames';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -10,11 +16,12 @@ import {
   schedulerDayEventMoveKind,
   schedulerTimeEventResizeKind,
   schedulerDayEventResizeKind,
-  schedulerExternalEventKind,
 } from '../internals/utils/schedulerDrag';
 import { useAutoScrollForTimeGrid } from './useAutoScrollForTimeGrid';
 
 const dialogKind = Draggable.createKind('scheduler-dialog');
+const payload = { scope: Symbol('scheduler') };
+const externalEventData = { id: 'external', title: 'External' };
 
 function TimeGrid() {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -23,42 +30,28 @@ function TimeGrid() {
     <React.Fragment>
       <Draggable.Root
         kind={schedulerTimeEventMoveKind}
-        payload={{ eventId: 'event', occurrenceKey: 'event', store: null }}
+        payload={payload}
         data-testid="event"
         style={{ position: 'fixed', left: 300, top: 0, width: 100, height: 40 }}
       >
         Event
         <Draggable.Preview disabled />
       </Draggable.Root>
-      <Draggable.Root
-        kind={schedulerDayEventMoveKind}
-        payload={{ eventId: 'day', occurrenceKey: 'day', store: null }}
-        data-testid="day-event"
-      >
+      <Draggable.Root kind={schedulerDayEventMoveKind} payload={payload} data-testid="day-event">
         Day event
         <Draggable.Preview disabled />
       </Draggable.Root>
       <Draggable.Root
         kind={schedulerTimeEventResizeKind}
-        payload={{ eventId: 'event', occurrenceKey: 'event', store: null }}
+        payload={payload}
         data-testid="time-resize"
       >
         <Draggable.Preview disabled />
       </Draggable.Root>
-      <Draggable.Root
-        kind={schedulerDayEventResizeKind}
-        payload={{ eventId: 'event', occurrenceKey: 'event', store: null }}
-        data-testid="day-resize"
-      >
+      <Draggable.Root kind={schedulerDayEventResizeKind} payload={payload} data-testid="day-resize">
         <Draggable.Preview disabled />
       </Draggable.Root>
-      <Draggable.Root
-        kind={schedulerExternalEventKind}
-        payload={{ eventData: { id: 'external', title: 'External' } }}
-        data-testid="external"
-      >
-        <Draggable.Preview disabled />
-      </Draggable.Root>
+      <ExternalEventSource eventData={externalEventData} data-testid="external" />
       <Draggable.Root kind={dialogKind} data-testid="dialog">
         <Draggable.Preview disabled />
       </Draggable.Root>
@@ -75,7 +68,6 @@ function TimeGrid() {
 
 describe.skipIf(isJSDOM)('time-grid overflow auto-scroll', () => {
   const { render } = createSchedulerRenderer();
-  afterEach(cancelDrag);
 
   it.each(['day-event', 'day-resize', 'dialog'])(
     'should not scroll for %s drags',
@@ -132,7 +124,7 @@ describe.skipIf(isJSDOM)('time-grid overflow auto-scroll', () => {
     { edge: 'top', insideMargin: 100, beyondMargin: 39, direction: -1 },
     { edge: 'bottom', insideMargin: 500, beyondMargin: 561, direction: 1 },
   ])(
-    'should scroll within the 160px $edge margin and stops beyond it',
+    'should scroll within the 160px $edge margin and stop beyond it',
     async ({ insideMargin, beyondMargin, direction }) => {
       render(
         <Draggable.Provider>

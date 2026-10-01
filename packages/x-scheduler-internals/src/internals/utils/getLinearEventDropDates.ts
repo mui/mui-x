@@ -1,5 +1,5 @@
 import type { Draggable } from '@base-ui/react/draggable';
-import { EVENT_DRAG_PRECISION_MS } from '../../constants';
+import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { TemporalSupportedObject } from '../../models';
 import { schedulerExternalEventKind } from './schedulerDrag';
@@ -8,8 +8,6 @@ import type {
   SchedulerAxisEventResizeDragData,
   SchedulerEventDragPayload,
 } from './schedulerDrag';
-import { roundToDragPrecision } from './drag-utils';
-import { clampResizedEventEdge } from './resize-utils';
 import type { SchedulerDropTarget } from './SchedulerDropTarget';
 
 /**
@@ -39,6 +37,11 @@ export interface LinearDropSurface {
    * The dates an event has to stay within, when the surface holds a single window such as a day.
    */
   bounds?: { start: TemporalSupportedObject; end: TemporalSupportedObject };
+}
+
+/** Rounds an offset in milliseconds to the grid an event snaps to while it is dragged. */
+function roundToDragPrecision(offsetMs: number) {
+  return Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 }
 
 function getCursorOffsetMs(target: Draggable.Target.Record, surface: LinearDropSurface) {
@@ -124,38 +127,25 @@ export function getLinearEventDropDates<
       return undefined;
     }
 
+    // The event keeps one drag precision step of duration: the snap step is also the minimum.
     if (data.side === 'start') {
-      let cursorDate = toDate(cursorOffsetMs - data.initialCursorPositionInEventMs);
-      if (bounds && adapter.isBefore(cursorDate, bounds.start)) {
-        cursorDate = bounds.start;
+      let newStart = toDate(cursorOffsetMs - data.initialCursorPositionInEventMs);
+      if (bounds && adapter.isBefore(newStart, bounds.start)) {
+        newStart = bounds.start;
       }
-      // Ensure the new start date is not after or too close to the end date.
-      return clampResizedEventEdge({
-        adapter,
-        side: 'start',
-        start: data.start,
-        end: data.end,
-        cursorDate,
-      });
+      const maxStart = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
+      return { start: adapter.isBefore(newStart, maxStart) ? newStart : maxStart, end: data.end };
     }
 
     // The offset from the grab point to the event end is measured on the axis: the real duration
     // would overshoot when the event spans hidden hours.
     const eventAxisDurationMs = surface.dateToOffset(data.end) - surface.dateToOffset(data.start);
-    let cursorDate = toDate(
-      cursorOffsetMs - data.initialCursorPositionInEventMs + eventAxisDurationMs,
-    );
-    if (bounds && adapter.isAfter(cursorDate, bounds.end)) {
-      cursorDate = bounds.end;
+    let newEnd = toDate(cursorOffsetMs - data.initialCursorPositionInEventMs + eventAxisDurationMs);
+    if (bounds && adapter.isAfter(newEnd, bounds.end)) {
+      newEnd = bounds.end;
     }
-    // Ensure the new end date is not before or too close to the start date.
-    return clampResizedEventEdge({
-      adapter,
-      side: 'end',
-      start: data.start,
-      end: data.end,
-      cursorDate,
-    });
+    const minEnd = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
+    return { start: data.start, end: adapter.isAfter(newEnd, minEnd) ? newEnd : minEnd };
   }
 
   if (schedulerExternalEventKind.matches(source)) {

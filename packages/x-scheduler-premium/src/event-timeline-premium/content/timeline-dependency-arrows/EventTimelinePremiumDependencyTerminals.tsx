@@ -355,9 +355,10 @@ function DependencyTerminalsLayerImpl() {
     return null;
   }
 
-  // The edge terminal of the selected arrow's target, which its delete button covers.
+  // The edge terminal of the selected arrow's target, which its delete button covers. A link drag
+  // mutes the delete button instead, so the terminal can receive the link.
   const mutedEdge =
-    selected === null
+    selected === null || creation !== null
       ? null
       : { eventId: selected.target, side: getDependencyEdges(selected.type).target };
   const terminals: React.ReactElement[] = [];

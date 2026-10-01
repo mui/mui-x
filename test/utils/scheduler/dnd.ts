@@ -1,4 +1,5 @@
-import { fireEvent } from '@mui/internal-test-utils';
+import { act, fireEvent } from '@mui/internal-test-utils';
+import { vi } from 'vitest';
 
 interface DragPointerOptions {
   clientX?: number;
@@ -6,6 +7,24 @@ interface DragPointerOptions {
   pointerType?: string;
   mockHitTest?: boolean;
 }
+
+interface StartDragOptions extends DragPointerOptions {
+  /**
+   * Whether the gesture should start a drag. The helper throws when it doesn't match, so a test
+   * never asserts on a drag that did not happen, or on a pickup it thinks it prevented.
+   * @default true
+   */
+  expectDrag?: boolean;
+}
+
+/**
+ * How far from the press the mouse and the pen start a drag, one pixel past Base UI's 5px
+ * activation distance.
+ */
+const ACTIVATION_OFFSET_PX = 6;
+
+/** How long a finger holds still before Base UI starts a touch drag. */
+const TOUCH_HOLD_MS = 250;
 
 let restoreDragHitTest: (() => void) | undefined;
 let dragPoint = { clientX: 0, clientY: 0 };
@@ -51,15 +70,78 @@ function dispatchDragPointer(type: string, element: Element, options: DragPointe
   fireEvent(element, event);
 }
 
-/** Starts a mouse drag at the supplied point, crossing the engine's activation threshold. */
-export function startDrag(element: Element, options: DragPointerOptions = {}) {
-  if (options.mockHitTest !== false) {
+function assertDragStarted(element: Element, expectDrag: boolean) {
+  // Base UI marks the source when the drag starts, synchronously.
+  const started = element.closest('[data-dragging]') !== null;
+  if (started !== expectDrag) {
+    throw new Error(
+      expectDrag
+        ? 'The gesture did not start a drag. A touch drag needs `startLongPressDrag`, unless its source starts on the press.'
+        : 'The gesture started a drag.',
+    );
+  }
+}
+
+/**
+ * Starts a mouse or pen drag that reaches (`clientX`, `clientY`) as it starts.
+ * The pointer presses at `press`, then moves to the point. For the mouse and the pen, the point has
+ * to be more than 5px from the press, or the gesture stays a click.
+ * The drag starts at the point, so it is the input `getDragData` reads.
+ */
+export function startDrag(
+  element: Element,
+  options: StartDragOptions & {
+    /**
+     * Where the pointer presses.
+     * @default 6px to the left of the point where the drag starts
+     */
+    press?: { clientX?: number; clientY?: number };
+  } = {},
+) {
+  const { press, expectDrag = true, ...pointerOptions } = options;
+  if (pointerOptions.mockHitTest !== false) {
     mockDragHitTest(element);
   }
-  const clientX = options.clientX ?? 0;
-  const clientY = options.clientY ?? 0;
-  dispatchDragPointer('pointerdown', element, { ...options, clientX: clientX - 6, clientY });
-  dispatchDragPointer('pointermove', element, { ...options, clientX, clientY });
+  const clientX = pointerOptions.clientX ?? 0;
+  const clientY = pointerOptions.clientY ?? 0;
+  dispatchDragPointer('pointerdown', element, {
+    ...pointerOptions,
+    clientX: press?.clientX ?? clientX - ACTIVATION_OFFSET_PX,
+    clientY: press?.clientY ?? clientY,
+  });
+  dispatchDragPointer('pointermove', element, { ...pointerOptions, clientX, clientY });
+  assertDragStarted(element, expectDrag);
+}
+
+/**
+ * Starts a touch drag the way Base UI starts one by default: the finger presses at (`clientX`,
+ * `clientY`) and holds still. Advances the fake timers when the test installed them, and waits
+ * otherwise.
+ */
+export async function startLongPressDrag(
+  element: Element,
+  options: Omit<StartDragOptions, 'pointerType'> = {},
+) {
+  const { expectDrag = true, clientX = 0, clientY = 0, ...pointerOptions } = options;
+  if (pointerOptions.mockHitTest !== false) {
+    mockDragHitTest(element);
+  }
+  dispatchDragPointer('pointerdown', element, {
+    ...pointerOptions,
+    clientX,
+    clientY,
+    pointerType: 'touch',
+  });
+  await act(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.advanceTimersByTimeAsync(TOUCH_HOLD_MS);
+    } else {
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, TOUCH_HOLD_MS + 20);
+      });
+    }
+  });
+  assertDragStarted(element, expectDrag);
 }
 
 /** Moves an active drag over a target. Hit testing is mocked because jsdom has no layout. */
@@ -68,6 +150,19 @@ export function moveDrag(element: Element, options: DragPointerOptions = {}) {
     mockDragHitTest(element);
   }
   dispatchDragPointer('pointermove', element, options);
+}
+
+/**
+ * Moves an active drag over a target and waits for the engine to handle the move, which it does on
+ * the next animation frame.
+ */
+export async function moveDragAndWait(element: Element, options: DragPointerOptions = {}) {
+  await act(async () => {
+    moveDrag(element, options);
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
+  });
 }
 
 /** Releases over a target. Base UI flushes the pending move before committing the drop. */
@@ -109,13 +204,14 @@ interface SimulateDragAndDropParameters {
    */
   target: Element;
   /**
-   * The clientX coordinate for the drag start position.
+   * The clientX coordinate where the drag starts, the input `getDragData` reads. The pointer
+   * presses 6px to its left, see {@link startDrag}.
    * Relevant for day grid event drags where the X position determines which day is being dragged.
    * @default 0
    */
   sourceClientX?: number;
   /**
-   * The clientY coordinate for the drag start position.
+   * The clientY coordinate where the drag starts, the input `getDragData` reads.
    * @default 0
    */
   sourceClientY?: number;
@@ -136,6 +232,11 @@ interface SimulateDragAndDropParameters {
    * @default false
    */
   hold?: boolean;
+  /**
+   * Whether the gesture should start a drag, see {@link startDrag}.
+   * @default true
+   */
+  expectDrag?: boolean;
 }
 
 /** Simulates the pointer gesture used by Scheduler event moves and resize handles. */
@@ -148,9 +249,10 @@ export function simulateDragAndDrop(parameters: SimulateDragAndDropParameters): 
     targetClientX = 0,
     targetClientY = 0,
     hold = false,
+    expectDrag = true,
   } = parameters;
 
-  startDrag(source, { clientX: sourceClientX, clientY: sourceClientY });
+  startDrag(source, { clientX: sourceClientX, clientY: sourceClientY, expectDrag });
   moveDrag(target, { clientX: targetClientX, clientY: targetClientY });
   if (!hold) {
     dropDrag(target, { clientX: targetClientX, clientY: targetClientY });
@@ -322,6 +424,7 @@ export function simulatePointerResize(parameters: SimulatePointerResizeParameter
   // The drag starts on the press, so the first move is already over the target.
   mockDragHitTest(handle);
   dispatchDragPointer('pointerdown', handle, { ...down, pointerType });
+  assertDragStarted(handle, true);
   moveDrag(target, { ...move, pointerType });
   if (hold) {
     return;

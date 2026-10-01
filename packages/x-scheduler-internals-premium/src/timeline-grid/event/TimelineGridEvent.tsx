@@ -2,12 +2,10 @@
 import {
   SchedulerDraggable,
   useDraggableEvent,
-  useOriginalOccurrence,
   computeElementPositionInCollection,
   dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
 import { useButton } from '@base-ui/react/internals/use-button';
@@ -16,6 +14,7 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerAxisEventDragData,
   useElementPositionInCollection,
+  useOriginalOccurrence,
 } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -88,31 +87,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   );
 
   // Feature hooks
-  const getOriginalOccurrence = useOriginalOccurrence({
-    eventId,
-    occurrenceKey,
-    start,
-    end,
-    dataTimezone,
-  });
-
-  const getDragData: TimelineGridEventContext['getDragData'] = useStableCallback((input) => {
-    // Measured on the axis so it stays consistent with the cursor offsets when a
-    // trimmed hour window compresses the days.
-    const offsetBeforeRowStart = Math.max(
-      -dateToTimelineAxisOffsetMs(adapter, config, start.value),
-      0,
-    );
-    const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
-    return {
-      originalOccurrence: getOriginalOccurrence(),
-      start: start.value,
-      end: end.value,
-      initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
-      sourceResourceId: rowResourceId,
-    };
-  });
-
   const elementPosition = React.useMemo(
     () =>
       elementPositionProp ??
@@ -126,19 +100,28 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   );
   const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
 
-  const {
-    state,
-    draggableProps,
-    contextValue: draggableEventContextValue,
-  } = useDraggableEvent({
+  const { state, draggableProps, contextValue } = useDraggableEvent({
     kind: schedulerTimelineEventMoveKind,
     start,
     end,
     occurrenceKey,
     eventId,
+    dataTimezone,
     isDraggable,
     renderDragPreview,
-    getDragData,
+    getExtraDragData: (input) => {
+      // Measured on the axis so it stays consistent with the cursor offsets when a
+      // trimmed hour window compresses the days.
+      const offsetBeforeRowStart = Math.max(
+        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
+        0,
+      );
+      const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
+      return {
+        initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
+        sourceResourceId: rowResourceId,
+      };
+    },
     position: elementPosition,
   });
 
@@ -154,11 +137,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     endingAfterEdge,
     dependencyDropTarget,
   };
-
-  const contextValue: TimelineGridEventContext = React.useMemo(
-    () => ({ ...draggableEventContextValue, getDragData }),
-    [draggableEventContextValue, getDragData],
-  );
 
   const element = useRenderElement('div', componentProps, {
     state: mergedState,

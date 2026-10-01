@@ -12,6 +12,7 @@ export function EventTimelinePremiumProvider<TEvent extends object, TResource ex
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
+      {/* Below the store context, which the floating drag preview reads. */}
       <Draggable.Provider>{children}</Draggable.Provider>
     </SchedulerStoreContext.Provider>
   );

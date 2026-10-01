@@ -27,13 +27,7 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
     // Context hooks
     const contextValue = useTimelineGridEventContext();
 
-    const { state, enabled, draggableProps } = useEventResizeHandler({
-      context: contextValue,
-      getEventDragData: contextValue.getDragData,
-      kind: schedulerTimelineEventResizeKind,
-      side,
-      dragCursor: 'ew-resize',
-    });
+    const { state, enabled, getDragData } = useEventResizeHandler({ context: contextValue, side });
 
     const element = useRenderElement('div', componentProps, {
       enabled,
@@ -42,7 +36,16 @@ export const TimelineGridEventResizeHandler = React.forwardRef(
       props: [elementProps],
     });
 
-    return element && <SchedulerDraggable {...draggableProps} render={element} />;
+    return (
+      element && (
+        <SchedulerDraggable
+          kind={schedulerTimelineEventResizeKind}
+          getDragData={getDragData}
+          dragCursor="ew-resize"
+          render={element}
+        />
+      )
+    );
   },
 );
 

@@ -12,7 +12,6 @@ import type {
   RenderDragPreviewParameters,
 } from '../models';
 import { SchedulerDragPreview } from '../internals/utils/SchedulerDragPreview';
-import { withDragPreview } from '../internals/utils/withDragPreview';
 
 function StandaloneEventElement({
   componentProps,
@@ -41,11 +40,15 @@ function StandaloneEventElement({
     ref: [ref, buttonRef],
     props: [dragElementProps, elementProps, getButtonProps],
   });
-  return withDragPreview(
-    element,
-    <SchedulerDragPreview>
-      {() => renderDragPreview({ type: 'standalone-event', data })}
-    </SchedulerDragPreview>,
+  // The preview renders nothing in place: beside the element, it stays inside the root without
+  // becoming a child of whatever `render` returns.
+  return (
+    <React.Fragment>
+      {element}
+      <SchedulerDragPreview>
+        {() => renderDragPreview({ type: 'standalone-event', data })}
+      </SchedulerDragPreview>
+    </React.Fragment>
   );
 }
 
@@ -62,6 +65,7 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
     [data, handleEventDrop],
   );
   return (
+    // An external event usually renders outside any Scheduler, so it brings its own provider.
     <Draggable.Provider>
       <Draggable.Root
         ref={forwardedRef}
@@ -93,10 +97,17 @@ export namespace StandaloneEvent {
      */
     data: SchedulerOccurrencePlaceholderExternalDragData;
     /**
-     * Whether the rendered element is a native button.
+     * Whether the component renders a native `<button>` element when replacing it
+     * via the `render` prop.
+     * Set to `true` if the rendered element is a native button.
      * @default false
      */
     nativeButton?: boolean;
+    /**
+     * Renders the preview that follows the pointer outside the Scheduler.
+     * @param {RenderDragPreviewParameters} parameters The dragged event.
+     * @returns {React.ReactNode} The content of the preview.
+     */
     renderDragPreview: (parameters: RenderDragPreviewParameters) => React.ReactNode;
     /**
      * Callback fired after the Scheduler handles the event drop.

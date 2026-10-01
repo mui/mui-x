@@ -2,6 +2,7 @@
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useDisposable } from '@mui/x-internals/useDisposable';
 import { useAdapter } from '@mui/x-scheduler-internals/use-adapter';
+import { useExternalDragPlaceholderCleanup } from '@mui/x-scheduler-internals/internals';
 import { EventTimelinePremiumStore } from './EventTimelinePremiumStore';
 import type { EventTimelinePremiumParameters } from './EventTimelinePremiumStore.types';
 
@@ -15,6 +16,8 @@ export function useEventTimelinePremium<TEvent extends object, TResource extends
     () => store.updateStateFromParameters(parameters, adapter),
     [store, adapter, parameters],
   );
+
+  useExternalDragPlaceholderCleanup(store);
 
   return store;
 }

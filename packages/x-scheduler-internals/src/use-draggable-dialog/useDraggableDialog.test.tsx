@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
-import { screen, fireEvent, act } from '@mui/internal-test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   createSchedulerRenderer,
   startDrag,
+  startLongPressDrag,
   moveDrag,
+  moveDragAndWait,
   dropDrag,
-  cancelDrag,
 } from 'test/utils/scheduler';
 import { useDraggableDialog } from './useDraggableDialog';
 
@@ -32,7 +33,6 @@ function TestDialog() {
 describe('useDraggableDialog', () => {
   const { render } = createSchedulerRenderer();
   afterEach(() => {
-    cancelDrag();
     vi.useRealTimers();
   });
 
@@ -72,32 +72,32 @@ describe('useDraggableDialog', () => {
     expect(dialog.style.transform).toBe('translate(10px, 5px)');
   });
 
-  it('should restore the last completed position when Escape cancels a drag', () => {
+  it('should restore the last completed position when Escape cancels a drag', async () => {
     render(
       <Draggable.Provider>
         <TestDialog />
       </Draggable.Provider>,
     );
+    const dialog = screen.getByTestId('dialog');
     const handle = screen.getByTestId('handle');
     startDrag(handle);
     dropDrag(handle, { clientX: 30, clientY: 20 });
     startDrag(handle);
-    moveDrag(handle, { clientX: 100, clientY: 100 });
+    await moveDragAndWait(handle, { clientX: 100, clientY: 100 });
+    expect(dialog.style.transform).toBe('translate(130px, 120px)');
     fireEvent.keyDown(document.body, { key: 'Escape' });
-    expect(screen.getByTestId('dialog').style.transform).toBe('translate(30px, 20px)');
+    expect(dialog.style.transform).toBe('translate(30px, 20px)');
   });
 
-  it('should keep form controls inside the handle interactive', () => {
+  it('should not move from a form control inside the handle', () => {
     render(
       <Draggable.Provider>
         <TestDialog />
       </Draggable.Provider>,
     );
-    const input = screen.getByRole<HTMLInputElement>('textbox', { name: 'Title' });
-    startDrag(input);
+    const input = screen.getByRole('textbox', { name: 'Title' });
+    startDrag(input, { expectDrag: false });
     dropDrag(input, { clientX: 100, clientY: 100 });
-    fireEvent.change(input, { target: { value: 'Updated title' } });
-    expect(input.value).toBe('Updated title');
     expect(screen.getByTestId('dialog').style.transform).toBe('');
   });
 
@@ -109,15 +109,7 @@ describe('useDraggableDialog', () => {
       </Draggable.Provider>,
     );
     const handle = screen.getByTestId('handle');
-    fireEvent.pointerDown(handle, {
-      pointerId: 1,
-      pointerType: 'touch',
-      isPrimary: true,
-      buttons: 1,
-      clientX: 0,
-      clientY: 0,
-    });
-    await act(async () => vi.advanceTimersByTimeAsync(300));
+    await startLongPressDrag(handle, { clientX: 0, clientY: 0 });
     moveDrag(handle, { pointerType: 'touch', clientX: 30, clientY: 20 });
     dropDrag(handle, { pointerType: 'touch', clientX: 30, clientY: 20 });
     expect(screen.getByTestId('dialog').style.transform).toBe('translate(30px, 20px)');
@@ -131,15 +123,7 @@ describe('useDraggableDialog', () => {
       </Draggable.Provider>,
     );
     const control = screen.getByRole(name === 'Title' ? 'textbox' : 'button', { name });
-    fireEvent.pointerDown(control, {
-      pointerId: 1,
-      pointerType: 'touch',
-      isPrimary: true,
-      buttons: 1,
-      clientX: 0,
-      clientY: 0,
-    });
-    await act(async () => vi.advanceTimersByTimeAsync(300));
+    await startLongPressDrag(control, { clientX: 0, clientY: 0, expectDrag: false });
     moveDrag(control, { pointerType: 'touch', clientX: 30, clientY: 20 });
     dropDrag(control, { pointerType: 'touch', clientX: 30, clientY: 20 });
     expect(screen.getByTestId('dialog').style.transform).toBe('');
@@ -152,7 +136,7 @@ describe('useDraggableDialog', () => {
       </Draggable.Provider>,
     );
     const content = screen.getByTestId('content');
-    startDrag(content);
+    startDrag(content, { expectDrag: false });
     dropDrag(content, { clientX: 30, clientY: 20 });
     expect(screen.getByTestId('dialog').style.transform).toBe('');
   });

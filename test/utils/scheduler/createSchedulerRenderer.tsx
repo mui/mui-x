@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { afterEach } from 'vitest';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
 import { absorbObserverFrames } from './absorb-observer-frames';
+import { cancelDrag } from './dnd';
 
 interface CreateSchedulerRendererOptions extends Omit<
   CreateRendererOptions,
@@ -15,6 +17,10 @@ export function createSchedulerRenderer({
     clockConfig,
     ...createRendererOptions,
   });
+
+  // The drag engine is shared by the whole page and the test files run in one context: a drag left
+  // active, for example by a failed assertion mid-gesture, would refuse every later drag.
+  afterEach(cancelDrag);
 
   return {
     /**

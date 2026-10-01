@@ -1,4 +1,10 @@
-import { cancelDrag, dropDrag, moveDrag, startDrag } from 'test/utils/scheduler/dnd';
+import {
+  cancelDrag,
+  dropDrag,
+  moveDrag,
+  moveDragAndWait,
+  startDrag,
+} from 'test/utils/scheduler/dnd';
 import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -12,6 +18,7 @@ import {
   simulateDragAndDrop,
 } from 'test/utils/scheduler';
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import {
   buildDependency,
   createDependencyTimelineRenderer,
@@ -107,10 +114,8 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
   const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
 
   afterEach(() => {
-    // A failed assertion mid-gesture must not leak Base UI's global drag state or
-    // an armed click swallow into the next test.
+    // A failed assertion mid-gesture must not leak an armed click swallow into the next test.
     dropDrag(document.body, {});
-    cancelDrag();
     fireEvent.click(document.body);
   });
 
@@ -720,6 +725,18 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       cancelDrag();
     });
 
+    it('should show a crosshair cursor during a terminal drag', async () => {
+      await renderTimeline({ events: [eventA, eventB], dependencies: [] });
+
+      startDrag(getTerminal('Event A')!, {});
+      // Base UI locks the cursor on the frame after the drag starts.
+      await moveDragAndWait(document.body, { clientX: 120, clientY: 40 });
+
+      expect(document.documentElement.style.getPropertyValue('--drag-cursor')).to.equal(
+        'crosshair',
+      );
+    });
+
     it('should ignore dropping a terminal on its own event', async () => {
       const handleDependenciesChange = vi.fn();
       const { store } = await renderTimeline({
@@ -879,8 +896,7 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
 
-      // Canceling (e.g. with Escape) ends the drag without a drop: Base UI reports cancellation and routes
-      // it through `onDrop` with no drop targets.
+      // A canceled pointer ends the drag without a drop: the monitor's `onMoveEnd` gets no target.
       cancelDrag();
 
       await waitFor(() => {
@@ -1134,6 +1150,13 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
   });
 
   describe('selection and deletion', () => {
+    const eventC = EventBuilder.new()
+      .id('event-c')
+      .title('Event C')
+      .singleDay('2025-07-03T13:00:00Z')
+      .resource(resource2)
+      .build();
+
     it('should select an arrow on click and delete it with the arrowhead button', async () => {
       const handleDependenciesChange = vi.fn();
       await renderTimeline({
@@ -1289,38 +1312,88 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
     });
 
     it('should keep the selection when Escape cancels an in-flight creation drag', async () => {
+      const handleDependenciesChange = vi.fn();
       const { store } = await renderTimeline({
-        events: [eventA, eventB],
+        events: [eventA, eventB, eventC],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
       });
 
       fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
       expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
 
-      const source = getTerminal('Event B')!;
-      startDrag(source, {});
-      moveDrag(document.body, {
-        clientX: 120,
-        clientY: 40,
-      });
+      const target = getEventElement('Event C');
+      startDrag(getTerminal('Event B')!, {});
+      moveDrag(target, {});
+      moveDrag(target, {});
       await waitFor(() => {
-        expect(store.state.dependencyCreation).not.to.equal(null);
+        expect(target.hasAttribute('data-dependency-drop-target')).to.equal(true);
       });
 
       // Escape cancels the drag (Base UI handles it); the same keystroke must not
       // also drop the selection.
       fireEvent.keyDown(document.body, { key: 'Escape' });
-      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
-
-      dropDrag(document.body, {});
-      cancelDrag();
       await waitFor(() => {
         expect(store.state.dependencyCreation).to.equal(null);
       });
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+
+      // The button is still down: releasing it over the valid target creates nothing.
+      dropDrag(target, {});
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store.state.errors).to.have.length(0);
 
       // With no gesture in flight, Escape deselects again.
       fireEvent.keyDown(document.body, { key: 'Escape' });
       expect(store.state.selection).to.equal(null);
+    });
+
+    it('should let a link drag reach the terminal under the delete button of the selected arrow', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB, eventC],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b', 'FinishToFinish')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+      // The delete button of a FinishToFinish arrow covers the end terminal of its target.
+      const getTargetTerminal = () => getTerminal('Event B', undefined, 'end')!;
+      expect(getTargetTerminal().hasAttribute('data-dependency-muted')).to.equal(true);
+
+      // jsdom has no layout to hit test: the browser also checks that the pointer reaches the
+      // terminal, which a muted terminal lets through to the empty cell under it.
+      const hitTest = isJSDOM ? {} : { mockHitTest: false };
+      const centerOf = (element: Element) => {
+        const rect = element.getBoundingClientRect();
+        return { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
+      };
+      const source = getTerminal('Event C')!;
+      startDrag(source, { ...centerOf(source), ...hitTest });
+      // Over the target event first, which reveals its terminals.
+      await moveDragAndWait(getEventElement('Event B'), {
+        ...centerOf(getEventElement('Event B')),
+        ...hitTest,
+      });
+      await moveDragAndWait(getTargetTerminal(), { ...centerOf(getTargetTerminal()), ...hitTest });
+      await waitFor(() => {
+        expect(getTargetTerminal().hasAttribute('data-dependency-drop-target')).to.equal(true);
+      });
+      expect(getTargetTerminal().hasAttribute('data-dependency-muted')).to.equal(false);
+
+      dropDrag(getTargetTerminal(), { ...centerOf(getTargetTerminal()), ...hitTest });
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      const created = handleDependenciesChange.mock.calls[0][0].find(
+        (dependency: SchedulerDependency) => dependency.id !== 'dep-1',
+      );
+      expect(created).to.include({ source: 'event-c', target: 'event-b', type: 'FinishToFinish' });
+      // The arrow is still selected: its delete button covers the terminal again.
+      await waitFor(() => {
+        expect(store.state.dependencyCreation).to.equal(null);
+      });
+      expect(store.state.selection).to.deep.equal({ type: 'dependency', id: 'dep-1' });
+      expect(getTargetTerminal().hasAttribute('data-dependency-muted')).to.equal(true);
     });
 
     it('should deselect when clicking away from the arrow', async () => {
@@ -1512,6 +1585,32 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       appButton.remove();
 
       expect(store.state.selection).to.equal(null);
+      expect(handleClick.mock.calls.length).to.equal(1);
+    });
+
+    it('should not swallow a click without a press after a deselecting press turned into a drag', async () => {
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(document.querySelector('[data-dependency-hit="dep-1"]')!);
+
+      // The press on the event deselects and arms the swallow for its click, but it turns
+      // into a drag, and the drag engine swallows the click that ends it.
+      startDrag(getEventElement('Event A'), {});
+      expect(store.state.selection).to.equal(null);
+      await moveDragAndWait(document.body, { clientX: 300, clientY: 40 });
+      dropDrag(document.body, {});
+
+      // A click without a press, like the one assistive technology sends.
+      const appButton = document.createElement('button');
+      document.body.appendChild(appButton);
+      const handleClick = vi.fn();
+      appButton.addEventListener('click', handleClick);
+      appButton.click();
+      appButton.remove();
+
       expect(handleClick.mock.calls.length).to.equal(1);
     });
 

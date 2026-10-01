@@ -70,6 +70,8 @@ export const TimelineGridEventDependencyTerminal = React.forwardRef(
           <Draggable.Root
             kind={store.dependencyDragKind}
             payload={payload}
+            // The cursor the terminal shows at rest.
+            dragCursor="crosshair"
             render={withDragPreview(element, <Draggable.Preview disabled />)}
           />
         }

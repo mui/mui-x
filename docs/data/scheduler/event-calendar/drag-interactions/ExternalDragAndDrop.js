@@ -6,7 +6,7 @@ import { Draggable } from '@base-ui/react/draggable';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 
-import { schedulerEventMoveKinds } from '@mui/x-scheduler/internals';
+import { schedulerCalendarEventMoveKinds } from '@mui/x-scheduler/internals';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -111,7 +111,7 @@ export default function ExternalDragAndDrop() {
     <Draggable.Provider>
       <Container className="mui-x-scheduler">
         <Draggable.Target
-          accept={schedulerEventMoveKinds}
+          accept={schedulerCalendarEventMoveKinds}
           onDraggableEnter={({ source }) => {
             setPlaceholder(getExternalEvent(source.dragData));
           }}

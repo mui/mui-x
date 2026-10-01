@@ -1,4 +1,4 @@
-import { cancelDrag, moveDrag, startDrag } from 'test/utils/scheduler/dnd';
+import { moveDrag, startDrag } from 'test/utils/scheduler/dnd';
 import { waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
@@ -7,7 +7,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
 } from 'test/utils/scheduler';
-import { afterEach, describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
 import {
   createDependencyTimelineRenderer,
@@ -30,7 +30,6 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> drag auto-scroll', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
   const { renderTimeline } = createDependencyTimelineRenderer(renderSettled);
-  afterEach(cancelDrag);
 
   function getGrid() {
     return document.querySelector<HTMLElement>(`.${eventTimelinePremiumClasses.grid}`)!;

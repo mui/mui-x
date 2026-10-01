@@ -188,11 +188,11 @@ export namespace CalendarGridTimeColumn {
       BaseUIComponentProps<'div', State>,
       Pick<TimeColumnDropTarget.Props, 'addPropertiesToDroppedEvent'> {
     /**
-     * The data and time at which the column starts.
+     * The date and time at which the column starts.
      */
     start: TemporalSupportedObject;
     /**
-     * The data and time at which the column ends.
+     * The date and time at which the column ends.
      */
     end: TemporalSupportedObject;
     /**

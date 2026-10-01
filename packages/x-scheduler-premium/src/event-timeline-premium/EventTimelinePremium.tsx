@@ -144,6 +144,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              {/* The floating drag preview only reads the contexts above its provider. */}
               <Draggable.Provider>
                 <EventTimelinePremiumRoot
                   ref={forwardedRef}

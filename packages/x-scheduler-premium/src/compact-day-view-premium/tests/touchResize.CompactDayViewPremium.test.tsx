@@ -12,6 +12,7 @@ import {
   mockElementBounds,
   clientYForTime,
   getResizeHandle,
+  getTimeGridColumn,
   simulatePointerResize,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -34,12 +35,6 @@ describe('CompactDayViewPremium - touch resize (recurring)', () => {
     clearLicenseStatusCache();
     LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
   });
-
-  function getTimeGridColumn(): HTMLElement {
-    return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`,
-    )!;
-  }
 
   // Controlled wrapper so a committed resize re-renders with the resulting events (re-creating the
   // re-keyed occurrence we assert on). `onChange` mirrors each commit out for the time assertion.

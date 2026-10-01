@@ -155,7 +155,9 @@ StandaloneEvent.propTypes /* remove-proptypes */ = {
     title: PropTypes.string.isRequired,
   }).isRequired,
   /**
-   * Whether the rendered element is a native button.
+   * Whether the component renders a native `<button>` element when replacing it
+   * via the `render` prop.
+   * Set to `true` if the rendered element is a native button.
    * @default false
    */
   nativeButton: PropTypes.bool,

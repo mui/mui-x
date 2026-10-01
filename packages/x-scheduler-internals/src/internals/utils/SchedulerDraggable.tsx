@@ -24,11 +24,16 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
   } = props;
 
   const store = useSchedulerStoreContext();
+  const payload = React.useMemo<SchedulerEventDragPayload>(
+    () => ({ scope: store.dragScope }),
+    [store],
+  );
 
   return (
     <Draggable.Root
       {...other}
       ref={forwardedRef}
+      payload={payload}
       render={withDragPreview(render, preview)}
       onBeforeMoveStart={(value, eventDetails) => {
         value.source.updateDragData(getDragData(eventDetails.input));
@@ -48,10 +53,22 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
 export namespace SchedulerDraggable {
   export interface Props<TData extends SchedulerEventDragData> extends Omit<
     Draggable.Root.Props<SchedulerEventDragPayload, TData>,
-    'render' | 'children' | 'onBeforeMoveStart' | 'onMoveEnd'
+    'render' | 'children' | 'payload' | 'onBeforeMoveStart' | 'onMoveEnd'
   > {
+    /**
+     * Gets the drag data when the drag is about to start.
+     * @param {{ clientX: number, clientY: number }} input The pointer position that starts the drag.
+     * @returns {TData} The drag data.
+     */
     getDragData: (input: { clientX: number; clientY: number }) => TData;
+    /**
+     * The element to drag, already rendered with its own props. The root's props merge into it.
+     */
     render: React.ReactElement;
+    /**
+     * The `Draggable.Preview` of the drag.
+     * @default <Draggable.Preview disabled />
+     */
     preview?: React.ReactNode;
   }
 }

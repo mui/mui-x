@@ -6,6 +6,7 @@ import {
   mockElementBounds,
   clientYForTime,
   getResizeHandle,
+  getTimeGridColumn,
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
@@ -17,12 +18,6 @@ import { vi, describe, it, expect } from 'vitest';
  */
 describe('CompactDayView - touch resize', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
-
-  function getTimeGridColumn(): HTMLElement {
-    return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`,
-    )!;
-  }
 
   function renderResizableEvent({ onEventsChange = vi.fn(), controlled = false } = {}) {
     const event = EventBuilder.new()

@@ -27,7 +27,7 @@ Keep the drag kinds on `internals` until the engine and its types are released.
 These changes require a new upstream release or preview before Scheduler can use them.
 
 - Let `Draggable.Root` accept a preview declaration or append its children to the render
-  element. Then remove `withDragPreview`, which clones the render element to add the preview.
+  element. Then remove `withDragPreview`, which renders the preview beside the render element.
 - Support an inset auto-scroll hitbox or a bounds callback. Then remove the timeline's
   `getBoundingClientRect` override for its pinned title column.
 
@@ -35,11 +35,15 @@ These changes require a new upstream release or preview before Scheduler can use
 
 Dialog headers now support Base UI's touch long press. Title inputs and close buttons inside
 that handle remain interactive, and compact drawers continue to disable dragging.
-Mouse and touch regression tests cover the handle and its form controls.
+On touch, only the header moves a read-only dialog, so a long press on its details still
+selects text. Mouse and touch regression tests cover the handle and its form controls.
 
 Time-grid resize handles start a resize on the first touch or pen contact, through the
-engine's `immediate` activation. The engine blocks page scroll once the drag is active, so the
-handle no longer overrides `touch-action`. Verify this on a real iOS device before publishing.
+engine's `immediate` activation. The handle no longer overrides `touch-action`: the engine
+cancels every `touchmove` of the active drag, and on a touch screen the resize handles only show
+on an armed event, whose `useBlockScrollWhileArmed` listener makes the touch sequence cancelable
+before it starts. A Chromium browser test drives the gesture with real touch input. Verify it on a real
+iOS device before publishing. A tap on a handle still reaches the event.
 
 A time-grid resize locks the pointer to the column it started in, for every pointer type.
 A mouse resize can no longer extend into the next day's column. Releasing a touch or pen resize

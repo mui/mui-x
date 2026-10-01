@@ -11,6 +11,7 @@ import {
   mockElementBounds,
   clientYForTime,
   getResizeHandle,
+  getTimeGridColumn,
   simulatePointerResize,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -38,12 +39,6 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
   afterEach(() => {
     window.matchMedia = originalMatchMedia;
   });
-
-  function getTimeGridColumn(): HTMLElement {
-    return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`,
-    )!;
-  }
 
   // Controlled wrapper so a committed resize re-renders with the resulting events, re-creating the
   // (re-keyed) occurrence the toolbar must re-anchor to.

@@ -2,10 +2,13 @@ import * as React from 'react';
 import type { AnyEventCalendarStore } from 'test/utils/scheduler';
 import {
   adapter,
+  createMatchMedia,
   createSchedulerRenderer,
-  cancelDrag,
   dropDrag,
+  moveDrag,
+  moveDragAndWait,
   startDrag,
+  startLongPressDrag,
   EventBuilder,
   utcJuly4AllDayBuilder,
   ResourceBuilder,
@@ -505,15 +508,49 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('drag', () => {
-    afterEach(cancelDrag);
+    const originalMatchMedia = window.matchMedia;
+    afterEach(() => {
+      window.matchMedia = originalMatchMedia;
+    });
 
-    function renderDialog() {
+    function renderDialog(props: Partial<typeof defaultProps> = {}) {
       render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-          <EventDialogContent open {...defaultProps} />
+          <EventDialogContent open {...defaultProps} {...props} />
         </EventCalendarProvider>,
       );
       return { dialog: screen.getByRole('dialog'), header: document.querySelector('header')! };
+    }
+
+    function renderReadonlyDialog() {
+      const readonlyEvent: SchedulerEvent = EventBuilder.new()
+        .title('Running')
+        .description('Morning run')
+        .singleDay('2025-05-26T07:30:00Z', 45)
+        .resource(personalResource)
+        .readOnly()
+        .build();
+
+      render(
+        <EventCalendarProvider events={[readonlyEvent]} resources={resources}>
+          <EventDialogContent
+            open
+            {...defaultProps}
+            occurrence={EventBuilder.new()
+              .id(readonlyEvent.id)
+              .title(readonlyEvent.title)
+              .description('Morning run')
+              .span(readonlyEvent.start, readonlyEvent.end)
+              .resource(personalResource)
+              .toOccurrence()}
+          />
+        </EventCalendarProvider>,
+      );
+      return {
+        dialog: screen.getByRole('dialog'),
+        header: document.querySelector('header')!,
+        details: screen.getByText('Morning run'),
+      };
     }
 
     it('should move from its header', () => {
@@ -525,15 +562,66 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(dialog.style.transform).to.equal('translate(30px, 20px)');
     });
 
+    it('should move from its header on touch after a long press', async () => {
+      const { dialog, header } = renderDialog();
+
+      await startLongPressDrag(header, { clientX: 0, clientY: 0 });
+      moveDrag(header, { pointerType: 'touch', clientX: 30, clientY: 20 });
+      dropDrag(header, { pointerType: 'touch', clientX: 30, clientY: 20 });
+
+      expect(dialog.style.transform).to.equal('translate(30px, 20px)');
+    });
+
+    it('should not move from the title field on touch', async () => {
+      const { dialog } = renderDialog();
+      const titleInput = screen.getByRole('textbox', { name: /event title/i });
+
+      await startLongPressDrag(titleInput, { expectDrag: false });
+      dropDrag(titleInput, { pointerType: 'touch', clientX: 30, clientY: 20 });
+
+      expect(dialog.style.transform).to.equal('none');
+    });
+
+    it.skipIf(isJSDOM)('should keep the title field selectable inside the header handle', () => {
+      renderDialog();
+
+      // The engine makes the handle unselectable, and Safari then refuses typing in the field.
+      expect(
+        getComputedStyle(screen.getByRole('textbox', { name: /event title/i })).userSelect,
+      ).to.equal('text');
+    });
+
     it('should not move from its content, so the form keeps its own pointer gestures', () => {
       const { dialog } = renderDialog();
       const form = dialog.querySelector('form')!;
 
-      startDrag(form);
+      startDrag(form, { expectDrag: false });
       dropDrag(form, { clientX: 30, clientY: 20 });
 
       // Positioned at its anchor, and not moved.
       expect(dialog.style.transform).to.equal('none');
+    });
+
+    it('should cancel the drag on Escape without closing the dialog', async () => {
+      const onClose = vi.fn();
+      const { dialog, header } = renderDialog({ onClose });
+      // The focused field, inside the dialog, receives the key press.
+      const titleInput = screen.getByRole('textbox', { name: /event title/i });
+      startDrag(header);
+      dropDrag(header, { clientX: 30, clientY: 20 });
+
+      startDrag(header);
+      await moveDragAndWait(header, { clientX: 100, clientY: 100 });
+      expect(dialog.style.transform).to.equal('translate(130px, 120px)');
+
+      fireEvent.keyDown(titleInput, { key: 'Escape' });
+
+      expect(dialog.style.transform).to.equal('translate(30px, 20px)');
+      expect(onClose.mock.calls.length).to.equal(0);
+
+      // Once no drag is active, Escape closes the dialog again.
+      fireEvent.keyDown(titleInput, { key: 'Escape' });
+      expect(onClose.mock.calls.length).to.equal(1);
     });
 
     it('should return to its anchored position when the window is resized', () => {
@@ -547,35 +635,38 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       expect(dialog.style.transform).to.equal('none');
     });
-  });
 
-  it.skipIf(isJSDOM)('should keep the details of a readonly event selectable', () => {
-    const readonlyEvent: SchedulerEvent = EventBuilder.new()
-      .title('Running')
-      .description('Morning run')
-      .singleDay('2025-05-26T07:30:00Z', 45)
-      .resource(personalResource)
-      .readOnly()
-      .build();
+    it('should move a read-only dialog from its details with a fine pointer', () => {
+      window.matchMedia = createMatchMedia(false);
+      const { dialog, details } = renderReadonlyDialog();
 
-    render(
-      <EventCalendarProvider events={[readonlyEvent]} resources={resources}>
-        <EventDialogContent
-          open
-          {...defaultProps}
-          occurrence={EventBuilder.new()
-            .id(readonlyEvent.id)
-            .title(readonlyEvent.title)
-            .description('Morning run')
-            .span(readonlyEvent.start, readonlyEvent.end)
-            .resource(personalResource)
-            .toOccurrence()}
-        />
-      </EventCalendarProvider>,
-    );
+      startDrag(details);
+      dropDrag(details, { clientX: 30, clientY: 20 });
 
-    // The whole content of the dialog is a drag handle, which the engine makes unselectable.
-    expect(getComputedStyle(screen.getByText('Morning run')).userSelect).to.equal('text');
+      expect(dialog.style.transform).to.equal('translate(30px, 20px)');
+    });
+
+    it('should move a read-only dialog only from its header on a coarse pointer', async () => {
+      window.matchMedia = createMatchMedia(true);
+      const { dialog, header, details } = renderReadonlyDialog();
+
+      // A long press on the details selects their text instead.
+      await startLongPressDrag(details, { expectDrag: false });
+      dropDrag(details, { pointerType: 'touch', clientX: 30, clientY: 20 });
+      expect(dialog.style.transform).to.equal('none');
+
+      await startLongPressDrag(header, { clientX: 0, clientY: 0 });
+      moveDrag(header, { pointerType: 'touch', clientX: 30, clientY: 20 });
+      dropDrag(header, { pointerType: 'touch', clientX: 30, clientY: 20 });
+      expect(dialog.style.transform).to.equal('translate(30px, 20px)');
+    });
+
+    it.skipIf(isJSDOM)('should keep the details of a readonly event selectable', () => {
+      const { details } = renderReadonlyDialog();
+
+      // The whole content of the dialog is a drag handle, which the engine makes unselectable.
+      expect(getComputedStyle(details).userSelect).to.equal('text');
+    });
   });
 
   it('should warn and strip the rrule when createEvent is called with one', () => {

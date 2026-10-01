@@ -12,8 +12,11 @@ const getDeltas = (location: Draggable.LocationHistory) => {
 };
 
 /**
- * Moves the dialog from its header handle. Touch uses Base UI's long-press activation;
- * form controls inside the handle remain interactive. Compact drawers disable dragging.
+ * Lets the user move a dialog by dragging it.
+ * Spread `draggableProps` on a `Draggable.Root` that renders the dialog element, attach `elementRef`
+ * to that element, and render a `Draggable.Handle` inside it where the drag should start.
+ * The dialog moves through a `transform` on the element: call `resetDrag` to clear the offset,
+ * for example when the dialog repositions. A canceled drag puts the dialog back where it was.
  */
 export function useDraggableDialog() {
   // The ref of the element the dialog moves, which is also the element that renders the root.

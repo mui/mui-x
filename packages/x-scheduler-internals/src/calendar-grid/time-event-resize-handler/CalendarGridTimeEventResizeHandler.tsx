@@ -9,14 +9,7 @@ import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandl
 import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
 import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
 import type { SchedulerEventSide } from '../../models';
-
-// A finger or pen resizes from the first contact instead of after a hold, since the handle is
-// the only thing under it. The date depends on the vertical position only, so the drag stays
-// on the column it started in however far the pointer drifts sideways.
-const TOUCH_AND_PEN_ACTIVATION = {
-  touch: { type: 'immediate' },
-  pen: { type: 'immediate' },
-} as const;
+import { TIME_EVENT_RESIZE_ACTIVATION } from './timeEventResizeActivation';
 
 export const CalendarGridTimeEventResizeHandler = React.forwardRef(
   function CalendarGridTimeEventResizeHandler(
@@ -37,15 +30,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
     // Context hooks
     const contextValue = useCalendarGridTimeEventContext();
 
-    const { state, enabled, draggableProps } = useEventResizeHandler({
-      context: contextValue,
-      getEventDragData: contextValue.getDragData,
-      kind: schedulerTimeEventResizeKind,
-      side,
-      activation: TOUCH_AND_PEN_ACTIVATION,
-      modifiers: Draggable.restrictToVerticalAxis,
-      dragCursor: 'ns-resize',
-    });
+    const { state, enabled, getDragData } = useEventResizeHandler({ context: contextValue, side });
 
     const element = useRenderElement('div', componentProps, {
       enabled,
@@ -54,7 +39,20 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       props: [elementProps],
     });
 
-    return element && <SchedulerDraggable {...draggableProps} render={element} />;
+    return (
+      element && (
+        <SchedulerDraggable
+          kind={schedulerTimeEventResizeKind}
+          getDragData={getDragData}
+          activation={TIME_EVENT_RESIZE_ACTIVATION}
+          // The date depends on the vertical position only, so the drag stays on the column it
+          // started in however far the pointer drifts sideways.
+          modifiers={Draggable.restrictToVerticalAxis}
+          dragCursor="ns-resize"
+          render={element}
+        />
+      )
+    );
   },
 );
 

@@ -161,7 +161,5 @@ The move kinds accept events dragged from the calendar views and the timeline, a
 
 This integration is experimental until Base UI releases its drag engine.
 It needs a Base UI version that includes the drag engine, which has not been released yet.
-The previous `@mui/x-scheduler-internals/build-is-valid-drop-target` helper has been removed.
-Replace it with a `Draggable.Target` that accepts the Scheduler move kinds.
 
 {{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": true}}

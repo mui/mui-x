@@ -1,7 +1,7 @@
 import { Draggable } from '@base-ui/react/draggable';
 import {
   createSchedulerEventKind,
-  schedulerEventMoveKinds as calendarEventMoveKinds,
+  schedulerCalendarEventMoveKinds,
 } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
@@ -17,7 +17,10 @@ export const schedulerTimelineEventResizeKind =
   createSchedulerEventKind<TimelineGridEventResizeHandler.DragData>('timeline-event-resize');
 
 /** The kinds of the events dragged out of the calendar grids and the timeline. */
-export const schedulerEventMoveKinds = [...calendarEventMoveKinds, schedulerTimelineEventMoveKind];
+export const schedulerEventMoveKinds = [
+  ...schedulerCalendarEventMoveKinds,
+  schedulerTimelineEventMoveKind,
+];
 
 /** Identifies the terminal a create-dependency drag started from. */
 export interface SchedulerDependencyDragPayload {

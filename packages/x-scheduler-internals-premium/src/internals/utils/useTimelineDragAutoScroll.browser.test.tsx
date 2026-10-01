@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Draggable } from '@base-ui/react/draggable';
 import { screen, waitFor } from '@mui/internal-test-utils';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   createSchedulerRenderer,
+  ExternalEventSource,
   ResourceBuilder,
   startDrag,
   moveDrag,
@@ -11,37 +11,30 @@ import {
 } from 'test/utils/scheduler';
 import { absorbObserverFrames } from 'test/utils/scheduler/absorb-observer-frames';
 import { isJSDOM } from 'test/utils/skipIf';
-import { schedulerExternalEventKind } from '@mui/x-scheduler-internals/internals';
 import { EventTimelinePremiumProvider } from '../../event-timeline-premium-provider';
 import { useTimelineDragAutoScroll } from './useTimelineDragAutoScroll';
 
+const eventData = { id: 'event', title: 'Event' };
+
 function Timeline() {
   const scrollerRef = React.useRef<HTMLDivElement>(null);
-  const viewportProps = useTimelineDragAutoScroll({ scrollerRef, pinnedLeftWidth: 80 });
+  useTimelineDragAutoScroll({ scrollerRef, pinnedLeftWidth: 80 });
   return (
     <React.Fragment>
-      <Draggable.Root
-        kind={schedulerExternalEventKind}
-        payload={{ eventData: { id: 'event', title: 'Event' } }}
-        data-testid="source"
-      >
-        <Draggable.Preview disabled />
-      </Draggable.Root>
-      <Draggable.Viewport
-        {...viewportProps}
+      <ExternalEventSource eventData={eventData} data-testid="source" />
+      <div
         ref={scrollerRef}
         data-testid="timeline"
         style={{ position: 'fixed', left: 0, top: 100, width: 300, height: 200, overflow: 'auto' }}
       >
         <div style={{ width: 1200, height: 1200 }} />
-      </Draggable.Viewport>
+      </div>
     </React.Fragment>
   );
 }
 
 describe.skipIf(isJSDOM)('timeline drag auto-scroll', () => {
   const { render } = createSchedulerRenderer();
-  afterEach(cancelDrag);
 
   it('should scroll at the events edge and exclude the pinned title column', async () => {
     const view = render(

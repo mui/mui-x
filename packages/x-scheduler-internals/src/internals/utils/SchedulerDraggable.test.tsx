@@ -14,9 +14,7 @@ import { schedulerDayEventMoveKind } from './schedulerDrag';
 import type { CalendarGridDayEvent } from '../../calendar-grid/day-event/CalendarGridDayEvent';
 
 const occurrence = EventBuilder.new().fullDay('2025-07-03').toOccurrence();
-const payload = { eventId: occurrence.id, occurrenceKey: occurrence.key, store: null };
 const snapshot: CalendarGridDayEvent.DragData = {
-  ...payload,
   originalOccurrence: occurrence,
   start: occurrence.displayTimezone.start.value,
   end: occurrence.displayTimezone.end.value,
@@ -34,7 +32,6 @@ function Fixture({
     <EventCalendarProvider events={[]} resources={[]}>
       <SchedulerDraggable
         kind={schedulerDayEventMoveKind}
-        payload={payload}
         getDragData={getDragData}
         onMove={onMove}
         render={<div data-testid="source">Event</div>}
@@ -64,7 +61,6 @@ describe('Scheduler drag snapshots', () => {
         requestAnimationFrame(() => resolve());
       });
     });
-    expect(onMove.mock.lastCall![0].source.payload).toBe(payload);
     expect(onMove.mock.lastCall![0].source.dragData).toBe(snapshot);
     expect(nextGetDragData).not.toHaveBeenCalled();
 
@@ -95,12 +91,67 @@ describe('Scheduler drag snapshots', () => {
         <SchedulerDraggable
           ref={ref}
           kind={schedulerDayEventMoveKind}
-          payload={payload}
           getDragData={() => snapshot}
           render={<div data-testid="source">Event</div>}
         />
       </EventCalendarProvider>,
     );
     expect(ref.current).toBe(screen.getByTestId('source'));
+  });
+
+  // Base UI marks a disabled draggable with `data-disabled`. A Scheduler event that can't be
+  // dragged is still an enabled control, which styles for `[data-disabled]` must not dim.
+  it('should not mark the element as disabled when dragging is disabled', () => {
+    render(
+      <EventCalendarProvider events={[]} resources={[]}>
+        <SchedulerDraggable
+          kind={schedulerDayEventMoveKind}
+          disabled
+          getDragData={() => snapshot}
+          render={<div data-testid="source">Event</div>}
+        />
+      </EventCalendarProvider>,
+    );
+    expect(screen.getByTestId('source')).not.to.have.attribute('data-disabled');
+  });
+
+  it('should keep the data-disabled attribute of the element it renders', () => {
+    render(
+      <EventCalendarProvider events={[]} resources={[]}>
+        <SchedulerDraggable
+          kind={schedulerDayEventMoveKind}
+          getDragData={() => snapshot}
+          render={<div data-testid="source" data-disabled="" />}
+        />
+      </EventCalendarProvider>,
+    );
+    expect(screen.getByTestId('source')).to.have.attribute('data-disabled');
+  });
+
+  // The preview only has to be inside the root. As a child of the render element, it would break a
+  // `render` that wraps a single child or ignores its children.
+  it('should not add children to the element it renders', () => {
+    const receivedChildren: React.ReactNode[] = [];
+    function SingleChild(props: { children?: React.ReactNode }) {
+      receivedChildren.push(props.children);
+      return <div data-testid="source">{props.children}</div>;
+    }
+    render(
+      <EventCalendarProvider events={[]} resources={[]}>
+        <SchedulerDraggable
+          kind={schedulerDayEventMoveKind}
+          getDragData={() => snapshot}
+          render={
+            <SingleChild>
+              <span>Event</span>
+            </SingleChild>
+          }
+        />
+      </EventCalendarProvider>,
+    );
+    expect(receivedChildren.length).toBeGreaterThan(0);
+    receivedChildren.forEach((children) => {
+      expect(React.isValidElement(children) && children.type).toBe('span');
+    });
   });
 });

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { SchedulerEventDragData } from './schedulerDrag';
 import type { SchedulerDraggable } from './SchedulerDraggable';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
@@ -12,6 +13,7 @@ import type { RenderDragPreviewParameters, SchedulerEventId } from '../../models
 import type { useElementPositionInCollection } from './useElementPositionInCollection';
 import { SchedulerDragPreview } from './SchedulerDragPreview';
 import { useEvent } from './useEvent';
+import { useOriginalOccurrence } from './useOriginalOccurrence';
 
 export function useDraggableEvent<TData extends SchedulerEventDragData>(
   parameters: useDraggableEvent.Parameters<TData>,
@@ -22,8 +24,9 @@ export function useDraggableEvent<TData extends SchedulerEventDragData>(
     end,
     occurrenceKey,
     eventId,
+    dataTimezone,
     renderDragPreview,
-    getDragData,
+    getExtraDragData,
     position,
     isDraggable = false,
   } = parameters;
@@ -42,6 +45,24 @@ export function useDraggableEvent<TData extends SchedulerEventDragData>(
 
   // Feature hooks
   const { state: eventState } = useEvent({ start, end, occurrenceKey });
+  const getOriginalOccurrence = useOriginalOccurrence({
+    eventId,
+    occurrenceKey,
+    start,
+    end,
+    dataTimezone,
+  });
+
+  // Read when the drag is about to start, so it always sees the latest event.
+  const getDragData = useStableCallback(
+    (input: { clientX: number; clientY: number }) =>
+      ({
+        originalOccurrence: getOriginalOccurrence(),
+        start: start.value,
+        end: end.value,
+        ...getExtraDragData(input),
+      }) as TData,
+  );
 
   const state = {
     ...eventState,
@@ -49,14 +70,8 @@ export function useDraggableEvent<TData extends SchedulerEventDragData>(
     resizing: placeholderAction === 'internal-resize',
   };
 
-  const payload = React.useMemo(
-    () => ({ eventId, occurrenceKey, store }),
-    [eventId, occurrenceKey, store],
-  );
-
   const draggableProps: Omit<SchedulerDraggable.Props<TData>, 'render'> = {
     kind,
-    payload,
     disabled: !isDraggable,
     getDragData,
     preview: (
@@ -72,14 +87,13 @@ export function useDraggableEvent<TData extends SchedulerEventDragData>(
   // already rendered with, so "clipped" and "rendered somewhere else" cannot drift apart
   // — notably an end at the exact midnight closing the collection renders at its real
   // position.
-  const contextValue: useDraggableEvent.ContextValue = React.useMemo(
+  const contextValue: useDraggableEvent.ContextValue<TData> = React.useMemo(
     () => ({
-      eventId,
-      occurrenceKey,
       isEventStartClipped: position.startingBeforeEdge,
       isEventEndClipped: position.endingAfterEdge,
+      getDragData,
     }),
-    [eventId, occurrenceKey, position.startingBeforeEdge, position.endingAfterEdge],
+    [position.startingBeforeEdge, position.endingAfterEdge, getDragData],
   );
 
   return { state, contextValue, draggableProps };
@@ -119,14 +133,18 @@ export namespace useDraggableEvent {
     occurrenceKey: string;
   }
 
-  export interface Parameters<TData extends SchedulerEventDragData> extends PublicParameters {
+  export interface Parameters<TData extends SchedulerEventDragData>
+    extends PublicParameters, Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
     kind: SchedulerDraggable.Props<TData>['kind'];
     /**
-     * Gets the drag data.
-     * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
-     * @returns {any} The shared drag data.
+     * Gets the fields the surface adds to the drag data of the occurrence, such as the grab offset.
+     * @param {{ clientX: number, clientY: number }} input The pointer position that starts the drag.
+     * @returns {object} The fields to add.
      */
-    getDragData: SchedulerDraggable.Props<TData>['getDragData'];
+    getExtraDragData: (input: {
+      clientX: number;
+      clientY: number;
+    }) => Omit<TData, keyof SchedulerEventDragData>;
     /**
      * The position the caller renders the event at. The clipping flags come from it, so a
      * single pass of the positioning arithmetic serves both rendering and resizing.
@@ -143,12 +161,10 @@ export namespace useDraggableEvent {
     /**
      * The context to access in useEventResizeHandler.
      */
-    contextValue: ContextValue;
+    contextValue: ContextValue<TData>;
   }
 
-  export interface ContextValue {
-    eventId: SchedulerEventId;
-    occurrenceKey: string;
+  export interface ContextValue<TData extends SchedulerEventDragData = SchedulerEventDragData> {
     /**
      * Whether the event's start does not render at its real position: it is before the
      * collection start or hidden by the daily hour window.
@@ -159,5 +175,11 @@ export namespace useDraggableEvent {
      * collection end or hidden by the daily hour window.
      */
     isEventEndClipped: boolean;
+    /**
+     * Gets the drag data of the event, which its resize handlers extend with their side.
+     * @param {{ clientX: number, clientY: number }} input The pointer position that starts the drag.
+     * @returns {TData} The drag data.
+     */
+    getDragData: (input: { clientX: number; clientY: number }) => TData;
   }
 }

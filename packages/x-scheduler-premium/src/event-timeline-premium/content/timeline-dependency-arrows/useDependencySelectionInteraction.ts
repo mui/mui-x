@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStore } from '@base-ui/utils/store';
 import { getTarget } from '@base-ui/utils/shadowDom';
 import { isElement, isNode } from '@mui/x-scheduler-internals/internals';
@@ -60,6 +61,9 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
   // tears the effect down before the click arrives), so only unmounting may disarm it.
   const armedDisarmRef = React.useRef<(() => void) | null>(null);
   React.useEffect(() => () => armedDisarmRef.current?.(), []);
+  // A press that turns into a drag produces no click of its own: the engine swallows it before
+  // the document sees it, so the swallow would stay armed for the next, unrelated click.
+  Draggable.useMonitor({ onMoveStart: () => armedDisarmRef.current?.() });
 
   React.useEffect(() => {
     if (selectedId === null) {
@@ -127,8 +131,8 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
       }
       // The one-shot listeners outlive this effect on purpose (deselecting tears it
       // down before the click arrives) and disarm themselves on the click, or on any
-      // signal that the press will not produce one (a canceled pointer, a keystroke).
-      // A press that turns into a drag is disarmed by the next press or keystroke at the latest.
+      // signal that the press will not produce one (a drag, a canceled pointer, a
+      // keystroke).
       function swallowClick(clickEvent: MouseEvent) {
         clickEvent.stopPropagation();
         disarm();

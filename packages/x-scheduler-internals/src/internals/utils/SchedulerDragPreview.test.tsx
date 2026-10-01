@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { act, screen, waitFor } from '@mui/internal-test-utils';
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cancelDrag, createSchedulerRenderer, moveDrag, startDrag } from 'test/utils/scheduler';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  cancelDrag,
+  createSchedulerRenderer,
+  moveDragAndWait,
+  startDrag,
+} from 'test/utils/scheduler';
 import { schedulerDayEventMoveKind, schedulerDropTargetKind } from './schedulerDrag';
 import { SchedulerDragPreview } from './SchedulerDragPreview';
 
 const PreviewContext = React.createContext('missing context');
-const payload = { eventId: 'event', occurrenceKey: 'event', store: null };
+const payload = { scope: Symbol('scheduler') };
 
 function PreviewContent() {
   return <span>{React.useContext(PreviewContext)}</span>;
@@ -51,18 +56,8 @@ function Fixture({
   );
 }
 
-async function moveTo(element: Element, clientX: number) {
-  await act(async () => {
-    moveDrag(element, { clientX });
-    await new Promise<void>((resolve) => {
-      requestAnimationFrame(() => resolve());
-    });
-  });
-}
-
 describe('Scheduler floating drag preview', () => {
   const { render } = createSchedulerRenderer();
-  afterEach(cancelDrag);
 
   it('should keep context and switch visibility when entering and leaving Scheduler targets', async () => {
     const renderPreview = vi.fn(() => <PreviewContent />);
@@ -72,9 +67,9 @@ describe('Scheduler floating drag preview', () => {
     expect(content).toBeVisible();
     const initialRenderCount = renderPreview.mock.calls.length;
 
-    await moveTo(screen.getByTestId('target'), 100);
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(content.parentElement!.style.visibility).toBe('hidden');
-    await moveTo(document.body, 200);
+    await moveDragAndWait(document.body, { clientX: 200 });
     expect(content).toBeVisible();
     expect(renderPreview).toHaveBeenCalledTimes(initialRenderCount);
 
@@ -89,7 +84,7 @@ describe('Scheduler floating drag preview', () => {
     await screen.findByText('Custom preview');
     view.setProps({ showSource: false });
     expect(screen.queryByTestId('source')).toBe(null);
-    await moveTo(document.body, 200);
+    await moveDragAndWait(document.body, { clientX: 200 });
     expect(screen.getByText('Custom preview')).toBeVisible();
     cancelDrag();
     await waitFor(() => expect(screen.queryByText('Custom preview')).toBe(null));
@@ -99,7 +94,7 @@ describe('Scheduler floating drag preview', () => {
     const renderPreview = vi.fn(() => <PreviewContent />);
     render(<Fixture renderPreview={renderPreview} disabled />);
     await act(async () => startDrag(screen.getByTestId('source')));
-    await moveTo(screen.getByTestId('target'), 100);
+    await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
     expect(screen.queryByText('Custom preview')).toBe(null);
     expect(renderPreview).not.toHaveBeenCalled();
     expect(screen.getByTestId('source').hasAttribute('data-dragging')).toBe(true);

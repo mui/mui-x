@@ -5,15 +5,19 @@ import {
   EventBuilder,
   getMonthViewCell,
   simulateDragAndDrop,
+  startDrag,
+  startLongPressDrag,
+  moveDrag,
+  moveDragAndWait,
+  dropDrag,
   mockElementBounds,
   getResizeHandle,
 } from 'test/utils/scheduler';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
-import { vi, describe, it, expect, afterEach } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('MonthView - Drag and Drop', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
-  afterEach(cancelDrag);
 
   it('should keep multi-day previews in each week crossed by the dragged occurrence', async () => {
     const event = EventBuilder.new()
@@ -24,12 +28,8 @@ describe('MonthView - Drag and Drop', () => {
     render(<StandaloneMonthView events={[event]} resources={[]} canDropEventsToTheOutside />);
     const source = screen.getByRole('button', { name: /Multi-week preview/i });
     mockElementBounds(source, { left: 0, width: 300 });
-    await act(async () => {
-      simulateDragAndDrop({ source, target: getMonthViewCell(5), sourceClientX: 50, hold: true });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    startDrag(source, { clientX: 50 });
+    await moveDragAndWait(getMonthViewCell(5));
     const placeholders = document.querySelectorAll('.MuiEventCalendar-dayGridEventPlaceholder');
     expect(placeholders).toHaveLength(2);
     expect(placeholders[0].closest('[role="row"]')).not.toBe(
@@ -52,12 +52,8 @@ describe('MonthView - Drag and Drop', () => {
     const source = screen.getByRole('button', { name: /Floating preview/i });
     mockElementBounds(source, { left: 0, width: 300 });
 
-    await act(async () => {
-      simulateDragAndDrop({ source, target: document.body, sourceClientX: 50, hold: true });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    startDrag(source, { clientX: 50 });
+    await moveDragAndWait(document.body);
 
     // The preview is portaled by the drag provider, which has to sit below the styled contexts.
     await waitFor(() => {
@@ -75,12 +71,8 @@ describe('MonthView - Drag and Drop', () => {
     const source = screen.getByRole('button', { name: /No floating preview/i });
     mockElementBounds(source, { left: 0, width: 300 });
 
-    await act(async () => {
-      simulateDragAndDrop({ source, target: document.body, sourceClientX: 50, hold: true });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    startDrag(source, { clientX: 50 });
+    await moveDragAndWait(document.body);
 
     expect(document.querySelector('.MuiEventCalendar-eventDragPreview')).to.equal(null);
   });
@@ -145,6 +137,64 @@ describe('MonthView - Drag and Drop', () => {
     expect(durationDays).to.be.greaterThanOrEqual(2); // ~3 day span
   });
 
+  it('should move an all-day event by the day held on touch after a long press', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Offsite')
+      .span('2025-07-03T00:00:00Z', '2025-07-04T23:59:59Z', { allDay: true })
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneMonthView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    const eventElement = screen.getByRole('button', { name: /Offsite/i });
+    mockElementBounds(eventElement, { left: 0, width: 200 });
+    const targetCell = getMonthViewCell(8);
+
+    // The finger holds the second day of the event, July 4, and drops it on July 8.
+    await startLongPressDrag(eventElement, { clientX: 150 });
+    moveDrag(targetCell, { pointerType: 'touch' });
+    dropDrag(targetCell, { pointerType: 'touch' });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvent = handleEventsChange.mock.calls[0][0][0];
+    expect(new Date(updatedEvent.start).toISOString()).to.equal('2025-07-07T00:00:00.000Z');
+    expect(new Date(updatedEvent.end).toISOString()).to.equal('2025-07-08T23:59:59.999Z');
+  });
+
+  it('should not pick up an event on touch when the finger moves before the long press completes', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Conference')
+      .fullDay('2025-07-03')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneMonthView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    const eventElement = screen.getByRole('button', { name: /Conference/i });
+    mockElementBounds(eventElement, { left: 0, width: 100 });
+
+    // The finger slides 6px right after the press, like a scroll does.
+    startDrag(eventElement, { pointerType: 'touch', clientX: 56, expectDrag: false });
+    // The hold duration passes with the finger still down.
+    await act(async () => {
+      await new Promise<void>((resolve) => {
+        setTimeout(resolve, 300);
+      });
+    });
+    expect(eventElement).not.to.have.attribute('data-dragging');
+
+    dropDrag(getMonthViewCell(5), { pointerType: 'touch' });
+    expect(handleEventsChange).not.toHaveBeenCalled();
+  });
+
   it('should not move an event that is read-only or not draggable', async () => {
     const handleEventsChange = vi.fn();
     const events = [
@@ -165,6 +215,7 @@ describe('MonthView - Drag and Drop', () => {
           source: eventElement,
           target: getMonthViewCell(5),
           sourceClientX: 50,
+          expectDrag: false,
         });
       });
     }

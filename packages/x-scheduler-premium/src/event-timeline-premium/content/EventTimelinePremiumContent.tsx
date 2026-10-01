@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { Draggable } from '@base-ui/react/draggable';
 import { styled, useTheme } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
@@ -505,6 +504,29 @@ function FillerRow() {
 }
 
 /**
+ * One event of a row. Memoized so that a scroll step, which re-renders `EventList`, only renders
+ * the events it brings into view: each event renders several drag and drop layers.
+ */
+const EventListItem = React.memo(function EventListItem({
+  resourceId,
+  occurrence,
+}: {
+  resourceId: SchedulerResourceId;
+  occurrence: EventTimelinePremiumLayoutOccurrence;
+}) {
+  return (
+    <EventContextMenuTrigger occurrence={occurrence}>
+      <EventTimelinePremiumEvent
+        occurrence={occurrence}
+        elementPosition={occurrence.timelinePosition}
+        variant="regular"
+        resourceId={resourceId}
+      />
+    </EventContextMenuTrigger>
+  );
+});
+
+/**
  * Renders only the events that intersect the virtualizer's visible column range.
  * Isolated into its own component so that scrolling (which updates `renderContext`)
  * only re-renders this subtree, not the surrounding row logic.
@@ -535,14 +557,7 @@ function EventList({
         return (
           position + duration > visibleStart &&
           position < visibleEnd && (
-            <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
-              <EventTimelinePremiumEvent
-                occurrence={occurrence}
-                elementPosition={occurrence.timelinePosition}
-                variant="regular"
-                resourceId={resourceId}
-              />
-            </EventContextMenuTrigger>
+            <EventListItem key={occurrence.key} resourceId={resourceId} occurrence={occurrence} />
           )
         );
       })}
@@ -825,7 +840,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     titleCellClassName: classes.titleCell,
   });
 
-  const dragViewportProps = useTimelineDragAutoScroll({
+  useTimelineDragAutoScroll({
     scrollerRef: gridRef,
     pinnedLeftWidth: titleColumnWidth,
   });
@@ -874,16 +889,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       <EventTimelinePremiumVirtualizerContext.Provider value={virtualizer.store}>
         <TitleColumnWidthProvider value={reportTitleWidth}>
           <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-            <Draggable.Viewport
-              {...dragViewportProps}
-              render={
-                <EventTimelinePremiumGrid
-                  className={classes.grid}
-                  {...scrollerProps}
-                  ref={gridMergedRef}
-                  onKeyDown={handleEventTabKeyDown}
-                />
-              }
+            <EventTimelinePremiumGrid
+              className={classes.grid}
+              {...scrollerProps}
+              ref={gridMergedRef}
+              onKeyDown={handleEventTabKeyDown}
             >
               <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
                 <EventTimelinePremiumViewport {...viewportProps}>
@@ -910,7 +920,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                   <FillerRow />
                 </EventTimelinePremiumViewport>
               </EventTimelinePremiumScrollerContent>
-            </Draggable.Viewport>
+            </EventTimelinePremiumGrid>
             {hasScrollY && (
               <ScrollbarVertical
                 ref={scrollbarVerticalProps.ref}

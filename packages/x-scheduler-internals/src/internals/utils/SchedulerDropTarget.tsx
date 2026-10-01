@@ -2,11 +2,7 @@
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import {
-  schedulerExternalEventKind,
-  schedulerDropTargetKind,
-  schedulerTimeEventResizeKind,
-} from './schedulerDrag';
+import { schedulerExternalEventKind, schedulerDropTargetKind } from './schedulerDrag';
 import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
@@ -31,28 +27,7 @@ import {
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
 import { useAdapterContext } from '../../use-adapter-context';
-import { getPrimaryResourceId } from './event-utils';
-import { EVENT_DRAG_TAP_SLOP_PX } from '../../constants';
-
-/**
- * Whether a touch or pen resize has not left the spot where it started.
- * A press on a time grid resize handle starts a drag at once, so a tap on it is a drag too.
- * Other drags start after some movement or a hold, and the engine reports where they started
- * moving as their start, so the distance from it says nothing about a tap. The mouse always
- * moves before a drag starts.
- */
-function isTap(source: SchedulerDropTarget.Source, location: Draggable.LocationHistory) {
-  const { initial, current } = location;
-  if (!schedulerTimeEventResizeKind.matches(source) || current.input.pointerType === 'mouse') {
-    return false;
-  }
-  return (
-    Math.hypot(
-      current.input.clientX - initial.input.clientX,
-      current.input.clientY - initial.input.clientY,
-    ) < EVENT_DRAG_TAP_SLOP_PX
-  );
-}
+import { isTimeEventResizeTap } from '../../calendar-grid/time-event-resize-handler/timeEventResizeActivation';
 
 export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
   const {
@@ -84,10 +59,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
       end: adapter.addMinutes(start, payload.eventData.duration ?? eventCreationConfig.duration),
       eventData: payload.eventData,
       onEventDrop: payload.onEventDrop,
-      resourceId:
-        resourceId === undefined
-          ? (getPrimaryResourceId(payload.eventData.resource) ?? null)
-          : resourceId,
+      resourceId,
     };
   };
 
@@ -95,7 +67,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
   const canDrop = useStableCallback(({ source }: { source: SchedulerDropTarget.Source }) =>
     schedulerExternalEventKind.matches(source)
       ? schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
-      : 'store' in source.payload && source.payload.store === store,
+      : 'scope' in source.payload && source.payload.scope === store.dragScope,
   );
 
   const getDropData = (
@@ -126,10 +98,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
       originalOccurrence,
       // Not every source reports the resource it was dragged from.
       sourceResourceId: data.sourceResourceId ?? null,
-      resourceId:
-        resourceId === undefined
-          ? (getPrimaryResourceId(originalOccurrence.resource) ?? null)
-          : resourceId,
+      resourceId,
     };
   };
 
@@ -142,7 +111,9 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
       // Nothing styles the target while a drag is over it.
       trackDragOver={false}
       onDraggableMove={({ source, target }, { location }) => {
-        if (isTap(source, location)) {
+        if (isTimeEventResizeTap(source, location)) {
+          // Back where it started, the resize shows nothing to apply, like its release would.
+          store.setOccurrencePlaceholder(null);
           return;
         }
         const newPlaceholder = getDropData(source, target);
@@ -151,8 +122,11 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
         }
       }}
       onDraggableDrop={({ source, target }, { location }) => {
-        if (isTap(source, location)) {
+        if (isTimeEventResizeTap(source, location)) {
           store.setOccurrencePlaceholder(null);
+          // The engine swallows the click that follows a drag, and this tap started one. Forward it
+          // as a programmatic click, which the engine lets through, so the tap reaches the event.
+          source.element.click();
           return;
         }
         const dropData = getDropData(source, target);
@@ -200,9 +174,9 @@ export namespace SchedulerDropTarget {
      */
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
     /**
-     * The id of the resource onto which to drop the event.
-     * If null, the event will be dropped outside of any resource.
-     * If not defined, the event will be dropped onto the resource it was originally in (if any).
+     * The resource of the target. An event dropped on it moves to this resource.
+     * With `null`, the event keeps its resources.
+     * @default null
      */
     resourceId?: SchedulerResourceId | null;
   }

@@ -1,6 +1,5 @@
 import { Draggable } from '@base-ui/react/draggable';
 import type {
-  SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
   SchedulerResourceId,
@@ -13,18 +12,17 @@ import type { CalendarGridTimeEvent } from '../../calendar-grid/time-event/Calen
 import type { CalendarGridTimeEventResizeHandler } from '../../calendar-grid/time-event-resize-handler/CalendarGridTimeEventResizeHandler';
 
 /**
- * Identifies the occurrence an event move or resize started from.
+ * Identifies the Scheduler an event move or resize started in. The occurrence itself is in the
+ * drag data.
  * The kinds keep a payload on purpose: with `undefined`, `Draggable.Target accept` no longer
  * infers the drag data of the accepted kinds, and `source.dragData` types as `unknown`.
  */
 export interface SchedulerEventDragPayload {
-  eventId: SchedulerEventId;
-  occurrenceKey: string;
   /**
-   * The store of the Scheduler the drag started in. Two Schedulers on a page share the drag
+   * The `dragScope` of the Scheduler the drag started in. Two Schedulers on a page share the drag
    * engine, and an event only moves within its own.
    */
-  store: unknown;
+  scope: symbol;
 }
 
 /** The snapshot captured when an event move or resize starts. */
@@ -83,8 +81,14 @@ export const schedulerExternalEventKind = Draggable.createGlobalKind<
   never
 >('@mui/x-scheduler/external-event');
 
-/** The kinds of the events dragged out of the calendar grids. */
-export const schedulerEventMoveKinds = [schedulerDayEventMoveKind, schedulerTimeEventMoveKind];
+/**
+ * The kinds of the events dragged out of the calendar grids. The premium packages export
+ * `schedulerEventMoveKinds`, which adds the timeline.
+ */
+export const schedulerCalendarEventMoveKinds = [
+  schedulerDayEventMoveKind,
+  schedulerTimeEventMoveKind,
+];
 
 /** Marks every Scheduler drop target, whatever it accepts. */
 export const schedulerDropTargetKind = Draggable.createKind('scheduler-target');

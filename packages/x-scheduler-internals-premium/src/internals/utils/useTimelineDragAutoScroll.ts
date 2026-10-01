@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { Draggable } from '@base-ui/react/draggable';
+import { Draggable } from '@base-ui/react/draggable';
 import { schedulerExternalEventKind } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import {
@@ -9,9 +9,11 @@ import {
 } from './schedulerTimelineDrag';
 
 /**
- * Returns props for a Base UI viewport on the timeline scroller, with the
- * left-edge hitbox shifted to start at the right of the pinned title column.
- * Spread the returned props onto the scroller's `Draggable.Viewport`.
+ * Scrolls the timeline scroller while a timeline event, a resize handle, an external event or a
+ * dependency link is dragged near its edges, with the left-edge hitbox shifted to start at the
+ * right of the pinned title column.
+ * It registers the scroller with the drag engine, so it needs a `Draggable.Provider` above the
+ * component that calls it.
  *
  * The scroller spans the entire content width — the title column is overlaid via
  * `position: absolute` — so the autoscroller's default left-edge hitbox sits over
@@ -24,9 +26,10 @@ import {
 export function useTimelineDragAutoScroll(params: {
   scrollerRef: React.RefObject<HTMLElement | null>;
   pinnedLeftWidth: number;
-}) {
+}): void {
   const { scrollerRef, pinnedLeftWidth } = params;
   const store = useEventTimelinePremiumStoreContext();
+  const manager = Draggable.useManager();
 
   React.useEffect(() => {
     const scroller = scrollerRef.current;
@@ -45,18 +48,19 @@ export function useTimelineDragAutoScroll(params: {
       });
     };
 
+    const viewportOptions = {
+      accept: [
+        schedulerTimelineEventMoveKind,
+        schedulerTimelineEventResizeKind,
+        schedulerExternalEventKind,
+        store.dependencyDragKind,
+      ],
+    };
+    const unregister = manager.registerViewport(scroller, () => viewportOptions);
+
     return () => {
+      unregister();
       delete (scroller as Partial<HTMLElement>).getBoundingClientRect;
     };
-  }, [scrollerRef, pinnedLeftWidth]);
-
-  const viewportProps: Draggable.Viewport.Props = {
-    accept: [
-      schedulerTimelineEventMoveKind,
-      schedulerTimelineEventResizeKind,
-      schedulerExternalEventKind,
-      store.dependencyDragKind,
-    ],
-  };
-  return viewportProps;
+  }, [manager, scrollerRef, pinnedLeftWidth, store]);
 }

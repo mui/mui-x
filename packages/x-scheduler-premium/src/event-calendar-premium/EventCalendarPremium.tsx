@@ -83,6 +83,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+              {/* The floating drag preview only reads the contexts above its provider. */}
               <Draggable.Provider>
                 <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
                   <EventCalendarRoot className={className} {...other} ref={forwardedRef}>

@@ -1,25 +1,21 @@
-import { screen, act } from '@mui/internal-test-utils';
+import { screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
   cancelDrag,
   EventBuilder,
   simulateDragAndDrop,
+  startDrag,
+  startLongPressDrag,
+  moveDrag,
+  moveDragAndWait,
+  dropDrag,
   mockElementBounds,
   clientYForTime,
   getResizeHandle,
+  getTimeGridColumns,
 } from 'test/utils/scheduler';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
-import { vi, describe, it, expect, afterEach } from 'vitest';
-
-/**
- * Returns all time grid column drop targets (`[data-drop-target]`)
- * in DOM order (one per day of the rendered week).
- */
-function getTimeGridColumns(): HTMLElement[] {
-  return Array.from(
-    document.querySelectorAll<HTMLElement>(`.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`),
-  );
-}
+import { vi, describe, it, expect } from 'vitest';
 
 /**
  * Returns the day grid cell (all-day row) for a given day-of-month number.
@@ -53,6 +49,16 @@ function mockAllTimeGridColumnBounds() {
   }
 }
 
+/**
+ * Releases the mouse over `target` after its drag was canceled. The compatibility click lands on
+ * `clickTarget`, where Safari and Firefox can put it: back on the drag source.
+ */
+function releaseWithClickOn(target: Element, clickTarget: Element, clientY: number) {
+  const pointer = { bubbles: true, cancelable: true, pointerId: 1, pointerType: 'mouse' };
+  fireEvent(target, new PointerEvent('pointerup', { ...pointer, isPrimary: true, clientY }));
+  fireEvent(clickTarget, new PointerEvent('click', { ...pointer, detail: 1, clientY }));
+}
+
 // Week containing July 3, 2025 (Thursday): Sun Jun 29 – Sat Jul 5
 // With the default locale (en-US, week starts Sunday),
 // days rendered are: [29, 30, 1, 2, 3, 4, 5]
@@ -61,7 +67,6 @@ const JULY_3_COLUMN_INDEX = 4;
 const JULY_4_COLUMN_INDEX = 5;
 
 describe('WeekView - Drag and Drop', () => {
-  afterEach(cancelDrag);
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
   it('should discard the event move when the pointer gesture is canceled', async () => {
@@ -73,16 +78,8 @@ describe('WeekView - Drag and Drop', () => {
       .build();
     render(<StandaloneWeekView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
     mockAllTimeGridColumnBounds();
-    await act(async () => {
-      simulateDragAndDrop({
-        source: screen.getByRole('button', { name: /Canceled meeting/i }),
-        target: getDayGridCell(4),
-        hold: true,
-      });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
-    });
+    startDrag(screen.getByRole('button', { name: /Canceled meeting/i }));
+    await moveDragAndWait(getDayGridCell(4));
     expect(document.querySelector('.MuiEventCalendar-dayGridEventPlaceholder')).not.toBe(null);
     cancelDrag();
     expect(document.querySelector('.MuiEventCalendar-dayGridEventPlaceholder')).toBe(null);
@@ -102,16 +99,9 @@ describe('WeekView - Drag and Drop', () => {
     render(<StandaloneWeekView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
     mockAllTimeGridColumnBounds();
     const eventElement = screen.getByRole('button', { name: /Canceled resize/i });
-    await act(async () => {
-      simulateDragAndDrop({
-        source: getResizeHandle(eventElement, 'end'),
-        target: getTimeGridColumns()[JULY_3_COLUMN_INDEX],
-        targetClientY: clientYForTime(0, 24, 16),
-        hold: true,
-      });
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => resolve());
-      });
+    startDrag(getResizeHandle(eventElement, 'end'));
+    await moveDragAndWait(getTimeGridColumns()[JULY_3_COLUMN_INDEX], {
+      clientY: clientYForTime(0, 24, 16),
     });
     expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).not.toBe(null);
     await act(async () => cancelDrag());
@@ -120,6 +110,62 @@ describe('WeekView - Drag and Drop', () => {
     expect(
       screen.getByRole('button', { name: /Canceled resize/i }).hasAttribute('data-resizing'),
     ).toBe(false);
+  });
+
+  it('should discard the event move when Escape is pressed, and swallow the click of the release', async () => {
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .title('Escaped meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .draggable(true)
+      .build();
+    render(<StandaloneWeekView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    mockAllTimeGridColumnBounds();
+    const eventElement = screen.getByRole('button', { name: /Escaped meeting/i });
+    const columns = getTimeGridColumns();
+
+    startDrag(eventElement);
+    await moveDragAndWait(columns[JULY_4_COLUMN_INDEX], { clientY: clientYForTime(0, 24, 14) });
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).not.toBe(null);
+
+    fireEvent.keyDown(document.body, { key: 'Escape' });
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).toBe(null);
+    expect(document.querySelector('[data-dragging]')).toBe(null);
+
+    releaseWithClickOn(columns[JULY_4_COLUMN_INDEX + 1], eventElement, clientYForTime(0, 24, 16));
+
+    expect(onEventsChange).not.toHaveBeenCalled();
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).toBe(null);
+    // The click belongs to the canceled drag, so it must not open the event.
+    expect(screen.queryByRole('dialog')).toBe(null);
+  });
+
+  it('should discard the resize when Escape is pressed, and swallow the click of the release', async () => {
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .title('Escaped resize')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .resizable(true)
+      .build();
+    render(<StandaloneWeekView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    mockAllTimeGridColumnBounds();
+    const eventElement = screen.getByRole('button', { name: /Escaped resize/i });
+    const endHandle = getResizeHandle(eventElement, 'end');
+    const columns = getTimeGridColumns();
+
+    startDrag(endHandle);
+    await moveDragAndWait(columns[JULY_3_COLUMN_INDEX], { clientY: clientYForTime(0, 24, 16) });
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).not.toBe(null);
+
+    fireEvent.keyDown(document.body, { key: 'Escape' });
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).toBe(null);
+    expect(document.querySelector('[data-dragging]')).toBe(null);
+
+    releaseWithClickOn(columns[JULY_4_COLUMN_INDEX], endHandle, clientYForTime(0, 24, 18));
+
+    expect(onEventsChange).not.toHaveBeenCalled();
+    expect(document.querySelector('.MuiEventCalendar-timeGridEventPlaceholder')).toBe(null);
+    expect(screen.queryByRole('dialog')).toBe(null);
   });
 
   it('should move a time event to the day grid on the same day', async () => {
@@ -251,6 +297,36 @@ describe('WeekView - Drag and Drop', () => {
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(4);
+  });
+
+  it('should move a time event to another day and time after a touch long press', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
+    mockElementBounds(eventElement, { top: clientYForTime(0, 24, 10), height: 60, width: 200 });
+    const july4Column = getTimeGridColumns()[JULY_4_COLUMN_INDEX];
+
+    // The finger holds the event 30 minutes below its start, then drops that point at 14:30.
+    await startLongPressDrag(eventElement, { clientY: clientYForTime(0, 24, 10.5) });
+    moveDrag(july4Column, { pointerType: 'touch', clientY: clientYForTime(0, 24, 14.5) });
+    dropDrag(july4Column, { pointerType: 'touch', clientY: clientYForTime(0, 24, 14.5) });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvent = handleEventsChange.mock.calls[0][0][0];
+    expect(new Date(updatedEvent.start).toISOString()).to.equal('2025-07-04T14:00:00.000Z');
+    expect(new Date(updatedEvent.end).toISOString()).to.equal('2025-07-04T15:00:00.000Z');
   });
 
   it('should move an all-day event to a different day in the day grid', async () => {
@@ -484,22 +560,24 @@ describe('WeekView - Drag and Drop', () => {
       mockElementBounds(column, { top: 0, height: 144, width: 200 });
     }
 
-    // The event spans 10:00 to 11:00, and the pointer grabs its bottom edge.
+    // The event spans 10:00 to 11:00, and the pointer presses its bottom edge.
     const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
     mockElementBounds(eventElement, { top: 60, height: 6, width: 100 });
+    const column = getTimeGridColumns()[JULY_3_COLUMN_INDEX];
 
-    await act(async () => {
-      simulateDragAndDrop({
-        source: getResizeHandle(eventElement, 'end'),
-        target: getTimeGridColumns()[JULY_3_COLUMN_INDEX],
-        sourceClientY: 66,
-        targetClientY: 69,
-      });
+    // The mouse moves 6px down to start the resize, then comes back 3px before releasing.
+    startDrag(getResizeHandle(eventElement, 'end'), {
+      press: { clientX: 0, clientY: 66 },
+      clientX: 0,
+      clientY: 72,
     });
+    moveDrag(column, { clientY: 69 });
+    dropDrag(column, { clientY: 69 });
 
+    // The resize keeps the offset measured where it started: 3px above that is 30 minutes earlier.
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     expect(new Date(handleEventsChange.mock.calls[0][0][0].end).toISOString()).to.equal(
-      '2025-07-03T11:30:00.000Z',
+      '2025-07-03T10:30:00.000Z',
     );
   });
 

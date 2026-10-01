@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { styled } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
@@ -42,10 +43,13 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
 
-  return (
-    <Draggable.Handle render={<ReadonlyContentDragContainer />}>
-      {/* The whole section is the drag handle, so the header must not add a second one. */}
-      <EventDialogHeader onClose={onClose} isDraggable={false}>
+  // With a mouse, the whole section moves the dialog. On touch, a long press on the details
+  // selects their text, so only the header does.
+  const isCoarsePointer = useMediaQuery('(pointer: coarse)', { noSsr: true });
+
+  const content = (
+    <React.Fragment>
+      <EventDialogHeader onClose={onClose} isDraggable={isCoarsePointer}>
         <EventDialogTitle
           variant="h6"
           id={`${schedulerId}-event-dialog-title`}
@@ -65,6 +69,12 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
           {localeText.closeButtonLabel}
         </Button>
       </EventDialogActions>
-    </Draggable.Handle>
+    </React.Fragment>
   );
+
+  if (isCoarsePointer) {
+    return <ReadonlyContentDragContainer>{content}</ReadonlyContentDragContainer>;
+  }
+
+  return <Draggable.Handle render={<ReadonlyContentDragContainer />}>{content}</Draggable.Handle>;
 }
