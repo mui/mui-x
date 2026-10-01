@@ -34,6 +34,8 @@ import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry'
 const DEPENDENCY_DIALOG_TEXT = {
   editTitle: 'Edit dependency',
   detailsTitle: 'Dependency details',
+  sourceLabel: 'From',
+  targetLabel: 'To',
   typeLabel: 'Type',
   delete: 'Delete',
 };
@@ -80,6 +82,23 @@ const DependencyDialogBody = styled('div', {
   flexDirection: 'column',
   gap: theme.spacing(2),
   padding: theme.spacing(0, 3, 3),
+}));
+
+const DependencyDialogDetails = styled('dl', {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogDetails',
+})(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'auto 1fr',
+  columnGap: theme.spacing(3),
+  rowGap: theme.spacing(1.5),
+  margin: 0,
+  '& dt': {
+    color: (theme.vars || theme).palette.text.secondary,
+  },
+  '& dd': {
+    margin: 0,
+  },
 }));
 
 /**
@@ -205,14 +224,31 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
             </Typography>
           </EventDialogHeader>
           <DependencyDialogBody>
-            <Typography variant="body2" data-dependency-dialog-events="">
-              {sourceTitle} → {targetTitle}
-            </Typography>
-            {isReadOnly ? (
-              <Typography variant="body2">
-                {DEPENDENCY_DIALOG_TEXT.typeLabel}: {DEPENDENCY_TYPE_LABELS[dependency.type]}
+            <DependencyDialogDetails>
+              <Typography variant="body2" component="dt">
+                {DEPENDENCY_DIALOG_TEXT.sourceLabel}
               </Typography>
-            ) : (
+              <Typography variant="body2" component="dd">
+                {sourceTitle}
+              </Typography>
+              <Typography variant="body2" component="dt">
+                {DEPENDENCY_DIALOG_TEXT.targetLabel}
+              </Typography>
+              <Typography variant="body2" component="dd">
+                {targetTitle}
+              </Typography>
+              {isReadOnly && (
+                <React.Fragment>
+                  <Typography variant="body2" component="dt">
+                    {DEPENDENCY_DIALOG_TEXT.typeLabel}
+                  </Typography>
+                  <Typography variant="body2" component="dd">
+                    {DEPENDENCY_TYPE_LABELS[dependency.type]}
+                  </Typography>
+                </React.Fragment>
+              )}
+            </DependencyDialogDetails>
+            {!isReadOnly && (
               <FormControl fullWidth size="small">
                 <InputLabel id={typeLabelId}>{DEPENDENCY_DIALOG_TEXT.typeLabel}</InputLabel>
                 <Select

@@ -9,8 +9,12 @@ import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/m
 import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
+  useDependencyHover,
 } from './EventTimelinePremiumDependencyGeometry';
-import { DEPENDENCY_ARROW_HIT_STROKE_WIDTH } from './dependencyArrowHitArea';
+import {
+  DEPENDENCY_ARROW_HIT_STROKE_WIDTH,
+  DEPENDENCY_ARROW_HIT_TRIM_END,
+} from './dependencyArrowHitArea';
 import { useDependencySelectionInteraction } from './useDependencySelectionInteraction';
 import type { DependencyContextMenuState } from './EventTimelinePremiumDependencyContextMenu';
 import { EventTimelinePremiumDependencyContextMenu } from './EventTimelinePremiumDependencyContextMenu';
@@ -49,6 +53,10 @@ const DependencyInteractionsSvg = styled('svg', {
     pointerEvents: 'stroke',
     cursor: 'pointer',
   },
+  '[data-dependency-hit-head]': {
+    pointerEvents: 'fill',
+    cursor: 'pointer',
+  },
   '[data-dependency-delete-button]': {
     pointerEvents: 'auto',
     cursor: 'pointer',
@@ -81,6 +89,7 @@ function DependencyInteractionsLayer() {
   const svgRef = React.useRef<SVGSVGElement>(null);
   const { visibleArrows, eventsWidth, offsetTop, height } = useDependencyGeometry();
   const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
+  const { setHoveredId } = useDependencyHover();
   const orderedArrows = React.useMemo(
     () => orderArrowsWithSelectedLast(visibleArrows, selectedId),
     [visibleArrows, selectedId],
@@ -104,18 +113,6 @@ function DependencyInteractionsLayer() {
 
   const handleSelect = (dependencyId: SchedulerDependencyId) => {
     store.setSelectedDependencyId(dependencyId);
-  };
-
-  // The hover restyles the visual arrow, which lives in the arrows overlay (below the
-  // rows, never hit by the pointer): the attribute is toggled there directly, on every
-  // appearance of the dependency, like the selection highlight.
-  const setHovered = (dependencyId: SchedulerDependencyId, hovered: boolean) => {
-    const arrowsSvg = svgRef.current?.parentElement?.querySelector('[data-dependency-arrows]');
-    arrowsSvg?.querySelectorAll('[data-dependency-id]').forEach((path) => {
-      if (path.getAttribute('data-dependency-id') === String(dependencyId)) {
-        path.toggleAttribute('data-hovered', hovered);
-      }
-    });
   };
 
   // A client point in the overlay coordinates the dependency dialog is anchored in.
@@ -176,18 +173,38 @@ function DependencyInteractionsLayer() {
           );
           return (
             <g key={arrow.key}>
-              <path
-                data-dependency-hit={String(arrow.id)}
-                d={arrow.hitD}
-                fill="none"
-                stroke="transparent"
-                strokeWidth={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
+              <g
                 onClick={() => handleSelect(arrow.id)}
                 onDoubleClick={(event) => handleDoubleClick(arrow.id, event)}
                 onContextMenu={(event) => handleContextMenu(arrow.id, event)}
-                onPointerEnter={() => setHovered(arrow.id, true)}
-                onPointerLeave={() => setHovered(arrow.id, false)}
-              />
+                // The hover restyles the visual arrow, which lives in the arrows overlay
+                // (below the rows, never hit by the pointer). On the group, so moving
+                // between the line and the arrowhead does not leave the arrow.
+                onPointerEnter={() => setHoveredId(arrow.id)}
+                onPointerLeave={() => setHoveredId(null)}
+              >
+                <path
+                  data-dependency-hit={String(arrow.id)}
+                  d={arrow.hitD}
+                  fill="none"
+                  stroke="transparent"
+                  strokeWidth={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
+                />
+                {/* The line's hit-area stops short of the tip: the arrowhead gets its
+                    own, outside the target event. */}
+                <rect
+                  data-dependency-hit-head={String(arrow.id)}
+                  x={
+                    buttonDirection < 0
+                      ? arrow.endPoint.x - DEPENDENCY_ARROW_HIT_TRIM_END
+                      : arrow.endPoint.x
+                  }
+                  y={arrow.endPoint.y - DEPENDENCY_ARROW_HIT_STROKE_WIDTH / 2}
+                  width={DEPENDENCY_ARROW_HIT_TRIM_END}
+                  height={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
+                  fill="transparent"
+                />
+              </g>
               {hasDeleteButton && arrow.id === selectedId && (
                 <g
                   data-dependency-delete-button=""

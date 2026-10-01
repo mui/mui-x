@@ -35,6 +35,10 @@ function getHitArea(dependencyId: string) {
   return document.querySelector(`[data-dependency-hit="${dependencyId}"]`)!;
 }
 
+function getHeadHitArea(dependencyId: string) {
+  return document.querySelector(`[data-dependency-hit-head="${dependencyId}"]`)!;
+}
+
 function getVisualArrows(dependencyId: string) {
   return Array.from(document.querySelectorAll(`[data-dependency-id="${dependencyId}"]`));
 }
@@ -81,6 +85,41 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(getVisualArrows('dep-1')[0].hasAttribute('data-hovered')).to.equal(false);
     });
 
+    it('should highlight and select the arrow from its arrowhead', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.pointerEnter(getHeadHitArea('dep-1'));
+
+      expect(getVisualArrows('dep-1')[0].hasAttribute('data-hovered')).to.equal(true);
+
+      fireEvent.click(getHeadHitArea('dep-1'));
+
+      expect(getVisualArrows('dep-1')[0].hasAttribute('data-selected')).to.equal(true);
+    });
+
+    it('should paint the hovered arrow above the others', async () => {
+      await renderTimeline({
+        events: [eventA, eventB, eventC],
+        dependencies: [
+          buildDependency('dep-1', 'event-a', 'event-b'),
+          buildDependency('dep-2', 'event-b', 'event-c'),
+        ],
+      });
+
+      const getPaintOrder = () =>
+        Array.from(document.querySelectorAll('[data-dependency-arrows] [data-dependency-id]')).map(
+          (arrow) => arrow.getAttribute('data-dependency-id'),
+        );
+      expect(getPaintOrder()).to.deep.equal(['dep-1', 'dep-2']);
+
+      fireEvent.pointerEnter(getHitArea('dep-1'));
+
+      expect(getPaintOrder()).to.deep.equal(['dep-2', 'dep-1']);
+    });
+
     it('should highlight every appearance of a dependency whose event is on several resources', async () => {
       const multiResourceEvent = EventBuilder.new()
         .id('event-m')
@@ -103,7 +142,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
   });
 
   describe('dialog', () => {
-    it('should open on double click with the two event titles', async () => {
+    it('should open on double click with the source and target event titles', async () => {
       await renderTimeline({
         events: [eventA, eventB],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
@@ -112,7 +151,14 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       const dialog = openDialog('dep-1');
 
       expect(within(dialog).getByText('Edit dependency')).not.to.equal(null);
-      expect(within(dialog).getByText('Event A → Event B')).not.to.equal(null);
+      expect(
+        within(dialog)
+          .getAllByRole('term')
+          .map((term) => [term.textContent, term.nextElementSibling?.textContent]),
+      ).to.deep.equal([
+        ['From', 'Event A'],
+        ['To', 'Event B'],
+      ]);
     });
 
     it('should change the type of the dependency on save', async () => {
@@ -250,7 +296,15 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = screen.getByRole('dialog');
       expect(within(dialog).getByText('Dependency details')).not.to.equal(null);
-      expect(within(dialog).getByText('Type: Finish to start')).not.to.equal(null);
+      expect(
+        within(dialog)
+          .getAllByRole('term')
+          .map((term) => [term.textContent, term.nextElementSibling?.textContent]),
+      ).to.deep.equal([
+        ['From', 'Event A'],
+        ['To', 'Event B'],
+        ['Type', 'Finish to start'],
+      ]);
       expect(within(dialog).queryByRole('combobox')).to.equal(null);
       expect(within(dialog).queryByRole('button', { name: 'Delete' })).to.equal(null);
     });

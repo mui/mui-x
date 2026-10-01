@@ -102,7 +102,7 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         // surface — another timeline's arrows are ordinary click-aways, or one Delete
         // would delete a link in each timeline holding a selection.
         const interactionHit = target.closest(
-          '[data-dependency-hit], [data-dependency-delete-button]',
+          '[data-dependency-hit], [data-dependency-hit-head], [data-dependency-delete-button]',
         );
         if (
           (interactionHit !== null && elementRef.current?.contains(interactionHit)) ||

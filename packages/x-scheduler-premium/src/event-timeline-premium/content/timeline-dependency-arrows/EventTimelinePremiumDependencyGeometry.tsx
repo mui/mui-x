@@ -48,18 +48,47 @@ export interface EventTimelinePremiumDependencyGeometryValue {
 const EventTimelinePremiumDependencyGeometryContext =
   React.createContext<EventTimelinePremiumDependencyGeometryValue | null>(null);
 
+interface DependencyHoverValue {
+  hoveredId: SchedulerDependencyId | null;
+  setHoveredId: (dependencyId: SchedulerDependencyId | null) => void;
+}
+
+/**
+ * The hovered arrow, in its own context so a hover does not re-render the geometry
+ * consumers. Set by the interactions layer, read by the visual arrows.
+ */
+const DependencyHoverContext = React.createContext<DependencyHoverValue | null>(null);
+
 /**
  * The visible arrows with the selected one last, so its highlight (and its hit area)
- * is never covered by a sibling. Returns the input array when nothing is selected.
+ * is never covered by a sibling, and the hovered one right before it. Returns the
+ * input array when nothing is selected nor hovered.
  */
 export function orderArrowsWithSelectedLast(
   arrows: DependencyArrow[],
   selectedId: SchedulerDependencyId | null,
+  hoveredId: SchedulerDependencyId | null = null,
 ): DependencyArrow[] {
-  if (selectedId === null || !arrows.some((arrow) => arrow.id === selectedId)) {
+  const getRank = (arrow: DependencyArrow) => {
+    if (arrow.id === selectedId) {
+      return 2;
+    }
+    return arrow.id === hoveredId ? 1 : 0;
+  };
+  if (arrows.every((arrow) => getRank(arrow) === 0)) {
     return arrows;
   }
-  return arrows.toSorted((a, b) => Number(a.id === selectedId) - Number(b.id === selectedId));
+  return arrows.toSorted((a, b) => getRank(a) - getRank(b));
+}
+
+export function useDependencyHover(): DependencyHoverValue {
+  const value = React.useContext(DependencyHoverContext);
+  if (value === null) {
+    throw /* minify-error-disabled */ new Error(
+      'MUI X Scheduler: useDependencyHover requires <EventTimelinePremiumDependencyGeometryProvider /> as an ancestor.',
+    );
+  }
+  return value;
 }
 
 export function useDependencyGeometry(): EventTimelinePremiumDependencyGeometryValue {
@@ -201,9 +230,14 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     };
   }, [arrows, resolver, eventsWidth, renderContext, rowsMeta, config.tickCount, resources]);
 
+  const [hoveredId, setHoveredId] = React.useState<SchedulerDependencyId | null>(null);
+  const hoverValue = React.useMemo(() => ({ hoveredId, setHoveredId }), [hoveredId]);
+
   return (
     <EventTimelinePremiumDependencyGeometryContext.Provider value={value}>
-      {children}
+      <DependencyHoverContext.Provider value={hoverValue}>
+        {children}
+      </DependencyHoverContext.Provider>
     </EventTimelinePremiumDependencyGeometryContext.Provider>
   );
 }
