@@ -88,6 +88,12 @@ const TEST_RULES: RouteRule[] = [
     waitForSelector: '[data-testid="map-images-ready"]',
   },
   {
+    test: '/docs-charts-map/MarsMap',
+    // `MapImagePlot` renders its `<image>` only after the texture loads and is
+    // reprojected. The `<img>` wait below does not see that load.
+    waitForSelector: 'svg image',
+  },
+  {
     test: '/test-regressions-charts/ImageExportAutoSize',
     // The exported image is screenshotted by a dedicated `test` block below.
     enabled: false,
@@ -153,6 +159,8 @@ async function main() {
       // is a no-op on Linux Chromium, so without this flag screenshots pick
       // up LCD subpixel color fringes that vary across hosts.
       '--disable-lcd-text',
+      // Skia otherwise picks SIMD code paths per host CPU, which shifts glyph edges.
+      '--disable-skia-runtime-opts',
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
