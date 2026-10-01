@@ -720,6 +720,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it.skipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
+      // 2022-03-27 is the DST start day in Paris, so midnight on 2022-03-28 is in CEST.
       expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
       expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.setDate(testDateLastNonDSTDay, 28));
     });
@@ -731,6 +732,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it.skipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
+      // 2022-03-27 is the DST start day in Paris, so 12:00 is in CEST.
       expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
       expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.setHours(testDateLastNonDSTDay, 12));
     });
