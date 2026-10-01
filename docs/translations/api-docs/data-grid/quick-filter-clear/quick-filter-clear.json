@@ -2,7 +2,19 @@
   "componentDescription": "A button that resets the filter value.\nIt renders the `baseIconButton` slot.",
   "propDescriptions": {
     "className": { "description": "Override or extend the styles applied to the component." },
-    "render": { "description": "A function to customize rendering of the component." }
+    "component": {
+      "description": "The component used for the root node. Either a string to use an HTML element or a component."
+    },
+    "href": {
+      "description": "The URL to link to. If set, and <code>component</code> is not set, the component renders as an anchor tag."
+    },
+    "rel": {
+      "description": "The relationship of the linked URL. Set it to <code>noopener noreferrer</code> when <code>target</code> is set to <code>_blank</code> to avoid a security issue."
+    },
+    "render": { "description": "A function to customize rendering of the component." },
+    "target": {
+      "description": "Where to display the linked URL, as the name for a browsing context."
+    }
   },
   "classDescriptions": {}
 }

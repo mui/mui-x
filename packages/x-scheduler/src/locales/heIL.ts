@@ -1,11 +1,12 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-  SchedulerWeekday,
-} from '../models/translations';
+import type { SchedulerWeekday } from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
 // Saturday has no letter form, so it is always written in full.
 const weekdays: Record<SchedulerWeekday, { full: string; letter?: string }> = {
@@ -64,7 +65,7 @@ const viewNames = {
   agenda: 'סדר יום',
 };
 
-const heILDialog: Partial<EventEditingLocaleText> = {
+const heILDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'צבע האירוע',
   colorSectionLabel: 'צבע',
@@ -137,7 +138,23 @@ const heILDialog: Partial<EventEditingLocaleText> = {
   title: 'על אילו אירועים להחיל את השינוי?',
 };
 
-const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const heILEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const heILCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'משאבים',
 
@@ -192,7 +209,6 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
       month: 'החודש הקודם',
       agenda: 'התקופה הקודמת',
     })[view],
-  resourceAriaLabel: (resourceName) => `משאב: ${resourceName}`,
   weekAbbreviation: 'שב׳',
   weekNumberAriaLabel: (weekNumber) => `שבוע ${weekNumber}`,
 
@@ -211,13 +227,14 @@ const heILCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'שם המשאב',
 };
 
-const heILTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const heILTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'שם המשאב',
 };
 
 export const heIL: SchedulerLocalization = getSchedulerLocalization({
   dialog: heILDialog,
+  event: heILEvent,
   calendar: heILCalendar,
   timeline: heILTimeline,
 });

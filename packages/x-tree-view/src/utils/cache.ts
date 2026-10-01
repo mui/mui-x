@@ -27,12 +27,11 @@ export interface DataSourceCache<T = any> {
 }
 
 export class DataSourceCacheDefault<T = any> implements DataSourceCache<T> {
-  private cache: Record<string, { value: T[]; expiry: number }>;
+  private cache: Record<string, { value: T[]; expiry: number }> = {};
 
-  private ttl: number;
+  declare private ttl: number;
 
   constructor({ ttl = 300_000 }: DataSourceCacheDefaultConfig) {
-    this.cache = {};
     this.ttl = ttl;
   }
 

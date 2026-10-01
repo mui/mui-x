@@ -824,6 +824,7 @@
   { "name": "RowPropsOverrides", "kind": "Interface" },
   { "name": "setupExcelExportWebWorker", "kind": "Function" },
   { "name": "SkeletonCellPropsOverrides", "kind": "Interface" },
+  { "name": "StylesheetErrorReason", "kind": "TypeAlias" },
   { "name": "Toolbar", "kind": "Variable" },
   { "name": "ToolbarButton", "kind": "Variable" },
   { "name": "ToolbarButtonProps", "kind": "TypeAlias" },

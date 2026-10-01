@@ -71,14 +71,13 @@ export class SchedulerDataSourceCacheDefault<
   // The Registry of Truth: Which time intervals do we have?
   private loadedRanges: CachedRange[] = [];
 
-  private cache: Record<string, CachedEvent<TEvent>>;
+  private cache: Record<string, CachedEvent<TEvent>> = {};
 
-  private ttl: number;
+  declare private ttl: number;
 
-  private getId: (event: TEvent) => SchedulerEventId;
+  declare private getId: (event: TEvent) => SchedulerEventId;
 
   constructor({ ttl = 300000, getId }: SchedulerDataSourceCacheConfig<TEvent> = {}) {
-    this.cache = {};
     this.ttl = ttl;
     this.getId = getId ?? ((event: TEvent) => (event as any).id);
   }
