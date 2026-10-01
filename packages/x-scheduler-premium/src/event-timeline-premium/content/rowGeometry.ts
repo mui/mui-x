@@ -20,20 +20,19 @@ export function getEventsCellLaneMinHeight(theme: Theme): number {
   return lineHeight * fontSize + extra;
 }
 
-// A theme can give the font size in rem (the default), in px, or as a number of px.
+// A theme gives the font size as a number of px or as a CSS length. Px are used as they
+// are; other lengths (rem, em) go through `htmlFontSize`, as the timeline inherits the
+// root font size.
 function getBody2FontSizeInPx(theme: Theme): number | null {
   const fontSize = theme.typography.body2.fontSize;
   const value = parseFloat(String(fontSize));
   if (!Number.isFinite(value) || value <= 0) {
     return null;
   }
-  if (typeof fontSize === 'number' || String(fontSize).endsWith('px')) {
+  if (typeof fontSize === 'number' || String(fontSize).trim().toLowerCase().endsWith('px')) {
     return value;
   }
-  if (String(fontSize).endsWith('rem')) {
-    return value * (theme.typography.htmlFontSize ?? 16);
-  }
-  return null;
+  return value * (theme.typography.htmlFontSize ?? 16);
 }
 
 export function getRowHeightForLaneCount(theme: Theme, laneCount: number): number {
