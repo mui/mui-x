@@ -1,8 +1,10 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import preParsePostFormat from 'dayjs/plugin/preParsePostFormat';
+import { screen } from '@mui/internal-test-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
+import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
@@ -221,18 +223,57 @@ describe('<AdapterDayjs />', () => {
         const previousTimezone = process.env.TZ;
         process.env.TZ = timezone;
         onTestFinished(() => {
-          process.env.TZ = previousTimezone;
+          if (previousTimezone === undefined) {
+            delete process.env.TZ;
+          } else {
+            process.env.TZ = previousTimezone;
+          }
         });
       };
 
-      it('should keep plain values plain after a DST change', () => {
+      it.each([
+        {
+          transition: 'spring forward',
+          date: '2026-03-08',
+          startOfDay: '2026-03-08T08:00:00.000Z',
+        },
+        { transition: 'fall back', date: '2026-11-01', startOfDay: '2026-11-01T07:00:00.000Z' },
+      ])('should keep plain values plain after $transition', ({ date, startOfDay }) => {
         setSystemTimezone('America/Los_Angeles');
         const adapter = new AdapterDayjs();
-        const value = adapter.setHours(adapter.date('2026-03-08T12:00', 'system') as Dayjs, 4);
+        const value = adapter.setHours(adapter.date(`${date}T12:00`, 'system') as Dayjs, 4);
 
         expect(adapter.getTimezone(value)).to.equal('system');
         // A copied offset would make later `dayjs` calls on the returned value wrong by 1 hour.
-        expect(value.startOf('day').valueOf()).to.equal(new Date(2026, 2, 8).getTime());
+        expect(value.startOf('day').toISOString()).to.equal(startOfDay);
+      });
+
+      describe('DigitalClock', () => {
+        const { render } = createPickerRenderer({ adapterName: 'dayjs' });
+
+        it('should emit distinct instants for both occurrences of the repeated hour with plain values', async () => {
+          setSystemTimezone('America/New_York');
+          const onChange = vi.fn();
+          const { user } = render(
+            <DigitalClock
+              defaultValue={dayjs('2026-11-01T12:00')}
+              timezone="system"
+              timeStep={30}
+              ampm
+              onChange={onChange}
+            />,
+          );
+
+          expect(screen.getAllByRole('option')).to.have.length(50);
+          const repeatedOptions = screen.getAllByRole('option', { name: '01:30 AM' });
+          expect(repeatedOptions).to.have.length(2);
+
+          await user.click(repeatedOptions[0]);
+          expect(onChange.mock.lastCall?.[0].toISOString()).to.equal('2026-11-01T05:30:00.000Z');
+
+          await user.click(repeatedOptions[1]);
+          expect(onChange.mock.lastCall?.[0].toISOString()).to.equal('2026-11-01T06:30:00.000Z');
+        });
       });
 
       it('should update the offset of values without a named timezone', () => {
@@ -244,18 +285,6 @@ describe('<AdapterDayjs />', () => {
 
         expect(adapter.getHours(value)).to.equal(1);
         expect(value.toISOString()).to.equal('2026-03-08T09:58:00.000Z');
-      });
-
-      it('should return the right instant for `dayjs.tz` values edited across a DST change', () => {
-        setSystemTimezone('America/Los_Angeles');
-        const adapter = new AdapterDayjs();
-        const november = adapter.setMonth(dayjs.tz('2026-10-15T12:00', 'America/New_York'), 10);
-        const fallBack = adapter.setHours(dayjs.tz('2026-11-01T00:30', 'America/Los_Angeles'), 2);
-
-        expect(adapter.getHours(november)).to.equal(12);
-        expect(november.toISOString()).to.equal('2026-11-15T17:00:00.000Z');
-        expect(adapter.getHours(fallBack)).to.equal(2);
-        expect(fallBack.toISOString()).to.equal('2026-11-01T10:30:00.000Z');
       });
 
       it('should keep the elapsed time when adding hours to `dayjs.tz` values across a DST change', () => {

@@ -258,36 +258,17 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   /**
    * `dayjs` does not update the offset when `set` or `add` crosses a DST change (moment does).
    * Plain `system` values follow the JS Date DST, and a copied offset breaks later `dayjs` calls.
-   * @param {Dayjs} value The result of `set` or `add`.
-   * @param {Dayjs} source The value before a calendar edit. Time additions keep the instant and omit it.
    */
-  protected adjustOffset = (value: Dayjs, source?: Dayjs) => {
+  protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
       return value;
     }
 
     const timezone = this.getTimezone(value);
+    // Plain system values already follow the native Date offset.
     // @ts-ignore
     if (timezone === 'UTC' || (timezone === 'system' && value.$offset === undefined)) {
       return value;
-    }
-
-    // `dayjs.tz(string)` stores the system offset of its creation date. It is stale only when it matched
-    // the source value and the edit moved the value across a system DST change.
-    // @ts-ignore
-    const localOffset: number | undefined = value.$x.$localOffset;
-    // @ts-ignore
-    const sourceSystemOffset: number | undefined = source?.$d.getTimezoneOffset();
-    // @ts-ignore
-    const systemOffset: number = value.$d.getTimezoneOffset();
-    if (
-      localOffset !== undefined &&
-      localOffset === sourceSystemOffset &&
-      localOffset !== systemOffset
-    ) {
-      // `$x` is shared with the source value, so replace it instead of mutating it.
-      // @ts-ignore
-      value.$x = { ...value.$x, $localOffset: undefined };
     }
 
     const fixedValue = value.tz(this.cleanTimezone(timezone), true);
@@ -582,19 +563,19 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public addYears = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(this.restoreDayOfMonth(value.add(amount, 'year'), value), value);
+    return this.adjustOffset(this.restoreDayOfMonth(value.add(amount, 'year'), value));
   };
 
   public addMonths = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(this.restoreDayOfMonth(value.add(amount, 'month'), value), value);
+    return this.adjustOffset(this.restoreDayOfMonth(value.add(amount, 'month'), value));
   };
 
   public addWeeks = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'week'), value);
+    return this.adjustOffset(value.add(amount, 'week'));
   };
 
   public addDays = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'day'), value);
+    return this.adjustOffset(value.add(amount, 'day'));
   };
 
   public addHours = (value: Dayjs, amount: number) => {
@@ -638,31 +619,31 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public setYear = (value: Dayjs, year: number) => {
-    return this.adjustOffset(this.restoreDayOfMonth(value.set('year', year), value), value);
+    return this.adjustOffset(this.restoreDayOfMonth(value.set('year', year), value));
   };
 
   public setMonth = (value: Dayjs, month: number) => {
-    return this.adjustOffset(this.restoreDayOfMonth(value.set('month', month), value), value);
+    return this.adjustOffset(this.restoreDayOfMonth(value.set('month', month), value));
   };
 
   public setDate = (value: Dayjs, date: number) => {
-    return this.adjustOffset(value.set('date', date), value);
+    return this.adjustOffset(value.set('date', date));
   };
 
   public setHours = (value: Dayjs, hours: number) => {
-    return this.adjustOffset(value.set('hour', hours), value);
+    return this.adjustOffset(value.set('hour', hours));
   };
 
   public setMinutes = (value: Dayjs, minutes: number) => {
-    return this.adjustOffset(value.set('minute', minutes), value);
+    return this.adjustOffset(value.set('minute', minutes));
   };
 
   public setSeconds = (value: Dayjs, seconds: number) => {
-    return this.adjustOffset(value.set('second', seconds), value);
+    return this.adjustOffset(value.set('second', seconds));
   };
 
   public setMilliseconds = (value: Dayjs, milliseconds: number) => {
-    return this.adjustOffset(value.set('millisecond', milliseconds), value);
+    return this.adjustOffset(value.set('millisecond', milliseconds));
   };
 
   public getDaysInMonth = (value: Dayjs) => {
