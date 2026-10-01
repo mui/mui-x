@@ -7,8 +7,8 @@ import { DateValidationError } from '@mui/x-date-pickers/models';
 
 const maxDate = dayjs('2029-12-31');
 
-// https://github.com/mui/mui-x/issues/16637
-export default function NvdaHelperTextError() {
+// Page for `.github/nvda/fields.pw.mjs`. The helper text shows an error while the date is after `maxDate`.
+export default function NvdaFieldValidation() {
   const [error, setError] = React.useState<DateValidationError | null>(null);
 
   return (
@@ -21,12 +21,14 @@ export default function NvdaHelperTextError() {
         slotProps={{
           textField: {
             variant: 'standard',
-            label: 'Appointment',
+            label: 'End date',
             helperText: error ? 'Date is too late' : '',
           },
         }}
       />
       <button type="button">After</button>
+      {/* Keeps the body click done by Guidepup's `navigateToWebContent()` away from the field. */}
+      <div style={{ height: '100vh' }} />
     </LocalizationProvider>
   );
 }

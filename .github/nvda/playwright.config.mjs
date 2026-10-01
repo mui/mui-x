@@ -1,4 +1,4 @@
-// NVDA verification harness for https://github.com/mui/mui-x/issues/23101. Windows only.
+// Playwright config for `fields.pw.mjs`. Needs Windows with NVDA set up by `@guidepup/setup`.
 import { devices } from '@playwright/test';
 import { screenReaderConfig } from '@guidepup/playwright';
 
@@ -10,11 +10,14 @@ export default {
   timeout: 5 * 60 * 1000,
   retries: 1,
   reporter: [['list'], ['html', { open: 'never' }]],
-  use: { ...screenReaderConfig.use, trace: 'retain-on-failure', video: 'retain-on-failure' },
-  webServer: [
-    { command: 'npx serve -s sites/site-master -l 5001', url: 'http://localhost:5001' },
-    { command: 'npx serve -s sites/site-fixed -l 5002', url: 'http://localhost:5002' },
-  ],
+  use: {
+    ...screenReaderConfig.use,
+    baseURL: 'http://localhost:5001',
+    trace: 'retain-on-failure',
+    video: 'retain-on-failure',
+  },
+  // `site` is the `test/e2e` build of this branch.
+  webServer: { command: 'npx serve -s site -l 5001', url: 'http://localhost:5001' },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'], headless: false } },
     { name: 'firefox', use: { ...devices['Desktop Firefox'], headless: false } },

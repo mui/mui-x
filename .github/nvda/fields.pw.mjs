@@ -1,23 +1,27 @@
-// `master` = PickersTextField from the PR base, `fixed` = PR head. Same fixtures, same key sequence.
+// What NVDA must say when using a date field with the keyboard.
+// Each test opens a page from `test/e2e/fixtures/DatePicker`, presses keys one at a time,
+// and checks the speech produced by each key. Runs on Windows CI only (`nvda-verify.yml`).
 import fs from 'node:fs';
 import { nvdaTest as test } from '@guidepup/playwright';
 import { expect } from '@playwright/test';
 
 test.use({ nvdaStartOptions: { capture: true } });
 
-const VARIANTS = [
-  { name: 'master', baseURL: 'http://localhost:5001' },
-  { name: 'fixed', baseURL: 'http://localhost:5002' },
-];
+function log(line) {
+  // eslint-disable-next-line no-console
+  console.log(line);
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${line}\n`);
+  }
+}
 
-const occurrences = (steps, text) =>
-  steps.reduce((count, step) => count + step.spokenPhrase.split(text).length - 1, 0);
-
-async function open(page, nvda, baseURL, fixture) {
-  await page.goto(`${baseURL}/e2e/DatePicker/${fixture}#no-dev`);
+// Opens the page with focus on its "Before" button, right before the field.
+async function openPage(page, nvda, fixture) {
+  log(`\n### ${test.info().project.name}: ${test.info().title}\n`);
+  await page.goto(`/e2e/DatePicker/${fixture}#no-dev`);
   const before = page.getByRole('button', { name: 'Before' });
   await before.waitFor();
-  // NVDA sometimes ends up outside the browser window and stays silent; retry instead of logging nothing.
+  // NVDA is sometimes not attached to the browser window yet: retry until it speaks.
   for (let attempt = 0; attempt < 3; attempt += 1) {
     // eslint-disable-next-line no-await-in-loop
     await nvda.navigateToWebContent();
@@ -26,139 +30,88 @@ async function open(page, nvda, baseURL, fixture) {
     // eslint-disable-next-line no-await-in-loop
     const { spokenPhrase } = await nvda.capture(() => before.focus(), { capture: true });
     if (spokenPhrase.includes('Before')) {
-      // eslint-disable-next-line no-await-in-loop
-      await nvda.clearSpokenPhraseLog();
       return;
     }
   }
   throw new Error('NVDA is not following the browser: focusing "Before" produced no speech.');
 }
 
-// Keys go through Playwright so NVDA browse/focus mode cannot swallow them; NVDA still
-// reacts to the resulting focus, value and live region events like with real keystrokes.
-async function pressAll(page, nvda, keys) {
-  const steps = [];
-  for (const key of keys) {
-    // eslint-disable-next-line no-await-in-loop
-    const { spokenPhrase } = await nvda.capture(() => page.keyboard.press(key), { capture: true });
-    steps.push({ key, spokenPhrase });
-  }
-  return steps;
+// Presses a key and returns everything NVDA said until it went quiet.
+async function press(page, nvda, key) {
+  const { spokenPhrase } = await nvda.capture(() => page.keyboard.press(key), { capture: true });
+  log(`- \`${key}\`: ${spokenPhrase || '(silence)'}`);
+  return spokenPhrase;
 }
 
-async function report(testInfo, title, steps, counts) {
-  const header = `### ${testInfo.project.name} / ${title} (attempt ${testInfo.retry + 1})`;
-  const rows = steps.map(
-    ({ key, spokenPhrase }, i) =>
-      `| ${i} | ${key} | ${spokenPhrase.replaceAll('|', '\\|') || '_(silence)_'} |`,
-  );
-  const markdown = [
-    header,
-    '',
-    `Counts: \`${JSON.stringify(counts)}\``,
-    '',
-    '| # | Key | NVDA spoke |',
-    '| - | - | - |',
-    ...rows,
-    '',
-  ].join('\n');
-  // eslint-disable-next-line no-console
-  console.log(markdown);
-  await testInfo.attach('nvda-log.json', {
-    body: JSON.stringify({ steps, counts }, null, 2),
-    contentType: 'application/json',
-  });
-  if (process.env.GITHUB_STEP_SUMMARY) {
-    fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${markdown}\n`);
-  }
-}
+const timesSaid = (spoken, text) => spoken.split(text).length - 1;
 
-// Firefox moves focus to the top of the page when tabbing out of a non-first section
-// (pre-existing, also on master), so every field is left from its first section.
-const ACROSS_SECTIONS_AND_BACK = ['ArrowRight', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowLeft'];
+test.describe('date field with a label and a helper text', () => {
+  const LABEL = 'Start date';
+  const HELPER_TEXT = 'Pick any weekday';
 
-for (const { name, baseURL } of VARIANTS) {
-  test(`${name}: label is not re-announced while navigating (#23101)`, async ({
+  test('reads the label and the helper text once when focus enters the field', async ({
     page,
     nvda,
-  }, testInfo) => {
-    await open(page, nvda, baseURL, 'NvdaLabelRepeat');
+  }) => {
+    await openPage(page, nvda, 'NvdaFieldWithHelperText');
 
-    const group = page.getByRole('group', { name: 'Birth date' });
-    if (name === 'master') {
-      await expect(group).toHaveAttribute('aria-live', 'polite');
-    } else {
-      await expect(group).not.toHaveAttribute('aria-live');
-    }
+    const spoken = await press(page, nvda, 'Tab');
 
-    const steps = await pressAll(page, nvda, [
-      'Tab', // first field, month
-      ...ACROSS_SECTIONS_AND_BACK,
-      'Tab', // first field "Choose date" button
-      'Tab', // second field, month
-      ...ACROSS_SECTIONS_AND_BACK,
-      'Tab', // second field "Choose date" button
-      'Tab', // "After" button, outside both fields
-    ]);
-    const counts = {
-      'Birth date': occurrences(steps, 'Birth date'),
-      'Due date': occurrences(steps, 'Due date'),
-    };
-    await report(testInfo, `${name} / label repeat`, steps, counts);
-    await expect(page.getByRole('button', { name: 'After' })).toBeFocused();
-
-    if (name === 'master') {
-      // Each field is entered once, so any count above 2 is a repeat.
-      const reproduced = counts['Birth date'] + counts['Due date'] > 2;
-      testInfo.annotations.push({
-        type: 'master reproduces #23101',
-        description: String(reproduced),
-      });
-      // Control: the bug was reported on Chrome; without it the `fixed` result proves nothing.
-      if (testInfo.project.name === 'chromium') {
-        expect.soft(reproduced, 'master should reproduce the bug').toBe(true);
-      }
-    } else {
-      expect.soft(counts['Birth date'], 'first label spoken once').toBe(1);
-      expect.soft(counts['Due date'], 'second label spoken once').toBe(1);
-      expect
-        .soft(steps.at(-1).spokenPhrase, 'label must not leak onto the next element')
-        .not.toContain('Due date');
-    }
+    expect.soft(spoken).toContain('Month');
+    expect.soft(timesSaid(spoken, LABEL), 'label').toBe(1);
+    expect.soft(timesSaid(spoken, HELPER_TEXT), 'helper text').toBe(1);
   });
 
-  test(`${name}: helper text changes are still announced (#16637)`, async ({
+  test('does not read the label again while moving between sections or changing a value', async ({
     page,
     nvda,
-  }, testInfo) => {
-    await open(page, nvda, baseURL, 'NvdaHelperTextError');
+  }) => {
+    await openPage(page, nvda, 'NvdaFieldWithHelperText');
+    await press(page, nvda, 'Tab');
 
-    const steps = await pressAll(page, nvda, [
-      'Tab', // month
-      'ArrowRight', // day
-      'ArrowRight', // year
-      'ArrowUp', // 2030 > maxDate: error appears
-      'ArrowDown', // 2029: error clears
-      'ArrowUp', // error appears again
-      'ArrowLeft',
-      'ArrowLeft', // back to month
-      'Tab', // "Choose date" button
-      'Tab', // "After" button
-    ]);
-    const ERROR = 'Date is too late';
-    const announcedNear = (i) => [i, i + 1].some((j) => steps[j]?.spokenPhrase.includes(ERROR));
-    const counts = {
-      Appointment: occurrences(steps, 'Appointment'),
-      [ERROR]: occurrences(steps, ERROR),
-    };
-    await report(testInfo, `${name} / helper text error`, steps, counts);
-    await expect(page.getByRole('button', { name: 'After' })).toBeFocused();
-
-    // `master` is logged for comparison only; the fix must keep announcing every error.
-    if (name === 'fixed') {
-      expect.soft(announcedNear(3), 'first error announced').toBe(true);
-      expect.soft(announcedNear(5), 'second error announced').toBe(true);
-      expect.soft(counts.Appointment, 'label spoken once').toBe(1);
+    for (const key of ['ArrowRight', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'ArrowLeft']) {
+      // eslint-disable-next-line no-await-in-loop
+      expect.soft(await press(page, nvda, key), key).not.toContain(LABEL);
     }
   });
-}
+
+  test('does not read the label once focus moves to the next elements', async ({ page, nvda }) => {
+    await openPage(page, nvda, 'NvdaFieldWithHelperText');
+    await press(page, nvda, 'Tab');
+    await press(page, nvda, 'ArrowRight');
+    // Back to the first section: in Firefox, Tab from a later section jumps to the top of the page.
+    await press(page, nvda, 'ArrowLeft');
+
+    const openButton = await press(page, nvda, 'Tab');
+    expect.soft(openButton).toContain('Choose date');
+    expect.soft(openButton).not.toContain(LABEL);
+
+    const nextButton = await press(page, nvda, 'Tab');
+    expect.soft(nextButton).toContain('After');
+    expect.soft(nextButton).not.toContain(LABEL);
+  });
+});
+
+test.describe('date field with a validation error in the helper text', () => {
+  const LABEL = 'End date';
+  const ERROR = 'Date is too late';
+
+  test('announces the error every time it appears, without the label', async ({ page, nvda }) => {
+    await openPage(page, nvda, 'NvdaFieldValidation');
+    await press(page, nvda, 'Tab'); // month
+    await press(page, nvda, 'ArrowRight'); // day
+    await press(page, nvda, 'ArrowRight'); // year, 2029 = maxDate
+
+    const tooLate = await press(page, nvda, 'ArrowUp'); // 2030
+    expect.soft(tooLate, '2030').toContain(ERROR);
+    expect.soft(tooLate, '2030').not.toContain(LABEL);
+
+    const valid = await press(page, nvda, 'ArrowDown'); // 2029
+    expect.soft(valid, '2029').not.toContain(ERROR);
+    expect.soft(valid, '2029').not.toContain(LABEL);
+
+    const tooLateAgain = await press(page, nvda, 'ArrowUp'); // 2030
+    expect.soft(tooLateAgain, '2030 again').toContain(ERROR);
+    expect.soft(tooLateAgain, '2030 again').not.toContain(LABEL);
+  });
+});

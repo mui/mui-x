@@ -1,4 +1,4 @@
-# Temporary: verifies https://github.com/mui/mui-x/issues/23101 with a real NVDA. Do not merge.
+# Temporary: runs `.github/nvda/fields.pw.mjs` with a real NVDA. Do not merge.
 name: NVDA verify
 
 on:
@@ -17,24 +17,13 @@ concurrency:
 
 jobs:
   build:
-    name: Build fixtures (${{ matrix.variant }})
+    name: Build fixtures
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    strategy:
-      matrix:
-        variant: [master, fixed]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Use PickersTextField from the PR base
-        if: matrix.variant == 'master'
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: |
-          git fetch --depth=1 origin "$BASE_SHA"
-          git checkout "$BASE_SHA" -- packages/x-date-pickers/src/PickersTextField
-          git diff --cached --stat
       - name: Set up pnpm
         uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - name: Use Node.js
@@ -48,7 +37,7 @@ jobs:
           NODE_ENV: production
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: site-${{ matrix.variant }}
+          name: site
           path: test/e2e/build
           retention-days: 7
 
@@ -76,8 +65,8 @@ jobs:
           node-version: '22.23.3'
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          pattern: site-*
-          path: .github/nvda/sites
+          name: site
+          path: .github/nvda/site
       - name: Install harness
         run: |
           npm init -y > /dev/null
