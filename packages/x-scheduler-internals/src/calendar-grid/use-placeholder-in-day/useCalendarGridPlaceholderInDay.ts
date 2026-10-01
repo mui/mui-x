@@ -58,6 +58,10 @@ export function useCalendarGridPlaceholderInDay(
       return null;
     }
 
+    // The placeholder can run past the week row: the next rows render their own piece.
+    const endInRow = adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end;
+    const daySpan = adapter.differenceInDays(endInRow, day) + 1;
+
     const sharedProperties = {
       key: 'occurrence-placeholder',
       id: originalEventId ?? 'occurrence-placeholder',
@@ -67,10 +71,7 @@ export function useCalendarGridPlaceholderInDay(
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
       const startProcessed = processDate(day, adapter);
-      const endProcessed = processDate(
-        adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
-        adapter,
-      );
+      const endProcessed = processDate(endInRow, adapter);
       const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
@@ -79,7 +80,7 @@ export function useCalendarGridPlaceholderInDay(
         displayTimezone: { start: startProcessed, end: endProcessed, timezone },
         position: {
           index: findAvailableIndex(),
-          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
+          daySpan,
         },
       };
     }
@@ -95,7 +96,7 @@ export function useCalendarGridPlaceholderInDay(
         displayTimezone: { start: startProcessed, end: endProcessed, timezone },
         position: {
           index: findAvailableIndex(),
-          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
+          daySpan,
         },
       };
     }
@@ -107,7 +108,7 @@ export function useCalendarGridPlaceholderInDay(
       displayTimezone: { ...originalEvent!.displayTimezone },
       position: {
         index: findAvailableIndex(rawPlaceholder.occurrenceKey),
-        daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
+        daySpan,
       },
     };
   }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, rowEnd, findAvailableIndex]);
