@@ -215,7 +215,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
   it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
     const localFetchRowsSpy = vi.fn();
-    const { setProps, unmount } = render(
+    const { unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -235,15 +235,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(callCountAfterFirstFetch);
     });
 
-    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
-    // after unmount and leak polling into later tests.
-    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should periodically revalidate expanded nested rows when dataSourceRevalidateMs is set', async () => {
     const localFetchRowsSpy = vi.fn();
-    const { setProps, user, unmount } = render(
+    const { user, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -276,14 +273,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(hasNestedGroupRequest).to.equal(true);
     });
 
-    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
-    // after unmount and leak polling into later tests.
-    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should keep selected nested rows selected during background nested revalidation', async () => {
-    const { setProps, user, unmount } = render(
+    const { user, unmount } = render(
       <TestDataSource dataSourceCache={null} dataSourceRevalidateMs={1} />,
     );
 
@@ -322,15 +316,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
 
-    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
-    // after unmount and leak polling into later tests.
-    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should not set children loading state during background nested revalidation', async () => {
     const localFetchRowsSpy = vi.fn();
-    const { setProps, user, unmount } = render(
+    const { user, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -372,9 +363,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
     expect(hasLoadingTrueCall).to.equal(false);
 
-    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
-    // after unmount and leak polling into later tests.
-    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 

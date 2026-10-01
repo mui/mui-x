@@ -4,6 +4,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { describe, it, expect } from 'vitest';
 
 describe('<ChartsYAxis />', () => {
@@ -84,5 +85,26 @@ describe('<ChartsYAxis />', () => {
 
     const root = container.querySelector(`.${axisClasses.root}.custom-y-axis`);
     expect(root).not.to.equal(null);
+  });
+
+  // https://github.com/mui/mui-x/issues/23697
+  it('should not warn when the theme typography has responsive styles', () => {
+    const baseTheme = createTheme();
+    const theme = createTheme(baseTheme, {
+      typography: {
+        caption: { [baseTheme.breakpoints.up('md')]: { fontSize: '0.875rem' } },
+        body1: { [baseTheme.breakpoints.up('md')]: { fontSize: '1.125rem' } },
+      },
+    });
+
+    expect(() =>
+      render(
+        <ThemeProvider theme={theme}>
+          <ChartsContainer {...defaultProps}>
+            <ChartsYAxis />
+          </ChartsContainer>
+        </ThemeProvider>,
+      ),
+    ).not.toErrorDev();
   });
 });
