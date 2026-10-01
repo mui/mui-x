@@ -1,5 +1,7 @@
 // Run the work even when the page never becomes idle, for example while other work keeps the task queue busy.
 const IDLE_TIMEOUT = 100;
+// After a timeout, yield after this many milliseconds so that a busy page gets no long task.
+const TIMEOUT_WORK_BUDGET = 10;
 
 export default function asyncWorker({
   work,
@@ -11,8 +13,12 @@ export default function asyncWorker({
   done: () => void;
 }) {
   const myNonEssentialWork: IdleRequestCallback = (deadline) => {
-    // If there is a surplus time in the frame, or timeout
-    while ((deadline.timeRemaining() > 0 || deadline.didTimeout) && tasks.current > 0) {
+    const timeoutBudgetEnd = deadline.didTimeout ? performance.now() + TIMEOUT_WORK_BUDGET : 0;
+    // If there is a surplus time in the frame, or a timeout budget
+    while (
+      (deadline.timeRemaining() > 0 || performance.now() < timeoutBudgetEnd) &&
+      tasks.current > 0
+    ) {
       work();
     }
 
