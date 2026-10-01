@@ -122,7 +122,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   // The monitor reads the latest callback before paint, so the cursor never causes a render.
   Draggable.useMonitor({
     accept: store.dependencyDragKind,
-    onMove: (_, { location }) => {
+    onMove: ({ location }) => {
       if (creation !== null) {
         followCursorMove(location.current.input.clientX, location.current.input.clientY);
       }

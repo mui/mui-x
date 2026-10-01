@@ -148,7 +148,8 @@ const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
   alignContent: 'flex-start',
   minHeight: 11.5,
   containerType: 'size',
-  '&[data-dragging], &[data-resizing]': {
+  // The source stays dimmed while its preview settles back after the drop.
+  '&[data-dragging], &[data-settling], &[data-resizing]': {
     opacity: 0.5,
   },
   // Lift the armed/edited event — and the resize placeholder, which also carries `data-armed` — above

@@ -46,7 +46,8 @@ const DayGridEventBaseStyles = (theme: any) => ({
   alignItems: 'center',
   gap: theme.spacing(1),
   width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * (2 * ${theme.spacing(0.5)} + 1px))`,
-  '&[data-dragging], &[data-resizing]': {
+  // The source stays dimmed while its preview settles back after the drop.
+  '&[data-dragging], &[data-settling], &[data-resizing]': {
     opacity: 0.5,
   },
   variants: getPaletteVariants(theme),

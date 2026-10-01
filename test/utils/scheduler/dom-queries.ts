@@ -72,9 +72,7 @@ export function getAllEventsByTitle(title: string) {
  * Returns the drop targets of the time grid columns in DOM order, one per rendered day.
  */
 export function getTimeGridColumns(): HTMLElement[] {
-  return Array.from(
-    document.querySelectorAll<HTMLElement>(`.MuiEventCalendar-dayTimeGridGrid [data-drop-target]`),
-  );
+  return Array.from(document.querySelectorAll<HTMLElement>(`.MuiEventCalendar-dayTimeGridColumn`));
 }
 
 /**
@@ -105,9 +103,7 @@ export function getEventRow(resourceId: string): HTMLElement {
  * Applies mock bounds to all timeline event rows, so jsdom drops resolve positions.
  */
 export function mockAllEventRowBounds(width = 6720) {
-  const rows = document.querySelectorAll<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-drop-target]`,
-  );
+  const rows = document.querySelectorAll<HTMLElement>(`.MuiEventTimeline-eventsCell`);
   for (const row of rows) {
     mockElementBounds(row, { left: 0, width, height: 40 });
   }

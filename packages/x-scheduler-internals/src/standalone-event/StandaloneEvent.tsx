@@ -75,7 +75,9 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
           <StandaloneEventElement
             componentProps={props}
             dragProps={dragProps}
-            state={{ dragging: state.dragging }}
+            // The engine keeps `[data-dragging]` on the source until its preview has
+            // settled after the drop, so the rendered attribute must not drop it sooner.
+            state={{ dragging: state.dragging || state.settling }}
           />
         )}
       />
@@ -86,7 +88,7 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
 export namespace StandaloneEvent {
   export interface State {
     /**
-     * Whether the event is being dragged.
+     * Whether the event is being dragged, or its preview is still settling after the drop.
      */
     dragging: boolean;
   }

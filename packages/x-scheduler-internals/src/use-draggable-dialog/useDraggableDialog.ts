@@ -39,11 +39,11 @@ export function useDraggableDialog() {
     kind: dialogDragKind,
     // The header shows the same cursor at rest.
     dragCursor: 'move',
-    onMove: (_, { location }) => {
+    onMove: ({ location }) => {
       const { deltaX, deltaY } = getDeltas(location);
       setTransform(`translate(${offset.current.x + deltaX}px, ${offset.current.y + deltaY}px)`);
     },
-    onMoveEnd: (_, { location, canceled }) => {
+    onMoveEnd: ({ location, canceled }) => {
       const { deltaX, deltaY } = getDeltas(location);
 
       if (!canceled) {

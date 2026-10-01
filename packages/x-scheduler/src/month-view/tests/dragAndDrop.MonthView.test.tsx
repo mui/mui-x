@@ -55,7 +55,8 @@ describe('MonthView - Drag and Drop', () => {
     startDrag(source, { clientX: 50 });
     await moveDragAndWait(document.body);
 
-    // The preview is portaled by the drag provider, which has to sit below the styled contexts.
+    // The preview content renders under the drag provider, which has to sit below the styled
+    // contexts. Base UI copies it beside the source.
     await waitFor(() => {
       expect(document.querySelector('.MuiEventCalendar-eventDragPreview')).not.to.equal(null);
     });

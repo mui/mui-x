@@ -66,6 +66,12 @@ function TimeGrid() {
   );
 }
 
+/** Moves the drag to the middle of the grid, away from the edges, and lets a scroll frame see it. */
+async function enterGrid(grid: HTMLElement) {
+  moveDrag(grid, { clientX: 100, clientY: 300, mockHitTest: false });
+  await absorbObserverFrames();
+}
+
 describe.skipIf(isJSDOM)('time-grid overflow auto-scroll', () => {
   const { render } = createSchedulerRenderer();
 
@@ -95,6 +101,8 @@ describe.skipIf(isJSDOM)('time-grid overflow auto-scroll', () => {
     const grid = screen.getByTestId('time-grid');
     grid.scrollTop = 400;
     startDrag(screen.getByTestId(source), { clientX: 350, clientY: 20, mockHitTest: false });
+    // The margin beyond the edges only scrolls once the drag has entered the grid.
+    await enterGrid(grid);
     moveDrag(document.body, { clientX: 100, clientY: 500, mockHitTest: false });
     await waitFor(() => expect(grid.scrollTop).toBeGreaterThan(400));
   });
@@ -135,7 +143,14 @@ describe.skipIf(isJSDOM)('time-grid overflow auto-scroll', () => {
       grid.scrollTop = 400;
       startDrag(screen.getByTestId('event'), { clientX: 350, clientY: 20, mockHitTest: false });
       moveDrag(document.body, { clientX: 100, clientY: insideMargin, mockHitTest: false });
-      await waitFor(() => expect((grid.scrollTop - 400) * direction).toBeGreaterThan(0));
+      await absorbObserverFrames();
+      // The margin only scrolls once the drag has entered the grid.
+      expect(grid.scrollTop).toBe(400);
+
+      await enterGrid(grid);
+      const enteredAt = grid.scrollTop;
+      moveDrag(document.body, { clientX: 100, clientY: insideMargin, mockHitTest: false });
+      await waitFor(() => expect((grid.scrollTop - enteredAt) * direction).toBeGreaterThan(0));
 
       moveDrag(document.body, { clientX: 100, clientY: beyondMargin, mockHitTest: false });
       await absorbObserverFrames();
@@ -143,8 +158,15 @@ describe.skipIf(isJSDOM)('time-grid overflow auto-scroll', () => {
       await absorbObserverFrames();
       expect(grid.scrollTop).toBe(stoppedAt);
 
+      // Leaving the margin takes the permission back: the drag has to enter the grid again.
       moveDrag(document.body, { clientX: 100, clientY: insideMargin, mockHitTest: false });
-      await waitFor(() => expect((grid.scrollTop - stoppedAt) * direction).toBeGreaterThan(0));
+      await absorbObserverFrames();
+      expect(grid.scrollTop).toBe(stoppedAt);
+
+      await enterGrid(grid);
+      const reenteredAt = grid.scrollTop;
+      moveDrag(document.body, { clientX: 100, clientY: insideMargin, mockHitTest: false });
+      await waitFor(() => expect((grid.scrollTop - reenteredAt) * direction).toBeGreaterThan(0));
       cancelDrag();
       const canceledAt = grid.scrollTop;
       await absorbObserverFrames();

@@ -99,4 +99,13 @@ describe('Scheduler floating drag preview', () => {
     expect(renderPreview).not.toHaveBeenCalled();
     expect(screen.getByTestId('source').hasAttribute('data-dragging')).toBe(true);
   });
+
+  it('should show no preview when the content is null, and still run the drag', async () => {
+    render(<Fixture renderPreview={() => null} />);
+    await act(async () => startDrag(screen.getByTestId('source')));
+    await moveDragAndWait(document.body, { clientX: 200 });
+    expect(document.querySelector('[data-drag-preview]')).toBe(null);
+    expect(screen.getByTestId('source').hasAttribute('data-dragging')).toBe(true);
+    cancelDrag();
+  });
 });

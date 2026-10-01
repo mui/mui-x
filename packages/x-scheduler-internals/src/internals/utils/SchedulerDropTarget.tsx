@@ -110,7 +110,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
       canDrop={canDrop}
       // Nothing styles the target while a drag is over it.
       trackDragOver={false}
-      onDraggableMove={({ source, target }, { location }) => {
+      onDraggableMove={({ source, target, location }) => {
         if (isTimeEventResizeTap(source, location)) {
           // Back where it started, the resize shows nothing to apply, like its release would.
           store.setOccurrencePlaceholder(null);
@@ -121,7 +121,7 @@ export function SchedulerDropTarget(props: SchedulerDropTarget.Props) {
           store.setOccurrencePlaceholder(newPlaceholder);
         }
       }}
-      onDraggableDrop={({ source, target }, { location }) => {
+      onDraggableDrop={({ source, target, location }) => {
         if (isTimeEventResizeTap(source, location)) {
           store.setOccurrencePlaceholder(null);
           // The engine swallows the click that follows a drag, and this tap started one. Forward it

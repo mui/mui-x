@@ -15,7 +15,8 @@ const getViewportOptions = () => viewportOptions;
 
 /**
  * Scrolls the element vertically while a time grid event, a time grid resize handle or an external
- * event is dragged near its edges, or up to 160px beyond them.
+ * event is dragged near its edges, or up to 160px beyond them once the drag has entered the element.
+ * A drag that moves further than that has to enter the element again.
  * It registers the element with the drag engine, so it needs a `Draggable.Provider` above the
  * component that calls it. Use it when the element that scrolls is not rendered by a
  * `Draggable.Viewport` you control.

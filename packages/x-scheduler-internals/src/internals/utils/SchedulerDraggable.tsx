@@ -35,12 +35,12 @@ export const SchedulerDraggable = React.forwardRef(function SchedulerDraggable<
       ref={forwardedRef}
       payload={payload}
       render={withDragPreview(render, preview)}
-      onBeforeMoveStart={(value, eventDetails) => {
-        value.source.updateDragData(getDragData(eventDetails.input));
+      onBeforeMoveStart={(eventDetails) => {
+        eventDetails.source.updateDragData(getDragData(eventDetails.input));
       }}
-      onMoveEnd={(value) => {
+      onMoveEnd={(eventDetails) => {
         // The target's `onDraggableDrop` runs after this handler and may still commit the last placeholder.
-        if (!value.target || !schedulerDropTargetKind.matches(value.target)) {
+        if (!eventDetails.target || !schedulerDropTargetKind.matches(eventDetails.target)) {
           store.setOccurrencePlaceholder(null);
         }
       }}

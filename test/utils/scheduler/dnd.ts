@@ -200,7 +200,7 @@ interface SimulateDragAndDropParameters {
   source: Element;
   /**
    * The element to drop onto (or a child of the drop target element).
-   * The closest ancestor with `data-drop-target` will be used as the drop target.
+   * The closest registered drop target ancestor will be used as the drop target.
    */
   target: Element;
   /**
@@ -413,7 +413,7 @@ interface SimulatePointerResizeParameters {
  */
 export function simulatePointerResize(parameters: SimulatePointerResizeParameters): void {
   const { handle, to, from = {}, pointerType = 'touch', cancel = false, hold = false } = parameters;
-  const target = parameters.target ?? handle.closest('[data-drop-target]');
+  const target = parameters.target ?? handle.closest('.MuiEventCalendar-dayTimeGridColumn');
   if (!target) {
     throw new Error('Could not find the drop target of the resize handle.');
   }

@@ -206,7 +206,7 @@ describe('DayView - touch resize', () => {
     const pointerXs: number[] = [];
     function PointerXMonitor() {
       Draggable.useMonitor({
-        onMoveEnd: (_, { location }) => {
+        onMoveEnd: ({ location }) => {
           pointerXs.push(location.current.input.clientX);
         },
       });

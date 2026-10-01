@@ -729,12 +729,14 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       await renderTimeline({ events: [eventA, eventB], dependencies: [] });
 
       startDrag(getTerminal('Event A')!, {});
-      // Base UI locks the cursor on the frame after the drag starts.
       await moveDragAndWait(document.body, { clientX: 120, clientY: 40 });
 
-      expect(document.documentElement.style.getPropertyValue('--drag-cursor')).to.equal(
-        'crosshair',
-      );
+      // Base UI locks the cursor a few frames after the drag starts, once the lift has painted.
+      await waitFor(() => {
+        expect(document.documentElement.style.getPropertyValue('--drag-cursor')).to.equal(
+          'crosshair',
+        );
+      });
     });
 
     it('should ignore dropping a terminal on its own event', async () => {
