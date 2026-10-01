@@ -258,6 +258,16 @@ describe('<AdapterDayjs />', () => {
         expect(fallBack.toISOString()).to.equal('2026-11-01T10:30:00.000Z');
       });
 
+      it('should keep the elapsed time when adding hours to `dayjs.tz` values across a DST change', () => {
+        setSystemTimezone('America/Los_Angeles');
+        const adapter = new AdapterDayjs();
+        const fallBack = adapter.addHours(dayjs.tz('2026-11-01T01:30', 'America/Phoenix'), 1);
+        const springForward = adapter.addHours(dayjs.tz('2026-03-08T02:30', 'America/Phoenix'), 1);
+
+        expect(fallBack.toISOString()).to.equal('2026-11-01T09:30:00.000Z');
+        expect(springForward.toISOString()).to.equal('2026-03-08T10:30:00.000Z');
+      });
+
       it('should return the right instant when a zone moves to or from offset 0', () => {
         setSystemTimezone('America/New_York');
         const adapter = new AdapterDayjs();

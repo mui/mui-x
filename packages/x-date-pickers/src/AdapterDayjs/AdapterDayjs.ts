@@ -258,8 +258,10 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   /**
    * `dayjs` does not update the offset when `set` or `add` crosses a DST change (moment does).
    * Plain `system` values follow the JS Date DST, and a copied offset breaks later `dayjs` calls.
+   * @param {Dayjs} value The result of `set` or `add`.
+   * @param {boolean} isTimeAddition `true` after adding hours, minutes or seconds, which keeps the instant.
    */
-  protected adjustOffset = (value: Dayjs) => {
+  protected adjustOffset = (value: Dayjs, isTimeAddition = false) => {
     if (!this.hasTimezonePlugin()) {
       return value;
     }
@@ -271,24 +273,37 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     // `dayjs.tz(string)` stores the system offset of its creation date, even across a system DST change.
+    // A time addition keeps the instant, so this offset is still correct after it.
     // @ts-ignore
     const localOffset: number | undefined = value.$x.$localOffset;
     // @ts-ignore
-    if (localOffset !== undefined && localOffset !== value.$d.getTimezoneOffset()) {
+    const systemOffset: number = value.$d.getTimezoneOffset();
+    if (!isTimeAddition && localOffset !== undefined && localOffset !== systemOffset) {
       // `$x` is shared with the source value, so replace it instead of mutating it.
       // @ts-ignore
       value.$x = { ...value.$x, $localOffset: undefined };
     }
 
     const fixedValue = value.tz(this.cleanTimezone(timezone), true);
-    // Zones that move to or from offset 0 (for example `Europe/London`) switch between UTC and offset mode.
     // @ts-ignore
-    if (value.$x.$timezone && Boolean(fixedValue.$u) !== Boolean(value.$u)) {
-      return fixedValue;
+    const zone: string | undefined = value.$x.$timezone;
+    // Zones that move to or from offset 0 (for example `Europe/London`) switch between UTC and offset mode.
+    // Before dayjs 1.11.12, `tz()` returns wrong fields and drops the locale there, so rebuild the value.
+    // @ts-ignore
+    if (zone && Boolean(fixedValue.$u) !== Boolean(value.$u)) {
+      const wallClock = value.locale('en').format('YYYY-MM-DDTHH:mm:ss.SSS');
+      const rebuiltValue = dayjs.tz(wallClock, zone).locale(value.locale());
+      if (rebuiltValue.isValid()) {
+        return rebuiltValue;
+      }
     }
 
+    // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
     // @ts-ignore
-    value.$offset = fixedValue.$offset;
+    if ((fixedValue.$offset ?? 0) !== (value.$offset ?? 0)) {
+      // @ts-ignore
+      value.$offset = fixedValue.$offset;
+    }
     return value;
   };
 
@@ -590,15 +605,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public addHours = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'hour'));
+    return this.adjustOffset(value.add(amount, 'hour'), true);
   };
 
   public addMinutes = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'minute'));
+    return this.adjustOffset(value.add(amount, 'minute'), true);
   };
 
   public addSeconds = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'second'));
+    return this.adjustOffset(value.add(amount, 'second'), true);
   };
 
   public getYear = (value: Dayjs) => {
