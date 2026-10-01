@@ -244,6 +244,16 @@ describe('<DataGrid /> - Layout & warnings', () => {
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty width',
         );
       });
+
+      it('should not error about an empty height when the height prop is set', () => {
+        expect(() => {
+          render(
+            <div style={{ width: 300, height: 0 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+        }).not.toErrorDev();
+      });
     });
 
     describe('swallow warnings', () => {
@@ -853,6 +863,100 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         expect(grid('root')).to.have.class(gridClasses.autoHeight);
+      });
+    });
+
+    describe('height prop', () => {
+      it('should resolve the root element to the given pixel height without a wrapper', () => {
+        render(<DataGrid {...baselineProps} height={300} />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('300px');
+      });
+
+      it('should resolve the root element to the given CSS height value without a wrapper', () => {
+        render(<DataGrid {...baselineProps} height="150px" />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('150px');
+      });
+
+      it('should let autoPageSize compute the page size from the height prop, without a wrapper', () => {
+        const nbRows = 27;
+        const height = 780;
+        const columnHeaderHeight = 56;
+        const rowHeight = 52;
+
+        function TestCase() {
+          const data = useBasicDemoData(nbRows, 10);
+          return (
+            <DataGrid
+              columns={data.columns}
+              rows={data.rows}
+              autoPageSize
+              height={height}
+              columnHeaderHeight={columnHeaderHeight}
+              rowHeight={rowHeight}
+            />
+          );
+        }
+
+        render(<TestCase />);
+        const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
+        const expectedFullPageRowsLength = Math.floor(
+          (height - columnHeaderHeight - footerHeight) / rowHeight,
+        );
+        expect(getColumnValues(0)).to.have.length(expectedFullPageRowsLength);
+      });
+
+      it('should let sx override the height prop', () => {
+        render(<DataGrid {...baselineProps} height={300} sx={{ height: 150 }} />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('150px');
+      });
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      it('should resolve the root element to the given height inside a flex column container', () => {
+        render(
+          <div style={{ display: 'flex', flexDirection: 'column', height: 500 }}>
+            <DataGrid {...baselineProps} height={300} />
+          </div>,
+        );
+        expect(getComputedStyle(grid('root')!).height).to.equal('300px');
+      });
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should not grow past the given height inside a flex column container',
+        () => {
+          render(
+            <div style={{ display: 'flex', flexDirection: 'column', height: 500 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ height: '300px' });
+        },
+      );
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should not shrink below the given height when the flex column parent is shorter',
+        () => {
+          render(
+            <div style={{ display: 'flex', flexDirection: 'column', height: 200 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ height: '300px' });
+        },
+      );
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)('should fill the available width inside a flex row container', () => {
+        render(
+          <div style={{ display: 'flex', width: 400 }}>
+            <DataGrid {...baselineProps} height={300} />
+          </div>,
+        );
+        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
       });
     });
 
@@ -1554,25 +1658,24 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>
         );
       }
-      // Samples both flags once per frame, after the frame's rendering steps
-      // (layout, ResizeObserver callbacks, paint).
-      const sampleScrollFlagsPerFrame = (frames: number) =>
-        new Promise<string[]>((resolve) => {
-          const flags: string[] = [];
-          const tick = () => {
-            setTimeout(() => {
-              flags.push(
-                `${getVariable('--DataGrid-hasScrollX')}${getVariable('--DataGrid-hasScrollY')}`,
-              );
-              if (flags.length >= frames) {
-                resolve(flags);
-              } else {
-                requestAnimationFrame(tick);
-              }
-            });
-          };
-          requestAnimationFrame(tick);
-        });
+      // Samples both flags once per frame, after paint. Each frame gets its own `act()` scope,
+      // because React 18 holds commits until an async `act()` scope ends.
+      const sampleScrollFlagsPerFrame = async (frames: number) => {
+        const flags: string[] = [];
+        for (let i = 0; i < frames; i += 1) {
+          // eslint-disable-next-line no-await-in-loop
+          await act(
+            () =>
+              new Promise<void>((resolve) => {
+                requestAnimationFrame(() => resolve());
+              }),
+          );
+          flags.push(
+            `${getVariable('--DataGrid-hasScrollX')}${getVariable('--DataGrid-hasScrollY')}`,
+          );
+        }
+        return flags;
+      };
 
       const { setProps } = render(<TestCase brandWidth={200} />);
       await waitFor(() => {
@@ -1586,7 +1689,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       // than the stale root, which used to reserve a vertical scrollbar for the
       // duration of the resize throttle.
       setProps({ brandWidth: 500 });
-      const flags = await act(() => sampleScrollFlagsPerFrame(10));
+      const flags = await sampleScrollFlagsPerFrame(10);
 
       expect(flags, `sampled hasScrollX+hasScrollY: ${flags.join(', ')}`).to.deep.equal(
         flags.map(() => '10'),

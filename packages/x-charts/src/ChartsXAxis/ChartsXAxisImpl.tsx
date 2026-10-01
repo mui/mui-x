@@ -13,6 +13,7 @@ import { isInfinity } from '../internals/isInfinity';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { useDrawingArea } from '../hooks';
 import { getStringSize } from '../internals/domUtils';
+import { getInlineTypographyStyle } from '../internals/getInlineTypographyStyle';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 
 const XAxisRoot = styled(AxisRoot, {
@@ -64,7 +65,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
     // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     additionalProps: {
       style: {
-        ...theme.typography.body1,
+        ...getInlineTypographyStyle(theme.typography.body1),
         lineHeight: 1,
         fontSize: 14,
         textAnchor: 'middle',

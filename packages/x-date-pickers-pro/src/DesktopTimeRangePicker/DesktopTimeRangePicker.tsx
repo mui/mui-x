@@ -26,13 +26,12 @@ import {
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { rangeValueManager } from '../internals/utils/valueManagers';
 import type { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
 import { SingleInputTimeRangeField } from '../SingleInputTimeRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
-import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { useTimeRangeManager } from '../managers';
 import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
 import type { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
 
@@ -85,6 +84,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useTimeRangeManager();
 
   // Props with the default values common to all time range pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<DesktopTimeRangePickerProps>(
@@ -153,9 +153,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker(
   const { renderPicker } = useDesktopRangePicker<TimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'time',
-    validator: validateTimeRange,
+    manager,
     rendererInterceptor,
     steps: STEPS,
   });
@@ -290,6 +288,10 @@ DesktopTimeRangePicker.propTypes /* remove-proptypes */ = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

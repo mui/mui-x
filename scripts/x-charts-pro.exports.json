@@ -647,6 +647,7 @@
   { "name": "strawberrySkyPalette", "kind": "Variable" },
   { "name": "strawberrySkyPaletteDark", "kind": "Variable" },
   { "name": "strawberrySkyPaletteLight", "kind": "Variable" },
+  { "name": "StylesheetErrorReason", "kind": "ImportSpecifier" },
   { "name": "TickFrequency", "kind": "TypeAlias" },
   { "name": "TickFrequencyDefinition", "kind": "TypeAlias" },
   { "name": "TickItem", "kind": "TypeAlias" },
