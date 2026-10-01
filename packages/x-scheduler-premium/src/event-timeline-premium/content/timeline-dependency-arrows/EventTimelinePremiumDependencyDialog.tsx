@@ -6,6 +6,7 @@ import type { PaperProps } from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -181,18 +182,19 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
   );
   const dragHandlerRef = React.useRef<HTMLElement>(null);
   const [type, setType] = React.useState(dependency.type);
+  // Shown in the form, not as a toast: the dialog hides the rest of the page, the
+  // scheduler's error container included, from assistive technologies.
+  const [rejection, setRejection] = React.useState<string | null>(null);
 
   const titleId = `${schedulerId}-dependency-dialog-title`;
   const typeLabelId = `${schedulerId}-dependency-dialog-type-label`;
+  const rejectionId = `${schedulerId}-dependency-dialog-rejection`;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const result = store.updateDependency(dependency.id, { type });
     if (result.status === 'rejected') {
-      store.pushError(
-        /* minify-error-disabled */ new Error(UPDATE_REJECTION_MESSAGES[result.reason]),
-        { transient: true },
-      );
+      setRejection(UPDATE_REJECTION_MESSAGES[result.reason]);
       return;
     }
     onClose();
@@ -249,13 +251,17 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
               )}
             </DependencyDialogDetails>
             {!isReadOnly && (
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="small" error={rejection !== null}>
                 <InputLabel id={typeLabelId}>{DEPENDENCY_DIALOG_TEXT.typeLabel}</InputLabel>
                 <Select
                   labelId={typeLabelId}
                   label={DEPENDENCY_DIALOG_TEXT.typeLabel}
                   value={type}
-                  onChange={(event) => setType(event.target.value as SchedulerDependencyType)}
+                  aria-describedby={rejection === null ? undefined : rejectionId}
+                  onChange={(event) => {
+                    setType(event.target.value as SchedulerDependencyType);
+                    setRejection(null);
+                  }}
                 >
                   {DEPENDENCY_TYPES.map((option) => (
                     <MenuItem key={option} value={option}>
@@ -263,6 +269,11 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                     </MenuItem>
                   ))}
                 </Select>
+                {rejection !== null && (
+                  <FormHelperText id={rejectionId} role="alert">
+                    {rejection}
+                  </FormHelperText>
+                )}
               </FormControl>
             )}
           </DependencyDialogBody>

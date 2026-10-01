@@ -120,6 +120,21 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(getPaintOrder()).to.deep.equal(['dep-2', 'dep-1']);
     });
 
+    it('should not keep the hover of an arrow removed under the pointer', async () => {
+      const dependency = buildDependency('dep-1', 'event-a', 'event-b');
+      const { setProps } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [dependency],
+      });
+
+      fireEvent.pointerEnter(getHitArea('dep-1'));
+      // Unmounted under the pointer: no pointerleave reaches the arrow.
+      await setProps({ dependencies: [] });
+      await setProps({ dependencies: [dependency] });
+
+      expect(getVisualArrows('dep-1')[0].hasAttribute('data-hovered')).to.equal(false);
+    });
+
     it('should highlight every appearance of a dependency whose event is on several resources', async () => {
       const multiResourceEvent = EventBuilder.new()
         .id('event-m')
@@ -194,7 +209,12 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       fireEvent.click(within(dialog).getByRole('button', { name: /save/i }));
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
-      expect(screen.getByRole('dialog')).not.to.equal(null);
+      // Inline: the dialog hides the rest of the page from assistive technologies.
+      expect(
+        within(screen.getByRole('dialog')).getByText(
+          'A dependency of this type already exists between these two events.',
+        ),
+      ).not.to.equal(null);
     });
 
     it('should delete the dependency from the dialog', async () => {
@@ -223,6 +243,36 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       expect(getVisualArrows('dep-1')[0].hasAttribute('data-selected')).to.equal(true);
     });
+
+    it('should keep the arrow selected while choosing a type', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      const dialog = openDialog('dep-1');
+      fireEvent.mouseDown(within(dialog).getByRole('combobox', { name: 'Type' }));
+      fireEvent.pointerDown(screen.getByRole('option', { name: 'Start to start' }));
+
+      expect(getVisualArrows('dep-1')[0].hasAttribute('data-selected')).to.equal(true);
+    });
+
+    it('should keep the arrow selected when dismissing the type options', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      const dialog = openDialog('dep-1');
+      fireEvent.mouseDown(within(dialog).getByRole('combobox', { name: 'Type' }));
+      const optionsBackdrop = screen
+        .getByRole('listbox')
+        .closest('[role="presentation"]')!
+        .querySelector('.MuiBackdrop-root')!;
+      fireEvent.pointerDown(optionsBackdrop);
+
+      expect(getVisualArrows('dep-1')[0].hasAttribute('data-selected')).to.equal(true);
+    });
   });
 
   describe('context menu', () => {
@@ -236,6 +286,18 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       fireEvent.click(screen.getByRole('menuitem', { name: 'Edit dependency' }));
 
       expect(within(screen.getByRole('dialog')).getByText('Edit dependency')).not.to.equal(null);
+    });
+
+    it('should open the menu on a right click on the delete button', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      fireEvent.click(getHitArea('dep-1'));
+      fireEvent.contextMenu(document.querySelector('[data-dependency-delete-button]')!);
+
+      expect(screen.getByRole('menuitem', { name: 'Edit dependency' })).not.to.equal(null);
     });
 
     it('should delete the dependency from Delete', async () => {

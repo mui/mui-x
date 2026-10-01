@@ -32,6 +32,15 @@ const GUARDED_KEY_TARGETS = [
  */
 const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"], [role="menu"]';
 
+/**
+ * Whether a press lands in the popup layer of an options list, such as the type Select
+ * of the dependency dialog: portaled outside the dialog, its options and its backdrop
+ * belong to the dialog too.
+ */
+function isOptionsPopupPress(target: Element): boolean {
+  return target.closest('[role="presentation"]')?.querySelector('[role="listbox"]') != null;
+}
+
 function isGuardedKeyTarget(event: KeyboardEvent): boolean {
   // At the document level `event.target` is retargeted to the shadow host, which
   // would mask an editable living inside it: the composed path has the real target.
@@ -106,7 +115,8 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         );
         if (
           (interactionHit !== null && elementRef.current?.contains(interactionHit)) ||
-          target.closest(GUARDED_PRESS_TARGETS) !== null
+          target.closest(GUARDED_PRESS_TARGETS) !== null ||
+          isOptionsPopupPress(target)
         ) {
           return;
         }

@@ -231,6 +231,11 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
   }, [arrows, resolver, eventsWidth, renderContext, rowsMeta, config.tickCount, resources]);
 
   const [hoveredId, setHoveredId] = React.useState<SchedulerDependencyId | null>(null);
+  // An arrow unmounted under the pointer (deleted, scrolled out) never gets its
+  // pointerleave: drop the hover, or the arrow would come back highlighted.
+  if (hoveredId !== null && !value.visibleArrows.some((arrow) => arrow.id === hoveredId)) {
+    setHoveredId(null);
+  }
   const hoverValue = React.useMemo(() => ({ hoveredId, setHoveredId }), [hoveredId]);
 
   return (

@@ -209,6 +209,8 @@ function DependencyInteractionsLayer() {
                 <g
                   data-dependency-delete-button=""
                   onClick={() => store.deleteSelectedDependency()}
+                  // It replaces the arrowhead: a right click there opens the same menu.
+                  onContextMenu={(event) => handleContextMenu(arrow.id, event)}
                 >
                   <circle
                     cx={buttonX}

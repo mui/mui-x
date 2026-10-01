@@ -2,6 +2,7 @@ import { vi, describe, it, expect } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
+import { noopUIEvent } from '../../internals/tests/disposeTestHelpers';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -791,6 +792,18 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
       store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the visible date changes', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.goToNextVisibleDate(noopUIEvent);
 
       expect(store.state.dependencyEditor).to.equal(null);
     });

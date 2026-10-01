@@ -278,6 +278,15 @@ export class EventTimelinePremiumStore<
       this.registerStoreEffect((state) => state.processedEventLookup, clearInactiveDependencyState),
     );
 
+    // Like the event dialog: the dialog is anchored to a point of the timeline, which a
+    // date change moves under it.
+    this.disposables.defer(
+      this.registerStoreEffect(
+        (state) => state.adapter.getTime(state.visibleDate),
+        this.closeDependencyEditor,
+      ),
+    );
+
     // One editing surface at a time: editing an event closes the dependency dialog.
     this.disposables.defer(
       this.registerStoreEffect(
