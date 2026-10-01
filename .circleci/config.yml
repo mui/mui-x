@@ -354,8 +354,15 @@ workflows:
           <<: *default-context
           name: test_types_additional
   test-react-18:
-    when:
-      equal: [pipeline, << pipeline.parameters.workflow >>]
+    # Nightly rather than per push: it added ~50% to the CI cost of every push.
+    # Run it on a PR with the `additional` workflow and `with-react-version: ^18`.
+    triggers:
+      - schedule:
+          cron: '0 0 * * *'
+          filters:
+            branches:
+              only:
+                - master
     jobs:
       - test_unit:
           <<: *default-context
