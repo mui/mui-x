@@ -720,10 +720,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it.skipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
-      // testDateLastNonDSTDay is 2022-03-27 in Europe/Paris (CET, the last
-      // non-DST day). Setting the date to 28 keeps us inside DST week, but
-      // the offset still needs to update because the local hour is now in
-      // CEST.
       expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
       expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.setDate(testDateLastNonDSTDay, 28));
     });
@@ -735,9 +731,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it.skipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
-      // testDateLastNonDSTDay starts at 00:00 Europe/Paris CET. DST begins at
-      // 02:00 -> 03:00 the same day, so setting hours to 12 lands inside
-      // CEST and the offset must follow.
       expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
       expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.setHours(testDateLastNonDSTDay, 12));
     });

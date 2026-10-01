@@ -256,45 +256,37 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * After operations like `set('hour', X)` or `add(1, 'month')`, the value's
-   * `$offset` may be stale if the new local time falls on the other side of a
-   * DST transition. dayjs does not automatically re-evaluate the offset for
-   * us (moment does), so we have to do it ourselves by mutating `$offset` in
-   * place against the value computed by `value.tz(timezone, true)`.
-   *
-   * Mutation - rather than returning the `value.tz(timezone, true)` result
-   * directly - matters because that round-trip drops `$x.$localOffset` and
-   * shifts `$d` via its internal "keep local time" adjustment, both of which
-   * break `valueOf()` and `getHours()` once the system timezone is non-UTC
-   * (see https://github.com/mui/mui-x/issues/21669).
-   *
-   * Pure plain `dayjs()` values (no `$offset`, e.g. `dayjs(value)` without
-   * any timezone-related call) are skipped: they rely on JS Date semantics
-   * which already handle DST via the system timezone, and mutating `$offset`
-   * on them would attach timezone metadata that breaks comparisons against
-   * other plain values (see https://github.com/mui/mui-x/issues/13290).
-   * Values that came through `dayjs.tz(...)` or `.tz(...)` already carry an
-   * `$offset` and need the adjustment, even when `$x.$timezone` is unset
-   * (e.g. the picker's `now` from `createTZDate(undefined, 'default')`,
-   * which calls `.tz(undefined, false)`).
+   * `dayjs` does not update the offset when `set` or `add` crosses a DST change (moment does).
+   * Plain `system` values follow the JS Date DST, and a copied offset breaks later `dayjs` calls.
    */
   protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
       return value;
     }
-    // @ts-ignore
-    if (value.$offset === undefined) {
-      return value;
-    }
+
     const timezone = this.getTimezone(value);
-    if (timezone === 'UTC') {
-      return value;
-    }
-    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
     // @ts-ignore
-    if (fixedValue.$offset === value.$offset) {
+    if (timezone === 'UTC' || (timezone === 'system' && value.$offset === undefined)) {
       return value;
     }
+
+    // `dayjs.tz(string)` stores the system offset of its creation date, even across a system DST change.
+    // @ts-ignore
+    const localOffset: number | undefined = value.$x.$localOffset;
+    // @ts-ignore
+    if (localOffset !== undefined && localOffset !== value.$d.getTimezoneOffset()) {
+      // `$x` is shared with the source value, so replace it instead of mutating it.
+      // @ts-ignore
+      value.$x = { ...value.$x, $localOffset: undefined };
+    }
+
+    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+    // Zones that move to or from offset 0 (for example `Europe/London`) switch between UTC and offset mode.
+    // @ts-ignore
+    if (value.$x.$timezone && Boolean(fixedValue.$u) !== Boolean(value.$u)) {
+      return fixedValue;
+    }
+
     // @ts-ignore
     value.$offset = fixedValue.$offset;
     return value;

@@ -1,8 +1,6 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { screen } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
@@ -17,6 +15,7 @@ import 'dayjs/locale/de';
 // We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
 describe('<AdapterDayjs />', () => {
@@ -136,160 +135,63 @@ describe('<AdapterDayjs />', () => {
       });
     });
 
-    it('should not mutate `$offset` on plain `dayjs()` values when `dayjs.tz.guess()` is non-UTC (regression #21669)', () => {
-      // Regression: the previous `adjustOffset` implementation set
-      // `value.$offset = fixedValue.$offset` on every `setX`/`addX` result.
-      // For plain dayjs values (no `$x.$timezone`), `valueOf()` is computed as
-      // `$d.getTime() - ($offset + $d.getTimezoneOffset()) * 60000`. Mutating
-      // only `$offset` (without updating `$d`) drifted `valueOf()` by the
-      // guessed-zone offset, even though the local time getters still looked
-      // correct. In Los Angeles on March 8 (DST start) this caused the time
-      // picker to silently shift the picked hour by one when the user clicked
-      // 04:00 AM. CI runs in UTC so the guess has to be stubbed to a non-UTC
-      // zone to reproduce the drift.
-      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/Los_Angeles');
-      onTestFinished(() => guess.mockRestore());
+    // CI runs with `TZ=UTC`, so these tests switch to a system timezone that observes DST.
+    describe.skipIf(!isJSDOM)('DST changes of the system timezone', () => {
+      const setSystemTimezone = (timezone: string) => {
+        const previousTimezone = process.env.TZ;
+        process.env.TZ = timezone;
+        onTestFinished(() => {
+          process.env.TZ = previousTimezone;
+        });
+      };
 
-      const adapter = new AdapterDayjs();
-      const noon = adapter.date('2026-03-08T12:00:00', 'system') as Dayjs;
-      const fourAM = adapter.setHours(noon, 4) as Dayjs;
+      it('should keep plain values plain after a DST change', () => {
+        setSystemTimezone('America/Los_Angeles');
+        const adapter = new AdapterDayjs();
+        const value = adapter.setHours(adapter.date('2026-03-08T12:00', 'system') as Dayjs, 4);
 
-      // The result must remain a plain dayjs value, otherwise `DateRangePicker`
-      // breaks with "timezone of start and end should be the same" (#13290).
-      expect(adapter.getTimezone(fourAM)).to.equal('system');
-      // @ts-ignore - reaching into dayjs internals to assert the invariant
-      // that drives the bug: `$offset` must stay undefined so the `valueOf()`
-      // formula reduces to `$d.getTime()`.
-      expect(fourAM.$offset).to.equal(undefined);
-      expect(adapter.getHours(fourAM)).to.equal(4);
-      // CI runs in TZ=UTC, so the underlying instant of "4 AM system" is 4 AM
-      // UTC. With the buggy mutation this would shift to 11 AM or 12 PM UTC
-      // depending on whether DST applies in the guessed zone.
-      expect(fourAM.toDate().toISOString()).to.equal('2026-03-08T04:00:00.000Z');
-    });
+        expect(adapter.getTimezone(value)).to.equal('system');
+        // A copied offset would make later `dayjs` calls on the returned value wrong by 1 hour.
+        expect(value.startOf('day').valueOf()).to.equal(new Date(2026, 2, 8).getTime());
+      });
 
-    it('should not mutate `$offset` on plain `dayjs()` values across `addMonths` (regression #21669)', () => {
-      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/Los_Angeles');
-      onTestFinished(() => guess.mockRestore());
+      it('should update the offset of values without a named timezone', () => {
+        setSystemTimezone('America/Los_Angeles');
+        const adapter = new AdapterDayjs();
+        // Same shape as `adapter.date(undefined, 'default')` on a system timezone with DST.
+        const now = dayjs('2026-03-08T12:58').utcOffset(-420, true);
+        const value = adapter.setHours(now, 1);
 
-      const adapter = new AdapterDayjs();
-      const winter = adapter.date('2026-01-15T12:00:00', 'system') as Dayjs;
-      const summer = adapter.addMonths(winter, 6) as Dayjs;
+        expect(adapter.getHours(value)).to.equal(1);
+        expect(value.toISOString()).to.equal('2026-03-08T09:58:00.000Z');
+      });
 
-      expect(adapter.getTimezone(summer)).to.equal('system');
-      // @ts-ignore - dayjs internals
-      expect(summer.$offset).to.equal(undefined);
-      expect(summer.toDate().toISOString()).to.equal('2026-07-15T12:00:00.000Z');
-    });
+      it('should return the right instant for `dayjs.tz` values edited across a DST change', () => {
+        setSystemTimezone('America/Los_Angeles');
+        const adapter = new AdapterDayjs();
+        const november = adapter.setMonth(dayjs.tz('2026-10-15T12:00', 'America/New_York'), 10);
+        const fallBack = adapter.setHours(dayjs.tz('2026-11-01T00:30', 'America/Los_Angeles'), 2);
 
-    it('should mutate `$offset` on `.tz()`-touched values that lack `$x.$timezone` (regression #21669)', () => {
-      // The picker's `useNow()` calls `adapter.date(undefined, 'default')`,
-      // which goes through `createTZDate` -> `dayjs(undefined).tz(undefined,
-      // false)`. In a non-UTC system zone the result has `$offset` set to the
-      // system offset at construction time but `$x.$timezone` is `undefined`
-      // (because the `t` arg passed to `.tz()` was `undefined`). After
-      // `setHours(now, 1)` to a PST hour on March 8 in LA, `$d.setHours`
-      // moves `$d` to the new local time but `$offset` would stay at the
-      // PDT construction value, so the `$offset + $d.getTimezoneOffset()`
-      // term in `valueOf()` no longer cancels - the instant emitted to
-      // `onChange` would drift an hour from the picked time. CI runs in
-      // TZ=UTC where `dayjs(...).tz(undefined, false)` returns a UTC value
-      // (no `$offset`), so we manually shape the value to mirror the
-      // non-UTC `now` shape and stub `dayjs.tz.guess()` so the `'system'`
-      // path resolves to LA.
-      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/Los_Angeles');
-      onTestFinished(() => guess.mockRestore());
+        expect(adapter.getHours(november)).to.equal(12);
+        expect(november.toISOString()).to.equal('2026-11-15T17:00:00.000Z');
+        expect(adapter.getHours(fallBack)).to.equal(2);
+        expect(fallBack.toISOString()).to.equal('2026-11-01T10:30:00.000Z');
+      });
 
-      const now = dayjs('2026-03-08T12:58:00') as Dayjs;
-      // @ts-ignore - mirror the construction-time PDT offset that LA env
-      // would have given.
-      now.$offset = -420;
-      // @ts-ignore - dayjs.utc plugin reads `$u` to decide which Date getter
-      // family to use; `false` matches the non-UTC `.tz()` result.
-      now.$u = false;
-
-      const adapter = new AdapterDayjs();
-      const oneAM = adapter.setHours(now, 1) as Dayjs;
-
-      expect(adapter.getHours(oneAM)).to.equal(1);
-      // @ts-ignore - dayjs internals; the mutation must update `$offset` to
-      // the recomputed PST offset for the new local hour. Without it the
-      // value would still report `-420` and `valueOf()` would drift an hour.
-      expect(oneAM.$offset).to.equal(-480);
-    });
-
-    it('should not shift `$d` or drop `$x.$localOffset` on tz-aware values across `setHours` (regression #21669)', () => {
-      // The picker validates each hour option by calling
-      // `getHours(setHours(value, X)) === X`, where `getHours()` reads
-      // `$d.getHours()`. An earlier attempt at `adjustOffset` returned
-      // `value.tz(timezone, true)`, which has two side effects:
-      //  - the timezone plugin's "keep local time" branch runs an internal
-      //    `n.add(i - m, 'minute')` that shifts `$d` whenever the offset
-      //    changes;
-      //  - dayjs's `utcOffset(_, true)` does not set `$x.$localOffset`,
-      //    leaving the side table that `valueOf()` consults empty.
-      // For tz-aware values with `$x.$localOffset` set (the `dayjs.tz(...)`
-      // construction path - distinct from the adapter's `createTZDate` path
-      // which uses `.tz(tz, true)` and never sets `$localOffset`), those two
-      // shifts together caused `$d.getHours()` to land on the wrong side of
-      // the DST gap in a non-UTC system timezone. Mutating `$offset` in
-      // place avoids both - this test pins the invariants.
-      const value = dayjs.tz('2026-03-08T12:00:00', 'America/Los_Angeles');
-      // @ts-ignore - dayjs internals: the `dayjs.tz(...)` path goes through
-      // `utcOffset(c)` (no keep-local-time), which sets `$localOffset`.
-      const localOffsetBefore = value.$x.$localOffset;
-      expect(localOffsetBefore).not.to.equal(undefined);
-
-      const adapter = new AdapterDayjs();
-      for (const hour of [0, 1, 3, 4, 5, 11]) {
-        // @ts-ignore - dayjs internals
-        const dWithoutAdjust = value.set('hour', hour).$d.getTime();
-        const result = adapter.setHours(value, hour) as Dayjs;
-
-        // @ts-ignore - dayjs internals
-        expect(result.$d.getTime()).to.equal(dWithoutAdjust);
-        // @ts-ignore - dayjs internals
-        expect(result.$x.$localOffset).to.equal(localOffsetBefore);
-        expect(adapter.getHours(result)).to.equal(hour);
-      }
-    });
-
-    describe('Time picker (regression #21669)', () => {
-      const { render, adapter } = createPickerRenderer({ adapterName: 'dayjs' });
-
-      it('should call `onChange` with the clicked hour when picking on a DST start day with system timezone', async () => {
-        // The reproduction in #21669 is on March 8, 2026 in Los Angeles —
-        // the day local clocks jump from 02:00 PST to 03:00 PDT. The picker
-        // uses plain `dayjs(...)` for `system`/`default` timezone (since
-        // PR #22170), and the previous `adjustOffset` mutated `$offset` on
-        // those plain values, which corrupted the underlying instant. The
-        // regression made clicking "04:00 AM" silently produce a different
-        // hour. We stub `dayjs.tz.guess()` so the path runs in CI's UTC env.
-        const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/Los_Angeles');
-        onTestFinished(() => guess.mockRestore());
-
-        const onChange = vi.fn();
-        const { user } = render(
-          <DigitalClock
-            onChange={onChange}
-            referenceDate={adapter.date('2026-03-08T12:00:00', 'system') as Dayjs}
-            timezone="system"
-            timeStep={60}
-          />,
+      it('should return the right instant when a zone moves to or from offset 0', () => {
+        setSystemTimezone('America/New_York');
+        const adapter = new AdapterDayjs();
+        const summer = adapter.setMonth(
+          adapter.date('2026-01-15T12:00', 'Europe/London') as Dayjs,
+          6,
+        );
+        const winter = adapter.setMonth(
+          adapter.date('2026-07-15T12:00', 'Europe/London') as Dayjs,
+          0,
         );
 
-        await user.click(screen.getByRole('option', { name: '04:00 AM' }));
-
-        const result = onChange.mock.lastCall![0] as Dayjs;
-        expect(adapter.getHours(result)).to.equal(4);
-        // CI runs in TZ=UTC, so a plain dayjs value reports as 'UTC' (since
-        // `dayjs.isUTC()` is true in that env). The key regression invariant
-        // is that the value remains plain - no `$offset` mutation - so the
-        // underlying instant matches the picked hour.
-        // @ts-ignore - dayjs internals; the bug was that the previous
-        // `adjustOffset` set `$offset` here, which corrupted `valueOf()`.
-        expect(result.$offset).to.equal(undefined);
-        expect(result.toDate().toISOString()).to.equal('2026-03-08T04:00:00.000Z');
+        expect(summer.toISOString()).to.equal('2026-07-15T11:00:00.000Z');
+        expect(winter.toISOString()).to.equal('2026-01-15T12:00:00.000Z');
       });
     });
   });
