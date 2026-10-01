@@ -94,7 +94,14 @@ const DEFAULT_TOUCH_DELAY = 300;
 const DEFAULT_TOUCH_TOLERANCE = 8;
 const DEFAULT_MOUSE_DISTANCE = 5;
 
-function getElementAtPoint(element: HTMLElement | null, x: number, y: number) {
+/**
+ * Returns the topmost element at the given viewport position, in the document or shadow root of `element`.
+ * @param {HTMLElement | null} element An element of the document or shadow root to hit-test.
+ * @param {number} x The horizontal viewport position.
+ * @param {number} y The vertical viewport position.
+ * @returns {Element | null} The element at the position, or `null` when hit-testing isn't supported.
+ */
+export function getElementAtPoint(element: HTMLElement | null, x: number, y: number) {
   if (!element) {
     return null;
   }
@@ -235,7 +242,10 @@ export function usePointerDrag<TData>(
           }
         } else if (distance >= (optionsRef.current.mouseDistance ?? DEFAULT_MOUSE_DISTANCE)) {
           startDragging();
-          optionsRef.current.onDragMove?.(getPosition(session));
+          // `onDragStart` can cancel the session, for example when the drag isn't allowed anymore
+          if (sessionRef.current === session) {
+            optionsRef.current.onDragMove?.(getPosition(session));
+          }
         }
       };
 
@@ -300,7 +310,8 @@ export function usePointerDrag<TData>(
       doc.addEventListener('pointerup', handlePointerUp);
       doc.addEventListener('pointercancel', handlePointerCancel);
       doc.addEventListener('lostpointercapture', handleLostPointerCapture);
-      doc.addEventListener('keydown', handleKeyDown);
+      // Capture phase: the focused element can stop the propagation of `Escape`
+      doc.addEventListener('keydown', handleKeyDown, true);
       doc.addEventListener('touchmove', handleTouchMove, { passive: false });
       doc.addEventListener('contextmenu', handleContextMenu);
 
@@ -309,7 +320,7 @@ export function usePointerDrag<TData>(
         doc.removeEventListener('pointerup', handlePointerUp);
         doc.removeEventListener('pointercancel', handlePointerCancel);
         doc.removeEventListener('lostpointercapture', handleLostPointerCapture);
-        doc.removeEventListener('keydown', handleKeyDown);
+        doc.removeEventListener('keydown', handleKeyDown, true);
         doc.removeEventListener('touchmove', handleTouchMove);
         doc.removeEventListener('contextmenu', handleContextMenu);
       };

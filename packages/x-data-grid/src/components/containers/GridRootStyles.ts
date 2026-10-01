@@ -684,6 +684,14 @@ export const GridRootStyles = styled('div', {
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'grab',
       opacity: 1,
+      // Touch input drags rows with pointer events after a long press.
+      // The handle must not scroll the grid, select text, or open the iOS callout.
+      touchAction: 'none',
+      '@media (pointer: coarse)': {
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none',
+      },
     },
     [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,

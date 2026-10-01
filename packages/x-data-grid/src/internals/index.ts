@@ -181,7 +181,7 @@ export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibl
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
-export { usePointerDrag } from '../hooks/utils/usePointerDrag';
+export { usePointerDrag, getElementAtPoint } from '../hooks/utils/usePointerDrag';
 export type {
   PointerDragPosition,
   UsePointerDragOptions,
@@ -220,6 +220,7 @@ export {
   findParentElementFromClassName,
   getActiveElement,
   getGridCellElement,
+  getGridRowElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
 export {
