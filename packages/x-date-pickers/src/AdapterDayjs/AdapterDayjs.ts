@@ -297,35 +297,30 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * The wall clock of the value, as a plain UTC value on which `dayjs` is reliable.
-   * Returns `null` when the value cannot round-trip through the ISO format: years above 9999 don't,
-   * and an invalid value formats to `Invalid Date`.
+   * The number of days in the month of the value, read from its own year and month fields.
+   * A clone is not reliable: before 1.11.14, `dayjs` can give it other fields (https://github.com/iamkun/dayjs/pull/2505).
    */
-  private getWallClock = (value: Dayjs) => {
-    const wallClock = dayjs.utc(value.locale('en').format('YYYY-MM-DDTHH:mm:ss.SSS'));
+  private getDaysInMonthFromFields = (value: Dayjs) => {
+    const lastDayOfMonth = new Date(0);
+    lastDayOfMonth.setUTCFullYear(value.year(), value.month() + 1, 0);
 
-    return wallClock.isValid() ? wallClock : null;
+    return lastDayOfMonth.getUTCDate();
   };
 
   /**
    * On the dates described by `isAffectedByLocalMeanTime`, `dayjs` moves the day of the month when only
    * the year or the month was meant to change.
    * `daysInMonth()` is unusable on such a value because it derives from the equally broken
-   * `endOf('month')`, hence computing it on the wall clock instead.
+   * `endOf('month')`, hence computing it from the fields instead.
    * See https://github.com/mui/mui-x/issues/23163
    */
   private restoreDayOfMonth = (value: Dayjs, reference: Dayjs) => {
-    if (!this.isAffectedByLocalMeanTime(value)) {
-      return value;
-    }
-
-    const wallClock = this.getWallClock(value);
-    if (wallClock === null) {
+    if (!this.isAffectedByLocalMeanTime(value) || !value.isValid()) {
       return value;
     }
 
     // A shorter target month legitimately clamps the day (`Jan 31` + 1 month is `Feb 28`).
-    const expectedDayOfMonth = Math.min(reference.date(), wallClock.daysInMonth());
+    const expectedDayOfMonth = Math.min(reference.date(), this.getDaysInMonthFromFields(value));
     if (value.date() === expectedDayOfMonth) {
       return value;
     }
@@ -659,10 +654,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     // `daysInMonth()` derives from `endOf('month')`, which is broken on the dates described by
     // `isAffectedByLocalMeanTime` and returns `1` there.
     if (this.isAffectedByLocalMeanTime(value)) {
-      const wallClock = this.getWallClock(value);
-      if (wallClock !== null) {
-        return wallClock.daysInMonth();
-      }
+      return this.getDaysInMonthFromFields(value);
     }
 
     return value.daysInMonth();
