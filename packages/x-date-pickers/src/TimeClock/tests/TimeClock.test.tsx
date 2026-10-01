@@ -176,6 +176,22 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
+  it('should increase hour selection by 5 on PageUp press at noon', async () => {
+    const handleChange = vi.fn();
+    const { user } = render(
+      <TimeClock
+        autoFocus
+        value={adapterToUse.date('2019-01-01T12:20:00')}
+        onChange={handleChange}
+      />,
+    );
+
+    await user.keyboard('{PageUp}');
+
+    expect(handleChange.mock.calls.length).to.equal(1);
+    expect(adapterToUse.getHours(handleChange.mock.calls[0][0])).to.equal(17);
+  });
+
   [
     {
       keyName: 'Enter',
