@@ -2013,6 +2013,50 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2025-11-03T06:30:00Z', '2025-11-03T07:30:00Z');
   });
 
+  it('should push a successor whose timezone change advances its lagged bound', () => {
+    // New York springs forward on 2025-03-09, making that day 23h long.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .span('2025-03-09T03:00:00Z', '2025-03-09T04:00:00Z')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('America/New_York')
+      .span('2025-03-10T03:00:00Z', '2025-03-10T04:00:00Z')
+      .toProcessed();
+
+    // A day after 04:00Z is 03:00Z the next day in New York, but 04:00Z in UTC.
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b', { lag: 1 })],
+      [{ id: 'b', timezone: 'UTC' }],
+    );
+
+    expect(result).to.have.length(1);
+    expectDates(result[0], '2025-03-10T04:00:00Z', '2025-03-10T05:00:00Z');
+  });
+
+  it('should push an all-day successor turned timed when its lag stops rounding down', () => {
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T17:00:00', '2025-07-03T18:00:00')
+      .toProcessed();
+    const successor = allDayEvent('b', '2025-07-05');
+
+    // All-day, the 36h lag rounds down to one day; timed, it lands at 06:00 on the 5th.
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b', { lag: 36, lagUnit: 'hour' })],
+      [{ id: 'b', allDay: false }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(utcDate('2025-07-05T06:00:00')),
+    );
+  });
+
   it("should apply the lag in the successor's timezone", () => {
     // The successor's zone springs forward on 2025-03-09; the predecessor's (UTC) does not.
     const predecessor = EventBuilder.new()

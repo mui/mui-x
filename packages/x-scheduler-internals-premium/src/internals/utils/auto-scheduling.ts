@@ -332,16 +332,18 @@ export function computeAutoSchedulingCascade(
   // The earliest start and end the predecessors of `eventId` allow, in the timezone of
   // `base`. A repositioned seed is being placed by the user: every active predecessor
   // constrains it. An end-resized seed is constrained by the predecessors bounding its
-  // end. Anything else is pushed only by predecessors whose lagged bound advanced: a lag
-  // in days is added on the wall clock, so across a DST fall-back the bound can advance
-  // while the predecessor moves earlier.
+  // end. Anything else is pushed only by the predecessors whose lagged bound advanced,
+  // comparing the bound before the batch (current dates and settings) with the bound after
+  // it. A lag in days is added on the wall clock, so the bound can advance while the
+  // predecessor moves earlier (DST fall-back), or when only the successor's timezone or
+  // `allDay` changes.
   function collectBounds(
     eventId: SchedulerEventId,
     base: ResolvedDates,
   ): Record<SchedulerEventSide, Bound | null> {
     const constrainedByAll = repositionedSeeds.has(eventId);
     const constrainedOnEnd = endResizedSeeds.has(eventId);
-    const timezone = adapter.getTimezone(base.start);
+    const current = resolveCurrentDates(eventId);
     const required: Record<SchedulerEventSide, Bound | null> = { start: null, end: null };
     for (const dependency of activeDependenciesByTarget.get(eventId) ?? []) {
       const sourceId = dependency.source;
@@ -349,21 +351,32 @@ export function computeAutoSchedulingCascade(
         continue;
       }
       const edges = getDependencyEdges(dependency.type);
-      const lag = getEffectiveDependencyLag(dependency, base.allDay);
-      const boundFrom = (sourceDates: ResolvedDates) =>
+      // The bound `sourceDates` set on a successor with the timezone and `allDay` of `target`.
+      const boundFrom = (sourceDates: ResolvedDates, target: ResolvedDates) =>
         toBound(
-          addDependencyLag(adapter, adapter.setTimezone(sourceDates[edges.source], timezone), lag),
+          addDependencyLag(
+            adapter,
+            adapter.setTimezone(sourceDates[edges.source], adapter.getTimezone(target.start)),
+            getEffectiveDependencyLag(dependency, target.allDay),
+          ),
         );
-      const settledDates = processed.has(sourceId) ? newDates.get(sourceId) : undefined;
       const currentDates = resolveCurrentDates(sourceId);
       let bound: Bound | null = null;
       if (constrainedByAll || (constrainedOnEnd && edges.target === 'end')) {
         const sourceDates = newDates.get(sourceId) ?? currentDates;
-        bound = sourceDates === null ? null : boundFrom(sourceDates);
-      } else if (settledDates !== undefined) {
-        const nextBound = boundFrom(settledDates);
-        if (currentDates === null || nextBound.timestamp > boundFrom(currentDates).timestamp) {
-          bound = nextBound;
+        bound = sourceDates === null ? null : boundFrom(sourceDates, base);
+      } else {
+        const sourceDates =
+          (processed.has(sourceId) ? newDates.get(sourceId) : undefined) ?? currentDates;
+        if (sourceDates !== null) {
+          const nextBound = boundFrom(sourceDates, base);
+          if (
+            currentDates === null ||
+            current === null ||
+            nextBound.timestamp > boundFrom(currentDates, current).timestamp
+          ) {
+            bound = nextBound;
+          }
         }
       }
       if (bound !== null) {
