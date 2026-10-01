@@ -8,13 +8,6 @@ import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import { resetRandomGenerators } from '@mui/x-data-grid-generator';
 import loadFonts from '@mui/internal-test-utils/loadFonts';
-// Static Roboto files: the variable font's 500 and 700 weights have fractional glyph
-// advances, which move single glyphs by a sub-pixel step from run to run.
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/400-italic.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';
@@ -45,9 +38,12 @@ const allTests = Object.values(testsBySuite).flatMap((suite) =>
 window.muiFixture = {
   allTests,
   // `index.test.ts` awaits this in `navigateToTest`, before any fixture mounts.
+  // `display=swap` is dropped on purpose: it paints fallback text first, and the
+  // font files Google serves are identical without it.
   fontsReady: loadFonts({
-    // The `@fontsource/roboto` imports above declare the faces.
-    stylesheets: [],
+    stylesheets: [
+      'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400',
+    ],
     faces: [
       ...[300, 400, 500, 700].map((weight) => ({ family: 'Roboto', weight })),
       { family: 'Roboto', weight: 400, style: 'italic' },

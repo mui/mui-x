@@ -153,6 +153,8 @@ async function main() {
       // is a no-op on Linux Chromium, so without this flag screenshots pick
       // up LCD subpixel color fringes that vary across hosts.
       '--disable-lcd-text',
+      // Skia otherwise picks SIMD code paths per host CPU, which shifts glyph edges.
+      '--disable-skia-runtime-opts',
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
