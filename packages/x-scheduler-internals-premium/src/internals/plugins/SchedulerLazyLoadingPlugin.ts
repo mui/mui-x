@@ -37,6 +37,14 @@ export class SchedulerLazyLoadingPlugin<
    */
   private latestRequestedRangeKey: string | null = null;
 
+  /**
+   * Range the view asked for in the most recent request, before trimming the cached parts.
+   */
+  private latestRequestedRange: {
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
+  } | null = null;
+
   protected readonly disposables = new DisposableStack();
 
   /**
@@ -125,6 +133,7 @@ export class SchedulerLazyLoadingPlugin<
         // A fully covered range still goes through the queue so the cache-hit branch runs.
         const missingRange = getMissingRange(adapter, cache, range);
         const rangeToFetch = missingRange ?? range;
+        this.latestRequestedRange = range;
         this.latestRequestedRangeKey = `${adapter.getTime(rangeToFetch.start)}:${adapter.getTime(adapter.endOfDay(rangeToFetch.end))}`;
 
         // Flip `isLoading` synchronously so the skeleton shows immediately,
@@ -192,6 +201,8 @@ export class SchedulerLazyLoadingPlugin<
 
     const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
     let isStale = false;
+    let rangeToRefetch: { start: TemporalSupportedObject; end: TemporalSupportedObject } | null =
+      null;
     try {
       const events = await dataSource.getEvents(range.start, range.end);
 
@@ -209,6 +220,11 @@ export class SchedulerLazyLoadingPlugin<
         adapter.getTime(adapter.endOfDay(range.end)),
         events ?? [],
       );
+      // The cached part of a trimmed request can expire while it is pending.
+      const requestedRange = this.latestRequestedRange;
+      if (requestedRange && getMissingRange(adapter, cache, requestedRange) !== null) {
+        rangeToRefetch = requestedRange;
+      }
       // Build from the full cache so disjoint already-cached ranges stay visible
       // when the visible range expands to cover them.
       const allCachedEvents = cache.getAll();
@@ -235,10 +251,13 @@ export class SchedulerLazyLoadingPlugin<
       }
       this.store.pushError(error);
     } finally {
-      if (!this.disposables.disposed && !isStale) {
+      if (!this.disposables.disposed && !isStale && !rangeToRefetch) {
         this.store.set('isLoading', false);
       }
       await dataManager.setRequestSettled(range);
+      if (rangeToRefetch && !this.disposables.disposed) {
+        await this.queueDataFetchForRange(rangeToRefetch, true);
+      }
     }
   };
 
@@ -340,11 +359,15 @@ function getMissingRange<TEvent extends object>(
   }
 
   // Only the trimmed edges are rebuilt, the others keep the value the view provided.
+  // The trimmed end is rounded to the end of its day, since that's the coverage the cache records.
   return {
     start:
       missing.start === startTime
         ? range.start
         : adapter.addMilliseconds(range.start, missing.start - startTime),
-    end: missing.end === endTime ? range.end : adapter.addMilliseconds(end, missing.end - endTime),
+    end:
+      missing.end === endTime
+        ? range.end
+        : adapter.endOfDay(adapter.addMilliseconds(end, missing.end - endTime)),
   };
 }

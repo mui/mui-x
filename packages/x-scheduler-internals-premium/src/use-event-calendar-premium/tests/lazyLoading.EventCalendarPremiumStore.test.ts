@@ -36,6 +36,16 @@ const flushEffect = async () => {
 
 const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 
+const CACHE_TTL_MS = 300_000;
+
+const isEventInRange = (
+  event: TestEvent,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
+) =>
+  Date.parse(event.start) <= adapter.getTime(end) &&
+  Date.parse(event.end) >= adapter.getTime(start);
+
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
   defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
@@ -346,6 +356,104 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     await flushEffect();
     expect(store.state.isLoading).to.equal(false);
     expect(store.state.eventIdList).to.have.length(1);
+  });
+
+  it('should refetch the cached part of the range when it expires while a trimmed fetch is pending', async () => {
+    const event: TestEvent = {
+      id: 'cached',
+      start: '2025-07-05T10:00:00.000Z',
+      end: '2025-07-05T11:00:00.000Z',
+      title: 'Cached event',
+    };
+    let resolvePending: () => void = () => {};
+    let callIndex = 0;
+    const dataSource = {
+      getEvents: vi.fn((start: TemporalSupportedObject, end: TemporalSupportedObject) => {
+        callIndex += 1;
+        const events = isEventInRange(event, start, end) ? [event] : [];
+        if (callIndex !== 2) {
+          return Promise.resolve(events);
+        }
+        return new Promise<TestEvent[]>((resolve) => {
+          resolvePending = () => resolve(events);
+        });
+      }),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore(
+      {
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+      },
+      adapter,
+    );
+    store.setViewDefinition(buildViewDefinition(10));
+    await flushEffect();
+    await flushDebounce();
+    expect(store.state.eventIdList).to.include('cached');
+
+    // Navigate just before the cache expires: only the days after July 10 are requested.
+    await vi.advanceTimersByTimeAsync(CACHE_TTL_MS - 1_000);
+    store.goToDate(adapter.date('2025-07-05T00:00:00Z', 'default'), noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.mock.calls).to.have.length(2);
+
+    // The cached July 5 to 10 expires before the request settles.
+    await vi.advanceTimersByTimeAsync(2_000);
+    resolvePending();
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.mock.calls).to.have.length(3);
+    expect(store.state.isLoading).to.equal(false);
+    expect(store.state.eventIdList).to.include('cached');
+  });
+
+  it('should not mark hours that were not fetched as cached when trimming in another timezone', async () => {
+    // 21:00 on July 9 in New York.
+    const event: TestEvent = {
+      id: 'late',
+      start: '2025-07-10T01:00:00.000Z',
+      end: '2025-07-10T02:00:00.000Z',
+      title: 'Late event',
+    };
+    const dataSource = {
+      getEvents: vi.fn(async (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+        isEventInRange(event, start, end) ? [event] : [],
+      ),
+      persistEvents: noopPersistEvents,
+    };
+    const parameters = {
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultVisibleDate: adapter.date('2025-07-10T12:00:00Z', 'default'),
+      displayTimezone: 'UTC',
+    };
+    const store = new EventCalendarPremiumStore(parameters, adapter);
+    store.setViewDefinition(buildViewDefinition(10));
+    await flushEffect();
+    await flushDebounce();
+
+    // July 5 to 14 in New York: the cached UTC days trim the request partway through July 9.
+    await vi.advanceTimersByTimeAsync(60_000);
+    store.updateStateFromParameters(
+      { ...parameters, displayTimezone: 'America/New_York' },
+      adapter,
+    );
+    store.goToDate(adapter.date('2025-07-05T12:00:00Z', 'default'), noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+
+    // The UTC days expire, the New York ones are still cached.
+    await vi.advanceTimersByTimeAsync(CACHE_TTL_MS - 30_000);
+    store.goToDate(adapter.date('2025-07-09T12:00:00Z', 'default'), noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+
+    expect(store.state.isLoading).to.equal(false);
+    expect(store.state.eventIdList).to.include('late');
   });
 
   it('should not fetch again when the visible date moves within the same day', async () => {
