@@ -32,6 +32,7 @@ import {
   runIf,
   DataSourceRowsUpdateStrategy,
   useGridDataSourceFilterModelChange,
+  useGridDataSourcePolling,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
@@ -107,10 +108,6 @@ export const useGridDataSourceLazyLoader = (
     props.paginationMeta?.hasNextPage ?? props.initialState?.pagination?.meta?.hasNextPage ?? true,
   );
   const draggedRowId = React.useRef<GridRowId | null>(null);
-  const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-  const pollingParamsRef = React.useRef<Partial<GridGetRowsParams> | null>(null);
-  // `false` while Activity is hidden or after unmount, so a late response cannot restart polling.
-  const isPollingAllowed = React.useRef(true);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -140,26 +137,15 @@ export const useGridDataSourceLazyLoader = (
     debouncedFetchRows(params);
   });
 
-  const stopPolling = React.useCallback(() => {
-    if (pollingIntervalRef.current !== null) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
-    }
-  }, []);
-
-  const startPolling = useEventCallback((params: Partial<GridGetRowsParams>) => {
-    stopPolling();
-    // Keep the range even if the response arrives while Activity is hidden.
-    pollingParamsRef.current = params;
-
-    if (!isPollingAllowed.current || !isStrategyActive || props.dataSourceRevalidateMs <= 0) {
-      return;
-    }
-
-    pollingIntervalRef.current = setInterval(() => {
-      revalidate(params);
-    }, props.dataSourceRevalidateMs);
+  const { startPolling: startPollingWith, stopPolling } = useGridDataSourcePolling({
+    revalidateMs: props.dataSourceRevalidateMs,
+    isActive: isStrategyActive,
   });
+
+  const startPolling = React.useCallback(
+    (params: Partial<GridGetRowsParams>) => startPollingWith(() => revalidate(params)),
+    [startPollingWith, revalidate],
+  );
 
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setLoading(true);
@@ -602,24 +588,6 @@ export const useGridDataSourceLazyLoader = (
       }
     };
   }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
-
-  // Stop polling when dataSourceRevalidateMs is set to 0
-  React.useEffect(() => {
-    if (props.dataSourceRevalidateMs <= 0) {
-      stopPolling();
-    }
-  }, [props.dataSourceRevalidateMs, stopPolling]);
-
-  React.useEffect(() => {
-    isPollingAllowed.current = true;
-    if (pollingParamsRef.current) {
-      startPolling(pollingParamsRef.current);
-    }
-    return () => {
-      isPollingAllowed.current = false;
-      stopPolling();
-    };
-  }, [startPolling, stopPolling]);
 
   // A new `dataSource` reference is a full restart in `useGridDataSourceBase` (rows and cache
   // cleared, first page refetched), so end-of-data must be re-evaluated like on a re-query.

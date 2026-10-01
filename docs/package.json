@@ -55,8 +55,8 @@
     "@mui/x-tree-view": "workspace:^",
     "@mui/x-tree-view-pro": "workspace:^",
     "@react-spring/web": "catalog:",
-    "@tanstack/query-core": "^5.102.8",
-    "@tanstack/react-query": "^5.102.8",
+    "@tanstack/query-core": "^5.104.0",
+    "@tanstack/react-query": "^5.104.0",
     "chance": "catalog:",
     "clsx": "catalog:",
     "cross-env": "catalog:",
@@ -87,7 +87,7 @@
     "stylis": "catalog:",
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1",
-    "webpack-bundle-analyzer": "^5.3.2",
+    "webpack-bundle-analyzer": "^5.4.0",
     "visionscarto-world-atlas": "^1.0.0"
   },
   "devDependencies": {

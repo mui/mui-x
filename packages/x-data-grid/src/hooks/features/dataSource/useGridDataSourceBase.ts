@@ -20,6 +20,7 @@ import { gridColumnLookupSelector } from '../columns';
 import { removeIncompleteFilterItems } from '../filter/gridFilterUtils';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
 import { useGridDataSourceFilterModelChange } from './useGridDataSourceFilterModelChange';
+import { useGridDataSourcePolling } from './useGridDataSourcePolling';
 import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault } from './cache';
 import type { GridDataSourceCacheDefaultConfig } from './cache';
@@ -89,12 +90,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const rowsAreUpToDate = React.useRef(false);
   // Requests that are still running and will apply their response when they settle.
   const pendingRequestCount = React.useRef(0);
-  const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
-  // `false` while Activity is hidden or after unmount, so a late response cannot restart polling.
-  const isPollingAllowed = React.useRef(true);
 
   const onDataSourceErrorProp = props.onDataSourceError;
-  const revalidateMs = props.dataSourceRevalidateMs;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
     if (!props.pagination) {
@@ -307,20 +304,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     }
   });
 
-  const stopPolling = React.useCallback(() => {
-    if (pollingIntervalRef.current !== null) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
-    }
-  }, []);
-
-  const startPolling = useEventCallback(() => {
-    stopPolling();
-    if (!isPollingAllowed.current || revalidateMs <= 0 || !standardRowsUpdateStrategyActive) {
-      return;
-    }
-    pollingIntervalRef.current = setInterval(revalidate, revalidateMs);
+  const { startPolling: startPollingWith, stopPolling } = useGridDataSourcePolling({
+    revalidateMs: props.dataSourceRevalidateMs,
+    isActive: standardRowsUpdateStrategyActive,
+    // Rows that are still loading start the polling when they arrive.
+    shouldResume: () => rowsAreUpToDate.current,
   });
+
+  const startPolling = React.useCallback(
+    () => startPollingWith(revalidate),
+    [startPollingWith, revalidate],
+  );
 
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
@@ -461,30 +455,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     const newCache = getCache(props.dataSourceCache, options.cacheOptions);
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
   }, [props.dataSourceCache, options.cacheOptions]);
-
-  React.useEffect(() => {
-    if (!standardRowsUpdateStrategyActive) {
-      stopPolling();
-    }
-  }, [standardRowsUpdateStrategyActive, stopPolling]);
-
-  React.useEffect(() => {
-    if (revalidateMs <= 0) {
-      stopPolling();
-    }
-  }, [revalidateMs, stopPolling]);
-
-  React.useEffect(() => {
-    isPollingAllowed.current = true;
-    // Activity reconnects effects without refetching rows that have already arrived.
-    if (rowsAreUpToDate.current) {
-      startPolling();
-    }
-    return () => {
-      isPollingAllowed.current = false;
-      stopPolling();
-    };
-  }, [startPolling, stopPolling]);
 
   const lastApiRef = React.useRef(apiRef);
   const lastStrategy = React.useRef(currentStrategy);
