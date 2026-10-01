@@ -362,7 +362,7 @@ Same changes as in `@mui/x-date-pickers@6.19.3`.
 
 - [docs] Add a general uplift to the whats new page (#11883) @danilo-leal
 - [docs] Fix 404 (#11852) @alexfauquette
-- [docs] Fix <title> generation (#11825) @alexfauquette
+- [docs] Fix `<title>` generation (#11825) @alexfauquette
 - [docs] Fix docs:api when typo in slots typing (#11861) @alexfauquette
 - [docs] Improve Support page (#11556) @oliviertassinari
 - [docs] Sync support page with core @oliviertassinari
@@ -4992,7 +4992,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [pickers] Add field placeholders to the locale (#6337) @flaviendelangle
 - [pickers] Do not use `Partial` for `components` and `componentsProps` props (#6463) @flaviendelangle
 - [pickers] New component: `DateRangeCalendar` (#6416) @flaviendelangle
-- [pickers] Replace the `Picker` prefix in the view component by `Calendar` (eg: `MonthPicker` => `MonthCalendar`) (#6389) @flaviendelangle
+- [pickers] Replace the `Picker` prefix in the view component by `Calendar` (for example, `MonthPicker` => `MonthCalendar`) (#6389) @flaviendelangle
 - [pickers] Support pasting on fields (#6364) @flaviendelangle
 - [pickers] Use slots in the mobile and desktop wrappers instead of `XXXComponent` and `XXXProps` (#6381) @flaviendelangle
 

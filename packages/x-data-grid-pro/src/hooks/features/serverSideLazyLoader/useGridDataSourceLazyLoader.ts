@@ -589,13 +589,6 @@ export const useGridDataSourceLazyLoader = (
     };
   }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
 
-  // Stop polling when dataSourceRevalidateMs is set to 0
-  React.useEffect(() => {
-    if (props.dataSourceRevalidateMs <= 0) {
-      stopPolling();
-    }
-  }, [props.dataSourceRevalidateMs, stopPolling]);
-
   // A new `dataSource` reference is a full restart in `useGridDataSourceBase` (rows and cache
   // cleared, first page refetched), so end-of-data must be re-evaluated like on a re-query.
   const previousDataSource = React.useRef(props.dataSource);

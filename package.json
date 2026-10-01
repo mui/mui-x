@@ -48,8 +48,7 @@
     "test:regressions": "pnpm -F ./test/regressions start",
     "test:argos": "code-infra argos-push --folder test/regressions/screenshots/chrome",
     "test:charts-benchmark": "pnpm -F ./test/performance-charts test:performance",
-    "typescript": "lerna run --no-bail --parallel typescript",
-    "typescript:ci": "lerna run --concurrency 3 --no-bail --no-sort typescript",
+    "typescript": "lerna run --concurrency 3 --no-bail --no-sort typescript",
     "use-react-18": "code-infra set-version-overrides --pkg react@18",
     "use-material-ui-v6": "code-infra set-version-overrides --pkg @mui/material@6",
     "use-material-ui-next": "code-infra set-version-overrides --pkg @mui/material@next",
@@ -94,7 +93,7 @@
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
     "@sinonjs/fake-timers": "15.4.0",
-    "@types/node": "22.20.2",
+    "@types/node": "22.20.4",
     "@types/picomatch": "4.0.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
@@ -150,11 +149,11 @@
     "zod": "4.6.5"
   },
   "config": {
-    "valeVersion": "3.21.0"
+    "valeVersion": "3.23.0"
   },
   "packageManager": "pnpm@12.6.0",
   "engines": {
     "pnpm": "12.6.0",
-    "node": ">=22.23.2"
+    "node": ">=22.23.3"
   }
 }
