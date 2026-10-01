@@ -205,7 +205,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         }
 
         const { setProps } = render(<Test />);
-        await waitFor(() => expect(apiRef.current?.getRow(1)).not.to.equal(null));
+        await waitFor(() => expect(apiRef.current?.getRow(1)?.id).to.equal(1));
         const callCountBeforeSort = getRows.mock.calls.length;
 
         // Queue the sort fetch and hide the grid before the fetch runs.
@@ -546,6 +546,42 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => {
         expect(localFetchRowsSpy.mock.calls.length).to.be.greaterThan(1);
       });
+    });
+
+    it('should stop polling the lazy loaded range when lazyLoading turns off', async () => {
+      const localFetchRowsSpy = vi.fn();
+      const { setProps } = render(
+        <TestDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={10}
+          lazyLoadingRequestThrottleMs={0}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await actSleep(50);
+
+      const getRangeCallCount = () =>
+        localFetchRowsSpy.mock.calls.filter(
+          ([url]) => new URL(url).searchParams.get('start') === '20',
+        ).length;
+
+      await act(async () => {
+        apiRef.current?.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 20,
+          lastRowIndex: 26,
+          firstColumnIndex: 0,
+          lastColumnIndex: 0,
+        });
+      });
+      await waitFor(() => expect(getRangeCallCount()).to.be.above(2));
+
+      setProps({ lazyLoading: false });
+      // Let a revalidation queued before the switch run.
+      await actSleep(50);
+      const callCountAfterSwitch = getRangeCallCount();
+      await actSleep(100);
+      expect(getRangeCallCount()).to.equal(callCountAfterSwitch);
     });
 
     it('should remove rows dropped by the server on revalidation', async () => {

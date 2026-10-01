@@ -497,6 +497,34 @@ describe('<DataGrid /> - Data source', () => {
         },
       );
 
+      it('should wait for an in-flight query before resuming polling when the Activity becomes visible', async () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        const localFetchRowsSpy = vi.fn();
+        const { setProps } = render(
+          <TestDataSource
+            dataSourceCache={null}
+            dataSourceRevalidateMs={10}
+            onFetchRows={localFetchRowsSpy}
+          />,
+        );
+        await waitFor(() => expect(apiRef.current?.getRowsCount()).to.be.above(0));
+
+        localFetchRowsSpy.mockClear();
+        setProps({
+          stallResponsePromise: promise,
+          sortModel: [{ field: 'id', sort: 'desc' }],
+        });
+        await waitFor(() => expect(localFetchRowsSpy).toHaveBeenCalledTimes(1));
+
+        // Showing the grid must not resume polling while the sort request is still pending.
+        await toggleActivity(setProps);
+        await actSleep(30);
+        expect(localFetchRowsSpy).toHaveBeenCalledTimes(1);
+
+        await act(async () => resolve());
+        await waitFor(() => expect(localFetchRowsSpy.mock.calls.length).to.be.above(1));
+      });
+
       it('should re-fetch the data when the Activity becomes visible after a failed request', async () => {
         const onDataSourceError = vi.fn();
         const { setProps } = render(
