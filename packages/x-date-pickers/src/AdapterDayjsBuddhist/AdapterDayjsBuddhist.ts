@@ -56,7 +56,7 @@ export class AdapterDayjsBuddhist extends AdapterDayjs {
    * Sets the Buddhist year (converts to Gregorian year internally)
    */
   public setYear = (value: Dayjs, year: number) => {
-    return this.adjustOffset(value.set('year', year - BUDDHIST_YEAR_OFFSET));
+    return this.adjustOffset(value.set('year', year - BUDDHIST_YEAR_OFFSET), value);
   };
 
   /**

@@ -268,21 +268,31 @@ describe('<AdapterDayjs />', () => {
         expect(springForward.toISOString()).to.equal('2026-03-08T10:30:00.000Z');
       });
 
-      it('should return the right instant when a zone moves to or from offset 0', () => {
+      it('should keep the elapsed time when adding hours across a DST change of the value timezone', () => {
+        setSystemTimezone('Europe/London');
+        const adapter = new AdapterDayjs();
+        const springForward = adapter.addHours(dayjs.tz('2026-03-29T00:30', 'Europe/London'), 2);
+        const fallBack = adapter.addHours(dayjs.tz('2026-10-25T00:30', 'Europe/London'), 2);
+
+        expect(springForward.toISOString()).to.equal('2026-03-29T02:30:00.000Z');
+        expect(fallBack.toISOString()).to.equal('2026-10-25T01:30:00.000Z');
+      });
+
+      it('should keep the instant when a setter does not change the value', () => {
         setSystemTimezone('America/New_York');
         const adapter = new AdapterDayjs();
-        const summer = adapter.setMonth(
-          adapter.date('2026-01-15T12:00', 'Europe/London') as Dayjs,
-          6,
-        );
-        const winter = adapter.setMonth(
-          adapter.date('2026-07-15T12:00', 'Europe/London') as Dayjs,
-          0,
-        );
+        // In this system timezone, `dayjs` creates this value with a `$localOffset` that differs from its `Date`.
+        const value = dayjs.tz('2026-11-01T00:30', 'America/Los_Angeles');
 
-        expect(summer.toISOString()).to.equal('2026-07-15T11:00:00.000Z');
-        expect(winter.toISOString()).to.equal('2026-01-15T12:00:00.000Z');
+        expect(adapter.setMinutes(value, 30).toISOString()).to.equal('2026-11-01T07:30:00.000Z');
       });
+    });
+
+    it('should keep small years when setting the year of a value with a timezone', () => {
+      const adapter = new AdapterDayjs();
+      const value = adapter.setYear(adapter.date('2026-01-15T12:00', 'Europe/London') as Dayjs, 1);
+
+      expect(adapter.getYear(value)).to.equal(1);
     });
   });
 
