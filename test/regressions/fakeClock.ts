@@ -27,8 +27,8 @@ true satisfies [OverlappingMethods] extends [never] ? true : never;
 // The date is always frozen, so demos that show "today" are stable.
 // Timers are only faked while a test case mounts, see `fakeTimers` and `flushTimers`.
 let clock: Clock = freezeDate();
-// Whether `clock` fakes the timers and still has to be flushed.
-let timersFaked = false;
+// `'faked'` after `fakeTimers`, the running flush during `flushTimers`, `null` with real timers.
+let timers: 'faked' | Promise<void> | null = null;
 
 // Only call it when no clock is installed: fake-timers throws if `Date` is already faked.
 function freezeDate() {
@@ -49,34 +49,37 @@ export function fakeTimers() {
     // for example by the previous test case when it unmounts.
     shouldClearNativeTimers: true,
   });
-  timersFaked = true;
+  timers = 'faked';
 }
 
 // How long to keep running the timers that the flushed timers schedule in turn,
 // for example a fake fetch followed by `autosizeColumns`.
 const SETTLE_MS = 2000;
 
+async function settleTimers(current: Clock) {
+  await current.runToLastAsync();
+  // Timers scheduled after the last one would otherwise be dropped by `uninstall`.
+  await current.tickAsync(SETTLE_MS);
+  if (clock !== current) {
+    // `fakeTimers` was called again in the meantime, its timers stay faked.
+    return;
+  }
+  clock.uninstall();
+  clock = freezeDate();
+  timers = null;
+}
+
 /**
  * Runs all the timers scheduled while the test case mounted, so it reaches its final state
  * (for example, a fake server that responds after a delay). Then goes back to real timers.
- * Without a preceding `fakeTimers`, for example when the page is opened on a test case directly,
- * there is nothing to flush.
+ * A call during a running flush waits for that flush. Without a preceding `fakeTimers`,
+ * for example when the page is opened on a test case directly, there is nothing to flush.
  */
 export async function flushTimers() {
-  if (timersFaked) {
-    // Claim the flush, so that a second call doesn't tick the same clock concurrently.
-    timersFaked = false;
-    const current = clock;
-    await current.runToLastAsync();
-    // Timers scheduled after the last one would otherwise be dropped by `uninstall`.
-    await current.tickAsync(SETTLE_MS);
-    if (clock !== current) {
-      // `fakeTimers` was called again in the meantime.
-      return;
-    }
-    clock.uninstall();
-    clock = freezeDate();
+  if (timers === 'faked') {
+    timers = settleTimers(clock);
   }
+  await timers;
   // Let the layout updates that run in an animation frame land, for example a chart resize.
   await new Promise((resolve) => {
     requestAnimationFrame(() => requestAnimationFrame(resolve));
