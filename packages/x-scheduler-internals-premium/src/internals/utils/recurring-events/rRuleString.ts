@@ -9,6 +9,9 @@ import type {
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
+// `yyyyMMddTHHmmssZ`, the UTC date-time form of `UNTIL`.
+const UNTIL_UTC_REGEX = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/;
+
 const SUPPORTED_RRULE_KEYS = new Set([
   'FREQ',
   'INTERVAL',
@@ -158,11 +161,18 @@ export function parseRRule(
   }
 
   if (rruleObject.UNTIL) {
-    // The trailing `Z` makes the value a UTC instant (RFC 5545): read it in UTC, then
-    // move it to the event's timezone like the other dates of the rule.
-    const parsed = adapter.parse(rruleObject.UNTIL, getAdapterCache(adapter).untilFormat, 'UTC');
+    // The trailing `Z` makes the value a UTC instant (RFC 5545). Read through its ISO form,
+    // like an instant-string `until`: the adapter's `parse` goes through the host timezone,
+    // which shifts the times of its daylight saving gap.
+    const match = UNTIL_UTC_REGEX.exec(rruleObject.UNTIL);
+    const parsed = match
+      ? adapter.date(
+          `${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}Z`,
+          'default',
+        )
+      : null;
 
-    if (!adapter.isValid(parsed)) {
+    if (parsed === null || !adapter.isValid(parsed)) {
       throw new Error(
         `MUI X Scheduler: Invalid UNTIL date "${rruleObject.UNTIL}". ` +
           'The UNTIL value must be a valid date in ISO format. ' +
