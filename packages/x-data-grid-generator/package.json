@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@mui/icons-material": "catalog:",
+    "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@types/chance": "catalog:",
     "react": "catalog:",
