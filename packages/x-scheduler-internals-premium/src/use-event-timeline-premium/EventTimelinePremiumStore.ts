@@ -236,7 +236,11 @@ export class EventTimelinePremiumStore<
       );
     }
 
-    this.scheduling = this.disposables.use(new SchedulerSchedulingPlugin(this));
+    this.scheduling = this.disposables.use(
+      new SchedulerSchedulingPlugin(this, (updated) => {
+        this.updateEvents({ updated });
+      }),
+    );
     this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
 
@@ -381,7 +385,9 @@ export class EventTimelinePremiumStore<
   /**
    * Adds a dependency between two events.
    * Rejects dependencies referencing an unknown, recurring or read-only event,
-   * duplicates and cycles — see the returned `SchedulerAddDependencyResult`.
+   * duplicates, cycles, and dependencies whose successor would need to move while
+   * read-only — see the returned `SchedulerAddDependencyResult`.
+   * A dependency the event dates break moves its successor (and the cascade behind it).
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`
    * value before making another validated add.
@@ -392,8 +398,9 @@ export class EventTimelinePremiumStore<
 
   /**
    * Changes the properties of an existing dependency.
-   * Rejects an unknown id, a read-only endpoint event and a duplicate — see the returned
-   * `SchedulerUpdateDependencyResult`.
+   * Rejects an unknown id, a read-only endpoint event, a duplicate and a change that would
+   * move a read-only event — see the returned `SchedulerUpdateDependencyResult`.
+   * A change the event dates break moves its successor (and the cascade behind it).
    */
   public updateDependency = (
     dependencyId: SchedulerDependencyId,

@@ -56,6 +56,7 @@ const UPDATE_REJECTION_MESSAGES: Record<
   Extract<SchedulerUpdateDependencyResult, { status: 'rejected' }>['reason'],
   string
 > = {
+  cascadeBlocked: 'This change would move a read-only event, so it was not applied.',
   duplicateDependency: 'A dependency of this type already exists between these two events.',
   readOnlyEvent: 'Dependencies cannot involve read-only events.',
   unknownDependency: 'This dependency no longer exists.',

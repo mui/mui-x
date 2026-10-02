@@ -7,11 +7,13 @@ import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-pr
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const TEST_RESOURCES = [ResourceBuilder.new().id('r1').title('Resource 1').build()];
-const eventA = EventBuilder.new().id('event-a').build();
-const eventB = EventBuilder.new().id('event-b').build();
-const eventC = EventBuilder.new().id('event-c').build();
-const eventD = EventBuilder.new().id('event-d').build();
-const eventE = EventBuilder.new().id('event-e').build();
+// In chronological order (`event-e` first), so adding a forward FS dependency keeps the
+// events in place: a broken one would move its target.
+const eventE = EventBuilder.new().id('event-e').singleDay('2025-07-03T07:00:00Z').build();
+const eventA = EventBuilder.new().id('event-a').singleDay('2025-07-03T09:00:00Z').build();
+const eventB = EventBuilder.new().id('event-b').singleDay('2025-07-03T11:00:00Z').build();
+const eventC = EventBuilder.new().id('event-c').singleDay('2025-07-03T13:00:00Z').build();
+const eventD = EventBuilder.new().id('event-d').singleDay('2025-07-03T15:00:00Z').build();
 const recurringEvent = EventBuilder.new().id('event-r').recurrent('DAILY').build();
 
 const DEP_AB: SchedulerDependency = {
@@ -397,11 +399,17 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      const result = store.addDependency({
-        source: 'event-a',
-        target: 'event-b',
-        type: 'FinishToStart',
-      });
+      let result!: ReturnType<typeof store.addDependency>;
+      // The cascade of the added edge enters the cycle too.
+      expect(() => {
+        result = store.addDependency({
+          source: 'event-a',
+          target: 'event-b',
+          type: 'FinishToStart',
+        });
+      }).toWarnDev([
+        'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
+      ]);
 
       expect(result.status).to.equal('added');
       expect(onDependenciesChange.mock.calls.length).to.equal(1);
@@ -452,6 +460,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
               { id: 'dep-1', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
             ],
             onDependenciesChange,
+            onEventsChange: vi.fn(),
           },
           adapter,
         );
@@ -548,7 +557,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // controlled `dependencyModelList`, which has not round-tripped yet.
       const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
+        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange, onEventsChange: vi.fn() },
         adapter,
       );
 

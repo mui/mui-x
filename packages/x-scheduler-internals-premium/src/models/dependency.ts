@@ -129,7 +129,20 @@ export type SchedulerDependencyEventRejectionReason =
   'recurringEvent' | 'unknownEvent' | 'readOnlyEvent';
 
 export type SchedulerDependencyRejectionReason =
-  SchedulerDependencyEventRejectionReason | 'duplicateDependency' | 'cyclicDependency';
+  | SchedulerDependencyEventRejectionReason
+  | 'duplicateDependency'
+  | 'cyclicDependency'
+  | 'cascadeBlocked';
+
+/**
+ * The dependency is broken by the dates of its events, and restoring it would move the
+ * read-only `eventId`.
+ */
+type SchedulerDependencyCascadeBlockedRejection = {
+  status: 'rejected';
+  reason: 'cascadeBlocked';
+  eventId: SchedulerEventId;
+};
 
 export type SchedulerAddDependencyResult =
   | { status: 'added'; id: SchedulerDependencyId }
@@ -139,7 +152,8 @@ export type SchedulerAddDependencyResult =
       eventId: SchedulerEventId;
     }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
-  | { status: 'rejected'; reason: 'cyclicDependency' };
+  | { status: 'rejected'; reason: 'cyclicDependency' }
+  | SchedulerDependencyCascadeBlockedRejection;
 
 /**
  * Properties to change on an existing dependency with `updateDependency()`.
@@ -150,7 +164,8 @@ export type SchedulerUpdateDependencyResult =
   | { status: 'updated' }
   | { status: 'rejected'; reason: 'unknownDependency' }
   | { status: 'rejected'; reason: 'readOnlyEvent'; eventId: SchedulerEventId }
-  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId };
+  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
+  | SchedulerDependencyCascadeBlockedRejection;
 
 /**
  * The dependency open in the dependency dialog, and where the dialog is anchored.
