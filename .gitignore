@@ -20,6 +20,7 @@ __diff_output__
 /docs/export/
 /docs/public/x/
 /docs/public/chat/
+/packages/*/published-docs/
 /test/regressions/screenshots/
 /test/performance-charts/benchmarks/
 build/

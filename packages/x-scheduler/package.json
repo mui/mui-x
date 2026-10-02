@@ -47,8 +47,8 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\" --copy \"published-docs/**:docs\"",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo && node ../../scripts/stagePublishedDocs.mjs scheduler"
   },
   "repository": {
     "type": "git",

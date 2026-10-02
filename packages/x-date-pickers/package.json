@@ -30,8 +30,8 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "build": "code-infra build --flat --copy \"published-docs/**:docs\"",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo && node ../../scripts/stagePublishedDocs.mjs date-pickers"
   },
   "repository": {
     "type": "git",
