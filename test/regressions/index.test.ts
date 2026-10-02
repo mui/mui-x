@@ -122,19 +122,8 @@ const TEST_RULES: RouteRule[] = [
   },
   {
     test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
-    // The demo loads its rows asynchronously via `useDemoData`, which the
-    // `aria-busy` font gate doesn't track. Until the data resolves the grid
-    // shows the skeleton overlay (skeleton rows carry both `row` and
-    // `rowSkeleton`), so wait for a real, non-skeleton row before screenshotting.
-    waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
-  },
-  {
-    test: '/docs-data-grid-server-side-data/ServerSideDataGridKeepPreviousData',
-    // The demo intentionally sets a 500-1500ms mock-server delay so the
-    // keep-previous-data behavior is visible when paginating. An explicit delay
-    // bypasses the regression build's delay-zeroing (`__DISABLE_CHANCE_RANDOM__`),
-    // and the `aria-busy` font gate doesn't track async data, so the initial
-    // skeleton overlay would otherwise be captured. Wait for a real row instead.
+    // The demo renders in `TailwindDemoContainer`, which shows a spinner until the Tailwind
+    // script loads from the network. Wait for a real, non-skeleton row before screenshotting.
     waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
   },
 ];
@@ -313,11 +302,6 @@ async function main() {
               await Promise.all(promises);
             });
 
-            if (/^\/docs-charts-.*/.test(route.url)) {
-              // Extra wait for charts, from before `flushTimers`. It may no longer be needed.
-              await sleep(10);
-            }
-
             if (timeSensitiveSuites.some((suite) => route.url.includes(suite))) {
               await sleep(100);
             }
@@ -433,8 +417,6 @@ async function main() {
 
       const testcase = await navigateToTest(page, route);
 
-      await sleep(10);
-
       await enablePointerDot(page, onTestFinished);
 
       // At index 5: Series C (area)=9, Series A=5, Series B=3. yAxis 0-10.
@@ -461,8 +443,6 @@ async function main() {
       const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
 
       const testcase = await navigateToTest(page, route);
-
-      await sleep(10);
 
       await enablePointerDot(page, onTestFinished);
 

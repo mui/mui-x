@@ -11,11 +11,9 @@ const DATASET_OPTION = {
 const { columnsWithDefaultColDef, useQuery, ...data } =
   createFakeServer(DATASET_OPTION);
 
-const emptyObject = {};
-
 export default function LazyLoadingGrid() {
   // dataServerSide simulates your database.
-  const { rows: rowsServerSide } = useQuery(emptyObject);
+  const { rows: rowsServerSide } = useQuery({});
 
   const apiRef = useGridApiRef();
   const [initialRows, setInitialRows] = React.useState([]);
