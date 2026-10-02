@@ -142,6 +142,41 @@ jobs:
                   pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
       - store_test_results:
           path: test-results
+  test_browser_large_gen2:
+    <<: *default-job
+    executor:
+      name: code-infra/mui-node-browser
+      playwright-img-version: v1.63.0-noble
+    resource_class: large.gen2
+    steps:
+      - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
+      - when:
+          condition:
+            not:
+              equal: ['stable', << parameters.react-version >>]
+          steps:
+            - run:
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                name: Test Browser
+                command: |
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
+      - when:
+          condition:
+            equal: ['stable', << parameters.react-version >>]
+          steps:
+            - run:
+                name: Test Browser
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                command: |
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
+      - store_test_results:
+          path: test-results
   test_lint:
     <<: *default-job
     environment:
@@ -184,6 +219,18 @@ jobs:
   test_types:
     <<: *default-job
     resource_class: xlarge.gen2
+    steps:
+      - checkout
+      - install-deps
+      - code-infra/check-generated:
+          command: pnpm docs:typescript:formatted --disable-cache
+          pathspec: docs/src docs/data
+      - run:
+          name: Tests TypeScript definitions
+          command: pnpm typescript
+  test_types_large_gen2:
+    <<: *default-job
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps
@@ -301,23 +348,13 @@ workflows:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      - test_unit:
-          <<: *default-context
       - test_browser:
           <<: *default-context
-      - test_lint:
-          <<: *default-context
-      - test_static:
+      - test_browser_large_gen2:
           <<: *default-context
       - test_types:
           <<: *default-context
-      - test_e2e:
-          <<: *default-context
-      - test_regressions:
-          <<: *default-context
-      - test_package:
-          <<: *default-context
-      - test_charts_benchmark:
+      - test_types_large_gen2:
           <<: *default-context
   e2e-website:
     when:
@@ -362,7 +399,7 @@ workflows:
           name: test_types_additional
   test-react-18:
     when:
-      equal: [pipeline, << pipeline.parameters.workflow >>]
+      equal: [trial-off, << pipeline.parameters.workflow >>]
     jobs:
       - test_unit:
           <<: *default-context
