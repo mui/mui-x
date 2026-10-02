@@ -5,6 +5,8 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
@@ -33,6 +35,7 @@ const series = [
 
 export default function KeyboardNavigation() {
   const [chartType, setChartType] = React.useState('line');
+  const [focusItemOnClick, setFocusItemOnClick] = React.useState(false);
   const chartRef = React.useRef(null);
 
   const handleChange = (event) => setChartType(event.target.value);
@@ -67,16 +70,38 @@ export default function KeyboardNavigation() {
         >
           Focus chart
         </Button>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={focusItemOnClick}
+              onChange={(event) => setFocusItemOnClick(event.target.checked)}
+            />
+          }
+          label="focusItemOnClick"
+        />
       </Stack>
-      <Chart key={chartType} chartRef={chartRef} type={chartType} />
+      <Chart
+        key={chartType}
+        chartRef={chartRef}
+        type={chartType}
+        focusItemOnClick={focusItemOnClick}
+      />
     </Stack>
   );
 }
 
-function Chart({ chartRef, type }) {
+function Chart({ chartRef, type, focusItemOnClick }) {
   switch (type) {
     case 'scatter':
-      return <ScatterChart ref={chartRef} height={300} series={scatterSeries} />;
+      return (
+        <ScatterChart
+          ref={chartRef}
+          height={300}
+          series={scatterSeries}
+          focusItemOnClick={focusItemOnClick}
+        />
+      );
+
     case 'line':
       return (
         <LineChart
@@ -85,6 +110,7 @@ function Chart({ chartRef, type }) {
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
           series={series}
           slotProps={{ tooltip: { trigger: 'item' } }}
+          focusItemOnClick={focusItemOnClick}
         />
       );
 
@@ -98,6 +124,7 @@ function Chart({ chartRef, type }) {
           ]}
           slotProps={{ tooltip: { trigger: 'item' } }}
           series={series}
+          focusItemOnClick={focusItemOnClick}
         />
       );
 
@@ -118,6 +145,7 @@ function Chart({ chartRef, type }) {
           ]}
           height={300}
           hideLegend={false}
+          focusItemOnClick={focusItemOnClick}
         />
       );
 

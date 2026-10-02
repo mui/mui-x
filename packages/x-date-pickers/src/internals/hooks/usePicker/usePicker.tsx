@@ -4,13 +4,13 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
-import {
+import type {
   PickerViewsRendererProps,
   UsePickerParameters,
   UsePickerProps,
   UsePickerReturnValue,
 } from './usePicker.types';
-import {
+import type {
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
   PickerValidValue,
@@ -18,15 +18,15 @@ import {
 } from '../../models';
 import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 import { useReduceAnimations } from '../useReduceAnimations';
-import { FieldRef, InferError, PickerOwnerState } from '../../../models';
-import {
+import type { FieldRef, InferError, PickerOwnerState } from '../../../models';
+import type {
   PickerActionsContextValue,
   PickerContextValue,
   PickerPrivateContextValue,
 } from '../../components/PickerProvider';
 import { isTimeView } from '../../utils/time-utils';
 import { useViews } from '../useViews';
-import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
+import type { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
 import { useOrientation } from './hooks/useOrientation';
 import { useValueAndOpenStates } from './hooks/useValueAndOpenStates';
 import type { PickersActionBarAction } from '../../../PickersActionBar';
@@ -38,10 +38,8 @@ export const usePicker = <
 >({
   ref,
   props,
-  valueManager,
-  valueType,
+  manager,
   variant,
-  validator,
   onPopperExited,
   autoFocusView,
   rendererInterceptor: RendererInterceptor,
@@ -50,6 +48,8 @@ export const usePicker = <
   getStepNavigation,
 }: UsePickerParameters<TValue, TView, TExternalProps>): UsePickerReturnValue<TValue> => {
   type TError = InferError<TExternalProps>;
+
+  const { internal_valueManager: valueManager, valueType, validator } = manager;
 
   const {
     // View props
@@ -75,6 +75,7 @@ export const usePicker = <
     autoFocus,
     name,
     keepOpenDuringFieldFocus,
+    onCancel,
   } = props;
 
   const { className, sx, ...propsToForwardToView } = props;
@@ -102,8 +103,7 @@ export const usePicker = <
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
     useValueAndOpenStates<TValue, TView, TExternalProps>({
       props,
-      valueManager,
-      validator,
+      manager,
     });
 
   const {
@@ -141,12 +141,15 @@ export const usePicker = <
 
   const acceptValueChanges = useEventCallback(() => setValue(value, { source: 'view' }));
 
-  const cancelValueChanges = useEventCallback(() =>
+  const cancelValueChanges = useEventCallback(() => {
     setValue(state.lastCommittedValue, {
       skipPublicationIfPristine: true,
       source: 'view',
-    }),
-  );
+      shouldClose: false,
+    });
+    onCancel?.();
+    setOpen(false);
+  });
 
   const dismissViews = useEventCallback(() => {
     setValue(value, {

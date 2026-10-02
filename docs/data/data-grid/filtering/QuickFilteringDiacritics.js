@@ -14,7 +14,7 @@ const rows = [
 ];
 
 const columns = [
-  { field: 'string', width: 100 },
+  { field: 'string', width: 100, rowHeader: true },
   {
     field: 'date',
     type: 'date',

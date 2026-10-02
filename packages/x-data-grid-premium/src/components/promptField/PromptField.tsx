@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import type { RenderProp } from '@mui/x-data-grid';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { PromptFieldContext, type PromptFieldState } from './PromptFieldContext';
+import { PromptFieldContext } from './PromptFieldContext';
+import type { PromptFieldState } from './PromptFieldContext';
 
 export type PromptFieldProps = Omit<
   React.HTMLAttributes<HTMLDivElement>,
@@ -98,7 +99,7 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
   return <PromptFieldContext.Provider value={contextValue}>{element}</PromptFieldContext.Provider>;
 });
 
-PromptField.propTypes = {
+PromptField.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

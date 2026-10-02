@@ -1,6 +1,6 @@
 'use client';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { EventCalendarStore } from '../use-event-calendar';
+import type { EventCalendarStore } from '../use-event-calendar';
 
 export function useEventCalendarStoreContext<TEvent extends object, TResource extends object>() {
   const context = useSchedulerStoreContext();
@@ -10,7 +10,7 @@ export function useEventCalendarStoreContext<TEvent extends object, TResource ex
     context.instanceName !== 'EventCalendarPremiumStore'
   ) {
     throw new Error(
-      'MUI: useEventCalendarStoreContext must be used within an <EventCalendar /> component',
+      'MUI X Scheduler: useEventCalendarStoreContext must be used within an <EventCalendar /> component',
     );
   }
 

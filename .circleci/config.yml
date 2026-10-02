@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/7c091ffc8105f41363b1bd9907eca180c8c1d21e/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/294ab9be74ab24116c64cd734568b8d0a9b30f18/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -56,7 +56,10 @@ default-job: &default-job
     # For example, when creating v9 from v8, `master -> v8.x`
     BASE_BRANCH: master
   working_directory: /tmp/mui
-  executor: code-infra/mui-node
+  executor:
+    name: code-infra/mui-node
+    node-version: '22.23.3'
+  resource_class: medium.gen2
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -78,12 +81,13 @@ commands:
         default: << pipeline.parameters.react-version >>
     steps:
       - code-infra/install-deps:
-          package-overrides: react@<< parameters.react-version >> @mui/material@<< pipeline.parameters.material-ui-version >>
+          react-version: << parameters.react-version >>
+          package-overrides: '@mui/material@<< pipeline.parameters.material-ui-version >>'
 
 jobs:
   test_unit:
     <<: *default-job
-    resource_class: large
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps:
@@ -107,8 +111,8 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
-    resource_class: xlarge
+      playwright-img-version: v1.63.0-noble
+    resource_class: xlarge.gen2
     steps:
       - checkout
       - install-deps:
@@ -142,47 +146,29 @@ jobs:
     <<: *default-job
     environment:
       <<: *default-environment
-      NODE_OPTIONS: --max-old-space-size=4096
+      NODE_OPTIONS: --max-old-space-size=3584
     steps:
       - checkout
       - install-deps
       - code-infra/eslint
       - code-infra/stylelint
-      - code-infra/markdownlint
       - code-infra/valelint
   test_static:
     <<: *default-job
+    environment:
+      <<: *default-environment
+      NODE_OPTIONS: --max-old-space-size=3584
     steps:
       - checkout
       - install-deps
       - code-infra/check-static-changes
-      - run:
-          name: Generate PropTypes
+      - code-infra/check-generated:
           command: pnpm proptypes
-          environment:
-            NODE_OPTIONS: --max-old-space-size=3584
-      - run:
-          name: '`pnpm proptypes` changes committed?'
-          command: git add -A && git diff --exit-code --staged
-      - run:
-          name: Generate the documentation
+      - code-infra/check-generated:
           command: pnpm docs:api
-          environment:
-            NODE_OPTIONS: --max-old-space-size=3584
-      - run:
-          name: '`pnpm docs:api` changes committed?'
-          command: git add -A && git diff --exit-code --staged
-      - run:
-          name: '`pnpm extract-error-codes` changes committed?'
-          command: |
-            pnpm extract-error-codes
-            git add -A && git diff --exit-code --staged
-      - run:
-          name: Sync locale files
+      - code-infra/extract-error-codes
+      - code-infra/check-generated:
           command: pnpm l10n
-      - run:
-          name: '`pnpm l10n` changes committed?'
-          command: git add -A && git diff --exit-code --staged
       - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
@@ -193,40 +179,33 @@ jobs:
             else
                 exit 0
             fi
-      - run:
-          name: '`pnpm generate:exports` was run?'
-          command: |
-            pnpm generate:exports
-            git add -A && git diff --exit-code --staged
+      - code-infra/check-generated:
+          command: pnpm generate:exports
   test_types:
     <<: *default-job
-    resource_class: large
+    resource_class: xlarge.gen2
     steps:
       - checkout
       - install-deps
-      - run:
-          name: Transpile TypeScript demos
+      - code-infra/check-generated:
           command: pnpm docs:typescript:formatted --disable-cache
-      - run:
-          name: '`pnpm docs:typescript:formatted` changes committed?'
-          command: git add -A && git diff --exit-code --staged docs/src docs/data
+          pathspec: docs/src docs/data
       - run:
           name: Tests TypeScript definitions
-          command: pnpm typescript:ci
-          environment:
-            NODE_OPTIONS: --max-old-space-size=5120
+          command: pnpm typescript
   test_e2e:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.63.0-noble
+    resource_class: medium
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build --concurrency 5
+          command: pnpm release:build --concurrency 2
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -234,7 +213,8 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.63.0-noble
+    resource_class: medium
     steps:
       - checkout
       - install-deps
@@ -245,40 +225,44 @@ jobs:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_package:
     <<: *default-job
+    resource_class: medium
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build
+          command: pnpm release:build --concurrency 2
       - code-infra/upload-size-snapshot
   test_regressions:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.63.0-noble
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
-          name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
+          name: Host CPU
+          command: |
+            grep -m1 'model name' /proc/cpuinfo
+            grep -m1 '^flags' /proc/cpuinfo | grep -ow 'avx2\|avx512[a-z_0-9]*\|fma\|f16c' | sort -u | tr '\n' ' '
+            echo
+            nproc
       - run:
-          name: Build packages
-          command: pnpm release:build
+          name: Install ffmpeg
+          command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
-      - run:
-          name: Upload screenshots to Argos CI
-          command: pnpm test:argos
+      - code-infra/argos-push
   test_charts_benchmark:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.63.0-noble
     resource_class: medium
     steps:
       - checkout

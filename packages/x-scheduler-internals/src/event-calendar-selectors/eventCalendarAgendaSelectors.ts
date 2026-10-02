@@ -7,7 +7,7 @@ import {
 } from '../scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { SchedulerProcessedDate } from '../models';
+import type { SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
 
@@ -18,18 +18,18 @@ export const eventCalendarAgendaSelectors = {
     schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-    schedulerEventSelectors.processedEventList,
+    schedulerEventSelectors.processedEventRangeIndex,
     schedulerResourceSelectors.visibleMap,
-    schedulerOtherSelectors.plan,
+    schedulerOtherSelectors.recurringEventsPlugin,
     (
       adapter,
       visibleDate,
       displayTimezone,
       showWeekends,
       showEmptyDaysInAgenda,
-      events,
+      eventRangeIndex,
       visibleResources,
-      plan,
+      recurringEventsPlugin,
     ) => {
       const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
@@ -45,10 +45,10 @@ export const eventCalendarAgendaSelectors = {
       let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days: accumulatedDays,
-        events,
+        eventRangeIndex,
         visibleResources,
         displayTimezone,
-        plan,
+        recurringEventsPlugin,
       });
 
       const hasEvents = (day: SchedulerProcessedDate) =>
@@ -92,10 +92,10 @@ export const eventCalendarAgendaSelectors = {
         occurrenceMap = innerGetEventOccurrencesGroupedByDay({
           adapter,
           days: accumulatedDays,
-          events,
+          eventRangeIndex,
           visibleResources,
           displayTimezone,
-          plan,
+          recurringEventsPlugin,
         });
 
         daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);

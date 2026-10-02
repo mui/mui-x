@@ -4,12 +4,8 @@
 </Stack>
 <MultiInputDateRangeField
   sx={{ minWidth: 300 }}
-  slotProps={{
-    textField: (ownerState) => ({
-      inputRef:
-        ownerState.position === 'start' ? startInputRef : endInputRef,
-    }),
-  }}
+  startFieldRef={startFieldRef}
+  endFieldRef={endFieldRef}
   selectedSections={selectedSections}
   onSelectedSectionsChange={setSelectedSections}
 />

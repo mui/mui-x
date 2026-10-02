@@ -5,19 +5,19 @@ import type {
   SeriesItemIdentifier,
   SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
-import { type ChartsColorPalette } from '../../../../colorPalettes';
-import { type ChartPluginSignature } from '../../models';
-import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
-import { type SeriesId } from '../../../../models/seriesType/common';
-import {
-  type SeriesLayoutGetterResult,
-  type SeriesProcessorParams,
-  type SeriesProcessorResult,
-  type UseChartSeriesConfigSignature,
+import type { ChartsColorPalette } from '../../../../colorPalettes';
+import type { ChartPluginSignature } from '../../models';
+import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import type { SeriesId } from '../../../../models/seriesType/common';
+import type {
+  SeriesLayoutGetterResult,
+  SeriesProcessorParams,
+  SeriesProcessorResult,
+  UseChartSeriesConfigSignature,
 } from '../useChartSeriesConfig';
-import {
-  type VisibilityIdentifier,
-  type VisibilityIdentifierWithType,
+import type {
+  VisibilityIdentifier,
+  VisibilityIdentifierWithType,
 } from '../../featurePlugins/useChartVisibilityManager/useChartVisibilityManager.types';
 
 export interface UseChartSeriesParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {

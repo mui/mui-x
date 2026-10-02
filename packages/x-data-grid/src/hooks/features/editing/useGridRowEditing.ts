@@ -3,19 +3,19 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
-import {
-  GridEditModes,
-  GridRowModes,
-  type GridEditingState,
-  type GridEditCellProps,
-  type GridEditRowProps,
+import { GridEditModes, GridRowModes } from '../../../models/gridEditRowModel';
+import type {
+  GridEditingState,
+  GridEditCellProps,
+  GridEditRowProps,
 } from '../../../models/gridEditRowModel';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import type {
   GridRowEditingApi,
   GridEditingSharedApi,
@@ -38,10 +38,12 @@ import type { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
-  type GridRowEditStopParams,
-  type GridRowEditStartParams,
   GridRowEditStopReasons,
   GridRowEditStartReasons,
+} from '../../../models/params/gridRowParams';
+import type {
+  GridRowEditStopParams,
+  GridRowEditStartParams,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
@@ -209,7 +211,7 @@ export const useGridRowEditing = (
         } else if (event.key === 'Tab') {
           const columnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) => {
             const column = apiRef.current.getColumn(field);
-            if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+            if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
               return true;
             }
             return apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field));
@@ -366,6 +368,7 @@ export const useGridRowEditing = (
     if (onRowModesModelChange && isNewModelDifferentFromProp) {
       onRowModesModelChange(newModel, {
         api: apiRef.current,
+        apiRef: getPublicApiRef(apiRef),
       });
     }
 
@@ -455,11 +458,10 @@ export const useGridRowEditing = (
           return acc;
         }
 
-        const column = apiRef.current.getColumn(field);
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
           if (deleteValue) {
-            newValue = getDefaultCellValue(column);
+            newValue = getDefaultCellValue(col);
           } else if (initialValue) {
             newValue = initialValue;
           }
@@ -468,7 +470,7 @@ export const useGridRowEditing = (
         acc[field] = {
           value: newValue,
           error: false,
-          isProcessingProps: column.editable && !!column.preProcessEditCellProps && deleteValue,
+          isProcessingProps: col.editable && !!col.preProcessEditCellProps && deleteValue,
         };
 
         return acc;
@@ -604,14 +606,13 @@ export const useGridRowEditing = (
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
-          } else {
-            warnOnce(
+          } else if (process.env.NODE_ENV !== 'production') {
+            errorOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
-              ],
-              'error',
+              ].join('\n'),
             );
           }
         };
@@ -646,6 +647,9 @@ export const useGridRowEditing = (
       throwIfNotEditable(id, field);
 
       const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return Promise.resolve(false);
+      }
       const row = apiRef.current.getRow(id)!;
 
       let parsedValue = value;
@@ -711,7 +715,7 @@ export const useGridRowEditing = (
           }
 
           const fieldColumn = apiRef.current.getColumn(thisField);
-          if (!fieldColumn.preProcessEditCellProps) {
+          if (!fieldColumn?.preProcessEditCellProps) {
             return;
           }
 

@@ -6,7 +6,8 @@ import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useFocusedItem } from '@mui/x-charts/hooks';
 import { useFunnelSeriesContext } from '../hooks';
 import { createPositionGetter } from './coordinateMapper';
-import { getFunnelCurve, type Point } from './curves';
+import { getFunnelCurve } from './curves';
+import type { Point } from './curves';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -30,6 +31,12 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
   }
 
   const funnelSeries = allFunnelSeries[focusedItem.seriesId];
+  // Focus may reference a removed series or section.
+  const sectionPoints = funnelSeries?.dataPoints[focusedItem.dataIndex];
+
+  if (!sectionPoints) {
+    return null;
+  }
 
   const xAxisId = funnelSeries.xAxisId ?? xAxisIds[0];
   const yAxisId = funnelSeries.yAxisId ?? yAxisIds[0];
@@ -59,7 +66,7 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
   });
 
   const bandPoints = curve({} as any).processPoints(
-    funnelSeries.dataPoints[focusedItem.dataIndex].map((v) => ({
+    sectionPoints.map((v) => ({
       x: xPosition(v.x, focusedItem.dataIndex, v.stackOffset, v.useBandWidth),
       y: yPosition(v.y, focusedItem.dataIndex, v.stackOffset, v.useBandWidth),
     })),

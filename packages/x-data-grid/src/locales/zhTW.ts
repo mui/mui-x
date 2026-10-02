@@ -1,9 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import {
-  getGridLocalization,
-  type Localization,
-  buildLocaleFormat,
-} from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const formatNumber = buildLocaleFormat('zh-TW');
 
@@ -57,6 +54,11 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
+
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
 
   // Columns management text
   columnsManagementSearchTitle: '搜尋',

@@ -1,4 +1,5 @@
-import { PromptField, type PromptFieldProps } from './PromptField';
+import { PromptField } from './PromptField';
+import type { PromptFieldProps } from './PromptField';
 import { PromptFieldControl } from './PromptFieldControl';
 import { PromptFieldRecord } from './PromptFieldRecord';
 import { PromptFieldSend } from './PromptFieldSend';

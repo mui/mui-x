@@ -1,4 +1,4 @@
-import { bench, describe } from 'vitest';
+import { describe, test } from 'vitest';
 import { batchMeasureStrings, clearStringMeasurementCache, getStringSize } from './domUtils';
 
 export const strings = [
@@ -236,49 +236,39 @@ const setup = () => {
 };
 
 describe('getStringSize', () => {
-  bench(
-    'without styles',
-    () => {
-      strings.forEach((countryName) => getStringSize(countryName));
-    },
-    { setup },
-  );
+  test('styles', { timeout: 0 }, async ({ bench }) => {
+    await bench.compare(
+      bench('without styles', { beforeAll: setup }, () => {
+        strings.forEach((countryName) => getStringSize(countryName));
+      }),
+      bench('with alternating styles', { beforeAll: setup }, () => {
+        const style1 = { fontSize: 12, fontFamily: 'Arial' };
+        const style2 = { fontSize: 16, fontFamily: 'Times New Roman', fontWeight: 'bold' };
+        const firstHalf = strings.filter((_, i) => i % 2 === 0);
+        const secondHalf = strings.filter((_, i) => i % 2 !== 0);
 
-  bench(
-    'with alternating styles',
-    () => {
-      const style1 = { fontSize: 12, fontFamily: 'Arial' };
-      const style2 = { fontSize: 16, fontFamily: 'Times New Roman', fontWeight: 'bold' };
-      const firstHalf = strings.filter((_, i) => i % 2 === 0);
-      const secondHalf = strings.filter((_, i) => i % 2 !== 0);
-
-      firstHalf.forEach((countryName) => getStringSize(countryName, style1));
-      secondHalf.forEach((countryName) => getStringSize(countryName, style2));
-    },
-    { setup },
-  );
+        firstHalf.forEach((countryName) => getStringSize(countryName, style1));
+        secondHalf.forEach((countryName) => getStringSize(countryName, style2));
+      }),
+    );
+  });
 });
 
 describe('batchMeasureStrings', () => {
-  bench(
-    'without styles',
-    () => {
-      batchMeasureStrings(strings);
-    },
-    { setup },
-  );
+  test('styles', { timeout: 0 }, async ({ bench }) => {
+    await bench.compare(
+      bench('without styles', { beforeAll: setup }, () => {
+        batchMeasureStrings(strings);
+      }),
+      bench('with alternating styles', { beforeAll: setup }, () => {
+        const style1 = { fontSize: 12, fontFamily: 'Arial' };
+        const style2 = { fontSize: 16, fontFamily: 'Times New Roman', fontWeight: 'bold' };
+        const firstHalf = strings.filter((_, i) => i % 2 === 0);
+        const secondHalf = strings.filter((_, i) => i % 2 !== 0);
 
-  bench(
-    'with alternating styles',
-    () => {
-      const style1 = { fontSize: 12, fontFamily: 'Arial' };
-      const style2 = { fontSize: 16, fontFamily: 'Times New Roman', fontWeight: 'bold' };
-      const firstHalf = strings.filter((_, i) => i % 2 === 0);
-      const secondHalf = strings.filter((_, i) => i % 2 !== 0);
-
-      batchMeasureStrings(firstHalf, style1);
-      batchMeasureStrings(secondHalf, style2);
-    },
-    { setup },
-  );
+        batchMeasureStrings(firstHalf, style1);
+        batchMeasureStrings(secondHalf, style2);
+      }),
+    );
+  });
 });

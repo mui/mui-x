@@ -1,10 +1,10 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import {
+import type { MakeOptional } from '@mui/x-internals/types';
+import type {
   BaseDateTimePickerProps,
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import {
+import type {
   StaticOnlyPickerProps,
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,

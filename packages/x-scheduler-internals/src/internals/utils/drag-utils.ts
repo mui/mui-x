@@ -1,4 +1,4 @@
-import {
+import type {
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderInternalDragOrResize,
 } from '../../models';

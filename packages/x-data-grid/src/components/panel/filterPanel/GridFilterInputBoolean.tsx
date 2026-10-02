@@ -20,6 +20,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     slotProps,
+    disableDebounce,
     ...other
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
@@ -111,7 +112,7 @@ export function sanitizeFilterItemValue(value: any): boolean | undefined {
   return undefined;
 }
 
-GridFilterInputBoolean.propTypes = {
+GridFilterInputBoolean.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -123,21 +124,16 @@ GridFilterInputBoolean.propTypes = {
   className: PropTypes.string,
   clearButton: PropTypes.node,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, filter value changes are applied immediately without debouncing.
+   * @default false
+   */
+  disableDebounce: PropTypes.bool,
   focusElementRef: refType,
   headerFilterMenu: PropTypes.node,
-  inputRef: PropTypes.oneOfType([
+  inputRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
-    PropTypes.shape({
-      current: (props, propName) => {
-        if (props[propName] == null) {
-          return null;
-        }
-        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-          return new Error(`Expected prop '${propName}' to be of type Element`);
-        }
-        return null;
-      },
-    }),
+    PropTypes.object,
   ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value

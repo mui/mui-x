@@ -1,12 +1,14 @@
 'use client';
 import {
   ChartsZoomSlider,
-  type ChartsAxisZoomSliderThumbClasses,
-  type ChartsAxisZoomSliderThumbClassKey,
   chartsAxisZoomSliderThumbClasses,
-  type ChartsAxisZoomSliderTrackClasses,
-  type ChartsAxisZoomSliderTrackClassKey,
   chartsAxisZoomSliderTrackClasses,
+} from '../ChartsZoomSlider';
+import type {
+  ChartsAxisZoomSliderThumbClasses,
+  ChartsAxisZoomSliderThumbClassKey,
+  ChartsAxisZoomSliderTrackClasses,
+  ChartsAxisZoomSliderTrackClassKey,
 } from '../ChartsZoomSlider';
 
 /**

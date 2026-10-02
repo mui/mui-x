@@ -17,8 +17,8 @@ export function FocusedScatterMark({ className, ...props }: React.SVGAttributes<
     return null;
   }
 
-  const { cx, cy, series } = resolved;
-  const size = series.markerSize + 3;
+  const { cx, cy, markerSize } = resolved;
+  const size = markerSize + 3;
 
   return (
     <rect

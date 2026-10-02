@@ -1,0 +1,11 @@
+<ScatterChart
+  height={300}
+  grid={{ horizontal: true, vertical: true }}
+  series={[{ data, sizeAxisId: 'size' }]}
+  zAxis={[
+    {
+      id: 'size',
+      sizeMap: { type: 'continuous', min: 0, max: 25, size: [3, 24] },
+    },
+  ]}
+/>

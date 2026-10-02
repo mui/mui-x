@@ -2,6 +2,7 @@ import type * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from './useAnimate';
+import { snapEndAngleToFullCircle } from '../../internals/snapEndAngleToFullCircle';
 import type { PieArcProps } from '../../PieChart';
 
 type UseAnimatePieArcParams = Pick<
@@ -74,7 +75,12 @@ export function useAnimatePieArc(props: UseAnimatePieArcParams): UseAnimatePieAr
           innerRadius: p.innerRadius,
           outerRadius: p.outerRadius,
           startAngle: p.startAngle,
-          endAngle: p.endAngle,
+          endAngle: snapEndAngleToFullCircle(
+            p.startAngle,
+            p.endAngle,
+            p.outerRadius,
+            p.paddingAngle,
+          ),
         })!,
         visibility: p.startAngle === p.endAngle ? ('hidden' as const) : ('visible' as const),
       }),

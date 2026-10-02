@@ -1,13 +1,13 @@
 import {
-  type GrowableBuffer,
   compileShader,
   createGrowableBuffer,
   logWebGLErrors,
   uploadGrowableBuffer,
 } from '../utils/webgl/utils';
+import type { GrowableBuffer } from '../utils/webgl/utils';
 import { candleFragmentShader, candleVertexShader } from './candleShaders';
 import { wickFragmentShader, wickVertexShader } from './wickShaders';
-import { type CandlestickPlotData } from './useCandlestickPlotData';
+import type { CandlestickPlotData } from './useCandlestickPlotData';
 
 const QUAD_VERTICES = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 const WICK_VERTICES = new Float32Array([0, -1, 0, 1]);
@@ -35,13 +35,13 @@ type WickProgram = {
 export class CandlestickWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
 
-  private readonly quadBuffer: WebGLBuffer;
+  declare private readonly quadBuffer: WebGLBuffer;
 
-  private readonly wickGeometryBuffer: WebGLBuffer;
+  declare private readonly wickGeometryBuffer: WebGLBuffer;
 
-  private readonly candle: CandleProgram;
+  declare private readonly candle: CandleProgram;
 
-  private readonly wick: WickProgram;
+  declare private readonly wick: WickProgram;
 
   constructor(private gl: WebGL2RenderingContext) {
     /* Enable blending for transparency

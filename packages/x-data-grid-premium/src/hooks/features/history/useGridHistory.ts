@@ -6,12 +6,12 @@ import debounce from '@mui/utils/debounce';
 import {
   useGridEvent,
   useGridApiMethod,
-  type GridStateInitializer,
   isUndoShortcut,
   isRedoShortcut,
   runIf,
   useGridNativeEventListener,
 } from '@mui/x-data-grid-pro/internals';
+import type { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import type { GridEvents } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';

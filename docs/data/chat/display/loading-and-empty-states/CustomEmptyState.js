@@ -11,8 +11,17 @@ import {
   ChatComposer,
 } from '@mui/x-chat';
 import { ChatProvider, useChat } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
-import { minimalConversation } from 'docs/data/chat/material/examples/shared/demoData';
+import { createEchoAdapter } from 'docs/data/chat/core/examples/shared/demoUtils';
+
+const emptyConversation = {
+  id: 'custom-empty-conv',
+  title: 'New conversation',
+  subtitle: 'Pick a prompt to get started',
+  participants: [],
+  readState: 'read',
+  unreadCount: 0,
+  lastMessageAt: '2026-03-15T10:00:00.000Z',
+};
 
 function EmptyStateContent() {
   const { messages, sendMessage } = useChat();
@@ -71,16 +80,13 @@ export default function CustomEmptyState() {
   return (
     <ChatProvider
       adapter={adapter}
-      initialActiveConversationId={minimalConversation.id}
-      initialConversations={[minimalConversation]}
+      initialActiveConversationId={emptyConversation.id}
+      initialConversations={[emptyConversation]}
     >
       <Box
         sx={{
           height: 500,
           width: '100%',
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
           display: 'flex',
           flexDirection: 'column',
         }}

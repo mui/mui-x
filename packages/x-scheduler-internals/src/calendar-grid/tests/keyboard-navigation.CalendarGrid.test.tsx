@@ -2,9 +2,10 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { GridRowType } from '@mui/x-scheduler-internals/models';
+import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 
 /**
  * Integration tests for keyboard navigation across the CalendarGrid.
@@ -403,6 +404,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.DayEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
+                  dataTimezone={undefined}
                   start={processDate(day1, adapter)}
                   end={processDate(adapter.addHours(day1, 1), adapter)}
                   renderDragPreview={() => null}
@@ -413,6 +415,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.DayEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
+                  dataTimezone={undefined}
                   start={processDate(day2, adapter)}
                   end={processDate(adapter.addHours(day2, 1), adapter)}
                   renderDragPreview={() => null}
@@ -462,6 +465,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.TimeEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
+                  dataTimezone={undefined}
                   start={processDate(adapter.addHours(day1, 9), adapter)}
                   end={processDate(adapter.addHours(day1, 10), adapter)}
                   renderDragPreview={() => null}
@@ -476,6 +480,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 <CalendarGrid.TimeEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
+                  dataTimezone={undefined}
                   start={processDate(adapter.addHours(day2, 9), adapter)}
                   end={processDate(adapter.addHours(day2, 10), adapter)}
                   renderDragPreview={() => null}

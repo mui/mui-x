@@ -1,0 +1,11 @@
+<Typography sx={{ mb: 1 }} variant="body2">
+  Only rows with notes have an enabled toggle.
+</Typography>
+<Box sx={{ height: 300 }}>
+  <DataGridPro
+    columns={columns}
+    rows={rows}
+    getDetailPanelHeight={getDetailPanelHeight}
+    getDetailPanelContent={getDetailPanelContent}
+  />
+</Box>

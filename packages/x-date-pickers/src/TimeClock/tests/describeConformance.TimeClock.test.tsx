@@ -1,6 +1,7 @@
 import { TimeClock, timeClockClasses as classes } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<TimeClock /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

@@ -5,3 +5,5 @@ export * from './GridDetailPanelToggleCell';
 export * from './GridRowReorderCell';
 export * from '../material/icons';
 export * from './headerFiltering';
+export * from './cell';
+export * from './panel/filterPanel';

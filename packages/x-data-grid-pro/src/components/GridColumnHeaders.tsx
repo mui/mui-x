@@ -3,11 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import {
-  vars,
-  GridBaseColumnHeaders,
-  type UseGridColumnHeadersProps,
-} from '@mui/x-data-grid/internals';
+import { vars, GridBaseColumnHeaders } from '@mui/x-data-grid/internals';
+import type { UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
 import { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 const Filler = styled('div', {
@@ -68,7 +65,7 @@ const GridColumnHeaders = forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   },
 );
 
-GridColumnHeaders.propTypes = {
+GridColumnHeaders.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

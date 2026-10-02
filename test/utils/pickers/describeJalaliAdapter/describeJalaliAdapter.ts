@@ -1,5 +1,6 @@
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import { describe, beforeAll, afterAll } from 'vitest';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';
 import { testFormat } from './testFormat';

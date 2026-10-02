@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
-import { EventTimelinePremiumStore } from '../use-event-timeline-premium/EventTimelinePremiumStore';
+import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
+import type { EventTimelinePremiumStore } from '../use-event-timeline-premium/EventTimelinePremiumStore';
 
 /**
  * Creates the ref to pass to the `apiRef` prop of the `EventTimelinePremium` component.

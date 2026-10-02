@@ -1,25 +1,25 @@
-import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
+import { vi, describe, it, expect } from 'vitest';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { EventCalendarState } from '../EventCalendarStore.types';
+import type { EventCalendarState } from '../EventCalendarStore.types';
 
 const DEFAULT_PARAMS = { events: [] };
 
 describe('View - EventCalendarStore', () => {
   describe('Method: setView', () => {
     it('should update view and call onViewChange when value changes and is uncontrolled', () => {
-      const onViewChange = spy();
+      const onViewChange = vi.fn();
       const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onViewChange }, adapter);
 
       store.setView('day', {} as any);
 
       expect(store.state.view).to.equal('day');
-      expect(onViewChange.calledOnce).to.equal(true);
-      expect(onViewChange.lastCall.firstArg).to.equal('day');
+      expect(onViewChange.mock.calls.length).to.equal(1);
+      expect(onViewChange.mock.lastCall?.[0]).to.equal('day');
     });
 
     it('should NOT mutate store but calls onViewChange when is controlled', () => {
-      const onViewChange = spy();
+      const onViewChange = vi.fn();
       const store = new EventCalendarStore(
         { ...DEFAULT_PARAMS, view: 'week', onViewChange },
         adapter,
@@ -28,12 +28,12 @@ describe('View - EventCalendarStore', () => {
       store.setView('day', {} as any);
 
       expect(store.state.view).to.equal('week');
-      expect(onViewChange.calledOnce).to.equal(true);
-      expect(onViewChange.lastCall.firstArg).to.equal('day');
+      expect(onViewChange.mock.calls.length).to.equal(1);
+      expect(onViewChange.mock.lastCall?.[0]).to.equal('day');
     });
 
     it('should do nothing if setting the same view: no state change, no callback', () => {
-      const onViewChange = spy();
+      const onViewChange = vi.fn();
       const store = new EventCalendarStore(
         { ...DEFAULT_PARAMS, defaultView: 'month', onViewChange },
         adapter,
@@ -42,7 +42,7 @@ describe('View - EventCalendarStore', () => {
       store.setView('month', {} as any);
 
       expect(store.state.view).to.equal('month');
-      expect(onViewChange.called).to.equal(false);
+      expect(onViewChange.mock.calls.length).to.equal(0);
     });
 
     it('should throw when switching to a view not included in the allowed views', () => {
@@ -164,23 +164,25 @@ describe('View - EventCalendarStore', () => {
     });
   });
 
-  describe('Method: setViewConfig', () => {
-    it('should set config and cleanup to null', () => {
+  describe('Method: setViewDefinition', () => {
+    it('should set definition and cleanup to null', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
-      const siblingVisibleDateGetter = spy(
+      const siblingVisibleDateGetter = vi.fn(
         ({ state }: { state: EventCalendarState }) => state.visibleDate,
       );
-      const cleanup = store.setViewConfig({
+      const cleanup = store.setViewDefinition({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
       });
 
-      expect(store.state.viewConfig?.siblingVisibleDateGetter).to.equal(siblingVisibleDateGetter);
+      expect(store.state.viewDefinition?.siblingVisibleDateGetter).to.equal(
+        siblingVisibleDateGetter,
+      );
 
       cleanup();
 
-      expect(store.state.viewConfig).to.equal(null);
+      expect(store.state.viewDefinition).to.equal(null);
     });
   });
 });

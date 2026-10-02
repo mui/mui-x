@@ -1,30 +1,28 @@
 import type * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import {
+import type { SxProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+import type {
   InferError,
   OnErrorProps,
   PickerChangeHandlerContext,
+  PickerManager,
   PickerOwnerState,
   PickerValidDate,
-  PickerValueType,
   TimezoneProps,
 } from '../../../models';
-import {
+import type {
   DateOrTimeViewWithMeridiem,
   FormProps,
   PickerOrientation,
   PickerRangeValue,
   PickerValidValue,
-  PickerValueManager,
   PickerVariant,
 } from '../../models';
-import { Validator } from '../../../validation';
-import { UseViewsOptions } from '../useViews';
-import { PickerProviderProps } from '../../components/PickerProvider';
-import { PickersInputLocaleText } from '../../../locales';
-import { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
-import { CreateStepNavigationReturnValue } from '../../utils/createStepNavigation';
+import type { UseViewsOptions } from '../useViews';
+import type { PickerProviderProps } from '../../components/PickerProvider';
+import type { PickersInputLocaleText } from '../../../locales';
+import type { PickerFieldPrivateContextValue } from '../useNullableFieldPrivateContext';
+import type { CreateStepNavigationReturnValue } from '../../utils/createStepNavigation';
 
 /**
  * Props common to all Picker headless implementations.
@@ -76,6 +74,10 @@ export interface UsePickerBaseProps<
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel?: () => void;
   /**
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be used.
@@ -170,6 +172,11 @@ export interface UsePickerProps<
   sx?: SxProps<Theme>;
 }
 
+export type UsePickerManager<TValue extends PickerValidValue, TExternalProps extends {}> = Pick<
+  PickerManager<TValue, InferError<TExternalProps>, TExternalProps, any>,
+  'valueType' | 'validator' | 'internal_valueManager'
+>;
+
 export interface UsePickerParameters<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
@@ -178,9 +185,7 @@ export interface UsePickerParameters<
   ref: React.ForwardedRef<HTMLDivElement> | undefined;
   localeText: PickersInputLocaleText | undefined;
   variant: PickerVariant;
-  valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
-  valueType: PickerValueType;
-  validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
+  manager: UsePickerManager<TValue, TExternalProps>;
   autoFocusView: boolean;
   viewContainerRole: 'dialog' | 'tooltip' | null;
   /**

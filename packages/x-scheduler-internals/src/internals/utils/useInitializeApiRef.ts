@@ -1,7 +1,7 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import { SchedulerAnyStore, SchedulerPublicAPI } from '../models/publicAPI';
+import type { SchedulerAnyStore, SchedulerPublicAPI } from '../models/publicAPI';
 
 function initializeInputApiRef<TStore extends SchedulerAnyStore>(
   publicAPI: SchedulerPublicAPI<TStore>,

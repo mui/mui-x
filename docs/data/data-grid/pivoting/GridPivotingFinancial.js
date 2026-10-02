@@ -9,7 +9,7 @@ const columns = [
     width: 140,
     valueGetter: (value) => (value ? new Date(value) : null),
   },
-  { field: 'ticker', headerName: 'Ticker' },
+  { field: 'ticker', headerName: 'Ticker', rowHeader: true },
   {
     field: 'price',
     type: 'number',

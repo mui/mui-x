@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridEventListener } from '../../../models/events';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -18,19 +19,19 @@ import {
   gridSortModelSelector,
 } from './gridSortingSelector';
 import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
-import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
-  type GridStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
 } from '../../core/strategyProcessing';
+import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import {
   buildAggregatedSortingApplier,
   mergeStateWithSortModel,
   getNextGridSortDirection,
   sanitizeSortModel,
 } from './gridSortingUtils';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
 
@@ -189,6 +190,9 @@ export const useGridSorting = (
   const sortColumn = React.useCallback<GridSortApi['sortColumn']>(
     (field, direction, allowMultipleSorting) => {
       const column = apiRef.current.getColumn(field);
+      if (!column) {
+        return;
+      }
       const sortItem = createSortItem(column, direction);
       let sortModel: GridSortModel;
       if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {
@@ -373,7 +377,7 @@ export const useGridSorting = (
   /**
    * 1ST RENDER
    */
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     if (props.signature === 'DataGrid') {
       apiRef.current.applySorting();
     }

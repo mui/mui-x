@@ -10,13 +10,13 @@ githubLabel: 'scope: chat'
 <p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation.</p>
 
 The core package uses [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) instead of generic props for type-safe customization.
-This means you declare your app-specific types once, and they flow through the entire stack — messages, stream chunks, selectors, hooks, and renderers.
+Your app-specific types flow through the entire stack—messages, stream chunks, selectors, hooks, and renderers—once you declare them.
 
-The following demo shows type augmentation in practice:
+The demo below shows type augmentation in practice:
 
 {{"demo": "../examples/type-augmentation/TypeAugmentationHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-## The six registry interfaces
+## Registry interface reference
 
 All augmentable interfaces live under `@mui/x-chat/types`:
 
@@ -29,9 +29,9 @@ All augmentable interfaces live under `@mui/x-chat/types`:
 | `ChatDataPartMap`          | `ChatDataMessagePart`, data chunks       | Typed payloads per `data-*` type      |
 | `ChatCustomMessagePartMap` | `ChatMessagePart`                        | Entirely new message part types       |
 
-## How to augment
+## Augmenting the type system
 
-### Step 1: Declare the module
+### Declaring the module
 
 Create a type declaration file (for example, `chat-types.d.ts`) or use `declare module` in any `.ts` file:
 
@@ -44,7 +44,7 @@ declare module '@mui/x-chat/types' {
 }
 ```
 
-### Step 2: Register tool definitions
+### Registering tool definitions
 
 Add entries to `ChatToolDefinitionMap` to get typed `input` and `output` on tool invocations:
 
@@ -65,7 +65,7 @@ declare module '@mui/x-chat/types' {
 
 Once registered, `ChatToolInvocation<'weather'>` has typed `input` and `output` fields, and stream chunks like `tool-input-available` and `tool-output-available` carry the corresponding types.
 
-### Step 3: Register data part types
+### Registering data part types
 
 Add entries to `ChatDataPartMap` to type `data-*` stream chunks and message parts:
 
@@ -80,7 +80,7 @@ declare module '@mui/x-chat/types' {
 }
 ```
 
-### Step 4: Register custom message parts
+### Registering custom message parts
 
 Add entries to `ChatCustomMessagePartMap` for entirely new part types:
 
@@ -100,7 +100,7 @@ Custom parts are included in the `ChatMessagePart` union, so they appear in `mes
 
 ## End-to-end example
 
-Here is a complete augmentation that combines metadata, a typed tool, a typed data part, and a custom message part:
+The example below combines metadata, a typed tool, a typed data part, and a custom message part:
 
 ```ts
 // chat-types.d.ts
@@ -158,13 +158,14 @@ The effect flows through:
 4. **Hooks** — `useChat().messages` and `useMessage(id)` return messages with augmented types.
 5. **Renderers** — `useChatPartRenderer('ticket-summary')` returns a renderer typed for the custom part.
 
-No runtime code changes are needed. The augmentation is purely compile-time.
+No runtime code changes are needed.
+The augmentation is purely compile-time.
 
-## Gotchas
+## Common pitfalls
 
 ### Module resolution
 
-Make sure your `.d.ts` file is included in your `tsconfig.json`.
+Make sure the `.d.ts` file is included in your `tsconfig.json`.
 If the declaration is in a `types/` directory, add it to the `include` array:
 
 ```json
@@ -197,14 +198,16 @@ declare module '@mui/x-chat/types' {
 
 ### Multiple augmentation files
 
-You can split augmentations across multiple files. TypeScript merges all declarations for the same module. Just make sure each file is included in your `tsconfig`.
+You can split augmentations across multiple files.
+TypeScript merges all declarations for the same module.
+Make sure each file is included in your `tsconfig`.
 
 ## See also
 
 - [Hooks](/x/react-chat/core/hooks/) for `useChatPartRenderer()` and typed hook return values.
 - [State and store](/x/react-chat/core/state/) for `partRenderers` registration on `ChatProvider`.
 - [Streaming](/x/react-chat/core/streaming/) for how typed chunks flow through the stream.
-- [Type augmentation](/x/react-chat/core/examples/type-augmentation/) for a runnable demo combining all registry interfaces.
+- [Type augmentation example](/x/react-chat/core/examples/type-augmentation/) for a runnable demo combining all registry interfaces.
 - [Tool approval and renderers](/x/react-chat/core/examples/tool-approval-and-renderers/) for custom part rendering with the registry.
 
 ## API

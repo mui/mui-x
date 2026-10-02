@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import identifierCleaner from './identifierCleaner';
 
 describe('Sankey identifierCleaner', () => {

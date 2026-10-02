@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
 const timeViews: Record<TimeViewWithMeridiem, string> = {
@@ -9,6 +9,17 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   seconds: 'Secunde',
   meridiem: 'Meridiane',
 };
+
+// Romanian inserts "de" before the plural noun for counts of 20 and above
+function getPluralForm(count: number, one: string, few: string) {
+  if (count === 1) {
+    return one;
+  }
+  if (count < 20) {
+    return few;
+  }
+  return `de ${few}`;
+}
 
 const roROPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
@@ -43,14 +54,17 @@ const roROPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Selectați data și ora',
   timePickerToolbarTitle: 'Selectați ora',
   dateRangePickerToolbarTitle: 'Selectați intervalul de date',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Selectați intervalul de timp',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Selectați ${timeViews[view] ?? view}. ${!formattedTime ? 'Nicio oră selectată' : `Ora selectată este ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
-  minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
-  secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralForm(Number(hours), 'Oră', timeViews.hours)}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralForm(Number(minutes), 'Minut', timeViews.minutes)}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralForm(Number(seconds), 'Secundă', timeViews.seconds)}`,
 
   // Digital clock labels
   selectViewText: (view) => `Selectați ${timeViews[view]}`,
@@ -66,7 +80,10 @@ const roROPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Selectați data, data selectată este ${formattedDate}` : 'Selectați data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Selectați ora, ora selectată este ${formattedTime}` : 'Selectați ora',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Selectați intervalul, intervalul selectat este ${formattedRange}`
+      : 'Selectați intervalul',
   fieldClearLabel: 'Golire conținut',
 
   // Table labels

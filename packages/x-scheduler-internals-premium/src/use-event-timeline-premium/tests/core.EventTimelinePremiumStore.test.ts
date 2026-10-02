@@ -1,9 +1,13 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { disposeSymbol } from '@mui/x-internals/disposable';
+import { describe, it, expect } from 'vitest';
+import { schedulerRecurringEventsPlugin } from '../../internals/plugins/schedulerRecurringEventsPlugin';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
-const DEFAULT_PARAMS = { events: [] };
+const TEST_RESOURCE = ResourceBuilder.new().id('r1').title('Resource 1').build();
+const DEFAULT_PARAMS = { events: [], resources: [TEST_RESOURCE] };
 
 describe('Core - EventTimelinePremiumStore', () => {
   describe('create', () => {
@@ -14,11 +18,16 @@ describe('Core - EventTimelinePremiumStore', () => {
 
       const expectedState = {
         adapter,
+        areDependenciesEnabled: false,
         areEventsDraggable: true,
         areEventsResizable: true,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         copiedEvent: null,
+        selection: null,
+        dependencyCreation: null,
+        dependencyModelList: [],
+        dependencyModelLookup: new Map(),
         eventColor: 'teal',
         eventCreation: true,
         eventIdList: [],
@@ -26,28 +35,93 @@ describe('Core - EventTimelinePremiumStore', () => {
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
         displayTimezone: 'default',
-        editedEventId: null,
+        editingOccurrence: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
-        plan: 'premium',
+        pendingRecurringEventOperation: null,
         preferences: EMPTY_OBJECT,
         processedEventLookup: new Map(),
-        processedResourceLookup: new Map(),
+        processedResourceLookup: new Map([
+          [
+            TEST_RESOURCE.id,
+            {
+              id: TEST_RESOURCE.id,
+              title: TEST_RESOURCE.title,
+              areEventsDraggable: undefined,
+              areEventsReadOnly: undefined,
+              areEventsResizable: undefined,
+              eventColor: undefined,
+            },
+          ],
+        ]),
         readOnly: false,
+        recurringEventsPlugin: schedulerRecurringEventsPlugin,
+        shouldEventRequireResource: true,
         resourceChildrenIdLookup: new Map(),
-        resourceIdList: [],
+        resourceIdList: [TEST_RESOURCE.id],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         preset: 'dayAndHour',
+        presetConfig: EMPTY_OBJECT,
         presets: ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
+        collapsedResources: {},
         isLoading: false,
         errors: [],
+        hasInitialized: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);
+    });
+
+    it('should default `shouldEventRequireResource` to `true`', () => {
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(true);
+    });
+
+    it('should respect an explicit `shouldEventRequireResource={false}`', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, shouldEventRequireResource: false },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+    });
+
+    it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore({ events: [], resources: [] }, adapter);
+      }).toWarnDev([
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+      ]);
+    });
+
+    it('should sync `shouldEventRequireResource` when parameters update', () => {
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(true);
+
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, shouldEventRequireResource: false },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+    });
+
+    it('should store the `presetConfig` parameter in the state', () => {
+      const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, presetConfig }, adapter);
+
+      expect(store.state.presetConfig).to.equal(presetConfig);
+    });
+
+    it('should sync `presetConfig` when parameters update', () => {
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.presetConfig).to.equal(EMPTY_OBJECT);
+
+      const presetConfig = { dayAndHour: { startTime: 8, endTime: 20 } };
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, presetConfig }, adapter);
+      expect(store.state.presetConfig).to.equal(presetConfig);
     });
 
     it('should sort the presets array into the canonical zoom order regardless of input order', () => {
@@ -127,7 +201,7 @@ describe('Core - EventTimelinePremiumStore', () => {
       // Dispose the store's pending timers; otherwise the `nowUpdatedEveryMinute` interval
       // would fire later, re-trigger the subscribe listener against the intentionally invalid
       // state left by this test, and leak an unhandled error into the test run.
-      store.disposeEffect()();
+      store[disposeSymbol]();
     });
   });
 });

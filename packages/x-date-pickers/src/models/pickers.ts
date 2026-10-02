@@ -1,4 +1,4 @@
-import { PickerOrientation, PickerVariant } from '../internals/models/common';
+import type { PickerOrientation, PickerVariant } from '../internals/models/common';
 import type { PickersShortcutsItemContext } from '../PickersShortcuts';
 
 export interface PickerChangeHandlerContext<TError> {

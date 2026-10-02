@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { Button } from '@base-ui/react/button';
-import {
+import type * as React from 'react';
+import type { Button } from '@base-ui/react/button';
+import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
@@ -22,8 +22,4 @@ export interface EventItemProps extends Omit<React.HTMLAttributes<HTMLDivElement
    * 'compact': displays the resource legend, event title alongside the event time on a neutral background.
    */
   variant: 'filled' | 'compact' | 'regular';
-  /**
-   * ID of the header this event is associated with (for aria-labelledby).
-   */
-  ariaLabelledBy: string;
 }

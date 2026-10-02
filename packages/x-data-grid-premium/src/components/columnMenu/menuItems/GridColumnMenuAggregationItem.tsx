@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
+import { useGridSelector } from '@mui/x-data-grid-pro';
+import type { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -56,11 +57,12 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const handleAggregationItemChange = (event: React.ChangeEvent<unknown>) => {
     const newAggregationItem = (event.target as HTMLSelectElement | null)?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
-    const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
-    const newModel: GridAggregationModel =
-      newAggregationItem == null
-        ? otherColumnItems
-        : { ...otherColumnItems, [colDef?.field]: newAggregationItem };
+    const newModel: GridAggregationModel = { ...currentModel };
+    if (newAggregationItem == null) {
+      delete newModel[colDef.field];
+    } else {
+      newModel[colDef.field] = newAggregationItem;
+    }
 
     apiRef.current.setAggregationModel(newModel);
     apiRef.current.hideColumnMenu();
@@ -133,7 +135,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   );
 }
 
-GridColumnMenuAggregationItem.propTypes = {
+GridColumnMenuAggregationItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

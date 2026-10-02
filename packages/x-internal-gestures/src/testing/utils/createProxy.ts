@@ -10,6 +10,7 @@ export const createProxy = <T extends UserGesture>(target: T): T => {
           // Calling setup pretty much clears this proxy by creating a new instance
           // This new instance will NOT be a proxy.
           // @ts-expect-error, constructor is a function...
+          // eslint-disable-next-line new-cap -- Accessing the instance constructor.
           return new obj.constructor(mode).setup(options);
         };
       }
@@ -27,6 +28,7 @@ export const createProxy = <T extends UserGesture>(target: T): T => {
       return async (...args: unknown[]) => {
         const mode = Reflect.get(obj, 'pointerManager').mode;
         // @ts-expect-error, constructor is a function...
+        // eslint-disable-next-line new-cap -- Accessing the instance constructor.
         return new obj.constructor(mode)[prop](...args);
       };
     },

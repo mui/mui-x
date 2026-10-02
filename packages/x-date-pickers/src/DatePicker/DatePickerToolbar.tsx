@@ -7,18 +7,14 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { usePickerAdapter, usePickerContext, usePickerTranslations } from '../hooks';
-import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import {
-  DatePickerToolbarClasses,
-  getDatePickerToolbarUtilityClass,
-} from './datePickerToolbarClasses';
+import type { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
+import type { DatePickerToolbarClasses } from './datePickerToolbarClasses';
+import { getDatePickerToolbarUtilityClass } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
-import {
-  PickerToolbarOwnerState,
-  useToolbarOwnerState,
-} from '../internals/hooks/useToolbarOwnerState';
-import { DateView } from '../models/views';
-import { PickerValue } from '../internals/models';
+import type { PickerToolbarOwnerState } from '../internals/hooks/useToolbarOwnerState';
+import { useToolbarOwnerState } from '../internals/hooks/useToolbarOwnerState';
+import type { DateView } from '../models/views';
+import type { PickerValue } from '../internals/models';
 
 export interface DatePickerToolbarProps extends BaseToolbarProps, ExportedDatePickerToolbarProps {}
 
@@ -119,7 +115,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
   );
 }) as DatePickerToolbarComponent;
 
-DatePickerToolbar.propTypes = {
+DatePickerToolbar.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

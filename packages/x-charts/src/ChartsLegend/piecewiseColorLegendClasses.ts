@@ -33,8 +33,14 @@ export interface PiecewiseColorLegendClasses {
   label: string;
 }
 
+const CORRECT_PREFIX = 'MuiPiecewiseColorLegend';
+// TODO v10: remove `MuiPiecewiseColorLegendClasses`. Kept for backwards compatibility with
+// users targeting the historically-incorrect prefix.
+const LEGACY_PREFIX = 'MuiPiecewiseColorLegendClasses';
+
+// Used by `useUtilityClasses` to also emit the legacy prefix in the rendered className.
 function getLegendUtilityClass(slot: string) {
-  return generateUtilityClass('MuiPiecewiseColorLegendClasses', slot);
+  return `${generateUtilityClass(CORRECT_PREFIX, slot)} ${generateUtilityClass(LEGACY_PREFIX, slot)}`;
 }
 
 export const useUtilityClasses = (props: PiecewiseColorLegendProps & ChartsLegendSlotExtension) => {
@@ -56,7 +62,7 @@ export const useUtilityClasses = (props: PiecewiseColorLegendProps & ChartsLegen
 };
 
 export const piecewiseColorLegendClasses: PiecewiseColorLegendClasses = generateUtilityClasses(
-  'MuiPiecewiseColorLegendClasses',
+  CORRECT_PREFIX,
   [
     'root',
     'minLabel',

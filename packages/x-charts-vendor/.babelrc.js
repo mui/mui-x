@@ -7,7 +7,6 @@
  */
 const path = require('path');
 const fs = require('fs');
-const { execSync } = require('child_process');
 
 const packageJsonPath = path.resolve('./package.json');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
@@ -18,13 +17,15 @@ if (!babelRuntimeVersion) {
     'package.json needs to have a dependency on `@babel/runtime` when building with `@babel/plugin-transform-runtime`.',
   );
 } else if (babelRuntimeVersion === 'catalog:') {
-  const listedBabelRuntime = execSync('pnpm list "@babel/runtime" --json');
-  const jsonListedDependencies = JSON.parse(listedBabelRuntime);
-  babelRuntimeVersion = jsonListedDependencies[0].dependencies['@babel/runtime'].version;
+  const runtimePackageJsonPath = require.resolve('@babel/runtime/package.json');
+  babelRuntimeVersion = JSON.parse(
+    fs.readFileSync(runtimePackageJsonPath, { encoding: 'utf8' }),
+  ).version;
 }
 
 module.exports = function getBabelConfig(api) {
-  const useESModules = api.env(['stable', 'rollup']);
+  // The config no longer varies by env, so it can be cached for the whole run.
+  api.cache(true);
 
   return {
     only: [/node_modules\/(d3-.*|internmap|flatqueue)\/.*\.js/],
@@ -81,9 +82,8 @@ module.exports = function getBabelConfig(api) {
       [
         '@babel/plugin-transform-runtime',
         {
-          useESModules,
-          // any package needs to declare 7.25.0 as a runtime dependency. default is ^7.0.0
-          version: babelRuntimeVersion || '^7.25.0',
+          // Let the plugin use all the helpers available in the installed runtime version.
+          version: babelRuntimeVersion,
         },
       ],
     ],

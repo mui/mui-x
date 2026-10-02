@@ -8,13 +8,13 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless composer
 
-<p class="description">Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.</p>
+<p class="description">Compose chat messages from headless primitives that handle submission, IME-safe Enter, attachments, and helper text.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 {{"demo": "../examples/composer-with-attachments/ComposerWithAttachments.js", "hideToolbar": true}}
 
-## Primitive set
+## Composer primitives
 
 The composer surface is built from:
 
@@ -25,7 +25,7 @@ The composer surface is built from:
 - `Composer.HelperText`
 - `Composer.SendButton`
 
-## Canonical composition
+## Composing the primitives
 
 ```tsx
 import { Composer } from '@mui/x-chat/headless';
@@ -44,9 +44,9 @@ function ThreadComposer() {
 }
 ```
 
-This pattern gives you a working structural composer while leaving every visual decision in user land.
+This pattern gives you a working composer skeleton while leaving every visual decision to you.
 
-## `Composer.Root`
+## Wrapping the composer form
 
 `Composer.Root` is a structural form wrapper around the headless composer state.
 
@@ -56,11 +56,11 @@ It owns:
 - composer context for the child primitives
 - owner state such as `hasValue`, `isSubmitting`, `isStreaming`, and `attachmentCount`
 
-That makes it the place to style global draft states such as empty, busy, or attachment-heavy composers.
+Use it to style global draft states such as empty, busy, or attachment-heavy composers.
 
-## `Composer.TextArea`
+## Rendering the text input
 
-`Composer.TextArea` is a textarea-based primitive that already handles the runtime-specific behaviors that usually make chat inputs fiddly to implement.
+`Composer.TextArea` handles the runtime behaviors that make chat inputs hard to implement from scratch.
 
 It supports:
 
@@ -71,7 +71,7 @@ It supports:
 - composition tracking for IME input
 - focus restoration when the active conversation changes and the previous input unmounts
 
-### IME-safe Enter behavior
+### Handling IME-safe Enter
 
 The input only submits when all of these are true:
 
@@ -80,17 +80,17 @@ The input only submits when all of these are true:
 - the native event is not composing
 - no earlier `onKeyDown` handler prevented the default behavior
 
-That means East Asian IME flows stay intact without requiring extra app-level bookkeeping.
+East Asian IME flows stay intact without extra app-level bookkeeping.
 
-### Input example
+### Configuring the text input
 
 ```tsx
 <Composer.TextArea aria-label="Message" minRows={1} placeholder="Reply in thread" />
 ```
 
-If you replace the root slot, preserve the textarea-like behavior unless you are intentionally building a different draft surface.
+When replacing the root slot, keep the textarea-like behavior unless you intend to build a different draft surface.
 
-## `Composer.AttachButton`
+## Attaching files
 
 `Composer.AttachButton` pairs a visible trigger with a hidden file input.
 
@@ -103,7 +103,7 @@ By default it:
 
 The primitive exposes both `root` and `input` slots, which is useful when you want a custom trigger element or need to style the hidden input for a testing harness.
 
-### Attachment example
+### Configuring the attach button
 
 ```tsx
 <Composer.AttachButton
@@ -116,7 +116,7 @@ The primitive exposes both `root` and `input` slots, which is useful when you wa
 />
 ```
 
-## `Composer.HelperText`
+## Surfacing helper text and errors
 
 `Composer.HelperText` is the default place for draft-level status and error messaging.
 
@@ -135,9 +135,9 @@ That makes it a good structural slot for validation copy, transport errors, and 
 
 If you omit children, the component falls back to the active runtime error text and returns `null` when there is nothing to show.
 
-## `Composer.SendButton`
+## Submitting the draft
 
-`Composer.SendButton` is a submit button that understands composer state.
+`Composer.SendButton` is a submit button wired to composer state.
 
 It disables itself when:
 
@@ -145,7 +145,7 @@ It disables itself when:
 - a stream is already active
 - the button is disabled externally
 
-The default button type is `submit`, so it works naturally inside `Composer.Root`.
+The default button type is `submit`, so it works inside `Composer.Root` without extra wiring.
 
 ## Slots and owner state
 
@@ -165,9 +165,9 @@ Use these values for styling patterns such as:
 
 ## See also
 
-- Continue with [Indicators](/x/react-chat/headless/indicators/) to add typing, unread, and scroll affordances around the composer.
-- Continue with [Customization](/x/react-chat/headless/customization/) for slot and owner-state patterns across the full headless surface.
-- Continue with [Composer with attachments](/x/react-chat/headless/examples/composer-with-attachments/) for the demo version of this page.
+- See [Indicators](/x/react-chat/headless/indicators/) for typing, unread, and scroll affordances around the composer.
+- See [Customization](/x/react-chat/headless/customization/) for slot and owner-state patterns across the headless surface.
+- See [Composer with attachments](/x/react-chat/headless/examples/composer-with-attachments/) for the runnable demo.
 
 ## API
 

@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector } from '@base-ui/utils/store';
 import type { ChartsCartesianAxisProps, AxisId, ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
@@ -6,7 +6,7 @@ import {
 } from '../useChartInteraction/useChartInteraction.selectors';
 import { getAxisIndex, getAxisValue } from './getAxisValue';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
-import { type ComputeResult } from './computeAxisValue';
+import type { ComputeResult } from './computeAxisValue';
 
 /**
  * Get interaction indexes

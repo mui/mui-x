@@ -1,21 +1,14 @@
 import {
-  type AxisId,
-  type SeriesId,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  type SeriesProcessorResult,
   useStore,
+  processBarDataForPlot,
 } from '@mui/x-charts/internals';
-import {
-  type ChartDrawingArea,
-  useBarSeriesContext,
-  useChartId,
-  useXAxes,
-  useYAxes,
-} from '@mui/x-charts/hooks';
+import type { AxisId, SeriesId, SeriesProcessorResult } from '@mui/x-charts/internals';
+import { useBarSeriesContext, useChartId, useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
-import { processBarDataForPlot } from '@mui/x-charts/internals';
-import { type PreviewPlotProps } from './PreviewPlot.types';
+import type { PreviewPlotProps } from './PreviewPlot.types';
 
 interface BarPreviewPlotProps extends PreviewPlotProps {
   x: number;

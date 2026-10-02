@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { useFirstRender } from '../../utils/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import type { GridStrategyProcessorName, GridStrategyProcessor } from './gridStrategyProcessingApi';
 
@@ -15,10 +15,16 @@ export const useGridRegisterStrategyProcessor = <
   processor: GridStrategyProcessor<G>,
 ) => {
   const registerPreProcessor = React.useCallback(() => {
-    apiRef.current.registerStrategyProcessor(strategyName, group, processor);
+    // NOTE: the unregister fn is intentionally discarded. Unlike pipe processors
+    // (which are additive), a strategy processor is required for as long as its
+    // strategy is active — `applyStrategyProcessor` throws if the active strategy's
+    // processor is missing — so it must outlive the registering component. The cache
+    // keeps a single entry per (processor, strategy) and is reclaimed with the grid
+    // api, so nothing leaks; `void` documents the deliberate discard.
+    void apiRef.current.registerStrategyProcessor(strategyName, group, processor);
   }, [apiRef, processor, group, strategyName]);
 
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     registerPreProcessor();
   });
 

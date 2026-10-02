@@ -5,8 +5,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DesktopTimePicker } from '../DesktopTimePicker';
-import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
-import { TimePickerProps } from './TimePicker.types';
+import type { MobileTimePickerProps } from '../MobileTimePicker';
+import { MobileTimePicker } from '../MobileTimePicker';
+import type { TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type TimePickerComponent = ((
@@ -41,7 +42,7 @@ const TimePicker = React.forwardRef(function TimePicker(
   return <MobileTimePicker ref={ref} {...(other as MobileTimePickerProps)} />;
 }) as TimePickerComponent;
 
-TimePicker.propTypes = {
+TimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -168,6 +169,10 @@ TimePicker.propTypes = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

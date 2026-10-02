@@ -1,4 +1,5 @@
 import type { MakeOptional } from '@mui/x-internals/types';
+import { describe, it, expect } from 'vitest';
 import {
   isSeriesHighlighted,
   isSeriesFaded,

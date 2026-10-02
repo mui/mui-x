@@ -52,7 +52,7 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
   },
 );
 
-AnimatedLine.propTypes = {
+AnimatedLine.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

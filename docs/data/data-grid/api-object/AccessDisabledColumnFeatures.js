@@ -7,6 +7,7 @@ const columns = [
   {
     field: 'firstName',
     headerName: 'First name',
+    rowHeader: true,
     width: 150,
     editable: true,
     filterable: false,
@@ -15,6 +16,7 @@ const columns = [
   {
     field: 'lastName',
     headerName: 'Last name',
+    rowHeader: true,
     width: 150,
     editable: true,
   },

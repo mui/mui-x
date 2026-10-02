@@ -1,5 +1,6 @@
 import semver from 'semver';
 import { isJSDOM } from 'test/utils/skipIf';
+import { it, expect } from 'vitest';
 
 type PackageJson = {
   name: string;

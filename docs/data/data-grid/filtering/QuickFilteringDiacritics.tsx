@@ -13,7 +13,7 @@ const rows = [
   { id: 0, string: 'Café', date: new Date(2023, 1, 1), singleSelect: 'Jalapeño' },
 ];
 const columns: GridColDef[] = [
-  { field: 'string', width: 100 },
+  { field: 'string', width: 100, rowHeader: true },
   {
     field: 'date',
     type: 'date',

@@ -1,16 +1,17 @@
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  GRID_ROOT_GROUP_ID,
-  gridClasses,
-  type GridRowId,
-  type GridTreeNode,
-  type GridGroupNode,
-  type GridRowTreeConfig,
-  type GridKeyValue,
-  type GridValidRowModel,
-  type GridUpdateRowParams,
+import { GRID_ROOT_GROUP_ID, gridClasses } from '@mui/x-data-grid';
+import type {
+  GridRowId,
+  GridTreeNode,
+  GridGroupNode,
+  GridRowTreeConfig,
+  GridKeyValue,
+  GridValidRowModel,
+  GridRowModelUpdate,
+  GridRowModelReplace,
+  GridUpdateRowParams,
 } from '@mui/x-data-grid';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import type { ReorderOperationType } from './types';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -235,14 +236,13 @@ export function handleProcessRowUpdateError(
 ): void {
   if (onProcessRowUpdateError) {
     onProcessRowUpdateError(error);
-  } else {
-    warnOnce(
+  } else if (process.env.NODE_ENV !== 'production') {
+    errorOnce(
       [
         'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
         'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
         'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
-      ],
-      'error',
+      ].join('\n'),
     );
   }
 }
@@ -280,14 +280,15 @@ export class BatchRowUpdater {
 
   private failedRowIds = new Set<GridRowId>();
 
-  private pendingRowUpdates: GridValidRowModel[] = [];
+  // `processRowUpdate()` can return a `{ _action: 'replace', row }` update, which is passed
+  // through to `updateRows()` untouched.
+  private pendingRowUpdates: Array<GridRowModelUpdate | GridRowModelReplace> = [];
 
   constructor(
     private apiRef: RefObject<GridPrivateApiPro>,
     private processRowUpdate: DataGridProProcessedProps['processRowUpdate'] | undefined,
     private onProcessRowUpdateError:
-      | DataGridProProcessedProps['onProcessRowUpdateError']
-      | undefined,
+      DataGridProProcessedProps['onProcessRowUpdateError'] | undefined,
   ) {}
 
   queueUpdate(
@@ -302,7 +303,7 @@ export class BatchRowUpdater {
   async executeAll(): Promise<{
     successful: GridRowId[];
     failed: GridRowId[];
-    updates: GridValidRowModel[];
+    updates: Array<GridRowModelUpdate | GridRowModelReplace>;
   }> {
     const rowIds = Array.from(this.rowsToUpdate.keys());
 

@@ -1,6 +1,7 @@
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { describe } from 'vitest';
 
 describe('<CalendarGrid.TimeScrollableContent />', () => {
   const { render } = createSchedulerRenderer();

@@ -6,23 +6,77 @@ title: Ask Your Table - AI Assistant
 
 <p class="description">Translate natural language into Data Grid views.</p>
 
-:::info
-The AI Assistant requires a prompt processing backend to interpret natural language queries.
-You can [build your own service](#with-a-custom-service) using any AI provider—no additional add-on is required beyond the Premium license.
-Alternatively, MUI offers a [hosted processing service](#with-muis-service) as a paid add-on.
-Visit the [MUI Console](https://console.mui.com) to grab a free API key or manage your plan.
-:::
-
 The AI Assistant feature lets users interact with the Data Grid component using natural language.
 Type a prompt like "sort by name", "show amounts larger than 1000", or even make more complex queries like "which customers brought the most revenue the past year" in the prompt input field and the Data Grid will update accordingly.
 In [supported browsers](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#browser_compatibility), users can also prompt the assistant using their voice.
 
-To enable this feature on the Data Grid, pass the `aiAssistant` prop and use the `GridAiAssistantPanel` component for `aiAssistantPanel` slot:
+:::info
+AI Assistant demos on this page use a limited version of MUI's hosted processing service.
+:::
+
+{{"demo": "AssistantWithExamples.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Get started
+
+The AI Assistant requires a prompt processing backend to interpret natural language queries.
+The fastest way to start is with MUI's hosted processing service.
+Premium license holders get starter credits to try the AI Assistant at no additional cost beyond their license.
+Usage beyond the included credits may require a paid plan, managed from the Console.
+
+[Get a free API key in MUI Console](https://console.mui.com/lp/ai-datagrid?utm_source=docs&utm_medium=ai-assistant&utm_content=get-free-api-key)
+
+A small server-side proxy is required to keep your API key private.
+The browser sends prompts to your endpoint, and your endpoint forwards them to MUI's service with the API key.
+
+To get started:
+
+1. Store the API key in a server-side environment variable, for example `MUI_DATAGRID_API_KEY`.
+2. Create a proxy endpoint in your app.
+3. Pass the proxy endpoint to `unstable_gridDefaultPromptResolver()` from `onPrompt()`.
+
+### Minimal setup
+
+Create a server route that forwards prompts to MUI's service with your API key:
+
+```ts
+// app/api/prompt/route.ts
+import { type NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  const body = await request.text();
+  const response = await fetch('https://backend.mui.com/api/v1/datagrid/prompt', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': process.env.MUI_DATAGRID_API_KEY!,
+    },
+    body,
+  });
+  const data = await response.json();
+  return NextResponse.json(data, { status: response.status });
+}
+```
+
+To enable this feature on the Data Grid, pass the `aiAssistant` prop, use the `GridAiAssistantPanel` component for the `aiAssistantPanel` slot, and call your proxy from `onPrompt()`.
+The `/api/prompt` path below should point to your proxy endpoint:
 
 ```tsx
-import { DataGridPremium, GridAiAssistantPanel } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridAiAssistantPanel,
+  unstable_gridDefaultPromptResolver as promptResolver,
+} from '@mui/x-data-grid-premium';
+
+function processPrompt(prompt: string, context: string, conversationId?: string) {
+  return promptResolver('/api/prompt', prompt, context, conversationId);
+}
+
 // ...
-<DataGridPremium aiAssistant slots={{ aiAssistantPanel: GridAiAssistantPanel }} />;
+<DataGridPremium
+  aiAssistant
+  onPrompt={processPrompt}
+  slots={{ aiAssistantPanel: GridAiAssistantPanel }}
+/>;
 ```
 
 ## Improving accuracy with example values
@@ -33,12 +87,7 @@ To increase the accuracy of the language processing, provide example values for 
 
 Use the `examples` property on items of the `columns` array to provide custom examples as context for prompt processing.
 The `examples` property should contain an array of possible values for each respective column.
-
-:::info
-AI Assistant demos use a limited version of [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
-:::
-
-{{"demo": "AssistantWithExamples.js", "bg": "inline"}}
+The demo at the top of the page uses this approach.
 
 :::success
 Provide examples for the [derived columns](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode) using the `getPivotDerivedColumns` prop.
@@ -67,161 +116,35 @@ AI Assistant analyzes the query to determine if it is helpful to visualize the r
 
 {{"demo": "AssistantWithCharts.js", "bg": "inline"}}
 
-## Processing service integration
+## Build your own service
 
-Natural language prompts must be processed by a service to understand what kinds of state changes must be applied to the Data Grid to match the user's request.
-You can use MUI's processing service or build your own.
+You can replace MUI's hosted processing service with your own prompt processing service.
+This gives you full control over the AI provider, prompts, logging, routing, and data handling.
 
-### With MUI's service
+Building your own service means the prompt processing no longer depends on MUI's hosted service or a MUI Console API key.
+You still need Data Grid Premium to use the AI Assistant UI and APIs in the grid.
 
-The Data Grid provides all the necessary elements for integration with MUI's service.
-
-1. Get an API key from the [MUI Console](https://console.mui.com)—a free tier is available, and you can manage your plan there as well.
-
-   :::warning
-   Do not expose the API key to the public.
-   Instead, keep it private and use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and forwards the request to MUI's service.
-
-   This is an example of a Next.js App Router route handler (`app/api/prompt/route.ts`) for the prompt requests.
-
-   ```ts
-   import { type NextRequest, NextResponse } from 'next/server';
-
-   export async function POST(request: NextRequest) {
-     const body = await request.text();
-     const response = await fetch('https://backend.mui.com/api/v1/datagrid/prompt', {
-       method: 'POST',
-       headers: {
-         'content-type': 'application/json',
-         'x-api-key': process.env.MUI_DATAGRID_API_KEY!,
-       },
-       body,
-     });
-     const data = await response.json();
-     return NextResponse.json(data, { status: response.status });
-   }
-   ```
-
-   This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
-
-   ```ts
-   fastify.register(proxy, {
-     upstream: 'https://backend.mui.com',
-     prefix: '/api/my-custom-path',
-     rewritePrefix: '/api/v1/datagrid/prompt',
-     replyOptions: {
-       rewriteRequestHeaders: (_, headers) => ({
-         ...headers,
-         'x-api-key': process.env.MUI_DATAGRID_API_KEY,
-       }),
-     },
-   });
-   ```
-
-   :::
-
-2. Enable the AI Assistant feature by adding the `aiAssistant` prop.
-   This adds a new button to the Toolbar that controls the Assistant Panel's open state.
-3. Provide `<GridAiAssistantPanel />` as a component for the `aiAssistantPanel` slot.
-   Slot is by default `null` to prevent bundling of the panel and its child components in the projects that are not using the AI Assistant feature.
-4. Provide the `onPrompt()` callback to pass the user's prompts to the service.
-   The service's response is used internally by the Data Grid to make the necessary state updates.
-
-   :::success
-   You can implement `onPrompt()` with `unstable_gridDefaultPromptResolver()`.
-   This adds the necessary headers and stringifies the body in the correct format for you.
-   The `unstable_` prefix means this API may change in a minor release as it matures—it is suitable for production use.
-
-   It also makes it possible to provide additional context for better processing results, as shown below:
-
-   ```ts
-   const PROMPT_RESOLVER_PROXY_BASE_URL =
-     process.env.NODE_ENV === 'development'
-       ? 'http://localhost:3000'
-       : 'https://api.my-proxy.com';
-
-   function processPrompt(query: string, context: string, conversationId?: string) {
-     const additionalContext = `The rows represent: List of employees with their company, position and start date`;
-
-     return unstable_gridDefaultPromptResolver(
-       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
-       query,
-       context,
-       conversationId,
-       { additionalContext },
-     );
-   }
-   ```
-
-   By default, MUI's prompt resolver service logs query text to analyze errors and improve the service—your grid's row data is never stored.
-   Pass `privateMode: true` to limit logging to billing data only, with no query text stored.
-   This is recommended for production deployments handling sensitive data:
-
-   ```ts
-   function processPrompt(query: string, context: string, conversationId?: string) {
-     return unstable_gridDefaultPromptResolver(
-       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
-       query,
-       context,
-       conversationId,
-       { privateMode: true },
-     );
-   }
-   ```
-
-   :::
-
-5. Provide data examples in either of the following ways:
-   - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI Assistant.
-   - Provide access to the row data with `allowAiAssistantDataSampling` prop – since this uses real data, it may lead to better processing results.
-
-6. Optionally, provide `referenceId` in the metadata to track spending and set limits for each entity sharing your API key.
-   The MUI Service supports `metadata` property through which you can send the reference that will be stored with the request.
-   Later, use that reference in the request history analysis.
-
-   ::warning
-   The `metadata` object would store only `referenceId` property. If you are interested in storing more data, please [contact our support team](mailto:support@mui.com).
-   ::
-
-   ```ts
-   function processPrompt(query: string, context: string, conversationId?: string) {
-     return unstable_gridDefaultPromptResolver(
-       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
-       query,
-       context,
-       conversationId,
-       {
-         metadata: {
-           referenceId: 'example-user-reference',
-         },
-       },
-     );
-   }
-   ```
-
-### With a custom service
-
-The Data Grid exposes elements of the AI Assistant feature so you can build your own prompt processing service:
+The Data Grid exposes elements of the AI Assistant feature to integrate with your service:
 
 - The [`aiAssistant` API](/x/api/data-grid/grid-api/#grid-api-prop-aiAssistant) for processing the prompt results and updating state
-- The `unstable_gridDefaultPromptResolver()` method for passing the prompt and context with the necessary headers to the processing service
+- The `unstable_gridDefaultPromptResolver()` function for passing the prompt and context to the processing service
 
 Integrate these elements with your custom components and methods to suit your specific use case.
 
 You can use a fully custom solution and apply the processing result using other Grid APIs such as [`setFilterModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setFilterModel) or [`setSortModel()`](/x/api/data-grid/grid-api/#grid-api-prop-setSortModel) without the need to structure it as a `PromptResponse`.
 
-To replace `unstable_gridDefaultPromptResolver()` with your own solution, send a POST request to MUI's API.
-
-The body of the request requires `query` and `context` parameters.
+To use `unstable_gridDefaultPromptResolver()` with your own service, expose an endpoint that accepts the same request body and returns the response shape expected by the resolver.
+The request body includes `query` and `context` parameters.
 `conversationId` and `options` are optional.
 To keep the previous messages in the context you should pass the `conversationId` from the previous response.
 
-The API response type is `Result<PromptResponse>`.
+The response type should be `Result<PromptResponse>`.
 
 ```ts
 type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 ```
 
+If you do not want to use `unstable_gridDefaultPromptResolver()`, implement `onPrompt()` directly.
 Your resolver should return `Promise<PromptResponse>`.
 
 ## Error handling

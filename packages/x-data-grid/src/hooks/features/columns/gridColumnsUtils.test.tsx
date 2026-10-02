@@ -1,4 +1,5 @@
 import type * as React from 'react';
+import { describe, it, expect } from 'vitest';
 import { computeFlexColumnsWidth, createColumnsState } from './gridColumnsUtils';
 import type { GridColDef } from '../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';

@@ -1,7 +1,8 @@
 'use client';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { path } from '@mui/x-charts-vendor/d3-path';
-import { sankey, type SankeyGraph } from './d3Sankey';
+import { sankey } from './d3Sankey';
+import type { SankeyGraph } from './d3Sankey';
 import type {
   SankeyLayout,
   SankeyLayoutLink,

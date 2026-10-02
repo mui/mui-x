@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import { useChatRuntimeContext } from '../internals/useChatRuntimeContext';
 import { chatSelectors } from '../selectors';
 import type { ChatAddToolApproveResponseInput } from '../types';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
-import type { ChatInternalState } from '../types/chat-state';
+import type { ChatHistoryStatus, ChatInternalState } from '../types/chat-state';
 import { useChatStore } from './useChatStore';
 import type { UseChatSendMessageInput } from '../types/chat-callbacks';
 
@@ -19,6 +19,10 @@ export interface UseChatValue<Cursor = string> {
   activeConversationId: string | undefined;
   isStreaming: boolean;
   hasMoreHistory: boolean;
+  /** Whether a history fetch (initial page or older messages) is currently in flight for the active conversation. */
+  isLoadingHistory: boolean;
+  /** Lifecycle of the initial history page for the active conversation. Distinguishes "not loaded yet" from "loaded and empty". */
+  historyStatus: ChatHistoryStatus;
   /** Unified error from any operation (send, load history, realtime). */
   error: ChatError | null;
   sendMessage(input: UseChatSendMessageInput): Promise<void>;
@@ -26,6 +30,14 @@ export interface UseChatValue<Cursor = string> {
   loadMoreHistory(): Promise<void>;
   setActiveConversation(id: string | undefined): Promise<void>;
   retry(messageId: string): Promise<void>;
+  /**
+   * Regenerate the assistant reply for the message identified by `messageId`.
+   * Accepts an assistant message id (or the user message that prompted it):
+   * removes the existing assistant run and requests a fresh reply through
+   * `adapter.regenerate` (falling back to re-sending the anchoring user message
+   * when the adapter does not implement it).
+   */
+  regenerate(messageId: string): Promise<void>;
   setError(error: ChatError | null): void;
   addToolApprovalResponse(input: ChatAddToolApproveResponseInput): Promise<void>;
   /** Reload the list of conversations. */
@@ -58,6 +70,12 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
   const selectHasMoreHistory = chatSelectors.hasMoreHistory as (
     state: ChatInternalState<Cursor>,
   ) => ReturnType<typeof chatSelectors.hasMoreHistory>;
+  const selectIsLoadingHistory = chatSelectors.isLoadingHistory as (
+    state: ChatInternalState<Cursor>,
+  ) => ReturnType<typeof chatSelectors.isLoadingHistory>;
+  const selectHistoryStatus = chatSelectors.historyStatus as (
+    state: ChatInternalState<Cursor>,
+  ) => ReturnType<typeof chatSelectors.historyStatus>;
   const selectError = chatSelectors.error as (
     state: ChatInternalState<Cursor>,
   ) => ReturnType<typeof chatSelectors.error>;
@@ -66,6 +84,8 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
   const activeConversationId = useStore(store, selectActiveConversationId);
   const isStreaming = useStore(store, selectIsStreaming);
   const hasMoreHistory = useStore(store, selectHasMoreHistory);
+  const isLoadingHistory = useStore(store, selectIsLoadingHistory);
+  const historyStatus = useStore(store, selectHistoryStatus);
   const error = useStore(store, selectError);
 
   return React.useMemo(
@@ -75,12 +95,15 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
       activeConversationId,
       isStreaming,
       hasMoreHistory,
+      isLoadingHistory,
+      historyStatus,
       error,
       sendMessage: actions.sendMessage,
       stopStreaming: actions.stopStreaming,
       loadMoreHistory: actions.loadMoreHistory,
       setActiveConversation: actions.setActiveConversation,
       retry: actions.retry,
+      regenerate: actions.regenerate,
       setError: actions.setError,
       addToolApprovalResponse: actions.addToolApprovalResponse,
       reloadConversations:
@@ -114,6 +137,7 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
     [
       actions.addToolApprovalResponse,
       actions.loadMoreHistory,
+      actions.regenerate,
       actions.retry,
       actions.sendMessage,
       actions.setActiveConversation,
@@ -123,6 +147,8 @@ export function useChat<Cursor = string>(): UseChatValue<Cursor> {
       conversations,
       error,
       hasMoreHistory,
+      historyStatus,
+      isLoadingHistory,
       isStreaming,
       messages,
     ],

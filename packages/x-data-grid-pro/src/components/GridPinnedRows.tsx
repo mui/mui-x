@@ -7,11 +7,8 @@ import {
   gridRowTreeSelector,
   useGridSelector,
 } from '@mui/x-data-grid';
-import {
-  type GridPinnedRowsProps,
-  gridPinnedRowsSelector,
-  useGridPrivateApiContext,
-} from '@mui/x-data-grid/internals';
+import { gridPinnedRowsSelector, useGridPrivateApiContext } from '@mui/x-data-grid/internals';
+import type { GridPinnedRowsProps } from '@mui/x-data-grid/internals';
 
 const useUtilityClasses = () => {
   const slots = {
@@ -52,7 +49,7 @@ export function GridPinnedRows({ position }: GridPinnedRowsProps) {
   );
 
   return (
-    <div className={clsx(classes.root, gridClasses[`pinnedRows--${position}`])} role="presentation">
+    <div className={clsx(classes.root, gridClasses[`pinnedRows--${position}`])} role="none">
       {pinnedRows}
     </div>
   );

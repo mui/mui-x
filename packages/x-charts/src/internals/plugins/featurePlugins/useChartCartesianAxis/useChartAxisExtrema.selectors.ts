@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -6,10 +6,8 @@ import {
 import type { AxisId } from '../../../../models/axis';
 import { isBandScaleConfig, isPointScaleConfig } from '../../../../models/axis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import {
-  selectorChartSeriesConfig,
-  type ChartSeriesConfig,
-} from '../../corePlugins/useChartSeriesConfig';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import type { ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { getAxisExtrema } from './getAxisExtrema';
 import type { CartesianChartSeriesType } from '../../../../models/seriesType/config';
 

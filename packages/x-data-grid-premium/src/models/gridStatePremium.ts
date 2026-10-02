@@ -26,6 +26,7 @@ import type {
   GridChartsIntegrationInitialState,
 } from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 import type { GridHistoryState } from '../hooks/features/history/gridHistoryInterfaces';
+import type { GridFormulaState } from '../hooks/features/formula/gridFormulaInterfaces';
 
 /**
  * The state of Data Grid Premium.
@@ -39,6 +40,7 @@ export interface GridStatePremium extends GridStatePro {
   sidebar: GridSidebarState;
   chartsIntegration: GridChartsIntegrationState;
   history: GridHistoryState;
+  formula: GridFormulaState;
 }
 
 /**

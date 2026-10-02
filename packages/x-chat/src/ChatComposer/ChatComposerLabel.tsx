@@ -2,10 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, Theme } from '@mui/system';
-import { ComposerLabel, type ComposerLabelProps } from '@mui/x-chat-headless';
+import type { SxProps, Theme } from '@mui/system';
+import { ComposerLabel } from '@mui/x-chat-headless';
+import type { ComposerLabelProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatComposerUtilityClasses } from './chatComposerClasses';
+import type { ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerLabel');
 
@@ -39,23 +42,25 @@ const ChatComposerLabel = React.forwardRef<HTMLLabelElement, ChatComposerLabelPr
         ref={ref}
         {...other}
         slots={{
-          label: slots?.label ?? ChatComposerLabelStyled,
           ...slots,
+          label: slots?.label ?? ChatComposerLabelStyled,
         }}
         slotProps={{
           ...slotProps,
-          label: {
-            className: clsx(classes.label, className),
-            sx,
-            ...slotProps?.label,
-          } as any,
+          label: mergeSlotProps(
+            {
+              className: clsx(classes.label, className),
+              sx,
+            },
+            slotProps?.label,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatComposerLabel.propTypes = {
+ChatComposerLabel.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

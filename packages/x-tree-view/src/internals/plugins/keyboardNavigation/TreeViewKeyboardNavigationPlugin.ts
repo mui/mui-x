@@ -1,8 +1,9 @@
-import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
-import { TreeViewAnyStore, TreeViewItemMeta } from '../../models';
+import type { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
+import type { TreeViewAnyStore, TreeViewItemMeta } from '../../models';
 import { expansionSelectors } from '../expansion';
 import { itemsSelectors } from '../items';
-import { labelSelectors, TreeViewLabelEditingPlugin } from '../labelEditing';
+import type { TreeViewLabelEditingPlugin } from '../labelEditing';
+import { labelSelectors } from '../labelEditing';
 import { selectionSelectors } from '../selection/selectors';
 import {
   getFirstNavigableItem,
@@ -21,9 +22,9 @@ type TreeViewStoreWithLabelEditing = TreeViewAnyStore & {
 type TreeViewLabelMap = { [itemId: string]: string };
 
 export class TreeViewKeyboardNavigationPlugin {
-  private store: TreeViewStoreWithLabelEditing;
+  declare private store: TreeViewStoreWithLabelEditing;
 
-  private labelMap: TreeViewLabelMap;
+  declare private labelMap: TreeViewLabelMap;
 
   private typeaheadQuery = '';
 

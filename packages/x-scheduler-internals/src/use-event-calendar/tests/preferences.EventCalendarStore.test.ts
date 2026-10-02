@@ -1,5 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
-import { spy } from 'sinon';
+import { vi, describe, it, expect } from 'vitest';
 import { EventCalendarStore } from '../EventCalendarStore';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -7,7 +7,7 @@ const DEFAULT_PARAMS = { events: [] };
 describe('Preferences - EventCalendarStore', () => {
   describe('Method: setPreferences', () => {
     it('should update the store preferences and call onPreferencesChange when value changes and is uncontrolled', () => {
-      const onPreferencesChange = spy();
+      const onPreferencesChange = vi.fn();
       const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onPreferencesChange }, adapter);
 
       store.setPreferences({ showWeekends: false }, {} as any);
@@ -15,14 +15,14 @@ describe('Preferences - EventCalendarStore', () => {
       expect(store.state.preferences).to.deep.equal({
         showWeekends: false,
       });
-      expect(onPreferencesChange.calledOnce).to.equal(true);
-      expect(onPreferencesChange.lastCall.firstArg).to.deep.equal({
+      expect(onPreferencesChange.mock.calls.length).to.equal(1);
+      expect(onPreferencesChange.mock.lastCall?.[0]).to.deep.equal({
         showWeekends: false,
       });
     });
 
     it('should NOT mutate store but calls onPreferencesChange when is controlled', () => {
-      const onPreferencesChange = spy();
+      const onPreferencesChange = vi.fn();
       const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
@@ -37,10 +37,22 @@ describe('Preferences - EventCalendarStore', () => {
       expect(store.state.preferences).to.deep.equal({
         showWeekends: false,
       });
-      expect(onPreferencesChange.calledOnce).to.equal(true);
-      expect(onPreferencesChange.lastCall.firstArg).to.deep.equal({
+      expect(onPreferencesChange.mock.calls.length).to.equal(1);
+      expect(onPreferencesChange.mock.lastCall?.[0]).to.deep.equal({
         showWeekends: true,
       });
+    });
+
+    it('should warn in dev when controlled without an onPreferencesChange handler', () => {
+      const store = new EventCalendarStore(
+        { ...DEFAULT_PARAMS, preferences: { showWeekends: true } },
+        adapter,
+      );
+
+      expect(() => store.setPreferences({ showWeekends: false }, {} as any)).toWarnDev(
+        'MUI X Scheduler: EventCalendar is controlled (received a `preferences` prop) but `onPreferencesChange` is not provided',
+      );
+      expect(store.state.preferences).to.deep.equal({ showWeekends: true });
     });
 
     it('should NOT mutate store when onPreferencesChange cancels the change', () => {

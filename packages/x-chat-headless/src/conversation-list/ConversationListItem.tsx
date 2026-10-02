@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import type { ChatConversation } from '../types/chat-entities';
 import { getDataAttributes } from '../internals/getDataAttributes';
-import { type ConversationListItemOwnerState } from './conversationList.types';
+import type { ConversationListItemOwnerState } from './conversationList.types';
 
 export interface ConversationListItemSlots {
   root: React.ElementType;
@@ -63,6 +63,10 @@ export const ConversationListItem = React.forwardRef(function ConversationListIt
     ownerState,
     additionalProps: {
       ref,
+      // Expose the conversation id as a stable hook for tests, automation,
+      // and consumer styling without forcing them to bind a ref (Playwright
+      // Bug D).
+      'data-conversation-id': conversation.id,
       ...getDataAttributes({
         selected: ownerState.selected,
         unread: ownerState.unread,

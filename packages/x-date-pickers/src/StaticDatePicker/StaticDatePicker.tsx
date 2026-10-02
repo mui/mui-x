@@ -1,13 +1,21 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { StaticDatePickerProps } from './StaticDatePicker.types';
-import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import type { StaticDatePickerProps } from './StaticDatePicker.types';
+import type { DatePickerViewRenderers } from '../DatePicker/shared';
+import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
+import type { DateView } from '../models';
 import { validateDate } from '../validation';
-import { DateView } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+
+// Static pickers render no field, so they skip the field-only manager members.
+const manager = {
+  valueType: 'date' as const,
+  validator: validateDate,
+  internal_valueManager: singleItemValueManager,
+};
 
 type StaticDatePickerComponent = ((
   props: StaticDatePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -59,16 +67,14 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker(
   const { renderPicker } = useStaticPicker<DateView, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date',
-    validator: validateDate,
+    manager,
     steps: null,
   });
 
   return renderPicker();
 }) as StaticDatePickerComponent;
 
-StaticDatePicker.propTypes = {
+StaticDatePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -166,6 +172,10 @@ StaticDatePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
+  /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
@@ -179,7 +189,8 @@ StaticDatePicker.propTypes = {
   /**
    * Callback fired when component requests to be closed.
    * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
-   * @deprecated Please avoid using as it will be removed in next major version.
+   * @deprecated Use `onCancel` or `onAccept` instead, depending on the action you want to react to.
+   * This callback will be removed in the next major version.
    */
   onClose: PropTypes.func,
   /**
@@ -237,7 +248,7 @@ StaticDatePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span>...</span>
+   * @default () => <span>…</span>
    */
   renderLoading: PropTypes.func,
   /**

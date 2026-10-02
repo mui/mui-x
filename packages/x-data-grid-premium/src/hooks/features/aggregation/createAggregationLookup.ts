@@ -1,19 +1,23 @@
 import type { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
-  type GridRowId,
-  type GridGroupNode,
-  type GridLeafNode,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
   gridRowsLookupSelector,
-  type GridColumnLookup,
 } from '@mui/x-data-grid-pro';
-import { getVisibleRows, type GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
+import type {
+  GridRowId,
+  GridGroupNode,
+  GridLeafNode,
+  GridColumnLookup,
+} from '@mui/x-data-grid-pro';
+import { getVisibleRows } from '@mui/x-data-grid-pro/internals';
+import type { GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
 import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationLookup,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
@@ -151,15 +155,31 @@ const getGroupAggregatedValueDataSource = (
   apiRef: RefObject<GridPrivateApiPremium>,
   aggregatedFields: string[],
   position: GridAggregationPosition,
+  aggregationRules: GridAggregationRules,
+  columnsLookup: GridColumnLookup,
 ) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
+  const rowLookup = gridRowsLookupSelector(apiRef);
 
   for (let j = 0; j < aggregatedFields.length; j += 1) {
     const aggregatedField = aggregatedFields[j];
+    const value = apiRef.current.resolveGroupAggregation?.(groupId, aggregatedField) ?? '';
+    const aggregationFunction = aggregationRules[aggregatedField]
+      ?.aggregationFunction as GridAggregationFunctionDataSource;
+    const rowForFormatter = rowLookup[groupId] || { id: groupId, [aggregatedField]: value };
+    const formattedValue = aggregationFunction?.valueFormatter
+      ? aggregationFunction.valueFormatter(
+          value as never,
+          rowForFormatter,
+          columnsLookup[aggregatedField],
+          apiRef,
+        )
+      : undefined;
 
     groupAggregationLookup[aggregatedField] = {
       position,
-      value: apiRef.current.resolveGroupAggregation?.(groupId, aggregatedField) ?? '',
+      value,
+      formattedValue,
     };
   }
 
@@ -192,6 +212,8 @@ export const createAggregationLookup = ({
   for (let i = 0; i < aggregatedFields.length; i += 1) {
     const field = aggregatedFields[i];
     const column = columnsLookup[field];
+    // `column` can be `undefined` if the field has no matching column; `getRowValue`
+    // tolerates that and returns `undefined`, which is filtered out when aggregating.
     const valueGetter = (row: any) => apiRef.current.getRowValue(row, column);
     valueGetters[field] = valueGetter;
   }
@@ -225,6 +247,8 @@ export const createAggregationLookup = ({
           apiRef,
           aggregatedFields,
           position,
+          aggregationRules,
+          columnsLookup,
         );
       }
     } else if (groupNode.children.length) {

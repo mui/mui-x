@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'گھنٹے',
@@ -47,7 +47,7 @@ const urPKPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `${timeViews[view]} منتخب کریں ${!formattedTime ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} گھنٹے`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'گھنٹہ' : 'گھنٹے'}`,
   minutesClockNumberText: (minutes) => `${minutes} منٹ`,
   secondsClockNumberText: (seconds) => `${seconds} سیکنڈ`,
 

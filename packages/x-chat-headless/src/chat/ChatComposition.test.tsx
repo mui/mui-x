@@ -15,11 +15,8 @@ import {
   MessageRoot,
 } from '../message';
 import { MessageGroup } from '../message-group';
-import {
-  MessageListDateDivider,
-  MessageListRoot,
-  type MessageListRootProps,
-} from '../message-list';
+import { MessageListDateDivider, MessageListRoot } from '../message-list';
+import type { MessageListRootProps } from '../message-list';
 import {
   ConversationHeader,
   ConversationHeaderInfo,
@@ -117,6 +114,7 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
     getItemKey,
     items,
     onReachTop,
+    onReachBottom,
     renderItem,
     slotProps,
     slots,
@@ -127,6 +125,7 @@ const RootWithAffordance = React.forwardRef(function RootWithAffordance(
   void getItemKey;
   void items;
   void onReachTop;
+  void onReachBottom;
   void renderItem;
   void slotProps;
   void slots;
@@ -290,7 +289,7 @@ describe('ChatComposition', () => {
       render(<ChatCompositionHarness ref={handleRef} />);
 
       const actionButton = screen.getByTestId('message-action-c1-m1');
-      const composerInput = screen.getByTestId('composer-input');
+      const input = screen.getByTestId('composer-input');
 
       actionButton.focus();
       expect(actionButton).toHaveFocus();
@@ -301,7 +300,7 @@ describe('ChatComposition', () => {
 
       await waitFor(() => {
         expect(screen.getByTestId('message-action-c2-m1')).not.to.equal(null);
-        expect(composerInput).toHaveFocus();
+        expect(input).toHaveFocus();
       });
     },
   );
@@ -336,7 +335,7 @@ describe('ChatComposition', () => {
     );
 
     const beforeButton = screen.getByRole('button', { name: 'Before list' });
-    const composerInput = screen.getByTestId('composer-input');
+    const input = screen.getByTestId('composer-input');
 
     beforeButton.focus();
     await view.user.keyboard('{Tab}');
@@ -347,7 +346,7 @@ describe('ChatComposition', () => {
     });
 
     await waitFor(() => {
-      expect(composerInput).toHaveFocus();
+      expect(input).toHaveFocus();
     });
   });
 

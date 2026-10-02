@@ -1,10 +1,12 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { useInteractionItemProps, type SeriesId, consumeSlots } from '@mui/x-charts/internals';
+import { useInteractionItemProps, consumeSlots } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/internals';
 import { useItemHighlightState } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
-import { useUtilityClasses, type FunnelClasses } from './funnelClasses';
+import { useUtilityClasses } from './funnelClasses';
+import type { FunnelClasses } from './funnelClasses';
 
 export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref'> {
   seriesId: SeriesId;

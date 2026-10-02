@@ -16,6 +16,7 @@ export default function HeaderColumnsGrid() {
           {
             field: 'username',
             headerName: 'Username',
+            rowHeader: true,
             description:
               'The identification used by the person with access to the online service.',
           },

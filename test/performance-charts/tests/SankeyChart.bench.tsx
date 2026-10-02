@@ -30,6 +30,5 @@ benchmark('SankeyChart with big data amount', () => (
     }}
     width={500}
     height={300}
-    skipAnimation
   />
 ));

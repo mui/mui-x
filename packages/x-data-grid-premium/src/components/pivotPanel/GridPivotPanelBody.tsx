@@ -175,7 +175,8 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
       if (pivotModelFields.has(field)) {
         return false;
       }
-      if (initialColumns.get(field)?.pivotable === false) {
+      const column = initialColumns.get(field);
+      if (column?.pivotable === false || column?.type === 'multiSelect') {
         return false;
       }
       if (searchValue) {

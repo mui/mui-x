@@ -4,7 +4,7 @@ export default function RowsGridWithGetRowId() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
-        columns={[{ field: 'name' }]}
+        columns={[{ field: 'name', rowHeader: true }]}
         rows={[
           { internalId: 1, name: 'React' },
           { internalId: 2, name: 'MUI' },

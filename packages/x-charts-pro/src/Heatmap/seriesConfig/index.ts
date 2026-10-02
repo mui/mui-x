@@ -1,11 +1,13 @@
-import { cartesianSeriesTypes, type ChartSeriesTypeConfig } from '@mui/x-charts/internals';
+import { cartesianSeriesTypes } from '@mui/x-charts/internals';
+import type { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import { getBaseExtremum } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
-import tooltipItemPositionGetter from './tooltipPosition';
+import { selectorTooltipItemPosition } from './tooltipPosition';
 import getItemAtPosition from './getItemAtPosition';
+import getItemWithData from './getItemWithData';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { createIsFaded, createIsHighlighted } from './highlight';
 import identifierSerializer from './identifierSerializer';
@@ -19,13 +21,14 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   colorProcessor: getColor,
   legendGetter: () => [],
   tooltipGetter,
-  tooltipItemPositionGetter,
+  selectorTooltipItemPosition,
   xExtremumGetter: getBaseExtremum,
   yExtremumGetter: getBaseExtremum,
   getSeriesWithDefaultValues,
   identifierSerializer,
   identifierCleaner,
   getItemAtPosition,
+  getItemWithData,
   keyboardFocusHandler,
   descriptionGetter,
   isHighlightedCreator: createIsHighlighted,

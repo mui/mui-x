@@ -66,9 +66,10 @@ function CustomLayout(props: CustomLayoutProps) {
       ownerState={ownerState}
       sx={{
         overflow: 'auto',
+        gridAutoColumns: isHorizontal ? 'auto auto auto' : undefined,
         [`.${pickersLayoutClasses.shortcuts}`]: isHorizontal
           ? {
-              gridColumn: 2,
+              gridColumn: '2/4',
               gridRow: 1,
               display: 'flex',
               flexGrow: 1,

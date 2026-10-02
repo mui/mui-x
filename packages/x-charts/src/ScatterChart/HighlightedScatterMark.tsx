@@ -36,11 +36,11 @@ export function HighlightedScatterMark({
     return null;
   }
 
-  const { cx, cy, series } = resolved;
+  const { cx, cy, markerSize } = resolved;
 
   // Allow a markerSize margin around the drawing area so the highlight ring stays
   // visible at the edges (e.g. during keyboard navigation) without needing a clip-path.
-  const margin = series.markerSize;
+  const margin = markerSize;
   if (
     cx < drawingArea.left - margin ||
     cx > drawingArea.left + drawingArea.width + margin ||
@@ -58,7 +58,7 @@ export function HighlightedScatterMark({
       strokeWidth={1}
       cx={cx}
       cy={cy}
-      r={series.markerSize}
+      r={markerSize}
       pointerEvents="none"
       {...props}
     />

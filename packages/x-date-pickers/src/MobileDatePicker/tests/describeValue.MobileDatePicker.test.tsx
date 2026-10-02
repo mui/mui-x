@@ -8,7 +8,8 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { describe } from 'vitest';
 
 describe('<MobileDatePicker /> - Describe Value', () => {
   const { render } = createPickerRenderer();

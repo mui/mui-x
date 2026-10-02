@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, type SxProps, type Theme } from '@mui/system';
+import { styled } from '@mui/system';
+import type { SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { vars } from '../../constants/cssVariables';
@@ -44,7 +45,7 @@ function GridPanelHeader(props: React.HTMLAttributes<HTMLDivElement> & { sx?: Sx
   );
 }
 
-GridPanelHeader.propTypes = {
+GridPanelHeader.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

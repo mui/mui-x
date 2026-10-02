@@ -1,6 +1,7 @@
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
+import { describe } from 'vitest';
 
 describe('<CalendarGrid.DayRow />', () => {
   const { render } = createSchedulerRenderer();

@@ -1,4 +1,5 @@
-import {
+import type { WithDataAttributes } from '@mui/utils/types';
+import type {
   BasePickerProps,
   UsePickerParameters,
   ExportedBaseToolbarProps,
@@ -6,17 +7,17 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import {
+import type {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { UseRangePositionProps } from '../useRangePosition';
-import { PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
+import type { UseRangePositionProps } from '../useRangePosition';
+import type { PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
 
 export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 
 export interface UseStaticRangePickerSlotProps extends ExportedPickersLayoutSlotProps<PickerRangeValue> {
-  toolbar?: ExportedBaseToolbarProps;
+  toolbar?: WithDataAttributes<ExportedBaseToolbarProps>;
 }
 
 export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps, UseRangePositionProps {}
@@ -44,10 +45,7 @@ export interface UseStaticRangePickerProps<
 export interface UseStaticRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
-> extends Pick<
-  UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
-  'valueManager' | 'valueType' | 'validator' | 'ref'
-> {
+> extends Pick<UsePickerParameters<PickerRangeValue, TView, TExternalProps>, 'manager' | 'ref'> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

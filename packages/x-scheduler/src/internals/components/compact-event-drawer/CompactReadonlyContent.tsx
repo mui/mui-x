@@ -1,0 +1,70 @@
+'use client';
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import CloseRounded from '@mui/icons-material/CloseRounded';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useEventEditingStyledContext, ReadonlyEventDetails } from '../event-editing';
+
+const CompactReadonlyContentHeader = styled('header', {
+  name: 'MuiEventCalendar',
+  slot: 'CompactEventDrawerReadonlyHeader',
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: theme.spacing(1),
+  padding: theme.spacing(0.5, 3),
+}));
+
+const CompactReadonlyContentTitle = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'CompactEventDrawerReadonlyTitle',
+})({
+  flex: 1,
+  minWidth: 0,
+  margin: 0,
+  color: 'var(--event-on-surface-subtle-secondary)',
+  cursor: 'default',
+});
+
+interface CompactReadonlyContentProps {
+  occurrence: SchedulerRenderableEventOccurrence;
+  onClose: () => void;
+}
+
+/**
+ * The read-only summary shown inside the compact drawer: the shared `ReadonlyEventDetails` with
+ * lighter chrome (small heading + close button, no footer).
+ */
+export function CompactReadonlyContent(props: CompactReadonlyContentProps) {
+  const { occurrence, onClose } = props;
+
+  // Context hooks
+  const { localeText, classes } = useEventEditingStyledContext();
+
+  return (
+    <React.Fragment>
+      <CompactReadonlyContentHeader className={classes.compactEventDrawerReadonlyHeader}>
+        <CompactReadonlyContentTitle
+          className={classes.compactEventDrawerReadonlyTitle}
+          variant="body1"
+          noWrap
+        >
+          {occurrence.title}
+        </CompactReadonlyContentTitle>
+        <IconButton
+          size="small"
+          edge="end"
+          aria-label={localeText.closeButtonAriaLabel}
+          onClick={onClose}
+        >
+          <CloseRounded fontSize="small" />
+        </IconButton>
+      </CompactReadonlyContentHeader>
+
+      <ReadonlyEventDetails occurrence={occurrence} />
+    </React.Fragment>
+  );
+}

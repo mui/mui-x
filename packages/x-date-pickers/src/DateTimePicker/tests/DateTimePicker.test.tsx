@@ -1,6 +1,7 @@
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
+import { describe, it, expect } from 'vitest';
 
 describe('<DateTimePicker />', () => {
   const { render } = createPickerRenderer();

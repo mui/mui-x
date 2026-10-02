@@ -1,32 +1,68 @@
-import { BaseUIChangeEventDetails } from '@base-ui/react';
-import { TemporalTimezone } from '../../../base-ui-copy/types/temporal';
-import {
+import type { BaseUIChangeEventDetails } from '@base-ui/react';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
   SchedulerEventId,
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
   SchedulerEventModelStructure,
   SchedulerEventUpdatedProperties,
   SchedulerOccurrencePlaceholder,
   SchedulerPreferences,
   SchedulerProcessedEvent,
+  SchedulerRenderableEventOccurrence,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
+  SchedulerSelection,
   TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../../models';
-import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
-export type SchedulerPlan = 'community' | 'premium';
+export interface StoredError {
+  /**
+   * The error itself. Non-Error rejections are wrapped, preserving the original via `cause`.
+   */
+  error: Error;
+  /**
+   * Stable identifier assigned at push time. Suitable as a React key and as the
+   * argument to `store.dismissError(key)`.
+   */
+  key: string;
+}
+
+/**
+ * Which face the edited occurrence is in:
+ * - `'armed'`: no surface is shown; the event displays its resize handles and an action toolbar
+ *   (Edit / Delete). A resize commits immediately. The drawer surface always arms; the dialog
+ *   surface arms only on a coarse pointer.
+ * - `'edit'`: the editing surface (dialog or drawer) is shown; the event is not resizable while open.
+ */
+export type SchedulerEditingMode = 'armed' | 'edit';
+
+export interface SchedulerEditingState {
+  /** The occurrence being edited — existing or a creation draft. */
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * Whether the occurrence is armed (toolbar + resize handles, no surface) or being edited (surface open).
+   * The toolbar's Edit switches `'armed'` to `'edit'`. The drawer surface always opens in `'armed'`;
+   * the dialog surface opens in `'armed'` on a coarse pointer and directly in `'edit'` otherwise.
+   */
+  mode: SchedulerEditingMode;
+  /**
+   * The stored model's data-timezone bounds (as timestamps) when the occurrence's times were
+   * last refreshed from a committed change. A bound the model still holds is a change awaiting
+   * persistence (a `dataSource` write in flight), which the editing surface resends; a bound
+   * the host moved since is kept.
+   */
+  modelBounds?: { start: number; end: number };
+}
 
 export interface SchedulerState<TEvent extends object = any> {
-  /**
-   * The plan of the scheduler instance.
-   * Derived from the `instanceName` of the store.
-   * Used to gate premium features like recurring events.
-   */
-  plan: SchedulerPlan;
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -82,9 +118,19 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   visibleResources: Record<SchedulerResourceId, boolean>;
   /**
+   * Collapse status for each resource.
+   * A resource is expanded unless it is registered here with a `true` value.
+   * Collapsing a resource hides its descendants.
+   */
+  collapsedResources: Record<SchedulerResourceId, boolean>;
+  /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
   areEventsDraggable: boolean;
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   */
+  shouldEventRequireResource: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
@@ -125,9 +171,9 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   readOnly: boolean;
   /**
-   * Pending parameters to use when the user selects the scope of a recurring event update.
+   * Pending operation to apply when the user selects the scope in the recurring scope dialog.
    */
-  pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
+  pendingRecurringEventOperation: PendingRecurringEventOperation | null;
   /**
    * Preferences for the scheduler.
    */
@@ -153,36 +199,65 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   displayTimezone: TemporalTimezone;
   /**
-   * The ID of the event currently active (e.g. open in the event dialog).
-   * `null` when no event is active.
+   * The occurrence currently being edited (existing or a creation draft), or `null`.
+   * Single source of truth for *what* is edited, decoupled from *which* surface is open; surfaces
+   * and the highlight read from here.
    */
-  editedEventId: SchedulerEventId | null;
+  editingOccurrence: SchedulerEditingState | null;
   /**
    * The event that has been copied or cut, if any.
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
   /**
+   * The selected entity (a dependency arrow, later an event...), or `null`.
+   * See `SchedulerSelectionTypeLookup` for how features register their type.
+   */
+  selection: SchedulerSelection | null;
+  /**
    * Whether the store is currently loading events from the data source.
    */
   isLoading: boolean;
   /**
-   * The errors that occurred during data fetching.
+   * The scheduler errors surfaced through the error container: persistent data-source
+   * failures, and transient interaction feedback that dismisses itself.
+   * Each entry carries a stable `key` assigned at push time so the UI can use it
+   * directly as a React key and as the argument to `store.dismissError(key)`.
    */
-  errors: Error[];
+  errors: readonly StoredError[];
+  /**
+   * Plugin that provides recurring-events support. `null` when not attached.
+   */
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
+}
+
+/**
+ * Result of `dataSource.persistEvents`.
+ */
+export interface SchedulerPersistEventsResult {
+  success: boolean;
 }
 
 export interface SchedulerDataSource<TEvent extends object> {
   getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
-  updateEvents: (parameters: {
+  /**
+   * Called when events are created, updated or deleted so the consumer can persist them.
+   *
+   * Throw to surface a custom error in `state.errors`. Return `{ success: false }`
+   * to abort the cache/state update with a generic error.
+   */
+  persistEvents: (parameters: {
     deleted: SchedulerEventId[];
-    updated: SchedulerEventId[];
-    created: SchedulerEventId[];
-  }) => Promise<{ success: boolean }>;
+    updated: TEvent[];
+    created: TEvent[];
+  }) => Promise<SchedulerPersistEventsResult>;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
+   *
+   * Event models are compared by reference to avoid reprocessing unchanged events.
+   * Replace an event model with a new object when updating it instead of mutating it in place.
    * @default []
    */
   events?: readonly TEvent[];
@@ -225,6 +300,23 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
     eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**
+   * The collapsed resources. A resource is expanded unless included here with a `true` value.
+   */
+  collapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * The resources initially collapsed.
+   * To render a controlled scheduler, use the `collapsedResources` prop.
+   * @default {} - all resources are expanded
+   */
+  defaultCollapsedResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * Event handler called when the collapsed resources change.
+   */
+  onCollapsedResourcesChange?: (
+    collapsedResources: Record<SchedulerResourceId, boolean>,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
+  /**
    * The date currently used to determine the visible date range.
    */
   visibleDate?: TemporalSupportedObject;
@@ -246,6 +338,10 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default true
    */
   areEventsDraggable?: boolean;
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   */
+  shouldEventRequireResource?: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
@@ -285,17 +381,24 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   readOnly?: boolean;
   /**
-   * Data source for fetching events asynchronously.
-   * When provided, events are fetched through the data source instead of the `events` prop.
-   */
-  dataSource?: SchedulerDataSource<TEvent>;
-  /*
    * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.
    * If an object, event creation is enabled with the provided configuration.
    */
   eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
+  /**
+   * Event handler called right before the built-in event dialog (or its mobile drawer variant) opens,
+   * regardless of what triggered it (pointer, keyboard, the armed toolbar's Edit action or event creation).
+   * `eventDetails.reason` is `"creation"` when the user is creating a new event, `"view"` when the
+   * occurrence is read-only (through the event, its resource or the `readOnly` prop) and the dialog
+   * opens in view-only mode, and `"edit"` otherwise.
+   * Call `eventDetails.cancel()` to keep it closed and handle the interaction in your own UI.
+   */
+  onEventEditingStart?: (
+    occurrence: SchedulerRenderableEventOccurrence,
+    eventDetails: SchedulerEventEditingStartEventDetails,
+  ) => void;
   /**
    * The timezone used to display events in the scheduler.
    *
@@ -325,11 +428,12 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
 export type UpdateRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the update before the update is applied.
+   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
+   * the identity the occurrence expansion keys on.
    */
   occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
-   * Requires `start` and `end`, all other properties are optional.
    */
   changes: SchedulerEventUpdatedProperties;
   /**
@@ -337,6 +441,33 @@ export type UpdateRecurringEventParameters = {
    */
   onSubmit?: () => void;
 };
+
+/**
+ * Parameters for deleting a recurring event.
+ */
+export type DeleteRecurringEventParameters = {
+  /**
+   * The start date of the occurrence affected by the deletion.
+   * Must be the occurrence's data-timezone start (`occurrence.dataTimezone.start.value`),
+   * the identity the occurrence expansion keys on.
+   */
+  occurrenceStart: TemporalSupportedObject;
+  /**
+   * The id of the recurring event to delete.
+   */
+  eventId: SchedulerEventId;
+  /**
+   * Callback fired when the user submits the recurring scope dialog.
+   */
+  onSubmit?: () => void;
+};
+
+/**
+ * A recurring event operation waiting for the user to pick a scope in the recurring scope dialog.
+ */
+export type PendingRecurringEventOperation =
+  | ({ kind: 'update' } & UpdateRecurringEventParameters)
+  | ({ kind: 'delete' } & DeleteRecurringEventParameters);
 
 /**
  * Mapper between a Scheduler instance's state and parameters.
@@ -348,9 +479,11 @@ export interface SchedulerParametersToStateMapper<
 > {
   /**
    * Gets the initial state of the store based on the initial parameters.
+   * `shouldEventRequireResource` is left for the mapper to set, because its default depends on the component
+   * (`false` on the Event Calendar, `true` on the Event Timeline).
    */
   getInitialState: (
-    schedulerInitialState: SchedulerState,
+    schedulerInitialState: Omit<SchedulerState, 'shouldEventRequireResource'>,
     parameters: Parameters,
     adapter: Adapter,
   ) => State;
@@ -379,13 +512,47 @@ export interface UpdateEventsParameters {
   updated?: SchedulerEventUpdatedProperties[];
 }
 
+/**
+ * Outcome of `updateEvent`: applied, with the changes as the batch applied them (the
+ * scheduling plugin can clamp the dates), or vetoed by that plugin with the error to surface.
+ */
+export type SchedulerUpdateEventResult =
+  | { applied: true; changes: SchedulerEventUpdatedProperties }
+  | { applied: false; rejection: Error };
+
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
+
+/**
+ * Properties shared by every `onEventEditingStart` reason on top of the Base UI change details.
+ */
+interface SchedulerEventEditingStartCustomProperties {
+  /**
+   * An element that stays in the DOM after the callback returns, even when it cancels.
+   * Position custom UI against it rather than `trigger`, which some flows unmount right
+   * after a canceled activation.
+   */
+  anchor: HTMLElement | undefined;
+}
+
+export type SchedulerEventEditingStartEventDetails =
+  | BaseUIChangeEventDetails<
+      'edit',
+      SchedulerEventEditingStartCustomProperties & { occurrence: SchedulerEventOccurrence }
+    >
+  | BaseUIChangeEventDetails<
+      'view',
+      SchedulerEventEditingStartCustomProperties & { occurrence: SchedulerEventOccurrence }
+    >
+  | BaseUIChangeEventDetails<
+      'creation',
+      SchedulerEventEditingStartCustomProperties & {
+        occurrence: SchedulerEventOccurrencePlaceholder;
+      }
+    >;
 
 /**
  * The unique identifier for each scheduler store type.
  * Used by context hooks to assert the store type at runtime.
  */
 export type SchedulerInstanceName =
-  | 'EventCalendarStore'
-  | 'EventCalendarPremiumStore'
-  | 'EventTimelinePremiumStore';
+  'EventCalendarStore' | 'EventCalendarPremiumStore' | 'EventTimelinePremiumStore';

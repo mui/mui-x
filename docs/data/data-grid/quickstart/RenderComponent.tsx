@@ -7,7 +7,7 @@ const rows: GridRowsProp = [
 ];
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Product Name', width: 200 },
+  { field: 'name', headerName: 'Product Name', width: 200, rowHeader: true },
   { field: 'description', headerName: 'Description', width: 300 },
 ];
 

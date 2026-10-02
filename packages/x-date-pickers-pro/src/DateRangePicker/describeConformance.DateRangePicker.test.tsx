@@ -1,6 +1,7 @@
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 
 describe('<DateRangePicker /> - Describe Conformance', () => {
   const { render } = createPickerRenderer();

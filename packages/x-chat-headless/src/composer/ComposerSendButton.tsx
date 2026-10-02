@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { useComposerContext } from './internals/ComposerContext';
-import { type ComposerSendButtonOwnerState } from './composer.types';
+import type { ComposerSendButtonOwnerState } from './composer.types';
 
 export interface ComposerSendButtonSlots {
   sendButton: React.ElementType;
@@ -64,7 +64,7 @@ export const ComposerSendButton = React.forwardRef(function ComposerSendButton(
       aria-label={rootProps['aria-label'] ?? localeText.composerSendButtonLabel}
       disabled={
         Boolean(rootProps.disabled) ||
-        !ownerState.hasValue ||
+        (!ownerState.hasValue && ownerState.attachmentCount === 0) ||
         ownerState.isStreaming ||
         ownerState.disabled
       }

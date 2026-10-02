@@ -4,10 +4,8 @@ import { TransitionGroup } from 'react-transition-group';
 import Fade from '@mui/material/Fade';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import {
-  getPickersFadeTransitionGroupUtilityClass,
-  PickersFadeTransitionGroupClasses,
-} from './pickersFadeTransitionGroupClasses';
+import type { PickersFadeTransitionGroupClasses } from './pickersFadeTransitionGroupClasses';
+import { getPickersFadeTransitionGroupUtilityClass } from './pickersFadeTransitionGroupClasses';
 
 export interface ExportedPickersFadeTransitionGroupProps {
   className?: string;
@@ -58,11 +56,11 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
         appear={false}
         mountOnEnter
         unmountOnExit
+        exit={false}
         key={transKey}
         timeout={{
           appear: theme.transitions.duration.enteringScreen,
           enter: theme.transitions.duration.enteringScreen,
-          exit: 0,
         }}
       >
         {children}

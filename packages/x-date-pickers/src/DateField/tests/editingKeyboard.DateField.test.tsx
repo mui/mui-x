@@ -1,7 +1,7 @@
-import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { expectFieldValue } from 'test/utils/pickers';
+import { buildFieldInteractions, createPickerRenderer, expectFieldValue } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<DateField /> - Editing Keyboard', () => {
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {
@@ -290,7 +290,7 @@ describe('<DateField /> - Editing Keyboard', () => {
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -303,11 +303,11 @@ describe('<DateField /> - Editing Keyboard', () => {
       await view.user.keyboard('{Control>}a{/Control}');
 
       await view.user.keyboard('{Delete}');
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
     });
 
     it('should call `onChange` when clearing the first section', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -318,16 +318,16 @@ describe('<DateField /> - Editing Keyboard', () => {
       await view.selectSection('month');
 
       await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).to.equal(null);
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.lastCall?.[0]).to.equal(null);
 
       await view.user.keyboard('[ArrowRight][Delete]');
 
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
 
     it('should not call `onChange` if the section is already empty', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
 
       const view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -338,10 +338,10 @@ describe('<DateField /> - Editing Keyboard', () => {
       await view.selectSection('month');
 
       await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
 
       await view.user.keyboard('[Delete]');
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
   });
 
@@ -570,6 +570,30 @@ describe('<DateField /> - Editing Keyboard', () => {
           expectedValue: adapter.lib === 'dayjs' ? '1898' : '9998',
         });
       });
+    });
+  });
+
+  describe('Dates predating the timezone standardization - Dayjs', () => {
+    const { render, adapter } = createPickerRenderer({ adapterName: 'dayjs' });
+    const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
+
+    // `getDaysInMonth` used to return `1` on those dates, which is the maximum the day section is
+    // clamped to when editing it with the arrows. The day was stuck on `01`.
+    // See https://github.com/mui/mui-x/issues/23301
+    it('should increment the day of the month with the arrows', async () => {
+      const view = renderWithProps({
+        defaultValue: adapter.setYear(adapter.date('2026-08-15T12:30:00', 'Asia/Kolkata')!, 1883),
+        format: 'MM/DD/YYYY',
+        timezone: 'Asia/Kolkata',
+      });
+
+      await view.selectSection('day');
+
+      await view.user.keyboard('{ArrowUp}');
+      expectFieldValue(view.getSectionsContainer(), '08/16/1883');
+
+      await view.user.keyboard('{ArrowUp}');
+      expectFieldValue(view.getSectionsContainer(), '08/17/1883');
     });
   });
 });

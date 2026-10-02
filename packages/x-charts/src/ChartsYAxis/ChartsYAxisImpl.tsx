@@ -3,16 +3,18 @@ import * as React from 'react';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { useIsHydrated } from '@mui/x-internals/useIsHydrated';
 import type { ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleYAxisTicks } from './ChartsSingleYAxisTicks';
 import { ChartsGroupedYAxisTicks } from './ChartsGroupedYAxisTicks';
-import { ChartsText, type ChartsTextProps } from '../ChartsText';
+import { ChartsText } from '../ChartsText';
+import type { ChartsTextProps } from '../ChartsText';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { isInfinity } from '../internals/isInfinity';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { useIsHydrated } from '../hooks/useIsHydrated';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { getStringSize } from '../internals/domUtils';
+import { getInlineTypographyStyle } from '../internals/getInlineTypographyStyle';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 
 const YAxisRoot = styled(AxisRoot, {
@@ -73,7 +75,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
     // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     additionalProps: {
       style: {
-        ...theme.typography.body1,
+        ...getInlineTypographyStyle(theme.typography.body1),
         lineHeight: 1,
         fontSize: 14,
         angle: positionSign * 90,

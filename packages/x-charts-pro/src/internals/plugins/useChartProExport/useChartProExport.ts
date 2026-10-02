@@ -1,10 +1,10 @@
-import { type ChartPlugin } from '@mui/x-charts/internals';
+import type { ChartPlugin } from '@mui/x-charts/internals';
 import { printChart } from './print';
 import { exportImage } from './exportImage';
-import {
-  type ChartImageExportOptions,
-  type ChartPrintExportOptions,
-  type UseChartProExportSignature,
+import type {
+  ChartImageExportOptions,
+  ChartPrintExportOptions,
+  UseChartProExportSignature,
 } from './useChartProExport.types';
 
 function waitForAnimationFrame() {
@@ -31,9 +31,7 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ ins
       try {
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
-        printChart(chartRoot, options);
-      } catch (error) {
-        console.error('MUI X Charts: Error exporting chart as print:', error);
+        await printChart(chartRoot, options);
       } finally {
         enableAnimation();
       }
@@ -51,8 +49,6 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ ins
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
         await exportImage(chartRoot, svg, options);
-      } catch (error) {
-        console.error('MUI X Charts: Error exporting chart as image:', error);
       } finally {
         enableAnimation();
       }

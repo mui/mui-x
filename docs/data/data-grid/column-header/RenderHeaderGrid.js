@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 const columns = [
   {
     field: 'date',
+    rowHeader: true,
     width: 150,
     type: 'date',
     renderHeader: () => (

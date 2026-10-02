@@ -44,6 +44,7 @@
         "describedArgs": ["value", "context"]
       }
     },
+    "onCancel": { "type": { "name": "func" } },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
@@ -54,7 +55,7 @@
     "onClose": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Please avoid using as it will be removed in next major version."
+      "deprecationInfo": "Use <code>onCancel</code> or <code>onAccept</code> instead, depending on the action you want to react to."
     },
     "onError": {
       "type": { "name": "func" },
@@ -98,7 +99,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span>...</span>",
+      "default": "() => <span>…</span>",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
@@ -312,6 +313,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/StaticDateTimePicker/StaticDateTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker/\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>"
 }

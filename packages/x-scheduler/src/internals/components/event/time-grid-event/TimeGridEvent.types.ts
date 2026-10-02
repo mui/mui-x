@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 
 export interface TimeGridEventProps extends React.HTMLAttributes<HTMLDivElement> {

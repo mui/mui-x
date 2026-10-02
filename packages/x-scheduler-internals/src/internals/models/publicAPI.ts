@@ -1,4 +1,4 @@
-import { SchedulerStore } from '../utils/SchedulerStore';
+import type { SchedulerStore } from '../utils/SchedulerStore';
 
 export interface SchedulerAnyStore extends SchedulerStore<any, any, any, any> {}
 

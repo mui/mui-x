@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
+import type { RadarSeriesPlotProps } from './RadarSeriesPlot.types';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import { useUtilityClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
@@ -28,7 +28,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
           }
 
           return (
-            <g key={seriesId}>
+            <g key={seriesId} data-series={seriesId}>
               {
                 <path
                   key={seriesId}
@@ -63,10 +63,12 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                       getHighlightState,
                       classes,
                     })}
+                    pointerEvents={onMarkClick ? undefined : 'none'}
                     onClick={(event) =>
                       onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
                     }
                     cursor={onMarkClick ? 'pointer' : 'unset'}
+                    {...interactionProps[seriesIndex]}
                   />
                 ))}
             </g>
@@ -77,7 +79,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   );
 }
 
-RadarSeriesPlot.propTypes = {
+RadarSeriesPlot.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -86,6 +88,10 @@ RadarSeriesPlot.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
   /**
    * Callback fired when an area is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.

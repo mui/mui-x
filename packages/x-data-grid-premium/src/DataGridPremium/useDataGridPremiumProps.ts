@@ -4,10 +4,9 @@ import { getThemeProps } from '@mui/system';
 import {
   DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   GRID_DEFAULT_LOCALE_TEXT,
-  type DataGridProProps,
   GridSignature,
-  type GridEvents,
 } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridEvents } from '@mui/x-data-grid-pro';
 import { computeSlots } from '@mui/x-data-grid-pro/internals';
 import type {
   DataGridPremiumProps,
@@ -53,6 +52,9 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   rowGroupingColumnMode: 'single',
   aggregationFunctions: GRID_AGGREGATION_FUNCTIONS,
   aggregationRowsScope: 'filtered',
+  disableFormulas: false,
+  formulaA1Notation: false,
+  disableFormulaAutocomplete: false,
   getAggregationPosition: defaultGetAggregationPosition,
   cellSelectionFillHandle: false,
   disableClipboardPaste: false,
@@ -100,6 +102,10 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
         ? { aggregationFunctions: {} }
         : { getPivotDerivedColumns: defaultGetPivotDerivedColumns }),
       ...themedProps,
+      // Injectable features can adjust the themed props (the formula feature
+      // pins the A1 row-number column to the left). The transform runs during
+      // render and must stay pure.
+      ...themedProps.featureDependencies?.formula?.transformProps(themedProps),
       localeText,
       slots,
       ...getDataGridPremiumForcedProps(themedProps),

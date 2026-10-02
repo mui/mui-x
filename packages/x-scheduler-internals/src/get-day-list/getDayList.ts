@@ -1,7 +1,7 @@
-import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 import { isWeekend } from '../use-adapter/useAdapter';
 import { processDate } from '../process-date';
-import { TemporalAdapter } from '../base-ui-copy/types';
 
 export function getDayList(parameters: GetDaytListParameters): GetDaytListReturnValue {
   const { adapter, start: rawStart, end: rawEnd, excludeWeekends } = parameters;
@@ -14,7 +14,7 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
       // TODO: fix mui/no-guarded-throw
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
-        `MUI: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
+        `MUI X Scheduler: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
       );
     }
   }

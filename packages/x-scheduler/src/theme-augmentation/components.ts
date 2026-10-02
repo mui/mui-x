@@ -1,4 +1,4 @@
-import {
+import type {
   ComponentsProps,
   ComponentsOverrides as MuiComponentsOverrides,
 } from '@mui/material/styles';
@@ -11,6 +11,14 @@ export interface SchedulerComponents<Theme = unknown> {
   MuiEventDialog?: {
     defaultProps?: ComponentsProps['MuiEventDialog'];
     styleOverrides?: MuiComponentsOverrides<Theme>['MuiEventDialog'];
+  };
+  // Internal shared components: only `styleOverrides` is themeable, since their props
+  // are controlled by the host product (for example the skeleton's `data-variant`).
+  MuiEventSkeleton?: {
+    styleOverrides?: MuiComponentsOverrides<Theme>['MuiEventSkeleton'];
+  };
+  MuiEventErrorContainer?: {
+    styleOverrides?: MuiComponentsOverrides<Theme>['MuiEventErrorContainer'];
   };
 }
 

@@ -1,5 +1,7 @@
-import { DateOrTimeViewWithMeridiem, isDatePickerView } from '@mui/x-date-pickers/internals';
-import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
+import type { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
+import { isDatePickerView } from '@mui/x-date-pickers/internals';
+import type { DateRangeCalendarProps } from '../DateRangeCalendar';
+import { DateRangeCalendar } from '../DateRangeCalendar';
 
 export interface DateRangeViewRendererProps<TView extends DateOrTimeViewWithMeridiem> extends Omit<
   DateRangeCalendarProps,

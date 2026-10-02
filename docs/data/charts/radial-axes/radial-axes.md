@@ -10,8 +10,9 @@ components: ChartsRadialDataProvider, ChartsRadialGrid, ChartsRadiusAxis, Charts
 
 ## Radial grid 🧪
 
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+:::warning
+This feature is in preview.
+It is ready for production use, and its API, visuals, and behavior may change in future minor or patch releases.
 :::
 
 Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates.
@@ -35,6 +36,16 @@ To distinguish radius axis from the rotation axis, use the `chartsRadialAxisClas
 [`.${chartsRadialAxisClasses.radius} .${chartsRadialAxisClasses.tick} `]: { /* Modify only ticks from the radius axis */ },
 ```
 
+### Hiding axis elements
+
+Both axes accept three boolean props to remove parts of the axis:
+
+- `disableLine`: hides the axis line.
+- `disableTicks`: hides the tick marks.
+- `disableTickLabel`: hides the tick labels while keeping the ticks.
+
+Toggle them in the playgrounds below.
+
 ### Radius axis
 
 The `ChartsRadiusAxis` component renders tick labels along a radius direction.
@@ -47,6 +58,28 @@ It can be set to
 - `number`: The angle in degree where to plot the axis.
 
 {{"demo": "RadiusAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
+
+#### Radius extent
+
+The `minRadius` and `maxRadius` props control the radial extent of the radius axis.
+They accept three kinds of value:
+
+- a number—the radius in pixels (for example `50`).
+- a pixel string—the radius in pixels (for example `'50px'`).
+- a percentage string—relative to the available radius, half the smallest side of the drawing area (for example `'40%'`).
+
+Pixel values are fixed: the inner hole keeps the same size regardless of how big the chart is.
+Percentage values scale with the chart, which keeps the proportions consistent across container sizes.
+
+```jsx
+// Fixed: 50px hole no matter the chart size
+<radiusAxis minRadius={50} />
+
+// Responsive: hole is always 40% of the available radius
+<radiusAxis minRadius="40%" />
+```
+
+{{"demo": "RadiusAxisPercentage.js"}}
 
 ### Rotation axis
 

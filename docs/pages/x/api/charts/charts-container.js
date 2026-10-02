@@ -1,20 +1,8 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import descriptions from 'docs/translations/api-docs/charts/charts-container/charts-container.json';
 import jsonPageContent from './charts-container.json';
 
-export default function Page(props) {
-  const { descriptions } = props;
+export default function Page() {
   return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
-}
-
-export async function getStaticProps() {
-  const req = require.context(
-    'docs/translations/api-docs/charts/charts-container',
-    false,
-    /\.\/charts-container.*\.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
-
-  return { props: { descriptions } };
 }

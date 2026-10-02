@@ -1,6 +1,6 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
-import {
+import type {
   InnerSimpleTreeViewParameters,
   SimpleTreeViewItem,
   SimpleTreeViewStoreParameters,

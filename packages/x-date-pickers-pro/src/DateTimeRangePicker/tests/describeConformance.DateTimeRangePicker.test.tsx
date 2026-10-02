@@ -1,5 +1,6 @@
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { describe } from 'vitest';
 import { DateTimeRangePicker } from '../DateTimeRangePicker';
 
 describe('<DateTimeRangePicker /> - Describe Conformance', () => {

@@ -12,12 +12,21 @@ import type {
   ScaleSymLog,
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
-import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
-import { type DatasetElementType } from './seriesType/config';
+import type { SxProps } from '@mui/system/styleFunctionSx';
+import type { HasProperty, MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { WithDataAttributes } from '@mui/utils/types';
+import type { DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
+import type { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
+import type {
+  AxisLinePropsOverrides,
+  AxisTickPropsOverrides,
+  AxisTickLabelPropsOverrides,
+  AxisLabelPropsOverrides,
+  XAxisPropsOverrides,
+  YAxisPropsOverrides,
+} from './chartsSlotsComponentsProps';
 import type { ChartsTextProps } from '../ChartsText';
 import type {
   ContinuousColorConfig,
@@ -25,8 +34,8 @@ import type {
   PiecewiseColorConfig,
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
-import { type ChartsTypeFeatureFlags } from './featureFlags';
-import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
+import type { ChartsTypeFeatureFlags } from './featureFlags';
+import type { ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export type AxisId = string | number;
 
@@ -51,49 +60,59 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleLinear<Range, Output>;
 
 export type D3OrdinalScale<Domain extends { toString(): string } = { toString(): string }> =
-  | ScaleBand<Domain>
-  | ScalePoint<Domain>;
+  ScaleBand<Domain> | ScalePoint<Domain>;
 
 export interface ChartsAxisSlots {
   /**
    * Custom component for the axis main line.
    * @default 'line'
    */
-  axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisLine?: React.JSXElementConstructor<
+    React.SVGAttributes<SVGPathElement> & AxisLinePropsOverrides
+  >;
   /**
    * Custom component for the axis tick.
    * @default 'line'
    */
-  axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisTick?: React.JSXElementConstructor<
+    React.SVGAttributes<SVGPathElement> & AxisTickPropsOverrides
+  >;
   /**
    * Custom component for tick label.
    * @default ChartsText
    */
-  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps & AxisTickLabelPropsOverrides>;
   /**
    * Custom component for axis label.
    * @default ChartsText
    */
-  axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisLabel?: React.JSXElementConstructor<ChartsTextProps & AxisLabelPropsOverrides>;
   /**
    * Custom component for the x-axis.
    * @default ChartsXAxis
    */
-  xAxis?: React.JSXElementConstructor<ChartsXAxisProps>;
+  xAxis?: React.JSXElementConstructor<ChartsXAxisProps & XAxisPropsOverrides>;
   /**
    * Custom component for the y-axis.
    * @default ChartsYAxis
    */
-  yAxis?: React.JSXElementConstructor<ChartsYAxisProps>;
+  yAxis?: React.JSXElementConstructor<ChartsYAxisProps & YAxisPropsOverrides>;
 }
 
 export interface ChartsAxisSlotProps {
-  axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: Partial<ChartsTextProps>;
-  axisLabel?: Partial<ChartsTextProps>;
-  xAxis?: Partial<ChartsXAxisProps>;
-  yAxis?: Partial<ChartsYAxisProps>;
+  axisLine?: WithDataAttributes<
+    Partial<React.SVGAttributes<SVGPathElement>> & AxisLinePropsOverrides
+  >;
+  axisTick?: WithDataAttributes<
+    Partial<React.SVGAttributes<SVGPathElement>> & AxisTickPropsOverrides
+  >;
+  axisTickLabel?: WithDataAttributes<Partial<ChartsTextProps> & AxisTickLabelPropsOverrides>;
+  axisLabel?: WithDataAttributes<Partial<ChartsTextProps> & AxisLabelPropsOverrides>;
+  // `xAxis`/`yAxis` are whole-axis-component replacement slots whose props are
+  // never spread onto a DOM element (ChartsAxis passes them nowhere), so they
+  // are intentionally not widened with `data-*` -- forwarding is a follow-up.
+  xAxis?: Partial<ChartsXAxisProps> & XAxisPropsOverrides;
+  yAxis?: Partial<ChartsYAxisProps> & YAxisPropsOverrides;
 }
 
 export interface ChartsAxisProps extends TickParams {
@@ -208,8 +227,13 @@ type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
   width?: AxisProps extends ChartsYAxisProps ? number | 'auto' : never;
 };
 
-export interface ChartsRotationAxisProps extends ChartsAxisProps {
+export interface ChartsRotationAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'rotation';
+  /**
+   * If true, the tick labels are not rendered.
+   * @default false
+   */
+  disableTickLabel?: boolean;
   /**
    * The start angle (in deg).
    */
@@ -246,16 +270,27 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
   classes?: Partial<ChartsRadialAxisClasses>;
 }
 
-export interface ChartsRadiusAxisProps extends ChartsAxisProps {
+export interface ChartsRadiusAxisProps extends Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   axis?: 'radius';
   /**
-   * The minimal radius.
+   * If true, the tick labels are not rendered.
+   * @default false
    */
-  minRadius?: number;
+  disableTickLabel?: boolean;
+  /**
+   * The minimal radius.
+   * Can be a number (in pixels), a pixel string (for example `'20px'`), or a percentage string
+   * (for example `'20%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default 0
+   */
+  minRadius?: number | string;
   /**
    * The maximal radius.
+   * Can be a number (in pixels), a pixel string (for example `'80px'`), or a percentage string
+   * (for example `'80%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default '100%'
    */
-  maxRadius?: number;
+  maxRadius?: number | string;
   /**
    * The position of the axis in polar coordinates.
    * It can be 'start', 'end', or a specific angle in degrees.
@@ -437,13 +472,11 @@ export interface AxisScaleComputedConfig {
   };
   time: {
     colorScale?:
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
+      ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   utc: {
     colorScale?:
-      | ScaleSequential<string, string | null>
-      | ScaleThreshold<number | Date, string | null>;
+      ScaleSequential<string, string | null> | ScaleThreshold<number | Date, string | null>;
   };
   linear: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
@@ -585,6 +618,11 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
     | 'nice'
     | 'strict'
     | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
+  /**
+   * Defines the series used to compute the axis domain.
+   * @default "all"
+   */
+  domainSeries?: 'all' | 'visible';
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
@@ -750,7 +788,7 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<
     string,
-    HasProperty<ChartsTypeFeatureFlags, 'seriesValueOverride'> extends true
+    HasProperty<ChartsTypeFeatureFlags, 'seriesValuesOverride'> extends true
       ? // @ts-ignore this property is added through module augmentation
         ChartsTypeFeatureFlags['seriesValuesOverride']
       : number | null | undefined

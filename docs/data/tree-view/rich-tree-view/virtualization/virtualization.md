@@ -23,6 +23,13 @@ You can disable virtualization using the `disableVirtualization` prop:
 <RichTreeViewPro items={ITEMS} disableVirtualization />
 ```
 
+Disabling virtualization does not change the default flat DOM structure of the `<RichTreeViewPro />`.
+If you need a nested DOM structure, for example to use expansion animations based on the `groupTransition` slot, set both `disableVirtualization` and `domStructure="nested"`:
+
+```tsx
+<RichTreeViewPro items={ITEMS} disableVirtualization domStructure="nested" />
+```
+
 ## Item height
 
 When virtualization is enabled, the Tree View needs to know the height of each item to calculate which items are visible.
@@ -44,7 +51,8 @@ See the [Item height](/x/react-tree-view/rich-tree-view/items/#item-height) docu
 ## DOM structure
 
 Virtualization requires a flat DOM structure where all items are rendered as siblings, regardless of their hierarchy in the tree.
-This is automatically enforced, when virtualization is enabled the `domStructure` prop is set to `"flat"` and cannot be changed.
+`<RichTreeViewPro />` defaults to `domStructure="flat"`.
+The nested DOM structure is not supported while virtualization is enabled.
 
 ```html
 <ul>

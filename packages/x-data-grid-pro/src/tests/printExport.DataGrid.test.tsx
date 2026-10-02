@@ -1,13 +1,11 @@
-import { spy } from 'sinon';
-import { type RefObject } from '@mui/x-internals/types';
-import {
-  DataGridPro,
-  type GridApi,
-  useGridApiRef,
-  type DataGridProProps,
-} from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
+import { DataGridPro, GridPrintExportMenuItem, useGridApiRef } from '@mui/x-data-grid-pro';
+import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
+import MenuList from '@mui/material/MenuList';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
+import { vi, describe, it, expect, onTestFinished } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Print export', () => {
   const { render } = createRenderer();
@@ -77,7 +75,7 @@ describe('<DataGridPro /> - Print export', () => {
       it(`should have 'currencyPair' ${printVisible ? "'visible'" : "'hidden'"} in print and ${
         gridVisible ? "'visible'" : "'hidden'"
       } in screen`, async () => {
-        const onColumnVisibilityModelChange = spy();
+        const onColumnVisibilityModelChange = vi.fn();
 
         render(
           <Test
@@ -93,7 +91,7 @@ describe('<DataGridPro /> - Print export', () => {
           />,
         );
 
-        expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+        expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
         await act(() =>
           apiRef.current?.exportDataAsPrint({
@@ -101,15 +99,15 @@ describe('<DataGridPro /> - Print export', () => {
           }),
         );
 
-        expect(onColumnVisibilityModelChange.callCount).to.equal(2);
+        expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
         // verify column visibility has been set
-        expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+        expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
           currencyPair: printVisible,
           id: true,
         });
 
         // verify column visibility has been restored
-        expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
+        expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
           currencyPair: gridVisible,
           id: false,
         });
@@ -119,22 +117,22 @@ describe('<DataGridPro /> - Print export', () => {
 
   describe('columns to print', () => {
     it(`should ignore 'allColumns' if 'fields' is provided`, async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(<Test onColumnVisibilityModelChange={onColumnVisibilityModelChange} />);
 
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
-      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
         currencyPair: false,
         id: true,
       });
     });
 
     it(`should ignore 'disableExport' if 'fields' is provided`, async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(
         <Test
@@ -143,18 +141,18 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
-      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
         currencyPair: false,
         id: true,
       });
     });
 
     it(`should apply 'disableExport' even if 'allColumns' is set`, async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(
         <Test
@@ -163,18 +161,18 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ allColumns: true }));
 
-      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
         currencyPair: true,
         id: false,
       });
     });
 
     it(`should print hidden columns if 'allColumns' set to true`, async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(
         <Test
@@ -184,14 +182,232 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ allColumns: true }));
 
-      expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[0][0]).to.deep.equal({
         currencyPair: true,
         id: true,
       });
+    });
+  });
+
+  describe('stylesheets that fail to load', () => {
+    function addMissingStylesheet() {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/missing-stylesheet.css';
+      document.head.appendChild(link);
+      onTestFinished(() => link.remove());
+    }
+
+    /* Browsers fire `error` for the missing stylesheet on their own, JSDOM doesn't load resources. */
+    async function failStylesheetLoad() {
+      if (!isJSDOM) {
+        return;
+      }
+
+      let link: HTMLLinkElement | null | undefined;
+      while (!link) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+        link = document.querySelector('iframe')?.contentDocument?.head.querySelector('link');
+      }
+      link.dispatchEvent(new Event('error'));
+    }
+
+    async function waitUntil(condition: () => boolean) {
+      while (!condition()) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      }
+    }
+
+    const initialState = {
+      columns: { columnVisibilityModel: { currencyPair: true, id: false } },
+    };
+
+    async function printAndWaitForTheResult(
+      onStylesheetError: ReturnType<typeof vi.fn>,
+      clickPrint: () => void,
+    ) {
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        clickPrint();
+        await failStylesheetLoad();
+        await waitUntil(
+          () =>
+            onStylesheetError.mock.calls.length > 0 &&
+            document.querySelectorAll('iframe').length === iframeCount,
+        );
+        /* Let the trigger's `catch` run. */
+        await new Promise((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      });
+    }
+
+    it('logs the error when the print is stopped from the default toolbar', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => {
+        throw new Error('Stop the print');
+      });
+
+      render(<Test showToolbar slotProps={{ toolbar: { printOptions: { onStylesheetError } } }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      await expect(() =>
+        printAndWaitForTheResult(onStylesheetError, () => {
+          fireEvent.click(printItem);
+        }),
+      ).toErrorDev('MUI X Data Grid: Error exporting the grid as print:');
+    });
+
+    it('logs the error when the print is stopped from `GridPrintExportMenuItem`', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => {
+        throw new Error('Stop the print');
+      });
+
+      function PrintToolbar() {
+        return (
+          <MenuList>
+            <GridPrintExportMenuItem options={{ onStylesheetError }} />
+          </MenuList>
+        );
+      }
+
+      render(<Test showToolbar slots={{ toolbar: PrintToolbar }} />);
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      await expect(() =>
+        printAndWaitForTheResult(onStylesheetError, () => {
+          fireEvent.click(printItem);
+        }),
+      ).toErrorDev('MUI X Data Grid: Error exporting the grid as print:');
+    });
+
+    it('rejects, restores the grid, and removes the print window when `onStylesheetError` throws', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const error = new Error('Stop the print');
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError: () => {
+            throw error;
+          },
+        });
+        await failStylesheetLoad();
+        await expect(printPromise).rejects.toBe(error);
+      });
+
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+    });
+
+    it('resolves and restores the grid when `onStylesheetError` returns', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const onStylesheetError = vi.fn();
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError,
+        });
+        await failStylesheetLoad();
+        await printPromise;
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
+      expect(onStylesheetError.mock.calls[0][0].getAttribute('href')).to.equal(
+        '/missing-stylesheet.css',
+      );
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+    });
+
+    it('resolves and restores the grid when `onStylesheetError` returns `false`', async () => {
+      addMissingStylesheet();
+      const onColumnVisibilityModelChange = vi.fn();
+      const onStylesheetError = vi.fn(() => false);
+
+      render(
+        <Test
+          initialState={initialState}
+          onColumnVisibilityModelChange={onColumnVisibilityModelChange}
+        />,
+      );
+
+      const iframeCount = document.querySelectorAll('iframe').length;
+
+      await act(async () => {
+        const printPromise = apiRef.current!.exportDataAsPrint({
+          fields: ['id'],
+          onStylesheetError,
+        });
+        await failStylesheetLoad();
+        await printPromise;
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.calls[1][0]).to.deep.equal({
+        currencyPair: true,
+        id: false,
+      });
+      expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+    });
+
+    it('does not log when the print is cancelled from the default toolbar', async () => {
+      addMissingStylesheet();
+      const onStylesheetError = vi.fn(() => false);
+
+      render(<Test showToolbar slotProps={{ toolbar: { printOptions: { onStylesheetError } } }} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
+      const printItem = screen.getByRole('menuitem', { name: 'Print' });
+
+      /* Any `console.error` fails the test. */
+      await printAndWaitForTheResult(onStylesheetError, () => {
+        fireEvent.click(printItem);
+      });
+
+      expect(onStylesheetError.mock.calls.length).to.equal(1);
     });
   });
 });

@@ -20,7 +20,22 @@ You can enable interactive visibility toggling by setting the `toggleVisibilityO
 When you click a legend item, it hides or shows the corresponding series or data item in the chart.
 Hidden items appear with reduced opacity in the legend.
 
+By default axes compute their domain based on all series.
+To only consider visible series set the axis property `domainSeries` to `'visible'`.
+
+This demo shows how hiding series can impact the x-axis.
+
 {{"demo": "ToggleSeriesVisibility.js"}}
+
+### Stack series edge case
+
+When series are stacked, we recommend using `domainSeries: 'visible'`.
+Otherwise, hiding the bottom series could bring the other one outside of the axis domain.
+
+In this demo, hiding the blue series (New York) decreases the values of the two other ones as expected.
+But if the y-axis does not take it into consideration, the yellow series which has some values below 50 goes outside of the drawing area.
+
+{{"demo": "StackLineVisibility.js"}}
 
 ### Visibility change callback
 

@@ -7,18 +7,18 @@ githubLabel: 'scope: chat'
 
 # Chat - Compact variant
 
-<p class="description">A messenger-style layout with no bubbles, left-aligned messages, and author names as group headers.</p>
+<p class="description">Switch the Chat to a messenger-style layout with left-aligned messages, no bubbles, and author names as group headers.</p>
 
-Set `variant="compact"` on `ChatBox` to switch the entire chat to a compact layout.
-Both the conversation list and the message list adapt automatically.
+Set `variant="compact"` on `<ChatBox />` to switch the Chat to a compact layout.
+When `features={{ conversationList: true }}` is enabled, both the conversation list and the message list adapt automatically.
 
 {{"demo": "CompactVariant.js", "bg": "inline"}}
 
-## What changes in compact mode
+## Compact mode behavior
 
-| Default                                  | Compact                                         |
-| :--------------------------------------- | :---------------------------------------------- |
-| Colored message bubbles                  | Plain text, no background                       |
-| User messages right-aligned              | All messages left-aligned                       |
-| Timestamp below each message             | Timestamp in the group header, next to author   |
-| Conversation list shows avatar + preview | Conversation list shows compact title + actions |
+| Default                                    | Compact                                           |
+| :----------------------------------------- | :------------------------------------------------ |
+| Colored message bubbles                    | Plain text, no background                         |
+| User messages right-aligned                | All messages left-aligned                         |
+| Timestamp below each message               | Timestamp in the group header, next to author     |
+| Conversation list shows avatar and preview | Conversation list shows compact title and actions |

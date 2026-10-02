@@ -134,6 +134,12 @@ Function values receive index-based domain bounds instead of timestamps.
 
 {{"demo": "ChartsToolbarOrdinalRangeButtons.js"}}
 
+### Initial selection
+
+When `initialZoom` (or a controlled `zoomData`) matches a range button's computed range, that button is selected on first render without requiring user interaction.
+
+{{"demo": "ChartsToolbarRangeButtonsInitialSelection.js"}}
+
 ### Custom toolbar with range buttons
 
 You can use `ChartsToolbarRangeButtonTrigger` directly in a custom toolbar to have full control over layout and behavior.

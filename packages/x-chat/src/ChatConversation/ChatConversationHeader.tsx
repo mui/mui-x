@@ -2,12 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { ConversationHeader, type ConversationHeaderProps } from '@mui/x-chat-headless';
+import { ConversationHeader } from '@mui/x-chat-headless';
+import type { ConversationHeaderProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import {
-  useChatConversationUtilityClasses,
-  type ChatConversationClasses,
-} from './chatConversationClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { useChatConversationUtilityClasses } from './chatConversationClasses';
+import type { ChatConversationClasses } from './chatConversationClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationHeader');
 
@@ -43,23 +43,25 @@ const ChatConversationHeader = React.forwardRef<HTMLElement, ChatConversationHea
       <ConversationHeader
         {...other}
         slots={{
-          header: slots?.header ?? ChatConversationHeaderStyled,
           ...slots,
+          header: slots?.header ?? ChatConversationHeaderStyled,
         }}
         slotProps={{
           ...slotProps,
-          header: {
-            ref,
-            className: clsx(classes.header, className),
-            ...(slotProps?.header as object),
-          } as any,
+          header: mergeSlotProps(
+            {
+              ref,
+              className: clsx(classes.header, className),
+            },
+            slotProps?.header,
+          ) as any,
         }}
       />
     );
   },
 );
 
-ChatConversationHeader.propTypes = {
+ChatConversationHeader.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

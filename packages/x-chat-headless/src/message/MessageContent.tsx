@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentProps } from '@mui/utils/types';
 import { useChatPartRenderer } from '../hooks/useChatPartRenderer';
 import type { ChatMessagePart, ChatStepStartMessagePart } from '../types/chat-message-parts';
 import type { ChatPartRenderer } from '../renderers/chatPartRenderer';
@@ -9,15 +9,17 @@ import { useChatOnToolCall } from '../hooks/useChatOnToolCall';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import type { ChatLocaleText } from '../chat/internals/chatLocaleText';
 import { useMessageContext } from './internals/MessageContext';
-import { type MessageContentOwnerState } from './message.types';
-import { FilePart, type FilePartExternalProps } from './parts/FilePart';
-import { ReasoningPart, type ReasoningPartExternalProps } from './parts/ReasoningPart';
-import {
-  SourceDocumentPart,
-  type SourceDocumentPartExternalProps,
-} from './parts/SourceDocumentPart';
-import { SourceUrlPart, type SourceUrlPartExternalProps } from './parts/SourceUrlPart';
-import { ToolPart, type ToolPartExternalProps } from './parts/ToolPart';
+import type { MessageContentOwnerState } from './message.types';
+import { FilePart } from './parts/FilePart';
+import type { FilePartExternalProps } from './parts/FilePart';
+import { ReasoningPart } from './parts/ReasoningPart';
+import type { ReasoningPartExternalProps } from './parts/ReasoningPart';
+import { SourceDocumentPart } from './parts/SourceDocumentPart';
+import type { SourceDocumentPartExternalProps } from './parts/SourceDocumentPart';
+import { SourceUrlPart } from './parts/SourceUrlPart';
+import type { SourceUrlPartExternalProps } from './parts/SourceUrlPart';
+import { ToolPart } from './parts/ToolPart';
+import type { ToolPartExternalProps } from './parts/ToolPart';
 
 export interface MessageContentSlots {
   content: React.ElementType;
@@ -106,6 +108,24 @@ const renderDefaultDataPart: ChatPartRenderer<
   Extract<ChatMessagePart, { type: `data-${string}` }>
 > = ({ part }) => <JsonBlock value={part.data} />;
 
+function renderDefaultStepStartMessagePart(props: {
+  part: ChatStepStartMessagePart;
+  index: number;
+  message: NonNullable<MessageContentOwnerState['message']>;
+  onToolCall: ReturnType<typeof useChatOnToolCall>;
+}) {
+  return renderDefaultStepStartPart(props);
+}
+
+function renderDefaultDataMessagePart(props: {
+  part: Extract<ChatMessagePart, { type: `data-${string}` }>;
+  index: number;
+  message: NonNullable<MessageContentOwnerState['message']>;
+  onToolCall: ReturnType<typeof useChatOnToolCall>;
+}) {
+  return renderDefaultDataPart(props);
+}
+
 function MessageRenderedPart(props: {
   part: ChatMessagePart;
   index: number;
@@ -158,10 +178,17 @@ function MessageRenderedPart(props: {
     case 'source-document':
       return <SourceDocumentPart {...partProps?.['source-document']} {...baseProps} part={part} />;
     case 'step-start':
-      return <React.Fragment>{renderDefaultStepStartPart(baseProps as any)}</React.Fragment>;
+      return (
+        <React.Fragment>{renderDefaultStepStartMessagePart({ ...baseProps, part })}</React.Fragment>
+      );
     default:
       if (part.type.startsWith('data-')) {
-        return <React.Fragment>{renderDefaultDataPart(baseProps as any)}</React.Fragment>;
+        const dataPart = part as Extract<ChatMessagePart, { type: `data-${string}` }>;
+        return (
+          <React.Fragment>
+            {renderDefaultDataMessagePart({ ...baseProps, part: dataPart })}
+          </React.Fragment>
+        );
       }
 
       return <DefaultPartFallback part={part} />;

@@ -1,19 +1,10 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  type GridEventListener,
-  type GridRowId,
-  useGridEvent,
-  useGridApiMethod,
-  type GridCellParams,
-  gridDataRowIdsSelector,
-} from '@mui/x-data-grid';
-import {
-  useGridRegisterPipeProcessor,
-  type GridPipeProcessor,
-  type GridStateInitializer,
-} from '@mui/x-data-grid/internals';
+import { useGridEvent, useGridApiMethod, gridDataRowIdsSelector } from '@mui/x-data-grid';
+import type { GridEventListener, GridRowId, GridCellParams } from '@mui/x-data-grid';
+import { useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor, GridStateInitializer } from '@mui/x-data-grid/internals';
 import type { GridApiPro, GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from './gridDetailPanelToggleColDef';
 import {

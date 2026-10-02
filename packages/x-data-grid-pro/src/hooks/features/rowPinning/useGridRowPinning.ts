@@ -2,7 +2,8 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridApiMethod } from '@mui/x-data-grid';
-import { getRowIdFromRowModel, type GridStateInitializer } from '@mui/x-data-grid/internals';
+import { getRowIdFromRowModel } from '@mui/x-data-grid/internals';
+import type { GridStateInitializer } from '@mui/x-data-grid/internals';
 
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps, DataGridProProps } from '../../../models/dataGridProProps';

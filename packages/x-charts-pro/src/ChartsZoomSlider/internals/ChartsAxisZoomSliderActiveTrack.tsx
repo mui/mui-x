@@ -2,8 +2,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  type AxisId,
-  type ComputedAxis,
   getChartPoint,
   invertScale,
   selectorChartAxis,
@@ -11,15 +9,13 @@ import {
   useChartsContext,
   useDrawingArea,
   useStore,
-  type ZoomData,
 } from '@mui/x-charts/internals';
+import type { AxisId, ComputedAxis, ZoomData } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type ChartDrawingArea } from '@mui/x-charts/hooks';
+import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { shouldForwardProp } from '@mui/system';
-import {
-  selectorChartAxisZoomData,
-  type UseChartProZoomSignature,
-} from '../../internals/plugins/useChartProZoom';
+import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
+import type { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 import { ChartsAxisZoomSliderThumb } from './ChartsAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';

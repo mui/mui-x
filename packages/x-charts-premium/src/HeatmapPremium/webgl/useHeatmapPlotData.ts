@@ -1,21 +1,16 @@
 'use client';
 import * as React from 'react';
-import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
-import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
-import { type ChartDrawingArea, useZColorScale } from '@mui/x-charts/hooks';
+import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
+import type { DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
+import { useZColorScale } from '@mui/x-charts/hooks';
+import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
 import { parseColor } from '../../utils/webgl/parseColor';
+import { ensurePool } from '../../utils/webgl/utils';
 
 /* Far enough off-canvas that the rect is never visible; used for invalid x/y entries.
  * Avoids coupling the position pass to the color/saturation passes. */
 const OFFSCREEN = -1e9;
-
-function ensurePoolFloat32(pool: Float32Array | undefined, n: number) {
-  if (pool && pool.length >= n) {
-    return pool;
-  }
-  return new Float32Array(n);
-}
 
 export function useHeatmapPlotData(
   drawingArea: ChartDrawingArea,
@@ -55,7 +50,7 @@ export function useHeatmapPlotData(
   const saturationsPoolRef = React.useRef<Float32Array | null>(null);
   const saturations = React.useMemo(() => {
     const n = series.data.length;
-    const pool = ensurePoolFloat32(saturationsPoolRef.current ?? undefined, n);
+    const pool = ensurePool(saturationsPoolRef.current, n, Float32Array);
     saturationsPoolRef.current = pool;
     for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {
       const item = series.data[dataIndex];
@@ -82,7 +77,7 @@ export function useHeatmapPlotData(
   const centersPoolRef = React.useRef<Float32Array | null>(null);
   const centers = React.useMemo(() => {
     const n = series.data.length;
-    const pool = ensurePoolFloat32(centersPoolRef.current ?? undefined, n * 2);
+    const pool = ensurePool(centersPoolRef.current, n * 2, Float32Array);
     centersPoolRef.current = pool;
 
     const left = drawingArea.left;

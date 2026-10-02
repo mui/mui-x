@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -8,15 +8,8 @@ import {
   reactMajor,
   act,
 } from '@mui/internal-test-utils';
-import { stub, spy } from 'sinon';
-import {
-  DataGrid,
-  type DataGridProps,
-  type GridColDef,
-  gridClasses,
-  useGridApiRef,
-  type GridApi,
-} from '@mui/x-data-grid';
+import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
+import type { DataGridProps, GridColDef, GridApi } from '@mui/x-data-grid';
 import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -31,6 +24,8 @@ import {
   sleep,
 } from 'test/utils/helperFn';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
@@ -128,6 +123,34 @@ describe('<DataGrid /> - Layout & warnings', () => {
         expect(ref.current).to.equal(container.firstChild?.firstChild);
       });
 
+      it('mounts the root element during the first SPA commit', () => {
+        let rootElementInLayoutEffect: HTMLDivElement | null | undefined;
+        let renderCount = 0;
+
+        function TestCase() {
+          const apiRef = useGridApiRef();
+
+          React.useLayoutEffect(() => {
+            renderCount += 1;
+            if (renderCount === 1) {
+              rootElementInLayoutEffect = apiRef.current!.rootElementRef.current;
+            }
+          }, [apiRef]);
+
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid apiRef={apiRef} {...baselineProps} />
+            </div>
+          );
+        }
+
+        render(<TestCase />);
+
+        // Assert against the actual mounted root node because `rootElementInLayoutEffect` starts as `undefined`.
+        // A plain null check would pass if the effect never captured the node.
+        expect(rootElementInLayoutEffect).to.equal(document.querySelector(`.${gridClasses.root}`));
+      });
+
       describe('`classes` prop', () => {
         it("should apply the `root` rule name's value as a class to the root grid component", () => {
           const classes = {
@@ -221,22 +244,33 @@ describe('<DataGrid /> - Layout & warnings', () => {
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty width',
         );
       });
+
+      it('should not error about an empty height when the height prop is set', () => {
+        expect(() => {
+          render(
+            <div style={{ width: 300, height: 0 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+        }).not.toErrorDev();
+      });
     });
 
     describe('swallow warnings', () => {
+      let consoleError: MockInstance;
+
       beforeEach(() => {
-        stub(console, 'error');
+        consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
       });
 
       afterEach(() => {
-        // @ts-expect-error beforeEach side effect
-        console.error.restore();
+        consoleError.mockRestore();
       });
 
       it('should have a stable height if the parent container has no intrinsic height', () => {
         render(
           <div>
-            <p>The table keeps growing... and growing...</p>
+            <p>The table keeps growing… and growing…</p>
             <DataGrid {...baselineProps} />
           </div>,
         );
@@ -832,6 +866,100 @@ describe('<DataGrid /> - Layout & warnings', () => {
       });
     });
 
+    describe('height prop', () => {
+      it('should resolve the root element to the given pixel height without a wrapper', () => {
+        render(<DataGrid {...baselineProps} height={300} />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('300px');
+      });
+
+      it('should resolve the root element to the given CSS height value without a wrapper', () => {
+        render(<DataGrid {...baselineProps} height="150px" />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('150px');
+      });
+
+      it('should let autoPageSize compute the page size from the height prop, without a wrapper', () => {
+        const nbRows = 27;
+        const height = 780;
+        const columnHeaderHeight = 56;
+        const rowHeight = 52;
+
+        function TestCase() {
+          const data = useBasicDemoData(nbRows, 10);
+          return (
+            <DataGrid
+              columns={data.columns}
+              rows={data.rows}
+              autoPageSize
+              height={height}
+              columnHeaderHeight={columnHeaderHeight}
+              rowHeight={rowHeight}
+            />
+          );
+        }
+
+        render(<TestCase />);
+        const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
+        const expectedFullPageRowsLength = Math.floor(
+          (height - columnHeaderHeight - footerHeight) / rowHeight,
+        );
+        expect(getColumnValues(0)).to.have.length(expectedFullPageRowsLength);
+      });
+
+      it('should let sx override the height prop', () => {
+        render(<DataGrid {...baselineProps} height={300} sx={{ height: 150 }} />);
+        expect(getComputedStyle(grid('root')!).height).to.equal('150px');
+      });
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      it('should resolve the root element to the given height inside a flex column container', () => {
+        render(
+          <div style={{ display: 'flex', flexDirection: 'column', height: 500 }}>
+            <DataGrid {...baselineProps} height={300} />
+          </div>,
+        );
+        expect(getComputedStyle(grid('root')!).height).to.equal('300px');
+      });
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should not grow past the given height inside a flex column container',
+        () => {
+          render(
+            <div style={{ display: 'flex', flexDirection: 'column', height: 500 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ height: '300px' });
+        },
+      );
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should not shrink below the given height when the flex column parent is shorter',
+        () => {
+          render(
+            <div style={{ display: 'flex', flexDirection: 'column', height: 200 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ height: '300px' });
+        },
+      );
+
+      // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+      // Need layout
+      it.skipIf(isJSDOM)('should fill the available width inside a flex row container', () => {
+        render(
+          <div style={{ display: 'flex', width: 400 }}>
+            <DataGrid {...baselineProps} height={300} />
+          </div>,
+        );
+        expect(grid('root')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
+
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
     it('should not have a horizontal scrollbar if not needed', () => {
       function TestCase() {
@@ -884,6 +1012,101 @@ describe('<DataGrid /> - Layout & warnings', () => {
       const overlayWrapper = screen.getByText('No rows').parentElement;
       const expectedHeight = height - columnHeaderHeight - scrollbarSize;
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
+    });
+
+    // See https://github.com/mui/mui-x/issues/14289
+    describe('overlay position', () => {
+      const renderGrid = (
+        direction: 'ltr' | 'rtl',
+        columns: GridColDef[],
+        props?: Partial<DataGridProps>,
+      ) => {
+        render(
+          <ThemeProvider theme={createTheme({ direction })}>
+            <div dir={direction} style={{ width: 300, height: 300 }}>
+              <DataGrid rows={[]} columns={columns} hideFooter {...props} />
+            </div>
+          </ThemeProvider>,
+        );
+        return { scroller: grid('virtualScroller')!, overlay: grid('overlayWrapperInner')! };
+      };
+
+      const expectOverlayToCoverTheViewport = (scroller: HTMLElement, overlay: HTMLElement) => {
+        const scrollerRect = scroller.getBoundingClientRect();
+        const overlayRect = overlay.getBoundingClientRect();
+        expect(Math.round(overlayRect.left)).to.equal(Math.round(scrollerRect.left));
+        expect(Math.round(overlayRect.right)).to.equal(Math.round(scrollerRect.right));
+      };
+
+      describe('columns wider than the viewport', () => {
+        // The columns are more than twice as wide as the viewport, so the overlay has to travel
+        // further than a single viewport width to stay in place.
+        const wideColumns: GridColDef[] = Array.from({ length: 10 }, (_, index) => ({
+          field: `col${index}`,
+          width: 100,
+        }));
+
+        const expectOverlayToStayInTheViewport = async (
+          direction: 'ltr' | 'rtl',
+          props?: Partial<DataGridProps>,
+        ) => {
+          const { scroller, overlay } = renderGrid(direction, wideColumns, props);
+          const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+          expect(maxScrollLeft).to.be.greaterThan(scroller.clientWidth);
+
+          // The content is wider than the viewport, so the overlay sits at its static position
+          // rather than being pushed by the scroll. It has to cover the viewport already.
+          expectOverlayToCoverTheViewport(scroller, overlay);
+
+          await act(async () => {
+            // In RTL, `scrollLeft` goes from 0 (scrolled to the start) to `-maxScrollLeft`
+            scroller.scrollLeft = direction === 'rtl' ? -maxScrollLeft : maxScrollLeft;
+            scroller.dispatchEvent(new Event('scroll'));
+          });
+
+          await waitFor(() => {
+            expectOverlayToCoverTheViewport(scroller, overlay);
+          });
+        };
+
+        it('should keep the overlay in the viewport in LTR', async () => {
+          await expectOverlayToStayInTheViewport('ltr');
+        });
+
+        it('should keep the overlay in the viewport in RTL', async () => {
+          await expectOverlayToStayInTheViewport('rtl');
+        });
+
+        // The controlled layout mode pins the whole viewport instead of the overlay alone.
+        const controlledLayout: Partial<DataGridProps> = {
+          experimentalFeatures: { virtualizerLayoutMode: 'controlled' },
+        };
+
+        it('should keep the overlay in the viewport in LTR with a controlled layout', async () => {
+          await expectOverlayToStayInTheViewport('ltr', controlledLayout);
+        });
+
+        it('should keep the overlay in the viewport in RTL with a controlled layout', async () => {
+          await expectOverlayToStayInTheViewport('rtl', controlledLayout);
+        });
+      });
+
+      describe('columns narrower than the viewport', () => {
+        // The columns leave empty space next to them, which the overlay has to cover as well.
+        const narrowColumns: GridColDef[] = [{ field: 'col0', width: 100 }];
+
+        it('should cover the viewport in LTR', () => {
+          const { scroller, overlay } = renderGrid('ltr', narrowColumns);
+          expect(scroller.scrollWidth).to.equal(scroller.clientWidth);
+          expectOverlayToCoverTheViewport(scroller, overlay);
+        });
+
+        it('should cover the viewport in RTL', () => {
+          const { scroller, overlay } = renderGrid('rtl', narrowColumns);
+          expect(scroller.scrollWidth).to.equal(scroller.clientWidth);
+          expectOverlayToCoverTheViewport(scroller, overlay);
+        });
+      });
     });
 
     it('should respect the maxHeight of the flex parent', () => {
@@ -1152,7 +1375,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
-    const NoRowsOverlay = spy(() => null);
+    const NoRowsOverlay = vi.fn(() => null);
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
@@ -1161,13 +1384,13 @@ describe('<DataGrid /> - Layout & warnings', () => {
       );
     }
     const { setProps } = render(<TestCase rows={[]} loading />);
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
   });
 
   it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
-    const NoRowsOverlay = spy(() => null);
+    const NoRowsOverlay = vi.fn(() => null);
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
@@ -1177,9 +1400,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }
     const rows: DataGridProps['rows'] = [];
     const { setProps } = render(<TestCase rows={rows} loading />);
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     setProps({ loading: false });
-    expect(NoRowsOverlay.callCount).not.to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).not.to.equal(0);
   });
 
   // Doesn't work with mocked window.getComputedStyle
@@ -1337,6 +1560,139 @@ describe('<DataGrid /> - Layout & warnings', () => {
             rows={[]}
           />
         </div>,
+      );
+    },
+  );
+
+  // See https://github.com/mui/mui-x/issues/22510
+  // Need layout
+  it.skipIf(isJSDOM)(
+    'should keep the vertical scrollbar after the container size oscillates across the threshold',
+    async () => {
+      function TestCase({ height }: { height: number }) {
+        return (
+          <div style={{ width: 300, height }}>
+            <DataGrid
+              rows={Array.from({ length: 3 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+              columns={[{ field: 'brand' }]}
+              resizeThrottleMs={0}
+            />
+          </div>
+        );
+      }
+      const { setProps } = render(<TestCase height={150} />);
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+      });
+      // Pauses simulate user-paced resize (each flip > OSCILLATION_FLIP_WINDOW_MS apart).
+      await sleep(150);
+      setProps({ height: 400 });
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+      });
+      await sleep(150);
+      setProps({ height: 150 });
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+      });
+    },
+  );
+
+  // See https://github.com/mui/mui-x/issues/20539
+  // Need layout
+  it.skipIf(isJSDOM)(
+    'should force the vertical scrollbar off when consecutive flips happen inside one render frame',
+    async () => {
+      // Stub performance.now to drive the oscillation detector's elapsed-time check.
+      let mockTime = 1000;
+      const performanceNowStub = vi.spyOn(performance, 'now').mockImplementation(() => mockTime);
+      try {
+        function TestCase({ height }: { height: number }) {
+          return (
+            <div style={{ width: 300, height }}>
+              <DataGrid
+                rows={Array.from({ length: 3 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+                columns={[{ field: 'brand' }]}
+                resizeThrottleMs={0}
+              />
+            </div>
+          );
+        }
+        const { setProps } = render(<TestCase height={150} />);
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+        });
+        // First flip outside the window — counter resets.
+        mockTime += 200;
+        setProps({ height: 400 });
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+        });
+        // Second flip inside the window — force-suppressed despite needing the scrollbar.
+        mockTime += 30;
+        setProps({ height: 150 });
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+        });
+      } finally {
+        performanceNowStub.mockRestore();
+      }
+    },
+  );
+  // See https://github.com/mui/mui-x/issues/23573
+  // Need layout
+  it.skipIf(isJSDOM)(
+    'should not reserve a vertical scrollbar while a growing container adapts to the horizontal scrollbar',
+    async () => {
+      function TestCase({ brandWidth }: { brandWidth: number }) {
+        return (
+          <div style={{ width: 400 }}>
+            <DataGrid
+              rows={Array.from({ length: 3 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+              columns={[
+                { field: 'id', width: 100 },
+                { field: 'brand', width: brandWidth },
+              ]}
+              scrollbarSize={15}
+            />
+          </div>
+        );
+      }
+      // Samples both flags once per frame, after paint. Each frame gets its own `act()` scope,
+      // because React 18 holds commits until an async `act()` scope ends.
+      const sampleScrollFlagsPerFrame = async (frames: number) => {
+        const flags: string[] = [];
+        for (let i = 0; i < frames; i += 1) {
+          // eslint-disable-next-line no-await-in-loop
+          await act(
+            () =>
+              new Promise<void>((resolve) => {
+                requestAnimationFrame(() => resolve());
+              }),
+          );
+          flags.push(
+            `${getVariable('--DataGrid-hasScrollX')}${getVariable('--DataGrid-hasScrollY')}`,
+          );
+        }
+        return flags;
+      };
+
+      const { setProps } = render(<TestCase brandWidth={200} />);
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-columnsTotalWidth')).to.equal('300px');
+      });
+      expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
+      expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+
+      // The columns overflow, and the horizontal scrollbar filler makes the
+      // container grow. Until that resize is observed the content is taller
+      // than the stale root, which used to reserve a vertical scrollbar for the
+      // duration of the resize throttle.
+      setProps({ brandWidth: 500 });
+      const flags = await sampleScrollFlagsPerFrame(10);
+
+      expect(flags, `sampled hasScrollX+hasScrollY: ${flags.join(', ')}`).to.deep.equal(
+        flags.map(() => '10'),
       );
     },
   );

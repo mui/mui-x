@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'tunnit',
@@ -47,9 +47,11 @@ const fiFIPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Valitse ${views[view]}. ${!formattedTime ? 'Ei aikaa valittuna' : `Valittu aika on ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} tuntia`,
-  minutesClockNumberText: (minutes) => `${minutes} minuuttia`,
-  secondsClockNumberText: (seconds) => `${seconds} sekuntia`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'tunti' : 'tuntia'}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${Number(minutes) === 1 ? 'minuutti' : 'minuuttia'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'sekunti' : 'sekuntia'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Valitse ${views[view]}`,

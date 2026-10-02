@@ -45,16 +45,19 @@ This feature is experimental.
 It may change or be removed in a future release.
 :::
 
-The virtualizer supports two layout modes that differ in how scrolling and row positioning work.
+The virtualizer supports two layout modes that differ in how scrolling and row positioning work:
 
-In the default **uncontrolled** mode, the browser drives scrolling natively and the grid uses CSS `sticky` positioning to keep headers and pinned rows in place.
-Rendered rows are positioned inside a filler element that stretches the scroll container to the correct total height.
-Because the browser and JavaScript run asynchronously, fast scrolling can outpace rendering and produce brief white areas in the viewport.
+- **Uncontrolled mode** (default). The rows' positions are set relative to the native scroll container.
+  A JavaScript logic updates the virtualized rows asynchronously to cover the current scroll position.\
+  _(For example, the data grid uses CSS `sticky` positioning to keep headers and pinned rows in place, rendered rows are positioned inside a filler element that stretches the scroll container to the correct total height.)_\
+  The downsides:
+  - During fast scrolling, the native scroll update can outpace the JavaScript rendering logic, which produces brief empty row areas.
 
-In **controlled** mode, the grid takes over the scrolling.
-All visible elements are positioned with CSS `position: absolute` and updated together in a single JavaScript pass whenever the scroll position changes.
-This removes the filler element and ensures that headers, pinned rows, and data rows always move as one unit—eliminating the white-area gaps that can appear under fast scrolling.
-However, this mode may have a perceivable performance cost on some devices and browsers, as the browser can't use native scrolling.
+- **Controlled mode**. The rows' positions are set in absolute. A JavaScript logic updates the virtualized rows asynchronously to cover the current scroll position.
+  Headers, pinned rows, and data rows always move as one unit.\
+  The downsides:
+  - During fast scrolling, depending on the browser, the JavaScript rendering logic can be slower than what the native scroll would be, leading to a feeling of lag.
+  - Safari row position update is capped at 60Hz, even on higher refresh-rate displays, because of `requestAnimationFrames()`: [webkit#173434](https://bugs.webkit.org/show_bug.cgi?id=173434).
 
 Use the `virtualizerLayoutMode` key inside `experimentalFeatures` to opt in to the controlled mode:
 

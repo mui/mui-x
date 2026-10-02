@@ -17,14 +17,14 @@ This guide is also available in <a href="https://raw.githubusercontent.com/mui/m
 
 ## Start using the new release
 
-In `package.json`, change the version of the Tree View package to `latest`.
+In `package.json`, change the version of the Tree View package to `^8.0.0`.
 
 ```diff
 -"@mui/x-tree-view": "7.x.x",
-+"@mui/x-tree-view": "latest",
++"@mui/x-tree-view": "^8.0.0",
 
 -"@mui/x-tree-view-pro": "7.x.x",
-+"@mui/x-tree-view-pro": "latest",
++"@mui/x-tree-view-pro": "^8.0.0",
 ```
 
 Since `v8` is a major release, it contains changes that affect the public API.

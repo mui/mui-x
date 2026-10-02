@@ -1,6 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import type { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'Horas',
@@ -47,9 +47,10 @@ const esESPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Seleccione ${views[view]}. ${!formattedTime ? 'No hay hora seleccionada' : `La hora seleccionada es ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} horas`,
-  minutesClockNumberText: (minutes) => `${minutes} minutos`,
-  secondsClockNumberText: (seconds) => `${seconds} segundos`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'hora' : 'horas'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'minuto' : 'minutos'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'segundo' : 'segundos'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Seleccionar ${views[view]}`,

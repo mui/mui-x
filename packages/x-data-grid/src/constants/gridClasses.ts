@@ -87,6 +87,18 @@ export interface GridClasses {
    */
   aggregationRowOverlayWrapper: string;
   /**
+   * Styles applied to the A1-notation column-letter adornment in the column header (Premium formulas).
+   */
+  formulaColumnHeaderLetter: string;
+  /**
+   * Styles applied to the cells of the A1-notation row-number column (Premium formulas).
+   */
+  formulaRowNumberCell: string;
+  /**
+   * Styles applied to the formula bar root element (Premium formulas).
+   */
+  formulaBar: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -517,6 +529,54 @@ export interface GridClasses {
    * Styles applied to the edit long text cell textarea.
    */
   editLongTextCellTextarea: string;
+  /**
+   * Styles applied to the multi-select cell root element.
+   */
+  multiSelectCell: string;
+  /**
+   * Styles applied to each chip in the multi-select cell.
+   */
+  multiSelectCellChip: string;
+  /**
+   * @ignore - do not document.
+   */
+  'multiSelectCellChip--hidden': string;
+  /**
+   * Styles applied to the overflow "+N" chip in the multi-select cell.
+   */
+  multiSelectCellOverflow: string;
+  /**
+   * Styles applied to the multi-select cell expand popup.
+   */
+  multiSelectCellPopup: string;
+  /**
+   * Styles applied to the multi-select cell popper content.
+   */
+  multiSelectCellPopperContent: string;
+  /**
+   * Styles applied to the edit multi-select cell root element.
+   */
+  editMultiSelectCell: string;
+  /**
+   * Styles applied to each chip in the edit multi-select cell.
+   */
+  editMultiSelectCellChip: string;
+  /**
+   * @ignore - do not document.
+   */
+  'editMultiSelectCellChip--hidden': string;
+  /**
+   * Styles applied to the overflow "+N" chip in the edit multi-select cell.
+   */
+  editMultiSelectCellOverflow: string;
+  /**
+   * Styles applied to the edit multi-select cell popup.
+   */
+  editMultiSelectCellPopup: string;
+  /**
+   * Styles applied to the edit multi-select cell popper content.
+   */
+  editMultiSelectCellPopperContent: string;
   /**
    * Styles applied to the filter icon element.
    */
@@ -1161,6 +1221,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignRight',
   'aggregationColumnHeaderLabel',
   'aggregationRowOverlayWrapper',
+  'formulaColumnHeaderLetter',
+  'formulaRowNumberCell',
+  'formulaBar',
   'mainContent',
   'withSidePanel',
   'collapsible',
@@ -1200,6 +1263,18 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editLongTextCellPopup',
   'editLongTextCellPopperContent',
   'editLongTextCellTextarea',
+  'multiSelectCell',
+  'multiSelectCellChip',
+  'multiSelectCellChip--hidden',
+  'multiSelectCellOverflow',
+  'multiSelectCellPopup',
+  'multiSelectCellPopperContent',
+  'editMultiSelectCell',
+  'editMultiSelectCellChip',
+  'editMultiSelectCellChip--hidden',
+  'editMultiSelectCellOverflow',
+  'editMultiSelectCellPopup',
+  'editMultiSelectCellPopperContent',
   'filler',
   'filterForm',
   'filterFormDeleteIcon',

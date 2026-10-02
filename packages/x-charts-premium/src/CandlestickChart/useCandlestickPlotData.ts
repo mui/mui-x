@@ -1,12 +1,9 @@
 'use client';
 import * as React from 'react';
-import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
-import {
-  type D3ContinuousScale,
-  selectorChartsHighlightStateCallback,
-  useStore,
-} from '@mui/x-charts/internals';
-import { type ChartDrawingArea } from '@mui/x-charts/hooks';
+import type { ScaleBand } from '@mui/x-charts-vendor/d3-scale';
+import { selectorChartsHighlightStateCallback, useStore } from '@mui/x-charts/internals';
+import type { D3ContinuousScale } from '@mui/x-charts/internals';
+import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
 import type { DefaultizedOHLCSeriesType } from '../models';
 import { parseColor } from '../utils/webgl/parseColor';

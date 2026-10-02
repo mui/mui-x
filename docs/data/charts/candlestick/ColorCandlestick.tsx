@@ -1,4 +1,4 @@
-import { Unstable_CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
+import { CandlestickChart as CandlestickChart } from '@mui/x-charts-premium/CandlestickChart';
 import { OHLCValueType } from '@mui/x-charts-premium/models';
 import sp500 from '../dataset/sp500-intraday.json';
 

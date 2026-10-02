@@ -2,8 +2,11 @@ import * as React from 'react';
 import { act, renderHook, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters';
-import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
+import { createEchoAdapter } from '../adapters/createEchoAdapter';
+import { ChatProvider } from '../ChatProvider';
+import type { ChatProviderProps } from '../ChatProvider';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
+import type { ChatToolMessagePart } from '../types/chat-message-parts';
 import { useChat } from './useChat';
 import { useChatStatus } from './useChatStatus';
 import { useChatStore } from './useChatStore';
@@ -124,6 +127,7 @@ describe('useChat', () => {
         role: 'assistant',
         status: 'sent',
         parts: [{ type: 'text', text: 'Hello back', state: 'done' }],
+        createdAt: expect.any(String),
       },
     ]);
   });
@@ -450,6 +454,7 @@ describe('useChat', () => {
           },
           { type: 'step-start' },
         ],
+        createdAt: expect.any(String),
       },
     ]);
   });
@@ -665,6 +670,127 @@ describe('useChat', () => {
     expect(result.current.hasMoreHistory).toBe(false);
   });
 
+  it('reports the initial history load as pending from the first render, mirrored by useChatStatus', async () => {
+    let resolveListMessages!: (value: any) => void;
+    const adapter = createAdapter({
+      listMessages: vi.fn(
+        () =>
+          new Promise<any>((resolve) => {
+            resolveListMessages = resolve;
+          }),
+      ),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      initialActiveConversationId: 'c1',
+    });
+
+    const observed: Array<[boolean, string]> = [];
+    const { result } = renderHook(
+      () => {
+        const chat = useChat();
+        const status = useChatStatus();
+        observed.push([chat.isLoadingHistory, chat.historyStatus]);
+        return { chat, status };
+      },
+      { wrapper: Wrapper },
+    );
+
+    // The first committed frame must not look like an empty, settled conversation.
+    expect(observed[0]).toEqual([true, 'loading']);
+    expect(result.current.status.isLoadingHistory).toBe(true);
+    expect(result.current.status.historyStatus).toBe('loading');
+
+    await act(async () => {
+      resolveListMessages({
+        messages: [
+          {
+            id: 'm1',
+            conversationId: 'c1',
+            role: 'user',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Hello' }],
+          },
+        ],
+        cursor: undefined,
+        hasMore: false,
+      });
+    });
+
+    expect(result.current.chat.isLoadingHistory).toBe(false);
+    expect(result.current.chat.historyStatus).toBe('loaded');
+    expect(result.current.status.isLoadingHistory).toBe(false);
+    expect(result.current.status.historyStatus).toBe('loaded');
+    expect(result.current.chat.messages.map((message) => message.id)).toEqual(['m1']);
+    expect(observed).not.toContainEqual([false, 'idle']);
+  });
+
+  it('reports historyStatus "loaded" with no messages for an empty conversation', async () => {
+    const adapter = createAdapter({
+      listMessages: vi.fn(async () => ({ messages: [], cursor: undefined, hasMore: false })),
+    });
+    const { Wrapper } = createProviderWrapper({ adapter, initialActiveConversationId: 'c1' });
+
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.historyStatus).toBe('loaded');
+    });
+    expect(result.current.messages).toEqual([]);
+  });
+
+  it('keeps historyStatus "idle" when there is no history to load', () => {
+    const { Wrapper: NoLoader } = createProviderWrapper({
+      adapter: createAdapter(),
+      initialActiveConversationId: 'c1',
+    });
+    const { result: withoutLoader } = renderHook(() => useChat(), { wrapper: NoLoader });
+    expect(withoutLoader.current.historyStatus).toBe('idle');
+    expect(withoutLoader.current.isLoadingHistory).toBe(false);
+
+    const { Wrapper: NoConversation } = createProviderWrapper({
+      adapter: createAdapter({ listMessages: vi.fn() }),
+    });
+    const { result: withoutConversation } = renderHook(() => useChat(), {
+      wrapper: NoConversation,
+    });
+    expect(withoutConversation.current.historyStatus).toBe('idle');
+    expect(withoutConversation.current.isLoadingHistory).toBe(false);
+  });
+
+  it('does not double-fire loadConversationMessages on initial mount with initialActiveConversationId', async () => {
+    const adapter = createAdapter({
+      listMessages: vi.fn(async () => ({
+        messages: [],
+        cursor: undefined,
+        hasMore: false,
+      })),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      initialActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(adapter.listMessages).toHaveBeenCalled();
+    });
+
+    // Wait one extra microtask + animation frame so any redundant secondary
+    // effect has a chance to fire before we assert call count.
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+    });
+
+    expect(result.current.activeConversationId).toBe('c1');
+    expect(adapter.listMessages).toHaveBeenCalledTimes(1);
+    expect(adapter.listMessages).toHaveBeenCalledWith(
+      expect.objectContaining({ conversationId: 'c1', direction: 'backward' }),
+    );
+  });
+
   it('switches conversations, aborts active streaming, and loads the new thread', async () => {
     const adapter = createAdapter({
       listMessages: vi.fn(async ({ conversationId }) => {
@@ -765,7 +891,43 @@ describe('useChat', () => {
       role: 'assistant',
       status: 'sent',
       parts: [{ type: 'text', text: 'Second answer', state: 'done' }],
+      createdAt: expect.any(String),
     });
+  });
+
+  it('exposes a stable regenerate action that drives the store via createEchoAdapter', async () => {
+    const adapter = createEchoAdapter({ delayMs: 0, respond: () => 'Regenerated reply' });
+    const { Wrapper } = createProviderWrapper({ adapter });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    const initialRegenerate = result.current.regenerate;
+    expect(typeof initialRegenerate).toBe('function');
+
+    await act(async () => {
+      await result.current.sendMessage({
+        id: 'user-1',
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Hello' }],
+      });
+    });
+
+    const assistantId = result.current.messages[1].id;
+    expect(result.current.messages.map((m) => m.role)).toEqual(['user', 'assistant']);
+
+    await act(async () => {
+      await result.current.regenerate(assistantId);
+    });
+
+    // The action reference is stable across re-renders.
+    expect(result.current.regenerate).toBe(initialRegenerate);
+    expect(result.current.messages.map((m) => m.role)).toEqual(['user', 'assistant']);
+    expect(result.current.messages[0].id).toBe('user-1');
+    // The old assistant message was replaced with a fresh reply.
+    expect(result.current.messages[1].id).not.toBe(assistantId);
+    expect(result.current.messages[1].parts).toEqual([
+      { type: 'text', text: 'Regenerated reply', state: 'done' },
+    ]);
+    expect(result.current.isStreaming).toBe(false);
   });
 
   it('updates tool approval state locally and forwards the response to the adapter', async () => {
@@ -838,6 +1000,123 @@ describe('useChat', () => {
         },
       ],
     });
+  });
+
+  it('matches the invocation by a distinct approvalId and flips it optimistically', async () => {
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const approvalMessage: ChatMessage = {
+      id: 'assistant-1',
+      conversationId: 'c1',
+      role: 'assistant',
+      status: 'sent',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tool-1',
+            toolName: 'search',
+            state: 'approval-requested',
+            input: { query: 'weather' },
+            approvalId: 'approval-1',
+          },
+        },
+      ],
+    };
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter({
+        addToolApprovalResponse,
+        listMessages: vi.fn(async () => ({
+          messages: [approvalMessage],
+          cursor: undefined,
+          hasMore: false,
+        })),
+      }),
+      initialActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.messages).toHaveLength(1);
+    });
+
+    await act(async () => {
+      // Respond with the distinct approvalId rather than the toolCallId.
+      await result.current.addToolApprovalResponse({
+        id: 'approval-1',
+        approved: true,
+        reason: 'Approved',
+      });
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'approval-1',
+      approved: true,
+      reason: 'Approved',
+    });
+    const invocation = (result.current.messages[0].parts[0] as ChatToolMessagePart).toolInvocation;
+    expect(invocation.state).toBe('approval-responded');
+    expect(invocation.approval).toEqual({ approved: true, reason: 'Approved' });
+  });
+
+  it('rolls back the optimistic flip when responding by approvalId and the adapter rejects', async () => {
+    const onError = vi.fn();
+    const approvalMessage: ChatMessage = {
+      id: 'assistant-1',
+      conversationId: 'c1',
+      role: 'assistant',
+      status: 'sent',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tool-1',
+            toolName: 'search',
+            state: 'approval-requested',
+            input: { query: 'weather' },
+            approvalId: 'approval-1',
+          },
+        },
+      ],
+    };
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter({
+        addToolApprovalResponse: vi.fn(async () => {
+          throw new Error('Adapter error');
+        }),
+        listMessages: vi.fn(async () => ({
+          messages: [approvalMessage],
+          cursor: undefined,
+          hasMore: false,
+        })),
+      }),
+      initialActiveConversationId: 'c1',
+      onError,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.messages).toHaveLength(1);
+    });
+
+    await act(async () => {
+      await result.current.addToolApprovalResponse({
+        id: 'approval-1',
+        approved: true,
+        reason: 'Approved',
+      });
+    });
+
+    expect(result.current.error).toEqual(
+      expect.objectContaining({
+        code: 'SEND_ERROR',
+        message: 'Adapter error',
+      }),
+    );
+    expect(onError).toHaveBeenCalled();
+    // The optimistic flip is rolled back to the original approval-requested state.
+    const invocation = (result.current.messages[0].parts[0] as ChatToolMessagePart).toolInvocation;
+    expect(invocation.state).toBe('approval-requested');
+    expect(invocation.approval).toBeUndefined();
   });
 
   it('completes the tool approval flow from request to approved output', async () => {
@@ -976,6 +1255,7 @@ describe('useChat', () => {
             },
           },
         ],
+        createdAt: expect.any(String),
       },
     ]);
   });
@@ -1111,6 +1391,7 @@ describe('useChat', () => {
             },
           },
         ],
+        createdAt: expect.any(String),
       },
     ]);
   });

@@ -1,32 +1,36 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  type GridColDef,
-  type GridRowId,
-  type GridValidRowModel,
   GRID_CHECKBOX_SELECTION_FIELD,
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
-  type GridRowModel,
   useGridEventPriority,
   useGridEvent,
-  type GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowSelectionIdsSelector,
   gridRowSelectionCountSelector,
 } from '@mui/x-data-grid';
+import type {
+  GridColDef,
+  GridRowId,
+  GridValidRowModel,
+  GridRowModel,
+  GridEventListener,
+} from '@mui/x-data-grid';
 import {
   getRowIdFromRowModel,
   getActiveElement,
-  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   getPublicApiRef,
   isPasteShortcut,
   useGridLogger,
   isEventTargetInPortal,
+  isReplaceUpdate,
+  getReplaceRow,
 } from '@mui/x-data-grid/internals';
-import { warnOnce } from '@mui/x-internals/warning';
+import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
+import { errorOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import debounce from '@mui/utils/debounce';
 import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -88,9 +92,9 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
 export class CellValueUpdater {
   rowsToUpdate: Map<GridRowId, GridValidRowModel> = new Map();
 
-  updateRow: (row: GridRowModel) => void;
+  declare updateRow: (row: GridRowModel) => void;
 
-  options: {
+  declare options: {
     apiRef: RefObject<GridPrivateApiPremium>;
     processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
     onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
@@ -183,20 +187,24 @@ export class CellValueUpdater {
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else if (process.env.NODE_ENV !== 'production') {
-            warnOnce(
+            errorOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
                 'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
-              ],
-              'error',
+              ].join('\n'),
             );
           }
         };
 
         try {
           const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
-          newRows.set(rowId, finalRowUpdate);
+          // A `{ _action: 'replace', row }` update is unwrapped so that the
+          // `clipboardPasteEnd` event exposes the stored row, not the envelope.
+          newRows.set(
+            rowId,
+            isReplaceUpdate(finalRowUpdate) ? getReplaceRow(finalRowUpdate) : finalRowUpdate,
+          );
           this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);

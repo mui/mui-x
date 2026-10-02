@@ -32,6 +32,7 @@ export * from './ruRU';
 export * from './skSK';
 export * from './svSE';
 export * from './trTR';
+export * from './thTH';
 export * from './ukUA';
 export * from './urPK';
 export * from './viVN';

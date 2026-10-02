@@ -2,14 +2,16 @@
 import {
   useSeriesOfType,
   useAllSeriesOfType,
-  type ProcessedSeries,
-  type SeriesId,
-  type ChartSeriesDefaultized,
   useStore,
-  type ChartSeriesLayout,
   selectorChartSeriesLayout,
 } from '@mui/x-charts/internals';
-import { type SankeyLayout } from '../SankeyChart';
+import type {
+  ProcessedSeries,
+  SeriesId,
+  ChartSeriesDefaultized,
+  ChartSeriesLayout,
+} from '@mui/x-charts/internals';
+import type { SankeyLayout } from '../SankeyChart';
 
 export type UseSankeySeriesReturnValue = ChartSeriesDefaultized<'sankey'>;
 export type UseSankeySeriesContextReturnValue = ProcessedSeries['sankey'];

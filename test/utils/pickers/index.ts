@@ -6,6 +6,7 @@ export * from './createPickerRenderer';
 export * from './fields';
 export * from './misc';
 export * from './openPicker';
+export * from './pickersTextField';
 export * from './viewHandlers';
 // `describeAdapters` is intentionally NOT re-exported from this barrel: it pulls in
 // `moment` and `moment-timezone` eagerly, which is wasted memory for tests that

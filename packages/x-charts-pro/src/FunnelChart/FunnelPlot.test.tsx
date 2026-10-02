@@ -1,5 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { FunnelPlot, funnelClasses, FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { describe, it, expect } from 'vitest';
 
 describe('<FunnelPlot />', () => {
   const { render } = createRenderer();

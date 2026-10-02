@@ -1,20 +1,21 @@
-import {
-  type MoveEvent,
-  type PanEvent,
-  type PanGestureOptions,
-  type PinchEvent,
-  type PinchGestureOptions,
-  type PressEvent,
-  type TapEvent,
-  type TurnWheelEvent,
-  type PressAndDragEvent,
-  type PressAndDragGestureOptions,
-  type TapAndDragEvent,
-  type TapAndDragGestureOptions,
-  type TapGestureOptions,
-  type TurnWheelGestureOptions,
+import type {
+  Gesture,
+  MoveEvent,
+  PanEvent,
+  PanGestureOptions,
+  PinchEvent,
+  PinchGestureOptions,
+  PressEvent,
+  TapEvent,
+  TurnWheelEvent,
+  PressAndDragEvent,
+  PressAndDragGestureOptions,
+  TapAndDragEvent,
+  TapAndDragGestureOptions,
+  TapGestureOptions,
+  TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
-import { type ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =
   | 'pan'
@@ -136,6 +137,8 @@ export interface UseChartInteractionListenerParameters {}
 
 export interface UseChartInteractionListenerState {}
 
+export type RegisterGestures = (gestures: Gesture<string>[]) => () => void;
+
 export interface UseChartInteractionListenerInstance {
   /**
    * Adds an interaction listener to the SVG element.
@@ -151,6 +154,12 @@ export interface UseChartInteractionListenerInstance {
    * @param options The options to apply to the interaction.
    */
   updateZoomInteractionListeners: UpdateZoomInteractionListeners;
+  /**
+   * Registers additional gestures on the chart interaction element.
+   *
+   * @param gestures The gestures to register.
+   */
+  registerGestures: RegisterGestures;
 }
 
 export type UseChartInteractionListenerSignature = ChartPluginSignature<{

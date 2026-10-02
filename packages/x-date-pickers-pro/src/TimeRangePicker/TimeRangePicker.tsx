@@ -7,7 +7,7 @@ import refType from '@mui/utils/refType';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '@mui/x-date-pickers/internals';
 import { DesktopTimeRangePicker } from '../DesktopTimeRangePicker';
 import { MobileTimeRangePicker } from '../MobileTimeRangePicker';
-import { TimeRangePickerProps } from './TimeRangePicker.types';
+import type { TimeRangePickerProps } from './TimeRangePicker.types';
 
 type TimePickerComponent = ((
   props: TimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -41,7 +41,7 @@ const TimeRangePicker = React.forwardRef(function TimeRangePicker(
   return <MobileTimeRangePicker ref={ref} {...other} />;
 }) as TimePickerComponent;
 
-TimeRangePicker.propTypes = {
+TimeRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -169,6 +169,10 @@ TimeRangePicker.propTypes = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

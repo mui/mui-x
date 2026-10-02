@@ -1,4 +1,5 @@
 import { EventBuilder } from 'test/utils/scheduler';
+import { describe, it, expect } from 'vitest';
 import { sortEventOccurrences } from './sortEventOccurrences';
 
 describe('sortEventOccurrences', () => {

@@ -1,5 +1,5 @@
-import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 
 /**
  * @example "Sun, Jul 13"
@@ -48,7 +48,7 @@ export function formatHourAndMinutes(
   date: TemporalSupportedObject,
   adapter: Adapter,
   ampm: boolean,
-) {
+): string {
   const f = adapter.formats;
   const timeFormat = ampm
     ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`

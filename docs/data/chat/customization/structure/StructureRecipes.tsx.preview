@@ -1,0 +1,15 @@
+<ChatBox
+  adapter={adapter}
+  slots={{
+    emptyState: CustomEmptyState,
+    composerSendButton: CustomSendButton,
+  }}
+  features={{ attachments: false }}
+  localeText={{ composerInputPlaceholder: 'Ask anything...' }}
+  sx={{
+    height: 500,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

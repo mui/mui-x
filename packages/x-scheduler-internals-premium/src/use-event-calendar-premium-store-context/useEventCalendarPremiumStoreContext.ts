@@ -1,6 +1,6 @@
 'use client';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { EventCalendarPremiumStore } from '../use-event-calendar-premium';
+import type { EventCalendarPremiumStore } from '../use-event-calendar-premium';
 
 export function useEventCalendarPremiumStoreContext<
   TEvent extends object,

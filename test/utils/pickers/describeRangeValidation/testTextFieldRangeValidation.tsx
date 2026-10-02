@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (
@@ -32,7 +31,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
   describe.skipIf(!['picker', 'field'].includes(componentFamily))('text field:', () => {
     it('should accept single day range', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       render(
         <ElementToTest
           onError={onErrorMock}
@@ -43,12 +42,12 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
     });
 
     it('should not accept end date prior to start state', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       render(
         <ElementToTest
           onError={onErrorMock}
@@ -56,13 +55,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['invalidRange', 'invalidRange']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['invalidRange', 'invalidRange']);
       testInvalidStatus([true, true], fieldType);
     });
 
     it.skipIf(!withDate)('should apply shouldDisableDate', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -73,23 +72,23 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-13')],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'shouldDisableDate']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([
         'shouldDisableDate',
         'shouldDisableDate',
       ]);
@@ -101,13 +100,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
           adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
-      expect(onErrorMock.callCount).to.equal(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['shouldDisableDate', null]);
+      expect(onErrorMock.mock.calls.length).to.equal(3);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['shouldDisableDate', null]);
       testInvalidStatus([true, false], fieldType);
     });
 
     it.skipIf(!withDate)('should apply shouldDisableDate specifically on end date', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -118,23 +117,23 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-13')],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'shouldDisableDate']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'shouldDisableDate']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
@@ -143,13 +142,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
           position === 'end' ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')) : false,
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
 
     it.skipIf(!withDate)('should apply shouldDisableDate specifically on start date', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -162,14 +161,14 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-13')],
       });
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
 
       testInvalidStatus([false, false], fieldType);
 
@@ -177,8 +176,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['shouldDisableDate', null]);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['shouldDisableDate', null]);
       testInvalidStatus([true, false], fieldType);
 
       setProps({
@@ -188,7 +187,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
             : false,
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
       testInvalidStatus([true, false], fieldType);
     });
 
@@ -202,7 +201,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       it('should apply disablePast', () => {
-        const onErrorMock = spy();
+        const onErrorMock = vi.fn();
         const now = adapterToUse.date();
         function WithFakeTimer(props: any) {
           return <ElementToTest value={[now, now]} {...props} />;
@@ -225,22 +224,22 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
           value: [past, now],
         });
 
-        expect(onErrorMock.callCount).to.equal(1);
-        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
+        expect(onErrorMock.mock.calls.length).to.equal(1);
+        expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['disablePast', null]);
         testInvalidStatus([true, false], fieldType);
 
         setProps({
           value: [past, past],
         });
 
-        expect(onErrorMock.callCount).to.equal(2);
-        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
+        expect(onErrorMock.mock.calls.length).to.equal(2);
+        expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['disablePast', 'disablePast']);
         testInvalidStatus([true, true], fieldType);
       });
     });
 
     it('should apply disableFuture', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const now = adapterToUse.date();
       function WithFakeTimer(props: any) {
         return <ElementToTest value={[now, now]} {...props} />;
@@ -264,21 +263,21 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         value: [now, future],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disableFuture']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'disableFuture']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
         value: [future, future],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disableFuture', 'disableFuture']);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['disableFuture', 'disableFuture']);
       testInvalidStatus([true, true], fieldType);
     });
 
     it.skipIf(!withDate)('should apply minDate', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -287,29 +286,29 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minDate']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minDate', 'minDate']);
       testInvalidStatus([true, true], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-15')],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minDate', null]);
       testInvalidStatus([true, false], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-16'), adapterToUse.date('2018-03-17')],
       });
 
-      expect(onErrorMock.callCount).to.equal(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls.length).to.equal(3);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
 
     it.skipIf(!withDate)('should apply minDate when only first field is filled', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -318,21 +317,21 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minDate', null]);
       testInvalidStatus([true, false], fieldType, true);
 
       setProps({
         value: [adapterToUse.date('2018-03-16'), null],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType, true);
     });
 
     it.skipIf(!withDate)('should apply minDate when only second field is filled', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -341,21 +340,21 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minDate']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'minDate']);
       testInvalidStatus([false, true], fieldType, true);
 
       setProps({
         value: [null, adapterToUse.date('2018-03-16')],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType, true);
     });
 
     it.skipIf(!withDate)('should apply maxDate', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -364,28 +363,28 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-15'), adapterToUse.date('2018-03-17')],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxDate']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'maxDate']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-16'), adapterToUse.date('2018-03-17')],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxDate', 'maxDate']);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['maxDate', 'maxDate']);
       testInvalidStatus([true, true], fieldType);
     });
 
     it.skipIf(!withTime)('should apply minTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -397,28 +396,28 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', 'minTime']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minTime', 'minTime']);
       testInvalidStatus([true, true], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-10T09:00:00'), adapterToUse.date('2018-03-10T12:05:00')],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', null]);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minTime', null]);
       testInvalidStatus([true, false], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-10T12:15:00'), adapterToUse.date('2018-03-10T18:00:00')],
       });
 
-      expect(onErrorMock.callCount).to.equal(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls.length).to.equal(3);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
     it.skipIf(!withTime)('should ignore date when applying minTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -430,21 +429,21 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', 'minTime']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minTime', 'minTime']);
       testInvalidStatus([true, true], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-05T15:00:00'), adapterToUse.date('2018-03-15T16:05:00')],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
 
     it.skipIf(!withTime)('should apply minTime when only first field is filled', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -453,20 +452,20 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType, true);
 
       setProps({
         value: [adapterToUse.date('2018-02-01T05:00:00'), null],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', null]);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minTime', null]);
       testInvalidStatus([true, false], fieldType, true);
     });
 
     it.skipIf(!withTime)('should apply minTime when only second field is filled', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -475,20 +474,20 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType, true);
 
       setProps({
         value: [null, adapterToUse.date('2018-02-01T05:00:00')],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minTime']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'minTime']);
       testInvalidStatus([false, true], fieldType, true);
     });
 
     it.skipIf(!withTime)('should apply maxTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -500,28 +499,28 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-10T09:00:00'), adapterToUse.date('2018-03-10T12:05:00')],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'maxTime']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-10T12:15:00'), adapterToUse.date('2018-03-10T18:00:00')],
       });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['maxTime', 'maxTime']);
       testInvalidStatus([true, true], fieldType);
     });
 
     it.skipIf(!withTime)('should ignore date when applying maxTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -533,21 +532,21 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
 
       setProps({
         value: [adapterToUse.date('2018-03-05T15:00:00'), adapterToUse.date('2018-03-15T16:05:00')],
       });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['maxTime', 'maxTime']);
       testInvalidStatus([true, true], fieldType);
     });
 
     // prop only available on DateTime pickers
     it.skipIf(!withDate || !withTime)('should apply maxDateTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -559,24 +558,24 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock.mock.calls.length).to.equal(0);
       testInvalidStatus([false, false], fieldType);
 
       setProps({ maxDateTime: adapterToUse.date('2018-03-02T08:00:00') });
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, 'maxTime']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({ maxDateTime: adapterToUse.date('2018-03-01T05:00:00') });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxDate']);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['maxTime', 'maxDate']);
       testInvalidStatus([true, true], fieldType);
     });
 
     it.skipIf(!withDate || !withTime)('should apply minDateTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -588,20 +587,20 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minTime']);
+      expect(onErrorMock.mock.calls.length).to.equal(1);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minDate', 'minTime']);
       testInvalidStatus([true, true], fieldType);
 
       setProps({ minDateTime: adapterToUse.date('2018-03-02T08:00:00') });
 
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
+      expect(onErrorMock.mock.calls.length).to.equal(2);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal(['minDate', null]);
       testInvalidStatus([true, false], fieldType);
 
       setProps({ minDateTime: adapterToUse.date('2018-03-01T05:00:00') });
 
-      expect(onErrorMock.callCount).to.equal(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls.length).to.equal(3);
+      expect(onErrorMock.mock.lastCall?.[0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
   });

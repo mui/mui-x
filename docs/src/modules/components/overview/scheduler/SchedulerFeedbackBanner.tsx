@@ -41,11 +41,10 @@ export default function SchedulerFeedbackBanner() {
           ...theme.applyDarkStyles({ color: 'primary.100' }),
         })}
       >
-        🚀 The Scheduler is in alpha — we&apos;d love your input.{' '}
+        🚀 The Scheduler is in beta — we&apos;d love your input.{' '}
         <Link
           href={FEEDBACK_FORM_URL}
           target="_blank"
-          rel="noopener noreferrer"
           sx={(theme) => ({
             fontWeight: 'semiBold',
             color: 'primary.700',

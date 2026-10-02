@@ -5,9 +5,8 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  type GridRenderCellParams,
-  type GridGroupNode,
 } from '@mui/x-data-grid';
+import type { GridRenderCellParams, GridGroupNode } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -88,7 +87,7 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   );
 }
 
-GridTreeDataGroupingCell.propTypes = {
+GridTreeDataGroupingCell.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

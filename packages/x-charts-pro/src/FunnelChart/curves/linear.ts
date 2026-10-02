@@ -1,9 +1,4 @@
-import {
-  type FunnelCurveGenerator,
-  type CurveOptions,
-  type FunnelPointShape,
-  type Point,
-} from './curve.types';
+import type { FunnelCurveGenerator, CurveOptions, FunnelPointShape, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
 import { lerpX, lerpY } from './utils';
 
@@ -16,7 +11,7 @@ import { lerpX, lerpY } from './utils';
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/linear.js
  */
 export class Linear implements FunnelCurveGenerator {
-  private context: CanvasRenderingContext2D;
+  declare private context: CanvasRenderingContext2D;
 
   private position: number = 0;
 

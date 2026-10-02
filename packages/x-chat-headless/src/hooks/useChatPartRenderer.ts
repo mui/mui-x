@@ -10,7 +10,6 @@ export function useChatPartRenderer<TPartType extends ChatMessagePart['type']>(
 
   return (
     (partRenderers[partType] as
-      | ChatPartRenderer<Extract<ChatMessagePart, { type: TPartType }>>
-      | undefined) ?? null
+      ChatPartRenderer<Extract<ChatMessagePart, { type: TPartType }>> | undefined) ?? null
   );
 }

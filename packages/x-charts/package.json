@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "9.2.0",
+  "version": "9.14.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "license": "MIT",
@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --flat --ignore 'src/**/*.bench.ts' --copy \"published-docs/**:docs\"",
+    "build": "code-infra build --tsgo --ignore 'src/**/*.bench.ts' --copy \"published-docs/**:docs\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo && node ../../scripts/stagePublishedDocs.mjs charts",
     "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts",
     "bench:browser": "pnpm vitest bench -c ./vitest.config.browser.mts"
@@ -36,11 +36,12 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-charts-vendor": "workspace:^",
     "@mui/x-internal-gestures": "workspace:^",
     "@mui/x-internals": "workspace:^",
-    "bezier-easing": "^2.1.0",
+    "bezier-easing": "^3.1.0",
     "clsx": "catalog:",
     "prop-types": "catalog:",
     "reselect": "catalog:",

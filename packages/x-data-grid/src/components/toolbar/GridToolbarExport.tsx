@@ -59,7 +59,7 @@ function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
   );
 }
 
-GridCsvExportMenuItem.propTypes = {
+GridCsvExportMenuItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -88,7 +88,9 @@ function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   return (
     <rootProps.slots.baseMenuItem
       onClick={() => {
-        apiRef.current.exportDataAsPrint(options);
+        apiRef.current.exportDataAsPrint(options).catch((error) => {
+          console.error('MUI X Data Grid: Error exporting the grid as print:', error);
+        });
         hideMenu?.();
       }}
       {...other}
@@ -98,7 +100,7 @@ function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   );
 }
 
-GridPrintExportMenuItem.propTypes = {
+GridPrintExportMenuItem.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -115,6 +117,7 @@ GridPrintExportMenuItem.propTypes = {
     hideFooter: PropTypes.bool,
     hideToolbar: PropTypes.bool,
     includeCheckboxes: PropTypes.bool,
+    onStylesheetError: PropTypes.func,
     pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   }),
 } as any;
@@ -151,7 +154,7 @@ const GridToolbarExport = forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   },
 );
 
-GridToolbarExport.propTypes = {
+GridToolbarExport.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

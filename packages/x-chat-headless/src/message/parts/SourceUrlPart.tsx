@@ -5,6 +5,8 @@ import type { SlotComponentProps } from '@mui/utils/types';
 import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/chatPartRenderer';
 import type { ChatRole } from '../../types/chat-entities';
 import type { ChatSourceUrlMessagePart } from '../../types/chat-message-parts';
+import { useMessageContentTabIndex } from '../../message-list/internals/MessageRovingContext';
+import { safeUri } from './partUtils';
 
 export interface SourceUrlPartOwnerState {
   messageId: string;
@@ -86,10 +88,16 @@ export const SourceUrlPart = React.forwardRef(function SourceUrlPart(
     externalSlotProps: slotProps?.icon,
     ownerState,
   });
+  // Inside a roving message list the link leaves the tab order until the
+  // user drills into the message (Enter); it stays mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
   const linkProps = useSlotProps({
     elementType: LinkSlot,
     externalSlotProps: slotProps?.link,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
 
   return (
@@ -97,7 +105,12 @@ export const SourceUrlPart = React.forwardRef(function SourceUrlPart(
       <Icon {...iconProps}>
         <ExternalLinkIcon />
       </Icon>
-      <LinkSlot href={part.url} rel="noreferrer noopener" target="_blank" {...linkProps}>
+      <LinkSlot
+        href={safeUri(part.url) || undefined}
+        rel="noreferrer noopener"
+        target="_blank"
+        {...linkProps}
+      >
         {part.title ?? part.url}
       </LinkSlot>
     </Root>

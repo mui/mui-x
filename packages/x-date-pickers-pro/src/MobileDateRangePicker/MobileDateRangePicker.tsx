@@ -3,17 +3,16 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import refType from '@mui/utils/refType';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { PickerViewRendererLookup, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerViewRendererLookup, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { rangeValueManager } from '../internals/utils/valueManagers';
-import { MobileDateRangePickerProps } from './MobileDateRangePicker.types';
+import type { MobileDateRangePickerProps } from './MobileDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
-import { validateDateRange } from '../validation';
+import { useDateRangeManager } from '../managers';
 
 type MobileDateRangePickerComponent = ((
   props: MobileDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -34,6 +33,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateRangeManager();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<MobileDateRangePickerProps>(
@@ -77,16 +77,14 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker(
   const { renderPicker } = useMobileRangePicker<'day', typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'date',
-    validator: validateDateRange,
+    manager,
     steps: null,
   });
 
   return renderPicker();
 }) as MobileDateRangePickerComponent;
 
-MobileDateRangePicker.propTypes = {
+MobileDateRangePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -236,6 +234,10 @@ MobileDateRangePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
+  /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
@@ -310,7 +312,7 @@ MobileDateRangePicker.propTypes = {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading: PropTypes.func,
   /**

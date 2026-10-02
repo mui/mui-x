@@ -22,7 +22,7 @@ export default function ColumnSpanningNumber() {
     >
       <DataGrid
         columns={[
-          { field: 'username', colSpan: 2, hideable: false },
+          { field: 'username', colSpan: 2, hideable: false, rowHeader: true },
           {
             field: 'organization',
             sortable: false,

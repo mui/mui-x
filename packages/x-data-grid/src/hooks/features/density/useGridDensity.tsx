@@ -9,7 +9,8 @@ import type { GridDensityApi } from '../../../models/api/gridDensityApi';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridDensitySelector } from './densitySelector';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 
 export const densityStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'initialState' | 'density'>

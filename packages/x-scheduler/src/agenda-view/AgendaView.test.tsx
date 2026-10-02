@@ -1,18 +1,70 @@
-import { screen } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { screen, within } from '@mui/internal-test-utils';
 import {
   adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { vi, describe, it, expect } from 'vitest';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
 
+  it('should name each event with its title, time range and date', () => {
+    const event = EventBuilder.new().title('My Event').build();
+
+    render(
+      <EventCalendar events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
+    );
+
+    const eventButton = screen.getByRole('button', {
+      name: 'My Event, 12:00 AM to 1:00 AM, Thursday, July 3rd, 2025',
+    });
+    expect(eventButton).not.to.have.attribute('aria-labelledby');
+  });
+
+  describe('multi-resource events', () => {
+    const resourceA = ResourceBuilder.new().title('Room A').build();
+    const resourceB = ResourceBuilder.new().title('Room B').build();
+
+    it('should render the event once when at least one of its assigned resources is visible', () => {
+      const event = EventBuilder.new().title('Team Sync').resources([resourceA, resourceB]).build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+        />,
+      );
+
+      expect(screen.getAllByText('Team Sync')).toHaveLength(1);
+    });
+
+    it('should not render the event when all of its assigned resources are hidden', () => {
+      const event = EventBuilder.new().title('Team Sync').resources([resourceA, resourceB]).build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          resources={[resourceA, resourceB]}
+          defaultVisibleResources={{ [resourceA.id]: false, [resourceB.id]: false }}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+        />,
+      );
+
+      expect(screen.queryByText('Team Sync')).to.equal(null);
+    });
+  });
+
   describe('time navigation', () => {
     it('should go to previous agenda period (12 days) when clicking on the Previous Agenda button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -24,13 +76,13 @@ describe('<AgendaView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous agenda/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -12),
       );
     });
 
     it('should go to next agenda period (12 days) when clicking on the Next Agenda button', async () => {
-      const onVisibleDateChange = spy();
+      const onVisibleDateChange = vi.fn();
 
       const { user } = render(
         <EventCalendar
@@ -42,9 +94,122 @@ describe('<AgendaView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next agenda/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12),
       );
+    });
+  });
+
+  describe('week number label', () => {
+    it('does not render week number rows when showWeekNumber is not set', () => {
+      render(
+        <EventCalendar events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} view="agenda" />,
+      );
+
+      const separators = document.querySelectorAll(
+        `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
+      );
+      expect(separators).to.have.length(0);
+    });
+
+    it('renders week number rows when showWeekNumber is enabled', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+          preferences={{ showWeekNumber: true }}
+        />,
+      );
+
+      const separators = document.querySelectorAll(
+        `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
+      );
+      expect(separators.length).to.be.at.least(2);
+    });
+
+    it('renders the second week separator before the Sunday when weekStartsOn=0', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+          preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+        />,
+      );
+
+      const separators = document.querySelectorAll(
+        `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
+      );
+      expect(separators.length).to.be.at.least(2);
+      const nextRow = separators[1].nextElementSibling as HTMLElement;
+      expect(within(nextRow).getByText('6')).not.to.equal(null);
+    });
+
+    it('renders the second week separator before the Monday when weekStartsOn=1', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+          preferences={{ showWeekNumber: true, weekStartsOn: 1 }}
+        />,
+      );
+
+      const separators = document.querySelectorAll(
+        `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
+      );
+      expect(separators.length).to.be.at.least(2);
+      const nextRow = separators[1].nextElementSibling as HTMLElement;
+      expect(within(nextRow).getByText('7')).not.to.equal(null);
+    });
+
+    it('renders the second week separator before the Saturday when weekStartsOn=6', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+          preferences={{ showWeekNumber: true, weekStartsOn: 6 }}
+        />,
+      );
+
+      const separators = document.querySelectorAll(
+        `.${eventCalendarClasses.agendaViewWeekNumberRow}`,
+      );
+      expect(separators.length).to.be.at.least(2);
+      const nextRow = separators[1].nextElementSibling as HTMLElement;
+      expect(within(nextRow).getByText('5')).not.to.equal(null);
+    });
+
+    it('shows "Week 2" for Jan 5 2025 when weekStartsOn=0', () => {
+      const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="agenda"
+          preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+        />,
+      );
+
+      expect(screen.getByText('Week 2')).not.to.equal(null);
+    });
+
+    it('shows "Week 1" for Jan 5 2025 when weekStartsOn=1 (regression)', () => {
+      const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="agenda"
+          preferences={{ showWeekNumber: true, weekStartsOn: 1 }}
+        />,
+      );
+
+      expect(screen.getByText('Week 1')).not.to.equal(null);
     });
   });
 });

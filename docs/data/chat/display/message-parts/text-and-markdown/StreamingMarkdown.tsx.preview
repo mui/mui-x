@@ -1,0 +1,12 @@
+<ChatBox
+  adapter={streamingAdapter}
+  initialActiveConversationId={conversation.id}
+  initialConversations={[conversation]}
+  initialMessages={messages}
+  sx={{
+    height: 460,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

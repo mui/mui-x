@@ -9,7 +9,7 @@ import {
 const valueFormatter = (value) => `${Math.floor(value * 1000) / 1000} °C`;
 
 const columns = [
-  { field: 'city' },
+  { field: 'city', rowHeader: true },
   {
     field: 'oct',
     type: 'number',

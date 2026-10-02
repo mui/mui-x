@@ -5,7 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
+import { focusElement } from '../../utils/focusElement';
 import type { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -151,13 +151,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       if (!elementToFocus) {
         return;
       }
-      if (doesSupportPreventScroll()) {
-        elementToFocus.focus({ preventScroll: true });
-      } else {
-        const scrollPosition = apiRef.current.getScrollPosition();
-        elementToFocus.focus();
-        apiRef.current.scroll(scrollPosition);
-      }
+      focusElement(elementToFocus, apiRef);
     }
   }, [apiRef, hasFocus]);
 

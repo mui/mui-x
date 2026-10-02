@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import type { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -7,8 +7,10 @@ import {
   describeValue,
   openPicker,
   getFieldInputRoot,
+  multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
 import { MobileTimeRangePicker } from '@mui/x-date-pickers-pro/MobileTimeRangePicker';
+import { describe } from 'vitest';
 
 describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
   const { render } = createPickerRenderer();
@@ -68,21 +70,11 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
       // Go to the start date or the end date
       await user.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
 
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const hours = adapterToUse.format(
+      await multiSectionDigitalClockHandler.setViewValue(
+        user,
+        adapterToUse,
         newValue[setEndDate ? 1 : 0],
-        hasMeridiem ? 'hours12h' : 'hours24h',
       );
-      const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-      await user.click(
-        screen.getByRole('option', {
-          name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
-        }),
-      );
-      if (hasMeridiem) {
-        await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
-      }
 
       if (closeMobilePicker) {
         if (setEndDate) {

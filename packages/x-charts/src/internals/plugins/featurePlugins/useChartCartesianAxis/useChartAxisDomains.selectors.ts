@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -9,7 +9,8 @@ import {
   selectorChartXAxisExtrema,
   selectorChartYAxisExtrema,
 } from './useChartAxisExtrema.selectors';
-import { computeAxisDomainsMap, type DomainDefinition } from './domain';
+import { computeAxisDomainsMap } from './domain';
+import type { DomainDefinition } from './domain';
 
 /**
  * Default tick number used for auto-size domain computation.

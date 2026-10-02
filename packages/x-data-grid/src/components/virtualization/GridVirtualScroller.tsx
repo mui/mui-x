@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import { platform } from '@base-ui/utils/platform';
 import clsx from 'clsx';
 import { LayoutDataGrid, Virtualization } from '@mui/x-virtualizer';
 import {
@@ -36,7 +37,6 @@ import { useGridVirtualizer } from '../../hooks/core/useGridVirtualizer';
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
   hasScrollX: boolean;
   hasPinnedRight: boolean;
-  hasPinnedColumns: boolean;
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
   overlayType: GridOverlayType;
 };
@@ -59,7 +59,7 @@ const Scroller = styled('div', {
     const { ownerState } = props;
     return [styles.virtualScroller, ownerState.hasScrollX && styles['virtualScroller--hasScrollX']];
   },
-})<{ ownerState: OwnerState }>(({ ownerState }) => ({
+})<{ ownerState: OwnerState }>({
   position: 'relative',
   height: '100%',
   flexGrow: 1,
@@ -71,6 +71,17 @@ const Scroller = styled('div', {
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
   },
+  // [iOS-scrollbar-swap]
+  // On iOS, virtual scrollbars do not show a thumb unless the user scrolls the element directly:
+  // https://github.com/mui/mui-x/issues/22386
+  // So keep this scroller's own native scrollbars and hide the ones in `GridVirtualScrollbar`
+  // instead to avoid a duplicate thumb.
+  [platform.mediaQuery.iOS]: {
+    scrollbarWidth: 'auto',
+    '&::-webkit-scrollbar': {
+      display: 'block',
+    },
+  },
 
   '@media print': {
     overflow: 'hidden',
@@ -78,10 +89,7 @@ const Scroller = styled('div', {
 
   // See https://github.com/mui/mui-x/issues/10547
   zIndex: 0,
-
-  // Prevent overscroll bounce from revealing content behind pinned column shadows on macOS.
-  overscrollBehaviorX: ownerState.hasPinnedColumns ? 'none' : undefined,
-}));
+});
 
 const Viewport = styled('div', {
   slot: 'internal',
@@ -93,16 +101,16 @@ const Viewport = styled('div', {
     display: 'inline-block',
     position: 'sticky',
     top: 0,
+    // The viewport spans the scrollport exactly, so both 0-insets resolve to the same
+    // offset and it stays pinned in LTR and RTL alike.
     left: 0,
+    right: 0,
     overflow: 'hidden',
   },
 });
 
 const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.dimensions.rightPinnedWidth > 0;
-
-const hasPinnedLeftSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.dimensions.leftPinnedWidth > 0;
 
 export interface GridVirtualScrollerProps {
   children?: React.ReactNode;
@@ -114,16 +122,13 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
-  const hasPinnedLeft = useGridSelector(apiRef, hasPinnedLeftSelector);
   const hasBottomFiller = useGridSelector(apiRef, gridHasBottomFillerSelector);
   const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, rootProps);
   const Overlay = rootProps.slots?.[overlayType];
-  const hasPinnedColumns = hasPinnedRight || hasPinnedLeft;
   const ownerState = {
     classes: rootProps.classes,
     hasScrollX,
     hasPinnedRight,
-    hasPinnedColumns,
     overlayType,
     loadingOverlayVariant,
   };

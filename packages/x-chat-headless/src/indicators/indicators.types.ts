@@ -1,5 +1,5 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import type { ChatUser } from '../types/chat-entities';
 
 export interface TypingIndicatorOwnerState {
@@ -7,6 +7,16 @@ export interface TypingIndicatorOwnerState {
   users: ChatUser[];
   count: number;
   label: string;
+}
+
+export interface StreamingIndicatorOwnerState {
+  /**
+   * `'waiting'` – a response is in flight but no assistant message exists yet.
+   * `'streaming'` – the surrounding assistant message is streaming.
+   * `null` – hidden.
+   */
+  phase: 'waiting' | 'streaming' | null;
+  messageId?: string;
 }
 
 export interface UnreadMarkerOwnerState {

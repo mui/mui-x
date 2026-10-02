@@ -5,14 +5,14 @@ import {
   gridRowNodeSelector,
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowIndexLookupSelector,
-  type GridRowProApi,
 } from '@mui/x-data-grid-pro';
+import type { GridRowProApi } from '@mui/x-data-grid-pro';
 import {
   useGridRowsOverridableMethodsCommunity,
   useGridRowsOverridableMethodsPro,
   useGridSelector,
-  type ReorderExecutionContext,
 } from '@mui/x-data-grid-pro/internals';
+import type { ReorderExecutionContext } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import { rowGroupingReorderExecutor } from '../rowReorder/rowGroupingReorderExecutor';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';

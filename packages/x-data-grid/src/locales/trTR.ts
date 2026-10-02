@@ -1,5 +1,6 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import { getGridLocalization } from '../utils/getGridLocalization';
+import type { Localization } from '../utils/getGridLocalization';
 
 const trTRGrid: Partial<GridLocaleText> = {
   // Root
@@ -51,6 +52,11 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
+
+  // Formula bar (Premium formulas)
+  // formulaBarLabel: 'Formula bar',
+  // formulaBarInputLabel: 'Formula',
+  // formulaBarAddressLabel: 'Active cell',
 
   // Columns management text
   columnsManagementSearchTitle: 'Arama',

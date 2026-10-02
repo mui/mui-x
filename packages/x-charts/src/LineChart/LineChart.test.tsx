@@ -3,7 +3,7 @@ import { describeConformance } from 'test/utils/charts/describeConformance';
 import { LineChart, lineClasses } from '@mui/x-charts/LineChart';
 import { screen } from '@mui/internal-test-utils';
 import * as React from 'react';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { isJSDOM } from 'test/utils/skipIf';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
@@ -165,6 +165,34 @@ describe('<LineChart />', () => {
       expect(marks[1].getAttribute('data-index')).to.equal('1');
       expect(marks[2].getAttribute('data-index')).to.equal('2');
       expect(marks[3].getAttribute('data-index')).to.equal('3');
+    });
+  });
+
+  describe('showMark', () => {
+    it('should not render highlight in stead of regular marks when set to "start"', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', showMark: 'start' }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+
+      expect(document.querySelectorAll(`.${lineClasses.mark}`)).to.have.length(0);
+      expect(document.querySelectorAll(`.${lineClasses.highlight}`)).to.have.length(1);
+    });
+
+    it('should not render highlight in stead of regular marks when set to "end"', () => {
+      render(
+        <LineChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', showMark: 'end' }]}
+          xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
+        />,
+      );
+
+      expect(document.querySelectorAll(`.${lineClasses.mark}`)).to.have.length(0);
+      expect(document.querySelectorAll(`.${lineClasses.highlight}`)).to.have.length(1);
     });
   });
 

@@ -1,12 +1,12 @@
-import { SxProps, Theme } from '@mui/material/styles';
-import { PickerValidDate, TimeStepOptions, TimezoneProps } from '../../../models';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { PickerValidDate, TimeStepOptions, TimezoneProps } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectionDigitalClock/MultiSectionDigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
-import { TimeViewWithMeridiem } from '../common';
-import { ExportedValidateTimeProps } from '../../../validation/validateTime';
-import { FormProps } from '../formProps';
-import { PickerValue } from '../value';
+import type { TimeViewWithMeridiem } from '../common';
+import type { ExportedValidateTimeProps } from '../../../validation/validateTime';
+import type { FormProps } from '../formProps';
+import type { PickerValue } from '../value';
 
 export interface AmPmProps {
   /**

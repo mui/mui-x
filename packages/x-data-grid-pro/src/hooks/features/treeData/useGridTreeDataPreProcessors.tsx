@@ -1,21 +1,15 @@
 'use client';
 import * as React from 'react';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { RefObject } from '@mui/x-internals/types';
+import { gridRowTreeSelector } from '@mui/x-data-grid';
+import type { GridColDef, GridRenderCellParams, GridGroupNode, GridRowId } from '@mui/x-data-grid';
 import {
-  gridRowTreeSelector,
-  useFirstRender,
-  type GridColDef,
-  type GridRenderCellParams,
-  type GridGroupNode,
-  type GridRowId,
-} from '@mui/x-data-grid';
-import {
-  type GridPipeProcessor,
   GridStrategyGroup,
-  type GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
+import type { GridPipeProcessor, GridStrategyProcessor } from '@mui/x-data-grid/internals';
 import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
@@ -232,7 +226,7 @@ export const useGridTreeDataPreProcessors = (
   /**
    * 1ST RENDER
    */
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     setStrategyAvailability();
   });
 

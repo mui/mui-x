@@ -55,7 +55,7 @@ function writeConfigFile(configPath: string, data: ConfigData): void {
 }
 
 export class TelemetryStorage {
-  private readonly configPath: string | null;
+  declare private readonly configPath: string | null;
 
   public static async init({ distDir }: { distDir: string }) {
     const configDirectory = getConfigDirectory(distDir);

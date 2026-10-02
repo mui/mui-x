@@ -3,32 +3,38 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import {
   useGridEvent,
   gridSortModelSelector,
   gridFilterModelSelector,
-  type GridEventListener,
   GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
-  type GridSkeletonRowNode,
   gridPaginationModelSelector,
   gridFilteredSortedRowIdsSelector,
   gridRowIdSelector,
-  type GridRowId,
+  gridPaginationMetaSelector,
+  useGridSelector,
+} from '@mui/x-data-grid';
+import type {
+  GridEventListener,
+  GridGroupNode,
+  GridSkeletonRowNode,
+  GridRowId,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
   gridRenderContextSelector,
   GridStrategyGroup,
-  type GridStrategyProcessor,
-  type GridPipeProcessor,
   useGridRegisterStrategyProcessor,
   useGridRegisterPipeProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
+  useGridDataSourceFilterModelChange,
+  useGridDataSourcePolling,
 } from '@mui/x-data-grid/internals';
+import type { GridStrategyProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -56,25 +62,52 @@ export const useGridDataSourceLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs' | 'dataSourceRevalidateMs'
+    | 'dataSource'
+    | 'lazyLoading'
+    | 'lazyLoadingRequestThrottleMs'
+    | 'dataSourceRevalidateMs'
+    | 'treeData'
+    | 'paginationMeta'
+    | 'initialState'
   >,
 ): void => {
+  const isNestedLazyLoadingEnabled = useGridSelector(privateApiRef, () =>
+    props.treeData
+      ? true
+      : ((
+          privateApiRef.current.unstable_applyPipeProcessors(
+            'getRowsParams',
+            {},
+          ) as Partial<GridGetRowsParams> & { groupFields: string[] }
+        )?.groupFields?.length ?? 0) > 0,
+  );
+
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.LazyLoading,
-      props.dataSource && props.lazyLoading ? () => true : () => false,
+      props.dataSource && props.lazyLoading && !isNestedLazyLoadingEnabled
+        ? () => true
+        : () => false,
     );
-  }, [privateApiRef, props.lazyLoading, props.dataSource]);
+  }, [privateApiRef, props.lazyLoading, props.dataSource, isNestedLazyLoadingEnabled]);
 
-  const [lazyLoadingRowsUpdateStrategyActive, setLazyLoadingRowsUpdateStrategyActive] =
-    React.useState(false);
+  const [isStrategyActive, setStrategyActive] = React.useState(false);
+
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
+  // Whether more pages are available, used to skip the scroll-end fetch in infinite loading
+  // mode. Seeded like the pagination meta state itself, then updated by each response's
+  // `pageInfo.hasNextPage` (a missing value keeps the previous signal) and by any later
+  // pagination meta update in the store. Defaults to `true`, so data sources that don't
+  // provide `hasNextPage` keep fetching until an empty response. A controlled
+  // `paginationMeta` prop takes precedence over this ref (see `handleIntersection`).
+  const hasNextPage = React.useRef<boolean>(
+    props.paginationMeta?.hasNextPage ?? props.initialState?.pagination?.meta?.hasNextPage ?? true,
+  );
   const draggedRowId = React.useRef<GridRowId | null>(null);
-  const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -84,6 +117,8 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
+
+  const hasFilterModelChanged = useGridDataSourceFilterModelChange(privateApiRef);
 
   const revalidate = useEventCallback((params: Partial<GridGetRowsParams>) => {
     if (rowsStale.current) {
@@ -102,30 +137,22 @@ export const useGridDataSourceLazyLoader = (
     debouncedFetchRows(params);
   });
 
-  const stopPolling = React.useCallback(() => {
-    if (pollingIntervalRef.current !== null) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
-    }
-  }, []);
-
-  const startPolling = useEventCallback((params: Partial<GridGetRowsParams>) => {
-    stopPolling();
-
-    if (props.dataSourceRevalidateMs <= 0) {
-      return;
-    }
-
-    pollingIntervalRef.current = setInterval(() => {
-      revalidate(params);
-    }, props.dataSourceRevalidateMs);
+  const { startPolling: startPollingWith, stopPolling } = useGridDataSourcePolling({
+    revalidateMs: props.dataSourceRevalidateMs,
+    isActive: isStrategyActive,
   });
+
+  const startPolling = React.useCallback(
+    (params: Partial<GridGetRowsParams>) => startPollingWith(() => revalidate(params)),
+    [startPollingWith, revalidate],
+  );
 
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setLoading(true);
     privateApiRef.current.dataSource.cache.clear();
     rowsStale.current = true;
     previousLastRowIndex.current = 0;
+    hasNextPage.current = true; // re-evaluate end-of-data for the new query
     const paginationModel = gridPaginationModelSelector(privateApiRef);
     const sortModel = gridSortModelSelector(privateApiRef);
     const filterModel = gridFilterModelSelector(privateApiRef);
@@ -241,13 +268,18 @@ export const useGridDataSourceLazyLoader = (
     [ensureValidRowCount],
   );
 
-  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
+  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
         return;
       }
 
       const { response, fetchParams } = params;
+      // A data source can signal end-of-data via `pageInfo.hasNextPage` when the row count
+      // is unknown (infinite loading). A missing value keeps the previous signal, so an
+      // explicit `false` is not undone by a later response that omits `pageInfo`.
+      hasNextPage.current = response.pageInfo?.hasNextPage ?? hasNextPage.current;
+
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
       const tree = privateApiRef.current.state.rows.tree;
       const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
@@ -435,7 +467,15 @@ export const useGridDataSourceLazyLoader = (
 
   const handleIntersection: GridEventListener<'rowsScrollEndIntersection'> = useEventCallback(
     () => {
-      if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
+      // A controlled `paginationMeta.hasNextPage` prop wins over the signal reported by the
+      // data source response.
+      const hasNextPageValue = props.paginationMeta?.hasNextPage ?? hasNextPage.current;
+      if (
+        rowsStale.current ||
+        // No more pages available — don't fetch again.
+        !hasNextPageValue ||
+        loadingTrigger.current !== LoadingTrigger.SCROLL_END
+      ) {
         return;
       }
 
@@ -538,20 +578,40 @@ export const useGridDataSourceLazyLoader = (
   );
 
   React.useEffect(() => {
+    const rootElement = privateApiRef.current.rootElementRef?.current ?? null;
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
+      // `<Activity mode="hidden">` keeps the root connected and lets the queued fetch run.
+      if (!rootElement?.isConnected) {
+        debouncedFetchRows.clear();
+      }
     };
-  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
+  }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
 
-  // Stop polling when dataSourceRevalidateMs is set to 0
+  // A new `dataSource` reference is a full restart in `useGridDataSourceBase` (rows and cache
+  // cleared, first page refetched), so end-of-data must be re-evaluated like on a re-query.
+  const previousDataSource = React.useRef(props.dataSource);
   React.useEffect(() => {
-    if (props.dataSourceRevalidateMs <= 0) {
-      stopPolling();
+    if (previousDataSource.current !== props.dataSource) {
+      previousDataSource.current = props.dataSource;
+      hasNextPage.current = true;
     }
-  }, [props.dataSourceRevalidateMs, stopPolling]);
+  }, [props.dataSource]);
 
-  React.useEffect(() => stopPolling, [stopPolling]);
+  // An explicit pagination meta update (`setPaginationMeta`, restored state, changed
+  // `paginationMeta` prop) overrides what the last response reported. Transitions only, so
+  // the initial value stays a seed and `initialState` does not survive a re-query reset.
+  useStoreEffect(
+    // typings not supported currently, but methods work
+    privateApiRef.current.store as any,
+    () => gridPaginationMetaSelector(privateApiRef).hasNextPage,
+    (_, hasNextPageValue) => {
+      if (hasNextPageValue !== undefined) {
+        hasNextPage.current = hasNextPageValue;
+      }
+    },
+  );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
@@ -559,6 +619,7 @@ export const useGridDataSourceLazyLoader = (
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
       previousLastRowIndex.current = 0;
+      hasNextPage.current = true; // re-evaluate end-of-data for the new query
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
 
@@ -577,10 +638,15 @@ export const useGridDataSourceLazyLoader = (
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
+      if (!hasFilterModelChanged(newFilterModel)) {
+        return;
+      }
+
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
       stopPolling();
       previousLastRowIndex.current = 0;
+      hasNextPage.current = true; // re-evaluate end-of-data for the new query
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const sortModel = gridSortModelSelector(privateApiRef);
@@ -594,7 +660,13 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
+    [
+      privateApiRef,
+      debouncedFetchRows,
+      throttledHandleRenderedRowsIntervalChange,
+      stopPolling,
+      hasFilterModelChanged,
+    ],
   );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
@@ -608,7 +680,7 @@ export const useGridDataSourceLazyLoader = (
   const handleStrategyActivityChange = React.useCallback<
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
-    setLazyLoadingRowsUpdateStrategyActive(
+    setStrategyActive(
       privateApiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) ===
         DataSourceRowsUpdateStrategy.LazyLoading,
     );
@@ -620,7 +692,7 @@ export const useGridDataSourceLazyLoader = (
   // pagination-model state.
   const addGetRowsParams = React.useCallback<GridPipeProcessor<'getRowsParams'>>(
     (params) => {
-      if (!lazyLoadingRowsUpdateStrategyActive) {
+      if (!isStrategyActive) {
         return params;
       }
       const renderContext = gridRenderContextSelector(privateApiRef);
@@ -645,7 +717,7 @@ export const useGridDataSourceLazyLoader = (
         end: adjustedParams.end,
       };
     },
-    [privateApiRef, lazyLoadingRowsUpdateStrategyActive],
+    [privateApiRef, isStrategyActive],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'getRowsParams', addGetRowsParams);
@@ -653,47 +725,35 @@ export const useGridDataSourceLazyLoader = (
   useGridRegisterStrategyProcessor(
     privateApiRef,
     DataSourceRowsUpdateStrategy.LazyLoading,
-    'dataSourceRowsUpdate',
+    'dataSourceRootRowsUpdate',
     handleDataUpdate,
   );
 
   useGridEvent(privateApiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
 
-  useGridEvent(
-    privateApiRef,
-    'rowCountChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleRowCountChange),
-  );
+  useGridEvent(privateApiRef, 'rowCountChange', runIf(isStrategyActive, handleRowCountChange));
   useGridEvent(
     privateApiRef,
     'rowsScrollEndIntersection',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleIntersection),
+    runIf(isStrategyActive, handleIntersection),
   );
   useGridEvent(
     privateApiRef,
     'renderedRowsIntervalChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, throttledHandleRenderedRowsIntervalChange),
+    runIf(isStrategyActive, throttledHandleRenderedRowsIntervalChange),
   );
   useGridEvent(
     privateApiRef,
     'sortModelChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleGridSortModelChange),
+    runIf(isStrategyActive, handleGridSortModelChange),
   );
   useGridEvent(
     privateApiRef,
     'filterModelChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleGridFilterModelChange),
+    runIf(isStrategyActive, handleGridFilterModelChange),
   );
-  useGridEvent(
-    privateApiRef,
-    'rowDragStart',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleDragStart),
-  );
-  useGridEvent(
-    privateApiRef,
-    'rowDragEnd',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleDragEnd),
-  );
+  useGridEvent(privateApiRef, 'rowDragStart', runIf(isStrategyActive, handleDragStart));
+  useGridEvent(privateApiRef, 'rowDragEnd', runIf(isStrategyActive, handleDragEnd));
 
   React.useEffect(() => {
     setStrategyAvailability();

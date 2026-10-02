@@ -1,4 +1,4 @@
-import { Dayjs } from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjsBuddhist } from '@mui/x-date-pickers/AdapterDayjsBuddhist';
 import {
@@ -7,8 +7,9 @@ import {
   describeBuddhistAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import type { AdapterFormats } from '@mui/x-date-pickers/models';
 import 'dayjs/locale/th';
+import { describe, it, expect } from 'vitest';
 
 describe('<AdapterDayjsBuddhist />', () => {
   describeBuddhistAdapter(AdapterDayjsBuddhist, {});

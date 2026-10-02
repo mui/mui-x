@@ -1,0 +1,345 @@
+import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { vi, describe, it, expect } from 'vitest';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+
+describe('keyboard zoom and pan', () => {
+  const { render } = createRenderer();
+
+  const barChartProps = {
+    series: [{ id: 'A', data: [10, 20, 30, 40] }],
+    xAxis: [{ id: 'x', data: ['A', 'B', 'C', 'D'], zoom: true }],
+    yAxis: [{ position: 'none' as const }],
+    width: 200,
+    height: 200,
+    margin: 0,
+    hideLegend: true,
+    skipAnimation: true,
+    slotProps: { tooltip: { trigger: 'none' as const } },
+  };
+
+  const lastZoom = (onZoomChange: ReturnType<typeof vi.fn>, axisId = 'x') =>
+    onZoomChange.mock.lastCall?.[0].find((zoom: { axisId: string }) => zoom.axisId === axisId);
+
+  describe('defaults', () => {
+    it('should zoom without any interaction configuration', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(<BarChartPro {...barChartProps} onZoomChange={onZoomChange} />);
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('+');
+
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 5, end: 95 });
+    });
+
+    it('should pan without any interaction configuration', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 0, end: 50 }]}
+          onZoomChange={onZoomChange}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 5, end: 55 });
+    });
+
+    it('should zoom when the `keyboard` interaction is set explicitly', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{ zoom: ['keyboard'] }}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('+');
+
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 5, end: 95 });
+    });
+
+    it('should not zoom when the interaction config excludes `keyboard`', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{ zoom: ['wheel'], pan: ['drag'] }}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('+');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+  });
+
+  describe('key bindings', () => {
+    const renderChart = (props?: Partial<React.ComponentProps<typeof BarChartPro>>) => {
+      const onZoomChange = vi.fn();
+      const view = render(
+        <BarChartPro {...barChartProps} onZoomChange={onZoomChange} {...props} />,
+      );
+      return { ...view, onZoomChange };
+    };
+
+    it('should zoom in on `+` and on `=`', async () => {
+      const { user, onZoomChange } = renderChart();
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('+');
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 5, end: 95 });
+
+      await user.keyboard('=');
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 9.5, end: 90.5 });
+    });
+
+    it('should zoom out on `-`', async () => {
+      const { user, onZoomChange } = renderChart({
+        initialZoom: [{ axisId: 'x', start: 20, end: 80 }],
+      });
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('-');
+
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 17, end: 83 });
+    });
+
+    it('should reset the zoom on `0`', async () => {
+      const { user, onZoomChange } = renderChart({
+        initialZoom: [{ axisId: 'x', start: 20, end: 80 }],
+      });
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('0');
+
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 0, end: 100 });
+    });
+
+    it('should pan on `Shift` + horizontal arrows', async () => {
+      const { user, onZoomChange } = renderChart({
+        initialZoom: [{ axisId: 'x', start: 20, end: 70 }],
+      });
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 25, end: 75 });
+
+      await user.keyboard('{Shift>}{ArrowLeft}{/Shift}');
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 20, end: 70 });
+    });
+
+    it('should not pan past the axis boundaries', async () => {
+      const { user, onZoomChange } = renderChart({
+        initialZoom: [{ axisId: 'x', start: 50, end: 100 }],
+      });
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should pan the y-axis on `Shift` + vertical arrows', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <ScatterChartPro
+          width={200}
+          height={200}
+          margin={0}
+          hideLegend
+          skipAnimation
+          series={[
+            {
+              id: 'A',
+              data: [
+                { x: 1, y: 1, id: 'a' },
+                { x: 2, y: 2, id: 'b' },
+              ],
+            },
+          ]}
+          xAxis={[{ id: 'x', zoom: true }]}
+          yAxis={[{ id: 'y', zoom: true }]}
+          initialZoom={[{ axisId: 'y', start: 20, end: 70 }]}
+          onZoomChange={onZoomChange}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Shift>}{ArrowUp}{/Shift}');
+
+      expect(lastZoom(onZoomChange, 'y')).to.deep.equal({ axisId: 'y', start: 25, end: 75 });
+      // The horizontal axis is left untouched.
+      expect(lastZoom(onZoomChange, 'x')).to.deep.equal({ axisId: 'x', start: 0, end: 100 });
+    });
+
+    it('should ignore zoom keys combined with `Control` or `Meta`', async () => {
+      const { user, onZoomChange } = renderChart();
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Control>}={/Control}');
+      await user.keyboard('{Meta>}-{/Meta}');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should ignore unmodified arrow keys', async () => {
+      const { user, onZoomChange } = renderChart({
+        initialZoom: [{ axisId: 'x', start: 20, end: 70 }],
+      });
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{ArrowRight}');
+      await user.keyboard('{ArrowUp}');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+  });
+
+  describe('focus requirements', () => {
+    it('should not react to keys pressed outside of the chart', async () => {
+      const onZoomChange = vi.fn();
+      render(<BarChartPro {...barChartProps} onZoomChange={onZoomChange} />);
+
+      fireEvent.keyDown(document.body, { key: '+' });
+      fireEvent.keyDown(document.body, { key: 'ArrowRight', shiftKey: true });
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should make the chart focusable and zoom once focused', async () => {
+      const onZoomChange = vi.fn();
+      const { user, container } = render(
+        <BarChartPro {...barChartProps} onZoomChange={onZoomChange} />,
+      );
+
+      await user.keyboard('{Tab}');
+
+      expect(document.activeElement).not.to.equal(document.body);
+      expect(container.contains(document.activeElement)).to.equal(true);
+
+      await user.keyboard('+');
+      expect(onZoomChange.mock.calls.length).to.equal(1);
+    });
+
+    it('should not zoom when keyboard navigation is disabled', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro {...barChartProps} disableKeyboardNavigation onZoomChange={onZoomChange} />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('+');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should not listen to the chart itself when keyboard navigation is disabled', async () => {
+      const onZoomChange = vi.fn();
+      // A composition can render something focusable inside the chart, so the keys must be
+      // disabled, not merely unreachable.
+      const { user, container } = render(
+        <BarChartPro {...barChartProps} disableKeyboardNavigation onZoomChange={onZoomChange}>
+          <foreignObject width={100} height={100}>
+            <button type="button">inside</button>
+          </foreignObject>
+        </BarChartPro>,
+      );
+
+      act(() => container.querySelector('button')!.focus());
+      await user.keyboard('+');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should zoom from a focusable element composed in the chart', async () => {
+      const onZoomChange = vi.fn();
+      const { user, container } = render(
+        <BarChartPro {...barChartProps} onZoomChange={onZoomChange}>
+          <foreignObject width={100} height={100}>
+            <button type="button">inside</button>
+          </foreignObject>
+        </BarChartPro>,
+      );
+
+      act(() => container.querySelector('button')!.focus());
+      await user.keyboard('+');
+
+      expect(lastZoom(onZoomChange)).to.deep.equal({ axisId: 'x', start: 5, end: 95 });
+    });
+
+    it('should leave the keys to an editable element composed in the chart', async () => {
+      const onZoomChange = vi.fn();
+      const { user, container } = render(
+        <BarChartPro {...barChartProps} onZoomChange={onZoomChange}>
+          <foreignObject width={100} height={100}>
+            <input type="text" />
+          </foreignObject>
+        </BarChartPro>,
+      );
+
+      act(() => container.querySelector('input')!.focus());
+      await user.keyboard('+');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should not pan a chart whose drawing area has no size', async () => {
+      const onZoomChange = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          width={0}
+          height={0}
+          initialZoom={[{ axisId: 'x', start: 0, end: 50 }]}
+          onZoomChange={onZoomChange}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+
+      // Panning by a zero-pixel drawing area would write a `NaN` range.
+      expect(onZoomChange.mock.calls.length).to.equal(0);
+    });
+  });
+
+  describe('item navigation', () => {
+    it('should keep unmodified arrows for item navigation while panning with `Shift`', async () => {
+      const onZoomChange = vi.fn();
+      const onItemClick = vi.fn();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
+          onZoomChange={onZoomChange}
+          onItemClick={onItemClick}
+          experimentalFeatures={{ keyboardActivation: true }}
+        />,
+      );
+
+      await user.keyboard('{Tab}');
+      // Focuses the first item.
+      await user.keyboard('{ArrowRight}');
+      // Pans, and must not move the focused item.
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
+      await user.keyboard('{Enter}');
+
+      expect(onZoomChange.mock.calls.length).to.equal(1);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
+        type: 'bar',
+        seriesId: 'A',
+        dataIndex: 0,
+      });
+    });
+  });
+});

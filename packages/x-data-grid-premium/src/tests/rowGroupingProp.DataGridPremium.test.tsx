@@ -1,4 +1,4 @@
-import { type RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, act, reactMajor, waitFor } from '@mui/internal-test-utils';
 import {
   getColumnHeaderCell,
@@ -9,17 +9,19 @@ import {
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import {
   DataGridPremium,
-  type DataGridPremiumProps,
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  type GridApi,
-  type GridRowsProp,
   useGridApiRef,
-  type GridGroupingColDefOverrideParams,
-  type GridGroupNode,
 } from '@mui/x-data-grid-premium';
-import { spy } from 'sinon';
+import type {
+  DataGridPremiumProps,
+  GridApi,
+  GridRowsProp,
+  GridGroupingColDefOverrideParams,
+  GridGroupNode,
+} from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi, describe, it, expect } from 'vitest';
 
 interface BaselineProps extends DataGridPremiumProps {
   rows: GridRowsProp;
@@ -509,7 +511,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
   describe('prop: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
-      const isGroupExpandedByDefault = spy(
+      const isGroupExpandedByDefault = vi.fn(
         (node: GridGroupNode) => node.groupingKey === 'Cat A' && node.groupingField === 'category1',
       );
 
@@ -519,17 +521,14 @@ describe('<DataGridPremium /> - Row grouping', () => {
           isGroupExpandedByDefault={isGroupExpandedByDefault}
         />,
       );
-      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 6 : 12); // Should not be called on leaves
+      expect(isGroupExpandedByDefault.mock.calls.length).to.equal(reactMajor >= 19 ? 6 : 12); // Should not be called on leaves
       const { childrenExpanded, ...node } = apiRef.current?.state.rows.tree[
         'auto-generated-row-category1/Cat A'
       ] as GridGroupNode;
-      const callForNodeA = isGroupExpandedByDefault
-        .getCalls()
-        .find(
-          (call) =>
-            call.firstArg.groupingKey === 'Cat A' && call.firstArg.groupingField === 'category1',
-        )!;
-      expect(callForNodeA.firstArg).to.deep.includes(node);
+      const callForNodeA = isGroupExpandedByDefault.mock.calls.find(
+        (call) => call[0].groupingKey === 'Cat A' && call[0].groupingField === 'category1',
+      )!;
+      expect(callForNodeA[0]).to.deep.includes(node);
       expect(getColumnValues(0)).to.deep.equal([
         'Cat A (3)',
         'Cat 1 (1)',
@@ -682,7 +681,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       });
 
       it('should render the leafField `renderCell` on leaves  if `renderCell` is defined on the leafColDef', () => {
-        const renderIdCell = spy(() => 'Custom leaf');
+        const renderIdCell = vi.fn(() => 'Custom leaf');
 
         render(
           <Test
@@ -715,7 +714,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
 
       // See https://github.com/mui/mui-x/issues/7949
       it('should correctly pass `hasFocus` to `renderCell` defined on the leafColDef', () => {
-        const renderIdCell = spy((params) => `Focused: ${params.hasFocus}`);
+        const renderIdCell = vi.fn((params) => `Focused: ${params.hasFocus}`);
 
         render(
           <Test
@@ -736,7 +735,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         fireUserEvent.mousePress(getCell(1, 0));
-        expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
+        expect(renderIdCell.mock.lastCall?.[0].field).to.equal('id');
         expect(getCell(1, 0)).to.have.text('Focused: true');
       });
     });
@@ -1100,7 +1099,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       });
 
       it('should render the leafField `renderCell` on leaves  if `renderCell` is defined on the leafColDef', () => {
-        const renderIdCell = spy(() => 'Custom leaf');
+        const renderIdCell = vi.fn(() => 'Custom leaf');
 
         render(
           <Test

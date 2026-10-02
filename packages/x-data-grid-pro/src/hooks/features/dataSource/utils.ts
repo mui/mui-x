@@ -1,12 +1,8 @@
 import type { RefObject } from '@mui/x-internals/types';
-import {
-  GRID_ROOT_GROUP_ID,
-  type GridGroupNode,
-  type GridKeyValue,
-  type GridRowId,
-  type GridRowTreeConfig,
-} from '@mui/x-data-grid';
+import { GRID_ROOT_GROUP_ID } from '@mui/x-data-grid';
+import type { GridGroupNode, GridKeyValue, GridRowId, GridRowTreeConfig } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models';
+import type { GridGetRowsParamsPro } from './models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
@@ -29,9 +25,11 @@ export class NestedDataManager {
 
   private settledRequests: Set<GridRowId> = new Set();
 
-  private api: GridPrivateApiPro;
+  private fetchParams: Map<GridRowId, GridGetRowsParamsPro> = new Map();
 
-  private maxConcurrentRequests: number;
+  declare private api: GridPrivateApiPro;
+
+  declare private maxConcurrentRequests: number;
 
   constructor(
     privateApiRef: RefObject<GridPrivateApiPro>,
@@ -58,15 +56,23 @@ export class NestedDataManager {
       const id = fetchQueue[i];
       this.queuedRequests.delete(id);
       this.pendingRequests.add(id);
-      this.api.fetchRowChildren(id);
+      this.api.fetchRowChildren(id, this.fetchParams.get(id));
     }
   };
 
-  public queue = async (ids: GridRowId[], options: { showChildrenLoading?: boolean } = {}) => {
-    const { showChildrenLoading = true } = options;
+  public queue = async (
+    ids: GridRowId[],
+    fetchParams: GridGetRowsParamsPro[],
+    showChildrenLoading = true,
+  ) => {
     const loadingIds: Record<GridRowId, boolean> = {};
-    ids.forEach((id) => {
+    ids.forEach((id, index) => {
       this.queuedRequests.add(id);
+      if (fetchParams?.[index]) {
+        this.fetchParams.set(id, fetchParams[index]);
+      } else {
+        this.fetchParams.delete(id);
+      }
       if (showChildrenLoading) {
         loadingIds[id] = true;
       }
@@ -123,7 +129,7 @@ export const getGroupKeys = (tree: GridRowTreeConfig, rowId: GridRowId) => {
   const rowNode = tree[rowId];
   let currentNodeId = rowNode.parent;
   const groupKeys: GridKeyValue[] = [];
-  while (currentNodeId && currentNodeId !== GRID_ROOT_GROUP_ID) {
+  while (currentNodeId != null && currentNodeId !== GRID_ROOT_GROUP_ID) {
     const currentNode = tree[currentNodeId] as GridGroupNode;
     groupKeys.push(currentNode.groupingKey ?? '');
     currentNodeId = currentNode.parent;

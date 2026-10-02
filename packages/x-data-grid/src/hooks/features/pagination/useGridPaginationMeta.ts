@@ -5,7 +5,8 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridPaginationMetaApi } from './gridPaginationInterfaces';
 import { useGridLogger, useGridApiMethod } from '../../utils';
-import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridPipeProcessor } from '../../core/pipeProcessing';
 import { gridPaginationMetaSelector } from './gridPaginationSelector';
 
 export const useGridPaginationMeta = (

@@ -75,4 +75,6 @@ Bear in mind that using `foreignObject` might prevent charts from being [exporte
 You can fully customize how axis and their ticks are rendered by providing a component to the `xAxis` or `yAxis` slots.
 For more information about how to create custom axes, refer to the [composition section](/x/react-charts/axis/#composition).
 
+The same technique can move the tick labels inside the plot, as shown in [Labels on the grid](/x/react-charts/axis-ticks/#labels-on-the-grid).
+
 {{"demo": "CustomAxisTicks.js"}}

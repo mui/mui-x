@@ -3,12 +3,9 @@ import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
-import {
-  ClockNumberClasses,
-  getClockNumberUtilityClass,
-  clockNumberClasses,
-} from './clockNumberClasses';
-import { PickerOwnerState } from '../models/pickers';
+import type { ClockNumberClasses } from './clockNumberClasses';
+import { getClockNumberUtilityClass, clockNumberClasses } from './clockNumberClasses';
+import type { PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> {

@@ -439,6 +439,7 @@ const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Feature name',
+    rowHeader: true,
     maxWidth: 172,
     flex: 0.2,
     minWidth: 100,

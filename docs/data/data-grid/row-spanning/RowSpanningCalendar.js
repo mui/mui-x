@@ -69,6 +69,7 @@ const columns = [
   {
     field: 'time',
     headerName: 'Time',
+    rowHeader: true,
     width: 120,
   },
   {

@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  EventCalendarParameters,
-  EventCalendarStoreConstructor,
-  useEventCalendar,
-} from '../use-event-calendar';
+import type { EventCalendarParameters, EventCalendarStoreConstructor } from '../use-event-calendar';
+import { useEventCalendar } from '../use-event-calendar';
 import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
@@ -25,6 +22,8 @@ export namespace EventCalendarProvider {
     children: React.ReactNode;
     /**
      * The store class to use for this provider.
+     * A premium store reads parameters this interface does not declare (`dataSource`); they reach
+     * its constructor through the JSX spread, which skips excess-property checks.
      * @default EventCalendarStore
      */
     storeClass?: EventCalendarStoreConstructor<TEvent, TResource>;

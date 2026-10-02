@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import {
+import type {
   SchedulerParameters,
   SchedulerState,
   SchedulerStore,
@@ -30,7 +30,7 @@ export function useSchedulerStoreContext<TEvent extends object, TResource extend
   const context = React.useContext(SchedulerStoreContext);
   if (context == null && !optional) {
     throw new Error(
-      'MUI: useSchedulerStoreContext must be used within an <EventCalendar /> or a <EventTimelinePremium /> component',
+      'MUI X Scheduler: useSchedulerStoreContext must be used within an <EventCalendar /> or a <EventTimelinePremium /> component',
     );
   }
 

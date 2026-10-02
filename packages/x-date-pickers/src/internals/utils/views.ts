@@ -1,4 +1,4 @@
-import { DateOrTimeViewWithMeridiem } from '../models';
+import type { DateOrTimeViewWithMeridiem } from '../models';
 
 export const areViewsEqual = <TView extends DateOrTimeViewWithMeridiem>(
   views: ReadonlyArray<DateOrTimeViewWithMeridiem>,

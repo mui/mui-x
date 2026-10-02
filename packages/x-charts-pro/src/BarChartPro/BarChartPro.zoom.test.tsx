@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { BarChartPro } from './BarChartPro';
 import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
@@ -256,5 +256,37 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     expect(onZoomChange.mock.calls.length).to.be.above(0);
     // Should have zoomed in to show fewer ticks
     expect(getAxisTickValues('x').length).to.be.lessThan(4);
+  });
+
+  describe('initialZoom with range values', () => {
+    it('should resolve a string range to the matching axis values', () => {
+      render(
+        <BarChartPro {...barChartProps} initialZoom={[{ axisId: 'x', value: ['B', 'C'] }]} />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+    });
+
+    it('should resolve a function range value', () => {
+      render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', value: () => ({ start: 75, end: 100 }) }]}
+        />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['D']);
+    });
+
+    it('should still apply explicit zoom percentages alongside range values', () => {
+      render(
+        <BarChartPro {...barChartProps} initialZoom={[{ axisId: 'x', start: 75, end: 100 }]} />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['D']);
+    });
   });
 });

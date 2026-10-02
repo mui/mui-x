@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
+import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
+import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 
 export const TimelineGridRow = React.forwardRef(function TimelineGridRow(
   componentProps: TimelineGridRow.Props,

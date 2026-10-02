@@ -1,4 +1,4 @@
-import { describe, bench } from 'vitest';
+import { describe, test } from 'vitest';
 import { Flatbush } from './Flatbush';
 
 const data: Array<{ x: number; y: number }> = [],
@@ -27,8 +27,8 @@ for (let i = 0; i < data.length; i += 1) {
 flatbush1M.finish();
 
 describe('Flatbush benchmarks', () => {
-  describe('add + finish', () => {
-    bench('add 1M points + finish', () => {
+  test('add + finish', { timeout: 0 }, async ({ bench }) => {
+    await bench('add 1M points + finish', () => {
       const flatbush = new Flatbush(data.length);
 
       for (let i = 0; i < data.length; i += 1) {
@@ -36,18 +36,18 @@ describe('Flatbush benchmarks', () => {
       }
 
       flatbush.finish();
-    });
+    }).run();
   });
 
-  describe('search 1M points', () => {
-    bench('search 1M points', () => {
+  test('search 1M points', { timeout: 0 }, async ({ bench }) => {
+    await bench('search 1M points', () => {
       flatbush1M.search(0.4, 0.4, 0.6, 0.6);
-    });
+    }).run();
   });
 
-  describe('neighbors 1M points', () => {
-    bench('neighbors 1M points', () => {
+  test('neighbors 1M points', { timeout: 0 }, async ({ bench }) => {
+    await bench('neighbors 1M points', () => {
       flatbush1M.neighbors(0.5, 0.5, 1, 0.04, undefined);
-    });
+    }).run();
   });
 });

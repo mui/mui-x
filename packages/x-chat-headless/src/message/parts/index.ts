@@ -40,6 +40,7 @@ export type {
   ToolPartSlotProps,
   ToolPartSlots,
 } from './ToolPart';
+export type { ChatToolExpand, ChatToolGetExpanded } from './toolDisclosure';
 
 // Utilities
 export {

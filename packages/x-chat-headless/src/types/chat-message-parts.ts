@@ -97,6 +97,7 @@ export interface ChatToolInvocation<TToolName extends ChatKnownToolName = ChatKn
   output?: ChatToolOutput<TToolName>;
   errorText?: string;
   approval?: ChatToolApproval;
+  approvalId?: string;
   providerExecuted?: boolean;
   title?: string;
   callProviderMetadata?: Record<string, unknown>;
@@ -116,6 +117,7 @@ export interface ChatDynamicToolInvocation<TToolName extends string = string> {
   output?: unknown;
   errorText?: string;
   approval?: ChatToolApproval;
+  approvalId?: string;
   providerExecuted?: boolean;
   title?: string;
   callProviderMetadata?: Record<string, unknown>;
