@@ -7,8 +7,8 @@ import { install, type Clock, type FakeMethod } from '@sinonjs/fake-timers';
 const DEFAULT_TIMESTAMP = '2014-08-18T14:11:54-05:00';
 const NOW = new Date(DEFAULT_TIMESTAMP).getTime();
 
-const DATE_METHODS: FakeMethod[] = ['Date', 'Intl'];
-const TIMER_METHODS: FakeMethod[] = [
+const DATE_METHODS = ['Date', 'Intl'] as const satisfies readonly FakeMethod[];
+const TIMER_METHODS = [
   'setTimeout',
   'clearTimeout',
   'setInterval',
@@ -17,14 +17,19 @@ const TIMER_METHODS: FakeMethod[] = [
   'cancelAnimationFrame',
   'requestIdleCallback',
   'cancelIdleCallback',
-];
+] as const satisfies readonly FakeMethod[];
+
+// The date-only clock stays installed between test cases, so a timer method in both lists
+// would stay faked. This fails to type-check if the lists overlap.
+type OverlappingMethods = Extract<(typeof DATE_METHODS)[number], (typeof TIMER_METHODS)[number]>;
+true satisfies [OverlappingMethods] extends [never] ? true : never;
 
 // The date is always frozen, so demos that show "today" are stable.
 // Timers are only faked while a test case mounts, see `fakeTimers` and `flushTimers`.
 let clock: Clock = freezeDate();
 
 function freezeDate() {
-  return install({ now: NOW, toFake: DATE_METHODS });
+  return install({ now: NOW, toFake: [...DATE_METHODS] });
 }
 
 /**
