@@ -436,6 +436,38 @@ describe('<MonthView />', () => {
       expect(onEventEditingStart.mock.calls.length).to.equal(1);
       expect(screen.queryByRole('dialog')).not.to.equal(null);
     });
+
+    it('should clamp the span of a creation placeholder to each week row', () => {
+      // Friday May 9 to Tuesday May 13: two days left in the first week row, three in the next.
+      const start = adapter.startOfDay(adapter.date('2025-05-09T00:00:00Z', 'default'));
+      const end = adapter.endOfDay(adapter.date('2025-05-13T00:00:00Z', 'default'));
+
+      render(
+        <EventCalendarProvider events={[]} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'day-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+        </EventCalendarProvider>,
+      );
+
+      const spans = Array.from(
+        document.querySelectorAll<HTMLElement>('[style*="--grid-column-span"]'),
+      ).map((element) => element.style.getPropertyValue('--grid-column-span'));
+      expect(spans).to.deep.equal(['2', '3']);
+    });
   });
 
   describe('All day events', () => {
