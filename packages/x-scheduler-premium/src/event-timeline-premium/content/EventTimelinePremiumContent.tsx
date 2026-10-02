@@ -40,6 +40,7 @@ import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
+import { createEventTimelinePremiumOccurrenceIndex } from '../utils/eventTimelinePremiumOccurrenceIndex';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import {
   EventTimelinePremiumVirtualizerContext,
@@ -543,24 +544,29 @@ function EventList({
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
   const store = useEventTimelinePremiumStoreContext();
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const occurrenceIndex = React.useMemo(
+    () =>
+      createEventTimelinePremiumOccurrenceIndex(
+        occurrences.map((occurrence) => {
+          const { position, duration } = occurrence.timelinePosition;
+          return { occurrence, start: position, end: position + duration };
+        }),
+      ),
+    [occurrences],
+  );
 
   // Convert virtualizer column range to fraction range
   const { start: visibleStart, end: visibleEnd } = getVisibleFractionRange(
     renderContext,
     config.tickCount,
   );
+  const visibleOccurrences = occurrenceIndex(visibleStart, visibleEnd);
 
   return (
     <React.Fragment>
-      {occurrences.map((occurrence) => {
-        const { position, duration } = occurrence.timelinePosition;
-        return (
-          position + duration > visibleStart &&
-          position < visibleEnd && (
-            <EventListItem key={occurrence.key} resourceId={resourceId} occurrence={occurrence} />
-          )
-        );
-      })}
+      {visibleOccurrences.map(({ occurrence }) => (
+        <EventListItem key={occurrence.key} resourceId={resourceId} occurrence={occurrence} />
+      ))}
     </React.Fragment>
   );
 }

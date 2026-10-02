@@ -86,7 +86,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
    * Movement threshold in pixels that must be exceeded before the gesture activates.
    * Higher values reduce false positive gesture detection for small movements.
    */
-  protected threshold: number;
+  declare protected threshold: number;
 
   constructor(options: MoveGestureOptions<GestureName>) {
     super(options);

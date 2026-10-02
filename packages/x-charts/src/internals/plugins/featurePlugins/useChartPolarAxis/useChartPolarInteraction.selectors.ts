@@ -99,8 +99,6 @@ export const selectorChartsInteractionRotationAxisIndex = createSelector(
       : indexGetter(rotation, rotationAxis, id ?? rotationAxis.axisIds[0], 'rotation'),
 );
 
-// The memoized selector forwards the arguments the combiner takes beyond its input selectors:
-// `ids` has to be a combiner parameter, an input selector would never receive it.
 export const selectorChartsInteractionRotationAxisIndexes = createSelectorMemoized(
   selectorChartsInteractionRotationAngle,
   selectorChartRotationAxis,
@@ -195,7 +193,6 @@ export const selectorChartsInteractionRadiusAxisIndex = createSelector(
     radius === null ? null : indexGetter(radius, radiusAxis, id ?? radiusAxis.axisIds[0], 'radius'),
 );
 
-// See `selectorChartsInteractionRotationAxisIndexes` for why `ids` is a combiner parameter.
 export const selectorChartsInteractionRadiusAxisIndexes = createSelectorMemoized(
   selectorChartsInteractionRadius,
   selectorChartRadiusAxis,

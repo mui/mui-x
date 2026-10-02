@@ -1658,25 +1658,24 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>
         );
       }
-      // Samples both flags once per frame, after the frame's rendering steps
-      // (layout, ResizeObserver callbacks, paint).
-      const sampleScrollFlagsPerFrame = (frames: number) =>
-        new Promise<string[]>((resolve) => {
-          const flags: string[] = [];
-          const tick = () => {
-            setTimeout(() => {
-              flags.push(
-                `${getVariable('--DataGrid-hasScrollX')}${getVariable('--DataGrid-hasScrollY')}`,
-              );
-              if (flags.length >= frames) {
-                resolve(flags);
-              } else {
-                requestAnimationFrame(tick);
-              }
-            });
-          };
-          requestAnimationFrame(tick);
-        });
+      // Samples both flags once per frame, after paint. Each frame gets its own `act()` scope,
+      // because React 18 holds commits until an async `act()` scope ends.
+      const sampleScrollFlagsPerFrame = async (frames: number) => {
+        const flags: string[] = [];
+        for (let i = 0; i < frames; i += 1) {
+          // eslint-disable-next-line no-await-in-loop
+          await act(
+            () =>
+              new Promise<void>((resolve) => {
+                requestAnimationFrame(() => resolve());
+              }),
+          );
+          flags.push(
+            `${getVariable('--DataGrid-hasScrollX')}${getVariable('--DataGrid-hasScrollY')}`,
+          );
+        }
+        return flags;
+      };
 
       const { setProps } = render(<TestCase brandWidth={200} />);
       await waitFor(() => {
@@ -1690,7 +1689,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       // than the stale root, which used to reserve a vertical scrollbar for the
       // duration of the resize throttle.
       setProps({ brandWidth: 500 });
-      const flags = await act(() => sampleScrollFlagsPerFrame(10));
+      const flags = await sampleScrollFlagsPerFrame(10);
 
       expect(flags, `sampled hasScrollX+hasScrollY: ${flags.join(', ')}`).to.deep.equal(
         flags.map(() => '10'),

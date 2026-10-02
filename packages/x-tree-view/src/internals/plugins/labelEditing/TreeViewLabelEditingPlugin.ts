@@ -4,7 +4,7 @@ import { labelSelectors } from './selectors';
 import { useLabelEditingItemPlugin } from './itemPlugin';
 
 export class TreeViewLabelEditingPlugin {
-  private store: ExtendableRichTreeViewStore<any, any, any, any>;
+  declare private store: ExtendableRichTreeViewStore<any, any, any, any>;
 
   constructor(store: ExtendableRichTreeViewStore<any, any, any, any>) {
     this.store = store;

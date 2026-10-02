@@ -58,7 +58,7 @@ default-job: &default-job
   working_directory: /tmp/mui
   executor:
     name: code-infra/mui-node
-    node-version: '22.23.2'
+    node-version: '22.23.3'
   resource_class: medium.gen2
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
@@ -192,7 +192,7 @@ jobs:
           pathspec: docs/src docs/data
       - run:
           name: Tests TypeScript definitions
-          command: pnpm typescript:ci
+          command: pnpm typescript
   test_e2e:
     <<: *default-job
     executor:
@@ -244,6 +244,13 @@ jobs:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
+      - run:
+          name: Host CPU
+          command: |
+            grep -m1 'model name' /proc/cpuinfo
+            grep -m1 '^flags' /proc/cpuinfo | grep -ow 'avx2\|avx512[a-z_0-9]*\|fma\|f16c' | sort -u | tr '\n' ' '
+            echo
+            nproc
       - run:
           name: Install ffmpeg
           command: apt-get update && apt-get install ffmpeg --no-install-recommends -y

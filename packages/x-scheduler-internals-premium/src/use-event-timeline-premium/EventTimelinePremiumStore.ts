@@ -216,9 +216,9 @@ export class EventTimelinePremiumStore<
   public readonly dependencyDragKind =
     Draggable.createKind<SchedulerDependencyDragPayload>('scheduler-dependency');
 
-  public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
+  declare public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
 
-  public scheduling: SchedulerSchedulingPlugin<
+  declare public scheduling: SchedulerSchedulingPlugin<
     TEvent,
     EventTimelinePremiumState,
     EventTimelinePremiumStoreParameters<TEvent, TResource>

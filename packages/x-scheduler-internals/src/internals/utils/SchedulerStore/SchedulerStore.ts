@@ -117,11 +117,11 @@ export class SchedulerStore<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
 > extends Store<State> {
-  public parameters: Parameters;
+  declare public parameters: Parameters;
 
   private initialParameters: Parameters | null = null;
 
-  public instanceName: SchedulerInstanceName;
+  declare public instanceName: SchedulerInstanceName;
 
   /**
    * Identifies this Scheduler in the payload of the events it drags. The drop targets compare it,
@@ -129,7 +129,7 @@ export class SchedulerStore<
    */
   public readonly dragScope = Symbol('scheduler-drag-scope');
 
-  private mapper: SchedulerParametersToStateMapper<State, Parameters>;
+  declare private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected readonly disposables = new DisposableStack();
 
