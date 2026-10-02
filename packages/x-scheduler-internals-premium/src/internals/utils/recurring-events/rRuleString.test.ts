@@ -155,6 +155,14 @@ describe('recurring-events/rRuleString', () => {
       );
     });
 
+    it('should throw when UNTIL is a date that does not exist', () => {
+      for (const until of ['20250231T000000Z', '20250101T240000Z']) {
+        expect(() => parseRRule(adapter, `FREQ=DAILY;UNTIL=${until}`, 'default')).to.throw(
+          `MUI X Scheduler: Invalid UNTIL date "${until}".`,
+        );
+      }
+    });
+
     it('should throw when FREQ is missing', () => {
       expect(() => parseRRule(adapter, 'INTERVAL=2', 'default')).to.throw(
         'MUI X Scheduler: RRULE must include a FREQ property. The frequency (DAILY, WEEKLY, MONTHLY, or YEARLY) is required for recurrence rules. Add a FREQ property to the RRULE string.',
