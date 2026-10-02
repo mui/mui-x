@@ -54,6 +54,19 @@ function chooseType(dialog: HTMLElement, label: string) {
   fireEvent.click(screen.getByRole('option', { name: label }));
 }
 
+function getLagInput(dialog: HTMLElement) {
+  return within(dialog).getByRole('spinbutton', { name: 'Lag' });
+}
+
+function chooseLagUnit(dialog: HTMLElement, label: string) {
+  fireEvent.mouseDown(within(dialog).getByRole('combobox', { name: 'Lag unit' }));
+  fireEvent.click(screen.getByRole('option', { name: label }));
+}
+
+function save(dialog: HTMLElement) {
+  fireEvent.click(within(dialog).getByRole('button', { name: /save/i }));
+}
+
 describe('<EventTimelinePremium /> dependency editor', () => {
   const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
@@ -275,6 +288,127 @@ describe('<EventTimelinePremium /> dependency editor', () => {
     });
   });
 
+  describe('lag', () => {
+    it('should save the lag with its unit', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const dialog = openDialog('dep-1');
+      expect(getLagInput(dialog)).to.have.property('value', '');
+      fireEvent.change(getLagInput(dialog), { target: { value: '30' } });
+      chooseLagUnit(dialog, 'Minutes');
+      save(dialog);
+
+      expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.include({
+        lag: 30,
+        lagUnit: 'minute',
+      });
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    it('should remove the lag and its unit when the lag is cleared', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [
+          { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: 1, lagUnit: 'hour' },
+        ],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const dialog = openDialog('dep-1');
+      expect(getLagInput(dialog)).to.have.property('value', '1');
+      fireEvent.change(getLagInput(dialog), { target: { value: '' } });
+      save(dialog);
+
+      const [emitted] = handleDependenciesChange.mock.lastCall![0];
+      expect('lag' in emitted).to.equal(false);
+      expect('lagUnit' in emitted).to.equal(false);
+    });
+
+    it('should keep an untouched lag as written in the props', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        // No unit: days by default.
+        dependencies: [{ ...buildDependency('dep-1', 'event-a', 'event-b'), lag: 2 }],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Start to start');
+      save(dialog);
+
+      expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.equal({
+        ...buildDependency('dep-1', 'event-a', 'event-b'),
+        lag: 2,
+        type: 'StartToStart',
+      });
+    });
+
+    it('should show a lag the timeline ignores as unset', async () => {
+      await expect(() =>
+        renderTimeline({
+          events: [eventA, eventB],
+          dependencies: [
+            { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: -2, lagUnit: 'hour' },
+          ],
+        }),
+      ).toWarnDev(['MUI X Scheduler: The dependency "dep-1" has a negative lag (-2).']);
+
+      expect(getLagInput(openDialog('dep-1'))).to.have.property('value', '');
+    });
+
+    it('should not save a lag that is not a whole number', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const dialog = openDialog('dep-1');
+      fireEvent.change(getLagInput(dialog), { target: { value: '1.5' } });
+
+      expect(getLagInput(dialog)).toHaveAccessibleDescription('Enter a whole number, 0 or more.');
+      expect(within(dialog).getByRole('button', { name: /save/i })).to.have.property(
+        'disabled',
+        true,
+      );
+    });
+
+    it('should say how an all-day successor rounds the lag', async () => {
+      const allDayEvent = EventBuilder.new()
+        .id('event-d')
+        .title('Event D')
+        .fullDay('2025-07-05')
+        .resource(resource1)
+        .build();
+      await renderTimeline({
+        events: [eventA, allDayEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-d')],
+      });
+
+      const dialog = openDialog('dep-1');
+      fireEvent.change(getLagInput(dialog), { target: { value: '36' } });
+      chooseLagUnit(dialog, 'Hours');
+
+      expect(getLagInput(dialog)).toHaveAccessibleDescription(
+        'An all-day event can only wait whole days: 1 day.',
+      );
+
+      fireEvent.change(getLagInput(dialog), { target: { value: '3' } });
+
+      expect(getLagInput(dialog)).toHaveAccessibleDescription(
+        'An all-day event can only wait whole days, so this lag adds no wait.',
+      );
+    });
+  });
+
   describe('context menu', () => {
     it('should open the dialog from Edit dependency', async () => {
       await renderTimeline({
@@ -366,6 +500,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
         ['From', 'Event A'],
         ['To', 'Event B'],
         ['Type', 'Finish to start'],
+        ['Lag', 'None'],
       ]);
       expect(within(dialog).queryByRole('combobox')).to.equal(null);
       expect(within(dialog).queryByRole('button', { name: 'Delete' })).to.equal(null);

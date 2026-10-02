@@ -7,9 +7,11 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
+import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
@@ -17,9 +19,16 @@ import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-intern
 import type {
   SchedulerDependency,
   SchedulerDependencyEditor,
+  SchedulerDependencyLagUnit,
   SchedulerDependencyType,
+  SchedulerResolvedDependencyLag,
   SchedulerUpdateDependencyResult,
 } from '@mui/x-scheduler-internals-premium/models';
+import {
+  getDependencyLag,
+  getDependencyLagIssue,
+  getEffectiveDependencyLag,
+} from '@mui/x-scheduler-internals-premium/internals';
 import {
   EventDialogDraggablePaper,
   EventDialogForm,
@@ -38,8 +47,38 @@ const DEPENDENCY_DIALOG_TEXT = {
   sourceLabel: 'From',
   targetLabel: 'To',
   typeLabel: 'Type',
+  lagLabel: 'Lag',
+  lagUnitLabel: 'Lag unit',
+  noLag: 'None',
+  invalidLag: 'Enter a whole number, 0 or more.',
+  allDayLagIgnored: 'An all-day event can only wait whole days, so this lag adds no wait.',
+  allDayLagRounded: (lag: string) => `An all-day event can only wait whole days: ${lag}.`,
   delete: 'Delete',
 };
+
+// TODO(dependencies public flip, #23420): move to localeText.
+const DEPENDENCY_LAG_UNIT_LABELS: Record<SchedulerDependencyLagUnit, string> = {
+  minute: 'Minutes',
+  hour: 'Hours',
+  day: 'Days',
+  week: 'Weeks',
+};
+
+const DEPENDENCY_LAG_UNITS = Object.keys(
+  DEPENDENCY_LAG_UNIT_LABELS,
+) as SchedulerDependencyLagUnit[];
+
+// TODO(dependencies public flip, #23420): move to localeText.
+function formatLag(lag: SchedulerResolvedDependencyLag) {
+  return `${lag.amount} ${lag.unit}${lag.amount === 1 ? '' : 's'}`;
+}
+
+function isSameLag(
+  a: SchedulerResolvedDependencyLag | null,
+  b: SchedulerResolvedDependencyLag | null,
+) {
+  return a?.amount === b?.amount && a?.unit === b?.unit;
+}
 
 // TODO(dependencies public flip, #23420): move to localeText.
 const DEPENDENCY_TYPE_LABELS: Record<SchedulerDependencyType, string> = {
@@ -85,6 +124,22 @@ const DependencyDialogBody = styled('div', {
   gap: theme.spacing(2),
   padding: theme.spacing(0, 3, 3),
 }));
+
+const DependencyDialogLagRow = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogLagRow',
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
+
+const DependencyDialogLagAmount = styled(TextField, {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogLagAmount',
+})({
+  maxWidth: 100,
+});
 
 const DependencyDialogDetails = styled('dl', {
   name: 'MuiEventTimeline',
@@ -181,8 +236,21 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
     store,
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.title ?? '',
   );
+  const isTargetAllDay = useStore(
+    store,
+    (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.allDay ?? false,
+  );
   const dragHandlerRef = React.useRef<HTMLElement>(null);
   const [type, setType] = React.useState(dependency.type);
+  // A lag the engine ignores (invalid in the props) shows as unset.
+  const initialLag = getDependencyLag(dependency);
+  // Kept as typed, so the field can be emptied.
+  const [lagAmount, setLagAmount] = React.useState(
+    initialLag === null ? '' : String(initialLag.amount),
+  );
+  const [lagUnit, setLagUnit] = React.useState<SchedulerDependencyLagUnit>(
+    initialLag?.unit ?? 'day',
+  );
   // Shown in the form, not as a toast: the dialog hides the rest of the page, the
   // scheduler's error container included, from assistive technologies.
   const [rejection, setRejection] = React.useState<string | null>(null);
@@ -190,10 +258,36 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
   const titleId = `${schedulerId}-dependency-dialog-title`;
   const typeLabelId = `${schedulerId}-dependency-dialog-type-label`;
   const rejectionId = `${schedulerId}-dependency-dialog-rejection`;
+  const lagLabelId = `${schedulerId}-dependency-dialog-lag-label`;
+  const lagHelperId = `${schedulerId}-dependency-dialog-lag-helper`;
+
+  const lagValue = lagAmount.trim() === '' ? 0 : Number(lagAmount);
+  const isLagInvalid = getDependencyLagIssue({ lag: lagValue, lagUnit }) !== null;
+  const draftLag = getDependencyLag({ lag: lagValue, lagUnit });
+  const effectiveLag = getEffectiveDependencyLag({ lag: lagValue, lagUnit }, isTargetAllDay);
+  let lagHelperText: string | null = null;
+  if (isLagInvalid) {
+    lagHelperText = DEPENDENCY_DIALOG_TEXT.invalidLag;
+  } else if (!isSameLag(effectiveLag, draftLag)) {
+    lagHelperText =
+      effectiveLag === null
+        ? DEPENDENCY_DIALOG_TEXT.allDayLagIgnored
+        : DEPENDENCY_DIALOG_TEXT.allDayLagRounded(formatLag(effectiveLag));
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const result = store.updateDependency(dependency.id, { type });
+    if (isLagInvalid) {
+      return;
+    }
+    // Only a lag the user changed is written: an untouched one keeps its original form
+    // (a default unit left implicit, an ignored value from the props).
+    const result = store.updateDependency(
+      dependency.id,
+      isSameLag(draftLag, initialLag)
+        ? { type }
+        : { type, lag: draftLag?.amount, lagUnit: draftLag?.unit },
+    );
     if (result.status === 'rejected') {
       setRejection(UPDATE_REJECTION_MESSAGES[result.reason]);
       return;
@@ -248,6 +342,12 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                   <Typography variant="body2" component="dd">
                     {DEPENDENCY_TYPE_LABELS[dependency.type]}
                   </Typography>
+                  <Typography variant="body2" component="dt">
+                    {DEPENDENCY_DIALOG_TEXT.lagLabel}
+                  </Typography>
+                  <Typography variant="body2" component="dd">
+                    {initialLag === null ? DEPENDENCY_DIALOG_TEXT.noLag : formatLag(initialLag)}
+                  </Typography>
                 </React.Fragment>
               )}
             </DependencyDialogDetails>
@@ -277,6 +377,52 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                 )}
               </FormControl>
             )}
+            {!isReadOnly && (
+              <div>
+                <DependencyDialogLagRow>
+                  <FormLabel id={lagLabelId}>{DEPENDENCY_DIALOG_TEXT.lagLabel}</FormLabel>
+                  <DependencyDialogLagAmount
+                    type="number"
+                    size="small"
+                    value={lagAmount}
+                    error={isLagInvalid}
+                    onChange={(event) => {
+                      setLagAmount(event.target.value);
+                      setRejection(null);
+                    }}
+                    slotProps={{
+                      htmlInput: {
+                        min: 0,
+                        step: 1,
+                        'aria-labelledby': lagLabelId,
+                        'aria-describedby': lagHelperText === null ? undefined : lagHelperId,
+                        'aria-invalid': isLagInvalid || undefined,
+                      },
+                    }}
+                  />
+                  <Select
+                    size="small"
+                    value={lagUnit}
+                    inputProps={{ 'aria-label': DEPENDENCY_DIALOG_TEXT.lagUnitLabel }}
+                    onChange={(event) => {
+                      setLagUnit(event.target.value as SchedulerDependencyLagUnit);
+                      setRejection(null);
+                    }}
+                  >
+                    {DEPENDENCY_LAG_UNITS.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {DEPENDENCY_LAG_UNIT_LABELS[option]}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </DependencyDialogLagRow>
+                {lagHelperText !== null && (
+                  <FormHelperText id={lagHelperId} error={isLagInvalid}>
+                    {lagHelperText}
+                  </FormHelperText>
+                )}
+              </div>
+            )}
           </DependencyDialogBody>
           <Divider className={classes.eventDialogFormDivider} />
           <EventDialogFormActions className={classes.eventDialogFormActions}>
@@ -289,7 +435,7 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                 <Button color="error" type="button" onClick={handleDelete}>
                   {DEPENDENCY_DIALOG_TEXT.delete}
                 </Button>
-                <Button variant="contained" type="submit">
+                <Button variant="contained" type="submit" disabled={isLagInvalid}>
                   {localeText.saveChanges}
                 </Button>
               </React.Fragment>

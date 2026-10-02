@@ -157,8 +157,11 @@ export type SchedulerAddDependencyResult =
 
 /**
  * Properties to change on an existing dependency with `updateDependency()`.
+ * A `lag` or `lagUnit` passed as `undefined` is removed from the dependency.
  */
-export type SchedulerDependencyUpdatedProperties = Partial<Pick<SchedulerDependency, 'type'>>;
+export type SchedulerDependencyUpdatedProperties = Partial<
+  Pick<SchedulerDependency, 'type' | 'lag' | 'lagUnit'>
+>;
 
 export type SchedulerUpdateDependencyResult =
   | { status: 'updated' }

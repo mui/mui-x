@@ -276,20 +276,31 @@ export class SchedulerSchedulingPlugin<
     }
 
     const updated: SchedulerDependency = { ...dependency, ...changes };
-    if (updated.type === dependency.type) {
+    for (const key of ['lag', 'lagUnit'] as const) {
+      if (key in changes && changes[key] === undefined) {
+        delete updated[key];
+      }
+    }
+    if (
+      updated.type === dependency.type &&
+      updated.lag === dependency.lag &&
+      updated.lagUnit === dependency.lagUnit
+    ) {
       return { status: 'updated' };
     }
 
-    const duplicate = groupRetainedDependenciesBySource(dependencyModelLookup)
-      .get(updated.source)
-      ?.find(
-        (entry) =>
-          entry.id !== dependencyId &&
-          entry.target === updated.target &&
-          entry.type === updated.type,
-      );
-    if (duplicate) {
-      return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
+    if (updated.type !== dependency.type) {
+      const duplicate = groupRetainedDependenciesBySource(dependencyModelLookup)
+        .get(updated.source)
+        ?.find(
+          (entry) =>
+            entry.id !== dependencyId &&
+            entry.target === updated.target &&
+            entry.type === updated.type,
+        );
+      if (duplicate) {
+        return { status: 'rejected', reason: 'duplicateDependency', dependencyId: duplicate.id };
+      }
     }
 
     const rejection = this.commitDependencyChange(

@@ -696,6 +696,56 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       ]);
     });
 
+    it('should emit onDependenciesChange with the new lag', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { lag: 30, lagUnit: 'minute' });
+
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([
+        { ...DEP_AB, lag: 30, lagUnit: 'minute' },
+      ]);
+    });
+
+    it('should remove the lag and its unit when passed as undefined', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          dependencies: [{ ...DEP_AB, lag: 2, lagUnit: 'hour' }],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { lag: undefined, lagUnit: undefined });
+
+      const [emitted] = onDependenciesChange.mock.lastCall![0];
+      expect(emitted).to.deep.equal(DEP_AB);
+      expect('lag' in emitted).to.equal(false);
+      expect('lagUnit' in emitted).to.equal(false);
+    });
+
+    it('should not reject a lag change on a dependency duplicated in the props', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          dependencies: [DEP_AB, { ...DEP_AB, id: 'dep-2' }],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { lag: 30, lagUnit: 'minute' }).status).to.equal(
+        'updated',
+      );
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+    });
+
     it('should not emit onDependenciesChange when nothing changes', () => {
       const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
