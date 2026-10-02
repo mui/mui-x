@@ -57,6 +57,14 @@ It accepts a number (in pixels), a CSS length such as `'50vh'`, a percentage, or
 Percentage values require a parent element with an explicit height.
 For content-based sizing, use a [flex parent container](#flex-parent-container) instead of values such as `'auto'`, `'min-content'`, `'max-content'`, or `'fit-content'`, which this prop does not support.
 To change the height, update the prop instead of `sx` or `style`, because the prop also sets the minimum and maximum height.
+For a responsive height, pass a CSS variable to the prop and set the variable with `sx`:
+
+```tsx
+<DataGrid
+  height="var(--grid-height)"
+  sx={{ '--grid-height': { xs: '300px', md: '500px' } }}
+/>
+```
 
 {{"demo": "HeightGrid.js", "bg": "inline"}}
 

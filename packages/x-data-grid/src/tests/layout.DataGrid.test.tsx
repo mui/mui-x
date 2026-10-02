@@ -917,12 +917,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
         expect(getColumnValues(0)).to.have.length(expectedFullPageRowsLength);
       });
 
-      it('should let sx override the height prop', () => {
-        // The prop also sets `minHeight`, so the override has to set it too.
-        render(<DataGrid {...baselineProps} height={300} sx={{ height: 150, minHeight: 150 }} />);
-        expect(getComputedStyle(grid('root')!).height).to.equal('150px');
-      });
-
       // See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
       it('should resolve the root element to the given height inside a flex column container', () => {
         render(
@@ -954,6 +948,19 @@ describe('<DataGrid /> - Layout & warnings', () => {
         () => {
           render(
             <div style={{ display: 'flex', flexDirection: 'column', height: 200 }}>
+              <DataGrid {...baselineProps} height={300} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ height: '300px' });
+        },
+      );
+
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should resolve the given height inside a flex column container without a height',
+        () => {
+          render(
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <DataGrid {...baselineProps} height={300} />
             </div>,
           );
