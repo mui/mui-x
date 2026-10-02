@@ -47,6 +47,18 @@ describe('<AdapterDayjs />', () => {
   });
 
   describe('Adapter timezone', () => {
+    const setSystemTimezone = (timezone: string) => {
+      const previousTimezone = process.env.TZ;
+      process.env.TZ = timezone;
+      onTestFinished(() => {
+        if (previousTimezone === undefined) {
+          delete process.env.TZ;
+        } else {
+          process.env.TZ = previousTimezone;
+        }
+      });
+    };
+
     it('setTimezone: should throw warning if no plugin is available', () => {
       const modifiedAdapter = new AdapterDayjs();
       // @ts-ignore
@@ -198,6 +210,16 @@ describe('<AdapterDayjs />', () => {
           expect(value.format('YYYY-MM-DD')).to.equal('١٩٦٠-٠٨-١٥');
         });
 
+        it('should add elapsed time without parsing localized digits or changing the locale', () => {
+          const value = getValue();
+          const result = adapterAr.addHours(value, 1) as Dayjs;
+
+          expect(result.valueOf() - value.valueOf()).to.equal(3_600_000);
+          expect(result.locale()).to.equal('ar');
+          expect(result.format('YYYY-MM-DD HH:mm')).to.equal('١٩٦٠-٠٨-١٥ ١٣:٣٠');
+          expect(value.format('YYYY-MM-DD HH:mm')).to.equal('١٩٦٠-٠٨-١٥ ١٢:٣٠');
+        });
+
         it('should increment the day of the month with localized digits', async () => {
           const view = renderWithProps({
             defaultValue: getValue(),
@@ -217,20 +239,122 @@ describe('<AdapterDayjs />', () => {
       });
     });
 
+    describe('Elapsed time in named timezones', () => {
+      const adapter = new AdapterDayjs();
+      const transitions = [
+        {
+          timezone: 'America/New_York',
+          before: '2026-03-08T06:30:12.345Z',
+          after: '2026-03-08T07:30:12.345Z',
+          beforeWall: '2026-03-08 01:30:12.345 -05:00',
+          afterWall: '2026-03-08 03:30:12.345 -04:00',
+        },
+        {
+          timezone: 'America/New_York',
+          before: '2026-11-01T05:30:12.345Z',
+          after: '2026-11-01T06:30:12.345Z',
+          beforeWall: '2026-11-01 01:30:12.345 -04:00',
+          afterWall: '2026-11-01 01:30:12.345 -05:00',
+        },
+        {
+          timezone: 'Europe/London',
+          before: '2026-03-29T00:30:12.345Z',
+          after: '2026-03-29T01:30:12.345Z',
+          beforeWall: '2026-03-29 00:30:12.345 +00:00',
+          afterWall: '2026-03-29 02:30:12.345 +01:00',
+        },
+        {
+          timezone: 'Europe/London',
+          before: '2026-10-25T00:30:12.345Z',
+          after: '2026-10-25T01:30:12.345Z',
+          beforeWall: '2026-10-25 01:30:12.345 +01:00',
+          afterWall: '2026-10-25 01:30:12.345 +00:00',
+        },
+        {
+          timezone: 'Australia/Lord_Howe',
+          before: '2026-04-04T14:45:12.345Z',
+          after: '2026-04-04T15:45:12.345Z',
+          beforeWall: '2026-04-05 01:45:12.345 +11:00',
+          afterWall: '2026-04-05 02:15:12.345 +10:30',
+        },
+        {
+          timezone: 'Australia/Lord_Howe',
+          before: '2026-10-03T15:00:12.345Z',
+          after: '2026-10-03T16:00:12.345Z',
+          beforeWall: '2026-10-04 01:30:12.345 +10:30',
+          afterWall: '2026-10-04 03:00:12.345 +11:00',
+        },
+      ];
+      const format = 'YYYY-MM-DD HH:mm:ss.SSS Z';
+
+      it.skipIf(!isJSDOM)(
+        'should keep elapsed time exact when the target wall time falls in a system DST gap',
+        () => {
+          setSystemTimezone('Europe/London');
+          const source = dayjs.utc('2026-03-29T04:30:12.345Z').tz('America/New_York');
+          const result = adapter.addMinutes(source, 30);
+
+          expect(result.toISOString()).to.equal('2026-03-29T05:00:12.345Z');
+          expect(result.utcOffset()).to.equal(-240);
+          expect(adapter.getTimezone(result)).to.equal('America/New_York');
+          // Day.js stores nonzero-offset wall fields in a local Date. The expected 01:00 wall time
+          // does not exist in the system timezone, so correct wall fields remain a library limitation.
+        },
+      );
+
+      describe.each([
+        'UTC',
+        'America/New_York',
+        'America/Los_Angeles',
+        'Europe/London',
+        'Australia/Lord_Howe',
+      ])('system timezone: %s', (systemTimezone) => {
+        // Browsers cannot change their timezone through process.env.TZ.
+        describe.skipIf(!isJSDOM && systemTimezone !== 'UTC')('DST transitions', () => {
+          beforeEach(() => {
+            if (isJSDOM) {
+              setSystemTimezone(systemTimezone);
+            }
+          });
+
+          describe.each([
+            { method: 'addHours', amount: 1 },
+            { method: 'addMinutes', amount: 60 },
+            { method: 'addSeconds', amount: 3600 },
+          ] as const)('$method', ({ method, amount }) => {
+            it.each(transitions)('$timezone: $before → $after', (transition) => {
+              const { timezone, before, after, beforeWall, afterWall } = transition;
+              for (const direction of [1, -1]) {
+                const source = dayjs
+                  .utc(direction === 1 ? before : after)
+                  .tz(timezone)
+                  .locale('fr');
+                const originalTimestamp = source.valueOf();
+                const originalWall = source.format(format);
+                const result = adapter[method](source, amount * direction);
+                const expected = direction === 1 ? after : before;
+                const expectedWall = direction === 1 ? afterWall : beforeWall;
+
+                expect(adapter[method](result, 0).valueOf()).to.equal(result.valueOf());
+                expect(result.valueOf() - originalTimestamp).to.equal(direction * 3_600_000);
+                expect(result.toISOString()).to.equal(expected);
+                expect(result.format(format)).to.equal(expectedWall);
+                expect(result.clone().format(format)).to.equal(expectedWall);
+                expect(result.clone().valueOf()).to.equal(result.valueOf());
+                expect(adapter.getTimezone(result)).to.equal(timezone);
+                expect(result.locale()).to.equal('fr');
+                expect(source.valueOf()).to.equal(originalTimestamp);
+                expect(source.format(format)).to.equal(originalWall);
+                expect(source.locale()).to.equal('fr');
+              }
+            });
+          });
+        });
+      });
+    });
+
     // CI runs with `TZ=UTC`, so these tests switch to a system timezone that observes DST.
     describe.skipIf(!isJSDOM)('DST changes of the system timezone', () => {
-      const setSystemTimezone = (timezone: string) => {
-        const previousTimezone = process.env.TZ;
-        process.env.TZ = timezone;
-        onTestFinished(() => {
-          if (previousTimezone === undefined) {
-            delete process.env.TZ;
-          } else {
-            process.env.TZ = previousTimezone;
-          }
-        });
-      };
-
       it.each([
         {
           transition: 'spring forward',
@@ -250,6 +374,29 @@ describe('<AdapterDayjs />', () => {
 
       describe('DigitalClock', () => {
         const { render } = createPickerRenderer({ adapterName: 'dayjs' });
+
+        it('should emit distinct instants for both occurrences of the repeated hour with named-zone values', async () => {
+          setSystemTimezone('America/New_York');
+          const onChange = vi.fn();
+          const { user } = render(
+            <DigitalClock
+              value={dayjs.tz('2026-11-01T12:00', 'America/New_York')}
+              timeStep={30}
+              ampm
+              onChange={onChange}
+            />,
+          );
+
+          expect(screen.getAllByRole('option')).to.have.length(50);
+          const repeatedOptions = screen.getAllByRole('option', { name: '01:30 AM' });
+          expect(repeatedOptions).to.have.length(2);
+          await user.click(repeatedOptions[0]);
+          await user.click(repeatedOptions[1]);
+          expect(onChange.mock.calls.map(([value]) => value.toISOString())).to.deep.equal([
+            '2026-11-01T05:30:00.000Z',
+            '2026-11-01T06:30:00.000Z',
+          ]);
+        });
 
         it('should emit distinct instants for both occurrences of the repeated hour with plain values', async () => {
           setSystemTimezone('America/New_York');
