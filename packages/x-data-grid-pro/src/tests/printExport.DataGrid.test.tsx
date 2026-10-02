@@ -207,7 +207,7 @@ describe('<DataGridPro /> - Print export', () => {
         <Test {...getBasicGridData(rowCount, 2)} height={height} rowHeight={40} />,
       );
 
-      const printLayouts: { height: number; footerGap: number }[] = [];
+      const printLayouts: { height: number; footerGap: number; rowCount: number }[] = [];
       const removeChild = document.body.removeChild.bind(document.body);
       const removeChildSpy = vi
         .spyOn(document.body, 'removeChild')
@@ -224,19 +224,29 @@ describe('<DataGridPro /> - Print export', () => {
             printLayouts.push({
               height: printRoot.getBoundingClientRect().height,
               footerGap: footer.top - lastRow.bottom,
+              rowCount: rows.length,
             });
           }
           return removeChild(child);
         });
       onTestFinished(() => removeChildSpy.mockRestore());
 
-      await act(() => apiRef.current!.exportDataAsPrint());
+      async function exportGrid() {
+        let printPromise!: Promise<void>;
+        // Flush the virtualization update before the async export clones the grid in React 18.
+        act(() => {
+          printPromise = apiRef.current!.exportDataAsPrint();
+        });
+        await act(() => printPromise);
+      }
+
+      await exportGrid();
 
       setProps({ height: undefined });
-      await act(() => apiRef.current!.exportDataAsPrint());
+      await exportGrid();
 
       // The height prop must not change the exported content height or footer position.
-      expect(printLayouts).to.have.length(2);
+      expect(printLayouts.map((layout) => layout.rowCount)).to.deep.equal([rowCount, rowCount]);
       expect(printLayouts[0]).to.deep.equal(printLayouts[1]);
     });
   });
