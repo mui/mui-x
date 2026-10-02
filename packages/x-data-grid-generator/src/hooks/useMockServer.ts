@@ -34,6 +34,10 @@ const dataCache = new LRUCache<string, GridDemoData>({
   ttl: 60 * 5 * 1e3, // 5 minutes
 });
 
+export function clearMockServerCache() {
+  dataCache.clear();
+}
+
 export const BASE_URL = 'https://mui.com/x/api/data-grid';
 
 type UseMockServerResponse<T> = {
