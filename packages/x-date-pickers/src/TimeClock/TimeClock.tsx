@@ -282,7 +282,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
 
         let viewRange: [number, number];
         if (ampm) {
-          if (viewValue >= 12) {
+          if (meridiemMode === 'pm') {
             viewRange = [12, 23];
           } else {
             viewRange = [0, 11];
