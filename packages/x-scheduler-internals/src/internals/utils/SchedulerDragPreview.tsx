@@ -3,13 +3,18 @@ import * as React from 'react';
 import { Draggable } from '@base-ui/react/draggable';
 import { schedulerDropTargetKind } from './schedulerDrag';
 
+// The content each drag's preview was built with. `Draggable.updatePreview()` runs the preview
+// function again, and the content must not be rendered again with it.
+const contentBySource = new WeakMap<Draggable.Root.Record, React.ReactNode>();
+
 function isOutsideScheduler(location: Draggable.LocationHistory) {
   return !location.current.targets.some((target) => schedulerDropTargetKind.matches(target));
 }
 
 /**
  * Visibility changes only when the target changes; Base UI positions the floating preview.
- * This renders off-document: Base UI copies each commit into the element that follows the pointer.
+ * This renders off-document. Base UI copies it into the element that follows the pointer when the
+ * drag starts, and again on `Draggable.updatePreview()`.
  */
 function SchedulerFloatingPreview(props: {
   location: Draggable.LocationHistory;
@@ -22,6 +27,14 @@ function SchedulerFloatingPreview(props: {
   Draggable.useMonitor({
     onTargetChange: (eventDetails) => setVisible(isOutsideScheduler(eventDetails.location)),
   });
+  // The copy on screen shows a new visibility only once asked to.
+  const shownVisible = React.useRef(visible);
+  React.useEffect(() => {
+    if (shownVisible.current !== visible) {
+      shownVisible.current = visible;
+      Draggable.updatePreview();
+    }
+  }, [visible]);
   return <div style={{ visibility: visible ? undefined : 'hidden' }}>{children}</div>;
 }
 
@@ -34,8 +47,11 @@ export function SchedulerDragPreview(props: SchedulerDragPreview.Props) {
 
   return (
     <Draggable.Preview offset="pointer" disabled={disabled}>
-      {({ location }) => {
-        const content = children();
+      {({ source, location }) => {
+        if (!contentBySource.has(source)) {
+          contentBySource.set(source, children());
+        }
+        const content = contentBySource.get(source);
         // An empty preview would still be inserted and follow the pointer.
         if (content == null || content === false) {
           return null;

@@ -67,10 +67,12 @@ describe('Scheduler floating drag preview', () => {
     expect(content).toBeVisible();
     const initialRenderCount = renderPreview.mock.calls.length;
 
+    // The copy on screen takes the new visibility in a later frame, and keeps its nodes.
     await moveDragAndWait(screen.getByTestId('target'), { clientX: 100 });
-    expect(content.parentElement!.style.visibility).toBe('hidden');
+    await waitFor(() => expect(content.parentElement!.style.visibility).toBe('hidden'));
     await moveDragAndWait(document.body, { clientX: 200 });
-    expect(content).toBeVisible();
+    await waitFor(() => expect(content).toBeVisible());
+    // The content is built once per drag, even when the preview updates.
     expect(renderPreview).toHaveBeenCalledTimes(initialRenderCount);
 
     cancelDrag();
