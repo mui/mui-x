@@ -23,6 +23,31 @@ describe('useMockServer', () => {
     expect(rows[0]).to.have.property('maturityDate-year');
   });
 
+  it.each([false, true])(
+    'should not reuse cached data with multiSelect=%s for the opposite value',
+    async (multiSelect) => {
+      const rowLength = multiSelect ? 7 : 8;
+      const { result: firstResult } = renderHook(() =>
+        useMockServer(
+          { dataSet: 'Commodity', rowLength, maxColumns: 6, multiSelect },
+          serverOptions,
+        ),
+      );
+      await waitFor(() => expect(firstResult.current.isReady).to.equal(true));
+
+      const { result: secondResult } = renderHook(() =>
+        useMockServer(
+          { dataSet: 'Commodity', rowLength, maxColumns: 6, multiSelect: !multiSelect },
+          serverOptions,
+        ),
+      );
+      await waitFor(() => expect(secondResult.current.isReady).to.equal(true));
+      const { rows } = await secondResult.current.fetchRows(BASE_URL);
+      expect(rows[0]).to.have.property(multiSelect ? 'quantity' : 'tags');
+      expect(rows[0]).not.to.have.property(multiSelect ? 'tags' : 'quantity');
+    },
+  );
+
   it('should keep the edited row after a remount', async () => {
     const { result, unmount } = renderHook(() =>
       useMockServer({ dataSet: 'Commodity', rowLength: 6 }, serverOptions),
