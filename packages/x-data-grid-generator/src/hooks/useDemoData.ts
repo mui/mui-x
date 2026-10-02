@@ -164,7 +164,9 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
       (options.treeData?.maxDepth ?? 1) > 1
         ? `${options.treeData?.maxDepth}-${options.treeData?.averageChildren ?? 2}-${options.treeData?.groupingField ?? ''}`
         : 'false';
-    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-multiSelect:${options.multiSelect ? 'true' : 'false'}-treeData:${treeDataKey}`;
+    // The cached data includes `columns` and `initialState`, so every column option must be in the key.
+    const visibleFieldsKey = options.visibleFields ? options.visibleFields.join(',') : 'all';
+    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-multiSelect:${options.multiSelect ? 'true' : 'false'}-editable:${options.editable ? 'true' : 'false'}-visibleFields:${visibleFieldsKey}-treeData:${treeDataKey}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.
@@ -219,6 +221,8 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     options.treeData?.groupingField,
     options.treeData?.averageChildren,
     options.multiSelect,
+    options.editable,
+    options.visibleFields,
     index,
     columns,
   ]);
