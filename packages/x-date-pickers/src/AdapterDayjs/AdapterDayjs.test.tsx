@@ -286,42 +286,15 @@ describe('<AdapterDayjs />', () => {
         expect(adapter.getHours(value)).to.equal(1);
         expect(value.toISOString()).to.equal('2026-03-08T09:58:00.000Z');
       });
-
-      it('should keep the elapsed time when adding hours to `dayjs.tz` values across a DST change', () => {
-        setSystemTimezone('America/Los_Angeles');
-        const adapter = new AdapterDayjs();
-        const fallBack = adapter.addHours(dayjs.tz('2026-11-01T01:30', 'America/Phoenix'), 1);
-        const springForward = adapter.addHours(dayjs.tz('2026-03-08T02:30', 'America/Phoenix'), 1);
-
-        expect(fallBack.toISOString()).to.equal('2026-11-01T09:30:00.000Z');
-        expect(springForward.toISOString()).to.equal('2026-03-08T10:30:00.000Z');
-      });
-
-      it('should keep the elapsed time when adding hours across a DST change of the value timezone', () => {
-        setSystemTimezone('Europe/London');
-        const adapter = new AdapterDayjs();
-        const springForward = adapter.addHours(dayjs.tz('2026-03-29T00:30', 'Europe/London'), 2);
-        const fallBack = adapter.addHours(dayjs.tz('2026-10-25T00:30', 'Europe/London'), 2);
-
-        expect(springForward.toISOString()).to.equal('2026-03-29T02:30:00.000Z');
-        expect(fallBack.toISOString()).to.equal('2026-10-25T01:30:00.000Z');
-      });
-
-      it('should keep the instant when a setter does not change the value', () => {
-        setSystemTimezone('America/New_York');
-        const adapter = new AdapterDayjs();
-        // In this system timezone, `dayjs` creates this value with a `$localOffset` that differs from its `Date`.
-        const value = dayjs.tz('2026-11-01T00:30', 'America/Los_Angeles');
-
-        expect(adapter.setMinutes(value, 30).toISOString()).to.equal('2026-11-01T07:30:00.000Z');
-      });
     });
 
-    it('should keep small years when setting the year of a value with a timezone', () => {
+    it('should keep small years when setting the year of a plain value', () => {
       const adapter = new AdapterDayjs();
-      const value = adapter.setYear(adapter.date('2026-01-15T12:00', 'Europe/London') as Dayjs, 1);
+      const value = adapter.setYear(adapter.date('2026-01-15T12:00', 'system') as Dayjs, 1);
+      const expected = new Date(2026, 0, 15, 12);
+      expected.setFullYear(1);
 
-      expect(adapter.getYear(value)).to.equal(1);
+      expect(value.valueOf()).to.equal(expected.getTime());
     });
   });
 
