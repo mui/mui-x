@@ -295,7 +295,6 @@ export default function MyApp(
       Component={Component}
       pageProps={pageProps}
       docsConfig={DOCS_CONFIG}
-      serviceWorkerPath="/x/sw.js"
       activePage={activePage}
       activePageParents={activePageParents}
       pageList={xPages}
