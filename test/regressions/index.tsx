@@ -2,8 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
-// eslint-disable-next-line import/no-relative-packages
-import '../utils/setupFakeClock';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import {
@@ -12,11 +10,10 @@ import {
   resetRandomGenerators,
 } from '@mui/x-data-grid-generator';
 import loadFonts from '@mui/internal-test-utils/loadFonts';
+import { fakeTimers, flushTimers } from './fakeClock';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';
-
-(globalThis as any).MUI_TEST_ENV = true;
 
 LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
 
@@ -31,6 +28,7 @@ declare global {
       fontsReady: Promise<void>;
       isReady: boolean;
       navigate: (test: string) => void;
+      flushTimers: () => Promise<void>;
     };
   }
 }
@@ -63,6 +61,8 @@ window.muiFixture = {
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
   },
+  // Called by the runner once the test case mounted, see `navigateToTest`.
+  flushTimers,
 };
 
 main();
@@ -85,6 +85,7 @@ function Root() {
       // which changes how some demos render compared to a cold cache.
       clearDemoDataCache();
       clearMockServerCache();
+      fakeTimers();
       navigate(path);
     };
     window.muiFixture.isReady = true;
@@ -136,12 +137,6 @@ function App() {
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
         const isOverviewTest = suite.startsWith('test-regressions-overviews-');
 
-        const chartTestNeedsToAdvanceTime = (test: Test) =>
-          test.path.includes('Interaction') ||
-          test.path.includes('PrintChart') ||
-          test.path.includes('ExportChartAsImage') ||
-          test.path.includes('ImageExportAutoSize');
-
         return {
           path: suite,
           children: testsBySuite[suite].map((test) => ({
@@ -150,7 +145,6 @@ function App() {
               <TestViewer
                 isDataGridTest={isDataGridTest}
                 isDataGridPivotTest={isDataGridPivotTest}
-                shouldAdvanceTime={isDataGridTest || chartTestNeedsToAdvanceTime(test)}
                 path={computePath(test)}
               >
                 {isOverviewTest ? (
