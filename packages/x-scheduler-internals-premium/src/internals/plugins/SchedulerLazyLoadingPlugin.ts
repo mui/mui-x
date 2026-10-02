@@ -204,8 +204,7 @@ export class SchedulerLazyLoadingPlugin<
 
     const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
     let isStale = false;
-    let rangeToRefetch: { start: TemporalSupportedObject; end: TemporalSupportedObject } | null =
-      null;
+    let requestToRefetch: typeof this.latestRequest = null;
     try {
       const events = await dataSource.getEvents(range.start, range.end);
       const latestRequest = this.latestRequest;
@@ -226,7 +225,7 @@ export class SchedulerLazyLoadingPlugin<
       );
       // The cached part of a trimmed request can expire while it is pending.
       if (getMissingRange(adapter, cache, latestRequest.range) !== null) {
-        rangeToRefetch = latestRequest.range;
+        requestToRefetch = latestRequest;
       }
       // Build from the full cache so disjoint already-cached ranges stay visible
       // when the visible range expands to cover them.
@@ -254,12 +253,13 @@ export class SchedulerLazyLoadingPlugin<
       }
       this.store.pushError(error);
     } finally {
-      if (!this.disposables.disposed && !isStale && !rangeToRefetch) {
+      if (!this.disposables.disposed && !isStale && !requestToRefetch) {
         this.store.set('isLoading', false);
       }
       await dataManager.setRequestSettled(range);
-      if (rangeToRefetch && !this.disposables.disposed) {
-        await this.queueDataFetchForRange(rangeToRefetch, true);
+      // Settling can wait for other queued fetches, skip the refetch if the user navigated meanwhile.
+      if (requestToRefetch && requestToRefetch === this.latestRequest) {
+        await this.queueDataFetchForRange(requestToRefetch.range, true);
       }
     }
   };

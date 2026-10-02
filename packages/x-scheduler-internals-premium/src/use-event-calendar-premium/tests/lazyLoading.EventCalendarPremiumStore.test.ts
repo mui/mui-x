@@ -411,6 +411,80 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(store.state.eventIdList).to.include('cached');
   });
 
+  it('should not refetch an expired range once the user navigated away', async () => {
+    const event: TestEvent = {
+      id: 'december',
+      start: '2025-12-02T10:00:00.000Z',
+      end: '2025-12-02T11:00:00.000Z',
+      title: 'December event',
+    };
+    const pending: Array<() => void> = [];
+    const dataSource = {
+      getEvents: vi.fn(
+        (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+          new Promise<TestEvent[]>((resolve) => {
+            pending.push(() => resolve(isEventInRange(event, start, end) ? [event] : []));
+          }),
+      ),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore(
+      {
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+      },
+      adapter,
+    );
+    const navigate = async (date: string) => {
+      store.goToDate(adapter.date(date, 'default'), noopUIEvent);
+      await flushEffect();
+      await flushDebounce();
+    };
+    const resolveCall = async (index: number) => {
+      pending[index]();
+      await flushEffect();
+    };
+
+    store.setViewDefinition(buildViewDefinition(10));
+    await flushEffect();
+    await resolveCall(0);
+
+    // Fill the 3 concurrent slots so the next requests wait in the queue.
+    await vi.advanceTimersByTimeAsync(CACHE_TTL_MS - 10_000);
+    await navigate('2025-08-01T00:00:00Z'); // 1
+    await navigate('2025-09-01T00:00:00Z'); // 2
+    await navigate('2025-10-01T00:00:00Z'); // 3
+    await navigate('2025-11-01T00:00:00Z'); // queued
+    await navigate('2025-07-05T00:00:00Z'); // queued, trimmed to the days after July 10
+
+    // Freeing one slot starts the trimmed July request, the November one stays queued.
+    await resolveCall(1);
+    expect(dataSource.getEvents.mock.calls).to.have.length(5);
+
+    // The cached July days expire, so settling the July request plans a refetch,
+    // but it first waits for the queued November request.
+    await vi.advanceTimersByTimeAsync(20_000);
+    await resolveCall(4);
+    expect(dataSource.getEvents.mock.calls).to.have.length(6);
+
+    // Navigate to December while November is pending.
+    await navigate('2025-12-01T00:00:00Z');
+    await resolveCall(2);
+    expect(dataSource.getEvents.mock.calls).to.have.length(7);
+
+    // November settles: July must not take over from December.
+    await resolveCall(5);
+    await flushDebounce();
+    await resolveCall(6);
+    pending.forEach((resolve) => resolve());
+    await flushEffect();
+    await flushDebounce();
+
+    expect(store.state.isLoading).to.equal(false);
+    expect(store.state.eventIdList).to.include('december');
+  });
+
   it('should not mark hours that were not fetched as cached when trimming in another timezone', async () => {
     // 21:00 on July 9 in New York.
     const event: TestEvent = {
