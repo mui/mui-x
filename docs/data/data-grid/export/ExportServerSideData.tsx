@@ -21,16 +21,13 @@ const { useQuery, ...data } = createFakeServer(
   SERVER_OPTIONS,
 );
 
-// Defined outside the component: `useQuery` fetches again whenever the query object changes.
-const ALL_ROWS_QUERY = {};
-
 function CustomToolbar() {
   const apiRef = useGridApiContext();
   const [exporting, setExporting] = React.useState(false);
 
   // Due to the mockup API, it's required to get all rows from the hook.
   // For a real-world scenario, this line is not necessary.
-  const { rows: allExportRows } = useQuery(ALL_ROWS_QUERY);
+  const { rows: allExportRows } = useQuery({});
 
   async function exportAllRows<
     T extends (params: { fileName: string; includeHeaders: boolean }) => void,
