@@ -125,11 +125,11 @@ export interface SchedulerDependencyCreation {
   targetSide: SchedulerEventSide | null;
 }
 
-export type SchedulerDependencyEventRejectionReason =
-  'recurringEvent' | 'unknownEvent' | 'readOnlyEvent';
+export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknownEvent';
 
 export type SchedulerDependencyRejectionReason =
   | SchedulerDependencyEventRejectionReason
+  | 'readOnly'
   | 'duplicateDependency'
   | 'cyclicDependency'
   | 'cascadeBlocked';
@@ -153,6 +153,7 @@ export type SchedulerAddDependencyResult =
     }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
   | { status: 'rejected'; reason: 'cyclicDependency' }
+  | { status: 'rejected'; reason: 'readOnly' }
   | SchedulerDependencyCascadeBlockedRejection;
 
 /**
@@ -166,7 +167,7 @@ export type SchedulerDependencyUpdatedProperties = Partial<
 export type SchedulerUpdateDependencyResult =
   | { status: 'updated' }
   | { status: 'rejected'; reason: 'unknownDependency' }
-  | { status: 'rejected'; reason: 'readOnlyEvent'; eventId: SchedulerEventId }
+  | { status: 'rejected'; reason: 'readOnly' }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
   | SchedulerDependencyCascadeBlockedRejection;
 

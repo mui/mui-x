@@ -384,9 +384,9 @@ export class EventTimelinePremiumStore<
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown, recurring or read-only event,
-   * duplicates, cycles, and dependencies whose successor would need to move while
-   * read-only — see the returned `SchedulerAddDependencyResult`.
+   * Rejects every dependency while the scheduler is read-only, and dependencies
+   * referencing an unknown or recurring event, duplicates, cycles, and dependencies
+   * needing a read-only event to move — see the returned `SchedulerAddDependencyResult`.
    * A dependency the event dates break moves its successor (and the cascade behind it).
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`
@@ -398,8 +398,9 @@ export class EventTimelinePremiumStore<
 
   /**
    * Changes the properties of an existing dependency.
-   * Rejects an unknown id, a read-only endpoint event, a duplicate and a change that would
-   * move a read-only event — see the returned `SchedulerUpdateDependencyResult`.
+   * Rejects every change while the scheduler is read-only, an unknown id, a duplicate and
+   * a change that would move a read-only event — see the returned
+   * `SchedulerUpdateDependencyResult`.
    * A change the event dates break moves its successor (and the cascade behind it).
    */
   public updateDependency = (
@@ -409,7 +410,7 @@ export class EventTimelinePremiumStore<
 
   /**
    * Deletes a dependency. Returns `false` when the deletion was refused: the id is
-   * unknown, or an endpoint event is read-only.
+   * unknown, or the scheduler is read-only.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean =>
     this.scheduling.deleteDependency(dependencyId);
@@ -467,7 +468,7 @@ export class EventTimelinePremiumStore<
     if (selection?.type !== 'dependency') {
       return;
     }
-    // A refused deletion (read-only endpoint) keeps the selection: silently
+    // A refused deletion (read-only scheduler) keeps the selection: silently
     // deselecting would read as a broken delete.
     if (!this.deleteDependency(selection.id)) {
       return;

@@ -199,9 +199,9 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown, recurring or read-only event,
-   * duplicating an existing dependency, closing a cycle, or needing a read-only event to
-   * move.
+   * Rejects every dependency while the scheduler is read-only, and dependencies
+   * referencing an unknown or recurring event, duplicating an existing dependency, closing
+   * a cycle, or needing a read-only event to move.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other.
    * Implementation of the store's `addDependency()` — call it through the store.
@@ -209,14 +209,14 @@ export class SchedulerSchedulingPlugin<
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,
   ): SchedulerAddDependencyResult => {
+    if (isDependencyReadOnly(this.store.state)) {
+      return { status: 'rejected', reason: 'readOnly' };
+    }
     const { processedEventLookup } = this.store.state;
     for (const eventId of [properties.source, properties.target]) {
       const status = classifyDependencyEvent(processedEventLookup, eventId);
       if (status !== 'ok') {
         return { status: 'rejected', reason: status, eventId };
-      }
-      if (schedulerEventSelectors.isReadOnly(this.store.state, eventId)) {
-        return { status: 'rejected', reason: 'readOnlyEvent', eventId };
       }
     }
 
@@ -254,7 +254,7 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Changes the properties of an existing dependency.
-   * Rejects an unknown id, a dependency with a read-only endpoint event, a type change
+   * Rejects every change while the scheduler is read-only, an unknown id, a type change
    * duplicating another dependency between the same events, and a change needing a
    * read-only event to move. An update keeps the source
    * and target, so it cannot close a cycle.
@@ -269,10 +269,8 @@ export class SchedulerSchedulingPlugin<
     if (dependency === undefined) {
       return { status: 'rejected', reason: 'unknownDependency' };
     }
-    for (const eventId of [dependency.source, dependency.target]) {
-      if (schedulerEventSelectors.isReadOnly(this.store.state, eventId)) {
-        return { status: 'rejected', reason: 'readOnlyEvent', eventId };
-      }
+    if (isDependencyReadOnly(this.store.state)) {
+      return { status: 'rejected', reason: 'readOnly' };
     }
 
     const updated: SchedulerDependency = { ...dependency, ...changes };
@@ -381,14 +379,14 @@ export class SchedulerSchedulingPlugin<
 
   /**
    * Deletes a dependency, returning whether it was deleted. Refused (`false`) for an
-   * unknown id and when either endpoint event is read-only, so the store stays safe
+   * unknown id and while the scheduler is read-only, so the store stays safe
    * regardless of which affordance calls it and the callers pairing the deletion with
    * a side effect (clearing the selection) never act on a no-op.
    * Implementation of the store's `deleteDependency()` — call it through the store.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean => {
     const dependency = this.store.state.dependencyModelLookup.get(dependencyId);
-    if (dependency === undefined || isDependencyReadOnly(this.store.state, dependency)) {
+    if (dependency === undefined || isDependencyReadOnly(this.store.state)) {
       return false;
     }
     const current = this.store.state.dependencyModelList;

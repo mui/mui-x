@@ -2,7 +2,7 @@ import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -241,18 +241,14 @@ export function groupRetainedDependenciesBySource(
 }
 
 /**
- * Whether the dependency cannot be created or deleted because one of its endpoint
- * events is read-only. The single definition shared by the store guard and the
- * `isModelReadOnly` selector.
+ * Whether dependencies cannot be created, edited or deleted: only the scheduler-wide
+ * `readOnly` makes them read-only. A read-only event can still be linked, and is protected
+ * by the cascade veto instead: a change that would move it is rejected.
+ * The single definition shared by the store guards, the `isModelReadOnly` selector and
+ * the terminals.
  */
-export function isDependencyReadOnly(
-  state: Parameters<typeof schedulerEventSelectors.isReadOnly>[0],
-  dependency: { source: SchedulerEventId; target: SchedulerEventId },
-): boolean {
-  return (
-    schedulerEventSelectors.isReadOnly(state, dependency.source) ||
-    schedulerEventSelectors.isReadOnly(state, dependency.target)
-  );
+export function isDependencyReadOnly(state: Pick<SchedulerState, 'readOnly'>): boolean {
+  return state.readOnly;
 }
 
 /**

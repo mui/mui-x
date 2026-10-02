@@ -61,7 +61,7 @@ const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
   cyclicDependency: 'This dependency would create a cycle between events.',
   duplicateDependency: 'A dependency of this type already exists between these two events.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
-  readOnlyEvent: 'Dependencies cannot involve read-only events.',
+  readOnly: 'Dependencies cannot be changed while the scheduler is read-only.',
   unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',
 };
 

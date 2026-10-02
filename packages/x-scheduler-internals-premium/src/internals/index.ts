@@ -7,4 +7,5 @@ export {
   getDependencyLagIssue,
   getDependencyType,
   getEffectiveDependencyLag,
+  isDependencyReadOnly,
 } from './utils/dependency-utils';

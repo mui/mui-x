@@ -788,9 +788,13 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
-    it('should reject a dependency with a read-only event', () => {
+    it('should update a dependency with a read-only event', () => {
       const onDependenciesChange = vi.fn();
-      const readOnlyEventB = EventBuilder.new().id('event-b').readOnly().build();
+      const readOnlyEventB = EventBuilder.new()
+        .id('event-b')
+        .readOnly()
+        .singleDay('2025-07-03T11:00:00Z')
+        .build();
       const store = new EventTimelinePremiumStore(
         {
           ...DEFAULT_PARAMS,
@@ -802,9 +806,21 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       );
 
       expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'updated',
+      });
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+    });
+
+    it('should reject any change when the scheduler is read-only', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], readOnly: true, onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
         status: 'rejected',
-        reason: 'readOnlyEvent',
-        eventId: 'event-b',
+        reason: 'readOnly',
       });
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
