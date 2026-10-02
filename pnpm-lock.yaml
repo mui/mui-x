@@ -324,8 +324,8 @@ catalogs:
       specifier: ^3.7.2
       version: 3.7.2
     moment:
-      specifier: ^2.30.1
-      version: 2.30.1
+      specifier: ^2.31.0
+      version: 2.31.0
     moment-hijri:
       specifier: ^3.0.0
       version: 3.0.0
@@ -568,7 +568,7 @@ importers:
         version: 10.0.1(@types/node@22.20.4)(@typescript/typescript6@6.0.2)(babel-plugin-macros@3.1.0)(supports-color@11.0.0)
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       moment-timezone:
         specifier: 'catalog:'
         version: 0.6.4
@@ -793,7 +793,7 @@ importers:
         version: 9.10.3(react@19.3.0)
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       moment-hijri:
         specifier: 'catalog:'
         version: 3.0.0
@@ -1721,7 +1721,7 @@ importers:
         version: 3.7.2
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       moment-hijri:
         specifier: 'catalog:'
         version: 3.0.0
@@ -1810,7 +1810,7 @@ importers:
         version: 3.7.2
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       react:
         specifier: 'catalog:'
         version: 19.3.0
@@ -2396,7 +2396,7 @@ importers:
         version: 1.11.23
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       moment-jalaali:
         specifier: 'catalog:'
         version: 0.10.5
@@ -9779,8 +9779,8 @@ packages:
   moment-timezone@0.6.4:
     resolution: {integrity: sha512-JHUK8Mgheach4uMQmIV/pIfrv0ubPiDCPPqc7Mi604je1UblP6Gbm+FfV+Oh88KP03rZqGCZG3t0wmpfdlDv+w==}
 
-  moment@2.30.1:
-    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
+  moment@2.31.0:
+    resolution: {integrity: sha512-0acOTfMiWOheYS4eoWb80yYMb/JLvVv9SHbs2PehaDzfUG0Bw855SKyk0IKTnPGa5+U2bmi3W68l1+sGLX/pvw==}
 
   motion-dom@13.4.5:
     resolution: {integrity: sha512-p63p2Doq+US/O5wADauIPUVx0/eONHMLPzsudBM9XMWRuBQLXogdxH0vwIA8WYQZw864pyzoV723xoDqakwWTg==}
@@ -16219,11 +16219,11 @@ snapshots:
 
   '@types/moment-hijri@2.1.4':
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
   '@types/moment-jalaali@0.7.9':
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
   '@types/ms@2.1.0': {}
 
@@ -20309,19 +20309,19 @@ snapshots:
 
   moment-hijri@3.0.0:
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
   moment-jalaali@0.10.5:
     dependencies:
       jalaali-js: 1.2.8
-      moment: 2.30.1
+      moment: 2.31.0
       moment-timezone: 0.6.4
 
   moment-timezone@0.6.4:
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
-  moment@2.30.1: {}
+  moment@2.31.0: {}
 
   motion-dom@13.4.5:
     dependencies:
