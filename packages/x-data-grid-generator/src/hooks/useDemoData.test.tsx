@@ -14,8 +14,9 @@ describe('useDemoData', () => {
       firstResult.current.data.initialState?.columns?.columnVisibilityModel?.traderName,
     ).to.equal(false);
 
+    const otherVisibleFields = ['traderName'];
     const { result: secondResult } = renderHook(() =>
-      useDemoData({ dataSet: 'Commodity', rowLength: 7 }),
+      useDemoData({ dataSet: 'Commodity', rowLength: 7, visibleFields: otherVisibleFields }),
     );
     await waitFor(() => expect(secondResult.current.loading).to.equal(false));
     expect(

@@ -24,6 +24,7 @@ describe('asyncWorker', () => {
     });
     const done = vi.fn();
     asyncWorker({ work, tasks, done });
+    expect(requestIdleCallback.mock.calls[0][1]).to.deep.equal({ timeout: 100 });
 
     const timedOut = { didTimeout: true, timeRemaining: () => 0 } as IdleDeadline;
     callbacks.shift()!(timedOut);
