@@ -40,12 +40,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
   // The mock server uses random data, so row 0 isn't guaranteed to be a
   // parent — find the first one that is.
-  function findFirstParentRow() {
+  function findFirstParentRow(excludeId?: GridRowId) {
     const tree = apiRef.current!.state.rows.tree;
     const rootChildren = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
     for (let i = 0; i < rootChildren.length; i += 1) {
       const node = tree[rootChildren[i]];
-      if (node?.type === 'group') {
+      if (node?.type === 'group' && node.id !== excludeId) {
         return { index: i, id: rootChildren[i] as string, cell: getCell(i, 0) };
       }
     }
@@ -471,8 +471,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // the second row is part of the tree
     expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
 
-    // expand the first parent row
-    const { cell: cell11 } = findFirstParentRow();
+    // expand the first parent row, but not the renamed one: the server has no children for its new group key
+    const { cell: cell11 } = findFirstParentRow(testRowId);
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
