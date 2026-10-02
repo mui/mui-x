@@ -300,7 +300,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       const dialog = openDialog('dep-1');
       expect(getLagInput(dialog)).to.have.property('value', '');
       fireEvent.change(getLagInput(dialog), { target: { value: '30' } });
-      chooseLagUnit(dialog, 'Minutes');
+      chooseLagUnit(dialog, 'minutes');
       save(dialog);
 
       expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.include({
@@ -395,7 +395,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       fireEvent.change(getLagInput(dialog), { target: { value: '36' } });
-      chooseLagUnit(dialog, 'Hours');
+      chooseLagUnit(dialog, 'hours');
 
       expect(getLagInput(dialog)).toHaveAccessibleDescription(
         'An all-day event can only wait whole days: 1 day.',

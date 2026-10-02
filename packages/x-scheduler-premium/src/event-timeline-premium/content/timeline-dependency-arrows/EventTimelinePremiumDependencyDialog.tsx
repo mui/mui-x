@@ -58,10 +58,10 @@ const DEPENDENCY_DIALOG_TEXT = {
 
 // TODO(dependencies public flip, #23420): move to localeText.
 const DEPENDENCY_LAG_UNIT_LABELS: Record<SchedulerDependencyLagUnit, string> = {
-  minute: 'Minutes',
-  hour: 'Hours',
-  day: 'Days',
-  week: 'Weeks',
+  minute: 'minutes',
+  hour: 'hours',
+  day: 'days',
+  week: 'weeks',
 };
 
 const DEPENDENCY_LAG_UNITS = Object.keys(
@@ -125,13 +125,25 @@ const DependencyDialogBody = styled('div', {
   padding: theme.spacing(0, 3, 3),
 }));
 
+// The rows mirror the "Repeat" section of the event dialog's recurrence tab: a label
+// column, then the inputs.
+const LABEL_MIN_WIDTH = 60;
+
 const DependencyDialogLagRow = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogLagRow',
-})(({ theme }) => ({
+})({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(1),
+  gap: 8,
+});
+
+const DependencyDialogLagLabel = styled(FormLabel, {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogLagLabel',
+})(({ theme }) => ({
+  color: (theme.vars || theme).palette.text.primary,
+  minWidth: LABEL_MIN_WIDTH,
 }));
 
 const DependencyDialogLagAmount = styled(TextField, {
@@ -141,18 +153,23 @@ const DependencyDialogLagAmount = styled(TextField, {
   maxWidth: 100,
 });
 
+const DependencyDialogLagUnit = styled(Select, {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogLagUnit',
+})({
+  maxWidth: 120,
+});
+
 const DependencyDialogDetails = styled('dl', {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogDetails',
 })(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'auto 1fr',
-  columnGap: theme.spacing(3),
-  rowGap: theme.spacing(1.5),
+  gridTemplateColumns: `minmax(${LABEL_MIN_WIDTH}px, auto) 1fr`,
+  columnGap: 8,
+  rowGap: 12,
   margin: 0,
-  '& dt': {
-    color: (theme.vars || theme).palette.text.secondary,
-  },
+  color: (theme.vars || theme).palette.text.primary,
   '& dd': {
     margin: 0,
   },
@@ -322,30 +339,16 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
           </EventDialogHeader>
           <DependencyDialogBody>
             <DependencyDialogDetails>
-              <Typography variant="body2" component="dt">
-                {DEPENDENCY_DIALOG_TEXT.sourceLabel}
-              </Typography>
-              <Typography variant="body2" component="dd">
-                {sourceTitle}
-              </Typography>
-              <Typography variant="body2" component="dt">
-                {DEPENDENCY_DIALOG_TEXT.targetLabel}
-              </Typography>
-              <Typography variant="body2" component="dd">
-                {targetTitle}
-              </Typography>
+              <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.sourceLabel}</Typography>
+              <Typography component="dd">{sourceTitle}</Typography>
+              <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.targetLabel}</Typography>
+              <Typography component="dd">{targetTitle}</Typography>
               {isReadOnly && (
                 <React.Fragment>
-                  <Typography variant="body2" component="dt">
-                    {DEPENDENCY_DIALOG_TEXT.typeLabel}
-                  </Typography>
-                  <Typography variant="body2" component="dd">
-                    {DEPENDENCY_TYPE_LABELS[dependency.type]}
-                  </Typography>
-                  <Typography variant="body2" component="dt">
-                    {DEPENDENCY_DIALOG_TEXT.lagLabel}
-                  </Typography>
-                  <Typography variant="body2" component="dd">
+                  <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.typeLabel}</Typography>
+                  <Typography component="dd">{DEPENDENCY_TYPE_LABELS[dependency.type]}</Typography>
+                  <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.lagLabel}</Typography>
+                  <Typography component="dd">
                     {initialLag === null ? DEPENDENCY_DIALOG_TEXT.noLag : formatLag(initialLag)}
                   </Typography>
                 </React.Fragment>
@@ -380,7 +383,9 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
             {!isReadOnly && (
               <div>
                 <DependencyDialogLagRow>
-                  <FormLabel id={lagLabelId}>{DEPENDENCY_DIALOG_TEXT.lagLabel}</FormLabel>
+                  <DependencyDialogLagLabel id={lagLabelId}>
+                    {DEPENDENCY_DIALOG_TEXT.lagLabel}
+                  </DependencyDialogLagLabel>
                   <DependencyDialogLagAmount
                     type="number"
                     size="small"
@@ -400,8 +405,9 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                       },
                     }}
                   />
-                  <Select
+                  <DependencyDialogLagUnit
                     size="small"
+                    fullWidth
                     value={lagUnit}
                     inputProps={{ 'aria-label': DEPENDENCY_DIALOG_TEXT.lagUnitLabel }}
                     onChange={(event) => {
@@ -414,7 +420,7 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                         {DEPENDENCY_LAG_UNIT_LABELS[option]}
                       </MenuItem>
                     ))}
-                  </Select>
+                  </DependencyDialogLagUnit>
                 </DependencyDialogLagRow>
                 {lagHelperText !== null && (
                   <FormHelperText id={lagHelperId} error={isLagInvalid}>
