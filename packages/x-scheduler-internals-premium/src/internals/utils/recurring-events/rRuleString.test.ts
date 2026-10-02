@@ -155,6 +155,11 @@ describe('recurring-events/rRuleString', () => {
       );
     });
 
+    it('should read a UNTIL in a year below 100 as that year', () => {
+      const result = parseRRule(adapter, 'FREQ=DAILY;UNTIL=00990315T000000Z', 'default');
+      expect(adapter.getYear(result.until!)).to.equal(99);
+    });
+
     it('should throw when UNTIL is a date that does not exist', () => {
       for (const until of ['20250231T000000Z', '20250101T240000Z']) {
         expect(() => parseRRule(adapter, `FREQ=DAILY;UNTIL=${until}`, 'default')).to.throw(
