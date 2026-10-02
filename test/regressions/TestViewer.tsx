@@ -3,7 +3,7 @@ import { useLocation } from 'react-router';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
 // eslint-disable-next-line import/no-relative-packages
-import { fakeClock, setupFakeClock } from '../utils/setupFakeClock';
+import { flushTimers } from '../utils/setupFakeClock';
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest' && prop !== 'isDataGridPivotTest',
@@ -32,7 +32,7 @@ const StyledBox = styled('div', {
 );
 
 function TestViewer(props: any) {
-  const { children, isDataGridTest, isDataGridPivotTest, shouldAdvanceTime, path } = props;
+  const { children, isDataGridTest, isDataGridPivotTest, path } = props;
 
   return (
     <React.Fragment>
@@ -62,30 +62,15 @@ function TestViewer(props: any) {
           },
         }}
       />
-      <MockTime shouldAdvanceTime={shouldAdvanceTime}>
-        <LoadFont
-          isDataGridTest={isDataGridTest}
-          isDataGridPivotTest={isDataGridPivotTest}
-          data-testpath={path}
-        >
-          {children}
-        </LoadFont>
-      </MockTime>
+      <LoadFont
+        isDataGridTest={isDataGridTest}
+        isDataGridPivotTest={isDataGridPivotTest}
+        data-testpath={path}
+      >
+        {children}
+      </LoadFont>
     </React.Fragment>
   );
-}
-
-function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>) {
-  const [dispose, setDispose] = React.useState<(() => void) | null>(null);
-  const [prevShouldAdvanceTime, setPrevShouldAdvanceTime] = React.useState(props.shouldAdvanceTime);
-
-  if (!dispose || prevShouldAdvanceTime !== props.shouldAdvanceTime) {
-    dispose?.();
-    setDispose(() => setupFakeClock(props.shouldAdvanceTime));
-    setPrevShouldAdvanceTime(props.shouldAdvanceTime);
-  }
-
-  return props.children;
 }
 
 function LoadFont(props: any) {
@@ -95,36 +80,47 @@ function LoadFont(props: any) {
   // We're simulating `act(() => ReactDOM.render(children))`
   // In the end children passive effects should've been flushed.
   // React doesn't have any such guarantee outside of `act()` so we're approximating it.
-  const [ready, setReady] = React.useState(false);
+  // The element is reused across routes, so track which location is ready.
+  const [readyLocation, setReadyLocation] = React.useState<typeof location | null>(null);
+  const ready = readyLocation === location;
 
   // In react-router v6, with multiple routes sharing the same element,
   // this effect will only run once if no dependency is passed.
   React.useEffect(() => {
+    let active = true;
+    let timersFlushed = false;
+
+    function markReady() {
+      // Don't know if there could be multiple loaded events after we started loading multiple times.
+      // So make sure we're only ready if fonts are actually ready.
+      if (active && timersFlushed && document.fonts.status === 'loaded') {
+        setReadyLocation(location);
+      }
+    }
+
     function handleFontsEvent(event: any) {
       if (event.type === 'loading') {
-        setReady(false);
-      } else if (event.type === 'loadingdone') {
-        // Don't know if there could be multiple loaded events after we started loading multiple times.
-        // So make sure we're only ready if fonts are actually ready.
-        if (document.fonts.status === 'loaded') {
-          setReady(true);
+        if (active) {
+          setReadyLocation(null);
         }
+      } else if (event.type === 'loadingdone') {
+        markReady();
       }
     }
 
     document.fonts.addEventListener('loading', handleFontsEvent);
     document.fonts.addEventListener('loadingdone', handleFontsEvent);
 
-    // and wait `load-css` timeouts to be flushed
-    fakeClock?.runToLast();
-
+    // Let the timers scheduled while mounting run, so the test case reaches its final state.
     // In case the child triggered font fetching we're not ready yet.
     // The fonts event handler will mark the test as ready on `loadingdone`
-    if (document.fonts.status === 'loaded') {
-      setReady(true);
-    }
+    flushTimers().then(() => {
+      timersFlushed = true;
+      markReady();
+    });
 
     return () => {
+      active = false;
       document.fonts.removeEventListener('loading', handleFontsEvent);
       document.fonts.removeEventListener('loadingdone', handleFontsEvent);
     };

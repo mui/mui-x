@@ -2,17 +2,15 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
-// eslint-disable-next-line import/no-relative-packages
-import '../utils/setupFakeClock';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
 import { resetRandomGenerators } from '@mui/x-data-grid-generator';
 import loadFonts from '@mui/internal-test-utils/loadFonts';
+// eslint-disable-next-line import/no-relative-packages
+import { fakeTimers } from '../utils/setupFakeClock';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';
-
-(globalThis as any).MUI_TEST_ENV = true;
 
 LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PREMIUM);
 
@@ -77,6 +75,7 @@ function Root() {
       // Each demo should observe the same seeded random sequence regardless
       // of what was rendered before on this page.
       resetRandomGenerators();
+      fakeTimers();
       navigate(path);
     };
     window.muiFixture.isReady = true;
@@ -128,12 +127,6 @@ function App() {
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
         const isOverviewTest = suite.startsWith('test-regressions-overviews-');
 
-        const chartTestNeedsToAdvanceTime = (test: Test) =>
-          test.path.includes('Interaction') ||
-          test.path.includes('PrintChart') ||
-          test.path.includes('ExportChartAsImage') ||
-          test.path.includes('ImageExportAutoSize');
-
         return {
           path: suite,
           children: testsBySuite[suite].map((test) => ({
@@ -142,7 +135,6 @@ function App() {
               <TestViewer
                 isDataGridTest={isDataGridTest}
                 isDataGridPivotTest={isDataGridPivotTest}
-                shouldAdvanceTime={isDataGridTest || chartTestNeedsToAdvanceTime(test)}
                 path={computePath(test)}
               >
                 {isOverviewTest ? (

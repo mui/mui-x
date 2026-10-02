@@ -1,43 +1,57 @@
 // `test/regressions` renders in a plain Vite app driven by Playwright, not in a Vitest
 // context, so `vi.useFakeTimers` is not available here. Use the fake-timers package
 // Vitest itself is built on.
-import { install, type Clock } from '@sinonjs/fake-timers';
-
-declare global {
-  interface Window {
-    fakeClock: any;
-  }
-}
+import { install, type Clock, type FakeMethod } from '@sinonjs/fake-timers';
 
 // Use a "real timestamp" so that we see a useful date instead of "00:00"
 const DEFAULT_TIMESTAMP = '2014-08-18T14:11:54-05:00';
+const NOW = new Date(DEFAULT_TIMESTAMP).getTime();
 
-// eslint-disable-next-line import/no-mutable-exports
-export let fakeClock: Clock | undefined;
+const DATE_METHODS: FakeMethod[] = ['Date', 'Intl'];
+const TIMER_METHODS: FakeMethod[] = [
+  'setTimeout',
+  'clearTimeout',
+  'setInterval',
+  'clearInterval',
+  'requestAnimationFrame',
+  'cancelAnimationFrame',
+  'requestIdleCallback',
+  'cancelIdleCallback',
+];
 
-setupFakeClock();
+// The date is always frozen, so demos that show "today" are stable.
+// Timers are only faked while a test case mounts, see `fakeTimers` and `flushTimers`.
+let clock: Clock = freezeDate();
 
-export function setupFakeClock(shouldAdvanceTime = true) {
-  restoreFakeClock();
-
-  fakeClock = install({
-    now: new Date(DEFAULT_TIMESTAMP).getTime(),
-    // We need to let time advance to use `useDemoData`, but on the pickers
-    // test it makes the tests flaky
-    shouldAdvanceTime,
-    // Allows cancelAnimationFrame to clear native (pre-fake-clock) animation frames
-    // without throwing a warning. Needed for streaming demos that schedule rAFs before
-    // fake timers are installed.
-    shouldClearNativeTimers: true,
-  });
-
-  return restoreFakeClock;
+function freezeDate() {
+  return install({ now: NOW, toFake: DATE_METHODS });
 }
 
-export function restoreFakeClock() {
-  if (fakeClock) {
-    fakeClock.runToLast();
-    fakeClock.uninstall();
-    fakeClock = undefined;
+/**
+ * Fakes the timers until `flushTimers` is called. Call it before a test case mounts.
+ */
+export function fakeTimers() {
+  clock.uninstall();
+  clock = install({
+    now: NOW,
+    toFake: [...DATE_METHODS, ...TIMER_METHODS],
+    // Allows clearing timers that were scheduled before the clock was installed,
+    // for example by the previous test case when it unmounts.
+    shouldClearNativeTimers: true,
+  });
+}
+
+/**
+ * Runs all the timers scheduled while the test case mounted, so it reaches its final state
+ * (for example, a fake server that responds after a delay). Then goes back to real timers.
+ */
+export async function flushTimers() {
+  const current = clock;
+  await current.runToLastAsync();
+  if (clock !== current) {
+    // `fakeTimers` was called again in the meantime.
+    return;
   }
+  clock.uninstall();
+  clock = freezeDate();
 }
