@@ -27,8 +27,7 @@ true satisfies [OverlappingMethods] extends [never] ? true : never;
 // The date is always frozen, so demos that show "today" are stable.
 // Timers are only faked while a test case mounts, see `fakeTimers` and `flushTimers`.
 let clock: Clock = freezeDate();
-// `'faked'` after `fakeTimers`, the running flush during `flushTimers`, `null` with real timers.
-let timers: 'faked' | Promise<void> | null = null;
+let timers: 'real' | 'faked' | 'flushing' = 'real';
 
 // Only call it when no clock is installed: fake-timers throws if `Date` is already faked.
 function freezeDate() {
@@ -37,8 +36,8 @@ function freezeDate() {
 
 /**
  * Fakes the timers until `flushTimers` is called. Call it before a test case mounts.
- * Calling it again before `flushTimers` drops the pending fake timers, for example when
- * navigating away before the previous test case settled.
+ * It can be called in any state: it drops the pending fake timers, for example when the
+ * previous test case on a reused page never settled.
  */
 export function fakeTimers() {
   clock.uninstall();
@@ -56,7 +55,20 @@ export function fakeTimers() {
 // for example a fake fetch followed by `autosizeColumns`.
 const SETTLE_MS = 2000;
 
-async function settleTimers(current: Clock) {
+/**
+ * Runs all the timers scheduled while the test case mounted, so it reaches its final state
+ * (for example, a fake server that responds after a delay). Then goes back to real timers.
+ * Called by the test runner once the test case mounted, after `fakeTimers`.
+ */
+export async function flushTimers() {
+  if (timers !== 'faked') {
+    throw new Error(
+      `flushTimers() was called while the timers are ${timers}. ` +
+        'Call fakeTimers() before the test case mounts, and flushTimers() once after.',
+    );
+  }
+  timers = 'flushing';
+  const current = clock;
   await current.runToLastAsync();
   // Timers scheduled after the last one would otherwise be dropped by `uninstall`.
   await current.tickAsync(SETTLE_MS);
@@ -66,20 +78,7 @@ async function settleTimers(current: Clock) {
   }
   clock.uninstall();
   clock = freezeDate();
-  timers = null;
-}
-
-/**
- * Runs all the timers scheduled while the test case mounted, so it reaches its final state
- * (for example, a fake server that responds after a delay). Then goes back to real timers.
- * A call during a running flush waits for that flush. Without a preceding `fakeTimers`,
- * for example when the page is opened on a test case directly, there is nothing to flush.
- */
-export async function flushTimers() {
-  if (timers === 'faked') {
-    timers = settleTimers(clock);
-  }
-  await timers;
+  timers = 'real';
   // Let the layout updates that run in an animation frame land, for example a chart resize.
   await new Promise((resolve) => {
     requestAnimationFrame(() => requestAnimationFrame(resolve));

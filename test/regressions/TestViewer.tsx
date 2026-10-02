@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import { flushTimers } from './fakeClock';
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest' && prop !== 'isDataGridPivotTest',
@@ -90,13 +89,10 @@ function LoadFont(props: any) {
   // In react-router v6, with multiple routes sharing the same element,
   // this effect will only run once if no dependency is passed.
   React.useEffect(() => {
-    let active = true;
-    let timersFlushed = false;
-
     function markReady() {
       // Don't know if there could be multiple loaded events after we started loading multiple times.
       // So make sure we're only ready if fonts are actually ready.
-      if (active && timersFlushed && document.fonts.status === 'loaded') {
+      if (document.fonts.status === 'loaded') {
         setReadyLocation(location);
       }
     }
@@ -112,16 +108,11 @@ function LoadFont(props: any) {
     document.fonts.addEventListener('loading', handleFontsEvent);
     document.fonts.addEventListener('loadingdone', handleFontsEvent);
 
-    // Let the timers scheduled while mounting run, so the test case reaches its final state.
     // In case the child triggered font fetching we're not ready yet.
     // The fonts event handler will mark the test as ready on `loadingdone`
-    flushTimers().then(() => {
-      timersFlushed = true;
-      markReady();
-    });
+    markReady();
 
     return () => {
-      active = false;
       document.fonts.removeEventListener('loading', handleFontsEvent);
       document.fonts.removeEventListener('loadingdone', handleFontsEvent);
     };

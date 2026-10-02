@@ -10,7 +10,7 @@ import {
   resetRandomGenerators,
 } from '@mui/x-data-grid-generator';
 import loadFonts from '@mui/internal-test-utils/loadFonts';
-import { fakeTimers } from './fakeClock';
+import { fakeTimers, flushTimers } from './fakeClock';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';
@@ -28,6 +28,7 @@ declare global {
       fontsReady: Promise<void>;
       isReady: boolean;
       navigate: (test: string) => void;
+      flushTimers: () => Promise<void>;
     };
   }
 }
@@ -60,6 +61,8 @@ window.muiFixture = {
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
   },
+  // Called by the runner once the test case mounted, see `navigateToTest`.
+  flushTimers,
 };
 
 main();

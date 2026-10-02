@@ -216,9 +216,18 @@ async function main() {
     await page.evaluate(() => window.muiFixture.fontsReady);
 
     // Use client-side routing which is much faster than full page navigation via page.goto().
-    return page.evaluate((_route) => {
+    await page.evaluate((_route) => {
       window.muiFixture.navigate(_route);
     }, route);
+
+    const testcase = await page.waitForSelector(
+      `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+    );
+
+    // Run the timers the test case scheduled while mounting, then switch to real timers.
+    await page.evaluate(() => window.muiFixture.flushTimers());
+
+    return testcase;
   }
 
   describe('visual regressions', () => {
@@ -268,16 +277,12 @@ async function main() {
 
             await page.setViewportSize(routeConfig?.viewport ?? DEFAULT_VIEWPORT);
 
-            await navigateToTest(page, route.url);
-
             // Move cursor offscreen to not trigger unwanted hover effects.
             await page.mouse.move(0, 0);
 
-            const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
+            const testcase = await navigateToTest(page, route.url);
 
-            const testcase = await page.waitForSelector(
-              `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
-            );
+            const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
 
             if (routeConfig?.waitForSelector) {
               // Scope the wait to this route's testcase: pooled pages keep the
@@ -334,11 +339,7 @@ async function main() {
       const route = '/docs-data-grid-virtualization/ColumnVirtualizationGrid';
       const screenshotPath = path.resolve(screenshotDir, `.${route}ScrollLeft400px.png`);
 
-      await navigateToTest(page, route);
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
+      const testcase = await navigateToTest(page, route);
 
       await sleep(100);
       await page.evaluate(() => {
@@ -363,11 +364,7 @@ async function main() {
       const route = '/test-regressions-data-grid/ColumnFluidWidthScrollClamp';
       const screenshotPath = path.resolve(screenshotDir, `.${route}AfterResize.png`);
 
-      await navigateToTest(page, route);
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
+      const testcase = await navigateToTest(page, route);
 
       await page.getByRole('button', { name: 'Scroll to max' }).click();
       await page.getByRole('button', { name: 'Shrink username' }).click();
@@ -417,11 +414,6 @@ async function main() {
 
       await navigateToTest(page, route);
 
-      // Make sure demo got loaded
-      await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
-
       const charts = await page.locator('svg').all();
 
       await charts[0].click();
@@ -440,11 +432,7 @@ async function main() {
       const route = '/test-regressions-charts/LineChartPointerInteraction';
       const screenshotPath = path.resolve(screenshotDir, `.${route}LineHighlight.png`);
 
-      await navigateToTest(page, route);
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
+      const testcase = await navigateToTest(page, route);
 
       await sleep(10);
 
@@ -473,11 +461,7 @@ async function main() {
       const route = '/test-regressions-charts/LineChartPointerInteraction';
       const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
 
-      await navigateToTest(page, route);
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
+      const testcase = await navigateToTest(page, route);
 
       await sleep(10);
 
