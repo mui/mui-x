@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-// Tests that need a longer timeout.
+// Suites that get an extra 100ms wait before the screenshot.
 const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
   'DensitySelectorGrid',
@@ -44,8 +44,8 @@ interface RouteConfig {
    */
   viewport?: { width: number; height: number };
   /**
-   * Wait for this selector before screenshotting, on top of the testcase
-   * `aria-busy` gate (which only tracks font loading, not async demo data).
+   * Wait for this selector before screenshotting, on top of `navigateToTest`
+   * (fonts loaded, and the timers scheduled while mounting flushed).
    */
   waitForSelector?: string;
 }
@@ -213,10 +213,9 @@ async function main() {
     // fonts (route discovery, page setup) is blocked. It has to happen before the
     // fixture mounts -- components that measure text at mount would otherwise
     // bake in fallback metrics that the later font swap does not recompute.
-    await page.evaluate(() => window.muiFixture.fontsReady);
-
     // Use client-side routing which is much faster than full page navigation via page.goto().
-    await page.evaluate((_route) => {
+    await page.evaluate(async (_route) => {
+      await window.muiFixture.fontsReady;
       window.muiFixture.navigate(_route);
     }, route);
 
@@ -315,7 +314,7 @@ async function main() {
             });
 
             if (/^\/docs-charts-.*/.test(route.url)) {
-              // Run one tick of the clock to get the final animation state
+              // Extra wait for charts, from before `flushTimers`. It may no longer be needed.
               await sleep(10);
             }
 

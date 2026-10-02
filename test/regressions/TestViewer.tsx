@@ -82,12 +82,11 @@ function LoadFont(props: any) {
   // We're simulating `act(() => ReactDOM.render(children))`
   // In the end children passive effects should've been flushed.
   // React doesn't have any such guarantee outside of `act()` so we're approximating it.
-  // The element is reused across routes, so track which location is ready.
+  // In react-router v6, multiple routes share the same element: track which location is ready,
+  // and run the effect for each location, otherwise it only runs once.
   const [readyLocation, setReadyLocation] = React.useState<typeof location | null>(null);
   const ready = readyLocation === location;
 
-  // In react-router v6, with multiple routes sharing the same element,
-  // this effect will only run once if no dependency is passed.
   React.useEffect(() => {
     function markReady() {
       // Don't know if there could be multiple loaded events after we started loading multiple times.
