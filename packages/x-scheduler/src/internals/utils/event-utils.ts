@@ -14,3 +14,18 @@ export function isOccurrenceAllDayOrMultipleDay(
     occurrence.displayTimezone.end.value,
   );
 }
+
+/** Timed occurrences shorter than a day stay in the time grid, even when they cross midnight. */
+export function isOccurrenceInAllDayRow(
+  occurrence: SchedulerRenderableEventOccurrence,
+  adapter: Adapter,
+) {
+  if (occurrence.allDay) {
+    return true;
+  }
+
+  return !adapter.isBefore(
+    occurrence.displayTimezone.end.value,
+    adapter.addDays(occurrence.displayTimezone.start.value, 1),
+  );
+}
