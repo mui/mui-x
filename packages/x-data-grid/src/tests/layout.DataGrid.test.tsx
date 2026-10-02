@@ -877,6 +877,18 @@ describe('<DataGrid /> - Layout & warnings', () => {
         expect(getComputedStyle(grid('root')!).height).to.equal('150px');
       });
 
+      it.each(['50%', 'calc(100% - 300px)', 'var(--grid-height)'])(
+        'should resolve height=%s inside a flex column container',
+        (height) => {
+          render(
+            <div style={{ display: 'flex', flexDirection: 'column', height: 600 }}>
+              <DataGrid {...baselineProps} height={height} sx={{ '--grid-height': '300px' }} />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ height: '300px' });
+        },
+      );
+
       it('should let autoPageSize compute the page size from the height prop, without a wrapper', () => {
         const nbRows = 27;
         const height = 780;

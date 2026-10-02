@@ -1,5 +1,10 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGridPro, GridPrintExportMenuItem, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridPrintExportMenuItem,
+  gridClasses,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import type { GridApi, DataGridProProps } from '@mui/x-data-grid-pro';
 import MenuList from '@mui/material/MenuList';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
@@ -190,6 +195,49 @@ describe('<DataGridPro /> - Print export', () => {
         currencyPair: true,
         id: true,
       });
+    });
+  });
+
+  describe('print height', () => {
+    it.skipIf(isJSDOM).each([
+      { height: 1200, rowCount: 3 },
+      { height: 300, rowCount: 30 },
+    ])('fits $rowCount exported rows when height={$height}', async ({ height, rowCount }) => {
+      const { setProps } = render(
+        <Test {...getBasicGridData(rowCount, 2)} height={height} rowHeight={40} />,
+      );
+
+      const printLayouts: { height: number; footerGap: number }[] = [];
+      const removeChild = document.body.removeChild.bind(document.body);
+      const removeChildSpy = vi
+        .spyOn(document.body, 'removeChild')
+        .mockImplementation(<T extends Node>(child: T): T => {
+          if (child instanceof HTMLIFrameElement) {
+            const printRoot = child.contentDocument!.querySelector<HTMLElement>(
+              `.${gridClasses.root}`,
+            )!;
+            const rows = printRoot.querySelectorAll<HTMLElement>(`.${gridClasses.row}`);
+            const lastRow = rows[rows.length - 1].getBoundingClientRect();
+            const footer = printRoot
+              .querySelector<HTMLElement>(`.${gridClasses.footerContainer}`)!
+              .getBoundingClientRect();
+            printLayouts.push({
+              height: printRoot.getBoundingClientRect().height,
+              footerGap: footer.top - lastRow.bottom,
+            });
+          }
+          return removeChild(child);
+        });
+      onTestFinished(() => removeChildSpy.mockRestore());
+
+      await act(() => apiRef.current!.exportDataAsPrint());
+
+      setProps({ height: undefined });
+      await act(() => apiRef.current!.exportDataAsPrint());
+
+      // The height prop must not change the exported content height or footer position.
+      expect(printLayouts).to.have.length(2);
+      expect(printLayouts[0]).to.deep.equal(printLayouts[1]);
     });
   });
 
