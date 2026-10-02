@@ -161,9 +161,8 @@ async function main() {
       '--disable-lcd-text',
       // Skia otherwise picks SIMD code paths per host CPU, which shifts glyph edges.
       '--disable-skia-runtime-opts',
-      // We could add the hide-scrollbars flag, which should improve argos
-      // flaky tests based on the scrollbars.
-      // '--hide-scrollbars',
+      // Not `--hide-scrollbars`: it also hides the scrollbars of the components under test.
+      // Only the page scrollbar is hidden, see `TestViewer`.
     ],
     headless: false,
   });

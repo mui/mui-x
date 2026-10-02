@@ -10,8 +10,7 @@ import {
   resetRandomGenerators,
 } from '@mui/x-data-grid-generator';
 import loadFonts from '@mui/internal-test-utils/loadFonts';
-// eslint-disable-next-line import/no-relative-packages
-import { fakeTimers } from '../utils/setupFakeClock';
+import { fakeTimers } from './fakeClock';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';

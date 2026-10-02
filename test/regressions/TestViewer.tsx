@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
-// eslint-disable-next-line import/no-relative-packages
-import { flushTimers } from '../utils/setupFakeClock';
+import { flushTimers } from './fakeClock';
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest' && prop !== 'isDataGridPivotTest',
@@ -104,9 +103,7 @@ function LoadFont(props: any) {
 
     function handleFontsEvent(event: any) {
       if (event.type === 'loading') {
-        if (active) {
-          setReadyLocation(null);
-        }
+        setReadyLocation(null);
       } else if (event.type === 'loadingdone') {
         markReady();
       }
