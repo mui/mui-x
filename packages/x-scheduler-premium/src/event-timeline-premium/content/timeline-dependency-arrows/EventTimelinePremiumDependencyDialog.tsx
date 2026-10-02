@@ -115,13 +115,25 @@ const DependencyDialogAnchor = styled('span', {
   pointerEvents: 'none',
 });
 
+// Narrower than the event form, which has more fields. Keeps its `maxWidth: '100%'`, so
+// it still shrinks to the viewport on narrow screens.
+// TODO(dependencies public flip, #23420): settle the width with the dialog's own styles.
+const DependencyDialogFormContent = styled(EventDialogFormContent, {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogFormContent',
+})({
+  minWidth: 0,
+  width: 345,
+});
+
 const DependencyDialogBody = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogBody',
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(2),
+  // Wider than the rows inside a group, like the recurrence tab between its sections.
+  gap: theme.spacing(3),
   padding: theme.spacing(0, 3, 3),
 }));
 
@@ -136,6 +148,7 @@ const DependencyDialogLagRow = styled('div', {
   display: 'flex',
   alignItems: 'center',
   gap: 8,
+  flexWrap: 'wrap',
 });
 
 const DependencyDialogLagLabel = styled(FormLabel, {
@@ -330,7 +343,7 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
         paper: { className: classes.eventDialogPaper, anchor, dragHandlerRef } as PaperProps,
       }}
     >
-      <EventDialogFormContent className={classes.eventDialogContent}>
+      <DependencyDialogFormContent className={classes.eventDialogContent}>
         <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
           <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
             <Typography variant="h6" id={titleId} className={classes.eventDialogTitle}>
@@ -448,7 +461,7 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
             )}
           </EventDialogFormActions>
         </EventDialogForm>
-      </EventDialogFormContent>
+      </DependencyDialogFormContent>
     </EventDialogRoot>
   );
 }
