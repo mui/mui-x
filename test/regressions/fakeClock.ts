@@ -57,17 +57,9 @@ function nextFrame() {
  */
 export async function flushTimers() {
   const current = clock;
-  try {
-    await current.runToLastAsync();
-    // Timers scheduled after the last one would otherwise be dropped by `uninstall`.
-    await current.tickAsync(SETTLE_MS);
-  } catch (error) {
-    // Some demos never settle, for example a fetch that triggers itself again on every render.
-    // fake-timers aborts after `loopLimit` timers, continue with real timers from there.
-    if (!String(error).includes('Aborting after running')) {
-      throw error;
-    }
-  }
+  await current.runToLastAsync();
+  // Timers scheduled after the last one would otherwise be dropped by `uninstall`.
+  await current.tickAsync(SETTLE_MS);
   if (clock !== current) {
     // `fakeTimers` was called again in the meantime.
     return;
