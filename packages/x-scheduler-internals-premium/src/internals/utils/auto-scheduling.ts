@@ -42,6 +42,11 @@ export interface ComputeAutoSchedulingCascadeParameters {
    * The ids deleted in the same batch. Deleted events are never cascaded into.
    */
   deleted: ReadonlySet<SchedulerEventId>;
+  /**
+   * Active dependencies just created or edited, in their new form. Their target is pushed
+   * to satisfy them even though no predecessor moved, and the cascade follows from there.
+   */
+  enforcedDependencies?: readonly SchedulerDependency[];
 }
 
 interface ResolvedDates {
@@ -81,14 +86,14 @@ export interface AutoSchedulingCascadeResult {
  * entry moves `start` is being placed by the user and is clamped forward by all its
  * predecessors; a seed whose entry only moves `end` is clamped by the predecessors bounding
  * its end; everything else is pushed only by predecessors whose lagged bound advances in
- * the same batch. A `timezone` change moves the effective dates of wall-time events.
+ * the same batch, or by an enforced dependency. A `timezone` change moves the effective dates of wall-time events.
  * Timed events keep their duration, except that a resize keeps the edge it did not touch
  * as long as that edge is not the violated one. All-day events shift by whole days, and a
  * read-only event that would need to move is reported in `blocked` so the caller rejects
  * the batch.
  *
- * Kahn pass over the subgraph reachable from the seeds. Cycles in the props data warn in
- * dev: a seedless cycle stays unmoved, a cycle through a seed is broken at that seed.
+ * Kahn pass over the subgraph reachable from the seeds and the enforced targets. Cycles in
+ * the props data warn in dev: a cycle through either is broken there, any other stays unmoved.
  * Only loaded events take part: with lazy loading, an unfetched successor is not pushed.
  */
 export function computeAutoSchedulingCascade(
@@ -101,6 +106,7 @@ export function computeAutoSchedulingCascade(
     activeDependenciesByTarget,
     isEventReadOnly,
     deleted,
+    enforcedDependencies = [],
   } = parameters;
 
   const newDates = new Map<SchedulerEventId, ResolvedDates>();
@@ -198,16 +204,24 @@ export function computeAutoSchedulingCascade(
 
   const blocked: SchedulerEventId[] = [];
 
-  if (newDates.size === 0) {
+  const enforcedIds = new Set<SchedulerDependency['id']>();
+  // The seeds plus the targets of the enforced dependencies: where the cascade starts.
+  const roots = new Set(newDates.keys());
+  for (const dependency of enforcedDependencies) {
+    if (!deleted.has(dependency.target) && !becomesRecurring.has(dependency.target)) {
+      enforcedIds.add(dependency.id);
+      roots.add(dependency.target);
+    }
+  }
+
+  if (roots.size === 0) {
     return { updated: [], blocked };
   }
 
-  const seeds = new Set(newDates.keys());
-
-  // Subgraph reachable from the seeds, visiting each node and edge once.
-  const members = new Set<SchedulerEventId>(seeds);
+  // Subgraph reachable from the roots, visiting each node and edge once.
+  const members = new Set<SchedulerEventId>(roots);
   const inDegree = new Map<SchedulerEventId, number>();
-  const discovery = [...seeds];
+  const discovery = [...roots];
   while (discovery.length > 0) {
     const eventId = discovery.pop()!;
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
@@ -224,19 +238,19 @@ export function computeAutoSchedulingCascade(
   }
 
   const ready: SchedulerEventId[] = [];
-  for (const seedId of seeds) {
-    if ((inDegree.get(seedId) ?? 0) === 0) {
-      ready.push(seedId);
+  for (const rootId of roots) {
+    if ((inDegree.get(rootId) ?? 0) === 0) {
+      ready.push(rootId);
     }
   }
   const processed = new Set<SchedulerEventId>();
   const cascaded: SchedulerEventUpdatedProperties[] = [];
   while (processed.size < members.size) {
     if (ready.length === 0) {
-      // Every remaining member waits on a cycle. A seed on it can still settle (its
-      // dates are the user's), so the stall breaks there; a seedless cycle stays unmoved.
-      const stalledSeed = [...seeds].find((seedId) => !processed.has(seedId));
-      if (stalledSeed === undefined) {
+      // Every remaining member waits on a cycle. A root on it can still settle (its
+      // dates are the user's), so the stall breaks there; a rootless cycle stays unmoved.
+      const stalledRoot = [...roots].find((rootId) => !processed.has(rootId));
+      if (stalledRoot === undefined) {
         break;
       }
       if (process.env.NODE_ENV !== 'production') {
@@ -248,11 +262,11 @@ export function computeAutoSchedulingCascade(
           ].join('\n'),
         );
       }
-      ready.push(stalledSeed);
+      ready.push(stalledRoot);
     }
     const eventId = ready.pop()!;
     if (processed.has(eventId)) {
-      // A force-broken seed can still reach in-degree 0 afterwards.
+      // A force-broken root can still reach in-degree 0 afterwards.
       continue;
     }
     processed.add(eventId);
@@ -334,7 +348,7 @@ export function computeAutoSchedulingCascade(
   // constrains it. An end-resized seed is constrained by the predecessors bounding its
   // end. Anything else is pushed only by the predecessors whose lagged bound advanced,
   // comparing the bound before the batch (current dates and settings) with the bound after
-  // it. A lag in days is added on the wall clock, so the bound can advance while the
+  // it. An enforced dependency constrains it whether or not its predecessor moved. A lag in days is added on the wall clock, so the bound can advance while the
   // predecessor moves earlier (DST fall-back), or when only the successor's timezone or
   // `allDay` changes.
   function collectBounds(
@@ -362,7 +376,11 @@ export function computeAutoSchedulingCascade(
         );
       const currentDates = resolveCurrentDates(sourceId);
       let bound: Bound | null = null;
-      if (constrainedByAll || (constrainedOnEnd && edges.target === 'end')) {
+      if (
+        constrainedByAll ||
+        (constrainedOnEnd && edges.target === 'end') ||
+        enforcedIds.has(dependency.id)
+      ) {
         const sourceDates = newDates.get(sourceId) ?? currentDates;
         bound = sourceDates === null ? null : boundFrom(sourceDates, base);
       } else {
