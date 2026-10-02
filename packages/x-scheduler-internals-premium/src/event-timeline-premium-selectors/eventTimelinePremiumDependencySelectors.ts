@@ -3,12 +3,14 @@ import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
-  SchedulerDependencyId,
   SchedulerDependenciesState,
+  SchedulerDependencyId,
+  SchedulerResolvedDependencyLag,
   SchedulerDependencyType,
 } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
+  getEffectiveDependencyLag,
   groupByEventId,
   isDependencyActive,
   isDependencyReadOnly,
@@ -32,6 +34,11 @@ const activeModelListSelector = createSelectorMemoized(
 export interface SchedulerDependencySourceDescription {
   title: string;
   type: SchedulerDependencyType;
+  /**
+   * The lag the engine applies to this successor, or `null` when the dependency has no
+   * usable lag.
+   */
+  lag: SchedulerResolvedDependencyLag | null;
 }
 
 const activeSourcesByTargetSelector = createSelectorMemoized(
@@ -44,6 +51,10 @@ const activeSourcesByTargetSelector = createSelectorMemoized(
       const source = {
         title: processedEventLookup.get(dependency.source)!.title,
         type: dependency.type,
+        lag: getEffectiveDependencyLag(
+          dependency,
+          processedEventLookup.get(dependency.target)!.allDay,
+        ),
       };
       const sources = sourcesByTarget.get(dependency.target);
       if (sources) {
@@ -82,7 +93,7 @@ export const eventTimelinePremiumDependencySelectors = {
     groupByEventId(dependencies, 'target'),
   ),
   /**
-   * The source event title and type of the active dependencies, grouped by target
+   * The source event title, type and lag of the active dependencies, grouped by target
    * event id. Used to describe an event with the events it depends on.
    */
   activeSourcesByTarget: activeSourcesByTargetSelector,
