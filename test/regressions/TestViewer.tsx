@@ -43,6 +43,10 @@ function TestViewer(props: any) {
             MozOsxFontSmoothing: 'grayscale', // Antialiasing.
             // Do the opposite of the docs in order to help catching issues.
             boxSizing: 'content-box',
+            // Screenshots of test cases taller than the viewport drop the page scrollbar while
+            // capturing, which resizes the content mid-capture. Never show it, so the width stays
+            // the same. Not inherited, so scrollbars of other elements (e.g. the grid) still show.
+            scrollbarWidth: 'none',
           },
           '*, *::before, *::after': {
             boxSizing: 'inherit',
