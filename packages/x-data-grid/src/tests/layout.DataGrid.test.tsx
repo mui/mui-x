@@ -906,7 +906,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
       });
 
       it('should let sx override the height prop', () => {
-        render(<DataGrid {...baselineProps} height={300} sx={{ height: 150 }} />);
+        // The prop also sets `minHeight`, so the override has to set it too.
+        render(<DataGrid {...baselineProps} height={300} sx={{ height: 150, minHeight: 150 }} />);
         expect(getComputedStyle(grid('root')!).height).to.equal('150px');
       });
 
@@ -958,6 +959,23 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
         expect(grid('root')).toHaveComputedStyle({ width: '400px' });
       });
+
+      // Need layout
+      it.skipIf(isJSDOM)(
+        'should not overflow a flex row container narrower than the columns',
+        () => {
+          render(
+            <div style={{ display: 'flex', width: 300 }}>
+              <DataGrid
+                {...baselineProps}
+                columns={[{ field: 'brand', width: 500 }]}
+                height={300}
+              />
+            </div>,
+          );
+          expect(grid('root')).toHaveComputedStyle({ width: '300px' });
+        },
+      );
     });
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
