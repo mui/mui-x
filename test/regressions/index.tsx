@@ -4,7 +4,11 @@ import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } fro
 import { Globals } from '@react-spring/web';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from 'test/utils/licenseKeys';
-import { resetRandomGenerators } from '@mui/x-data-grid-generator';
+import {
+  clearDemoDataCache,
+  clearMockServerCache,
+  resetRandomGenerators,
+} from '@mui/x-data-grid-generator';
 import loadFonts from '@mui/internal-test-utils/loadFonts';
 // eslint-disable-next-line import/no-relative-packages
 import { fakeTimers } from '../utils/setupFakeClock';
@@ -75,6 +79,10 @@ function Root() {
       // Each demo should observe the same seeded random sequence regardless
       // of what was rendered before on this page.
       resetRandomGenerators();
+      // Same for the generated data: a cache hit skips the empty first render,
+      // which changes how some demos render compared to a cold cache.
+      clearDemoDataCache();
+      clearMockServerCache();
       fakeTimers();
       navigate(path);
     };
