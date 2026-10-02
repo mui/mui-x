@@ -9,7 +9,41 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   });
 
   describe('placeholderInTimeRange', () => {
-    // TODO
+    const day = adapter.date('2024-01-15', 'default');
+    const dayStart = adapter.startOfDay(day);
+    const dayEnd = adapter.endOfDay(day);
+
+    it('should return the placeholder when it crosses into the range from the previous day', () => {
+      const state: EventCalendarState = {
+        ...DEFAULT_EVENT_CALENDAR_STATE,
+        occurrencePlaceholder: {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.setHours(adapter.addDays(dayStart, -1), 22),
+          end: adapter.setHours(dayStart, 6),
+          resourceId: null,
+        },
+      };
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(state, dayStart, dayEnd),
+      ).to.equal(state.occurrencePlaceholder);
+    });
+
+    it('should return null when the placeholder ends exactly at the start of the range', () => {
+      const state: EventCalendarState = {
+        ...DEFAULT_EVENT_CALENDAR_STATE,
+        occurrencePlaceholder: {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: adapter.setHours(adapter.addDays(dayStart, -1), 16),
+          end: dayStart,
+          resourceId: null,
+        },
+      };
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(state, dayStart, dayEnd),
+      ).to.equal(null);
+    });
   });
 
   describe('isCreatingInDayCell', () => {
