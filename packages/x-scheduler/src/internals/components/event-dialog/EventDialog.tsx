@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { useStore } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { PaperProps } from '@mui/material/Paper';
@@ -13,6 +14,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { withDragPreview } from '@mui/x-scheduler-internals/internals';
 import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import type { EventDialogProps, EventDialogProviderProps } from './EventDialog.types';
 import type { EventEditingOptionalRenderers } from '../event-editing';
@@ -62,28 +64,24 @@ const EventDialogPaper = styled(Paper, {
 
 interface PaperComponentProps extends PaperProps {
   anchor: HTMLElement | null;
-  dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
 // 1. Setup the Draggable Paper Logic
 const PaperComponent = function PaperComponent(props: PaperComponentProps) {
-  const nodeRef = React.useRef<HTMLDivElement>(null);
-
-  const mutateStyle = React.useCallback(
-    (style: string) => {
-      if (nodeRef.current) {
-        nodeRef.current.style.transform = style;
-      }
-    },
-    [nodeRef],
-  );
-
-  const { anchor, dragHandlerRef, className, ...other } = props;
-  const resetDrag = useDraggableDialog(nodeRef, dragHandlerRef, mutateStyle);
+  const { anchor, className, ...other } = props;
+  const { elementRef: nodeRef, resetDrag, draggableProps } = useDraggableDialog();
 
   useAnchoredPosition({ anchor, popupRef: nodeRef, onReposition: resetDrag });
 
-  return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
+  return (
+    <Draggable.Root
+      {...draggableProps}
+      render={withDragPreview(
+        <EventDialogPaper {...other} ref={nodeRef} className={className} />,
+        <Draggable.Preview disabled />,
+      )}
+    />
+  );
 } as any as DialogProps['PaperComponent'];
 
 export const EventDialogContent = React.forwardRef(function EventDialogContent(
@@ -100,13 +98,10 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
-  // Ref hooks
-  const dragHandlerRef = React.useRef<HTMLElement>(null);
-
   // Read-only events have no editing form; editable events open the form fresh on each occurrence
   // (keyed) so it initializes from the current times.
   const content = isEventReadOnly ? (
-    <ReadonlyContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
+    <ReadonlyContent occurrence={occurrence} onClose={onClose} />
   ) : (
     <FormContent
       // Remount on a retarget so the form re-seeds instead of keeping the old draft.
@@ -114,7 +109,6 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       key={occurrence.key}
       occurrence={occurrence}
       onClose={onClose}
-      dragHandlerRef={dragHandlerRef}
     />
   );
 
@@ -131,7 +125,6 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
         paper: {
           className: classes.eventDialogPaper,
           anchor,
-          dragHandlerRef,
         } as PaperProps,
       }}
       {...other}

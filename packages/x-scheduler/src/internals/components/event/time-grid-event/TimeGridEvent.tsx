@@ -68,8 +68,6 @@ const getTouchResizeHandleStyles = (): CSSObject => ({
   border: '2px solid var(--event-on-surface-subtle-primary)',
   zIndex: 3,
   cursor: 'ns-resize',
-  // Block scroll/zoom during the resize gesture.
-  touchAction: 'none',
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -150,7 +148,8 @@ const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
   alignContent: 'flex-start',
   minHeight: 11.5,
   containerType: 'size',
-  '&[data-dragging], &[data-resizing]': {
+  // The source stays dimmed while its preview settles back after the drop.
+  '&[data-dragging], &[data-settling], &[data-resizing]': {
     opacity: 0.5,
   },
   // Lift the armed/edited event — and the resize placeholder, which also carries `data-armed` — above

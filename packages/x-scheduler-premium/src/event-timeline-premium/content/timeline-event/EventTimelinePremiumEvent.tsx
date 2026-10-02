@@ -57,7 +57,8 @@ const EventTimelinePremiumEventRoot = styled('div', {
   alignItems: 'center',
   gap: theme.spacing(0.5),
   cursor: 'pointer',
-  '&[data-dragging], &[data-resizing]': {
+  // The source stays dimmed while its preview settles back after the drop.
+  '&[data-dragging], &[data-settling], &[data-resizing]': {
     opacity: 0.5,
   },
   '&:hover': {

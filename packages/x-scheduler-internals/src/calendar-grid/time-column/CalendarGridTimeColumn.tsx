@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
@@ -14,7 +15,8 @@ import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
-import { useTimeDropTarget } from './useTimeDropTarget';
+import type { TemporalSupportedObject } from '../../models';
+import { TimeColumnDropTarget } from './TimeColumnDropTarget';
 
 export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTimeColumn(
   componentProps: CalendarGridTimeColumn.Props,
@@ -48,20 +50,28 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     focusedCell?.rowIndex === 0 &&
     focusedCell?.columnIndex === index;
 
-  const {
-    getCursorPositionInElementMs,
-    getDateAtPointer,
-    ref: dropTargetRef,
-  } = useTimeDropTarget({
-    start,
-    end,
-    addPropertiesToDroppedEvent,
-  });
+  const collectionStartTimestamp = adapter.getTime(start);
+  const collectionEndTimestamp = adapter.getTime(end);
+  const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
+
+  const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
+    useStableCallback(({ input, elementRef }) => {
+      if (!cellRef.current || !elementRef.current) {
+        return 0;
+      }
+
+      const clientY = input.clientY;
+      const elementPosition = elementRef.current.getBoundingClientRect();
+      const positionY = (clientY - elementPosition.y) / cellRef.current.offsetHeight;
+      const clampedPositionY = Math.max(0, Math.min(1, positionY));
+
+      return Math.round(collectionDurationMs * clampedPositionY);
+    });
 
   const eventCreationProps = useEventCreation(({ event, creationConfig }) => {
     const offsetMs = getCursorPositionInElementMs({
       input: { clientY: event.clientY },
-      elementRef: dropTargetRef,
+      elementRef: cellRef,
     });
     const anchor = adapter.addMilliseconds(start, offsetMs);
     const startDate = adapter.addMinutes(
@@ -134,17 +144,8 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       dayEndMinute,
       hasFocus,
       getCursorPositionInElementMs,
-      getDateAtPointer,
     }),
-    [
-      start,
-      end,
-      dayStartMinute,
-      dayEndMinute,
-      hasFocus,
-      getCursorPositionInElementMs,
-      getDateAtPointer,
-    ],
+    [start, end, dayStartMinute, dayEndMinute, hasFocus, getCursorPositionInElementMs],
   );
 
   const keyboardProps = {
@@ -155,7 +156,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const element = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, dropTargetRef, listItemRef, cellRef],
+    ref: [forwardedRef, listItemRef, cellRef],
     props: [
       { role: 'gridcell', 'aria-colindex': index + 1 },
       keyboardProps,
@@ -166,7 +167,10 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   return (
     <CalendarGridTimeColumnContext.Provider value={contextValue}>
-      {element}
+      <TimeColumnDropTarget
+        addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+        render={element}
+      />
     </CalendarGridTimeColumnContext.Provider>
   );
 });
@@ -179,7 +183,18 @@ export namespace CalendarGridTimeColumn {
     current: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useTimeDropTarget.Parameters {
+  export interface Props
+    extends
+      BaseUIComponentProps<'div', State>,
+      Pick<TimeColumnDropTarget.Props, 'addPropertiesToDroppedEvent'> {
+    /**
+     * The date and time at which the column starts.
+     */
+    start: TemporalSupportedObject;
+    /**
+     * The date and time at which the column ends.
+     */
+    end: TemporalSupportedObject;
     /**
      * First displayed minute of the day, as an offset from midnight.
      * Derived from the view's whole-hour window so it stays aligned with the

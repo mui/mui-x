@@ -1,81 +1,58 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/utils/disable-native-drag-preview';
-import { preventUnhandled } from '@atlaskit/pragmatic-drag-and-drop/utils/prevent-unhandled';
-import type { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/types';
-import { isCoarsePointer } from '../internals/utils/pointer-utils';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { Draggable } from '@base-ui/react/draggable';
 
-const getDeltas = (location: DragLocationHistory) => {
+const dialogDragKind = Draggable.createKind<undefined>('scheduler-dialog');
+
+const getDeltas = (location: Draggable.LocationHistory) => {
   const deltaX = location.current.input.clientX - location.initial.input.clientX;
   const deltaY = location.current.input.clientY - location.initial.input.clientY;
   return { deltaX, deltaY };
 };
 
-export function useDraggableDialog(
-  elementRef: React.RefObject<HTMLElement | null>,
-  handleRef: React.RefObject<HTMLElement | null>,
-  mutateStyle: (style: string) => void,
-) {
+/**
+ * Lets the user move a dialog by dragging it.
+ * Spread `draggableProps` on a `Draggable.Root` that renders the dialog element, attach `elementRef`
+ * to that element, and render a `Draggable.Handle` inside it where the drag should start.
+ * The dialog moves through a `transform` on the element: call `resetDrag` to clear the offset,
+ * for example when the dialog repositions. A canceled drag puts the dialog back where it was.
+ */
+export function useDraggableDialog() {
+  // The ref of the element the dialog moves, which is also the element that renders the root.
+  const elementRef = React.useRef<HTMLDivElement>(null);
   const offset = React.useRef({ x: 0, y: 0 });
 
-  const resetDrag = React.useCallback(() => {
-    offset.current = { x: 0, y: 0 };
+  const setTransform = (transform: string) => {
     const element = elementRef.current;
     if (element) {
-      mutateStyle('none');
+      element.style.transform = transform;
     }
-  }, [elementRef, mutateStyle]);
+  };
 
-  React.useEffect(() => {
-    const element = elementRef.current;
-    if (!element) {
-      return undefined;
-    }
+  const resetDrag = useStableCallback(() => {
+    offset.current = { x: 0, y: 0 };
+    setTransform('none');
+  });
 
-    // Skip draggable wiring on a coarse pointer: `draggable="true"` blocks typing into the dialog's
-    // form fields on touch, and native drag-and-drop never starts from touch anyway.
-    if (isCoarsePointer()) {
-      return undefined;
-    }
+  const draggableProps: Draggable.Root.Props = {
+    kind: dialogDragKind,
+    // The header shows the same cursor at rest.
+    dragCursor: 'move',
+    onMove: ({ location }) => {
+      const { deltaX, deltaY } = getDeltas(location);
+      setTransform(`translate(${offset.current.x + deltaX}px, ${offset.current.y + deltaY}px)`);
+    },
+    onMoveEnd: ({ location, canceled }) => {
+      const { deltaX, deltaY } = getDeltas(location);
 
-    return draggable({
-      element,
-      dragHandle: handleRef.current || undefined,
-      canDrag: ({ input }) => {
-        const target = document.elementFromPoint(input.clientX, input.clientY);
-        return !target?.closest('input, textarea, select, [contenteditable="true"]');
-      },
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDragStart: () => {
-        preventUnhandled.start();
-        element.setAttribute('data-dragging', 'true');
-      },
-      onDrag: ({ location }) => {
-        const { deltaX, deltaY } = getDeltas(location);
-
-        const x = offset.current.x + deltaX;
-        const y = offset.current.y + deltaY;
-
-        const currentElement = elementRef.current;
-        if (currentElement) {
-          const transform = `translate(${x}px, ${y}px)`;
-          mutateStyle(transform);
-        }
-      },
-      onDrop: ({ location }) => {
-        preventUnhandled.stop();
-        element.removeAttribute('data-dragging');
-
-        const { deltaX, deltaY } = getDeltas(location);
-
+      if (!canceled) {
         offset.current.x += deltaX;
         offset.current.y += deltaY;
-      },
-    });
-  }, [elementRef, mutateStyle, handleRef]);
+      }
+      setTransform(`translate(${offset.current.x}px, ${offset.current.y}px)`);
+    },
+  };
 
-  return resetDrag;
+  return { elementRef, resetDrag, draggableProps };
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import type { EventTimelinePremiumParameters } from '../use-event-timeline-premium';
 import { useEventTimelinePremium } from '../use-event-timeline-premium';
@@ -10,7 +11,10 @@ export function EventTimelinePremiumProvider<TEvent extends object, TResource ex
   const store = useEventTimelinePremium(parameters);
 
   return (
-    <SchedulerStoreContext.Provider value={store as any}>{children}</SchedulerStoreContext.Provider>
+    <SchedulerStoreContext.Provider value={store as any}>
+      {/* Below the store context, which the floating drag preview reads. */}
+      <Draggable.Provider>{children}</Draggable.Provider>
+    </SchedulerStoreContext.Provider>
   );
 }
 

@@ -65,7 +65,6 @@
     "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo"
   },
   "devDependencies": {
-    "@atlaskit/pragmatic-drag-and-drop-unit-testing": "2.1.0",
     "@babel/core": "catalog:",
     "@babel/plugin-syntax-typescript": "8.0.3",
     "@babel/plugin-transform-object-rest-spread": "8.0.1",

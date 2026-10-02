@@ -6,23 +6,18 @@ import {
   mockElementBounds,
   clientYForTime,
   getResizeHandle,
+  getTimeGridColumn,
   simulatePointerResize,
 } from 'test/utils/scheduler';
 import { StandaloneCompactDayView } from '@mui/x-scheduler/compact-day-view';
 import { vi, describe, it, expect } from 'vitest';
 
 /**
- * Touch resize uses pointer events, not native drag-and-drop, so it is driven here via
+ * Touch resize starts on the first contact with a handle, so it is driven here via
  * {@link simulatePointerResize} on the compact (touch) view.
  */
 describe('CompactDayView - touch resize', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
-
-  function getTimeGridColumn(): HTMLElement {
-    return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]`,
-    )!;
-  }
 
   function renderResizableEvent({ onEventsChange = vi.fn(), controlled = false } = {}) {
     const event = EventBuilder.new()
@@ -55,8 +50,13 @@ describe('CompactDayView - touch resize', () => {
       ),
     );
 
-    // Geometry resolver maps pointer Y to a time via the column's bounds.
+    // The column maps pointer Y to a time, and the event tells where the pointer grabbed it.
     mockElementBounds(getTimeGridColumn(), { top: 0, height: 1440, width: 200 });
+    mockElementBounds(screen.getByRole('button', { name: /Morning Meeting/i }), {
+      top: clientYForTime(0, 24, 10),
+      height: 60,
+      width: 200,
+    });
 
     return { onEventsChange, user };
   }
@@ -84,7 +84,11 @@ describe('CompactDayView - touch resize', () => {
     const endHandle = getResizeHandle(eventElement, 'end');
 
     await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -101,7 +105,11 @@ describe('CompactDayView - touch resize', () => {
     const startHandle = getResizeHandle(eventElement, 'start');
 
     await act(async () => {
-      simulatePointerResize({ handle: startHandle, to: { clientY: clientYForTime(0, 24, 8) } });
+      simulatePointerResize({
+        handle: startHandle,
+        from: { clientY: clientYForTime(0, 24, 10) },
+        to: { clientY: clientYForTime(0, 24, 8) },
+      });
     });
 
     expect(onEventsChange.mock.calls.length).to.equal(1);
@@ -120,7 +128,11 @@ describe('CompactDayView - touch resize', () => {
 
       const endHandle = getResizeHandle(eventElement, 'end');
       await act(async () => {
-        simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+        simulatePointerResize({
+          handle: endHandle,
+          from: { clientY: clientYForTime(0, 24, 11) },
+          to: { clientY: clientYForTime(0, 24, 16) },
+        });
       });
 
       // Open the editing form from the armed toolbar and change only the title.

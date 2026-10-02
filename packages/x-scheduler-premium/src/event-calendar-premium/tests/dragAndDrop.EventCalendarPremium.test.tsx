@@ -5,6 +5,7 @@ import {
   createSchedulerRenderer,
   EventBuilder,
   getMonthViewCell,
+  getTimeGridColumns,
   utcJuly4AllDayBuilder,
   simulateDragAndDrop,
   mockElementBounds,
@@ -95,11 +96,7 @@ describe('EventCalendarPremium - Month view drag and drop', () => {
     );
 
     // 1px per minute, like the week view drag tests: the drop math reads the column bounds.
-    const columns = Array.from(
-      document.querySelectorAll<HTMLElement>(
-        '.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]',
-      ),
-    );
+    const columns = getTimeGridColumns();
     for (const column of columns) {
       mockElementBounds(column, { top: 0, height: 1440, width: 200 });
     }

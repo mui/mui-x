@@ -242,7 +242,7 @@ function DependencyTerminalsLayerImpl() {
     },
   );
 
-  // A native drag suppresses pointer events, so the hover goes stale: at gesture start
+  // A drag captures the pointer on the body, so the hover goes stale: at gesture start
   // only the gesture's terminals (owned by the render) keep their reveal, at gesture
   // end the tracking resets and the next pointerover rebuilds it.
   React.useEffect(() => {
@@ -355,9 +355,10 @@ function DependencyTerminalsLayerImpl() {
     return null;
   }
 
-  // The edge terminal of the selected arrow's target, which its delete button covers.
+  // The edge terminal of the selected arrow's target, which its delete button covers. A link drag
+  // mutes the delete button instead, so the terminal can receive the link.
   const mutedEdge =
-    selected === null
+    selected === null || creation !== null
       ? null
       : { eventId: selected.target, side: getDependencyEdges(selected.type).target };
   const terminals: React.ReactElement[] = [];

@@ -123,6 +123,12 @@ export class SchedulerStore<
 
   declare public instanceName: SchedulerInstanceName;
 
+  /**
+   * Identifies this Scheduler in the payload of the events it drags. The drop targets compare it,
+   * so an event dragged in another Scheduler of the page never lands here.
+   */
+  public readonly dragScope = Symbol('scheduler-drag-scope');
+
   declare private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected readonly disposables = new DisposableStack();

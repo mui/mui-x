@@ -1,26 +1,23 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
+import { schedulerDayEventMoveKind } from '../../internals/utils/schedulerDrag';
+import type { SchedulerEventDragData } from '../../internals/utils/schedulerDrag';
+import { SchedulerDraggable } from '../../internals/utils/SchedulerDraggable';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
-import type {
-  SchedulerEventId,
-  SchedulerEventOccurrence,
-  SchedulerResourceId,
-  TemporalSupportedObject,
-} from '../../models';
+import type { TemporalSupportedObject } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
-import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
+import type { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
 
 const overflowStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) => (value ? { 'data-starting-before-edge': '' } : null),
@@ -66,7 +63,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const hasPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isDefined);
 
   // Feature hooks
-  const getDraggedDay = useStableCallback((input: { clientX: number }) => {
+  const getDraggedDay = (input: { clientX: number }) => {
     if (!ref.current) {
       return start.value;
     }
@@ -81,31 +78,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     return adapter.startOfDay(
       adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1),
     );
-  });
-
-  const getOriginalOccurrence = useOriginalOccurrence({
-    eventId,
-    occurrenceKey,
-    start,
-    end,
-    dataTimezone,
-  });
-
-  const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
-    () => ({
-      eventId,
-      occurrenceKey,
-      originalOccurrence: getOriginalOccurrence(),
-      start: start.value,
-      end: end.value,
-    }),
-  );
-
-  const getDragData = useStableCallback((input) => ({
-    ...getSharedDragData(input),
-    source: 'CalendarGridDayEvent',
-    draggedDay: getDraggedDay(input),
-  }));
+  };
 
   // The all-day row spans whole days, so its window is never trimmed.
   const elementPosition = useElementPositionInCollection({
@@ -114,24 +87,21 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     collection: { start: rowStart, end: rowEnd, dayStartMinute: 0, dayEndMinute: FULL_DAY_MINUTES },
   });
 
-  const {
-    state,
-    preview,
-    contextValue: draggableEventContextValue,
-  } = useDraggableEvent({
-    ref,
+  const { state, draggableProps, contextValue } = useDraggableEvent({
+    kind: schedulerDayEventMoveKind,
     start,
     end,
     occurrenceKey,
     eventId,
+    dataTimezone,
     isDraggable,
     renderDragPreview,
-    getDragData,
+    getExtraDragData: (input) => ({ draggedDay: getDraggedDay(input) }),
     position: elementPosition,
   });
 
-  const startingBeforeEdge = draggableEventContextValue.isEventStartClipped;
-  const endingAfterEdge = draggableEventContextValue.isEventEndClipped;
+  const startingBeforeEdge = contextValue.isEventStartClipped;
+  const endingAfterEdge = contextValue.isEventEndClipped;
 
   const mergedState = { ...state, startingBeforeEdge, endingAfterEdge };
 
@@ -142,12 +112,6 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   });
 
   // Rendering hooks
-
-  const contextValue: CalendarGridDayEventContext = React.useMemo(
-    () => ({ ...draggableEventContextValue, getSharedDragData }),
-    [draggableEventContextValue, getSharedDragData],
-  );
-
   const element = useRenderElement('div', componentProps, {
     state: mergedState,
     ref: [forwardedRef, buttonRef, ref],
@@ -163,8 +127,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   return (
     <CalendarGridDayEventContext.Provider value={contextValue}>
-      {element}
-      {preview.element}
+      <SchedulerDraggable {...draggableProps} render={element} />
     </CalendarGridDayEventContext.Provider>
   );
 });
@@ -182,17 +145,10 @@ export namespace CalendarGridDayEvent {
       useDraggableEvent.PublicParameters,
       Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {}
 
-  export interface SharedDragData {
-    eventId: SchedulerEventId;
-    occurrenceKey: string;
-    originalOccurrence: SchedulerEventOccurrence;
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
-    sourceResourceId?: SchedulerResourceId;
-  }
-
-  export interface DragData extends SharedDragData {
-    source: 'CalendarGridDayEvent';
+  export interface DragData extends SchedulerEventDragData {
+    /**
+     * The day of the event the pointer grabbed. A multi-day event moves by whole days from it.
+     */
     draggedDay: TemporalSupportedObject;
   }
 }

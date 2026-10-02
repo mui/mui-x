@@ -11,6 +11,7 @@ import {
   mockElementBounds,
   clientYForTime,
   getResizeHandle,
+  getTimeGridColumn,
   simulatePointerResize,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -38,12 +39,6 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
   afterEach(() => {
     window.matchMedia = originalMatchMedia;
   });
-
-  function getTimeGridColumn(): HTMLElement {
-    return document.querySelector<HTMLElement>(
-      `.MuiEventCalendar-dayTimeGridGrid [data-drop-target-for-element]`,
-    )!;
-  }
 
   // Controlled wrapper so a committed resize re-renders with the resulting events, re-creating the
   // (re-keyed) occurrence the toolbar must re-anchor to.
@@ -93,7 +88,11 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
 
     const endHandle = getResizeHandle(originalEvent, 'end');
     await act(async () => {
-      simulatePointerResize({ handle: endHandle, to: { clientY: clientYForTime(0, 24, 16) } });
+      simulatePointerResize({
+        handle: endHandle,
+        from: { clientY: clientYForTime(0, 24, 11) },
+        to: { clientY: clientYForTime(0, 24, 16) },
+      });
     });
 
     await screen.findByText(/Apply this change to:/i);

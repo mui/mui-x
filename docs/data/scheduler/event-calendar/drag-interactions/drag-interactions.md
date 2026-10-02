@@ -154,4 +154,12 @@ Use the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props to d
 When `canDragEventsFromTheOutside` is `true`, you can drop events created with `StandaloneEvent` into the Event Calendar.
 When `canDropEventsToTheOutside` is `true`, you can drag events out of the Event Calendar.
 
-{{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+External drop containers use Base UI's `Draggable.Target` inside a `Draggable.Provider`.
+Import `Draggable` from `@base-ui/react/draggable` and pass `schedulerCalendarEventMoveKinds` from `@mui/x-scheduler/internals` to the target's `accept` prop.
+Use `onDraggableDrop` to read `source.dragData.originalOccurrence` and update the event list.
+The move kinds accept events dragged from the calendar views and exclude resize gestures.
+
+This integration is experimental until Base UI releases its drag engine.
+It needs a Base UI version that includes the drag engine, which has not been released yet.
+
+{{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": true}}

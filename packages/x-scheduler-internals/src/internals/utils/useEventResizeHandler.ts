@@ -1,27 +1,34 @@
 'use client';
 import * as React from 'react';
-import { useDragHandle } from './useDragHandle';
+import type { SchedulerEventDragData } from './schedulerDrag';
+import type { useDraggableEvent } from './useDraggableEvent';
 import type { SchedulerEventSide } from '../../models';
 
 /**
- * Native drag-and-drop resize for calendar events. This hook and the pointer-based resize
- * ({@link useEventPointerResizeHandler}) run together on the same handle and share one `enabled`
- * (the edge is inside the collection). The mouse is served here; touch and pen are served by the
- * pointer hook, which bails on `pointerType === 'mouse'`.
+ * Base UI drag-and-drop resize for calendar events, for any pointer type.
+ * `TEventData` is the drag data of the event whose edge the handler resizes.
  */
-export function useEventResizeHandler(
-  parameters: useEventResizeHandler.Parameters,
-): useEventResizeHandler.ReturnValue {
-  const { ref, side, enabled, getDragData } = parameters;
+export function useEventResizeHandler<TEventData extends SchedulerEventDragData>(
+  parameters: useEventResizeHandler.Parameters<TEventData>,
+): useEventResizeHandler.ReturnValue<TEventData> {
+  const { context, side } = parameters;
+
+  // A side clipped by the collection boundary does not render at its real position, and the drop
+  // math reconstructs positions from the rendered edges.
+  const enabled = !(side === 'start' ? context.isEventStartClipped : context.isEventEndClipped);
 
   const state: useEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
     [side],
   );
 
-  useDragHandle({ ref, enabled, getDragData });
+  // Read again when the drag is about to start, so it always sees the latest event.
+  const getDragData = (input: { clientX: number; clientY: number }) => ({
+    ...context.getDragData(input),
+    side,
+  });
 
-  return { state };
+  return { state, enabled, getDragData };
 }
 
 export namespace useEventResizeHandler {
@@ -43,26 +50,27 @@ export namespace useEventResizeHandler {
     side: SchedulerEventSide;
   }
 
-  export interface Parameters extends PublicParameters {
+  export interface Parameters<TEventData extends SchedulerEventDragData> extends PublicParameters {
     /**
-     * The ref to the event's resize handler root element.
+     * The context of the event the handler belongs to.
      */
-    ref: React.RefObject<HTMLDivElement | null>;
-    /**
-     * Whether to attach the native drag-and-drop listeners (false when the side is clipped by the
-     * collection boundary). Shared with {@link useEventPointerResizeHandler} — it is never turned
-     * off "because the pointer interaction is active".
-     */
-    enabled: boolean;
-    /**
-     * Gets the drag data.
-     * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
-     * @returns {any} The shared drag data.
-     */
-    getDragData: (input: { clientX: number; clientY: number }) => any;
+    context: useDraggableEvent.ContextValue<TEventData>;
   }
 
-  export interface ReturnValue {
+  export interface ReturnValue<TEventData extends SchedulerEventDragData> {
+    /**
+     * Gets the drag data of the resize: the one of the event, with the side of the handler.
+     * @param {{ clientX: number, clientY: number }} input The pointer position that starts the drag.
+     * @returns {TEventData & { side: SchedulerEventSide }} The drag data.
+     */
+    getDragData: (input: {
+      clientX: number;
+      clientY: number;
+    }) => TEventData & { side: SchedulerEventSide };
+    /**
+     * Whether the handler renders and can start a resize.
+     */
+    enabled: boolean;
     /**
      * The state to pass to the useRenderElement hook.
      */

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Draggable } from '@base-ui/react/draggable';
 
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
@@ -190,8 +191,10 @@ export default function TimelineDependencyArrows() {
         <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
           <EventEditingStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <EventTimelinePremiumContent />
-              <ErrorContainer />
+              <Draggable.Provider>
+                <EventTimelinePremiumContent />
+                <ErrorContainer />
+              </Draggable.Provider>
             </SharedComponentsStyledContext.Provider>
           </EventEditingStyledContext.Provider>
         </EventTimelinePremiumStyledContext.Provider>

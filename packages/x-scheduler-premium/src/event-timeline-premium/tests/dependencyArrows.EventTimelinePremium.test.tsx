@@ -1,4 +1,5 @@
-import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { cancelDrag, moveDragAndWait, startDrag } from 'test/utils/scheduler/dnd';
+import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   absorbObserverFrames,
@@ -6,6 +7,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  ExternalEventSource,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { createTheme } from '@mui/material/styles';
@@ -532,13 +534,18 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     }
 
     async function withDrag(source: Element, during: () => Promise<void>) {
-      fireEvent.dragStart(source, { dataTransfer: new DataTransfer() });
-      // The drag start (and end) perturb layout; keep the observer deliveries acted.
-      await absorbObserverFrames();
+      const rect = source.getBoundingClientRect();
+      startDrag(source, {
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.top + rect.height / 2,
+        mockHitTest: false,
+      });
       try {
+        // The drag start (and end) perturb layout; keep the observer deliveries acted.
+        await absorbObserverFrames();
         await during();
       } finally {
-        fireEvent.dragEnd(document.body, { dataTransfer: new DataTransfer() });
+        cancelDrag();
         await absorbObserverFrames();
       }
     }
@@ -594,7 +601,9 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       expect(probe().closest('[data-dependency-hit]')).not.to.equal(null);
 
       // Mid-drag, the hit-areas must not intercept the pointer (see the overlay's CSS).
-      await withDrag(getEventElement(farSuccessor.title), async () => {
+      // The predecessor is dragged: the successor sits inside the scroller's right-edge
+      // auto-scroll zone, where the press point would scroll the timeline away.
+      await withDrag(getEventElement(farPredecessor.title), async () => {
         await waitFor(() => {
           expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
         });
@@ -612,7 +621,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       await renderFarTimelineWithArrow();
       const probe = probeAt(getHitPath().getBoundingClientRect());
 
-      await withDrag(getEventElement(farSuccessor.title), async () => {
+      await withDrag(getEventElement(farPredecessor.title), async () => {
         // Cull the arrow out of the render window and back: the remounted svg must
         // come back muted, not with re-armed hit-areas.
         act(() => {
@@ -637,9 +646,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       await renderFarTimelineWithArrow();
       const probe = probeAt(getHitPath().getBoundingClientRect());
 
-      const terminal = document
-        .querySelector('[data-dependency-terminal]')!
-        .closest('[draggable="true"]')!;
+      const terminal = document.querySelector('[data-dependency-terminal]')!;
       await withDrag(terminal, async () => {
         await waitFor(() => {
           expect(probe().closest('[data-dependency-interactions]')).to.equal(null);
@@ -666,11 +673,52 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       const probeButton = () => probeAt(getButton().getBoundingClientRect())();
       expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
 
-      // External-drag shaped: a pointer drag's own pointerdown would deselect first.
-      await withDrag(getEventElement(farPredecessor.title), async () => {
+      // A terminal press preserves the selection while creating another dependency.
+      const terminal = document.querySelector('[data-dependency-terminal]')!;
+      await withDrag(terminal, async () => {
         await waitFor(() => {
           expect(probeButton().closest('[data-dependency-interactions]')).to.equal(null);
         });
+        expect(getButton()).not.to.equal(null);
+      });
+
+      await waitFor(() => {
+        expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
+      });
+    });
+
+    it('should mute the delete button of a selected arrow during an external drag', async () => {
+      await renderFarTimelineWithArrow();
+      // A list of external events in a non-modal dialog: pressing one keeps the selection, like
+      // any press inside a dialog.
+      await renderSettled(
+        <div role="dialog">
+          <ExternalEventSource eventData={{ id: 'external', title: 'External job' }} />
+        </div>,
+      );
+
+      fireEvent.click(getHitPath());
+      const getButton = () =>
+        document.querySelector<SVGGElement>('[data-dependency-delete-button]')!;
+      await waitFor(() => {
+        expect(getButton()).not.to.equal(null);
+      });
+      const probeButton = () => probeAt(getButton().getBoundingClientRect())();
+      const probeHitArea = probeAt(getHitPath().getBoundingClientRect());
+      expect(probeButton().closest('[data-dependency-delete-button]')).not.to.equal(null);
+
+      // The external drag comes from another provider: the timeline mutes its surfaces for any drag.
+      await withDrag(screen.getByTestId('external-source'), async () => {
+        const buttonRect = getButton().getBoundingClientRect();
+        await moveDragAndWait(getGrid(), {
+          clientX: buttonRect.left + buttonRect.width / 2,
+          clientY: buttonRect.top + buttonRect.height / 2,
+          mockHitTest: false,
+        });
+        await waitFor(() => {
+          expect(probeButton().closest('[data-dependency-interactions]')).to.equal(null);
+        });
+        expect(probeHitArea().closest('[data-dependency-interactions]')).to.equal(null);
         expect(getButton()).not.to.equal(null);
       });
 

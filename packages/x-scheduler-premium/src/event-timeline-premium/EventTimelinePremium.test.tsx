@@ -1,3 +1,4 @@
+import { Draggable } from '@base-ui/react/draggable';
 import * as React from 'react';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import {
@@ -999,11 +1000,15 @@ describe('<EventTimelinePremium />', () => {
       );
 
       return render(
-        <SchedulerStoreContext.Provider value={store as any}>
-          <SharedComponentsStyledContext.Provider value={{ classes: eventTimelinePremiumClasses }}>
-            <ErrorContainer />
-          </SharedComponentsStyledContext.Provider>
-        </SchedulerStoreContext.Provider>,
+        <Draggable.Provider>
+          <SchedulerStoreContext.Provider value={store as any}>
+            <SharedComponentsStyledContext.Provider
+              value={{ classes: eventTimelinePremiumClasses }}
+            >
+              <ErrorContainer />
+            </SharedComponentsStyledContext.Provider>
+          </SchedulerStoreContext.Provider>
+        </Draggable.Provider>,
       );
     }
 
@@ -1194,11 +1199,13 @@ describe('<EventTimelinePremium />', () => {
         );
 
         return (
-          <SchedulerStoreContext.Provider value={store as any}>
-            <SharedComponentsStyledContext.Provider value={styledContextValue}>
-              <ErrorContainer />
-            </SharedComponentsStyledContext.Provider>
-          </SchedulerStoreContext.Provider>
+          <Draggable.Provider>
+            <SchedulerStoreContext.Provider value={store as any}>
+              <SharedComponentsStyledContext.Provider value={styledContextValue}>
+                <ErrorContainer />
+              </SharedComponentsStyledContext.Provider>
+            </SchedulerStoreContext.Provider>
+          </Draggable.Provider>
         );
       }
 

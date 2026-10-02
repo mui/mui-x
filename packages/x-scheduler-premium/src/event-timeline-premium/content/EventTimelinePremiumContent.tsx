@@ -34,7 +34,7 @@ import {
   useEventEditingContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals/internals';
+import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals-premium/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
@@ -505,6 +505,29 @@ function FillerRow() {
 }
 
 /**
+ * One event of a row. Memoized so that a scroll step, which re-renders `EventList`, only renders
+ * the events it brings into view: each event renders several drag and drop layers.
+ */
+const EventListItem = React.memo(function EventListItem({
+  resourceId,
+  occurrence,
+}: {
+  resourceId: SchedulerResourceId;
+  occurrence: EventTimelinePremiumLayoutOccurrence;
+}) {
+  return (
+    <EventContextMenuTrigger occurrence={occurrence}>
+      <EventTimelinePremiumEvent
+        occurrence={occurrence}
+        elementPosition={occurrence.timelinePosition}
+        variant="regular"
+        resourceId={resourceId}
+      />
+    </EventContextMenuTrigger>
+  );
+});
+
+/**
  * Renders only the events that intersect the virtualizer's visible column range.
  * Isolated into its own component so that scrolling (which updates `renderContext`)
  * only re-renders this subtree, not the surrounding row logic.
@@ -542,14 +565,7 @@ function EventList({
   return (
     <React.Fragment>
       {visibleOccurrences.map(({ occurrence }) => (
-        <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
-          <EventTimelinePremiumEvent
-            occurrence={occurrence}
-            elementPosition={occurrence.timelinePosition}
-            variant="regular"
-            resourceId={resourceId}
-          />
-        </EventContextMenuTrigger>
+        <EventListItem key={occurrence.key} resourceId={resourceId} occurrence={occurrence} />
       ))}
     </React.Fragment>
   );
