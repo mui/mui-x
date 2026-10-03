@@ -86,6 +86,8 @@ Choose `Chat.Root` to:
 
 Choose `ChatProvider` directly when only part of the tree should use headless primitives or when a page mixes several rendering approaches.
 
+Both accept `localeText`, so the choice does not affect localization. See [Localization](/x/react-chat/customization/structure/#localization).
+
 ## Namespace usage
 
 Use namespaced exports when the API should read like a component family:

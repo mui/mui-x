@@ -475,6 +475,10 @@ ChatBox.propTypes /* remove-proptypes */ = {
     overlay: PropTypes.number,
     split: PropTypes.number,
   }),
+  /**
+   * Overrides for the user-facing strings of every chat component rendered below the provider.
+   * Omitted keys fall back to the locale of the closest parent provider, then to the built-in English defaults.
+   */
   localeText: PropTypes.object,
   /**
    * Known chat participants.
