@@ -61,7 +61,7 @@ import {
 import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 
-const FormActions = styled(DialogActions, {
+export const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
@@ -69,7 +69,7 @@ const FormActions = styled(DialogActions, {
   gap: theme.spacing(2),
 }));
 
-const DialogContent = styled(MuiDialogContent, {
+export const DialogContent = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
@@ -86,7 +86,7 @@ const DialogContent = styled(MuiDialogContent, {
   maxHeight: '100%',
 });
 
-const EventDialogForm = styled('form', {
+export const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
   slot: 'Form',
 })({

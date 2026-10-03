@@ -13,7 +13,10 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
+import {
+  getDependencyEdges,
+  isDependencyReadOnly,
+} from '@mui/x-scheduler-internals-premium/internals';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
@@ -193,9 +196,9 @@ function DependencyTerminalsLayerImpl() {
 
   const creation = useStore(store, eventTimelinePremiumDependencySelectors.creation);
   const selected = useStore(store, eventTimelinePremiumDependencySelectors.selectedModel);
-  // Subscribed (not read inline like the per-event flags) because a global `readOnly`
-  // flip changes no event or occurrence, so nothing else would re-render the layer.
-  useStore(store, (state) => state.readOnly);
+  // Only the scheduler-wide `readOnly` removes the terminals: a read-only event can still
+  // be linked, the cascade veto protects it.
+  const isReadOnly = useStore(store, isDependencyReadOnly);
   const {
     resolver,
     resources,
@@ -377,10 +380,7 @@ function DependencyTerminalsLayerImpl() {
       if (endFraction < visibleStartFraction || startFraction > visibleEndFraction) {
         continue;
       }
-      if (
-        schedulerEventSelectors.isRecurring(store.state, occurrence.id) ||
-        schedulerEventSelectors.isReadOnly(store.state, occurrence.id)
-      ) {
+      if (isReadOnly || schedulerEventSelectors.isRecurring(store.state, occurrence.id)) {
         continue;
       }
       const anchor = { rowIndex, resourceId: rowResourceId, occurrence };

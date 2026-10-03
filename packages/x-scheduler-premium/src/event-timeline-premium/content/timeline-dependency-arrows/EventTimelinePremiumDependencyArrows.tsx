@@ -14,6 +14,7 @@ import { DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowRouting';
 import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
+  useDependencyHover,
 } from './EventTimelinePremiumDependencyGeometry';
 
 const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
@@ -37,8 +38,23 @@ const DependencyArrowsSvg = styled('svg', {
   ...theme.applyStyles('dark', {
     color: (theme.vars || theme).palette.grey[600],
   }),
+  // Opaque, unlike `text.secondary`: the line runs under the arrowhead up to its tip.
+  '[data-dependency-id][data-hovered]:not([data-selected])': {
+    stroke: (theme.vars || theme).palette.grey[700],
+    strokeWidth: DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH,
+    ...theme.applyStyles('dark', {
+      stroke: (theme.vars || theme).palette.grey[400],
+    }),
+  },
   '[data-dependency-id][data-selected]': {
-    color: (theme.vars || theme).palette.error.main,
+    stroke: (theme.vars || theme).palette.error.main,
+  },
+  // The arrowhead follows the stroke of the path it ends, so the hover and selection
+  // colors reach it too. The states set `stroke` and not `color`: inside the marker,
+  // `currentColor` resolves to the overlay's color. Browsers without `context-stroke`
+  // keep the `fill` attribute.
+  '& marker path': {
+    fill: 'context-stroke',
   },
 }));
 
@@ -73,9 +89,10 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   // one to the other and clips the arrows reaching off-screen anchors.
   const { visibleArrows, resolver, eventsWidth, offsetTop, height } = useDependencyGeometry();
   const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
+  const { hoveredId } = useDependencyHover();
   const orderedArrows = React.useMemo(
-    () => orderArrowsWithSelectedLast(visibleArrows, selectedId),
-    [visibleArrows, selectedId],
+    () => orderArrowsWithSelectedLast(visibleArrows, selectedId, hoveredId),
+    [visibleArrows, selectedId, hoveredId],
   );
   // A selected read-only arrow keeps its arrowhead: the delete button that normally
   // replaces it is not rendered by the interactions layer.
@@ -154,8 +171,8 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
     >
       <defs>
         <DependencyArrowheadMarker id={arrowheadId} fill="currentColor" />
-        {/* Markers do not inherit the color of the referencing path, so the creation
-            arrowhead needs its own def. */}
+        {/* Without `context-stroke`, markers do not inherit the color of the referencing
+            path, so the creation arrowhead needs its own def. */}
         <DependencyArrowheadMarker id={creationArrowheadId} fill={creationColor} />
       </defs>
       {orderedArrows.map((arrow) => {
@@ -166,6 +183,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
             key={arrow.key}
             data-dependency-id={String(arrow.id)}
             {...(selected ? { 'data-selected': '' } : null)}
+            {...(arrow.id === hoveredId ? { 'data-hovered': '' } : null)}
             d={arrow.d}
             fill="none"
             stroke="currentColor"

@@ -137,7 +137,15 @@ export const eventTimelinePremiumDependencySelectors = {
     return selectedId === null ? null : (state.dependencyModelLookup.get(selectedId) ?? null);
   },
   /**
-   * Whether the dependency cannot be deleted because one of its events is read-only.
+   * The dependency open in the dependency dialog and its anchor, or `null`.
+   * Masked by membership like `selectedId`.
+   */
+  editor: (state: State) => {
+    const editor = state.dependencyEditor;
+    return editor !== null && state.dependencyModelLookup.has(editor.dependencyId) ? editor : null;
+  },
+  /**
+   * Whether the dependency cannot be edited or deleted (the scheduler is read-only).
    * Unknown ids resolve to `false`.
    */
   isModelReadOnly: (state: State, dependencyId: SchedulerDependencyId | null) => {
@@ -146,6 +154,6 @@ export const eventTimelinePremiumDependencySelectors = {
     if (!dependency) {
       return false;
     }
-    return isDependencyReadOnly(state, dependency);
+    return isDependencyReadOnly(state);
   },
 };

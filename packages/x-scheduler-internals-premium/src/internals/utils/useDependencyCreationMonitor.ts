@@ -57,10 +57,11 @@ function getDependencyDropTarget(
 // The `Record` is exhaustive on the rejection union: a new reason fails to compile
 // until it brings a message.
 const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
+  cascadeBlocked: 'This dependency would move a read-only event, so it was not created.',
   cyclicDependency: 'This dependency would create a cycle between events.',
   duplicateDependency: 'A dependency of this type already exists between these two events.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
-  readOnlyEvent: 'Dependencies cannot involve read-only events.',
+  readOnly: 'Dependencies cannot be changed while the scheduler is read-only.',
   unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',
 };
 

@@ -555,6 +555,150 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
     });
   });
 
+  describe('method: addDependency', () => {
+    it('should push the target of a dependency created broken', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          dependencies: [],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(
+        store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' }).status,
+      ).to.equal('added');
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedC = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'c',
+      )!;
+      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedC.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+    });
+
+    it('should not emit when the push would move a read-only event', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
+      const readOnlyNext = EventBuilder.new()
+        .id('d')
+        .readOnly()
+        .singleDay('2025-07-03T10:30:00Z')
+        .build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, readOnlyNext],
+          dependencies: [{ id: 'dep-cd', source: 'c', target: 'd', type: 'FinishToStart' }],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(
+        store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' }),
+      ).to.deep.equal({ status: 'rejected', reason: 'cascadeBlocked', eventId: 'd' });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should push the target only as far as the created dependency requires', () => {
+      const onEventsChange = vi.fn();
+      const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
+      const later = EventBuilder.new().id('x').singleDay('2025-07-03T12:00:00Z').build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, later],
+          // Already broken: a second engine run would clamp `c` after `x` too.
+          dependencies: [{ id: 'dep-xc', source: 'x', target: 'c', type: 'FinishToStart' }],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedC = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'c',
+      )!;
+      expect(timestampOf(emittedC.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+    });
+  });
+
+  describe('method: updateDependency', () => {
+    it('should push the target when the new type is broken', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'FinishToStart' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.lastCall![0]).to.deep.equal([DEP_AB]);
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+    });
+
+    it('should not emit when the push would move a read-only event', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const readOnlyNext = EventBuilder.new()
+        .id('d')
+        .readOnly()
+        .singleDay('2025-07-03T10:30:00Z')
+        .build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping, readOnlyNext],
+          dependencies: [
+            { ...DEP_AB, type: 'StartToStart' },
+            { id: 'dep-bd', source: 'b', target: 'd', type: 'FinishToStart' },
+          ],
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'FinishToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'cascadeBlocked',
+        eventId: 'd',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+  });
+
   describe('feature gating', () => {
     it('should not cascade when the dependencies feature is disabled', () => {
       const onEventsChange = vi.fn();
