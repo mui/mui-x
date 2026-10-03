@@ -1,0 +1,7 @@
+<DataGrid
+  {...data}
+  loading={loading}
+  slotProps={{
+    columnHeaderFilterIconButton: { hideIconIfNoFilterAdded: false },
+  }}
+/>
