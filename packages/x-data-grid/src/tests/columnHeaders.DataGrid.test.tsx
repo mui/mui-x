@@ -310,4 +310,32 @@ describe('<DataGrid /> - Column headers', () => {
     expect(tooltip!.getAttribute('data-title')).to.equal('Sort');
     expect(sortButton.getAttribute('title')).to.equal(null);
   });
+
+  // Needs real CSS to compute `visibility` and `opacity`.
+  it.skipIf(isJSDOM)(
+    'should show the sort icon of an unsorted column when its header gets keyboard focus',
+    async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+
+      const columnCell = getColumnHeaderCell(0);
+      const iconButtonContainer = columnCell.querySelector<HTMLElement>(
+        '.MuiDataGrid-iconButtonContainer',
+      )!;
+      const sortButton = columnCell.querySelector<HTMLElement>('.MuiDataGrid-sortButton')!;
+
+      expect(window.getComputedStyle(iconButtonContainer).visibility).to.equal('hidden');
+
+      await user.keyboard('{Tab}');
+      expect(columnCell).toHaveFocus();
+
+      await waitFor(() => {
+        expect(window.getComputedStyle(iconButtonContainer).visibility).to.equal('visible');
+        expect(window.getComputedStyle(sortButton).opacity).to.equal('1');
+      });
+    },
+  );
 });
