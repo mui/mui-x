@@ -109,6 +109,28 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
     });
 
+    // See https://github.com/mui/mui-x/issues/10251
+    it('should support toggling treeData and getTreeDataPath together', () => {
+      const { setProps } = render(<Test treeData={false} getTreeDataPath={undefined} />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
+      setProps({ treeData: true, getTreeDataPath: baselineProps.getTreeDataPath });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Group', 'name']);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+      setProps({ treeData: false, getTreeDataPath: undefined });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
+    });
+
     it('should support enabling treeData after apiRef.current.updateRows has modified the rows', () => {
       const { setProps } = render(<Test treeData={false} defaultGroupingExpansionDepth={-1} />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['name']);
