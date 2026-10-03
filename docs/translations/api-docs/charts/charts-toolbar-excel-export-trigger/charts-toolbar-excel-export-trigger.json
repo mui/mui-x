@@ -1,0 +1,21 @@
+{
+  "componentDescription": "A button that triggers an Excel export of the chart data.\nIt renders the `baseButton` slot.",
+  "propDescriptions": {
+    "onExport": {
+      "description": "Overrides how the export is performed. Defaults to <code>apiRef.current.exportAsExcel</code>.",
+      "typeDescriptions": {
+        "options": {
+          "name": "options",
+          "description": "The options to apply on the Excel export."
+        },
+        "Promise<void>": {
+          "name": "Promise<void>",
+          "description": "A promise that resolves once the export is done."
+        }
+      }
+    },
+    "options": { "description": "The options to apply on the Excel export." },
+    "render": { "description": "A function to customize the rendering of the component." }
+  },
+  "classDescriptions": {}
+}
