@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -398,13 +398,16 @@ describe('<DataGrid /> - Keyboard', () => {
       async () => {
         const { user } = render(<NavigationTestCaseNoScrollX />);
 
-        // get the sort button in column header 1
-        const columnMenuButton =
-          getColumnHeaderCell(1).querySelector<HTMLElement>(`button[aria-label="Sort"]`)!;
+        const sortButton = within(getColumnHeaderCell(1)).getByLabelText(
+          /^Sort .+ in ascending order$/,
+          {
+            selector: 'button',
+          },
+        );
 
         // Simulate click on this button
-        await user.click(columnMenuButton);
-        await act(async () => columnMenuButton.focus());
+        await user.click(sortButton);
+        await act(async () => sortButton.focus());
 
         await user.keyboard('{ArrowDown}');
         expect(getActiveCell()).to.equal(`0-1`);
