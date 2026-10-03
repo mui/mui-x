@@ -357,11 +357,13 @@ export const updateCacheWithNewRows = ({
   getRowId,
   updates,
   groupKeys,
+  replaceChildrenOf,
 }: {
   previousCache: GridRowsInternalCache;
   getRowId: DataGridProcessedProps['getRowId'];
   updates: Array<GridRowModelUpdate | GridRowModelReplace>;
   groupKeys?: string[];
+  replaceChildrenOf?: GridRowId;
 }): GridRowsInternalCache => {
   if (previousCache.updates.type === 'full') {
     throw new Error(
@@ -413,6 +415,18 @@ export const updateCacheWithNewRows = ({
     }
   });
 
+  let childrenOrder: GridRowsPartialUpdates['childrenOrder'];
+  if (replaceChildrenOf !== undefined) {
+    const ids: GridRowId[] = [];
+    uniqueUpdates.forEach((row, id) => {
+      // eslint-disable-next-line no-underscore-dangle
+      if (row._action !== 'delete') {
+        ids.push(id);
+      }
+    });
+    childrenOrder = { parentId: replaceChildrenOf, ids };
+  }
+
   const partialUpdates: GridRowsPartialUpdates = {
     type: 'partial',
     actions: {
@@ -422,6 +436,7 @@ export const updateCacheWithNewRows = ({
     },
     idToActionLookup: { ...previousCache.updates.idToActionLookup },
     groupKeys,
+    childrenOrder,
   };
   const dataRowIdToModelLookup = { ...previousCache.dataRowIdToModelLookup };
 
