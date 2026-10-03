@@ -29,7 +29,7 @@ import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
-import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
+import { isOccurrenceInAllDayRow } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -386,8 +386,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     days,
     occurrencesMap,
     shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) =>
-        isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+      (occurrence: SchedulerEventOccurrence) => isOccurrenceInAllDayRow(occurrence, adapter),
       [adapter],
     ),
   });

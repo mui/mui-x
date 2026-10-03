@@ -44,6 +44,9 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
+In the day and week views, all-day events and timed events lasting 24 hours or more are rendered in the all-day row.
+Shorter timed events stay in the time grid, split across the days they cover when they cross midnight.
+
 ### Timezone
 
 Use the `timezone` property to specify the timezone for an event's dates:
