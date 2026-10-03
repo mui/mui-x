@@ -2,7 +2,8 @@ import type { TreeViewItemId } from '../../../models';
 import type { TreeViewItemMeta } from '../../models';
 import type { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
 import { buildSiblingIndexes, itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
-import { selectionSelectors } from '../selection/selectors';
+import { idSelectors } from '../id';
+import { escapeOperandAttributeSelector } from '../../utils/utils';
 import { jsxItemsitemWrapper, useJSXItemsItemPlugin } from './itemPlugin';
 
 export class TreeViewJSXItemsPlugin {
@@ -18,6 +19,207 @@ export class TreeViewJSXItemsPlugin {
     this.store = store;
     store.itemPluginManager.register(useJSXItemsItemPlugin, jsxItemsitemWrapper);
   }
+
+  private orderingRoot: React.RefObject<HTMLElement | null> | null = null;
+
+  private refreshOrder: (() => void) | null = null;
+
+  private pendingParents = new Set<TreeViewItemId | null>();
+
+  // An index of the existing metadata, not a second item registration lifecycle.
+  private itemIdByDOMId = new Map<string, TreeViewItemId>();
+
+  private indexedTreeId: string | undefined;
+
+  public setOrderingRoot = (rootRef: React.RefObject<HTMLElement | null>, refresh: () => void) => {
+    this.orderingRoot = rootRef;
+    this.refreshOrder = refresh;
+    if (this.pendingParents.size > 0) {
+      refresh();
+    }
+    return () => {
+      this.orderingRoot = null;
+      this.refreshOrder = null;
+      this.pendingParents.clear();
+    };
+  };
+
+  public requestOrderUpdate = (parentId: TreeViewItemId | null) => {
+    if (this.pendingParents.has(parentId)) {
+      return;
+    }
+    const wasEmpty = this.pendingParents.size === 0;
+    this.pendingParents.add(parentId);
+    if (wasEmpty) {
+      this.refreshOrder?.();
+    }
+  };
+
+  private ensureDOMIdIndex = () => {
+    const treeId = idSelectors.treeId(this.store.state);
+    if (this.indexedTreeId === treeId) {
+      return;
+    }
+    this.indexedTreeId = treeId;
+    this.itemIdByDOMId.clear();
+    for (const meta of Object.values(this.store.state.itemMetaLookup)) {
+      this.itemIdByDOMId.set(
+        idSelectors.treeItemIdAttribute(this.store.state, meta.id, meta.idAttribute),
+        meta.id,
+      );
+    }
+  };
+
+  private removeDOMIdIndexEntry = (item: TreeViewItemMeta) => {
+    const domId = idSelectors.treeItemIdAttribute(this.store.state, item.id, item.idAttribute);
+    // Another item may already have claimed this DOM id during the same commit.
+    if (this.itemIdByDOMId.get(domId) === item.id) {
+      this.itemIdByDOMId.delete(domId);
+    }
+  };
+
+  private getItemElement = (itemId: TreeViewItemId) => {
+    const root = this.orderingRoot?.current;
+    const meta = itemsSelectors.itemMeta(this.store.state, itemId);
+    if (!root || !meta) {
+      return null;
+    }
+    const id = idSelectors.treeItemIdAttribute(this.store.state, itemId, meta.idAttribute);
+    const element = root.ownerDocument.getElementById(id);
+    if (element && root.contains(element)) {
+      return element;
+    }
+    // Detached containers and shadow roots are not indexed by their owner document.
+    return root.querySelector<HTMLElement>(
+      `[id="${escapeOperandAttributeSelector(id)}"][role="treeitem"]`,
+    );
+  };
+
+  /**
+   * A keyed item can move without any of its metadata changing. Check its
+   * neighbors after a render, and only rescan its parent if the DOM order changed.
+   */
+  public checkItemOrder = (itemId: TreeViewItemId) => {
+    const { state } = this.store;
+    const meta = itemsSelectors.itemMeta(state, itemId);
+    if (!meta || this.pendingParents.has(null) || this.pendingParents.has(meta.parentId)) {
+      return;
+    }
+    const siblings = itemsSelectors.itemOrderedChildrenIds(state, meta.parentId);
+    const index =
+      state.itemChildrenIndexesLookup[meta.parentId ?? TREE_VIEW_ROOT_PARENT_ID]?.[itemId];
+    if (index == null) {
+      this.requestOrderUpdate(meta.parentId);
+      return;
+    }
+    const element = this.getItemElement(itemId);
+    if (!element) {
+      return;
+    }
+    const previous = index > 0 ? this.getItemElement(siblings[index - 1]) : null;
+    const next = index + 1 < siblings.length ? this.getItemElement(siblings[index + 1]) : null;
+    if ((previous && isBefore(element, previous)) || (next && isBefore(next, element))) {
+      this.requestOrderUpdate(meta.parentId);
+    }
+  };
+
+  /** Reconcile all affected branches after the item layout effects have committed. */
+  public syncItemOrder = () => {
+    const root = this.orderingRoot?.current;
+    if (!root || this.pendingParents.size === 0) {
+      return;
+    }
+    this.ensureDOMIdIndex();
+    const pendingParents = this.pendingParents;
+    this.pendingParents = new Set();
+    const { state } = this.store;
+    const nextChildren = new Map<TreeViewItemId | null, TreeViewItemId[]>();
+
+    const collect = (element: HTMLElement, parentId: TreeViewItemId | null) => {
+      // Collapsed and unmounted branches retain their previous children so that
+      // indeterminate selection does not depend on whether those children are mounted.
+      if (parentId !== null && element.getAttribute('aria-expanded') === 'false') {
+        return;
+      }
+      nextChildren.set(parentId, []);
+      const nodes = Array.from(element.querySelectorAll<HTMLElement>('[role="treeitem"]'));
+      for (const node of nodes) {
+        const itemId = this.itemIdByDOMId.get(node.id);
+        if (itemId !== undefined && node.getAttribute('aria-expanded') !== 'false') {
+          nextChildren.set(itemId, []);
+        }
+      }
+      for (const node of nodes) {
+        const itemId = this.itemIdByDOMId.get(node.id);
+        const meta = itemId === undefined ? null : itemsSelectors.itemMeta(state, itemId);
+        if (!meta) {
+          // React leaves suspended elements in the DOM after their metadata was removed.
+          continue;
+        }
+        const parentNode = node.parentElement?.closest('[role="treeitem"]');
+        if (meta.parentId === null) {
+          if (parentNode && root.contains(parentNode)) {
+            continue;
+          }
+        } else {
+          const parentMeta = itemsSelectors.itemMeta(state, meta.parentId);
+          if (
+            !parentMeta ||
+            parentNode?.id !==
+              idSelectors.treeItemIdAttribute(state, parentMeta.id, parentMeta.idAttribute)
+          ) {
+            continue;
+          }
+        }
+        nextChildren.get(meta.parentId)?.push(meta.id);
+      }
+    };
+
+    for (const parentId of pendingParents) {
+      if (parentId === null) {
+        collect(root, null);
+        break;
+      }
+      if (pendingParents.has(null)) {
+        continue;
+      }
+      const meta = itemsSelectors.itemMeta(state, parentId);
+      if (!meta) {
+        continue;
+      }
+      let ancestorId = meta.parentId;
+      while (ancestorId !== null && !pendingParents.has(ancestorId)) {
+        ancestorId = itemsSelectors.itemParentId(state, ancestorId);
+      }
+      if (ancestorId !== null) {
+        continue;
+      }
+      const element = this.getItemElement(parentId);
+      if (element && root.contains(element)) {
+        collect(element, parentId);
+      }
+    }
+
+    const changed = Array.from(nextChildren).filter(([parentId, ids]) => {
+      const previous = itemsSelectors.itemOrderedChildrenIds(state, parentId);
+      return ids.length !== previous.length || ids.some((id, index) => id !== previous[index]);
+    });
+    if (changed.length === 0) {
+      return;
+    }
+    const orderLookup = { ...state.itemOrderedChildrenIdsLookup };
+    const indexLookup = { ...state.itemChildrenIndexesLookup };
+    for (const [parentId, ids] of changed) {
+      const key = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+      orderLookup[key] = ids;
+      indexLookup[key] = buildSiblingIndexes(ids);
+    }
+    this.store.update({
+      itemOrderedChildrenIdsLookup: orderLookup,
+      itemChildrenIndexesLookup: indexLookup,
+    });
+    this.store.selection.propagateSelectionToUpdatedParents(changed.map(([parentId]) => parentId));
+  };
 
   /**
    * Insert or update an item in the state from a Tree Item component.
@@ -37,8 +239,27 @@ Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
 
     this.itemOwners.set(item.id, ownerToken);
     const existingMeta = itemsSelectors.itemMeta(this.store.state, item.id);
+    if (
+      !existingMeta ||
+      existingMeta.parentId !== item.parentId ||
+      existingMeta.idAttribute !== item.idAttribute
+    ) {
+      this.ensureDOMIdIndex();
+      if (existingMeta) {
+        this.removeDOMIdIndexEntry(existingMeta);
+        this.requestOrderUpdate(existingMeta.parentId);
+      }
+      this.itemIdByDOMId.set(
+        idSelectors.treeItemIdAttribute(this.store.state, item.id, item.idAttribute),
+        item.id,
+      );
+      this.requestOrderUpdate(item.parentId);
+    }
 
     if (existingMeta != null) {
+      if (existingMeta.expandable !== item.expandable) {
+        this.requestOrderUpdate(item.id);
+      }
       // Update the existing item in place.
       let hasChanges = false;
       for (const key of Object.keys(item) as (keyof TreeViewItemMeta)[]) {
@@ -68,7 +289,10 @@ Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
     }
 
     return () => {
+      this.ensureDOMIdIndex();
       this.itemOwners.delete(item.id);
+      this.removeDOMIdIndexEntry(item);
+      this.requestOrderUpdate(item.parentId);
 
       const newItemMetaLookup = { ...this.store.state.itemMetaLookup };
       const newItemModelLookup = { ...this.store.state.itemModelLookup };
@@ -103,44 +327,10 @@ Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
       });
     };
   };
+}
 
-  /**
-   * Store the ids of a given item's children in the state.
-   * Those ids must be passed in the order they should be rendered.
-   * @param {TreeViewItemId | null} parentId The id of the item to store the children of.
-   * @param {TreeViewItemId[]} orderedChildrenIds The ids of the item's children.
-   */
-  public setJSXItemsOrderedChildrenIds = (
-    parentId: TreeViewItemId | null,
-    orderedChildrenIds: TreeViewItemId[],
-  ) => {
-    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-
-    this.store.update({
-      itemOrderedChildrenIdsLookup: {
-        ...this.store.state.itemOrderedChildrenIdsLookup,
-        [parentIdWithDefault]: orderedChildrenIds,
-      },
-      itemChildrenIndexesLookup: {
-        ...this.store.state.itemChildrenIndexesLookup,
-        [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
-      },
-    });
-
-    // If a parent was selected while its children were unmounted (collapsed with unmountOnExit),
-    // re-run selection propagation now that the children are registered.
-    // The multiSelect guard matches the documented contract: selectionPropagation only works with multiSelect.
-    if (
-      parentId !== null &&
-      selectionSelectors.isMultiSelectEnabled(this.store.state) &&
-      selectionSelectors.propagationRules(this.store.state).descendants &&
-      selectionSelectors.isItemSelected(this.store.state, parentId)
-    ) {
-      this.store.selection.setItemSelection({
-        itemId: parentId,
-        shouldBeSelected: true,
-        keepExistingSelection: true,
-      });
-    }
-  };
+function isBefore(a: HTMLElement, b: HTMLElement) {
+  // compareDocumentPosition returns a bitmask, including containment/disconnection flags.
+  // eslint-disable-next-line no-bitwise
+  return Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
 }
