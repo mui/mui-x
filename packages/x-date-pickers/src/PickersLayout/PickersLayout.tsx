@@ -70,6 +70,13 @@ export const PickersLayoutRoot = styled('div', {
       },
     },
     {
+      // Column 1 is empty, so a wide action bar must not grow it.
+      props: { pickerOrientation: 'portrait', hasShortcuts: false },
+      style: {
+        [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '2 / 4' },
+      },
+    },
+    {
       props: { hasShortcuts: true, layoutDirection: 'rtl' },
       style: {
         [`& .${pickersLayoutClasses.shortcuts}`]: {
