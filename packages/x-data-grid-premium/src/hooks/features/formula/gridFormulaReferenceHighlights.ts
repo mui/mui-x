@@ -72,6 +72,11 @@ export interface FormulaTextSegment {
    * its own inner parentheses and colons.
    */
   syntax?: boolean;
+  /**
+   * A run inside an error span (a parse error the host wants underlined). May
+   * combine with a reference color or a syntax run — the error mask splits both.
+   */
+  error?: boolean;
 }
 
 /**
@@ -415,32 +420,61 @@ function buildFormulaSyntaxMask(value: string): boolean[] {
 }
 
 /**
- * Appends `value.slice(start, end)` — the text between two reference tokens —
- * split into alternating syntax and plain runs. A `null` mask (a non-formula
- * value, e.g. a plain cell value shown in the formula bar) appends the gap whole.
+ * A per-character mask of the editor text: `true` inside one of the error
+ * spans (clamped to the text). `null` when there is no span to mark.
  */
-function pushGapSegments(
+function buildFormulaErrorMask(value: string, spans: FormulaSourceSpan[]): boolean[] | null {
+  let mask: boolean[] | null = null;
+  for (const span of spans) {
+    const start = Math.max(0, span.start);
+    const end = Math.min(value.length, span.end);
+    for (let index = start; index < end; index += 1) {
+      mask ??= new Array<boolean>(value.length).fill(false);
+      mask[index] = true;
+    }
+  }
+  return mask;
+}
+
+/**
+ * Appends `value.slice(start, end)` — a reference token (`colorIndex !== null`)
+ * or the text between two of them — split into runs of identical flags: muted
+ * syntax (gaps only) and error underline. With no mask at all (a non-formula
+ * value, e.g. a plain cell value shown in the formula bar) the run is appended
+ * whole.
+ */
+function pushRunSegments(
   segments: FormulaTextSegment[],
   value: string,
-  mask: boolean[] | null,
   start: number,
   end: number,
+  colorIndex: number | null,
+  syntaxMask: boolean[] | null,
+  errorMask: boolean[] | null,
 ): void {
   if (start >= end) {
     return;
   }
-  if (mask === null) {
-    segments.push({ text: value.slice(start, end), colorIndex: null });
-    return;
-  }
+  // A reference keeps its identity color across its own inner punctuation: the
+  // syntax mask only applies to gaps.
+  const isSyntax = (index: number) =>
+    colorIndex === null && syntaxMask !== null && syntaxMask[index];
+  const isError = (index: number) => errorMask !== null && errorMask[index];
   let runStart = start;
   for (let index = start + 1; index <= end; index += 1) {
-    if (index < end && mask[index] === mask[runStart]) {
+    if (
+      index < end &&
+      isSyntax(index) === isSyntax(runStart) &&
+      isError(index) === isError(runStart)
+    ) {
       continue;
     }
-    const segment: FormulaTextSegment = { text: value.slice(runStart, index), colorIndex: null };
-    if (mask[runStart]) {
+    const segment: FormulaTextSegment = { text: value.slice(runStart, index), colorIndex };
+    if (isSyntax(runStart)) {
       segment.syntax = true;
+    }
+    if (isError(runStart)) {
+      segment.error = true;
     }
     segments.push(segment);
     runStart = index;
@@ -450,7 +484,8 @@ function pushGapSegments(
 /**
  * Splits the editor text into colored reference runs and plain gaps, each gap
  * further split into muted syntax runs (operators, punctuation) and everything
- * else. References are non-overlapping distinct tokens; an out-of-order or
+ * else; `errorSpans` (editor coordinates) additionally mark the runs to
+ * underline. References are non-overlapping distinct tokens; an out-of-order or
  * overlapping span is skipped defensively so the segment text always
  * reconstructs the value exactly — the invariant every caret offset depends on.
  * Shared by the editor's imperative DOM rebuild (`renderSegments`).
@@ -458,11 +493,13 @@ function pushGapSegments(
 export function buildFormulaTextSegments(
   value: string,
   references: FormulaReference[],
+  errorSpans: FormulaSourceSpan[] = [],
 ): FormulaTextSegment[] {
   // Only formula text carries syntax: the formula bar renders plain cell values
   // through the same editable, and the comma in `Hello, world` is not an
   // operator. Escaped literals (`'=…`) are not formula source either.
   const syntaxMask = isFormulaSource(value) ? buildFormulaSyntaxMask(value) : null;
+  const errorMask = errorSpans.length === 0 ? null : buildFormulaErrorMask(value, errorSpans);
   const colored = references
     .filter((reference) => reference.colorIndex !== null)
     .flatMap((reference) =>
@@ -480,10 +517,10 @@ export function buildFormulaTextSegments(
     if (span.start < cursor || span.end > value.length) {
       continue;
     }
-    pushGapSegments(segments, value, syntaxMask, cursor, span.start);
-    segments.push({ text: value.slice(span.start, span.end), colorIndex: span.colorIndex });
+    pushRunSegments(segments, value, cursor, span.start, null, syntaxMask, errorMask);
+    pushRunSegments(segments, value, span.start, span.end, span.colorIndex, null, errorMask);
     cursor = span.end;
   }
-  pushGapSegments(segments, value, syntaxMask, cursor, value.length);
+  pushRunSegments(segments, value, cursor, value.length, null, syntaxMask, errorMask);
   return segments;
 }

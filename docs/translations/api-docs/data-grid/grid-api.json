@@ -1,6 +1,7 @@
 {
   "interfaceDescription": "The full grid API.",
   "propertiesDescriptions": {
+    "addComputedColumn": { "description": "Adds a computed column." },
     "addRowGroupingCriteria": { "description": "Adds the field to the row grouping model." },
     "aiAssistant": { "description": "The AI assistant API." },
     "applySorting": { "description": "Applies the current sort model to the rows." },
@@ -116,6 +117,7 @@
     "getSortModel": { "description": "Returns the sort model currently applied to the grid." },
     "getVisibleColumns": { "description": "Returns the currently visible columns." },
     "hideColumnMenu": { "description": "Hides the column menu that is open." },
+    "hideComputedColumnEditor": { "description": "Closes the computed columns panel." },
     "hideFilterPanel": { "description": "Hides the filter panel." },
     "hideHeaderFilterMenu": { "description": "Hides the header filter menu." },
     "hidePreferences": { "description": "Hides the preferences panel." },
@@ -131,6 +133,7 @@
     "isRowSelected": { "description": "Determines if a row is selected or not." },
     "pinColumn": { "description": "Pins a column to the left or right side of the grid." },
     "publishEvent": { "description": "Emits an event." },
+    "removeComputedColumn": { "description": "Removes a computed column." },
     "removeRowGroupingCriteria": { "description": "Remove the field from the row grouping model." },
     "resetRowHeights": { "description": "Forces the recalculation of the heights of all rows." },
     "restoreState": { "description": "Inject the given values into the state of the DataGrid." },
@@ -179,6 +182,7 @@
       "description": "Sets the column visibility model to the one given by <code>model</code>."
     },
     "setColumnWidth": { "description": "Updates the width of a column." },
+    "setComputedColumns": { "description": "Sets the computed columns model." },
     "setDensity": { "description": "Sets the density of the grid." },
     "setEditCellValue": {
       "description": "Sets the value of the edit cell.<br />Commonly used inside the edit cell component."
@@ -228,6 +232,9 @@
     "showColumnMenu": {
       "description": "Display the column menu under the <code>field</code> column."
     },
+    "showComputedColumnEditor": {
+      "description": "Opens the computed column editor in the sidebar."
+    },
     "showFilterPanel": {
       "description": "Shows the filter panel. If <code>targetColumnField</code> is given, a filter for this field is also added."
     },
@@ -275,12 +282,16 @@
     "updateColumns": {
       "description": "Updates the definition of multiple columns at the same time."
     },
+    "updateComputedColumn": { "description": "Updates the definition of a computed column." },
     "updateRows": { "description": "Allows to update, insert, replace and delete rows." },
     "upsertFilterItem": {
       "description": "Updates or inserts a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
     "upsertFilterItems": {
       "description": "Updates or inserts many <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
+    },
+    "validateComputedColumn": {
+      "description": "Validates the definition of a computed column against the current columns."
     }
   }
 }

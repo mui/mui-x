@@ -38,7 +38,7 @@ import {
   shouldIgnorePlainEditInput,
 } from '../../hooks/features/formula/gridFormulaPlainEditing';
 import { CellValueUpdater } from '../../hooks/features/clipboard/useGridClipboardImport';
-import { GridFormulaEditable, valueToText } from '../GridFormulaEditable';
+import { GridFormulaEditable, isComposingKeyEvent, valueToText } from '../GridFormulaEditable';
 import type { GridFormulaEditableHandle } from '../GridFormulaEditable';
 
 const FormulaBarRoot = styled('div', {
@@ -505,6 +505,10 @@ const FormulaBar = forwardRef<HTMLDivElement, FormulaBarProps>(function FormulaB
   const handleRootKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       onKeyDown?.(event);
+      // A Tab pressed during an IME composition walks the IME's candidates.
+      if (isComposingKeyEvent(event)) {
+        return;
+      }
       // Tab with the suggestion popup open is consumed by the editable
       // (stopPropagation) — reaching here means "commit and move" (Excel:
       // Tab → right, Shift+Tab → left).

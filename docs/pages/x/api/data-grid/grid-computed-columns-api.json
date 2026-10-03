@@ -1,0 +1,41 @@
+{
+  "name": "GridComputedColumnsApi",
+  "description": "The computed columns API interface that is available in the grid `apiRef`.",
+  "properties": [
+    {
+      "name": "addComputedColumn",
+      "description": "Adds a computed column.",
+      "type": "(definition: GridComputedColumnDefinition, options?: { columnIndex?: number }) => void"
+    },
+    {
+      "name": "hideComputedColumnEditor",
+      "description": "Closes the computed columns panel.",
+      "type": "() => void"
+    },
+    {
+      "name": "removeComputedColumn",
+      "description": "Removes a computed column.",
+      "type": "(field: string) => void"
+    },
+    {
+      "name": "setComputedColumns",
+      "description": "Sets the computed columns model.",
+      "type": "(model: GridComputedColumnsModel | ((prev: GridComputedColumnsModel) => GridComputedColumnsModel)) => void"
+    },
+    {
+      "name": "showComputedColumnEditor",
+      "description": "Opens the computed column editor in the sidebar.",
+      "type": "(field?: string | null, options?: { sampleRowId?: GridRowId; columnIndex?: number }) => void"
+    },
+    {
+      "name": "updateComputedColumn",
+      "description": "Updates the definition of a computed column.",
+      "type": "(field: string, changes: Partial<Omit<GridComputedColumnDefinition, 'field'>>) => void"
+    },
+    {
+      "name": "validateComputedColumn",
+      "description": "Validates the definition of a computed column against the current columns.",
+      "type": "(definition: GridComputedColumnDefinition) => GridComputedColumnValidationResult"
+    }
+  ]
+}

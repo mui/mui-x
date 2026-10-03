@@ -751,6 +751,16 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the icon of the boolean cell"
     },
+    "cell--computed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the cell belongs to a computed column (Premium computed columns)"
+    },
+    "cell--computedError": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the formula of its computed column evaluates to an error for the row (Premium computed columns)"
+    },
     "cell--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -902,6 +912,16 @@
       "nodeName": "the column header",
       "conditions": "<code>headerAlign=\"right\"</code>"
     },
+    "columnHeader--computed": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the column is a computed column (Premium computed columns)"
+    },
+    "columnHeader--computedInvalid": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column header",
+      "conditions": "the formula of its computed column is invalid (Premium computed columns)"
+    },
     "columnHeader--dragging": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the floating column header element",
@@ -1029,6 +1049,58 @@
     "columnsManagementSearchInput": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management search input element"
+    },
+    "computedColumnHeaderBadge": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the <code>ƒx</code> badge in the column header of a computed column (Premium computed columns)"
+    },
+    "computedColumnsPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel root element (Premium computed columns)"
+    },
+    "computedColumnsPanelEditor": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel editor view element"
+    },
+    "computedColumnsPanelEmpty": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty state of the computed columns panel list"
+    },
+    "computedColumnsPanelField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the field rows of the computed columns panel editor"
+    },
+    "computedColumnsPanelFooter": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the footer of the computed columns panel editor"
+    },
+    "computedColumnsPanelFormula": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formula surface of the computed columns panel editor"
+    },
+    "computedColumnsPanelHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel header element"
+    },
+    "computedColumnsPanelList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the computed columns panel list view element"
+    },
+    "computedColumnsPanelListItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each item of the computed columns panel list"
+    },
+    "computedColumnsPanelPreview": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preview element of the computed columns panel editor"
+    },
+    "computedColumnsPanelReference": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the reference pane (columns and functions to insert) of the computed columns panel editor"
+    },
+    "computedColumnsPanelValidation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the validation block of the computed columns panel editor"
     },
     "container--bottom": {
       "description": "Styles applied to {{nodeName}}.",

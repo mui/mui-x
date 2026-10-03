@@ -5,6 +5,7 @@ import {
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
+import { formulaFeature } from '@mui/x-data-grid-premium/formula';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const groupingColDef: GridGroupingColDefOverride<GridValidRowModel> = {
@@ -32,6 +33,16 @@ export default function ColumnMenuGridPremium() {
       rowGrouping: {
         model: ['company'],
       },
+      computedColumns: {
+        model: [
+          {
+            field: 'grossMillions',
+            headerName: 'Gross (millions)',
+            formula: '=ROUND(gross / 1000000, 1)',
+            type: 'number',
+          },
+        ],
+      },
     },
   });
 
@@ -40,6 +51,7 @@ export default function ColumnMenuGridPremium() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
+        featureDependencies={{ formula: formulaFeature }}
         groupingColDef={groupingColDef}
         initialState={initialState}
       />
