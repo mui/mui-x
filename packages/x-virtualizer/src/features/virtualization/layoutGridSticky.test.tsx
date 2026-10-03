@@ -716,33 +716,78 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     const heightAtRest = rect('outer-window').height;
 
-    // From rest each measured scroll reverses direction, so it commits immediately
-    // (direction changes are never frame-deferred) and the height is stable to read.
-    act(() => {
-      scroller.scrollTop = 150 * ROW_HEIGHT;
-      scroller.dispatchEvent(new Event('scroll'));
-    });
-    const heightScrollingDown = rect('outer-window').height;
-    expectInnerViewportCovered();
+    // The settle pass runs a second after the last context update. Fake timers skip the
+    // wait, and have to be installed before the scroll that arms it.
+    vi.useFakeTimers();
+    let heightScrollingDown: number;
+    let heightScrollingUp: number;
+    let heightSettled: number;
+    try {
+      // From rest each measured scroll reverses direction, so it commits immediately and
+      // the height is stable to read.
+      act(() => {
+        scroller.scrollTop = 150 * ROW_HEIGHT;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      heightScrollingDown = rect('outer-window').height;
+      expectInnerViewportCovered();
 
-    act(() => {
-      scroller.scrollTop = 149 * ROW_HEIGHT;
-      scroller.dispatchEvent(new Event('scroll'));
-    });
-    const heightScrollingUp = rect('outer-window').height;
-    expectInnerViewportCovered();
+      act(() => {
+        scroller.scrollTop = 149 * ROW_HEIGHT;
+        scroller.dispatchEvent(new Event('scroll'));
+      });
+      heightScrollingUp = rect('outer-window').height;
+      expectInnerViewportCovered();
 
-    // A zero-delta event settles the direction back to NONE: the buffer rebalances
-    // to symmetric without resizing the window.
-    act(() => {
-      scroller.dispatchEvent(new Event('scroll'));
-    });
-    const heightSettled = rect('outer-window').height;
-    expectInnerViewportCovered();
+      // The settle pass returns the direction to NONE: the buffer rebalances to symmetric
+      // without resizing the window.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1100);
+      });
+      heightSettled = rect('outer-window').height;
+      expectInnerViewportCovered();
+    } finally {
+      vi.useRealTimers();
+    }
 
     expect(Math.abs(heightScrollingDown - heightAtRest)).to.be.at.most(2 * ROW_HEIGHT);
     expect(Math.abs(heightScrollingUp - heightScrollingDown)).to.be.at.most(2 * ROW_HEIGHT);
     expect(Math.abs(heightSettled - heightScrollingDown)).to.be.at.most(2 * ROW_HEIGHT);
+  });
+
+  it('keeps the scroll direction across a scroll event with no movement', async () => {
+    // Writing `scrollTop` echoes a scroll event that carries no delta. Reading it as a
+    // stop would rebalance the buffers and commit, and the next event would reallocate
+    // them toward the scroll and commit again.
+    await renderGrid();
+    const scroller = screen.getByTestId('scroller');
+
+    await act(async () => {
+      scroller.scrollTop = 100 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    await waitFor(() => {
+      expect(getWindowRowIds()).to.include(100);
+    });
+
+    // Scroll down: the whole buffer moves below the viewport.
+    act(() => {
+      scroller.scrollTop = 101 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const idsScrollingDown = getWindowRowIds();
+
+    act(() => {
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.deep.equal(idsScrollingDown);
+
+    // Still scrolling down, within the leading buffer: no direction change to commit.
+    act(() => {
+      scroller.scrollTop = 102 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.deep.equal(idsScrollingDown);
   });
 
   it('defers render context updates until the leading buffer runs low', async () => {
@@ -768,15 +813,13 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     expect(getWindowRowIds()).to.deep.equal(idsAfterDirectionChange);
 
-    // Past the rendered buffer: the context must advance. On a fast scroll the advance
-    // is deferred a few frames, so wait for it to land.
+    // Past the rendered buffer: the context must advance within the scroll event, even
+    // though the jump reads as a fast scroll.
     act(() => {
       scroller.scrollTop = 30 * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
-    await waitFor(() => {
-      expect(getWindowRowIds()).to.include(30);
-    });
+    expect(getWindowRowIds()).to.include(30);
     expect(getWindowRowIds()).not.to.deep.equal(idsAfterDirectionChange);
   });
 
@@ -840,11 +883,7 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       scroller.scrollTop = nextFirstRow * ROW_HEIGHT;
       scroller.dispatchEvent(new Event('scroll'));
     });
-    // On a fast scroll the advance is deferred a few frames, so wait for the rendered
-    // set to actually change rather than for a row the leading buffer already holds.
-    await waitFor(() => {
-      expect([...localOffsets().keys()]).to.not.deep.equal(beforeKeys);
-    });
+    // The advance commits inside the scroll event, however fast the scroll.
     const after = localOffsets();
 
     // The context did advance...
@@ -944,12 +983,9 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
         scroller.scrollTop = top;
         scroller.dispatchEvent(new Event('scroll'));
       });
-      // A fast scroll defers the advance a few frames; wait for it to land so the pad
-      // reflects the new context before measuring.
-      // eslint-disable-next-line no-await-in-loop
-      await waitFor(() => {
-        expect(getWindowRowIds()).to.include(Math.floor(top / ROW_HEIGHT));
-      });
+      // The advance commits inside the scroll event, so the pad already reflects the
+      // new context.
+      expect(getWindowRowIds()).to.include(Math.floor(top / ROW_HEIGHT));
       maxPad = Math.max(maxPad, padTop());
     }
 
