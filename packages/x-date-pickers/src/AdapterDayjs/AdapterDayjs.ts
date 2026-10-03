@@ -174,6 +174,8 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     return value.locale(expectedLocale);
   };
 
+  private timezoneOffsetFormatters = new Map<string, Intl.DateTimeFormat>();
+
   private hasUTCPlugin = () => typeof dayjs.utc !== 'undefined';
 
   private hasTimezonePlugin = () => typeof dayjs.tz !== 'undefined';
@@ -256,10 +258,8 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * If the new day does not have the same offset as the old one (when switching to summer day time for example),
-   * Then dayjs will not automatically adjust the offset (moment does).
-   * We have to parse again the value to make sure the `fixOffset` method is applied.
-   * See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
+   * `dayjs` does not update the offset when `set` or `add` crosses a DST change (moment does).
+   * Plain `system` values follow the JS Date DST, and a copied offset breaks later `dayjs` calls.
    */
   protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
@@ -267,22 +267,89 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     const timezone = this.getTimezone(value);
-    if (timezone !== 'UTC') {
-      const fixedValue = value.tz(this.cleanTimezone(timezone), true);
-      // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
-      /* v8 ignore next 3 */
-      // @ts-ignore
-      if (fixedValue.$offset === (value.$offset ?? 0)) {
-        return value;
-      }
-      // Change only what is needed to avoid creating a new object with unwanted data
-      // Especially important when used in an environment where utc or timezone dates are used only in some places
-      // Reference: https://github.com/mui/mui-x/issues/13290
+    // Plain system values already follow the native Date offset.
+    // @ts-ignore
+    if (timezone === 'UTC' || (timezone === 'system' && value.$offset === undefined)) {
+      return value;
+    }
+
+    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+    // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
+    // @ts-ignore
+    if ((fixedValue.$offset ?? 0) !== (value.$offset ?? 0)) {
       // @ts-ignore
       value.$offset = fixedValue.$offset;
     }
-
     return value;
+  };
+
+  /**
+   * Hours, minutes and seconds measure elapsed time. Rebuild named-zone values from the target
+   * instant: adjusting the offset while keeping the wall time changes the elapsed duration.
+   */
+  private addTime = (value: Dayjs, amount: number, unit: 'hour' | 'minute' | 'second') => {
+    // @ts-ignore
+    const timezone = value.$x?.$timezone;
+    if (!this.hasTimezonePlugin() || !timezone) {
+      return this.adjustOffset(value.add(amount, unit));
+    }
+
+    const timestamp =
+      value.valueOf() + amount * { hour: 3_600_000, minute: 60_000, second: 1000 }[unit];
+    if (!Number.isFinite(timestamp)) {
+      return value.add(amount, unit);
+    }
+
+    let formatter = this.timezoneOffsetFormatters.get(timezone);
+    if (!formatter) {
+      formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        timeZoneName: 'longOffset',
+      });
+      this.timezoneOffsetFormatters.set(timezone, formatter);
+    }
+
+    // Older dayjs.tz() implementations derive the offset through the system timezone and can
+    // shift the instant at a DST transition. Read the named zone's offset directly from Intl.
+    const offsetName = formatter
+      .formatToParts(timestamp)
+      .find((part) => part.type === 'timeZoneName')!.value;
+    const [hours = 0, minutes = 0, seconds = 0] = offsetName.slice(4).split(':').map(Number);
+    const offset = (offsetName[3] === '-' ? -1 : 1) * (hours * 60 + minutes + seconds / 60);
+
+    let result: Dayjs;
+    if (offset === 0) {
+      // Starting from UTC also clears the old nonzero offset and local-offset metadata.
+      result = dayjs.utc(timestamp).locale(value.locale());
+    } else {
+      const wallDate = new Date(timestamp + offset * 60_000);
+      const localDate = new Date(0);
+      localDate.setFullYear(
+        wallDate.getUTCFullYear(),
+        wallDate.getUTCMonth(),
+        wallDate.getUTCDate(),
+      );
+      localDate.setHours(
+        wallDate.getUTCHours(),
+        wallDate.getUTCMinutes(),
+        wallDate.getUTCSeconds(),
+        wallDate.getUTCMilliseconds(),
+      );
+      result = dayjs(localDate).locale(value.locale());
+      // @ts-ignore
+      result.$offset = offset;
+      // dayjs 1.10.7 falls back to today's system offset when $localOffset is falsy. A boxed zero
+      // keeps numeric coercion equal to zero while avoiding that fallback, including on clones.
+      // Use the actual displacement so elapsed time stays exact even if the system timezone
+      // normalizes a wall time inside its spring-forward gap (a dayjs representation limitation).
+      const localOffset = (localDate.getTime() - timestamp) / 60_000 - offset || new Number(0);
+      // @ts-ignore
+      result.$x.$localOffset = localOffset;
+    }
+    // Only the newly constructed value receives metadata; the source and its clones stay intact.
+    // @ts-ignore
+    result.$x.$timezone = timezone;
+    return result;
   };
 
   /**
@@ -583,15 +650,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public addHours = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'hour'));
+    return this.addTime(value, amount, 'hour');
   };
 
   public addMinutes = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'minute'));
+    return this.addTime(value, amount, 'minute');
   };
 
   public addSeconds = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'second'));
+    return this.addTime(value, amount, 'second');
   };
 
   public getYear = (value: Dayjs) => {
