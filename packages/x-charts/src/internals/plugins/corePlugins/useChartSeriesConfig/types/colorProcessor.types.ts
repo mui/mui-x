@@ -8,19 +8,26 @@ import type {
 } from '../../../../../models/axis';
 import type { DefaultizedSeriesType } from '../../../../../models/seriesType';
 import type { ZAxisDefaultized } from '../../../../../models/z-axis';
-import type { ChartSeriesType } from '../../../../../models/seriesType/config';
+import type { ChartSeriesType, ChartsSeriesConfig } from '../../../../../models/seriesType/config';
 
 /**
- * Map data index to a color.
- * If dataIndex is not defined, it falls back to the series color when defined.
+ * Maps a data index to a color.
+ * When `dataIndex` is not defined, it falls back to the series color if there is one.
+ * @param {number} [dataIndex] The index of the item to color.
+ * @returns {string} The color to use for the item.
  */
-export type ColorGetter<SeriesType extends ChartSeriesType> = SeriesType extends 'pie' | 'funnel'
-  ? (dataIndex: number) => string
-  : SeriesType extends 'heatmap'
-    ? (value: number | null) => string
-    : SeriesType extends 'mapShape'
-      ? (name?: string) => string | null
-      : (dataIndex?: number) => string;
+export type DefaultColorGetter = (dataIndex?: number) => string;
+
+/**
+ * The color getter a series' `colorProcessor` returns.
+ * Series needing another signature declare `colorGetter` in their `ChartsSeriesConfig` entry.
+ * `SeriesType` stays naked so the conditional distributes over unions.
+ */
+export type ColorGetter<SeriesType extends ChartSeriesType> = SeriesType extends any
+  ? ChartsSeriesConfig[SeriesType] extends { colorGetter: infer SeriesColorGetter }
+    ? SeriesColorGetter
+    : DefaultColorGetter
+  : never;
 
 export type ColorProcessor<SeriesType extends ChartSeriesType> = (
   series: DefaultizedSeriesType<SeriesType>,

@@ -46,6 +46,18 @@ export interface HeatmapSeriesType
     value: number | null,
     context: { xIndex: number; yIndex: number },
   ) => string | null;
+  /**
+   * Function that returns the color of a cell, based on its value and position.
+   * Takes precedence over the z-axis `colorMap`.
+   * The legend keeps displaying the z-axis color scale, so consider hiding it when the
+   * returned colors no longer match that scale.
+   * @param {number | null} value The cell's value. Can be `null` if the cell doesn't contain any value.
+   * @param {{ xIndex: number; yIndex: number}} context The rendering context of the value.
+   * @param {number} context.xIndex The x index of the cell the value belongs to.
+   * @param {number} context.yIndex The y index of the cell the value belongs to.
+   * @returns {string} The color to use for the cell.
+   */
+  colorGetter?: (value: number | null, context: { xIndex: number; yIndex: number }) => string;
 }
 
 /**
