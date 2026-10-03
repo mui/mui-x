@@ -150,6 +150,15 @@ const caESGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtres actius` : `${count} filtre actiu`,
   columnHeaderFiltersLabel: 'Mostra filtres',
   columnHeaderSortIconLabel: 'Ordena',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
