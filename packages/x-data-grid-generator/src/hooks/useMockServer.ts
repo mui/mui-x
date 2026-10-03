@@ -167,6 +167,15 @@ const getInitialState = (columns: GridColDefGenerator[], groupingField?: string)
   return { columns: { columnVisibilityModel } };
 };
 
+// The key must include every option that changes the generated rows.
+const getCacheKey = (options: UseMockServerOptions, index: number) => {
+  const treeDataKey =
+    (options.treeData?.maxDepth ?? 1) > 1
+      ? `${options.treeData?.maxDepth}-${options.treeData?.averageChildren ?? 2}-${options.treeData?.groupingField ?? ''}`
+      : 'false';
+  return `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}-multiSelect:${options.multiSelect ? 'true' : 'false'}-derivedColumns:${options.derivedColumns ? 'true' : 'false'}-treeData:${treeDataKey}`;
+};
+
 const defaultColDef = getGridDefaultColumnTypes();
 
 function sendEmptyResponse<T>() {
@@ -249,13 +258,9 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     return undefined;
   }, [isTreeData]);
 
-  React.useEffect(() => {
-    const treeDataKey =
-      (options.treeData?.maxDepth ?? 1) > 1
-        ? `${options.treeData?.maxDepth}-${options.treeData?.averageChildren ?? 2}-${options.treeData?.groupingField ?? ''}`
-        : 'false';
-    const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}-treeData:${treeDataKey}`;
+  const cacheKey = getCacheKey(options, index);
 
+  React.useEffect(() => {
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.
     if (dataCache.has(cacheKey)) {
@@ -317,9 +322,8 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     options.treeData?.groupingField,
     options.treeData?.averageChildren,
     options.dataSet,
-    options.maxColumns,
     options.derivedColumns,
-    index,
+    cacheKey,
   ]);
 
   const fetchRows = React.useCallback(
@@ -486,7 +490,6 @@ export const useMockServer = <T extends GridGetRowsResponse>(
         // keep the path from the original row if the updated row's path is `undefined`
         newRows[rowIndex] = { ...updatedRow, path: updatedRow.path || newRows[rowIndex].path };
         const newData = { ...dataRef.current, rows: newRows } as GridDemoData;
-        const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
         dataCache.set(cacheKey, newData!);
         setTimeout(() => {
           if (verbose) {
@@ -497,15 +500,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
         dataRef.current = newData;
       });
     },
-    [
-      index,
-      options.dataSet,
-      options.maxColumns,
-      options.rowLength,
-      serverOptions?.maxDelay,
-      serverOptions?.minDelay,
-      serverOptions?.verbose,
-    ],
+    [cacheKey, serverOptions?.maxDelay, serverOptions?.minDelay, serverOptions?.verbose],
   );
 
   return {
