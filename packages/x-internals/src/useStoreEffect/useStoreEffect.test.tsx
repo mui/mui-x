@@ -1,0 +1,73 @@
+import * as React from 'react';
+import { vi, describe, expect, it } from 'vitest';
+import { createRenderer, act, reactMajor } from '@mui/internal-test-utils';
+import { Store } from '@base-ui/utils/store';
+import { useStoreEffect } from './index';
+
+describe('useStoreEffect', () => {
+  // `createRenderer().render` wraps the tree in `<React.StrictMode>` by default,
+  // so the default render exercises the mount → unmount → mount replay.
+  const { render } = createRenderer();
+
+  // React 18 StrictMode runs the `useLazyRef` initializer again
+  // and discards that instance without unmounting it, so its store
+  // subscription is still alive. It always fires twice, and after a selector
+  // change the throwaway instance keeps firing with the mount-time selector.
+  // React 19 keeps a single instance.
+  const subscriptionCount = reactMajor >= 19 ? 1 : 2;
+  // Fires produced by the leaked throwaway subscription only.
+  const throwawayFires = reactMajor >= 19 ? 0 : 1;
+
+  it('runs the effect when the selected value changes', () => {
+    const store = Store.create({ value: 0, other: 0 });
+    const effect = vi.fn();
+
+    function Test() {
+      useStoreEffect(store, (state) => state.value, effect);
+      return null;
+    }
+    render(<Test />);
+
+    act(() => store.update({ value: 1, other: 0 }));
+    expect(effect.mock.calls.length).to.equal(subscriptionCount);
+    expect(effect.mock.lastCall).to.deep.equal([0, 1]);
+
+    // Update to an unselected part of the state should not run the effect
+    act(() => store.update({ value: 1, other: 1 }));
+    expect(effect.mock.calls.length).to.equal(subscriptionCount);
+  });
+
+  it('uses the latest selector when the store updates', () => {
+    const store = Store.create({ a: 0, b: 100 });
+    const effect = vi.fn();
+
+    function Test(props: { field: 'a' | 'b' }) {
+      useStoreEffect(store, (state) => state[props.field], effect);
+      return null;
+    }
+    const { setProps } = render(<Test field="a" />);
+
+    act(() => store.update({ a: 1, b: 100 }));
+    expect(effect.mock.lastCall).to.deep.equal([0, 1]);
+
+    // The selector closes over new props: it should select `b` from now on.
+    // The switch itself must not run the effect.
+    const callCount = effect.mock.calls.length;
+    setProps({ field: 'b' });
+    expect(effect.mock.calls.length).to.equal(callCount);
+
+    // Updates to the previously selected field should not run the effect
+    // (except the React 18 throwaway subscription, pinned to the old selector)
+    act(() => store.update({ a: 2, b: 100 }));
+    expect(effect.mock.calls.length).to.equal(callCount + throwawayFires);
+
+    // Updates to the newly selected field run the effect with previous and
+    // next values produced by the same selector
+    act(() => store.update({ a: 2, b: 200 }));
+    expect(effect.mock.lastCall).to.deep.equal([100, 200]);
+
+    const callCountAfterB = effect.mock.calls.length;
+    act(() => store.update({ a: 3, b: 200 }));
+    expect(effect.mock.calls.length).to.equal(callCountAfterB + throwawayFires);
+  });
+});
