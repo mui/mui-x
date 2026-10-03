@@ -138,7 +138,7 @@
       "description": "Triggers the viewport to scroll to the given positions (in pixels)."
     },
     "scrollToIndexes": {
-      "description": "Triggers the viewport to scroll to the cell at indexes given by <code>params</code>.<br />Returns <code>true</code> if the grid had to scroll to reach the target."
+      "description": "Triggers the viewport to scroll to the cell at indexes given by <code>params</code>.<br /><code>rowIndex</code> is the zero-based index in the full filtered and sorted row list, not the index within the current page.<br />When pagination is enabled, <code>rowIndex</code> must point to a row on the current page. With <code>paginationMode=&quot;server&quot;</code>, only the rows of the current page are loaded, so that index is <code>page * pageSize</code> plus the index of the row within them.<br /><code>colIndex</code> is the zero-based index in the visible columns.<br />An invalid index is ignored, along with the axis it belongs to, and the other axis still scrolls."
     },
     "selectCellRange": {
       "description": "Selects all cells that are inside the range given by <code>start</code> and <code>end</code> coordinates."
