@@ -14,6 +14,7 @@ export interface GridAggregationInitialState {
 export interface GridAggregationInternalCache {
   rulesOnLastColumnHydration: GridAggregationRules;
   rulesOnLastRowHydration: GridAggregationRules;
+  valueGettersOnLastApply: Record<string, GridColDef['valueGetter']>;
 }
 
 export interface GridAggregationApi {

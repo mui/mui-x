@@ -25,6 +25,7 @@ import {
 } from './gridAggregationSelectors';
 import type {
   GridAggregationApi,
+  GridAggregationInternalCache,
   GridAggregationLookup,
   GridAggregationPrivateApi,
 } from './gridAggregationInterfaces';
@@ -42,6 +43,7 @@ export const aggregationStateInitializer: GridStateInitializer<
   apiRef.current.caches.aggregation = {
     rulesOnLastColumnHydration: {},
     rulesOnLastRowHydration: {},
+    valueGettersOnLastApply: {},
   };
 
   return {
@@ -97,13 +99,19 @@ export const useGridAggregation = (
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
 
+    const columnsLookup = gridColumnLookupSelector(apiRef);
     const aggregationRules = getAggregationRules(
-      gridColumnLookupSelector(apiRef),
+      columnsLookup,
       gridAggregationModelSelector(apiRef),
       props.aggregationFunctions,
       !!props.dataSource,
     );
     const aggregatedFields = Object.keys(aggregationRules);
+    const valueGettersOnLastApply: GridAggregationInternalCache['valueGettersOnLastApply'] = {};
+    for (const field of aggregatedFields) {
+      valueGettersOnLastApply[field] = columnsLookup[field]?.valueGetter;
+    }
+    apiRef.current.caches.aggregation.valueGettersOnLastApply = valueGettersOnLastApply;
     const currentAggregationLookup = gridAggregationLookupSelector(apiRef);
 
     const renderContext = gridRenderContextSelector(apiRef);
@@ -284,8 +292,27 @@ export const useGridAggregation = (
     props.dataSource,
   ]);
 
+  const handleColumnsChange = React.useCallback(() => {
+    checkAggregationRulesDiff();
+
+    if (props.dataSource && !gridPivotActiveSelector(apiRef)) {
+      return;
+    }
+
+    // The aggregation rules can stay the same while the values change.
+    // For example, when a new `valueGetter` reads external data.
+    const columnsLookup = gridColumnLookupSelector(apiRef);
+    const { valueGettersOnLastApply } = apiRef.current.caches.aggregation;
+    const hasValueGetterChanged = Object.entries(valueGettersOnLastApply).some(
+      ([field, valueGetter]) => columnsLookup[field]?.valueGetter !== valueGetter,
+    );
+    if (hasValueGetterChanged) {
+      deferredApplyAggregation();
+    }
+  }, [apiRef, checkAggregationRulesDiff, deferredApplyAggregation, props.dataSource]);
+
   useGridEvent(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
-  useGridEvent(apiRef, 'columnsChange', checkAggregationRulesDiff);
+  useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'filteredRowsSet', deferredApplyAggregation);
 
   const lastSortModel = React.useRef(gridSortModelSelector(apiRef));
