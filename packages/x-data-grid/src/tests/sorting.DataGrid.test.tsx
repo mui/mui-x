@@ -39,6 +39,88 @@ describe('<DataGrid /> - Sorting', () => {
     columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
   };
 
+  it('should identify the column in each sort button label', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand', headerName: 'Brand' }, { field: 'isPublished' }]}
+        />
+      </div>,
+    );
+
+    const brandSort = screen.getByLabelText('Sort Brand in ascending order', {
+      selector: 'button',
+    });
+    expect(
+      screen.getByLabelText('Sort isPublished in ascending order', { selector: 'button' }),
+    ).not.to.equal(brandSort);
+    await user.hover(getColumnHeaderCell(0));
+    await user.click(brandSort);
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnHeaderCell(0)).to.have.attribute('aria-sort', 'ascending');
+    expect(brandSort).to.have.attribute('aria-label', 'Sort Brand in descending order');
+    await user.click(brandSort);
+    expect(getColumnHeaderCell(0)).to.have.attribute('aria-sort', 'descending');
+    expect(brandSort).to.have.attribute('aria-label', 'Remove sorting from Brand');
+    await user.click(brandSort);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    expect(brandSort).to.have.attribute('aria-label', 'Sort Brand in ascending order');
+  });
+
+  it('should support localized sort button labels without changing the tooltip', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          localeText={{
+            columnHeaderSortIconLabel: 'Trier',
+            columnHeaderSortIconAriaLabel: (columnName, direction) =>
+              `Trier ${columnName} (${direction})`,
+          }}
+          slotProps={{ baseTooltip: { enterDelay: 0 } }}
+        />
+      </div>,
+    );
+
+    const button = screen.getByLabelText('Trier brand (asc)', { selector: 'button' });
+    await user.hover(getColumnHeaderCell(0));
+    await user.hover(button);
+    expect(await screen.findByRole('tooltip')).to.have.text('Trier');
+  });
+
+  it('should describe the next direction in the column sorting order', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand', sortingOrder: ['desc', 'asc'] }]}
+        />
+      </div>,
+    );
+    const button = screen.getByLabelText('Sort brand in descending order', { selector: 'button' });
+    await user.hover(getColumnHeaderCell(0));
+    await user.click(button);
+    expect(getColumnHeaderCell(0)).to.have.attribute('aria-sort', 'descending');
+    expect(button).to.have.attribute('aria-label', 'Sort brand in ascending order');
+    await user.click(button);
+    expect(button).to.have.attribute('aria-label', 'Sort brand in descending order');
+  });
+
+  it('should preserve an explicit sort button label', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand' }]}
+          slotProps={{ columnHeaderSortIcon: { 'aria-label': 'Custom sort label' } }}
+        />
+      </div>,
+    );
+
+    expect(screen.getByLabelText('Custom sort label', { selector: 'button' })).not.to.equal(null);
+  });
+
   it('should keep the initial order', () => {
     const cols = [{ field: 'id' }];
     const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];

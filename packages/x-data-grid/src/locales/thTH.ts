@@ -148,6 +148,15 @@ const thTHGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `ตัวกรองที่ใช้งาน ${count} รายการ`,
   columnHeaderFiltersLabel: 'แสดงตัวกรอง',
   columnHeaderSortIconLabel: 'เรียงลำดับ',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) => `เลือกแล้ว ${count.toLocaleString()} แถว`,

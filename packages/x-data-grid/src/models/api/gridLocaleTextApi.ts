@@ -1,5 +1,6 @@
 import type * as React from 'react';
 import type { GridColDef } from '../colDef';
+import type { GridSortDirection } from '../gridSortModel';
 
 /**
  * Set the types of the texts in the grid.
@@ -148,6 +149,7 @@ export interface GridLocaleText {
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
   columnHeaderFiltersLabel: string;
   columnHeaderSortIconLabel: string;
+  columnHeaderSortIconAriaLabel: (columnName: string, direction: GridSortDirection) => string;
 
   // Rows selected footer text
   footerRowSelected: (count: number) => React.ReactNode;

@@ -151,6 +151,15 @@ const nnNOGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
   columnHeaderFiltersLabel: 'Vis filter',
   columnHeaderSortIconLabel: 'Sorter',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>

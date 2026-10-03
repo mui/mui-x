@@ -149,6 +149,15 @@ const svSEGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktiva filter` : `${count} aktivt filter`,
   columnHeaderFiltersLabel: 'Visa filter',
   columnHeaderSortIconLabel: 'Sortera',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>

@@ -148,6 +148,15 @@ const roROGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} filtru activ` : `${count} filtru activ`,
   columnHeaderFiltersLabel: 'Afișează filtru',
   columnHeaderSortIconLabel: 'Sortare',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>
