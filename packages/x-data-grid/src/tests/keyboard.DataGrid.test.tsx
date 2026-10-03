@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -63,6 +63,42 @@ describe('<DataGrid /> - Keyboard', () => {
   }
 
   /* eslint-disable mui/disallow-active-element-as-key-event-target */
+  it.skipIf(isJSDOM).each([0, 19])(
+    'should retain header %i focus when scrolled outside the render context',
+    async (focusedIndex) => {
+      const columns = Array.from({ length: 20 }, (_, index) => ({
+        field: `col${index}`,
+        width: 150,
+      }));
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={[{ id: 1 }]} columns={columns} columnBufferPx={0} />
+        </div>,
+      );
+      await act(async () => getColumnHeaderCell(0).focus());
+      if (focusedIndex === 19) {
+        await user.keyboard('{End}');
+      }
+      await waitFor(() =>
+        expect(getColumnHeaderCell(focusedIndex === 0 ? 1 : 18)).not.to.equal(null),
+      );
+      const header = getColumnHeaderCell(focusedIndex);
+      const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      scroller.scrollLeft = focusedIndex === 0 ? scroller.scrollWidth : 0;
+      await waitFor(() =>
+        expect(getColumnHeaderCell(focusedIndex === 0 ? 18 : 1)).not.to.equal(null),
+      );
+
+      expect(header).toHaveFocus();
+      expect(screen.getAllByRole('columnheader').length).to.be.lessThan(6);
+      await user.keyboard(focusedIndex === 0 ? '{ArrowRight}' : '{ArrowLeft}');
+      await waitFor(() =>
+        expect(getColumnHeaderCell(focusedIndex === 0 ? 2 : 17)).not.to.equal(null),
+      );
+      expect(getActiveColumnHeader()).to.equal(focusedIndex === 0 ? '1' : '18');
+    },
+  );
+
   describe('cell navigation', () => {
     it('should move to cell below when pressing "ArrowDown" on a cell on the 1st page', async () => {
       const { user } = render(<NavigationTestCaseNoScrollX />);

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import visuallyHidden from '@mui/utils/visuallyHidden';
 import { computeOffsetLeft } from '@mui/x-virtualizer';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
@@ -216,13 +217,32 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   };
 
   const getColumnHeaders = (params?: GetHeadersParams, other = {}) => {
-    const { renderedColumns, firstColumnToRender } = getColumnsToRender(params);
+    const { renderedColumns, firstColumnToRender, lastColumnToRender } = getColumnsToRender(params);
+    const columnIndexes = renderedColumns.map((_, index) => firstColumnToRender + index);
+    // Keep a focused, unpinned header mounted when it leaves the render context,
+    // just as we retain focused cells. Preserve its key and the column order.
+    if (params?.position === undefined && columnHeaderFocus) {
+      const focusedColumnIndex = visibleColumns.findIndex(
+        (column) => column.field === columnHeaderFocus.field,
+      );
+      if (
+        focusedColumnIndex >= pinnedColumns.left.length &&
+        focusedColumnIndex < visibleColumns.length - pinnedColumns.right.length
+      ) {
+        if (focusedColumnIndex < firstColumnToRender) {
+          columnIndexes.unshift(focusedColumnIndex);
+        } else if (focusedColumnIndex >= lastColumnToRender) {
+          columnIndexes.push(focusedColumnIndex);
+        }
+      }
+    }
 
     const columns: React.JSX.Element[] = [];
-    for (let i = 0; i < renderedColumns.length; i += 1) {
-      const colDef = renderedColumns[i];
+    for (const columnIndex of columnIndexes) {
+      const colDef = visibleColumns[columnIndex];
+      const i = columnIndex - firstColumnToRender;
+      const isVirtual = columnIndex < firstColumnToRender || columnIndex >= lastColumnToRender;
 
-      const columnIndex = firstColumnToRender + i;
       const isFirstColumn = columnIndex === 0;
       const tabIndex =
         (columnHeaderTabIndexState !== null && columnHeaderTabIndexState.field === colDef.field) ||
@@ -290,6 +310,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           isSiblingFocused={isSiblingFocused}
           showLeftBorder={showLeftBorder}
           showRightBorder={showRightBorder}
+          style={isVirtual ? visuallyHidden : undefined}
           {...other}
         />,
       );
