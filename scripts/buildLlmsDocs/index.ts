@@ -65,6 +65,7 @@
  * - **API Documentation**: `x/api/{project}/{api-item}.md` (e.g., `x/api/charts/bar-chart.md`)
  * - **Non-Component Docs**: `x/react-{project}/{category}/{topic}.md` (e.g., `x/react-charts/getting-started/installation.md`)
  * - **Project Index**: `x/react-{project}/llms.txt` (e.g., `x/react-charts/llms.txt`)
+ * - **Package Index**: `x/react-{project}/index.md`, same as llms.txt but with relative links, shipped in the package
  * - **Root Index**: `x/llms.txt` (concatenates all project indexes)
  */
 
@@ -563,12 +564,28 @@ function findProjectPagesSection(projectKey: string): MuiPage | null {
 }
 
 /**
+ * Get the link to a generated file.
+ *
+ * When `relativeTo` is set, links are emitted as paths relative to that directory (for example
+ * `./bar-chart.md` or `../api/charts/bar-chart.md`) instead of absolute paths, so the index
+ * can be shipped inside the package and browsed offline.
+ */
+function getFileLink(file: GeneratedFile, relativeTo?: string): string {
+  if (!relativeTo) {
+    return `/${file.outputPath}`;
+  }
+  const relativePath = path.posix.relative(relativeTo, file.outputPath);
+  return relativePath.startsWith('../') ? relativePath : `./${relativePath}`;
+}
+
+/**
  * Generate structured content based on pages hierarchy
  */
 function generateStructuredContent(
   page: MuiPage,
   fileMap: Map<string, GeneratedFile>,
   depth: number = 0,
+  relativeTo?: string,
 ): string {
   let content = '';
 
@@ -594,7 +611,7 @@ function generateStructuredContent(
         const newFeatureIndicator = apiItem.newFeature ? ' 🆕' : '';
         const plannedIndicator = apiItem.planned ? ' (planned)' : '';
 
-        content += `- [${title}](/${matchedApiFile.outputPath})`;
+        content += `- [${title}](${getFileLink(matchedApiFile, relativeTo)})`;
         if (matchedApiFile.description) {
           content += `: ${matchedApiFile.description}`;
         }
@@ -622,7 +639,7 @@ function generateStructuredContent(
 
     // Process children
     for (const child of page.children) {
-      content += generateStructuredContent(child, fileMap, depth + 1);
+      content += generateStructuredContent(child, fileMap, depth + 1, relativeTo);
     }
     content += '\n\n';
   } else if (matchedFile) {
@@ -634,7 +651,7 @@ function generateStructuredContent(
     const plannedIndicator = page.planned ? ' (planned)' : '';
 
     // Don't add indentation for markdown list items - they should start at column 0
-    content += `- [${title}](/${matchedFile.outputPath})`;
+    content += `- [${title}](${getFileLink(matchedFile, relativeTo)})`;
     if (matchedFile.description) {
       content += `: ${matchedFile.description}`;
     }
@@ -717,12 +734,16 @@ function inferProjectName(outputPath: string, projectSettings: ProjectSettings):
 }
 
 /**
- * Generate llms.txt content for a project using pages.ts structure for organization
+ * Generate llms.txt content for a project using pages.ts structure for organization.
+ *
+ * When `relative` is true, links are relative to `baseDir` instead of absolute.
+ * This is used to generate the `index.md` that is shipped inside the package.
  */
 function generateProjectLlmsTxt(
   generatedFiles: GeneratedFile[],
   projectName: string,
   baseDir: string,
+  relative = false,
 ): string {
   // Extract project key from baseDir (e.g., "x/react-data-grid" -> "data-grid")
   const pathParts = baseDir.split('/');
@@ -750,7 +771,7 @@ function generateProjectLlmsTxt(
 
   // Process the pages structure to generate organized content
   for (const child of pagesSection.children) {
-    content += generateStructuredContent(child, fileMap, 1);
+    content += generateStructuredContent(child, fileMap, 1, relative ? baseDir : undefined);
   }
 
   return content.trim();
@@ -998,6 +1019,20 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
       fs.writeFileSync(llmsPath, formattedLlmsContent, 'utf-8');
       // eslint-disable-next-line no-console
       console.log(`✓ Generated: ${baseDir}/llms.txt`);
+      processedCount += 1;
+
+      // Generate an `index.md` with relative links so the generated docs can be shipped
+      // inside the package and browsed offline (llms.txt uses absolute website paths).
+      const indexContent = generateProjectLlmsTxt(
+        currentProjectFiles,
+        projectDisplayName,
+        baseDir,
+        true,
+      );
+      const indexPath = path.join(outputDir, baseDir, 'index.md');
+      fs.writeFileSync(indexPath, await formatMarkdown(indexContent, indexPath), 'utf-8');
+      // eslint-disable-next-line no-console
+      console.log(`✓ Generated: ${baseDir}/index.md`);
       processedCount += 1;
 
       // Store formatted content with increased header levels for root llms.txt
