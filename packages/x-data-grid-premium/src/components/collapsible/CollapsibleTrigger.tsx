@@ -26,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const CollapsibleTriggerRoot = styled('button', {
   name: 'MuiDataGrid',
   slot: 'CollapsibleTrigger',
-})<{ ownerState: OwnerState }>(({ ownerState }) => ({
+})<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
   position: 'relative',
   display: 'flex',
   alignItems: 'center',
@@ -44,10 +44,14 @@ const CollapsibleTriggerRoot = styled('button', {
     backgroundColor: vars.colors.interactive.hover,
     cursor: 'pointer',
   },
-  '&:focus-visible': {
-    outline: `2px solid ${vars.colors.interactive.selected}`,
-    outlineOffset: -2,
-  },
+  ...(theme.focusVisible
+    ? { '&:focus-visible': theme.focusVisible }
+    : {
+        '&:focus-visible': {
+          outline: `2px solid ${vars.colors.interactive.selected}`,
+          outlineOffset: -2,
+        },
+      }),
 }));
 
 const CollapsibleIcon = styled('div', {

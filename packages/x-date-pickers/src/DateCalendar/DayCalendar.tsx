@@ -211,7 +211,13 @@ const PickerCalendarSlideTransition = styled(PickersSlideTransition, {
 const PickerCalendarWeekContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'MonthContainer',
-})({ overflow: 'hidden' });
+})(({ theme }) => ({
+  overflow: 'hidden',
+  ...(theme.focusVisible && {
+    // to prevent the focus outline from being clipped
+    paddingBlock: theme.focusVisible.outlineOffset,
+  }),
+}));
 
 const PickerCalendarWeek = styled('div', {
   name: 'MuiDayCalendar',
