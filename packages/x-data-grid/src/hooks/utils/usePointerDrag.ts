@@ -19,7 +19,7 @@ export interface PointerDragPosition<TData> {
   /**
    * The topmost element at the pointer position.
    * With pointer capture, the event target is always the capture element, so drop targets must be found with this.
-   * Elements with `pointer-events: none`, like a drag preview, are ignored.
+   * Elements with `pointer-events: none`, like a drag preview, and elements matching `hitTestIgnoreSelector` are ignored.
    */
   elementAtPoint: Element | null;
   /**
@@ -52,7 +52,18 @@ export interface UsePointerDragOptions<TData> {
    * @default 5
    */
   mouseDistance?: number;
-  onDragStart?: (position: PointerDragPosition<TData>) => void;
+  /**
+   * Selector of elements to skip when finding `elementAtPoint`, with their descendants.
+   * For overlays that must keep receiving events from other inputs, so they can't use `pointer-events: none`.
+   */
+  hitTestIgnoreSelector?: string;
+  /**
+   * Called when the activation constraints are met.
+   * @param {PointerDragPosition<TData>} position The pointer position.
+   * @returns {boolean | void} `false` to refuse the drag, for example when it isn't allowed anymore.
+   * The session ends without `onDragCancel`, and the pointer is released.
+   */
+  onDragStart?: (position: PointerDragPosition<TData>) => boolean | void;
   onDragMove?: (position: PointerDragPosition<TData>) => void;
   onDragEnd?: (position: PointerDragPosition<TData>) => void;
   /**
@@ -86,6 +97,7 @@ interface DragSession<TData> {
   clientX: number;
   clientY: number;
   captureElement: HTMLElement | null;
+  doc: Document;
   timeout: ReturnType<typeof setTimeout> | undefined;
   cleanup: () => void;
 }
@@ -93,15 +105,24 @@ interface DragSession<TData> {
 const DEFAULT_TOUCH_DELAY = 300;
 const DEFAULT_TOUCH_TOLERANCE = 8;
 const DEFAULT_MOUSE_DISTANCE = 5;
+// The `click` usually follows the `pointerup` in the same task, but it can come later, for example
+// the compatibility click of a touch. Matches the click prevention after a column resize.
+const SUPPRESS_CLICK_TIMEOUT = 100;
 
 /**
  * Returns the topmost element at the given viewport position, in the document or shadow root of `element`.
  * @param {HTMLElement | null} element An element of the document or shadow root to hit-test.
  * @param {number} x The horizontal viewport position.
  * @param {number} y The vertical viewport position.
+ * @param {string} ignoreSelector Selector of elements to skip, with their descendants.
  * @returns {Element | null} The element at the position, or `null` when hit-testing isn't supported.
  */
-export function getElementAtPoint(element: HTMLElement | null, x: number, y: number) {
+export function getElementAtPoint(
+  element: HTMLElement | null,
+  x: number,
+  y: number,
+  ignoreSelector?: string,
+): Element | null {
   if (!element) {
     return null;
   }
@@ -113,7 +134,12 @@ export function getElementAtPoint(element: HTMLElement | null, x: number, y: num
   if (typeof hitTestRoot.elementFromPoint !== 'function') {
     return null;
   }
-  return hitTestRoot.elementFromPoint(x, y);
+  if (!ignoreSelector) {
+    return hitTestRoot.elementFromPoint(x, y);
+  }
+  // Ordered from the topmost element down
+  const elements = hitTestRoot.elementsFromPoint(x, y);
+  return elements.find((candidate) => !candidate.closest(ignoreSelector)) ?? null;
 }
 
 function isPointInside(element: HTMLElement | null, x: number, y: number) {
@@ -146,7 +172,12 @@ export function usePointerDrag<TData>(
         pointerType: session.pointerType,
         clientX: session.clientX,
         clientY: session.clientY,
-        elementAtPoint: getElementAtPoint(captureElement, session.clientX, session.clientY),
+        elementAtPoint: getElementAtPoint(
+          captureElement,
+          session.clientX,
+          session.clientY,
+          optionsRef.current.hitTestIgnoreSelector,
+        ),
         isInside: isPointInside(captureElement, session.clientX, session.clientY),
       };
     },
@@ -164,17 +195,31 @@ export function usePointerDrag<TData>(
     }
   }, []);
 
+  // Ends a started drag without a drop
+  const abortDrag = React.useCallback(
+    (session: DragSession<TData>) => {
+      endSession(session);
+      // A mouse or pen button can still be pressed, and its release must not click either.
+      // A touch ends without a click once it moved.
+      if (session.pointerType !== 'touch') {
+        suppressClickAfterRelease(session.doc, session.pointerId);
+      }
+    },
+    [endSession],
+  );
+
   const cancel = React.useCallback(() => {
     const session = sessionRef.current;
     if (!session) {
       return;
     }
-    const wasDragging = session.status === 'dragging';
-    endSession(session);
-    if (wasDragging) {
-      optionsRef.current.onDragCancel?.(session.data);
+    if (session.status !== 'dragging') {
+      endSession(session);
+      return;
     }
-  }, [endSession]);
+    abortDrag(session);
+    optionsRef.current.onDragCancel?.(session.data);
+  }, [abortDrag, endSession]);
 
   const onPointerDown = React.useCallback(
     (event: PointerEvent | React.PointerEvent, data: TData) => {
@@ -195,6 +240,7 @@ export function usePointerDrag<TData>(
         clientX: event.clientX,
         clientY: event.clientY,
         captureElement,
+        doc,
         timeout: undefined,
         cleanup: () => {},
       };
@@ -210,7 +256,9 @@ export function usePointerDrag<TData>(
           // The pointer can already be released, or not be an active pointer at all (synthetic events).
           // The document listeners still receive the events in that case.
         }
-        optionsRef.current.onDragStart?.(getPosition(session));
+        if (optionsRef.current.onDragStart?.(getPosition(session)) === false) {
+          abortDrag(session);
+        }
       };
 
       const handlePointerMove = (moveEvent: PointerEvent) => {
@@ -242,7 +290,7 @@ export function usePointerDrag<TData>(
           }
         } else if (distance >= (optionsRef.current.mouseDistance ?? DEFAULT_MOUSE_DISTANCE)) {
           startDragging();
-          // `onDragStart` can cancel the session, for example when the drag isn't allowed anymore
+          // `onDragStart` can refuse or cancel the drag
           if (sessionRef.current === session) {
             optionsRef.current.onDragMove?.(getPosition(session));
           }
@@ -334,7 +382,7 @@ export function usePointerDrag<TData>(
 
       sessionRef.current = session;
     },
-    [cancel, endSession, getPosition],
+    [abortDrag, cancel, endSession, getPosition],
   );
 
   React.useEffect(() => {
@@ -349,15 +397,34 @@ export function usePointerDrag<TData>(
   return { onPointerDown, cancel };
 }
 
-// The browser fires a `click` after the `pointerup` that ends a mouse drag.
+// The browser fires a `click` after the `pointerup` that ends a mouse drag, on the capture element
+// or on the common ancestor of the press and release targets.
 // It must not trigger the click behavior of the element under the pointer (for example, sorting a column).
 function suppressNextClick(doc: Document) {
   const preventClick = (event: MouseEvent) => {
     event.preventDefault();
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     doc.removeEventListener('click', preventClick, true);
   };
   doc.addEventListener('click', preventClick, true);
-  // No `click` follows when the pointer ends on another element than it started on.
-  setTimeout(() => doc.removeEventListener('click', preventClick, true));
+  // Some releases are not followed by a `click`, for example a touch that moved
+  setTimeout(() => doc.removeEventListener('click', preventClick, true), SUPPRESS_CLICK_TIMEOUT);
+}
+
+// Suppresses the click of the next release of `pointerId`, after a drag was canceled while the button was down.
+function suppressClickAfterRelease(doc: Document, pointerId: number) {
+  function stopListening() {
+    doc.removeEventListener('pointerup', handlePointerUp, true);
+    doc.removeEventListener('pointerdown', stopListening, true);
+  }
+  function handlePointerUp(event: PointerEvent) {
+    if (event.pointerId === pointerId) {
+      stopListening();
+      suppressNextClick(doc);
+    }
+  }
+  doc.addEventListener('pointerup', handlePointerUp, true);
+  // Without capture, a release outside the window doesn't reach the document.
+  // The next press must not lose its click then.
+  doc.addEventListener('pointerdown', stopListening, true);
 }

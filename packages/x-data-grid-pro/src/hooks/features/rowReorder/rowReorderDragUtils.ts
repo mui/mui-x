@@ -28,10 +28,6 @@ export const EXPAND_DELAY = 500;
  */
 export const EXPAND_CANCEL_BUFFER_PX = 5;
 
-// Smaller than a row, so picking up the first or last visible row doesn't scroll right away
-const AUTO_SCROLL_EDGE_SIZE = 24;
-const AUTO_SCROLL_MAX_SPEED = 20;
-
 export interface RowReorderDropTarget {
   rowId: GridRowId;
   position: RowReorderDropPosition;
@@ -334,24 +330,4 @@ export async function animateRowMove(
       }
     });
   });
-}
-
-/**
- * Returns how far to scroll in one frame when the pointer is close to the top or bottom edge of the rows.
- * The speed grows as the pointer gets closer to, or goes past, the edge.
- * @param {number} clientY The vertical pointer position.
- * @param {number} top The top edge of the rows area.
- * @param {number} bottom The bottom edge of the rows area.
- * @returns {number} The scroll delta in px: negative scrolls up, positive scrolls down, `0` doesn't scroll.
- */
-export function getAutoScrollDelta(clientY: number, top: number, bottom: number): number {
-  if (clientY < top + AUTO_SCROLL_EDGE_SIZE) {
-    const ratio = Math.min(1, (top + AUTO_SCROLL_EDGE_SIZE - clientY) / AUTO_SCROLL_EDGE_SIZE);
-    return -Math.ceil(ratio * AUTO_SCROLL_MAX_SPEED);
-  }
-  if (clientY > bottom - AUTO_SCROLL_EDGE_SIZE) {
-    const ratio = Math.min(1, (clientY - (bottom - AUTO_SCROLL_EDGE_SIZE)) / AUTO_SCROLL_EDGE_SIZE);
-    return Math.ceil(ratio * AUTO_SCROLL_MAX_SPEED);
-  }
-  return 0;
 }

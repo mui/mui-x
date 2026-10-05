@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import composeClasses from '@mui/utils/composeClasses';
 import {
@@ -13,20 +12,23 @@ import {
 } from '@mui/x-data-grid';
 import type { GridRowId } from '@mui/x-data-grid';
 import {
+  createDragPreview,
+  getEdgeScrollDelta,
   getElementAtPoint,
   getGridRowElement,
   gridDimensionsSelector,
   gridEditRowsStateSelector,
   usePointerDrag,
-  useGridNativeEventListener,
 } from '@mui/x-data-grid/internals';
 import type {
+  DragPreview,
   PointerDragPosition,
   RowReorderDragDirection,
   RowReorderDropPosition,
 } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { isElementInGrid, useGridPointerDragRouting } from '../../utils/useGridPointerDragRouting';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 import { findCellElement } from './utils';
 import {
@@ -35,7 +37,6 @@ import {
   checkRowReorderValid,
   commitRowReorder,
   evaluateRowDropTarget,
-  getAutoScrollDelta,
   getRowDropPosition,
   getRowIdFromElement,
   hasLeftPendingExpansion,
@@ -68,9 +69,7 @@ interface RowDragSession {
   rowId: GridRowId;
   clientX: number;
   clientY: number;
-  preview: HTMLElement;
-  previewOffsetX: number;
-  previewOffsetY: number;
+  preview: DragPreview;
   dropTarget: RowReorderDropTarget | null;
   previousTargetId: GridRowId | null;
   previousDropPosition: RowReorderDropPosition | null;
@@ -78,6 +77,10 @@ interface RowDragSession {
   pendingExpansion: { rowId: GridRowId; clientX: number; clientY: number } | null;
   autoScrollFrame: number | undefined;
 }
+
+// The scroll areas of HTML drag and drop show while a row is dragged.
+// They cover the edges of the rows, so hit-testing skips them.
+const HIT_TEST_IGNORE_SELECTOR = `.${gridClasses.scrollArea}`;
 
 const addClasses = (element: Element | null, className: string) => {
   // `composeClasses` returns the default class and the custom ones, separated by spaces
@@ -101,41 +104,33 @@ export const useGridRowReorderPointer = (
   const classes = useUtilityClasses({ classes: props.classes });
   const expandTimeout = useTimeout();
   const sessionRef = React.useRef<RowDragSession | null>(null);
-  // The pointer type of the last press on a row reorder handle
-  const handlePointerTypeRef = React.useRef<string | null>(null);
 
-  const isRowDragAllowed = (): boolean =>
+  const isRowReorderAllowedNow = (): boolean =>
     isRowReorderAllowed({
       rowReordering: props.rowReordering,
       sortModel: gridSortModelSelector(apiRef),
       editRowsState: gridEditRowsStateSelector(apiRef),
     });
 
-  const getDraggableHandle = (target: EventTarget | null): HTMLElement | null => {
-    const root = apiRef.current.rootElementRef?.current;
-    const handle = (target as Element | null)?.closest?.<HTMLElement>(
-      `.${gridClasses['rowReorderCell--draggable']}`,
-    );
-    // Ignore the handles of nested grids, for example in a detail panel
-    if (!handle || !root || handle.closest(`.${gridClasses.root}`) !== root) {
-      return null;
-    }
-    return handle;
-  };
-
-  const resetDrag = () => {
-    expandTimeout.clear();
-    const session = sessionRef.current;
+  // A session can end while its drop is still committing, and a newer drag can start meanwhile.
+  // Only the current session resets the shared reorder state; an older one only reverts its own DOM changes.
+  const resetDrag = (session: RowDragSession | null = sessionRef.current) => {
     if (!session) {
+      expandTimeout.clear();
+      return;
+    }
+    cancelAnimationFrame(session.autoScrollFrame!);
+    session.preview.remove();
+    const isCurrent = sessionRef.current === session;
+    const root = apiRef.current.rootElementRef?.current;
+    if (root && (isCurrent || sessionRef.current?.rowId !== session.rowId)) {
+      removeClasses(getGridRowElement(root, session.rowId), classes.rowBeingDragged);
+    }
+    if (!isCurrent) {
       return;
     }
     sessionRef.current = null;
-    cancelAnimationFrame(session.autoScrollFrame!);
-    session.preview.remove();
-    const root = apiRef.current.rootElementRef?.current;
-    if (root) {
-      removeClasses(getGridRowElement(root, session.rowId), classes.rowBeingDragged);
-    }
+    expandTimeout.clear();
     apiRef.current.setState((state) => ({
       ...state,
       rowReorder: {
@@ -145,23 +140,13 @@ export const useGridRowReorderPointer = (
     }));
   };
 
-  const movePreview = (session: RowDragSession) => {
-    const root = apiRef.current.rootElementRef?.current;
-    if (!root) {
-      return;
-    }
-    const rootRect = root.getBoundingClientRect();
-    const x = session.clientX - rootRect.left - session.previewOffsetX;
-    const y = session.clientY - rootRect.top - session.previewOffsetY;
-    session.preview.style.transform = `translate(${x}px, ${y}px)`;
-  };
-
   // Mirrors the drag over logic of `useGridRowReorder`
   const updateDropTarget = (session: RowDragSession, elementAtPoint: Element | null) => {
     const root = apiRef.current.rootElementRef?.current;
     const rowElement = elementAtPoint?.closest(`.${gridClasses.row}`);
-    // Outside of the rows, the last drop target is kept, like with HTML drag and drop
-    if (!root || !elementAtPoint || !rowElement || !root.contains(rowElement)) {
+    // Outside of the rows, the last drop target is kept, like with HTML drag and drop.
+    // The rows of a nested grid, for example in a detail panel, aren't drop targets.
+    if (!elementAtPoint || !rowElement || !isElementInGrid(root, rowElement)) {
       return;
     }
     const targetId = getRowIdFromElement(apiRef, rowElement);
@@ -233,7 +218,7 @@ export const useGridRowReorderPointer = (
     const rect = scroller.getBoundingClientRect();
     if (session.clientX >= rect.left && session.clientX <= rect.right) {
       const dimensions = gridDimensionsSelector(apiRef);
-      const delta = getAutoScrollDelta(
+      const delta = getEdgeScrollDelta(
         session.clientY,
         rect.top + dimensions.headersTotalHeight,
         rect.bottom - (dimensions.hasScrollX ? dimensions.scrollbarSize : 0),
@@ -242,7 +227,10 @@ export const useGridRowReorderPointer = (
         const { top, left } = apiRef.current.getScrollPosition();
         apiRef.current.scroll({ top: top + delta, left });
         // The rows moved under a pointer that may not move
-        updateDropTarget(session, getElementAtPoint(root, session.clientX, session.clientY));
+        updateDropTarget(
+          session,
+          getElementAtPoint(root, session.clientX, session.clientY, HIT_TEST_IGNORE_SELECTOR),
+        );
       }
     }
 
@@ -251,38 +239,25 @@ export const useGridRowReorderPointer = (
 
   const startDrag = (position: PointerDragPosition<DragData>) => {
     const root = apiRef.current.rootElementRef?.current;
-    // Reordering can get disabled during the long press.
-    // Without a session, the rest of the gesture does nothing.
-    if (!root || !isRowDragAllowed()) {
-      return;
+    // Reordering can get disabled during the long press
+    if (!root || !isRowReorderAllowedNow()) {
+      return false;
     }
 
     const { rowId, handle } = position.data;
     logger.debug(`Start dragging row ${rowId} with a ${position.pointerType} pointer`);
 
-    // The preview replaces the drag image of HTML drag and drop
-    const handleRect = handle.getBoundingClientRect();
-    const preview = handle.cloneNode(true) as HTMLElement;
-    addClasses(preview, classes.rowDragging);
-    preview.setAttribute('aria-hidden', 'true');
-    Object.assign(preview.style, {
-      position: 'absolute',
-      top: '0',
-      left: '0',
-      height: `${handleRect.height}px`,
-      margin: '0',
-      pointerEvents: 'none',
-      zIndex: '100',
-    });
-    root.appendChild(preview);
-
     const session: RowDragSession = {
       rowId,
       clientX: position.clientX,
       clientY: position.clientY,
-      preview,
-      previewOffsetX: position.clientX - handleRect.left,
-      previewOffsetY: position.clientY - handleRect.top,
+      // Replaces the drag image of HTML drag and drop
+      preview: createDragPreview(handle, {
+        container: root,
+        clientX: position.clientX,
+        clientY: position.clientY,
+        className: classes.rowDragging,
+      }),
       dropTarget: null,
       previousTargetId: null,
       previousDropPosition: null,
@@ -291,7 +266,6 @@ export const useGridRowReorderPointer = (
       autoScrollFrame: undefined,
     };
     sessionRef.current = session;
-    movePreview(session);
 
     apiRef.current.setState((state) => ({
       ...state,
@@ -306,6 +280,7 @@ export const useGridRowReorderPointer = (
 
     updateDropTarget(session, position.elementAtPoint);
     session.autoScrollFrame = requestAnimationFrame(autoScroll);
+    return true;
   };
 
   const moveDrag = (position: PointerDragPosition<DragData>) => {
@@ -315,7 +290,7 @@ export const useGridRowReorderPointer = (
     }
     session.clientX = position.clientX;
     session.clientY = position.clientY;
-    movePreview(session);
+    session.preview.move(session.clientX, session.clientY);
     updateDropTarget(session, position.elementAtPoint);
   };
 
@@ -324,7 +299,7 @@ export const useGridRowReorderPointer = (
     const session = sessionRef.current;
     const root = apiRef.current.rootElementRef?.current;
     if (!session || !root) {
-      resetDrag();
+      resetDrag(session);
       return;
     }
 
@@ -334,8 +309,8 @@ export const useGridRowReorderPointer = (
     session.preview.remove();
 
     const { rowId, dropTarget, dragDirection } = session;
-    if (!position.isInside || !dropTarget || !dragDirection || !isRowDragAllowed()) {
-      resetDrag();
+    if (!position.isInside || !dropTarget || !dragDirection || !isRowReorderAllowedNow()) {
+      resetDrag(session);
       return;
     }
 
@@ -346,24 +321,24 @@ export const useGridRowReorderPointer = (
       dragDirection,
     });
     if (!isValid) {
-      resetDrag();
+      resetDrag(session);
       return;
     }
 
     try {
-      // `resetDrag` clears the reorder state before the event, like `useGridRowReorder`
+      // The reorder state is cleared before the event, like in `useGridRowReorder`
       await commitRowReorder(
         apiRef,
         rowId,
         dropTarget,
         (move) => animateRowMove(root, move),
-        resetDrag,
+        () => resetDrag(session),
       );
     } catch {
       // The reorder failed: skip the `rowOrderChange` event.
     }
 
-    resetDrag();
+    resetDrag(session);
   };
 
   const pointerDrag = usePointerDrag<DragData>({
@@ -371,57 +346,23 @@ export const useGridRowReorderPointer = (
     onDragStart: startDrag,
     onDragMove: moveDrag,
     onDragEnd: endDrag,
-    onDragCancel: resetDrag,
+    onDragCancel: () => resetDrag(),
+    hitTestIgnoreSelector: HIT_TEST_IGNORE_SELECTOR,
   });
 
-  const handlePointerDown = useEventCallback((event: PointerEvent) => {
-    const handle = getDraggableHandle(event.target);
-    if (!handle) {
-      return;
-    }
-    handlePointerTypeRef.current = event.pointerType;
-
-    // The mouse keeps using HTML drag and drop
-    if (event.pointerType === 'mouse' || !isRowDragAllowed()) {
-      return;
-    }
-
-    const rowElement = handle.closest(`.${gridClasses.row}`);
-    const rowId = rowElement ? getRowIdFromElement(apiRef, rowElement) : null;
-    if (rowId === null) {
-      return;
-    }
-    pointerDrag.onPointerDown(event, { rowId, handle });
+  useGridPointerDragRouting(apiRef, {
+    handleSelector: `.${gridClasses['rowReorderCell--draggable']}`,
+    onPointerDown: (event, handle) => {
+      if (!isRowReorderAllowedNow()) {
+        return;
+      }
+      const rowElement = handle.closest(`.${gridClasses.row}`);
+      const rowId = rowElement ? getRowIdFromElement(apiRef, rowElement) : null;
+      if (rowId !== null) {
+        pointerDrag.onPointerDown(event, { rowId, handle });
+      }
+    },
   });
-
-  // A long press on a draggable element starts a native drag on some browsers (Chrome on Android).
-  // It would cancel the pointer events, so it's blocked when the handle was pressed with touch or pen.
-  // Stopping the propagation in the capture phase also keeps `useGridRowReorder` from seeing it.
-  const handleNativeDragStart = useEventCallback((event: DragEvent) => {
-    if (
-      handlePointerTypeRef.current !== null &&
-      handlePointerTypeRef.current !== 'mouse' &&
-      getDraggableHandle(event.target)
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  });
-
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current.rootElementRef?.current,
-    'pointerdown',
-    handlePointerDown,
-  );
-
-  useGridNativeEventListener(
-    apiRef,
-    () => apiRef.current.rootElementRef?.current,
-    'dragstart',
-    handleNativeDragStart,
-    { capture: true },
-  );
 
   React.useEffect(() => {
     return () => {

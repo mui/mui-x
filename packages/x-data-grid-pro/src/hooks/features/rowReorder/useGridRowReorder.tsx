@@ -128,6 +128,8 @@ export const useGridRowReorder = (
     targetRowIndex: null,
     dropPosition: null,
   });
+  // A new object for each started drag, to tell whether a newer drag started while a drop was committing
+  const currentDragRef = React.useRef<{ rowId: GridRowId } | null>(null);
 
   React.useEffect(() => {
     return () => {
@@ -205,6 +207,7 @@ export const useGridRowReorder = (
       }
 
       logger.debug(`Start dragging row ${params.id}`);
+      currentDragRef.current = { rowId: params.id };
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
@@ -366,6 +369,17 @@ export const useGridRowReorder = (
         return;
       }
 
+      // The drop can take time to commit, for example with an async `processRowUpdate`.
+      // A drag started meanwhile owns the shared state: this drag only reverts its row's style then.
+      const drag = currentDragRef.current;
+      const resetAfterCommit = () => {
+        if (currentDragRef.current === drag) {
+          resetRowDragState();
+        } else if (currentDragRef.current?.rowId !== dragRowId) {
+          applyDraggedState(dragRowId, false);
+        }
+      };
+
       if (timeoutInfoRef.current) {
         timeout.clear();
         timeoutInfoRef.current = EMPTY_TIMEOUT_INFO;
@@ -406,7 +420,7 @@ export const useGridRowReorder = (
                 position: dropTarget.current.dropPosition as RowReorderDropPosition,
               },
               applyRowAnimation,
-              resetRowDragState,
+              resetAfterCommit,
             );
           } catch {
             // The reorder failed: skip the `rowOrderChange` event.
@@ -417,7 +431,7 @@ export const useGridRowReorder = (
 
       // Catch-all cleanup: also covers a rejected drop, a missing drop target,
       // and an animation that bailed out before it ran the reorder callback.
-      resetRowDragState();
+      resetAfterCommit();
     },
     [
       apiRef,
@@ -426,6 +440,7 @@ export const useGridRowReorder = (
       logger,
       timeout,
       applyRowAnimation,
+      applyDraggedState,
       resetRowDragState,
     ],
   );

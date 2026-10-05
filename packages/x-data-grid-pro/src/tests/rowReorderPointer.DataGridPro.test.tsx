@@ -5,7 +5,6 @@ import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { DataGridProProps, GridApi } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
-import { getAutoScrollDelta } from '../hooks/features/rowReorder/rowReorderDragUtils';
 
 // Longer than the long press delay of touch input
 const LONG_PRESS = 350;
@@ -48,11 +47,12 @@ describe('<DataGridPro /> - Row reorder with pointer events', () => {
 
   let apiRef: React.RefObject<GridApi | null>;
 
-  function Test(props: Partial<DataGridProProps>) {
+  function Test(props: Partial<DataGridProProps> & { height?: number }) {
+    const { height = 300, ...other } = props;
     apiRef = useGridApiRef();
     return (
-      <div style={{ width: 300, height: 300 }}>
-        <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering {...props} />
+      <div style={{ width: 300, height }}>
+        <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering {...other} />
       </div>
     );
   }
@@ -162,6 +162,101 @@ describe('<DataGridPro /> - Row reorder with pointer events', () => {
       expect(apiRef.current!.state.rowReorder.isActive).to.equal(false);
     });
 
+    it('should end the gesture when reordering got disabled during the long press', async () => {
+      render(<Test />);
+      const handle = getHandle(0);
+      const start = getPointInRow(0, 0.5);
+
+      fireEvent.pointerDown(handle, pointer('touch', start.x, start.y));
+      await act(async () => {
+        apiRef.current!.setSortModel([{ field: 'brand', sort: 'asc' }]);
+      });
+      await waitForLongPress();
+      expect(apiRef.current!.state.rowReorder.isActive).to.equal(false);
+      expect(document.querySelector(`.${gridClasses['row--dragging']}`)).to.equal(null);
+      fireEvent.pointerUp(handle, pointer('touch', start.x, start.y));
+
+      // The refused gesture didn't keep a session that would ignore the next press
+      await act(async () => {
+        apiRef.current!.setSortModel([]);
+      });
+      await startTouchDrag(0);
+      expect(apiRef.current!.state.rowReorder.isActive).to.equal(true);
+    });
+
+    it('should not use the rows of a nested grid as drop targets', async () => {
+      render(
+        <Test
+          height={600}
+          getDetailPanelHeight={() => 100}
+          // Mimics a nested grid that reuses the row ids of the parent grid
+          getDetailPanelContent={({ row }) =>
+            row.id === 2 ? (
+              <div className={gridClasses.root}>
+                <div className={gridClasses.row} data-id="0" style={{ height: 80 }}>
+                  Nested row
+                </div>
+              </div>
+            ) : null
+          }
+          initialState={{ detailPanel: { expandedRowIds: new Set([2]) } }}
+        />,
+      );
+      const getRow = (id: number) =>
+        document.querySelector<HTMLElement>(`.${gridClasses.row}[data-id="${id}"]`)!;
+      const getPoint = (element: Element, ratioY: number) => {
+        const rect = element.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height * ratioY };
+      };
+
+      const handle = getRow(1).querySelector<HTMLElement>(
+        `.${gridClasses['rowReorderCell--draggable']}`,
+      )!;
+      const start = getPoint(getRow(1), 0.5);
+      fireEvent.pointerDown(handle, pointer('touch', start.x, start.y));
+      await waitForLongPress();
+
+      const target = getPoint(getRow(2), 0.75);
+      fireEvent.pointerMove(handle, pointer('touch', target.x, target.y));
+      expect(apiRef.current!.state.rowReorder.dropTarget).to.deep.equal({
+        rowId: 2,
+        position: 'below',
+      });
+
+      const nestedRow = document.querySelector(`.${gridClasses.detailPanel} .${gridClasses.row}`)!;
+      const nested = getPoint(nestedRow, 0.25);
+      fireEvent.pointerMove(handle, pointer('touch', nested.x, nested.y));
+      expect(apiRef.current!.state.rowReorder.dropTarget).to.deep.equal({
+        rowId: 2,
+        position: 'below',
+      });
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+    });
+
+    it('should find the row under the scroll areas of HTML drag and drop', async () => {
+      const manyRows = Array.from({ length: 30 }, (_, id) => ({ id, brand: `Brand ${id}` }));
+      render(<Test rows={manyRows} />);
+
+      const handle = await startTouchDrag(0);
+      const scroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      const scrollerRect = scroller.getBoundingClientRect();
+      const point = { x: scrollerRect.left + 50, y: scrollerRect.bottom - 10 };
+      // The scroll area shows while a row is dragged, over the bottom of the rows
+      expect(
+        document.elementFromPoint(point.x, point.y)!.closest(`.${gridClasses.scrollArea}`),
+      ).not.to.equal(null);
+      const rowUnder = document
+        .elementsFromPoint(point.x, point.y)
+        .find((element) => !element.closest(`.${gridClasses.scrollArea}`))!
+        .closest(`.${gridClasses.row}`)!;
+
+      fireEvent.pointerMove(handle, pointer('touch', point.x, point.y));
+      expect(apiRef.current!.state.rowReorder.dropTarget?.rowId).to.equal(
+        Number(rowUnder.getAttribute('data-id')),
+      );
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+    });
+
     it('should not start a drag when row reordering is disabled by sorting', async () => {
       render(<Test initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }} />);
       const handle = getHandle(0);
@@ -217,23 +312,5 @@ describe('<DataGridPro /> - Row reorder with pointer events', () => {
       fireEvent(handle, dragStartEvent);
       expect(onRowDragStart).toHaveBeenCalledTimes(1);
     });
-  });
-});
-
-describe('getAutoScrollDelta', () => {
-  it('should not scroll away from the edges', () => {
-    expect(getAutoScrollDelta(150, 100, 300)).to.equal(0);
-  });
-
-  it('should scroll up near the top edge, faster closer to it', () => {
-    const slow = getAutoScrollDelta(120, 100, 300);
-    const fast = getAutoScrollDelta(101, 100, 300);
-    expect(slow).to.be.lessThan(0);
-    expect(fast).to.be.lessThan(slow);
-  });
-
-  it('should scroll down near the bottom edge, and cap the speed past it', () => {
-    expect(getAutoScrollDelta(290, 100, 300)).to.be.greaterThan(0);
-    expect(getAutoScrollDelta(400, 100, 300)).to.equal(getAutoScrollDelta(300, 100, 300));
   });
 });
