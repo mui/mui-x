@@ -2,7 +2,6 @@ import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import type { SchedulerState } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -258,14 +257,6 @@ export function findDuplicateDependency(
         entry.target === dependency.target &&
         entry.type === dependency.type,
     );
-}
-
-/**
- * Whether dependencies cannot be created, edited or deleted: only the scheduler-wide
- * `readOnly` makes them read-only. A read-only event is protected by the cascade veto.
- */
-export function isDependencyReadOnly(state: Pick<SchedulerState, 'readOnly'>): boolean {
-  return state.readOnly;
 }
 
 /**

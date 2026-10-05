@@ -13,10 +13,7 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import {
-  getDependencyEdges,
-  isDependencyReadOnly,
-} from '@mui/x-scheduler-internals-premium/internals';
+import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
 import type { SchedulerDependencyCreation } from '@mui/x-scheduler-internals-premium/models';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
@@ -198,7 +195,7 @@ function DependencyTerminalsLayerImpl() {
   const selected = useStore(store, eventTimelinePremiumDependencySelectors.selectedModel);
   // Only the scheduler-wide `readOnly` removes the terminals: a read-only event can still
   // be linked, the cascade veto protects it.
-  const isReadOnly = useStore(store, isDependencyReadOnly);
+  const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
   const {
     resolver,
     resources,

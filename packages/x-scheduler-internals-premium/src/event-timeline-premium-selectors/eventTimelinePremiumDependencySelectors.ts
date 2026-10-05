@@ -13,7 +13,6 @@ import {
   getActiveDependencies,
   getEffectiveDependencyLag,
   groupByEventId,
-  isDependencyReadOnly,
 } from '../internals/utils/dependency-utils';
 
 // Typed against the two slices they read, so the scheduling plugin (generic over
@@ -140,15 +139,13 @@ export const eventTimelinePremiumDependencySelectors = {
     return editor !== null && state.dependencyModelLookup.has(editor.dependencyId) ? editor : null;
   },
   /**
-   * Whether the dependency cannot be edited or deleted (the scheduler is read-only).
-   * Unknown ids resolve to `false`.
+   * Whether dependencies cannot be created, edited or deleted: only the scheduler-wide
+   * `readOnly` locks them. A read-only event is protected by the cascade veto instead.
    */
-  isModelReadOnly: (state: State, dependencyId: SchedulerDependencyId | null) => {
-    const dependency =
-      dependencyId === null ? undefined : state.dependencyModelLookup.get(dependencyId);
-    if (!dependency) {
-      return false;
-    }
-    return isDependencyReadOnly(state);
-  },
+  isReadOnly: (state: DependenciesState) => state.readOnly,
+  /**
+   * Whether the dependency cannot be edited or deleted. Unknown ids resolve to `false`.
+   */
+  isModelReadOnly: (state: State, dependencyId: SchedulerDependencyId | null) =>
+    dependencyId !== null && state.dependencyModelLookup.has(dependencyId) && state.readOnly,
 };

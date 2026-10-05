@@ -36,7 +36,6 @@ import {
   groupByEventId,
   groupRetainedDependenciesBySource,
   isDependencyActive,
-  isDependencyReadOnly,
   getDependencyLagIssue,
   isDependencyType,
 } from '../utils/dependency-utils';
@@ -214,7 +213,7 @@ export class SchedulerSchedulingPlugin<
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,
   ): SchedulerAddDependencyResult => {
-    if (isDependencyReadOnly(this.store.state)) {
+    if (eventTimelinePremiumDependencySelectors.isReadOnly(this.store.state)) {
       return { status: 'rejected', reason: 'readOnly' };
     }
     const { processedEventLookup } = this.store.state;
@@ -267,7 +266,7 @@ export class SchedulerSchedulingPlugin<
     if (dependency === undefined) {
       return { status: 'rejected', reason: 'unknownDependency' };
     }
-    if (isDependencyReadOnly(this.store.state)) {
+    if (eventTimelinePremiumDependencySelectors.isReadOnly(this.store.state)) {
       return { status: 'rejected', reason: 'readOnly' };
     }
 
@@ -389,7 +388,10 @@ export class SchedulerSchedulingPlugin<
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean => {
     const dependency = this.store.state.dependencyModelLookup.get(dependencyId);
-    if (dependency === undefined || isDependencyReadOnly(this.store.state)) {
+    if (
+      dependency === undefined ||
+      eventTimelinePremiumDependencySelectors.isReadOnly(this.store.state)
+    ) {
       return false;
     }
     const current = this.store.state.dependencyModelList;
