@@ -17,6 +17,7 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import type {
   SchedulerAddDependencyResult,
   SchedulerDependency,
+  SchedulerDependencyCascadeBlockedRejection,
   SchedulerDependencyCreationProperties,
   SchedulerDependencyId,
   SchedulerDependenciesParameters,
@@ -318,7 +319,7 @@ export class SchedulerSchedulingPlugin<
   private commitDependencyChange(
     nextList: SchedulerDependency[],
     enforced: SchedulerDependency | null,
-  ): { status: 'rejected'; reason: 'cascadeBlocked'; eventId: SchedulerEventId } | null {
+  ): SchedulerDependencyCascadeBlockedRejection | null {
     const { adapter, processedEventLookup } = this.store.state;
     const activeDependencies = getActiveDependencies(
       buildDependenciesState(nextList).dependencyModelLookup,

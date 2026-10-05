@@ -138,7 +138,7 @@ export type SchedulerDependencyRejectionReason =
  * The dependency, as created or made stricter, is broken by the dates of its events, and
  * restoring it (or the cascade behind it) would move the read-only `eventId`.
  */
-type SchedulerDependencyCascadeBlockedRejection = {
+export type SchedulerDependencyCascadeBlockedRejection = {
   status: 'rejected';
   reason: 'cascadeBlocked';
   eventId: SchedulerEventId;
