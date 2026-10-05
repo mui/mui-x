@@ -4,41 +4,42 @@ title: Date and Time Pickers - Focus visible
 
 # Date and Time Pickers - Focus visible
 
-<p class="description">Theme the keyboard focus ring of the Date and Time Pickers.</p>
+<p class="description">Customize the focus ring that shows when users navigate the Date and Time Pickers with a keyboard.</p>
 
 ## Prerequisite
 
 This feature requires Material UI 9.4 or later, and MUI X 9.13 or later.
 
-You enable it once on the Material UI theme, and the Pickers pick it up—there's nothing to set on the picker itself:
+Turn it on in the Material UI theme.
+The Pickers use it automatically, so you don't need to set any prop on the picker:
 
 ```tsx
 const theme = createTheme({ focusVisible: true });
 ```
 
-See [Focus visible](/material-ui/customization/focus-visible/) for customization details.
+See Material UI's [Focus visible](/material-ui/customization/focus-visible/) page to customize the ring.
 
 ## Usage
 
-Every interactive element in the Pickers uses the ring: day cells, year and month buttons, the clocks, and the calendar header controls.
-They all match, and they all follow the theme.
+When `focusVisible` is enabled, these elements show the focus ring: day cells, month and year buttons, clocks, and the buttons in the calendar header.
 
-Nothing changes until you opt in.
-Tab into the demo below, then use the arrow keys to see the focus indicator.
-Open the month dropdown in the calendar header to reach the year list.
+:::info
+The focus ring only shows when you use the keyboard. Clicking doesn't show it.
+
+The demos on this page turn off the ripple effect, so you only see the focus ring.
+:::
+
+Press <kbd class="key">Tab</kbd> to move into the demo below, then use the arrow keys to move between items.
+To reach the year list, open the month dropdown in the calendar header.
 
 {{"demo": "FocusVisiblePickers.js", "bg": "inline"}}
 
-:::info
-The ring is for keyboard users. Clicking won't show it—press <kbd class="key">Tab</kbd>.
-
-The demos on this page opt out of the ripple to show only the focus visible indicator.
-:::
-
 :::warning
-**The "today" marker gets out of the way.** It's normally drawn with `outline`, the same single CSS property the ring uses, so the two can't both render.
+Today's date is marked with a circle drawn with the CSS `outline` property.
+The focus ring also uses `outline`, and an element can only have one.
 
-While a day is focused, the marker is drawn as an inset `box-shadow` instead. A focused "today" shows both: the ring around the cell, the marker inside it.
+So when today's date has focus, the circle is drawn with `box-shadow` instead, and you see both the ring and the circle.
 
-This only happens when you opt in. Otherwise the marker keeps using `outline`, so an override on the `.MuiPickerDay-today` class still applies as before.
+This only happens when the focus ring is turned on.
+Otherwise, today's date still uses `outline`, so your existing styles on the `today` class keep working.
 :::

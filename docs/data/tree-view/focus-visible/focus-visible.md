@@ -4,35 +4,35 @@ title: Tree View - Focus visible
 
 # Tree View - Focus visible
 
-<p class="description">Theme the keyboard focus ring of the Tree View.</p>
+<p class="description">Customize the focus ring that shows when users navigate the Tree View with a keyboard.</p>
 
 ## Prerequisite
 
 This feature requires Material UI 9.4 or later, and MUI X 9.13 or later.
 
-You enable it once on the Material UI theme, and the Tree View picks it up—there's nothing to set on the tree itself:
+Turn it on in the Material UI theme.
+The Tree View uses it automatically, so you don't need to set any prop on the tree:
 
 ```tsx
 const theme = createTheme({ focusVisible: true });
 ```
 
-See [Focus visible](/material-ui/customization/focus-visible/) for customization details.
+See Material UI's [Focus visible](/material-ui/customization/focus-visible/) page to customize the ring.
 
 ## Usage
 
-Every interactive element in the Tree View uses the ring: item rows, checkboxes, and the rename input when [label editing](/x/react-tree-view/rich-tree-view/editing/) is on.
-They all match, and they all follow the theme.
+When `focusVisible` is enabled, these elements show the focus ring: items, checkboxes, and the input used to rename an item when [label editing](/x/react-tree-view/rich-tree-view/editing/) is enabled.
 
-The ring marks the row you're on, so it takes over from the background tint that used to do that. Selected rows keep their own background.
-
-Nothing changes until you opt in.
-Tab into the demo below, then use the arrow keys to see the focus indicator.
-Press <kbd class="key">Enter</kbd> on an item to rename it—the input takes the ring too.
-
-{{"demo": "FocusVisibleTreeView.js", "bg": "inline"}}
+The focus ring replaces the gray background that normally marks the focused item.
+Selected items keep their selected background.
 
 :::info
-The ring is for keyboard users. Clicking won't show it—press <kbd class="key">Tab</kbd>.
+The focus ring only shows when you use the keyboard. Clicking doesn't show it.
 
-The demos on this page opt out of the ripple to show only the focus visible indicator.
+The demos on this page turn off the ripple effect, so you only see the focus ring.
 :::
+
+Press <kbd class="key">Tab</kbd> to move into the demo below, then use the arrow keys to move between items.
+Press <kbd class="key">Enter</kbd> on an item to rename it.
+
+{{"demo": "FocusVisibleTreeView.js", "bg": "inline"}}
