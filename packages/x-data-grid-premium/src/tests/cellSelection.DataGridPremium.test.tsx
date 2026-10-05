@@ -1605,7 +1605,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
             />,
           );
 
-          // value of rows 0 and 2, row 1 left out
+          // value of rows 0 and 2
           await user.click(getCell(0, 2));
           await user.keyboard('{Control>}');
           await user.click(getCell(2, 2));
@@ -1641,7 +1641,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
             />,
           );
 
-          // Column indexes are shifted by the checkbox column
+          // Checkbox column shifts indexes by one
           await user.click(getCell(0, 3)); // value=10
 
           const handleCell = document.querySelector(
@@ -1819,7 +1819,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
             />,
           );
 
-          // name/value of rows 0-1: [[Alice, 10], [Bob, 20]]
+          // [[Alice, 10], [Bob, 20]]
           await user.click(getCell(0, 1));
           await user.keyboard('{Shift>}');
           await user.click(getCell(1, 2));
@@ -1863,7 +1863,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
               />,
             );
 
-            // value of rows 1-2: [20, 30]
+            // [20, 30]
             await user.click(getCell(1, 2));
             await user.keyboard('{Shift>}');
             await user.click(getCell(2, 2));
@@ -1890,7 +1890,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
             />,
           );
 
-          // value of rows 1-2: [20, 30]
+          // [20, 30]
           await user.click(getCell(1, 2));
           await user.keyboard('{Shift>}');
           await user.click(getCell(2, 2));

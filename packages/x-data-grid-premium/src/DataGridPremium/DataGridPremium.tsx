@@ -283,7 +283,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   /**
    * If `true`, a fill handle is shown at the bottom-right corner of the cell selection.
    * Dragging the fill handle fills target cells with the values from selected cells.
-   * If an object is provided, you can choose the directions the fill handle can fill in.
+   * Pass an object to set the fill directions.
    * Requires `cellSelection` to be enabled.
    * @default false
    */

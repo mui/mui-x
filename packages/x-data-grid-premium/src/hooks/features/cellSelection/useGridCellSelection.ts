@@ -108,7 +108,7 @@ type FillHandleDirection = NonNullable<
 
 interface FillSourceState {
   cells: GridCellCoordinates[];
-  // Rows and columns spanned by the source block, gaps included
+  // Source block span, gaps included
   rowIds: GridRowId[];
   fields: string[];
   cellLookup: Map<string, Map<string, GridCellCoordinates>>;
@@ -117,7 +117,7 @@ interface FillSourceState {
   rowIdMap: Map<string, GridRowId>;
 }
 
-// `offset` is relative to the first row or column of the source block
+// `offset` is relative to the source block start
 interface FillTargetRow {
   id: GridRowId;
   offset: number;
@@ -128,7 +128,7 @@ interface FillTargetColumn {
   offset: number;
 }
 
-// Source cell repeated onto the target, or `null` for source block cells and unselected source positions
+// Tiled source cell for a target; `null` inside the source block or on a gap
 function getFillSourceCell(
   source: FillSourceState,
   row: FillTargetRow,
@@ -815,7 +815,6 @@ export const useGridCellSelection = (
         if (!sourceCell) {
           continue;
         }
-        // A dragged formula is copied with its references adjusted for the target cell
         const pastedCellValue =
           apiRef.current.getFilledFormulaSource?.(sourceCell, {
             id: row.id,
@@ -963,7 +962,6 @@ export const useGridCellSelection = (
         cellLookup,
         rowIndexRange,
         columnIndexRange,
-        // O(1) row id resolution during mousemove
         rowIdMap: new Map(visibleRows.map((row) => [String(row.id), row.id])),
       };
       fillDrag.current.direction = fillHandleDirection;
@@ -1035,11 +1033,10 @@ export const useGridCellSelection = (
             direction !== 'horizontal' && !isInRange(targetRowIndex, rowIndexRange);
           const isOutsideColRange =
             direction !== 'vertical' && !isInRange(targetColIndex, columnIndexRange);
-          // `orthogonal` extends rows first, `any` extends both axes
+          // `orthogonal` prefers rows, `any` extends both
           const extendsRows = isOutsideRowRange;
           const extendsColumns = isOutsideColRange && (direction === 'any' || !isOutsideRowRange);
 
-          // Rectangle spanned by the source and the pointer, source included
           const newTargetRows: FillTargetRow[] = [];
           const newTargetColumns: FillTargetColumn[] = [];
           if (extendsRows || extendsColumns) {
@@ -1674,7 +1671,7 @@ export const useGridCellSelection = (
 
   const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
     (initialValue, { event, cell }) => {
-      // The fill handle mouseup is not a click outside the focused cell
+      // Fill mouseup is not a click outside the focused cell
       if (fillSource.current && event.type === 'mouseup') {
         return false;
       }
