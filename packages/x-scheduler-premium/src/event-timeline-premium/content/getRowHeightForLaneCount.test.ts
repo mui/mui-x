@@ -26,6 +26,23 @@ describe('row-height invariant', () => {
     expect(getRowHeightForLaneCount(theme, 3)).to.be.closeTo(128.06, 1e-6);
   });
 
+  // A 20px font, different from the 14px fallback: 1.43 * 20 + 9 = 37.6.
+  it('should read a body2 font size given in px or as a number of px', () => {
+    for (const fontSize of ['20px', 20]) {
+      expect(
+        getEventsCellLaneMinHeight(createTheme({ typography: { body2: { fontSize } } })),
+      ).to.be.closeTo(37.6, 1e-6);
+    }
+  });
+
+  it('should convert other body2 font size lengths with the html font size', () => {
+    for (const fontSize of ['1.25rem', '1.25em', ' 1.25REM ']) {
+      expect(
+        getEventsCellLaneMinHeight(createTheme({ typography: { body2: { fontSize } } })),
+      ).to.be.closeTo(37.6, 1e-6);
+    }
+  });
+
   it('getRowHeightForLaneCount treats 0 and negative lane counts as one lane', () => {
     const oneLane = getRowHeightForLaneCount(theme, 1);
     expect(getRowHeightForLaneCount(theme, 0)).to.equal(oneLane);

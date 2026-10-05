@@ -34,10 +34,11 @@
     "@mui/x-internals": "workspace:^",
     "chance": "catalog:",
     "clsx": "catalog:",
-    "lru-cache": "^11.5.2"
+    "lru-cache": "^11.5.3"
   },
   "devDependencies": {
     "@mui/icons-material": "catalog:",
+    "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@types/chance": "catalog:",
     "react": "catalog:",

@@ -505,9 +505,11 @@ export interface DataGridPropsWithoutDefaultValue<
    */
   scrollbarSize?: number;
   /**
-   * The height of the Data Grid.
-   * Accepts a number (pixels) or any valid CSS height value (for example `'50vh'`).
-   * When set, the Data Grid no longer needs a parent element with an explicit height.
+   * The fixed height of the Data Grid.
+   * Accepts a number (pixels), a CSS length (for example `'50vh'`), a percentage, or a CSS calculation.
+   * Percentage values require a parent with an explicit height.
+   * Content-based values such as `'auto'`, `'min-content'`, `'max-content'`, and `'fit-content'` are not supported.
+   * For content-based sizing, use a flex parent container instead.
    */
   height?: number | string;
   /**
