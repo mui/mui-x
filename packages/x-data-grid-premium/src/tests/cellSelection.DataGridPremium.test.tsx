@@ -3,11 +3,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid, microtasks } from 'test/utils/helperFn';
 import { createRenderer, act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGridPremium, useGridApiRef, gridClasses } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  useGridApiRef,
+  gridClasses,
+  GRID_CHECKBOX_SELECTION_COL_DEF,
+} from '@mui/x-data-grid-premium';
 import type { DataGridPremiumProps, GridApi, GridColDef } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM, isOSX } from 'test/utils/skipIf';
-import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach, onTestFinished } from 'vitest';
 import type { MockInstance } from 'vitest';
 
 describe('<DataGridPremium /> - Cell selection', () => {
@@ -1285,7 +1290,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       async function simulateFillDrag(
         sourceCell: HTMLElement,
         targetCell: HTMLElement,
-        options?: { handleSide?: 'left' | 'right' },
+        options?: { handleSide?: 'left' | 'right'; release?: boolean },
       ) {
         const handleSide = options?.handleSide ?? 'right';
 
@@ -1314,6 +1319,9 @@ describe('<DataGridPremium /> - Cell selection', () => {
             });
           });
         });
+        if (options?.release === false) {
+          return;
+        }
         // Mouseup triggers applyFill
         act(() => {
           document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
@@ -1558,6 +1566,146 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
 
       describe('Fill direction', () => {
+        it('should preview the rectangle without the source block', async () => {
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle={{ direction: 'any' }}
+            />,
+          );
+
+          await user.click(getCell(0, 2));
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(1, 3), { release: false });
+          onTestFinished(() => {
+            document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+          });
+
+          expect(getCell(0, 2)).not.to.have.class(gridClasses['cell--fillPreview']);
+          expect(getCell(0, 3)).to.have.class(gridClasses['cell--fillPreview']);
+          expect(getCell(0, 3)).to.have.class(gridClasses['cell--fillPreviewTop']);
+          expect(getCell(1, 2)).to.have.class(gridClasses['cell--fillPreviewLeft']);
+          expect(getCell(1, 3)).to.have.class(gridClasses['cell--fillPreviewBottom']);
+          expect(getCell(1, 3)).to.have.class(gridClasses['cell--fillPreviewRight']);
+        });
+
+        it('should not fill or select cells that map to a gap in the source', async () => {
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle={{ direction: 'any' }}
+              processRowUpdate={processRowUpdateSpy}
+            />,
+          );
+
+          // value of rows 0 and 2, row 1 left out
+          await user.click(getCell(0, 2));
+          await user.keyboard('{Control>}');
+          await user.click(getCell(2, 2));
+          await user.keyboard('{/Control}');
+          const previousModel = apiRef.current!.getCellSelectionModel();
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(3, 3));
+
+          await waitFor(() => {
+            expect(getCell(2, 3).textContent).to.equal('30');
+          });
+          expect(getCell(0, 3).textContent).to.equal('10');
+          expect(getCell(3, 2).textContent).to.equal('10');
+          expect(getCell(1, 3).textContent).to.equal('B');
+          expect(getCell(1, 2)).not.to.have.class('Mui-selected');
+          expect(getCell(1, 3)).not.to.have.class('Mui-selected');
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(3);
+          expect(previousModel[0]).to.deep.equal({ value: true });
+        });
+
+        it('should not select special columns', async () => {
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              rowSelection
+              checkboxSelection
+              cellSelectionFillHandle={{ direction: 'any' }}
+            />,
+          );
+
+          // Column indexes are shifted by the checkbox column
+          await user.click(getCell(0, 3)); // value=10
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(1, 0));
+
+          await waitFor(() => {
+            expect(getCell(1, 3).textContent).to.equal('10');
+          });
+          expect(getCell(1, 2).textContent).to.equal('10');
+          expect(apiRef.current!.isCellSelected(1, GRID_CHECKBOX_SELECTION_COL_DEF.field)).to.equal(
+            false,
+          );
+        });
+
+        it('should only auto-scroll along the locked axis', async () => {
+          const columns = Array.from({ length: 10 }, (_, index) => ({
+            field: `c${index}`,
+            editable: true,
+          }));
+          const rows = Array.from({ length: 30 }, (_, id) => ({ id }));
+          const { user } = render(
+            <TestDataGridSelection
+              columns={columns}
+              rows={rows}
+              cellSelectionFillHandle={{ direction: 'horizontal' }}
+            />,
+          );
+
+          await user.click(getCell(0, 0));
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+          const scroller = document.querySelector<HTMLElement>(`.${gridClasses.virtualScroller}`)!;
+          const scrollerRect = scroller.getBoundingClientRect();
+
+          /* eslint-disable testing-library/no-unnecessary-act */
+          act(() => {
+            const rect = handleCell.getBoundingClientRect();
+            fireEvent.mouseDown(handleCell, { clientX: rect.right - 4, clientY: rect.bottom - 4 });
+          });
+          onTestFinished(() => {
+            document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+          });
+          act(() => {
+            document.dispatchEvent(
+              new MouseEvent('mousemove', {
+                clientX: scrollerRect.right - 30,
+                clientY: scrollerRect.bottom - 30,
+                bubbles: true,
+              }),
+            );
+          });
+          /* eslint-enable testing-library/no-unnecessary-act */
+
+          await waitFor(() => {
+            expect(scroller.scrollLeft).to.be.greaterThan(0);
+          });
+          expect(scroller.scrollTop).to.equal(0);
+        });
+
         it('should only fill rows with `direction: vertical`', async () => {
           const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(
@@ -1658,6 +1806,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
           expect(getCell(3, 3).textContent).to.equal('');
           expect(processRowUpdateSpy.mock.calls.length).to.equal(3);
           expect(getCell(2, 3)).to.have.class('Mui-selected');
+          expect(getCell(2, 3)).to.have.class(gridClasses['cell--withFillHandle']);
         });
 
         it('should repeat a source block across both axes', async () => {
@@ -1702,6 +1851,35 @@ describe('<DataGridPremium /> - Cell selection', () => {
             'Bob',
           ]);
         });
+
+        it.each(['orthogonal', 'any'] as const)(
+          'should anchor the pattern on the source when filling up with `direction: %s`',
+          async (direction) => {
+            const { user } = render(
+              <TestDataGridSelection
+                columns={fillColumns}
+                rows={fillRows}
+                cellSelectionFillHandle={{ direction }}
+              />,
+            );
+
+            // value of rows 1-2: [20, 30]
+            await user.click(getCell(1, 2));
+            await user.keyboard('{Shift>}');
+            await user.click(getCell(2, 2));
+            await user.keyboard('{/Shift}');
+
+            const handleCell = document.querySelector(
+              `.${gridClasses['cell--withFillHandle']}`,
+            )! as HTMLElement;
+
+            await simulateFillDrag(handleCell, getCell(0, 2));
+
+            await waitFor(() => {
+              expect(getCell(0, 2).textContent).to.equal('30');
+            });
+          },
+        );
 
         it('should anchor the pattern on the source when filling up and left', async () => {
           const { user } = render(

@@ -208,5 +208,34 @@ describe('<DataGridPremium /> - Formula fill handle', () => {
       expect(apiRef.current!.getRow('r2')!.total).to.contain('ROW("r2")');
       expect(apiRef.current!.getRow('r3')!.total).to.contain('ROW("r3")');
     });
+
+    it('adjusts references by both offsets when dragging the handle diagonally', async () => {
+      const { user } = render(
+        <TestGrid
+          columns={columns.map((column) =>
+            column.field === 'plain' ? { ...column, allowFormulas: true } : column,
+          )}
+          cellSelectionFillHandle={{ direction: 'any' }}
+        />,
+      );
+      await waitFor(() => expect(getCell(0, 2).textContent).to.equal('6'));
+
+      await user.click(getCell(0, 2));
+      const handle = document.querySelector(
+        `.${gridClasses['cell--withFillHandle']}`,
+      )! as HTMLElement;
+
+      await simulateFillDrag(handle, getCell(1, 3));
+
+      // r1 total: price(r1) * qty(r1) = 4 * 5
+      await waitFor(() => expect(getCell(1, 2).textContent).to.equal('20'));
+      // r0 plain: qty(r0) * total(r0) = 3 * 6
+      expect(getCell(0, 3).textContent).to.equal('18');
+      // r1 plain: qty(r1) * total(r1) = 5 * 20
+      expect(getCell(1, 3).textContent).to.equal('100');
+      const filled = apiRef.current!.getRow('r1')!.plain as string;
+      expect(filled).to.contain('COLUMN("qty")');
+      expect(filled).to.contain('ROW("r1")');
+    });
   });
 });
