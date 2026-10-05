@@ -1683,6 +1683,23 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
 
       describe('Fill preview', () => {
+        it('should keep the fill handle and focus after a drag that fills nothing', async () => {
+          const { user } = render(
+            <TestDataGridSelection columns={fillColumns} rows={fillRows} cellSelectionFillHandle />,
+          );
+
+          await user.click(getCell(0, 2));
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(0, 2));
+
+          expect(getCell(0, 2)).to.have.class(gridClasses['cell--withFillHandle']);
+          expect(getCell(0, 2)).toHaveFocus();
+        });
+
         it('should remove fill preview classes after mouse release', async () => {
           const processRowUpdateSpy = vi.fn((newRow) => newRow);
           const { user } = render(

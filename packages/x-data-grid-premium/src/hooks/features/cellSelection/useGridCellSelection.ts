@@ -1794,6 +1794,11 @@ export const useGridCellSelection = (
 
   const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
     (initialValue, { event, cell }) => {
+      // The fill handle mouseup is not a click outside the focused cell
+      if (fillSource.current) {
+        return false;
+      }
+
       if (!cell || !props.cellSelection || !event.shiftKey) {
         return initialValue;
       }
