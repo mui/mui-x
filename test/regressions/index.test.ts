@@ -44,10 +44,8 @@ interface RouteConfig {
    */
   viewport?: { width: number; height: number };
   /**
-   * Wait for this selector before screenshotting, on top of `navigateToTest`
-   * (fonts loaded, no `data-screenshot-pending` left, and the timers scheduled
-   * while mounting flushed). Prefer rendering `data-screenshot-pending` while
-   * the demo loads, so the wait doesn't need a rule.
+   * Wait for this selector before screenshotting, on top of `navigateToTest`.
+   * Prefer rendering `data-screenshot-pending` while the demo loads, so no rule is needed.
    */
   waitForSelector?: string;
 }
@@ -77,17 +75,6 @@ const TEST_RULES: RouteRule[] = [
     test: '/test-regressions-charts/LineChartPointerInteraction',
     // Dedicated tests handle mouse positioning.
     enabled: false,
-  },
-  {
-    test: '/test-regressions-charts/MapImageProjections',
-    // `MapImagePlot` reprojects each raster on a canvas asynchronously; the demo
-    // reveals this sentinel once every projection has finished rendering.
-    waitForSelector: '[data-testid="map-images-ready"]',
-  },
-  {
-    test: '/test-regressions-charts/MapImageAntimeridian',
-    // Same async reprojection sentinel as MapImageProjections.
-    waitForSelector: '[data-testid="map-images-ready"]',
   },
   {
     test: '/docs-charts-map/MarsMap',
