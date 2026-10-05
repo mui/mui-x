@@ -36,6 +36,7 @@ import {
   EventDialogFormContent,
   EventDialogHeader,
   EventDialogRoot,
+  getPaletteVariants,
   useEventEditingStyledContext,
 } from '@mui/x-scheduler/internals';
 import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals';
@@ -174,7 +175,39 @@ const DependencyDialogDetails = styled('dl', {
   color: (theme.vars || theme).palette.text.primary,
   '& dd': {
     margin: 0,
+    // Lets a long event title shrink to an ellipsis.
+    minWidth: 0,
   },
+}));
+
+// Styled like the event on the timeline (surface, text and accent stripe), so From and
+// To read as the events the arrow connects.
+const DependencyDialogEventChip = styled('span', {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogEventChip',
+})(({ theme }) => ({
+  position: 'relative',
+  display: 'inline-block',
+  maxWidth: '100%',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  verticalAlign: 'middle',
+  padding: theme.spacing(0.25, 1, 0.25, 1.5),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: 'var(--event-surface-subtle)',
+  color: 'var(--event-on-surface-subtle-primary)',
+  ...theme.typography.body2,
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 3,
+    background: 'var(--event-surface-accent)',
+  },
+  variants: getPaletteVariants(theme),
 }));
 
 /**
@@ -196,7 +229,10 @@ export function EventTimelinePremiumDependencyDialog() {
   return <DependencyDialog editor={editor} />;
 }
 
-interface DependencyDialogContentProps {
+interface DependencyDialogContentProps extends Pick<
+  SchedulerDependencyEditor,
+  'sourceResourceId' | 'targetResourceId'
+> {
   dependency: SchedulerDependency;
   anchor: HTMLElement;
   onClose: () => void;
@@ -206,7 +242,7 @@ interface DependencyDialogContentProps {
 const DependencyDialogContent = React.memo(function DependencyDialogContent(
   props: DependencyDialogContentProps,
 ) {
-  const { dependency, anchor, onClose } = props;
+  const { dependency, anchor, onClose, sourceResourceId, targetResourceId } = props;
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
   const isReadOnly = useStore(
@@ -221,6 +257,18 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
   const targetTitle = useStore(
     store,
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.title ?? '',
+  );
+  const sourceColor = useStore(
+    store,
+    schedulerEventSelectors.color,
+    dependency.source,
+    sourceResourceId,
+  );
+  const targetColor = useStore(
+    store,
+    schedulerEventSelectors.color,
+    dependency.target,
+    targetResourceId,
   );
   const isTargetAllDay = useStore(
     store,
@@ -312,9 +360,17 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
           <DependencyDialogBody>
             <DependencyDialogDetails>
               <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.sourceLabel}</Typography>
-              <Typography component="dd">{sourceTitle}</Typography>
+              <Typography component="dd">
+                <DependencyDialogEventChip data-palette={sourceColor} title={sourceTitle}>
+                  {sourceTitle}
+                </DependencyDialogEventChip>
+              </Typography>
               <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.targetLabel}</Typography>
-              <Typography component="dd">{targetTitle}</Typography>
+              <Typography component="dd">
+                <DependencyDialogEventChip data-palette={targetColor} title={targetTitle}>
+                  {targetTitle}
+                </DependencyDialogEventChip>
+              </Typography>
               {isReadOnly && (
                 <React.Fragment>
                   <Typography component="dt">{DEPENDENCY_DIALOG_TEXT.typeLabel}</Typography>
@@ -453,6 +509,8 @@ function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
           dependency={dependency}
           anchor={anchor}
           onClose={store.closeDependencyEditor}
+          sourceResourceId={editor.sourceResourceId}
+          targetResourceId={editor.targetResourceId}
         />
       )}
     </React.Fragment>

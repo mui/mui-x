@@ -3,6 +3,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  ResourceBuilder,
 } from 'test/utils/scheduler';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
@@ -204,6 +205,54 @@ describe('<EventTimelinePremium /> dependency editor', () => {
         ['From', 'Event A'],
         ['To', 'Event B'],
       ]);
+    });
+
+    it('should show the source and target in the colors of their events', async () => {
+      await renderTimeline({
+        events: [
+          EventBuilder.new()
+            .id('event-a')
+            .title('Event A')
+            .singleDay('2025-07-03T09:00:00Z')
+            .resource(resource1)
+            .color('pink')
+            .build(),
+          eventB,
+        ],
+        resources: [ResourceBuilder.new().id('r1').title('Resource 1').eventColor('lime').build()],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      const dialog = openDialog('dep-1');
+
+      expect(within(dialog).getByTitle('Event A')).to.have.attribute('data-palette', 'pink');
+      expect(within(dialog).getByTitle('Event B')).to.have.attribute('data-palette', 'lime');
+    });
+
+    it('should use the colors of the row of the opened arrow for a multi-resource event', async () => {
+      const multiResourceEvent = EventBuilder.new()
+        .id('event-m')
+        .title('Event M')
+        .singleDay('2025-07-03T13:00:00Z')
+        .resources([resource1, resource2])
+        .build();
+      await renderTimeline({
+        events: [eventA, multiResourceEvent],
+        resources: [
+          ResourceBuilder.new().id('r1').title('Resource 1').eventColor('blue').build(),
+          ResourceBuilder.new().id('r2').title('Resource 2').eventColor('orange').build(),
+        ],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-m')],
+      });
+
+      // One arrow per row of `event-m`, in row order.
+      const hitAreas = document.querySelectorAll('[data-dependency-hit="dep-1"]');
+      expect(hitAreas).to.have.length(2);
+      fireEvent.doubleClick(hitAreas[1]);
+
+      const dialog = screen.getByRole('dialog');
+      expect(within(dialog).getByTitle('Event A')).to.have.attribute('data-palette', 'blue');
+      expect(within(dialog).getByTitle('Event M')).to.have.attribute('data-palette', 'orange');
     });
 
     it('should change the type of the dependency on save', async () => {

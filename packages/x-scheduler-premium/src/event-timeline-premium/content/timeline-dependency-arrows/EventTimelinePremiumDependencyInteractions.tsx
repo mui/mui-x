@@ -17,6 +17,7 @@ import {
 } from './dependencyArrowHitArea';
 import { useDependencySelectionInteraction } from './useDependencySelectionInteraction';
 import type { DependencyContextMenuState } from './EventTimelinePremiumDependencyContextMenu';
+import type { DependencyArrow } from './dependencyArrowGeometry';
 import { EventTimelinePremiumDependencyContextMenu } from './EventTimelinePremiumDependencyContextMenu';
 
 // The hit paths never ride over an event the route crosses (the geometry cuts them
@@ -131,21 +132,28 @@ function DependencyInteractionsLayer({
     return { x: event.clientX - rect.left, y: event.clientY - rect.top + offsetTop };
   };
 
-  const handleDoubleClick = (dependencyId: SchedulerDependencyId, event: React.MouseEvent) => {
-    store.openDependencyEditor(dependencyId, toOverlayPoint(event));
+  // The rows of the arrow the user opened: the dialog shows the colors of those rows.
+  const getResourceIds = (arrow: DependencyArrow) => ({
+    sourceResourceId: arrow.sourceResourceId,
+    targetResourceId: arrow.targetResourceId,
+  });
+
+  const handleDoubleClick = (arrow: DependencyArrow, event: React.MouseEvent) => {
+    store.openDependencyEditor(arrow.id, toOverlayPoint(event), getResourceIds(arrow));
   };
 
-  const handleContextMenu = (dependencyId: SchedulerDependencyId, event: React.MouseEvent) => {
+  const handleContextMenu = (arrow: DependencyArrow, event: React.MouseEvent) => {
     if (isCoarsePointer()) {
       return;
     }
     event.preventDefault();
-    store.setSelectedDependencyId(dependencyId);
+    store.setSelectedDependencyId(arrow.id);
     onContextMenu({
       open: true,
-      dependencyId,
+      dependencyId: arrow.id,
       anchorPosition: { top: event.clientY - 4, left: event.clientX - 2 },
       editorAnchor: toOverlayPoint(event),
+      editorResourceIds: getResourceIds(arrow),
     });
   };
 
@@ -184,8 +192,8 @@ function DependencyInteractionsLayer({
           <g key={arrow.key}>
             <g
               onClick={() => handleSelect(arrow.id)}
-              onDoubleClick={(event) => handleDoubleClick(arrow.id, event)}
-              onContextMenu={(event) => handleContextMenu(arrow.id, event)}
+              onDoubleClick={(event) => handleDoubleClick(arrow, event)}
+              onContextMenu={(event) => handleContextMenu(arrow, event)}
               // The hover restyles the visual arrow, which lives in the arrows overlay
               // (below the rows, never hit by the pointer). On the group, so moving
               // between the line and the arrowhead does not leave the arrow.
@@ -219,7 +227,7 @@ function DependencyInteractionsLayer({
                 data-dependency-delete-button=""
                 onClick={() => store.deleteSelectedDependency()}
                 // It replaces the arrowhead: a right click there opens the same menu.
-                onContextMenu={(event) => handleContextMenu(arrow.id, event)}
+                onContextMenu={(event) => handleContextMenu(arrow, event)}
               >
                 <circle
                   cx={buttonX}

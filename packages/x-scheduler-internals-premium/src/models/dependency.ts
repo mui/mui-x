@@ -181,6 +181,12 @@ export interface SchedulerDependencyEditor {
    * `x` from the start of the events area, `y` in absolute row-space.
    */
   anchor: { x: number; y: number };
+  /**
+   * The resource of the row each end of the opened arrow is drawn on, so the dialog shows
+   * the colors of that arrow. `undefined` uses the event's primary resource.
+   */
+  sourceResourceId?: SchedulerResourceId;
+  targetResourceId?: SchedulerResourceId;
 }
 
 /**

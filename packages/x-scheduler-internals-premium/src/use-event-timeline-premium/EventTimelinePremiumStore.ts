@@ -439,6 +439,7 @@ export class EventTimelinePremiumStore<
   public openDependencyEditor = (
     dependencyId: SchedulerDependencyId,
     anchor: SchedulerDependencyEditor['anchor'],
+    resourceIds?: Pick<SchedulerDependencyEditor, 'sourceResourceId' | 'targetResourceId'>,
   ) => {
     // A stale caller (a menu left open on a removed dependency) must not store an editor
     // that would open by itself if the dependency came back.
@@ -448,7 +449,7 @@ export class EventTimelinePremiumStore<
     if (this.state.editingOccurrence !== null) {
       this.stopEditing();
     }
-    this.set('dependencyEditor', { dependencyId, anchor });
+    this.set('dependencyEditor', { dependencyId, anchor, ...resourceIds });
   };
 
   /**

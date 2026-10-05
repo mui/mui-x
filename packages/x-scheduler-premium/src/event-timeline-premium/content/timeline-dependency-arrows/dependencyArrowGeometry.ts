@@ -1,4 +1,4 @@
-import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventSide, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerDependency,
   SchedulerDependencyId,
@@ -30,6 +30,11 @@ export interface DependencyArrow {
    */
   key: string;
   id: SchedulerDependencyId;
+  /**
+   * The resources of the rows the arrow leaves and enters.
+   */
+  sourceResourceId: SchedulerResourceId;
+  targetResourceId: SchedulerResourceId;
   /**
    * The SVG path of the arrow, in absolute row-space pixels (y = 0 is the top of the
    * first row), so it does not depend on the scroll position.
@@ -159,6 +164,8 @@ export function computeDependencyArrows(
       // and numbers, so `1` and `"1"` would otherwise share a key on the same row pair.
       key: `${typeof dependency.id}:${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
       id: dependency.id,
+      sourceResourceId: sourceAnchor.resourceId,
+      targetResourceId: targetAnchor.resourceId,
       get d() {
         if (d === null) {
           d = buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS);

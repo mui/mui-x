@@ -30,6 +30,10 @@ export interface DependencyContextMenuState {
    * Where the dependency dialog opens from the menu, in overlay coordinates.
    */
   editorAnchor: SchedulerDependencyEditor['anchor'];
+  /**
+   * The resources of the rows of the right-clicked arrow, for the dialog colors.
+   */
+  editorResourceIds: Pick<SchedulerDependencyEditor, 'sourceResourceId' | 'targetResourceId'>;
 }
 
 interface EventTimelinePremiumDependencyContextMenuProps {
@@ -66,7 +70,7 @@ export function EventTimelinePremiumDependencyContextMenu(
 
   const handleEdit = () => {
     onClose();
-    store.openDependencyEditor(state.dependencyId, state.editorAnchor);
+    store.openDependencyEditor(state.dependencyId, state.editorAnchor, state.editorResourceIds);
   };
 
   const handleDelete = () => {
