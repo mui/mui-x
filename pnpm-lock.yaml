@@ -210,8 +210,8 @@ catalogs:
       specifier: 9.4.0
       version: 9.4.0
     '@mui/internal-core-docs':
-      specifier: 9.1.2-canary.3
-      version: 9.1.2-canary.3
+      specifier: 9.4.1-canary.0
+      version: 9.4.1-canary.0
     '@mui/internal-test-utils':
       specifier: 2.1.1-canary.0
       version: 2.1.1-canary.0
@@ -324,8 +324,8 @@ catalogs:
       specifier: ^3.7.2
       version: 3.7.2
     moment:
-      specifier: ^2.30.1
-      version: 2.30.1
+      specifier: ^2.31.0
+      version: 2.31.0
     moment-hijri:
       specifier: ^3.0.0
       version: 3.0.0
@@ -423,8 +423,8 @@ importers:
         specifier: 8.7.2
         version: 8.7.2(@types/node@22.20.4)
       '@mui/internal-api-docs-builder':
-        specifier: 1.0.4-canary.3
-        version: 1.0.4-canary.3(supports-color@11.0.0)
+        specifier: 1.0.6-canary.0
+        version: 1.0.6-canary.0(supports-color@11.0.0)
       '@mui/internal-babel-plugin-display-name':
         specifier: 2.0.1-canary.0
         version: 2.0.1-canary.0(@babel/core@8.0.6)(@babel/preset-react@8.0.1(@babel/core@8.0.6))
@@ -435,20 +435,20 @@ importers:
         specifier: 1.1.1-canary.0
         version: 1.1.1-canary.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.2.6)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0)
       '@mui/internal-code-infra':
-        specifier: 0.1.1-canary.1
-        version: 0.1.1-canary.1(@next/eslint-plugin-next@16.3.6(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0)))(@types/node@22.20.4)(@typescript-eslint/eslint-plugin@8.70.1(@typescript-eslint/parser@8.70.1(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.70.1(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(@vitest/expect@4.1.11)(eslint-import-resolver-node@0.3.9(supports-color@11.0.0))(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.28)(prettier@3.9.9)(stylelint@17.15.0(@typescript/typescript6@6.0.2)(supports-color@11.0.0))(supports-color@11.0.0)(vitest@5.0.0)
+        specifier: 0.1.1-canary.4
+        version: 0.1.1-canary.4(@next/eslint-plugin-next@16.3.6(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0)))(@types/node@22.20.4)(@typescript-eslint/eslint-plugin@8.70.1(@typescript-eslint/parser@8.70.1(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.70.1(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(@vitest/expect@4.1.11)(eslint-import-resolver-node@0.3.9(supports-color@11.0.0))(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.28)(prettier@3.9.9)(stylelint@17.15.0(@typescript/typescript6@6.0.2)(supports-color@11.0.0))(supports-color@11.0.0)(vitest@5.0.0)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.1.2-canary.3(4083701c7145d9ce4b4402899102e500)
+        version: 9.4.1-canary.0(3637ce24075d88edcb9a0f6f8ebb8a54)
       '@mui/internal-markdown':
-        specifier: 3.0.11-canary.3
-        version: 3.0.11-canary.3
+        specifier: 3.0.13-canary.0
+        version: 3.0.13-canary.0
       '@mui/internal-netlify-cache':
-        specifier: 0.1.1-canary.0
-        version: 0.1.1-canary.0
+        specifier: 0.1.1-canary.1
+        version: 0.1.1-canary.1
       '@mui/internal-scripts':
-        specifier: 3.0.10-canary.3
-        version: 3.0.10-canary.3(supports-color@11.0.0)
+        specifier: 3.0.12-canary.0
+        version: 3.0.12-canary.0(supports-color@11.0.0)
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.1.1-canary.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@playwright/test@1.63.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@vitest/utils@5.0.0)(chai@6.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@5.0.0)
@@ -568,7 +568,7 @@ importers:
         version: 10.0.1(@types/node@22.20.4)(@typescript/typescript6@6.0.2)(babel-plugin-macros@3.1.0)(supports-color@11.0.0)
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       moment-timezone:
         specifier: 'catalog:'
         version: 0.6.4
@@ -670,7 +670,7 @@ importers:
         version: 9.4.0(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@types/react@19.3.0)(react@19.3.0)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.1.2-canary.3(4083701c7145d9ce4b4402899102e500)
+        version: 9.4.1-canary.0(3637ce24075d88edcb9a0f6f8ebb8a54)
       '@mui/internal-docs-infra':
         specifier: ^0.13.1-canary.0
         version: 0.13.1-canary.0(@types/react@19.3.0)(next@16.3.6(@babel/core@8.0.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.63.0)(@types/node@22.20.4)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(prettier@3.9.9)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@11.0.0)
@@ -793,7 +793,7 @@ importers:
         version: 9.10.3(react@19.3.0)
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       moment-hijri:
         specifier: 'catalog:'
         version: 3.0.0
@@ -859,8 +859,8 @@ importers:
         specifier: 'catalog:'
         version: 8.0.1(@babel/core@8.0.6)
       '@mui/internal-docs-utils':
-        specifier: 3.0.7-canary.3
-        version: 3.0.7-canary.3(@typescript/typescript6@6.0.2)
+        specifier: 3.0.8-canary.0
+        version: 3.0.8-canary.0
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.8
@@ -1505,7 +1505,7 @@ importers:
         version: 9.4.0(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@types/react@19.3.0)(react@19.3.0)
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.1.1-canary.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@playwright/test@1.63.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@vitest/utils@5.0.0)(chai@6.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.0(@types/node@22.20.2)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@5.0.0)
+        version: 2.1.1-canary.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@playwright/test@1.63.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(@vitest/utils@5.0.0)(chai@6.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@5.0.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1721,7 +1721,7 @@ importers:
         version: 3.7.2
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       moment-hijri:
         specifier: 'catalog:'
         version: 3.0.0
@@ -1810,7 +1810,7 @@ importers:
         version: 3.7.2
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       react:
         specifier: 'catalog:'
         version: 19.3.0
@@ -2396,7 +2396,7 @@ importers:
         version: 1.11.23
       moment:
         specifier: 'catalog:'
-        version: 2.30.1
+        version: 2.31.0
       moment-jalaali:
         specifier: 'catalog:'
         version: 0.10.5
@@ -2545,8 +2545,8 @@ importers:
         specifier: 'catalog:'
         version: 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0)
       '@mui/internal-benchmark':
-        specifier: 0.0.3-canary.23
-        version: 0.0.3-canary.23(@vitest/browser-playwright@5.0.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@5.0.0)
+        specifier: 0.1.1-canary.0
+        version: 0.1.1-canary.0(@vitest/browser-playwright@5.0.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@5.0.0)
       '@mui/x-charts':
         specifier: workspace:^
         version: link:../../packages/x-charts/build
@@ -4961,9 +4961,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/internal-api-docs-builder@1.0.4-canary.3':
-    resolution: {integrity: sha512-UXo/J1gB8U1s6NEPFudLjUslBvzNQy56qtuSYCXCMFaKXLJdRoSQyFQsc8AItM/5xhK0bamiHE8ZVGmzj3W8aA==}
-    engines: {node: '>=22.23.1'}
+  '@mui/internal-api-docs-builder@1.0.6-canary.0':
+    resolution: {integrity: sha512-Jkd6kcdqbeCjc0O3j1pSFmQs3aMYstcWxynRUQUyrzj0vTx/Qwlfn2imQVg3tLcJv5EbrauYS9zQjJA136aIow==}
+    engines: {node: '>=22.23.3'}
 
   '@mui/internal-babel-plugin-display-name@2.0.1-canary.0':
     resolution: {integrity: sha512-BAt6ZSsjJ52hWE1zNZp6mWCdAwcg2WXKnE4Qg/GAi1bBykhdfSrnNDsISq4CZYWUwQHEcN+u/ofiObuPYTZhaw==}
@@ -4978,14 +4978,14 @@ packages:
     peerDependencies:
       '@babel/core': ^8.0.0
 
-  '@mui/internal-babel-plugin-resolve-imports@3.0.1-canary.0':
-    resolution: {integrity: sha512-cRzHcsdzrgRI0UmNHSkq4A+Z6LqnyXmWWu50kVd+WTQPFH/QivigkaEfvtojeeDhnNPOTNjxdnyqQuIElMPIwA==}
+  '@mui/internal-babel-plugin-resolve-imports@3.0.1-canary.1':
+    resolution: {integrity: sha512-fORciac3Y6MnLhGWU+8CcRUxMCy9jhQpLnvL7V98o/VazegIzwXZkkrYb24e+Ncxmm05+ZzyNWho4gpfG1AClQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@babel/core': ^8.0.0
 
-  '@mui/internal-benchmark@0.0.3-canary.23':
-    resolution: {integrity: sha512-YmYGDZB6+lvRw/KO2vZyo1AHrlzX+EERW2LeMWLOtinxoPivBESDj6//s8epPdUHnX5TzCnqYzBUoU8LmKQKAA==}
+  '@mui/internal-benchmark@0.1.1-canary.0':
+    resolution: {integrity: sha512-E+NnT3TGnPfwsY1SbM1pX1P3y9C4E7rIlxnlbqIF6FivUMnJR4Mb6g+sOT6KFMe1PjqxwCvdYFmuGX1uI6EZoQ==}
     peerDependencies:
       '@vitest/browser-playwright': '>=4.1'
       react: ^18.0.0 || ^19.0.0
@@ -4996,8 +4996,8 @@ packages:
     resolution: {integrity: sha512-jPAMqC6aBEnrFalmrZeGnGzk+QG9/PRr/8V8xXgEo07fyCMc4c+zrgj8SNyNww2oujo6d46ek0ZdaHldwrBV7Q==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.1.1-canary.1':
-    resolution: {integrity: sha512-KFfNmlRLZfk3+QR+Vptu7seaAvLwzicQzAmcejolOtaR4vOUxHJ5Wq2BrslS7sGE2gGittNTcQwT00yKDS/UKA==}
+  '@mui/internal-code-infra@0.1.1-canary.4':
+    resolution: {integrity: sha512-roNJV7Zq8frEOw/DEp/Y3oF4o5DTaYJZUnV/Gawe1NMI1zpuVhOkk6298cKIdAk6jKKHr+TBCMS5Sv3n1HttWQ==}
     hasBin: true
     peerDependencies:
       '@next/eslint-plugin-next': '*'
@@ -5008,12 +5008,12 @@ packages:
       typescript:
         optional: true
 
-  '@mui/internal-core-docs@9.1.2-canary.3':
-    resolution: {integrity: sha512-3ktHDMoHHCPEZcP+FLAtcDdqtzxiyMy/X2Gt6edNEycvu7mTObz44JhqyGkvjrEmHTM/qwAbydgHOTFkiCPv6A==}
-    engines: {node: '>=14.0.0'}
+  '@mui/internal-core-docs@9.4.1-canary.0':
+    resolution: {integrity: sha512-/83lMYMcecmiyDwYnSxjGWDhrIGLqfEsl47MEHkqvvl2cqeXTicTLwWGKt7VwnXMgsf6Yp4WVYpFpTQLJQqcug==}
+    engines: {node: '>=22.23.3'}
     peerDependencies:
       '@base-ui/react': ^1
-      '@docsearch/react': ^4.6.3
+      '@docsearch/react': ^4.7.0
       '@emotion/cache': ^11.14.0
       '@emotion/react': ^11.14.0
       '@emotion/styled': ^11.14.1
@@ -5025,17 +5025,12 @@ packages:
       '@mui/utils': ^5.0.0 || ^6.0.0 || ^7.0.0 || ^9.0.0 || ^9.0.0-alpha || ^9.0.0-beta
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       '@types/stylis': ^4.2.7
-      chai: ^6.0.1
       csstype: ^3.1.3
       next: ^13.5.1 || ^14 || ^15.0.0 || ^16.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-runner: ^1.0.5
       react-simple-code-editor: ^0.14.1
-      styled-components: ^5.3.0 || ^6.0.0
-    peerDependenciesMeta:
-      styled-components:
-        optional: true
 
   '@mui/internal-docs-infra@0.13.1-canary.0':
     resolution: {integrity: sha512-TW1aCA33Yd4OoxZhA++LZcURfam9bEjZGB0C5g/fu3uT69AEGdmHA1lyOt4YFKv3TWVR5eFubuX70A1YUfpNzg==}
@@ -5055,19 +5050,17 @@ packages:
       prettier:
         optional: true
 
-  '@mui/internal-docs-utils@3.0.7-canary.3':
-    resolution: {integrity: sha512-84nFRKBsK/nsbHCIrcyfUC8PkRWNMlP8utEVvHbN/SvAqO8d7vin8PXUz82tXYilFiLsT1sski+ORIYQKXWRFg==}
-    peerDependencies:
-      typescript: ^5.9.3 || ^6.0.0
+  '@mui/internal-docs-utils@3.0.8-canary.0':
+    resolution: {integrity: sha512-cX4BbU1xdaEYk4qHbByeXPSv/wdRY2Zuy/V0KBJhmPGR3NlMCtMkAVC/8wbc3TgIf77Lxn0VI4Nd9kd4qyN3TA==}
 
-  '@mui/internal-markdown@3.0.11-canary.3':
-    resolution: {integrity: sha512-rjmuPuISJSACOkMkvbkbCO5QipgcqOygArGquutY0eDsCuuM275meIg2sj3rs/cVbsj83AJFmSP7ZL8BzR1iZA==}
+  '@mui/internal-markdown@3.0.13-canary.0':
+    resolution: {integrity: sha512-POFDIWxQVcK96RhyJrM9eERUkWPZa0EzJ5NBiOiRN4dxw4hXmozdxlDrmfPYAFe3JJuiLDMLEcJH0TADHwfwVw==}
 
-  '@mui/internal-netlify-cache@0.1.1-canary.0':
-    resolution: {integrity: sha512-EFqzKoYjwE4zaygM0Bs+K2NcyJH4tB7GQKeHutrz+OgPixcLcfYkBmPqjIwbQ9n5awZwvFnFQbX2osqK1EK+Ng==}
+  '@mui/internal-netlify-cache@0.1.1-canary.1':
+    resolution: {integrity: sha512-gr79QpE9b2BA3Af/TmKoKPtNUmuDnh/ofClumg1R1mPcvpTEzQWkcoGU7fEZIiPzrgWuwb6emo5w0sx97youdQ==}
 
-  '@mui/internal-scripts@3.0.10-canary.3':
-    resolution: {integrity: sha512-budhxOOmN87t5MVhrCekJ1qg7tBOFARdJjtloiRkubV+3uU5LPmYswZU0R2UcNk0l/AiVSMwnARsOa1vvhtTGg==}
+  '@mui/internal-scripts@3.0.12-canary.0':
+    resolution: {integrity: sha512-btvBJQ/jMd3G/d4RCE6Bqkych84Ge3OmaAsvgKKkt7a/juZl5LRNPSNxjumXCP3vu1EuonsDPxnqtWrcX/zVvw==}
 
   '@mui/internal-test-utils@2.1.1-canary.0':
     resolution: {integrity: sha512-ZXPjpvD+q292EFc79NrfhrY2QuOoBtq9gWByY95/eYXavPXxUajjXIfzrtpJbqv9C1hTkmT8UEGxlAD6r/Dq/w==}
@@ -9474,8 +9467,8 @@ packages:
       vue:
         optional: true
 
-  marked@18.0.7:
-    resolution: {integrity: sha512-iDVQ5ldaiKXn6b2JroX5kgRfmwgqolW7NpaEzTl1k/2Zh1njIEN9yniyLV/mOvWwtsE8OGgkjsCYvijuPk1dtA==}
+  marked@18.0.14:
+    resolution: {integrity: sha512-mBHK6FBHuBAlhgRe88w9F0O1AbwwXJUcQibUbC/QcdTbVGAD7aWza+xt3N6oT/jCZx3/OMeS+8rnuiHZcQ9s7A==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -9779,8 +9772,8 @@ packages:
   moment-timezone@0.6.4:
     resolution: {integrity: sha512-JHUK8Mgheach4uMQmIV/pIfrv0ubPiDCPPqc7Mi604je1UblP6Gbm+FfV+Oh88KP03rZqGCZG3t0wmpfdlDv+w==}
 
-  moment@2.30.1:
-    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
+  moment@2.31.0:
+    resolution: {integrity: sha512-0acOTfMiWOheYS4eoWb80yYMb/JLvVv9SHbs2PehaDzfUG0Bw855SKyk0IKTnPGa5+U2bmi3W68l1+sGLX/pvw==}
 
   motion-dom@13.4.5:
     resolution: {integrity: sha512-p63p2Doq+US/O5wADauIPUVx0/eONHMLPzsudBM9XMWRuBQLXogdxH0vwIA8WYQZw864pyzoV723xoDqakwWTg==}
@@ -10539,8 +10532,8 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  react-docgen@8.0.3:
-    resolution: {integrity: sha512-aEZ9qP+/M+58x2qgfSFEWH1BxLyHe5+qkLNJOZQb5iGS017jpbRnoKhNRrXPeA6RfBrZO5wZrT9DMC1UqE1f1w==}
+  react-docgen@8.0.4:
+    resolution: {integrity: sha512-gIYjtVTU4NCWZnb/LXVSWfClZXnjzX3+xxi69Tkfu4YsmYuqiOk8giLkKt/WwxWqh+U66CTh8Kqbha1uPv8/qQ==}
     engines: {node: ^20.9.0 || >=22}
 
   react-dom@19.3.0:
@@ -10632,6 +10625,10 @@ packages:
   recast@0.23.19:
     resolution: {integrity: sha512-T98lym7kH+pnZmRaD8yDRdaNqyUbwnbEBx0MuchrzMFOEMray4AO3ZJoTUZ5r78Ao78X/OhzW0DL8GB85w/I2w==}
     engines: {node: '>= 4'}
+
+  recast@0.24.0:
+    resolution: {integrity: sha512-dN08tw9Kl2i8oDBy16NhxBh6qOqsEqmGYpX1xaxPmgz6/6ukopSuysLfvLbieuDMY57jEz6eTmNz6lqH54kuqQ==}
+    engines: {node: '>= 22'}
 
   reflect.getprototypeof@1.0.10:
     resolution: {integrity: sha512-00o4I+DVrefhv+nX0ulyi3biSHCPDe+yLv5o/p6d/UVlirijB8E16FtfwSAi4g3tcqrQ4lRAqQSoFEZJehYEcw==}
@@ -11231,22 +11228,6 @@ packages:
 
   style-to-object@1.0.12:
     resolution: {integrity: sha512-ddJqYnoT4t97QvN2C95bCgt+m7AAgXjVnkk/jxAfmp7EAB8nnqqZYEbMd3em7/vEomDb2LAQKAy1RFfv41mdNw==}
-
-  styled-components@6.4.4:
-    resolution: {integrity: sha512-tJk5CmKUPMDoTsZQ8m0hHInBk9HFKUPSusqmbBuefDX+yUbMBWea2Ob/wdXFyHW8XZqXkprJscysAdKeGWNqlA==}
-    engines: {node: '>= 16'}
-    peerDependencies:
-      css-to-react-native: '>= 3.2.0'
-      react: '>= 16.8.0'
-      react-dom: '>= 16.8.0'
-      react-native: '>= 0.68.0'
-    peerDependenciesMeta:
-      css-to-react-native:
-        optional: true
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
 
   styled-jsx@5.1.6:
     resolution: {integrity: sha512-qSVyDTeMotdvQYoHWLNGwRFJHC+i+ZvdBRYosOFgC+Wg1vx4frN2/RG/NA7SYqqvKNLf39P2LSRA2pu6n0XYZA==}
@@ -14720,22 +14701,22 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@mui/internal-api-docs-builder@1.0.4-canary.3(supports-color@11.0.0)':
+  '@mui/internal-api-docs-builder@1.0.6-canary.0(supports-color@11.0.0)':
     dependencies:
       '@babel/core': 7.29.7(supports-color@11.0.0)
       '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7(supports-color@11.0.0))(supports-color@11.0.0)
       '@babel/traverse': 7.29.8(supports-color@11.0.0)
       '@babel/types': 7.29.8
-      '@mui/internal-docs-utils': 3.0.7-canary.3(typescript@6.0.3)
-      '@mui/internal-markdown': 3.0.11-canary.3
+      '@mui/internal-docs-utils': 3.0.8-canary.0
+      '@mui/internal-markdown': 3.0.13-canary.0
+      '@typescript/typescript6': 6.0.2
       doctrine: 3.0.0
       es-toolkit: 1.52.0
       fast-glob: 3.3.3
       prettier: 3.9.9
-      react-docgen: 8.0.3(supports-color@11.0.0)
-      recast: 0.23.19
+      react-docgen: 8.0.4(supports-color@11.0.0)
+      recast: 0.24.0
       remark: 15.0.1(supports-color@11.0.0)
-      typescript: 6.0.3
       unist-util-visit: 5.1.0
     transitivePeerDependencies:
       - supports-color
@@ -14751,14 +14732,14 @@ snapshots:
       '@babel/helper-module-imports': 8.0.0
       find-package-json: 1.2.0
 
-  '@mui/internal-babel-plugin-resolve-imports@3.0.1-canary.0(@babel/core@8.0.6)':
+  '@mui/internal-babel-plugin-resolve-imports@3.0.1-canary.1(@babel/core@8.0.6)':
     dependencies:
       '@babel/core': 8.0.6
       resolve: 1.22.12
 
-  '@mui/internal-benchmark@0.0.3-canary.23(@vitest/browser-playwright@5.0.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@5.0.0)':
+  '@mui/internal-benchmark@0.1.1-canary.0(@vitest/browser-playwright@5.0.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@5.0.0)':
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.5
       '@vitejs/plugin-react': 6.1.1(babel-plugin-react-compiler@1.0.0)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))
       '@vitest/browser-playwright': 5.0.0(playwright@1.63.0)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@5.0.0)
       env-ci: 11.2.0
@@ -14802,7 +14783,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.1.1-canary.1(@next/eslint-plugin-next@16.3.6(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0)))(@types/node@22.20.4)(@typescript-eslint/eslint-plugin@8.70.1(@typescript-eslint/parser@8.70.1(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.70.1(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(@vitest/expect@4.1.11)(eslint-import-resolver-node@0.3.9(supports-color@11.0.0))(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.28)(prettier@3.9.9)(stylelint@17.15.0(@typescript/typescript6@6.0.2)(supports-color@11.0.0))(supports-color@11.0.0)(vitest@5.0.0)':
+  '@mui/internal-code-infra@0.1.1-canary.4(@next/eslint-plugin-next@16.3.6(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0)))(@types/node@22.20.4)(@typescript-eslint/eslint-plugin@8.70.1(@typescript-eslint/parser@8.70.1(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.70.1(@typescript/typescript6@6.0.2)(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(@vitest/expect@4.1.11)(eslint-import-resolver-node@0.3.9(supports-color@11.0.0))(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.28)(prettier@3.9.9)(stylelint@17.15.0(@typescript/typescript6@6.0.2)(supports-color@11.0.0))(supports-color@11.0.0)(vitest@5.0.0)':
     dependencies:
       '@argos-ci/core': 6.8.4(@types/node@22.20.4)(supports-color@11.0.0)
       '@babel/cli': 8.0.6(@babel/core@8.0.6)
@@ -14821,7 +14802,7 @@ snapshots:
       '@inquirer/select': 5.2.5(@types/node@22.20.4)
       '@mui/internal-babel-plugin-display-name': 2.0.1-canary.0(@babel/core@8.0.6)(@babel/preset-react@8.0.1(@babel/core@8.0.6))
       '@mui/internal-babel-plugin-minify-errors': 3.0.1-canary.0(@babel/core@8.0.6)
-      '@mui/internal-babel-plugin-resolve-imports': 3.0.1-canary.0(@babel/core@8.0.6)
+      '@mui/internal-babel-plugin-resolve-imports': 3.0.1-canary.1(@babel/core@8.0.6)
       '@napi-rs/keyring': 2.1.0
       '@next/eslint-plugin-next': 16.3.6(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))
       '@octokit/auth-action': 6.0.3
@@ -14913,16 +14894,16 @@ snapshots:
       - supports-color
       - vitest
 
-  '@mui/internal-core-docs@9.1.2-canary.3(4083701c7145d9ce4b4402899102e500)':
+  '@mui/internal-core-docs@9.4.1-canary.0(3637ce24075d88edcb9a0f6f8ebb8a54)':
     dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.5
       '@base-ui/react': 1.8.0(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@docsearch/react': 4.7.0(@algolia/client-search@5.35.0)(@types/react@19.3.0)(algoliasearch@5.35.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(search-insights@2.17.3)
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0)
       '@mui/icons-material': 9.4.0(@mui/material@9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@types/react@19.3.0)(react@19.3.0)
-      '@mui/internal-markdown': 3.0.11-canary.3
+      '@mui/internal-markdown': 3.0.13-canary.0
       '@mui/material': 9.4.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@mui/material-nextjs': 9.4.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/server@11.11.0)(@types/react@19.3.0)(next@16.3.6(@babel/core@8.0.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.63.0)(@types/node@22.20.4)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
       '@mui/stylis-plugin-rtl': 9.4.0(stylis@4.4.0)
@@ -14930,7 +14911,6 @@ snapshots:
       '@mui/utils': 9.4.0(@types/react@19.3.0)(react@19.3.0)
       '@types/react': 19.3.0
       '@types/stylis': 4.2.7
-      chai: 6.2.2
       clipboard-copy: 4.0.1
       clsx: 2.1.1
       csstype: 3.2.3
@@ -14944,8 +14924,6 @@ snapshots:
       react-runner: 1.0.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react-simple-code-editor: 0.14.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       stylis: 4.4.0
-    optionalDependencies:
-      styled-components: 6.4.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
 
   '@mui/internal-docs-infra@0.13.1-canary.0(@types/react@19.3.0)(next@16.3.6(@babel/core@8.0.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.63.0)(@types/node@22.20.4)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(prettier@3.9.9)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(supports-color@11.0.0)':
     dependencies:
@@ -15001,36 +14979,31 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-docs-utils@3.0.7-canary.3(@typescript/typescript6@6.0.2)':
+  '@mui/internal-docs-utils@3.0.8-canary.0':
     dependencies:
+      '@typescript/typescript6': 6.0.2
       rimraf: 6.1.3
-      typescript: '@typescript/typescript6@6.0.2'
 
-  '@mui/internal-docs-utils@3.0.7-canary.3(typescript@6.0.3)':
+  '@mui/internal-markdown@3.0.13-canary.0':
     dependencies:
-      rimraf: 6.1.3
-      typescript: 6.0.3
-
-  '@mui/internal-markdown@3.0.11-canary.3':
-    dependencies:
-      '@babel/runtime': 7.29.7
+      '@babel/runtime': 8.0.5
       es-toolkit: 1.52.0
-      marked: 18.0.7
+      marked: 18.0.14
       prismjs: 1.30.0
 
-  '@mui/internal-netlify-cache@0.1.1-canary.0': {}
+  '@mui/internal-netlify-cache@0.1.1-canary.1': {}
 
-  '@mui/internal-scripts@3.0.10-canary.3(supports-color@11.0.0)':
+  '@mui/internal-scripts@3.0.12-canary.0(supports-color@11.0.0)':
     dependencies:
       '@babel/core': 7.29.7(supports-color@11.0.0)
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.29.7(supports-color@11.0.0))
       '@babel/plugin-syntax-jsx': 7.29.7(@babel/core@7.29.7(supports-color@11.0.0))
       '@babel/plugin-syntax-typescript': 7.29.7(@babel/core@7.29.7(supports-color@11.0.0))
       '@babel/types': 7.29.8
-      '@mui/internal-docs-utils': 3.0.7-canary.3(typescript@6.0.3)
+      '@mui/internal-docs-utils': 3.0.8-canary.0
+      '@typescript/typescript6': 6.0.2
       doctrine: 3.0.0
       es-toolkit: 1.52.0
-      typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
@@ -16219,11 +16192,11 @@ snapshots:
 
   '@types/moment-hijri@2.1.4':
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
   '@types/moment-jalaali@0.7.9':
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
   '@types/ms@2.1.0': {}
 
@@ -19744,7 +19717,7 @@ snapshots:
     optionalDependencies:
       react: 19.3.0
 
-  marked@18.0.7: {}
+  marked@18.0.14: {}
 
   math-intrinsics@1.1.0: {}
 
@@ -20309,19 +20282,19 @@ snapshots:
 
   moment-hijri@3.0.0:
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
   moment-jalaali@0.10.5:
     dependencies:
       jalaali-js: 1.2.8
-      moment: 2.30.1
+      moment: 2.31.0
       moment-timezone: 0.6.4
 
   moment-timezone@0.6.4:
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
-  moment@2.30.1: {}
+  moment@2.31.0: {}
 
   motion-dom@13.4.5:
     dependencies:
@@ -21236,7 +21209,7 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-docgen@8.0.3(supports-color@11.0.0):
+  react-docgen@8.0.4(supports-color@11.0.0):
     dependencies:
       '@babel/core': 7.29.7(supports-color@11.0.0)
       '@babel/traverse': 7.29.8(supports-color@11.0.0)
@@ -21337,6 +21310,14 @@ snapshots:
   readdirp@5.1.1: {}
 
   recast@0.23.19:
+    dependencies:
+      ast-types: 0.16.1
+      esprima: 4.0.1
+      source-map: 0.6.1
+      tiny-invariant: 1.3.3
+      tslib: 2.8.1
+
+  recast@0.24.0:
     dependencies:
       ast-types: 0.16.1
       esprima: 4.0.1
@@ -22194,16 +22175,6 @@ snapshots:
   style-to-object@1.0.12:
     dependencies:
       inline-style-parser: 0.2.6
-
-  styled-components@6.4.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
-    dependencies:
-      '@emotion/is-prop-valid': 1.4.0
-      csstype: 3.2.3
-      react: 19.3.0
-      stylis: 4.4.0
-    optionalDependencies:
-      react-dom: 19.3.0(react@19.3.0)
-    optional: true
 
   styled-jsx@5.1.6(@babel/core@8.0.6)(babel-plugin-macros@3.1.0)(react@19.3.0):
     dependencies:
