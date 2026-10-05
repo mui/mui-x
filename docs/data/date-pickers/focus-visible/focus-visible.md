@@ -17,7 +17,7 @@ The Pickers use it automatically, so you don't need to set any prop on the picke
 const theme = createTheme({ focusVisible: true });
 ```
 
-See Material UI's [Focus visible](/material-ui/customization/focus-visible/) page to customize the ring.
+See Material UI's [Focus visible](/material-ui/customization/focus-visible/) page for more details.
 
 ## Usage
 
