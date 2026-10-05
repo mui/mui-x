@@ -64,11 +64,15 @@ function chooseType(dialog: HTMLElement, label: string) {
 }
 
 function getLagInput(dialog: HTMLElement) {
-  return within(dialog).getByRole('spinbutton', { name: 'Lag' });
+  return within(dialog).getByRole('textbox', { name: 'Lag' });
+}
+
+function getLagUnit(dialog: HTMLElement) {
+  return within(dialog).getByRole('combobox', { name: 'Lag unit' });
 }
 
 function chooseLagUnit(dialog: HTMLElement, label: string) {
-  fireEvent.mouseDown(within(dialog).getByRole('combobox', { name: 'Lag unit' }));
+  fireEvent.mouseDown(getLagUnit(dialog));
   fireEvent.click(screen.getByRole('option', { name: label }));
 }
 
@@ -414,6 +418,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       const dialog = openDialog('dep-1');
       expect(getLagInput(dialog)).to.have.property('value', '');
       expect(getLagInput(dialog)).to.have.attribute('placeholder', '0');
+      expect(getLagInput(dialog)).to.have.attribute('inputmode', 'numeric');
       fireEvent.change(getLagInput(dialog), { target: { value: '30' } });
       chooseLagUnit(dialog, 'minutes');
       save(dialog);
@@ -534,6 +539,10 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       chooseLagUnit(dialog, 'hours');
 
       expect(getLagInput(dialog)).toHaveAccessibleDescription(
+        'An all-day event can only wait whole days: 1 day.',
+      );
+      // The unit changes the rounding too, so it announces the same help.
+      expect(getLagUnit(dialog)).toHaveAccessibleDescription(
         'An all-day event can only wait whole days: 1 day.',
       );
 
@@ -690,7 +699,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       const dialog = openDialog('dep-1');
 
       expect(within(dialog).getByText('Dependency details')).not.to.equal(null);
-      expect(within(dialog).queryByRole('spinbutton')).to.equal(null);
+      expect(within(dialog).queryByRole('textbox', { name: 'Lag' })).to.equal(null);
       expect(within(dialog).queryByRole('button', { name: /save/i })).to.equal(null);
       // The header close button and the footer one.
       expect(within(dialog).getAllByRole('button', { name: 'Close' })).to.have.length(2);

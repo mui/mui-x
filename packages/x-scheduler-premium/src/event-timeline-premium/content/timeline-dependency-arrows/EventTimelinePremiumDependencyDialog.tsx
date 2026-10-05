@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import FormLabel from '@mui/material/FormLabel';
+import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -141,36 +141,14 @@ const DependencyDialogBody = styled('div', {
 // column, then the inputs.
 const LABEL_MIN_WIDTH = 60;
 
-const DependencyDialogLagRow = styled('div', {
-  name: 'MuiEventTimeline',
-  slot: 'DependencyDialogLagRow',
-})({
-  display: 'flex',
-  alignItems: 'center',
-  gap: 8,
-  flexWrap: 'wrap',
-});
-
-const DependencyDialogLagLabel = styled(FormLabel, {
-  name: 'MuiEventTimeline',
-  slot: 'DependencyDialogLagLabel',
-})(({ theme }) => ({
-  color: (theme.vars || theme).palette.text.primary,
-  minWidth: LABEL_MIN_WIDTH,
-}));
-
-const DependencyDialogLagAmount = styled(TextField, {
-  name: 'MuiEventTimeline',
-  slot: 'DependencyDialogLagAmount',
-})({
-  maxWidth: 100,
-});
-
+// The unit sits inside the lag field, as a borderless select in its end adornment.
 const DependencyDialogLagUnit = styled(Select, {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogLagUnit',
 })({
-  maxWidth: 120,
+  '& .MuiSelect-select:focus': {
+    backgroundColor: 'transparent',
+  },
 });
 
 const DependencyDialogDetails = styled('dl', {
@@ -254,8 +232,8 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
 
   const titleId = `${schedulerId}-dependency-dialog-title`;
   const typeLabelId = `${schedulerId}-dependency-dialog-type-label`;
-  const lagLabelId = `${schedulerId}-dependency-dialog-lag-label`;
-  const lagHelperId = `${schedulerId}-dependency-dialog-lag-helper`;
+  const lagId = `${schedulerId}-dependency-dialog-lag`;
+  const lagHelperId = `${lagId}-helper-text`;
 
   const draft = { lag: lagAmount.trim() === '' ? 0 : Number(lagAmount), lagUnit };
   const isLagInvalid = getDependencyLagIssue(draft) !== null;
@@ -358,54 +336,52 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
               </FormControl>
             )}
             {!isReadOnly && (
-              <div>
-                <DependencyDialogLagRow>
-                  <DependencyDialogLagLabel id={lagLabelId}>
-                    {DEPENDENCY_DIALOG_TEXT.lagLabel}
-                  </DependencyDialogLagLabel>
-                  <DependencyDialogLagAmount
-                    type="number"
-                    size="small"
-                    value={lagAmount}
-                    placeholder="0"
-                    error={isLagInvalid}
-                    onChange={(event) => {
-                      setLagAmount(event.target.value);
-                      setRejection(null);
-                    }}
-                    slotProps={{
-                      htmlInput: {
-                        min: 0,
-                        step: 1,
-                        'aria-labelledby': lagLabelId,
-                        'aria-describedby': lagHelperText === null ? undefined : lagHelperId,
-                        'aria-invalid': isLagInvalid || undefined,
-                      },
-                    }}
-                  />
-                  <DependencyDialogLagUnit
-                    size="small"
-                    fullWidth
-                    value={lagUnit}
-                    inputProps={{ 'aria-label': DEPENDENCY_DIALOG_TEXT.lagUnitLabel }}
-                    onChange={(event) => {
-                      setLagUnit(event.target.value as SchedulerDependencyLagUnit);
-                      setRejection(null);
-                    }}
-                  >
-                    {DEPENDENCY_LAG_UNITS.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {DEPENDENCY_LAG_UNIT_LABELS[option]}
-                      </MenuItem>
-                    ))}
-                  </DependencyDialogLagUnit>
-                </DependencyDialogLagRow>
-                {lagHelperText !== null && (
-                  <FormHelperText id={lagHelperId} error={isLagInvalid}>
-                    {lagHelperText}
-                  </FormHelperText>
-                )}
-              </div>
+              <TextField
+                id={lagId}
+                fullWidth
+                size="small"
+                label={DEPENDENCY_DIALOG_TEXT.lagLabel}
+                value={lagAmount}
+                placeholder="0"
+                error={isLagInvalid}
+                helperText={lagHelperText}
+                onChange={(event) => {
+                  setLagAmount(event.target.value);
+                  setRejection(null);
+                }}
+                slotProps={{
+                  // Shrunk so the placeholder shows: an end adornment does not shrink it.
+                  inputLabel: { shrink: true },
+                  // A text input: a number input changes on wheel and accepts `e` or `-`,
+                  // which the browser rejects with its own message instead of ours.
+                  htmlInput: { inputMode: 'numeric' },
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <DependencyDialogLagUnit
+                          variant="standard"
+                          disableUnderline
+                          value={lagUnit}
+                          inputProps={{ 'aria-label': DEPENDENCY_DIALOG_TEXT.lagUnitLabel }}
+                          SelectDisplayProps={{
+                            'aria-describedby': lagHelperText === null ? undefined : lagHelperId,
+                          }}
+                          onChange={(event) => {
+                            setLagUnit(event.target.value as SchedulerDependencyLagUnit);
+                            setRejection(null);
+                          }}
+                        >
+                          {DEPENDENCY_LAG_UNITS.map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {DEPENDENCY_LAG_UNIT_LABELS[option]}
+                            </MenuItem>
+                          ))}
+                        </DependencyDialogLagUnit>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
             )}
             {rejection !== null && (
               <FormHelperText error role="alert">
