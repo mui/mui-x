@@ -24,9 +24,8 @@ interface DependencyDropTargetData {
    */
   targetSide: SchedulerEventSide;
   /**
-   * `false` for a recurring or read-only event: hovering it gives no highlight or
-   * snap, but a drop still goes through `addDependency` so its rejection reaches the
-   * user.
+   * `false` for a recurring event: hovering it gives no highlight or snap, but a drop
+   * still goes through `addDependency` so its rejection reaches the user.
    */
   isValid: boolean;
 }
@@ -91,8 +90,7 @@ export function useDependencyCreationMonitor() {
       if (!isDependencyTerminalDrag(source.data)) {
         return;
       }
-      // Invalid targets (recurring or read-only events) never highlight or snap the
-      // rubber band.
+      // Invalid targets (recurring events) never highlight or snap the rubber band.
       const target = getDependencyDropTarget(location.current.dropTargets);
       const validTarget = target?.isValid ? target : null;
       store.setDependencyCreation({

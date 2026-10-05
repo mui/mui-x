@@ -247,30 +247,15 @@ export class EventTimelinePremiumStore<
     // Clear (not just mask) the selection of a removed or deactivated dependency:
     // with masking alone, a dependency coming back (a re-added id, an endpoint event
     // re-fetched or no longer recurring) would resurrect the arrow already selected.
-    const clearInactiveDependencySelection = () => {
-      const { selection, dependencyModelLookup, processedEventLookup } = this.state;
-      if (selection?.type !== 'dependency') {
-        return;
-      }
-      const dependency = dependencyModelLookup.get(selection.id);
-      if (dependency === undefined || !isDependencyActive(processedEventLookup, dependency)) {
+    // Same for the dependency open in the dialog: its form must not come back on screen.
+    const clearInactiveDependencyState = () => {
+      const { selection, dependencyEditor } = this.state;
+      if (selection?.type === 'dependency' && this.isDependencyInactive(selection.id)) {
         this.setSelection(null);
       }
-    };
-    // Same for the dependency open in the dialog: its form must not come back on screen.
-    const closeInactiveDependencyEditor = () => {
-      const { dependencyEditor, dependencyModelLookup, processedEventLookup } = this.state;
-      if (dependencyEditor === null) {
-        return;
-      }
-      const dependency = dependencyModelLookup.get(dependencyEditor.dependencyId);
-      if (dependency === undefined || !isDependencyActive(processedEventLookup, dependency)) {
+      if (dependencyEditor !== null && this.isDependencyInactive(dependencyEditor.dependencyId)) {
         this.closeDependencyEditor();
       }
-    };
-    const clearInactiveDependencyState = () => {
-      clearInactiveDependencySelection();
-      closeInactiveDependencyEditor();
     };
     this.disposables.defer(
       this.registerStoreEffect(
@@ -283,12 +268,15 @@ export class EventTimelinePremiumStore<
     );
 
     // Like the event dialog: the dialog is anchored to a point of the timeline, which a
-    // date change moves under it.
+    // date or preset change moves under it.
     this.disposables.defer(
       this.registerStoreEffect(
         (state) => state.adapter.getTime(state.visibleDate),
         this.closeDependencyEditor,
       ),
+    );
+    this.disposables.defer(
+      this.registerStoreEffect((state) => state.preset, this.closeDependencyEditor),
     );
 
     // One editing surface at a time: editing an event closes the dependency dialog.
@@ -401,7 +389,8 @@ export class EventTimelinePremiumStore<
    * Rejects every change while the scheduler is read-only, an unknown id, a duplicate and
    * a change that would move a read-only event — see the returned
    * `SchedulerUpdateDependencyResult`.
-   * A change the event dates break moves its successor (and the cascade behind it).
+   * A change making the dependency stricter than the event dates allow moves its
+   * successor (and the cascade behind it).
    */
   public updateDependency = (
     dependencyId: SchedulerDependencyId,
@@ -436,6 +425,13 @@ export class EventTimelinePremiumStore<
     this.setSelection(dependencyId === null ? null : { type: 'dependency', id: dependencyId });
   };
 
+  private isDependencyInactive(dependencyId: SchedulerDependencyId): boolean {
+    const dependency = this.state.dependencyModelLookup.get(dependencyId);
+    return (
+      dependency === undefined || !isDependencyActive(this.state.processedEventLookup, dependency)
+    );
+  }
+
   /**
    * Opens the dependency dialog on a dependency, anchored at `anchor`. Closes the event
    * editing surface: only one dialog is open at a time.
@@ -444,6 +440,11 @@ export class EventTimelinePremiumStore<
     dependencyId: SchedulerDependencyId,
     anchor: SchedulerDependencyEditor['anchor'],
   ) => {
+    // A stale caller (a menu left open on a removed dependency) must not store an editor
+    // that would open by itself if the dependency came back.
+    if (this.isDependencyInactive(dependencyId)) {
+      return;
+    }
     if (this.state.editingOccurrence !== null) {
       this.stopEditing();
     }

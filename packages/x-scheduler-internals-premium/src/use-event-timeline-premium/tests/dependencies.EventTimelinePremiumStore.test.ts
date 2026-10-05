@@ -408,7 +408,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
           type: 'FinishToStart',
         });
       }).toWarnDev([
-        'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
+        'MUI X Scheduler: The dependencies provided via props contain a cycle through a rescheduled event.',
       ]);
 
       expect(result.status).to.equal('added');
@@ -859,6 +859,57 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(store.state.dependencyEditor).to.equal(null);
     });
 
+    it('should do nothing for an unknown dependency', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+
+      store.openDependencyEditor('unknown', { x: 0, y: 0 });
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should do nothing for an inactive dependency', () => {
+      const dependency: SchedulerDependency = { ...DEP_AB, target: 'event-r' };
+      let store!: EventTimelinePremiumStore<any, any>;
+      expect(() => {
+        store = new EventTimelinePremiumStore(
+          { ...DEFAULT_PARAMS, events: [eventA, recurringEvent], dependencies: [dependency] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-r".',
+      ]);
+
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should keep editing an event when the dependency is unknown', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.startEditing(EventBuilder.new().id('event-a').toOccurrence(), 'armed');
+      const editingOccurrence = store.state.editingOccurrence;
+
+      store.openDependencyEditor('unknown', { x: 0, y: 0 });
+
+      expect(store.state.editingOccurrence).to.not.equal(null);
+      expect(store.state.editingOccurrence).to.equal(editingOccurrence);
+    });
+
+    it('should not open when a dependency unknown at call time is added later', () => {
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
     it('should close when the dependency is removed', () => {
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
@@ -879,6 +930,58 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       store.openDependencyEditor('dep-1', { x: 0, y: 0 });
 
       store.goToNextVisibleDate(noopUIEvent);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the preset changes', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.setPreset('dayAndMonth', new Event('change'));
+
+      expect(store.state.preset).to.equal('dayAndMonth');
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when an endpoint event is removed', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      expect(() => {
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, events: [eventA], dependencies: [DEP_AB] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the unknown event "event-b".',
+      ]);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when an endpoint event becomes recurring', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      const recurringB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
+      expect(() => {
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, events: [eventA, recurringB], dependencies: [DEP_AB] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
+      ]);
 
       expect(store.state.dependencyEditor).to.equal(null);
     });

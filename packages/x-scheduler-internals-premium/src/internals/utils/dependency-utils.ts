@@ -241,11 +241,28 @@ export function groupRetainedDependenciesBySource(
 }
 
 /**
+ * The retained dependency linking the same events with the same type, ignoring
+ * `ignoredId`. The type is part of the identity: two events can be linked by several
+ * dependencies of different types.
+ */
+export function findDuplicateDependency(
+  dependencyModelLookup: Map<SchedulerDependencyId, SchedulerDependency>,
+  dependency: Pick<SchedulerDependency, 'source' | 'target' | 'type'>,
+  ignoredId?: SchedulerDependencyId,
+): SchedulerDependency | undefined {
+  return groupRetainedDependenciesBySource(dependencyModelLookup)
+    .get(dependency.source)
+    ?.find(
+      (entry) =>
+        entry.id !== ignoredId &&
+        entry.target === dependency.target &&
+        entry.type === dependency.type,
+    );
+}
+
+/**
  * Whether dependencies cannot be created, edited or deleted: only the scheduler-wide
- * `readOnly` makes them read-only. A read-only event can still be linked, and is protected
- * by the cascade veto instead: a change that would move it is rejected.
- * The single definition shared by the store guards, the `isModelReadOnly` selector and
- * the terminals.
+ * `readOnly` makes them read-only. A read-only event is protected by the cascade veto.
  */
 export function isDependencyReadOnly(state: Pick<SchedulerState, 'readOnly'>): boolean {
   return state.readOnly;
@@ -267,6 +284,18 @@ export function classifyDependencyEvent(
     return 'recurringEvent';
   }
   return 'ok';
+}
+
+/**
+ * The retained (deduplicated) dependencies the timeline renders.
+ */
+export function getActiveDependencies(
+  dependencyModelLookup: Map<SchedulerDependencyId, SchedulerDependency>,
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
+): SchedulerDependency[] {
+  return Array.from(dependencyModelLookup.values()).filter((dependency) =>
+    isDependencyActive(processedEventLookup, dependency),
+  );
 }
 
 /**

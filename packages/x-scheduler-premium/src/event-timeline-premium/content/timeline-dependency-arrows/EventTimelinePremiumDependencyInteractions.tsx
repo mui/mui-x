@@ -9,7 +9,7 @@ import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/m
 import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
-  useDependencyHover,
+  useSetDependencyHoveredId,
 } from './EventTimelinePremiumDependencyGeometry';
 import {
   DEPENDENCY_ARROW_HIT_STROKE_WIDTH,
@@ -70,26 +70,38 @@ const DependencyInteractionsSvg = styled('svg', {
 }));
 
 /**
- * The click hit-areas and the selected arrow's delete button.
+ * The arrows' hit-areas (click, double click, context menu, hover), the selected arrow's
+ * delete button and the context menu.
  */
 export function EventTimelinePremiumDependencyInteractions() {
   const store = useEventTimelinePremiumStoreContext();
   const dependencies = useStore(store, eventTimelinePremiumDependencySelectors.activeModelList);
+  // Outside the layer, so deleting the last arrow from the menu does not unmount it
+  // during its exit transition.
+  const [contextMenu, setContextMenu] = React.useState<DependencyContextMenuState | null>(null);
 
-  if (dependencies.length === 0) {
-    return null;
-  }
-
-  return <DependencyInteractionsLayer />;
+  return (
+    <React.Fragment>
+      {dependencies.length > 0 && <DependencyInteractionsLayer onContextMenu={setContextMenu} />}
+      <EventTimelinePremiumDependencyContextMenu
+        state={contextMenu}
+        onClose={() => setContextMenu((previous) => previous && { ...previous, open: false })}
+      />
+    </React.Fragment>
+  );
 }
 
-function DependencyInteractionsLayer() {
+function DependencyInteractionsLayer({
+  onContextMenu,
+}: {
+  onContextMenu: (state: DependencyContextMenuState) => void;
+}) {
   const theme = useTheme();
   const store = useEventTimelinePremiumStoreContext();
   const svgRef = React.useRef<SVGSVGElement>(null);
   const { visibleArrows, eventsWidth, offsetTop, height } = useDependencyGeometry();
   const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
-  const { setHoveredId } = useDependencyHover();
+  const setHoveredId = useSetDependencyHoveredId();
   const orderedArrows = React.useMemo(
     () => orderArrowsWithSelectedLast(visibleArrows, selectedId),
     [visibleArrows, selectedId],
@@ -101,8 +113,6 @@ function DependencyInteractionsLayer() {
     eventTimelinePremiumDependencySelectors.isModelReadOnly,
     selectedId,
   );
-
-  const [contextMenu, setContextMenu] = React.useState<DependencyContextMenuState | null>(null);
 
   useDependencySelectionInteraction(svgRef);
   useElementDragMarker(svgRef);
@@ -131,7 +141,7 @@ function DependencyInteractionsLayer() {
     }
     event.preventDefault();
     store.setSelectedDependencyId(dependencyId);
-    setContextMenu({
+    onContextMenu({
       open: true,
       dependencyId,
       anchorPosition: { top: event.clientY - 4, left: event.clientX - 2 },
@@ -146,97 +156,91 @@ function DependencyInteractionsLayer() {
   const hasDeleteButton = selectedId !== null && !isSelectedReadOnly;
 
   return (
-    <React.Fragment>
-      <DependencyInteractionsSvg
-        ref={svgRef}
-        aria-hidden
-        data-dependency-interactions=""
-        width={eventsWidth}
-        height={height}
-        viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}
-      >
-        {orderedArrows.map((arrow) => {
-          // On the side of the tip the arrow comes from, so it never covers the target
-          // event, and clamped inside the viewBox: at a timeline edge or into a
-          // scrolled-out row the button would otherwise be unreachable.
-          const buttonDirection = arrow.targetEdge === 'start' ? -1 : 1;
-          const buttonX = Math.min(
-            Math.max(
-              arrow.endPoint.x + buttonDirection * DEPENDENCY_DELETE_BUTTON_RADIUS,
-              DEPENDENCY_DELETE_BUTTON_RADIUS,
-            ),
-            eventsWidth - DEPENDENCY_DELETE_BUTTON_RADIUS,
-          );
-          const buttonY = Math.min(
-            Math.max(arrow.endPoint.y, offsetTop + DEPENDENCY_DELETE_BUTTON_RADIUS),
-            offsetTop + height - DEPENDENCY_DELETE_BUTTON_RADIUS,
-          );
-          return (
-            <g key={arrow.key}>
-              <g
-                onClick={() => handleSelect(arrow.id)}
-                onDoubleClick={(event) => handleDoubleClick(arrow.id, event)}
-                onContextMenu={(event) => handleContextMenu(arrow.id, event)}
-                // The hover restyles the visual arrow, which lives in the arrows overlay
-                // (below the rows, never hit by the pointer). On the group, so moving
-                // between the line and the arrowhead does not leave the arrow.
-                onPointerEnter={() => setHoveredId(arrow.id)}
-                onPointerLeave={() => setHoveredId(null)}
-              >
-                <path
-                  data-dependency-hit={String(arrow.id)}
-                  d={arrow.hitD}
-                  fill="none"
-                  stroke="transparent"
-                  strokeWidth={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
-                />
-                {/* The line's hit-area stops short of the tip: the arrowhead gets its
+    <DependencyInteractionsSvg
+      ref={svgRef}
+      aria-hidden
+      data-dependency-interactions=""
+      width={eventsWidth}
+      height={height}
+      viewBox={`0 ${offsetTop} ${eventsWidth} ${height}`}
+    >
+      {orderedArrows.map((arrow) => {
+        // On the side of the tip the arrow comes from, so it never covers the target
+        // event, and clamped inside the viewBox: at a timeline edge or into a
+        // scrolled-out row the button would otherwise be unreachable.
+        const buttonDirection = arrow.targetEdge === 'start' ? -1 : 1;
+        const buttonX = Math.min(
+          Math.max(
+            arrow.endPoint.x + buttonDirection * DEPENDENCY_DELETE_BUTTON_RADIUS,
+            DEPENDENCY_DELETE_BUTTON_RADIUS,
+          ),
+          eventsWidth - DEPENDENCY_DELETE_BUTTON_RADIUS,
+        );
+        const buttonY = Math.min(
+          Math.max(arrow.endPoint.y, offsetTop + DEPENDENCY_DELETE_BUTTON_RADIUS),
+          offsetTop + height - DEPENDENCY_DELETE_BUTTON_RADIUS,
+        );
+        return (
+          <g key={arrow.key}>
+            <g
+              onClick={() => handleSelect(arrow.id)}
+              onDoubleClick={(event) => handleDoubleClick(arrow.id, event)}
+              onContextMenu={(event) => handleContextMenu(arrow.id, event)}
+              // The hover restyles the visual arrow, which lives in the arrows overlay
+              // (below the rows, never hit by the pointer). On the group, so moving
+              // between the line and the arrowhead does not leave the arrow.
+              onPointerEnter={() => setHoveredId(arrow.id)}
+              onPointerLeave={() => setHoveredId(null)}
+            >
+              <path
+                data-dependency-hit={String(arrow.id)}
+                d={arrow.hitD}
+                fill="none"
+                stroke="transparent"
+                strokeWidth={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
+              />
+              {/* The line's hit-area stops short of the tip: the arrowhead gets its
                     own, outside the target event. */}
-                <rect
-                  data-dependency-hit-head={String(arrow.id)}
-                  x={
-                    buttonDirection < 0
-                      ? arrow.endPoint.x - DEPENDENCY_ARROW_HIT_TRIM_END
-                      : arrow.endPoint.x
-                  }
-                  y={arrow.endPoint.y - DEPENDENCY_ARROW_HIT_STROKE_WIDTH / 2}
-                  width={DEPENDENCY_ARROW_HIT_TRIM_END}
-                  height={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
-                  fill="transparent"
+              <rect
+                data-dependency-hit-head={String(arrow.id)}
+                x={
+                  buttonDirection < 0
+                    ? arrow.endPoint.x - DEPENDENCY_ARROW_HIT_TRIM_END
+                    : arrow.endPoint.x
+                }
+                y={arrow.endPoint.y - DEPENDENCY_ARROW_HIT_STROKE_WIDTH / 2}
+                width={DEPENDENCY_ARROW_HIT_TRIM_END}
+                height={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
+                fill="transparent"
+              />
+            </g>
+            {hasDeleteButton && arrow.id === selectedId && (
+              <g
+                data-dependency-delete-button=""
+                onClick={() => store.deleteSelectedDependency()}
+                // It replaces the arrowhead: a right click there opens the same menu.
+                onContextMenu={(event) => handleContextMenu(arrow.id, event)}
+              >
+                <circle
+                  cx={buttonX}
+                  cy={buttonY}
+                  r={DEPENDENCY_DELETE_BUTTON_RADIUS}
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <path
+                  d={buildDeleteCrossPath(buttonX, buttonY)}
+                  stroke={(theme.vars || theme).palette.error.contrastText}
+                  strokeWidth={1.5}
+                  strokeLinecap="round"
+                  fill="none"
                 />
               </g>
-              {hasDeleteButton && arrow.id === selectedId && (
-                <g
-                  data-dependency-delete-button=""
-                  onClick={() => store.deleteSelectedDependency()}
-                  // It replaces the arrowhead: a right click there opens the same menu.
-                  onContextMenu={(event) => handleContextMenu(arrow.id, event)}
-                >
-                  <circle
-                    cx={buttonX}
-                    cy={buttonY}
-                    r={DEPENDENCY_DELETE_BUTTON_RADIUS}
-                    fill="currentColor"
-                    stroke="none"
-                  />
-                  <path
-                    d={buildDeleteCrossPath(buttonX, buttonY)}
-                    stroke={(theme.vars || theme).palette.error.contrastText}
-                    strokeWidth={1.5}
-                    strokeLinecap="round"
-                    fill="none"
-                  />
-                </g>
-              )}
-            </g>
-          );
-        })}
-      </DependencyInteractionsSvg>
-      <EventTimelinePremiumDependencyContextMenu
-        state={contextMenu}
-        onClose={() => setContextMenu((previous) => previous && { ...previous, open: false })}
-      />
-    </React.Fragment>
+            )}
+          </g>
+        );
+      })}
+    </DependencyInteractionsSvg>
   );
 }
 

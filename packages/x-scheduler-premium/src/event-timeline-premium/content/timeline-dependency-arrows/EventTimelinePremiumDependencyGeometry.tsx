@@ -48,16 +48,20 @@ export interface EventTimelinePremiumDependencyGeometryValue {
 const EventTimelinePremiumDependencyGeometryContext =
   React.createContext<EventTimelinePremiumDependencyGeometryValue | null>(null);
 
-interface DependencyHoverValue {
-  hoveredId: SchedulerDependencyId | null;
-  setHoveredId: (dependencyId: SchedulerDependencyId | null) => void;
-}
-
 /**
  * The hovered arrow, in its own context so a hover does not re-render the geometry
- * consumers. Set by the interactions layer, read by the visual arrows.
+ * consumers. Read by the visual arrows, which already require the provider through
+ * `useDependencyGeometry`.
  */
-const DependencyHoverContext = React.createContext<DependencyHoverValue | null>(null);
+const DependencyHoveredIdContext = React.createContext<SchedulerDependencyId | null>(null);
+
+/**
+ * Sets the hovered arrow. Separate from the hovered id so the interactions layer, which
+ * only sets it, does not re-render on hover.
+ */
+const DependencySetHoveredIdContext = React.createContext<
+  ((dependencyId: SchedulerDependencyId | null) => void) | null
+>(null);
 
 /**
  * The visible arrows with the selected one last, so its highlight (and its hit area)
@@ -81,14 +85,18 @@ export function orderArrowsWithSelectedLast(
   return arrows.toSorted((a, b) => getRank(a) - getRank(b));
 }
 
-export function useDependencyHover(): DependencyHoverValue {
-  const value = React.useContext(DependencyHoverContext);
-  if (value === null) {
+export function useDependencyHoveredId(): SchedulerDependencyId | null {
+  return React.useContext(DependencyHoveredIdContext);
+}
+
+export function useSetDependencyHoveredId(): (dependencyId: SchedulerDependencyId | null) => void {
+  const setHoveredId = React.useContext(DependencySetHoveredIdContext);
+  if (setHoveredId === null) {
     throw /* minify-error-disabled */ new Error(
-      'MUI X Scheduler: useDependencyHover requires <EventTimelinePremiumDependencyGeometryProvider /> as an ancestor.',
+      'MUI X Scheduler: useSetDependencyHoveredId requires <EventTimelinePremiumDependencyGeometryProvider /> as an ancestor.',
     );
   }
-  return value;
+  return setHoveredId;
 }
 
 export function useDependencyGeometry(): EventTimelinePremiumDependencyGeometryValue {
@@ -236,13 +244,14 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
   if (hoveredId !== null && !value.visibleArrows.some((arrow) => arrow.id === hoveredId)) {
     setHoveredId(null);
   }
-  const hoverValue = React.useMemo(() => ({ hoveredId, setHoveredId }), [hoveredId]);
 
   return (
     <EventTimelinePremiumDependencyGeometryContext.Provider value={value}>
-      <DependencyHoverContext.Provider value={hoverValue}>
-        {children}
-      </DependencyHoverContext.Provider>
+      <DependencySetHoveredIdContext.Provider value={setHoveredId}>
+        <DependencyHoveredIdContext.Provider value={hoveredId}>
+          {children}
+        </DependencyHoveredIdContext.Provider>
+      </DependencySetHoveredIdContext.Provider>
     </EventTimelinePremiumDependencyGeometryContext.Provider>
   );
 }

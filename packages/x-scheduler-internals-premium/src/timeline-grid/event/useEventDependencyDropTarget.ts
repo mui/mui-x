@@ -15,9 +15,9 @@ import { isDependencyTerminalDrag } from '../event-dependency-terminal/dependenc
 /**
  * Registers an element of an event (its body, or one of its dependency terminals) as
  * a drop target for the create-dependency gesture.
- * Recurring and read-only events register as invalid targets: they never get the drop
- * highlight or the snapped preview, but dropping on one surfaces the rejection instead
- * of dissolving the gesture in silence.
+ * Recurring events register as invalid targets: they never get the drop highlight or
+ * the snapped preview, but dropping on one surfaces the rejection instead of
+ * dissolving the gesture in silence.
  * Declarative only: the drop itself is finalized by the creation monitor on the grid
  * root, which reads the hovered target from the drop target data.
  */

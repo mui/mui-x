@@ -14,7 +14,7 @@ import { DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowRouting';
 import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
-  useDependencyHover,
+  useDependencyHoveredId,
 } from './EventTimelinePremiumDependencyGeometry';
 
 const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
@@ -89,7 +89,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   // one to the other and clips the arrows reaching off-screen anchors.
   const { visibleArrows, resolver, eventsWidth, offsetTop, height } = useDependencyGeometry();
   const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
-  const { hoveredId } = useDependencyHover();
+  const hoveredId = useDependencyHoveredId();
   const orderedArrows = React.useMemo(
     () => orderArrowsWithSelectedLast(visibleArrows, selectedId, hoveredId),
     [visibleArrows, selectedId, hoveredId],

@@ -1,10 +1,12 @@
-import { fireEvent, screen, within } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
 } from 'test/utils/scheduler';
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import type { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import {
   buildDependency,
   createDependencyTimelineRenderer,
@@ -23,6 +25,13 @@ const eventB = EventBuilder.new()
   .title('Event B')
   .singleDay('2025-07-03T11:00:00Z')
   .resource(resource1)
+  .build();
+// Overlaps `eventA`: a Finish to start dependency from `eventA` breaks it.
+const overlappingEvent = EventBuilder.new()
+  .id('event-o')
+  .title('Event O')
+  .singleDay('2025-07-03T09:30:00Z')
+  .resource(resource2)
   .build();
 const eventC = EventBuilder.new()
   .id('event-c')
@@ -61,6 +70,10 @@ function getLagInput(dialog: HTMLElement) {
 function chooseLagUnit(dialog: HTMLElement, label: string) {
   fireEvent.mouseDown(within(dialog).getByRole('combobox', { name: 'Lag unit' }));
   fireEvent.click(screen.getByRole('option', { name: label }));
+}
+
+function getStartTimestamp(store: EventTimelinePremiumStore<any, any>, eventId: string): number {
+  return store.state.processedEventLookup.get(eventId)!.dataTimezone.start.timestamp;
 }
 
 function save(dialog: HTMLElement) {
@@ -199,7 +212,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       chooseType(dialog, 'Start to start');
-      fireEvent.click(within(dialog).getByRole('button', { name: /save/i }));
+      save(dialog);
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(1);
       expect(handleDependenciesChange.mock.lastCall![0][0].type).to.equal('StartToStart');
@@ -219,15 +232,116 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       chooseType(dialog, 'Start to start');
-      fireEvent.click(within(dialog).getByRole('button', { name: /save/i }));
+      save(dialog);
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       // Inline: the dialog hides the rest of the page from assistive technologies.
-      expect(
-        within(screen.getByRole('dialog')).getByText(
-          'A dependency of this type already exists between these two events.',
-        ),
-      ).not.to.equal(null);
+      expect(within(screen.getByRole('dialog')).getByRole('alert')).to.have.text(
+        'A dependency of this type already exists between these two events.',
+      );
+    });
+
+    it('should move the target when the new type is broken by its dates', async () => {
+      const { store } = await renderTimeline({
+        events: [eventA, overlappingEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-o', 'StartToStart')],
+      });
+      const sourceEnd = store.state.processedEventLookup.get('event-a')!.dataTimezone.end.timestamp;
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Finish to start');
+      save(dialog);
+
+      expect(getStartTimestamp(store, 'event-o')).to.equal(sourceEnd);
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
+    // Changing `dep-1` to Finish to start would push `event-o` into the read-only `event-d`.
+    function renderReadOnlyCascade(onDependenciesChange?: (value: SchedulerDependency[]) => void) {
+      const readOnlyEvent = EventBuilder.new()
+        .id('event-d')
+        .title('Event D')
+        .readOnly()
+        .singleDay('2025-07-03T10:30:00Z')
+        .resource(resource2)
+        .build();
+      return renderTimeline({
+        events: [eventA, overlappingEvent, readOnlyEvent],
+        dependencies: [
+          buildDependency('dep-1', 'event-a', 'event-o', 'StartToStart'),
+          buildDependency('dep-2', 'event-o', 'event-d'),
+        ],
+        onDependenciesChange,
+      });
+    }
+
+    it('should keep the dialog open with an alert when the change would move a read-only event', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderReadOnlyCascade(handleDependenciesChange);
+      const targetStart = getStartTimestamp(store, 'event-o');
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Finish to start');
+      save(dialog);
+
+      expect(within(screen.getByRole('dialog')).getByRole('alert')).to.have.text(
+        'This change would move a read-only event, so it was not applied.',
+      );
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      expect(getStartTimestamp(store, 'event-o')).to.equal(targetStart);
+
+      chooseType(dialog, 'Finish to finish');
+
+      expect(within(dialog).queryByRole('alert')).to.equal(null);
+    });
+
+    it('should clear the alert when the lag amount changes', async () => {
+      await renderReadOnlyCascade();
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Finish to start');
+      save(dialog);
+      expect(within(dialog).queryByRole('alert')).not.to.equal(null);
+
+      fireEvent.change(getLagInput(dialog), { target: { value: '1' } });
+
+      expect(within(dialog).queryByRole('alert')).to.equal(null);
+    });
+
+    it('should clear the alert when the lag unit changes', async () => {
+      await renderReadOnlyCascade();
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Finish to start');
+      save(dialog);
+      expect(within(dialog).queryByRole('alert')).not.to.equal(null);
+
+      chooseLagUnit(dialog, 'hours');
+
+      expect(within(dialog).queryByRole('alert')).to.equal(null);
+    });
+
+    it('should emit nothing when closed, and show the original values when reopened', async () => {
+      const handleDependenciesChange = vi.fn();
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Start to start');
+      fireEvent.change(getLagInput(dialog), { target: { value: '2' } });
+      fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));
+
+      expect(screen.queryByRole('dialog')).to.equal(null);
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+
+      const reopened = openDialog('dep-1');
+      expect(within(reopened).getByRole('combobox', { name: 'Type' })).to.have.text(
+        'Finish to start',
+      );
+      expect(getLagInput(reopened)).to.have.property('value', '');
     });
 
     it('should delete the dependency from the dialog', async () => {
@@ -299,6 +413,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       expect(getLagInput(dialog)).to.have.property('value', '');
+      expect(getLagInput(dialog)).to.have.attribute('placeholder', '0');
       fireEvent.change(getLagInput(dialog), { target: { value: '30' } });
       chooseLagUnit(dialog, 'minutes');
       save(dialog);
@@ -346,6 +461,27 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.equal({
         ...buildDependency('dep-1', 'event-a', 'event-b'),
         lag: 2,
+        type: 'StartToStart',
+      });
+    });
+
+    it('should keep a lag changed in the props while the dialog is open when only the type is saved', async () => {
+      const handleDependenciesChange = vi.fn();
+      const dependency = { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: 2 };
+      const { setProps } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [dependency],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const dialog = openDialog('dep-1');
+      await setProps({ dependencies: [{ ...dependency, lag: 5 }] });
+      chooseType(dialog, 'Start to start');
+      save(dialog);
+
+      expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.equal({
+        ...dependency,
+        lag: 5,
         type: 'StartToStart',
       });
     });
@@ -448,6 +584,44 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(handleDependenciesChange.mock.lastCall![0]).to.deep.equal([]);
     });
 
+    it('should close the menu after deleting the last dependency, and open it again on a new one', async () => {
+      const dependency = buildDependency('dep-1', 'event-a', 'event-b');
+      const { setProps } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [dependency],
+      });
+
+      fireEvent.contextMenu(getHitArea('dep-1'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Delete' }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+
+      await setProps({ dependencies: [buildDependency('dep-2', 'event-a', 'event-b')] });
+      fireEvent.contextMenu(getHitArea('dep-2'));
+
+      expect(screen.getByRole('menuitem', { name: 'Edit dependency' })).not.to.equal(null);
+    });
+
+    it('should not open the dialog from a menu left open on a dependency removed via props', async () => {
+      const dependency = buildDependency('dep-1', 'event-a', 'event-b');
+      const { setProps } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [dependency],
+      });
+
+      fireEvent.contextMenu(getHitArea('dep-1'));
+      await setProps({ dependencies: [] });
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit dependency' }));
+
+      expect(screen.queryByRole('dialog')).to.equal(null);
+
+      await setProps({ dependencies: [dependency] });
+
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+
     it('should not delete the dependency on a Delete key press inside the menu', async () => {
       const handleDependenciesChange = vi.fn();
       await renderTimeline({
@@ -504,6 +678,22 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       ]);
       expect(within(dialog).queryByRole('combobox')).to.equal(null);
       expect(within(dialog).queryByRole('button', { name: 'Delete' })).to.equal(null);
+    });
+
+    it('should open the details dialog on double click', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        readOnly: true,
+      });
+
+      const dialog = openDialog('dep-1');
+
+      expect(within(dialog).getByText('Dependency details')).not.to.equal(null);
+      expect(within(dialog).queryByRole('spinbutton')).to.equal(null);
+      expect(within(dialog).queryByRole('button', { name: /save/i })).to.equal(null);
+      // The header close button and the footer one.
+      expect(within(dialog).getAllByRole('button', { name: 'Close' })).to.have.length(2);
     });
   });
 });

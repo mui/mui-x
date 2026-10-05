@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
-import type { PaperProps } from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
@@ -38,6 +37,7 @@ import {
   EventDialogRoot,
   useEventEditingStyledContext,
 } from '@mui/x-scheduler/internals';
+import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
 
 // TODO(dependencies public flip, #23420): move to localeText.
@@ -207,49 +207,16 @@ export function EventTimelinePremiumDependencyDialog() {
   return <DependencyDialog editor={editor} />;
 }
 
-function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
-  const store = useEventTimelinePremiumStoreContext();
-  const dependency = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.model,
-    editor.dependencyId,
-  );
-  const { offsetTop } = useDependencyGeometry();
-  const [anchor, setAnchor] = React.useState<HTMLSpanElement | null>(null);
-
-  if (dependency === null) {
-    return null;
-  }
-
-  return (
-    <React.Fragment>
-      <DependencyDialogAnchor
-        ref={setAnchor}
-        style={{
-          left: `calc(var(--title-column-width) + ${editor.anchor.x}px)`,
-          top: editor.anchor.y - offsetTop,
-        }}
-      />
-      {anchor !== null && (
-        <DependencyDialogContent
-          // Remount per dependency so the draft re-seeds from the opened dependency.
-          key={String(dependency.id)}
-          dependency={dependency}
-          anchor={anchor}
-          onClose={store.closeDependencyEditor}
-        />
-      )}
-    </React.Fragment>
-  );
-}
-
 interface DependencyDialogContentProps {
   dependency: SchedulerDependency;
   anchor: HTMLElement;
   onClose: () => void;
 }
 
-function DependencyDialogContent(props: DependencyDialogContentProps) {
+// Memoized: the geometry read by the parent changes while scrolling.
+const DependencyDialogContent = React.memo(function DependencyDialogContent(
+  props: DependencyDialogContentProps,
+) {
   const { dependency, anchor, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -273,7 +240,7 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
   const dragHandlerRef = React.useRef<HTMLElement>(null);
   const [type, setType] = React.useState(dependency.type);
   // A lag the engine ignores (invalid in the props) shows as unset.
-  const initialLag = getDependencyLag(dependency);
+  const [initialLag] = React.useState(() => getDependencyLag(dependency));
   // Kept as typed, so the field can be emptied.
   const [lagAmount, setLagAmount] = React.useState(
     initialLag === null ? '' : String(initialLag.amount),
@@ -287,14 +254,13 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
 
   const titleId = `${schedulerId}-dependency-dialog-title`;
   const typeLabelId = `${schedulerId}-dependency-dialog-type-label`;
-  const rejectionId = `${schedulerId}-dependency-dialog-rejection`;
   const lagLabelId = `${schedulerId}-dependency-dialog-lag-label`;
   const lagHelperId = `${schedulerId}-dependency-dialog-lag-helper`;
 
-  const lagValue = lagAmount.trim() === '' ? 0 : Number(lagAmount);
-  const isLagInvalid = getDependencyLagIssue({ lag: lagValue, lagUnit }) !== null;
-  const draftLag = getDependencyLag({ lag: lagValue, lagUnit });
-  const effectiveLag = getEffectiveDependencyLag({ lag: lagValue, lagUnit }, isTargetAllDay);
+  const draft = { lag: lagAmount.trim() === '' ? 0 : Number(lagAmount), lagUnit };
+  const isLagInvalid = getDependencyLagIssue(draft) !== null;
+  const draftLag = getDependencyLag(draft);
+  const effectiveLag = getEffectiveDependencyLag(draft, isTargetAllDay);
   let lagHelperText: string | null = null;
   if (isLagInvalid) {
     lagHelperText = DEPENDENCY_DIALOG_TEXT.invalidLag;
@@ -340,7 +306,11 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
       aria-modal="false"
       className={classes.eventDialog}
       slotProps={{
-        paper: { className: classes.eventDialogPaper, anchor, dragHandlerRef } as PaperProps,
+        paper: {
+          className: classes.eventDialogPaper,
+          anchor,
+          dragHandlerRef,
+        } as EventDialogDraggablePaperProps,
       }}
     >
       <DependencyDialogFormContent className={classes.eventDialogContent}>
@@ -368,13 +338,12 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
               )}
             </DependencyDialogDetails>
             {!isReadOnly && (
-              <FormControl fullWidth size="small" error={rejection !== null}>
+              <FormControl fullWidth size="small">
                 <InputLabel id={typeLabelId}>{DEPENDENCY_DIALOG_TEXT.typeLabel}</InputLabel>
                 <Select
                   labelId={typeLabelId}
                   label={DEPENDENCY_DIALOG_TEXT.typeLabel}
                   value={type}
-                  aria-describedby={rejection === null ? undefined : rejectionId}
                   onChange={(event) => {
                     setType(event.target.value as SchedulerDependencyType);
                     setRejection(null);
@@ -386,11 +355,6 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                     </MenuItem>
                   ))}
                 </Select>
-                {rejection !== null && (
-                  <FormHelperText id={rejectionId} role="alert">
-                    {rejection}
-                  </FormHelperText>
-                )}
               </FormControl>
             )}
             {!isReadOnly && (
@@ -403,6 +367,7 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                     type="number"
                     size="small"
                     value={lagAmount}
+                    placeholder="0"
                     error={isLagInvalid}
                     onChange={(event) => {
                       setLagAmount(event.target.value);
@@ -442,6 +407,11 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
                 )}
               </div>
             )}
+            {rejection !== null && (
+              <FormHelperText error role="alert">
+                {rejection}
+              </FormHelperText>
+            )}
           </DependencyDialogBody>
           <Divider className={classes.eventDialogFormDivider} />
           <EventDialogFormActions className={classes.eventDialogFormActions}>
@@ -463,5 +433,41 @@ function DependencyDialogContent(props: DependencyDialogContentProps) {
         </EventDialogForm>
       </DependencyDialogFormContent>
     </EventDialogRoot>
+  );
+});
+
+function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
+  const store = useEventTimelinePremiumStoreContext();
+  const dependency = useStore(
+    store,
+    eventTimelinePremiumDependencySelectors.model,
+    editor.dependencyId,
+  );
+  const { offsetTop } = useDependencyGeometry();
+  const [anchor, setAnchor] = React.useState<HTMLSpanElement | null>(null);
+
+  if (dependency === null) {
+    return null;
+  }
+
+  return (
+    <React.Fragment>
+      <DependencyDialogAnchor
+        ref={setAnchor}
+        style={{
+          left: `calc(var(--title-column-width) + ${editor.anchor.x}px)`,
+          top: editor.anchor.y - offsetTop,
+        }}
+      />
+      {anchor !== null && (
+        <DependencyDialogContent
+          // Remount per dependency so the draft re-seeds from the opened dependency.
+          key={String(dependency.id)}
+          dependency={dependency}
+          anchor={anchor}
+          onClose={store.closeDependencyEditor}
+        />
+      )}
+    </React.Fragment>
   );
 }

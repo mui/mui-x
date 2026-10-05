@@ -376,7 +376,13 @@ describe('eventTimelinePremiumDependencySelectors', () => {
 
   it('should report a dependency as read-only only when the scheduler is read-only', () => {
     const readOnlyEvent = EventBuilder.new().id('event-ro').readOnly().build();
-    const DEP_TARGET_RO: SchedulerDependency = {
+    const depSourceReadOnly: SchedulerDependency = {
+      id: 'dep-source-ro',
+      source: 'event-ro',
+      target: 'event-b',
+      type: 'FinishToStart',
+    };
+    const depTargetReadOnly: SchedulerDependency = {
       id: 'dep-target-ro',
       source: 'event-a',
       target: 'event-ro',
@@ -385,7 +391,7 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     const parameters = {
       resources: TEST_RESOURCES,
       events: [eventA, eventB, readOnlyEvent],
-      dependencies: [DEP_1, DEP_TARGET_RO],
+      dependencies: [DEP_1, depSourceReadOnly, depTargetReadOnly],
     };
     const state = getEventTimelinePremiumStateFromParameters(parameters);
     const readOnlyState = getEventTimelinePremiumStateFromParameters({
@@ -394,6 +400,9 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     });
 
     // A read-only event is protected by the cascade veto, not by the dependency.
+    expect(
+      eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-source-ro'),
+    ).to.equal(false);
     expect(
       eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-target-ro'),
     ).to.equal(false);

@@ -10,9 +10,9 @@ import type {
 } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
+  getActiveDependencies,
   getEffectiveDependencyLag,
   groupByEventId,
-  isDependencyActive,
   isDependencyReadOnly,
 } from '../internals/utils/dependency-utils';
 
@@ -23,12 +23,7 @@ type DependenciesState = SchedulerState & SchedulerDependenciesState;
 const activeModelListSelector = createSelectorMemoized(
   (state: DependenciesState) => state.dependencyModelLookup,
   (state: DependenciesState) => state.processedEventLookup,
-  (dependencyModelLookup, processedEventLookup) =>
-    // `dependencyModelLookup` already deduped duplicate ids (last wins) while
-    // preserving insertion order, so no separate dedup pass is needed here.
-    Array.from(dependencyModelLookup.values()).filter((dependency) =>
-      isDependencyActive(processedEventLookup, dependency),
-    ),
+  getActiveDependencies,
 );
 
 export interface SchedulerDependencySourceDescription {
