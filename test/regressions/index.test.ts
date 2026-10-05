@@ -191,11 +191,12 @@ async function main() {
       window.muiFixture.navigate(_route);
     }, route);
 
-    // Wait for the fonts, and for anything inside the test case that marks itself with
-    // `data-screenshot-pending` while it loads something the timers don't cover, for example a
-    // script from the network. Content that mounts once that's done still has its timers faked.
+    // Wait until nothing in the test case is marked `data-screenshot-pending`: the viewer until the
+    // test case mounted and its fonts loaded, and demos while they load something the timers
+    // don't cover, for example a script from the network. Content that mounts once that's done
+    // still has its timers faked.
     const testcase = await page.waitForSelector(
-      `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"]):not(:has([data-screenshot-pending]))`,
+      `[data-testid="testcase"][data-testpath="${route}"]:not(:has([data-screenshot-pending]))`,
     );
 
     // Run the timers the test case scheduled while mounting, then switch to real timers.

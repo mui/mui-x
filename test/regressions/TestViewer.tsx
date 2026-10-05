@@ -118,7 +118,9 @@ function LoadFont(props: any) {
   }, [location]);
 
   return (
-    <StyledBox aria-busy={!ready} data-testid="testcase" {...other}>
+    <StyledBox data-testid="testcase" {...other}>
+      {/* The regression runner waits until no `data-screenshot-pending` is left in the test case. */}
+      {!ready && <span data-screenshot-pending hidden />}
       {children}
     </StyledBox>
   );
