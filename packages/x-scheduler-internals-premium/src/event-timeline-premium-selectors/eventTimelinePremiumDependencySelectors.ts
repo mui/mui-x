@@ -143,9 +143,4 @@ export const eventTimelinePremiumDependencySelectors = {
    * `readOnly` locks them. A read-only event is protected by the cascade veto instead.
    */
   isReadOnly: (state: DependenciesState) => state.readOnly,
-  /**
-   * Whether the dependency cannot be edited or deleted. Unknown ids resolve to `false`.
-   */
-  isModelReadOnly: (state: State, dependencyId: SchedulerDependencyId | null) =>
-    dependencyId !== null && state.dependencyModelLookup.has(dependencyId) && state.readOnly,
 };

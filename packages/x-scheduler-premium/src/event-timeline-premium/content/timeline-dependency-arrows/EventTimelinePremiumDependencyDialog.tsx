@@ -245,11 +245,7 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
   const { dependency, anchor, onClose, sourceResourceId, targetResourceId } = props;
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
-  const isReadOnly = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.isModelReadOnly,
-    dependency.id,
-  );
+  const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
   const sourceTitle = useStore(
     store,
     (state) => schedulerEventSelectors.processedEvent(state, dependency.source)?.title ?? '',

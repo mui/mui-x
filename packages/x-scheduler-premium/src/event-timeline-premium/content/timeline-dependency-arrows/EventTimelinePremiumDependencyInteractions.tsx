@@ -109,11 +109,7 @@ function DependencyInteractionsLayer({
   );
   // `deleteDependency` ignores read-only dependencies: hide the button instead of
   // rendering one that does nothing.
-  const isSelectedReadOnly = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.isModelReadOnly,
-    selectedId,
-  );
+  const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
 
   useDependencySelectionInteraction(svgRef);
   useElementDragMarker(svgRef);
@@ -161,7 +157,7 @@ function DependencyInteractionsLayer({
   // row appearances, all sharing the dependency id: each one gets its own button, so
   // the arrow the user selected is always the one carrying the affordance. They all
   // delete the same selected dependency, so whichever is clicked does the same thing.
-  const hasDeleteButton = selectedId !== null && !isSelectedReadOnly;
+  const hasDeleteButton = selectedId !== null && !isReadOnly;
 
   return (
     <DependencyInteractionsSvg

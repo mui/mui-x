@@ -96,11 +96,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   );
   // A selected read-only arrow keeps its arrowhead: the delete button that normally
   // replaces it is not rendered by the interactions layer.
-  const isSelectedReadOnly = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.isModelReadOnly,
-    selectedId,
-  );
+  const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
 
   const creationPath = getCreationPath(creation, resolver);
 
@@ -177,7 +173,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
       </defs>
       {orderedArrows.map((arrow) => {
         const selected = arrow.id === selectedId;
-        const replacedByDeleteButton = selected && !isSelectedReadOnly;
+        const replacedByDeleteButton = selected && !isReadOnly;
         return (
           <path
             key={arrow.key}

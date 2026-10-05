@@ -400,22 +400,8 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     });
 
     // A read-only event is protected by the cascade veto, not by the dependency.
-    expect(
-      eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-source-ro'),
-    ).to.equal(false);
-    expect(
-      eventTimelinePremiumDependencySelectors.isModelReadOnly(state, 'dep-target-ro'),
-    ).to.equal(false);
-    expect(
-      eventTimelinePremiumDependencySelectors.isModelReadOnly(readOnlyState, 'dep-1'),
-    ).to.equal(true);
-    // A null or unknown id resolves to false: there is no dependency to protect.
-    expect(eventTimelinePremiumDependencySelectors.isModelReadOnly(readOnlyState, null)).to.equal(
-      false,
-    );
-    expect(eventTimelinePremiumDependencySelectors.isModelReadOnly(readOnlyState, 'nope')).to.equal(
-      false,
-    );
+    expect(eventTimelinePremiumDependencySelectors.isReadOnly(state)).to.equal(false);
+    expect(eventTimelinePremiumDependencySelectors.isReadOnly(readOnlyState)).to.equal(true);
   });
 
   it('should keep only the last dependency when two of them share the same id', () => {

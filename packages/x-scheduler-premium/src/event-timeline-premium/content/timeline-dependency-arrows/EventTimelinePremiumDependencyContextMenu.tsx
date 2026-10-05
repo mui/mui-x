@@ -58,11 +58,7 @@ export function EventTimelinePremiumDependencyContextMenu(
 ) {
   const { state, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const isReadOnly = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.isModelReadOnly,
-    state?.dependencyId ?? null,
-  );
+  const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
 
   if (state === null) {
     return null;
