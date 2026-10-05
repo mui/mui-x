@@ -43,7 +43,7 @@ export interface ChatFeatures {
 
 export interface ChatProviderProps<Cursor = string> extends Omit<
   ChatStoreParameters<Cursor>,
-  'activeConversationIdControlled'
+  'activeConversationIdControlled' | 'hasHistoryLoader'
 > {
   children?: React.ReactNode;
   adapter: ChatAdapter<Cursor>;
@@ -104,6 +104,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     onComposerValueChange,
   } = props;
 
+  const hasHistoryLoader = adapter.listMessages != null;
   const parameters = React.useMemo(
     () => ({
       members,
@@ -118,6 +119,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       initialConversations,
       activeConversationId,
       activeConversationIdControlled: isActiveConversationIdControlled,
+      hasHistoryLoader,
       initialActiveConversationId,
       composerValue,
       initialComposerValue,
@@ -139,6 +141,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
       initialConversations,
       activeConversationId,
       isActiveConversationIdControlled,
+      hasHistoryLoader,
       initialActiveConversationId,
       composerValue,
       initialComposerValue,

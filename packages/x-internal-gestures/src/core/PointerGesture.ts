@@ -98,13 +98,13 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
    * Minimum number of simultaneous pointers required to activate the gesture.
    * The gesture will not start until at least this many pointers are active.
    */
-  protected minPointers: number;
+  declare protected minPointers: number;
 
   /**
    * Maximum number of simultaneous pointers allowed for this gesture.
    * If more than this many pointers are detected, the gesture may be canceled.
    */
-  protected maxPointers: number;
+  declare protected maxPointers: number;
 
   constructor(options: PointerGestureOptions<GestureName>) {
     super(options);

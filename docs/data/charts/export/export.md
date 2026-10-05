@@ -129,6 +129,40 @@ You can disable this behavior by setting the `copyStyles` property to `false` in
 <BarChartPro slotProps={{ toolbar: { printOptions: { copyStyles: false } } }} />
 ```
 
+### Stylesheets that fail to load
+
+When a stylesheet, or a stylesheet it imports, fails to load in the export iframe, for example because a request fails or a [Content Security Policy](/x/react-charts/content-security-policy/) blocks it, the export continues.
+The result may be missing some styles, and a warning is logged in development.
+The image export still fails when the [Content Security Policy](/x/react-charts/content-security-policy/#csp-for-exporting-charts) blocks the styles it inlines, for example when the `nonce` option is missing.
+
+To handle the failure yourself, use the `onStylesheetError` callback.
+It receives the `<link>` element that failed to load, or whose import failed to load, and the reason: `'content-security-policy'` if the [Content Security Policy](/x/react-charts/content-security-policy/) blocked the stylesheet, or `'load-error'` if the request failed or a stylesheet it imports failed to load.
+The callback's return value decides what happens next:
+
+- Return or resolve to `false` to cancel the export.
+- Throw an error or reject to make the export fail with that error.
+- Return anything else to continue the export. The image export still fails if the Content Security Policy blocks the styles it inlines.
+
+If the callback returns a promise, the export waits for it. This can be useful if you want to add replacement styles to `link.ownerDocument`.
+See [Handling export errors](#handling-export-errors) for how a cancelled or failed export is reported.
+
+When using the toolbar, you can provide `onStylesheetError` as an option using `slotProps`:
+
+```tsx
+<BarChartPro
+  slotProps={{
+    toolbar: {
+      printOptions: {
+        onStylesheetError: (link) => {
+          showNotification(`The stylesheet ${link.href} failed to load.`);
+          return false;
+        },
+      },
+    },
+  }}
+/>
+```
+
 ## Exporting composed charts
 
 MUI X Charts may be [self-contained](/x/react-charts/quickstart/#self-contained-charts) or [composed of various subcomponents](/x/react-charts/quickstart/#composable-charts).
@@ -173,7 +207,26 @@ Higher values produce sharper images at the cost of a larger file size.
 When omitted, the export uses the larger of `window.devicePixelRatio` and `2`, guaranteeing a minimum 2x resolution on standard-DPI displays without regressing higher-DPI exports.
 
 ```tsx
-apiRef.current?.exportAsImage({ pixelRatio: 3 });
+apiRef.current?.exportAsImage({ pixelRatio: 3 }).catch((error) => {
+  // Report the failed export.
+});
+```
+
+### Handling export errors
+
+`exportAsPrint()` and `exportAsImage()` return a promise that rejects when the export fails, for example when [`onStylesheetError`](#stylesheets-that-fail-to-load) throws or rejects.
+`exportAsImage()` also rejects when a [Content Security Policy](/x/react-charts/content-security-policy/) blocks the styles copied to the export, while `exportAsPrint()` prints the chart without them.
+Handle the rejection to report the failure to your users.
+When the export is started from the toolbar, the error is logged to the console instead.
+
+```tsx
+try {
+  await apiRef.current?.exportAsImage();
+} catch (error) {
+  // Report the failed export.
+}
 ```
 
 {{"demo": "ExportChartAsImage.js"}}
+
+When `onStylesheetError` cancels the export by returning `false`, nothing is exported, no error is logged, and the promise resolves.

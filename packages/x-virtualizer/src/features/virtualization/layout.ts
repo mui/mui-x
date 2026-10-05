@@ -23,7 +23,7 @@ type AnyElements = BaseElements & Record<string, React.RefObject<HTMLElement | n
 export abstract class Layout<E extends AnyElements = AnyElements> {
   static elements: readonly (keyof AnyElements)[] = ['scroller', 'container'];
 
-  refs: E;
+  declare refs: E;
 
   constructor(refs: E) {
     this.refs = refs;

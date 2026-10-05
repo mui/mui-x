@@ -40,7 +40,9 @@ const ExportPrint = forwardRef<HTMLButtonElement, ExportPrintProps>(
     const apiRef = useGridApiContext();
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      apiRef.current.exportDataAsPrint(options);
+      apiRef.current.exportDataAsPrint(options).catch((error) => {
+        console.error('MUI X Data Grid: Error exporting the grid as print:', error);
+      });
       onClick?.(event);
     };
 
@@ -78,6 +80,7 @@ ExportPrint.propTypes /* remove-proptypes */ = {
     hideFooter: PropTypes.bool,
     hideToolbar: PropTypes.bool,
     includeCheckboxes: PropTypes.bool,
+    onStylesheetError: PropTypes.func,
     pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   }),
   /**

@@ -55,10 +55,12 @@ function normalizeValidatorResult(
   // Booleans are excluded from the type but reachable from JS (`condition && 'message'`).
   if (process.env.NODE_ENV !== 'production') {
     if (list.some((message) => typeof message === 'boolean')) {
-      warnOnce([
-        'MUI X Scheduler: A form field validator returned a boolean.',
-        'Booleans are ignored: return the error message(s) when the value is invalid, or `null` when it is valid.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Scheduler: A form field validator returned a boolean.',
+          'Booleans are ignored: return the error message(s) when the value is invalid, or `null` when it is valid.',
+        ].join('\n'),
+      );
     }
   }
   const messages = list.filter(
@@ -160,24 +162,24 @@ export class EventDialogFormStore<
    */
   private validatorsRevision = 0;
 
-  private parameters: EventDialogFormParameters<TValues>;
+  declare private parameters: EventDialogFormParameters<TValues>;
 
   /**
    * Values the form was seeded with, used to detect edited fields.
    */
-  private readonly initialValues: TValues;
+  declare private readonly initialValues: TValues;
 
   /**
    * The occurrence the editing session targets. Constant for the lifetime of the store.
    */
-  public readonly occurrence: SchedulerRenderableEventOccurrence;
+  declare public readonly occurrence: SchedulerRenderableEventOccurrence;
 
   /**
    * Whether the resource picker of the editing session is single- or multi-select.
    * Constant for the lifetime of the store: the resource Select and the submit
    * logic must read the same value.
    */
-  public readonly resourceSelectionMode: ResourceSelectionMode;
+  declare public readonly resourceSelectionMode: ResourceSelectionMode;
 
   constructor(initialValues: TValues, parameters: EventDialogFormParameters<TValues>) {
     super({ values: { ...initialValues }, errors: {}, isSubmitting: false });
@@ -364,11 +366,13 @@ export class EventDialogFormStore<
         this.state.values === values && this.validatorsRevision === validatorsRevision;
       if (isSettled || restarts >= maxRestarts) {
         if (process.env.NODE_ENV !== 'production' && !isSettled) {
-          warnOnce([
-            'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
-            'The submit stays blocked; the stored errors describe the last completed pass.',
-            'Avoid writing values or (un)registering validators from a validator.',
-          ]);
+          warnOnce(
+            [
+              'MUI X Scheduler: The form values or validators kept changing while the validation was running (for example a validator calling setValue).',
+              'The submit stays blocked; the stored errors describe the last completed pass.',
+              'Avoid writing values or (un)registering validators from a validator.',
+            ].join('\n'),
+          );
         }
         this.set('errors', errors);
         // Failing closed on the cap: never resolve valid over values no validator saw.

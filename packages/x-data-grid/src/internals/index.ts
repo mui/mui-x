@@ -206,6 +206,7 @@ export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataS
 export { CacheChunkManager } from '../hooks/features/dataSource/utils';
 export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridDataSourceSelector';
 export { useGridDataSourceFilterModelChange } from '../hooks/features/dataSource/useGridDataSourceFilterModelChange';
+export { useGridDataSourcePolling } from '../hooks/features/dataSource/useGridDataSourcePolling';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
