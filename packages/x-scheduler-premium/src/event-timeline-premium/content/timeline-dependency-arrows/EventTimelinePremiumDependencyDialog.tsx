@@ -11,6 +11,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import Typography from '@mui/material/Typography';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
@@ -140,6 +141,16 @@ const DependencyDialogBody = styled('div', {
 // The rows mirror the "Repeat" section of the event dialog's recurrence tab: a label
 // column, then the inputs.
 const LABEL_MIN_WIDTH = 60;
+
+// Same right inset as the Type select, so both arrows line up.
+const DependencyDialogLag = styled(TextField, {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogLag',
+})({
+  [`& .${outlinedInputClasses.root}`]: {
+    paddingRight: 7,
+  },
+});
 
 // The unit sits inside the lag field, as a borderless select in its end adornment.
 const DependencyDialogLagUnit = styled(Select, {
@@ -336,7 +347,7 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
               </FormControl>
             )}
             {!isReadOnly && (
-              <TextField
+              <DependencyDialogLag
                 id={lagId}
                 fullWidth
                 size="small"
