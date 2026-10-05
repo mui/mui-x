@@ -459,8 +459,8 @@ importers:
         specifier: 'catalog:'
         version: 9.4.0(@types/react@19.3.0)(react@19.3.0)
       '@netlify/types':
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.2.0
+        version: 3.2.0
       '@next/eslint-plugin-next':
         specifier: 16.3.6
         version: 16.3.6(eslint@10.11.0(jiti@2.7.0)(supports-color@11.0.0))
@@ -5454,8 +5454,8 @@ packages:
   '@napi-rs/wasm-runtime@0.2.4':
     resolution: {integrity: sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ==}
 
-  '@netlify/types@3.0.0':
-    resolution: {integrity: sha512-zRCidsQgI4CZWrZB/kmwdPf0QbSNljakfNSLizFvrsSA3UcUrTWSBNMVKmZnob92/8ESeUN0ewXLOlffJU+ATQ==}
+  '@netlify/types@3.2.0':
+    resolution: {integrity: sha512-PVvY1EEN9i2Er0LQoiyNG7i/BnwnttLuZqIkBnhL2Jrcj3P5N/NcGkv1i20MJ2ngNGSPQcT7tagDmF3V6BsdWg==}
     engines: {node: '>=22.12.0'}
 
   '@next/env@16.3.6':
@@ -15366,7 +15366,7 @@ snapshots:
       '@emnapi/runtime': 1.11.3
       '@tybys/wasm-util': 0.9.0
 
-  '@netlify/types@3.0.0': {}
+  '@netlify/types@3.2.0': {}
 
   '@next/env@16.3.6': {}
 
