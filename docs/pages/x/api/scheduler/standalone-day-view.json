@@ -10,9 +10,6 @@
     },
     "canDragEventsFromTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
-    "dataSource": {
-      "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
-    },
     "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
     "defaultPreferences": {
       "type": {
@@ -102,7 +99,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ day?: { endTime?: number, startTime?: number } }"
+        "description": "{ day?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
       }
     },
     "views": {
@@ -135,5 +132,5 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-scheduler/src/day-view/StandaloneDayView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-scheduler/components/event-dialog/\">Scheduler - Event dialog</a></li>\n<li><a href=\"/x/react-scheduler/event-calendar/views/\">Event Calendar - Views</a></li></ul>"
 }

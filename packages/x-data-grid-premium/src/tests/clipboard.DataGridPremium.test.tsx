@@ -3,13 +3,12 @@ import type { RefObject } from '@mui/x-internals/types';
 import { useGridApiRef, DataGridPremium } from '@mui/x-data-grid-premium';
 import type { GridApi, DataGridPremiumProps, GridColDef } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { spy, stub } from 'sinon';
-import type { SinonSpy, SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect, afterEach } from 'vitest';
+import { vi, describe, it, expect, afterEach } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 describe('<DataGridPremium /> - Clipboard', () => {
   const { render } = createRenderer();
@@ -57,17 +56,17 @@ describe('<DataGridPremium /> - Clipboard', () => {
   }
 
   describe('copy', () => {
-    let writeText: SinonSpy | undefined;
+    let writeText: MockInstance | undefined;
 
     afterEach(function afterEachHook() {
-      writeText?.restore();
+      writeText?.mockRestore();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected cells to the clipboard when ${key} + C is pressed`, async () => {
         const { user } = render(<Test />);
 
-        writeText = spy(navigator.clipboard, 'writeText');
+        writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
         const cell = getCell(0, 0);
         await act(() => cell.focus());
@@ -77,7 +76,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         fireEvent.click(getCell(2, 2), { shiftKey: true });
 
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
-        expect(writeText.firstCall.args[0]).to.equal(
+        expect(writeText.mock.calls[0][0]).to.equal(
           [
             ['0', 'USDGBP', '1'].join('\t'),
             ['1', 'USDEUR', '11'].join('\t'),
@@ -90,7 +89,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     it(`should copy cells range selected in one row`, async () => {
       const { user } = render(<Test />);
 
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
       await act(() => cell.focus());
@@ -100,7 +99,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.click(getCell(0, 2), { shiftKey: true });
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.firstCall.args[0]).to.equal([['0', 'USDGBP', '1'].join('\t')].join('\r\n'));
+      expect(writeText.mock.calls[0][0]).to.equal([['0', 'USDGBP', '1'].join('\t')].join('\r\n'));
     });
 
     it(`should copy cells range selected based on their sorted order`, async () => {
@@ -121,7 +120,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         </div>,
       );
 
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
       await act(() => cell.focus());
@@ -134,7 +133,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.click(getCell(2, 0), { ctrlKey: true });
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.lastCall.firstArg).to.equal(['Adidas', 'Nike', 'Puma'].join('\r\n'));
+      expect(writeText.mock.lastCall?.[0]).to.equal(['Adidas', 'Nike', 'Puma'].join('\r\n'));
     });
 
     it('should not escape double quotes when copying multiple cells to clipboard', async () => {
@@ -152,7 +151,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         </div>,
       );
 
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
       await act(() => cell.focus());
@@ -162,7 +161,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.click(getCell(1, 0), { ctrlKey: true });
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.lastCall.firstArg).to.equal(['1 " 1', '2'].join('\r\n'));
+      expect(writeText.mock.lastCall?.[0]).to.equal(['1 " 1', '2'].join('\r\n'));
     });
 
     it('should copy aggregation cell value to clipboard', async () => {
@@ -177,7 +176,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       // set aggregation model through API to avoid act error
       await act(async () => apiRef.current?.setAggregationModel({ value: 'sum' }));
 
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       // Because of the row grouping, the value column only displays the aggregation cells initially
       const aggregationCell = getCell(0, 2);
@@ -187,7 +186,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       await user.click(aggregationCell);
       fireEvent.keyDown(aggregationCell, { key: 'c', keyCode: 67, ctrlKey: true });
 
-      expect(writeText.firstCall.args[0]).to.equal('30');
+      expect(writeText.mock.calls[0][0]).to.equal('30');
     });
   });
 
@@ -208,12 +207,12 @@ describe('<DataGridPremium /> - Clipboard', () => {
       it(`should not enter cell edit mode when ${key} + V is pressed`, async () => {
         const { user } = render(<Test />);
 
-        const listener = spy();
+        const listener = vi.fn();
         apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
-        expect(listener.callCount).to.equal(0);
+        expect(listener.mock.calls.length).to.equal(0);
       });
     });
 
@@ -221,12 +220,12 @@ describe('<DataGridPremium /> - Clipboard', () => {
       it(`should not enter row edit mode when ${key} + V is pressed`, async () => {
         const { user } = render(<Test editMode="row" />);
 
-        const listener = spy();
+        const listener = vi.fn();
         apiRef.current?.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
-        expect(listener.callCount).to.equal(0);
+        expect(listener.mock.calls.length).to.equal(0);
       });
     });
 
@@ -584,7 +583,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
 
     it('should use valueSetter if the column has one', async () => {
-      const processRowUpdateSpy = spy((newRow) => newRow);
+      const processRowUpdateSpy = vi.fn((newRow) => newRow);
 
       const columns: GridColDef<(typeof rows)[number]>[] = [
         { field: 'firstName' },
@@ -627,8 +626,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
       paste(cell, 'John Doe');
 
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['Jon', 'John']));
-      expect(processRowUpdateSpy.callCount).to.equal(1);
-      expect(processRowUpdateSpy.args[0]).to.deep.equal([
+      expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
+      expect(processRowUpdateSpy.mock.calls[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
         { rowId: 1 },
@@ -775,7 +774,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
 
     it('should call `processRowUpdate` with each row impacted by the paste', async () => {
-      const processRowUpdateSpy = spy((newRow) => {
+      const processRowUpdateSpy = vi.fn((newRow) => {
         return newRow;
       });
       const { user } = render(<Test processRowUpdate={processRowUpdateSpy} />);
@@ -793,8 +792,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getCell(2, 2).textContent).to.equal('12');
       });
 
-      expect(processRowUpdateSpy.callCount).to.equal(3);
-      expect(processRowUpdateSpy.args).to.deep.equal([
+      expect(processRowUpdateSpy.mock.calls.length).to.equal(3);
+      expect(processRowUpdateSpy.mock.calls).to.deep.equal([
         [
           { id: 0, currencyPair: '12', price1M: '12' }, // new row
           { id: 0, currencyPair: 'USDGBP', price1M: 1 }, // old row
@@ -892,7 +891,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
 
     it('should call `onProcessRowUpdateError()` if `processRowUpdate()` fails', async () => {
-      const onProcessRowUpdateError = spy();
+      const onProcessRowUpdateError = vi.fn();
       const error = new Error('Something went wrong');
       const { user } = render(
         <Test
@@ -914,20 +913,20 @@ describe('<DataGridPremium /> - Clipboard', () => {
       paste(cell, '12');
 
       await waitFor(() => {
-        expect(onProcessRowUpdateError.callCount).to.equal(1);
+        expect(onProcessRowUpdateError.mock.calls.length).to.equal(1);
       });
-      expect(onProcessRowUpdateError.args[0][0]).to.equal(error);
+      expect(onProcessRowUpdateError.mock.calls[0][0]).to.equal(error);
     });
 
     it('should emit clipboard paste events', async () => {
       const calls: string[] = [];
-      const onClipboardPasteStartSpy = spy(() => {
+      const onClipboardPasteStartSpy = vi.fn(() => {
         calls.push('onClipboardPasteStart');
       });
-      const onClipboardPasteEndSpy = spy(() => {
+      const onClipboardPasteEndSpy = vi.fn(() => {
         calls.push('onClipboardPasteEnd');
       });
-      const processRowUpdateSpy = spy((newRow) => {
+      const processRowUpdateSpy = vi.fn((newRow) => {
         calls.push('processRowUpdate');
         return newRow;
       });
@@ -959,20 +958,59 @@ describe('<DataGridPremium /> - Clipboard', () => {
       ]);
     });
 
+    it('should store the row verbatim when `processRowUpdate` returns a replace update', async () => {
+      class CurrencyRow {
+        id: number;
+        currencyPair: string;
+        price1M: string | number;
+        constructor(id: number, currencyPair: string, price1M: string | number) {
+          this.id = id;
+          this.currencyPair = currencyPair;
+          this.price1M = price1M;
+        }
+      }
+
+      let replacement: CurrencyRow | undefined;
+      const onClipboardPasteEnd = vi.fn();
+      const { user } = render(
+        <Test
+          onClipboardPasteEnd={onClipboardPasteEnd}
+          processRowUpdate={(newRow) => {
+            replacement = new CurrencyRow(newRow.id, newRow.currencyPair, newRow.price1M);
+            return { _action: 'replace' as const, row: replacement };
+          }}
+        />,
+      );
+
+      const cell = getCell(0, 1);
+      await act(() => cell.focus());
+      await user.click(cell);
+
+      paste(cell, '12');
+
+      await waitFor(() => {
+        expect(getCell(0, 1).textContent).to.equal('12');
+      });
+      // The instance returned in the envelope is stored verbatim.
+      expect(apiRef.current?.getRow(0)).to.equal(replacement);
+      // The `clipboardPasteEnd` event exposes the stored row, not the envelope.
+      expect(onClipboardPasteEnd.mock.lastCall?.[0].newRows.get(0)).to.equal(replacement);
+    });
+
     describe('should copy and paste cell value', () => {
       let clipboardData = '';
       const writeText = (data: string) => {
         clipboardData = data;
         return Promise.resolve();
       };
-      let writeTextStub: SinonStub;
+      let writeTextStub: MockInstance;
 
       const stubClipboard = () => {
-        writeTextStub = stub(navigator.clipboard, 'writeText').callsFake(writeText);
+        writeTextStub = vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(writeText);
       };
 
       afterEach(function afterEachHook() {
-        writeTextStub.restore();
+        writeTextStub.mockRestore();
         clipboardData = '';
       });
 

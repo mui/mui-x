@@ -56,7 +56,7 @@ export const GridRootStyles = styled('div', {
     });
     return overrides;
   },
-})<{ ownerState: OwnerState }>(() => {
+})<{ ownerState: OwnerState }>(({ ownerState }) => {
   const apiRef = useGridPrivateApiContext();
   const shouldShowBorderTopRightRadius = useGridSelector(
     apiRef,
@@ -78,6 +78,12 @@ export const GridRootStyles = styled('div', {
     hover: vars.colors.interactive.hover,
     selected: selectedColor,
     selectedHover: selectedColor,
+    // Pinned cells cover the scrolled cells behind them, so their fallback must
+    // stay opaque. Translucent overlay colors would let those cells bleed through
+    // in browsers without `color-mix()` support (https://github.com/mui/mui-x/issues/18273).
+    pinnedHover: pinnedBackground,
+    pinnedSelected: pinnedBackground,
+    pinnedSelectedHover: pinnedBackground,
   };
 
   const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity, fallbackColors.hover);
@@ -98,37 +104,32 @@ export const GridRootStyles = styled('div', {
     pinnedBackground,
     hoverColor,
     hoverOpacity,
-    fallbackColors.hover,
+    fallbackColors.pinnedHover,
   );
   const pinnedSelectedBackground = mix(
     pinnedBackground,
     selectedColor,
     selectedOpacity,
-    fallbackColors.selected,
+    fallbackColors.pinnedSelected,
   );
   const pinnedSelectedHoverBackground = mix(
     pinnedBackground,
     selectedHoverColor,
     selectedHoverOpacity,
-    fallbackColors.selectedHover,
+    fallbackColors.pinnedSelectedHover,
   );
 
   const getPinnedBackgroundStyles = (backgroundColor: string) => ({
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       backgroundColor,
       '&.Mui-selected': {
-        backgroundColor: mix(
-          backgroundColor,
-          selectedBackground,
-          selectedOpacity,
-          fallbackColors.selected,
-        ),
+        backgroundColor: mix(backgroundColor, selectedBackground, selectedOpacity, backgroundColor),
         '&:hover': {
           backgroundColor: mix(
             backgroundColor,
             selectedHoverBackground,
             selectedHoverOpacity,
-            fallbackColors.selectedHover,
+            backgroundColor,
           ),
         },
       },
@@ -182,10 +183,13 @@ export const GridRootStyles = styled('div', {
     color: vars.colors.foreground.base,
     font: vars.typography.font.body,
     outline: 'none',
-    height: '100%',
+    height: ownerState.height ?? '100%',
+    // Pin the `height` prop in a flex-column parent without flex-shrink: 0, which would make
+    // a flex-row parent overflow. See https://github.com/mui/mui-x/pull/23628#discussion_r4046270137
+    minHeight: ownerState.height ?? 0,
+    maxHeight: ownerState.height,
     display: 'flex',
     minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
-    minHeight: 0,
     flexDirection: 'column',
     overflow: 'hidden',
     transform: 'translate(0, 0)', // Create a stacking context to keep scrollbars from showing on top
@@ -211,6 +215,7 @@ export const GridRootStyles = styled('div', {
     [`&.${c.autosizing}`]: {
       [`& .${c.columnHeaderTitleContainerContent} > *`]: {
         overflow: 'visible !important',
+        whiteSpace: 'nowrap !important',
       },
       '@media (hover: hover)': {
         [`& .${c.menuIcon}`]: {

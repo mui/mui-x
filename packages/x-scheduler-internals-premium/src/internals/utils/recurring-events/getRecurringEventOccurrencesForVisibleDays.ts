@@ -46,33 +46,33 @@ const YEARLY_MAX_ATTEMPTS = 8;
  * Expands a recurring event into concrete occurrences within a visible range.
  */
 class RecurringEventExpander {
-  private readonly dataTimezone: SchedulerProcessedEvent['dataTimezone'];
+  declare private readonly dataTimezone: SchedulerProcessedEvent['dataTimezone'];
 
-  private readonly rule: SchedulerProcessedEventRecurrenceRule;
+  declare private readonly rule: SchedulerProcessedEventRecurrenceRule;
 
   /*
    * Day anchor for RRULE math (BYDAY/COUNT), always in data timezone.
    */
-  private readonly seriesStartDay: TemporalSupportedObject;
+  declare private readonly seriesStartDay: TemporalSupportedObject;
 
   /*
    * Represents the original DTSTART wall-time (HH:mm) in the event/data timezone
    * It is used to build occurrence instants via mergeDateAndTime().
    */
-  private readonly dtStartInDataTz: TemporalSupportedObject;
+  declare private readonly dtStartInDataTz: TemporalSupportedObject;
 
-  private readonly scanFirstDay: TemporalSupportedObject;
+  declare private readonly scanFirstDay: TemporalSupportedObject;
 
-  private readonly scanLastDay: TemporalSupportedObject;
+  declare private readonly scanLastDay: TemporalSupportedObject;
 
-  private readonly interval: number;
+  declare private readonly interval: number;
 
-  private readonly exDateKeys: Set<string>;
+  declare private readonly exDateKeys: Set<string>;
 
-  private readonly untilBoundary: TemporalSupportedObject | null;
+  declare private readonly untilBoundary: TemporalSupportedObject | null;
 
   /** The later of seriesStart and scanFirstDay */
-  private readonly minDate: TemporalSupportedObject;
+  declare private readonly minDate: TemporalSupportedObject;
 
   // Weekly-specific: sorted weekday codes
   private sortedWeekDayCodes: RecurringEventWeekDayCode[] | null = null;
@@ -100,13 +100,9 @@ class RecurringEventExpander {
 
     this.dataTimezone = event.dataTimezone;
     this.rule = this.dataTimezone.rrule!;
-    this.dtStartInDataTz = adapter.setTimezone(
-      this.dataTimezone.start.value,
-      this.dataTimezone.timezone,
-    );
-    this.seriesStartDay = adapter.startOfDay(
-      adapter.setTimezone(this.dataTimezone.start.value, this.dataTimezone.timezone),
-    );
+    // Already labeled in the data timezone by `resolveEventDate`.
+    this.dtStartInDataTz = this.dataTimezone.start.value;
+    this.seriesStartDay = adapter.startOfDay(this.dtStartInDataTz);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
     const dataTz = this.dataTimezone.timezone;
@@ -118,7 +114,7 @@ class RecurringEventExpander {
     this.scanFirstDay = adapter.startOfDay(adapter.addDays(visibleStartDataTz, 1 - eventDuration));
     this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
-    // Pre-compute boundaries and exclusions
+    // Pre-compute boundaries and exclusions (exDates are data-timezone labeled, like the day keys).
     this.exDateKeys = new Set(this.dataTimezone.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStartDay, this.scanFirstDay)

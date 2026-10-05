@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
@@ -66,10 +66,8 @@ const visibleAxisDataSelector = createSelectorMemoized(
  * The filtered source for all timeline layout consumers. Using this list keeps hidden
  * occurrences out of rendered lanes, lane counts, dependency arrows, and tab navigation.
  */
-const visibleGroupedByResourceListSelector = createSelector(
-  visibleAxisDataSelector,
-  (data) => data.resources,
-);
+const visibleGroupedByResourceListSelector = (state: State) =>
+  visibleAxisDataSelector(state).resources;
 
 const visibleOccurrencesByResourceMapSelector = createSelectorMemoized(
   visibleGroupedByResourceListSelector,
@@ -112,13 +110,11 @@ export const eventTimelinePremiumOccurrenceSelectors = {
    * The axis position of every visible occurrence, or `null` on the full-day window
    * (where filtering is an identity and mounted rows derive positions on demand).
    */
-  visiblePositionByOccurrenceKey: createSelector(
-    visibleAxisDataSelector,
-    (data): ReadonlyMap<string, OccurrencePosition> | null => data.positionByOccurrenceKey,
-  ),
-  visibleResourceOccurrences: createSelector(
-    visibleOccurrencesByResourceMapSelector,
-    (map, resourceId: SchedulerResourceId): readonly SchedulerEventOccurrence[] =>
-      map.get(resourceId) ?? EMPTY_ARRAY,
-  ),
+  visiblePositionByOccurrenceKey: (state: State): ReadonlyMap<string, OccurrencePosition> | null =>
+    visibleAxisDataSelector(state).positionByOccurrenceKey,
+  visibleResourceOccurrences: (
+    state: State,
+    resourceId: SchedulerResourceId,
+  ): readonly SchedulerEventOccurrence[] =>
+    visibleOccurrencesByResourceMapSelector(state).get(resourceId) ?? EMPTY_ARRAY,
 };

@@ -38,10 +38,8 @@ export const usePicker = <
 >({
   ref,
   props,
-  valueManager,
-  valueType,
+  manager,
   variant,
-  validator,
   onPopperExited,
   autoFocusView,
   rendererInterceptor: RendererInterceptor,
@@ -50,6 +48,8 @@ export const usePicker = <
   getStepNavigation,
 }: UsePickerParameters<TValue, TView, TExternalProps>): UsePickerReturnValue<TValue> => {
   type TError = InferError<TExternalProps>;
+
+  const { internal_valueManager: valueManager, valueType, validator } = manager;
 
   const {
     // View props
@@ -75,6 +75,7 @@ export const usePicker = <
     autoFocus,
     name,
     keepOpenDuringFieldFocus,
+    onCancel,
   } = props;
 
   const { className, sx, ...propsToForwardToView } = props;
@@ -102,8 +103,7 @@ export const usePicker = <
   const { timezone, state, setOpen, setValue, setValueFromView, value, viewValue } =
     useValueAndOpenStates<TValue, TView, TExternalProps>({
       props,
-      valueManager,
-      validator,
+      manager,
     });
 
   const {
@@ -141,12 +141,15 @@ export const usePicker = <
 
   const acceptValueChanges = useEventCallback(() => setValue(value, { source: 'view' }));
 
-  const cancelValueChanges = useEventCallback(() =>
+  const cancelValueChanges = useEventCallback(() => {
     setValue(state.lastCommittedValue, {
       skipPublicationIfPristine: true,
       source: 'view',
-    }),
-  );
+      shouldClose: false,
+    });
+    onCancel?.();
+    setOpen(false);
+  });
 
   const dismissViews = useEventCallback(() => {
     setValue(value, {

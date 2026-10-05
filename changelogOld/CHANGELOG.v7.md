@@ -6797,7 +6797,7 @@ And if you need the exact same output you can apply the following transformation
   ```
 
 - The `adapter.isEqual` method used to accept any type of value for its two input and tried to parse them before checking if they were equal.
-  The method has been simplified and now only accepts an already-parsed date or `null` (ie: the same formats used by the `value` prop in the pickers)
+  The method has been simplified and now only accepts an already-parsed date or `null` (that is, the same formats used by the `value` prop in the pickers)
 
   ```diff
    const adapterDayjs = new AdapterDayjs();

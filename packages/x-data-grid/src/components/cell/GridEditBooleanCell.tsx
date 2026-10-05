@@ -34,7 +34,7 @@ export interface GridEditBooleanCellProps
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
    * @param {boolean} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange?: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -76,12 +76,12 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.target.checked;
 
+      setValueState(newValue);
+      await apiRef.current.setEditCellValue({ id: idProp, field, value: newValue }, event);
+
       if (onValueChange) {
         await onValueChange(event, newValue);
       }
-
-      setValueState(newValue);
-      await apiRef.current.setEditCellValue({ id: idProp, field, value: newValue }, event);
     },
     [apiRef, field, idProp, onValueChange],
   );
@@ -154,7 +154,7 @@ GridEditBooleanCell.propTypes /* remove-proptypes */ = {
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
    * @param {boolean} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
-   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   * @returns {Promise<void> | void} A promise to be awaited after `apiRef.current.setEditCellValue` is called
    */
   onValueChange: PropTypes.func,
   /**

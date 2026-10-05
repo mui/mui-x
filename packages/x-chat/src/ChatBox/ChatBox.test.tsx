@@ -2,7 +2,8 @@ import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createEchoAdapter, useChatStatus, type ChatAdapter } from '@mui/x-chat-headless';
+import { createEchoAdapter, useChatStatus } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from './ChatBox';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -89,6 +90,59 @@ describe('ChatBox', () => {
 
     it('renders empty state text when no messages', () => {
       render(<ChatBox adapter={createAdapter()}>{null}</ChatBox>);
+      expect(screen.getByText('No messages yet')).not.toBe(null);
+    });
+
+    it('does not flash the empty state or suggestions while the initial history page loads', async () => {
+      let resolveListMessages!: (value: any) => void;
+      const adapter = createAdapter({
+        listMessages: () =>
+          new Promise((resolve) => {
+            resolveListMessages = resolve;
+          }),
+      });
+
+      render(
+        <ChatBox
+          adapter={adapter}
+          initialActiveConversationId="c1"
+          suggestions={['Tell me a joke']}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      expect(document.querySelector('.MuiChatSuggestions-root')).toBe(null);
+      expect(screen.queryByText('No messages yet')).toBe(null);
+
+      await act(async () => {
+        resolveListMessages({ messages: [], hasMore: false });
+      });
+
+      expect(document.querySelector('.MuiChatSuggestions-root')).not.toBe(null);
+    });
+
+    it('renders the empty state once the initial history page resolves empty', async () => {
+      let resolveListMessages!: (value: any) => void;
+      const adapter = createAdapter({
+        listMessages: () =>
+          new Promise((resolve) => {
+            resolveListMessages = resolve;
+          }),
+      });
+
+      render(
+        <ChatBox adapter={adapter} initialActiveConversationId="c1">
+          {null}
+        </ChatBox>,
+      );
+
+      expect(screen.queryByText('No messages yet')).toBe(null);
+
+      await act(async () => {
+        resolveListMessages({ messages: [], hasMore: false });
+      });
+
       expect(screen.getByText('No messages yet')).not.toBe(null);
     });
 

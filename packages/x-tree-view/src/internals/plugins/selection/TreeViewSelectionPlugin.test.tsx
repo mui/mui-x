@@ -1,8 +1,7 @@
-import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { TreeViewAnyStore } from '../../models';
 
 /**
@@ -64,7 +63,7 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (single selection and add selected item)', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
@@ -73,15 +72,15 @@ describeTreeView<TreeViewAnyStore>(
 
         await view.user.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal('1');
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal('1');
       });
 
       // TODO: Re-enable this test if we have a way to un-select an item in single selection.
       it.todo(
         'should call onSelectedItemsChange callback when the model is updated (single selection and remove selected item',
         async () => {
-          const onSelectedItemsChange = spy();
+          const onSelectedItemsChange = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -91,13 +90,13 @@ describeTreeView<TreeViewAnyStore>(
 
           await view.user.click(view.getItemContent('1'));
 
-          expect(onSelectedItemsChange.callCount).to.equal(1);
-          expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
+          expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+          expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal([]);
         },
       );
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to empty list)', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -107,12 +106,12 @@ describeTreeView<TreeViewAnyStore>(
 
         await view.user.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['1']);
       });
 
       it('should call the onSelectedItemsChange callback only once when selecting a collapsed parent item', () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -121,12 +120,12 @@ describeTreeView<TreeViewAnyStore>(
 
         fireEvent.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.equal('1');
       });
 
       it('should propagate selection to descendants when they mount after parent is selected (descendants propagation enabled)', () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -142,7 +141,7 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       it('should call the onSelectedItemsChange callback only once when selecting a collapsed parent item in single-select mode with selectionPropagation.descendants', () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }],
@@ -152,12 +151,12 @@ describeTreeView<TreeViewAnyStore>(
 
         fireEvent.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.equal('1');
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to non-empty list)', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -170,12 +169,12 @@ describeTreeView<TreeViewAnyStore>(
         await view.user.click(view.getItemContent('2'));
         await view.user.keyboard('{/Control}');
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['2', '1']);
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and remove selected item)', async () => {
-        const onSelectedItemsChange = spy();
+        const onSelectedItemsChange = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -188,8 +187,8 @@ describeTreeView<TreeViewAnyStore>(
         await view.user.click(view.getItemContent('1'));
         await view.user.keyboard('{/Control}');
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
+        expect(onSelectedItemsChange.mock.calls.length).to.equal(1);
+        expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal([]);
       });
 
       it('should warn when switching from controlled to uncontrolled', () => {
@@ -1088,81 +1087,202 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
-    // The `aria-checked` attribute is used by the `view.isItemSelected` method.
+    // The `aria-checked` and `aria-selected` attributes are used by the `view.isItemSelected` method.
     // This `describe` only tests basics scenarios, more complex scenarios are tested in this file's other `describe`.
-    describe('aria-checked item attribute', () => {
-      describe('single selection', () => {
-        it('should have the attribute `aria-checked=false` if not selected', () => {
-          const view = render({
-            items: [{ id: '1' }, { id: '2' }],
+    // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/ — `aria-checked` is only used when
+    // `checkboxSelection` is enabled; otherwise selection is conveyed through `aria-selected`.
+    describe('aria-checked / aria-selected item attribute', () => {
+      describe('without checkboxSelection', () => {
+        describe('single selection', () => {
+          it('should have the attribute `aria-selected=false` if not selected', () => {
+            const view = render({
+              items: [{ id: '1' }, { id: '2' }],
+            });
+
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'false');
+          it('should have the attribute `aria-selected=true` if selected', () => {
+            const view = render({
+              items: [{ id: '1' }, { id: '2' }],
+              defaultSelectedItems: '1',
+            });
+
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'true');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+          });
+
+          it('should have the attribute `aria-selected=false` if partially selected', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+              defaultSelectedItems: '1.1',
+              defaultExpandedItems: ['1'],
+            });
+            // aria-selected has no tri-state value, so a parent with only some
+            // descendants selected is reported as not selected.
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+          });
+
+          it('should follow the selection model, not the propagated status, with selectionPropagation.parents', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+              defaultExpandedItems: ['1'],
+              defaultSelectedItems: '1.1',
+              selectionPropagation: { parents: true },
+            });
+
+            // Item `1` is not in the selection model, even though its status is
+            // `selected` because its only child is selected.
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+            expect(view.getRoot()).to.have.attribute('aria-multiselectable', 'false');
+          });
         });
 
-        it('should have the attribute `aria-checked=true` if selected', () => {
-          const view = render({
-            items: [{ id: '1' }, { id: '2' }],
-            defaultSelectedItems: '1',
+        describe('multi selection', () => {
+          it('should have the attribute `aria-selected=false` if not selected', () => {
+            const view = render({
+              multiSelect: true,
+              items: [{ id: '1' }, { id: '2' }],
+            });
+
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
-        });
+          it('should have the attribute `aria-selected=true` if selected', () => {
+            const view = render({
+              multiSelect: true,
+              items: [{ id: '1' }, { id: '2' }],
+              defaultSelectedItems: ['1'],
+            });
 
-        it('should have the attribute `aria-cheded="mixed"` if partially selected', () => {
-          const view = render({
-            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
-            defaultSelectedItems: '1.1',
-            defaultExpandedItems: ['1'],
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'true');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
           });
-          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'mixed');
+
+          it('should not have the attribute `aria-selected` if disabledSelection is true', () => {
+            const view = render({
+              multiSelect: true,
+              items: [{ id: '1' }, { id: '2' }],
+              disableSelection: true,
+            });
+
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+          });
+
+          it('should not have the attribute `aria-selected` if the item is disabled', () => {
+            const view = render({
+              multiSelect: true,
+              items: [{ id: '1', disabled: true }, { id: '2' }],
+            });
+
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+          });
+
+          it('should follow the selection model, not the propagated status, with selectionPropagation.parents', () => {
+            const view = render({
+              multiSelect: true,
+              items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+              defaultExpandedItems: ['1'],
+              defaultSelectedItems: ['1.1', '1.2'],
+              selectionPropagation: { parents: true },
+            });
+
+            // Item `1` is not in the selection model, even though its status is
+            // `selected` because both of its children are selected.
+            expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+          });
         });
       });
 
-      describe('multi selection', () => {
-        it('should have the attribute `aria-checked=false` if not selected', () => {
-          const view = render({
-            multiSelect: true,
-            items: [{ id: '1' }, { id: '2' }],
+      describe('with checkboxSelection', () => {
+        describe('single selection', () => {
+          it('should have the attribute `aria-checked=false` if not selected', () => {
+            const view = render({
+              checkboxSelection: true,
+              items: [{ id: '1' }, { id: '2' }],
+            });
+
+            expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'false');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'false');
+          it('should have the attribute `aria-checked=true` if selected', () => {
+            const view = render({
+              checkboxSelection: true,
+              items: [{ id: '1' }, { id: '2' }],
+              defaultSelectedItems: '1',
+            });
+
+            expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+          });
+
+          it('should have the attribute `aria-cheded="mixed"` if partially selected', () => {
+            const view = render({
+              checkboxSelection: true,
+              items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+              defaultSelectedItems: '1.1',
+              defaultExpandedItems: ['1'],
+            });
+            expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'mixed');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+          });
         });
 
-        it('should have the attribute `aria-checked=true` if selected', () => {
-          const view = render({
-            multiSelect: true,
-            items: [{ id: '1' }, { id: '2' }],
-            defaultSelectedItems: ['1'],
+        describe('multi selection', () => {
+          it('should have the attribute `aria-checked=false` if not selected', () => {
+            const view = render({
+              checkboxSelection: true,
+              multiSelect: true,
+              items: [{ id: '1' }, { id: '2' }],
+            });
+
+            expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'false');
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
-        });
+          it('should have the attribute `aria-checked=true` if selected', () => {
+            const view = render({
+              checkboxSelection: true,
+              multiSelect: true,
+              items: [{ id: '1' }, { id: '2' }],
+              defaultSelectedItems: ['1'],
+            });
 
-        it('should not have the attribute `aria-checked=false` if disabledSelection is true', () => {
-          const view = render({
-            multiSelect: true,
-            items: [{ id: '1' }, { id: '2' }],
-            disableSelection: true,
+            expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
           });
 
-          expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
-        });
+          it('should not have the attribute `aria-checked=false` if disabledSelection is true', () => {
+            const view = render({
+              checkboxSelection: true,
+              multiSelect: true,
+              items: [{ id: '1' }, { id: '2' }],
+              disableSelection: true,
+            });
 
-        it('should not have the attribute `aria-checked=false` if the item is disabled', () => {
-          const view = render({
-            multiSelect: true,
-            items: [{ id: '1', disabled: true }, { id: '2' }],
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
           });
 
-          expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+          it('should not have the attribute `aria-checked=false` if the item is disabled', () => {
+            const view = render({
+              checkboxSelection: true,
+              multiSelect: true,
+              items: [{ id: '1', disabled: true }, { id: '2' }],
+            });
+
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+          });
         });
       });
     });
 
     describe('onItemSelectionToggle prop', () => {
       it('should call the onItemSelectionToggle callback when selecting an item', async () => {
-        const onItemSelectionToggle = spy();
+        const onItemSelectionToggle = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -1171,13 +1291,13 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         await view.user.click(view.getItemContent('1'));
-        expect(onItemSelectionToggle.callCount).to.equal(1);
-        expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemSelectionToggle.lastCall.args[2]).to.equal(true);
+        expect(onItemSelectionToggle.mock.calls.length).to.equal(1);
+        expect(onItemSelectionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemSelectionToggle.mock.lastCall?.[2]).to.equal(true);
       });
 
       it('should call the onItemSelectionToggle callback when un-selecting an item', async () => {
-        const onItemSelectionToggle = spy();
+        const onItemSelectionToggle = vi.fn();
 
         const view = render({
           multiSelect: true,
@@ -1189,9 +1309,9 @@ describeTreeView<TreeViewAnyStore>(
         await view.user.keyboard('{Control>}');
         await view.user.click(view.getItemContent('1'));
         await view.user.keyboard('{/Control}');
-        expect(onItemSelectionToggle.callCount).to.equal(1);
-        expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
+        expect(onItemSelectionToggle.mock.calls.length).to.equal(1);
+        expect(onItemSelectionToggle.mock.lastCall?.[1]).to.equal('1');
+        expect(onItemSelectionToggle.mock.lastCall?.[2]).to.equal(false);
       });
     });
 
@@ -1250,7 +1370,7 @@ describeTreeView<TreeViewAnyStore>(
         });
 
         it('should ignore keepExistingSelection and only select the new item', () => {
-          const onSelectedItemsChange = spy();
+          const onSelectedItemsChange = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -1268,12 +1388,12 @@ describeTreeView<TreeViewAnyStore>(
 
           expect(view.isItemSelected('1')).to.equal(false);
           expect(view.isItemSelected('2')).to.equal(true);
-          expect(onSelectedItemsChange.lastCall.args[1]).to.equal('2');
+          expect(onSelectedItemsChange.mock.lastCall?.[1]).to.equal('2');
         });
 
         it('should keep the model as an item id when re-selecting a selected item with keepExistingSelection', () => {
-          const onSelectedItemsChange = spy();
-          const onItemSelectionToggle = spy();
+          const onSelectedItemsChange = vi.fn();
+          const onItemSelectionToggle = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -1292,8 +1412,8 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           expect(view.isItemSelected('1')).to.equal(true);
-          expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
-          expect(onItemSelectionToggle.callCount).to.equal(0);
+          expect(onSelectedItemsChange.mock.lastCall?.[1]).to.equal('1');
+          expect(onItemSelectionToggle.mock.calls.length).to.equal(0);
         });
       });
 
@@ -1334,7 +1454,7 @@ describeTreeView<TreeViewAnyStore>(
       describe('onItemSelectionToggle prop', () => {
         it('should call call onItemSelectionToggle callback when selecting an item', () => {
           const event = {} as any;
-          const onItemSelectionToggle = spy();
+          const onItemSelectionToggle = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -1345,15 +1465,15 @@ describeTreeView<TreeViewAnyStore>(
             view.apiRef.current.setItemSelection({ itemId: '1', event });
           });
 
-          expect(onItemSelectionToggle.callCount).to.equal(1);
-          expect(onItemSelectionToggle.lastCall.args[0]).to.equal(event);
-          expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-          expect(onItemSelectionToggle.lastCall.args[2]).to.equal(true);
+          expect(onItemSelectionToggle.mock.calls.length).to.equal(1);
+          expect(onItemSelectionToggle.mock.lastCall?.[0]).to.equal(event);
+          expect(onItemSelectionToggle.mock.lastCall?.[1]).to.equal('1');
+          expect(onItemSelectionToggle.mock.lastCall?.[2]).to.equal(true);
         });
 
         it('should call call onItemSelectionToggle callback when un-selecting an item', () => {
           const event = {} as any;
-          const onItemSelectionToggle = spy();
+          const onItemSelectionToggle = vi.fn();
 
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
@@ -1365,10 +1485,10 @@ describeTreeView<TreeViewAnyStore>(
             view.apiRef.current.setItemSelection({ itemId: '1', event });
           });
 
-          expect(onItemSelectionToggle.callCount).to.equal(1);
-          expect(onItemSelectionToggle.lastCall.args[0]).to.equal(event);
-          expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-          expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
+          expect(onItemSelectionToggle.mock.calls.length).to.equal(1);
+          expect(onItemSelectionToggle.mock.lastCall?.[0]).to.equal(event);
+          expect(onItemSelectionToggle.mock.lastCall?.[1]).to.equal('1');
+          expect(onItemSelectionToggle.mock.lastCall?.[2]).to.equal(false);
         });
       });
     });
@@ -1530,13 +1650,13 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.getItemContent('2').querySelector('input[type="checkbox"]')).not.to.equal(null);
       });
 
-      it('should not have aria-checked attribute when disableSelection is true', () => {
+      it('should not have aria-selected attribute when disableSelection is true', () => {
         const view = render({
           items: [{ id: '1', disableSelection: true }, { id: '2' }],
         });
 
-        expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
-        expect(view.getItemRoot('2')).to.have.attribute('aria-checked', 'false');
+        expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+        expect(view.getItemRoot('2')).to.have.attribute('aria-selected', 'false');
       });
 
       it('should not include items with disableSelection when selecting a range (multi selection)', async () => {
@@ -1591,15 +1711,15 @@ describeTreeView<TreeViewAnyStore>(
             );
           });
 
-          it('should not have aria-checked attribute when item is not selectable', () => {
+          it('should not have aria-selected attribute when item is not selectable', () => {
             const view = render({
               items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
               defaultExpandedItems: ['1'],
               isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
             });
 
-            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
-            expect(view.getItemRoot('1.1')).to.have.attribute('aria-checked', 'false');
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+            expect(view.getItemRoot('1.1')).to.have.attribute('aria-selected', 'false');
           });
         });
 

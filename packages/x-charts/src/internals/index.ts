@@ -98,6 +98,7 @@ export { processLineLikeSeries } from './processLineLikeSeries';
 export { getLineLikeTooltip } from './getLineLikeTooltip';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
+export { useDefaultTickLabelStyle } from './useDefaultTickLabelStyle';
 export * from './plugins/utils/defaultSeriesConfig';
 export { EPSILON } from '../utils/epsilon';
 export {

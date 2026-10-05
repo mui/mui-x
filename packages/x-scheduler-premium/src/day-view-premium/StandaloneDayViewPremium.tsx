@@ -3,8 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
-import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import {
+  EventCalendarPremiumStore,
+  useExtractEventCalendarPremiumParameters,
+} from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { DayView } from '@mui/x-scheduler/day-view';
 import { EventCalendarProvider, EventDialogProvider } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
@@ -32,7 +34,7 @@ const StandaloneDayViewPremium = React.forwardRef(function StandaloneDayViewPrem
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+  const { parameters, forwardedProps } = useExtractEventCalendarPremiumParameters<
     TEvent,
     TResource,
     typeof props
@@ -306,12 +308,14 @@ StandaloneDayViewPremium.propTypes /* remove-proptypes */ = {
   /**
    * Configuration applied to the view, keyed by the view name.
    * For the `day` view, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid.
-   * @example { day: { startTime: 8, endTime: 20 } }
+   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
+   * scrolls to on mount.
+   * @example { day: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig: PropTypes.shape({
     day: PropTypes.shape({
       endTime: PropTypes.number,
+      initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
     }),
   }),

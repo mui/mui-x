@@ -13,13 +13,12 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   useDraggableEvent,
-  generateOccurrenceFromEvent,
+  useOriginalOccurrence,
   computeElementPositionInCollection,
   dateToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
@@ -52,6 +51,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     // Internal props
     start,
     end,
+    dataTimezone,
     eventId,
     occurrenceKey,
     renderDragPreview,
@@ -88,6 +88,14 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   );
 
   // Feature hooks
+  const getOriginalOccurrence = useOriginalOccurrence({
+    eventId,
+    occurrenceKey,
+    start,
+    end,
+    dataTimezone,
+  });
+
   const getSharedDragData: TimelineGridEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
       // Measured on the axis so it stays consistent with the cursor offsets when a
@@ -96,21 +104,11 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         -dateToTimelineAxisOffsetMs(adapter, config, start.value),
         0,
       );
-      const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-
-      const originalOccurrence = generateOccurrenceFromEvent({
-        event,
-        eventId,
-        occurrenceKey,
-        start,
-        end,
-      });
-
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
       return {
         eventId,
         occurrenceKey,
-        originalOccurrence,
+        originalOccurrence: getOriginalOccurrence(),
         start: start.value,
         end: end.value,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
@@ -209,7 +207,8 @@ export namespace TimelineGridEvent {
     extends
       BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useDraggableEvent.PublicParameters {
+      useDraggableEvent.PublicParameters,
+      Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
     elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 

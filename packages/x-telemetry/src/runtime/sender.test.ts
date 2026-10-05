@@ -1,8 +1,6 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import { isJSDOM } from 'test/utils/skipIf';
 import telemetryContext from '../context';
-import { getTelemetryEnvConfig } from './config';
 
 vi.mock('../context', () => ({
   default: {
@@ -19,6 +17,12 @@ vi.mock('../context', () => ({
   },
 }));
 
+// `isolate: false` shares the module registry, so `./sender` and the `./get-context` it
+// imports may be cached bound to another file's `vi.mock('../context')`.
+beforeEach(() => {
+  vi.resetModules();
+});
+
 const testEvent = {
   eventName: 'test.event',
   payload: { foo: 'bar' },
@@ -27,8 +31,14 @@ const testEvent = {
 
 describe.runIf(isJSDOM)('Telemetry: sendMuiXTelemetryEvent', () => {
   let fetchSpy: ReturnType<typeof vi.fn>;
+  // Imported after the reset: `./config` caches env in module scope, so a reference held
+  // across the reset is not the one `./sender` reads.
+  let muiXTelemetrySettings: typeof import('@mui/x-telemetry').muiXTelemetrySettings;
+  let getTelemetryEnvConfig: typeof import('./config').getTelemetryEnvConfig;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    ({ muiXTelemetrySettings } = await import('@mui/x-telemetry'));
+    ({ getTelemetryEnvConfig } = await import('./config'));
     vi.stubEnv('NODE_ENV', 'development');
     fetchSpy = vi.fn().mockResolvedValue(new Response('ok', { status: 200 }));
     vi.stubGlobal('fetch', fetchSpy);

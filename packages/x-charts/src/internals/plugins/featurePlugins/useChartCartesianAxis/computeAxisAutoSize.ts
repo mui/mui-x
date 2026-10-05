@@ -53,6 +53,8 @@ interface ComputeAxisAutoSizeOptions {
    * so tick labels measured from them match what the chart renders.
    */
   domain?: DomainDefinition;
+  /** Font the ticks render with, used only for measuring. */
+  defaultTickLabelStyle?: ChartsTextStyle;
 }
 
 /**
@@ -267,6 +269,7 @@ function getRotatedDimension(
 function computeGroupedAxisAutoSize(
   axis: DefaultedXAxis & { groups: AxisGroup[] },
   direction: 'x' | 'y',
+  defaultTickLabelStyle: ChartsTextStyle | undefined,
 ): AxisAutoSizeResult | undefined {
   const { groups, data, tickSize: baseTickSize, tickLabelStyle: axisTickLabelStyle } = axis;
   const hasAxisLabel = Boolean(axis.label);
@@ -284,9 +287,10 @@ function computeGroupedAxisAutoSize(
     const groupLabels = selectLargestCandidates(getGroupLabels(data, group));
 
     const groupTickLabelStyle = {
+      ...defaultTickLabelStyle,
       ...axisTickLabelStyle,
       ...group.tickLabelStyle,
-    } as ChartsTextStyle | undefined;
+    } as ChartsTextStyle;
 
     const angle = groupTickLabelStyle?.angle;
     const { maxWidth, maxHeight } = measureTickLabels(groupLabels, groupTickLabelStyle);
@@ -342,13 +346,15 @@ function computeGroupedAxisAutoSize(
 export function computeAxisAutoSize(
   options: ComputeAxisAutoSizeOptions,
 ): AxisAutoSizeResult | undefined {
-  const { axis, direction, domain } = options;
+  const { axis, direction, domain, defaultTickLabelStyle } = options;
 
   if (hasGroups(axis)) {
-    return computeGroupedAxisAutoSize(axis, direction);
+    return computeGroupedAxisAutoSize(axis, direction, defaultTickLabelStyle);
   }
 
-  const tickLabelStyle = axis.tickLabelStyle as ChartsTextStyle | undefined;
+  // Measure with the font the ticks render with. `axis.tickLabelStyle` only holds what the user set,
+  // so on its own the measurement element would inherit the document font instead.
+  const tickLabelStyle = { ...defaultTickLabelStyle, ...axis.tickLabelStyle } as ChartsTextStyle;
   const tickSize = axis.tickSize ?? AXIS_AUTO_SIZE_TICK_SIZE;
   const hasLabel = Boolean(axis.label);
   const angle = tickLabelStyle?.angle;

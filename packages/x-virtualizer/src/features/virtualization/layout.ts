@@ -3,7 +3,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { platform } from '@base-ui/utils/platform';
-import { Store, createSelectorMemoized } from '@mui/x-internals/store';
+import { Store, createSelectorMemoized } from '@base-ui/utils/store';
 import type { ColumnWithWidth } from '../../models';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
@@ -23,7 +23,7 @@ type AnyElements = BaseElements & Record<string, React.RefObject<HTMLElement | n
 export abstract class Layout<E extends AnyElements = AnyElements> {
   static elements: readonly (keyof AnyElements)[] = ['scroller', 'container'];
 
-  refs: E;
+  declare refs: E;
 
   constructor(refs: E) {
     this.refs = refs;
@@ -151,6 +151,11 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
             height: cssMax(height, viewportOuterSize.height - horizontalScrollbarSize),
             flex: '0 0 auto',
           } as React.CSSProperties;
+        } else if (needsHorizontalScrollbar) {
+          // As wide as the rows, so the content box isn't narrower than its own children.
+          // Sticky children never move past their containing block, and a viewport-wide box
+          // would cut their travel short.
+          style = { width: dimensions.rowWidth };
         }
 
         return {

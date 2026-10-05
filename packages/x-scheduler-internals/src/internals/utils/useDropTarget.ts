@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import type {
   SchedulerEvent,
   SchedulerOccurrencePlaceholder,
@@ -229,7 +229,24 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const adapter = store.state.adapter;
 
-  const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
+  const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
+
+  // Only the bounds the drop moved, as displayed. An untouched bound keeps its stored value:
+  // re-read from its display value it can be another day in the event's timezone (an all-day
+  // occurrence is displayed on whole display days), which a recurring update would take for
+  // a day move and realign the rule on. A drop that toggles all-day resends both: the stored
+  // bounds belong to the other representation (the displayed start of an all-day occurrence
+  // can equal the drop start while the stored one is later).
+  const allDayToggled =
+    additionalChanges.allDay != null &&
+    additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
+  const changes: SchedulerEventUpdatedProperties = { id: eventId };
+  if (allDayToggled || !adapter.isEqual(originalOccurrence.displayTimezone.start.value, start)) {
+    changes.start = start;
+  }
+  if (allDayToggled || !adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)) {
+    changes.end = end;
+  }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
   // If `null`, we want to keep the original event resource.
@@ -257,7 +274,6 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     }
   }
 
-  const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
   Object.assign(changes, additionalChanges);
 
   const hasChanged = Object.entries(changes).some(([key, value]) => {
@@ -265,10 +281,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
       return false;
     }
     if (key === 'start' || key === 'end') {
-      return !adapter.isEqual(
-        originalOccurrence.displayTimezone[key].value,
-        value as TemporalSupportedObject,
-      );
+      return true;
     }
     return originalOccurrence[key as keyof typeof originalOccurrence] !== value;
   });
@@ -277,20 +290,34 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     return;
   }
 
-  if (originalOccurrence.displayTimezone.rrule) {
+  if (originalOccurrence.dataTimezone.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.displayTimezone.start.value,
+      occurrenceStart: originalOccurrence.dataTimezone.start.value,
       changes,
     });
-    // Editing surface is refreshed in `selectRecurringEventScope` once the user confirms a scope.
+    // Editing surface is refreshed (or disarmed) in `selectRecurringEventScope` once the user
+    // confirms a scope.
     return;
   }
 
-  store.updateEvent(changes);
+  const result = store.updateEvent(changes);
+  if (!result.applied) {
+    // The drop has no other surface for the rejection.
+    store.pushError(result.rejection, { transient: true });
+    return;
+  }
 
-  // Sync the editing surface (if this occurrence is being edited) with the committed times.
+  // Sync the editing surface (if this occurrence is being edited) with the committed times:
+  // the scheduling plugin can clamp the drop, and its dates come in the data timezone.
+  // Only the committed bounds: an untouched one keeps its stored value on the occurrence.
   if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
-    store.setEditingOccurrenceTimes(start, end);
+    const { displayTimezone } = store.state;
+    const toDisplayTimezone = (date: TemporalSupportedObject | undefined) =>
+      date == null ? undefined : adapter.setTimezone(date, displayTimezone);
+    store.setEditingOccurrenceTimes({
+      start: toDisplayTimezone(result.changes.start),
+      end: toDisplayTimezone(result.changes.end),
+    });
   }
 }
 

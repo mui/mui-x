@@ -31,9 +31,7 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ ins
       try {
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
-        printChart(chartRoot, options);
-      } catch (error) {
-        console.error('MUI X Charts: Error exporting chart as print:', error);
+        await printChart(chartRoot, options);
       } finally {
         enableAnimation();
       }
@@ -51,8 +49,6 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ ins
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
         await exportImage(chartRoot, svg, options);
-      } catch (error) {
-        console.error('MUI X Charts: Error exporting chart as image:', error);
       } finally {
         enableAnimation();
       }

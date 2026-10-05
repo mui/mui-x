@@ -3,7 +3,6 @@
 export type {
   SchedulerSlots,
   SchedulerSlotProps,
-  EventDialogGeneralTabProps,
   EventDialogGeneralTabPropsOverrides,
 } from './models/slots';
 
@@ -13,6 +12,7 @@ export * from './compact-three-day-view';
 export * from './compact-week-view';
 export * from './day-view';
 export * from './event-calendar';
+export * from './event-dialog';
 export * from './month-view';
 export * from './standalone-event';
 export * from './week-view';

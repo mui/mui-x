@@ -1,5 +1,4 @@
 'use client';
-import { useStore } from '@base-ui/utils/store';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
@@ -7,19 +6,11 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getPrimaryResourceId } from '@mui/x-scheduler-internals/internals';
-import type { EventDialogBuiltInFormValues, EventDialogFormValues } from './utils';
-import { computeRange } from './utils';
+import type { EventDialogFormValues } from './utils';
+import { computeRange, RANGE_FORM_KEYS } from './utils';
 
 // Gate on the whole hook: only writes to these keys reach the placeholder.
-// Must stay in sync with what `computeRange` reads, plus `resourceIds`.
-const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set<keyof EventDialogBuiltInFormValues>([
-  'startDate',
-  'startTime',
-  'endDate',
-  'endTime',
-  'allDay',
-  'resourceIds',
-]);
+const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set([...RANGE_FORM_KEYS, 'resourceIds']);
 
 /**
  * Returns a function that live-updates the creation placeholder in the store
@@ -29,10 +20,11 @@ const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set<keyof EventDialogBuiltInFo
 export function usePushPlaceholder() {
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
-  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
 
   return function pushPlaceholder(values: EventDialogFormValues, changedKeys: string[]) {
+    // Read the store directly: the callback runs synchronously after each write,
+    // and subscribing would re-render the whole dialog on every push.
+    const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
     if (rawPlaceholder?.type !== 'creation') {
       return;
     }
@@ -40,6 +32,7 @@ export function usePushPlaceholder() {
       return;
     }
 
+    const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
     const { start, end, surfaceType } = computeRange(adapter, values, displayTimezone);
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType

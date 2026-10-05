@@ -1,7 +1,6 @@
-import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import type { TreeViewAnyStore } from '../../models';
 
 describeTreeView<TreeViewAnyStore>(
@@ -771,7 +770,7 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           it('should not add a duplicate id to the selection model when ArrowDown is pressed while holding Shift onto an already-selected item', () => {
-            const onSelectedItemsChange = spy();
+            const onSelectedItemsChange = vi.fn();
             const view = render({
               items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
               multiSelect: true,
@@ -784,11 +783,11 @@ describeTreeView<TreeViewAnyStore>(
             });
             fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowDown', shiftKey: true });
 
-            expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['2', '3']);
+            expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['2', '3']);
           });
 
           it('should not add a duplicate id to the selection model when extending a range onto an already-selected item', () => {
-            const onSelectedItemsChange = spy();
+            const onSelectedItemsChange = vi.fn();
             const view = render({
               items: [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }],
               multiSelect: true,
@@ -802,7 +801,7 @@ describeTreeView<TreeViewAnyStore>(
             fireEvent.keyDown(view.getItemRoot('2'), { key: 'ArrowDown', shiftKey: true });
             fireEvent.keyDown(view.getItemRoot('3'), { key: 'ArrowDown', shiftKey: true });
 
-            expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['4', '3']);
+            expect(onSelectedItemsChange.mock.lastCall?.[1]).to.deep.equal(['4', '3']);
           });
 
           it('should un-select the focused item when ArrowDown is pressed while holding Shift and the item below have been selected in the same range', () => {
@@ -1445,8 +1444,8 @@ describeTreeView<TreeViewAnyStore>(
 
     describe('onKeyDown prop', () => {
       it('should call onKeyDown on the Tree View and the Tree Item when a key is pressed', () => {
-        const handleTreeViewKeyDown = spy();
-        const handleTreeItemKeyDown = spy();
+        const handleTreeViewKeyDown = vi.fn();
+        const handleTreeItemKeyDown = vi.fn();
 
         const view = render({
           items: [{ id: '1' }],
@@ -1463,8 +1462,8 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.keyDown(itemRoot, { key: 'A' });
         fireEvent.keyDown(itemRoot, { key: ']' });
 
-        expect(handleTreeViewKeyDown.callCount).to.equal(3);
-        expect(handleTreeItemKeyDown.callCount).to.equal(3);
+        expect(handleTreeViewKeyDown.mock.calls.length).to.equal(3);
+        expect(handleTreeItemKeyDown.mock.calls.length).to.equal(3);
       });
     });
 

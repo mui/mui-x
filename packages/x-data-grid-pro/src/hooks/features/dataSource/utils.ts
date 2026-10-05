@@ -27,9 +27,9 @@ export class NestedDataManager {
 
   private fetchParams: Map<GridRowId, GridGetRowsParamsPro> = new Map();
 
-  private api: GridPrivateApiPro;
+  declare private api: GridPrivateApiPro;
 
-  private maxConcurrentRequests: number;
+  declare private maxConcurrentRequests: number;
 
   constructor(
     privateApiRef: RefObject<GridPrivateApiPro>,
@@ -129,7 +129,7 @@ export const getGroupKeys = (tree: GridRowTreeConfig, rowId: GridRowId) => {
   const rowNode = tree[rowId];
   let currentNodeId = rowNode.parent;
   const groupKeys: GridKeyValue[] = [];
-  while (currentNodeId && currentNodeId !== GRID_ROOT_GROUP_ID) {
+  while (currentNodeId != null && currentNodeId !== GRID_ROOT_GROUP_ID) {
     const currentNode = tree[currentNodeId] as GridGroupNode;
     groupKeys.push(currentNode.groupingKey ?? '');
     currentNodeId = currentNode.parent;

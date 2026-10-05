@@ -10,8 +10,12 @@ import type { EventCalendarPremiumParameters } from './EventCalendarPremiumStore
 export class EventCalendarPremiumStore<
   TEvent extends object,
   TResource extends object,
-> extends ExtendableEventCalendarStore<TEvent, TResource> {
-  public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent>;
+> extends ExtendableEventCalendarStore<
+  TEvent,
+  TResource,
+  EventCalendarPremiumParameters<TEvent, TResource>
+> {
+  declare public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent>;
 
   public constructor(
     parameters: EventCalendarPremiumParameters<TEvent, TResource>,

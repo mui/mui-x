@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import type { TreeViewAnyStore } from '../../models';
 
 /**
@@ -173,7 +172,7 @@ describeTreeView<TreeViewAnyStore>(
 
     describe('onItemFocus prop', () => {
       it('should be called when an item is focused', () => {
-        const onItemFocus = spy();
+        const onItemFocus = vi.fn();
 
         const view = render({
           items: [{ id: '1' }],
@@ -184,8 +183,8 @@ describeTreeView<TreeViewAnyStore>(
           view.getItemRoot('1').focus();
         });
 
-        expect(onItemFocus.callCount).to.equal(1);
-        expect(onItemFocus.lastCall.lastArg).to.equal('1');
+        expect(onItemFocus.mock.calls.length).to.equal(1);
+        expect(onItemFocus.mock.lastCall?.at(-1)).to.equal('1');
       });
     });
 

@@ -9,8 +9,10 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import type {
   SchedulerEventCreationConfig,
+  SchedulerEventOccurrence,
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
+import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import {
@@ -21,7 +23,8 @@ import {
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { describe, it, expect } from 'vitest';
+import { afterAll, describe, it, expect, vi } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 
 const editingStyledContextValue = {
@@ -60,7 +63,7 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
 
-  const { render } = createSchedulerRenderer();
+  const { renderSettled } = createSchedulerRenderer();
 
   /**
    * Seeds a `type: 'creation'` placeholder anchored to `rowResource`'s row — mirroring what
@@ -68,10 +71,10 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
    * `rawPlaceholder.resourceId ?? originalEvent?.resource`: the row's (string) id for a fresh
    * creation with no original event.
    */
-  function renderCreationDialog(options: {
+  async function renderCreationDialog(options: {
     rowResource: SchedulerResource;
     eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
-    onCreateEventSpyReady: (spy: sinon.SinonSpy) => void;
+    onCreateEventSpyReady: (spy: MockInstance) => void;
   }) {
     const { rowResource, eventCreation, onCreateEventSpyReady } = options;
 
@@ -98,7 +101,7 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
       .resource(rowResource)
       .toOccurrence();
 
-    const utils = render(
+    const utils = await renderSettled(
       <SchedulerStoreContext.Provider value={store as any}>
         <StoreSpy
           Context={SchedulerStoreContext}
@@ -125,8 +128,8 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
   }
 
   it("should seed the picker as multi-select with the row's resource when `canHaveMultipleResources` is true, and let a second resource be added", async () => {
-    let createEventSpy: sinon.SinonSpy | undefined;
-    const { user, currentDialog } = renderCreationDialog({
+    let createEventSpy: MockInstance | undefined;
+    const { user, currentDialog } = await renderCreationDialog({
       rowResource: engineering,
       eventCreation: { canHaveMultipleResources: true },
       onCreateEventSpyReady: (sp) => {
@@ -144,13 +147,13 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     await user.keyboard('{Escape}');
     await user.click(currentDialog.getByRole('button', { name: /save/i }));
 
-    expect(createEventSpy?.calledOnce).to.equal(true);
-    expect(createEventSpy?.firstCall.args[0].resource).to.deep.equal([engineering.id, design.id]);
+    expect(createEventSpy?.mock.calls.length).to.equal(1);
+    expect(createEventSpy?.mock.calls[0][0].resource).to.deep.equal([engineering.id, design.id]);
   });
 
   it("should seed the picker as single-select with the row's resource when `canHaveMultipleResources` is false, and picking another resource replaces it", async () => {
-    let createEventSpy: sinon.SinonSpy | undefined;
-    const { user, currentDialog } = renderCreationDialog({
+    let createEventSpy: MockInstance | undefined;
+    const { user, currentDialog } = await renderCreationDialog({
       rowResource: engineering,
       eventCreation: { canHaveMultipleResources: false },
       onCreateEventSpyReady: (sp) => {
@@ -167,7 +170,142 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     await user.click(await screen.findByRole('option', { name: /design/i }));
     await user.click(currentDialog.getByRole('button', { name: /save/i }));
 
-    expect(createEventSpy?.calledOnce).to.equal(true);
-    expect(createEventSpy?.firstCall.args[0].resource).to.equal(design.id);
+    expect(createEventSpy?.mock.calls.length).to.equal(1);
+    expect(createEventSpy?.mock.calls[0][0].resource).to.equal(design.id);
+  });
+});
+
+describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
+  const anchor = document.createElement('button');
+  document.body.appendChild(anchor);
+  afterAll(() => anchor.remove());
+
+  const { renderSettled } = createSchedulerRenderer();
+
+  const predecessor = EventBuilder.new()
+    .id('event-a')
+    .title('Movable predecessor')
+    .span('2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z')
+    .resource(engineering)
+    .build();
+  const readOnlySuccessor = EventBuilder.new()
+    .id('event-b')
+    .title('Locked successor')
+    .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+    .resource(engineering)
+    .readOnly()
+    .build();
+  const dependency: SchedulerDependency = {
+    id: 'dep-1',
+    source: predecessor.id,
+    target: readOnlySuccessor.id,
+    type: 'FinishToStart',
+  };
+
+  /**
+   * Renders the dialog editing `predecessor`, whose FinishToStart successor is
+   * read-only: a save moving it past 10:00 is vetoed.
+   */
+  async function renderEditDialog() {
+    const onEventsChange = vi.fn();
+    const onClose = vi.fn();
+
+    const store = new EventTimelinePremiumStore(
+      {
+        events: [predecessor, readOnlySuccessor],
+        resources,
+        dependencies: [dependency],
+        onDependenciesChange: () => {},
+        onEventsChange,
+      },
+      adapter,
+    );
+
+    const editedOccurrence: SchedulerEventOccurrence = {
+      ...store.state.processedEventLookup.get(predecessor.id)!,
+      key: 'occurrence-a',
+    };
+
+    const utils = await renderSettled(
+      <SchedulerStoreContext.Provider value={store as any}>
+        <TestEventDialogContent
+          open
+          anchor={anchor}
+          container={document.body}
+          occurrence={editedOccurrence}
+          onClose={onClose}
+        />
+      </SchedulerStoreContext.Provider>,
+    );
+
+    // Same desktop Dialog + mobile Drawer duplication as the creation suite above:
+    // scope every query to the last dialog.
+    const dialogs = screen.getAllByRole('dialog');
+    const currentDialog = within(dialogs[dialogs.length - 1]);
+
+    return { ...utils, currentDialog, store, onClose, onEventsChange };
+  }
+
+  it('should keep the dialog open with the edits when the save is vetoed because the cascade would move a read-only event', async () => {
+    const { user, currentDialog, store, onClose, onEventsChange } = await renderEditDialog();
+
+    // Move the predecessor to 11:00–12:00: past the read-only successor's 10:00 start,
+    // so the auto-scheduling cascade would have to push it.
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '11:00');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '12:00');
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    // Vetoed atomically: nothing emitted, the dialog keeps the edits, and the rejection
+    // sits on the end time field rather than on a toast behind the modal.
+    expect(onClose.mock.calls.length).to.equal(0);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    expect(store.state.errors).to.have.length(0);
+    expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+    expect(currentDialog.getByLabelText(/start time/i)).to.have.value('11:00');
+  });
+
+  it('should show the General tab when a save submitted from the Recurrence tab is vetoed', async () => {
+    const { user, currentDialog, onEventsChange } = await renderEditDialog();
+
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '11:00');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '12:00');
+
+    const generalPanel = currentDialog.getByRole('tabpanel', { name: /general/i });
+    await user.click(currentDialog.getByRole('tab', { name: /recurrence/i }));
+    expect(generalPanel).to.have.attribute('hidden');
+
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    // The rejection sits on a General tab field, so the dialog switches back to it.
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    expect(generalPanel).not.to.have.attribute('hidden');
+    expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+  });
+
+  it('should save after the vetoed dates are edited back into a valid range', async () => {
+    const { user, currentDialog, onClose, onEventsChange } = await renderEditDialog();
+
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '11:00');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '12:00');
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+    expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+
+    // Editing a range field clears the rejection; a save that no longer pushes the
+    // successor goes through.
+    await user.clear(currentDialog.getByLabelText(/start time/i));
+    await user.type(currentDialog.getByLabelText(/start time/i), '08:30');
+    await user.clear(currentDialog.getByLabelText(/end time/i));
+    await user.type(currentDialog.getByLabelText(/end time/i), '09:30');
+    expect(currentDialog.queryByText(/"Locked successor"/)).to.equal(null);
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    expect(onClose.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls.length).to.equal(1);
   });
 });

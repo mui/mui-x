@@ -50,6 +50,20 @@ You can predefine dimensions for the parent of the Data Grid.
 
 {{"demo": "FixedSizeGrid.js", "bg": "inline"}}
 
+## Height prop
+
+Use the `height` prop to set a fixed height directly on the Data Grid, without a parent element with an explicit height.
+It accepts a number (in pixels), a CSS length such as `'50vh'`, a percentage, or a calculation such as `'calc(100vh - 200px)'`.
+Percentage values require a parent element with an explicit height.
+For content-based sizing, use a [flex parent container](#flex-parent-container) instead of values such as `'auto'`, `'min-content'`, `'max-content'`, or `'fit-content'`, which this prop does not support.
+To change the height, update the prop instead of `sx` or `style`, because the prop also sets the minimum and maximum height.
+
+{{"demo": "HeightGrid.js", "bg": "inline"}}
+
+:::warning
+The `height` prop cannot be used together with [`autoHeight`](/x/react-data-grid/layout/#auto-height).
+:::
+
 ## Overlay height
 
 When data grid has no content, overlays (such as

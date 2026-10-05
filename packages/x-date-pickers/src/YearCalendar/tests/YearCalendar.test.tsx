@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { act, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
@@ -8,7 +7,7 @@ describe('<YearCalendar />', () => {
   const { render } = createPickerRenderer();
 
   it('allows to pick year standalone by click, `Enter` and `Space`', async () => {
-    const onChange = spy();
+    const onChange = vi.fn();
     const { user } = render(
       <YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />,
     );
@@ -23,22 +22,22 @@ describe('<YearCalendar />', () => {
 
     await user.click(targetYear);
 
-    expect(onChange.callCount).to.equal(1);
-    expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 1, 2));
+    expect(onChange.mock.calls.length).to.equal(1);
+    expect(onChange.mock.calls[0][0]).toEqualDateTime(new Date(2025, 1, 2));
   });
 
   it('should select start of year without time when no initial value is present', async () => {
-    const onChange = spy();
+    const onChange = vi.fn();
     const { user } = render(<YearCalendar onChange={onChange} />);
 
     await user.click(screen.getByRole('radio', { name: '2025' }));
 
-    expect(onChange.callCount).to.equal(1);
-    expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 0, 1, 0, 0, 0, 0));
+    expect(onChange.mock.calls.length).to.equal(1);
+    expect(onChange.mock.calls[0][0]).toEqualDateTime(new Date(2025, 0, 1, 0, 0, 0, 0));
   });
 
   it('does not allow to pick year if readOnly prop is passed', async () => {
-    const onChangeMock = spy();
+    const onChangeMock = vi.fn();
     const { user } = render(
       <YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChangeMock} readOnly />,
     );
@@ -47,7 +46,7 @@ describe('<YearCalendar />', () => {
 
     await user.click(targetYear);
 
-    expect(onChangeMock.callCount).to.equal(0);
+    expect(onChangeMock.mock.calls.length).to.equal(0);
   });
 
   it('should display years in ascending (chronological order) by default', () => {
@@ -77,7 +76,7 @@ describe('<YearCalendar />', () => {
 
   describe('Disabled', () => {
     it('should disable all years if props.disabled = true', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(
         <YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />,
       );
@@ -91,12 +90,12 @@ describe('<YearCalendar />', () => {
         expect(yearButton).to.have.attribute('disabled');
         // eslint-disable-next-line no-await-in-loop
         await userWithoutPointerEventsCheck.click(yearButton);
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       }
     });
 
     it('should not render years before props.minDate but should render and not disable the year in which props.minDate is', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(
         <YearCalendar
           value={adapterToUse.date('2017-02-15')}
@@ -112,11 +111,11 @@ describe('<YearCalendar />', () => {
       expect(year2018).not.to.have.attribute('disabled');
 
       await user.click(year2018);
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
 
     it('should not render years after props.maxDate but should render and not disable the year in which props.maxDate is', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(
         <YearCalendar
           value={adapterToUse.date('2019-02-15')}
@@ -132,11 +131,11 @@ describe('<YearCalendar />', () => {
       expect(year2025).not.to.have.attribute('disabled');
 
       await user.click(year2025);
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
 
     it('should disable years if props.shouldDisableYear returns true', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(
         <YearCalendar
           value={adapterToUse.date('2019-01-02')}
@@ -152,10 +151,10 @@ describe('<YearCalendar />', () => {
       expect(year2025).not.to.have.attribute('disabled');
 
       await user.setup({ pointerEventsCheck: 0 }).click(year2024);
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
 
       await user.click(year2025);
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
   });
 

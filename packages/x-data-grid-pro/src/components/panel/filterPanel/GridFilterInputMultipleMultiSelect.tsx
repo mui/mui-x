@@ -25,6 +25,7 @@ function GridFilterInputMultipleMultiSelect(props: GridFilterInputMultipleMultiS
     clearButton,
     headerFilterMenu,
     slotProps,
+    disableDebounce,
     ...other
   } = props;
 
@@ -135,19 +136,9 @@ GridFilterInputMultipleMultiSelect.propTypes /* remove-proptypes */ = {
     PropTypes.object,
   ]),
   headerFilterMenu: PropTypes.node,
-  inputRef: PropTypes.oneOfType([
+  inputRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
-    PropTypes.shape({
-      current: (props, propName) => {
-        if (props[propName] == null) {
-          return null;
-        }
-        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-          return new Error(`Expected prop '${propName}' to be of type Element`);
-        }
-        return null;
-      },
-    }),
+    PropTypes.object,
   ]),
   /**
    * It is `true` if the filter either has a value or an operator with no value

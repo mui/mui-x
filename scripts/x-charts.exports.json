@@ -241,6 +241,7 @@
   { "name": "DEFAULT_MARGINS", "kind": "Variable" },
   { "name": "DEFAULT_RADIUS_AXIS_KEY", "kind": "Variable" },
   { "name": "DEFAULT_ROTATION_AXIS_KEY", "kind": "Variable" },
+  { "name": "DEFAULT_TICK_LABEL_FONT_SIZE", "kind": "Variable" },
   { "name": "DEFAULT_X_AXIS_KEY", "kind": "Variable" },
   { "name": "DEFAULT_Y_AXIS_KEY", "kind": "Variable" },
   { "name": "DefaultizedBarSeriesType", "kind": "Interface" },

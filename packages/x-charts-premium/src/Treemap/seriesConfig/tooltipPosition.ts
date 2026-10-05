@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { selectorChartsTooltipItem, selectorChartSeriesLayout } from '@mui/x-charts/internals';
 import type { TooltipItemPositionSelector } from '@mui/x-charts/internals';
 

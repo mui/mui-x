@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, Theme } from '@mui/material/styles';
 import { teal } from '@mui/material/colors';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';

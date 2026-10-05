@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { screen } from '@mui/internal-test-utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -10,7 +9,7 @@ import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 const getHourLabels = () =>
   screen
     .getAllByRole('option')
-    .filter((option) => option.getAttribute('aria-label')?.endsWith('hours'))
+    .filter((option) => /hours?$/.test(option.getAttribute('aria-label') ?? ''))
     .map((option) => option.textContent);
 
 const HOURS_12H = ['12', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11'];
@@ -54,7 +53,7 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
       });
 
       it('should select 4 AM when the user clicks "4 hours"', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const value = adapter.date('2026-03-08T03:00:00', 'America/Chicago');
         const { user } = render(
           <MultiSectionDigitalClock
@@ -67,8 +66,8 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
 
         await user.click(screen.getByRole('option', { name: '4 hours' }));
 
-        expect(onChange.callCount).to.equal(1);
-        expect(adapter.getHours(onChange.lastCall.firstArg)).to.equal(4);
+        expect(onChange.mock.calls.length).to.equal(1);
+        expect(adapter.getHours(onChange.mock.lastCall?.[0])).to.equal(4);
       });
 
       it('should respect a non-default `timeSteps.hours`', () => {

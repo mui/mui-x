@@ -1,9 +1,8 @@
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { getDateOffset } from 'test/utils/pickers';
 import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -19,7 +18,7 @@ describe('<DigitalClock /> - Timezone', () => {
   describeAdapters('Timezone prop', DigitalClock, ({ adapter, render }) => {
     describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
-        const onChange = spy();
+        const onChange = vi.fn();
         const { user } = render(<DigitalClock onChange={onChange} />);
 
         await user.click(screen.getByRole('option', { name: '08:00 AM' }));
@@ -27,7 +26,7 @@ describe('<DigitalClock /> - Timezone', () => {
         const expectedDate = adapter.setHours(adapter.date(), 8);
 
         // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
-        const actualDate = onChange.lastCall.firstArg;
+        const actualDate = onChange.mock.lastCall?.[0];
 
         // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
         // In a real world scenario, this should probably never occur.
@@ -108,7 +107,7 @@ describe('<DigitalClock /> - Timezone', () => {
       TIMEZONE_TO_TEST.forEach((timezone) => {
         describe(`Timezone: ${timezone}`, () => {
           it('should use timezone prop for onChange when no value is provided', async () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const { user } = render(<DigitalClock onChange={onChange} timezone={timezone} />);
 
             await user.click(screen.getByRole('option', { name: '08:00 AM' }));
@@ -119,13 +118,13 @@ describe('<DigitalClock /> - Timezone', () => {
             );
 
             // Check the `onChange` value (uses timezone prop)
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
           it('should use timezone prop for rendering and value timezone for onChange when a value is provided', async () => {
-            const onChange = spy();
+            const onChange = vi.fn();
             const value = adapter.date('2022-04-17T04:30', timezone);
 
             const { user } = render(
@@ -144,7 +143,7 @@ describe('<DigitalClock /> - Timezone', () => {
 
             await user.click(screen.getByRole('option', { name: '08:30 PM' }));
 
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.lastCall?.[0];
 
             const renderedHourAfter = get24HourFromDigitalClock();
             expect(renderedHourAfter).to.equal(

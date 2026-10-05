@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
@@ -8,7 +7,7 @@ describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer();
 
   it('should allow to pick month standalone by click, `Enter` and `Space`', async () => {
-    const onChange = spy();
+    const onChange = vi.fn();
     const { user } = render(
       <MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />,
     );
@@ -23,8 +22,8 @@ describe('<MonthCalendar />', () => {
 
     await user.click(targetMonth);
 
-    expect(onChange.callCount).to.equal(1);
-    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 2));
+    expect(onChange.mock.calls.length).to.equal(1);
+    expect(onChange.mock.calls[0][0]).toEqualDateTime(new Date(2019, 1, 2));
   });
 
   describe('with fake timers', () => {
@@ -37,13 +36,13 @@ describe('<MonthCalendar />', () => {
     });
 
     it('should select start of month without time when no initial value is present', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(<MonthCalendar onChange={onChange} />);
 
       await user.click(screen.getByRole('radio', { name: 'February' }));
 
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
+      expect(onChange.mock.calls.length).to.equal(1);
+      expect(onChange.mock.calls[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
     });
 
     it('should mark only the month in the current year as `aria-current="date"`', () => {
@@ -82,23 +81,23 @@ describe('<MonthCalendar />', () => {
   });
 
   it('does not allow to pick months if readOnly prop is passed', async () => {
-    const onChangeMock = spy();
+    const onChangeMock = vi.fn();
     const { user } = render(
       <MonthCalendar value={adapterToUse.date('2019-02-02')} onChange={onChangeMock} readOnly />,
     );
 
     await user.click(screen.getByText('Mar', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(0);
+    expect(onChangeMock.mock.calls.length).to.equal(0);
 
     await user.click(screen.getByText('Apr', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(0);
+    expect(onChangeMock.mock.calls.length).to.equal(0);
 
     await user.click(screen.getByText('Jul', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(0);
+    expect(onChangeMock.mock.calls.length).to.equal(0);
   });
 
   it('clicking on a month button should not trigger the form submit', async () => {
-    const onSubmitMock = spy();
+    const onSubmitMock = vi.fn();
     const { user } = render(
       <form onSubmit={onSubmitMock}>
         <MonthCalendar defaultValue={adapterToUse.date('2018-02-02')} />
@@ -106,12 +105,12 @@ describe('<MonthCalendar />', () => {
     );
 
     await user.click(screen.getByText('Mar', { selector: 'button' }));
-    expect(onSubmitMock.callCount).to.equal(0);
+    expect(onSubmitMock.mock.calls.length).to.equal(0);
   });
 
   describe('Disabled', () => {
     it('should disable all months if props.disabled = true', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(
         <MonthCalendar value={adapterToUse.date('2019-02-15')} onChange={onChange} disabled />,
       );
@@ -125,12 +124,12 @@ describe('<MonthCalendar />', () => {
         expect(monthButton).to.have.attribute('disabled');
         // eslint-disable-next-line no-await-in-loop
         await userWithoutPointerEventsCheck.click(monthButton);
-        expect(onChange.callCount).to.equal(0);
+        expect(onChange.mock.calls.length).to.equal(0);
       }
     });
 
     it('should disable months before props.minDate but not the month in which props.minDate is', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-15')}
@@ -146,14 +145,14 @@ describe('<MonthCalendar />', () => {
       expect(february).not.to.have.attribute('disabled');
 
       await user.setup({ pointerEventsCheck: 0 }).click(january);
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
 
       await user.click(february);
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
 
     it('should disable months after props.maxDate but not the month in which props.maxDate is', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-15')}
@@ -169,14 +168,14 @@ describe('<MonthCalendar />', () => {
       expect(april).not.to.have.attribute('disabled');
 
       await user.setup({ pointerEventsCheck: 0 }).click(may);
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
 
       await user.click(april);
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
 
     it('should disable months if props.shouldDisableMonth returns true', async () => {
-      const onChange = spy();
+      const onChange = vi.fn();
       const { user } = render(
         <MonthCalendar
           value={adapterToUse.date('2019-02-02')}
@@ -192,10 +191,10 @@ describe('<MonthCalendar />', () => {
       expect(jun).not.to.have.attribute('disabled');
 
       await user.setup({ pointerEventsCheck: 0 }).click(april);
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.mock.calls.length).to.equal(0);
 
       await user.click(jun);
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.mock.calls.length).to.equal(1);
     });
 
     describe('with fake timers', () => {

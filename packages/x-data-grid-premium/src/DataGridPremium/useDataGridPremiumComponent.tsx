@@ -77,9 +77,9 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
   rowReorderStateInitializer,
-  useFirstRender,
   registerMultiSelectColumnType,
 } from '@mui/x-data-grid-pro/internals';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridConfiguration } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -171,11 +171,13 @@ export const useDataGridPremiumComponent = (
   const formulaFeature = React.useRef(props.featureDependencies?.formula).current;
   if (process.env.NODE_ENV !== 'production') {
     if (props.featureDependencies?.formula !== formulaFeature) {
-      warnOnce([
-        'MUI X Data Grid: The `featureDependencies` prop changed after the first render.',
-        'Injected features are captured once when the grid mounts, so the change is ignored.',
-        'Provide a stable `featureDependencies` object, or remount the grid to apply the change.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Data Grid: The `featureDependencies` prop changed after the first render.',
+          'Injected features are captured once when the grid mounts, so the change is ignored.',
+          'Provide a stable `featureDependencies` object, or remount the grid to apply the change.',
+        ].join('\n'),
+      );
     }
   }
   useGridMissingFormulaFeatureWarning(props, formulaFeature !== undefined);
@@ -259,8 +261,10 @@ export const useDataGridPremiumComponent = (
   // run before filtering and sorting read cell values in the same cascade.
   useFormulaFeature(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
-  useGridRowSelection(apiRef, props);
+  // Before `useGridRowSelection`: the select-all shortcut of the cell selection feature
+  // must run first and block the row selection listener with `defaultMuiPrevented`.
   useGridCellSelection(apiRef, props);
+  useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
@@ -304,7 +308,7 @@ export const useDataGridPremiumComponent = (
   useGridPivotingExportState(apiRef);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });
   React.useEffect(() => {

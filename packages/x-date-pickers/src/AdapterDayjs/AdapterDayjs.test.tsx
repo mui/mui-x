@@ -1,7 +1,10 @@
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { stub } from 'sinon';
+import preParsePostFormat from 'dayjs/plugin/preParsePostFormat';
+import { screen } from '@mui/internal-test-utils';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
+import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import type { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
@@ -13,10 +16,12 @@ import {
 } from 'test/utils/pickers';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
+import 'dayjs/locale/ar';
 // We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
-import { describe, it, expect } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
+import { vi, onTestFinished, beforeEach, describe, it, expect } from 'vitest';
 
 describe('<AdapterDayjs />', () => {
   const commonParams = {
@@ -59,10 +64,9 @@ describe('<AdapterDayjs />', () => {
       // comparisons against plain `dayjs()` dates (for which `getTimezone()`
       // returns `'system'`) went through an unnecessary `setTimezone` conversion
       // that could shift the day across midnight. CI runs in UTC, so the non-UTC
-      // branch is only reachable by stubbing `dayjs.tz.guess()`. The Sinon
-      // default sandbox is restored by the global `afterEach` in
-      // `test/setupVitest.ts`, so no manual cleanup is needed.
-      stub(dayjs.tz, 'guess').returns('America/New_York');
+      // branch is only reachable by stubbing `dayjs.tz.guess()`.
+      const guess = vi.spyOn(dayjs.tz, 'guess').mockReturnValue('America/New_York');
+      onTestFinished(() => guess.mockRestore());
 
       const adapter = new AdapterDayjs();
       const resolvedDate = adapter.date(TEST_DATE_ISO_STRING, 'system') as Dayjs;
@@ -134,6 +138,163 @@ describe('<AdapterDayjs />', () => {
           false,
         );
       });
+
+      // See https://github.com/mui/mui-x/issues/23301
+      it('getDaysInMonth: should return the number of days in the month', () => {
+        // The wall clock of this date in `Asia/Kolkata` is `1883-08-15 12:30:00`.
+        const value = adapter.setYear(
+          adapter.date('2026-08-15T12:30:00', 'Asia/Kolkata') as Dayjs,
+          1883,
+        );
+
+        expect(adapter.getDaysInMonth(value)).to.equal(31);
+      });
+
+      // `dayjs` >= 1.11.22 gets `endOf('month')` wrong before 1970 in every timezone.
+      // See https://github.com/iamkun/dayjs/pull/3227
+      it('getDaysInMonth: should return the number of days in the month before 1970', () => {
+        const value = adapter.setYear(
+          adapter.date('2026-08-15T12:30:00', 'America/New_York') as Dayjs,
+          1960,
+        );
+
+        expect(adapter.getDaysInMonth(value)).to.equal(31);
+      });
+
+      it('getDaysInMonth: should support `UTC` values bound to a timezone with `dayjs.tz`', () => {
+        expect(adapter.getDaysInMonth(dayjs.tz('1890-03-10 12:00', 'UTC'))).to.equal(31);
+      });
+
+      describe('Localized digits', () => {
+        const { render, adapter: adapterAr } = createPickerRenderer({
+          adapterName: 'dayjs',
+          locale: { code: 'ar' },
+        });
+        const { renderWithProps } = buildFieldInteractions({ render, Component: DateField });
+        const getValue = () => dayjs.tz('1960-08-15 12:30', 'America/New_York').locale('ar');
+
+        beforeEach(() => {
+          const originalLocale = dayjs.locale();
+          dayjs.locale('en');
+          onTestFinished(() => {
+            dayjs.locale(originalLocale);
+          });
+
+          // Restore the prototype after each test because Day.js plugins are global.
+          dayjs.extend((option, dayjsClass, dayjsFactory) => {
+            const originalPrototype = Object.getOwnPropertyDescriptors(dayjsClass.prototype);
+            onTestFinished(() => {
+              Object.defineProperties(dayjsClass.prototype, originalPrototype);
+            });
+            preParsePostFormat(option, dayjsClass, dayjsFactory);
+          });
+        });
+
+        it('getDaysInMonth: should support localized digits without changing the value locale', () => {
+          const value = getValue();
+
+          expect(adapterAr.getDaysInMonth(value)).to.equal(31);
+          expect(value.locale()).to.equal('ar');
+          expect(value.format('YYYY-MM-DD')).to.equal('١٩٦٠-٠٨-١٥');
+        });
+
+        it('should increment the day of the month with localized digits', async () => {
+          const view = renderWithProps({
+            defaultValue: getValue(),
+            format: 'MM/DD/YYYY',
+            timezone: 'America/New_York',
+          });
+
+          expectFieldValue(view.getSectionsContainer(), '٠٨/١٥/١٩٦٠');
+          await view.selectSection('day');
+
+          await view.user.keyboard('{ArrowUp}');
+          expectFieldValue(view.getSectionsContainer(), '٠٨/١٦/١٩٦٠');
+
+          await view.user.keyboard('{ArrowUp}');
+          expectFieldValue(view.getSectionsContainer(), '٠٨/١٧/١٩٦٠');
+        });
+      });
+    });
+
+    // CI runs with `TZ=UTC`, so these tests switch to a system timezone that observes DST.
+    describe.skipIf(!isJSDOM)('DST changes of the system timezone', () => {
+      const setSystemTimezone = (timezone: string) => {
+        const previousTimezone = process.env.TZ;
+        process.env.TZ = timezone;
+        onTestFinished(() => {
+          if (previousTimezone === undefined) {
+            delete process.env.TZ;
+          } else {
+            process.env.TZ = previousTimezone;
+          }
+        });
+      };
+
+      it.each([
+        {
+          transition: 'spring forward',
+          date: '2026-03-08',
+          startOfDay: '2026-03-08T08:00:00.000Z',
+        },
+        { transition: 'fall back', date: '2026-11-01', startOfDay: '2026-11-01T07:00:00.000Z' },
+      ])('should keep plain values plain after $transition', ({ date, startOfDay }) => {
+        setSystemTimezone('America/Los_Angeles');
+        const adapter = new AdapterDayjs();
+        const value = adapter.setHours(adapter.date(`${date}T12:00`, 'system') as Dayjs, 4);
+
+        expect(adapter.getTimezone(value)).to.equal('system');
+        // A copied offset would make later `dayjs` calls on the returned value wrong by 1 hour.
+        expect(value.startOf('day').toISOString()).to.equal(startOfDay);
+      });
+
+      describe('DigitalClock', () => {
+        const { render } = createPickerRenderer({ adapterName: 'dayjs' });
+
+        it('should emit distinct instants for both occurrences of the repeated hour with plain values', async () => {
+          setSystemTimezone('America/New_York');
+          const onChange = vi.fn();
+          const { user } = render(
+            <DigitalClock
+              defaultValue={dayjs('2026-11-01T12:00')}
+              timezone="system"
+              timeStep={30}
+              ampm
+              onChange={onChange}
+            />,
+          );
+
+          expect(screen.getAllByRole('option')).to.have.length(50);
+          const repeatedOptions = screen.getAllByRole('option', { name: '01:30 AM' });
+          expect(repeatedOptions).to.have.length(2);
+
+          await user.click(repeatedOptions[0]);
+          expect(onChange.mock.lastCall?.[0].toISOString()).to.equal('2026-11-01T05:30:00.000Z');
+
+          await user.click(repeatedOptions[1]);
+          expect(onChange.mock.lastCall?.[0].toISOString()).to.equal('2026-11-01T06:30:00.000Z');
+        });
+      });
+
+      it('should update the offset of values without a named timezone', () => {
+        setSystemTimezone('America/Los_Angeles');
+        const adapter = new AdapterDayjs();
+        // Same shape as `adapter.date(undefined, 'default')` on a system timezone with DST.
+        const now = dayjs('2026-03-08T12:58').utcOffset(-420, true);
+        const value = adapter.setHours(now, 1);
+
+        expect(adapter.getHours(value)).to.equal(1);
+        expect(value.toISOString()).to.equal('2026-03-08T09:58:00.000Z');
+      });
+    });
+
+    it('should keep small years when setting the year of a plain value', () => {
+      const adapter = new AdapterDayjs();
+      const value = adapter.setYear(adapter.date('2026-01-15T12:00', 'system') as Dayjs, 1);
+      const expected = new Date(2026, 0, 15, 12);
+      expected.setFullYear(1);
+
+      expect(value.valueOf()).to.equal(expected.getTime());
     });
   });
 

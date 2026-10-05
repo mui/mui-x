@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const plPLDialog: Partial<EventEditingLocaleText> = {
+const plPLDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Kolor wydarzenia',
   // colorSectionLabel: 'Color',
@@ -42,6 +43,8 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   recurrenceEveryLabel: 'Co',
   recurrenceRepeatLabel: 'Powtarzaj',
   recurrenceTabLabel: 'Powtarzanie',
+  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
+  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
   recurrenceMainSelectCustomLabel: 'Powtarzanie',
   recurrenceWeeklyFrequencyLabel: 'tygodnie',
   recurrenceWeeklyPresetLabel: ({ weekday }) => {
@@ -58,17 +61,21 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   },
   recurrenceMonthlyFrequencyLabel: 'miesiące',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Dzień ${dayNumber}`,
-  recurrenceMonthlyLastWeekAriaLabel: (weekDay) => `${weekDay} w ostatnim tygodniu miesiąca`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay}, ostatni tydzień`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) =>
+    `${weekdayName} w ostatnim tygodniu miesiąca`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `${weekdayName}, ostatni tydzień`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Powtarza się co miesiąc w dniu ${dayNumber}`,
-  recurrenceMonthlyWeekNumberAriaLabel: (ord, weekDay) => `${weekDay}, tydzień ${ord} miesiąca`,
-  recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay}, tydzień ${ord}`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `${weekdayName}, tydzień ${ord} miesiąca`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${weekdayName}, tydzień ${ord}`,
   recurrenceWeeklyMonthlySpecificInputsLabel: 'W',
   recurrenceYearlyFrequencyLabel: 'lata',
   recurrenceYearlyPresetLabel: (date) => `Powtarza się co roku w ${date}`,
   noResourceAriaLabel: 'Brak określonego zasobu',
   selectColorAriaLabel: (color) => `Wybierz ${color} jako kolor wydarzenia`,
   resourceLabel: 'Zasób',
+  // invalidDateError: 'Enter a valid date.',
+  // invalidTimeError: 'Enter a valid time.',
   requiredResourceError: 'Należy wybrać zasób.',
   saveChanges: 'Zapisz',
   startDateAfterEndDateError: 'Data zakończenia nie może być wcześniejsza niż data rozpoczęcia.',
@@ -86,7 +93,23 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   title: 'Zastosuj tę zmianę do:',
 };
 
-const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const plPLEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Zasób: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const plPLCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Zasoby',
 
@@ -129,7 +152,6 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} więcej..`,
   nextTimeSpan: (timeSpan) => `Następny ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Poprzedni ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Zasób: ${resourceName}`,
   weekAbbreviation: 'T',
   weekNumberAriaLabel: (weekNumber) => `Tydzień ${weekNumber}`,
 
@@ -148,13 +170,14 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };
 
-const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const plPLTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };
 
 export const plPL: SchedulerLocalization = getSchedulerLocalization({
   dialog: plPLDialog,
+  event: plPLEvent,
   calendar: plPLCalendar,
   timeline: plPLTimeline,
 });

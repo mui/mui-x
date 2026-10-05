@@ -82,6 +82,12 @@ interface SimulateDragAndDropParameters {
    * @default 0
    */
   targetClientY?: number;
+  /**
+   * Stop after the `dragover`, leaving the drag in progress so the placeholder stays on screen and
+   * can be asserted on.
+   * @default false
+   */
+  hold?: boolean;
 }
 
 /**
@@ -107,6 +113,7 @@ export function simulateDragAndDrop(parameters: SimulateDragAndDropParameters): 
     sourceClientY = 0,
     targetClientX = 0,
     targetClientY = 0,
+    hold = false,
   } = parameters;
 
   const sourceElement = findDraggableElement(source);
@@ -126,6 +133,10 @@ export function simulateDragAndDrop(parameters: SimulateDragAndDropParameters): 
   targetElement.dispatchEvent(
     createDragEvent('dragover', { clientX: targetClientX, clientY: targetClientY }),
   );
+
+  if (hold) {
+    return;
+  }
 
   // 4. Drop on the target
   targetElement.dispatchEvent(

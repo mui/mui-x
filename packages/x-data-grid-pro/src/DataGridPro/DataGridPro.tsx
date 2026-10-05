@@ -520,6 +520,14 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    */
   headerFilters: PropTypes.bool,
   /**
+   * The fixed height of the Data Grid.
+   * Accepts a number (pixels), a CSS length (for example `'50vh'`), a percentage, or a CSS calculation.
+   * Percentage values require a parent with an explicit height.
+   * Content-based values such as `'auto'`, `'min-content'`, `'max-content'`, and `'fit-content'` are not supported.
+   * For content-based sizing, use a flex parent container instead.
+   */
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */
@@ -1027,7 +1035,7 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
    * @param {{ rowId: GridRowId }} params Additional parameters.
-   * @returns {Promise<R> | R} The final values to update the row.
+   * @returns {Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>} The final values to update the row, or a `{ _action: 'replace', row }` update to store `row` as the new row without merging.
    */
   processRowUpdate: PropTypes.func,
   /**

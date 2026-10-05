@@ -8,7 +8,13 @@ import type { GridFeatureMode } from '../gridFeatureMode';
 import type { Logger } from '../logger';
 import type { GridSortDirection, GridSortModel } from '../gridSortModel';
 import type { GridSlotsComponent } from '../gridSlotsComponent';
-import type { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
+import type {
+  GridRowId,
+  GridRowIdGetter,
+  GridRowModelReplace,
+  GridRowsProp,
+  GridValidRowModel,
+} from '../gridRows';
 import type { GridEventListener } from '../events';
 import type { GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridApiCommunity } from '../api/gridApiCommunity';
@@ -499,6 +505,14 @@ export interface DataGridPropsWithoutDefaultValue<
    */
   scrollbarSize?: number;
   /**
+   * The fixed height of the Data Grid.
+   * Accepts a number (pixels), a CSS length (for example `'50vh'`), a percentage, or a CSS calculation.
+   * Percentage values require a parent with an explicit height.
+   * Content-based values such as `'auto'`, `'min-content'`, `'max-content'`, and `'fit-content'` are not supported.
+   * For content-based sizing, use a flex parent container instead.
+   */
+  height?: number | string;
+  /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
@@ -874,9 +888,13 @@ export interface DataGridPropsWithoutDefaultValue<
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
    * @param {{ rowId: GridRowId }} params Additional parameters.
-   * @returns {Promise<R> | R} The final values to update the row.
+   * @returns {Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>} The final values to update the row, or a `{ _action: 'replace', row }` update to store `row` as the new row without merging.
    */
-  processRowUpdate?: (newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R;
+  processRowUpdate?: (
+    newRow: R,
+    oldRow: R,
+    params: { rowId: GridRowId },
+  ) => Promise<R | GridRowModelReplace<R>> | R | GridRowModelReplace<R>;
   /**
    * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.

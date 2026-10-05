@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { CHAT_DEFAULT_LOCALE_TEXT, type ChatLocaleText } from './chatLocaleText';
+import { CHAT_DEFAULT_LOCALE_TEXT } from './chatLocaleText';
+import type { ChatLocaleText } from './chatLocaleText';
 
 const ChatLocaleContext = React.createContext<ChatLocaleText>(CHAT_DEFAULT_LOCALE_TEXT);
 
