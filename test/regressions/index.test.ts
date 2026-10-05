@@ -45,7 +45,9 @@ interface RouteConfig {
   viewport?: { width: number; height: number };
   /**
    * Wait for this selector before screenshotting, on top of `navigateToTest`
-   * (fonts loaded, and the timers scheduled while mounting flushed).
+   * (fonts loaded, no `data-screenshot-pending` left, and the timers scheduled
+   * while mounting flushed). Prefer rendering `data-screenshot-pending` while
+   * the demo loads, so the wait doesn't need a rule.
    */
   waitForSelector?: string;
 }
@@ -119,12 +121,6 @@ const TEST_RULES: RouteRule[] = [
     // the one for left:0.
     waitForSelector:
       '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell[data-field="maturityDate"]',
-  },
-  {
-    test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
-    // The demo renders in `TailwindDemoContainer`, which shows a spinner until the Tailwind
-    // script loads from the network. Wait for a real, non-skeleton row before screenshotting.
-    waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
   },
 ];
 
@@ -208,8 +204,11 @@ async function main() {
       window.muiFixture.navigate(_route);
     }, route);
 
+    // Wait for the fonts, and for anything inside the test case that marks itself with
+    // `data-screenshot-pending` while it loads something the timers don't cover, for example a
+    // script from the network. Content that mounts once that's done still has its timers faked.
     const testcase = await page.waitForSelector(
-      `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"]):not(:has([data-screenshot-pending]))`,
     );
 
     // Run the timers the test case scheduled while mounting, then switch to real timers.
