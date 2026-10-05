@@ -7,14 +7,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   getDataGridUtilityClass,
   gridClasses,
-  gridExpandedSortedRowIndexLookupSelector,
   gridRowNodeSelector,
-  gridRowTreeSelector,
   gridSortModelSelector,
   useGridLogger,
-  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
-import type { GridGroupNode, GridRowId } from '@mui/x-data-grid';
+import type { GridRowId } from '@mui/x-data-grid';
 import {
   getElementAtPoint,
   getGridRowElement,
@@ -28,16 +25,26 @@ import type {
   RowReorderDragDirection,
   RowReorderDropPosition,
 } from '@mui/x-data-grid/internals';
-import type { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
+import { findCellElement } from './utils';
 import {
+  EXPAND_DELAY,
   animateRowMove,
+  checkRowReorderValid,
+  commitRowReorder,
+  evaluateRowDropTarget,
   getAutoScrollDelta,
   getRowDropPosition,
   getRowIdFromElement,
-} from './rowReorderPointerUtils';
+  hasLeftPendingExpansion,
+  isRowReorderAllowed,
+  setRowReorderDropTarget,
+  shouldExpandGroupOnHover,
+  toggleHoveredGroupExpansion,
+} from './rowReorderDragUtils';
+import type { RowReorderDropTarget } from './rowReorderDragUtils';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -52,9 +59,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const EXPAND_DELAY = 500;
-const EXPAND_CANCEL_BUFFER_PX = 5;
-
 interface DragData {
   rowId: GridRowId;
   handle: HTMLElement;
@@ -67,7 +71,7 @@ interface RowDragSession {
   preview: HTMLElement;
   previewOffsetX: number;
   previewOffsetY: number;
-  dropTarget: { rowId: GridRowId; position: RowReorderDropPosition } | null;
+  dropTarget: RowReorderDropTarget | null;
   previousTargetId: GridRowId | null;
   previousDropPosition: RowReorderDropPosition | null;
   dragDirection: RowReorderDragDirection | null;
@@ -101,9 +105,11 @@ export const useGridRowReorderPointer = (
   const handlePointerTypeRef = React.useRef<string | null>(null);
 
   const isRowDragAllowed = (): boolean =>
-    !!props.rowReordering &&
-    gridSortModelSelector(apiRef).length === 0 &&
-    Object.keys(gridEditRowsStateSelector(apiRef)).length === 0;
+    isRowReorderAllowed({
+      rowReordering: props.rowReordering,
+      sortModel: gridSortModelSelector(apiRef),
+      editRowsState: gridEditRowsStateSelector(apiRef),
+    });
 
   const getDraggableHandle = (target: EventTarget | null): HTMLElement | null => {
     const root = apiRef.current.rootElementRef?.current;
@@ -175,31 +181,24 @@ export const useGridRowReorderPointer = (
 
     const { clientX, clientY } = session;
     const pending = session.pendingExpansion;
-    if (
-      pending &&
-      (pending.rowId !== targetId ||
-        // Avoid expanding a group when the pointer is only passing over it
-        Math.abs(clientY - pending.clientY) > EXPAND_CANCEL_BUFFER_PX ||
-        Math.abs(clientX - pending.clientX) > EXPAND_CANCEL_BUFFER_PX)
-    ) {
+    // Avoid expanding a group when the pointer is only passing over it
+    if (pending && hasLeftPendingExpansion(pending, targetId, clientX, clientY)) {
       expandTimeout.clear();
       session.pendingExpansion = null;
     }
 
-    const dropPosition = getRowDropPosition(rowElement, elementAtPoint, clientY, !!props.treeData);
+    // For tree data, the cell is measured to avoid flickering in the top 20% zone
+    const dropPosition = getRowDropPosition(
+      props.treeData ? findCellElement(elementAtPoint) : rowElement,
+      clientY,
+      !!props.treeData,
+    );
 
     if (
-      targetNode.type === 'group' &&
-      !targetNode.childrenExpanded &&
       !session.pendingExpansion &&
-      targetNode.id !== sourceNode.id &&
-      (dropPosition === 'inside' || targetNode.depth < sourceNode.depth)
+      shouldExpandGroupOnHover(sourceNode, targetNode, dropPosition)
     ) {
-      expandTimeout.start(EXPAND_DELAY, () => {
-        const rowNode = gridRowNodeSelector(apiRef, targetId) as GridGroupNode;
-        // TODO: Handle `dataSource` case with https://github.com/mui/mui-x/issues/18947
-        apiRef.current.setRowChildrenExpansion(targetId, !rowNode.childrenExpanded);
-      });
+      expandTimeout.start(EXPAND_DELAY, () => toggleHoveredGroupExpansion(apiRef, targetId));
       session.pendingExpansion = { rowId: targetId, clientX, clientY };
       return;
     }
@@ -208,38 +207,19 @@ export const useGridRowReorderPointer = (
       return;
     }
 
-    const sortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
-    const targetRowIndex = sortedRowIndexLookup[targetId];
-    const sourceRowIndex = sortedRowIndexLookup[session.rowId];
-    const dragDirection: RowReorderDragDirection = targetRowIndex < sourceRowIndex ? 'up' : 'down';
+    const { dragDirection, showIndicator } = evaluateRowDropTarget(
+      apiRef,
+      session.rowId,
+      targetId,
+      dropPosition,
+    );
 
     session.previousTargetId = targetId;
     session.previousDropPosition = dropPosition;
     session.dragDirection = dragDirection;
 
-    const isSameNode = targetRowIndex === sourceRowIndex;
-    const isAdjacentPosition =
-      (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
-      (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1);
-    const isRowReorderValid = apiRef.current.unstable_applyPipeProcessors(
-      'isRowReorderValid',
-      false,
-      { sourceRowId: session.rowId, targetRowId: targetId, dropPosition, dragDirection },
-    );
-
-    // Show the drop indicator for valid drops, adjacent positions and the dragged row itself
-    session.dropTarget =
-      isRowReorderValid || isAdjacentPosition || isSameNode
-        ? { rowId: targetId, position: dropPosition }
-        : null;
-    const dropTarget = session.dropTarget;
-    apiRef.current.setState((state) => ({
-      ...state,
-      rowReorder: {
-        ...state.rowReorder,
-        dropTarget: dropTarget ?? undefined,
-      },
-    }));
+    session.dropTarget = showIndicator ? { rowId: targetId, position: dropPosition } : null;
+    setRowReorderDropTarget(apiRef, session.dropTarget ?? undefined);
   };
 
   const autoScroll = () => {
@@ -359,50 +339,26 @@ export const useGridRowReorderPointer = (
       return;
     }
 
-    const isRowReorderValid = apiRef.current.unstable_applyPipeProcessors(
-      'isRowReorderValid',
-      false,
-      {
-        sourceRowId: rowId,
-        targetRowId: dropTarget.rowId,
-        dropPosition: dropTarget.position,
-        dragDirection,
-      },
-    );
-    const sourceNode = gridRowNodeSelector(apiRef, rowId);
-    if (!isRowReorderValid || !sourceNode) {
+    const isValid = checkRowReorderValid(apiRef, {
+      sourceRowId: rowId,
+      targetRowId: dropTarget.rowId,
+      dropPosition: dropTarget.position,
+      dragDirection,
+    });
+    if (!isValid) {
       resetDrag();
       return;
     }
 
     try {
-      const oldParent = sourceNode.parent!;
-      const oldParentNode = gridRowTreeSelector(apiRef)[oldParent] as GridGroupNode;
-      const oldIndex = oldParentNode.children.indexOf(rowId);
-
-      await animateRowMove(root, async () => {
-        await apiRef.current.setRowPosition(rowId, dropTarget.rowId, dropTarget.position);
-
-        const updatedTree = gridRowTreeSelector(apiRef);
-        const updatedNode = updatedTree[rowId];
-        if (!updatedNode) {
-          return;
-        }
-        const newParent = updatedNode.parent!;
-        const newParentNode = updatedTree[newParent] as GridGroupNode;
-
-        const rowOrderChangeParams: GridRowOrderChangeParams = {
-          row: apiRef.current.getRow(rowId)!,
-          oldIndex,
-          targetIndex: newParentNode.children.indexOf(rowId),
-          oldParent: oldParent === GRID_ROOT_GROUP_ID ? null : oldParent,
-          newParent: newParent === GRID_ROOT_GROUP_ID ? null : newParent,
-        };
-
-        // Clear the reorder state before the event, like `useGridRowReorder`
-        resetDrag();
-        apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
-      });
+      // `resetDrag` clears the reorder state before the event, like `useGridRowReorder`
+      await commitRowReorder(
+        apiRef,
+        rowId,
+        dropTarget,
+        (move) => animateRowMove(root, move),
+        resetDrag,
+      );
     } catch {
       // The reorder failed: skip the `rowOrderChange` event.
     }

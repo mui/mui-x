@@ -5,7 +5,7 @@ import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { DataGridProProps, GridApi } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
-import { getAutoScrollDelta } from '../hooks/features/rowReorder/rowReorderPointerUtils';
+import { getAutoScrollDelta } from '../hooks/features/rowReorder/rowReorderDragUtils';
 
 // Longer than the long press delay of touch input
 const LONG_PRESS = 350;
