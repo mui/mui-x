@@ -119,7 +119,7 @@ function LoadFont(props: any) {
 
   return (
     <StyledBox data-testid="testcase" {...other}>
-      {/* The regression runner waits until no `data-screenshot-pending` is left in the test case. */}
+      {/* See `navigateToTest` in `index.test.ts`. */}
       {!ready && <span data-screenshot-pending hidden />}
       {children}
     </StyledBox>

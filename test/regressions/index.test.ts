@@ -194,7 +194,8 @@ async function main() {
     // Wait until nothing in the test case is marked `data-screenshot-pending`: the viewer until the
     // test case mounted and its fonts loaded, and demos while they load something the timers
     // don't cover, for example a script from the network. Content that mounts once that's done
-    // still has its timers faked.
+    // still has its timers faked. The timers only run after this wait, so a marker must not wait
+    // for a timer, or the test times out.
     const testcase = await page.waitForSelector(
       `[data-testid="testcase"][data-testpath="${route}"]:not(:has([data-screenshot-pending]))`,
     );
