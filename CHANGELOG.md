@@ -2,7 +2,7 @@
 
 ## 9.15.0
 
-_Oct 5, 2026_
+_Oct 6, 2026_
 
 We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
 
@@ -163,7 +163,6 @@ Internal changes.
 
 ### Miscellaneous
 
-- [charts] Fix `no-computed-key-with-rest` lint failure in `getInlineTypographyStyle` test (#23711) @Janpot
 - [ci] Flake-fix caller: follow mui-public's central model default (#23680) @Janpot
 - [internals] Fix `hash` word indexing and buffer sizing (#23494) @romgrk
 - [test] Fix regression flake when an aborted image errors mid-wait (#23708) @JCQuintas
