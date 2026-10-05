@@ -177,6 +177,13 @@ describe('<AdapterDayjs />', () => {
         expect(adapter.getDaysInMonth(dayjs.tz('1890-03-10 12:00', 'UTC'))).to.equal(31);
       });
 
+      it('startOfDay: should keep the seconds of the offset', () => {
+        // The offset of `Asia/Kolkata` in 1850 is `+05:53:28`.
+        const value = dayjs.utc('1850-06-15T12:00:00Z').tz('Asia/Kolkata');
+
+        expect(adapter.startOfDay(value).toISOString()).to.equal('1850-06-14T18:06:32.000Z');
+      });
+
       describe('Localized digits', () => {
         const { render, adapter: adapterAr } = createPickerRenderer({
           adapterName: 'dayjs',
@@ -284,6 +291,14 @@ describe('<AdapterDayjs />', () => {
           beforeWall: '2026-10-04 01:30:12.345 +10:30',
           afterWall: '2026-10-04 03:00:12.345 +11:00',
         },
+        // A zero-offset wall time in the DST gap of the US system timezones.
+        {
+          timezone: 'Europe/London',
+          before: '2026-03-08T01:30:12.345Z',
+          after: '2026-03-08T02:30:12.345Z',
+          beforeWall: '2026-03-08 01:30:12.345 +00:00',
+          afterWall: '2026-03-08 02:30:12.345 +00:00',
+        },
       ];
       const format = 'YYYY-MM-DD HH:mm:ss.SSS Z';
 
@@ -301,6 +316,13 @@ describe('<AdapterDayjs />', () => {
           // does not exist in the system timezone, so correct wall fields remain a library limitation.
         },
       );
+
+      it('should keep invalid values invalid', () => {
+        const value = dayjs.tz('not a date', 'Europe/London');
+
+        expect(adapter.isValid(adapter.addHours(value, 1))).to.equal(false);
+        expect(adapter.isValid(adapter.startOfDay(value))).to.equal(false);
+      });
 
       describe.each([
         'UTC',
@@ -349,6 +371,87 @@ describe('<AdapterDayjs />', () => {
               }
             });
           });
+
+          it('should keep the instant when a setter changes an elapsed-time result', () => {
+            const winterValue = adapter.addMinutes(
+              dayjs.utc('2026-02-20T13:30:00Z').tz('America/New_York'),
+              30,
+            );
+            expect(adapter.setMonth(winterValue, 3).toISOString()).to.equal(
+              '2026-04-20T13:00:00.000Z',
+            );
+
+            const startOfDay = adapter.startOfDay(dayjs.tz('2026-11-01T12:00', 'America/New_York'));
+            // 11 hours after the midnight before the fall back is 10:00 AM in standard time.
+            const standardTimeValue = adapter.addHours(startOfDay, 11);
+            expect(adapter.setHours(standardTimeValue, 0).toISOString()).to.equal(
+              '2026-11-01T04:00:00.000Z',
+            );
+          });
+
+          it('should update the offset when a setter moves a zero-offset result into DST', () => {
+            const source = dayjs.utc('2026-10-25T00:30:00Z').tz('Europe/London');
+            const result = adapter.setMonth(adapter.addHours(source, 1), 6);
+
+            expect(result.format('YYYY-MM-DD HH:mm Z')).to.equal('2026-07-25 01:30 +01:00');
+            expect(result.toISOString()).to.equal('2026-07-25T00:30:00.000Z');
+          });
+
+          it('should update the offset when a setter moves a DST value to a zero offset', () => {
+            const winterValue = adapter.setMonth(dayjs.tz('2026-07-15T12:00', 'Europe/London'), 0);
+            expect(winterValue.format('YYYY-MM-DD HH:mm Z')).to.equal('2026-01-15 12:00 +00:00');
+            expect(winterValue.toISOString()).to.equal('2026-01-15T12:00:00.000Z');
+
+            const startOfDay = adapter.startOfDay(dayjs.tz('2026-10-25T12:00', 'Europe/London'));
+            // 30 minutes after midnight is 00:30 in summer time, before the fall back.
+            const summerTimeValue = adapter.addMinutes(startOfDay, 30);
+            expect(adapter.setHours(summerTimeValue, 12).toISOString()).to.equal(
+              '2026-10-25T12:30:00.000Z',
+            );
+          });
+
+          it('should keep the occurrence of a repeated wall time when a setter changes the minutes', () => {
+            // The second 01:30 of the fall back, in standard time (offset 0).
+            const value = dayjs.utc('2026-10-25T01:30:00Z').tz('Europe/London');
+
+            expect(adapter.setMinutes(value, 45).toISOString()).to.equal(
+              '2026-10-25T01:45:00.000Z',
+            );
+          });
+
+          it.each([
+            {
+              timezone: 'America/Santiago',
+              date: '2026-09-06',
+              startOfDay: '2026-09-06T04:00:00.000Z',
+            },
+            {
+              timezone: 'Europe/London',
+              date: '2026-10-25',
+              startOfDay: '2026-10-24T23:00:00.000Z',
+            },
+            { timezone: 'Asia/Tokyo', date: '2026-03-08', startOfDay: '2026-03-07T15:00:00.000Z' },
+            // Midnight is repeated, and the first occurrence starts the day.
+            {
+              timezone: 'Atlantic/Azores',
+              date: '2026-10-25',
+              startOfDay: '2026-10-25T00:00:00.000Z',
+            },
+            // The DST change is on the same day, two hours after midnight.
+            {
+              timezone: 'Australia/Sydney',
+              date: '2026-10-04',
+              startOfDay: '2026-10-03T14:00:00.000Z',
+            },
+          ])(
+            'startOfDay: should return the first instant of $date in $timezone',
+            ({ timezone, date, startOfDay }) => {
+              const result = adapter.startOfDay(dayjs.tz(`${date}T12:00`, timezone));
+
+              expect(result.toISOString()).to.equal(startOfDay);
+              expect(adapter.getTimezone(result)).to.equal(timezone);
+            },
+          );
         });
       });
     });
@@ -397,6 +500,46 @@ describe('<AdapterDayjs />', () => {
             '2026-11-01T06:30:00.000Z',
           ]);
         });
+
+        it.each([
+          {
+            systemTimezone: 'UTC',
+            timezone: 'America/Santiago',
+            date: '2026-09-06',
+            options: 46,
+            firstOption: '01:00',
+          },
+          {
+            systemTimezone: 'America/New_York',
+            timezone: 'America/Santiago',
+            date: '2026-09-06',
+            options: 46,
+            firstOption: '01:00',
+          },
+          {
+            systemTimezone: 'America/New_York',
+            timezone: 'Europe/London',
+            date: '2026-10-25',
+            options: 50,
+            firstOption: '00:00',
+          },
+        ])(
+          'should list every option of $date in $timezone (system timezone: $systemTimezone)',
+          ({ systemTimezone, timezone, date, options, firstOption }) => {
+            setSystemTimezone(systemTimezone);
+            render(
+              <DigitalClock
+                value={dayjs.tz(`${date}T12:00`, timezone)}
+                timeStep={30}
+                ampm={false}
+              />,
+            );
+
+            const renderedOptions = screen.getAllByRole('option');
+            expect(renderedOptions).to.have.length(options);
+            expect(renderedOptions[0]).to.have.text(firstOption);
+          },
+        );
 
         it('should emit distinct instants for both occurrences of the repeated hour with plain values', async () => {
           setSystemTimezone('America/New_York');

@@ -174,7 +174,9 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     return value.locale(expectedLocale);
   };
 
-  private timezoneOffsetFormatters = new Map<string, Intl.DateTimeFormat>();
+  private timezoneFormatters = new Map<string, Intl.DateTimeFormat>();
+
+  private valueOfDSTFix: boolean | undefined;
 
   private hasUTCPlugin = () => typeof dayjs.utc !== 'undefined';
 
@@ -273,7 +275,36 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       return value;
     }
 
-    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+    // Before 1.11.22, `tz` derives the offset through the system timezone, so read it from Intl.
+    if (timezone !== 'system' && this.hasValueOfDSTFix() && value.isValid()) {
+      const wallDate = new Date(0);
+      wallDate.setUTCFullYear(value.year(), value.month(), value.date());
+      wallDate.setUTCHours(value.hour(), value.minute(), value.second(), value.millisecond());
+      // @ts-ignore
+      const currentOffset: number = value.$u ? 0 : value.$offset;
+      const offset = this.getWallTimeOffset(wallDate.getTime(), timezone, currentOffset);
+      if (offset === currentOffset) {
+        return value;
+      }
+
+      // A UTC-mode value ignores `$offset`, and a value without `$offset` follows the system offset.
+      // @ts-ignore
+      if (value.$u || offset === 0) {
+        return this.createNamedZoneValue(
+          wallDate.getTime() - offset * 60_000,
+          offset,
+          timezone,
+          value.locale(),
+        );
+      }
+
+      // @ts-ignore
+      value.$offset = offset;
+      return value;
+    }
+
+    // dayjs 1.11.12 and 1.11.13 change the value itself when the new offset is 0.
+    const fixedValue = value.clone().tz(this.cleanTimezone(timezone), true);
     // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
     // @ts-ignore
     if ((fixedValue.$offset ?? 0) !== (value.$offset ?? 0)) {
@@ -284,43 +315,73 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * Hours, minutes and seconds measure elapsed time. Rebuild named-zone values from the target
-   * instant: adjusting the offset while keeping the wall time changes the elapsed duration.
+   * Before 1.11.2, `valueOf()` of a value without `$x.$localOffset` uses the system offset of today,
+   * not of the value date (https://github.com/iamkun/dayjs/issues/1448).
    */
-  private addTime = (value: Dayjs, amount: number, unit: 'hour' | 'minute' | 'second') => {
-    // @ts-ignore
-    const timezone = value.$x?.$timezone;
-    if (!this.hasTimezonePlugin() || !timezone) {
-      return this.adjustOffset(value.add(amount, unit));
+  private hasValueOfDSTFix = () => {
+    if (this.valueOfDSTFix === undefined) {
+      const probe = dayjs(0);
+      const date = new Date(0);
+      date.getTimezoneOffset = () => 1;
+      // @ts-ignore
+      probe.$d = date;
+      // @ts-ignore
+      probe.$offset = 0;
+      this.valueOfDSTFix = probe.valueOf() === -60_000;
     }
 
-    const timestamp =
-      value.valueOf() + amount * { hour: 3_600_000, minute: 60_000, second: 1000 }[unit];
-    if (!Number.isFinite(timestamp)) {
-      return value.add(amount, unit);
-    }
+    return this.valueOfDSTFix;
+  };
 
-    let formatter = this.timezoneOffsetFormatters.get(timezone);
+  /**
+   * The offset of the timezone at the timestamp, in minutes. Local Mean Time offsets keep their seconds.
+   * Older dayjs.tz() implementations derive the offset through the system timezone, hence reading it from Intl.
+   * The numeric parts also work on Node 14 and 16, which do not support `timeZoneName: 'longOffset'`.
+   */
+  private getTimezoneOffsetAt = (timezone: string, timestamp: number) => {
+    let formatter = this.timezoneFormatters.get(timezone);
     if (!formatter) {
       formatter = new Intl.DateTimeFormat('en-US', {
         timeZone: timezone,
-        timeZoneName: 'longOffset',
+        hourCycle: 'h23',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
       });
-      this.timezoneOffsetFormatters.set(timezone, formatter);
+      this.timezoneFormatters.set(timezone, formatter);
     }
 
-    // Older dayjs.tz() implementations derive the offset through the system timezone and can
-    // shift the instant at a DST transition. Read the named zone's offset directly from Intl.
-    const offsetName = formatter
-      .formatToParts(timestamp)
-      .find((part) => part.type === 'timeZoneName')!.value;
-    const [hours = 0, minutes = 0, seconds = 0] = offsetName.slice(4).split(':').map(Number);
-    const offset = (offsetName[3] === '-' ? -1 : 1) * (hours * 60 + minutes + seconds / 60);
+    const wall: Partial<Record<Intl.DateTimeFormatPartTypes, number>> = {};
+    formatter.formatToParts(timestamp).forEach((part) => {
+      wall[part.type] = Number(part.value);
+    });
+    const date = new Date(timestamp);
+    let seconds =
+      (wall.hour! - date.getUTCHours()) * 3600 +
+      (wall.minute! - date.getUTCMinutes()) * 60 +
+      (wall.second! - date.getUTCSeconds());
+    // An offset is shorter than a day, so another day of the month is the next or the previous day.
+    if (wall.day !== date.getUTCDate()) {
+      seconds += seconds < 0 ? 86_400 : -86_400;
+    }
 
+    return seconds / 60;
+  };
+
+  /**
+   * Builds the value of a named timezone at the timestamp, with the offset (in minutes) of that timezone.
+   */
+  private createNamedZoneValue = (
+    timestamp: number,
+    offset: number,
+    timezone: string,
+    locale: string,
+  ) => {
     let result: Dayjs;
     if (offset === 0) {
-      // Starting from UTC also clears the old nonzero offset and local-offset metadata.
-      result = dayjs.utc(timestamp).locale(value.locale());
+      // A UTC value keeps the wall time, even when it falls in a DST gap of the system timezone.
+      result = dayjs.utc(timestamp).locale(locale);
     } else {
       const wallDate = new Date(timestamp + offset * 60_000);
       const localDate = new Date(0);
@@ -335,21 +396,92 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
         wallDate.getUTCSeconds(),
         wallDate.getUTCMilliseconds(),
       );
-      result = dayjs(localDate).locale(value.locale());
+      result = dayjs(localDate).locale(locale);
       // @ts-ignore
       result.$offset = offset;
-      // dayjs 1.10.7 falls back to today's system offset when $localOffset is falsy. A boxed zero
-      // keeps numeric coercion equal to zero while avoiding that fallback, including on clones.
-      // Use the actual displacement so elapsed time stays exact even if the system timezone
-      // normalizes a wall time inside its spring-forward gap (a dayjs representation limitation).
-      const localOffset = (localDate.getTime() - timestamp) / 60_000 - offset || new Number(0);
-      // @ts-ignore
-      result.$x.$localOffset = localOffset;
+      // A wall time in a DST gap of the system timezone moves the local Date, so `valueOf()` needs the
+      // actual displacement. Later `set` and `add` calls copy it, so only store it when it is needed.
+      if (result.valueOf() !== timestamp) {
+        // dayjs ignores a falsy `$localOffset`. A boxed zero keeps numeric coercion equal to zero.
+        // @ts-ignore
+        result.$x.$localOffset =
+          (localDate.getTime() - timestamp) / 60_000 - offset || new Number(0);
+      }
     }
-    // Only the newly constructed value receives metadata; the source and its clones stay intact.
     // @ts-ignore
     result.$x.$timezone = timezone;
     return result;
+  };
+
+  /**
+   * The offset of the timezone for a wall time, given in milliseconds as if it was UTC.
+   * A repeated wall time keeps the preferred offset when it is valid, else it takes the occurrence nearest to
+   * that offset, or the first occurrence. A wall time in a gap takes the offset before the gap, so its instant
+   * moves forward past the gap.
+   */
+  private getWallTimeOffset = (wallTime: number, timezone: string, preferredOffset?: number) => {
+    const isValidOffset = (offset: number) =>
+      this.getTimezoneOffsetAt(timezone, wallTime - offset * 60_000) === offset;
+    if (preferredOffset !== undefined) {
+      if (isValidOffset(preferredOffset)) {
+        return preferredOffset;
+      }
+
+      const nearestOffset = this.getTimezoneOffsetAt(timezone, wallTime - preferredOffset * 60_000);
+      if (isValidOffset(nearestOffset)) {
+        return nearestOffset;
+      }
+    }
+
+    const offsets = [
+      this.getTimezoneOffsetAt(timezone, wallTime - 86_400_000),
+      this.getTimezoneOffsetAt(timezone, wallTime + 86_400_000),
+    ];
+    const validOffsets = offsets.filter(isValidOffset);
+    return validOffsets.length > 0 ? Math.max(...validOffsets) : Math.min(...offsets);
+  };
+
+  /**
+   * For a named timezone, `startOf('day')` can give a midnight in a DST gap (`America/Santiago`) or the
+   * previous day. Elapsed-time additions from such a value leave the day, so build the first instant of the day.
+   */
+  private getStartOfDayInTimezone = (value: Dayjs, timezone: string) => {
+    const midnight = new Date(0);
+    midnight.setUTCFullYear(value.year(), value.month(), value.date());
+    const timestamp =
+      midnight.getTime() - this.getWallTimeOffset(midnight.getTime(), timezone) * 60_000;
+
+    return this.createNamedZoneValue(
+      timestamp,
+      this.getTimezoneOffsetAt(timezone, timestamp),
+      timezone,
+      value.locale(),
+    );
+  };
+
+  /**
+   * Hours, minutes and seconds measure elapsed time. Rebuild named-zone values from the target
+   * instant: adjusting the offset while keeping the wall time changes the elapsed duration.
+   */
+  private addTime = (value: Dayjs, amount: number, unit: 'hour' | 'minute' | 'second') => {
+    // @ts-ignore
+    const timezone = value.$x?.$timezone;
+    if (!this.hasTimezonePlugin() || !timezone || !this.hasValueOfDSTFix()) {
+      return this.adjustOffset(value.add(amount, unit));
+    }
+
+    const timestamp =
+      value.valueOf() + amount * { hour: 3_600_000, minute: 60_000, second: 1000 }[unit];
+    if (!Number.isFinite(timestamp)) {
+      return value.add(amount, unit);
+    }
+
+    return this.createNamedZoneValue(
+      timestamp,
+      this.getTimezoneOffsetAt(timezone, timestamp),
+      timezone,
+      value.locale(),
+    );
   };
 
   /**
@@ -614,6 +746,12 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public startOfDay = (value: Dayjs) => {
+    // @ts-ignore
+    const timezone = value.$x?.$timezone;
+    if (this.hasTimezonePlugin() && timezone && this.hasValueOfDSTFix() && value.isValid()) {
+      return this.getStartOfDayInTimezone(value, timezone);
+    }
+
     return this.adjustOffset(value.startOf('day'));
   };
 
