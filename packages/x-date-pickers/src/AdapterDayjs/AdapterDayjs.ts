@@ -256,10 +256,8 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * If the new day does not have the same offset as the old one (when switching to summer day time for example),
-   * Then dayjs will not automatically adjust the offset (moment does).
-   * We have to parse again the value to make sure the `fixOffset` method is applied.
-   * See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
+   * `dayjs` does not update the offset when `set` or `add` crosses a DST change (moment does).
+   * Plain `system` values follow the JS Date DST, and a copied offset breaks later `dayjs` calls.
    */
   protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
@@ -267,21 +265,19 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     const timezone = this.getTimezone(value);
-    if (timezone !== 'UTC') {
-      const fixedValue = value.tz(this.cleanTimezone(timezone), true);
-      // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
-      /* v8 ignore next 3 */
-      // @ts-ignore
-      if (fixedValue.$offset === (value.$offset ?? 0)) {
-        return value;
-      }
-      // Change only what is needed to avoid creating a new object with unwanted data
-      // Especially important when used in an environment where utc or timezone dates are used only in some places
-      // Reference: https://github.com/mui/mui-x/issues/13290
+    // Plain system values already follow the native Date offset.
+    // @ts-ignore
+    if (timezone === 'UTC' || (timezone === 'system' && value.$offset === undefined)) {
+      return value;
+    }
+
+    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+    // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
+    // @ts-ignore
+    if ((fixedValue.$offset ?? 0) !== (value.$offset ?? 0)) {
       // @ts-ignore
       value.$offset = fixedValue.$offset;
     }
-
     return value;
   };
 
