@@ -169,7 +169,15 @@ const getCacheKey = (options: UseMockServerOptions, index: number) => {
     (options.treeData?.maxDepth ?? 1) > 1
       ? `${options.treeData?.maxDepth}-${options.treeData?.averageChildren ?? 2}-${options.treeData?.groupingField ?? ''}`
       : 'false';
-  return `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}-multiSelect:${options.multiSelect ? 'true' : 'false'}-derivedColumns:${options.derivedColumns ? 'true' : 'false'}-treeData:${treeDataKey}`;
+  return JSON.stringify([
+    options.dataSet,
+    options.rowLength,
+    index,
+    options.maxColumns,
+    Boolean(options.multiSelect),
+    Boolean(options.derivedColumns),
+    treeDataKey,
+  ]);
 };
 
 const defaultColDef = getGridDefaultColumnTypes();
