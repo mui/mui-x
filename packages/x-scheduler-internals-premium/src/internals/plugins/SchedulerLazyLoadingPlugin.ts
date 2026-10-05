@@ -176,10 +176,15 @@ export class SchedulerLazyLoadingPlugin<
     if (!dataSource || !cache || !dataManager) {
       return;
     }
+    const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
     if (
       cache.hasCoverage(adapter.getTime(range.start), adapter.getTime(adapter.endOfDay(range.end)))
     ) {
       try {
+        // Like a stale fetch, a stale cache hit leaves the state to the latest request.
+        if (this.latestRequest?.fetchKey !== fetchedRangeKey) {
+          return;
+        }
         const allCachedEvents = cache.getAll();
         const eventsState = buildEventsState({
           events: allCachedEvents,
@@ -202,7 +207,6 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
-    const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
     let isStale = false;
     let requestToRefetch: typeof this.latestRequest = null;
     try {

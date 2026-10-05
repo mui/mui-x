@@ -485,6 +485,65 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(store.state.eventIdList).to.include('december');
   });
 
+  it('should keep loading when a queued cache hit settles after navigating away', async () => {
+    const event: TestEvent = {
+      id: 'november',
+      start: '2025-11-02T10:00:00.000Z',
+      end: '2025-11-02T11:00:00.000Z',
+      title: 'November event',
+    };
+    const pending: Array<() => void> = [];
+    const dataSource = {
+      getEvents: vi.fn(
+        (start: TemporalSupportedObject, end: TemporalSupportedObject) =>
+          new Promise<TestEvent[]>((resolve) => {
+            pending.push(() => resolve(isEventInRange(event, start, end) ? [event] : []));
+          }),
+      ),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore(
+      {
+        ...DEFAULT_PARAMS,
+        dataSource,
+        defaultVisibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
+      },
+      adapter,
+    );
+    const navigate = async (date: string) => {
+      store.goToDate(adapter.date(date, 'default'), noopUIEvent);
+      await flushEffect();
+      await flushDebounce();
+    };
+    const resolveCall = async (index: number) => {
+      pending[index]();
+      await flushEffect();
+    };
+
+    store.setViewDefinition(buildViewDefinition(10));
+    await flushEffect();
+    await resolveCall(0);
+
+    // Fill the 3 concurrent slots so the next requests wait in the queue.
+    await navigate('2025-08-01T00:00:00Z'); // 1
+    await navigate('2025-09-01T00:00:00Z'); // 2
+    await navigate('2025-10-01T00:00:00Z'); // 3
+    await navigate('2025-07-01T00:00:00Z'); // queued, fully cached
+    await navigate('2025-11-01T00:00:00Z'); // queued
+
+    // Freeing one slot starts the November request.
+    await resolveCall(1);
+    expect(dataSource.getEvents.mock.calls).to.have.length(5);
+
+    // Freeing another slot runs the cached July request while November is pending.
+    await resolveCall(2);
+    expect(store.state.isLoading).to.equal(true);
+
+    await resolveCall(4);
+    expect(store.state.isLoading).to.equal(false);
+    expect(store.state.eventIdList).to.include('november');
+  });
+
   it('should not mark hours that were not fetched as cached when trimming in another timezone', async () => {
     // 21:00 on July 9 in New York.
     const event: TestEvent = {
