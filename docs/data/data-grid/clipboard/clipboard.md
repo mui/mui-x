@@ -91,6 +91,13 @@ The above demo uses a `pastedValueParser` to convert the pasted value to a numbe
 
 :::
 
+By default, the fill handle fills along one axis at a time.
+Pass `{ direction: 'any' }` to also fill diagonally: the selection is repeated over the rectangle spanned by the selection and the pointer.
+
+```tsx
+<DataGridPremium cellSelection cellSelectionFillHandle={{ direction: 'any' }} />
+```
+
 ### Disable clipboard paste
 
 To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:

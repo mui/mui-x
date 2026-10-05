@@ -61,6 +61,11 @@ const AUTO_SCROLL_SENSITIVITY = 50; // The distance from the edge to start scrol
 const AUTO_SCROLL_SPEED = 20; // The speed to scroll once the mouse enters the sensitivity area
 const FILL_HANDLE_HIT_AREA = 16; // px — size of the interactive hit area for the fill handle
 
+const positiveModulo = (value: number, divisor: number) => ((value % divisor) + divisor) % divisor;
+
+const isInRange = (index: number, range: { start: number; end: number }) =>
+  index >= range.start && index <= range.end;
+
 function getSelectedOrFocusedCells(
   apiRef: RefObject<GridPrivateApiPremium>,
 ): GridCellCoordinates[] {
@@ -104,7 +109,7 @@ interface FillSourceState {
 
 interface FillDragState {
   isDragging: boolean;
-  direction: 'vertical' | 'horizontal' | null;
+  direction: 'vertical' | 'horizontal' | 'any' | null;
   targetRowIds: GridRowId[];
   targetFields: string[];
   decoratedElements: Set<Element>;
@@ -166,6 +171,10 @@ export const useGridCellSelection = (
       ? ignoreValueFormatterProp?.clipboardExport
       : ignoreValueFormatterProp) || false;
   const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
+  const fillHandleProp = props.cellSelectionFillHandle;
+  const isFillHandleEnabled = !!fillHandleProp;
+  const isFillAnyDirection =
+    typeof fillHandleProp === 'object' && fillHandleProp?.direction === 'any';
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
@@ -819,6 +828,51 @@ export const useGridCellSelection = (
           cellUpdater.updateCell({ rowId, field: targetField, pastedCellValue });
         });
       });
+    } else if (direction === 'any' && fillSource.current) {
+      // Tile the source block over the target rectangle, anchored on the source
+      const { cells, rowIndexRange, columnIndexRange } = fillSource.current;
+      const visibleRows = getVisibleRows(apiRef).rows;
+      const visibleColumns = apiRef.current.getVisibleColumns();
+      const sourceFieldsByRowId = new Map<string, Set<string>>();
+      for (const cell of cells) {
+        const fields = sourceFieldsByRowId.get(String(cell.id)) ?? new Set<string>();
+        fields.add(cell.field);
+        sourceFieldsByRowId.set(String(cell.id), fields);
+      }
+      const rowCount = rowIndexRange.end - rowIndexRange.start + 1;
+      const columnCount = columnIndexRange.end - columnIndexRange.start + 1;
+
+      targetRowIds.forEach((rowId) => {
+        const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
+        const isSourceRow = isInRange(rowIndex, rowIndexRange);
+        const sourceRow =
+          visibleRows[
+            rowIndexRange.start + positiveModulo(rowIndex - rowIndexRange.start, rowCount)
+          ];
+        const sourceRowFields = sourceRow && sourceFieldsByRowId.get(String(sourceRow.id));
+        if (!sourceRowFields) {
+          return;
+        }
+        targetFields.forEach((field) => {
+          const columnIndex = apiRef.current.getColumnIndex(field);
+          if (isSourceRow && isInRange(columnIndex, columnIndexRange)) {
+            return;
+          }
+          const sourceField =
+            visibleColumns[
+              columnIndexRange.start +
+                positiveModulo(columnIndex - columnIndexRange.start, columnCount)
+            ]?.field;
+          if (!sourceField || !sourceRowFields.has(sourceField)) {
+            return;
+          }
+          const sourceCell = { id: sourceRow.id, field: sourceField };
+          const pastedCellValue =
+            apiRef.current.getFilledFormulaSource?.(sourceCell, { id: rowId, field }) ??
+            serializeCellForClipboard(sourceRow.id, sourceField);
+          cellUpdater.updateCell({ rowId, field, pastedCellValue });
+        });
+      });
     }
 
     cellUpdater.applyUpdates();
@@ -843,6 +897,7 @@ export const useGridCellSelection = (
     getFillSourceData,
     getSourceValuesForField,
     getSourceCellsForField,
+    serializeCellForClipboard,
   ]);
 
   // Helper: clear fill preview classes from previously decorated elements
@@ -893,7 +948,7 @@ export const useGridCellSelection = (
   // Fill handle: mousedown on the fill handle
   const handleFillHandleMouseDown = React.useCallback<GridEventListener<'cellMouseDown'>>(
     (params, event) => {
-      if (!props.cellSelectionFillHandle || !props.cellSelection) {
+      if (!isFillHandleEnabled || !props.cellSelection) {
         return;
       }
 
@@ -1051,7 +1106,24 @@ export const useGridCellSelection = (
           const newTargetRowIds: GridRowId[] = [];
           let newTargetFields: string[] = [];
 
-          if (isOutsideRowRange) {
+          if (isFillAnyDirection && (isOutsideRowRange || isOutsideColRange)) {
+            // Rectangle spanned by the source and the pointer, source included
+            fillDrag.current.direction = 'any';
+            const lastRowIndex = Math.max(targetRowIndex, maxSourceRowIdx);
+            for (let i = Math.min(targetRowIndex, minSourceRowIdx); i <= lastRowIndex; i += 1) {
+              const row = currentVisibleRows.rows[i];
+              if (row) {
+                newTargetRowIds.push(row.id);
+              }
+            }
+            const lastColIndex = Math.max(targetColIndex, maxSourceColIdx);
+            for (let i = Math.min(targetColIndex, minSourceColIdx); i <= lastColIndex; i += 1) {
+              const column = currentVisibleColumns[i];
+              if (column) {
+                newTargetFields.push(column.field);
+              }
+            }
+          } else if (isOutsideRowRange) {
             // Vertical fill: extend rows, keep all source columns
             fillDrag.current.direction = 'vertical';
             newTargetFields = source.fields;
@@ -1113,7 +1185,19 @@ export const useGridCellSelection = (
             const nextDecorated = new Set<Element>();
 
             newTargetRowIds.forEach((rowId, rowIdx) => {
+              const isSourceRow =
+                fillDrag.current.direction === 'any' &&
+                isInRange(
+                  apiRef.current.getRowIndexRelativeToVisibleRows(rowId),
+                  source.rowIndexRange,
+                );
               newTargetFields.forEach((field, colIdx) => {
+                if (
+                  isSourceRow &&
+                  isInRange(apiRef.current.getColumnIndex(field), source.columnIndexRange)
+                ) {
+                  return;
+                }
                 const cellEl = getGridCellElement(currentRootEl, { id: rowId, field });
                 if (cellEl) {
                   nextDecorated.add(cellEl);
@@ -1194,7 +1278,8 @@ export const useGridCellSelection = (
     },
     [
       apiRef,
-      props.cellSelectionFillHandle,
+      isFillHandleEnabled,
+      isFillAnyDirection,
       props.cellSelection,
       applyFill,
       cleanupFillDrag,
@@ -1619,7 +1704,7 @@ export const useGridCellSelection = (
 
       if (!visibleRows.range || !apiRef.current.isCellSelected(id, field)) {
         // Show fill handle on the focused cell when no cell selection exists
-        if (props.cellSelectionFillHandle && !fillDrag.current.isDragging) {
+        if (isFillHandleEnabled && !fillDrag.current.isDragging) {
           const focusedCell = gridFocusCellSelector(apiRef);
           if (focusedCell && focusedCell.id === id && focusedCell.field === field) {
             const selectionModel = apiRef.current.getCellSelectionModel();
@@ -1688,7 +1773,7 @@ export const useGridCellSelection = (
 
       // Add fill handle to the bottom-right cell of the selection
       // Show if any selected column is editable (not just the bottom-right column)
-      if (props.cellSelectionFillHandle && isBottom && isRight && !fillDrag.current.isDragging) {
+      if (isFillHandleEnabled && isBottom && isRight && !fillDrag.current.isDragging) {
         const selectionModel = apiRef.current.getCellSelectionModel();
         const selectedFieldsInRow = selectionModel[id];
         const hasEditableColumn =
@@ -1704,7 +1789,7 @@ export const useGridCellSelection = (
 
       return newClasses;
     },
-    [apiRef, props.cellSelectionFillHandle],
+    [apiRef, isFillHandleEnabled],
   );
 
   const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(

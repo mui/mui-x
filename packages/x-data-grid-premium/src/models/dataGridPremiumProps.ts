@@ -180,10 +180,20 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   /**
    * If `true`, a fill handle is shown at the bottom-right corner of the cell selection.
    * Dragging the fill handle fills target cells with the values from selected cells.
+   * If an object is provided, you can choose the directions the fill handle can fill in.
    * Requires `cellSelection` to be enabled.
    * @default false
    */
-  cellSelectionFillHandle: boolean;
+  cellSelectionFillHandle:
+    | boolean
+    | {
+        /**
+         * `'orthogonal'` fills along one axis at a time.
+         * `'any'` also fills diagonally, tiling the selection over the dragged rectangle.
+         * @default 'orthogonal'
+         */
+        direction?: 'orthogonal' | 'any';
+      };
   /**
    * The maximum size of the history stack.
    * Set to 0 to disable the undo/redo feature.

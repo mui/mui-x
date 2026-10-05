@@ -1557,6 +1557,131 @@ describe('<DataGridPremium /> - Cell selection', () => {
         });
       });
 
+      describe('Any direction fill', () => {
+        it('should only fill one axis when dragging diagonally by default', async () => {
+          const { user } = render(
+            <TestDataGridSelection columns={fillColumns} rows={fillRows} cellSelectionFillHandle />,
+          );
+
+          await user.click(getCell(0, 2)); // value=10
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(2, 3));
+
+          await waitFor(() => {
+            expect(getCell(2, 2).textContent).to.equal('10');
+          });
+          expect(getCell(1, 3).textContent).to.equal('B');
+        });
+
+        it('should fill the rectangle spanned by the source and the pointer', async () => {
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle={{ direction: 'any' }}
+              processRowUpdate={processRowUpdateSpy}
+            />,
+          );
+
+          await user.click(getCell(0, 2)); // value=10
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(2, 3));
+
+          await waitFor(() => {
+            expect(getCell(2, 3).textContent).to.equal('10');
+          });
+          expect(getCell(0, 3).textContent).to.equal('10');
+          expect(getCell(1, 2).textContent).to.equal('10');
+          expect(getCell(2, 2).textContent).to.equal('10');
+          expect(getCell(3, 3).textContent).to.equal('');
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(3);
+          expect(getCell(2, 3)).to.have.class('Mui-selected');
+        });
+
+        it('should repeat a source block across both axes', async () => {
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              height={500}
+              cellSelectionFillHandle={{ direction: 'any' }}
+            />,
+          );
+
+          // name/value of rows 0-1: [[Alice, 10], [Bob, 20]]
+          await user.click(getCell(0, 1));
+          await user.keyboard('{Shift>}');
+          await user.click(getCell(1, 2));
+          await user.keyboard('{/Shift}');
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(4, 3));
+
+          await waitFor(() => {
+            expect(getCell(4, 3).textContent).to.equal('Alice');
+          });
+          expect([2, 3, 4].map((row) => getCell(row, 1).textContent)).to.deep.equal([
+            'Alice',
+            'Bob',
+            'Alice',
+          ]);
+          expect([2, 3, 4].map((row) => getCell(row, 2).textContent)).to.deep.equal([
+            '10',
+            '20',
+            '10',
+          ]);
+          expect([0, 1, 2, 3].map((row) => getCell(row, 3).textContent)).to.deep.equal([
+            'Alice',
+            'Bob',
+            'Alice',
+            'Bob',
+          ]);
+        });
+
+        it('should anchor the pattern on the source when filling up and left', async () => {
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle={{ direction: 'any' }}
+            />,
+          );
+
+          // value of rows 1-2: [20, 30]
+          await user.click(getCell(1, 2));
+          await user.keyboard('{Shift>}');
+          await user.click(getCell(2, 2));
+          await user.keyboard('{/Shift}');
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(0, 1));
+
+          await waitFor(() => {
+            expect(getCell(0, 2).textContent).to.equal('30');
+          });
+          expect([0, 1, 2].map((row) => getCell(row, 1).textContent)).to.deep.equal([
+            '30',
+            '20',
+            '30',
+          ]);
+        });
+      });
+
       describe('Fill preview', () => {
         it('should remove fill preview classes after mouse release', async () => {
           const processRowUpdateSpy = vi.fn((newRow) => newRow);
