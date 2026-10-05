@@ -25,6 +25,7 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.15.0`
 
+- [charts-pro][DataGrid] Fix exports failing or hanging under a Content Security Policy (#23521) @JCQuintas
 - [DataGrid] Add `height` prop for sizing without a wrapper (#23628) @michelengelen
 - [DataGrid] Cap the pagination toolbar so the footer height is stable on mount (#23547) @JCQuintas
 - [DataGrid] Document `rowsSet`, `filteredRowsSet` & `sortedRowsSet` events (#23631) @michelengelen
@@ -172,7 +173,7 @@ Internal changes.
 - [test] Make regression screenshot rasterization deterministic (#23722) @LukasTy
 - [test] Wait for the Mars texture before the `MarsMap` regression screenshot (#23730) @LukasTy
 - [virtualizer] Do not affect `columnPositions` selector with unrelated state change (#23629) @arminmeh
-- [x-internals] Import Base UI utils directly instead of re-exporting them (#23373) @romgrk
+- [x-internals] Import Base UI utils directly instead of re-exporting them (#23373) @romgrk
 - [x-internals] Import the store from `@base-ui/utils` directly (#23335) @romgrk
 
 ## 9.14.0
