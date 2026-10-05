@@ -283,24 +283,14 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       // @ts-ignore
       const currentOffset: number = value.$u ? 0 : value.$offset;
       const offset = this.getWallTimeOffset(wallDate.getTime(), timezone, currentOffset);
-      if (offset === currentOffset) {
+      const timestamp = wallDate.getTime() - offset * 60_000;
+      if (offset === currentOffset && value.valueOf() === timestamp) {
         return value;
       }
 
-      // A UTC-mode value ignores `$offset`, and a value without `$offset` follows the system offset.
-      // @ts-ignore
-      if (value.$u || offset === 0) {
-        return this.createNamedZoneValue(
-          wallDate.getTime() - offset * 60_000,
-          offset,
-          timezone,
-          value.locale(),
-        );
-      }
-
-      // @ts-ignore
-      value.$offset = offset;
-      return value;
+      // Rebuild the local displacement as well: setters copy `$localOffset` across system-offset
+      // changes, and historical system offsets can include seconds that `getTimezoneOffset()` omits.
+      return this.createNamedZoneValue(timestamp, offset, timezone, value.locale());
     }
 
     // dayjs 1.11.12 and 1.11.13 change the value itself when the new offset is 0.
@@ -399,8 +389,8 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       result = dayjs(localDate).locale(locale);
       // @ts-ignore
       result.$offset = offset;
-      // A wall time in a DST gap of the system timezone moves the local Date, so `valueOf()` needs the
-      // actual displacement. Later `set` and `add` calls copy it, so only store it when it is needed.
+      // System DST gaps and historical offsets with seconds require the actual local displacement.
+      // Later `set` and `add` calls copy it, so only store it when it is needed.
       if (result.valueOf() !== timestamp) {
         // dayjs ignores a falsy `$localOffset`. A boxed zero keeps numeric coercion equal to zero.
         // @ts-ignore
@@ -470,8 +460,10 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       return this.adjustOffset(value.add(amount, unit));
     }
 
-    const timestamp =
-      value.valueOf() + amount * { hour: 3_600_000, minute: 60_000, second: 1000 }[unit];
+    // Match Date's millisecond precision and range before comparing local displacements.
+    const timestamp = new Date(
+      value.valueOf() + amount * { hour: 3_600_000, minute: 60_000, second: 1000 }[unit],
+    ).getTime();
     if (!Number.isFinite(timestamp)) {
       return value.add(amount, unit);
     }

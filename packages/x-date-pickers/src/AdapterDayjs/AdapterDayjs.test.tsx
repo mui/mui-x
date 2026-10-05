@@ -301,6 +301,92 @@ describe('<AdapterDayjs />', () => {
         },
       ];
       const format = 'YYYY-MM-DD HH:mm:ss.SSS Z';
+      const fractionalTimeMethods = [
+        { method: 'addHours', amount: 1 / 10_800 },
+        { method: 'addMinutes', amount: 1 / 180 },
+        { method: 'addSeconds', amount: 1 / 3 },
+      ] as const;
+
+      it.each(fractionalTimeMethods)(
+        '$method: should keep fractional elapsed times at native millisecond precision',
+        ({ method, amount }) => {
+          // Native Date truncates the resulting epoch toward zero, including before 1970.
+          const cases = [
+            {
+              source: '2026-01-15T12:00:00.000Z',
+              direction: 1,
+              expected: '2026-01-15T12:00:00.333Z',
+            },
+            {
+              source: '2026-01-15T12:00:00.000Z',
+              direction: -1,
+              expected: '2026-01-15T11:59:59.666Z',
+            },
+            {
+              source: '1960-01-15T12:00:00.000Z',
+              direction: 1,
+              expected: '1960-01-15T12:00:00.334Z',
+            },
+            {
+              source: '1960-01-15T12:00:00.000Z',
+              direction: -1,
+              expected: '1960-01-15T11:59:59.667Z',
+            },
+          ];
+
+          for (const { source: sourceISO, direction, expected } of cases) {
+            const source = dayjs.utc(sourceISO).tz('America/New_York');
+            const result = adapter[method](source, amount * direction);
+
+            expect(result.toISOString()).to.equal(expected);
+            expect(result.valueOf()).to.equal(Date.parse(expected));
+            expect(result.toDate().getTime()).to.equal(result.valueOf());
+            expect(result.clone().valueOf()).to.equal(result.valueOf());
+            expect(source.toISOString()).to.equal(sourceISO);
+          }
+        },
+      );
+
+      it.skipIf(!isJSDOM)(
+        'setYear: should preserve seconds when entering a historical system timezone offset',
+        () => {
+          setSystemTimezone('Europe/London');
+          const source = dayjs.utc('2026-07-15T12:30:12.345Z').tz('Europe/London').locale('fr');
+          const result = adapter.setYear(source, 202);
+
+          expect(result.toISOString()).to.equal('0202-07-15T13:31:27.345Z');
+          expect(result.format('YYYY-MM-DD HH:mm:ss.SSS')).to.equal('0202-07-15 13:30:12.345');
+          expect(result.utcOffset()).to.equal(-1.25);
+          expect(result.toDate().getTime()).to.equal(result.valueOf());
+          expect(adapter.getTimezone(result)).to.equal('Europe/London');
+          expect(result.locale()).to.equal('fr');
+          expect(source.toISOString()).to.equal('2026-07-15T12:30:12.345Z');
+          expect(source.format(format)).to.equal('2026-07-15 13:30:12.345 +01:00');
+          expect(source.locale()).to.equal('fr');
+        },
+      );
+
+      it.skipIf(!isJSDOM)(
+        'addDays: should refresh historical system offsets when the named offset stays unchanged',
+        () => {
+          setSystemTimezone('Europe/Paris');
+          const source = dayjs.utc('1911-03-11T01:00:00Z').tz('Asia/Tokyo').locale('fr');
+          const previousDay = adapter.addHours(source, -12);
+          const result = adapter.addDays(previousDay, 1);
+
+          expect(previousDay.toISOString()).to.equal('1911-03-10T13:00:00.000Z');
+          expect(previousDay.format(format)).to.equal('1911-03-10 22:00:00.000 +09:00');
+          expect(result.toISOString()).to.equal('1911-03-11T13:00:00.000Z');
+          expect(result.format(format)).to.equal('1911-03-11 22:00:00.000 +09:00');
+          expect(result.utcOffset()).to.equal(previousDay.utcOffset());
+          expect(result.toDate().getTime()).to.equal(result.valueOf());
+          expect(adapter.getTimezone(result)).to.equal('Asia/Tokyo');
+          expect(result.locale()).to.equal('fr');
+          expect(source.toISOString()).to.equal('1911-03-11T01:00:00.000Z');
+          expect(source.format(format)).to.equal('1911-03-11 10:00:00.000 +09:00');
+          expect(source.locale()).to.equal('fr');
+        },
+      );
 
       it.skipIf(!isJSDOM)(
         'should keep elapsed time exact when the target wall time falls in a system DST gap',
@@ -371,6 +457,23 @@ describe('<AdapterDayjs />', () => {
               }
             });
           });
+
+          it.each(fractionalTimeMethods)(
+            '$method: should preserve fractional precision when a setter moves the result into DST',
+            ({ method, amount }) => {
+              const source = dayjs.utc('2026-01-15T12:00:00Z').tz('America/New_York').locale('fr');
+              const fractionalValue = adapter[method](source, amount);
+              const result = adapter.setMonth(fractionalValue, 3);
+
+              expect(result.toISOString()).to.equal('2026-04-15T11:00:00.333Z');
+              expect(result.format(format)).to.equal('2026-04-15 07:00:00.333 -04:00');
+              expect(result.toDate().getTime()).to.equal(result.valueOf());
+              expect(adapter.getTimezone(result)).to.equal('America/New_York');
+              expect(result.locale()).to.equal('fr');
+              expect(fractionalValue.toISOString()).to.equal('2026-01-15T12:00:00.333Z');
+              expect(source.toISOString()).to.equal('2026-01-15T12:00:00.000Z');
+            },
+          );
 
           it('should keep the instant when a setter changes an elapsed-time result', () => {
             const winterValue = adapter.addMinutes(
