@@ -1557,7 +1557,60 @@ describe('<DataGridPremium /> - Cell selection', () => {
         });
       });
 
-      describe('Any direction fill', () => {
+      describe('Fill direction', () => {
+        it('should only fill rows with `direction: vertical`', async () => {
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle={{ direction: 'vertical' }}
+              processRowUpdate={processRowUpdateSpy}
+            />,
+          );
+
+          await user.click(getCell(0, 2)); // value=10
+
+          const getHandleCell = () =>
+            document.querySelector(`.${gridClasses['cell--withFillHandle']}`)! as HTMLElement;
+
+          await simulateFillDrag(getHandleCell(), getCell(0, 3));
+          await simulateFillDrag(getHandleCell(), getCell(1, 2));
+
+          await waitFor(() => {
+            expect(getCell(1, 2).textContent).to.equal('10');
+          });
+          expect(getCell(0, 3).textContent).to.equal('A');
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
+        });
+
+        it('should only fill columns with `direction: horizontal`', async () => {
+          const processRowUpdateSpy = vi.fn((newRow) => newRow);
+          const { user } = render(
+            <TestDataGridSelection
+              columns={fillColumns}
+              rows={fillRows}
+              cellSelectionFillHandle={{ direction: 'horizontal' }}
+              processRowUpdate={processRowUpdateSpy}
+            />,
+          );
+
+          await user.click(getCell(0, 2)); // value=10
+
+          const handleCell = document.querySelector(
+            `.${gridClasses['cell--withFillHandle']}`,
+          )! as HTMLElement;
+
+          await simulateFillDrag(handleCell, getCell(2, 3));
+
+          await waitFor(() => {
+            expect(getCell(0, 3).textContent).to.equal('10');
+          });
+          expect(getCell(1, 2).textContent).to.equal('20');
+          expect(getCell(1, 3).textContent).to.equal('B');
+          expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
+        });
+
         it('should only fill one axis when dragging diagonally by default', async () => {
           const { user } = render(
             <TestDataGridSelection columns={fillColumns} rows={fillRows} cellSelectionFillHandle />,

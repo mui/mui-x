@@ -173,8 +173,8 @@ export const useGridCellSelection = (
   const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
   const fillHandleProp = props.cellSelectionFillHandle;
   const isFillHandleEnabled = !!fillHandleProp;
-  const isFillAnyDirection =
-    typeof fillHandleProp === 'object' && fillHandleProp?.direction === 'any';
+  const fillHandleDirection =
+    (typeof fillHandleProp === 'object' ? fillHandleProp?.direction : undefined) ?? 'orthogonal';
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
@@ -1098,15 +1098,17 @@ export const useGridCellSelection = (
           const targetColIndex = apiRef.current.getColumnIndex(targetField);
 
           const isOutsideRowRange =
-            targetRowIndex > maxSourceRowIdx || targetRowIndex < minSourceRowIdx;
+            fillHandleDirection !== 'horizontal' &&
+            (targetRowIndex > maxSourceRowIdx || targetRowIndex < minSourceRowIdx);
           const isOutsideColRange =
-            targetColIndex > maxSourceColIdx || targetColIndex < minSourceColIdx;
+            fillHandleDirection !== 'vertical' &&
+            (targetColIndex > maxSourceColIdx || targetColIndex < minSourceColIdx);
 
           // Determine fill direction and target cells
           const newTargetRowIds: GridRowId[] = [];
           let newTargetFields: string[] = [];
 
-          if (isFillAnyDirection && (isOutsideRowRange || isOutsideColRange)) {
+          if (fillHandleDirection === 'any' && (isOutsideRowRange || isOutsideColRange)) {
             // Rectangle spanned by the source and the pointer, source included
             fillDrag.current.direction = 'any';
             const lastRowIndex = Math.max(targetRowIndex, maxSourceRowIdx);
@@ -1279,7 +1281,7 @@ export const useGridCellSelection = (
     [
       apiRef,
       isFillHandleEnabled,
-      isFillAnyDirection,
+      fillHandleDirection,
       props.cellSelection,
       applyFill,
       cleanupFillDrag,

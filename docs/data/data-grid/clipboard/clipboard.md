@@ -92,7 +92,14 @@ The above demo uses a `pastedValueParser` to convert the pasted value to a numbe
 :::
 
 By default, the fill handle fills along one axis at a time.
-Pass `{ direction: 'any' }` to also fill diagonally: the selection is repeated over the rectangle spanned by the selection and the pointer.
+Use the `direction` option to change which directions are allowed:
+
+- `'vertical'`: rows only.
+- `'horizontal'`: columns only.
+- `'orthogonal'` (default): rows or columns, one axis at a time.
+- `'any'`: also diagonally. The selection is repeated over the rectangle spanned by the selection and the pointer.
+
+The option only affects dragging the handle. The keyboard shortcuts keep working.
 
 ```tsx
 <DataGridPremium cellSelection cellSelectionFillHandle={{ direction: 'any' }} />

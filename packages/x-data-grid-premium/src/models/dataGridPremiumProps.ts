@@ -188,11 +188,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
     | boolean
     | {
         /**
-         * `'orthogonal'` fills along one axis at a time.
-         * `'any'` also fills diagonally, tiling the selection over the dragged rectangle.
+         * `'vertical'` and `'horizontal'` lock the drag to one axis, `'orthogonal'` allows either axis at a time, `'any'` also fills diagonally.
+         * Keyboard shortcuts are not affected.
          * @default 'orthogonal'
          */
-        direction?: 'orthogonal' | 'any';
+        direction?: 'vertical' | 'horizontal' | 'orthogonal' | 'any';
       };
   /**
    * The maximum size of the history stack.

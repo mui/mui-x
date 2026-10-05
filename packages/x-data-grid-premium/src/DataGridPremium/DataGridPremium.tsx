@@ -289,7 +289,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
    */
   cellSelectionFillHandle: PropTypes.oneOfType([
     PropTypes.shape({
-      direction: PropTypes.oneOf(['any', 'orthogonal']),
+      direction: PropTypes.oneOf(['any', 'horizontal', 'orthogonal', 'vertical']),
     }),
     PropTypes.bool,
   ]),
