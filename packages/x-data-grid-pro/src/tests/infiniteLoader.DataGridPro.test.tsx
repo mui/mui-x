@@ -166,22 +166,27 @@ describe('<DataGridPro /> - Infinite loader', () => {
       // eslint-disable-next-line testing-library/no-container
       const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
       const maxScrollTop = virtualScroller.scrollHeight - virtualScroller.clientHeight;
+      const isLastRowRendered = () =>
+        // eslint-disable-next-line testing-library/no-container
+        container.querySelector(`[data-rowindex="${rows.length - 1}"]`) !== null;
+      const scrollDownTo = (top: number) =>
+        act(async () => {
+          virtualScroller.scrollTo({ top, behavior: 'instant' });
+          await new Promise((resolve) => {
+            requestAnimationFrame(resolve);
+          });
+        });
 
       // Outside of the threshold area
-      await act(async () =>
-        virtualScroller.scrollTo({ top: maxScrollTop - 1200, behavior: 'instant' }),
-      );
-      await act(async () => {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 100);
-        });
-      });
+      await scrollDownTo(maxScrollTop - 1200);
+      expect(isLastRowRendered()).to.equal(false);
       expect(handleRowsScrollEnd.mock.calls.length).to.equal(0);
 
-      // Inside of the threshold area, but the last row is further away than the rendered rows buffer
-      await act(async () =>
-        virtualScroller.scrollTo({ top: maxScrollTop - 900, behavior: 'instant' }),
-      );
+      // Inside of the threshold area, further than the default buffer used while scrolling down.
+      // The last row, and the trigger rendered after it, are there while scrolling, not only
+      // after the scroll has settled.
+      await scrollDownTo(maxScrollTop - 900);
+      expect(isLastRowRendered()).to.equal(true);
       await waitFor(() => {
         expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
       });

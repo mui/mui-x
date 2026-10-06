@@ -201,9 +201,13 @@ export function useGridVirtualizer() {
     virtualization: {
       layoutMode: rootProps.experimentalFeatures?.virtualizerLayoutMode ?? 'uncontrolled',
       isRtl,
-      rowBufferPx: rootProps.rowBufferPx,
+      // The infinite loading trigger is rendered after the last row, so rows have to be rendered
+      // at least `scrollEndThreshold` ahead of the viewport for the trigger to be observed in time.
+      rowBufferPx: Math.max(
+        rootProps.rowBufferPx,
+        (apiRef as any).current.getInfiniteLoadingThreshold?.() ?? 0,
+      ),
       columnBufferPx: rootProps.columnBufferPx,
-      scrollEndThresholdPx: (rootProps as any).scrollEndThreshold,
     },
     colspan: {
       enabled: hasColSpan,

@@ -67,10 +67,6 @@ export type VirtualizationParams = {
   /** The column buffer in pixels to render before and after the viewport.
    * @default 150 */
   columnBufferPx?: number;
-  /** The area in pixels at the end of the rows in which the last row is always rendered,
-   * so that the infinite loading trigger rendered after it can be observed in that area.
-   * @default 0 */
-  scrollEndThresholdPx?: number;
   /**
    * Controls how the container and render zones are positioned:
    * - 'uncontrolled': uses CSS sticky positioning (default)
@@ -975,7 +971,6 @@ function inputsSelector(
     autoHeight: dimensions.autoHeight,
     rowBufferPx: params.virtualization.rowBufferPx,
     columnBufferPx: params.virtualization.columnBufferPx,
-    scrollEndThresholdPx: params.virtualization.scrollEndThresholdPx ?? 0,
     leftPinnedWidth: dimensions.leftPinnedWidth,
     rightPinnedWidth: dimensions.rightPinnedWidth,
     columnsTotalWidth: dimensions.columnsTotalWidth,
@@ -1030,20 +1025,9 @@ function computeRenderContext(
       firstRowIndex = Math.min(firstRowIndex, minSpannedRowIndex);
     }
 
-    let lastRowIndex = inputs.autoHeight
+    const lastRowIndex = inputs.autoHeight
       ? firstRowIndex + inputs.rows.length
       : getNearestIndexToRender(inputs, top + inputs.viewportInnerHeight);
-
-    // The infinite loading trigger is rendered after the last row, so it can only be observed
-    // once the last row is rendered. If the threshold is larger than the buffer, render the
-    // last row as soon as it enters the threshold area.
-    if (inputs.scrollEndThresholdPx > 0) {
-      const rowsEnd =
-        inputs.rowsMeta.positions[inputs.rowsMeta.positions.length - 1] + inputs.lastRowHeight;
-      if (rowsEnd - (top + inputs.viewportInnerHeight) <= inputs.scrollEndThresholdPx) {
-        lastRowIndex = inputs.rows.length;
-      }
-    }
 
     renderContext.firstRowIndex = firstRowIndex;
     renderContext.lastRowIndex = lastRowIndex;
@@ -1459,16 +1443,18 @@ function bufferForDirection(
         columnAfter: horizontalBuffer,
         columnBefore: 0,
       };
+    // While scrolling, the buffer in the scroll direction is never smaller than at rest,
+    // as in sticky mode, so a larger `rowBufferPx` is respected while scrolling too.
     case ScrollDirection.UP:
       return {
         rowAfter: 0,
-        rowBefore: verticalBuffer,
+        rowBefore: Math.max(verticalBuffer, rowBufferPx),
         columnAfter: 0,
         columnBefore: 0,
       };
     case ScrollDirection.DOWN:
       return {
-        rowAfter: verticalBuffer,
+        rowAfter: Math.max(verticalBuffer, rowBufferPx),
         rowBefore: 0,
         columnAfter: 0,
         columnBefore: 0,

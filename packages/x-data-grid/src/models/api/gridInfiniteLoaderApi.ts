@@ -4,4 +4,5 @@ export interface GridInfiniteLoaderPrivateApi {
   }: {
     lastRowId: string | number;
   }) => React.ReactNode;
+  getInfiniteLoadingThreshold?: () => number | undefined;
 }

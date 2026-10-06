@@ -129,8 +129,14 @@ export const useGridInfiniteLoadingIntersection = (
     [isEnabled, triggerRef],
   );
 
+  const getInfiniteLoadingThreshold = React.useCallback(
+    () => (isEnabled ? props.scrollEndThreshold : undefined),
+    [isEnabled, props.scrollEndThreshold],
+  );
+
   const infiniteLoaderPrivateApi: GridInfiniteLoaderPrivateApi = {
     getInfiniteLoadingTriggerElement,
+    getInfiniteLoadingThreshold,
   };
 
   useGridApiMethod(apiRef, infiniteLoaderPrivateApi, 'private');
