@@ -1,5 +1,8 @@
+'use client';
+
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { warnOnce } from '@mui/x-internals/warning';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
@@ -48,7 +51,23 @@ const ChartsToolbarExcelExportTrigger = forwardRef<
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const exportAsExcel = onExport ?? apiRef.current?.exportAsExcel;
-    exportAsExcel?.(options);
+
+    if (exportAsExcel) {
+      exportAsExcel(options).catch((error) => {
+        console.error('MUI X Charts: Error exporting chart as Excel:', error);
+      });
+    } else if (process.env.NODE_ENV !== 'production') {
+      warnOnce(
+        [
+          'MUI X Charts: The Excel export trigger has nothing to export.',
+          'Clicking it does nothing, because the chart does not register the `useChartPremiumExport` plugin and no `onExport` prop was passed.',
+          'Add the plugin to the chart `plugins` array, or pass `onExport`.',
+          'See https://mui.com/x/react-charts/plugins/ for the plugin list.',
+        ].join('\n'),
+        'error',
+      );
+    }
+
     onClick?.(event);
   };
 

@@ -2,6 +2,14 @@
   "componentDescription": "The chart toolbar component for the premium package.\nIt adds the Excel export entry to the Pro toolbar's export menu.",
   "propDescriptions": {
     "excelExportOptions": { "description": "The options to apply on the Excel export." },
+    "exportMenuItems": {
+      "description": "Extra items rendered at the end of the export menu.",
+      "typeDescriptions": {
+        "params": { "name": "params", "description": "The render params." },
+        "params.onClose": { "name": "params.onClose", "description": "Closes the export menu." },
+        "React.ReactNode": { "name": "React.ReactNode", "description": "The menu items." }
+      }
+    },
     "onExcelExport": {
       "description": "Overrides how the Excel export is performed. Defaults to <code>apiRef.current.exportAsExcel</code>, and is required for a chart that does not register <code>useChartPremiumExport</code>, such as the one in the Data Grid integration.",
       "typeDescriptions": {
