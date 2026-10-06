@@ -155,6 +155,9 @@ const plPLCalendar: SchedulerCalendarTranslations = {
   weekAbbreviation: 'T',
   weekNumberAriaLabel: (weekNumber) => `Tydzień ${weekNumber}`,
 
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Kończy się ${endDate}`,
 
