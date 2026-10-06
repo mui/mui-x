@@ -19,32 +19,43 @@ describe('<StandaloneWeekView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: DEFAULT_TESTING_VISIBLE_DATE });
 
   describe('localization', () => {
+    const themeLocalization = getSchedulerLocalization({
+      dialog: {},
+      event: {},
+      calendar: { dayGridLabel: 'Eventos de todo el día y de varios días' },
+      timeline: {},
+    });
+
     it('should use the locale text provided through the localeText prop', () => {
       render(
         <StandaloneWeekView
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          localeText={{ allDay: 'Ganztägig' }}
+          localeText={{ dayGridLabel: 'Ganztägig' }}
         />,
       );
 
-      expect(screen.getByText('Ganztägig')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).not.to.have.length(0);
     });
 
     it('should use the default locale text when the localeText prop is not provided', () => {
       render(<StandaloneWeekView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />);
 
-      expect(screen.getByText('All day')).toBeVisible();
+      expect(
+        screen.getAllByRole('gridcell', { name: /All-day and multi-day events/ }),
+      ).not.to.have.length(0);
     });
 
     it('should use the locale text provided through the theme', () => {
       render(
-        <ThemeProvider theme={createTheme({}, esES)}>
+        <ThemeProvider theme={createTheme({}, themeLocalization)}>
           <StandaloneWeekView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
         </ThemeProvider>,
       );
 
-      expect(screen.getByText('Todo el día')).toBeVisible();
+      expect(
+        screen.getAllByRole('gridcell', { name: /Eventos de todo el día y de varios días/ }),
+      ).not.to.have.length(0);
     });
 
     it('should name events with the locale text provided through the theme', () => {
@@ -113,16 +124,19 @@ describe('<StandaloneWeekView />', () => {
 
     it('should override the theme locale text with the localeText prop', () => {
       render(
-        <ThemeProvider theme={createTheme({}, esES)}>
+        <ThemeProvider theme={createTheme({}, themeLocalization)}>
           <StandaloneWeekView
             events={[]}
             visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-            localeText={{ allDay: 'Ganztägig' }}
+            localeText={{ dayGridLabel: 'Ganztägig' }}
           />
         </ThemeProvider>,
       );
 
-      expect(screen.getByText('Ganztägig')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).not.to.have.length(0);
+      expect(
+        screen.queryAllByRole('gridcell', { name: /Eventos de todo el día y de varios días/ }),
+      ).to.have.length(0);
     });
   });
 });

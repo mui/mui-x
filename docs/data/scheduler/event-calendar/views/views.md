@@ -92,6 +92,20 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 
 With this feature, users would be able to view events grouped by resource in a dedicated view.
 
+## Time grid events
+
+In the day and week views, the time grid renders timed events, and the day grid above it renders all-day events and the remaining timed events.
+Use the `timeGridEvents` property of `viewConfig.day` and `viewConfig.week` to choose which timed events stay in the time grid:
+
+- `'shorter-than-one-day'` (default): timed events shorter than 24 hours, split across the days they cover.
+- `'same-day-only'`: timed events that start and end on the same day.
+
+```tsx
+<EventCalendar viewConfig={{ week: { timeGridEvents: 'same-day-only' } }} />
+```
+
+{{"demo": "TimeGridEvents.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Limit available views
 
 Use the `views` prop to define which views can be accessed in the Event Calendar:

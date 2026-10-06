@@ -1,4 +1,7 @@
-import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type {
+  EventCalendarTimeGridViewConfig,
+  SchedulerRenderableEventOccurrence,
+} from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 
 export function isOccurrenceAllDayOrMultipleDay(
@@ -15,11 +18,16 @@ export function isOccurrenceAllDayOrMultipleDay(
   );
 }
 
-/** Timed occurrences shorter than a day stay in the time grid, even when they cross midnight. */
-export function isOccurrenceInAllDayRow(
+/** Whether the occurrence is rendered in the day grid of the day and week views. */
+export function isOccurrenceInDayGrid(
   occurrence: SchedulerRenderableEventOccurrence,
   adapter: Adapter,
+  timeGridEvents: NonNullable<EventCalendarTimeGridViewConfig['timeGridEvents']>,
 ) {
+  if (timeGridEvents === 'same-day-only') {
+    return isOccurrenceAllDayOrMultipleDay(occurrence, adapter);
+  }
+
   if (occurrence.allDay) {
     return true;
   }

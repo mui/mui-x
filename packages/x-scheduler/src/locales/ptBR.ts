@@ -136,6 +136,7 @@ const ptBRCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'O dia todo',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `Próximo(a) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,

@@ -58,6 +58,13 @@ export interface EventCalendarTimeGridViewConfig {
    * @default 7 when it is a displayed hour, otherwise `startTime`
    */
   initialScrollTime?: number;
+  /**
+   * Which timed events are rendered in the time grid, the others go to the day grid above it.
+   * - `'shorter-than-one-day'`: timed events shorter than 24 hours, split across the days they cover.
+   * - `'same-day-only'`: timed events that start and end on the same day.
+   * @default 'shorter-than-one-day'
+   */
+  timeGridEvents?: 'shorter-than-one-day' | 'same-day-only';
 }
 
 /**

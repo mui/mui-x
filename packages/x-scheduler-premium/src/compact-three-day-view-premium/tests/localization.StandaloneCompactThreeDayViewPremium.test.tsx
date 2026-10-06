@@ -13,11 +13,11 @@ describe('<StandaloneCompactThreeDayViewPremium />', () => {
         <StandaloneCompactThreeDayViewPremium
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          localeText={{ allDay: 'Ganztägig' }}
+          localeText={{ dayGridLabel: 'Ganztägig' }}
         />,
       );
 
-      expect(screen.getByText('Ganztägig')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).not.to.have.length(0);
     });
   });
 });

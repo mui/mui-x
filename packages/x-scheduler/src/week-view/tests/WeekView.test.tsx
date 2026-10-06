@@ -302,25 +302,30 @@ describe('<WeekView />', () => {
       });
     });
 
-    it('should hide the All day label from AT and reference it via aria-labelledby on each cell', () => {
+    it('should name the day grid cells with a hidden label instead of a visible "All day" label', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const allDayLabel = document.querySelector<HTMLElement>(
+      expect(screen.queryByText('All day')).to.equal(null);
+
+      const dayGridLabel = document.querySelector<HTMLElement>(
         `.${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`,
       );
-      expect(allDayLabel).not.to.equal(null);
-      expect(allDayLabel!.getAttribute('aria-hidden')).to.equal('true');
-      expect(allDayLabel!.getAttribute('role')).to.equal(null);
+      expect(dayGridLabel).not.to.equal(null);
+      expect(dayGridLabel!.getAttribute('aria-hidden')).to.equal('true');
+      expect(dayGridLabel!.getAttribute('role')).to.equal(null);
 
-      const labelId = allDayLabel!.id;
+      const labelId = dayGridLabel!.id;
       expect(labelId.length).to.be.greaterThan(0);
 
       const allDayGridContainer = document.querySelector(
         `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid}`,
       ) as HTMLElement;
       const allDayRow = within(allDayGridContainer).getByRole('row');
-      const allDayCells = within(allDayRow).getAllByRole('gridcell');
+      const allDayCells = within(allDayRow).getAllByRole('gridcell', {
+        name: /All-day and multi-day events/,
+      });
+      expect(allDayCells).to.have.length(7);
       allDayCells.forEach((cell) => {
         const labelledBy = cell.getAttribute('aria-labelledby') ?? '';
         expect(labelledBy.split(' ')).to.include(labelId);
