@@ -1,2 +1,2 @@
-// Re-export automatically generated, to customize, simply remove this line.
 export * from '@mui/x-charts-pro/plugins';
+export * from '../internals/plugins/useChartPremiumExport';
