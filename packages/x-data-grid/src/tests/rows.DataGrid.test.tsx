@@ -25,14 +25,6 @@ import {
   gridClasses,
   GridActionsCell,
 } from '@mui/x-data-grid';
-import type {
-  DataGridProps,
-  GridRowIdGetter,
-  GridRowClassNameParams,
-  GridRowModel,
-  GridRenderCellParams,
-  GridApi,
-} from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
