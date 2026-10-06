@@ -133,6 +133,7 @@ You can disable this behavior by setting the `copyStyles` property to `false` in
 
 When a stylesheet, or a stylesheet it imports, fails to load in the export iframe, for example because a request fails or a [Content Security Policy](/x/react-charts/content-security-policy/) blocks it, the export continues.
 The result may be missing some styles, and a warning is logged in development.
+The image export still fails when the [Content Security Policy](/x/react-charts/content-security-policy/#csp-for-exporting-charts) blocks the styles it inlines, for example when the `nonce` option is missing.
 
 To handle the failure yourself, use the `onStylesheetError` callback.
 It receives the `<link>` element that failed to load, or whose import failed to load, and the reason: `'content-security-policy'` if the [Content Security Policy](/x/react-charts/content-security-policy/) blocked the stylesheet, or `'load-error'` if the request failed or a stylesheet it imports failed to load.
@@ -140,7 +141,7 @@ The callback's return value decides what happens next:
 
 - Return or resolve to `false` to cancel the export.
 - Throw an error or reject to make the export fail with that error.
-- Return anything else to continue the export.
+- Return anything else to continue the export. The image export still fails if the Content Security Policy blocks the styles it inlines.
 
 If the callback returns a promise, the export waits for it. This can be useful if you want to add replacement styles to `link.ownerDocument`.
 See [Handling export errors](#handling-export-errors) for how a cancelled or failed export is reported.

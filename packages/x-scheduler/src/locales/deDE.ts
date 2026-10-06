@@ -144,6 +144,9 @@ const deDECalendar: SchedulerCalendarTranslations = {
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Woche ${weekNumber}`,
 
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Endet am ${endDate}`,
 

@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-// Tests that need a longer timeout.
+// Suites that get an extra 100ms wait before the screenshot.
 const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
   'DensitySelectorGrid',
@@ -44,8 +44,8 @@ interface RouteConfig {
    */
   viewport?: { width: number; height: number };
   /**
-   * Wait for this selector before screenshotting, on top of the testcase
-   * `aria-busy` gate (which only tracks font loading, not async demo data).
+   * Wait for this selector before screenshotting, on top of `navigateToTest`
+   * (fonts loaded, and the timers scheduled while mounting flushed).
    */
   waitForSelector?: string;
 }
@@ -88,6 +88,12 @@ const TEST_RULES: RouteRule[] = [
     waitForSelector: '[data-testid="map-images-ready"]',
   },
   {
+    test: '/docs-charts-map/MarsMap',
+    // `MapImagePlot` renders its `<image>` only after the texture loads and is
+    // reprojected. The `<img>` wait below does not see that load.
+    waitForSelector: 'svg image',
+  },
+  {
     test: '/test-regressions-charts/ImageExportAutoSize',
     // The exported image is screenshotted by a dedicated `test` block below.
     enabled: false,
@@ -116,19 +122,8 @@ const TEST_RULES: RouteRule[] = [
   },
   {
     test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
-    // The demo loads its rows asynchronously via `useDemoData`, which the
-    // `aria-busy` font gate doesn't track. Until the data resolves the grid
-    // shows the skeleton overlay (skeleton rows carry both `row` and
-    // `rowSkeleton`), so wait for a real, non-skeleton row before screenshotting.
-    waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
-  },
-  {
-    test: '/docs-data-grid-server-side-data/ServerSideDataGridKeepPreviousData',
-    // The demo intentionally sets a 500-1500ms mock-server delay so the
-    // keep-previous-data behavior is visible when paginating. An explicit delay
-    // bypasses the regression build's delay-zeroing (`__DISABLE_CHANCE_RANDOM__`),
-    // and the `aria-busy` font gate doesn't track async data, so the initial
-    // skeleton overlay would otherwise be captured. Wait for a real row instead.
+    // The demo renders in `TailwindDemoContainer`, which shows a spinner until the Tailwind
+    // script loads from the network. Wait for a real, non-skeleton row before screenshotting.
     waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
   },
 ];
@@ -153,9 +148,8 @@ async function main() {
       // is a no-op on Linux Chromium, so without this flag screenshots pick
       // up LCD subpixel color fringes that vary across hosts.
       '--disable-lcd-text',
-      // We could add the hide-scrollbars flag, which should improve argos
-      // flaky tests based on the scrollbars.
-      // '--hide-scrollbars',
+      // Not `--hide-scrollbars`: it also hides the scrollbars of the components under test.
+      // Only the page scrollbar is hidden, see `TestViewer`.
     ],
     headless: false,
   });
@@ -206,12 +200,20 @@ async function main() {
     // fonts (route discovery, page setup) is blocked. It has to happen before the
     // fixture mounts -- components that measure text at mount would otherwise
     // bake in fallback metrics that the later font swap does not recompute.
-    await page.evaluate(() => window.muiFixture.fontsReady);
-
     // Use client-side routing which is much faster than full page navigation via page.goto().
-    return page.evaluate((_route) => {
+    await page.evaluate(async (_route) => {
+      await window.muiFixture.fontsReady;
       window.muiFixture.navigate(_route);
     }, route);
+
+    const testcase = await page.waitForSelector(
+      `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+    );
+
+    // Run the timers the test case scheduled while mounting, then switch to real timers.
+    await page.evaluate(() => window.muiFixture.flushTimers());
+
+    return testcase;
   }
 
   describe('visual regressions', () => {
@@ -261,16 +263,12 @@ async function main() {
 
             await page.setViewportSize(routeConfig?.viewport ?? DEFAULT_VIEWPORT);
 
-            await navigateToTest(page, route.url);
-
             // Move cursor offscreen to not trigger unwanted hover effects.
             await page.mouse.move(0, 0);
 
-            const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
+            const testcase = await navigateToTest(page, route.url);
 
-            const testcase = await page.waitForSelector(
-              `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
-            );
+            const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
 
             if (routeConfig?.waitForSelector) {
               // Scope the wait to this route's testcase: pooled pages keep the
@@ -302,11 +300,6 @@ async function main() {
               await Promise.all(promises);
             });
 
-            if (/^\/docs-charts-.*/.test(route.url)) {
-              // Run one tick of the clock to get the final animation state
-              await sleep(10);
-            }
-
             if (timeSensitiveSuites.some((suite) => route.url.includes(suite))) {
               await sleep(100);
             }
@@ -327,11 +320,7 @@ async function main() {
       const route = '/docs-data-grid-virtualization/ColumnVirtualizationGrid';
       const screenshotPath = path.resolve(screenshotDir, `.${route}ScrollLeft400px.png`);
 
-      await navigateToTest(page, route);
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
+      const testcase = await navigateToTest(page, route);
 
       await sleep(100);
       await page.evaluate(() => {
@@ -356,11 +345,7 @@ async function main() {
       const route = '/test-regressions-data-grid/ColumnFluidWidthScrollClamp';
       const screenshotPath = path.resolve(screenshotDir, `.${route}AfterResize.png`);
 
-      await navigateToTest(page, route);
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
+      const testcase = await navigateToTest(page, route);
 
       await page.getByRole('button', { name: 'Scroll to max' }).click();
       await page.getByRole('button', { name: 'Shrink username' }).click();
@@ -410,11 +395,6 @@ async function main() {
 
       await navigateToTest(page, route);
 
-      // Make sure demo got loaded
-      await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
-
       const charts = await page.locator('svg').all();
 
       await charts[0].click();
@@ -433,13 +413,7 @@ async function main() {
       const route = '/test-regressions-charts/LineChartPointerInteraction';
       const screenshotPath = path.resolve(screenshotDir, `.${route}LineHighlight.png`);
 
-      await navigateToTest(page, route);
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
-
-      await sleep(10);
+      const testcase = await navigateToTest(page, route);
 
       await enablePointerDot(page, onTestFinished);
 
@@ -466,13 +440,7 @@ async function main() {
       const route = '/test-regressions-charts/LineChartPointerInteraction';
       const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
 
-      await navigateToTest(page, route);
-
-      const testcase = await page.waitForSelector(
-        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
-      );
-
-      await sleep(10);
+      const testcase = await navigateToTest(page, route);
 
       await enablePointerDot(page, onTestFinished);
 

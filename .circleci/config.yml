@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/294ab9be74ab24116c64cd734568b8d0a9b30f18/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/4479f61e20e6fb3b1a6b8144827a66c46f01d3b8/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -55,10 +55,12 @@ default-job: &default-job
     # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
     # For example, when creating v9 from v8, `master -> v8.x`
     BASE_BRANCH: master
+    # #target-branch-reference
+    ARGOS_REFERENCE_BRANCH: master
   working_directory: /tmp/mui
   executor:
     name: code-infra/mui-node
-    node-version: '22.23.2'
+    node-version: '22.23.3'
   resource_class: medium.gen2
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
@@ -192,7 +194,7 @@ jobs:
           pathspec: docs/src docs/data
       - run:
           name: Tests TypeScript definitions
-          command: pnpm typescript:ci
+          command: pnpm typescript
   test_e2e:
     <<: *default-job
     executor:
