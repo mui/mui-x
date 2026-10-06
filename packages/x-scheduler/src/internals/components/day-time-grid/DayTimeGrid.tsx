@@ -5,6 +5,7 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
+import visuallyHidden from '@mui/utils/visuallyHidden';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
@@ -29,7 +30,7 @@ import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
-import { isOccurrenceInAllDayRow } from '../../utils/event-utils';
+import { isOccurrenceInDayGrid } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -140,18 +141,10 @@ const DayTimeGridAllDayEventsCell = styled('div', {
 const DayTimeGridAllDayEventsHeaderCell = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridAllDayEventsHeaderCell',
-})(({ theme }) => ({
+})({
   gridColumn: '1',
   gridRow: '1',
-  fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
-  fontStyle: 'italic',
-  padding: theme.spacing(1),
-  textAlign: 'end',
-  color: (theme.vars || theme).palette.text.secondary,
-  overflowWrap: 'break-word',
-  wordBreak: 'break-word',
-  hyphens: 'auto',
-}));
+});
 
 const DayTimeGridHeaderContent = styled('span', {
   name: 'MuiEventCalendar',
@@ -343,6 +336,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     startTime: startTimeProp,
     endTime: endTimeProp,
     initialScrollTime: initialScrollTimeProp,
+    timeGridEvents = 'shorter-than-one-day',
     hourRangeSource = 'viewConfig',
     ...other
   } = props;
@@ -386,8 +380,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     days,
     occurrencesMap,
     shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) => isOccurrenceInAllDayRow(occurrence, adapter),
-      [adapter],
+      (occurrence: SchedulerEventOccurrence) =>
+        isOccurrenceInDayGrid(occurrence, adapter, timeGridEvents),
+      [adapter, timeGridEvents],
     ),
   });
 
@@ -521,7 +516,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           id={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
           aria-hidden="true"
         >
-          {localeText.allDay}
+          <span style={visuallyHidden}>{localeText.dayGridLabel}</span>
         </DayTimeGridAllDayEventsHeaderCell>
         <DayTimeGridAllDayEventsRow
           as={CalendarGrid.DayRow}
