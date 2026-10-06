@@ -5,6 +5,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.29.4
+
+<!-- generated comparing v8.29.3..v8.x -->
+
+_Oct 6, 2026_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@Janpot, @JCQuintas, @LukasTy, @michelengelen
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.29.4`
+
+- [fields] Focus the section synchronously on `mousedown` (#23642) (#23647) @michelengelen
+- [pickers] Preserve plain Day.js values across system DST changes (#22278) (#23771) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.29.4`.
+
+### Core
+
+- [code-infra] Fix the publish workflow failing on an outdated Node version (#23392) @JCQuintas
+- [code-infra] Pin npm 11 to fix the v8 publish workflow (#23397) @JCQuintas
+- [code-infra] Remove disabled Discord release announcement workflow (#23555) @Janpot
+
 ## 8.29.3
 
 _Aug 21, 2026_
