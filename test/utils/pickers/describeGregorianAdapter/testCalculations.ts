@@ -713,12 +713,28 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.setMonth(testDateIso, 4)).toEqualDateTime('2018-05-30T11:44:00.000Z');
   });
 
-  it('Method: setDate', () => {
-    expect(adapter.setDate(testDateIso, 15)).toEqualDateTime('2018-10-15T11:44:00.000Z');
+  describe('Method: setDate', () => {
+    it('should handle basic usecases', () => {
+      expect(adapter.setDate(testDateIso, 15)).toEqualDateTime('2018-10-15T11:44:00.000Z');
+    });
+
+    it.skipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
+      // 2022-03-27 is the DST start day in Paris, so midnight on 2022-03-28 is in CEST.
+      expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
+      expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.setDate(testDateLastNonDSTDay, 28));
+    });
   });
 
-  it('Method: setHours', () => {
-    expect(adapter.setHours(testDateIso, 0)).toEqualDateTime('2018-10-30T00:44:00.000Z');
+  describe('Method: setHours', () => {
+    it('should handle basic usecases', () => {
+      expect(adapter.setHours(testDateIso, 0)).toEqualDateTime('2018-10-30T00:44:00.000Z');
+    });
+
+    it.skipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
+      // 2022-03-27 is the DST start day in Paris, so 12:00 is in CEST.
+      expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
+      expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.setHours(testDateLastNonDSTDay, 12));
+    });
   });
 
   it('Method: setMinutes', () => {
