@@ -64,7 +64,7 @@ catalog:
   moment: ^2.31.0
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.5
-  moment-timezone: ^0.6.4
+  moment-timezone: ^0.6.5
   motion: ^13.4.5
   playwright: 1.63.0
   prop-types: ^15.8.1
@@ -119,4 +119,4 @@ overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
-  caniuse-lite: ^1.0.30001812
+  caniuse-lite: ^1.0.30001814
