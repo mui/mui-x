@@ -7,8 +7,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.29.4
 
-<!-- generated comparing v8.29.3..v8.x -->
-
 _Oct 6, 2026_
 
 We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
