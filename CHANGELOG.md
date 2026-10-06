@@ -109,6 +109,7 @@ Same changes as in `@mui/x-tree-view@9.15.0`.
 
 - [l10n] Add Russian (ru-RU) locale (#23567) @Sazuru
 - [scheduler] Clamp the placeholder span to the week row (#23734) @rita-codes
+- [scheduler] Fix the agenda view crashing when hiding empty days and no event is in the horizon (#23570) @rita-codes
 - [scheduler] Fix the event dialog moving untouched dates across timezones (#23462) @rita-codes
 - [scheduler] Give events a proper accessible name (#23675) @rita-codes
 - [scheduler] Index events by visible range (#23362) @flaviendelangle
