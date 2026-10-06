@@ -1,5 +1,9 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { createSelector, createSelectorMemoizedWithOptions } from '@base-ui/utils/store';
+import {
+  createSelector,
+  createSelectorMemoized,
+  createSelectorMemoizedWithOptions,
+} from '@base-ui/utils/store';
 import type {
   AxisId,
   AxisItemIdentifier,
@@ -95,11 +99,10 @@ export const selectorChartsInteractionRotationAxisIndex = createSelector(
       : indexGetter(rotation, rotationAxis, id ?? rotationAxis.axisIds[0], 'rotation'),
 );
 
-export const selectorChartsInteractionRotationAxisIndexes = createSelector(
+export const selectorChartsInteractionRotationAxisIndexes = createSelectorMemoized(
   selectorChartsInteractionRotationAngle,
   selectorChartRotationAxis,
-  optionalGetAxisIds,
-  (rotation, rotationAxis, ids) =>
+  (rotation, rotationAxis, ids: AxisId[] | undefined) =>
     rotation === null
       ? null
       : indexGetter(rotation, rotationAxis, ids ?? rotationAxis.axisIds, 'rotation'),
@@ -190,11 +193,10 @@ export const selectorChartsInteractionRadiusAxisIndex = createSelector(
     radius === null ? null : indexGetter(radius, radiusAxis, id ?? radiusAxis.axisIds[0], 'radius'),
 );
 
-export const selectorChartsInteractionRadiusAxisIndexes = createSelector(
+export const selectorChartsInteractionRadiusAxisIndexes = createSelectorMemoized(
   selectorChartsInteractionRadius,
   selectorChartRadiusAxis,
-  optionalGetAxisIds,
-  (radius, radiusAxis, ids) =>
+  (radius, radiusAxis, ids: AxisId[] | undefined) =>
     radius === null ? null : indexGetter(radius, radiusAxis, ids ?? radiusAxis.axisIds, 'radius'),
 );
 

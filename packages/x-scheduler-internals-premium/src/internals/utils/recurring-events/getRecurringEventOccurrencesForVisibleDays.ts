@@ -46,33 +46,33 @@ const YEARLY_MAX_ATTEMPTS = 8;
  * Expands a recurring event into concrete occurrences within a visible range.
  */
 class RecurringEventExpander {
-  private readonly dataTimezone: SchedulerProcessedEvent['dataTimezone'];
+  declare private readonly dataTimezone: SchedulerProcessedEvent['dataTimezone'];
 
-  private readonly rule: SchedulerProcessedEventRecurrenceRule;
+  declare private readonly rule: SchedulerProcessedEventRecurrenceRule;
 
   /*
    * Day anchor for RRULE math (BYDAY/COUNT), always in data timezone.
    */
-  private readonly seriesStartDay: TemporalSupportedObject;
+  declare private readonly seriesStartDay: TemporalSupportedObject;
 
   /*
    * Represents the original DTSTART wall-time (HH:mm) in the event/data timezone
    * It is used to build occurrence instants via mergeDateAndTime().
    */
-  private readonly dtStartInDataTz: TemporalSupportedObject;
+  declare private readonly dtStartInDataTz: TemporalSupportedObject;
 
-  private readonly scanFirstDay: TemporalSupportedObject;
+  declare private readonly scanFirstDay: TemporalSupportedObject;
 
-  private readonly scanLastDay: TemporalSupportedObject;
+  declare private readonly scanLastDay: TemporalSupportedObject;
 
-  private readonly interval: number;
+  declare private readonly interval: number;
 
-  private readonly exDateKeys: Set<string>;
+  declare private readonly exDateKeys: Set<string>;
 
-  private readonly untilBoundary: TemporalSupportedObject | null;
+  declare private readonly untilBoundary: TemporalSupportedObject | null;
 
   /** The later of seriesStart and scanFirstDay */
-  private readonly minDate: TemporalSupportedObject;
+  declare private readonly minDate: TemporalSupportedObject;
 
   // Weekly-specific: sorted weekday codes
   private sortedWeekDayCodes: RecurringEventWeekDayCode[] | null = null;

@@ -223,7 +223,7 @@
       "description": "If <code>true</code>, the header filters feature is enabled."
     },
     "height": {
-      "description": "The height of the Data Grid. Accepts a number (pixels) or any valid CSS height value (for example <code>&#39;50vh&#39;</code>). When set, the Data Grid no longer needs a parent element with an explicit height."
+      "description": "The fixed height of the Data Grid. Accepts a number (pixels), a CSS length (for example <code>&#39;50vh&#39;</code>), a percentage, or a CSS calculation. Percentage values require a parent with an explicit height. Content-based values such as <code>&#39;auto&#39;</code>, <code>&#39;min-content&#39;</code>, <code>&#39;max-content&#39;</code>, and <code>&#39;fit-content&#39;</code> are not supported. For content-based sizing, use a flex parent container instead."
     },
     "hideFooter": { "description": "If <code>true</code>, the footer component is hidden." },
     "hideFooterPagination": {

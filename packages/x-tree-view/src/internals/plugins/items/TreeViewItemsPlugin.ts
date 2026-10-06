@@ -14,7 +14,7 @@ import type {
 } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
-  private store: MinimalTreeViewStore<R, any>;
+  declare private store: MinimalTreeViewStore<R, any>;
 
   // We can't type `store`, otherwise we get the following TS error:
   // 'items' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.

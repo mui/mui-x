@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { useId } from '@base-ui/utils/useId';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
@@ -9,7 +8,6 @@ import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
-import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import type {
@@ -18,7 +16,6 @@ import type {
   SchedulerResourceId,
   TemporalSupportedObject,
 } from '../../models';
-import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { useOriginalOccurrence } from '../../internals/utils/useOriginalOccurrence';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
@@ -37,7 +34,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     eventId,
     occurrenceKey,
     renderDragPreview,
-    id: idProp,
     isDraggable = false,
     nativeButton = false,
     interactive = true,
@@ -47,22 +43,17 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { id: rootId } = useCalendarGridRootContext();
   const {
     start: columnStart,
     end: columnEnd,
     dayStartMinute,
     dayEndMinute,
-    index: columnIndex,
     hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
-
-  // State hooks
-  const id = useId(idProp);
 
   // Feature hooks
   const getOriginalOccurrence = useOriginalOccurrence({
@@ -126,8 +117,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     tabIndex: columnHasFocus ? 0 : -1,
   });
 
-  const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
-
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
     [draggableEventContextValue, getSharedDragData],
@@ -139,9 +128,6 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     props: [
       elementProps,
       {
-        id,
-        // A non-interactive event stays a plain div: no role, no tabIndex, no header label.
-        ...(interactive ? { 'aria-labelledby': `${columnHeaderId} ${id}` } : undefined),
         style: {
           [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
           [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
@@ -169,8 +155,8 @@ export namespace CalendarGridTimeEvent {
       useDraggableEvent.PublicParameters,
       Pick<useOriginalOccurrence.Parameters, 'dataTimezone'> {
     /**
-     * Whether the event behaves like a button: `role="button"`, roving `tabIndex` and the column
-     * header labelling. Set it to `false` for an inert preview (creation / resize placeholder) that
+     * Whether the event behaves like a button: `role="button"` and a roving `tabIndex`.
+     * Set it to `false` for an inert preview (creation / resize placeholder) that
      * only hosts pointer interactions — it then renders a plain `div`, so it is never focusable.
      * @default true
      */
