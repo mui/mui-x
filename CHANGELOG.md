@@ -20,8 +20,8 @@ The following team members contributed to this release:
 
 #### `@mui/x-date-pickers@8.29.4`
 
-- [fields] Focus the section synchronously on `mousedown` (#23642) (#23647) @michelengelen
-- [pickers] Preserve plain Day.js values across system DST changes (#22278) (#23771) @LukasTy
+- [fields] Focus the section synchronously on `mousedown` (#23647) @michelengelen
+- [pickers] Preserve plain Day.js values across system DST changes (#23771) @LukasTy
 
 #### `@mui/x-date-pickers-pro@8.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
