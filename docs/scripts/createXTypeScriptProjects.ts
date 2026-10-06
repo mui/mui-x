@@ -173,6 +173,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'RadarSeries',
       'AxisConfig',
       'ChartImageExportOptions',
+      'ChartExcelExportOptions',
       'ChartPrintExportOptions',
       'LegendItemParams',
     ],
