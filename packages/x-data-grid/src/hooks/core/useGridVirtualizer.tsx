@@ -329,6 +329,12 @@ export function useGridVirtualizer() {
     ),
   });
 
+  // `virtualizer` is a new object on each render that references the callbacks of that render, so it must stay out of this scope.
+  // Otherwise every render stays reachable from the next one, along with its rows.
+  // The store is the same object for the grid's lifetime.
+  // https://github.com/mui/mui-x/issues/20699
+  const virtualizerStore = virtualizer.store;
+
   // HACK: Keep the grid's store in sync with the virtualizer store. We set up the
   // subscription in the render phase rather than in an effect because other grid
   // initialization code runs between those two moments.
@@ -336,14 +342,14 @@ export function useGridVirtualizer() {
   // TODO(v9): Remove this
   useFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
-      virtualizer.store.state.dimensions,
+      virtualizerStore.state.dimensions,
       headerHeight,
       groupHeaderHeight,
       headerFilterHeight,
       headersTotalHeight,
     );
-    apiRef.current.store.state.rowsMeta = virtualizer.store.state.rowsMeta;
-    apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
+    apiRef.current.store.state.rowsMeta = virtualizerStore.state.rowsMeta;
+    apiRef.current.store.state.virtualization = virtualizerStore.state.virtualization;
   });
 
   useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {
