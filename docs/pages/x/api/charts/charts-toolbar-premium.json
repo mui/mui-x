@@ -6,6 +6,14 @@
         "description": "{ disableToolbarButton?: bool, escapeFormulas?: bool, fileName?: string, includeFormattedValues?: bool, includeHeaders?: bool, includeHiddenSeries?: bool }"
       }
     },
+    "onExcelExport": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(options: ChartExcelExportOptions) => Promise<void>",
+        "describedArgs": ["options"],
+        "returned": "Promise<void>"
+      }
+    },
     "rangeButtons": {
       "type": {
         "name": "arrayOf",

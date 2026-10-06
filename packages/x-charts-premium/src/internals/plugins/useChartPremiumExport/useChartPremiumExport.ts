@@ -5,15 +5,6 @@ import type {
   UseChartPremiumExportSignature,
 } from './useChartPremiumExport.types';
 
-const EXCEL_MIME_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-
-function triggerDownload(url: string, name: string) {
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = name;
-  a.click();
-}
-
 export const useChartPremiumExport: ChartPlugin<UseChartPremiumExportSignature> = ({ store }) => {
   const getDataAsExcel = async (options: ChartExcelExportOptions = {}) => {
     const {
@@ -46,10 +37,8 @@ export const useChartPremiumExport: ChartPlugin<UseChartPremiumExportSignature> 
         return;
       }
 
-      const buffer = await workbook.xlsx.writeBuffer();
-      const url = URL.createObjectURL(new Blob([buffer], { type: EXCEL_MIME_TYPE }));
-      triggerDownload(url, `${options?.fileName || document.title || 'untitled'}.xlsx`);
-      URL.revokeObjectURL(url);
+      const { downloadWorkbook } = await import('../../excelExport');
+      await downloadWorkbook(workbook, options?.fileName || document.title);
     } catch (error) {
       console.error('MUI X Charts: Error exporting chart as Excel:', error);
     }

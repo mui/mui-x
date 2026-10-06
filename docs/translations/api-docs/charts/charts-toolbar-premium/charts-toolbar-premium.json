@@ -2,6 +2,19 @@
   "componentDescription": "The chart toolbar component for the premium package.\nIt adds the Excel export entry to the Pro toolbar's export menu.",
   "propDescriptions": {
     "excelExportOptions": { "description": "The options to apply on the Excel export." },
+    "onExcelExport": {
+      "description": "Overrides how the Excel export is performed. Defaults to <code>apiRef.current.exportAsExcel</code>, and is required for a chart that does not register <code>useChartPremiumExport</code>, such as the one in the Data Grid integration.",
+      "typeDescriptions": {
+        "options": {
+          "name": "options",
+          "description": "The options to apply on the Excel export."
+        },
+        "Promise<void>": {
+          "name": "Promise<void>",
+          "description": "A promise that resolves once the export is done."
+        }
+      }
+    },
     "rangeButtons": {
       "description": "Configuration for range buttons shown in the toolbar. Each button zooms the chart to a predefined time range from the end of the data."
     },

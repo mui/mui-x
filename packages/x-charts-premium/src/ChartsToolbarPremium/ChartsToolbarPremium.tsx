@@ -25,13 +25,25 @@ export interface ChartsToolbarPremiumProps extends Omit<ChartsToolbarProProps, '
    * The options to apply on the Excel export.
    */
   excelExportOptions?: ChartsToolbarPremiumExcelExportOptions;
+  /**
+   * Overrides how the Excel export is performed.
+   * Defaults to `apiRef.current.exportAsExcel`, and is required for a chart that does not
+   * register `useChartPremiumExport`, such as the one in the Data Grid integration.
+   * @param {ChartExcelExportOptions} options The options to apply on the Excel export.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  onExcelExport?: (options?: ChartExcelExportOptions) => Promise<void>;
 }
 
 /**
  * The chart toolbar component for the premium package.
  * It adds the Excel export entry to the Pro toolbar's export menu.
  */
-function ChartsToolbarPremium({ excelExportOptions, ...other }: ChartsToolbarPremiumProps) {
+function ChartsToolbarPremium({
+  excelExportOptions,
+  onExcelExport,
+  ...other
+}: ChartsToolbarPremiumProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
   const { localeText } = useChartsLocalization();
   const apiRef = useChartPremiumApiContext<ChartPremiumApiWithExcelExport>();
@@ -39,7 +51,7 @@ function ChartsToolbarPremium({ excelExportOptions, ...other }: ChartsToolbarPre
   const renderExportMenuItems = React.useCallback(
     ({ onClose }: { onClose: () => void }) => {
       // `useChartPremiumExport` is opt-in. Read at open time, so mount order does not matter.
-      if (!apiRef.current?.exportAsExcel) {
+      if (!onExcelExport && !apiRef.current?.exportAsExcel) {
         return null;
       }
 
@@ -49,13 +61,21 @@ function ChartsToolbarPremium({ excelExportOptions, ...other }: ChartsToolbarPre
         <ChartsToolbarExcelExportTrigger
           render={<MenuItem dense {...slotProps?.baseMenuItem} />}
           options={excelExportOptions}
+          onExport={onExcelExport}
           onClick={onClose}
         >
           {localeText.toolbarExportExcel}
         </ChartsToolbarExcelExportTrigger>
       );
     },
-    [apiRef, slots.baseMenuItem, slotProps?.baseMenuItem, excelExportOptions, localeText],
+    [
+      apiRef,
+      onExcelExport,
+      slots.baseMenuItem,
+      slotProps?.baseMenuItem,
+      excelExportOptions,
+      localeText,
+    ],
   );
 
   return (
@@ -94,6 +114,14 @@ ChartsToolbarPremium.propTypes /* remove-proptypes */ = {
       type: PropTypes.string.isRequired,
     }),
   ),
+  /**
+   * Overrides how the Excel export is performed.
+   * Defaults to `apiRef.current.exportAsExcel`, and is required for a chart that does not
+   * register `useChartPremiumExport`, such as the one in the Data Grid integration.
+   * @param {ChartExcelExportOptions} options The options to apply on the Excel export.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  onExcelExport: PropTypes.func,
   printOptions: PropTypes.object,
   /**
    * Configuration for range buttons shown in the toolbar.

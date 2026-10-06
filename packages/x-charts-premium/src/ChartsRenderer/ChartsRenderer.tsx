@@ -6,6 +6,8 @@ import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { configurationOptions } from './configuration';
 import { colorPaletteLookup } from './colors';
 import type { BarSeries } from '../BarChart';
+import { ChartsToolbarPremium } from '../ChartsToolbarPremium';
+import type { ChartExcelExportOptions } from '../internals/plugins/useChartPremiumExport';
 
 const getLegendPosition = (position: string) => {
   let horizontal: 'start' | 'center' | 'end' | undefined = 'center';
@@ -115,6 +117,34 @@ function ChartsRenderer({
     };
   }, [defaultOptions, configuration]);
 
+  // The integration renders Pro charts, which cannot register the Premium export plugin, and the
+  // rendered axis mangles its labels. So the export reads the grid's selection instead.
+  const onExcelExport = React.useCallback(
+    async (options?: ChartExcelExportOptions) => {
+      try {
+        const { getGridChartsExcelTables, buildChartExcelWorkbook, downloadWorkbook } =
+          await import('../internals/excelExport');
+
+        const tables = getGridChartsExcelTables(dimensions, values, {
+          escapeFormulas: options?.escapeFormulas,
+        });
+        const workbook = await buildChartExcelWorkbook(tables, {
+          includeHeaders: options?.includeHeaders,
+        });
+
+        if (workbook) {
+          await downloadWorkbook(workbook, options?.fileName || document.title);
+        }
+      } catch (error) {
+        console.error('MUI X Charts: Error exporting chart as Excel:', error);
+      }
+    },
+    [dimensions, values],
+  );
+
+  const excelExportSlots = { toolbar: ChartsToolbarPremium };
+  const excelExportSlotProps = { toolbar: { onExcelExport } };
+
   if (chartType === 'bar' || chartType === 'column') {
     const layout = chartType === 'bar' ? 'horizontal' : 'vertical';
     const { categoriesAxis, categoriesAxisPosition, seriesAxis, seriesAxisPosition } =
@@ -189,7 +219,9 @@ function ChartsRenderer({
       },
       skipAnimation: chartConfiguration.skipAnimation,
       showToolbar: chartConfiguration.showToolbar,
+      slots: excelExportSlots,
       slotProps: {
+        ...excelExportSlotProps,
         tooltip: {
           trigger: chartConfiguration.tooltipTrigger,
           placement: chartConfiguration.tooltipPlacement,
@@ -248,7 +280,9 @@ function ChartsRenderer({
         vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
         horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
       },
+      slots: excelExportSlots,
       slotProps: {
+        ...excelExportSlotProps,
         tooltip: {
           trigger: chartConfiguration.tooltipTrigger,
           placement: chartConfiguration.tooltipPlacement,
@@ -315,7 +349,9 @@ function ChartsRenderer({
       hideLegend: legendPosition === undefined,
       colors: colorPaletteLookup.get(chartConfiguration.colors),
       showToolbar: chartConfiguration.showToolbar,
+      slots: excelExportSlots,
       slotProps: {
+        ...excelExportSlotProps,
         legend: {
           direction: chartConfiguration.pieLegendDirection,
           position: legendPosition,
