@@ -25,6 +25,7 @@ import {
   gridClasses,
   GridActionsCell,
 } from '@mui/x-data-grid';
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
   grid,
@@ -96,6 +97,28 @@ describe('<DataGrid /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
       setProps({ rows });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+    });
+
+    // https://github.com/mui/mui-x/issues/20699
+    it('should not keep the cached heights of the rows that are no longer in the grid', async () => {
+      function Test(props: Pick<DataGridProps, 'rows'>) {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...props} apiRef={apiRef} columns={[{ field: 'id' }]} />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Test rows={[{ id: 1 }, { id: 2 }, { id: 3 }]} />);
+      const { rowHeights } = unwrapPrivateAPI(apiRef.current!).virtualizer.store.state;
+      expect(Array.from(rowHeights.keys())).to.deep.equal([1, 2, 3]);
+
+      setProps({ rows: [{ id: 3 }, { id: 4 }] });
+      expect(Array.from(rowHeights.keys())).to.deep.equal([3, 4]);
+
+      await act(async () => apiRef.current?.updateRows([{ id: 4, _action: 'delete' }]));
+      expect(Array.from(rowHeights.keys())).to.deep.equal([3]);
     });
   });
 
