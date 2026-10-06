@@ -144,6 +144,52 @@ describe('<DataGridPro /> - Infinite loader', () => {
 
   // Needs layout
   it.skipIf(isJSDOM)(
+    'should call `onRowsScrollEnd` when `scrollEndThreshold` is larger than the rendered rows buffer',
+    async () => {
+      // See https://github.com/mui/mui-x/issues/16747
+      const rowHeight = 50;
+      const scrollEndThreshold = 1000;
+      const rows = Array.from({ length: 100 }, (_, id) => ({ id }));
+      const handleRowsScrollEnd = vi.fn();
+      const { container } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[{ field: 'id' }]}
+            rows={rows}
+            rowHeight={rowHeight}
+            onRowsScrollEnd={handleRowsScrollEnd}
+            scrollEndThreshold={scrollEndThreshold}
+            hideFooter
+          />
+        </div>,
+      );
+      // eslint-disable-next-line testing-library/no-container
+      const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
+      const maxScrollTop = virtualScroller.scrollHeight - virtualScroller.clientHeight;
+
+      // Outside of the threshold area
+      await act(async () =>
+        virtualScroller.scrollTo({ top: maxScrollTop - 1200, behavior: 'instant' }),
+      );
+      await act(async () => {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 100);
+        });
+      });
+      expect(handleRowsScrollEnd.mock.calls.length).to.equal(0);
+
+      // Inside of the threshold area, but the last row is further away than the rendered rows buffer
+      await act(async () =>
+        virtualScroller.scrollTo({ top: maxScrollTop - 900, behavior: 'instant' }),
+      );
+      await waitFor(() => {
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
+      });
+    },
+  );
+
+  // Needs layout
+  it.skipIf(isJSDOM)(
     'should not observe intersections with the rows pinned to the bottom',
     async () => {
       const baseRows = [

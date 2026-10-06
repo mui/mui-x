@@ -203,6 +203,7 @@ export function useGridVirtualizer() {
       isRtl,
       rowBufferPx: rootProps.rowBufferPx,
       columnBufferPx: rootProps.columnBufferPx,
+      scrollEndThresholdPx: (rootProps as any).scrollEndThreshold,
     },
     colspan: {
       enabled: hasColSpan,
