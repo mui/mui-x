@@ -93,7 +93,7 @@
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
     "@sinonjs/fake-timers": "15.4.0",
-    "@types/node": "22.20.4",
+    "@types/node": "22.20.5",
     "@types/picomatch": "4.0.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
