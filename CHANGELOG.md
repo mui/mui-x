@@ -10,7 +10,6 @@ We'd like to extend a big thank you to the 17 contributors who made this release
 - 📐 New `height` prop to size the Data Grid without a wrapper
 - 📅 New `onCancel` callback prop on the Date and Time Pickers
 - ⌨️ Home/End, Ctrl+Home/End, and PageUp/PageDown keyboard navigation in the Charts
-- 🗓️ Start-to-start, finish-to-finish, and start-to-finish dependencies with lag in the Premium Event Timeline auto-scheduling engine
 - 🔒 Data Grid and Charts exports work under a Content Security Policy
 - 🐞 Bugfixes
 - 📚 Documentation improvements
