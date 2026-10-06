@@ -25,7 +25,6 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.15.0`
 
-- [charts-pro][DataGrid] Fix exports failing or hanging under a Content Security Policy (#23521) @JCQuintas
 - [DataGrid] Add `height` prop for sizing without a wrapper (#23628) @michelengelen
 - [DataGrid] Cap the pagination toolbar so the footer height is stable on mount (#23547) @JCQuintas
 - [DataGrid] Document `rowsSet`, `filteredRowsSet` & `sortedRowsSet` events (#23631) @michelengelen
@@ -52,6 +51,7 @@ Same changes as in `@mui/x-data-grid@9.15.0`.
 Same changes as in `@mui/x-data-grid-pro@9.15.0`, plus:
 
 - [DataGridPremium] Clear the aggregation from the column menu (#23641) @Anexus5919
+- [DataGridPremium] Fix exports failing or hanging under a Content Security Policy (#23521) @JCQuintas
 
 ### Date and Time Pickers
 
@@ -85,7 +85,7 @@ Same changes as in `@mui/x-date-pickers@9.15.0`.
 Same changes as in `@mui/x-charts@9.15.0`, plus:
 
 - [charts-pro] Fix image export under a CSP when styles come only from `<link>` stylesheets (#23721) @Anexus5919
-- [charts-pro][DataGrid] Fix exports failing or hanging under a Content Security Policy (#23521) @JCQuintas
+- [charts-pro] Fix exports failing or hanging under a Content Security Policy (#23521) @JCQuintas
 
 #### `@mui/x-charts-premium@9.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
