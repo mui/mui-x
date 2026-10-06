@@ -1312,8 +1312,8 @@ importers:
         specifier: 'catalog:'
         version: 15.8.1
       remend:
-        specifier: ^1.3.1
-        version: 1.3.1
+        specifier: ^1.4.0
+        version: 1.4.0
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -10344,8 +10344,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  remend@1.3.1:
-    resolution: {integrity: sha512-N3DiY5qbRPoa5vkxn1oDLMyXOVTeo6Hp+XOj6SIqJAYUgLS0Q587gILPMom/qm86AQ/ZrcOdwEIzCz8V3J0nxQ==}
+  remend@1.4.0:
+    resolution: {integrity: sha512-mHiYhhwphs1IgIZmkToKLwJn0U99IjPXuutkA2acrNcG0vlEq2G4TGnd2eT0saIHwh2KjaCpvleHcsd5SAz96A==}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -20540,7 +20540,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  remend@1.3.1: {}
+  remend@1.4.0: {}
 
   require-directory@2.1.1: {}
 
