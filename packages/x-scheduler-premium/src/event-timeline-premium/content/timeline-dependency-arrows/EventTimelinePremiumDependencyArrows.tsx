@@ -38,7 +38,7 @@ const DependencyArrowsSvg = styled('svg', {
   ...theme.applyStyles('dark', {
     color: (theme.vars || theme).palette.grey[600],
   }),
-  // Opaque, unlike `text.secondary`: the line runs under the arrowhead up to its tip.
+  // Opaque: the line runs under the arrowhead.
   '[data-dependency-id][data-hovered]:not([data-selected])': {
     stroke: (theme.vars || theme).palette.grey[700],
     strokeWidth: DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH,
@@ -49,10 +49,8 @@ const DependencyArrowsSvg = styled('svg', {
   '[data-dependency-id][data-selected]': {
     stroke: (theme.vars || theme).palette.error.main,
   },
-  // The arrowhead follows the stroke of the path it ends, so the hover and selection
-  // colors reach it too. The states set `stroke` and not `color`: inside the marker,
-  // `currentColor` resolves to the overlay's color. Browsers without `context-stroke`
-  // keep the `fill` attribute.
+  // The arrowhead takes the path's stroke, so states set `stroke`, not `color`: in a
+  // marker, `currentColor` is the overlay's color.
   '& marker path': {
     fill: 'context-stroke',
   },

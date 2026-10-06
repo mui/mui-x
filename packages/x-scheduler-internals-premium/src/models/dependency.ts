@@ -135,8 +135,7 @@ export type SchedulerDependencyRejectionReason =
   | 'cascadeBlocked';
 
 /**
- * The dependency, as created or made stricter, is broken by the dates of its events, and
- * restoring it (or the cascade behind it) would move the read-only `eventId`.
+ * Restoring the created or stricter dependency would move the read-only `eventId`.
  */
 export type SchedulerDependencyCascadeBlockedRejection = {
   status: 'rejected';
@@ -177,13 +176,11 @@ export type SchedulerUpdateDependencyResult =
 export interface SchedulerDependencyEditor {
   dependencyId: SchedulerDependencyId;
   /**
-   * The point the dialog is anchored to, in the coordinates of the dependency overlays:
    * `x` from the start of the events area, `y` in absolute row-space.
    */
   anchor: { x: number; y: number };
   /**
-   * The resource of the row each end of the opened arrow is drawn on, so the dialog shows
-   * the colors of that arrow. `undefined` uses the event's primary resource.
+   * The rows of the opened arrow, for the colors. `undefined` uses the primary resource.
    */
   sourceResourceId?: SchedulerResourceId;
   targetResourceId?: SchedulerResourceId;

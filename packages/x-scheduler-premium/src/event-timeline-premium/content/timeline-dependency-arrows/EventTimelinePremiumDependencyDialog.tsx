@@ -103,10 +103,6 @@ const UPDATE_REJECTION_MESSAGES: Record<
   unknownDependency: 'This dependency no longer exists.',
 };
 
-/**
- * The point the dialog is anchored to. An element (not a virtual rect) so the event
- * dialog's positioning, which follows its anchor, works unchanged.
- */
 const DependencyDialogAnchor = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogAnchor',
@@ -117,8 +113,6 @@ const DependencyDialogAnchor = styled('span', {
   pointerEvents: 'none',
 });
 
-// Narrower than the event form, which has more fields. Keeps its `maxWidth: '100%'`, so
-// it still shrinks to the viewport on narrow screens.
 // TODO(dependencies public flip, #23420): settle the width with the dialog's own styles.
 const DependencyDialogFormContent = styled(EventDialogFormContent, {
   name: 'MuiEventTimeline',
@@ -134,13 +128,10 @@ const DependencyDialogBody = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  // Wider than the rows inside a group, like the recurrence tab between its sections.
   gap: theme.spacing(3),
   padding: theme.spacing(0, 3, 3),
 }));
 
-// The rows mirror the "Repeat" section of the event dialog's recurrence tab: a label
-// column, then the inputs.
 const LABEL_MIN_WIDTH = 60;
 
 // Same right inset as the Type select, so both arrows line up.
@@ -153,7 +144,6 @@ const DependencyDialogLag = styled(TextField, {
   },
 });
 
-// The unit sits inside the lag field, as a borderless select in its end adornment.
 const DependencyDialogLagUnit = styled(Select, {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogLagUnit',
@@ -180,8 +170,6 @@ const DependencyDialogDetails = styled('dl', {
   },
 }));
 
-// Styled like the event on the timeline (surface, text and accent stripe), so From and
-// To read as the events the arrow connects.
 const DependencyDialogEventChip = styled('span', {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogEventChip',
@@ -211,17 +199,15 @@ const DependencyDialogEventChip = styled('span', {
 }));
 
 /**
- * The dialog to edit a dependency (or show its details when it is read-only), opened by
- * a double click on its arrow or from its context menu. Built from the same pieces as the
- * event dialog: anchored next to the point the user clicked, draggable, non-modal.
+ * Dialog to edit a dependency, or show its details when read-only.
+ * Opens on double click on an arrow or from its context menu.
  * TODO(dependencies public flip, #23420): add the utility classes of the dialog.
  */
 export function EventTimelinePremiumDependencyDialog() {
   const store = useEventTimelinePremiumStoreContext();
   const editor = useStore(store, eventTimelinePremiumDependencySelectors.editor);
 
-  // Checked before reading the geometry, whose provider is a pass-through while the
-  // dependencies feature is disabled (the editor is then always closed).
+  // Before reading the geometry: it is not provided while the feature is disabled.
   if (editor === null) {
     return null;
   }
@@ -274,15 +260,13 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
   const [type, setType] = React.useState(dependency.type);
   // A lag the engine ignores (invalid in the props) shows as unset.
   const [initialLag] = React.useState(() => getDependencyLag(dependency));
-  // Kept as typed, so the field can be emptied.
   const [lagAmount, setLagAmount] = React.useState(
     initialLag === null ? '' : String(initialLag.amount),
   );
   const [lagUnit, setLagUnit] = React.useState<SchedulerDependencyLagUnit>(
     initialLag?.unit ?? 'day',
   );
-  // Shown in the form, not as a toast: the dialog hides the rest of the page, the
-  // scheduler's error container included, from assistive technologies.
+  // Shown in the form: screen readers can't reach the toast while the dialog is open.
   const [rejection, setRejection] = React.useState<string | null>(null);
 
   const titleId = `${schedulerId}-dependency-dialog-title`;
@@ -309,8 +293,7 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
     if (isLagInvalid) {
       return;
     }
-    // Only a lag the user changed is written: an untouched one keeps its original form
-    // (a default unit left implicit, an ignored value from the props).
+    // Only write the lag if the user changed it, so an untouched one stays as is.
     const result = store.updateDependency(
       dependency.id,
       isSameLag(draftLag, initialLag)
@@ -413,10 +396,9 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                   setRejection(null);
                 }}
                 slotProps={{
-                  // Shrunk so the placeholder shows: an end adornment does not shrink it.
+                  // Keep the label up so the placeholder shows.
                   inputLabel: { shrink: true },
-                  // A text input: a number input changes on wheel and accepts `e` or `-`,
-                  // which the browser rejects with its own message instead of ours.
+                  // Not `type="number"`: it changes on wheel and has its own validation.
                   htmlInput: { inputMode: 'numeric' },
                   input: {
                     endAdornment: (
@@ -500,7 +482,7 @@ function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
       />
       {anchor !== null && (
         <DependencyDialogContent
-          // Remount per dependency so the draft re-seeds from the opened dependency.
+          // Remount per dependency to reset the draft.
           key={String(dependency.id)}
           dependency={dependency}
           anchor={anchor}

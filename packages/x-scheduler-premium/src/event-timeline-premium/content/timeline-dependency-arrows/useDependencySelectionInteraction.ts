@@ -8,9 +8,7 @@ import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-intern
 
 /**
  * Targets whose keystrokes must never reach the arrows: form controls (native or
- * ARIA), editable regions, and anything inside a dialog or a menu — the event dialog,
- * the dependency dialog and the dependency context menu open on top of the timeline
- * while an arrow is still selected underneath.
+ * ARIA), editable regions, and anything inside a dialog or a menu.
  */
 const GUARDED_KEY_TARGETS = [
   'input',
@@ -26,16 +24,12 @@ const GUARDED_KEY_TARGETS = [
 ].join(', ');
 
 /**
- * The dialog and menu subset of the guard also applies to presses: a press inside an
- * open dialog or menu belongs to it, it must neither deselect the arrow underneath nor
- * swallow the control's click.
+ * A press inside an open dialog or menu must not deselect the arrow nor lose its click.
  */
 const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"], [role="menu"]';
 
 /**
- * Whether a press lands in the popup layer of an options list, such as the type Select
- * of the dependency dialog: portaled outside the dialog, its options and its backdrop
- * belong to the dialog too.
+ * Whether a press lands in a Select's options popup, portaled outside its dialog.
  */
 function isOptionsPopupPress(target: Element): boolean {
   return target.closest('[role="presentation"]')?.querySelector('[role="listbox"]') != null;

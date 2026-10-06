@@ -249,12 +249,8 @@ export class SchedulerSchedulingPlugin<
   };
 
   /**
-   * Changes the properties of an existing dependency.
-   * Rejects every change while the scheduler is read-only, an unknown id, a type change
-   * duplicating another dependency between the same events, and a change needing a
-   * read-only event to move. An update keeps the source and target, so it cannot close a
-   * cycle. Events only move when the change makes the dependency stricter: its target
-   * has to move further than before.
+   * Changes the type or lag of a dependency. Events only move when the change makes it
+   * stricter: its target has to move further than before.
    * Implementation of the store's `updateDependency()` — call it through the store.
    */
   public updateDependency = (
@@ -291,8 +287,7 @@ export class SchedulerSchedulingPlugin<
       }
     }
 
-    // Only a stricter dependency moves events: relaxing one that the dates already break
-    // (a shorter lag) leaves them as they are, so the cascade veto never rejects it.
+    // Relaxing a dependency the dates already break moves nothing, so it is never blocked.
     const { adapter, processedEventLookup } = this.store.state;
     const isStricter =
       getDependencyViolation(adapter, processedEventLookup, updated) >
@@ -305,15 +300,10 @@ export class SchedulerSchedulingPlugin<
   };
 
   /**
-   * Emits `nextList` and moves the events needed to satisfy `enforced` in full (and the
-   * cascade behind it), with a single run of the engine: applying the moves through
-   * `updateEvents` would cascade them again and clamp the target against all its
-   * predecessors, not only `enforced`. With `enforced` `null`, no event moves.
-   * Nothing is emitted when the move would need a read-only event to move. Otherwise
-   * `onDependenciesChange` is emitted before `onEventsChange`, as two separate changes:
-   * if the parent drops the dependency, the events have moved anyway. Until the parent
-   * passes the new list back, an update made from `onEventsChange` is cascaded with the
-   * previous dependencies.
+   * Emits `nextList` and moves the events `enforced` needs, with a single engine run:
+   * going through the `updateEvents` cascade would also clamp them by other dependencies.
+   * Emits nothing if a read-only event would have to move. `onDependenciesChange` is
+   * emitted before `onEventsChange`, as two separate changes.
    */
   private commitDependencyChange(
     nextList: SchedulerDependency[],

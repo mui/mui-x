@@ -17,22 +17,15 @@ import type {
 
 export interface DependencyContextMenuState {
   /**
-   * `false` while the menu plays its exit transition: the rest of the state is kept so
-   * the closing menu does not render empty.
+   * `false` while the menu closes: the rest is kept so it does not render empty.
    */
   open: boolean;
   dependencyId: SchedulerDependencyId;
-  /**
-   * Where the menu opens, in client coordinates.
-   */
   anchorPosition: { top: number; left: number };
   /**
-   * Where the dependency dialog opens from the menu, in overlay coordinates.
+   * In overlay coordinates, unlike `anchorPosition`.
    */
   editorAnchor: SchedulerDependencyEditor['anchor'];
-  /**
-   * The resources of the rows of the right-clicked arrow, for the dialog colors.
-   */
   editorResourceIds: Pick<SchedulerDependencyEditor, 'sourceResourceId' | 'targetResourceId'>;
 }
 
@@ -50,8 +43,7 @@ const DEPENDENCY_CONTEXT_MENU_TEXT = {
 };
 
 /**
- * The menu shown on right-click of a dependency arrow, mirroring the event context menu:
- * Edit and Delete, or Show details alone when the dependency is read-only.
+ * Right-click menu of a dependency arrow: Edit and Delete, or Show details when read-only.
  */
 export function EventTimelinePremiumDependencyContextMenu(
   props: EventTimelinePremiumDependencyContextMenuProps,

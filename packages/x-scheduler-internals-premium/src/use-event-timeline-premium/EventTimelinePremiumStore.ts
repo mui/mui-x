@@ -247,7 +247,6 @@ export class EventTimelinePremiumStore<
     // Clear (not just mask) the selection of a removed or deactivated dependency:
     // with masking alone, a dependency coming back (a re-added id, an endpoint event
     // re-fetched or no longer recurring) would resurrect the arrow already selected.
-    // Same for the dependency open in the dialog: its form must not come back on screen.
     const clearInactiveDependencyState = () => {
       const { selection, dependencyEditor } = this.state;
       if (selection?.type === 'dependency' && this.isDependencyInactive(selection.id)) {
@@ -267,8 +266,7 @@ export class EventTimelinePremiumStore<
       this.registerStoreEffect((state) => state.processedEventLookup, clearInactiveDependencyState),
     );
 
-    // Like the event dialog: the dialog is anchored to a point of the timeline, which a
-    // date or preset change moves under it.
+    // The dialog anchor no longer matches the arrow after a date or preset change.
     this.disposables.defer(
       this.registerStoreEffect(
         (state) => state.adapter.getTime(state.visibleDate),
@@ -279,7 +277,6 @@ export class EventTimelinePremiumStore<
       this.registerStoreEffect((state) => state.preset, this.closeDependencyEditor),
     );
 
-    // One editing surface at a time: editing an event closes the dependency dialog.
     this.disposables.defer(
       this.registerStoreEffect(
         (state) => state.editingOccurrence,
@@ -375,7 +372,7 @@ export class EventTimelinePremiumStore<
    * Rejects every dependency while the scheduler is read-only, and dependencies
    * referencing an unknown or recurring event, duplicates, cycles, and dependencies
    * needing a read-only event to move — see the returned `SchedulerAddDependencyResult`.
-   * A dependency the event dates break moves its successor (and the cascade behind it).
+   * A dependency the event dates break moves its successor.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`
    * value before making another validated add.
@@ -385,12 +382,8 @@ export class EventTimelinePremiumStore<
   ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
 
   /**
-   * Changes the properties of an existing dependency.
-   * Rejects every change while the scheduler is read-only, an unknown id, a duplicate and
-   * a change that would move a read-only event — see the returned
-   * `SchedulerUpdateDependencyResult`.
-   * A change making the dependency stricter than the event dates allow moves its
-   * successor (and the cascade behind it).
+   * Changes the type or lag of a dependency — see `SchedulerUpdateDependencyResult` for
+   * the rejections. Events only move when the change makes the dependency stricter.
    */
   public updateDependency = (
     dependencyId: SchedulerDependencyId,
@@ -433,16 +426,14 @@ export class EventTimelinePremiumStore<
   }
 
   /**
-   * Opens the dependency dialog on a dependency, anchored at `anchor`. Closes the event
-   * editing surface: only one dialog is open at a time.
+   * Opens the dependency dialog, closing the event dialog if open.
    */
   public openDependencyEditor = (
     dependencyId: SchedulerDependencyId,
     anchor: SchedulerDependencyEditor['anchor'],
     resourceIds?: Pick<SchedulerDependencyEditor, 'sourceResourceId' | 'targetResourceId'>,
   ) => {
-    // A stale caller (a menu left open on a removed dependency) must not store an editor
-    // that would open by itself if the dependency came back.
+    // A menu left open on a removed dependency must not open the dialog later.
     if (this.isDependencyInactive(dependencyId)) {
       return;
     }

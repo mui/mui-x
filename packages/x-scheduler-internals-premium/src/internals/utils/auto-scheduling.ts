@@ -44,8 +44,8 @@ export interface ComputeAutoSchedulingCascadeParameters {
    */
   deleted: ReadonlySet<SchedulerEventId>;
   /**
-   * Active dependencies just created, or edited to be stricter, in their new form. Their target is pushed
-   * to satisfy them even though no predecessor moved, and the cascade follows from there.
+   * Dependencies just created or made stricter: their target is pushed even though no
+   * predecessor moved.
    */
   enforcedDependencies?: readonly SchedulerDependency[];
 }
@@ -95,9 +95,8 @@ function resolveProcessedEventDates(
 }
 
 /**
- * The earliest date `dependency` allows for the bounded edge of the successor: the
- * predecessor's edge plus the lag, in the successor's timezone and with its `allDay`.
- * `null` when the lag runs past the supported date range.
+ * The earliest date `dependency` allows for the successor's bounded edge, or `null` when
+ * the lag runs past the supported date range.
  */
 function getDependencyBound(
   adapter: Adapter,

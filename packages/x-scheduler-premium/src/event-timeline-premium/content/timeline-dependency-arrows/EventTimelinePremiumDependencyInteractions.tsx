@@ -71,14 +71,12 @@ const DependencyInteractionsSvg = styled('svg', {
 }));
 
 /**
- * The arrows' hit-areas (click, double click, context menu, hover), the selected arrow's
- * delete button and the context menu.
+ * Hit areas, delete button and context menu of the dependency arrows.
  */
 export function EventTimelinePremiumDependencyInteractions() {
   const store = useEventTimelinePremiumStoreContext();
   const dependencies = useStore(store, eventTimelinePremiumDependencySelectors.activeModelList);
-  // Outside the layer, so deleting the last arrow from the menu does not unmount it
-  // during its exit transition.
+  // Outside the layer so the menu can finish closing after the last arrow is deleted.
   const [contextMenu, setContextMenu] = React.useState<DependencyContextMenuState | null>(null);
 
   return (
@@ -122,13 +120,11 @@ function DependencyInteractionsLayer({
     store.setSelectedDependencyId(dependencyId);
   };
 
-  // A client point in the overlay coordinates the dependency dialog is anchored in.
   const toOverlayPoint = (event: React.MouseEvent) => {
     const rect = svgRef.current!.getBoundingClientRect();
     return { x: event.clientX - rect.left, y: event.clientY - rect.top + offsetTop };
   };
 
-  // The rows of the arrow the user opened: the dialog shows the colors of those rows.
   const getResourceIds = (arrow: DependencyArrow) => ({
     sourceResourceId: arrow.sourceResourceId,
     targetResourceId: arrow.targetResourceId,
@@ -190,9 +186,7 @@ function DependencyInteractionsLayer({
               onClick={() => handleSelect(arrow.id)}
               onDoubleClick={(event) => handleDoubleClick(arrow, event)}
               onContextMenu={(event) => handleContextMenu(arrow, event)}
-              // The hover restyles the visual arrow, which lives in the arrows overlay
-              // (below the rows, never hit by the pointer). On the group, so moving
-              // between the line and the arrowhead does not leave the arrow.
+              // On the group, so moving from the line to the arrowhead keeps the hover.
               onPointerEnter={() => setHoveredId(arrow.id)}
               onPointerLeave={() => setHoveredId(null)}
             >
@@ -222,7 +216,6 @@ function DependencyInteractionsLayer({
               <g
                 data-dependency-delete-button=""
                 onClick={() => store.deleteSelectedDependency()}
-                // It replaces the arrowhead: a right click there opens the same menu.
                 onContextMenu={(event) => handleContextMenu(arrow, event)}
               >
                 <circle

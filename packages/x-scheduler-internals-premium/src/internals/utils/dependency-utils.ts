@@ -240,9 +240,7 @@ export function groupRetainedDependenciesBySource(
 }
 
 /**
- * The retained dependency linking the same events with the same type, ignoring
- * `ignoredId`. The type is part of the identity: two events can be linked by several
- * dependencies of different types.
+ * The dependency with the same source, target and type, other than `ignoredId`.
  */
 export function findDuplicateDependency(
   dependencyModelLookup: Map<SchedulerDependencyId, SchedulerDependency>,

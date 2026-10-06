@@ -49,15 +49,12 @@ const EventTimelinePremiumDependencyGeometryContext =
   React.createContext<EventTimelinePremiumDependencyGeometryValue | null>(null);
 
 /**
- * The hovered arrow, in its own context so a hover does not re-render the geometry
- * consumers. Read by the visual arrows, which already require the provider through
- * `useDependencyGeometry`.
+ * In its own context so hovering does not re-render the geometry consumers.
  */
 const DependencyHoveredIdContext = React.createContext<SchedulerDependencyId | null>(null);
 
 /**
- * Sets the hovered arrow. Separate from the hovered id so the interactions layer, which
- * only sets it, does not re-render on hover.
+ * Separate from the hovered id so the interactions layer does not re-render on hover.
  */
 const DependencySetHoveredIdContext = React.createContext<
   ((dependencyId: SchedulerDependencyId | null) => void) | null
@@ -239,8 +236,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
   }, [arrows, resolver, eventsWidth, renderContext, rowsMeta, config.tickCount, resources]);
 
   const [hoveredId, setHoveredId] = React.useState<SchedulerDependencyId | null>(null);
-  // An arrow unmounted under the pointer (deleted, scrolled out) never gets its
-  // pointerleave: drop the hover, or the arrow would come back highlighted.
+  // An arrow unmounted under the pointer never gets its pointerleave.
   if (hoveredId !== null && !value.visibleArrows.some((arrow) => arrow.id === hoveredId)) {
     setHoveredId(null);
   }
