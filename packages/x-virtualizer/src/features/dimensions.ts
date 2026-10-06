@@ -145,8 +145,8 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const rowsMeta = {
     currentPageTotalHeight,
     positions,
-    pinnedTopRowsTotalHeight: 0,
-    pinnedBottomRowsTotalHeight: 0,
+    pinnedTopTotalHeight: 0,
+    pinnedBottomTotalHeight: 0,
   };
 
   const rowHeights = new Map();
@@ -170,26 +170,26 @@ function computeColumnsMeta(
 
   const positions: number[] = [];
   let totalWidth = 0;
-  let pinnedLeftColumnsTotalWidth = 0;
-  let pinnedRightColumnsTotalWidth = 0;
+  let pinnedLeftTotalWidth = 0;
+  let pinnedRightTotalWidth = 0;
 
   for (let i = 0; i < columns.length; i += 1) {
     const width = columns[i].computedWidth;
     positions.push(totalWidth);
     totalWidth += width;
     if (i < pinnedLeftCount) {
-      pinnedLeftColumnsTotalWidth += width;
+      pinnedLeftTotalWidth += width;
     }
     if (i >= firstPinnedRightIndex) {
-      pinnedRightColumnsTotalWidth += width;
+      pinnedRightTotalWidth += width;
     }
   }
 
   return {
     positions,
     totalWidth: roundToDecimalPlaces(totalWidth, 1),
-    pinnedLeftColumnsTotalWidth,
-    pinnedRightColumnsTotalWidth,
+    pinnedLeftTotalWidth,
+    pinnedRightTotalWidth,
   };
 }
 
@@ -269,8 +269,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         params.dimensions.scrollbarSize,
       );
 
-      const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
-      const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
+      const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopTotalHeight;
+      const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomTotalHeight;
 
       const contentSize = {
         width: columnsTotalWidth,
@@ -331,15 +331,15 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           const osc = scrollYOscillation.current;
           const heightsChanged =
             rowsMeta.currentPageTotalHeight !== osc.heights.content ||
-            rowsMeta.pinnedTopRowsTotalHeight !== osc.heights.pinnedTop ||
-            rowsMeta.pinnedBottomRowsTotalHeight !== osc.heights.pinnedBottom;
+            rowsMeta.pinnedTopTotalHeight !== osc.heights.pinnedTop ||
+            rowsMeta.pinnedBottomTotalHeight !== osc.heights.pinnedBottom;
 
           if (heightsChanged) {
             osc.counter = 0;
             osc.heights = {
               content: rowsMeta.currentPageTotalHeight,
-              pinnedTop: rowsMeta.pinnedTopRowsTotalHeight,
-              pinnedBottom: rowsMeta.pinnedBottomRowsTotalHeight,
+              pinnedTop: rowsMeta.pinnedTopTotalHeight,
+              pinnedBottom: rowsMeta.pinnedBottomTotalHeight,
             };
           }
 
@@ -598,13 +598,13 @@ function useRowsMeta(
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    const pinnedTopRowsTotalHeight =
+    const pinnedTopTotalHeight =
       pinnedRows?.top.reduce((acc, row) => {
         const entry = processHeightEntry(row);
         return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
       }, 0) ?? 0;
 
-    const pinnedBottomRowsTotalHeight =
+    const pinnedBottomTotalHeight =
       pinnedRows?.bottom.reduce((acc, row) => {
         const entry = processHeightEntry(row);
         return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
@@ -626,15 +626,15 @@ function useRowsMeta(
     }
 
     const didHeightsChange =
-      pinnedTopRowsTotalHeight !== store.state.rowsMeta.pinnedTopRowsTotalHeight ||
-      pinnedBottomRowsTotalHeight !== store.state.rowsMeta.pinnedBottomRowsTotalHeight ||
+      pinnedTopTotalHeight !== store.state.rowsMeta.pinnedTopTotalHeight ||
+      pinnedBottomTotalHeight !== store.state.rowsMeta.pinnedBottomTotalHeight ||
       currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
 
     const rowsMeta = {
       currentPageTotalHeight,
       positions,
-      pinnedTopRowsTotalHeight,
-      pinnedBottomRowsTotalHeight,
+      pinnedTopTotalHeight,
+      pinnedBottomTotalHeight,
     };
 
     store.set('rowsMeta', rowsMeta);
@@ -757,8 +757,8 @@ function useColumnsMeta(
 
     const didWidthsChange =
       columnsMeta.totalWidth !== prevColumnsMeta.totalWidth ||
-      columnsMeta.pinnedLeftColumnsTotalWidth !== prevColumnsMeta.pinnedLeftColumnsTotalWidth ||
-      columnsMeta.pinnedRightColumnsTotalWidth !== prevColumnsMeta.pinnedRightColumnsTotalWidth;
+      columnsMeta.pinnedLeftTotalWidth !== prevColumnsMeta.pinnedLeftTotalWidth ||
+      columnsMeta.pinnedRightTotalWidth !== prevColumnsMeta.pinnedRightTotalWidth;
 
     // New columns often keep their widths and order, for example when only a label changes.
     if (!didWidthsChange && isDeepEqual(prevColumnsMeta.positions, columnsMeta.positions)) {

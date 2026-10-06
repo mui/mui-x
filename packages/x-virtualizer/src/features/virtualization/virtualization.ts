@@ -979,8 +979,8 @@ function inputsSelector(
     autoHeight: dimensions.autoHeight,
     rowBufferPx: params.virtualization.rowBufferPx,
     columnBufferPx: params.virtualization.columnBufferPx,
-    leftPinnedWidth: columnsMeta.pinnedLeftColumnsTotalWidth,
-    rightPinnedWidth: columnsMeta.pinnedRightColumnsTotalWidth,
+    leftPinnedWidth: columnsMeta.pinnedLeftTotalWidth,
+    rightPinnedWidth: columnsMeta.pinnedRightTotalWidth,
     columnsTotalWidth: columnsMeta.totalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
     viewportInnerHeight: dimensions.viewportInnerSize.height,
@@ -1510,7 +1510,7 @@ function isLowOnRenderedBuffer(
   const pinnedLeftCount = params.pinnedColumns?.left.length ?? 0;
   const pinnedRightCount = params.pinnedColumns?.right.length ?? 0;
 
-  const visibleLeft = Math.abs(scrollPosition.left) + columnsMeta.pinnedLeftColumnsTotalWidth;
+  const visibleLeft = Math.abs(scrollPosition.left) + columnsMeta.pinnedLeftTotalWidth;
   const visibleRight = visibleLeft + dimensions.viewportInnerSize.width;
   const renderedLeft = columnsMeta.positions[context.firstColumnIndex] ?? 0;
   const renderedRight = columnsMeta.positions[context.lastColumnIndex] ?? columnsMeta.totalWidth;

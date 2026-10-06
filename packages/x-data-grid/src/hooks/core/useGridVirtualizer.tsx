@@ -334,8 +334,8 @@ export function useGridVirtualizer() {
   useOnFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
       virtualizer.store.state.dimensions,
-      virtualizer.store.state.columnsMeta.pinnedLeftColumnsTotalWidth,
-      virtualizer.store.state.columnsMeta.pinnedRightColumnsTotalWidth,
+      virtualizer.store.state.columnsMeta.pinnedLeftTotalWidth,
+      virtualizer.store.state.columnsMeta.pinnedRightTotalWidth,
       headerHeight,
       groupHeaderHeight,
       headerFilterHeight,
@@ -352,8 +352,8 @@ export function useGridVirtualizer() {
     }
     const gridDimensions = addGridDimensions(
       dimensions,
-      columnsMeta.pinnedLeftColumnsTotalWidth,
-      columnsMeta.pinnedRightColumnsTotalWidth,
+      columnsMeta.pinnedLeftTotalWidth,
+      columnsMeta.pinnedRightTotalWidth,
       headerHeight,
       groupHeaderHeight,
       headerFilterHeight,

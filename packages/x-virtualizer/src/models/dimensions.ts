@@ -80,11 +80,11 @@ export interface RowsMetaState {
   /**
    * The total height of the pinned top rows.
    */
-  pinnedTopRowsTotalHeight: number;
+  pinnedTopTotalHeight: number;
   /**
    * The total height of the pinned bottom rows.
    */
-  pinnedBottomRowsTotalHeight: number;
+  pinnedBottomTotalHeight: number;
 }
 
 /**
@@ -102,11 +102,11 @@ export interface ColumnsMetaState {
   /**
    * The total width of the pinned left columns.
    */
-  pinnedLeftColumnsTotalWidth: number;
+  pinnedLeftTotalWidth: number;
   /**
    * The total width of the pinned right columns.
    */
-  pinnedRightColumnsTotalWidth: number;
+  pinnedRightTotalWidth: number;
 }
 
 export interface RowSpacing {
