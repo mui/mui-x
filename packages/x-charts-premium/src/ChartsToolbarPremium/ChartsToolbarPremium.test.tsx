@@ -9,6 +9,7 @@ import { BAR_CHART_PREMIUM_PLUGINS } from '../BarChartPremium/BarChartPremium.pl
 import type { BarChartPremiumPluginSignatures } from '../BarChartPremium/BarChartPremium.plugins';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { ChartsToolbarPremium } from './ChartsToolbarPremium';
+import { ChartsToolbarExcelExportTrigger } from './ChartsToolbarExcelExportTrigger';
 import { useChartPremiumExport } from '../internals/plugins/useChartPremiumExport';
 import type { UseChartPremiumExportSignature } from '../internals/plugins/useChartPremiumExport';
 
@@ -99,5 +100,100 @@ describe('<ChartsToolbarPremium />', () => {
 
     expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).to.equal(null);
     expect(screen.getByRole('menuitem', { name: 'Print' })).not.to.equal(null);
+  });
+
+  it('renders no export menu at all when nothing is left to put in it', async () => {
+    render(
+      <BarChartPremium
+        width={300}
+        height={200}
+        series={[{ label: 'Sales', data: [1, 2] }]}
+        xAxis={[{ data: ['A', 'B'] }]}
+        showToolbar
+        slots={{ toolbar: ChartsToolbarPremium }}
+        slotProps={{
+          toolbar: { printOptions: { disableToolbarButton: true }, imageExportOptions: [] },
+        }}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: 'Export' })).to.equal(null);
+  });
+
+  it('keeps the menu items the caller passes', async () => {
+    const { user } = render(
+      chart({
+        exportMenuItems: () => <li role="menuitem">Download as PDF</li>,
+      }),
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Export' }));
+
+    expect(screen.getByRole('menuitem', { name: 'Download as PDF' })).not.to.equal(null);
+    expect(screen.getByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
+  });
+
+  it('exports through onExport when the chart has no plugin', async () => {
+    const onExport = vi.fn(async () => {});
+    const { user } = render(
+      <BarChartPremium
+        width={300}
+        height={200}
+        series={[{ label: 'Sales', data: [1, 2] }]}
+        xAxis={[{ data: ['A', 'B'] }]}
+        showToolbar
+        slots={{
+          toolbar: () => (
+            <ChartsToolbarPremium
+              exportMenuItems={({ onClose }) => (
+                <ChartsToolbarExcelExportTrigger
+                  render={<li role="menuitem" />}
+                  onExport={onExport}
+                  onClick={onClose}
+                >
+                  Download as Excel
+                </ChartsToolbarExcelExportTrigger>
+              )}
+            />
+          ),
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Export' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Download as Excel' }));
+
+    expect(onExport.mock.calls).to.have.length(1);
+  });
+
+  it('logs a rejected export instead of leaving the promise unhandled', async () => {
+    const error = new Error('writeBuffer failed');
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    onTestFinished(() => consoleError.mockRestore());
+
+    const { user } = render(
+      chart({
+        exportMenuItems: ({ onClose }: { onClose: () => void }) => (
+          <ChartsToolbarExcelExportTrigger
+            render={<li role="menuitem" />}
+            onExport={() => Promise.reject(error)}
+            onClick={onClose}
+          >
+            Failing export
+          </ChartsToolbarExcelExportTrigger>
+        ),
+      }),
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Export' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Failing export' }));
+
+    await vi.waitFor(() =>
+      expect(
+        consoleError.mock.calls.some(
+          (call) => call[0] === 'MUI X Charts: Error exporting chart as Excel:',
+        ),
+      ).to.equal(true),
+    );
   });
 });

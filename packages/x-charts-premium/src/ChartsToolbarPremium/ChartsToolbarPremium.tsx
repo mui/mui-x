@@ -20,7 +20,7 @@ export interface ChartsToolbarPremiumExcelExportOptions extends ChartExcelExport
   disableToolbarButton?: boolean;
 }
 
-export interface ChartsToolbarPremiumProps extends Omit<ChartsToolbarProProps, 'exportMenuItems'> {
+export interface ChartsToolbarPremiumProps extends ChartsToolbarProProps {
   /**
    * The options to apply on the Excel export.
    */
@@ -31,39 +31,44 @@ export interface ChartsToolbarPremiumProps extends Omit<ChartsToolbarProProps, '
  * The chart toolbar component for the premium package.
  * It adds the Excel export entry to the Pro toolbar's export menu.
  */
-function ChartsToolbarPremium({ excelExportOptions, ...other }: ChartsToolbarPremiumProps) {
+function ChartsToolbarPremium({
+  excelExportOptions,
+  exportMenuItems,
+  ...other
+}: ChartsToolbarPremiumProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
   const { localeText } = useChartsLocalization();
   const apiRef = useChartPremiumApiContext<ChartPremiumApiWithExcelExport>();
 
-  const renderExportMenuItems = React.useCallback(
-    ({ onClose }: { onClose: () => void }) => {
-      // `useChartPremiumExport` is opt-in. Read at open time, so mount order does not matter.
-      if (!apiRef.current?.exportAsExcel) {
-        return null;
-      }
+  // `useChartPremiumExport` is opt-in. The provider assigns the public api during its own render,
+  // so the method is already there when this child renders. Decided here rather than inside the
+  // render prop, so the Pro toolbar does not open an export menu that would be empty.
+  const showExcelExport =
+    !excelExportOptions?.disableToolbarButton && apiRef.current?.exportAsExcel != null;
 
-      const MenuItem = slots.baseMenuItem;
+  const renderExportMenuItems =
+    showExcelExport || exportMenuItems
+      ? (params: { onClose: () => void }) => {
+          const MenuItem = slots.baseMenuItem;
 
-      return (
-        <ChartsToolbarExcelExportTrigger
-          render={<MenuItem dense {...slotProps?.baseMenuItem} />}
-          options={excelExportOptions}
-          onClick={onClose}
-        >
-          {localeText.toolbarExportExcel}
-        </ChartsToolbarExcelExportTrigger>
-      );
-    },
-    [apiRef, slots.baseMenuItem, slotProps?.baseMenuItem, excelExportOptions, localeText],
-  );
+          return (
+            <React.Fragment>
+              {exportMenuItems?.(params)}
+              {showExcelExport && (
+                <ChartsToolbarExcelExportTrigger
+                  render={<MenuItem dense {...slotProps?.baseMenuItem} />}
+                  options={excelExportOptions}
+                  onClick={params.onClose}
+                >
+                  {localeText.toolbarExportExcel}
+                </ChartsToolbarExcelExportTrigger>
+              )}
+            </React.Fragment>
+          );
+        }
+      : undefined;
 
-  return (
-    <ChartsToolbarPro
-      {...other}
-      exportMenuItems={excelExportOptions?.disableToolbarButton ? undefined : renderExportMenuItems}
-    />
-  );
+  return <ChartsToolbarPro {...other} exportMenuItems={renderExportMenuItems} />;
 }
 
 ChartsToolbarPremium.propTypes /* remove-proptypes */ = {
@@ -82,6 +87,13 @@ ChartsToolbarPremium.propTypes /* remove-proptypes */ = {
     includeHeaders: PropTypes.bool,
     includeHiddenSeries: PropTypes.bool,
   }),
+  /**
+   * Extra items rendered at the end of the export menu.
+   * @param {object} params The render params.
+   * @param {Function} params.onClose Closes the export menu.
+   * @returns {React.ReactNode} The menu items.
+   */
+  exportMenuItems: PropTypes.func,
   imageExportOptions: PropTypes.arrayOf(
     PropTypes.shape({
       copyStyles: PropTypes.bool,
