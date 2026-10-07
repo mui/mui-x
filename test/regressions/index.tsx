@@ -10,6 +10,17 @@ import {
   resetRandomGenerators,
 } from '@mui/x-data-grid-generator';
 import loadFonts from '@mui/internal-test-utils/loadFonts';
+// Static font files, installed from npm instead of loaded from Google Fonts. Google
+// serves Roboto as a variable font, and for the same stylesheet URL it sometimes
+// returns a file with the weight axis trimmed to the requested range (300-700
+// instead of 100-900). That file renders weights other than 400 with slightly
+// different glyph outlines and advances, which shows up as random anti-aliasing
+// diffs in the screenshots.
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/400-italic.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import { fakeTimers, flushTimers } from './fakeClock';
 import TestViewer from './TestViewer';
 import OverviewWrapper from './overviews/OverviewWrapper';
@@ -40,12 +51,9 @@ const allTests = Object.values(testsBySuite).flatMap((suite) =>
 window.muiFixture = {
   allTests,
   // `index.test.ts` awaits this in `navigateToTest`, before any fixture mounts.
-  // `display=swap` is dropped on purpose: it paints fallback text first, and the
-  // font files Google serves are identical without it.
+  // The font imports above declare the faces.
   fontsReady: loadFonts({
-    stylesheets: [
-      'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400',
-    ],
+    stylesheets: [],
     faces: [
       ...[300, 400, 500, 700].map((weight) => ({ family: 'Roboto', weight })),
       { family: 'Roboto', weight: 400, style: 'italic' },
