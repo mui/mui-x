@@ -40,7 +40,7 @@ import {
   DEPENDENCY_LAG_UNITS,
   DEPENDENCY_TYPE_LABELS,
   DEPENDENCY_TYPES,
-  formatLag,
+  getAllDayLagNote,
   isSameLag,
   toLagDraft,
   UPDATE_REJECTION_MESSAGES,
@@ -123,13 +123,8 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   const draft = toLagDraft(lagAmountField.value, lagUnitField.value);
   const draftLag = getDependencyLag(draft);
   const effectiveLag = getEffectiveDependencyLag(draft, isTargetAllDay);
-  let lagHelperText: React.ReactNode = lagAmountField.error ?? null;
-  if (lagHelperText === null && !isSameLag(effectiveLag, draftLag)) {
-    lagHelperText =
-      effectiveLag === null
-        ? DEPENDENCY_DIALOG_TEXT.allDayLagIgnored
-        : DEPENDENCY_DIALOG_TEXT.allDayLagRounded(formatLag(effectiveLag));
-  }
+  const lagHelperText: React.ReactNode =
+    lagAmountField.error ?? getAllDayLagNote(draftLag, effectiveLag);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -210,9 +205,7 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
             ))}
           </Select>
           {typeField.error !== undefined && (
-            <FormHelperText id={typeHelperId} role="alert">
-              {typeField.error}
-            </FormHelperText>
+            <FormHelperText id={typeHelperId}>{typeField.error}</FormHelperText>
           )}
         </FormControl>
         <DependencyDialogLag
@@ -228,9 +221,6 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
           slotProps={{
             // Keep the label up so the placeholder shows.
             inputLabel: { shrink: true },
-            formHelperText: {
-              role: lagAmountField.error === undefined ? undefined : 'alert',
-            },
             // Not `type="number"`: it changes on wheel and has its own validation.
             htmlInput: { inputMode: 'numeric' },
             input: {

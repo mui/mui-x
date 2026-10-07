@@ -86,3 +86,18 @@ export function isSameLag(
 ) {
   return a?.amount === b?.amount && a?.unit === b?.unit;
 }
+
+/**
+ * How an all-day successor rounds `lag` to whole days, or `null` when it applies as is.
+ */
+export function getAllDayLagNote(
+  lag: SchedulerResolvedDependencyLag | null,
+  effectiveLag: SchedulerResolvedDependencyLag | null,
+) {
+  if (isSameLag(effectiveLag, lag)) {
+    return null;
+  }
+  return effectiveLag === null
+    ? DEPENDENCY_DIALOG_TEXT.allDayLagIgnored
+    : DEPENDENCY_DIALOG_TEXT.allDayLagRounded(formatLag(effectiveLag));
+}

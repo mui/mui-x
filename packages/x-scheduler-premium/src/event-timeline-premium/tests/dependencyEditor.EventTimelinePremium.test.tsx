@@ -898,5 +898,30 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       expect(screen.queryByRole('dialog')).to.equal(null);
     });
+
+    it('should say how an all-day successor rounds the lag in the details', async () => {
+      const allDayEvent = EventBuilder.new()
+        .id('event-d')
+        .title('Event D')
+        .fullDay('2025-07-05')
+        .resource(resource1)
+        .build();
+      await renderTimeline({
+        events: [eventA, allDayEvent],
+        dependencies: [
+          { ...buildDependency('dep-1', 'event-a', 'event-d'), lag: 36, lagUnit: 'hour' },
+        ],
+        readOnly: true,
+      });
+
+      const dialog = openDialog('dep-1');
+
+      const lagTerm = within(dialog)
+        .getAllByRole('term')
+        .find((term) => term.textContent === 'Lag')!;
+      expect(lagTerm.nextElementSibling).to.have.text(
+        '36 hoursAn all-day event can only wait whole days: 1 day.',
+      );
+    });
   });
 });
