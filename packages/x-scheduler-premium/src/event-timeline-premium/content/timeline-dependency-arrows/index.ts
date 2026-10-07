@@ -2,4 +2,4 @@ export { EventTimelinePremiumDependencyArrows } from './EventTimelinePremiumDepe
 export { EventTimelinePremiumDependencyInteractions } from './EventTimelinePremiumDependencyInteractions';
 export { EventTimelinePremiumDependencyTerminals } from './EventTimelinePremiumDependencyTerminals';
 export { EventTimelinePremiumDependencyGeometryProvider } from './EventTimelinePremiumDependencyGeometry';
-export { EventTimelinePremiumDependencyDialog } from './EventTimelinePremiumDependencyDialog';
+export { EventTimelinePremiumDependencyDialog } from './dependency-dialog/EventTimelinePremiumDependencyDialog';
