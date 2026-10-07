@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useStore } from '@base-ui/utils/store';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -60,6 +61,7 @@ import {
 } from '../event-dialog/form/EventDialogFormContext';
 import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
+import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 
 export const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -320,6 +322,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
 
     if (formStore.state.isSubmitting) {
       return;
@@ -434,7 +437,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const failingKeys = Object.keys(formStore.state.errors);
         const onlyRecurrenceFails =
           failingKeys.length > 0 && failingKeys.every((key) => RECURRENCE_FORM_KEYS.has(key));
-        setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general');
+        // Rendered synchronously so the failing field is on screen to take the focus.
+        ReactDOM.flushSync(() => setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general'));
+        focusFirstInvalid(form);
         return;
       }
 
@@ -515,7 +520,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
           warnUnvalidatedField(rejectedField, 'The scheduling plugin rejected the save');
           formStore.setError(rejectedField, result.rejection.message);
-          setTabValue('general');
+          ReactDOM.flushSync(() => setTabValue('general'));
+          focusFirstInvalid(form);
           return;
         }
       }

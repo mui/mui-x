@@ -264,6 +264,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     expect(store.state.errors).to.have.length(0);
     expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
     expect(currentDialog.getByLabelText(/start time/i)).to.have.value('11:00');
+    expect(document.activeElement).to.equal(currentDialog.getByLabelText(/end time/i));
   });
 
   it('should show the General tab when a save submitted from the Recurrence tab is vetoed', async () => {
@@ -284,6 +285,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(generalPanel).not.to.have.attribute('hidden');
     expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+    expect(document.activeElement).to.equal(currentDialog.getByLabelText(/end time/i));
   });
 
   it('should save after the vetoed dates are edited back into a valid range', async () => {

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -36,6 +37,7 @@ import {
   EventDialogFormContent,
   EventDialogHeader,
   EventDialogRoot,
+  focusFirstInvalid,
   getPaletteVariants,
   SchedulerFormStore,
   schedulerFormSelectors,
@@ -276,8 +278,6 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.allDay ?? false,
   );
   const dragHandlerRef = React.useRef<HTMLElement>(null);
-  const typeInputRef = React.useRef<HTMLInputElement>(null);
-  const lagInputRef = React.useRef<HTMLInputElement>(null);
   // A lag the engine ignores (invalid in the props) shows as unset.
   const [initialLag] = React.useState(() => getDependencyLag(dependency));
   const [formStore] = React.useState(
@@ -324,10 +324,13 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
     formStore.setSubmitting(true);
     try {
       if (!(await formStore.validateAll())) {
-        lagInputRef.current?.focus();
+        // Rendered synchronously so the error is in the DOM to take the focus.
+        ReactDOM.flushSync(() => {});
+        focusFirstInvalid(form);
         return;
       }
       const { values } = formStore.state;
@@ -343,11 +346,13 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
         // On the field that caused it, like the event form: editing that field clears it.
         const isLagRejected =
           result.reason === 'cascadeBlocked' && !isSameLag(submittedLag, initialLag);
-        formStore.setError(
-          isLagRejected ? 'lagAmount' : 'type',
-          UPDATE_REJECTION_MESSAGES[result.reason],
+        ReactDOM.flushSync(() =>
+          formStore.setError(
+            isLagRejected ? 'lagAmount' : 'type',
+            UPDATE_REJECTION_MESSAGES[result.reason],
+          ),
         );
-        (isLagRejected ? lagInputRef : typeInputRef).current?.focus();
+        focusFirstInvalid(form);
         return;
       }
       onClose();
@@ -416,7 +421,6 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                 <Select
                   labelId={typeLabelId}
                   label={DEPENDENCY_DIALOG_TEXT.typeLabel}
-                  inputRef={typeInputRef}
                   value={typeField.value}
                   aria-describedby={typeField.error === undefined ? undefined : typeHelperId}
                   onChange={(event) =>
@@ -430,7 +434,9 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                   ))}
                 </Select>
                 {typeField.error !== undefined && (
-                  <FormHelperText id={typeHelperId}>{typeField.error}</FormHelperText>
+                  <FormHelperText id={typeHelperId} role="alert">
+                    {typeField.error}
+                  </FormHelperText>
                 )}
               </FormControl>
             )}
@@ -440,7 +446,6 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                 fullWidth
                 size="small"
                 label={DEPENDENCY_DIALOG_TEXT.lagLabel}
-                inputRef={lagInputRef}
                 value={lagAmountField.value}
                 placeholder="0"
                 error={lagAmountField.error !== undefined}
@@ -449,6 +454,9 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                 slotProps={{
                   // Keep the label up so the placeholder shows.
                   inputLabel: { shrink: true },
+                  formHelperText: {
+                    role: lagAmountField.error === undefined ? undefined : 'alert',
+                  },
                   // Not `type="number"`: it changes on wheel and has its own validation.
                   htmlInput: { inputMode: 'numeric' },
                   input: {

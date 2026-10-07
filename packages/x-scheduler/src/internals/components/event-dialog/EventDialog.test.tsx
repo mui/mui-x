@@ -1204,6 +1204,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
     }
 
+    it('should focus the field with the range error on save', async () => {
+      const { user } = renderWithSlot({}, { onEventsChange: () => {} });
+      await submitInvertedRange(user);
+
+      expect(document.activeElement).to.equal(screen.getByLabelText(/end date/i));
+    });
+
     it('should clear the range error when the range is fixed through the start date', async () => {
       const { user } = renderWithSlot({}, { onEventsChange: () => {} });
       await submitInvertedRange(user);
