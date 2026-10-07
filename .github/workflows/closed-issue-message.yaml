@@ -11,7 +11,7 @@ jobs:
   add-comment:
     name: Add closing message
     if: github.event.issue.state_reason == 'completed'
-    uses: mui/mui-public/.github/workflows/issues_add-closing-message.yml@dee147ca60c626f427f310af3d52a4aa27390566 # master
+    uses: mui/mui-public/.github/workflows/issues_add-closing-message.yml@d15ad292b4ac08fbfbb55aebffb354f659d71aea # master
     permissions:
       contents: read
       issues: write

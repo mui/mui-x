@@ -1,14 +1,6 @@
 const STORAGE_KEY = 'mui-tree-data-store';
 
 export class DataStore {
-  rowLookup;
-
-  tree;
-
-  subscribers;
-
-  snapshot;
-
   constructor() {
     // Try to load from localStorage first
     const stored = this.loadFromLocalStorage();
