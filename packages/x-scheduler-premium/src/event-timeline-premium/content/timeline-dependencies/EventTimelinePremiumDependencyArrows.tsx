@@ -38,7 +38,7 @@ const DependencyArrowsSvg = styled('svg', {
   ...theme.applyStyles('dark', {
     color: (theme.vars || theme).palette.grey[600],
   }),
-  // Opaque: the line runs under the arrowhead.
+  // Opaque, or the line would show through the arrowhead.
   '[data-dependency-id][data-hovered]:not([data-selected])': {
     stroke: (theme.vars || theme).palette.grey[700],
     strokeWidth: DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH,
@@ -92,8 +92,8 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
     () => orderArrowsWithSelectedLast(visibleArrows, selectedId, hoveredId),
     [visibleArrows, selectedId, hoveredId],
   );
-  // A selected read-only arrow keeps its arrowhead: the delete button that normally
-  // replaces it is not rendered by the interactions layer.
+  // While the scheduler is read-only, a selected arrow keeps its arrowhead: the delete
+  // button that normally replaces it is not rendered by the interactions layer.
   const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
 
   const creationPath = getCreationPath(creation, resolver);
@@ -165,8 +165,8 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
     >
       <defs>
         <DependencyArrowheadMarker id={arrowheadId} fill="currentColor" />
-        {/* Without `context-stroke`, markers do not inherit the color of the referencing
-            path, so the creation arrowhead needs its own def. */}
+        {/* Fallback where `context-stroke` is unsupported: the creation arrowhead gets
+            its own color. */}
         <DependencyArrowheadMarker id={creationArrowheadId} fill={creationColor} />
       </defs>
       {orderedArrows.map((arrow) => {

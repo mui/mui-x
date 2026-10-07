@@ -105,8 +105,8 @@ function DependencyInteractionsLayer({
     () => orderArrowsWithSelectedLast(visibleArrows, selectedId),
     [visibleArrows, selectedId],
   );
-  // `deleteDependency` ignores read-only dependencies: hide the button instead of
-  // rendering one that does nothing.
+  // `deleteDependency` is refused while the scheduler is read-only: hide the button
+  // instead of rendering one that does nothing.
   const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
 
   useDependencySelectionInteraction(svgRef);

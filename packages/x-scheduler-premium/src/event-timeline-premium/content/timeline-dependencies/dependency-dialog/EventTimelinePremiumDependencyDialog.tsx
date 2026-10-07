@@ -4,13 +4,10 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import type {
-  SchedulerDependency,
-  SchedulerDependencyEditor,
-} from '@mui/x-scheduler-internals-premium/models';
+import type { SchedulerDependencyEditor } from '@mui/x-scheduler-internals-premium/models';
 import {
   EventDialogDraggablePaper,
-  EventDialogFormContent,
+  EventDialogContentRoot,
   EventDialogRoot,
   useEventEditingStyledContext,
 } from '@mui/x-scheduler/internals';
@@ -18,6 +15,7 @@ import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals'
 import { useDependencyGeometry } from '../EventTimelinePremiumDependencyGeometry';
 import { DependencyDialogFormContent } from './DependencyDialogFormContent';
 import { DependencyDialogReadonlyContent } from './DependencyDialogReadonlyContent';
+import type { DependencyDialogViewProps } from './DependencyDialogDetails';
 
 const DependencyDialogAnchor = styled('span', {
   name: 'MuiEventTimeline',
@@ -30,7 +28,7 @@ const DependencyDialogAnchor = styled('span', {
 });
 
 // TODO(dependencies public flip, #23420): settle the width with the dialog's own styles.
-const DependencyDialogContentRoot = styled(EventDialogFormContent, {
+const DependencyDialogContentRoot = styled(EventDialogContentRoot, {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogContent',
 })({
@@ -55,39 +53,30 @@ export function EventTimelinePremiumDependencyDialog() {
   return <DependencyDialog editor={editor} />;
 }
 
-interface DependencyDialogContentProps extends Pick<
-  SchedulerDependencyEditor,
-  'sourceResourceId' | 'targetResourceId'
+interface DependencyDialogContentProps extends Omit<
+  DependencyDialogViewProps,
+  'titleId' | 'dragHandlerRef'
 > {
-  dependency: SchedulerDependency;
   anchor: HTMLElement;
-  onClose: () => void;
 }
 
 // Memoized: the geometry read by the parent changes while scrolling.
 const DependencyDialogContent = React.memo(function DependencyDialogContent(
   props: DependencyDialogContentProps,
 ) {
-  const { dependency, anchor, onClose, sourceResourceId, targetResourceId } = props;
+  const { anchor, ...other } = props;
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId, classes } = useEventEditingStyledContext();
   const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
   const dragHandlerRef = React.useRef<HTMLElement>(null);
   const titleId = `${schedulerId}-dependency-dialog-title`;
 
-  const contentProps = {
-    dependency,
-    sourceResourceId,
-    targetResourceId,
-    titleId,
-    dragHandlerRef,
-    onClose,
-  };
+  const viewProps = { ...other, titleId, dragHandlerRef };
 
   return (
     <EventDialogRoot
       open
-      onClose={onClose}
+      onClose={other.onClose}
       PaperComponent={EventDialogDraggablePaper}
       aria-labelledby={titleId}
       aria-modal="false"
@@ -102,9 +91,9 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
     >
       <DependencyDialogContentRoot className={classes.eventDialogContent}>
         {isReadOnly ? (
-          <DependencyDialogReadonlyContent {...contentProps} />
+          <DependencyDialogReadonlyContent {...viewProps} />
         ) : (
-          <DependencyDialogFormContent {...contentProps} />
+          <DependencyDialogFormContent {...viewProps} />
         )}
       </DependencyDialogContentRoot>
     </EventDialogRoot>

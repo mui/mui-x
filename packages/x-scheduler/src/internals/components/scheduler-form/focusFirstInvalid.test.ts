@@ -34,6 +34,43 @@ describe('focusFirstInvalid', () => {
     expect(focusFirstInvalid(form)).to.equal(false);
   });
 
+  it('should focus the next visible invalid control after an aria-hidden one', () => {
+    const form = mount(`
+      <input aria-hidden="true" tabindex="-1" aria-invalid="true" />
+      <div id="combobox" role="combobox" tabindex="0" aria-invalid="true"></div>
+    `);
+
+    expect(focusFirstInvalid(form)).to.equal(true);
+    expect(document.activeElement).to.equal(form.querySelector('#combobox'));
+  });
+
+  it('should skip an invalid control inside a hidden ancestor', () => {
+    const form = mount(`
+      <div hidden><input aria-invalid="true" /></div>
+      <input id="visible" aria-invalid="true" />
+    `);
+
+    expect(focusFirstInvalid(form)).to.equal(true);
+    expect(document.activeElement).to.equal(form.querySelector('#visible'));
+  });
+
+  it('should skip a disabled invalid control', () => {
+    const form = mount(`
+      <input disabled aria-invalid="true" />
+      <input id="enabled" aria-invalid="true" />
+    `);
+
+    expect(focusFirstInvalid(form)).to.equal(true);
+    expect(document.activeElement).to.equal(form.querySelector('#enabled'));
+  });
+
+  it('should return false when the only invalid control is hidden', () => {
+    const form = mount(`<div hidden><input aria-invalid="true" /></div>`);
+
+    expect(focusFirstInvalid(form)).to.equal(false);
+    expect(document.activeElement).to.equal(document.body);
+  });
+
   it('should return false when no control is invalid', () => {
     const form = mount(`<input />`);
 

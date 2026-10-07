@@ -22,7 +22,6 @@ import type {
 } from '@mui/x-scheduler-internals-premium/models';
 import {
   getDependencyLag,
-  getDependencyLagIssue,
   getEffectiveDependencyLag,
 } from '@mui/x-scheduler-internals-premium/internals';
 import {
@@ -52,8 +51,8 @@ import {
   DependencyDialogBody,
   DependencyDialogDetails,
   DependencyDialogEndpoints,
-} from './DependencyDialogLayout';
-import type { DependencyDialogContentProps } from './DependencyDialogLayout';
+} from './DependencyDialogDetails';
+import type { DependencyDialogViewProps } from './DependencyDialogDetails';
 
 // Same right inset as the Type select, so both arrows line up.
 const DependencyDialogLag = styled(TextField, {
@@ -74,7 +73,7 @@ const DependencyDialogLagUnit = styled(Select, {
   },
 });
 
-export function DependencyDialogFormContent(props: DependencyDialogContentProps) {
+export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -125,17 +124,18 @@ export function DependencyDialogFormContent(props: DependencyDialogContentProps)
   const draftLag = getDependencyLag(draft);
   const effectiveLag = getEffectiveDependencyLag(draft, isTargetAllDay);
   let lagHelperText: React.ReactNode = lagAmountField.error ?? null;
-  if (lagHelperText === null && getDependencyLagIssue(draft) === null) {
-    if (!isSameLag(effectiveLag, draftLag)) {
-      lagHelperText =
-        effectiveLag === null
-          ? DEPENDENCY_DIALOG_TEXT.allDayLagIgnored
-          : DEPENDENCY_DIALOG_TEXT.allDayLagRounded(formatLag(effectiveLag));
-    }
+  if (lagHelperText === null && !isSameLag(effectiveLag, draftLag)) {
+    lagHelperText =
+      effectiveLag === null
+        ? DEPENDENCY_DIALOG_TEXT.allDayLagIgnored
+        : DEPENDENCY_DIALOG_TEXT.allDayLagRounded(formatLag(effectiveLag));
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (formStore.state.isSubmitting) {
+      return;
+    }
     const form = event.currentTarget;
     formStore.setSubmitting(true);
     try {
@@ -152,16 +152,16 @@ export function DependencyDialogFormContent(props: DependencyDialogContentProps)
       const { values } = formStore.state;
       const submittedLag = getDependencyLag(toLagDraft(values.lagAmount, values.lagUnit));
       // Only write the lag if the user changed it, so an untouched one stays as is.
+      const isLagChanged = !isSameLag(submittedLag, initialLag);
       const result = store.updateDependency(
         dependency.id,
-        isSameLag(submittedLag, initialLag)
-          ? { type: values.type }
-          : { type: values.type, lag: submittedLag?.amount, lagUnit: submittedLag?.unit },
+        isLagChanged
+          ? { type: values.type, lag: submittedLag?.amount, lagUnit: submittedLag?.unit }
+          : { type: values.type },
       );
       if (result.status === 'rejected') {
-        // On the field that caused it, like the event form: editing that field clears it.
-        const isLagRejected =
-          result.reason === 'cascadeBlocked' && !isSameLag(submittedLag, initialLag);
+        // On the field that caused it (Type by default), like the event form.
+        const isLagRejected = result.reason === 'cascadeBlocked' && isLagChanged;
         ReactDOM.flushSync(() =>
           formStore.setError(
             isLagRejected ? 'lagAmount' : 'type',
@@ -246,8 +246,13 @@ export function DependencyDialogFormContent(props: DependencyDialogContentProps)
                     }}
                     onChange={(event) => {
                       lagUnitField.setValue(event.target.value as SchedulerDependencyLagUnit);
-                      // The unit is part of the lag value.
-                      formStore.clearErrors(['lagAmount']);
+                      // The unit is part of the lag value: check it again.
+                      if (lagAmountField.error !== undefined) {
+                        formStore.setError(
+                          'lagAmount',
+                          validateLagAmount(lagAmountField.value, formStore.state.values),
+                        );
+                      }
                     }}
                   >
                     {DEPENDENCY_LAG_UNITS.map((option) => (

@@ -180,9 +180,12 @@ export interface SchedulerDependencyEditor {
    */
   anchor: { x: number; y: number };
   /**
-   * The rows of the opened arrow, for the colors. `undefined` uses the primary resource.
+   * The row the opened arrow leaves, for the colors. `undefined` uses the primary resource.
    */
   sourceResourceId?: SchedulerResourceId;
+  /**
+   * The row the opened arrow enters, for the colors. `undefined` uses the primary resource.
+   */
   targetResourceId?: SchedulerResourceId;
 }
 

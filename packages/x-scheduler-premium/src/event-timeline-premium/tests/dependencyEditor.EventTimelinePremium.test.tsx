@@ -365,6 +365,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(typeSelect).toHaveAccessibleDescription(
         'This change would move a read-only event, so it was not applied.',
       );
+      expect(document.activeElement).to.equal(typeSelect);
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(getStartTimestamp(store, 'event-o')).to.equal(targetStart);
 
@@ -393,6 +394,24 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       fireEvent.change(getLagInput(dialog), { target: { value: '0' } });
       expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
+    });
+
+    it('should show the rejection on the lag when both the type and the lag changed', async () => {
+      await renderReadOnlyCascade();
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Finish to start');
+      fireEvent.change(getLagInput(dialog), { target: { value: '1' } });
+      chooseLagUnit(dialog, 'hours');
+      await save(dialog);
+
+      expect(getLagInput(dialog)).toHaveAccessibleDescription(
+        'This change would move a read-only event, so it was not applied.',
+      );
+      expect(within(dialog).getByRole('combobox', { name: 'Type' })).not.to.have.attribute(
+        'aria-describedby',
+      );
+      expect(document.activeElement).to.equal(getLagInput(dialog));
     });
 
     it('should clear the lag error when the lag unit changes', async () => {
@@ -598,7 +617,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       fireEvent.change(getLagInput(dialog), { target: { value: '1.5' } });
-      // Validated on save, like the event form: Save stays enabled.
+      // Validated on save, like the event form: no error while typing.
       expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
       await save(dialog);
 
@@ -611,6 +630,41 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       // Writing the field clears its error.
       fireEvent.change(getLagInput(dialog), { target: { value: '2' } });
       expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
+    });
+
+    it.each(['1e3', '0x10'])(
+      'should show the lag error when saving a lag written as %s',
+      async (lagAmount) => {
+        const handleDependenciesChange = vi.fn();
+        await renderTimeline({
+          events: [eventA, eventB],
+          dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+          onDependenciesChange: handleDependenciesChange,
+        });
+
+        const dialog = openDialog('dep-1');
+        fireEvent.change(getLagInput(dialog), { target: { value: lagAmount } });
+        await save(dialog);
+
+        expect(getLagInput(dialog)).toHaveAccessibleDescription('Enter a whole number, 0 or more.');
+        expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      },
+    );
+
+    it('should keep the lag error when the lag unit changes and the lag is still invalid', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+      });
+
+      const dialog = openDialog('dep-1');
+      fireEvent.change(getLagInput(dialog), { target: { value: '-1' } });
+      await save(dialog);
+      expect(getLagInput(dialog)).toHaveAccessibleDescription('Enter a whole number, 0 or more.');
+
+      chooseLagUnit(dialog, 'hours');
+
+      expect(getLagInput(dialog)).toHaveAccessibleDescription('Enter a whole number, 0 or more.');
     });
 
     it('should say how an all-day successor rounds the lag', async () => {
@@ -656,6 +710,33 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       fireEvent.click(screen.getByRole('menuitem', { name: 'Edit dependency' }));
 
       expect(within(screen.getByRole('dialog')).getByText('Edit dependency')).not.to.equal(null);
+    });
+
+    it('should use the colors of the row of the opened arrow for a multi-resource event', async () => {
+      const multiResourceEvent = EventBuilder.new()
+        .id('event-m')
+        .title('Event M')
+        .singleDay('2025-07-03T13:00:00Z')
+        .resources([resource1, resource2])
+        .build();
+      await renderTimeline({
+        events: [eventA, multiResourceEvent],
+        resources: [
+          ResourceBuilder.new().id('r1').title('Resource 1').eventColor('blue').build(),
+          ResourceBuilder.new().id('r2').title('Resource 2').eventColor('orange').build(),
+        ],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-m')],
+      });
+
+      // One arrow per row of `event-m`, in row order.
+      const hitAreas = document.querySelectorAll('[data-dependency-hit="dep-1"]');
+      expect(hitAreas).to.have.length(2);
+      fireEvent.contextMenu(hitAreas[1]);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit dependency' }));
+
+      const dialog = screen.getByRole('dialog');
+      expect(within(dialog).getByTitle('Event A')).to.have.attribute('data-palette', 'blue');
+      expect(within(dialog).getByTitle('Event M')).to.have.attribute('data-palette', 'orange');
     });
 
     it('should open the menu on a right click on the delete button', async () => {
@@ -794,6 +875,28 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(within(dialog).queryByRole('button', { name: /save/i })).to.equal(null);
       // The header close button and the footer one.
       expect(within(dialog).getAllByRole('button', { name: 'Close' })).to.have.length(2);
+    });
+
+    it('should show the lag in the details and close from the footer button', async () => {
+      await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [
+          { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: 2, lagUnit: 'hour' },
+        ],
+        readOnly: true,
+      });
+
+      const dialog = openDialog('dep-1');
+
+      const lagTerm = within(dialog)
+        .getAllByRole('term')
+        .find((term) => term.textContent === 'Lag')!;
+      expect(lagTerm.nextElementSibling).to.have.text('2 hours');
+
+      // The footer button comes after the header one.
+      fireEvent.click(within(dialog).getAllByRole('button', { name: 'Close' })[1]);
+
+      expect(screen.queryByRole('dialog')).to.equal(null);
     });
   });
 });

@@ -67,7 +67,7 @@ const DependencyDialogEventChip = styled('span', {
   variants: getPaletteVariants(theme),
 }));
 
-export interface DependencyDialogContentProps extends Pick<
+export interface DependencyDialogViewProps extends Pick<
   SchedulerDependencyEditor,
   'sourceResourceId' | 'targetResourceId'
 > {
@@ -102,7 +102,7 @@ function DependencyDialogEvent(props: {
  * The From and To rows of the dependency details.
  */
 export function DependencyDialogEndpoints(
-  props: Pick<DependencyDialogContentProps, 'dependency' | 'sourceResourceId' | 'targetResourceId'>,
+  props: Pick<DependencyDialogViewProps, 'dependency' | 'sourceResourceId' | 'targetResourceId'>,
 ) {
   const { dependency, sourceResourceId, targetResourceId } = props;
 

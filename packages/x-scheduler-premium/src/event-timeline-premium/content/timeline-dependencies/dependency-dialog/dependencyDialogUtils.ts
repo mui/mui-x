@@ -68,7 +68,9 @@ export interface DependencyFormValues extends Record<string, unknown> {
 }
 
 export function toLagDraft(lagAmount: string, lagUnit: SchedulerDependencyLagUnit) {
-  return { lag: lagAmount.trim() === '' ? 0 : Number(lagAmount), lagUnit };
+  const amount = lagAmount.trim();
+  // Digits only: `Number()` also reads `1e20` or `0x10` as whole numbers.
+  return { lag: /^\d*$/.test(amount) ? Number(amount) : NaN, lagUnit };
 }
 
 // Module level so its identity is stable: a new validator restarts a pending validation.

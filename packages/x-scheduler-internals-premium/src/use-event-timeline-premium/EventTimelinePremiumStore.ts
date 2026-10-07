@@ -187,9 +187,9 @@ const mapper: SchedulerParametersToStateMapper<
       ...deriveStateFromParameters(parameters),
       ...buildDependenciesState(parameters.dependencies),
       areDependenciesEnabled,
-      // Disabling the feature discards its in-flight gesture: kept in the raw state
-      // it would come back on screen if the feature is re-enabled. The selection is
-      // cleared by the store effect, which can check the selected type.
+      // Disabling the feature discards its in-flight gesture and dialog: kept in the raw
+      // state they would come back on screen if the feature is re-enabled. The selection
+      // is cleared by the store effect, which can check the selected type.
       ...(areDependenciesEnabled ? null : { dependencyCreation: null, dependencyEditor: null }),
       shouldEventRequireResource,
       hasInitialized: true,
@@ -244,9 +244,9 @@ export class EventTimelinePremiumStore<
     this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
 
-    // Clear (not just mask) the selection of a removed or deactivated dependency:
-    // with masking alone, a dependency coming back (a re-added id, an endpoint event
-    // re-fetched or no longer recurring) would resurrect the arrow already selected.
+    // Clear (not just mask) the selection and the dialog of a removed or deactivated
+    // dependency: with masking alone, a dependency coming back (a re-added id, an endpoint
+    // event re-fetched or no longer recurring) would bring them back.
     const clearInactiveDependencyState = () => {
       const { selection, dependencyEditor } = this.state;
       if (selection?.type === 'dependency' && this.isDependencyInactive(selection.id)) {
@@ -275,6 +275,10 @@ export class EventTimelinePremiumStore<
     );
     this.disposables.defer(
       this.registerStoreEffect((state) => state.preset, this.closeDependencyEditor),
+    );
+    // The dialog switches between the form and the details, which would drop the draft.
+    this.disposables.defer(
+      this.registerStoreEffect((state) => state.readOnly, this.closeDependencyEditor),
     );
 
     this.disposables.defer(

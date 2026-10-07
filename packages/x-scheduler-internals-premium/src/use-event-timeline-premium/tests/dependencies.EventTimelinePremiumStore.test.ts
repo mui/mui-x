@@ -947,6 +947,22 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect(store.state.dependencyEditor).to.equal(null);
     });
 
+    it('should close when the readOnly parameter changes', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], readOnly: true },
+        adapter,
+      );
+
+      expect(store.state.readOnly).to.equal(true);
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
     it('should close when an endpoint event is removed', () => {
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },

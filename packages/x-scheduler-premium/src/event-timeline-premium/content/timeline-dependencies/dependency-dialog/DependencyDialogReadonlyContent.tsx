@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { getDependencyLag } from '@mui/x-scheduler-internals-premium/internals';
 import {
+  EventDialogForm,
   EventDialogFormActions,
   EventDialogHeader,
   useEventEditingStyledContext,
@@ -15,28 +15,16 @@ import {
   DependencyDialogBody,
   DependencyDialogDetails,
   DependencyDialogEndpoints,
-} from './DependencyDialogLayout';
-import type { DependencyDialogContentProps } from './DependencyDialogLayout';
+} from './DependencyDialogDetails';
+import type { DependencyDialogViewProps } from './DependencyDialogDetails';
 
-// Same layout as the form, which the editable content renders.
-const DependencyDialogReadonlyRoot = styled('section', {
-  name: 'MuiEventTimeline',
-  slot: 'DependencyDialogReadonlyRoot',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-  minHeight: 0,
-});
-
-export function DependencyDialogReadonlyContent(props: DependencyDialogContentProps) {
+export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const { classes, localeText } = useEventEditingStyledContext();
-  // A lag the engine ignores (invalid in the props) shows as unset.
   const lag = getDependencyLag(dependency);
 
   return (
-    <DependencyDialogReadonlyRoot>
+    <EventDialogForm as="section" className={classes.eventDialogForm}>
       <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
         <Typography variant="h6" id={titleId} className={classes.eventDialogTitle}>
           {DEPENDENCY_DIALOG_TEXT.detailsTitle}
@@ -59,6 +47,6 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogContentPr
           {localeText.closeButtonLabel}
         </Button>
       </EventDialogFormActions>
-    </DependencyDialogReadonlyRoot>
+    </EventDialogForm>
   );
 }

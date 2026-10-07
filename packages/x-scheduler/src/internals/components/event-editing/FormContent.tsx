@@ -63,7 +63,7 @@ import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormSt
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 
-export const FormActions = styled(DialogActions, {
+export const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
@@ -71,7 +71,7 @@ export const FormActions = styled(DialogActions, {
   gap: theme.spacing(2),
 }));
 
-export const DialogContent = styled(MuiDialogContent, {
+export const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
@@ -564,7 +564,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const hasTabs = Boolean(showRecurrence && RecurrenceTabRenderer);
 
   return (
-    <DialogContent className={classes.eventDialogContent}>
+    <EventDialogContentRoot className={classes.eventDialogContent}>
       <EventDialogForm
         onSubmit={handleSubmit}
         onInvalidCapture={handleFormInvalid}
@@ -602,7 +602,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         <Divider className={classes.eventDialogFormDivider} />
         <FormActionButtons onDelete={handleDelete} />
       </EventDialogForm>
-    </DialogContent>
+    </EventDialogContentRoot>
   );
 }
 
@@ -613,7 +613,7 @@ function FormActionButtons(props: { onDelete: () => void }) {
   const isSubmitting = useStore(formStore, eventDialogFormSelectors.isSubmitting);
 
   return (
-    <FormActions className={classes.eventDialogFormActions}>
+    <EventDialogFormActions className={classes.eventDialogFormActions}>
       <Button
         className={classes.eventDialogDeleteButton}
         color="error"
@@ -633,6 +633,6 @@ function FormActionButtons(props: { onDelete: () => void }) {
       >
         {localeText.saveChanges}
       </Button>
-    </FormActions>
+    </EventDialogFormActions>
   );
 }

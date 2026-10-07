@@ -288,6 +288,18 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     expect(document.activeElement).to.equal(currentDialog.getByLabelText(/end time/i));
   });
 
+  it('should focus the end date when an all-day save is vetoed', async () => {
+    const { user, currentDialog, onEventsChange } = await renderEditDialog();
+
+    // All day ends at the end of the day: past the read-only successor's 10:00 start.
+    await user.click(currentDialog.getByRole('switch', { name: /all day/i }));
+    await user.click(currentDialog.getByRole('button', { name: /save/i }));
+
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    expect(currentDialog.getByText(/"Locked successor"/)).not.to.equal(null);
+    expect(document.activeElement).to.equal(currentDialog.getByLabelText(/end date/i));
+  });
+
   it('should save after the vetoed dates are edited back into a valid range', async () => {
     const { user, currentDialog, onClose, onEventsChange } = await renderEditDialog();
 

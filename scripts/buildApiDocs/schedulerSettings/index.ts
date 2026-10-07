@@ -125,7 +125,7 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyArrows.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyContextMenu.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogFormContent.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogLayout.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogDetails.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/DependencyDialogReadonlyContent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/dependency-dialog/EventTimelinePremiumDependencyDialog.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-dependencies/EventTimelinePremiumDependencyGeometry.tsx',

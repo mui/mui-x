@@ -17,8 +17,8 @@ export {
 export type { EventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
 export {
   FormContent,
-  FormActions as EventDialogFormActions,
-  DialogContent as EventDialogFormContent,
+  EventDialogFormActions,
+  EventDialogContentRoot,
   EventDialogForm,
 } from './FormContent';
 export { ReadonlyEventDetails } from './ReadonlyEventDetails';
