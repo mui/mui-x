@@ -2,11 +2,11 @@ export type DragEventTypes =
   'dragStart' | 'dragOver' | 'dragEnter' | 'dragLeave' | 'dragEnd' | 'drop';
 
 export class MockedDataTransfer implements DataTransfer {
-  data: Record<string, string>;
+  declare data: Record<string, string>;
 
-  dropEffect: 'none' | 'copy' | 'move' | 'link';
+  declare dropEffect: 'none' | 'copy' | 'move' | 'link';
 
-  effectAllowed:
+  declare effectAllowed:
     | 'none'
     | 'copy'
     | 'copyLink'
@@ -17,17 +17,17 @@ export class MockedDataTransfer implements DataTransfer {
     | 'all'
     | 'uninitialized';
 
-  files: FileList;
+  declare files: FileList;
 
   img?: Element;
 
-  items: DataTransferItemList;
+  declare items: DataTransferItemList;
 
-  types: string[];
+  declare types: string[];
 
-  xOffset: number;
+  declare xOffset: number;
 
-  yOffset: number;
+  declare yOffset: number;
 
   constructor() {
     this.data = {};

@@ -479,19 +479,21 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      const renderContext = gridRenderContextSelector(privateApiRef);
-      if (previousLastRowIndex.current >= renderContext.lastRowIndex) {
+      // The trigger is placed after the last row, which is not necessarily rendered
+      // when the trigger enters the `scrollEndThreshold` area.
+      const lastRowIndex = getVisibleRows(privateApiRef).rows.length;
+      if (previousLastRowIndex.current >= lastRowIndex) {
         return;
       }
 
-      previousLastRowIndex.current = renderContext.lastRowIndex;
+      previousLastRowIndex.current = lastRowIndex;
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
-        start: renderContext.lastRowIndex,
-        end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
+        start: lastRowIndex,
+        end: lastRowIndex + paginationModel.pageSize - 1,
         sortModel,
         filterModel,
       };
@@ -588,13 +590,6 @@ export const useGridDataSourceLazyLoader = (
       }
     };
   }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
-
-  // Stop polling when dataSourceRevalidateMs is set to 0
-  React.useEffect(() => {
-    if (props.dataSourceRevalidateMs <= 0) {
-      stopPolling();
-    }
-  }, [props.dataSourceRevalidateMs, stopPolling]);
 
   // A new `dataSource` reference is a full restart in `useGridDataSourceBase` (rows and cache
   // cleared, first page refetched), so end-of-data must be re-evaluated like on a re-query.

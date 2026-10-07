@@ -109,7 +109,6 @@ export type VirtualizerParams<L extends Layout = Layout> = {
     isVirtualFocusRow: boolean;
     showBottomBorder: boolean;
   }) => React.ReactElement;
-  renderInfiniteLoadingTrigger?: (id: any) => React.ReactElement;
 };
 
 type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;

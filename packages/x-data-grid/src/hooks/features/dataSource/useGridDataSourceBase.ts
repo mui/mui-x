@@ -92,7 +92,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const pendingRequestCount = React.useRef(0);
 
   const onDataSourceErrorProp = props.onDataSourceError;
-  const revalidateMs = props.dataSourceRevalidateMs;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
     if (!props.pagination) {
@@ -306,7 +305,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   });
 
   const { startPolling: startPollingWith, stopPolling } = useGridDataSourcePolling({
-    revalidateMs,
+    revalidateMs: props.dataSourceRevalidateMs,
     isActive: standardRowsUpdateStrategyActive,
     // Rows that are still loading start the polling when they arrive.
     shouldResume: () => rowsAreUpToDate.current,
@@ -456,18 +455,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     const newCache = getCache(props.dataSourceCache, options.cacheOptions);
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
   }, [props.dataSourceCache, options.cacheOptions]);
-
-  React.useEffect(() => {
-    if (!standardRowsUpdateStrategyActive) {
-      stopPolling();
-    }
-  }, [standardRowsUpdateStrategyActive, stopPolling]);
-
-  React.useEffect(() => {
-    if (revalidateMs <= 0) {
-      stopPolling();
-    }
-  }, [revalidateMs, stopPolling]);
 
   const lastApiRef = React.useRef(apiRef);
   const lastStrategy = React.useRef(currentStrategy);

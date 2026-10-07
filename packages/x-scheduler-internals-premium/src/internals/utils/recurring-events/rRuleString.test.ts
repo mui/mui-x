@@ -3,7 +3,8 @@ import type {
   RecurringEventByDayValue,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 import { parseRRule, serializeRRule } from './rRuleString';
 
 describe('recurring-events/rRuleString', () => {
@@ -69,6 +70,50 @@ describe('recurring-events/rRuleString', () => {
       expect(adapter.isValid(result.until!)).to.equal(true);
     });
 
+    it('should read a UNTIL ending in Z as a UTC instant, like the object input', () => {
+      const fromString = parseRRule(
+        adapter,
+        'FREQ=DAILY;UNTIL=20250315T000000Z',
+        'America/New_York',
+      );
+      const fromObject = parseRRule(
+        adapter,
+        { freq: 'DAILY', until: '2025-03-15T00:00:00Z' },
+        'America/New_York',
+      );
+
+      expect(adapter.getTime(fromString.until!)).to.equal(adapter.getTime(fromObject.until!));
+      expect(adapter.getTimezone(fromString.until!)).to.equal('America/New_York');
+    });
+
+    describe('with a host timezone that observes daylight saving time', () => {
+      afterEach(() => {
+        vi.unstubAllEnvs();
+      });
+
+      // `TZ` only changes the host timezone under Node.
+      it.skipIf(!isJSDOM)(
+        'should not let the host timezone shift a UNTIL in its daylight saving gap',
+        () => {
+          // 02:30 on March 9th 2025 does not exist in New York (clocks jump from 02:00 to 03:00).
+          vi.stubEnv('TZ', 'America/New_York');
+
+          const fromString = parseRRule(
+            adapter,
+            'FREQ=DAILY;UNTIL=20250309T023000Z',
+            'America/Sao_Paulo',
+          );
+          const fromObject = parseRRule(
+            adapter,
+            { freq: 'DAILY', until: '2025-03-09T02:30:00Z' },
+            'America/Sao_Paulo',
+          );
+
+          expect(adapter.getTime(fromString.until!)).to.equal(adapter.getTime(fromObject.until!));
+        },
+      );
+    });
+
     it('should sort BYDAY values in standard order regardless of input order', () => {
       const result = parseRRule(adapter, 'FREQ=WEEKLY;BYDAY=FR,MO,WE', 'default');
       expect(result.byDay).to.deep.equal(['MO', 'WE', 'FR']);
@@ -108,6 +153,19 @@ describe('recurring-events/rRuleString', () => {
       expect(() => parseRRule(adapter, 'FREQ=DAILY;UNTIL=not-a-date', 'default')).to.throw(
         'MUI X Scheduler: Invalid UNTIL date "NOT-A-DATE". The UNTIL value must be a valid date in ISO format. Provide a valid date string.',
       );
+    });
+
+    it('should read a UNTIL in a year below 100 as that year', () => {
+      const result = parseRRule(adapter, 'FREQ=DAILY;UNTIL=00990315T000000Z', 'default');
+      expect(adapter.getYear(result.until!)).to.equal(99);
+    });
+
+    it('should throw when UNTIL is a date that does not exist', () => {
+      for (const until of ['20250231T000000Z', '20250101T240000Z']) {
+        expect(() => parseRRule(adapter, `FREQ=DAILY;UNTIL=${until}`, 'default')).to.throw(
+          `MUI X Scheduler: Invalid UNTIL date "${until}".`,
+        );
+      }
     });
 
     it('should throw when FREQ is missing', () => {

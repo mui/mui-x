@@ -1137,12 +1137,6 @@ export const useGridDataSourceNestedLazyLoader = (
     };
   }, [privateApiRef, throttledHandleRenderedRowsIntervalChange, stopPolling, debouncedFetchRows]);
 
-  React.useEffect(() => {
-    if (!isStrategyActive || props.dataSourceRevalidateMs <= 0) {
-      stopPolling();
-    }
-  }, [isStrategyActive, props.dataSourceRevalidateMs, stopPolling]);
-
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       rowsStale.current = true;
