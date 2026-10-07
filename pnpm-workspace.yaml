@@ -120,3 +120,6 @@ overrides:
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
   caniuse-lite: ^1.0.30001814
+  '@mui/internal-code-infra>@mui/internal-babel-plugin-display-name': 2.0.1-canary.0
+  '@mui/internal-code-infra>@mui/internal-babel-plugin-minify-errors': 3.0.1-canary.0
+  '@mui/internal-code-infra>@mui/internal-babel-plugin-resolve-imports': 3.0.1-canary.1
