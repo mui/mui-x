@@ -245,7 +245,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     scrollReset,
 
     renderRow,
-    renderInfiniteLoadingTrigger,
   } = params;
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
@@ -800,13 +799,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       const panel = panels.get(id);
       if (panel) {
         rowElements.push(panel);
-      }
-      if (
-        rowParams.position === undefined &&
-        isLastVisibleInSection &&
-        renderInfiniteLoadingTrigger
-      ) {
-        rowElements.push(renderInfiniteLoadingTrigger(id));
       }
     });
     return rowElements;

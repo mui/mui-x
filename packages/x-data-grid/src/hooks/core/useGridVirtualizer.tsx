@@ -319,11 +319,6 @@ export function useGridVirtualizer() {
         visibleColumns,
       ],
     ),
-
-    renderInfiniteLoadingTrigger: React.useCallback(
-      (id: any) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
-      [apiRef],
-    ),
   });
 
   // `virtualizer` is a new object on each render that references the callbacks of that render, so it must stay out of this scope.

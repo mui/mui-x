@@ -6,7 +6,7 @@ packages:
   - bundle-size
 
 catalog:
-  '@atlaskit/pragmatic-drag-and-drop': ^3.1.0
+  '@atlaskit/pragmatic-drag-and-drop': ^4.0.0
   '@babel/cli': ^8.0.6
   '@babel/core': ^8.0.6
   '@babel/plugin-transform-modules-commonjs': ^8.0.1
@@ -41,7 +41,7 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.8.0
   '@types/use-sync-external-store': ^1.7.0
-  '@typescript-eslint/parser': ^8.70.1
+  '@typescript-eslint/parser': ^8.71.0
   '@vitejs/plugin-react': ^6.1.1
   '@vitejs/plugin-react-swc': ^4.3.3
   '@vitest/browser': ^5.0.3
