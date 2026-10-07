@@ -10,33 +10,19 @@ import {
   useGridLogger,
   useGridEventPriority,
 } from '@mui/x-data-grid';
-import type {
-  CursorCoordinates,
-  GridEventListener,
-  GridColumnOrderChangeParams,
-} from '@mui/x-data-grid';
+import type { CursorCoordinates, GridEventListener } from '@mui/x-data-grid';
 import type { GridStateInitializer } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-
-const CURSOR_MOVE_DIRECTION_LEFT = 'left';
-const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
-
-const getCursorMoveDirectionX = (
-  currentCoordinates: CursorCoordinates,
-  nextCoordinates: CursorCoordinates,
-) => {
-  return currentCoordinates.x <= nextCoordinates.x
-    ? CURSOR_MOVE_DIRECTION_RIGHT
-    : CURSOR_MOVE_DIRECTION_LEFT;
-};
-
-const hasCursorPositionChanged = (
-  currentCoordinates: CursorCoordinates,
-  nextCoordinates: CursorCoordinates,
-): boolean =>
-  currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
+import {
+  finishColumnReorder,
+  getColumnReorderForbiddenIndexes,
+  getColumnReorderTargetIndex,
+  hasCursorPositionChanged,
+  setColumnReorderDragCol,
+} from './columnReorderUtils';
+import type { ColumnReorderForbiddenIndexes } from './columnReorderUtils';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -76,7 +62,7 @@ export const useGridColumnReorder = (
     y: 0,
   });
   const originColumnIndex = React.useRef<number | null>(null);
-  const forbiddenIndexes = React.useRef<{ [key: number]: boolean }>({});
+  const forbiddenIndexes = React.useRef<ColumnReorderForbiddenIndexes>({});
   const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
@@ -96,10 +82,7 @@ export const useGridColumnReorder = (
         // state must not stay set in that case, because components like the
         // scroll areas derive their visibility from it.
         if (dragColField) {
-          apiRef.current.setState((state) => ({
-            ...state,
-            columnReorder: { ...state.columnReorder, dragCol: '' },
-          }));
+          setColumnReorderDragCol(apiRef, '');
         }
         return;
       }
@@ -120,28 +103,17 @@ export const useGridColumnReorder = (
       dragColNode.current = null;
 
       // Check if the column was dropped outside the grid.
-      if (event.dataTransfer.dropEffect === 'none' && !props.keepColumnPositionIfDraggedOutside) {
-        // Accessing params.field may contain the wrong field as header elements are reused
-        apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
+      const restoreOrigin =
+        event.dataTransfer.dropEffect === 'none' && !props.keepColumnPositionIfDraggedOutside;
+      // Accessing params.field may contain the wrong field as header elements are reused
+      finishColumnReorder(apiRef, {
+        dragField: dragColField,
+        originIndex: originColumnIndex.current!,
+        restoreOrigin,
+      });
+      if (restoreOrigin) {
         originColumnIndex.current = null;
-      } else {
-        const draggedColumn = apiRef.current.getColumn(dragColField);
-        if (draggedColumn) {
-          // Emit the columnOrderChange event only once when the reordering stops.
-          const columnOrderChangeParams: GridColumnOrderChangeParams = {
-            column: draggedColumn,
-            targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(dragColField),
-            oldIndex: originColumnIndex.current!,
-          };
-
-          apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
-        }
       }
-
-      apiRef.current.setState((state) => ({
-        ...state,
-        columnReorder: { ...state.columnReorder, dragCol: '' },
-      }));
     },
     [
       apiRef,
@@ -175,10 +147,7 @@ export const useGridColumnReorder = (
       if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = 'move';
       }
-      apiRef.current.setState((state) => ({
-        ...state,
-        columnReorder: { ...state.columnReorder, dragCol: params.field },
-      }));
+      setColumnReorderDragCol(apiRef, params.field);
 
       removeDnDStylesTimeout.current = setTimeout(() => {
         dragColNode.current!.classList.remove(classes.columnHeaderDragging);
@@ -186,70 +155,7 @@ export const useGridColumnReorder = (
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
 
-      const draggingColumnGroupPath = apiRef.current.getColumnGroupPath(params.field);
-
-      const columnIndex = originColumnIndex.current;
-      const allColumns = apiRef.current.getAllColumns();
-      const groupsLookup = apiRef.current.getAllGroupDetails();
-
-      const getGroupPathFromColumnIndex = (colIndex: number) => {
-        const field = allColumns[colIndex].field;
-        return apiRef.current.getColumnGroupPath(field);
-      };
-
-      // The limitingGroupId is the id of the group from which the dragged column should not escape
-      let limitingGroupId: string | null = null;
-
-      draggingColumnGroupPath.forEach((groupId) => {
-        if (!groupsLookup[groupId]?.freeReordering) {
-          // Only consider group that are made of more than one column
-          if (columnIndex > 0 && getGroupPathFromColumnIndex(columnIndex - 1).includes(groupId)) {
-            limitingGroupId = groupId;
-          } else if (
-            columnIndex + 1 < allColumns.length &&
-            getGroupPathFromColumnIndex(columnIndex + 1).includes(groupId)
-          ) {
-            limitingGroupId = groupId;
-          }
-        }
-      });
-
-      forbiddenIndexes.current = {};
-
-      for (let indexToForbid = 0; indexToForbid < allColumns.length; indexToForbid += 1) {
-        const leftIndex = indexToForbid <= columnIndex ? indexToForbid - 1 : indexToForbid;
-        const rightIndex = indexToForbid < columnIndex ? indexToForbid : indexToForbid + 1;
-
-        if (limitingGroupId !== null) {
-          // verify this indexToForbid will be linked to the limiting group. Otherwise forbid it
-          let allowIndex = false;
-          if (leftIndex >= 0 && getGroupPathFromColumnIndex(leftIndex).includes(limitingGroupId)) {
-            allowIndex = true;
-          } else if (
-            rightIndex < allColumns.length &&
-            getGroupPathFromColumnIndex(rightIndex).includes(limitingGroupId)
-          ) {
-            allowIndex = true;
-          }
-          if (!allowIndex) {
-            forbiddenIndexes.current[indexToForbid] = true;
-          }
-        }
-
-        // Verify we are not splitting another group
-        if (leftIndex >= 0 && rightIndex < allColumns.length) {
-          getGroupPathFromColumnIndex(rightIndex).forEach((groupId) => {
-            if (getGroupPathFromColumnIndex(leftIndex).includes(groupId)) {
-              if (!draggingColumnGroupPath.includes(groupId)) {
-                // moving here split the group groupId in two distincts chunks
-                if (!groupsLookup[groupId]?.freeReordering) {
-                  forbiddenIndexes.current[indexToForbid] = true;
-                }
-              }
-            }
-          });
-        }
-      }
+      forbiddenIndexes.current = getColumnReorderForbiddenIndexes(apiRef, params.field);
     },
     [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );
@@ -284,89 +190,19 @@ export const useGridColumnReorder = (
         params.field !== dragColField &&
         hasCursorPositionChanged(cursorPosition.current, coordinates)
       ) {
-        const targetColIndex = apiRef.current.getColumnIndex(params.field, false);
-        const targetColVisibleIndex = apiRef.current.getColumnIndex(params.field, true);
-        const targetCol = apiRef.current.getColumn(params.field);
-        if (!targetCol) {
+        if (!apiRef.current.getColumn(params.field)) {
           return;
         }
-        const dragColIndex = apiRef.current.getColumnIndex(dragColField, false);
-        const visibleColumns = apiRef.current.getVisibleColumns();
-        const allColumns = apiRef.current.getAllColumns();
-
-        const cursorMoveDirectionX = getCursorMoveDirectionX(cursorPosition.current, coordinates);
-        const hasMovedLeft =
-          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT &&
-          (isRtl ? dragColIndex < targetColIndex : targetColIndex < dragColIndex);
-        const hasMovedRight =
-          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT &&
-          (isRtl ? targetColIndex < dragColIndex : dragColIndex < targetColIndex);
-
-        if (hasMovedLeft || hasMovedRight) {
-          let canBeReordered: boolean;
-          let indexOffsetInHiddenColumns = 0;
-          if (!targetCol.disableReorder) {
-            canBeReordered = true;
-          } else if (hasMovedLeft) {
-            canBeReordered =
-              targetColVisibleIndex > 0 &&
-              !visibleColumns[targetColVisibleIndex - 1].disableReorder;
-          } else {
-            canBeReordered =
-              targetColVisibleIndex < visibleColumns.length - 1 &&
-              !visibleColumns[targetColVisibleIndex + 1].disableReorder;
-          }
-
-          if (forbiddenIndexes.current[targetColIndex]) {
-            let nextVisibleColumnField: string | null;
-            let indexWithOffset = targetColIndex + indexOffsetInHiddenColumns;
-            if (hasMovedLeft) {
-              nextVisibleColumnField =
-                targetColVisibleIndex > 0 ? visibleColumns[targetColVisibleIndex - 1].field : null;
-              while (
-                indexWithOffset > 0 &&
-                allColumns[indexWithOffset].field !== nextVisibleColumnField &&
-                forbiddenIndexes.current[indexWithOffset]
-              ) {
-                indexOffsetInHiddenColumns -= 1;
-                indexWithOffset = targetColIndex + indexOffsetInHiddenColumns;
-              }
-            } else {
-              nextVisibleColumnField =
-                targetColVisibleIndex + 1 < visibleColumns.length
-                  ? visibleColumns[targetColVisibleIndex + 1].field
-                  : null;
-              while (
-                indexWithOffset < allColumns.length - 1 &&
-                allColumns[indexWithOffset].field !== nextVisibleColumnField &&
-                forbiddenIndexes.current[indexWithOffset]
-              ) {
-                indexOffsetInHiddenColumns += 1;
-                indexWithOffset = targetColIndex + indexOffsetInHiddenColumns;
-              }
-            }
-
-            if (
-              forbiddenIndexes.current[indexWithOffset] ||
-              allColumns[indexWithOffset].field === nextVisibleColumnField
-            ) {
-              // If we ended up on a visible column, or a forbidden one, we cannot do the reorder
-              canBeReordered = false;
-            }
-          }
-
-          const canBeReorderedProcessed = apiRef.current.unstable_applyPipeProcessors(
-            'canBeReordered',
-            canBeReordered,
-            { targetIndex: targetColVisibleIndex },
-          );
-
-          if (canBeReorderedProcessed) {
-            apiRef.current.setColumnIndex(
-              dragColField,
-              targetColIndex + indexOffsetInHiddenColumns,
-            );
-          }
+        const targetIndex = getColumnReorderTargetIndex(apiRef, {
+          dragField: dragColField,
+          targetField: params.field,
+          previousPosition: cursorPosition.current,
+          position: coordinates,
+          isRtl,
+          forbiddenIndexes: forbiddenIndexes.current,
+        });
+        if (targetIndex !== null) {
+          apiRef.current.setColumnIndex(dragColField, targetIndex);
         }
 
         cursorPosition.current = coordinates;

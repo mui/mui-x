@@ -126,6 +126,26 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
   });
 
+  it('should mark the dragged column header as moving during the drag', () => {
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro rows={rows} columns={columns} />
+      </div>,
+    );
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    expect(getColumnHeaderCell(0)).not.to.have.class(gridClasses['columnHeader--moving']);
+
+    fireEvent.dragStart(dragCol);
+    expect(getColumnHeaderCell(0)).to.have.class(gridClasses['columnHeader--moving']);
+    expect(getColumnHeaderCell(1)).not.to.have.class(gridClasses['columnHeader--moving']);
+
+    fireEvent(dragCol, createDragEndEvent(dragCol));
+    expect(getColumnHeaderCell(0)).not.to.have.class(gridClasses['columnHeader--moving']);
+  });
+
   it('should cancel the reordering when dropping the column outside the grid', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
