@@ -2,18 +2,11 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import {
-  EventCalendarTimeGridViewConfig,
-  SchedulerEvent,
-} from '@mui/x-scheduler/models';
+
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
-type TimeGridEventsValue = NonNullable<
-  EventCalendarTimeGridViewConfig['timeGridEvents']
->;
-
-const initialEvents: SchedulerEvent[] = [
+const initialEvents = [
   {
     id: 'morning-shift',
     title: 'Morning shift',
@@ -46,11 +39,9 @@ const initialEvents: SchedulerEvent[] = [
   },
 ];
 
-export default function TimeGridEvents() {
-  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
-  const [timeGridEvents, setTimeGridEvents] = React.useState<TimeGridEventsValue>(
-    'shorter-than-one-day',
-  );
+export default function WeekViewTimeGridEvents() {
+  const [events, setEvents] = React.useState(initialEvents);
+  const [timeGridEvents, setTimeGridEvents] = React.useState('shorter-than-one-day');
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
@@ -58,7 +49,7 @@ export default function TimeGridEvents() {
         value={timeGridEvents}
         exclusive
         size="small"
-        onChange={(_, value: TimeGridEventsValue | null) => {
+        onChange={(_, value) => {
           if (value !== null) {
             setTimeGridEvents(value);
           }

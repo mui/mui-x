@@ -17,7 +17,7 @@ describe('<StandaloneCompactDayViewPremium />', () => {
         />,
       );
 
-      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).not.to.have.length(0);
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).to.have.length(1);
     });
   });
 });

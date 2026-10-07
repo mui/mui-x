@@ -1,5 +1,5 @@
 import type {
-  EventCalendarTimeGridViewConfig,
+  EventCalendarTimeGridEvents,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
 
@@ -30,7 +30,7 @@ export interface DayTimeGridProps extends ExportedDayTimeGridProps {
    * Which timed events are rendered in the time grid, the others go to the day grid.
    * @default 'shorter-than-one-day'
    */
-  timeGridEvents?: EventCalendarTimeGridViewConfig['timeGridEvents'];
+  timeGridEvents?: EventCalendarTimeGridEvents;
   /**
    * Name of the prop the hour range came from, interpolated in the `viewConfig` validation warnings.
    * @default 'viewConfig'

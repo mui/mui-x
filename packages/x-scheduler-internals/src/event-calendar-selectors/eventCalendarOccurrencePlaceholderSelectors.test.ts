@@ -44,6 +44,28 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(state, dayStart, dayEnd),
       ).to.equal(null);
     });
+
+    it('should return null when the placeholder starts exactly at the end of the range', () => {
+      const rangeStart = adapter.setHours(dayStart, 8);
+      const rangeEnd = adapter.setHours(dayStart, 20);
+      const state: EventCalendarState = {
+        ...DEFAULT_EVENT_CALENDAR_STATE,
+        occurrencePlaceholder: {
+          type: 'creation',
+          surfaceType: 'time-grid',
+          start: rangeEnd,
+          end: adapter.setHours(adapter.addDays(dayStart, 1), 4),
+          resourceId: null,
+        },
+      };
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
+          state,
+          rangeStart,
+          rangeEnd,
+        ),
+      ).to.equal(null);
+    });
   });
 
   describe('isCreatingInDayCell', () => {

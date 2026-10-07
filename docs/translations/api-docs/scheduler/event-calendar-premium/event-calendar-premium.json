@@ -247,7 +247,7 @@
     },
     "dayTimeGridAllDayEventsHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the day time grid all day events header cell element"
+      "nodeName": "the day time grid all day events header cell (visually hidden row label)"
     },
     "dayTimeGridAllDayEventsRow": {
       "description": "Styles applied to {{nodeName}}.",

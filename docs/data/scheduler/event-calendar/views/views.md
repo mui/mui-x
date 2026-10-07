@@ -38,6 +38,14 @@ Navigating to another week keeps the current scroll position; switching to anoth
 `initialScrollTime` must be a displayed hour (`startTime` to `endTime - 1`). An invalid value falls back to the default and logs a warning in development.
 :::
 
+Use `timeGridEvents` to choose which timed events are rendered in the time grid.
+The other events, including all-day events, are rendered in the day grid above it:
+
+- `'shorter-than-one-day'` (default): timed events shorter than one day, split across the days they cover.
+- `'same-day-only'`: timed events that start and end on the same day.
+
+{{"demo": "WeekViewTimeGridEvents.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Day view
 
 The `day` view lets users manage events for a single day.
@@ -61,6 +69,10 @@ Navigating to another day keeps the current scroll position; switching to anothe
 :::warning
 `initialScrollTime` must be a displayed hour (`startTime` to `endTime - 1`). An invalid value falls back to the default and logs a warning in development.
 :::
+
+The `timeGridEvents` option also sets which timed events are rendered in the time grid of the day view:
+
+{{"demo": "DayViewTimeGridEvents.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Month view
 
@@ -91,20 +103,6 @@ Please don't hesitate to leave a comment there to describe your needs, especiall
 :::
 
 With this feature, users would be able to view events grouped by resource in a dedicated view.
-
-## Time grid events
-
-In the day and week views, the time grid renders timed events, and the day grid above it renders all-day events and the remaining timed events.
-Use the `timeGridEvents` property of `viewConfig.day` and `viewConfig.week` to choose which timed events stay in the time grid:
-
-- `'shorter-than-one-day'` (default): timed events shorter than 24 hours, split across the days they cover.
-- `'same-day-only'`: timed events that start and end on the same day.
-
-```tsx
-<EventCalendar viewConfig={{ week: { timeGridEvents: 'same-day-only' } }} />
-```
-
-{{"demo": "TimeGridEvents.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Limit available views
 

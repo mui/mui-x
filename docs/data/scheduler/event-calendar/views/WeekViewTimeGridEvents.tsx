@@ -2,11 +2,14 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-
+import {
+  EventCalendarTimeGridEvents,
+  SchedulerEvent,
+} from '@mui/x-scheduler/models';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { defaultVisibleDate } from '../../datasets/personal-agenda';
 
-const initialEvents = [
+const initialEvents: SchedulerEvent[] = [
   {
     id: 'morning-shift',
     title: 'Morning shift',
@@ -39,9 +42,10 @@ const initialEvents = [
   },
 ];
 
-export default function TimeGridEvents() {
-  const [events, setEvents] = React.useState(initialEvents);
-  const [timeGridEvents, setTimeGridEvents] = React.useState('shorter-than-one-day');
+export default function WeekViewTimeGridEvents() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
+  const [timeGridEvents, setTimeGridEvents] =
+    React.useState<EventCalendarTimeGridEvents>('shorter-than-one-day');
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
@@ -49,7 +53,7 @@ export default function TimeGridEvents() {
         value={timeGridEvents}
         exclusive
         size="small"
-        onChange={(_, value) => {
+        onChange={(_, value: EventCalendarTimeGridEvents | null) => {
           if (value !== null) {
             setTimeGridEvents(value);
           }

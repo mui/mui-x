@@ -1,5 +1,5 @@
 import type {
-  EventCalendarTimeGridViewConfig,
+  EventCalendarTimeGridEvents,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
@@ -22,18 +22,22 @@ export function isOccurrenceAllDayOrMultipleDay(
 export function isOccurrenceInDayGrid(
   occurrence: SchedulerRenderableEventOccurrence,
   adapter: Adapter,
-  timeGridEvents: NonNullable<EventCalendarTimeGridViewConfig['timeGridEvents']>,
+  timeGridEvents: EventCalendarTimeGridEvents,
 ) {
-  if (timeGridEvents === 'same-day-only') {
-    return isOccurrenceAllDayOrMultipleDay(occurrence, adapter);
+  switch (timeGridEvents) {
+    case 'same-day-only':
+      return isOccurrenceAllDayOrMultipleDay(occurrence, adapter);
+    case 'shorter-than-one-day':
+      return (
+        !!occurrence.allDay ||
+        !adapter.isBefore(
+          occurrence.displayTimezone.end.value,
+          adapter.addDays(occurrence.displayTimezone.start.value, 1),
+        )
+      );
+    default: {
+      const unhandledValue: never = timeGridEvents;
+      return unhandledValue;
+    }
   }
-
-  if (occurrence.allDay) {
-    return true;
-  }
-
-  return !adapter.isBefore(
-    occurrence.displayTimezone.end.value,
-    adapter.addDays(occurrence.displayTimezone.start.value, 1),
-  );
 }
