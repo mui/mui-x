@@ -20,11 +20,11 @@ function getKeyDefault(params: GridGetRowsParams) {
 }
 
 class Cache {
-  private cache: Record<string, { value: GridGetRowsResponse }>;
+  declare private cache: Record<string, { value: GridGetRowsResponse }>;
 
-  private cacheKeys: Set<string>;
+  declare private cacheKeys: Set<string>;
 
-  private getKey: (params: GridGetRowsParams) => string;
+  declare private getKey: (params: GridGetRowsParams) => string;
 
   constructor() {
     this.cache = {};

@@ -11,7 +11,7 @@ import {
  * Builds a valid SchedulerResource with sensible defaults.
  */
 export class ResourceBuilder {
-  protected resource: SchedulerResource;
+  declare protected resource: SchedulerResource;
 
   protected constructor() {
     const id = crypto.randomUUID();
