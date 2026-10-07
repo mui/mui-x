@@ -20,7 +20,9 @@
     },
     {
       "groupName": "pragmatic-drag-and-drop",
-      "matchSourceUrls": ["https://github.com/atlassian/pragmatic-drag-and-drop"]
+      "description": "Keep major and minor bumps in one PR. The addons depend on the core package, so separate bumps install two copies of it.",
+      "matchSourceUrls": ["https://github.com/atlassian/pragmatic-drag-and-drop"],
+      "separateMajorMinor": false
     },
     {
       "groupName": "bundling fixtures",
