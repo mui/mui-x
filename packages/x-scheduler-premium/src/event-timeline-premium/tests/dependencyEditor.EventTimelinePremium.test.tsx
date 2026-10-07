@@ -594,6 +594,28 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       });
     });
 
+    it('should keep a type changed in the props while the dialog is open when only the lag is saved', async () => {
+      const handleDependenciesChange = vi.fn();
+      const dependency = buildDependency('dep-1', 'event-a', 'event-b');
+      const { setProps } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [dependency],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const dialog = openDialog('dep-1');
+      await setProps({ dependencies: [{ ...dependency, type: 'StartToStart' }] });
+      fireEvent.change(getLagInput(dialog), { target: { value: '1' } });
+      await save(dialog);
+
+      expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.equal({
+        ...dependency,
+        type: 'StartToStart',
+        lag: 1,
+        lagUnit: 'day',
+      });
+    });
+
     it('should show a lag the timeline ignores as unset', async () => {
       await expect(() =>
         renderTimeline({

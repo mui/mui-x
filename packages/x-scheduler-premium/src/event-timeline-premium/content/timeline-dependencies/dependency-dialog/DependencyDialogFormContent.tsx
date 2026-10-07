@@ -146,14 +146,14 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
       }
       const { values } = formStore.state;
       const submittedLag = getDependencyLag(toLagDraft(values.lagAmount, values.lagUnit));
-      // Only write the lag if the user changed it, so an untouched one stays as is.
+      // Only write what the user changed: a value changed in the props while the dialog is
+      // open stays, and an untouched lag keeps its original form.
+      const isTypeChanged = 'type' in formStore.getDirtyValues();
       const isLagChanged = !isSameLag(submittedLag, initialLag);
-      const result = store.updateDependency(
-        dependency.id,
-        isLagChanged
-          ? { type: values.type, lag: submittedLag?.amount, lagUnit: submittedLag?.unit }
-          : { type: values.type },
-      );
+      const result = store.updateDependency(dependency.id, {
+        ...(isTypeChanged ? { type: values.type } : null),
+        ...(isLagChanged ? { lag: submittedLag?.amount, lagUnit: submittedLag?.unit } : null),
+      });
       if (result.status === 'rejected') {
         // On the field that caused it (Type by default), like the event form.
         const isLagRejected = result.reason === 'cascadeBlocked' && isLagChanged;
