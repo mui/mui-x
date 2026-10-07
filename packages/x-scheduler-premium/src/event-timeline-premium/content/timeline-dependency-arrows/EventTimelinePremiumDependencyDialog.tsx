@@ -37,7 +37,10 @@ import {
   EventDialogHeader,
   EventDialogRoot,
   getPaletteVariants,
+  SchedulerFormStore,
+  schedulerFormSelectors,
   useEventEditingStyledContext,
+  useSchedulerFormField,
 } from '@mui/x-scheduler/internals';
 import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals';
 import { useDependencyGeometry } from './EventTimelinePremiumDependencyGeometry';
@@ -73,6 +76,24 @@ const DEPENDENCY_LAG_UNITS = Object.keys(
 // TODO(dependencies public flip, #23420): move to localeText.
 function formatLag(lag: SchedulerResolvedDependencyLag) {
   return `${lag.amount} ${lag.unit}${lag.amount === 1 ? '' : 's'}`;
+}
+
+interface DependencyFormValues extends Record<string, unknown> {
+  type: SchedulerDependencyType;
+  // Kept as typed, so the field can be emptied.
+  lagAmount: string;
+  lagUnit: SchedulerDependencyLagUnit;
+}
+
+function toLagDraft(lagAmount: string, lagUnit: SchedulerDependencyLagUnit) {
+  return { lag: lagAmount.trim() === '' ? 0 : Number(lagAmount), lagUnit };
+}
+
+// Module level so its identity is stable: a new validator restarts a pending validation.
+function validateLagAmount(lagAmount: string, values: DependencyFormValues) {
+  return getDependencyLagIssue(toLagDraft(lagAmount, values.lagUnit)) === null
+    ? null
+    : DEPENDENCY_DIALOG_TEXT.invalidLag;
 }
 
 function isSameLag(
@@ -257,54 +278,84 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.allDay ?? false,
   );
   const dragHandlerRef = React.useRef<HTMLElement>(null);
-  const [type, setType] = React.useState(dependency.type);
+  const typeInputRef = React.useRef<HTMLInputElement>(null);
+  const lagInputRef = React.useRef<HTMLInputElement>(null);
   // A lag the engine ignores (invalid in the props) shows as unset.
   const [initialLag] = React.useState(() => getDependencyLag(dependency));
-  const [lagAmount, setLagAmount] = React.useState(
-    initialLag === null ? '' : String(initialLag.amount),
+  const [formStore] = React.useState(
+    () =>
+      new SchedulerFormStore<DependencyFormValues>({
+        type: dependency.type,
+        lagAmount: initialLag === null ? '' : String(initialLag.amount),
+        lagUnit: initialLag?.unit ?? 'day',
+      }),
   );
-  const [lagUnit, setLagUnit] = React.useState<SchedulerDependencyLagUnit>(
-    initialLag?.unit ?? 'day',
+  const typeField = useSchedulerFormField<DependencyFormValues, SchedulerDependencyType>(
+    formStore,
+    'type',
   );
-  // Shown in the form: screen readers can't reach the toast while the dialog is open.
-  const [rejection, setRejection] = React.useState<string | null>(null);
+  const lagUnitField = useSchedulerFormField<DependencyFormValues, SchedulerDependencyLagUnit>(
+    formStore,
+    'lagUnit',
+  );
+  const lagAmountField = useSchedulerFormField<DependencyFormValues, string>(
+    formStore,
+    'lagAmount',
+    { validate: validateLagAmount },
+  );
+  const isSubmitting = useStore(formStore, schedulerFormSelectors.isSubmitting);
 
   const titleId = `${schedulerId}-dependency-dialog-title`;
   const typeLabelId = `${schedulerId}-dependency-dialog-type-label`;
+  const typeHelperId = `${schedulerId}-dependency-dialog-type-helper-text`;
   const lagId = `${schedulerId}-dependency-dialog-lag`;
   const lagHelperId = `${lagId}-helper-text`;
 
-  const draft = { lag: lagAmount.trim() === '' ? 0 : Number(lagAmount), lagUnit };
-  const isLagInvalid = getDependencyLagIssue(draft) !== null;
+  const draft = toLagDraft(lagAmountField.value, lagUnitField.value);
   const draftLag = getDependencyLag(draft);
   const effectiveLag = getEffectiveDependencyLag(draft, isTargetAllDay);
-  let lagHelperText: string | null = null;
-  if (isLagInvalid) {
-    lagHelperText = DEPENDENCY_DIALOG_TEXT.invalidLag;
-  } else if (!isSameLag(effectiveLag, draftLag)) {
-    lagHelperText =
-      effectiveLag === null
-        ? DEPENDENCY_DIALOG_TEXT.allDayLagIgnored
-        : DEPENDENCY_DIALOG_TEXT.allDayLagRounded(formatLag(effectiveLag));
+  let lagHelperText: React.ReactNode = lagAmountField.error ?? null;
+  if (lagHelperText === null && getDependencyLagIssue(draft) === null) {
+    if (!isSameLag(effectiveLag, draftLag)) {
+      lagHelperText =
+        effectiveLag === null
+          ? DEPENDENCY_DIALOG_TEXT.allDayLagIgnored
+          : DEPENDENCY_DIALOG_TEXT.allDayLagRounded(formatLag(effectiveLag));
+    }
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isLagInvalid) {
-      return;
+    formStore.setSubmitting(true);
+    try {
+      if (!(await formStore.validateAll())) {
+        lagInputRef.current?.focus();
+        return;
+      }
+      const { values } = formStore.state;
+      const submittedLag = getDependencyLag(toLagDraft(values.lagAmount, values.lagUnit));
+      // Only write the lag if the user changed it, so an untouched one stays as is.
+      const result = store.updateDependency(
+        dependency.id,
+        isSameLag(submittedLag, initialLag)
+          ? { type: values.type }
+          : { type: values.type, lag: submittedLag?.amount, lagUnit: submittedLag?.unit },
+      );
+      if (result.status === 'rejected') {
+        // On the field that caused it, like the event form: editing that field clears it.
+        const isLagRejected =
+          result.reason === 'cascadeBlocked' && !isSameLag(submittedLag, initialLag);
+        formStore.setError(
+          isLagRejected ? 'lagAmount' : 'type',
+          UPDATE_REJECTION_MESSAGES[result.reason],
+        );
+        (isLagRejected ? lagInputRef : typeInputRef).current?.focus();
+        return;
+      }
+      onClose();
+    } finally {
+      formStore.setSubmitting(false);
     }
-    // Only write the lag if the user changed it, so an untouched one stays as is.
-    const result = store.updateDependency(
-      dependency.id,
-      isSameLag(draftLag, initialLag)
-        ? { type }
-        : { type, lag: draftLag?.amount, lagUnit: draftLag?.unit },
-    );
-    if (result.status === 'rejected') {
-      setRejection(UPDATE_REJECTION_MESSAGES[result.reason]);
-      return;
-    }
-    onClose();
   };
 
   const handleDelete = () => {
@@ -362,16 +413,17 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
               )}
             </DependencyDialogDetails>
             {!isReadOnly && (
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="small" error={typeField.error !== undefined}>
                 <InputLabel id={typeLabelId}>{DEPENDENCY_DIALOG_TEXT.typeLabel}</InputLabel>
                 <Select
                   labelId={typeLabelId}
                   label={DEPENDENCY_DIALOG_TEXT.typeLabel}
-                  value={type}
-                  onChange={(event) => {
-                    setType(event.target.value as SchedulerDependencyType);
-                    setRejection(null);
-                  }}
+                  inputRef={typeInputRef}
+                  value={typeField.value}
+                  aria-describedby={typeField.error === undefined ? undefined : typeHelperId}
+                  onChange={(event) =>
+                    typeField.setValue(event.target.value as SchedulerDependencyType)
+                  }
                 >
                   {DEPENDENCY_TYPES.map((option) => (
                     <MenuItem key={option} value={option}>
@@ -379,6 +431,9 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                     </MenuItem>
                   ))}
                 </Select>
+                {typeField.error !== undefined && (
+                  <FormHelperText id={typeHelperId}>{typeField.error}</FormHelperText>
+                )}
               </FormControl>
             )}
             {!isReadOnly && (
@@ -387,14 +442,12 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                 fullWidth
                 size="small"
                 label={DEPENDENCY_DIALOG_TEXT.lagLabel}
-                value={lagAmount}
+                inputRef={lagInputRef}
+                value={lagAmountField.value}
                 placeholder="0"
-                error={isLagInvalid}
+                error={lagAmountField.error !== undefined}
                 helperText={lagHelperText}
-                onChange={(event) => {
-                  setLagAmount(event.target.value);
-                  setRejection(null);
-                }}
+                onChange={(event) => lagAmountField.setValue(event.target.value)}
                 slotProps={{
                   // Keep the label up so the placeholder shows.
                   inputLabel: { shrink: true },
@@ -406,14 +459,15 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                         <DependencyDialogLagUnit
                           variant="standard"
                           disableUnderline
-                          value={lagUnit}
+                          value={lagUnitField.value}
                           inputProps={{ 'aria-label': DEPENDENCY_DIALOG_TEXT.lagUnitLabel }}
                           SelectDisplayProps={{
                             'aria-describedby': lagHelperText === null ? undefined : lagHelperId,
                           }}
                           onChange={(event) => {
-                            setLagUnit(event.target.value as SchedulerDependencyLagUnit);
-                            setRejection(null);
+                            lagUnitField.setValue(event.target.value as SchedulerDependencyLagUnit);
+                            // The unit is part of the lag value.
+                            formStore.clearErrors(['lagAmount']);
                           }}
                         >
                           {DEPENDENCY_LAG_UNITS.map((option) => (
@@ -428,11 +482,6 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
                 }}
               />
             )}
-            {rejection !== null && (
-              <FormHelperText error role="alert">
-                {rejection}
-              </FormHelperText>
-            )}
           </DependencyDialogBody>
           <Divider className={classes.eventDialogFormDivider} />
           <EventDialogFormActions className={classes.eventDialogFormActions}>
@@ -442,10 +491,10 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
               </Button>
             ) : (
               <React.Fragment>
-                <Button color="error" type="button" onClick={handleDelete}>
+                <Button color="error" type="button" onClick={handleDelete} disabled={isSubmitting}>
                   {DEPENDENCY_DIALOG_TEXT.delete}
                 </Button>
-                <Button variant="contained" type="submit" disabled={isLagInvalid}>
+                <Button variant="contained" type="submit" disabled={isSubmitting}>
                   {localeText.saveChanges}
                 </Button>
               </React.Fragment>

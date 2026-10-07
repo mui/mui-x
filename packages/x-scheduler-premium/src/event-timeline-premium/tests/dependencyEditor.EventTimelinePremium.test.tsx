@@ -81,8 +81,13 @@ function getStartTimestamp(store: EventTimelinePremiumStore<any, any>, eventId: 
   return store.state.processedEventLookup.get(eventId)!.dataTimezone.start.timestamp;
 }
 
-function save(dialog: HTMLElement) {
+// The submit validates asynchronously: wait until the dialog closes or Save is enabled again.
+async function save(dialog: HTMLElement) {
   fireEvent.click(within(dialog).getByRole('button', { name: /save/i }));
+  await waitFor(() => {
+    const button = within(dialog).getByRole<HTMLButtonElement>('button', { name: /save/i });
+    expect(!dialog.isConnected || !button.disabled).to.equal(true);
+  });
 }
 
 describe('<EventTimelinePremium /> dependency editor', () => {
@@ -265,7 +270,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       chooseType(dialog, 'Start to start');
-      save(dialog);
+      await save(dialog);
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(1);
       expect(handleDependenciesChange.mock.lastCall![0][0].type).to.equal('StartToStart');
@@ -285,13 +290,14 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       chooseType(dialog, 'Start to start');
-      save(dialog);
+      await save(dialog);
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
-      // Inline: the dialog hides the rest of the page from assistive technologies.
-      expect(within(screen.getByRole('dialog')).getByRole('alert')).to.have.text(
+      const typeSelect = within(screen.getByRole('dialog')).getByRole('combobox', { name: 'Type' });
+      expect(typeSelect).toHaveAccessibleDescription(
         'A dependency of this type already exists between these two events.',
       );
+      expect(document.activeElement).to.equal(typeSelect);
     });
 
     it('should move the target when the new type is broken by its dates', async () => {
@@ -303,7 +309,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       chooseType(dialog, 'Finish to start');
-      save(dialog);
+      await save(dialog);
 
       expect(getStartTimestamp(store, 'event-o')).to.equal(sourceEnd);
       expect(screen.queryByRole('dialog')).to.equal(null);
@@ -328,50 +334,61 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       });
     }
 
-    it('should keep the dialog open with an alert when the change would move a read-only event', async () => {
+    it('should show the rejection on the type when the new type would move a read-only event', async () => {
       const handleDependenciesChange = vi.fn();
       const { store } = await renderReadOnlyCascade(handleDependenciesChange);
       const targetStart = getStartTimestamp(store, 'event-o');
 
       const dialog = openDialog('dep-1');
       chooseType(dialog, 'Finish to start');
-      save(dialog);
+      await save(dialog);
 
-      expect(within(screen.getByRole('dialog')).getByRole('alert')).to.have.text(
+      const typeSelect = within(dialog).getByRole('combobox', { name: 'Type' });
+      expect(typeSelect).toHaveAccessibleDescription(
         'This change would move a read-only event, so it was not applied.',
       );
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(getStartTimestamp(store, 'event-o')).to.equal(targetStart);
 
-      chooseType(dialog, 'Finish to finish');
-
-      expect(within(dialog).queryByRole('alert')).to.equal(null);
-    });
-
-    it('should clear the alert when the lag amount changes', async () => {
-      await renderReadOnlyCascade();
-
-      const dialog = openDialog('dep-1');
-      chooseType(dialog, 'Finish to start');
-      save(dialog);
-      expect(within(dialog).queryByRole('alert')).not.to.equal(null);
-
+      // Only editing the field that caused it clears the error, like in the event form.
       fireEvent.change(getLagInput(dialog), { target: { value: '1' } });
-
-      expect(within(dialog).queryByRole('alert')).to.equal(null);
+      expect(typeSelect).toHaveAccessibleDescription(
+        'This change would move a read-only event, so it was not applied.',
+      );
+      chooseType(dialog, 'Finish to finish');
+      expect(typeSelect).not.to.have.attribute('aria-describedby');
     });
 
-    it('should clear the alert when the lag unit changes', async () => {
+    it('should show the rejection on the lag when the new lag would move a read-only event', async () => {
+      await renderReadOnlyCascade();
+
+      // A 1-hour Start to start lag pushes `event-o` to 10:00, and `dep-2` then into `event-d`.
+      const dialog = openDialog('dep-1');
+      fireEvent.change(getLagInput(dialog), { target: { value: '1' } });
+      chooseLagUnit(dialog, 'hours');
+      await save(dialog);
+
+      expect(getLagInput(dialog)).toHaveAccessibleDescription(
+        'This change would move a read-only event, so it was not applied.',
+      );
+      expect(document.activeElement).to.equal(getLagInput(dialog));
+
+      fireEvent.change(getLagInput(dialog), { target: { value: '0' } });
+      expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
+    });
+
+    it('should clear the lag error when the lag unit changes', async () => {
       await renderReadOnlyCascade();
 
       const dialog = openDialog('dep-1');
-      chooseType(dialog, 'Finish to start');
-      save(dialog);
-      expect(within(dialog).queryByRole('alert')).not.to.equal(null);
-
+      fireEvent.change(getLagInput(dialog), { target: { value: '1' } });
       chooseLagUnit(dialog, 'hours');
+      await save(dialog);
+      expect(getLagInput(dialog)).to.have.attribute('aria-describedby');
 
-      expect(within(dialog).queryByRole('alert')).to.equal(null);
+      chooseLagUnit(dialog, 'minutes');
+
+      expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
     });
 
     it('should emit nothing when closed, and show the original values when reopened', async () => {
@@ -470,7 +487,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(getLagInput(dialog)).to.have.attribute('inputmode', 'numeric');
       fireEvent.change(getLagInput(dialog), { target: { value: '30' } });
       chooseLagUnit(dialog, 'minutes');
-      save(dialog);
+      await save(dialog);
 
       expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.include({
         lag: 30,
@@ -492,7 +509,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       const dialog = openDialog('dep-1');
       expect(getLagInput(dialog)).to.have.property('value', '1');
       fireEvent.change(getLagInput(dialog), { target: { value: '' } });
-      save(dialog);
+      await save(dialog);
 
       const [emitted] = handleDependenciesChange.mock.lastCall![0];
       expect('lag' in emitted).to.equal(false);
@@ -510,7 +527,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       chooseType(dialog, 'Start to start');
-      save(dialog);
+      await save(dialog);
 
       expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.equal({
         ...buildDependency('dep-1', 'event-a', 'event-b'),
@@ -531,7 +548,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       const dialog = openDialog('dep-1');
       await setProps({ dependencies: [{ ...dependency, lag: 5 }] });
       chooseType(dialog, 'Start to start');
-      save(dialog);
+      await save(dialog);
 
       expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.equal({
         ...dependency,
@@ -553,7 +570,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(getLagInput(openDialog('dep-1'))).to.have.property('value', '');
     });
 
-    it('should not save a lag that is not a whole number', async () => {
+    it('should show the lag error and focus the field when saving a lag that is not a whole number', async () => {
       const handleDependenciesChange = vi.fn();
       await renderTimeline({
         events: [eventA, eventB],
@@ -563,12 +580,19 @@ describe('<EventTimelinePremium /> dependency editor', () => {
 
       const dialog = openDialog('dep-1');
       fireEvent.change(getLagInput(dialog), { target: { value: '1.5' } });
+      // Validated on save, like the event form: Save stays enabled.
+      expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
+      await save(dialog);
 
+      expect(screen.getByRole('dialog')).to.equal(dialog);
       expect(getLagInput(dialog)).toHaveAccessibleDescription('Enter a whole number, 0 or more.');
-      expect(within(dialog).getByRole('button', { name: /save/i })).to.have.property(
-        'disabled',
-        true,
-      );
+      expect(getLagInput(dialog)).to.have.attribute('aria-invalid', 'true');
+      expect(document.activeElement).to.equal(getLagInput(dialog));
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+
+      // Writing the field clears its error.
+      fireEvent.change(getLagInput(dialog), { target: { value: '2' } });
+      expect(getLagInput(dialog)).not.to.have.attribute('aria-describedby');
     });
 
     it('should say how an all-day successor rounds the lag', async () => {
