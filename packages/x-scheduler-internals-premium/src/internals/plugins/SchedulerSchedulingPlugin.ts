@@ -78,7 +78,7 @@ export class SchedulerSchedulingPlugin<
 
   protected readonly disposables = new DisposableStack();
 
-  private readonly applyCascade: (updated: SchedulerEventUpdatedProperties[]) => void;
+  declare private readonly applyCascade: (updated: SchedulerEventUpdatedProperties[]) => void;
 
   // The batch `applyCascade` is applying: those moves are already the engine's output.
   // Matched by reference, so an update triggered from `onEventsChange` still cascades.
