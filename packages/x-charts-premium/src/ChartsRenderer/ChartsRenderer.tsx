@@ -41,6 +41,12 @@ export interface ChartsRendererProps {
   values: { id: string; label: string; data: (number | null)[] }[];
   chartType: string;
   configuration: Record<string, any>;
+  /**
+   * Exports the data of the Data Grid the chart is bound to.
+   * Passed by `GridChartsRendererProxy`, and offered next to the chart's own export.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  exportDataAsExcel?: () => Promise<void>;
   onRender?: (
     type: string,
     props: Record<string, any>,
@@ -67,6 +73,7 @@ function ChartsRenderer({
   values,
   chartType,
   configuration,
+  exportDataAsExcel,
   onRender,
 }: ChartsRendererProps): React.ReactNode {
   const hasMultipleDimensions = dimensions.length > 1;
@@ -143,7 +150,9 @@ function ChartsRenderer({
   );
 
   const excelExportSlots = { toolbar: ChartsToolbarPremium };
-  const excelExportSlotProps = { toolbar: { onExcelExport } };
+  const excelExportSlotProps = {
+    toolbar: { onExcelExport, onDataGridExcelExport: exportDataAsExcel },
+  };
 
   if (chartType === 'bar' || chartType === 'column') {
     const layout = chartType === 'bar' ? 'horizontal' : 'vertical';
@@ -391,6 +400,12 @@ ChartsRenderer.propTypes /* remove-proptypes */ = {
       label: PropTypes.string.isRequired,
     }),
   ).isRequired,
+  /**
+   * Exports the data of the Data Grid the chart is bound to.
+   * Passed by `GridChartsRendererProxy`, and offered next to the chart's own export.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  exportDataAsExcel: PropTypes.func,
   onRender: PropTypes.func,
   values: PropTypes.arrayOf(
     PropTypes.shape({

@@ -1,5 +1,8 @@
 {
   "props": {
+    "dataGridExportOptions": {
+      "type": { "name": "shape", "description": "{ disableToolbarButton?: bool }" }
+    },
     "excelExportOptions": {
       "type": {
         "name": "shape",
@@ -12,6 +15,14 @@
         "type": "function(params: object, params.onClose: Function) => React.ReactNode",
         "describedArgs": ["params", "params.onClose"],
         "returned": "React.ReactNode"
+      }
+    },
+    "onDataGridExcelExport": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function() => Promise<void>",
+        "describedArgs": [],
+        "returned": "Promise<void>"
       }
     },
     "onExcelExport": {

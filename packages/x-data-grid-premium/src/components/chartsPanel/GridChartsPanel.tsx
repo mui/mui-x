@@ -154,6 +154,7 @@ GridChartsPanelChartSelector.propTypes /* remove-proptypes */ = {
             }),
           ).isRequired,
           dimensionsLabel: PropTypes.string,
+          exportDataAsExcel: PropTypes.func,
           label: PropTypes.string,
           maxDimensions: PropTypes.number,
           maxValues: PropTypes.number,

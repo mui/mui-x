@@ -166,6 +166,69 @@ describe('<ChartsToolbarPremium />', () => {
     expect(onExport.mock.calls).to.have.length(1);
   });
 
+  describe('Data Grid data entry', () => {
+    it('offers the chart export and the Data Grid export as separate entries', async () => {
+      const onDataGridExcelExport = vi.fn(async () => {});
+      const { user } = render(chart({ onDataGridExcelExport }));
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.getByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
+      expect(
+        screen.getByRole('menuitem', { name: 'Download Data Grid data as Excel' }),
+      ).not.to.equal(null);
+    });
+
+    it('calls the Data Grid export, not the chart one, when its entry is clicked', async () => {
+      const onDataGridExcelExport = vi.fn(async () => {});
+      const { user } = render(chart({ onDataGridExcelExport }));
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Download Data Grid data as Excel' }));
+
+      expect(onDataGridExcelExport.mock.calls).to.have.length(1);
+      expect(downloads).to.deep.equal([]);
+    });
+
+    it('is absent when the chart is not bound to a Data Grid', async () => {
+      const { user } = render(chart());
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.queryByRole('menuitem', { name: 'Download Data Grid data as Excel' })).to.equal(
+        null,
+      );
+    });
+
+    it('each entry can be disabled on its own', async () => {
+      const onDataGridExcelExport = vi.fn(async () => {});
+      const { user } = render(
+        chart({ onDataGridExcelExport, excelExportOptions: { disableToolbarButton: true } }),
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).to.equal(null);
+      expect(
+        screen.getByRole('menuitem', { name: 'Download Data Grid data as Excel' }),
+      ).not.to.equal(null);
+    });
+
+    it('hides the Data Grid entry through dataGridExportOptions', async () => {
+      const onDataGridExcelExport = vi.fn(async () => {});
+      const { user } = render(
+        chart({ onDataGridExcelExport, dataGridExportOptions: { disableToolbarButton: true } }),
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Export' }));
+
+      expect(screen.getByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Download Data Grid data as Excel' })).to.equal(
+        null,
+      );
+    });
+  });
+
   it('logs a rejected export instead of leaving the promise unhandled', async () => {
     const error = new Error('writeBuffer failed');
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});

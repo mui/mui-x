@@ -120,6 +120,27 @@ describe('<ChartsRenderer />', () => {
       expect(typeof props.slotProps.toolbar.onExcelExport).to.equal('function');
     });
 
+    it('passes the Data Grid export to the toolbar as a second entry', () => {
+      const onRenderSpy = vi.fn();
+      const exportDataAsExcel = vi.fn(async () => {});
+      render(
+        <div data-testid="container">
+          <ChartsRenderer
+            dimensions={[]}
+            values={[]}
+            chartType="bar"
+            configuration={{ showToolbar: true }}
+            exportDataAsExcel={exportDataAsExcel}
+            onRender={onRenderSpy}
+          />
+        </div>,
+      );
+
+      const props = onRenderSpy.mock.lastCall?.[1];
+      expect(props.slotProps.toolbar.onDataGridExcelExport).to.equal(exportDataAsExcel);
+      expect(typeof props.slotProps.toolbar.onExcelExport).to.equal('function');
+    });
+
     it('exports the grid selection, keeping a column per dimension', async () => {
       const onRenderSpy = vi.fn();
       render(

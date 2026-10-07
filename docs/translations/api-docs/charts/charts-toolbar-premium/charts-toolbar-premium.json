@@ -1,7 +1,12 @@
 {
   "componentDescription": "The chart toolbar component for the premium package.\nIt adds the Excel export entry to the Pro toolbar's export menu.",
   "propDescriptions": {
-    "excelExportOptions": { "description": "The options to apply on the Excel export." },
+    "dataGridExportOptions": {
+      "description": "The options to apply on the Excel export of the Data Grid&#39;s data. The entry is only shown when <code>onDataGridExcelExport</code> is provided, which the Data Grid integration does."
+    },
+    "excelExportOptions": {
+      "description": "The options to apply on the Excel export of the chart&#39;s own data."
+    },
     "exportMenuItems": {
       "description": "Extra items rendered at the end of the export menu.",
       "typeDescriptions": {
@@ -10,8 +15,17 @@
         "React.ReactNode": { "name": "React.ReactNode", "description": "The menu items." }
       }
     },
+    "onDataGridExcelExport": {
+      "description": "Exports the data of the Data Grid the chart is bound to, rather than the chart&#39;s own data.",
+      "typeDescriptions": {
+        "Promise<void>": {
+          "name": "Promise<void>",
+          "description": "A promise that resolves once the export is done."
+        }
+      }
+    },
     "onExcelExport": {
-      "description": "Overrides how the Excel export is performed. Defaults to <code>apiRef.current.exportAsExcel</code>, and is required for a chart that does not register <code>useChartPremiumExport</code>, such as the one in the Data Grid integration.",
+      "description": "Overrides how the chart&#39;s data is exported. Defaults to <code>apiRef.current.exportAsExcel</code>, and is required for a chart that does not register <code>useChartPremiumExport</code>, such as the one in the Data Grid integration.",
       "typeDescriptions": {
         "options": {
           "name": "options",

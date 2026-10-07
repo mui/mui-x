@@ -37,6 +37,11 @@ export interface ChartsLocaleText {
    * Text for the Excel button in the toolbar's export menu.
    */
   toolbarExportExcel: string;
+  /**
+   * Text for the button that exports the Data Grid's data, in the toolbar's export menu.
+   * Only shown by the chart of the Data Grid integration.
+   */
+  toolbarExportDataGridExcel: string;
 
   // Charts renderer configuration
   /**

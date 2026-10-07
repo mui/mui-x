@@ -20,19 +20,38 @@ export interface ChartsToolbarPremiumExcelExportOptions extends ChartExcelExport
   disableToolbarButton?: boolean;
 }
 
+export interface ChartsToolbarPremiumDataGridExportOptions {
+  /**
+   * If `true`, the Data Grid export button is not shown in the toolbar's export menu.
+   * @default false
+   */
+  disableToolbarButton?: boolean;
+}
+
 export interface ChartsToolbarPremiumProps extends ChartsToolbarProProps {
   /**
-   * The options to apply on the Excel export.
+   * The options to apply on the Excel export of the chart's own data.
    */
   excelExportOptions?: ChartsToolbarPremiumExcelExportOptions;
   /**
-   * Overrides how the Excel export is performed.
+   * Overrides how the chart's data is exported.
    * Defaults to `apiRef.current.exportAsExcel`, and is required for a chart that does not
    * register `useChartPremiumExport`, such as the one in the Data Grid integration.
    * @param {ChartExcelExportOptions} options The options to apply on the Excel export.
    * @returns {Promise<void>} A promise that resolves once the export is done.
    */
   onExcelExport?: (options?: ChartExcelExportOptions) => Promise<void>;
+  /**
+   * The options to apply on the Excel export of the Data Grid's data.
+   * The entry is only shown when `onDataGridExcelExport` is provided, which the Data Grid
+   * integration does.
+   */
+  dataGridExportOptions?: ChartsToolbarPremiumDataGridExportOptions;
+  /**
+   * Exports the data of the Data Grid the chart is bound to, rather than the chart's own data.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  onDataGridExcelExport?: () => Promise<void>;
 }
 
 /**
@@ -43,6 +62,8 @@ function ChartsToolbarPremium({
   excelExportOptions,
   exportMenuItems,
   onExcelExport,
+  dataGridExportOptions,
+  onDataGridExcelExport,
   ...other
 }: ChartsToolbarPremiumProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
@@ -56,8 +77,12 @@ function ChartsToolbarPremium({
     !excelExportOptions?.disableToolbarButton &&
     (onExcelExport != null || apiRef.current?.exportAsExcel != null);
 
+  // The Data Grid's data is a separate entry: the chart's own export only covers what is plotted.
+  const showDataGridExport =
+    !dataGridExportOptions?.disableToolbarButton && onDataGridExcelExport != null;
+
   const renderExportMenuItems =
-    showExcelExport || exportMenuItems
+    showExcelExport || showDataGridExport || exportMenuItems
       ? (params: { onClose: () => void }) => {
           const MenuItem = slots.baseMenuItem;
 
@@ -74,6 +99,15 @@ function ChartsToolbarPremium({
                   {localeText.toolbarExportExcel}
                 </ChartsToolbarExcelExportTrigger>
               )}
+              {showDataGridExport && (
+                <ChartsToolbarExcelExportTrigger
+                  render={<MenuItem dense {...slotProps?.baseMenuItem} />}
+                  onExport={onDataGridExcelExport}
+                  onClick={params.onClose}
+                >
+                  {localeText.toolbarExportDataGridExcel}
+                </ChartsToolbarExcelExportTrigger>
+              )}
             </React.Fragment>
           );
         }
@@ -88,7 +122,15 @@ ChartsToolbarPremium.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The options to apply on the Excel export.
+   * The options to apply on the Excel export of the Data Grid's data.
+   * The entry is only shown when `onDataGridExcelExport` is provided, which the Data Grid
+   * integration does.
+   */
+  dataGridExportOptions: PropTypes.shape({
+    disableToolbarButton: PropTypes.bool,
+  }),
+  /**
+   * The options to apply on the Excel export of the chart's own data.
    */
   excelExportOptions: PropTypes.shape({
     disableToolbarButton: PropTypes.bool,
@@ -118,7 +160,12 @@ ChartsToolbarPremium.propTypes /* remove-proptypes */ = {
     }),
   ),
   /**
-   * Overrides how the Excel export is performed.
+   * Exports the data of the Data Grid the chart is bound to, rather than the chart's own data.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  onDataGridExcelExport: PropTypes.func,
+  /**
+   * Overrides how the chart's data is exported.
    * Defaults to `apiRef.current.exportAsExcel`, and is required for a chart that does not
    * register `useChartPremiumExport`, such as the one in the Data Grid integration.
    * @param {ChartExcelExportOptions} options The options to apply on the Excel export.

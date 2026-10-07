@@ -986,6 +986,22 @@ export const useGridChartsIntegration = (
     [apiRef, setChartState],
   );
 
+  // The chart's own export only covers the dimensions and values selected for it, so the Grid
+  // publishes its export too, letting the chart's toolbar offer both.
+  const exportDataAsExcel = React.useCallback(() => apiRef.current.exportDataAsExcel(), [apiRef]);
+
+  React.useEffect(() => {
+    if (!isChartsIntegrationAvailable) {
+      return;
+    }
+
+    Object.keys(chartStateLookup).forEach((chartId) => {
+      if (chartStateLookup[chartId].exportDataAsExcel !== exportDataAsExcel) {
+        setChartState(chartId, { exportDataAsExcel });
+      }
+    });
+  }, [isChartsIntegrationAvailable, chartStateLookup, exportDataAsExcel, setChartState]);
+
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
