@@ -1,10 +1,12 @@
 import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { act, createRenderer, createEvent, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getRowsFieldContent, sleep } from 'test/utils/helperFn';
 import { DataGridPro, gridClasses, useGridApiRef } from '@mui/x-data-grid-pro';
 import type { DataGridProProps, GridApi } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+import { commitRowReorder } from '../hooks/features/rowReorder/rowReorderDragUtils';
 
 // Longer than the long press delay of touch input
 const LONG_PRESS = 350;
@@ -33,6 +35,31 @@ function getPointInRow(rowIndex: number, ratioY: number) {
 
 function getHandle(rowIndex: number) {
   return getCell(rowIndex, 0).firstChild as HTMLElement;
+}
+
+// Lets the drag run for a few animation frames
+async function waitForFrames(duration = 150) {
+  await act(async () => {
+    await sleep(duration);
+  });
+}
+
+function getScroller() {
+  return document.querySelector<HTMLElement>(`.${gridClasses.virtualScroller}`)!;
+}
+
+// The handle closest to `clientY`, among the rendered rows
+function getHandleAt(clientY: number) {
+  const handles = Array.from(
+    document.querySelectorAll<HTMLElement>(`.${gridClasses['rowReorderCell--draggable']}`),
+  );
+  const getDistance = (handle: HTMLElement) => {
+    const rect = handle.getBoundingClientRect();
+    return Math.abs(rect.top + rect.height / 2 - clientY);
+  };
+  return handles.reduce((closest, handle) =>
+    getDistance(handle) < getDistance(closest) ? handle : closest,
+  );
 }
 
 describe('<DataGridPro /> - Row reorder with pointer events', () => {
@@ -266,6 +293,243 @@ describe('<DataGridPro /> - Row reorder with pointer events', () => {
       await waitForLongPress();
 
       expect(apiRef.current!.state.rowReorder.isActive).to.equal(false);
+    });
+
+    it('should cancel the drop when the row is released over the column headers', async () => {
+      const onRowOrderChange = vi.fn();
+      render(<Test onRowOrderChange={onRowOrderChange} />);
+
+      const handle = await startTouchDrag(0);
+      const target = getPointInRow(2, 0.75);
+      fireEvent.pointerMove(handle, pointer('touch', target.x, target.y));
+      expect(apiRef.current!.state.rowReorder.dropTarget?.rowId).to.equal(2);
+
+      const headerRect = document
+        .querySelector(`.${gridClasses.columnHeader}`)!
+        .getBoundingClientRect();
+      const headerY = headerRect.top + headerRect.height / 2;
+      fireEvent.pointerMove(handle, pointer('touch', target.x, headerY));
+      fireEvent.pointerUp(handle, pointer('touch', target.x, headerY));
+
+      await waitForFrames(50);
+      expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      expect(onRowOrderChange).toHaveBeenCalledTimes(0);
+      expect(apiRef.current!.state.rowReorder.isActive).to.equal(false);
+    });
+
+    it('should drop inside a collapsed group that expands under a pointer holding still', async () => {
+      const treeRows = [
+        { id: 'alpha', path: ['Alpha'] },
+        { id: 'bravo', path: ['Bravo'] },
+        { id: 'group', path: ['Group'] },
+        { id: 'child', path: ['Group', 'Child'] },
+      ];
+      render(
+        <Test
+          rows={treeRows}
+          columns={[{ field: 'id' }]}
+          treeData
+          getTreeDataPath={(row) => row.path}
+          setTreeDataPath={(path, row) => ({ ...row, path })}
+        />,
+      );
+
+      const handle = await startTouchDrag(0);
+      const overBravo = getPointInRow(1, 0.9);
+      fireEvent.pointerMove(handle, pointer('touch', overBravo.x, overBravo.y));
+      expect(apiRef.current!.state.rowReorder.dropTarget).to.deep.equal({
+        rowId: 'bravo',
+        position: 'below',
+      });
+
+      // The pointer stops over the middle of the collapsed group, and doesn't move again
+      const overGroup = getPointInRow(2, 0.5);
+      fireEvent.pointerMove(handle, pointer('touch', overGroup.x, overGroup.y));
+      await waitForFrames(700);
+      expect(apiRef.current!.state.rowReorder.dropTarget).to.deep.equal({
+        rowId: 'group',
+        position: 'inside',
+      });
+
+      fireEvent.pointerUp(handle, pointer('touch', overGroup.x, overGroup.y));
+      await waitFor(() => {
+        expect(apiRef.current!.getRowNode('alpha')!.parent).to.equal('group');
+      });
+    });
+
+    it('should not auto-scroll before the pointer moves when the drag starts in an edge zone', async () => {
+      const manyRows = Array.from({ length: 30 }, (_, id) => ({ id, brand: `Brand ${id}` }));
+      render(<Test rows={manyRows} density="compact" />);
+      const scroller = getScroller();
+      await act(async () => {
+        scroller.scrollTop = 200;
+      });
+      // Let the rows at the new scroll position render
+      await waitForFrames(50);
+
+      // A compact row is smaller than the edge zone: a press in its middle is inside the zone
+      const bottomY = scroller.getBoundingClientRect().bottom - 10;
+      const handle = getHandleAt(bottomY);
+      const handleRect = handle.getBoundingClientRect();
+      const x = handleRect.left + handleRect.width / 2;
+      fireEvent.pointerDown(handle, pointer('touch', x, bottomY));
+      await waitForLongPress();
+      expect(apiRef.current!.state.rowReorder.isActive).to.equal(true);
+      await waitForFrames();
+      expect(scroller.scrollTop).to.equal(200);
+
+      // Moving toward the edge starts the auto-scroll
+      fireEvent.pointerMove(handle, pointer('touch', x - 12, bottomY + 6));
+      await waitForFrames();
+      expect(scroller.scrollTop).to.be.greaterThan(200);
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+    });
+
+    it('should auto-scroll at the edge of the scrollable rows, below the pinned rows', async () => {
+      const manyRows = Array.from({ length: 30 }, (_, id) => ({ id, brand: `Brand ${id}` }));
+      render(
+        <Test
+          rows={manyRows}
+          height={400}
+          pinnedRows={{
+            top: [
+              { id: 'pinned-0', brand: 'Pinned 0' },
+              { id: 'pinned-1', brand: 'Pinned 1' },
+            ],
+          }}
+        />,
+      );
+      const scroller = getScroller();
+      await act(async () => {
+        scroller.scrollTop = 300;
+      });
+      await waitForFrames(50);
+
+      const scrollerRect = scroller.getBoundingClientRect();
+      const handle = getHandleAt(scrollerRect.top + scrollerRect.height / 2);
+      const handleRect = handle.getBoundingClientRect();
+      const x = handleRect.left + handleRect.width / 2;
+      fireEvent.pointerDown(handle, pointer('touch', x, handleRect.top + handleRect.height / 2));
+      await waitForLongPress();
+
+      const pinnedBottom = document
+        .querySelector(`.${gridClasses['pinnedRows--top']}`)!
+        .getBoundingClientRect().bottom;
+      fireEvent.pointerMove(handle, pointer('touch', x, pinnedBottom + 5));
+      await waitForFrames();
+      expect(scroller.scrollTop).to.be.lessThan(300);
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+    });
+
+    it('should keep the horizontal scroll position in RTL while auto-scrolling', async () => {
+      const manyColumns = Array.from({ length: 8 }, (_, index) => ({
+        field: `col${index}`,
+        width: 100,
+      }));
+      const manyRows = Array.from({ length: 30 }, (_, id) => ({ id }));
+      render(
+        <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
+          <div dir="rtl">
+            <Test
+              rows={manyRows}
+              columns={manyColumns}
+              initialState={{ pinnedColumns: { left: ['__reorder__'] } }}
+            />
+          </div>
+        </ThemeProvider>,
+      );
+      const scroller = getScroller();
+      await act(async () => {
+        scroller.scrollLeft = -200;
+      });
+      expect(scroller.scrollLeft).to.equal(-200);
+
+      const handle = getHandle(0);
+      const handleRect = handle.getBoundingClientRect();
+      const x = handleRect.left + handleRect.width / 2;
+      fireEvent.pointerDown(handle, pointer('touch', x, handleRect.top + handleRect.height / 2));
+      await waitForLongPress();
+
+      const dimensions = apiRef.current!.state.dimensions;
+      const rowsBottom = scroller.getBoundingClientRect().bottom - dimensions.scrollbarSize;
+      fireEvent.pointerMove(handle, pointer('touch', x, rowsBottom - 5));
+      await waitForFrames();
+      expect(scroller.scrollTop).to.be.greaterThan(0);
+      expect(scroller.scrollLeft).to.equal(-200);
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+    });
+  });
+
+  describe.skipIf(isJSDOM)('pen', () => {
+    it('should enable text selection again after a drag', async () => {
+      render(<Test />);
+      const root = document.querySelector(`.${gridClasses.root}`)!;
+      const handle = getHandle(0);
+      const start = getPointInRow(0, 0.5);
+      const target = getPointInRow(2, 0.75);
+
+      // A pen press also fires the compatibility mouse events
+      fireEvent.pointerDown(handle, pointer('pen', start.x, start.y));
+      fireEvent.mouseDown(handle);
+      expect(root).to.have.class(gridClasses['root--disableUserSelection']);
+
+      fireEvent.pointerMove(handle, pointer('pen', target.x, target.y));
+      expect(apiRef.current!.state.rowReorder.isActive).to.equal(true);
+
+      // The root captured the pointer: `mouseup` doesn't reach the handle
+      fireEvent.pointerUp(root, pointer('pen', target.x, target.y));
+      fireEvent.mouseUp(root);
+      await waitFor(() => {
+        expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Puma', 'Nike']);
+      });
+      expect(root).not.to.have.class(gridClasses['root--disableUserSelection']);
+    });
+  });
+
+  describe.skipIf(isJSDOM)('commitRowReorder', () => {
+    it('should reject with the error of a rowOrderChange listener', async () => {
+      render(<Test />);
+      apiRef.current!.subscribeEvent('rowOrderChange', () => {
+        throw new Error('Boom');
+      });
+
+      // Caught inside `act`: a rejected `act` drops the updates it queued
+      let error: unknown;
+      await act(async () => {
+        try {
+          await commitRowReorder(
+            apiRef as any,
+            0,
+            { rowId: 2, position: 'below' },
+            (move) => move(),
+            () => {},
+          );
+        } catch (caught) {
+          error = caught;
+        }
+      });
+      expect((error as Error)?.message).to.equal('Boom');
+      // The row moved before the listener ran
+      await waitFor(() => {
+        expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Puma', 'Nike']);
+      });
+    });
+
+    it('should resolve without publishing rowOrderChange when the move fails', async () => {
+      render(<Test />);
+      const onRowOrderChange = vi.fn();
+      apiRef.current!.subscribeEvent('rowOrderChange', onRowOrderChange);
+
+      await act(() =>
+        commitRowReorder(
+          apiRef as any,
+          'missing',
+          { rowId: 2, position: 'below' },
+          (move) => move(),
+          () => {},
+        ),
+      );
+      expect(onRowOrderChange).toHaveBeenCalledTimes(0);
     });
   });
 

@@ -531,4 +531,30 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     apiRef.current!.setRowPosition(2, 0, 'below');
     expect(gridDataRowIdsSelector(apiRef)).to.deep.equal([0, 1, 2]);
   });
+
+  it('should support custom classes for the dragged row', () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          rows={rows}
+          columns={[{ field: 'brand' }]}
+          rowReordering
+          classes={{ 'row--dragging': 'custom-dragging', 'row--beingDragged': 'custom-dragged' }}
+        />
+      </div>,
+    );
+
+    // `composeClasses` joins the default and the custom class with a space, which `classList.add` rejects
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    fireDragStart(rowReorderCell);
+    expect(rowReorderCell).to.have.class('custom-dragging');
+
+    fireEvent(rowReorderCell, createDragEndEvent(rowReorderCell, true));
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas']);
+  });
 });

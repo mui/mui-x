@@ -182,7 +182,11 @@ export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
 export { usePointerDrag, getElementAtPoint } from '../hooks/utils/usePointerDrag';
-export { createDragPreview, getEdgeScrollDelta } from '../hooks/utils/pointerDragUtils';
+export {
+  createDragPreview,
+  getEdgeScrollDelta,
+  getVisibleViewportBounds,
+} from '../hooks/utils/pointerDragUtils';
 export type { DragPreview } from '../hooks/utils/pointerDragUtils';
 export type {
   PointerDragPosition,
