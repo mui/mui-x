@@ -47,6 +47,10 @@ export interface ChartsRendererProps {
    * @returns {Promise<void>} A promise that resolves once the export is done.
    */
   exportDataAsExcel?: () => Promise<void>;
+  /**
+   * The label of the chart, used to name the exported file.
+   */
+  label?: string;
   onRender?: (
     type: string,
     props: Record<string, any>,
@@ -74,6 +78,7 @@ function ChartsRenderer({
   chartType,
   configuration,
   exportDataAsExcel,
+  label,
   onRender,
 }: ChartsRendererProps): React.ReactNode {
   const hasMultipleDimensions = dimensions.length > 1;
@@ -140,13 +145,15 @@ function ChartsRenderer({
         });
 
         if (workbook) {
-          await downloadWorkbook(workbook, options?.fileName || document.title);
+          // The chart's label beats the document title here: a page holding several charts
+          // would otherwise export every one of them under the same name.
+          await downloadWorkbook(workbook, options?.fileName || label || document.title);
         }
       } catch (error) {
         console.error('MUI X Charts: Error exporting chart as Excel:', error);
       }
     },
-    [dimensions, values],
+    [dimensions, values, label],
   );
 
   const excelExportSlots = { toolbar: ChartsToolbarPremium };
@@ -406,6 +413,10 @@ ChartsRenderer.propTypes /* remove-proptypes */ = {
    * @returns {Promise<void>} A promise that resolves once the export is done.
    */
   exportDataAsExcel: PropTypes.func,
+  /**
+   * The label of the chart, used to name the exported file.
+   */
+  label: PropTypes.string,
   onRender: PropTypes.func,
   values: PropTypes.arrayOf(
     PropTypes.shape({

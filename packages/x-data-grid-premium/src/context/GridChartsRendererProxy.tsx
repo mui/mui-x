@@ -17,6 +17,7 @@ type GridChartsRendererProxyRenderer = React.ComponentType<{
   chartType: ChartState['type'];
   configuration: ChartState['configuration'];
   exportDataAsExcel?: ChartState['exportDataAsExcel'];
+  label?: ChartState['label'];
   onRender?: GridChartsRendererProxyRendererCallback;
 }>;
 
@@ -62,7 +63,14 @@ function GridChartsRendererProxy(props: GridChartsRendererProxyProps) {
     return null;
   }
 
-  const { dimensions, values, type, configuration, exportDataAsExcel } = chartStateLookup[id];
+  const {
+    dimensions,
+    values,
+    type,
+    configuration,
+    exportDataAsExcel,
+    label: chartLabel,
+  } = chartStateLookup[id];
 
   return (
     <Renderer
@@ -71,6 +79,7 @@ function GridChartsRendererProxy(props: GridChartsRendererProxyProps) {
       chartType={type}
       configuration={configuration}
       exportDataAsExcel={exportDataAsExcel}
+      label={chartLabel}
       onRender={onRender}
     />
   );
