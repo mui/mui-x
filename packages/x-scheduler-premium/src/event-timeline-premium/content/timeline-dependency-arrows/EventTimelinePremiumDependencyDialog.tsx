@@ -180,8 +180,8 @@ const DependencyDialogDetails = styled('dl', {
 })(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'minmax(60px, auto) 1fr',
-  columnGap: 8,
-  rowGap: 12,
+  columnGap: theme.spacing(1),
+  rowGap: theme.spacing(1.5),
   margin: 0,
   color: (theme.vars || theme).palette.text.primary,
   '& dd': {
