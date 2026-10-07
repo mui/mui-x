@@ -153,8 +153,6 @@ const DependencyDialogBody = styled('div', {
   padding: theme.spacing(0, 3, 3),
 }));
 
-const LABEL_MIN_WIDTH = 60;
-
 // Same right inset as the Type select, so both arrows line up.
 const DependencyDialogLag = styled(TextField, {
   name: 'MuiEventTimeline',
@@ -179,7 +177,7 @@ const DependencyDialogDetails = styled('dl', {
   slot: 'DependencyDialogDetails',
 })(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: `minmax(${LABEL_MIN_WIDTH}px, auto) 1fr`,
+  gridTemplateColumns: 'minmax(60px, auto) 1fr',
   columnGap: 8,
   rowGap: 12,
   margin: 0,
