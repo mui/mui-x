@@ -2,7 +2,12 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridSelector, useGridApiMethod, gridDimensionsSelector } from '@mui/x-data-grid';
-import { useTimeout, gridHorizontalScrollbarHeightSelector } from '@mui/x-data-grid/internals';
+import type { GridRowId } from '@mui/x-data-grid';
+import {
+  useTimeout,
+  gridHorizontalScrollbarHeightSelector,
+  getVisibleRows,
+} from '@mui/x-data-grid/internals';
 import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
@@ -37,6 +42,8 @@ export const useGridInfiniteLoadingIntersection = (
   const observer = React.useRef<IntersectionObserver>(null);
   const updateTargetTimeout = useTimeout();
   const triggerElement = React.useRef<HTMLElement | null>(null);
+  // The last row when the trigger entered the threshold area
+  const intersectingLastRowId = React.useRef<GridRowId | null>(null);
 
   const isEnabledClientSide = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
   const isEnabledServerSide = props.dataSource && props.lazyLoading;
@@ -47,16 +54,29 @@ export const useGridInfiniteLoadingIntersection = (
     () => isEnabled && gridDimensionsSelector(apiRef).isReady,
   );
 
-  const handleIntersectionChange = useEventCallback(([entry]: IntersectionObserverEntry[]) => {
-    const currentRatio = entry.intersectionRatio;
-    const isIntersecting = entry.isIntersecting;
-
-    if (isIntersecting && currentRatio === 1) {
-      observer.current?.disconnect();
-      // do not observe this node anymore
-      triggerElement.current = null;
-      apiRef.current.publishEvent('rowsScrollEndIntersection');
+  // The trigger stays mounted while scrolling, so it stays observed to notify each time it enters
+  // the threshold area. It is also remounted without leaving the area (e.g. after the skeleton
+  // loading overlay), and a new observation reports the current state. So the event is published
+  // only once per last row, until the trigger leaves the area.
+  const handleIntersectionChange = useEventCallback((entries: IntersectionObserverEntry[]) => {
+    // A removed trigger is reported as not intersecting, but it didn't leave the area
+    const connectedEntries = entries.filter((entry) => entry.target.isConnected);
+    const entry = connectedEntries[connectedEntries.length - 1];
+    if (!entry) {
+      return;
     }
+
+    if (!entry.isIntersecting || entry.intersectionRatio !== 1) {
+      intersectingLastRowId.current = null;
+      return;
+    }
+
+    const lastRowId = getVisibleRows(apiRef).rows.at(-1)?.id ?? null;
+    if (intersectingLastRowId.current === lastRowId) {
+      return;
+    }
+    intersectingLastRowId.current = lastRowId;
+    apiRef.current.publishEvent('rowsScrollEndIntersection');
   });
 
   React.useEffect(() => {
