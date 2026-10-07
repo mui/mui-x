@@ -21,7 +21,7 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.4.0
-  '@mui/internal-test-utils': 2.1.1-canary.0
+  '@mui/internal-test-utils': 2.1.1-canary.2
   '@mui/internal-core-docs': 9.4.1-canary.0
   '@mui/material': 9.4.0
   '@mui/stylis-plugin-rtl': 9.4.0
@@ -41,7 +41,7 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.8.0
   '@types/use-sync-external-store': ^1.7.0
-  '@typescript-eslint/parser': ^8.70.1
+  '@typescript-eslint/parser': ^8.71.0
   '@vitejs/plugin-react': ^6.1.1
   '@vitejs/plugin-react-swc': ^4.3.3
   '@vitest/browser': ^5.0.3
