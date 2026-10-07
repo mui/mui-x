@@ -107,6 +107,15 @@ export function DependencyDialogFormContent(props: DependencyDialogContentProps)
   );
   const isSubmitting = useStore(formStore, schedulerFormSelectors.isSubmitting);
 
+  // Like the event form: a dialog closed while the validation is pending must not save.
+  const isSessionAliveRef = React.useRef(true);
+  React.useEffect(() => {
+    isSessionAliveRef.current = true;
+    return () => {
+      isSessionAliveRef.current = false;
+    };
+  }, []);
+
   const typeLabelId = `${schedulerId}-dependency-dialog-type-label`;
   const typeHelperId = `${schedulerId}-dependency-dialog-type-helper-text`;
   const lagId = `${schedulerId}-dependency-dialog-lag`;
@@ -130,7 +139,11 @@ export function DependencyDialogFormContent(props: DependencyDialogContentProps)
     const form = event.currentTarget;
     formStore.setSubmitting(true);
     try {
-      if (!(await formStore.validateAll())) {
+      const isValid = await formStore.validateAll();
+      if (!isSessionAliveRef.current) {
+        return;
+      }
+      if (!isValid) {
         // Rendered synchronously so the error is in the DOM to take the focus.
         ReactDOM.flushSync(() => {});
         focusFirstInvalid(form);

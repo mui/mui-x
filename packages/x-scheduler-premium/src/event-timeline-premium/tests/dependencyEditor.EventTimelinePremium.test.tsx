@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -298,6 +298,24 @@ describe('<EventTimelinePremium /> dependency editor', () => {
         'A dependency of this type already exists between these two events.',
       );
       expect(document.activeElement).to.equal(typeSelect);
+    });
+
+    it('should not save when the dialog closes while the validation is pending', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      const dialog = openDialog('dep-1');
+      chooseType(dialog, 'Start to start');
+      fireEvent.click(within(dialog).getByRole('button', { name: /save/i }));
+      // The validation resolves in a microtask: close the dialog before it does.
+      act(() => store.closeDependencyEditor());
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
+      expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
     it('should move the target when the new type is broken by its dates', async () => {
