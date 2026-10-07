@@ -2,12 +2,10 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useChartsSlots } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import type { ChartsToolbarProProps } from '@mui/x-charts-pro/ChartsToolbarPro';
-import type { ChartsSlotsPro } from '@mui/x-charts-pro/internals';
-import { ChartsToolbarExcelExportTrigger } from './ChartsToolbarExcelExportTrigger';
+import { ChartsToolbarExcelExportMenuItem } from './ChartsToolbarExcelExportMenuItem';
 import type { ChartPremiumApiWithExcelExport } from './ChartsToolbarExcelExportTrigger';
 import { useChartPremiumApiContext } from '../context/useChartPremiumApiContext';
 import type { ChartExcelExportOptions } from '../internals/plugins/useChartPremiumExport';
@@ -36,7 +34,6 @@ function ChartsToolbarPremium({
   exportMenuItems,
   ...other
 }: ChartsToolbarPremiumProps) {
-  const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
   const { localeText } = useChartsLocalization();
   const apiRef = useChartPremiumApiContext<ChartPremiumApiWithExcelExport>();
 
@@ -48,24 +45,18 @@ function ChartsToolbarPremium({
 
   const renderExportMenuItems =
     showExcelExport || exportMenuItems
-      ? (params: { onClose: () => void }) => {
-          const MenuItem = slots.baseMenuItem;
-
-          return (
-            <React.Fragment>
-              {exportMenuItems?.(params)}
-              {showExcelExport && (
-                <ChartsToolbarExcelExportTrigger
-                  render={<MenuItem dense {...slotProps?.baseMenuItem} />}
-                  options={excelExportOptions}
-                  onClick={params.onClose}
-                >
-                  {localeText.toolbarExportExcel}
-                </ChartsToolbarExcelExportTrigger>
-              )}
-            </React.Fragment>
-          );
-        }
+      ? (params: { onClose: () => void }) => (
+          <React.Fragment>
+            {exportMenuItems?.(params)}
+            {showExcelExport && (
+              <ChartsToolbarExcelExportMenuItem
+                label={localeText.toolbarExportExcel}
+                options={excelExportOptions}
+                onClose={params.onClose}
+              />
+            )}
+          </React.Fragment>
+        )
       : undefined;
 
   return <ChartsToolbarPro {...other} exportMenuItems={renderExportMenuItems} />;
