@@ -3,11 +3,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { useGridSelector, useGridApiMethod, gridDimensionsSelector } from '@mui/x-data-grid';
 import type { GridRowId } from '@mui/x-data-grid';
-import {
-  useTimeout,
-  gridHorizontalScrollbarHeightSelector,
-  getVisibleRows,
-} from '@mui/x-data-grid/internals';
+import { gridHorizontalScrollbarHeightSelector, getVisibleRows } from '@mui/x-data-grid/internals';
 import type { GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
@@ -29,6 +25,36 @@ const InfiniteLoadingTriggerElement = styled('div', {
   height: 0,
 });
 
+interface InfiniteLoadingTriggerProps {
+  setTarget: (node: HTMLElement | null) => void;
+}
+
+function InfiniteLoadingTrigger(props: InfiniteLoadingTriggerProps) {
+  const { setTarget } = props;
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  // The connection is scheduled from an effect, not from a ref callback: on mount, Strict Mode in
+  // React 18 replays the effects but not the ref callbacks, so a connection scheduled by a ref
+  // callback and canceled by an effect cleanup would never be scheduled again.
+  React.useEffect(() => {
+    // If the user scrolls through the grid too fast it might happen that the observer is connected to the trigger element
+    // that will be intersecting the root inside the same render cycle (but not intersecting at the time of the connection).
+    // This will cause the observer to not call the callback with `isIntersecting` set to `true`.
+    // https://www.w3.org/TR/intersection-observer/#event-loop
+    // Delaying the connection to the next cycle helps since the observer will always call the callback the first time it is connected.
+    // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
+    // Related to
+    // https://github.com/mui/mui-x/issues/14116
+    const timeout = setTimeout(() => setTarget(ref.current));
+    return () => {
+      clearTimeout(timeout);
+      setTarget(null);
+    };
+  }, [setTarget]);
+
+  return <InfiniteLoadingTriggerElement ref={ref} role="none" />;
+}
+
 /**
  * @requires useGridDimensions (method) - can be after
  */
@@ -40,7 +66,6 @@ export const useGridInfiniteLoadingIntersection = (
   >,
 ): void => {
   const observer = React.useRef<IntersectionObserver>(null);
-  const updateTargetTimeout = useTimeout();
   const triggerElement = React.useRef<HTMLElement | null>(null);
   // The last row when the trigger entered the threshold area
   const intersectingLastRowId = React.useRef<GridRowId | null>(null);
@@ -99,7 +124,7 @@ export const useGridInfiniteLoadingIntersection = (
     }
   }, [apiRef, handleIntersectionChange, isEnabledAndReady, props.scrollEndThreshold]);
 
-  const updateTarget = (node: HTMLElement | null) => {
+  const updateTarget = useEventCallback((node: HTMLElement | null) => {
     if (triggerElement.current !== node) {
       observer.current?.disconnect();
 
@@ -108,27 +133,7 @@ export const useGridInfiniteLoadingIntersection = (
         observer.current?.observe(triggerElement.current);
       }
     }
-  };
-
-  const triggerRef = React.useCallback(
-    (node: HTMLElement | null) => {
-      // Prevent the infite loading working in combination with lazy loading
-      if (!isEnabled) {
-        return;
-      }
-
-      // If the user scrolls through the grid too fast it might happen that the observer is connected to the trigger element
-      // that will be intersecting the root inside the same render cycle (but not intersecting at the time of the connection).
-      // This will cause the observer to not call the callback with `isIntersecting` set to `true`.
-      // https://www.w3.org/TR/intersection-observer/#event-loop
-      // Delaying the connection to the next cycle helps since the observer will always call the callback the first time it is connected.
-      // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
-      // Related to
-      // https://github.com/mui/mui-x/issues/14116
-      updateTargetTimeout.start(0, () => updateTarget(node));
-    },
-    [isEnabled, updateTargetTimeout],
-  );
+  });
 
   const getInfiniteLoadingTriggerElement = React.useCallback<
     NonNullable<GridInfiniteLoaderPrivateApi['getInfiniteLoadingTriggerElement']>
@@ -138,15 +143,14 @@ export const useGridInfiniteLoadingIntersection = (
         return null;
       }
       return (
-        <InfiniteLoadingTriggerElement
-          ref={triggerRef}
+        <InfiniteLoadingTrigger
           // Force rerender on last row change to start observing the new trigger
           key={`trigger-${lastRowId}`}
-          role="none"
+          setTarget={updateTarget}
         />
       );
     },
-    [isEnabled, triggerRef],
+    [isEnabled, updateTarget],
   );
 
   const infiniteLoaderPrivateApi: GridInfiniteLoaderPrivateApi = {
