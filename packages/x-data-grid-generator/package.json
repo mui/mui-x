@@ -62,9 +62,6 @@
       "optional": true
     }
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
   "exports": {
     ".": "./src/index.ts",
     "./services/static-data": "./src/services/static-data.ts",
