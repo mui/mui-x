@@ -46,7 +46,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     if (
       !state.adapter.isAfter(state.occurrencePlaceholder.end, start) ||
-      state.adapter.isAfter(state.occurrencePlaceholder.start, end)
+      !state.adapter.isBefore(state.occurrencePlaceholder.start, end)
     ) {
       return null;
     }

@@ -7,7 +7,7 @@ import {
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekViewPremium } from '@mui/x-scheduler-premium/week-view-premium';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { getSchedulerLocalization } from '@mui/x-scheduler/locales';
+import { esES } from '@mui/x-scheduler/locales';
 import { describe, it, expect } from 'vitest';
 
 describe('<StandaloneWeekViewPremium />', () => {
@@ -23,26 +23,19 @@ describe('<StandaloneWeekViewPremium />', () => {
         />,
       );
 
-      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).not.to.have.length(0);
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).to.have.length(7);
     });
 
     it('should use the locale text provided through the theme', () => {
-      const localization = getSchedulerLocalization({
-        dialog: {},
-        event: {},
-        calendar: { dayGridLabel: 'Eventos de todo el día y de varios días' },
-        timeline: {},
-      });
-
       render(
-        <ThemeProvider theme={createTheme({}, localization)}>
+        <ThemeProvider theme={createTheme({}, esES)}>
           <StandaloneWeekViewPremium events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
         </ThemeProvider>,
       );
 
-      expect(
-        screen.getAllByRole('gridcell', { name: /Eventos de todo el día y de varios días/ }),
-      ).not.to.have.length(0);
+      expect(screen.getAllByRole('gridcell', { name: /Todo el día y varios días/ })).to.have.length(
+        7,
+      );
     });
   });
 

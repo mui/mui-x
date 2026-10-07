@@ -6,6 +6,10 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import {
+  useCalendarGridTimeColumnContext,
+  useElementPositionInCollection,
+} from '@mui/x-scheduler-internals/internals';
 import type { PaletteName } from '../../../utils/tokens';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 
@@ -54,9 +58,19 @@ export function useTimeGridEvent(
     useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end') && !isEditedInForm;
   const palette = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
 
-  const durationMs =
-    occurrence.displayTimezone.end.timestamp - occurrence.displayTimezone.start.timestamp;
-  const durationMinutes = durationMs / 60000;
+  // Measured on the part rendered in this column, shorter than the event when it crosses midnight.
+  const {
+    start: columnStart,
+    end: columnEnd,
+    dayStartMinute,
+    dayEndMinute,
+  } = useCalendarGridTimeColumnContext();
+  const { duration } = useElementPositionInCollection({
+    start: occurrence.displayTimezone.start,
+    end: occurrence.displayTimezone.end,
+    collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
+  });
+  const durationMinutes = Math.round(duration * (dayEndMinute - dayStartMinute));
   const isUnderHour = durationMinutes < 60;
   // Inclusive on purpose: an exactly-15-minute event gets the tightest (zero-padding) tier. See the
   // `duration thresholds` boundary tests in `DayView.test.tsx`.

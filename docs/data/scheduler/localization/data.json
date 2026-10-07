@@ -267,7 +267,7 @@
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 22,
+    "missingKeysCount": 21,
     "totalKeysCount": 116,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/esES.ts"
   },
