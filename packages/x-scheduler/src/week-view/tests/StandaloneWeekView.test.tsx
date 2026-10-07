@@ -21,13 +21,6 @@ describe('<StandaloneWeekView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: DEFAULT_TESTING_VISIBLE_DATE });
 
   describe('localization', () => {
-    const themeLocalization = getSchedulerLocalization({
-      dialog: {},
-      event: {},
-      calendar: { dayGridLabel: 'Eventos de todo el día y de varios días' },
-      timeline: {},
-    });
-
     it('should use the locale text provided through the localeText prop', () => {
       render(
         <StandaloneWeekView
@@ -37,7 +30,7 @@ describe('<StandaloneWeekView />', () => {
         />,
       );
 
-      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).not.to.have.length(0);
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).to.have.length(7);
     });
 
     it('should use the default locale text when the localeText prop is not provided', () => {
@@ -45,19 +38,19 @@ describe('<StandaloneWeekView />', () => {
 
       expect(
         screen.getAllByRole('gridcell', { name: /All-day and multi-day events/ }),
-      ).not.to.have.length(0);
+      ).to.have.length(7);
     });
 
     it('should use the locale text provided through the theme', () => {
       render(
-        <ThemeProvider theme={createTheme({}, themeLocalization)}>
+        <ThemeProvider theme={createTheme({}, esES)}>
           <StandaloneWeekView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
         </ThemeProvider>,
       );
 
-      expect(
-        screen.getAllByRole('gridcell', { name: /Eventos de todo el día y de varios días/ }),
-      ).not.to.have.length(0);
+      expect(screen.getAllByRole('gridcell', { name: /Todo el día y varios días/ })).to.have.length(
+        7,
+      );
     });
 
     it('should name events with the locale text provided through the theme', () => {
@@ -126,7 +119,7 @@ describe('<StandaloneWeekView />', () => {
 
     it('should override the theme locale text with the localeText prop', () => {
       render(
-        <ThemeProvider theme={createTheme({}, themeLocalization)}>
+        <ThemeProvider theme={createTheme({}, esES)}>
           <StandaloneWeekView
             events={[]}
             visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
@@ -135,9 +128,9 @@ describe('<StandaloneWeekView />', () => {
         </ThemeProvider>,
       );
 
-      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).not.to.have.length(0);
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).to.have.length(7);
       expect(
-        screen.queryAllByRole('gridcell', { name: /Eventos de todo el día y de varios días/ }),
+        screen.queryAllByRole('gridcell', { name: /Todo el día y varios días/ }),
       ).to.have.length(0);
     });
   });

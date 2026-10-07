@@ -356,7 +356,7 @@
     {
       "key": "dayTimeGridAllDayEventsHeaderCell",
       "className": "MuiEventCalendar-dayTimeGridAllDayEventsHeaderCell",
-      "description": "Styles applied to the day time grid all day events header cell element.",
+      "description": "Styles applied to the day time grid all day events header cell (visually hidden row label).",
       "isGlobal": false
     },
     {
