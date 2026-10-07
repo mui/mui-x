@@ -15,17 +15,17 @@ import { max, min } from './utils';
 export class Step implements FunnelCurveGenerator {
   declare private context: CanvasRenderingContext2D;
 
-  private isHorizontal: boolean = false;
+  declare private isHorizontal: boolean;
 
-  private isIncreasing: boolean = false;
+  declare private isIncreasing: boolean;
 
-  private gap: number = 0;
+  declare private gap: number;
 
-  private borderRadius: number = 0;
+  declare private borderRadius: number;
 
-  private position: number = 0;
+  declare private position: number;
 
-  private sections: number = 0;
+  declare private sections: number;
 
   private points: Point[] = [];
 
