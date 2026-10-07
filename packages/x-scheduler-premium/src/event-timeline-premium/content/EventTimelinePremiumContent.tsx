@@ -62,7 +62,7 @@ import {
   EventTimelinePremiumDependencyInteractions,
   EventTimelinePremiumDependencyTerminals,
   EventTimelinePremiumDependencyDialog,
-} from './timeline-dependency-arrows';
+} from './timeline-dependencies';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
