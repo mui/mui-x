@@ -1,5 +1,4 @@
-import { gridRowIdSelector } from '@mui/x-data-grid';
-import { gridRowNodeSelector } from '@mui/x-data-grid';
+import { gridRowIdSelector, gridRowNodeSelector } from '@mui/x-data-grid';
 import * as React from 'react';
 import {
   DataGridPremium,

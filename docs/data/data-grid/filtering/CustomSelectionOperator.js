@@ -1,6 +1,6 @@
-import { gridRowIdSelector } from '@mui/x-data-grid';
 import * as React from 'react';
 import {
+  gridRowIdSelector,
   DataGrid,
   getGridDefaultColumnTypes,
   DEFAULT_GRID_COL_TYPE_KEY,

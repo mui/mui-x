@@ -1,5 +1,4 @@
-import { gridRowIdSelector } from '@mui/x-data-grid';
-import { gridRowNodeSelector } from '@mui/x-data-grid';
+import { gridRowIdSelector, gridRowNodeSelector } from '@mui/x-data-grid';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 
 const rows = [

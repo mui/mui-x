@@ -1,6 +1,6 @@
-import { gridRowSelectionCountSelector } from '@mui/x-data-grid-premium';
 import * as React from 'react';
 import {
+  gridRowSelectionCountSelector,
   DataGridPremium,
   GridApiPremium,
   gridFocusCellSelector,
