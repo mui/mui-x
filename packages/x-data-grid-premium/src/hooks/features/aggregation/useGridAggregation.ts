@@ -295,7 +295,7 @@ export const useGridAggregation = (
   const handleColumnsChange = React.useCallback(() => {
     checkAggregationRulesDiff();
 
-    if (props.dataSource && !gridPivotActiveSelector(apiRef)) {
+    if (props.dataSource) {
       return;
     }
 
