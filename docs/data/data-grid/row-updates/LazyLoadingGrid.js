@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-deprecated -- This demo documents deprecated lazy loading and links to the server-side data replacement. */
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
@@ -103,9 +104,7 @@ export default function LazyLoadingGrid() {
         rowCount={rowCount}
         sortingMode="server"
         filterMode="server"
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents deprecated lazy loading and links to the server-side data replacement.
         rowsLoadingMode="server"
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents deprecated lazy loading and links to the server-side data replacement.
         onFetchRows={debouncedHandleFetchRows}
         onSortModelChange={handleModelChange}
         onFilterModelChange={handleModelChange}
