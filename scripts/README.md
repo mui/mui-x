@@ -29,14 +29,16 @@ A typical release goes like this:
 
 The following steps must be proposed as a pull request.
 
-1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
+<!-- #target-branch-reference -->
+
+1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `v9.x` for the current stable version).
    To do so, use `pnpm release:changelog` The options are the following:
 
 ```bash
 pnpm release:changelog
    --githubToken   YOUR_GITHUB_TOKEN (needs "public_repo" permission)
    --lastRelease   The release to compare against (default: the last one)
-   --release       The branch to release (default: master)
+   --release       The branch to release (default: v9.x)
    --nextVersion   Expected version of the next release (if not provided, __VERSION__ placeholders must be updated manually)
 ```
 
@@ -96,13 +98,15 @@ In case of a problem, another method to generate the changelog is available at t
 5. This command invokes the [Publish](https://github.com/mui/mui-x/actions/workflows/publish.yml) GitHub action. It'll log the URL which can be opened to see the latest workflow run.
 6. The next screen shows "@username requested your review to deploy to npm-publish", click "Review deployments" and authorize your workflow run. **Never approve workflow runs you didn't initiate.**
 
+<!-- #target-branch-reference -->
+
 Alternatively, you can run the workflow from the GitHub UI:
 
 1. Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
 2. Choose "Run workflow" dropdown
 
-   > - **Branch:** master
-   > - **Commit SHA to release from:** the commit that contains the merged release on master. This commit is linked to the GitHub release.
+   > - **Branch:** v9.x
+   > - **Commit SHA to release from:** the commit that contains the merged release on v9.x. This commit is linked to the GitHub release.
    > - **Run in dry-run mode:** Used for debugging.
    > - **Create GitHub release:** Keep selected if you want a GitHub release to be automatically created from the changelog.
    > - **npm dist tag to publish to** Use to publish legacy or canary versions.
@@ -145,14 +149,16 @@ Follow the instructions in https://mui-org.notion.site/Releases-7490ef9581b4447e
 
 ### Manual changelog generation
 
-Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
+<!-- #target-branch-reference -->
 
-For instance: [https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...master](https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...master) (if you want to release `master` and the last tag is `v4.0.0-alpha.9`)
-You can use the following script in your browser console on any GitHub page to automatically navigate to the page comparing `master` with the last tag.
+Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `v9.x` for the current stable version).
+
+For instance: [https://github.com/mui/mui-x/compare/v9.15.0...v9.x](https://github.com/mui/mui-x/compare/v9.15.0...v9.x) (if you want to release `v9.x` and the last tag is `v9.15.0`)
+You can use the following script in your browser console on any GitHub page to automatically navigate to the page comparing `v9.x` with the last tag.
 
 ```js
 (async () => {
-  const releaseBranch = 'master';
+  const releaseBranch = 'v9.x';
   const tagResponse = await fetch('https://api.github.com/repos/mui/mui-x/tags?per_page=1');
   const tagData = await tagResponse.json();
   const lastTag = tagData[0].name;
