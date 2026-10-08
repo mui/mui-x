@@ -11,7 +11,7 @@ import type {
   GridColDef,
   GridRenderEditCellParams,
 } from '@mui/x-data-grid-premium';
-import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
+import { RowsMeta, unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -778,11 +778,11 @@ describe('<DataGridPremium /> - Formulas editor surface and highlighting', () =>
       // (the reference overlay's own coordinate recipe).
       const { dimensions, rowsMeta } = apiRef.current!.state;
       expect(surface.style.top).to.equal(
-        `${dimensions.topContainerHeight + rowsMeta.positions[0]}px`,
+        `${dimensions.topContainerHeight + RowsMeta.getPosition(rowsMeta, 0)!}px`,
       );
       // Single-row fixture: the last row's height comes from the page total.
       expect(surface.style.height).to.equal(
-        `${rowsMeta.currentPageTotalHeight - rowsMeta.positions[0] + 1}px`,
+        `${rowsMeta.currentPageTotalHeight - RowsMeta.getPosition(rowsMeta, 0)! + 1}px`,
       );
     });
 

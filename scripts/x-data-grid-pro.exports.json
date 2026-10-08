@@ -541,6 +541,7 @@
   { "name": "GridRowParams", "kind": "Interface" },
   { "name": "GridRowPinningApi", "kind": "Interface" },
   { "name": "GridRowPinningInternalCache", "kind": "Interface" },
+  { "name": "gridRowPositionSelector", "kind": "Variable" },
   { "name": "GridRowProApi", "kind": "Interface" },
   { "name": "GridRowProPrivateApi", "kind": "Interface" },
   { "name": "GridRowProps", "kind": "Interface" },

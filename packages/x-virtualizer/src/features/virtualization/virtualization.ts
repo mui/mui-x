@@ -12,6 +12,7 @@ import { createSelector, useStore, Store } from '@base-ui/utils/store';
 import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import useRefCallback from '../../utils/useRefCallback';
 import { PinnedRows, PinnedColumns, Size } from '../../models/core';
+import { RowsMeta, type RowsMetaState } from '../../models/dimensions';
 import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
@@ -118,12 +119,12 @@ const selectors = (() => {
     offsetTop: createSelector(
       layoutModeSelector,
       Dimensions.selectors.dimensions,
-      Dimensions.selectors.rowPositions,
+      Dimensions.selectors.rowsMeta,
       firstRowIndexSelector,
-      (layoutMode, dimensions, rowPositions, firstRowIndex) => {
+      (layoutMode, dimensions, rowsMeta, firstRowIndex) => {
         return (
           (layoutMode === 'uncontrolled' ? dimensions.topContainerHeight : 0) +
-          (rowPositions[firstRowIndex] ?? 0)
+          (RowsMeta.getPosition(rowsMeta, firstRowIndex) ?? 0)
         );
       },
     ),
@@ -998,15 +999,16 @@ function computeRenderContext(
   const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
 
   if (inputs.enabledForRows) {
+    const { rowsMeta } = inputs;
     // Clamp the value because the search may return an index out of bounds.
     // In the last index, this is not needed because Array.slice doesn't include it.
     let firstRowIndex = Math.min(
       getNearestIndexToRender(inputs, top, {
         atStart: true,
         lastPosition:
-          inputs.rowsMeta.positions[inputs.rowsMeta.positions.length - 1] + inputs.lastRowHeight,
+          (RowsMeta.getPosition(rowsMeta, rowsMeta.rowCount - 1) ?? 0) + inputs.lastRowHeight,
       }),
-      inputs.rowsMeta.positions.length - 1,
+      rowsMeta.rowCount - 1,
     );
 
     // If any of the cells in the `firstRowIndex` is hidden due to an extended row span,
@@ -1038,16 +1040,11 @@ function computeRenderContext(
 
     let hasRowWithAutoHeight = false;
 
-    const [firstRowToRender, lastRowToRender] = getIndexesToRender({
-      firstIndex: renderContext.firstRowIndex,
-      lastIndex: renderContext.lastRowIndex,
-      minFirstIndex: 0,
-      maxLastIndex: inputs.rows.length,
-      bufferBefore: scrollCache.buffer.rowBefore,
-      bufferAfter: scrollCache.buffer.rowAfter,
-      positions: inputs.rowsMeta.positions,
-      lastSize: inputs.lastRowHeight,
-    });
+    const [firstRowToRender, lastRowToRender] = getRowIndexesToRender(
+      inputs,
+      renderContext,
+      scrollCache,
+    );
 
     if (!inputs.virtualizeColumnsWithAutoRowHeight) {
       for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
@@ -1084,6 +1081,11 @@ function getNearestIndexToRender(
   offset: number,
   options?: SearchOptions,
 ) {
+  const { rowsMeta } = inputs;
+  if (rowsMeta.positions === null) {
+    return searchRows(rowsMeta, offset, options);
+  }
+
   const lastMeasuredIndexRelativeToAllRows = inputs.api.rowsMeta.getLastMeasuredRowIndex();
   let allRowsMeasured = lastMeasuredIndexRelativeToAllRows === Infinity;
   if (inputs.range?.lastRowIndex && !allRowsMeasured) {
@@ -1094,16 +1096,13 @@ function getNearestIndexToRender(
   const lastMeasuredIndexRelativeToCurrentPage = clamp(
     lastMeasuredIndexRelativeToAllRows - (inputs.range?.firstRowIndex || 0),
     0,
-    inputs.rowsMeta.positions.length,
+    rowsMeta.rowCount,
   );
 
-  if (
-    allRowsMeasured ||
-    inputs.rowsMeta.positions[lastMeasuredIndexRelativeToCurrentPage] >= offset
-  ) {
+  if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndexRelativeToCurrentPage] >= offset) {
     // If all rows were measured (when no row has "auto" as height) or all rows before the offset
     // were measured, then use a binary search because it's faster.
-    return binarySearch(offset, inputs.rowsMeta.positions, options);
+    return binarySearch(offset, rowsMeta.positions, options);
   }
 
   // Otherwise, use an exponential search.
@@ -1112,7 +1111,7 @@ function getNearestIndexToRender(
   // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
   return exponentialSearch(
     offset,
-    inputs.rowsMeta.positions,
+    rowsMeta.positions,
     lastMeasuredIndexRelativeToCurrentPage,
     options,
   );
@@ -1128,16 +1127,11 @@ function deriveRenderContext(
   nextRenderContext: RenderContext,
   scrollCache: ScrollCache,
 ) {
-  const [firstRowToRender, lastRowToRender] = getIndexesToRender({
-    firstIndex: nextRenderContext.firstRowIndex,
-    lastIndex: nextRenderContext.lastRowIndex,
-    minFirstIndex: 0,
-    maxLastIndex: inputs.rows.length,
-    bufferBefore: scrollCache.buffer.rowBefore,
-    bufferAfter: scrollCache.buffer.rowAfter,
-    positions: inputs.rowsMeta.positions,
-    lastSize: inputs.lastRowHeight,
-  });
+  const [firstRowToRender, lastRowToRender] = getRowIndexesToRender(
+    inputs,
+    nextRenderContext,
+    scrollCache,
+  );
 
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
     firstIndex: nextRenderContext.firstColumnIndex,
@@ -1209,6 +1203,31 @@ function binarySearch(
     : binarySearch(offset, positions, options, pivot + 1, sliceEnd);
 }
 
+/**
+ * `binarySearch` over the row positions. Uniform rows have no positions array: their
+ * index follows from the offset directly.
+ */
+function searchRows(
+  rowsMeta: RowsMetaState,
+  offset: number,
+  options: SearchOptions | undefined = undefined,
+): number {
+  const { positions, rowCount, uniformRowHeight } = rowsMeta;
+  if (positions !== null) {
+    return binarySearch(offset, positions, options);
+  }
+  if (rowCount <= 0) {
+    return -1;
+  }
+  if (uniformRowHeight <= 0) {
+    return offset <= 0 ? 0 : rowCount;
+  }
+  const index = options?.atStart
+    ? Math.floor(offset / uniformRowHeight)
+    : Math.ceil(offset / uniformRowHeight);
+  return clamp(index, 0, rowCount);
+}
+
 function exponentialSearch(
   offset: number,
   positions: number[],
@@ -1229,6 +1248,34 @@ function exponentialSearch(
     Math.floor(index / 2),
     Math.min(index, positions.length),
   );
+}
+
+function getRowIndexesToRender(
+  inputs: RenderContextInputs,
+  renderContext: RenderContext,
+  scrollCache: ScrollCache,
+) {
+  const { rowsMeta } = inputs;
+  const { rowBefore: bufferBefore, rowAfter: bufferAfter } = scrollCache.buffer;
+  const firstPosition =
+    (RowsMeta.getPosition(rowsMeta, renderContext.firstRowIndex) ?? 0) - bufferBefore;
+  // `lastRowIndex` is exclusive: when it points past the last row, the window extends to
+  // the end of the content.
+  const lastPosition =
+    (RowsMeta.getPosition(rowsMeta, renderContext.lastRowIndex) ??
+      rowsMeta.currentPageTotalHeight) + bufferAfter;
+
+  const firstIndexPadded = searchRows(rowsMeta, firstPosition, {
+    atStart: true,
+    lastPosition:
+      (RowsMeta.getPosition(rowsMeta, rowsMeta.rowCount - 1) ?? 0) + inputs.lastRowHeight,
+  });
+  const lastIndexPadded = searchRows(rowsMeta, lastPosition) + 1;
+
+  return [
+    clamp(firstIndexPadded, 0, inputs.rows.length),
+    clamp(lastIndexPadded, 0, inputs.rows.length),
+  ];
 }
 
 function getIndexesToRender({
@@ -1307,8 +1354,12 @@ function anchorTopFor(
   if (layoutMode !== 'sticky') {
     return anchorTop;
   }
-  const rowPositions = Dimensions.selectors.rowPositions(store.state);
-  return nextAnchorTop(anchorTop, rowPositions[renderContext.firstRowIndex] ?? 0, isSettled);
+  const rowsMeta = Dimensions.selectors.rowsMeta(store.state);
+  return nextAnchorTop(
+    anchorTop,
+    RowsMeta.getPosition(rowsMeta, renderContext.firstRowIndex) ?? 0,
+    isSettled,
+  );
 }
 
 /**
@@ -1323,7 +1374,7 @@ function anchorTopFor(
  */
 function averageRowHeight(store: Store<BaseState>, rowHeight: number) {
   const rowsMeta = Dimensions.selectors.rowsMeta(store.state);
-  const rowCount = rowsMeta.positions.length;
+  const { rowCount } = rowsMeta;
   if (rowCount === 0) {
     return rowHeight;
   }
@@ -1472,13 +1523,13 @@ function isLowOnRenderedBuffer(
   const context = store.state.virtualization.renderContext;
   const { buffer } = scrollCache;
   const dimensions = Dimensions.selectors.dimensions(store.state);
-  const rowPositions = Dimensions.selectors.rowPositions(store.state);
+  const rowsMeta = Dimensions.selectors.rowsMeta(store.state);
   const contentHeight = Dimensions.selectors.contentHeight(store.state);
 
   const visibleTop = scrollPosition.top;
   const visibleBottom = visibleTop + dimensions.viewportInnerSize.height;
-  const renderedTop = rowPositions[context.firstRowIndex] ?? 0;
-  const renderedBottom = rowPositions[context.lastRowIndex] ?? contentHeight;
+  const renderedTop = RowsMeta.getPosition(rowsMeta, context.firstRowIndex) ?? 0;
+  const renderedBottom = RowsMeta.getPosition(rowsMeta, context.lastRowIndex) ?? contentHeight;
 
   if (context.firstRowIndex > 0 && visibleTop - renderedTop < buffer.rowBefore / 2) {
     return true;

@@ -491,6 +491,7 @@
   { "name": "GridRowMultiSelectionApi", "kind": "Interface" },
   { "name": "gridRowNodeSelector", "kind": "Variable" },
   { "name": "GridRowParams", "kind": "Interface" },
+  { "name": "gridRowPositionSelector", "kind": "Variable" },
   { "name": "GridRowProApi", "kind": "Interface" },
   { "name": "GridRowProPrivateApi", "kind": "Interface" },
   { "name": "GridRowProps", "kind": "Interface" },

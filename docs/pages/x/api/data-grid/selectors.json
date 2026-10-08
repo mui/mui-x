@@ -326,6 +326,11 @@
     "category": "Rows",
     "description": ""
   },
+  {
+    "name": "gridRowPositionSelector",
+    "returnType": "number | undefined",
+    "description": "Position of the row at `index` in the current page, or `undefined` out of range."
+  },
   { "name": "gridRowSelectionCountSelector", "returnType": "number", "description": "" },
   {
     "name": "gridRowSelectionIdsSelector",

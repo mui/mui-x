@@ -81,9 +81,19 @@ export interface DimensionsState {
  */
 export interface RowsMetaState {
   /**
-   * The grid rows positions.
+   * The number of rows in the current page.
    */
-  positions: number[];
+  rowCount: number;
+  /**
+   * The height shared by every row of the current page.
+   * Only meaningful while `positions` is `null`.
+   */
+  uniformRowHeight: number;
+  /**
+   * The position of each row, or `null` while every row has `uniformRowHeight` (the common
+   * case, where the array is never built). Read through `RowsMeta.getPosition`.
+   */
+  positions: number[] | null;
   /**
    * The sum of all visible grid rows in the current rows.
    */
@@ -111,4 +121,24 @@ export type HeightEntry = {
 
   autoHeight: boolean;
   needsFirstMeasurement: boolean;
+};
+
+export const RowsMeta = {
+  /** Position of the row at `index`, or `undefined` out of range, like an array lookup. */
+  getPosition: (rowsMeta: RowsMetaState, index: number): number | undefined => {
+    if (rowsMeta.positions !== null) {
+      return rowsMeta.positions[index];
+    }
+    return index >= 0 && index < rowsMeta.rowCount ? index * rowsMeta.uniformRowHeight : undefined;
+  },
+  /** Height of the slot of the row at `index` (spacing and detail included), or 0 out of range. */
+  getSlotHeight: (rowsMeta: RowsMetaState, index: number): number => {
+    const position = RowsMeta.getPosition(rowsMeta, index);
+    if (position === undefined) {
+      return 0;
+    }
+    const nextPosition =
+      RowsMeta.getPosition(rowsMeta, index + 1) ?? rowsMeta.currentPageTotalHeight;
+    return nextPosition - position;
+  },
 };

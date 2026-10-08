@@ -124,6 +124,7 @@ export type {
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
+export { RowsMeta } from '@mui/x-virtualizer';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export {
   getRowIdFromRowModel,

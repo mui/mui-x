@@ -8,7 +8,15 @@ import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { Store, useStore, createSelectorMemoized } from '@base-ui/utils/store';
-import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
+import {
+  ColumnWithWidth,
+  DimensionsState,
+  RowId,
+  RowEntry,
+  RowsMeta,
+  RowsMetaState,
+  Size,
+} from '../models';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
@@ -61,7 +69,7 @@ const selectors = {
   autoHeight: (state: BaseState) => state.dimensions.autoHeight,
   minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
-  rowPositions: (state: BaseState) => state.rowsMeta.positions,
+  rowPosition: (state: BaseState, index: number) => RowsMeta.getPosition(state.rowsMeta, index),
   // Memoized on the columns alone.
   // Without an input selector, the whole state is the memoization key.
   columnPositions: createSelectorMemoized(
@@ -114,20 +122,14 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 
   // Calculate the initial content height and row positions so the
   // initial render gets the correct size.
-  const positions: number[] = [];
-  let currentPageTotalHeight = 0;
-  if (getRowHeight && rows.length > 0) {
-    for (let i = 0; i < rows.length; i += 1) {
-      positions.push(currentPageTotalHeight);
-      const height = getRowHeight(rows[i]);
-      currentPageTotalHeight += typeof height === 'number' ? height : rowHeight;
-    }
-  } else {
-    for (let i = 0; i < rowCount; i += 1) {
-      positions.push(i * rowHeight);
-    }
-    currentPageTotalHeight = rowCount * rowHeight;
-  }
+  const rowsLayout =
+    getRowHeight && rows.length > 0
+      ? measureRows(rows.length, rowHeight, (i) => {
+          const height = getRowHeight(rows[i]);
+          return typeof height === 'number' ? height : rowHeight;
+        })
+      : measureRows(rowCount, rowHeight, () => rowHeight);
+  const { currentPageTotalHeight } = rowsLayout;
 
   // Reflect the pinned zone sizes in the container heights at initialization, mirroring
   // `updateDimensions`. The pinned rows' measured height is still 0 in `rowsMeta`
@@ -149,9 +151,8 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     },
   };
 
-  const rowsMeta = {
-    currentPageTotalHeight,
-    positions,
+  const rowsMeta: RowsMetaState = {
+    ...rowsLayout,
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
   };
@@ -593,15 +594,10 @@ function useRowsMeta(
         return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
       }, 0) ?? 0;
 
-    const positions: number[] = [];
-    const currentPageTotalHeight = rows.reduce((acc, row) => {
-      positions.push(acc);
-
-      const entry = processHeightEntry(row);
-      const total = entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-
-      return acc + total;
-    }, 0);
+    const rowsLayout = measureRows(rows.length, selectors.rowHeight(store.state), (i) => {
+      const entry = processHeightEntry(rows[i]);
+      return entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    });
 
     if (!hasRowWithAutoHeight.current) {
       // No row has height=auto, so all rows are already measured
@@ -611,11 +607,10 @@ function useRowsMeta(
     const didHeightsChange =
       pinnedTopRowsTotalHeight !== store.state.rowsMeta.pinnedTopRowsTotalHeight ||
       pinnedBottomRowsTotalHeight !== store.state.rowsMeta.pinnedBottomRowsTotalHeight ||
-      currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
+      rowsLayout.currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
 
-    const rowsMeta = {
-      currentPageTotalHeight,
-      positions,
+    const rowsMeta: RowsMetaState = {
+      ...rowsLayout,
       pinnedTopRowsTotalHeight,
       pinnedBottomRowsTotalHeight,
     };
@@ -717,6 +712,36 @@ function useRowsMeta(
     getLastMeasuredRowIndex,
     resetRowHeights,
   };
+}
+
+// Lays out `rowCount` rows of the given heights. The positions array is only built once a
+// row height differs from the previous ones: with uniform heights, the positions follow
+// from `uniformRowHeight` alone (see `RowsMeta.getPosition`).
+function measureRows(
+  rowCount: number,
+  defaultRowHeight: number,
+  getRowHeight: (index: number) => number,
+): Pick<RowsMetaState, 'rowCount' | 'uniformRowHeight' | 'positions' | 'currentPageTotalHeight'> {
+  let uniformRowHeight = defaultRowHeight;
+  let positions: number[] | null = null;
+  let currentPageTotalHeight = 0;
+
+  for (let i = 0; i < rowCount; i += 1) {
+    const height = getRowHeight(i);
+    if (i === 0) {
+      uniformRowHeight = height;
+    } else if (positions === null && height !== uniformRowHeight) {
+      positions = uniformPositions(i, uniformRowHeight);
+    }
+    positions?.push(currentPageTotalHeight);
+    currentPageTotalHeight += height;
+  }
+
+  return { rowCount, uniformRowHeight, positions, currentPageTotalHeight };
+}
+
+function uniformPositions(rowCount: number, rowHeight: number) {
+  return Array.from({ length: rowCount }, (_, index) => index * rowHeight);
 }
 
 export function observeRootNode(
