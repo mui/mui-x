@@ -395,6 +395,16 @@ export default defineConfig(
   },
 
   {
+    // TypeScript's project service omits generated JavaScript beside its TypeScript source.
+    files: ['docs/**/*.{js,jsx}'],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+        project: ['./docs/tsconfig.eslint.json'],
+      },
+    },
+  },
+  {
     files: [`docs/src/pages/**/*${EXTENSION_TS}`, `docs/data/**/*${EXTENSION_TS}`],
     rules: {
       // This most often reports data that is defined after the component definition.
