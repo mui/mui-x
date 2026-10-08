@@ -133,7 +133,7 @@ function Toolbar() {
             <TextField
               {...props}
               inputRef={ref}
-              aria-label="Search events"
+              slotProps={{ htmlInput: { 'aria-label': 'Search events' } }}
               size="small"
             />
           )}
