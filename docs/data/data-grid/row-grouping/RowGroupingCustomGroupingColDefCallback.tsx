@@ -1,3 +1,5 @@
+import { gridRowIdSelector } from '@mui/x-data-grid';
+import { gridRowNodeSelector } from '@mui/x-data-grid';
 import * as React from 'react';
 import {
   DataGridPremium,
@@ -35,12 +37,16 @@ export default function RowGroupingCustomGroupingColDefCallback() {
         return {
           headerName: 'Director',
           valueFormatter: (value: string, row: GridRowModel) => {
-            const rowId = apiRef.current?.getRowId(row);
+            const rowId = apiRef.current
+              ? gridRowIdSelector(apiRef, row)
+              : undefined;
             if (!rowId) {
               return undefined;
             }
 
-            const rowNode = apiRef.current?.getRowNode(rowId);
+            const rowNode = apiRef.current
+              ? gridRowNodeSelector(apiRef, rowId)
+              : undefined;
             if (rowNode?.type === 'group' && rowNode?.groupingField === 'director') {
               return `by ${rowNode.groupingKey ?? ''}`;
             }

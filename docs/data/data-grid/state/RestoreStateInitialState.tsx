@@ -1,3 +1,4 @@
+import Select from '@mui/material/Select';
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -6,9 +7,9 @@ import {
   DataGridPro,
   GridInitialState,
   GridSlotProps,
-  GridToolbarContainer,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
+  Toolbar,
+  GridDensity,
+  FilterPanelTrigger,
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
@@ -25,9 +26,21 @@ function GridCustomToolbar({ syncState }: GridSlotProps['toolbar']) {
   const apiRef = useGridApiContext();
 
   return (
-    <GridToolbarContainer>
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
+    <Toolbar>
+      <FilterPanelTrigger render={<Button />}>Filters</FilterPanelTrigger>
+      <Select
+        native
+        size="small"
+        defaultValue="standard"
+        inputProps={{ 'aria-label': 'Density' }}
+        onChange={(event) =>
+          apiRef.current.setDensity(event.target.value as GridDensity)
+        }
+      >
+        <option value="compact">Compact</option>
+        <option value="standard">Standard</option>
+        <option value="comfortable">Comfortable</option>
+      </Select>
       <Button
         size="small"
         startIcon={<rootProps.slots.columnSelectorIcon />}
@@ -36,7 +49,7 @@ function GridCustomToolbar({ syncState }: GridSlotProps['toolbar']) {
       >
         Recreate the 2nd grid
       </Button>
-    </GridToolbarContainer>
+    </Toolbar>
   );
 }
 

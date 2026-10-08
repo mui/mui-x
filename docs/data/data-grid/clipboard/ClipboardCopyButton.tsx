@@ -1,3 +1,4 @@
+import { gridRowSelectionCountSelector } from '@mui/x-data-grid-premium';
 import * as React from 'react';
 import {
   DataGridPremium,
@@ -41,8 +42,8 @@ function getSelectionAsText(apiRef: RefObject<GridApiPremium | null>): string {
       .join('\n');
   }
 
-  const selectedRowIds = api.getSelectedRows();
-  if (selectedRowIds.size > 0) {
+  const selectedRowCount = gridRowSelectionCountSelector({ current: api });
+  if (selectedRowCount > 0) {
     return api.getDataAsCsv({
       includeHeaders: false,
       shouldAppendQuotes: false,

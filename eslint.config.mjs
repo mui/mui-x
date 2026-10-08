@@ -378,7 +378,7 @@ export default defineConfig(
   // Common config from core start
   {
     files: [`docs/**/*${EXTENSION_TS}`],
-    extends: createDocsConfig(),
+    extends: createDocsConfig({ baseDirectory: dirname }),
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
