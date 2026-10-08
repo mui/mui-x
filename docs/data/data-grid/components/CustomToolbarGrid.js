@@ -11,6 +11,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomToolbar() {
   return (
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents the legacy toolbar components and their migration to the new Toolbar.
     <GridToolbarContainer>
       <Typography
         sx={{
@@ -21,11 +22,15 @@ function CustomToolbar() {
       >
         Custom Toolbar
       </Typography>
+      {/* eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents the legacy toolbar components and their migration to the new Toolbar. */}
       <GridToolbarColumnsButton />
+      {/* eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents the legacy toolbar components and their migration to the new Toolbar. */}
       <GridToolbarFilterButton />
+      {/* eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents the legacy toolbar components and their migration to the new Toolbar. */}
       <GridToolbarDensitySelector
         slotProps={{ tooltip: { title: 'Change density' } }}
       />
+      {/* eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents the legacy toolbar components and their migration to the new Toolbar. */}
       <GridToolbarExport
         slotProps={{
           tooltip: { title: 'Export data' },

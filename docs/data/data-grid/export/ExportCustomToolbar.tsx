@@ -1,10 +1,12 @@
-import { DataGrid, Toolbar, GridToolbarExport } from '@mui/x-data-grid';
+import Button from '@mui/material/Button';
+import { DataGrid, Toolbar, ExportCsv, ExportPrint } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomToolbar() {
   return (
     <Toolbar>
-      <GridToolbarExport />
+      <ExportCsv render={<Button />}>Download as CSV</ExportCsv>
+      <ExportPrint render={<Button />}>Print</ExportPrint>
     </Toolbar>
   );
 }

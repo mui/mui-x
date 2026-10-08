@@ -111,7 +111,9 @@ export default function LazyLoadingGrid() {
         rowCount={rowCount}
         sortingMode="server"
         filterMode="server"
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents deprecated lazy loading and links to the server-side data replacement.
         rowsLoadingMode="server"
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- This demo documents deprecated lazy loading and links to the server-side data replacement.
         onFetchRows={debouncedHandleFetchRows}
         onSortModelChange={handleModelChange}
         onFilterModelChange={handleModelChange}
