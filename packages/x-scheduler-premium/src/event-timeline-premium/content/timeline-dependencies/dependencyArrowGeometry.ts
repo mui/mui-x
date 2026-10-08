@@ -13,6 +13,7 @@ import type {
 import {
   DEPENDENCY_ARROW_CORNER_RADIUS,
   buildDependencyArrowRoutes,
+  buildOffRangeDependencyArrowRoute,
   buildRoundedOrthogonalPath,
   countRouteCollisions,
 } from './dependencyArrowRouting';
@@ -25,8 +26,8 @@ import {
 
 export interface DependencyArrow {
   /**
-   * Unique key of the arrow: a dependency renders one arrow per pair of row
-   * appearances of its events.
+   * Unique key of the arrow: a dependency renders one arrow per pair of rows of its
+   * events.
    */
   key: string;
   id: SchedulerDependencyId;
@@ -56,7 +57,8 @@ export interface DependencyArrow {
   endPoint: DependencyArrowPoint;
   /**
    * The edge of the target event the arrow enters, and so the side of `endPoint` the
-   * arrow comes from.
+   * arrow comes from. For a target outside the visible range, the edge the arrow would
+   * enter coming from inside the timeline.
    */
   targetEdge: SchedulerEventSide;
   /**
@@ -73,8 +75,8 @@ export interface DependencyArrow {
 
 /**
  * Computes the arrow of each renderable dependency, connecting the edges of its two
- * events that its type constrains. An event outside the visible range is reached
- * through the timeline edge on its side.
+ * events that its type constrains. When the other event is on screen, an event outside
+ * the visible range is reached through the timeline edge on its side.
  */
 export function computeDependencyArrows(
   resolver: DependencyAnchorResolver,
@@ -104,14 +106,6 @@ export function computeDependencyArrows(
     const source = resolver.getEdgePoint(sourceAnchor, edges.source);
     const target = resolver.getEdgePoint(targetAnchor, edges.target);
 
-    const routes = buildDependencyArrowRoutes(
-      source,
-      target,
-      dependency.type,
-      resolver.detourOffset,
-      eventsWidth,
-    );
-
     // The event boxes the route may cross, used to pick the route and to cut the
     // hit-area around them. The endpoint events stay out: the end trims already
     // handle their edges. Gathered on demand — a single-candidate route only needs
@@ -135,25 +129,57 @@ export function computeDependencyArrows(
       return obstacles;
     };
 
-    // With several candidates, keep the one crossing the fewest events (first wins on
-    // a tie). Best-effort avoidance, not full pathfinding.
-    // With an off-range endpoint, the turn stays next to the event on screen instead,
-    // so the arrow shows right away which row the other event is on. The candidates go
-    // from the turn after the source to the turn before the target.
-    let points = routes[0];
-    if (routes.length > 1 && sourceAnchor.occurrence === null) {
-      points = routes[routes.length - 1];
-    } else if (routes.length > 1 && targetAnchor.occurrence !== null) {
-      const routeObstacles = getObstacles();
-      let bestCollisions = countRouteCollisions(points, routeObstacles);
-      for (let index = 1; index < routes.length && bestCollisions > 0; index += 1) {
-        const collisions = countRouteCollisions(routes[index], routeObstacles);
-        if (collisions < bestCollisions) {
-          bestCollisions = collisions;
-          points = routes[index];
+    let route: DependencyArrowPoint[] | null;
+    let targetEdge: SchedulerEventSide = edges.target;
+    if (targetAnchor.occurrence === null) {
+      route = buildOffRangeDependencyArrowRoute(
+        source,
+        edges.source === 'end' ? 1 : -1,
+        target,
+        true,
+        resolver.detourOffset,
+        eventsWidth,
+      );
+      // The arrowhead points out of the timeline: after the range, it comes from the
+      // left like into a start edge.
+      targetEdge = targetAnchor.side === 'after' ? 'start' : 'end';
+    } else if (sourceAnchor.occurrence === null) {
+      route = buildOffRangeDependencyArrowRoute(
+        target,
+        edges.target === 'end' ? 1 : -1,
+        source,
+        false,
+        resolver.detourOffset,
+        eventsWidth,
+      );
+    } else {
+      const routes = buildDependencyArrowRoutes(
+        source,
+        target,
+        dependency.type,
+        resolver.detourOffset,
+        eventsWidth,
+      );
+      // With several candidates, keep the one crossing the fewest events (first wins on
+      // a tie). Best-effort avoidance, not full pathfinding.
+      route = routes[0];
+      if (routes.length > 1) {
+        const routeObstacles = getObstacles();
+        let bestCollisions = countRouteCollisions(route, routeObstacles);
+        for (let index = 1; index < routes.length && bestCollisions > 0; index += 1) {
+          const collisions = countRouteCollisions(routes[index], routeObstacles);
+          if (collisions < bestCollisions) {
+            bestCollisions = collisions;
+            route = routes[index];
+          }
         }
       }
     }
+
+    if (route === null) {
+      return null;
+    }
+    const points = route;
 
     let minX = Infinity;
     let maxX = -Infinity;
@@ -191,7 +217,7 @@ export function computeDependencyArrows(
         return hitD;
       },
       endPoint: points[points.length - 1],
-      targetEdge: edges.target,
+      targetEdge,
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
       minRowIndex,
@@ -219,7 +245,7 @@ export function computeDependencyArrows(
         : resolver.getOffRangeAnchors(dependency.target);
 
     // An endpoint without an anchor is not rendered in the timeline: its event has no
-    // resource, is not loaded, is hidden by the hour window, or its row is hidden. The
+    // resource, is hidden by the hour window between two visible days, or its row is hidden. The
     // dependency stays in the data, it just has no arrow.
     if (sourceAnchors.length === 0 || targetAnchors.length === 0) {
       continue;

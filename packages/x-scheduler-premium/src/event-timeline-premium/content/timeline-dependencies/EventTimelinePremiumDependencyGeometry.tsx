@@ -9,6 +9,7 @@ import type {
   SchedulerEventOccurrence,
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumDependencySelectors,
@@ -157,7 +158,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     store,
     eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
   );
-  const processedEventLookup = useStore(store, (state) => state.processedEventLookup);
+  const processedEventLookup = useStore(store, schedulerEventSelectors.processedEventLookup);
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 

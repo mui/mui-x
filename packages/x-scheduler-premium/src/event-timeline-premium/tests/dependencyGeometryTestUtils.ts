@@ -56,6 +56,10 @@ export function getOccurrences(events: SchedulerProcessedEvent[]) {
   });
 }
 
+export function buildEventLookup(...events: SchedulerProcessedEvent[]) {
+  return new Map(events.map((event) => [event.id, event]));
+}
+
 export function buildDependency(
   id: string,
   source: string,

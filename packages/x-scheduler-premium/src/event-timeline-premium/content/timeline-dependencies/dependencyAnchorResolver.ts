@@ -36,8 +36,8 @@ export interface DependencyArrowAnchor {
 }
 
 /**
- * Stands in for an event outside the visible date range: its arrows leave the timeline
- * on the event's row, through the edge on the event's side.
+ * Stands in for an event outside the visible date range: its arrows reach the timeline
+ * edge on the event's side, on the event's row.
  */
 export interface DependencyArrowOffRangeAnchor {
   rowIndex: number;
@@ -197,21 +197,32 @@ export function createDependencyAnchorResolver(
   };
 
   let rowIndexByResourceId: Map<SchedulerResourceId, number> | null = null;
-  const getOffRangeAnchors = (
-    eventId: SchedulerEventId,
-  ): readonly DependencyArrowOffRangeAnchor[] => {
+  const offRangeAnchorsLookup = new Map<SchedulerEventId, DependencyArrowOffRangeAnchor[]>();
+  const computeOffRangeAnchors = (eventId: SchedulerEventId): DependencyArrowOffRangeAnchor[] => {
     const event = processedEventLookup.get(eventId);
     if (event == null) {
       return [];
     }
-    // Same inclusive bounds as the range query of the rendered occurrences.
+    // Placed on the axis rather than compared with its bounds: the bounds are midnights,
+    // so the hours the window hides at the start of the first day and the end of the
+    // last day also come before or after what is on screen.
+    const position = computeElementPositionInCollection(adapter, {
+      start: event.displayTimezone.start,
+      end: event.displayTimezone.end,
+      collection: axis,
+      durationMs,
+    });
     let side: DependencyArrowOffRangeAnchor['side'];
-    if (adapter.isBefore(event.displayTimezone.end.value, axis.start)) {
+    if (position.duration > 0) {
+      // On screen, but not rendered in any row.
+      return [];
+    }
+    if (position.position === 0) {
       side = 'before';
-    } else if (adapter.isAfter(event.displayTimezone.start.value, axis.end)) {
+    } else if (position.position === 1) {
       side = 'after';
     } else {
-      // In the range but not rendered, for example hidden by the hour window.
+      // Hidden by the hour window between two visible days.
       return [];
     }
     if (rowIndexByResourceId == null) {
@@ -223,6 +234,17 @@ export function createDependencyAnchorResolver(
       if (rowIndex !== undefined) {
         anchors.push({ rowIndex, resourceId, occurrence: null, side });
       }
+    }
+    return anchors;
+  };
+
+  const getOffRangeAnchors = (
+    eventId: SchedulerEventId,
+  ): readonly DependencyArrowOffRangeAnchor[] => {
+    let anchors = offRangeAnchorsLookup.get(eventId);
+    if (anchors == null) {
+      anchors = computeOffRangeAnchors(eventId);
+      offRangeAnchorsLookup.set(eventId, anchors);
     }
     return anchors;
   };
