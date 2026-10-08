@@ -19,7 +19,7 @@ export interface RenameDialogProps {
 export function RenameDialog(props: RenameDialogProps) {
   const { params, open, container, onSave, onClose } = props;
 
-  const handleSave = (event: React.FormEvent) => {
+  const handleSave = (event: React.SubmitEvent) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget as HTMLFormElement);
