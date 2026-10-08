@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { vi, describe, it, expect, beforeEach, onTestFinished } from 'vitest';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { BarPlot } from '@mui/x-charts/BarChart';
@@ -9,6 +10,7 @@ import { BAR_CHART_PREMIUM_PLUGINS } from '../BarChartPremium/BarChartPremium.pl
 import type { BarChartPremiumPluginSignatures } from '../BarChartPremium/BarChartPremium.plugins';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import { ChartsToolbarPremium } from './ChartsToolbarPremium';
+import type { ChartsToolbarPremiumProps } from './ChartsToolbarPremium';
 import { ChartsToolbarExcelExportTrigger } from './ChartsToolbarExcelExportTrigger';
 import { useChartPremiumExport } from '../internals/plugins/useChartPremiumExport';
 import type { UseChartPremiumExportSignature } from '../internals/plugins/useChartPremiumExport';
@@ -41,7 +43,7 @@ describe('<ChartsToolbarPremium />', () => {
     });
   });
 
-  const chart = (toolbarProps = {}) => (
+  const chart = (toolbarProps: Partial<ChartsToolbarPremiumProps> = {}) => (
     <ChartsDataProviderPremium<'bar', Signatures>
       plugins={PLUGINS}
       width={300}
@@ -142,20 +144,19 @@ describe('<ChartsToolbarPremium />', () => {
         series={[{ label: 'Sales', data: [1, 2] }]}
         xAxis={[{ data: ['A', 'B'] }]}
         showToolbar
-        slots={{
-          toolbar: () => (
-            <ChartsToolbarPremium
-              exportMenuItems={({ onClose }) => (
-                <ChartsToolbarExcelExportTrigger
-                  render={<li role="menuitem" />}
-                  onExport={onExport}
-                  onClick={onClose}
-                >
-                  Download as Excel
-                </ChartsToolbarExcelExportTrigger>
-              )}
-            />
-          ),
+        slots={{ toolbar: ChartsToolbarPremium }}
+        slotProps={{
+          toolbar: {
+            exportMenuItems: ({ onClose }) => (
+              <ChartsToolbarExcelExportTrigger
+                render={<li role="menuitem" />}
+                onExport={onExport}
+                onClick={onClose}
+              >
+                Download as Excel
+              </ChartsToolbarExcelExportTrigger>
+            ),
+          },
         }}
       />,
     );
@@ -164,6 +165,46 @@ describe('<ChartsToolbarPremium />', () => {
     await user.click(screen.getByRole('menuitem', { name: 'Download as Excel' }));
 
     expect(onExport.mock.calls).to.have.length(1);
+  });
+
+  it('reports a trigger that has nothing to export, through console.error', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    onTestFinished(() => {
+      consoleError.mockRestore();
+      consoleWarn.mockRestore();
+      clearWarningsCache();
+    });
+    clearWarningsCache();
+
+    const { user } = render(
+      <BarChartPremium
+        width={300}
+        height={200}
+        series={[{ label: 'Sales', data: [1, 2] }]}
+        xAxis={[{ data: ['A', 'B'] }]}
+        showToolbar
+        slots={{ toolbar: ChartsToolbarPremium }}
+        slotProps={{
+          toolbar: {
+            exportMenuItems: ({ onClose }) => (
+              <ChartsToolbarExcelExportTrigger render={<li role="menuitem" />} onClick={onClose}>
+                Download as Excel
+              </ChartsToolbarExcelExportTrigger>
+            ),
+          },
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Export' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Download as Excel' }));
+
+    const logged = consoleError.mock.calls.map((call) => call.join(' ')).join('\n');
+    expect(logged).to.contain('The Excel export trigger has nothing to export.');
+    // The message must not leak the severity as text, which `warnOnce(message, 'error')` did.
+    expect(logged).not.to.contain('list. error');
+    expect(consoleWarn.mock.calls).to.have.length(0);
   });
 
   it('logs a rejected export instead of leaving the promise unhandled', async () => {
