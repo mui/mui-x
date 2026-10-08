@@ -42,7 +42,6 @@
     "node": ">=14.0.0"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    ".": "./src/index.ts"
   }
 }

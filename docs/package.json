@@ -1,7 +1,6 @@
 {
   "name": "docs",
   "private": true,
-  "license": "MIT",
   "scripts": {
     "build": "rimraf ./export && cross-env NODE_ENV=production next build --webpack && pnpm link-check",
     "build:clean": "rimraf .next && pnpm build",
