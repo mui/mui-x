@@ -165,8 +165,9 @@ function routeSameEdges(
  * event outside the visible range: off the event edge, vertical right next to it, then
  * along the row of the other event up to the timeline edge.
  * `direction` is the side the route takes off the event edge: `1` to the right.
- * `null` when the turn falls outside the events area, for example when the event edge is
- * itself cut by the timeline edge: the route would only be a knot on that edge.
+ * An event edge close to the timeline edge gets a shorter turn. `null` when there is no
+ * room at all, that is when the event edge is itself cut by the timeline edge: the route
+ * would only be a knot on that edge.
  */
 export function buildOffRangeDependencyArrowRoute(
   anchor: DependencyArrowPoint,
@@ -178,10 +179,11 @@ export function buildOffRangeDependencyArrowRoute(
 ): DependencyArrowPoint[] | null {
   // Entering the event, the last segment must fit the arrowhead.
   const stub = isTimelineEdgeTarget ? DEPENDENCY_ARROW_STUB : DEPENDENCY_ARROW_TARGET_CLEARANCE;
-  const turnX = anchor.x + direction * stub;
-  if (turnX < 0 || turnX > eventsWidth) {
+  const room = direction === 1 ? eventsWidth - anchor.x : anchor.x;
+  if (room <= 0) {
     return null;
   }
+  const turnX = anchor.x + direction * Math.min(stub, room / 2);
 
   // Computed from the event to the timeline edge, reversed below when the edge is the
   // source.

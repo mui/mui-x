@@ -730,6 +730,27 @@ describe('dependencyArrowGeometry', () => {
         );
       });
 
+      it('should shorten the turn when the event edge is close to the timeline edge', () => {
+        // Ends at 23:59, 1px before the right edge.
+        const lateEvent = EventBuilder.new()
+          .id('event-late')
+          .singleDay('2024-01-15T23:00:00Z', 59)
+          .toProcessed();
+
+        const arrows = computeArrows(
+          'event-late',
+          'event-after',
+          undefined,
+          [lateEvent, eventAfter],
+          [{ resource: resource1, occurrences: getOccurrences([lateEvent]) }, resources[1]],
+        );
+
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d).to.equal(
+          `M 1439 31 L 1439.25 31 Q 1439.5 31 1439.5 31.25 L 1439.5 ${ROW_1_CENTER - 0.25} Q 1439.5 ${ROW_1_CENTER} 1439.75 ${ROW_1_CENTER} L ${EVENTS_WIDTH} ${ROW_1_CENTER}`,
+        );
+      });
+
       it('should skip a dependency when the event edge is cut by the same timeline edge', () => {
         // The successor started before the range: its start edge sits on the left edge
         // too, so the route would only be a knot there.
