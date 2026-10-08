@@ -23,8 +23,9 @@ import { PlaygroundToolbar } from './PlaygroundToolbar';
 import { PlaygroundFooter } from './PlaygroundFooter';
 import { AddColumnDialog } from './AddColumnDialog';
 
+// #target-branch-reference
 const GITHUB_URL =
-  'https://github.com/mui/mui-x/tree/master/docs/src/modules/components/demos/data-grid/SpreadsheetPlayground';
+  'https://github.com/mui/mui-x/tree/v9.x/docs/src/modules/components/demos/data-grid/SpreadsheetPlayground';
 
 // The formula bar renders as the grid's toolbar, so it lives inside the grid
 // context. Module scope keeps the slot identity stable across re-renders.

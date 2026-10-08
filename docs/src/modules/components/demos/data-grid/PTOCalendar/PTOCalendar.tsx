@@ -735,7 +735,8 @@ function PTOCalendar() {
   return (
     <DemoContainer
       theme={ptoCalendarTheme}
-      href="https://github.com/mui/mui-x/tree/master/docs/src/modules/components/demos/data-grid/PTOCalendar"
+      // #target-branch-reference
+      href="https://github.com/mui/mui-x/tree/v9.x/docs/src/modules/components/demos/data-grid/PTOCalendar"
     >
       <CalendarContext.Provider value={calendarState}>
         <Box

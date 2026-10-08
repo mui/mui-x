@@ -238,7 +238,8 @@ function InventoryDashboard() {
   return (
     <DemoContainer
       theme={inventoryTheme}
-      href="https://github.com/mui/mui-x/tree/master/docs/src/modules/components/demos/data-grid/Inventory"
+      // #target-branch-reference
+      href="https://github.com/mui/mui-x/tree/v9.x/docs/src/modules/components/demos/data-grid/Inventory"
     >
       <ThemeProvider theme={inventoryTheme}>
         <Box

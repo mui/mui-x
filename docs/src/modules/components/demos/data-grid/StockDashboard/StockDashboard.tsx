@@ -292,7 +292,8 @@ function StockDashboard() {
   return (
     <DemoContainer
       theme={stockDashboardTheme}
-      href="https://github.com/mui/mui-x/tree/master/docs/src/modules/components/demos/data-grid/StockDashboard"
+      // #target-branch-reference
+      href="https://github.com/mui/mui-x/tree/v9.x/docs/src/modules/components/demos/data-grid/StockDashboard"
     >
       <Box
         sx={{
