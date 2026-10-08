@@ -644,6 +644,50 @@ describe('dependencyArrowGeometry', () => {
         expect(arrows[0].minXFraction).to.equal(0);
       });
 
+      it('should turn right after the source when the successor is after the range', () => {
+        // `event-b` (x 780 to 840) sits on the successor's row: the collision count
+        // alone would pick the turn before the edge.
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources: [
+              resources[0],
+              { resource: resource2, occurrences: getOccurrences([eventB]) },
+            ],
+            rowPositions: [0, 62],
+            processedEventLookup: buildLookup(eventA, eventB, eventAfter),
+          }),
+          [buildDependency('dep-1', 'event-a', 'event-after')],
+        );
+
+        expect(
+          arrows[0].d.startsWith(`M 720 ${LANE_1_CENTER} L 724 ${LANE_1_CENTER} Q 728`),
+        ).to.equal(true);
+      });
+
+      it('should turn right before the target when the predecessor is before the range', () => {
+        // 05:00–06:00 (x 300 to 360) sits on the predecessor's row: the collision count
+        // alone would pick the turn after the edge.
+        const earlyEvent = EventBuilder.new()
+          .id('event-early')
+          .singleDay('2024-01-15T05:00:00Z')
+          .toProcessed();
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources: [
+              resources[0],
+              { resource: resource2, occurrences: getOccurrences([earlyEvent]) },
+            ],
+            rowPositions: [0, 62],
+            processedEventLookup: buildLookup(eventA, earlyEvent, eventBefore),
+          }),
+          [buildDependency('dep-1', 'event-before', 'event-a')],
+        );
+
+        // event-a starts at x 600: the turn sits 12px before it.
+        const y = 62 + LANE_1_CENTER;
+        expect(arrows[0].d.startsWith(`M 0 ${y} L 584 ${y} Q 588`)).to.equal(true);
+      });
+
       it('should render an arrow to every row of a multi-resource event after the range', () => {
         const multiResourceEvent = EventBuilder.new()
           .id('event-after')

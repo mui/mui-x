@@ -137,8 +137,13 @@ export function computeDependencyArrows(
 
     // With several candidates, keep the one crossing the fewest events (first wins on
     // a tie). Best-effort avoidance, not full pathfinding.
+    // With an off-range endpoint, the turn stays next to the event on screen instead,
+    // so the arrow shows right away which row the other event is on. The candidates go
+    // from the turn after the source to the turn before the target.
     let points = routes[0];
-    if (routes.length > 1) {
+    if (routes.length > 1 && sourceAnchor.occurrence === null) {
+      points = routes[routes.length - 1];
+    } else if (routes.length > 1 && targetAnchor.occurrence !== null) {
       const routeObstacles = getObstacles();
       let bestCollisions = countRouteCollisions(points, routeObstacles);
       for (let index = 1; index < routes.length && bestCollisions > 0; index += 1) {
