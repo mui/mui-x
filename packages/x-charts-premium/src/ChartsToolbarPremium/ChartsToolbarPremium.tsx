@@ -160,7 +160,7 @@ function ChartsToolbarPremium({
               />
             )}
             {showDataGridExport && (
-              <ChartsToolbarExcelExportMenuItem
+              <ExcelExportMenuItem
                 label={localeText.toolbarExportDataGridExcel}
                 onExport={onDataGridExcelExport}
                 onClose={params.onClose}
