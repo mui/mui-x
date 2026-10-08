@@ -102,7 +102,7 @@ DemoItem.displayName = 'DemoItem';
 
 const isDemoItem = (child: React.ReactNode): child is React.ReactElement<DemoItemProps> => {
   if (React.isValidElement(child) && typeof child.type !== 'string') {
-    // @ts-ignore
+    // @ts-expect-error React also permits class constructors without a declared displayName property.
     return child.type.displayName === 'DemoItem';
   }
   return false;
@@ -201,7 +201,6 @@ export function DemoContainer(props: DemoGridProps) {
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child) && isDemoItem(child)) {
           // Inject sx styles to the `DemoItem` if it is a direct child of `DemoContainer`.
-          // @ts-ignore
           return React.cloneElement(child, {
             sx: [
               { ...extraSx, ...demoItemSx },

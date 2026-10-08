@@ -1240,7 +1240,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       expect(() => {
         render(
           <div style={{ width: 150, height: 300 }}>
-            {/* @ts-ignore */}
+            {/* @ts-expect-error Test the runtime warning when pagination is disabled in the community grid. */}
             <DataGrid pagination={false} columns={[]} rows={[]} />
           </div>,
         );

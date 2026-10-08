@@ -126,7 +126,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     // Slot system
     slots,
     slotProps,
-    // @ts-ignore
+    // @ts-expect-error Range pickers pass this internal data attribute outside the public text-field props.
     'data-active-range-position': dataActiveRangePosition,
     ...other
   } = props;

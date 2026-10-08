@@ -549,7 +549,7 @@ export function computeRowsUpdates(
 
     const rowNode = gridRowNodeSelector(apiRef, id);
     if (rowNode?.type === 'pinnedRow') {
-      // @ts-ignore because otherwise `release:build` doesn't work
+      // @ts-expect-error The public API type omits private caches used by this internal row update.
       const pinnedRowsCache = apiRef.current.caches.pinnedRows;
       const prevModel = pinnedRowsCache.idLookup[id];
       if (prevModel) {

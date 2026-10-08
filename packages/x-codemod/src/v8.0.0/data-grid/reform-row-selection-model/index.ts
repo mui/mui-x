@@ -1,4 +1,3 @@
-// @ts-nocheck - TODO: fix this
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
@@ -15,8 +14,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     .find(j.JSXOpeningElement)
     .filter(
       (path) =>
-        j.JSXIdentifier.check(path.node.name) &&
-        componentNames.some((name) => name === path.node.name.name),
+        j.JSXIdentifier.check(path.node.name) && componentNames.includes(path.node.name.name),
     )
     .forEach((path) => {
       path.node.attributes?.forEach((attr) => {
@@ -46,12 +44,13 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         path.node.id.elements.length === 2 &&
         j.Identifier.check(path.node.id.elements[0]) &&
         usedInDataGrid.has(path.node.id.elements[0].name) && // Only modify if used in `componentNames`
-        path.node.init &&
+        path.node.init != null &&
         j.CallExpression.check(path.node.init) &&
         ((j.MemberExpression.check(path.node.init.callee) &&
           j.Identifier.check(path.node.init.callee.object) &&
           ['React', 'useState', 'useMemo'].includes(path.node.init.callee.object.name)) ||
-          ['useState', 'useMemo'].includes(path.node.init.callee.name)) && // Handle direct calls
+          (j.Identifier.check(path.node.init.callee) &&
+            ['useState', 'useMemo'].includes(path.node.init.callee.name))) && // Handle direct calls
         path.node.init.arguments.length > 0 &&
         (j.ArrayExpression.check(path.node.init.arguments[0]) ||
           (j.ArrowFunctionExpression.check(path.node.init.arguments[0]) &&
@@ -59,9 +58,22 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             j.ArrayExpression.check(path.node.init.arguments[0].body))),
     )
     .forEach((path) => {
-      const arrayExpression = j.ArrayExpression.check(path.node.init?.arguments[0])
-        ? path.node.init?.arguments[0]
-        : path.node.init?.arguments[0]?.body;
+      const init = path.node.init;
+      if (!j.CallExpression.check(init)) {
+        return;
+      }
+      const firstArgument = init.arguments[0];
+      let arrayExpression;
+      if (j.ArrayExpression.check(firstArgument)) {
+        arrayExpression = firstArgument;
+      } else if (
+        j.ArrowFunctionExpression.check(firstArgument) &&
+        j.ArrayExpression.check(firstArgument.body)
+      ) {
+        arrayExpression = firstArgument.body;
+      } else {
+        return;
+      }
 
       const newObject = j.objectExpression([
         j.property('init', j.identifier('type'), j.literal('include')),
@@ -72,10 +84,10 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         ),
       ]);
 
-      if (j.ArrayExpression.check(path.node.init.arguments[0])) {
-        path.node.init.arguments[0] = newObject;
-      } else {
-        path.node.init.arguments[0].body = newObject;
+      if (j.ArrayExpression.check(firstArgument)) {
+        init.arguments[0] = newObject;
+      } else if (j.ArrowFunctionExpression.check(firstArgument)) {
+        firstArgument.body = newObject;
       }
     });
 

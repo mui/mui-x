@@ -135,7 +135,7 @@ describe('formatNumber', () => {
 
     beforeEach(() => {
       originalIntl = globalThis.Intl;
-      // @ts-ignore
+      // @ts-expect-error Remove the required Intl global to test the fallback without internationalization support.
       delete globalThis.Intl;
     });
 
@@ -154,7 +154,7 @@ describe('formatNumber', () => {
 
     beforeEach(() => {
       originalNumberFormat = Intl.NumberFormat;
-      // @ts-ignore
+      // @ts-expect-error Replace the Intl.NumberFormat constructor with a throwing function to test the fallback.
       Intl.NumberFormat = () => {
         throw new Error('NumberFormat error');
       };

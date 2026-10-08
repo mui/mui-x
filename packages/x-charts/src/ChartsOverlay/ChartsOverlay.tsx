@@ -24,9 +24,11 @@ export function useNoData() {
       const seriesItem = series[seriesId];
 
       // These prevent a type error when building the package.
-      // @ts-ignore, sankey type is not declared in the base package
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Sankey is added by Premium augmentation, absent when building the community package.
+      // @ts-ignore Sankey is added by Premium augmentation, absent when building the community package.
       if (seriesItem.type === 'sankey') {
-        // @ts-ignore, sankey type is not declared in the base package
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Sankey data is added by Premium augmentation, absent in the community build.
+        // @ts-ignore Sankey data is added by Premium augmentation, absent in the community build.
         return seriesItem.data.links.length === 0;
       }
 

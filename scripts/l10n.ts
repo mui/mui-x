@@ -16,7 +16,6 @@ import {
 } from '../docs/constants';
 import { resolvePrettierConfigPath } from '../docs/scripts/utils';
 
-// @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';

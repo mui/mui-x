@@ -64,6 +64,13 @@ pnpm --filter "@mui/x-charts*" run typescript # all charts packages
 pnpm typescript # typecheck the entire monorepo
 ```
 
+TypeScript directives must work in both workspace typechecks and standalone declaration builds.
+Optional Pro/Premium module augmentation and differing `noImplicitAny` settings can make an error
+appear only in one context; verify both before replacing `@ts-ignore` with `@ts-expect-error`.
+Keep any necessary lint exception on the individual directive and explain the differing context.
+After release builds, clean generated Charts `build` directories before source linting: pnpm workspace
+links target them, and ESLint can otherwise resolve generated CommonJS exports instead of source.
+
 ## Components documentation
 
 When editing React components or TypeScript types/interfaces in the `packages` folder, run the following script after you're done with the changes:
