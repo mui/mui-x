@@ -11,6 +11,5 @@ declare global {
   }
 
   // support process.env.NODE_ENV === '...'
-  // @ts-ignore
   const process: Process;
 }

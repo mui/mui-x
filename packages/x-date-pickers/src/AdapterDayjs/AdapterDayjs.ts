@@ -266,16 +266,16 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
     const timezone = this.getTimezone(value);
     // Plain system values already follow the native Date offset.
-    // @ts-ignore
+    // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
     if (timezone === 'UTC' || (timezone === 'system' && value.$offset === undefined)) {
       return value;
     }
 
     const fixedValue = value.tz(this.cleanTimezone(timezone), true);
     // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
-    // @ts-ignore
+    // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
     if ((fixedValue.$offset ?? 0) !== (value.$offset ?? 0)) {
-      // @ts-ignore
+      // @ts-expect-error Dayjs does not expose its internal UTC offset in its public types.
       value.$offset = fixedValue.$offset;
     }
     return value;
@@ -346,7 +346,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   public getTimezone = (value: Dayjs): string => {
     if (this.hasTimezonePlugin()) {
-      // @ts-ignore
+      // @ts-expect-error Dayjs does not expose its internal timezone metadata in its public types.
       const zone = value.$x?.$timezone;
 
       if (zone) {
