@@ -82,7 +82,6 @@ function ChartsToolbarPremium({
     showExcelExport || showDataGridExport || exportMenuItems
       ? (params: { onClose: () => void }) => (
           <React.Fragment>
-            {exportMenuItems?.(params)}
             {showExcelExport && (
               <ChartsToolbarExcelExportMenuItem
                 label={localeText.toolbarExportExcel}
@@ -98,6 +97,8 @@ function ChartsToolbarPremium({
                 onClose={params.onClose}
               />
             )}
+            {/* After the built-in entry, so `exportMenuItems` stays "at the end of the menu". */}
+            {exportMenuItems?.(params)}
           </React.Fragment>
         )
       : undefined;
