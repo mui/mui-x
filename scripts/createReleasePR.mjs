@@ -668,9 +668,10 @@ async function updateChangelogFile(changelogContent) {
 /**
  * Create the PR body with checklist
  * @param {string} newVersion - The new version
+ * @param {string} baseBranch - The branch the release PR targets (e.g. 'master' or 'v9.x')
  * @returns {string} The PR body
  */
-function createPrBody(newVersion) {
+function createPrBody(newVersion, baseBranch) {
   return `Release version ${newVersion}
 
 ### Prepare the release of the packages
@@ -687,8 +688,8 @@ function createPrBody(newVersion) {
 
 - [ ] Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
 - [ ] Choose "Run workflow" dropdown
-  > **Branch:** master
-  > **Commit SHA to release from:** the commit that contains the merged release on master. This commit is linked to the GitHub release.
+  > **Branch:** ${baseBranch}
+  > **Commit SHA to release from:** the commit that contains the merged release on ${baseBranch}. This commit is linked to the GitHub release.
 - [ ] Click "Run workflow"
 
 ### Publish the documentation
@@ -963,15 +964,15 @@ async function main() {
     await execa('git', ['push', forkRemote, branchName]);
     console.log(`Changes pushed to ${forkRemote}/${branchName}`);
 
+    // Determine the base branch based on the selected major version
+    const baseBranch = shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master';
+
     // Create PR body with checklist
-    const prBody = createPrBody(newVersion);
+    const prBody = createPrBody(newVersion, baseBranch);
 
     // Open a PR
     console.log('Opening a PR...');
     try {
-      // Determine the base branch based on the selected major version
-      const baseBranch = shouldUseVersionBranch ? majorVersionBranch(majorVersion) : 'master';
-
       // Get the origin owner (username or organization)
       const forkOwner = await findForkOwner();
 
