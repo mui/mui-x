@@ -74,6 +74,7 @@ export function buildResolver(parameters: {
   eventsWidth?: number;
   positionByOccurrenceKey?: ResolverParameters['positionByOccurrenceKey'];
   endpointIds?: ResolverParameters['endpointIds'];
+  processedEventLookup?: ResolverParameters['processedEventLookup'];
 }) {
   return createDependencyAnchorResolver({
     adapter,
@@ -84,6 +85,7 @@ export function buildResolver(parameters: {
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,
+    processedEventLookup: parameters.processedEventLookup ?? new Map(),
     endpointIds: parameters.endpointIds,
   });
 }

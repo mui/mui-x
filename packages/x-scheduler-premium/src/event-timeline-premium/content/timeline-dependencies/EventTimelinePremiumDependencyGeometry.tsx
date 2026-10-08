@@ -157,6 +157,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     store,
     eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
   );
+  const processedEventLookup = useStore(store, (state) => state.processedEventLookup);
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
@@ -182,6 +183,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
         positionByOccurrenceKey,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
+        processedEventLookup,
         endpointIds,
       }),
     // The config selector is memoized, so the object identity only changes with its content.
@@ -193,6 +195,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
       config,
       eventsWidth,
       theme,
+      processedEventLookup,
       endpointIds,
     ],
   );

@@ -6,7 +6,7 @@ import type {
 import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
 import type {
   DependencyAnchorResolver,
-  DependencyArrowAnchor,
+  DependencyArrowEndpoint,
   DependencyArrowObstacle,
   DependencyArrowPoint,
 } from './dependencyAnchorResolver';
@@ -73,7 +73,8 @@ export interface DependencyArrow {
 
 /**
  * Computes the arrow of each renderable dependency, connecting the edges of its two
- * events that its type constrains.
+ * events that its type constrains. An event outside the visible range is reached
+ * through the timeline edge on its side.
  */
 export function computeDependencyArrows(
   resolver: DependencyAnchorResolver,
@@ -87,8 +88,8 @@ export function computeDependencyArrows(
 
   const buildArrow = (
     dependency: SchedulerDependency,
-    sourceAnchor: DependencyArrowAnchor,
-    targetAnchor: DependencyArrowAnchor,
+    sourceAnchor: DependencyArrowEndpoint,
+    targetAnchor: DependencyArrowEndpoint,
   ): DependencyArrow | null => {
     if (
       !resolver.hasRowPosition(sourceAnchor.rowIndex) ||
@@ -122,8 +123,8 @@ export function computeDependencyArrows(
         for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
           for (const obstacle of resolver.getRowObstacles(rowIndex)) {
             if (
-              obstacle.occurrenceKey !== sourceAnchor.occurrence.key &&
-              obstacle.occurrenceKey !== targetAnchor.occurrence.key
+              obstacle.occurrenceKey !== sourceAnchor.occurrence?.key &&
+              obstacle.occurrenceKey !== targetAnchor.occurrence?.key
             ) {
               gathered.push(obstacle);
             }
@@ -195,12 +196,26 @@ export function computeDependencyArrows(
 
   const arrows: DependencyArrow[] = [];
   for (const dependency of dependencies) {
-    const sourceAnchors = resolver.getAppearances(dependency.source);
-    const targetAnchors = resolver.getAppearances(dependency.target);
+    const sourceAppearances = resolver.getAppearances(dependency.source);
+    const targetAppearances = resolver.getAppearances(dependency.target);
+
+    // With neither event on screen, nothing would explain the arrow.
+    if (sourceAppearances.length === 0 && targetAppearances.length === 0) {
+      continue;
+    }
+
+    const sourceAnchors: readonly DependencyArrowEndpoint[] =
+      sourceAppearances.length > 0
+        ? sourceAppearances
+        : resolver.getOffRangeAnchors(dependency.source);
+    const targetAnchors: readonly DependencyArrowEndpoint[] =
+      targetAppearances.length > 0
+        ? targetAppearances
+        : resolver.getOffRangeAnchors(dependency.target);
 
     // An endpoint without an anchor is not rendered in the timeline: its event has no
-    // resource, is outside the collection range, or its row is hidden. The dependency
-    // stays in the data, it just has no arrow.
+    // resource, is not loaded, is hidden by the hour window, or its row is hidden. The
+    // dependency stays in the data, it just has no arrow.
     if (sourceAnchors.length === 0 || targetAnchors.length === 0) {
       continue;
     }

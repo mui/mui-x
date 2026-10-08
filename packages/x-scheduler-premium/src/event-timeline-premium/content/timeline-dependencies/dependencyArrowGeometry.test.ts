@@ -592,6 +592,108 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows).to.deep.equal([]);
     });
 
+    describe('endpoints outside the visible range', () => {
+      // The visible range is 2024-01-15: these events sit the day after and the day before.
+      const eventAfter = EventBuilder.new()
+        .id('event-after')
+        .singleDay('2024-01-16T10:00:00Z')
+        .resource(resource2)
+        .toProcessed();
+      const eventBefore = EventBuilder.new()
+        .id('event-before')
+        .singleDay('2024-01-14T10:00:00Z')
+        .resource(resource2)
+        .toProcessed();
+      const buildLookup = (...events: SchedulerProcessedEvent[]) =>
+        new Map(events.map((event) => [event.id, event]));
+      // Row 1 is the resource of the off-range events, with nothing visible in it.
+      const resources = [
+        { resource: resource1, occurrences: getOccurrences([eventA]) },
+        { resource: resource2, occurrences: [] },
+      ];
+
+      it('should leave through the right edge on the row of a successor after the range', () => {
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources,
+            rowPositions: [0, 62],
+            processedEventLookup: buildLookup(eventA, eventAfter),
+          }),
+          [buildDependency('dep-1', 'event-a', 'event-after')],
+        );
+
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].endPoint).to.deep.equal({ x: EVENTS_WIDTH, y: 62 + LANE_1_CENTER });
+        expect(arrows[0].targetResourceId).to.equal('r2');
+        expect(arrows[0].maxXFraction).to.equal(1);
+      });
+
+      it('should enter through the left edge from the row of a predecessor before the range', () => {
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources,
+            rowPositions: [0, 62],
+            processedEventLookup: buildLookup(eventA, eventBefore),
+          }),
+          [buildDependency('dep-1', 'event-before', 'event-a')],
+        );
+
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d.startsWith(`M 0 ${62 + LANE_1_CENTER} `)).to.equal(true);
+        expect(arrows[0].sourceResourceId).to.equal('r2');
+        expect(arrows[0].minXFraction).to.equal(0);
+      });
+
+      it('should render an arrow to every row of a multi-resource event after the range', () => {
+        const multiResourceEvent = EventBuilder.new()
+          .id('event-after')
+          .singleDay('2024-01-16T10:00:00Z')
+          .resources([resource1, resource2])
+          .toProcessed();
+
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources,
+            rowPositions: [0, 62],
+            processedEventLookup: buildLookup(eventA, multiResourceEvent),
+          }),
+          [buildDependency('dep-1', 'event-a', 'event-after')],
+        );
+
+        expect(arrows.map((arrow) => arrow.key)).to.deep.equal([
+          'string:dep-1:0:0',
+          'string:dep-1:0:1',
+        ]);
+        expect(arrows.map((arrow) => arrow.endPoint.x)).to.deep.equal([EVENTS_WIDTH, EVENTS_WIDTH]);
+      });
+
+      it('should skip a dependency when the row of the off-range event is not shown', () => {
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources: [resources[0]],
+            rowPositions: [0],
+            processedEventLookup: buildLookup(eventA, eventAfter),
+          }),
+          [buildDependency('dep-1', 'event-a', 'event-after')],
+        );
+
+        expect(arrows).to.deep.equal([]);
+      });
+
+      it('should skip a dependency when both events are outside the range', () => {
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources,
+            rowPositions: [0, 62],
+            processedEventLookup: buildLookup(eventBefore, eventAfter),
+          }),
+          [buildDependency('dep-1', 'event-before', 'event-after')],
+        );
+
+        expect(arrows).to.deep.equal([]);
+      });
+    });
+
     describe('trimmed hour window', () => {
       // Window 8:00 → 20:00 on a single day: 720 axis minutes, eventsWidth 720 → 1px
       // per axis minute.
@@ -622,10 +724,11 @@ describe('dependencyArrowGeometry', () => {
 
       it('should produce no arrow when the source occurrence is hidden', () => {
         // 21:00–23:00 collapses to a zero-width sliver: the visible list excludes it,
-        // so the dependency has no source anchor.
+        // and being inside the range, it gets no off-range anchor either.
         const hiddenSource = EventBuilder.new()
           .id('event-hidden')
           .singleDay('2024-01-15T21:00:00Z', 120)
+          .resource(resource1)
           .toProcessed();
         const occurrences = filterVisibleOccurrences(
           TRIMMED_AXIS,
@@ -638,6 +741,7 @@ describe('dependencyArrowGeometry', () => {
             rowPositions: [0],
             axis: TRIMMED_AXIS,
             eventsWidth: TRIMMED_WIDTH,
+            processedEventLookup: new Map([[hiddenSource.id, hiddenSource]]),
           }),
           [buildDependency('dep-1', 'event-hidden', 'event-b')],
         );

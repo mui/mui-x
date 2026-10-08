@@ -212,6 +212,30 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       ]);
     });
 
+    it('should open on double click on an arrow to an event outside the visible range', async () => {
+      const laterEvent = EventBuilder.new()
+        .id('event-later')
+        .title('Event later')
+        .singleDay('2050-07-03T11:00:00Z')
+        .resource(resource2)
+        .build();
+      await renderTimeline({
+        events: [eventA, laterEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-later')],
+      });
+
+      const dialog = openDialog('dep-1');
+
+      expect(
+        within(dialog)
+          .getAllByRole('term')
+          .map((term) => [term.textContent, term.nextElementSibling?.textContent]),
+      ).to.deep.equal([
+        ['From', 'Event A'],
+        ['To', 'Event later'],
+      ]);
+    });
+
     it('should show the source and target in the colors of their events', async () => {
       await renderTimeline({
         events: [

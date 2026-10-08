@@ -211,25 +211,63 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
     ]);
   });
 
-  it('should not render an arrow when an endpoint event is outside the visible range', async () => {
-    const outOfRangeEvent = EventBuilder.new()
-      .id('event-out-of-range')
-      .title('Event out of range')
-      .singleDay('2050-07-03T11:00:00Z')
-      .resource(resource2)
-      .build();
+  describe('endpoint outside the visible range', () => {
+    function getPathCoordinates(dependencyId: string) {
+      const path = getArrowPaths().find(
+        (element) => element.getAttribute('data-dependency-id') === dependencyId,
+      )!;
+      return path
+        .getAttribute('d')!
+        .match(/-?[\d.]+/g)!
+        .map(parseFloat);
+    }
 
-    await renderTimeline({
-      events: [eventA, eventB, outOfRangeEvent],
-      dependencies: [
-        buildDependency('dep-1', 'event-a', 'event-out-of-range'),
-        buildDependency('dep-2', 'event-a', 'event-b'),
-      ],
+    function getEventsWidth() {
+      return parseFloat(document.querySelector('[data-dependency-arrows]')!.getAttribute('width')!);
+    }
+
+    it('should draw the arrow to the right edge, on the row of a successor after the range', async () => {
+      const laterEvent = EventBuilder.new()
+        .id('event-later')
+        .title('Event later')
+        .singleDay('2050-07-03T11:00:00Z')
+        .resource(resource2)
+        .build();
+
+      await renderTimeline({
+        events: [eventA, eventC, laterEvent],
+        dependencies: [
+          buildDependency('dep-1', 'event-a', 'event-later'),
+          // Ends on lane 1 of the same row, as a reference for the height.
+          buildDependency('dep-2', 'event-a', 'event-c'),
+        ],
+      });
+
+      const [endX, endY] = getPathCoordinates('dep-1').slice(-2);
+      expect(endX).to.equal(getEventsWidth());
+      expect(endY).to.equal(getPathCoordinates('dep-2').at(-1));
     });
 
-    expect(getArrowPaths().map((path) => path.getAttribute('data-dependency-id'))).to.deep.equal([
-      'dep-2',
-    ]);
+    it('should draw the arrow from the left edge, on the row of a predecessor before the range', async () => {
+      const earlierEvent = EventBuilder.new()
+        .id('event-earlier')
+        .title('Event earlier')
+        .singleDay('2020-07-03T11:00:00Z')
+        .resource(resource2)
+        .build();
+
+      await renderTimeline({
+        events: [eventA, eventC, earlierEvent],
+        dependencies: [
+          buildDependency('dep-1', 'event-earlier', 'event-a'),
+          buildDependency('dep-2', 'event-a', 'event-c'),
+        ],
+      });
+
+      const [startX, startY] = getPathCoordinates('dep-1');
+      expect(startX).to.equal(0);
+      expect(startY).to.equal(getPathCoordinates('dep-2').at(-1));
+    });
   });
 
   it('should update the arrow when the predecessor event moves', async () => {
