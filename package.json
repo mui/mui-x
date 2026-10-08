@@ -1,6 +1,7 @@
 {
   "version": "9.14.0",
   "private": true,
+  "//": "#target-branch-reference: scripts.prettier",
   "scripts": {
     "preinstall": "npx only-allow@1.2.2 pnpm",
     "start": "pnpm i && pnpm docs:dev",
