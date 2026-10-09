@@ -86,7 +86,7 @@ catalog:
 engineStrict: true
 updateNotifier: false
 autoDedupe: true
-blockExoticSubdeps: true
+blockExoticSubdeps: false
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - '@mui/*'
@@ -116,6 +116,9 @@ allowBuilds:
   msw: false
 
 overrides:
+  '@mui/material': https://pkg.pr.new/mui/material-ui/@mui/material@636e491e24
+  '@mui/system': https://pkg.pr.new/mui/material-ui/@mui/system@636e491e24
+  '@mui/utils': https://pkg.pr.new/mui/material-ui/@mui/utils@636e491e24
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
