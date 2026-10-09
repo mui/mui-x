@@ -12,16 +12,16 @@ interface CustomEvent {
 
 const initialEvents: CustomEvent[] = [
   {
-    id: 'work-daily-standup',
+    id: 'product-launch',
     start: '2025-07-02T09:00:00',
     end: '2025-07-02T09:30:00',
-    name: 'Daily Standup',
+    name: 'Product Launch',
   },
   {
-    id: 'work-retro',
+    id: 'client-meeting',
     start: '2025-07-01T16:00:00',
     end: '2025-07-01T17:00:00',
-    name: 'Team Retrospective',
+    name: 'Client Meeting',
   },
 ];
 
