@@ -62,6 +62,8 @@ interface MoreEventsData {
 interface MoreEventsPopoverContextValue {
   openPopover: (anchorEl: HTMLElement, data: MoreEventsData) => void;
   closePopover: () => void;
+  updatePopover: (data: MoreEventsData) => void;
+  closePopoverForDay: (dayKey: string) => void;
 }
 
 export const MoreEventsPopoverContext = React.createContext<
@@ -106,6 +108,35 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     }
   }, [open, anchor]);
 
+  // Deleting an event unmounts its item, so move focus to the one taking its place.
+  const bodyRef = React.useRef<HTMLDivElement>(null);
+  const previousOccurrencesRef = React.useRef(occurrences);
+  useIsoLayoutEffect(() => {
+    const previousOccurrences = previousOccurrencesRef.current;
+    previousOccurrencesRef.current = occurrences;
+    const body = bodyRef.current;
+    if (!open || !body || occurrences.length === 0) {
+      return;
+    }
+    const removedIndex = previousOccurrences.findIndex(
+      (previous) => !occurrences.some((occurrence) => occurrence.key === previous.key),
+    );
+    if (removedIndex === -1) {
+      return;
+    }
+    const ownerDocument = body.ownerDocument;
+    const activeElement = getActiveElement(ownerDocument);
+    const focusIsLost =
+      activeElement === null ||
+      activeElement === ownerDocument.body ||
+      activeElement === body.parentElement;
+    if (!focusIsLost) {
+      return;
+    }
+    const target = body.children[Math.min(removedIndex, occurrences.length - 1)];
+    (target as HTMLElement | undefined)?.focus();
+  }, [open, occurrences]);
+
   // Restore focus when it is about to be lost with the closing popover: on the document, or on
   // something unmounting with the popover. Focus already moved elsewhere is preserved.
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
@@ -136,7 +167,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
         </MoreEventsPopoverTitle>
       </MoreEventsPopoverHeader>
-      <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
+      <MoreEventsPopoverBody ref={bodyRef} className={classes.moreEventsPopoverBody}>
         {occurrences.map((occurrence) => (
           <EventContextMenuTrigger
             occurrence={occurrence}
@@ -180,9 +211,25 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
     setState((prev) => (prev.open ? { ...prev, open: false } : prev));
   });
 
+  // The trigger pushes the fresh occurrences of its day, so the list never goes stale.
+  const updatePopover = useStableCallback((data: MoreEventsData) => {
+    setState((prev) =>
+      prev.open && prev.data?.day.key === data.day.key && prev.data.occurrences !== data.occurrences
+        ? { ...prev, data }
+        : prev,
+    );
+  });
+
+  // The trigger unmounts once every event fits in the cell, taking the popover's anchor with it.
+  const closePopoverForDay = useStableCallback((dayKey: string) => {
+    setState((prev) =>
+      prev.open && prev.data?.day.key === dayKey ? { ...prev, open: false } : prev,
+    );
+  });
+
   const contextValue = React.useMemo<MoreEventsPopoverContextValue>(
-    () => ({ openPopover, closePopover }),
-    [openPopover, closePopover],
+    () => ({ openPopover, closePopover, updatePopover, closePopoverForDay }),
+    [openPopover, closePopover, updatePopover, closePopoverForDay],
   );
 
   return (
@@ -211,7 +258,15 @@ interface MoreEventsPopoverTriggerProps {
 
 export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
   const { occurrences, day, onClick, children } = props;
-  const { openPopover } = useMoreEventsPopoverContext();
+  const { openPopover, updatePopover, closePopoverForDay } = useMoreEventsPopoverContext();
+
+  useIsoLayoutEffect(() => {
+    updatePopover({ occurrences, day });
+  }, [occurrences, day, updatePopover]);
+
+  useIsoLayoutEffect(() => {
+    return () => closePopoverForDay(day.key);
+  }, [day.key, closePopoverForDay]);
 
   return React.cloneElement(children as React.ReactElement<any>, {
     onClick: (event: React.MouseEvent<HTMLElement>) => {

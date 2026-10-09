@@ -12,7 +12,7 @@ import {
   SchedulerStoreRunner,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
-import { act, screen, within, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, within, waitFor } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { vi, describe, it, expect } from 'vitest';
@@ -145,6 +145,30 @@ describe('<MonthView />', () => {
       await user.click(moreButton);
       const popover = await screen.findByRole('presentation');
       return { user, setProps, popover };
+    }
+
+    // Feeds `onEventsChange` back into `events`, so a delete actually removes the event.
+    async function renderAndOpenStatefulPopover(initialEvents = manyEvents) {
+      let applyChange: (events: object[]) => void = () => {};
+      const { setProps, ...other } = await renderAndOpenPopover({
+        events: initialEvents,
+        onEventsChange: (events) => applyChange(events),
+      });
+      applyChange = (events) => setProps({ events });
+      return { setProps, ...other };
+    }
+
+    function getPopoverEventTitles(popover: HTMLElement) {
+      return within(popover)
+        .getAllByRole('button')
+        .map((button) => button.getAttribute('aria-label')!.split(',')[0]);
+    }
+
+    function deleteFromPopover(popover: HTMLElement, title: string) {
+      fireEvent.contextMenu(
+        within(popover).getByRole('button', { name: new RegExp(`^${title},`) }),
+      );
+      fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
     }
 
     it('should have tabindex and role="button" on events in the popover', async () => {
@@ -384,6 +408,67 @@ describe('<MonthView />', () => {
         expect(document.body.contains(popover)).to.equal(false);
       });
       expect(document.activeElement).to.equal(movedTo);
+    });
+
+    it('should stop listing an event once it is deleted from the popover', async () => {
+      const { popover } = await renderAndOpenStatefulPopover();
+
+      deleteFromPopover(popover, 'Event 3');
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).to.deep.equal([
+          'Event 1',
+          'Event 2',
+          'Event 4',
+          'Event 5',
+          'Event 6',
+        ]);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+    });
+
+    it('should move focus to the next event after deleting one from the popover', async () => {
+      const { popover } = await renderAndOpenStatefulPopover();
+
+      deleteFromPopover(popover, 'Event 3');
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(
+          within(popover).getByRole('button', { name: /^Event 4,/ }),
+        );
+      });
+    });
+
+    it('should move focus to the previous event after deleting the last one from the popover', async () => {
+      const { popover } = await renderAndOpenStatefulPopover();
+
+      deleteFromPopover(popover, 'Event 6');
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(
+          within(popover).getByRole('button', { name: /^Event 5,/ }),
+        );
+      });
+    });
+
+    it('should close the popover and focus the day cell once every event fits in it', async () => {
+      const { popover } = await renderAndOpenStatefulPopover(manyEvents.slice(0, 3));
+
+      deleteFromPopover(popover, 'Event 3');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /more/i })).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      const may1Cell = screen
+        .getAllByRole('gridcell')
+        .find((cell) => within(cell).queryByText(/may 1/i));
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(may1Cell);
+      });
     });
 
     it('should return focus to the trigger when the popover is dismissed without editing', async () => {
