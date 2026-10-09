@@ -192,6 +192,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: TreeDataStrategy.DataSource,
+        childrenOrder: params.updates.childrenOrder,
       });
     },
     [props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
