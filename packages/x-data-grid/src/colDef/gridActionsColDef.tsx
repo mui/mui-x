@@ -8,7 +8,8 @@ export const GRID_ACTIONS_COL_DEF: GridColTypeDef = {
   ...GRID_STRING_COL_DEF,
   sortable: false,
   filterable: false,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds aggregable only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds aggregable only when the Premium package is included.
   aggregable: false,
   chartable: false,
   width: 100,

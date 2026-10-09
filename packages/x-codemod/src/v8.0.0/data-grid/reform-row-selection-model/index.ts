@@ -1,4 +1,4 @@
-// @ts-nocheck - TODO: fix this
+import type { JSXIdentifier, Identifier } from 'jscodeshift';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
@@ -16,7 +16,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     .filter(
       (path) =>
         j.JSXIdentifier.check(path.node.name) &&
-        componentNames.some((name) => name === path.node.name.name),
+        componentNames.some((name) => name === (path.node.name as JSXIdentifier).name),
     )
     .forEach((path) => {
       path.node.attributes?.forEach((attr) => {
@@ -42,6 +42,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     .find(j.VariableDeclarator)
     .filter(
       (path) =>
+        // @ts-expect-error This truthy predicate can return null or undefined; filter treats both as false.
         j.ArrayPattern.check(path.node.id) &&
         path.node.id.elements.length === 2 &&
         j.Identifier.check(path.node.id.elements[0]) &&
@@ -51,7 +52,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         ((j.MemberExpression.check(path.node.init.callee) &&
           j.Identifier.check(path.node.init.callee.object) &&
           ['React', 'useState', 'useMemo'].includes(path.node.init.callee.object.name)) ||
-          ['useState', 'useMemo'].includes(path.node.init.callee.name)) && // Handle direct calls
+          ['useState', 'useMemo'].includes((path.node.init.callee as Identifier).name)) && // Handle direct calls
         path.node.init.arguments.length > 0 &&
         (j.ArrayExpression.check(path.node.init.arguments[0]) ||
           (j.ArrowFunctionExpression.check(path.node.init.arguments[0]) &&
@@ -59,9 +60,12 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             j.ArrayExpression.check(path.node.init.arguments[0].body))),
     )
     .forEach((path) => {
+      // @ts-expect-error The preceding filter guarantees a call initializer; collection callbacks lose that narrowing.
       const arrayExpression = j.ArrayExpression.check(path.node.init?.arguments[0])
-        ? path.node.init?.arguments[0]
-        : path.node.init?.arguments[0]?.body;
+        ? // @ts-expect-error The preceding filter guarantees a call with an array argument.
+          path.node.init?.arguments[0]
+        : // @ts-expect-error The preceding filter guarantees an arrow callback returning an array in this branch.
+          path.node.init?.arguments[0]?.body;
 
       const newObject = j.objectExpression([
         j.property('init', j.identifier('type'), j.literal('include')),
@@ -72,9 +76,12 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         ),
       ]);
 
+      // @ts-expect-error The preceding filter guarantees a call initializer; collection callbacks lose that narrowing.
       if (j.ArrayExpression.check(path.node.init.arguments[0])) {
+        // @ts-expect-error The preceding filter guarantees a call with an array argument.
         path.node.init.arguments[0] = newObject;
       } else {
+        // @ts-expect-error The preceding filter guarantees an arrow callback returning an array in this branch.
         path.node.init.arguments[0].body = newObject;
       }
     });

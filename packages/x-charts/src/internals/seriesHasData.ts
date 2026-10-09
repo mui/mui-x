@@ -7,7 +7,8 @@ export function seriesHasData(
   type: ChartSeriesType,
   seriesId: SeriesId,
 ) {
-  // @ts-ignore sankey is not in MIT version
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Sankey is added by Premium augmentation, absent in the community build.
+  // @ts-ignore Sankey is added by Premium augmentation, absent in the community build.
   if (type === 'sankey') {
     return false;
   }

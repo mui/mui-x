@@ -141,10 +141,9 @@ export function getProcessedEventFromModel<TEvent extends object>(
   const modelInDefaultFormat = {} as SchedulerEvent;
 
   for (const key of EVENT_PROPERTIES) {
-    // @ts-ignore
     const getter = eventModelStructure?.[key]?.getter;
 
-    // @ts-ignore
+    // @ts-expect-error Each property getter returns its corresponding property type, but the key is a union.
     modelInDefaultFormat[key] = getter ? getter(model) : model[key];
   }
 
@@ -270,15 +269,14 @@ function createOrUpdateEventModelFromBuiltInEventModel<
       const typedKey = key as keyof SchedulerEvent;
       const setter = eventModelStructure?.[typedKey]?.setter;
       if (setter) {
-        // @ts-ignore
         propertiesWithSetter.push([setter, changes[key]]);
       } else if (changes[key] === undefined) {
-        // @ts-ignore
+        // @ts-expect-error Custom event models do not declare an index signature for property names.
         delete eventModel[key];
       }
       // If the property was set to its default value, remove it from the model
       else if (oldModel != null && key === 'allDay' && changes[key] === false) {
-        // @ts-ignore
+        // @ts-expect-error Custom event models do not declare an index signature for property names.
         delete eventModel[key];
       } else {
         setOwnProperty(eventModel, key, changes[key]);
@@ -305,7 +303,8 @@ export function getProcessedResourceFromModel<TResource extends object>(
   for (const key of RESOURCE_PROPERTIES) {
     const getter = resourceModelStructure?.[key]?.getter;
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Custom resource indexing errors only in consumers enabling noImplicitAny.
+    // @ts-ignore Custom resource indexing errors only in consumers enabling noImplicitAny.
     const resourceProperty = getter ? getter(resource) : resource[key];
 
     if (key === 'children' && Array.isArray(resourceProperty)) {
@@ -313,12 +312,11 @@ export function getProcessedResourceFromModel<TResource extends object>(
       const children = resourceProperty.map((child) =>
         getProcessedResourceFromModel(child, resourceModelStructure),
       );
-      // @ts-ignore
       processedResource[key] = children;
       continue;
     }
 
-    // @ts-ignore
+    // @ts-expect-error The resource getter returns the value for this key, but TypeScript loses the correlation.
     processedResource[key] = resourceProperty;
   }
 

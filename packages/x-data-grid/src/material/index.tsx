@@ -287,7 +287,6 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
       input?.focus({ preventScroll: true });
     } else if (autoFocus === false && rippleRef.current) {
       // Only available in @mui/material v5.4.1 or later
-      // @ts-ignore
       rippleRef.current.stop({});
     }
   }, [autoFocus]);

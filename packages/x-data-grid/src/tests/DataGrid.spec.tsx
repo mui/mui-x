@@ -43,9 +43,9 @@ function RowEditingProps() {
 function RowPropTest() {
   return (
     <div>
-      {/* @ts-expect-error */}
+      {/* @ts-expect-error The firstName field must be a string, not a number. */}
       <DataGrid<{ firstName: string }> rows={[{ firstName: 2 }]} columns={[]} />
-      {/* @ts-expect-error */}
+      {/* @ts-expect-error The row must include its required firstName field. */}
       <DataGrid<{ firstName: string }> rows={[{}]} columns={[]} />
       <DataGrid<{ firstName: string }> rows={[{ firstName: 'John' }]} columns={[]} />
       <DataGrid rows={[{ firstName: 'John' }]} columns={[]} />
@@ -62,16 +62,16 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            // @ts-expect-error
+            // @ts-expect-error The row model declares firstName, but no lastName property.
             valueGetter: (value, row) => row.lastName,
-            // @ts-expect-error
+            // @ts-expect-error The row model declares firstName, but no lastName property.
             valueParser: (value, row) => row!.lastName,
             valueSetter: (value, row) => {
-              // @ts-expect-error
+              // @ts-expect-error The row model declares firstName, but no lastName property.
               const lastName = row.lastName;
               return {} as any;
             },
-            // @ts-expect-error
+            // @ts-expect-error The row model declares firstName, but no lastName property.
             renderCell: (params) => params.row.lastName,
           },
         ]}
@@ -98,16 +98,16 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            // @ts-expect-error
+            // @ts-expect-error The row model declares firstName, but no lastName property.
             valueGetter: (value, row) => row.lastName,
-            // @ts-expect-error
+            // @ts-expect-error The row model declares firstName, but no lastName property.
             valueParser: (value, row) => row!.lastName,
             valueSetter: (value, row) => {
-              // @ts-expect-error
+              // @ts-expect-error The row model declares firstName, but no lastName property.
               const lastName = row.lastName;
               return {} as any;
             },
-            // @ts-expect-error
+            // @ts-expect-error The row model declares firstName, but no lastName property.
             renderCell: (params) => params.row.lastName,
           },
         ]}
@@ -141,7 +141,7 @@ function SingleSelectColDef() {
           {
             field: 'country',
             type: 'string',
-            // @ts-expect-error
+            // @ts-expect-error Only single-select columns accept valueOptions.
             valueOptions: ['United Kingdom', 'Spain', 'Brazil'],
           },
           {

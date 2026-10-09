@@ -265,8 +265,14 @@ const PiecewiseColorLegend = consumeThemeProps(
                 role={onItemClick ? 'button' : undefined}
                 type={onItemClick ? 'button' : undefined}
                 onClick={
-                  // @ts-ignore onClick is only attached to a button
-                  onItemClick ? (event) => onItemClick(event, clickObject, index) : undefined
+                  onItemClick
+                    ? (event) =>
+                        onItemClick(
+                          event as React.MouseEvent<HTMLButtonElement>,
+                          clickObject,
+                          index,
+                        )
+                    : undefined
                 }
                 className={clsx(classes?.item, {
                   [`${startClass}`]: index === 0,

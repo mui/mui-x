@@ -7,7 +7,8 @@ export const createZoomLookup =
   (axisDirection: 'x' | 'y') =>
   (axes: AxisConfig<ScaleName, any, ChartsCartesianAxisProps>[] = []) =>
     axes.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Zoom is added by Pro augmentation, absent in the community build.
+      // @ts-ignore Zoom is added by Pro augmentation, absent in the community build.
       const { zoom, id: axisId, reverse, scaleType } = v;
       const defaultizedZoom = defaultizeZoom(
         zoom,

@@ -4,7 +4,6 @@ import { GRID_MULTI_SELECT_COL_DEF } from './gridMultiSelectColDef';
 
 describe('GRID_MULTI_SELECT_COL_DEF', () => {
   describe('groupingValueGetter', () => {
-    // @ts-ignore premium-only field
     const groupingValueGetter = GRID_MULTI_SELECT_COL_DEF.groupingValueGetter as (
       value: any,
     ) => string | null;

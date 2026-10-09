@@ -13,7 +13,7 @@ export function extractStandaloneEvent(
     extractedFromId: source.id,
   };
 
-  // @ts-ignore
+  // @ts-expect-error The standalone event receives a new id after removing the original required id.
   delete createdEvent.id;
   delete createdEvent.rrule;
   delete createdEvent.exDates;
