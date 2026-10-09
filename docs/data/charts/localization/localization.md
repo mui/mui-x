@@ -15,8 +15,10 @@ This page describes how to use other locales, including how to set translations 
 
 ### Translation keys
 
+<!-- #target-branch-reference -->
+
 You can use the `localeText` prop to pass your own text and translations.
-You can find [all supported translation keys](https://github.com/mui/mui-x/blob/-/packages/x-charts/src/locales/enUS.ts) in the source code on GitHub.
+You can find [all supported translation keys](https://github.com/mui/mui-x/blob/v9.x/packages/x-charts/src/locales/enUS.ts) in the source code on GitHub.
 
 The example below customizes the labels of the loading overlay.
 
@@ -34,7 +36,9 @@ import { frFRLocaleText } from '@mui/x-charts/locales';
 import { frFRLocaleText } from '@mui/x-charts-pro/locales';
 ```
 
-You can find [all built-in locales](https://github.com/mui/mui-x/tree/HEAD/packages/x-charts/src/locales) in the source code on GitHub.
+<!-- #target-branch-reference -->
+
+You can find [all built-in locales](https://github.com/mui/mui-x/tree/v9.x/packages/x-charts/src/locales) in the source code on GitHub.
 
 To create your own translation or customize the English text, copy this file to your project, make any changes needed, and import the locale from there.
 Note that these chart component translations follow [Material UI's localization strategy](/material-ui/guides/localization/).

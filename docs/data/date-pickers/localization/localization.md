@@ -10,8 +10,10 @@ packageName: '@mui/x-date-pickers'
 
 <p class="description">Date and Time Pickers support translations between languages.</p>
 
+<!-- #target-branch-reference -->
+
 As with all MUI X components, you can modify text and translations inside the Date and Time Pickers.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
+You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/v9.x/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
 in the GitHub repository.
 
 The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
@@ -127,7 +129,9 @@ This will produce the following result:
 
 {{"demo": "PickersLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
-You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
+<!-- #target-branch-reference -->
+
+You can [find the source](https://github.com/mui/mui-x/tree/v9.x/packages/x-date-pickers/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the date and time picker components depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.

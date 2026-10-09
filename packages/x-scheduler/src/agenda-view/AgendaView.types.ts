@@ -29,7 +29,7 @@ export interface StandaloneAgendaViewProps<TEvent extends object, TResource exte
   viewConfig?: Omit<EventCalendarViewConfig, 'day' | 'week'>;
   /**
    * Set the locale text of the view.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/v9.x/packages/x-scheduler/src/models/translations.ts)
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;

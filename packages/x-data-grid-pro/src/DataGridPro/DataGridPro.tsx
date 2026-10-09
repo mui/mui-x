@@ -653,7 +653,7 @@ DataGridProRaw.propTypes /* remove-proptypes */ = {
   loading: PropTypes.bool,
   /**
    * Set the locale text of the Data Grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/v9.x/packages/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: PropTypes.object,
   /**

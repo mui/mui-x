@@ -16,8 +16,10 @@ The default locale of MUI X is English (United States).
 
 ## Translation keys
 
+<!-- #target-branch-reference -->
+
 Use the `localeText` prop to pass in your own text and translations.
-You can find all supported translation keys in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts) on GitHub.
+You can find all supported translation keys in [the source](https://github.com/mui/mui-x/blob/v9.x/packages/x-scheduler/src/models/translations.ts) on GitHub.
 The demo below customizes the labels of the view switcher buttons.
 
 {{"demo": "CustomLocaleTextCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -127,7 +129,9 @@ import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
 ### Supported locales
 
-You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-scheduler/src/locales) on GitHub.
+<!-- #target-branch-reference -->
+
+You can [find the source](https://github.com/mui/mui-x/tree/v9.x/packages/x-scheduler/src/locales) on GitHub.
 
 {{"demo": "SchedulerLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 

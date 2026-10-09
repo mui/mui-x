@@ -16,8 +16,10 @@ The default locale of MUI X is English (United States).
 
 ## Translation keys
 
+<!-- #target-branch-reference -->
+
 Use the `localeText` prop to pass in your own text and translations.
-You can find all supported translation keys in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts) on GitHub.
+You can find all supported translation keys in [the source](https://github.com/mui/mui-x/blob/v9.x/packages/x-scheduler/src/models/translations.ts) on GitHub.
 The demo below customizes the resource column header and loading text.
 
 {{"demo": "CustomLocaleTextTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -131,7 +133,9 @@ import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-pr
 
 ### Supported locales
 
-You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-scheduler/src/locales) on GitHub.
+<!-- #target-branch-reference -->
+
+You can [find the source](https://github.com/mui/mui-x/tree/v9.x/packages/x-scheduler/src/locales) on GitHub.
 
 {{"demo": "SchedulerLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
