@@ -18,7 +18,10 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependencyCreation,
   SchedulerDependencyCreationProperties,
+  SchedulerDependencyEditor,
   SchedulerDependencyId,
+  SchedulerDependencyUpdatedProperties,
+  SchedulerUpdateDependencyResult,
 } from '../models';
 import type {
   EventTimelinePremiumState,
@@ -167,6 +170,7 @@ const mapper: SchedulerParametersToStateMapper<
       ...buildDependenciesState(parameters.dependencies),
       areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
       dependencyCreation: null,
+      dependencyEditor: null,
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
       preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
       shouldEventRequireResource,
@@ -183,10 +187,10 @@ const mapper: SchedulerParametersToStateMapper<
       ...deriveStateFromParameters(parameters),
       ...buildDependenciesState(parameters.dependencies),
       areDependenciesEnabled,
-      // Disabling the feature discards its in-flight gesture: kept in the raw state
-      // it would come back on screen if the feature is re-enabled. The selection is
-      // cleared by the store effect, which can check the selected type.
-      ...(areDependenciesEnabled ? null : { dependencyCreation: null }),
+      // Disabling the feature discards its in-flight gesture and dialog: kept in the raw
+      // state they would come back on screen if the feature is re-enabled. The selection
+      // is cleared by the store effect, which can check the selected type.
+      ...(areDependenciesEnabled ? null : { dependencyCreation: null, dependencyEditor: null }),
       shouldEventRequireResource,
       hasInitialized: true,
     };
@@ -232,33 +236,59 @@ export class EventTimelinePremiumStore<
       );
     }
 
-    this.scheduling = this.disposables.use(new SchedulerSchedulingPlugin(this));
+    this.scheduling = this.disposables.use(
+      new SchedulerSchedulingPlugin(this, (updated) => {
+        this.updateEvents({ updated });
+      }),
+    );
     this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
 
-    // Clear (not just mask) the selection of a removed or deactivated dependency:
-    // with masking alone, a dependency coming back (a re-added id, an endpoint event
-    // re-fetched or no longer recurring) would resurrect the arrow already selected.
-    const clearInactiveDependencySelection = () => {
-      const { selection, dependencyModelLookup, processedEventLookup } = this.state;
-      if (selection?.type !== 'dependency') {
-        return;
-      }
-      const dependency = dependencyModelLookup.get(selection.id);
-      if (dependency === undefined || !isDependencyActive(processedEventLookup, dependency)) {
+    // Clear (not just mask) the selection and the dialog of a removed or deactivated
+    // dependency: with masking alone, a dependency coming back (a re-added id, an endpoint
+    // event re-fetched or no longer recurring) would bring them back.
+    const clearInactiveDependencyState = () => {
+      const { selection, dependencyEditor } = this.state;
+      if (selection?.type === 'dependency' && this.isDependencyInactive(selection.id)) {
         this.setSelection(null);
+      }
+      if (dependencyEditor !== null && this.isDependencyInactive(dependencyEditor.dependencyId)) {
+        this.closeDependencyEditor();
       }
     };
     this.disposables.defer(
       this.registerStoreEffect(
         (state) => state.dependencyModelLookup,
-        clearInactiveDependencySelection,
+        clearInactiveDependencyState,
       ),
     );
     this.disposables.defer(
+      this.registerStoreEffect((state) => state.processedEventLookup, clearInactiveDependencyState),
+    );
+
+    // The dialog anchor no longer matches the arrow after a date or preset change.
+    this.disposables.defer(
       this.registerStoreEffect(
-        (state) => state.processedEventLookup,
-        clearInactiveDependencySelection,
+        (state) => state.adapter.getTime(state.visibleDate),
+        this.closeDependencyEditor,
+      ),
+    );
+    this.disposables.defer(
+      this.registerStoreEffect((state) => state.preset, this.closeDependencyEditor),
+    );
+    // The dialog switches between the form and the details, which would drop the draft.
+    this.disposables.defer(
+      this.registerStoreEffect((state) => state.readOnly, this.closeDependencyEditor),
+    );
+
+    this.disposables.defer(
+      this.registerStoreEffect(
+        (state) => state.editingOccurrence,
+        (previous, next) => {
+          if (previous === null && next !== null) {
+            this.closeDependencyEditor();
+          }
+        },
       ),
     );
 
@@ -343,8 +373,10 @@ export class EventTimelinePremiumStore<
 
   /**
    * Adds a dependency between two events.
-   * Rejects dependencies referencing an unknown, recurring or read-only event,
-   * duplicates and cycles — see the returned `SchedulerAddDependencyResult`.
+   * Rejects every dependency while the scheduler is read-only, and dependencies
+   * referencing an unknown or recurring event, duplicates, cycles, and dependencies
+   * needing a read-only event to move — see the returned `SchedulerAddDependencyResult`.
+   * A dependency the event dates break moves its successor.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`
    * value before making another validated add.
@@ -354,8 +386,17 @@ export class EventTimelinePremiumStore<
   ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
 
   /**
+   * Changes the type or lag of a dependency — see `SchedulerUpdateDependencyResult` for
+   * the rejections. Events only move when the change makes the dependency stricter.
+   */
+  public updateDependency = (
+    dependencyId: SchedulerDependencyId,
+    changes: SchedulerDependencyUpdatedProperties,
+  ): SchedulerUpdateDependencyResult => this.scheduling.updateDependency(dependencyId, changes);
+
+  /**
    * Deletes a dependency. Returns `false` when the deletion was refused: the id is
-   * unknown, or an endpoint event is read-only.
+   * unknown, or the scheduler is read-only.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean =>
     this.scheduling.deleteDependency(dependencyId);
@@ -381,6 +422,40 @@ export class EventTimelinePremiumStore<
     this.setSelection(dependencyId === null ? null : { type: 'dependency', id: dependencyId });
   };
 
+  private isDependencyInactive(dependencyId: SchedulerDependencyId): boolean {
+    const dependency = this.state.dependencyModelLookup.get(dependencyId);
+    return (
+      dependency === undefined || !isDependencyActive(this.state.processedEventLookup, dependency)
+    );
+  }
+
+  /**
+   * Opens the dependency dialog, closing the event dialog if open.
+   */
+  public openDependencyEditor = (
+    dependencyId: SchedulerDependencyId,
+    anchor: SchedulerDependencyEditor['anchor'],
+    resourceIds?: Pick<SchedulerDependencyEditor, 'sourceResourceId' | 'targetResourceId'>,
+  ) => {
+    // A menu left open on a removed dependency must not open the dialog later.
+    if (this.isDependencyInactive(dependencyId)) {
+      return;
+    }
+    if (this.state.editingOccurrence !== null) {
+      this.stopEditing();
+    }
+    this.set('dependencyEditor', { dependencyId, anchor, ...resourceIds });
+  };
+
+  /**
+   * Closes the dependency dialog.
+   */
+  public closeDependencyEditor = () => {
+    if (this.state.dependencyEditor !== null) {
+      this.set('dependencyEditor', null);
+    }
+  };
+
   /**
    * Deletes the selected dependency and clears the selection, so the pairing cannot
    * drift apart across the affordances triggering it (delete button, keyboard).
@@ -390,7 +465,7 @@ export class EventTimelinePremiumStore<
     if (selection?.type !== 'dependency') {
       return;
     }
-    // A refused deletion (read-only endpoint) keeps the selection: silently
+    // A refused deletion (read-only scheduler) keeps the selection: silently
     // deselecting would read as a broken delete.
     if (!this.deleteDependency(selection.id)) {
       return;

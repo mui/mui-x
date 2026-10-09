@@ -61,7 +61,8 @@ import {
   EventTimelinePremiumDependencyGeometryProvider,
   EventTimelinePremiumDependencyInteractions,
   EventTimelinePremiumDependencyTerminals,
-} from './timeline-dependency-arrows';
+  EventTimelinePremiumDependencyDialog,
+} from './timeline-dependencies';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -227,7 +228,6 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   position: 'relative',
   padding: theme.spacing(2, 0),
   alignContent: 'start',
-  zIndex: 1,
   // Counted by `getRowHeightForLaneCount`, so it has to stay on this element: moving it
   // to the row would shrink the cell's content box and shift every event by a pixel.
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -901,6 +901,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                           aria-hidden
                         />
                       )}
+                      <EventTimelinePremiumDependencyDialog />
                       <EventTimelinePremiumDependencyInteractions />
                       {/* Last so the revealed terminals win their z-index ties and
                           paint above the arrows and their click hit-areas. */}

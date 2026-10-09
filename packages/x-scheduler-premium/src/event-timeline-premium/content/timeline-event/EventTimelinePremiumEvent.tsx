@@ -49,6 +49,8 @@ const EventTimelinePremiumEventRoot = styled('div', {
   color: 'var(--event-on-surface-subtle-primary)',
   padding: theme.spacing(0.5, 1),
   position: 'relative',
+  // Keeps the resize handlers' z-index inside the event.
+  isolation: 'isolate',
   width: 'var(--width)',
   height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)})`,
   marginLeft: 'var(--x-position)',
@@ -76,6 +78,10 @@ const EventTimelinePremiumEventRoot = styled('div', {
   },
   [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,
+  },
+  // The event being dragged or resized paints above the dependency arrows.
+  [`&.${eventTimelinePremiumClasses.eventPlaceholder}`]: {
+    zIndex: 2,
   },
   '&[data-dependency-drop-target]': {
     outline: '2px solid var(--event-surface-accent)',

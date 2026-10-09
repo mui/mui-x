@@ -14,6 +14,7 @@ import { DEPENDENCY_ARROWHEAD_SIZE } from './dependencyArrowRouting';
 import {
   orderArrowsWithSelectedLast,
   useDependencyGeometry,
+  useDependencyHoveredId,
 } from './EventTimelinePremiumDependencyGeometry';
 
 const DEPENDENCY_ARROW_STROKE_WIDTH = 1;
@@ -37,8 +38,21 @@ const DependencyArrowsSvg = styled('svg', {
   ...theme.applyStyles('dark', {
     color: (theme.vars || theme).palette.grey[600],
   }),
+  // Opaque, or the line would show through the arrowhead.
+  '[data-dependency-id][data-hovered]:not([data-selected])': {
+    stroke: (theme.vars || theme).palette.grey[700],
+    strokeWidth: DEPENDENCY_ARROW_SELECTED_STROKE_WIDTH,
+    ...theme.applyStyles('dark', {
+      stroke: (theme.vars || theme).palette.grey[400],
+    }),
+  },
   '[data-dependency-id][data-selected]': {
-    color: (theme.vars || theme).palette.error.main,
+    stroke: (theme.vars || theme).palette.error.main,
+  },
+  // The arrowhead takes the path's stroke, so states set `stroke`, not `color`: in a
+  // marker, `currentColor` is the overlay's color.
+  '& marker path': {
+    fill: 'context-stroke',
   },
 }));
 
@@ -73,17 +87,14 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   // one to the other and clips the arrows reaching off-screen anchors.
   const { visibleArrows, resolver, eventsWidth, offsetTop, height } = useDependencyGeometry();
   const selectedId = useStore(store, eventTimelinePremiumDependencySelectors.selectedId);
+  const hoveredId = useDependencyHoveredId();
   const orderedArrows = React.useMemo(
-    () => orderArrowsWithSelectedLast(visibleArrows, selectedId),
-    [visibleArrows, selectedId],
+    () => orderArrowsWithSelectedLast(visibleArrows, selectedId, hoveredId),
+    [visibleArrows, selectedId, hoveredId],
   );
-  // A selected read-only arrow keeps its arrowhead: the delete button that normally
-  // replaces it is not rendered by the interactions layer.
-  const isSelectedReadOnly = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.isModelReadOnly,
-    selectedId,
-  );
+  // While the scheduler is read-only, a selected arrow keeps its arrowhead: the delete
+  // button that normally replaces it is not rendered by the interactions layer.
+  const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
 
   const creationPath = getCreationPath(creation, resolver);
 
@@ -154,18 +165,19 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
     >
       <defs>
         <DependencyArrowheadMarker id={arrowheadId} fill="currentColor" />
-        {/* Markers do not inherit the color of the referencing path, so the creation
-            arrowhead needs its own def. */}
+        {/* Fallback where `context-stroke` is unsupported: the creation arrowhead gets
+            its own color. */}
         <DependencyArrowheadMarker id={creationArrowheadId} fill={creationColor} />
       </defs>
       {orderedArrows.map((arrow) => {
         const selected = arrow.id === selectedId;
-        const replacedByDeleteButton = selected && !isSelectedReadOnly;
+        const replacedByDeleteButton = selected && !isReadOnly;
         return (
           <path
             key={arrow.key}
             data-dependency-id={String(arrow.id)}
             {...(selected ? { 'data-selected': '' } : null)}
+            {...(arrow.id === hoveredId ? { 'data-hovered': '' } : null)}
             d={arrow.d}
             fill="none"
             stroke="currentColor"

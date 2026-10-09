@@ -132,7 +132,6 @@ export function EventDialogDateTimeSection() {
             slotProps={{
               inputLabel: { shrink: true },
               input: { readOnly: startDate.readOnly },
-              formHelperText: { role: 'alert' },
             }}
             error={!!startDate.error}
             helperText={startDate.error}
@@ -149,7 +148,6 @@ export function EventDialogDateTimeSection() {
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { readOnly: startTime.readOnly },
-                formHelperText: { role: 'alert' },
               }}
               error={!!startTime.error}
               helperText={startTime.error}
@@ -168,7 +166,6 @@ export function EventDialogDateTimeSection() {
             slotProps={{
               inputLabel: { shrink: true },
               input: { readOnly: endDate.readOnly },
-              formHelperText: { role: 'alert' },
             }}
             error={!!endDate.error}
             helperText={endDate.error}
@@ -185,7 +182,6 @@ export function EventDialogDateTimeSection() {
               slotProps={{
                 inputLabel: { shrink: true },
                 input: { readOnly: endTime.readOnly },
-                formHelperText: { role: 'alert' },
               }}
               error={!!endTime.error}
               helperText={endTime.error}

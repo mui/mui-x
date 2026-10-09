@@ -15,6 +15,11 @@ export {
   useEventEditingOptionalRenderers,
 } from './EventEditingOptionalRenderersContext';
 export type { EventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
-export { FormContent } from './FormContent';
+export {
+  FormContent,
+  EventDialogFormActions,
+  EventDialogContentRoot,
+  EventDialogForm,
+} from './FormContent';
 export { ReadonlyEventDetails } from './ReadonlyEventDetails';
 export { getInitialEditingMode } from './editingModePolicy';
