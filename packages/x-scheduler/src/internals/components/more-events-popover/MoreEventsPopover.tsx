@@ -148,6 +148,22 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     }
   }, [open, occurrences, getFocusFallback]);
 
+  // The "+N more" button unmounts once every event fits in the cell, so keep positioning the
+  // closing popover where the button last was instead of the top-left corner.
+  const anchorRectRef = React.useRef<DOMRect | null>(null);
+  const anchorEl = React.useMemo(
+    () => ({
+      nodeType: 1 as const,
+      getBoundingClientRect: () => {
+        if (anchor.isConnected || anchorRectRef.current === null) {
+          anchorRectRef.current = anchor.getBoundingClientRect();
+        }
+        return anchorRectRef.current;
+      },
+    }),
+    [anchor],
+  );
+
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
     if (isFocusLostWith(paper)) {
       getFocusFallback()?.focus({ preventScroll: true });
@@ -158,7 +174,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     <Popover
       className={classes.moreEventsPopover}
       open={open}
-      anchorEl={anchor}
+      anchorEl={anchorEl}
       onClose={onClose}
       slotProps={{ transition: { onExited: restoreFocusOnExit } }}
     >

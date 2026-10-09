@@ -13,6 +13,7 @@ import {
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { vi, describe, it, expect } from 'vitest';
@@ -528,6 +529,38 @@ describe('<MonthView />', () => {
       });
       expect(document.activeElement).to.equal(paper);
     });
+
+    // jsdom doesn't lay out the page, so every position is the same.
+    it.skipIf(isJSDOM)(
+      'should keep the popover in place while it closes once every event fits in the cell',
+      async () => {
+        const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+        const paper = popover.querySelector(
+          `.${eventCalendarClasses.moreEventsPopoverBody}`,
+        )!.parentElement!;
+        const getPosition = () => `${paper.style.top} ${paper.style.left}`;
+        // The popover moves while the list shrinks, so only the closing delete is checked.
+        let positionBeforeDelete = getPosition();
+        let positions: string[] = [];
+        const observer = new MutationObserver(() => {
+          positions.push(getPosition());
+        });
+        observer.observe(paper, { attributes: true, attributeFilter: ['style'] });
+
+        while (screen.queryByRole('button', { name: /more/i, hidden: true })) {
+          positionBeforeDelete = getPosition();
+          positions = [];
+          // eslint-disable-next-line no-await-in-loop
+          await deleteEvent(getPopoverEventTitles(popover).at(-1)!);
+        }
+        await waitFor(() => {
+          expect(document.body.contains(popover)).to.equal(false);
+        });
+        observer.disconnect();
+
+        expect(positions).to.deep.equal(positions.map(() => positionBeforeDelete));
+      },
+    );
 
     it('should not move focus when an event is removed while another one is focused', async () => {
       const { popover, setProps } = await renderAndOpenStatefulPopover();
