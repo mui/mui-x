@@ -58,7 +58,8 @@ export const useSplitFieldProps = <
 
     const extractProp = (propName: string) => {
       if (forwardedProps.hasOwnProperty(propName)) {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- The dynamic prop key errors only in consumers enabling noImplicitAny.
+        // @ts-ignore The dynamic prop key errors only in consumers enabling noImplicitAny.
         internalProps[propName] = forwardedProps[propName];
         delete forwardedProps[propName as keyof typeof forwardedProps];
       }

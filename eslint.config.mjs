@@ -200,7 +200,6 @@ export default defineConfig(
       // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
       // migration rules
-      '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       'react-hooks/exhaustive-deps': [
         'error',
@@ -395,6 +394,16 @@ export default defineConfig(
     },
   },
 
+  {
+    // TypeScript's project service omits generated JavaScript beside its TypeScript source.
+    files: ['docs/**/*.{js,jsx}'],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+        project: ['./docs/tsconfig.eslint.json'],
+      },
+    },
+  },
   {
     files: [`docs/src/pages/**/*${EXTENSION_TS}`, `docs/data/**/*${EXTENSION_TS}`],
     rules: {

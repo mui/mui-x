@@ -5,11 +5,12 @@ import {
   GridListViewColDef,
   GridColDef,
   GridRowParams,
-  GridToolbarContainer,
+  Toolbar as GridToolbar,
   GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -76,8 +77,10 @@ type ToolbarProps = {
 
 function Toolbar({ view, onChangeView }: ToolbarProps) {
   return (
-    <GridToolbarContainer
-      sx={{ borderBottom: '1px solid', borderColor: 'divider', py: 1 }}
+    <GridToolbar
+      render={
+        <Box sx={{ borderBottom: '1px solid', borderColor: 'divider', py: 1 }} />
+      }
     >
       <ToggleButtonGroup
         size="small"
@@ -109,7 +112,7 @@ function Toolbar({ view, onChangeView }: ToolbarProps) {
           <ListViewIcon fontSize="small" /> List
         </ToggleButton>
       </ToggleButtonGroup>
-    </GridToolbarContainer>
+    </GridToolbar>
   );
 }
 

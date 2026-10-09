@@ -194,7 +194,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     function paste(cell: HTMLElement, pasteText: string) {
       const pasteEvent = new Event('paste');
 
-      // @ts-ignore
+      // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
       pasteEvent.clipboardData = {
         getData: () => pasteText,
       };

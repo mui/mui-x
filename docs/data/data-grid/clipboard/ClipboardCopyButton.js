@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  gridRowSelectionCountSelector,
   DataGridPremium,
   gridFocusCellSelector,
   gridSortedRowIdsSelector,
@@ -40,8 +41,8 @@ function getSelectionAsText(apiRef) {
       .join('\n');
   }
 
-  const selectedRowIds = api.getSelectedRows();
-  if (selectedRowIds.size > 0) {
+  const selectedRowCount = gridRowSelectionCountSelector({ current: api });
+  if (selectedRowCount > 0) {
     return api.getDataAsCsv({
       includeHeaders: false,
       shouldAppendQuotes: false,

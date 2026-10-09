@@ -563,7 +563,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
           groupingColDef={{
-            // @ts-expect-error
+            // @ts-expect-error Grouping column fields are generated internally and cannot be overridden.
             field: 'custom-field',
           }}
         />,
@@ -908,7 +908,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           initialState={{ rowGrouping: { model: ['category1'] } }}
           rowGroupingColumnMode="multiple"
           groupingColDef={{
-            // @ts-expect-error
+            // @ts-expect-error Grouping column fields are generated internally and cannot be overridden.
             field: 'custom-field',
           }}
         />,

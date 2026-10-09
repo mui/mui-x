@@ -1,3 +1,4 @@
+import { gridRowIdSelector } from '@mui/x-data-grid';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -64,7 +65,7 @@ function CustomDetailPanelHeader() {
       for (const key in rowsWithDetailPanels) {
         if (rowsWithDetailPanels.hasOwnProperty(key)) {
           allRowIdsWithDetailPanels.add(
-            apiRef.current.getRowId(dataRowIdToModelLookup[key]),
+            gridRowIdSelector(apiRef, dataRowIdToModelLookup[key]),
           );
         }
       }

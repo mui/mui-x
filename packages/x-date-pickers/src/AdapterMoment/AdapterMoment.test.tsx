@@ -36,7 +36,7 @@ describe('<AdapterMoment />', () => {
   describeGregorianAdapter(AdapterMoment, {
     ...commonParams,
     prepareAdapter: (adapter) => {
-      // @ts-ignore
+      // @ts-expect-error Override the private timezone plugin probe to simulate Moment without the plugin.
       adapter.hasTimezonePlugin = () => false;
       // Makes sure that we don't run timezone related tests, that would not work.
       adapter.isTimezoneCompatible = false;

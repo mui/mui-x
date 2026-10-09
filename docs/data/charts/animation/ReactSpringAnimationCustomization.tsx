@@ -67,7 +67,6 @@ function AnimatedBarLabel(props: BarLabelProps) {
   return (
     <animated.text
       {...otherProps}
-      // @ts-ignore
       fill={color}
       x={xOrigin + x + width / 2}
       width={width}

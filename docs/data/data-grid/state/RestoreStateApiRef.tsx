@@ -4,7 +4,7 @@ import {
   GridInitialState,
   useGridApiContext,
   useGridApiRef,
-  GridToolbarContainer,
+  Toolbar,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -169,7 +169,7 @@ function NewViewListButton(props: {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
-  const handleSubmitForm: React.FormEventHandler = (event) => {
+  const handleSubmitForm: React.SubmitEventHandler = (event) => {
     onSubmit();
     setIsAddingView(false);
     event.preventDefault();
@@ -271,7 +271,7 @@ function CustomToolbar() {
   };
 
   return (
-    <GridToolbarContainer>
+    <Toolbar>
       <Button
         aria-describedby={popperId}
         type="button"
@@ -325,7 +325,7 @@ function CustomToolbar() {
         onSubmit={createNewView}
         isValid={isNewViewLabelValid}
       />
-    </GridToolbarContainer>
+    </Toolbar>
   );
 }
 

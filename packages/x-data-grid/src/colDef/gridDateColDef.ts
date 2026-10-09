@@ -62,7 +62,8 @@ export const GRID_DATE_COL_DEF: GridColTypeDef<Date, string> = {
   valueFormatter: gridDateFormatter,
   filterOperators: getGridDateOperators(),
   renderEditCell: renderEditDateCell,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds pastedValueParser only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds pastedValueParser only when the Premium package is included.
   pastedValueParser: (value) => new Date(value),
 };
 
@@ -73,6 +74,7 @@ export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date, string> = {
   valueFormatter: gridDateTimeFormatter,
   filterOperators: getGridDateOperators(true),
   renderEditCell: renderEditDateCell,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds pastedValueParser only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds pastedValueParser only when the Premium package is included.
   pastedValueParser: (value) => new Date(value),
 };

@@ -146,9 +146,11 @@ jobs:
           path: test-results
   test_lint:
     <<: *default-job
+    resource_class: large.gen2
     environment:
       <<: *default-environment
-      NODE_OPTIONS: --max-old-space-size=3584
+      # Typed documentation linting exceeds the previous 3.5 GB heap.
+      NODE_OPTIONS: --max-old-space-size=6144
     steps:
       - checkout
       - install-deps

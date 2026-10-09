@@ -108,7 +108,7 @@ export const buildFieldInteractions = <P extends {}>({
         }
 
         const hasMultipleInputs =
-          // @ts-ignore
+          // @ts-expect-error The field component union does not expose ForwardRefExoticComponent.render.
           Component.render.name.includes('Range') &&
           allProps.slots?.field?.fieldType === 'multi-input';
         if (hasMultipleInputs) {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GRID_ROOT_GROUP_ID,
+  gridRowNodeSelector,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -29,13 +30,15 @@ export default function RowGroupingSetChildrenExpansion() {
   });
 
   const toggle2ndGroup = () => {
-    const groups = apiRef.current?.getRowNode(GRID_ROOT_GROUP_ID).children;
+    const groups = apiRef.current
+      ? gridRowNodeSelector(apiRef, GRID_ROOT_GROUP_ID).children
+      : undefined;
 
     if (groups && groups.length > 1) {
       const groupId = groups[1];
       apiRef.current?.setRowChildrenExpansion(
         groupId,
-        !apiRef.current.getRowNode(groupId).childrenExpanded,
+        !gridRowNodeSelector(apiRef, groupId).childrenExpanded,
       );
     }
   };
