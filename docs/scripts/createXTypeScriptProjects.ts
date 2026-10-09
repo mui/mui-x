@@ -184,6 +184,7 @@ export const datagridApiToDocument = [
   'GridCellSelectionApi',
   'GridColumnPinningApi',
   'GridColumnResizeApi',
+  'GridComputedColumnsApi',
   'GridCsvExportApi',
   'GridDetailPanelApi',
   'GridEditingApi',

@@ -7,6 +7,13 @@
   ],
   "demos": "<ul><li><a href=\"/x/react-data-grid/api-object/\">API object</a></li></ul>",
   "properties": {
+    "addComputedColumn": {
+      "type": {
+        "description": "(definition: GridComputedColumnDefinition, options?: { columnIndex?: number }) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "addRowGroupingCriteria": {
       "type": {
         "description": "(groupingCriteriaField: string, groupingIndex?: number) =&gt; void"
@@ -232,6 +239,11 @@
       "required": true
     },
     "hideColumnMenu": { "type": { "description": "() =&gt; void" }, "required": true },
+    "hideComputedColumnEditor": {
+      "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "hideFilterPanel": { "type": { "description": "() =&gt; void" }, "required": true },
     "hideHeaderFilterMenu": { "type": { "description": "() =&gt; void" }, "required": true },
     "hidePreferences": { "type": { "description": "() =&gt; void" }, "required": true },
@@ -279,6 +291,11 @@
       "isProPlan": true
     },
     "publishEvent": { "type": { "description": "GridEventPublisher" }, "required": true },
+    "removeComputedColumn": {
+      "type": { "description": "(field: string) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "removeRowGroupingCriteria": {
       "type": { "description": "(groupingCriteriaField: string) =&gt; void" },
       "required": true,
@@ -382,6 +399,13 @@
     "setColumnWidth": {
       "type": { "description": "(field: string, width: number) =&gt; void" },
       "required": true
+    },
+    "setComputedColumns": {
+      "type": {
+        "description": "(model: GridComputedColumnsModel | ((prev: GridComputedColumnsModel) =&gt; GridComputedColumnsModel)) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
     },
     "setDensity": {
       "type": { "description": "(density: GridDensity) =&gt; void" },
@@ -489,6 +513,13 @@
       "required": true
     },
     "showColumnMenu": { "type": { "description": "(field: string) =&gt; void" }, "required": true },
+    "showComputedColumnEditor": {
+      "type": {
+        "description": "(field?: string | null, options?: { sampleRowId?: GridRowId; columnIndex?: number }) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "showFilterPanel": {
       "type": {
         "description": "(targetColumnField?: string, panelId?: string, labelId?: string) =&gt; void"
@@ -595,6 +626,13 @@
       "type": { "description": "(cols: GridColDef[]) =&gt; void" },
       "required": true
     },
+    "updateComputedColumn": {
+      "type": {
+        "description": "(field: string, changes: Partial&lt;Omit&lt;GridComputedColumnDefinition, 'field'&gt;&gt;) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "updateRows": {
       "type": {
         "description": "(updates: Array&lt;GridRowModelUpdate | GridRowModelReplace&gt;) =&gt; void"
@@ -608,6 +646,13 @@
     "upsertFilterItems": {
       "type": { "description": "(items: GridFilterItem[]) =&gt; void" },
       "required": true
+    },
+    "validateComputedColumn": {
+      "type": {
+        "description": "(definition: GridComputedColumnDefinition) =&gt; GridComputedColumnValidationResult"
+      },
+      "required": true,
+      "isPremiumPlan": true
     }
   }
 }

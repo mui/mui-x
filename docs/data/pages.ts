@@ -275,6 +275,10 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-data-grid/formulas', title: 'Overview' },
               {
+                pathname: '/x/react-data-grid/computed-columns',
+                title: 'Computed columns',
+              },
+              {
                 pathname: '/x/react-data-grid/formula-syntax',
                 title: 'Syntax reference',
               },
@@ -395,6 +399,12 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/components/pivot-panel',
             title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/computed-columns-panel',
+            title: 'Computed Columns Panel',
             planned: true,
             plan: 'premium',
           },
