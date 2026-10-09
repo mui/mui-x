@@ -8,7 +8,10 @@ import { getNonEmptySeriesArray } from './getNonEmptySeriesArray';
  * Returns `null` if no other series have data.
  */
 export function getPreviousNonEmptySeries<
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = Exclude<ChartSeriesType, 'sankey'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'treemap'> = Exclude<
+    ChartSeriesType,
+    'sankey' | 'treemap'
+  >,
 >(
   series: ProcessedSeries<ChartSeriesType>,
   availableSeriesTypes: Set<OutSeriesType>,
@@ -31,7 +34,6 @@ export function getPreviousNonEmptySeries<
       : -1;
 
   if (currentSeriesIndex <= 0) {
-    // If no current series, or if it's the first series
     return nonEmptySeries[nonEmptySeries.length - 1];
   }
   return nonEmptySeries[(currentSeriesIndex - 1 + nonEmptySeries.length) % nonEmptySeries.length];

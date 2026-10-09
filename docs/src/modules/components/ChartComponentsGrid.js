@@ -61,6 +61,11 @@ function getComponents() {
       pro: true,
     },
     {
+      title: 'Treemap',
+      href: '/x/react-charts/treemap/',
+      pro: true,
+    },
+    {
       title: 'Range Bar Chart',
       href: '/x/react-charts/range-bar/',
       premium: true,

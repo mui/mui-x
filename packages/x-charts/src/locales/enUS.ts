@@ -199,6 +199,9 @@ export const enUSLocaleText: ChartsLocaleText = {
       .filter(Boolean)
       .join(this.a11yConnector);
   },
+  treemapItemDescription: function treemapItemDescription({ formattedValue, label }) {
+    return [label, formattedValue].filter(Boolean).join(this.a11yConnector);
+  },
   rangeBarDescription: function rangeBarDescription({
     value,
     formattedValue,
