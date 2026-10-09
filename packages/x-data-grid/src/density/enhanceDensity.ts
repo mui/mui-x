@@ -1,4 +1,7 @@
 import type { Theme } from '@mui/material/styles';
+import { formControlLabelClasses } from '@mui/material/FormControlLabel';
+import { iconButtonClasses } from '@mui/material/IconButton';
+import { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import { addDefaultProps, addRootOverride } from '@mui/x-internals/densityTheme';
 import { getDensityScale, getDensitySizing, gridDensityHeight } from './densityScale';
 
@@ -49,6 +52,51 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     'MuiDataGrid',
     { width: touchTarget, height: touchTarget },
     'toolbarQuickFilterTrigger',
+  );
+  addRootOverride(components, 'MuiDataGrid', { marginInline: spacing('xSmall') }, 'toolbarDivider');
+  addRootOverride(components, 'MuiDataGrid', { marginInline: spacing('xSmall') }, 'toolbarLabel');
+
+  // Columns management panel. The row checkbox+label is the grid's internal
+  // FormControlLabel wrapper (no slot key of its own), so its gap nests here.
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    {
+      padding: `${spacing('xSmall')} ${spacing('medium')}`,
+      [`& .${formControlLabelClasses.root}`]: { gap: spacing('xSmall') },
+    },
+    'columnsManagement',
+  );
+  // Search fields (columns panel header, toolbar quick filter): the clear
+  // button pulls to the field edge. Material's enhancer pulls `edge="end"`
+  // buttons by a quarter of the box; the grid's internal adornment rule
+  // outranks that variant, so the pull is restated at the owning slot with
+  // the edge class in the selector to outrank the internal rule in turn.
+  const searchField = {
+    '& svg': { fontSize: iconSize },
+    [`& .${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}.${iconButtonClasses.edgeEnd}`]:
+      { marginRight: `calc(${touchTarget} / -4)` },
+  };
+  addRootOverride(components, 'MuiDataGrid', searchField, 'toolbarQuickFilterControl');
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { padding: `${spacing('medium')} ${spacing('large')}`, ...searchField },
+    'columnsManagementHeader',
+  );
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    {
+      padding: `${spacing('small')} ${spacing('small')} ${spacing('small')} ${spacing('medium')}`,
+    },
+    'columnsManagementFooter',
+  );
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { paddingBlock: spacing('small') },
+    'columnsManagementEmptyText',
   );
   return { ...theme, components };
 }

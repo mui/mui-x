@@ -63,6 +63,27 @@ describe('enhanceDensity', () => {
     ]);
   });
 
+  it('emits the columns management panel insets and the toolbar divider/label pulls', () => {
+    const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
+    expect(styleOverrides?.toolbarDivider).toEqual([{ marginInline: '8px' }]);
+    expect(styleOverrides?.toolbarLabel).toEqual([{ marginInline: '8px' }]);
+    expect(styleOverrides?.columnsManagement).toEqual([
+      { padding: '8px 16px', '& .MuiFormControlLabel-root': { gap: '8px' } },
+    ]);
+    const searchField = {
+      '& svg': { fontSize: '16px' },
+      '& .MuiInputAdornment-positionEnd .MuiIconButton-sizeSmall.MuiIconButton-edgeEnd': {
+        marginRight: 'calc(32px / -4)',
+      },
+    };
+    expect(styleOverrides?.toolbarQuickFilterControl).toEqual([searchField]);
+    expect(styleOverrides?.columnsManagementHeader).toEqual([
+      { padding: '16px 24px', ...searchField },
+    ]);
+    expect(styleOverrides?.columnsManagementFooter).toEqual([{ padding: '12px 12px 12px 16px' }]);
+    expect(styleOverrides?.columnsManagementEmptyText).toEqual([{ paddingBlock: '12px' }]);
+  });
+
   it("lets the theme's own styleOverrides win", () => {
     const theme = enhanceDensity(
       enhancedTheme({ MuiDataGrid: { styleOverrides: { cell: { paddingInline: 4 } } } }),
