@@ -791,6 +791,36 @@ describe('<DataGrid /> - Sorting', () => {
     });
   });
 
+  describe('gridStringOrNumberComparator', () => {
+    const compare = (a: any, b: any) => gridStringOrNumberComparator(a, b, {} as any, {} as any);
+
+    it('keeps numeric order for number values', () => {
+      expect([3, 10, 2].sort(compare)).to.deep.equal([2, 3, 10]);
+    });
+
+    it('keeps collation order for string values', () => {
+      expect(['banana', 'apple', 'cherry'].sort(compare)).to.deep.equal([
+        'apple',
+        'banana',
+        'cherry',
+      ]);
+    });
+
+    it('sorts mixed number/string values alphabetically', () => {
+      expect(Math.sign(compare(10, '9'))).to.equal(-Math.sign(compare('9', 10)));
+      expect(Number.isNaN(compare(5, 'apple'))).to.equal(false);
+      expect(compare(4, '4')).to.equal(0);
+      expect(['name', 4, 'lastName', '1', 0, '1st profession'].sort(compare)).to.deep.equal([
+        0,
+        '1',
+        '1st profession',
+        4,
+        'lastName',
+        'name',
+      ]);
+    });
+  });
+
   describe('Header class names', () => {
     it('should have the sortable class when the column is sortable', () => {
       render(
