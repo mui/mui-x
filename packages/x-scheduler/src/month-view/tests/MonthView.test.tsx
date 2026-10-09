@@ -788,6 +788,22 @@ describe('<MonthView />', () => {
   });
 
   describe('aria semantics', () => {
+    it('should mark only the cell of today with aria-current="date"', () => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const currentElements = document.querySelectorAll('[aria-current]');
+      expect(currentElements.length).to.equal(1);
+      expect(currentElements[0]).to.have.attribute('role', 'gridcell');
+      expect(currentElements[0]).to.have.attribute('aria-current', 'date');
+      expect(currentElements[0]).to.have.attribute('data-current');
+    });
+
     it('should set aria-rowcount and aria-colcount on the grid root and aria indexes on cells', () => {
       render(
         <EventCalendarProvider {...standaloneDefaults}>

@@ -264,6 +264,20 @@ describe('<WeekView />', () => {
   });
 
   describe('aria semantics', () => {
+    it('should mark only the header of today with aria-current="date"', () => {
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
+
+      // The side panel's mini calendar marks today too.
+      const currentElements = Array.from(document.querySelectorAll('[aria-current]')).filter(
+        (element) => !element.closest(`.${eventCalendarClasses.miniCalendar}`),
+      );
+      expect(currentElements.length).to.equal(1);
+      expect(currentElements[0]).to.have.attribute('role', 'columnheader');
+      expect(currentElements[0]).to.have.attribute('aria-current', 'date');
+      expect(currentElements[0]).to.have.attribute('data-current');
+    });
+
     it('should declare 7 navigable columns and index every cell from 1 to 7', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);

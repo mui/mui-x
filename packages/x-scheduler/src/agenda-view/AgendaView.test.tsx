@@ -64,6 +64,24 @@ describe('<AgendaView />', () => {
     });
   });
 
+  it('should mark only the day header of today with aria-current="date"', () => {
+    const today = adapter.now('default');
+    const event = EventBuilder.new()
+      .title('Today event')
+      .singleDay(new Date().toISOString())
+      .build();
+
+    render(<EventCalendar events={[event]} visibleDate={today} view="agenda" />);
+
+    // The side panel's mini calendar marks today too.
+    const currentElements = Array.from(document.querySelectorAll('[aria-current]')).filter(
+      (element) => !element.closest(`.${eventCalendarClasses.miniCalendar}`),
+    );
+    expect(currentElements.length).to.equal(1);
+    expect(currentElements[0]).to.have.attribute('aria-current', 'date');
+    expect(currentElements[0]).to.have.class(eventCalendarClasses.agendaViewDayHeaderCell);
+  });
+
   it('should name each event with its title, time range and date', () => {
     const event = EventBuilder.new().title('My Event').build();
 
