@@ -112,37 +112,60 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   // Where focus goes when it would be lost: the item that took the place of a removed one while
   // the popover is open, else the "+N more" button, else the cell.
   const bodyRef = React.useRef<HTMLDivElement>(null);
-  const removedIndexRef = React.useRef<number | null>(null);
+  const replacementKeyRef = React.useRef<string | null>(null);
   const getFocusFallback = useStableCallback((): HTMLElement | null => {
     const body = bodyRef.current;
-    const removedIndex = removedIndexRef.current;
-    if (open && body?.isConnected && removedIndex !== null && body.children.length > 0) {
-      return body.children[Math.min(removedIndex, body.children.length - 1)] as HTMLElement;
+    const index = occurrences.findIndex(
+      (occurrence) => occurrence.key === replacementKeyRef.current,
+    );
+    if (open && body?.isConnected && index !== -1) {
+      return (body.children[index] as HTMLElement | undefined) ?? null;
     }
     return anchor?.isConnected ? anchor : fallbackFocusRef.current;
   });
 
-  // Removing an event unmounts its item, so remember where it was for `getFocusFallback`. Focus that
-  // was on the item moves to the one taking its place right away; focus in the item's context menu
-  // moves there once the menu closes.
+  // The item focused last, which is also the one a context menu was opened from.
+  const focusedKeyRef = React.useRef<string | null>(null);
+  const handleBodyFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+    const index = Array.from(event.currentTarget.children).findIndex((child) =>
+      child.contains(event.target),
+    );
+    focusedKeyRef.current = occurrences[index]?.key ?? null;
+  };
+
+  // Removing an event unmounts its item, so remember the item taking its place for
+  // `getFocusFallback`. Focus that was on the item moves there right away; focus in the item's
+  // context menu moves there once the menu closes.
   const previousRef = React.useRef({ open, occurrences });
   useIsoLayoutEffect(() => {
     const previous = previousRef.current;
     previousRef.current = { open, occurrences };
     // Only an update of the list on screen removes items, not a reopen.
     if (!open || !previous.open) {
-      removedIndexRef.current = null;
+      replacementKeyRef.current = null;
       return;
     }
-    const removedIndex = previous.occurrences.findIndex(
-      (previousOccurrence) =>
-        !occurrences.some((occurrence) => occurrence.key === previousOccurrence.key),
+    const isListed = (key: string) => occurrences.some((occurrence) => occurrence.key === key);
+    const focusedIndex = previous.occurrences.findIndex(
+      (occurrence) => occurrence.key === focusedKeyRef.current,
     );
+    // Start from the focused item when it was removed, else from the first removed one.
+    const removedIndex =
+      focusedIndex !== -1 && !isListed(previous.occurrences[focusedIndex].key)
+        ? focusedIndex
+        : previous.occurrences.findIndex((occurrence) => !isListed(occurrence.key));
     const body = bodyRef.current;
     if (removedIndex === -1 || !body) {
       return;
     }
-    removedIndexRef.current = removedIndex;
+    // The next item still listed, else the previous one.
+    const replacement =
+      previous.occurrences.slice(removedIndex).find((occurrence) => isListed(occurrence.key)) ??
+      previous.occurrences
+        .slice(0, removedIndex)
+        .reverse()
+        .find((occurrence) => isListed(occurrence.key));
+    replacementKeyRef.current = replacement?.key ?? null;
     if (isFocusOnDocument(body.ownerDocument)) {
       getFocusFallback()?.focus({ preventScroll: true });
     }
@@ -154,6 +177,8 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   const anchorEl = React.useMemo(
     () => ({
       nodeType: 1 as const,
+      // The popover mounts in this document, which is not the global one inside an iframe.
+      ownerDocument: anchor.ownerDocument,
       getBoundingClientRect: () => {
         if (anchor.isConnected || anchorRectRef.current === null) {
           anchorRectRef.current = anchor.getBoundingClientRect();
@@ -183,7 +208,11 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
         </MoreEventsPopoverTitle>
       </MoreEventsPopoverHeader>
-      <MoreEventsPopoverBody ref={bodyRef} className={classes.moreEventsPopoverBody}>
+      <MoreEventsPopoverBody
+        ref={bodyRef}
+        className={classes.moreEventsPopoverBody}
+        onFocus={handleBodyFocus}
+      >
         {occurrences.map((occurrence) => (
           <EventContextMenuTrigger
             occurrence={occurrence}

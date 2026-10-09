@@ -562,6 +562,66 @@ describe('<MonthView />', () => {
       },
     );
 
+    it('should move focus past every removed event when several are removed at once', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      await act(async () => {
+        getPopoverEvent(popover, 'Event 4').focus();
+      });
+
+      setProps({
+        events: manyEvents.filter(
+          (event) => event.title !== 'Event 1' && event.title !== 'Event 4',
+        ),
+      });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 5'));
+      });
+    });
+
+    it('should move focus past every removed event when several are removed under an open context menu', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 4');
+
+      setProps({
+        events: manyEvents.filter(
+          (event) => event.title !== 'Event 1' && event.title !== 'Event 4',
+        ),
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 5'));
+      });
+    });
+
+    it('should open the popover in the document the calendar is rendered in', async () => {
+      const iframe = document.createElement('iframe');
+      iframe.style.width = '1000px';
+      iframe.style.height = '800px';
+      document.body.appendChild(iframe);
+      const iframeBody = iframe.contentDocument!.body;
+      const { unmount } = render(
+        <EventCalendarProvider events={manyEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+        { container: iframeBody.appendChild(iframe.contentDocument!.createElement('div')) },
+      );
+
+      const [moreButton] = await within(iframeBody).findAllByRole('button', { name: /more/i });
+      await act(async () => {
+        moreButton.click();
+      });
+
+      expect(await within(iframeBody).findByRole('presentation')).not.to.equal(null);
+      unmount();
+      iframe.remove();
+    });
+
     it('should not move focus when an event is removed while another one is focused', async () => {
       const { popover, setProps } = await renderAndOpenStatefulPopover();
       const firstEvent = getPopoverEvent(popover, 'Event 1');
