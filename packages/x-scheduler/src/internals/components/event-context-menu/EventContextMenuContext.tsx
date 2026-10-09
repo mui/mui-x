@@ -37,10 +37,7 @@ interface EventContextMenuState {
   getFocusFallback?: () => HTMLElement | null;
 }
 
-/**
- * The nearest focusable ancestor of an event: the grid column/cell it lives in, which doesn't
- * unmount with the event.
- */
+/** The grid column or cell around an event, which outlives it. */
 function getClosestFocusableAncestor(element: HTMLElement): HTMLElement | null {
   return element.parentElement?.closest<HTMLElement>('[tabindex]') ?? null;
 }
@@ -62,7 +59,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
       anchorEl: HTMLElement,
       options: OpenEventContextMenuOptions = {},
     ) => {
-      // Read now: once the anchor has unmounted, it has no ancestors left.
+      // Read while the anchor is still mounted.
       const ancestor = getClosestFocusableAncestor(anchorEl);
       setState({
         open: true,
@@ -81,7 +78,6 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
     setState((prev) => (prev.open ? { ...prev, open: false } : prev));
   });
 
-  // The event can be removed while its menu is open, so close the menu with it.
   const closeMenuForAnchor = useStableCallback((anchorEl: HTMLElement) => {
     if (state.open && state.anchorEl === anchorEl) {
       closeMenu();

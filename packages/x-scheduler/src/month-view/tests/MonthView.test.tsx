@@ -165,7 +165,6 @@ describe('<MonthView />', () => {
       });
       applyChange = (events) => setProps({ events });
 
-      // Opens the context menu with Space, like a keyboard user would.
       async function openMenu(title: string) {
         await act(async () => {
           getPopoverEvent(other.popover, title).focus();

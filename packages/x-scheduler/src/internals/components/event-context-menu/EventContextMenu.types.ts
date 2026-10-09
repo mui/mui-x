@@ -52,8 +52,8 @@ export interface EventContextMenuTriggerProps {
    */
   stableAnchor?: HTMLElement | null;
   /**
-   * Returns the element to focus when its menu closes after the trigger has unmounted and focus
-   * would be lost. Defaults to the trigger's nearest focusable ancestor.
+   * Element to focus if the menu closes after the trigger has unmounted. Defaults to the trigger's
+   * nearest focusable ancestor.
    */
   getFocusFallback?: () => HTMLElement | null;
 }

@@ -99,9 +99,8 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     );
   }, [store, onClose]);
 
-  // Where focus goes when it would be lost: the item that took the place of a removed one while
-  // the popover is open, else the "+N more" button, else the cell (the button can unmount when
-  // the day's events change).
+  // Where focus goes when it would be lost: the item replacing a removed one, else the "+N more"
+  // button, else the cell.
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const replacementRef = React.useRef<HTMLElement | null>(null);
   const getFocusFallback = useStableCallback((): HTMLElement | null => {
@@ -120,9 +119,8 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     lastItemKeyRef.current = occurrences[index]?.key ?? null;
   };
 
-  // Removing an event unmounts its item, so remember the item taking its place for
-  // `getFocusFallback`. Focus that was on the item moves there right away; focus in the item's
-  // context menu moves there once the menu closes.
+  // Remember which item replaces a removed one. Focus left on the document moves there now; focus
+  // in the item's context menu moves there when the menu closes.
   const previousRef = React.useRef({ open, occurrences });
   useIsoLayoutEffect(() => {
     const previous = previousRef.current;
@@ -136,8 +134,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     const lastItemIndex = previous.occurrences.findIndex(
       (occurrence) => occurrence.key === lastItemKeyRef.current,
     );
-    // Start from the last focused or right-clicked item when it was removed, else from the first
-    // removed one.
+    // Prefer the item the user was on, else the first removed one.
     const removedIndex =
       lastItemIndex !== -1 && !isListed(previous.occurrences[lastItemIndex].key)
         ? lastItemIndex
@@ -161,13 +158,12 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     }
   }, [open, occurrences, getFocusFallback]);
 
-  // The "+N more" button unmounts once every event fits in the cell, so keep positioning the
-  // closing popover where the button last was instead of the top-left corner.
+  // Keeps the closing popover where the "+N more" button was, not in the top-left corner, once the
+  // button unmounts.
   const anchorRectRef = React.useRef<DOMRect | null>(null);
   const anchorEl = React.useMemo(
     () => ({
-      // Popover only positions against an element (`nodeType` 1) and portals into its
-      // `ownerDocument`, which is not the global one inside an iframe.
+      // Popover reads these to treat it as an element and to portal into the right document.
       nodeType: 1 as const,
       ownerDocument: anchor.ownerDocument,
       getBoundingClientRect: () => {

@@ -58,7 +58,7 @@ export function useEventContextMenuItems(
 
   // Recurring events open the scope dialog; single events delete immediately.
   // No confirmation step here either — see #18025.
-  // An immediate delete unmounts `anchorEl`; `EventContextMenu` restores focus once it has closed.
+  // `EventContextMenu` restores focus once the event unmounts.
   const handleDelete = () => {
     onRequestClose();
     store.deleteOccurrence(occurrence);
