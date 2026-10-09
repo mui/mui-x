@@ -31,7 +31,7 @@ interface UseEventContextMenuItemsParameters {
  * itself here), but since that node is now detached, the restore silently fails and focus is lost
  * to `<body>`. Falling back to this ancestor keeps a keyboard user's place in the grid.
  */
-function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
+export function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
   return anchorEl.parentElement?.closest<HTMLElement>('[tabindex]') ?? null;
 }
 

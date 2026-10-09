@@ -1,10 +1,12 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { isCoarsePointer } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useEventEditingTriggerProps } from '../event-editing';
 import { EventContextMenu } from './EventContextMenu';
+import { getFocusFallback } from './EventContextMenuItems';
 import type {
   EventContextMenuAnchorPosition,
   EventContextMenuContextValue,
@@ -33,6 +35,7 @@ interface EventContextMenuState {
   anchorPosition: EventContextMenuAnchorPosition | null;
   onEditingCanceled?: () => void;
   stableAnchor?: HTMLElement | null;
+  focusFallback?: HTMLElement | null;
 }
 
 const INITIAL_STATE: EventContextMenuState = {
@@ -68,9 +71,18 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
     setState((prev) => (prev.open ? { ...prev, open: false } : prev));
   });
 
+  // The event can be removed while its menu is open, which would leave the menu without an anchor.
+  const closeMenuForAnchor = useStableCallback((anchorEl: HTMLElement) => {
+    // Read while `anchorEl` is still attached — see `getFocusFallback`.
+    const focusFallback = getFocusFallback(anchorEl);
+    setState((prev) =>
+      prev.open && prev.anchorEl === anchorEl ? { ...prev, open: false, focusFallback } : prev,
+    );
+  });
+
   const contextValue = React.useMemo<EventContextMenuContextValue>(
-    () => ({ openMenu }),
-    [openMenu],
+    () => ({ openMenu, closeMenuForAnchor }),
+    [openMenu, closeMenuForAnchor],
   );
 
   return (
@@ -84,6 +96,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
           anchorPosition={state.anchorPosition}
           onEditingCanceled={state.onEditingCanceled}
           stableAnchor={state.stableAnchor}
+          focusFallback={state.focusFallback}
           onClose={closeMenu}
         />
       )}
@@ -106,6 +119,14 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
   const { occurrence, onClick, onEditingCanceled, stableAnchor, children } = props;
   const editing = useEventEditingTriggerProps(occurrence, { onEditingCanceled, stableAnchor });
   const menuContext = useEventContextMenuContext();
+
+  useIsoLayoutEffect(() => {
+    const node = editing.ref.current;
+    if (!menuContext || node === null) {
+      return undefined;
+    }
+    return () => menuContext.closeMenuForAnchor(node);
+  }, [menuContext, editing.ref]);
 
   return React.cloneElement(children as React.ReactElement<any>, {
     ref: editing.ref,

@@ -25,9 +25,11 @@ describe('EventContextMenu', () => {
       .singleDay('2025-07-03T10:00:00Z', 60)
       .build();
 
-    render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    const { setProps } = render(
+      <StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
+    );
 
-    return { onEventsChange };
+    return { onEventsChange, setProps };
   }
 
   function getEvent(name: RegExp | string = /Morning Meeting/i): HTMLElement {
@@ -136,6 +138,25 @@ describe('EventContextMenu', () => {
 
     expect(document.activeElement).not.to.equal(document.body);
     expect(document.activeElement).to.have.attribute('tabindex', '0');
+  });
+
+  it('should close the menu and keep focus in the grid when its event is removed while it is open', async () => {
+    const { setProps } = renderEvent();
+    const event = getEvent();
+    event.focus();
+
+    fireEvent.keyDown(event, { key: ' ' });
+    fireEvent.keyUp(event, { key: ' ' });
+    expect(screen.getByRole('menu')).not.to.equal(null);
+
+    setProps({ events: [] });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.have.attribute('tabindex', '0');
+    });
   });
 
   describe('read-only events', () => {

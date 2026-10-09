@@ -25,6 +25,8 @@ export interface EventContextMenuContextValue {
     anchorEl: HTMLElement,
     options?: OpenEventContextMenuOptions,
   ) => void;
+  /** Closes the menu if it is anchored to `anchorEl`, which is about to unmount. */
+  closeMenuForAnchor: (anchorEl: HTMLElement) => void;
 }
 
 export interface EventContextMenuProviderProps {
@@ -56,5 +58,7 @@ export interface EventContextMenuProps {
   anchorPosition: EventContextMenuAnchorPosition | null;
   onEditingCanceled?: () => void;
   stableAnchor?: HTMLElement | null;
+  /** Receives focus when the menu closes because its anchor unmounted. */
+  focusFallback?: HTMLElement | null;
   onClose: () => void;
 }
