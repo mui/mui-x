@@ -61,7 +61,6 @@ interface MoreEventsData {
 
 interface MoreEventsPopoverContextValue {
   openPopover: (anchorEl: HTMLElement, data: MoreEventsData) => void;
-  closePopover: () => void;
   updatePopover: (data: MoreEventsData) => void;
   closePopoverForDay: (dayKey: string) => void;
 }
@@ -272,8 +271,8 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
   });
 
   const contextValue = React.useMemo<MoreEventsPopoverContextValue>(
-    () => ({ openPopover, closePopover, updatePopover, closePopoverForDay }),
-    [openPopover, closePopover, updatePopover, closePopoverForDay],
+    () => ({ openPopover, updatePopover, closePopoverForDay }),
+    [openPopover, updatePopover, closePopoverForDay],
   );
 
   return (
