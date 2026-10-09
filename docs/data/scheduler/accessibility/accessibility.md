@@ -169,6 +169,11 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
 - Deleting an event from the popover's context menu does not close the popover.
 
+## View switcher
+
+The view switcher button exposes `aria-haspopup="true"`, `aria-expanded`, and `aria-controls`.
+Inside the menu, each view uses `role="menuitemradio"` with `aria-checked`, so the current view is announced as checked.
+
 ## Preferences menu
 
 The Preferences menu button exposes `aria-haspopup="true"`, `aria-expanded`, and `aria-controls`.
