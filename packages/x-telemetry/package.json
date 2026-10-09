@@ -39,7 +39,6 @@
     "rimraf": "catalog:"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    ".": "./src/index.ts"
   }
 }
