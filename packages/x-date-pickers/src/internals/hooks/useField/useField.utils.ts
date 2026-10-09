@@ -415,9 +415,10 @@ export const getSectionsBoundaries = (
     hours: ({ format }) => {
       const lastHourInDay = adapter.getHours(endOfDay);
 
+      // Some days skip midnight (`America/Santiago` on 2026-09-06), but 2000-01-01 has a midnight in all timezones.
       const formattedMidnight = Number(
         removeLocalizedDigits(
-          adapter.formatByString(adapter.startOfDay(today), format),
+          adapter.formatByString(adapter.date('2000-01-01T00:00', timezone), format),
           localizedDigits,
         ),
       );

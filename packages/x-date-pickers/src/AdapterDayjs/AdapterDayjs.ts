@@ -271,6 +271,13 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       return value;
     }
 
+    // `tz(timezone, true)` breaks when the offset changes to or from 0, so rebuild the value from its wall time.
+    if (timezone !== 'system' && value.isValid()) {
+      return this.getWallTimeValue(this.getWallTime(value), timezone, value.utcOffset()).locale(
+        value.locale(),
+      );
+    }
+
     const fixedValue = value.tz(this.cleanTimezone(timezone), true);
     // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
     // @ts-ignore
@@ -279,6 +286,63 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       value.$offset = fixedValue.$offset;
     }
     return value;
+  };
+
+  /**
+   * The wall time of the value, in milliseconds as if it was UTC.
+   */
+  private getWallTime = (value: Dayjs) => {
+    const wallDate = new Date(0);
+    wallDate.setUTCFullYear(value.year(), value.month(), value.date());
+    wallDate.setUTCHours(value.hour(), value.minute(), value.second(), value.millisecond());
+    return wallDate.getTime();
+  };
+
+  /**
+   * The value of a timezone at a timestamp. Before 1970, `tz()` adds a second to an instant with milliseconds,
+   * so convert the whole second, then add the milliseconds (a setter can move a repeated local time).
+   */
+  private toTimezone = (timestamp: number, timezone: string) => {
+    const milliseconds = ((timestamp % 1000) + 1000) % 1000;
+    const value = this.setTimezone(dayjs(timestamp - milliseconds), timezone);
+    return value.add(milliseconds, 'millisecond');
+  };
+
+  /**
+   * The value of a timezone at a wall time. A repeated wall time keeps the given offset when it is valid,
+   * else it takes the first occurrence. A wall time in a DST gap moves forward.
+   */
+  private getWallTimeValue = (wallTime: number, timezone: string, offset?: number) => {
+    const getValue = (candidate: number) =>
+      this.toTimezone(wallTime - candidate * 60_000, timezone);
+    if (offset !== undefined) {
+      const value = getValue(offset);
+      if (this.getWallTime(value) === wallTime) {
+        return value;
+      }
+    }
+
+    // The offsets of the day before and the day after cover a DST change on that day.
+    const valueBefore = getValue(this.toTimezone(wallTime - 86_400_000, timezone).utcOffset());
+    if (this.getWallTime(valueBefore) === wallTime) {
+      return valueBefore;
+    }
+
+    const valueAfter = getValue(this.toTimezone(wallTime + 86_400_000, timezone).utcOffset());
+    return this.getWallTime(valueAfter) === wallTime ? valueAfter : valueBefore;
+  };
+
+  /**
+   * Hours, minutes, and seconds measure elapsed time: add them to the instant, then convert back to the timezone.
+   */
+  private addTime = (value: Dayjs, amount: number, unit: 'hour' | 'minute' | 'second') => {
+    // Without the `timezone` plugin, a value with a UTC offset keeps that offset.
+    if (!this.hasTimezonePlugin()) {
+      return this.adjustOffset(value.add(amount, unit));
+    }
+
+    const timestamp = dayjs(value.valueOf()).add(amount, unit).valueOf();
+    return this.toTimezone(timestamp, this.getTimezone(value)).locale(value.locale());
   };
 
   /**
@@ -543,7 +607,20 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public startOfDay = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('day'));
+    const timezone = this.getTimezone(value);
+    if (timezone === 'UTC' || !this.hasTimezonePlugin() || !value.isValid()) {
+      return this.adjustOffset(value.startOf('day'));
+    }
+
+    // The native `Date` gives the first instant of the day.
+    if (timezone === 'system') {
+      return dayjs(value.valueOf()).startOf('day').locale(value.locale());
+    }
+
+    // `startOf('day')` can give a midnight in a DST gap or the previous day.
+    const midnight = new Date(this.getWallTime(value));
+    midnight.setUTCHours(0, 0, 0, 0);
+    return this.getWallTimeValue(midnight.getTime(), timezone).locale(value.locale());
   };
 
   public endOfYear = (value: Dayjs) => {
@@ -579,15 +656,15 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public addHours = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'hour'));
+    return this.addTime(value, amount, 'hour');
   };
 
   public addMinutes = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'minute'));
+    return this.addTime(value, amount, 'minute');
   };
 
   public addSeconds = (value: Dayjs, amount: number) => {
-    return this.adjustOffset(value.add(amount, 'second'));
+    return this.addTime(value, amount, 'second');
   };
 
   public getYear = (value: Dayjs) => {
