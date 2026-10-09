@@ -31,7 +31,8 @@ export function EventContextMenu(props: EventContextMenuProps) {
     stableAnchor,
   });
 
-  // The menu restores focus to its anchor, which fails once the anchor has unmounted.
+  // The menu restores focus to the element focused when it opened, which fails once the event has
+  // unmounted.
   const handleExited = (paper: HTMLElement) => {
     if (anchorEl.isConnected || !isFocusLostWith(paper)) {
       return;

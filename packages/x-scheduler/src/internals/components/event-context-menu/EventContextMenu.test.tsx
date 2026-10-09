@@ -2,6 +2,8 @@ import * as React from 'react';
 import { screen, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
+import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
+import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -34,6 +36,10 @@ describe('EventContextMenu', () => {
 
   function getEvent(name: RegExp | string = /Morning Meeting/i): HTMLElement {
     return screen.getByRole('button', { name });
+  }
+
+  function getColumn(event: HTMLElement) {
+    return event.closest(`.${eventCalendarClasses.dayTimeGridColumn}`);
   }
 
   // `events` is a fully-controlled prop (the store warns if nothing feeds `onEventsChange` back
@@ -126,6 +132,7 @@ describe('EventContextMenu', () => {
 
   it('should not lose focus to <body> after Delete: it falls back to the owning grid column', async () => {
     renderStatefulEvent();
+    const column = getColumn(getEvent());
 
     fireEvent.contextMenu(getEvent());
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
@@ -136,14 +143,15 @@ describe('EventContextMenu', () => {
       expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
     });
 
-    expect(document.activeElement).not.to.equal(document.body);
-    expect(document.activeElement).to.have.attribute('tabindex', '0');
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(column);
+    });
   });
 
   it('should close the menu and keep focus in the grid when its event is removed while it is open', async () => {
     const { setProps } = renderEvent();
     const event = getEvent();
-    const column = event.parentElement!.closest('[tabindex]');
+    const column = getColumn(event);
     event.focus();
 
     fireEvent.keyDown(event, { key: ' ' });
@@ -163,7 +171,7 @@ describe('EventContextMenu', () => {
   it('should close the menu opened with a right-click and keep focus in the grid when its event is removed', async () => {
     const { setProps } = renderEvent();
     const event = getEvent();
-    const column = event.parentElement!.closest('[tabindex]');
+    const column = getColumn(event);
     event.focus();
 
     fireEvent.contextMenu(event);
@@ -176,6 +184,24 @@ describe('EventContextMenu', () => {
     });
     await waitFor(() => {
       expect(document.activeElement).to.equal(column);
+    });
+  });
+
+  it('should close the menu when its event is removed in the agenda view', async () => {
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .build();
+    const { setProps } = render(<StandaloneAgendaView events={[event]} resources={[]} />);
+
+    fireEvent.contextMenu(getEvent());
+    expect(screen.getByRole('menu')).not.to.equal(null);
+
+    setProps({ events: [] });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
     });
   });
 

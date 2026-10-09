@@ -16,6 +16,10 @@ export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElem
    */
   anchor: HTMLElement;
   /**
+   * The day cell of the anchor, focused when the anchor has unmounted.
+   */
+  cell: HTMLElement | null;
+  /**
    * Handles the close action of the popover.
    */
   onClose: () => void;

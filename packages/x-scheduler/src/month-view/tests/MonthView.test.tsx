@@ -47,6 +47,7 @@ describe('<MonthView />', () => {
     EventBuilder.new().singleDay('2025-05-02T08:00:00Z').title('Next day 1').build(),
     EventBuilder.new().singleDay('2025-05-02T09:00:00Z').title('Next day 2').build(),
     EventBuilder.new().singleDay('2025-05-02T10:00:00Z').title('Next day 3').build(),
+    EventBuilder.new().singleDay('2025-05-02T11:00:00Z').title('Next day 4').build(),
   ];
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
@@ -547,16 +548,19 @@ describe('<MonthView />', () => {
         });
         observer.observe(paper, { attributes: true, attributeFilter: ['style'] });
 
-        while (screen.queryByRole('button', { name: /more/i, hidden: true })) {
-          positionBeforeDelete = getPosition();
-          positions = [];
-          // eslint-disable-next-line no-await-in-loop
-          await deleteEvent(getPopoverEventTitles(popover).at(-1)!);
+        try {
+          while (screen.queryByRole('button', { name: /more/i, hidden: true })) {
+            positionBeforeDelete = getPosition();
+            positions = [];
+            // eslint-disable-next-line no-await-in-loop
+            await deleteEvent(getPopoverEventTitles(popover).at(-1)!);
+          }
+          await waitFor(() => {
+            expect(document.body.contains(popover)).to.equal(false);
+          });
+        } finally {
+          observer.disconnect();
         }
-        await waitFor(() => {
-          expect(document.body.contains(popover)).to.equal(false);
-        });
-        observer.disconnect();
 
         expect(positions).to.deep.equal(positions.map(() => positionBeforeDelete));
       },
@@ -612,14 +616,17 @@ describe('<MonthView />', () => {
         { container: iframeBody.appendChild(iframe.contentDocument!.createElement('div')) },
       );
 
-      const [moreButton] = await within(iframeBody).findAllByRole('button', { name: /more/i });
-      await act(async () => {
-        moreButton.click();
-      });
+      try {
+        const [moreButton] = await within(iframeBody).findAllByRole('button', { name: /more/i });
+        await act(async () => {
+          moreButton.click();
+        });
 
-      expect(await within(iframeBody).findByRole('presentation')).not.to.equal(null);
-      unmount();
-      iframe.remove();
+        expect(await within(iframeBody).findByRole('presentation')).not.to.equal(null);
+      } finally {
+        unmount();
+        iframe.remove();
+      }
     });
 
     it('should not move focus when an event is removed while another one is focused', async () => {
@@ -637,7 +644,30 @@ describe('<MonthView />', () => {
       expect(document.activeElement).to.equal(firstEvent);
     });
 
-    it('should ignore changes to the events of another day', async () => {
+    it('should ignore changes to the events of another day that still overflows', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover([
+        ...manyEvents,
+        ...nextDayEvents,
+      ]);
+      const labelsBefore = getMoreButtonLabels();
+
+      setProps({ events: [...manyEvents, ...nextDayEvents.slice(1)] });
+
+      await waitFor(() => {
+        expect(getMoreButtonLabels()).not.to.deep.equal(labelsBefore);
+      });
+      expect(getMoreButtonLabels()).to.have.length(2);
+      expect(getPopoverEventTitles(popover)).to.deep.equal([
+        'Event 1',
+        'Event 2',
+        'Event 3',
+        'Event 4',
+        'Event 5',
+        'Event 6',
+      ]);
+    });
+
+    it('should ignore the "+N more" button of another day unmounting', async () => {
       const { popover, setProps } = await renderAndOpenStatefulPopover([
         ...manyEvents,
         ...nextDayEvents,
@@ -645,7 +675,7 @@ describe('<MonthView />', () => {
       const labelsBefore = getMoreButtonLabels();
 
       // One event left, so the next day's "+N more" button unmounts.
-      setProps({ events: [...manyEvents, ...nextDayEvents.slice(2)] });
+      setProps({ events: [...manyEvents, ...nextDayEvents.slice(3)] });
 
       await waitFor(() => {
         expect(getMoreButtonLabels()).not.to.deep.equal(labelsBefore);
@@ -672,15 +702,46 @@ describe('<MonthView />', () => {
       await act(async () => {
         (document.activeElement as HTMLElement | null)?.blur();
       });
-      await act(async () => {
-        nextDayMoreButton.click();
+      const focusedElements: Element[] = [];
+      const recordFocus = (event: FocusEvent) => {
+        focusedElements.push(event.target as Element);
+      };
+      document.addEventListener('focusin', recordFocus);
+
+      try {
+        await act(async () => {
+          nextDayMoreButton.click();
+        });
+
+        const nextDayPopover = await screen.findByRole('presentation');
+        await waitFor(() => {
+          expect(nextDayPopover.contains(document.activeElement)).to.equal(true);
+        });
+        // Not even briefly on an event or the "+N more" button.
+        expect(
+          focusedElements.filter((element) => !nextDayPopover.contains(element)),
+        ).to.deep.equal([]);
+        expect(within(nextDayPopover).getAllByRole('button')).not.to.include(
+          document.activeElement,
+        );
+      } finally {
+        document.removeEventListener('focusin', recordFocus);
+      }
+    });
+
+    it('should list an event added to the day while the popover is open', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+
+      setProps({
+        events: [
+          ...manyEvents,
+          EventBuilder.new().singleDay('2025-05-01T14:00:00Z').title('Event 7').build(),
+        ],
       });
 
-      const nextDayPopover = await screen.findByRole('presentation');
       await waitFor(() => {
-        expect(nextDayPopover.contains(document.activeElement)).to.equal(true);
+        expect(getPopoverEventTitles(popover)).to.include('Event 7');
       });
-      expect(within(nextDayPopover).getAllByRole('button')).not.to.include(document.activeElement);
     });
 
     it('should move focus to the next event when the event of an open context menu is removed', async () => {

@@ -38,13 +38,8 @@ interface EventContextMenuState {
 }
 
 /**
- * The nearest focusable ancestor of an event: the grid column/cell it lives in, which (unlike the
- * event itself) doesn't unmount when the event is removed.
- *
- * When the event is removed while its menu is open, MUI's `Menu` tries to restore focus to the
- * element that had it when the menu opened (`anchorEl` itself here), but since that node is now
- * detached, the restore silently fails and focus is lost to `<body>`. Falling back to this ancestor
- * keeps a keyboard user's place in the grid.
+ * The nearest focusable ancestor of an event: the grid column/cell it lives in, which doesn't
+ * unmount with the event.
  */
 function getClosestFocusableAncestor(element: HTMLElement): HTMLElement | null {
   return element.parentElement?.closest<HTMLElement>('[tabindex]') ?? null;
@@ -86,7 +81,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
     setState((prev) => (prev.open ? { ...prev, open: false } : prev));
   });
 
-  // The event can be removed while its menu is open, which would leave the menu without an anchor.
+  // The event can be removed while its menu is open, so close the menu with it.
   const closeMenuForAnchor = useStableCallback((anchorEl: HTMLElement) => {
     if (state.open && state.anchorEl === anchorEl) {
       closeMenu();

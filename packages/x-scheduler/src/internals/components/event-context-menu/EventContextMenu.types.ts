@@ -27,7 +27,7 @@ export interface EventContextMenuContextValue {
     anchorEl: HTMLElement,
     options?: OpenEventContextMenuOptions,
   ) => void;
-  /** Closes the menu if it is anchored to `anchorEl`, which is about to unmount. */
+  /** Closes the menu if it was opened from `anchorEl`, which is about to unmount. */
   closeMenuForAnchor: (anchorEl: HTMLElement) => void;
 }
 
@@ -52,8 +52,8 @@ export interface EventContextMenuTriggerProps {
    */
   stableAnchor?: HTMLElement | null;
   /**
-   * Returns the element to focus when the trigger unmounts while its menu is open and focus would
-   * be lost with it. Defaults to the trigger's nearest focusable ancestor.
+   * Returns the element to focus when its menu closes after the trigger has unmounted and focus
+   * would be lost. Defaults to the trigger's nearest focusable ancestor.
    */
   getFocusFallback?: () => HTMLElement | null;
 }
