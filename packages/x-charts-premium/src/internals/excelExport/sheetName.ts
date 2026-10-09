@@ -14,6 +14,7 @@ export const DEFAULT_SHEET_NAMES: Record<ChartExcelTableId, string> = {
   mapShape: 'mapShape',
   sankeyNodes: 'sankey.nodes',
   sankeyLinks: 'sankey.links',
+  gridCharts: 'data',
 };
 
 /**

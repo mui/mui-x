@@ -1,7 +1,7 @@
 ---
 title: Charts - Export
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart
+components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart, ChartsToolbarPremium, ChartsToolbarExcelExportTrigger
 ---
 
 # Charts - Export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -20,6 +20,8 @@ The exporting feature is available for the following charts:
 - `RadarChartPro`
 - `SankeyChart`
 - `CandlestickChart`
+
+Premium charts can also export the data behind the chart as a spreadsheet, covered in [Excel export](#excel-export).
 
 ## Implementing exporting
 
@@ -179,6 +181,70 @@ To use a custom wrapper instead, you must set the reference to the root element 
 If your application uses a Content Security Policy (CSP), you might need to adjust it for exporting to work correctly.
 See [the dedicated document on CSP](/x/react-charts/content-security-policy/) for more details.
 
+## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+The exports above produce a picture of the chart.
+Premium charts can also export the data behind it as an Excel file, so users can sort, filter and chart the numbers themselves.
+
+### Enabling the export
+
+The Excel export comes from the `useChartPremiumExport` plugin, which is not registered by default: a chart that leaves it out never loads the Excel code.
+Add it to the `plugins` array of a [composed chart](/x/react-charts/composition/), after the plugins of the chart you are composing:
+
+```tsx
+import { BAR_CHART_PREMIUM_PLUGINS } from '@mui/x-charts-premium/BarChartPremium';
+import { useChartPremiumExport } from '@mui/x-charts-premium/plugins';
+
+// Outside the component: plugins contain hooks, so their order must not change.
+const plugins = [...BAR_CHART_PREMIUM_PLUGINS, useChartPremiumExport];
+```
+
+With the plugin registered, `ChartsToolbarPremium` adds a **Download as Excel** entry to the export menu.
+The entry is left out when the chart does not register the plugin, so the menu never offers an export that cannot run.
+
+{{"demo": "ExportChartAsExcel.js"}}
+
+:::info
+The single-component charts, such as `BarChartPremium`, do not accept a `plugins` prop, so the Excel export is only available on composed charts.
+See [Plugins](/x/react-charts/plugins/) for the full list of plugins and how to pass them.
+:::
+
+### Excel export options
+
+Pass `excelExportOptions` to the toolbar to customize the file:
+
+```tsx
+<ChartsToolbarPremium
+  excelExportOptions={{ fileName: 'revenue', includeHiddenSeries: false }}
+/>
+```
+
+| Option                   | Default            | Description                                                                          |
+| :----------------------- | :----------------- | :----------------------------------------------------------------------------------- |
+| `fileName`               | the document title | Name of the file, without the extension.                                             |
+| `includeHiddenSeries`    | `true`             | Export the series and items hidden through the legend.                               |
+| `includeFormattedValues` | `false`            | Add a `formattedValue` column next to each value, using the series `valueFormatter`. |
+| `escapeFormulas`         | `true`             | Escape text cells Excel would otherwise evaluate as formulas.                        |
+| `includeHeaders`         | `true`             | Write a header row on each sheet.                                                    |
+| `disableToolbarButton`   | `false`            | Remove the entry from the export menu.                                               |
+
+:::warning
+Keep `escapeFormulas` enabled unless you trust the data.
+Disabling it exposes users to [CSV injection](https://owasp.org/www-community/attacks/CSV_Injection).
+:::
+
+### What the file contains
+
+The export writes the chart's data, one row per data point, rather than the values as the axes display them.
+Numbers stay numbers and dates stay dates, so Excel formats and sorts them natively.
+
+Series are grouped by the columns they need, and each group becomes one sheet:
+
+- Bar, line, radar and the radial series share a `series`, `category` and `value` shape, so they are written together on a single `category` sheet.
+- Scatter carries its own coordinates, so it gets a `scatter` sheet with `x`, `y` and the optional `colorValue` and `sizeValue` channels.
+- Pie, funnel, heatmap, range bar, candlestick and map series each get a sheet with the columns that shape needs, such as `open`, `high`, `low` and `close` for candlestick.
+- Sankey describes a graph rather than a list of points, so it is written as two sheets, `sankey.nodes` and `sankey.links`.
+
 ## apiRef
 
 ### Print or export as PDF
@@ -211,6 +277,29 @@ apiRef.current?.exportAsImage({ pixelRatio: 3 }).catch((error) => {
   // Report the failed export.
 });
 ```
+
+### Export as Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+Charts that register the [`useChartPremiumExport` plugin](#enabling-the-export) expose two more methods, which take the same [options](#excel-export-options) as the toolbar entry.
+
+`exportAsExcel()` writes the file and downloads it:
+
+```tsx
+await apiRef.current?.exportAsExcel({ fileName: 'revenue' });
+```
+
+`getDataAsExcel()` returns the [ExcelJS](https://github.com/exceljs/exceljs) workbook instead of downloading it, which lets you add sheets, style cells or send the file somewhere else:
+
+```tsx
+const workbook = await apiRef.current?.getDataAsExcel();
+
+if (workbook) {
+  workbook.addWorksheet('Notes');
+  const buffer = await workbook.xlsx.writeBuffer();
+}
+```
+
+It resolves to `null` when the chart has no data to export, in which case `exportAsExcel()` downloads nothing.
 
 ### Handling export errors
 

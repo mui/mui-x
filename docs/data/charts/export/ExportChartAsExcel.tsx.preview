@@ -1,0 +1,13 @@
+<Typography sx={{ alignSelf: 'center', my: 1 }}>
+  Open the export menu and pick Download as Excel
+</Typography>
+<ChartsDataProviderPremium<'bar', Signatures> {...settings} plugins={plugins}>
+  <ChartsWrapper>
+    <ChartsToolbarPremium />
+    <ChartsSurface>
+      <BarPlot />
+      <ChartsXAxis />
+      <ChartsYAxis />
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartsDataProviderPremium>

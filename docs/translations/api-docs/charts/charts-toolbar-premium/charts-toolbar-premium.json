@@ -1,0 +1,48 @@
+{
+  "componentDescription": "The chart toolbar component for the premium package.\nIt adds the Excel export entry to the Pro toolbar's export menu.",
+  "propDescriptions": {
+    "dataGridExportOptions": {
+      "description": "The options to apply on the Excel export of the Data Grid&#39;s data. The entry is only shown when <code>onDataGridExcelExport</code> is provided, which the Data Grid integration does."
+    },
+    "excelExportOptions": {
+      "description": "The options to apply on the Excel export of the chart&#39;s own data."
+    },
+    "exportMenuItems": {
+      "description": "Extra items rendered at the end of the export menu.",
+      "typeDescriptions": {
+        "params": { "name": "params", "description": "The render params." },
+        "params.onClose": { "name": "params.onClose", "description": "Closes the export menu." },
+        "React.ReactNode": { "name": "React.ReactNode", "description": "The menu items." }
+      }
+    },
+    "onDataGridExcelExport": {
+      "description": "Exports the data of the Data Grid the chart is bound to, rather than the chart&#39;s own data.",
+      "typeDescriptions": {
+        "Promise<void>": {
+          "name": "Promise<void>",
+          "description": "A promise that resolves once the export is done."
+        }
+      }
+    },
+    "onExcelExport": {
+      "description": "Overrides how the chart&#39;s data is exported. Defaults to <code>apiRef.current.exportAsExcel</code>, and is required for a chart that does not register <code>useChartPremiumExport</code>, such as the one in the Data Grid integration.",
+      "typeDescriptions": {
+        "options": {
+          "name": "options",
+          "description": "The options to apply on the Excel export."
+        },
+        "Promise<void>": {
+          "name": "Promise<void>",
+          "description": "A promise that resolves once the export is done."
+        }
+      }
+    },
+    "rangeButtons": {
+      "description": "Configuration for range buttons shown in the toolbar. Each button zooms the chart to a predefined time range from the end of the data."
+    },
+    "rangeButtonsAxisId": {
+      "description": "The axis ID to apply range buttons to. Defaults to the first x-axis with zoom enabled and a time scale."
+    }
+  },
+  "classDescriptions": {}
+}

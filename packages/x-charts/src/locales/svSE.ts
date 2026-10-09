@@ -15,6 +15,8 @@ export const svSELocaleText: Partial<ChartsLocaleText> = {
   // Toolbar Export Menu
   toolbarExportPrint: 'Skriv ut',
   toolbarExportImage: (mimeType) => `Exportera som ${imageMimeTypes[mimeType] ?? mimeType}`,
+  // toolbarExportExcel: 'Download as Excel',
+  // toolbarExportDataGridExcel: 'Download Data Grid data as Excel',
 
   // Charts renderer configuration
   // chartTypeBar: 'Bar',
