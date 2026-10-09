@@ -116,10 +116,6 @@ allowBuilds:
   msw: false
 
 overrides:
-  # Preview packages reference unpublished sibling versions; use their published releases.
-  '@mui/internal-code-infra>@mui/internal-babel-plugin-display-name': 2.0.1-canary.1
-  '@mui/internal-code-infra>@mui/internal-babel-plugin-minify-errors': 3.0.1-canary.1
-  '@mui/internal-code-infra>@mui/internal-babel-plugin-resolve-imports': 3.0.1-canary.2
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
