@@ -114,6 +114,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
         id,
         'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
         'aria-colindex': index + 1,
+        'aria-current': isCurrentDay ? 'date' : undefined,
       },
       keyboardProps,
       elementProps,
