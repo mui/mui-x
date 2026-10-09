@@ -5,11 +5,12 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license/internals';
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import { styled, useThemeProps } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
+import ButtonBase, { buttonBaseClasses } from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import type {
@@ -131,10 +132,24 @@ const selectedDayStyles = (theme: Theme) => ({
   color: (theme.vars || theme).palette.primary.contrastText,
   backgroundColor: (theme.vars || theme).palette.primary.main,
   fontWeight: theme.typography.fontWeightMedium,
-  '&:focus, &:hover': {
+  '&:hover': {
     willChange: 'background-color',
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
+  ...(theme.focusVisible
+    ? {
+        [`&.${buttonBaseClasses.focusVisible}`]: {
+          ...theme.focusVisible,
+          ...applyInsetFocusVisible(2),
+          outlineColor: (theme.vars || theme).palette.primary.contrastText,
+        },
+      }
+    : {
+        '&:focus': {
+          willChange: 'background-color',
+          backgroundColor: (theme.vars || theme).palette.primary.dark,
+        },
+      }),
 });
 
 const DISABLED_DAY_OPACITY = 0.6;
@@ -196,12 +211,21 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       ),
     },
   },
-  '&:focus': {
-    backgroundColor: theme.alpha(
-      (theme.vars || theme).palette.primary.main,
-      (theme.vars || theme).palette.action.focusOpacity,
-    ),
-  },
+  ...(theme.focusVisible
+    ? {
+        [`&.${buttonBaseClasses.focusVisible}`]: {
+          ...theme.focusVisible,
+          ...applyInsetFocusVisible(1),
+        },
+      }
+    : {
+        '&:focus': {
+          backgroundColor: theme.alpha(
+            (theme.vars || theme).palette.primary.main,
+            (theme.vars || theme).palette.action.focusOpacity,
+          ),
+        },
+      }),
   zIndex: 1,
   isolation: 'isolate',
   '&::before, &::after': {
@@ -242,6 +266,15 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       style: {
         outline: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
         outlineOffset: -1,
+        ...(theme.focusVisible && {
+          [`&.${buttonBaseClasses.focusVisible}`]: {
+            ...theme.focusVisible,
+            ...applyInsetFocusVisible(2),
+            boxShadow: theme.focusVisible?.boxShadow
+              ? `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}, ${theme.focusVisible.boxShadow}`
+              : `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
+          },
+        }),
       },
     },
     {

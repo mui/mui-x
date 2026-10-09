@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import type {
   YearButtonOwnerState,
   YearCalendarSlotProps,
@@ -70,6 +71,13 @@ const DefaultYearButton = styled('button', {
       (theme.vars || theme).palette.action.focusOpacity,
     ),
   },
+  ...(theme.focusVisible && {
+    '&:focus-visible': {
+      backgroundColor: 'transparent',
+      ...applyInsetFocusVisible(1),
+      ...theme.focusVisible,
+    },
+  }),
   '&:hover': {
     backgroundColor: theme.alpha(
       (theme.vars || theme).palette.action.active,
