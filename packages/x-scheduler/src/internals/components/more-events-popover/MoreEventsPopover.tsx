@@ -112,7 +112,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     return anchor.isConnected ? anchor : cell;
   });
 
-  // The item last focused or right-clicked, so the one an open context menu belongs to.
+  // The item last focused or right-clicked, which is the one an open context menu belongs to.
   const lastItemKeyRef = React.useRef<string | null>(null);
   const handleItemInteraction = (event: React.SyntheticEvent<HTMLDivElement>) => {
     const index = Array.from(event.currentTarget.children).findIndex((child) =>
@@ -244,7 +244,12 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
   });
 
   const openPopover = useStableCallback((anchorEl: HTMLElement, data: MoreEventsData) => {
-    setState({ open: true, anchorEl, cell: anchorEl.closest('[role="gridcell"]'), data });
+    setState({
+      open: true,
+      anchorEl,
+      cell: anchorEl.closest<HTMLElement>('[role="gridcell"]'),
+      data,
+    });
   });
 
   // Keep the anchor and data, else the popover unmounts before its exit transition can play.
