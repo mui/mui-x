@@ -26,4 +26,42 @@ describe('enhanceDensity (pro)', () => {
     );
     expect(theme.components?.MuiDataGrid?.defaultProps?.headerFilterHeight).toBe(36);
   });
+
+  it('emits the Pro slots: header filter, reorder, grouping toggles, multi-select', () => {
+    const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
+    expect(styleOverrides?.root).toEqual([
+      {
+        '& .MuiDataGrid-columnHeader--filter': { paddingBlock: '4px', paddingRight: '8px' },
+        '& .MuiDataGrid-rowReorderIcon': { fontSize: '16px' },
+        '& .MuiDataGrid-multiSelectCell': { gap: '4px' },
+        '& .MuiDataGrid-cell[aria-rowspan]:not([aria-rowspan="1"]) .MuiDataGrid-multiSelectCell': {
+          paddingTop: '8px',
+        },
+        '& .MuiDataGrid-editMultiSelectCell': { gap: '4px', paddingInline: '8px' },
+      },
+    ]);
+    expect(styleOverrides?.columnHeaderFilterInput).toEqual([
+      { marginRight: '8px', marginBottom: '-4px' },
+    ]);
+    expect(styleOverrides?.columnHeaderFilterOperatorLabel).toEqual([{ marginRight: '8px' }]);
+    expect(styleOverrides?.rowReorderCellContainer).toEqual([{ paddingInline: 0 }]);
+    expect(styleOverrides?.treeDataGroupingCellToggle).toEqual([
+      { flexBasis: 'calc(32px - 4px)', marginRight: '24px' },
+    ]);
+    expect(styleOverrides?.groupingCriteriaCellToggle).toEqual(
+      styleOverrides?.treeDataGroupingCellToggle,
+    );
+    expect(styleOverrides?.multiSelectCellPopperContent).toEqual([{ padding: '8px', gap: '4px' }]);
+    expect(styleOverrides?.editMultiSelectCellPopperContent).toEqual([
+      {
+        '& .MuiInputBase-root.MuiInputBase-sizeSmall': { paddingBlock: '4px' },
+        '& svg': { fontSize: '16px' },
+      },
+    ]);
+  });
+
+  it('keeps the community slots underneath', () => {
+    const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
+    expect(styleOverrides?.cell).toEqual([{ paddingInline: '8px' }]);
+  });
 });
