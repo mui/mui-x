@@ -1,3 +1,6 @@
+// Review surface for the density enhancer PR. Lives outside `/experiments/`
+// only so the Netlify preview exports it (that folder is dropped under
+// DEPLOY_ENV=production). Remove or turn into a docs demo before merge.
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
