@@ -261,3 +261,5 @@ export { useGridPanelContext } from '../components/panel/GridPanelContext';
 export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';
 
 export { useSyncExternalStore } from 'use-sync-external-store/shim';
+
+export { getDensityScale, getDensitySizing, gridDensityHeight } from '../density/densityScale';
