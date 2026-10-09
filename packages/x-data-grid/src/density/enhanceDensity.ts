@@ -34,10 +34,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(components, 'MuiDataGrid', { paddingInline: 0 }, 'cellCheckbox');
   addRootOverride(components, 'MuiDataGrid', { paddingInline: 0 }, 'columnHeaderCheckbox');
   // Same bar as material's regular Toolbar: the interactive box plus one xSmall
-  // above and below, with the padding carrying that inset. The grid renders its
-  // icons with `fontSize="small"`, which material's enhancer maps to the small
-  // glyph; the grid's default glyph is the icon constant itself, so the owning
-  // slot sets it (material's Alert/Chip pattern).
+  // above and below, with the padding carrying that inset.
   addRootOverride(
     components,
     'MuiDataGrid',
@@ -45,7 +42,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
       minHeight: `calc(${touchTarget} + 2 * ${spacing('xSmall')})`,
       padding: spacing('xSmall'),
       gap: spacing('xxSmall'),
-      '& svg': { fontSize: iconSize },
+      '& svg': { fontSize: iconSize }, // see `glyph` below
     },
     'toolbar',
   );
@@ -84,7 +81,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // outranks that variant, so the pull is restated at the owning slot with
   // the edge class in the selector to outrank the internal rule in turn.
   const searchField = {
-    '& svg': { fontSize: iconSize },
+    '& svg': { fontSize: iconSize }, // see `glyph` below
     [`& .${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}.${iconButtonClasses.edgeEnd}`]:
       { marginRight: `calc(${touchTarget} / -4)` },
   };
@@ -130,6 +127,9 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   );
 
   // Cells with icons or inner controls.
+  // The grid hardcodes `fontSize="small"` on its icons with no prop to change it;
+  // material's enhancer maps that variant to `iconSize - 2px`, but the grid's
+  // default glyph is the icon constant itself, so the owning slot restates it.
   const glyph = { '& svg': { fontSize: iconSize } };
   // The boolean cell class is on the icon itself.
   addRootOverride(components, 'MuiDataGrid', { fontSize: iconSize }, 'booleanCell');

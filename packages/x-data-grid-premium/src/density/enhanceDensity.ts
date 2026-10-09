@@ -19,9 +19,11 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const { touchTarget, iconSize } = getDensitySizing(theme);
   const { components } = enhanced;
 
-  // The same bar the toolbar and footer ride; the row-high controls; the
-  // glyph rule for the panels' `fontSize="small"` icons.
+  // The same bar the toolbar and footer ride.
   const bar = `calc(${touchTarget} + ${spacing('medium')})`;
+  // The grid hardcodes `fontSize="small"` on its icons with no prop to change it;
+  // material's enhancer maps that variant to `iconSize - 2px`, but the grid's
+  // default glyph is the icon constant itself, so the owning slot restates it.
   const glyph = { '& svg': { fontSize: iconSize } };
   // Search fields: clear button pull restated above the grid's internal
   // adornment rule (same as the community columns panel).

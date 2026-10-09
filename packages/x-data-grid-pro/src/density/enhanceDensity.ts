@@ -32,6 +32,9 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const { spacing } = theme;
   const { touchTarget, iconSize } = getDensitySizing(theme);
   const { components } = enhanced;
+  // The grid hardcodes `fontSize="small"` on its icons with no prop to change it;
+  // material's enhancer maps that variant to `iconSize - 2px`, but the grid's
+  // default glyph is the icon constant itself, so the owning slot restates it.
   const glyph = { '& svg': { fontSize: iconSize } };
 
   // Header filter row: the same block inset the row height formula carries
