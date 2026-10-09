@@ -2,10 +2,14 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerProcessedEvent,
   SchedulerResource,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import {
+  computeElementPositionInCollection,
+  getEventResourceIds,
+} from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type { EventsCellLaneMetrics } from '../rowGeometry';
@@ -30,6 +34,19 @@ export interface DependencyArrowAnchor {
   resourceId: SchedulerResourceId;
   occurrence: SchedulerEventOccurrence;
 }
+
+/**
+ * Stands in for an event outside the visible date range: its arrows reach the timeline
+ * edge on the event's side, on the event's row.
+ */
+export interface DependencyArrowOffRangeAnchor {
+  rowIndex: number;
+  resourceId: SchedulerResourceId;
+  occurrence: null;
+  side: 'before' | 'after';
+}
+
+export type DependencyArrowEndpoint = DependencyArrowAnchor | DependencyArrowOffRangeAnchor;
 
 export interface DependencyArrowObstacle {
   occurrenceKey: string;
@@ -67,6 +84,10 @@ export interface DependencyAnchorResolverParameters {
   eventsWidth: number;
   laneMetrics: EventsCellLaneMetrics;
   /**
+   * The loaded events, used to anchor the endpoints outside the visible range.
+   */
+  processedEventLookup: ReadonlyMap<SchedulerEventId, SchedulerProcessedEvent>;
+  /**
    * When provided, the appearance lookup only indexes these events (the dependency
    * endpoints) on its single build pass; any other id — the in-flight creation's
    * events — falls back to a targeted scan cached per id. Without it every occurrence
@@ -87,14 +108,20 @@ export interface DependencyAnchorResolver {
    */
   getAppearances: (eventId: SchedulerEventId) => readonly DependencyArrowAnchor[];
   /**
+   * The anchors of an event outside the visible range, one per row of its resources.
+   * Empty when the event is not loaded, is in the range, or none of its rows is shown.
+   */
+  getOffRangeAnchors: (eventId: SchedulerEventId) => readonly DependencyArrowOffRangeAnchor[];
+  /**
    * Whether the row is laid out and can anchor an arrow. A row can briefly have no
    * position when the resources change before the virtualizer re-measures them.
    */
   hasRowPosition: (rowIndex: number) => boolean;
   /**
    * The pixel point of an anchor's start or end edge, vertically centered on its lane.
+   * An off-range anchor sits on the timeline edge, at the height of the first lane.
    */
-  getEdgePoint: (anchor: DependencyArrowAnchor, edge: 'start' | 'end') => DependencyArrowPoint;
+  getEdgePoint: (anchor: DependencyArrowEndpoint, edge: 'start' | 'end') => DependencyArrowPoint;
   /**
    * The cached position of an occurrence in the collection (fractions and edge
    * overflow flags), shared with the terminals overlay.
@@ -127,6 +154,7 @@ export function createDependencyAnchorResolver(
     positionByOccurrenceKey,
     eventsWidth,
     laneMetrics,
+    processedEventLookup,
     endpointIds,
   } = parameters;
 
@@ -168,6 +196,59 @@ export function createDependencyAnchorResolver(
     return appearances ?? [];
   };
 
+  let rowIndexByResourceId: Map<SchedulerResourceId, number> | null = null;
+  const offRangeAnchorsLookup = new Map<SchedulerEventId, DependencyArrowOffRangeAnchor[]>();
+  const computeOffRangeAnchors = (eventId: SchedulerEventId): DependencyArrowOffRangeAnchor[] => {
+    const event = processedEventLookup.get(eventId);
+    if (event == null) {
+      return [];
+    }
+    // Placed on the axis rather than compared with its bounds: the bounds are midnights,
+    // so the hours the window hides at the start of the first day and the end of the
+    // last day also come before or after what is on screen.
+    const position = computeElementPositionInCollection(adapter, {
+      start: event.displayTimezone.start,
+      end: event.displayTimezone.end,
+      collection: axis,
+      durationMs,
+    });
+    let side: DependencyArrowOffRangeAnchor['side'];
+    if (position.duration > 0) {
+      // On screen, but not rendered in any row.
+      return [];
+    }
+    if (position.position === 0) {
+      side = 'before';
+    } else if (position.position === 1) {
+      side = 'after';
+    } else {
+      // Hidden by the hour window between two visible days.
+      return [];
+    }
+    if (rowIndexByResourceId == null) {
+      rowIndexByResourceId = new Map(resources.map((entry, index) => [entry.resource.id, index]));
+    }
+    const anchors: DependencyArrowOffRangeAnchor[] = [];
+    for (const resourceId of getEventResourceIds(event.resource)) {
+      const rowIndex = rowIndexByResourceId.get(resourceId);
+      if (rowIndex !== undefined) {
+        anchors.push({ rowIndex, resourceId, occurrence: null, side });
+      }
+    }
+    return anchors;
+  };
+
+  const getOffRangeAnchors = (
+    eventId: SchedulerEventId,
+  ): readonly DependencyArrowOffRangeAnchor[] => {
+    let anchors = offRangeAnchorsLookup.get(eventId);
+    if (anchors == null) {
+      anchors = computeOffRangeAnchors(eventId);
+      offRangeAnchorsLookup.set(eventId, anchors);
+    }
+    return anchors;
+  };
+
   // Lane assignment of a row, computed on demand and only once per involved row.
   const laneLookupByRow = new Map<number, { [occurrenceKey: string]: number }>();
   const getLaneLookup = (rowIndex: number): { [occurrenceKey: string]: number } => {
@@ -203,9 +284,15 @@ export function createDependencyAnchorResolver(
     rowPositions[rowIndex] + laneMetrics.topPadding + (lane - 1) * laneStep;
 
   const getEdgePoint = (
-    anchor: DependencyArrowAnchor,
+    anchor: DependencyArrowEndpoint,
     edge: 'start' | 'end',
   ): DependencyArrowPoint => {
+    if (anchor.occurrence === null) {
+      return {
+        x: anchor.side === 'before' ? 0 : eventsWidth,
+        y: getLaneTop(anchor.rowIndex, 1) + laneMetrics.laneMinHeight / 2,
+      };
+    }
     const position = getPosition(anchor.occurrence);
     const xFraction = edge === 'start' ? position.position : position.position + position.duration;
     return {
@@ -242,6 +329,7 @@ export function createDependencyAnchorResolver(
     eventsWidth,
     detourOffset: laneMetrics.laneMinHeight / 2 + DEPENDENCY_ARROW_DETOUR_CLEARANCE,
     getAppearances,
+    getOffRangeAnchors,
     getPosition,
     hasRowPosition: (rowIndex: number) => rowPositions[rowIndex] != null,
     getEdgePoint,

@@ -1201,8 +1201,17 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.clear(endDateInput);
       await user.type(endDateInput, '2025-05-20');
       await user.click(screen.getByRole('button', { name: 'Save' }));
-      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+      expect(screen.getByLabelText(/end date/i)).toHaveAccessibleDescription(
+        'End date cannot be before start date.',
+      );
     }
+
+    it('should focus the field with the range error on save', async () => {
+      const { user } = renderWithSlot({}, { onEventsChange: () => {} });
+      await submitInvertedRange(user);
+
+      expect(document.activeElement).to.equal(screen.getByLabelText(/end date/i));
+    });
 
     it('should clear the range error when the range is fixed through the start date', async () => {
       const { user } = renderWithSlot({}, { onEventsChange: () => {} });
@@ -1212,7 +1221,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const startDateInput = screen.getByLabelText(/start date/i);
       await user.clear(startDateInput);
       await user.type(startDateInput, '2025-05-19');
-      expect(screen.queryByRole('alert')).to.equal(null);
+      expect(screen.queryByText('End date cannot be before start date.')).to.equal(null);
     });
 
     it('should clear the range error when the all-day switch is toggled', async () => {
@@ -1220,7 +1229,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await submitInvertedRange(user);
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
-      expect(screen.queryByRole('alert')).to.equal(null);
+      expect(screen.queryByText('End date cannot be before start date.')).to.equal(null);
     });
 
     it('should block the submit of an unparseable date from a custom field', async () => {
@@ -1306,11 +1315,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // The native `required` on the section's input already blocks a UI submit,
       // so exercise the programmatic path that reaches the form contract.
       fireEvent.submit(screen.getByRole('button', { name: 'Save' }).closest('form')!);
-      await screen.findAllByRole('alert');
+      await screen.findByText('Enter a valid date.');
 
       expect(onEventsChange.mock.calls.length).to.equal(0);
-      const alerts = screen.getAllByRole('alert').map((alert) => alert.textContent);
-      expect(alerts).to.deep.equal(['Enter a valid date.']);
+      // On the start date only.
+      expect(screen.getAllByText(/^Enter a valid/)).to.have.length(1);
+      expect(screen.getByLabelText(/start date/i)).toHaveAccessibleDescription(
+        'Enter a valid date.',
+      );
     });
 
     it('should ignore the time fields of an all-day event when validating', async () => {
@@ -1435,7 +1447,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       expect(onEventsChange.mock.calls.length).to.equal(0);
       // Effects register in tree order, so the earlier sibling's validator wins.
-      expect(screen.getByRole('alert')).to.have.text('Must stay within the project period');
+      expect(screen.getByLabelText(/end date/i)).toHaveAccessibleDescription(
+        'Must stay within the project period',
+      );
     });
 
     it('should mark the date and time inputs required', () => {

@@ -28,7 +28,7 @@ import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 import { AnchoredEventToolbar } from '../event-toolbar';
 import ReadonlyContent from './ReadonlyContent';
 
-const EventDialogRoot = styled(Dialog, {
+export const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
   slot: 'Root',
 })({
@@ -60,13 +60,18 @@ const EventDialogPaper = styled(Paper, {
   },
 }));
 
-interface PaperComponentProps extends PaperProps {
+export interface EventDialogDraggablePaperProps extends PaperProps {
   anchor: HTMLElement | null;
   dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
-// 1. Setup the Draggable Paper Logic
-const PaperComponent = function PaperComponent(props: PaperComponentProps) {
+/**
+ * The draggable paper of the event dialog, positioned next to `anchor`.
+ * Pass `anchor` and `dragHandlerRef` through `slotProps.paper`.
+ */
+export const EventDialogDraggablePaper = function EventDialogDraggablePaper(
+  props: EventDialogDraggablePaperProps,
+) {
   const nodeRef = React.useRef<HTMLDivElement>(null);
 
   const mutateStyle = React.useCallback(
@@ -123,7 +128,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       ref={forwardedRef}
       open={open}
       onClose={onClose}
-      PaperComponent={PaperComponent}
+      PaperComponent={EventDialogDraggablePaper}
       aria-labelledby={`${schedulerId}-event-dialog-title`}
       aria-modal="false"
       className={classes.eventDialog}

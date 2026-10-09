@@ -2,15 +2,18 @@ import { vi, describe, it, expect } from 'vitest';
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
+import { noopUIEvent } from '../../internals/tests/disposeTestHelpers';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors/eventTimelinePremiumDependencySelectors';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const TEST_RESOURCES = [ResourceBuilder.new().id('r1').title('Resource 1').build()];
-const eventA = EventBuilder.new().id('event-a').build();
-const eventB = EventBuilder.new().id('event-b').build();
-const eventC = EventBuilder.new().id('event-c').build();
-const eventD = EventBuilder.new().id('event-d').build();
-const eventE = EventBuilder.new().id('event-e').build();
+// In chronological order (`event-e` first), so adding a forward FS dependency keeps the
+// events in place: a broken one would move its target.
+const eventE = EventBuilder.new().id('event-e').singleDay('2025-07-03T07:00:00Z').build();
+const eventA = EventBuilder.new().id('event-a').singleDay('2025-07-03T09:00:00Z').build();
+const eventB = EventBuilder.new().id('event-b').singleDay('2025-07-03T11:00:00Z').build();
+const eventC = EventBuilder.new().id('event-c').singleDay('2025-07-03T13:00:00Z').build();
+const eventD = EventBuilder.new().id('event-d').singleDay('2025-07-03T15:00:00Z').build();
 const recurringEvent = EventBuilder.new().id('event-r').recurrent('DAILY').build();
 
 const DEP_AB: SchedulerDependency = {
@@ -396,11 +399,17 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      const result = store.addDependency({
-        source: 'event-a',
-        target: 'event-b',
-        type: 'FinishToStart',
-      });
+      let result!: ReturnType<typeof store.addDependency>;
+      // The cascade of the added edge enters the cycle too.
+      expect(() => {
+        result = store.addDependency({
+          source: 'event-a',
+          target: 'event-b',
+          type: 'FinishToStart',
+        });
+      }).toWarnDev([
+        'MUI X Scheduler: The dependencies provided via props contain a cycle through a rescheduled event.',
+      ]);
 
       expect(result.status).to.equal('added');
       expect(onDependenciesChange.mock.calls.length).to.equal(1);
@@ -451,6 +460,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
               { id: 'dep-1', source: 'event-c', target: 'event-d', type: 'FinishToStart' },
             ],
             onDependenciesChange,
+            onEventsChange: vi.fn(),
           },
           adapter,
         );
@@ -547,7 +557,7 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       // controlled `dependencyModelList`, which has not round-tripped yet.
       const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange },
+        { ...DEFAULT_PARAMS, dependencies: [], onDependenciesChange, onEventsChange: vi.fn() },
         adapter,
       );
 
@@ -665,6 +675,343 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
 
       expect(onDependenciesChange.mock.calls.length).to.equal(1);
       expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([]);
+    });
+  });
+
+  describe('method: updateDependency', () => {
+    it('should emit onDependenciesChange with the new type', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'updated',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([
+        { ...DEP_AB, type: 'StartToStart' },
+      ]);
+    });
+
+    it('should emit onDependenciesChange with the new lag', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { lag: 30, lagUnit: 'minute' });
+
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([
+        { ...DEP_AB, lag: 30, lagUnit: 'minute' },
+      ]);
+    });
+
+    it('should remove the lag and its unit when passed as undefined', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          dependencies: [{ ...DEP_AB, lag: 2, lagUnit: 'hour' }],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { lag: undefined, lagUnit: undefined });
+
+      const [emitted] = onDependenciesChange.mock.lastCall![0];
+      expect(emitted).to.deep.equal(DEP_AB);
+      expect('lag' in emitted).to.equal(false);
+      expect('lagUnit' in emitted).to.equal(false);
+    });
+
+    it('should not reject a lag change on a dependency duplicated in the props', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          dependencies: [DEP_AB, { ...DEP_AB, id: 'dep-2' }],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { lag: 30, lagUnit: 'minute' }).status).to.equal(
+        'updated',
+      );
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+    });
+
+    it('should not emit onDependenciesChange when nothing changes', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'FinishToStart' }).status).to.equal('updated');
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should reject an unknown dependency', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('nope', { type: 'StartToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'unknownDependency',
+      });
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should reject a type change duplicating another dependency between the same events', () => {
+      const onDependenciesChange = vi.fn();
+      const depSS: SchedulerDependency = { ...DEP_AB, id: 'dep-2', type: 'StartToStart' };
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB, depSS], onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'duplicateDependency',
+        dependencyId: 'dep-2',
+      });
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should update a dependency with a read-only event', () => {
+      const onDependenciesChange = vi.fn();
+      const readOnlyEventB = EventBuilder.new()
+        .id('event-b')
+        .readOnly()
+        .singleDay('2025-07-03T11:00:00Z')
+        .build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, readOnlyEventB],
+          dependencies: [DEP_AB],
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'updated',
+      });
+      expect(onDependenciesChange.mock.calls.length).to.equal(1);
+    });
+
+    it('should reject any change when the scheduler is read-only', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], readOnly: true, onDependenciesChange },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'StartToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'readOnly',
+      });
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
+  });
+
+  describe('method: openDependencyEditor', () => {
+    it('should open the dependency dialog at the given anchor', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+
+      store.openDependencyEditor('dep-1', { x: 10, y: 20 });
+
+      expect(eventTimelinePremiumDependencySelectors.editor(store.state)).to.deep.equal({
+        dependencyId: 'dep-1',
+        anchor: { x: 10, y: 20 },
+      });
+
+      store.closeDependencyEditor();
+      expect(eventTimelinePremiumDependencySelectors.editor(store.state)).to.equal(null);
+    });
+
+    it('should stop editing an event, and close when an event starts being edited', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      const occurrence = EventBuilder.new().id('event-a').toOccurrence();
+
+      store.startEditing(occurrence, 'armed');
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+      expect(store.state.editingOccurrence).to.equal(null);
+
+      store.startEditing(occurrence, 'armed');
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should do nothing for an unknown dependency', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+
+      store.openDependencyEditor('unknown', { x: 0, y: 0 });
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should do nothing for an inactive dependency', () => {
+      const dependency: SchedulerDependency = { ...DEP_AB, target: 'event-r' };
+      let store!: EventTimelinePremiumStore<any, any>;
+      expect(() => {
+        store = new EventTimelinePremiumStore(
+          { ...DEFAULT_PARAMS, events: [eventA, recurringEvent], dependencies: [dependency] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-r".',
+      ]);
+
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should keep editing an event when the dependency is unknown', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.startEditing(EventBuilder.new().id('event-a').toOccurrence(), 'armed');
+      const editingOccurrence = store.state.editingOccurrence;
+
+      store.openDependencyEditor('unknown', { x: 0, y: 0 });
+
+      expect(store.state.editingOccurrence).to.not.equal(null);
+      expect(store.state.editingOccurrence).to.equal(editingOccurrence);
+    });
+
+    it('should not open when a dependency unknown at call time is added later', () => {
+      const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [DEP_AB] }, adapter);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the dependency is removed', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, dependencies: [] }, adapter);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the visible date changes', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.goToNextVisibleDate(noopUIEvent);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the preset changes', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.setPreset('dayAndMonth', new Event('change'));
+
+      expect(store.state.preset).to.equal('dayAndMonth');
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the readOnly parameter changes', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], readOnly: true },
+        adapter,
+      );
+
+      expect(store.state.readOnly).to.equal(true);
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when an endpoint event is removed', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      expect(() => {
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, events: [eventA], dependencies: [DEP_AB] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the unknown event "event-b".',
+      ]);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when an endpoint event becomes recurring', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      const recurringB = EventBuilder.new().id('event-b').recurrent('DAILY').build();
+      expect(() => {
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, events: [eventA, recurringB], dependencies: [DEP_AB] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the recurring event "event-b".',
+      ]);
+
+      expect(store.state.dependencyEditor).to.equal(null);
+    });
+
+    it('should close when the feature is disabled', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB] },
+        adapter,
+      );
+      store.openDependencyEditor('dep-1', { x: 0, y: 0 });
+
+      store.updateStateFromParameters(DEFAULT_PARAMS, adapter);
+
+      expect(store.state.dependencyEditor).to.equal(null);
     });
   });
 

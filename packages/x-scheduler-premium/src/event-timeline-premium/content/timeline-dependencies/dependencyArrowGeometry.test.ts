@@ -3,6 +3,7 @@ import type {
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
+import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import {
   computeElementPositionInCollection,
   createEventRangeIndex,
@@ -13,6 +14,7 @@ import { describe, it, expect } from 'vitest';
 import { computeDependencyArrows } from './dependencyArrowGeometry';
 import {
   buildDependency,
+  buildEventLookup,
   buildResolver,
   collectionEnd,
   collectionStart,
@@ -592,6 +594,242 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows).to.deep.equal([]);
     });
 
+    describe('endpoints outside the visible range', () => {
+      // The visible range is 2024-01-15: these events sit the day after and the day before.
+      const eventAfter = EventBuilder.new()
+        .id('event-after')
+        .singleDay('2024-01-16T10:00:00Z')
+        .resource(resource2)
+        .toProcessed();
+      const eventBefore = EventBuilder.new()
+        .id('event-before')
+        .singleDay('2024-01-14T10:00:00Z')
+        .resource(resource2)
+        .toProcessed();
+      // Row 1 is the resource of the off-range events, with nothing visible in it.
+      const resources = [
+        { resource: resource1, occurrences: getOccurrences([eventA]) },
+        { resource: resource2, occurrences: [] },
+      ];
+      const ROW_1_CENTER = 62 + LANE_1_CENTER;
+
+      const computeArrows = (
+        source: string,
+        target: string,
+        type?: SchedulerDependencyType,
+        events: SchedulerProcessedEvent[] = [eventA, eventBefore, eventAfter],
+        rows = resources,
+      ) =>
+        computeDependencyArrows(
+          buildResolver({
+            resources: rows,
+            rowPositions: [0, 62].slice(0, rows.length),
+            processedEventLookup: buildEventLookup(...events),
+          }),
+          [buildDependency('dep-1', source, target, type)],
+        );
+
+      it('should point out of the right edge on the row of a successor after the range', () => {
+        const arrows = computeArrows('event-a', 'event-after');
+
+        expect(arrows).to.have.length(1);
+        // Turns right after event-a, which ends at x 720.
+        expect(arrows[0].d).to.equal(
+          `M 720 31 L 724 31 Q 728 31 728 35 L 728 ${ROW_1_CENTER - 4} Q 728 ${ROW_1_CENTER} 732 ${ROW_1_CENTER} L ${EVENTS_WIDTH} ${ROW_1_CENTER}`,
+        );
+        expect(arrows[0].endPoint).to.deep.equal({ x: EVENTS_WIDTH, y: ROW_1_CENTER });
+        expect(arrows[0].targetEdge).to.equal('start');
+        expect(arrows[0].targetResourceId).to.equal('r2');
+        expect(arrows[0].maxXFraction).to.equal(1);
+      });
+
+      it('should come out of the left edge on the row of a predecessor before the range', () => {
+        const arrows = computeArrows('event-before', 'event-a');
+
+        expect(arrows).to.have.length(1);
+        // Turns 12px before event-a, which starts at x 600.
+        expect(arrows[0].d).to.equal(
+          `M 0 ${ROW_1_CENTER} L 584 ${ROW_1_CENTER} Q 588 ${ROW_1_CENTER} 588 ${ROW_1_CENTER - 4} L 588 35 Q 588 31 592 31 L 600 31`,
+        );
+        expect(arrows[0].endPoint).to.deep.equal({ x: 600, y: 31 });
+        expect(arrows[0].sourceResourceId).to.equal('r2');
+        expect(arrows[0].minXFraction).to.equal(0);
+      });
+
+      it('should turn next to the event even when the route crosses an event', () => {
+        // event-b (x 780 to 840) sits on the successor's row, under the horizontal run.
+        const arrows = computeArrows('event-a', 'event-after', undefined, undefined, [
+          resources[0],
+          { resource: resource2, occurrences: getOccurrences([eventB]) },
+        ]);
+
+        expect(arrows[0].d).to.equal(
+          `M 720 31 L 724 31 Q 728 31 728 35 L 728 ${ROW_1_CENTER - 4} Q 728 ${ROW_1_CENTER} 732 ${ROW_1_CENTER} L ${EVENTS_WIDTH} ${ROW_1_CENTER}`,
+        );
+      });
+
+      it('should point out of the timeline edge whatever the edge of the off-range event', () => {
+        // FinishToFinish constrains the end of the successor, but the arrow still ends on
+        // the timeline edge instead of entering a box that is not there.
+        const arrows = computeArrows('event-a', 'event-after', 'FinishToFinish');
+
+        expect(arrows[0].endPoint).to.deep.equal({ x: EVENTS_WIDTH, y: ROW_1_CENTER });
+        expect(arrows[0].targetEdge).to.equal('start');
+      });
+
+      it('should leave the start edge of the source to the left', () => {
+        const arrows = computeArrows('event-a', 'event-after', 'StartToFinish');
+
+        expect(arrows[0].d).to.equal(
+          `M 600 31 L 596 31 Q 592 31 592 35 L 592 ${ROW_1_CENTER - 4} Q 592 ${ROW_1_CENTER} 596 ${ROW_1_CENTER} L ${EVENTS_WIDTH} ${ROW_1_CENTER}`,
+        );
+      });
+
+      it('should enter the end edge of the target from the right', () => {
+        const arrows = computeArrows('event-before', 'event-a', 'FinishToFinish');
+
+        expect(arrows[0].d).to.equal(
+          `M 0 ${ROW_1_CENTER} L 728 ${ROW_1_CENTER} Q 732 ${ROW_1_CENTER} 732 ${ROW_1_CENTER - 4} L 732 35 Q 732 31 728 31 L 720 31`,
+        );
+        expect(arrows[0].targetEdge).to.equal('end');
+      });
+
+      it('should point out of the left edge on the row of a target before the range', () => {
+        // A violated dependency: the successor ends before the visible range.
+        const arrows = computeArrows('event-a', 'event-before');
+
+        expect(arrows[0].endPoint).to.deep.equal({ x: 0, y: ROW_1_CENTER });
+        expect(arrows[0].targetEdge).to.equal('end');
+      });
+
+      it('should draw a straight arrow when the off-range event is on the same row', () => {
+        const sameRowAfter = EventBuilder.new()
+          .id('event-after')
+          .singleDay('2024-01-16T10:00:00Z')
+          .resource(resource1)
+          .toProcessed();
+        const arrows = computeArrows('event-a', 'event-after', undefined, [eventA, sameRowAfter]);
+
+        expect(arrows[0].d).to.equal(`M 720 31 L ${EVENTS_WIDTH} 31`);
+      });
+
+      it('should detour below the event when its edge faces away on the same row', () => {
+        const sameRowAfter = EventBuilder.new()
+          .id('event-after')
+          .singleDay('2024-01-16T10:00:00Z')
+          .resource(resource1)
+          .toProcessed();
+        const arrows = computeArrows('event-a', 'event-after', 'StartToStart', [
+          eventA,
+          sameRowAfter,
+        ]);
+
+        // detourOffset = laneMinHeight / 2 + 6 = 21.
+        expect(arrows[0].d).to.equal(
+          `M 600 31 L 596 31 Q 592 31 592 35 L 592 48 Q 592 52 596 52 L ${EVENTS_WIDTH} 52`,
+        );
+      });
+
+      it('should shorten the turn when the event edge is close to the timeline edge', () => {
+        // Ends at 23:59, 1px before the right edge.
+        const lateEvent = EventBuilder.new()
+          .id('event-late')
+          .singleDay('2024-01-15T23:00:00Z', 59)
+          .toProcessed();
+
+        const arrows = computeArrows(
+          'event-late',
+          'event-after',
+          undefined,
+          [lateEvent, eventAfter],
+          [{ resource: resource1, occurrences: getOccurrences([lateEvent]) }, resources[1]],
+        );
+
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d).to.equal(
+          `M 1439 31 L 1439.25 31 Q 1439.5 31 1439.5 31.25 L 1439.5 ${ROW_1_CENTER - 0.25} Q 1439.5 ${ROW_1_CENTER} 1439.75 ${ROW_1_CENTER} L ${EVENTS_WIDTH} ${ROW_1_CENTER}`,
+        );
+      });
+
+      it('should skip a dependency when the event edge is cut by the same timeline edge', () => {
+        // The successor started before the range: its start edge sits on the left edge
+        // too, so the route would only be a knot there.
+        const ongoing = EventBuilder.new()
+          .id('event-ongoing')
+          .span('2024-01-14T22:00:00Z', '2024-01-15T10:00:00Z')
+          .toProcessed();
+
+        const arrows = computeArrows(
+          'event-before',
+          'event-ongoing',
+          undefined,
+          [eventBefore, ongoing],
+          [{ resource: resource1, occurrences: getOccurrences([ongoing]) }, resources[1]],
+        );
+
+        expect(arrows).to.deep.equal([]);
+      });
+
+      it('should render an arrow to every row of a multi-resource event after the range', () => {
+        const multiResourceEvent = EventBuilder.new()
+          .id('event-after')
+          .singleDay('2024-01-16T10:00:00Z')
+          .resources([resource1, resource2])
+          .toProcessed();
+
+        const arrows = computeArrows('event-a', 'event-after', undefined, [
+          eventA,
+          multiResourceEvent,
+        ]);
+
+        expect(
+          arrows.map((arrow) => ({
+            key: arrow.key,
+            targetResourceId: arrow.targetResourceId,
+            endPoint: arrow.endPoint,
+          })),
+        ).to.deep.equal([
+          {
+            key: 'string:dep-1:0:0',
+            targetResourceId: 'r1',
+            endPoint: { x: EVENTS_WIDTH, y: LANE_1_CENTER },
+          },
+          {
+            key: 'string:dep-1:0:1',
+            targetResourceId: 'r2',
+            endPoint: { x: EVENTS_WIDTH, y: ROW_1_CENTER },
+          },
+        ]);
+      });
+
+      it('should skip a dependency when the row of the off-range event is not shown', () => {
+        const arrows = computeArrows('event-a', 'event-after', undefined, undefined, [
+          resources[0],
+        ]);
+
+        expect(arrows).to.deep.equal([]);
+      });
+
+      it('should skip a dependency when both events are outside the range', () => {
+        const arrows = computeArrows('event-before', 'event-after');
+
+        expect(arrows).to.deep.equal([]);
+      });
+
+      it('should treat an event ending at the start of the range as before it', () => {
+        const endingAtStart = EventBuilder.new()
+          .id('event-before')
+          .span('2024-01-14T22:00:00Z', '2024-01-15T00:00:00Z')
+          .resource(resource2)
+          .toProcessed();
+
+        const arrows = computeArrows('event-before', 'event-a', undefined, [eventA, endingAtStart]);
+
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d.startsWith(`M 0 ${ROW_1_CENTER} `)).to.equal(true);
+      });
+    });
+
     describe('trimmed hour window', () => {
       // Window 8:00 → 20:00 on a single day: 720 axis minutes, eventsWidth 720 → 1px
       // per axis minute.
@@ -620,16 +858,16 @@ describe('dependencyArrowGeometry', () => {
         expect(arrows[0].d).to.equal(`M 240 ${LANE_1_CENTER} L 300 ${LANE_1_CENTER}`);
       });
 
-      it('should produce no arrow when the source occurrence is hidden', () => {
-        // 21:00–23:00 collapses to a zero-width sliver: the visible list excludes it,
-        // so the dependency has no source anchor.
-        const hiddenSource = EventBuilder.new()
-          .id('event-hidden')
+      it('should treat an event in the hidden hours of the last day as after the range', () => {
+        // 21:00–23:00 collapses to a zero-width sliver after the 20:00 end of the window.
+        const lateEvent = EventBuilder.new()
+          .id('event-late')
           .singleDay('2024-01-15T21:00:00Z', 120)
+          .resource(resource1)
           .toProcessed();
         const occurrences = filterVisibleOccurrences(
           TRIMMED_AXIS,
-          getOccurrences([hiddenSource, eventB]),
+          getOccurrences([lateEvent, eventB]),
         );
 
         const arrows = computeDependencyArrows(
@@ -638,6 +876,66 @@ describe('dependencyArrowGeometry', () => {
             rowPositions: [0],
             axis: TRIMMED_AXIS,
             eventsWidth: TRIMMED_WIDTH,
+            processedEventLookup: buildEventLookup(lateEvent, eventB),
+          }),
+          [buildDependency('dep-1', 'event-b', 'event-late')],
+        );
+
+        // event-b ends at 14:00 → x 360.
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d).to.equal(`M 360 ${LANE_1_CENTER} L ${TRIMMED_WIDTH} ${LANE_1_CENTER}`);
+      });
+
+      it('should treat an event in the hidden hours of the first day as before the range', () => {
+        const earlyEvent = EventBuilder.new()
+          .id('event-early')
+          .singleDay('2024-01-15T05:00:00Z')
+          .resource(resource1)
+          .toProcessed();
+        const occurrences = filterVisibleOccurrences(
+          TRIMMED_AXIS,
+          getOccurrences([earlyEvent, eventB]),
+        );
+
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources: [{ resource: resource1, occurrences }],
+            rowPositions: [0],
+            axis: TRIMMED_AXIS,
+            eventsWidth: TRIMMED_WIDTH,
+            processedEventLookup: buildEventLookup(earlyEvent, eventB),
+          }),
+          [buildDependency('dep-1', 'event-early', 'event-b')],
+        );
+
+        // event-b starts at 13:00 → x 300.
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d).to.equal(`M 0 ${LANE_1_CENTER} L 300 ${LANE_1_CENTER}`);
+      });
+
+      it('should produce no arrow when the source is hidden between two visible days', () => {
+        // Two-day axis: 21:00–23:00 on the first day falls in the night the window hides.
+        const twoDayAxis = {
+          ...TRIMMED_AXIS,
+          end: adapter.endOfDay(adapter.addDays(collectionStart, 1)),
+        };
+        const hiddenSource = EventBuilder.new()
+          .id('event-hidden')
+          .singleDay('2024-01-15T21:00:00Z', 120)
+          .resource(resource1)
+          .toProcessed();
+        const occurrences = filterVisibleOccurrences(
+          twoDayAxis,
+          getOccurrences([hiddenSource, eventB]),
+        );
+
+        const arrows = computeDependencyArrows(
+          buildResolver({
+            resources: [{ resource: resource1, occurrences }],
+            rowPositions: [0],
+            axis: twoDayAxis,
+            eventsWidth: 2 * TRIMMED_WIDTH,
+            processedEventLookup: buildEventLookup(hiddenSource, eventB),
           }),
           [buildDependency('dep-1', 'event-hidden', 'event-b')],
         );

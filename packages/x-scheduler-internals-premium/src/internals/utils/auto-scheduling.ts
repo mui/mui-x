@@ -15,6 +15,7 @@ import {
   addDependencyLag,
   getDependencyEdges,
   getEffectiveDependencyLag,
+  isDependencyActive,
 } from './dependency-utils';
 
 export interface ComputeAutoSchedulingCascadeParameters {
@@ -42,6 +43,11 @@ export interface ComputeAutoSchedulingCascadeParameters {
    * The ids deleted in the same batch. Deleted events are never cascaded into.
    */
   deleted: ReadonlySet<SchedulerEventId>;
+  /**
+   * Dependencies just created or made stricter: their target is pushed even though no
+   * predecessor moved.
+   */
+  enforcedDependencies?: readonly SchedulerDependency[];
 }
 
 interface ResolvedDates {
@@ -69,26 +75,100 @@ export interface AutoSchedulingCascadeResult {
   blocked: SchedulerEventId[];
 }
 
+function resolveProcessedEventDates(
+  adapter: Adapter,
+  processedEvent: SchedulerProcessedEvent,
+): ResolvedDates {
+  const { start, end } = normalizeAllDayBounds(
+    adapter,
+    processedEvent.dataTimezone.start.value,
+    processedEvent.dataTimezone.end.value,
+    processedEvent.allDay,
+  );
+  return {
+    start,
+    end,
+    startTimestamp: adapter.getTime(start),
+    endTimestamp: adapter.getTime(end),
+    allDay: processedEvent.allDay ?? false,
+  };
+}
+
 /**
- * Computes the dependency cascade for an `updateEvents` batch: the extra
- * `{ id, start, end }` updates restoring the constraints, transitively.
+ * The earliest date `dependency` allows for the successor's bounded edge, or `null` when
+ * the lag runs past the supported date range.
+ */
+function getDependencyBound(
+  adapter: Adapter,
+  dependency: SchedulerDependency,
+  sourceDates: ResolvedDates,
+  targetDates: ResolvedDates,
+): Bound | null {
+  const edges = getDependencyEdges(dependency.type);
+  const date = addDependencyLag(
+    adapter,
+    adapter.setTimezone(sourceDates[edges.source], adapter.getTimezone(targetDates.start)),
+    getEffectiveDependencyLag(dependency, targetDates.allDay),
+  );
+  const timestamp = adapter.getTime(date);
+  return Number.isFinite(timestamp) ? { date, timestamp } : null;
+}
+
+/**
+ * How far, in milliseconds, the target of `dependency` has to move for the dependency to
+ * hold with the current event dates: `0` when it already holds or the engine ignores it.
+ */
+export function getDependencyViolation(
+  adapter: Adapter,
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
+  dependency: SchedulerDependency,
+): number {
+  // The engine never constrains an event by itself.
+  if (
+    dependency.source === dependency.target ||
+    !isDependencyActive(processedEventLookup, dependency)
+  ) {
+    return 0;
+  }
+  const targetDates = resolveProcessedEventDates(
+    adapter,
+    processedEventLookup.get(dependency.target)!,
+  );
+  const bound = getDependencyBound(
+    adapter,
+    dependency,
+    resolveProcessedEventDates(adapter, processedEventLookup.get(dependency.source)!),
+    targetDates,
+  );
+  if (bound === null) {
+    return 0;
+  }
+  const targetEdge = targetDates[getDependencyEdges(dependency.type).target];
+  return Math.max(0, bound.timestamp - adapter.getTime(targetEdge));
+}
+
+/**
+ * Computes the dependency cascade for an `updateEvents` batch or a created/edited
+ * dependency: the extra `{ id, start, end }` updates restoring the constraints,
+ * transitively.
  *
  * Each dependency bounds one edge of the successor by one edge of the predecessor plus
  * the lag (FS: `start >= pred.end`, SS: `start >= pred.start`, FF: `end >= pred.end`,
  * SF: `end >= pred.start`), the lag being added in the successor's timezone.
  *
- * Push-only: events only move later, and pre-existing violations stay as-is. A seed whose
- * entry moves `start` is being placed by the user and is clamped forward by all its
- * predecessors; a seed whose entry only moves `end` is clamped by the predecessors bounding
- * its end; everything else is pushed only by predecessors whose lagged bound advances in
- * the same batch. A `timezone` change moves the effective dates of wall-time events.
+ * Push-only: events only move later, and pre-existing violations stay as-is unless their
+ * dependency is enforced. A seed whose entry moves `start` is being placed by the user and
+ * is clamped forward by all its predecessors; a seed whose entry only moves `end` is
+ * clamped by the predecessors bounding its end; everything else is pushed only by
+ * predecessors whose lagged bound advances in the same batch, or by an enforced
+ * dependency. A `timezone` change moves the effective dates of wall-time events.
  * Timed events keep their duration, except that a resize keeps the edge it did not touch
  * as long as that edge is not the violated one. All-day events shift by whole days, and a
  * read-only event that would need to move is reported in `blocked` so the caller rejects
  * the batch.
  *
- * Kahn pass over the subgraph reachable from the seeds. Cycles in the props data warn in
- * dev: a seedless cycle stays unmoved, a cycle through a seed is broken at that seed.
+ * Kahn pass over the subgraph reachable from the seeds and the enforced targets. Cycles in
+ * the props data warn in dev: a cycle through either is broken there, any other stays unmoved.
  * Only loaded events take part: with lazy loading, an unfetched successor is not pushed.
  */
 export function computeAutoSchedulingCascade(
@@ -101,6 +181,7 @@ export function computeAutoSchedulingCascade(
     activeDependenciesByTarget,
     isEventReadOnly,
     deleted,
+    enforcedDependencies = [],
   } = parameters;
 
   const newDates = new Map<SchedulerEventId, ResolvedDates>();
@@ -198,16 +279,24 @@ export function computeAutoSchedulingCascade(
 
   const blocked: SchedulerEventId[] = [];
 
-  if (newDates.size === 0) {
+  const enforcedIds = new Set<SchedulerDependency['id']>();
+  // The seeds plus the targets of the enforced dependencies: where the cascade starts.
+  const roots = new Set(newDates.keys());
+  for (const dependency of enforcedDependencies) {
+    if (!deleted.has(dependency.target) && !becomesRecurring.has(dependency.target)) {
+      enforcedIds.add(dependency.id);
+      roots.add(dependency.target);
+    }
+  }
+
+  if (roots.size === 0) {
     return { updated: [], blocked };
   }
 
-  const seeds = new Set(newDates.keys());
-
-  // Subgraph reachable from the seeds, visiting each node and edge once.
-  const members = new Set<SchedulerEventId>(seeds);
+  // Subgraph reachable from the roots, visiting each node and edge once.
+  const members = new Set<SchedulerEventId>(roots);
   const inDegree = new Map<SchedulerEventId, number>();
-  const discovery = [...seeds];
+  const discovery = [...roots];
   while (discovery.length > 0) {
     const eventId = discovery.pop()!;
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
@@ -224,35 +313,36 @@ export function computeAutoSchedulingCascade(
   }
 
   const ready: SchedulerEventId[] = [];
-  for (const seedId of seeds) {
-    if ((inDegree.get(seedId) ?? 0) === 0) {
-      ready.push(seedId);
+  for (const rootId of roots) {
+    if ((inDegree.get(rootId) ?? 0) === 0) {
+      ready.push(rootId);
     }
   }
   const processed = new Set<SchedulerEventId>();
   const cascaded: SchedulerEventUpdatedProperties[] = [];
   while (processed.size < members.size) {
     if (ready.length === 0) {
-      // Every remaining member waits on a cycle. A seed on it can still settle (its
-      // dates are the user's), so the stall breaks there; a seedless cycle stays unmoved.
-      const stalledSeed = [...seeds].find((seedId) => !processed.has(seedId));
-      if (stalledSeed === undefined) {
+      // Every remaining member waits on a cycle. A root on it can still settle (its
+      // dates are the user's, or its constraint is enforced), so the stall breaks there;
+      // a rootless cycle stays unmoved.
+      const stalledRoot = [...roots].find((rootId) => !processed.has(rootId));
+      if (stalledRoot === undefined) {
         break;
       }
       if (process.env.NODE_ENV !== 'production') {
         warnOnce(
           [
-            'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
-            'Auto-scheduling processed the updated event with the cycle unresolved, so its members may keep violating each other.',
+            'MUI X Scheduler: The dependencies provided via props contain a cycle through a rescheduled event.',
+            'Auto-scheduling processed that event with the cycle unresolved, so its members may keep violating each other.',
             'Fix the `dependencies` data — `addDependency()` rejects dependencies that would create a cycle.',
           ].join('\n'),
         );
       }
-      ready.push(stalledSeed);
+      ready.push(stalledRoot);
     }
     const eventId = ready.pop()!;
     if (processed.has(eventId)) {
-      // A force-broken seed can still reach in-degree 0 afterwards.
+      // A force-broken root can still reach in-degree 0 afterwards.
       continue;
     }
     processed.add(eventId);
@@ -311,22 +401,9 @@ export function computeAutoSchedulingCascade(
 
   function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {
     const processedEvent = processedEventLookup.get(eventId);
-    if (processedEvent === undefined) {
-      return null;
-    }
-    const { start, end } = normalizeAllDayBounds(
-      adapter,
-      processedEvent.dataTimezone.start.value,
-      processedEvent.dataTimezone.end.value,
-      processedEvent.allDay,
-    );
-    return {
-      start,
-      end,
-      startTimestamp: adapter.getTime(start),
-      endTimestamp: adapter.getTime(end),
-      allDay: processedEvent.allDay ?? false,
-    };
+    return processedEvent === undefined
+      ? null
+      : resolveProcessedEventDates(adapter, processedEvent);
   }
 
   // The earliest start and end the predecessors of `eventId` allow, in the timezone of
@@ -334,9 +411,10 @@ export function computeAutoSchedulingCascade(
   // constrains it. An end-resized seed is constrained by the predecessors bounding its
   // end. Anything else is pushed only by the predecessors whose lagged bound advanced,
   // comparing the bound before the batch (current dates and settings) with the bound after
-  // it. A lag in days is added on the wall clock, so the bound can advance while the
-  // predecessor moves earlier (DST fall-back), or when only the successor's timezone or
-  // `allDay` changes.
+  // it. An enforced dependency constrains it whether or not its predecessor moved. A lag
+  // in days is added on the wall clock, so the bound can advance while the predecessor
+  // moves earlier (DST fall-back), or when only the successor's timezone or `allDay`
+  // changes.
   function collectBounds(
     eventId: SchedulerEventId,
     base: ResolvedDates,
@@ -351,29 +429,28 @@ export function computeAutoSchedulingCascade(
         continue;
       }
       const edges = getDependencyEdges(dependency.type);
-      // The bound `sourceDates` set on a successor with the timezone and `allDay` of `target`.
-      const boundFrom = (sourceDates: ResolvedDates, target: ResolvedDates) =>
-        toBound(
-          addDependencyLag(
-            adapter,
-            adapter.setTimezone(sourceDates[edges.source], adapter.getTimezone(target.start)),
-            getEffectiveDependencyLag(dependency, target.allDay),
-          ),
-        );
       const currentDates = resolveCurrentDates(sourceId);
       let bound: Bound | null = null;
-      if (constrainedByAll || (constrainedOnEnd && edges.target === 'end')) {
+      if (
+        constrainedByAll ||
+        (constrainedOnEnd && edges.target === 'end') ||
+        enforcedIds.has(dependency.id)
+      ) {
         const sourceDates = newDates.get(sourceId) ?? currentDates;
-        bound = sourceDates === null ? null : boundFrom(sourceDates, base);
+        bound =
+          sourceDates === null ? null : getDependencyBound(adapter, dependency, sourceDates, base);
       } else {
         const sourceDates =
           (processed.has(sourceId) ? newDates.get(sourceId) : undefined) ?? currentDates;
         if (sourceDates !== null) {
-          const nextBound = boundFrom(sourceDates, base);
+          const nextBound = getDependencyBound(adapter, dependency, sourceDates, base);
+          const previousBound =
+            currentDates === null || current === null
+              ? null
+              : getDependencyBound(adapter, dependency, currentDates, current);
           if (
-            currentDates === null ||
-            current === null ||
-            nextBound.timestamp > boundFrom(currentDates, current).timestamp
+            nextBound !== null &&
+            (previousBound === null || nextBound.timestamp > previousBound.timestamp)
           ) {
             bound = nextBound;
           }

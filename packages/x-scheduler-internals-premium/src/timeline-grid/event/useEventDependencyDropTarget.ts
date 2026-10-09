@@ -15,9 +15,9 @@ import { isDependencyTerminalDrag } from '../event-dependency-terminal/dependenc
 /**
  * Registers an element of an event (its body, or one of its dependency terminals) as
  * a drop target for the create-dependency gesture.
- * Recurring and read-only events register as invalid targets: they never get the drop
- * highlight or the snapped preview, but dropping on one surfaces the rejection instead
- * of dissolving the gesture in silence.
+ * Recurring events register as invalid targets: they never get the drop highlight or
+ * the snapped preview, but dropping on one surfaces the rejection instead of
+ * dissolving the gesture in silence.
  * Declarative only: the drop itself is finalized by the creation monitor on the grid
  * root, which reads the hovered target from the drop target data.
  */
@@ -27,7 +27,6 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
   const store = useEventTimelinePremiumStoreContext();
   const enabled = useStore(store, eventTimelinePremiumDependencySelectors.enabled);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, eventId);
-  const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, eventId);
 
   React.useEffect(() => {
     if (!ref.current || !enabled) {
@@ -41,7 +40,8 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
         dependencyTargetOccurrenceKey: occurrenceKey,
         dependencyTargetResourceId: resourceId,
         dependencyTargetSide: side,
-        dependencyTargetIsValid: !isRecurring && !isReadOnly,
+        // A read-only event is a valid target: the cascade veto protects it.
+        dependencyTargetIsValid: !isRecurring,
       }),
       // Only the dependency gesture of this timeline lands here (rows keep handling
       // the event drags — their allowlist ignores this source, and gestures born in
@@ -52,7 +52,7 @@ export function useEventDependencyDropTarget(parameters: useEventDependencyDropT
         source.data.storeContext === store &&
         source.data.eventId !== eventId,
     });
-  }, [ref, store, enabled, isRecurring, isReadOnly, eventId, occurrenceKey, resourceId, side]);
+  }, [ref, store, enabled, isRecurring, eventId, occurrenceKey, resourceId, side]);
 }
 
 export namespace useEventDependencyDropTarget {

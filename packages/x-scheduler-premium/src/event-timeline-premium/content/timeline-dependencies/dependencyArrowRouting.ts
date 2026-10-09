@@ -161,6 +161,52 @@ function routeSameEdges(
 }
 
 /**
+ * Builds the route between an event on screen and the timeline edge standing in for an
+ * event outside the visible range: off the event edge, vertical right next to it, then
+ * along the row of the other event up to the timeline edge.
+ * `direction` is the side the route takes off the event edge: `1` to the right.
+ * An event edge close to the timeline edge gets a shorter turn. `null` when there is no
+ * room at all, that is when the event edge is itself cut by the timeline edge: the route
+ * would only be a knot on that edge.
+ */
+export function buildOffRangeDependencyArrowRoute(
+  anchor: DependencyArrowPoint,
+  direction: 1 | -1,
+  timelineEdge: DependencyArrowPoint,
+  isTimelineEdgeTarget: boolean,
+  detourOffset: number,
+  eventsWidth: number,
+): DependencyArrowPoint[] | null {
+  // Entering the event, the last segment must fit the arrowhead.
+  const stub = isTimelineEdgeTarget ? DEPENDENCY_ARROW_STUB : DEPENDENCY_ARROW_TARGET_CLEARANCE;
+  const room = direction === 1 ? eventsWidth - anchor.x : anchor.x;
+  if (room <= 0) {
+    return null;
+  }
+  const turnX = anchor.x + direction * Math.min(stub, room / 2);
+
+  // Computed from the event to the timeline edge, reversed below when the edge is the
+  // source.
+  let points: DependencyArrowPoint[];
+  if (anchor.y !== timelineEdge.y) {
+    points = [anchor, { x: turnX, y: anchor.y }, { x: turnX, y: timelineEdge.y }, timelineEdge];
+  } else if (Math.sign(timelineEdge.x - anchor.x) === direction) {
+    points = [anchor, timelineEdge];
+  } else {
+    // Same row, but the event edge faces away from the timeline edge: detour below the
+    // event, like the S route.
+    const detourY = anchor.y + detourOffset;
+    points = [
+      anchor,
+      { x: turnX, y: anchor.y },
+      { x: turnX, y: detourY },
+      { x: timelineEdge.x, y: detourY },
+    ];
+  }
+  return isTimelineEdgeTarget ? points : points.reverse();
+}
+
+/**
  * How much a route segment must overlap an event to count as crossing it — anchors
  * touching their own event's edge must not count.
  */

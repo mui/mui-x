@@ -213,6 +213,7 @@ describe('<EventDialogContent open />', () => {
     // The failing field lives in the General tab, so the dialog switches back to it.
     expect(generalPanel).not.to.have.attribute('hidden');
     expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    expect(document.activeElement).to.equal(screen.getByRole('combobox', { name: /resource/i }));
   });
 
   it('should return to the General tab when only a custom validator fails', async () => {
@@ -3782,6 +3783,7 @@ describe('<EventDialogContent open />', () => {
           expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
             'hidden',
           );
+          expect(document.activeElement).to.equal(dateInput);
         });
 
         it('should keep the Recurrence tab visible when a recurrence control is natively invalid', async () => {

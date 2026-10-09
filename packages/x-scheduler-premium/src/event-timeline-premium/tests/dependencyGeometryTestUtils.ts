@@ -10,7 +10,7 @@ import type {
   SchedulerDependency,
   SchedulerDependencyType,
 } from '@mui/x-scheduler-internals-premium/models';
-import { createDependencyAnchorResolver } from '../content/timeline-dependency-arrows/dependencyAnchorResolver';
+import { createDependencyAnchorResolver } from '../content/timeline-dependencies/dependencyAnchorResolver';
 
 // Shared by the dependency tests, the anchor resolver and the arrow geometry ones included. Lives in `tests/` so
 // the declaration build (which excludes that folder) never follows its `test/utils`
@@ -56,6 +56,10 @@ export function getOccurrences(events: SchedulerProcessedEvent[]) {
   });
 }
 
+export function buildEventLookup(...events: SchedulerProcessedEvent[]) {
+  return new Map(events.map((event) => [event.id, event]));
+}
+
 export function buildDependency(
   id: string,
   source: string,
@@ -74,6 +78,7 @@ export function buildResolver(parameters: {
   eventsWidth?: number;
   positionByOccurrenceKey?: ResolverParameters['positionByOccurrenceKey'];
   endpointIds?: ResolverParameters['endpointIds'];
+  processedEventLookup?: ResolverParameters['processedEventLookup'];
 }) {
   return createDependencyAnchorResolver({
     adapter,
@@ -84,6 +89,7 @@ export function buildResolver(parameters: {
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,
+    processedEventLookup: parameters.processedEventLookup ?? new Map(),
     endpointIds: parameters.endpointIds,
   });
 }
