@@ -31,6 +31,7 @@ Available properties:
 - `ampm`: Whether the component displays time in 12-hour format with AM/PM.
 - `showWeekends`: Whether the calendar shows weekends.
 - `showWeekNumber`: Whether the calendar shows the week number.
+- `weekStartsOn`: The first day of the week, from `0` (Sunday) to `6` (Saturday). Defaults to the locale's first day of the week.
 - `isSidePanelOpen`: Whether the side panel is open.
 - `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events. When set to `false`, the agenda view looks for events in the next 180 days and shows a message when none is found, customizable through `localeText.agendaViewEmptyStateLabel`.
 
@@ -60,7 +61,7 @@ You can customize which preferences are available in the preferences menu using 
 Available properties:
 
 - `toggleAmpm`: Show/hide the menu item that toggles 12/24‑hour time format.
-- `toggleWeekStartsOn`: Show/hide the menu item that changes the first day of the week.
+- `toggleWeekStartsOn`: Show/hide the menu item that changes the first day of the week. Hidden by default; set it to `true` to show it.
 - `toggleWeekendVisibility`: Show/hide the menu item that toggles weekend visibility.
 - `toggleWeekNumberVisibility`: Show/hide the menu item that toggles week number visibility.
 - `toggleEmptyDaysInAgenda`: Show/hide the menu item that toggles the visibility of days with no event in the agenda view.
