@@ -13,8 +13,11 @@ pnpm eslint:fix # Auto-fix issues
 
 ### Formatting
 
+<!-- #target-branch-reference -->
+<!-- `pnpm prettier` compares against the branch set in the `prettier` script in the root `package.json` -->
+
 ```bash
-pnpm prettier # Format changed files (compared to master)
+pnpm prettier # Format changed files (compared to v9.x)
 pnpm prettier:all # Format all files
 ```
 
