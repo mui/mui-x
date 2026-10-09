@@ -191,6 +191,12 @@ function Timeline() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
+A property declared with a `getter` but no `setter` is not writable: the Event Timeline can display it but never writes it back to your model. `start` and `end` are the only properties this is meaningful for — declaring any other property this way isn't supported and can corrupt your model, since the calendar still attempts to write it.
+
+When `start` or `end` is not writable, dragging and creating events are disabled, the same way they are with `readOnly`: dragging that date is off (only the other side's resize handle stays enabled), and creating a new event — from the dialog, the keyboard shortcut, or dragging one in from the outside — is off too, since a new event has no old date to fall back to.
+
+Saving other changes still works: for a non-recurring event, or a recurring one saved with the "All events" scope, the event dialog leaves the non-writable date unchanged. Saving with the "Only this event" or "This and following events" scope needs to write a brand-new date instead, to detach the occurrence into its own event, so — like a creation — it's refused, with an error shown after saving rather than disabled up front. A copy-paste is refused the same way, and so is a cut-paste that would move the cut event's own dates; a cut that leaves them alone (for example, changing only the resource) still goes through.
+
 ## Custom event content
 
 Use the `timelineEventContent` slot to replace the text rendered inside an event block.
