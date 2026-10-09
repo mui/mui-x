@@ -1,5 +1,5 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import type { integer } from '@mui/x-internals/types';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import type { ColumnWithWidth, RowId } from '../models';

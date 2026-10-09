@@ -9,23 +9,23 @@ import { lerpX, lerpY } from './utils';
  * with the option to add a gap between sections while also properly handling the border radius.
  */
 export class Pyramid implements FunnelCurveGenerator {
-  private context: CanvasRenderingContext2D;
+  declare private context: CanvasRenderingContext2D;
 
-  private position: number = 0;
+  declare private position: number;
 
-  private sections: number = 0;
+  declare private sections: number;
 
-  private isHorizontal: boolean = false;
+  declare private isHorizontal: boolean;
 
-  private isIncreasing: boolean = false;
+  declare private isIncreasing: boolean;
 
-  private gap: number = 0;
+  declare private gap: number;
 
-  private borderRadius: number = 0;
+  declare private borderRadius: number;
 
-  private min: Point = { x: 0, y: 0 };
+  declare private min: Point;
 
-  private max: Point = { x: 0, y: 0 };
+  declare private max: Point;
 
   private points: Point[] = [];
 

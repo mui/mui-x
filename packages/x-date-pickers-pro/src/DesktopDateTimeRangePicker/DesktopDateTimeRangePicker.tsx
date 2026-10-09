@@ -28,12 +28,11 @@ import {
 import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
-import { rangeValueManager } from '../internals/utils/valueManagers';
 import type { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
-import { validateDateTimeRange } from '../validation';
 import type { DateTimeRangePickerView } from '../internals/models';
+import { useDateTimeRangeManager } from '../managers';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { SingleInputDateTimeRangeField } from '../SingleInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
@@ -119,6 +118,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateTimeRangeManager();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<DesktopDateTimeRangePickerProps>(
     inProps,
@@ -182,9 +182,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   const { renderPicker } = useDesktopRangePicker<DateTimeRangePickerView, typeof props>({
     ref,
     props,
-    valueManager: rangeValueManager,
-    valueType: 'date-time',
-    validator: validateDateTimeRange,
+    manager,
     rendererInterceptor,
     steps: STEPS,
   });
@@ -379,6 +377,10 @@ DesktopDateTimeRangePicker.propTypes /* remove-proptypes */ = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

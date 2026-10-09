@@ -19,8 +19,10 @@ import type { SchedulerDependencyId } from '@mui/x-scheduler-internals-premium/m
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 import { getEventsCellLaneMetrics } from '../rowGeometry';
 import { getVisibleFractionRange } from '../getVisibleFractionRange';
-import type { DependencyAnchorResolver, DependencyArrow } from './dependencyArrowGeometry';
-import { computeDependencyArrows, createDependencyAnchorResolver } from './dependencyArrowGeometry';
+import type { DependencyAnchorResolver } from './dependencyAnchorResolver';
+import { createDependencyAnchorResolver } from './dependencyAnchorResolver';
+import type { DependencyArrow } from './dependencyArrowGeometry';
+import { computeDependencyArrows } from './dependencyArrowGeometry';
 
 export interface EventTimelinePremiumDependencyGeometryValue {
   resolver: DependencyAnchorResolver;
@@ -142,6 +144,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
         resources,
         rowPositions: rowsMeta.positions,
         axis: config,
+        durationMs: config.durationMs,
         positionByOccurrenceKey,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),

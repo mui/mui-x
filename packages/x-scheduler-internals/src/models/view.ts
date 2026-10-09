@@ -13,6 +13,16 @@ export interface EventCalendarViewDefinition {
     parameters: SiblingVisibleDateGetterParameters,
   ) => TemporalSupportedObject;
   visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDate[];
+  /**
+   * The range to fetch from the data source.
+   * Defaults to the span of the visible days.
+   */
+  fetchRangeSelector?: (state: EventCalendarState) => EventCalendarFetchRange;
+}
+
+export interface EventCalendarFetchRange {
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
 }
 
 interface SiblingVisibleDateGetterParameters {
@@ -41,6 +51,13 @@ export interface EventCalendarTimeGridViewConfig {
    * @default 24
    */
   endTime?: number;
+  /**
+   * Hour the time grid scrolls to when it mounts.
+   * Must be a displayed hour (`startTime` to `endTime - 1`); otherwise the default applies
+   * and a warning is logged in development.
+   * @default 7 when it is a displayed hour, otherwise `startTime`
+   */
+  initialScrollTime?: number;
 }
 
 /**

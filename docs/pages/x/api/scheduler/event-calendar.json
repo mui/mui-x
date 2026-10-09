@@ -109,7 +109,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ day?: { endTime?: number, startTime?: number }, week?: { endTime?: number, startTime?: number } }"
+        "description": "{ day?: { endTime?: number, initialScrollTime?: number, startTime?: number }, week?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
       }
     },
     "views": {
@@ -152,6 +152,12 @@
       "key": "agendaViewDayNumberCell",
       "className": "MuiEventCalendar-agendaViewDayNumberCell",
       "description": "Styles applied to agenda view day number cell elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "agendaViewEmptyState",
+      "className": "MuiEventCalendar-agendaViewEmptyState",
+      "description": "Styles applied to the agenda view empty state element.",
       "isGlobal": false
     },
     {
@@ -680,6 +686,12 @@
       "key": "eventDialogRecurrenceSelectorToggleGroup",
       "className": "MuiEventCalendar-eventDialogRecurrenceSelectorToggleGroup",
       "description": "Styles applied to the event dialog recurrence selector toggle group element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogRecurrenceTimezoneLabel",
+      "className": "MuiEventCalendar-eventDialogRecurrenceTimezoneLabel",
+      "description": "Styles applied to the recurrence timezone note and label suffix elements.",
       "isGlobal": false
     },
     {

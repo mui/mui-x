@@ -56,7 +56,6 @@ const MoreEventsPopoverBody = styled('div', {
 
 interface MoreEventsData {
   occurrences: SchedulerEventOccurrence[];
-  count: number;
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
 
@@ -85,7 +84,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   // Context hooks
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
-  const { schedulerId, classes } = useEventCalendarStyledContext();
+  const { classes } = useEventCalendarStyledContext();
 
   // The popover stays open behind the editing surface, so close it when that surface closes.
   React.useEffect(() => {
@@ -132,11 +131,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       onClose={onClose}
       slotProps={{ transition: { onExited: restoreFocusOnExit } }}
     >
-      <MoreEventsPopoverHeader
-        className={classes.moreEventsPopoverHeader}
-        id={`${schedulerId}-PopoverHeader-${day.key}`}
-        aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
-      >
+      <MoreEventsPopoverHeader className={classes.moreEventsPopoverHeader}>
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>
           {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
         </MoreEventsPopoverTitle>
@@ -154,7 +149,6 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
-              ariaLabelledBy={`${schedulerId}-PopoverHeader-${day.key}`}
             />
           </EventContextMenuTrigger>
         ))}
@@ -199,7 +193,6 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
           open={state.open}
           anchor={state.anchorEl}
           occurrences={state.data.occurrences}
-          count={state.data.count}
           day={state.data.day}
           onClose={closePopover}
         />
@@ -223,7 +216,7 @@ export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
   return React.cloneElement(children as React.ReactElement<any>, {
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      openPopover(event.currentTarget, { occurrences, count: occurrences.length, day });
+      openPopover(event.currentTarget, { occurrences, day });
     },
   });
 }

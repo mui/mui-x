@@ -505,6 +505,81 @@ describe('createConversationActions', () => {
     });
   });
 
+  describe('historyStatus', () => {
+    function setup(adapter: ReturnType<typeof createAdapter>) {
+      const store = new ChatStore();
+      store.setActiveConversation('c1');
+      const setRuntimeError = vi.fn();
+      const actions = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError,
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+        historyLoadRequestIdRef: { current: 0 },
+      });
+      return { store, setRuntimeError, ...actions };
+    }
+
+    it('goes loading → loaded for the initial page, including an empty conversation', async () => {
+      const deferred = createDeferred();
+      const { store, loadConversationMessages } = setup(
+        createAdapter({ listMessages: vi.fn().mockReturnValue(deferred.promise) }),
+      );
+
+      expect(store.state.historyStatus).toBe('idle');
+      const promise = loadConversationMessages('c1');
+      expect(store.state.historyStatus).toBe('loading');
+
+      deferred.resolve({ messages: [], hasMore: false });
+      await promise;
+
+      expect(store.state.historyStatus).toBe('loaded');
+      expect(store.state.messageIds).toEqual([]);
+    });
+
+    it('goes loading → error when the initial page rejects', async () => {
+      const deferred = createDeferred();
+      const { store, loadConversationMessages } = setup(
+        createAdapter({ listMessages: vi.fn().mockReturnValue(deferred.promise) }),
+      );
+
+      const promise = loadConversationMessages('c1');
+      expect(store.state.historyStatus).toBe('loading');
+
+      deferred.reject(new Error('Network error'));
+      await promise;
+
+      expect(store.state.historyStatus).toBe('error');
+    });
+
+    it('is not affected by loadMoreHistory', async () => {
+      const deferred = createDeferred();
+      const { store, loadMoreHistory } = setup(
+        createAdapter({ listMessages: vi.fn().mockReturnValue(deferred.promise) }),
+      );
+      store.setHistoryStatus('loaded');
+
+      const promise = loadMoreHistory();
+      expect(store.state.historyStatus).toBe('loaded');
+
+      deferred.resolve({ messages: [{ id: 'older', role: 'user', parts: [] }], hasMore: false });
+      await promise;
+
+      expect(store.state.historyStatus).toBe('loaded');
+    });
+
+    it('resets to idle when switching to a conversation without history to load', async () => {
+      const { store, loadConversationMessages } = setup(createAdapter());
+      store.setHistoryStatus('loaded');
+
+      await loadConversationMessages(undefined);
+
+      expect(store.state.historyStatus).toBe('idle');
+    });
+  });
+
   describe('isLoadingHistory', () => {
     it('is true while the initial listMessages fetch is in flight and false after it resolves', async () => {
       const store = new ChatStore();

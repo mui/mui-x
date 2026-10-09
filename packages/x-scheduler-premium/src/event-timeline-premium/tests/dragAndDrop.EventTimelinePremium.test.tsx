@@ -1,7 +1,9 @@
-import { screen, within, act } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 import {
+  adapter,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -10,40 +12,21 @@ import {
   simulateDragAndDrop,
   mockElementBounds,
   getResizeHandle,
+  utcJuly4AllDayBuilder,
 } from 'test/utils/scheduler';
 import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type {
+  TimelineEventContentProps,
+  TimelineEventContentPropsOverrides,
+} from '@mui/x-scheduler-premium/models';
 import { vi, describe, it, expect } from 'vitest';
+import { getEventRow, mockAllEventRowBounds } from './dependencyTestUtils';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
 const marketing = ResourceBuilder.new().build();
 
 const resources: SchedulerResource[] = [engineering, design];
-
-/**
- * Returns the timeline event row for a given resource id.
- */
-function getEventRow(resourceId: string): HTMLElement {
-  const row = document.querySelector<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
-  );
-  if (!row) {
-    throw new Error(`Could not find event row for resource "${resourceId}"`);
-  }
-  return row;
-}
-
-/**
- * Applies mock bounds to all timeline event rows.
- */
-function mockAllEventRowBounds(width = 6720) {
-  const rows = document.querySelectorAll<HTMLElement>(
-    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
-  );
-  for (const row of rows) {
-    mockElementBounds(row, { left: 0, width, height: 40 });
-  }
-}
 
 describe('EventTimelinePremium - Drag and Drop', () => {
   const { renderSettled } = createSchedulerRenderer({
@@ -219,6 +202,182 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     // The event should have moved to a different time
     const newStart = new Date(updatedEvents[0].start);
     expect(newStart.getUTCDate()).to.not.equal(3);
+  });
+
+  it('should render the timelineEventContent slot in the drag placeholder', async () => {
+    function CustomEventContent(props: TimelineEventContentProps) {
+      return (
+        <span data-testid="custom-event-content" data-variant={props.variant}>
+          {props.occurrence.title}
+        </span>
+      );
+    }
+    const event = EventBuilder.new()
+      .title('Team Standup')
+      .singleDay('2025-07-03T09:00:00Z', 60)
+      .resource(engineering)
+      .draggable(true)
+      .build();
+
+    await renderSettled(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={() => {}}
+        slots={{
+          // The overrides interface is only populated through module augmentation on the consumer side.
+          timelineEventContent: CustomEventContent as React.ComponentType<
+            TimelineEventContentProps & TimelineEventContentPropsOverrides
+          >,
+        }}
+      />,
+    );
+
+    mockAllEventRowBounds();
+
+    const eventElement = screen.getByText('Team Standup');
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(design.id),
+        sourceClientX: 160,
+        targetClientX: 160,
+        hold: true,
+      });
+      // pragmatic-drag-and-drop delivers `onDrag` on the next animation frame.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => resolve());
+      });
+    });
+
+    try {
+      const placeholder = document.querySelector<HTMLElement>('.MuiEventTimeline-eventPlaceholder');
+      expect(placeholder).not.to.equal(null);
+      const content = within(placeholder!).getByTestId('custom-event-content');
+      expect(content.textContent).to.equal('Team Standup');
+      expect(content.getAttribute('data-variant')).to.equal('placeholder');
+      // The placeholder is a preview: its content is neither announced nor focusable.
+      expect(placeholder!.getAttribute('aria-hidden')).to.equal('true');
+      expect(placeholder!.hasAttribute('inert')).to.equal(true);
+    } finally {
+      // Finish the held drag even when an assertion fails, so it does not leak into the next test.
+      fireEvent.dragEnd(eventElement);
+    }
+
+    expect(document.querySelector('.MuiEventTimeline-eventPlaceholder')).to.equal(null);
+  });
+
+  it('should exclude the dragged occurrence of its own day when moved from another timezone', async () => {
+    const handleEventsChange = vi.fn();
+    // A UTC all-day weekly series whose display bounds normalize to New York July 3rd.
+    const event = utcJuly4AllDayBuilder()
+      .title('Weekly sync')
+      .recurrent('WEEKLY')
+      .resource(engineering)
+      .draggable(true)
+      .build();
+
+    const { user } = await renderSettled(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone="America/New_York"
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllEventRowBounds();
+    const eventElement = screen.getAllByText('Weekly sync')[0];
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(engineering.id),
+        sourceClientX: 160,
+        targetClientX: 1000,
+      });
+    });
+
+    // A recurring drop opens the scope dialog.
+    await user.click(await screen.findByText(/Only this event/i));
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    // The exception lands on the occurrence's own July 4th, not the displayed July 3rd.
+    const updatedEvents = handleEventsChange.mock.lastCall?.[0];
+    const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
+    expect(series.exDates).to.have.length(1);
+    expect(
+      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
+    ).to.equal('2025-07-04');
+
+    // The dragged occurrence detaches as a one-off keeping its all-day span. The landing
+    // day depends on the pointer-to-axis math, so it is pinned in the month view instead,
+    // where the drop targets a cell.
+    const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
+    expect(detached.rrule).to.equal(undefined);
+    expect(detached.allDay).to.equal(true);
+  });
+
+  it('should exclude the dragged occurrence of its own day when dragged from a secondary resource row', async () => {
+    const handleEventsChange = vi.fn();
+    // The same cross-timezone weekly occurrence renders once per resource row; the
+    // appearance does not change which occurrence identity the drag carries.
+    const event = utcJuly4AllDayBuilder()
+      .title('Weekly sync')
+      .recurrent('WEEKLY')
+      .resources([engineering, design])
+      .draggable(true)
+      .build();
+
+    const { user } = await renderSettled(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone="America/New_York"
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllEventRowBounds();
+    const eventElement = within(getEventRow(design.id)).getAllByText('Weekly sync')[0];
+    mockElementBounds(eventElement, { left: 100, width: 120, height: 30 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(design.id),
+        sourceClientX: 160,
+        targetClientX: 1000,
+      });
+    });
+
+    await user.click(await screen.findByText(/Only this event/i));
+    await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+    const updatedEvents = handleEventsChange.mock.lastCall?.[0];
+    const series = updatedEvents.find((item: { id: string }) => item.id === event.id)!;
+    expect(series.exDates).to.have.length(1);
+    expect(
+      adapter.formatByString(adapter.date(String(series.exDates[0]), 'UTC'), 'yyyy-MM-dd'),
+    ).to.equal('2025-07-04');
+
+    // Dragging a secondary appearance detaches the occurrence without dropping the
+    // resources it belongs to: the key does not identify which row it was dragged from.
+    const detached = updatedEvents.find((item: { id: string }) => item.id !== event.id)!;
+    expect(detached.rrule).to.equal(undefined);
+    expect(detached.resource).to.deep.equal([engineering.id, design.id]);
   });
 
   it('should resize an event end to a later time', async () => {

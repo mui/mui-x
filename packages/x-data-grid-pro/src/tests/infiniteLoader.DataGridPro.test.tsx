@@ -2,7 +2,7 @@ import * as React from 'react';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getColumnValues } from 'test/utils/helperFn';
+import { actSleep, getColumnValues, getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, onTestFinished, describe, it, expect } from 'vitest';
 
@@ -143,8 +143,122 @@ describe('<DataGridPro /> - Infinite loader', () => {
   );
 
   // Needs layout
+  it.skipIf(isJSDOM).each(['uncontrolled', 'controlled'] as const)(
+    'should call `onRowsScrollEnd` when `scrollEndThreshold` is larger than the rendered rows buffer (%s layout)',
+    async (virtualizerLayoutMode) => {
+      // See https://github.com/mui/mui-x/issues/16747
+      const rows = Array.from({ length: 100 }, (_, id) => ({ id }));
+      const handleRowsScrollEnd = vi.fn();
+      const { container } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[{ field: 'id' }]}
+            rows={rows}
+            rowHeight={50}
+            onRowsScrollEnd={handleRowsScrollEnd}
+            scrollEndThreshold={1000}
+            experimentalFeatures={{ virtualizerLayoutMode }}
+            hideFooter
+          />
+        </div>,
+      );
+      // eslint-disable-next-line testing-library/no-container
+      const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
+      const maxScrollTop = virtualScroller.scrollHeight - virtualScroller.clientHeight;
+
+      // Outside of the threshold area
+      await act(async () =>
+        virtualScroller.scrollTo({ top: maxScrollTop - 1200, behavior: 'instant' }),
+      );
+      await actSleep(100);
+      expect(handleRowsScrollEnd.mock.calls.length).to.equal(0);
+
+      // Inside of the threshold area, but the last row is further away than the rendered rows buffer
+      await act(async () =>
+        virtualScroller.scrollTo({ top: maxScrollTop - 900, behavior: 'instant' }),
+      );
+      await waitFor(() => {
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
+      });
+      expect(() => getRow(rows.length - 1)).to.throw();
+    },
+  );
+
+  // Needs layout
   it.skipIf(isJSDOM)(
-    'should not observe intersections with the rows pinned to the bottom',
+    'should call `onRowsScrollEnd` again when the threshold area enters the viewport again',
+    async () => {
+      const rows = Array.from({ length: 100 }, (_, id) => ({ id }));
+      const handleRowsScrollEnd = vi.fn();
+      const { container } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            columns={[{ field: 'id' }]}
+            rows={rows}
+            onRowsScrollEnd={handleRowsScrollEnd}
+            hideFooter
+          />
+        </div>,
+      );
+      // eslint-disable-next-line testing-library/no-container
+      const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
+      const maxScrollTop = virtualScroller.scrollHeight - virtualScroller.clientHeight;
+
+      await act(async () => virtualScroller.scrollTo({ top: maxScrollTop, behavior: 'instant' }));
+      await waitFor(() => {
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
+      });
+
+      await act(async () => virtualScroller.scrollTo({ top: 0, behavior: 'instant' }));
+      await actSleep(100);
+      expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
+
+      await act(async () => virtualScroller.scrollTo({ top: maxScrollTop, behavior: 'instant' }));
+      await waitFor(() => {
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(2);
+      });
+    },
+  );
+
+  // Needs layout
+  it.skipIf(isJSDOM)(
+    'should not call `onRowsScrollEnd` again after the skeleton loading overlay if no rows were added',
+    async () => {
+      const rows = Array.from({ length: 3 }, (_, id) => ({ id }));
+      const handleRowsScrollEnd = vi.fn();
+      function TestCase({ loading }: { loading: boolean }) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              columns={[{ field: 'id' }]}
+              rows={rows}
+              loading={loading}
+              slotProps={{ loadingOverlay: { variant: 'skeleton' } }}
+              onRowsScrollEnd={handleRowsScrollEnd}
+            />
+          </div>
+        );
+      }
+      const { setProps } = render(<TestCase loading={false} />);
+
+      // The rows don't fill the viewport, so the end of the rows is in the threshold area right away
+      await waitFor(() => {
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
+      });
+
+      // The skeleton overlay hides the rows while the next ones are loading
+      await act(async () => setProps({ loading: true }));
+      await actSleep(100);
+      // No rows were added
+      await act(async () => setProps({ loading: false }));
+      await actSleep(100);
+      expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
+    },
+  );
+
+  // Needs layout
+  it.skipIf(isJSDOM)(
+    'should not call `onRowsScrollEnd` if there are rows pinned to the bottom and the viewport scroll is at the top',
     async () => {
       const baseRows = [
         { id: 0, brand: 'Nike' },
@@ -183,13 +297,17 @@ describe('<DataGridPro /> - Infinite loader', () => {
       const { container } = render(<TestCase rows={baseRows} pinnedRows={basePinnedRows} />);
       // eslint-disable-next-line testing-library/no-container
       const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
-      // on the initial render, last row is not visible and the `observe` method is not called
-      expect(observe.mock.calls.length).to.equal(0);
+      // The observer reports the intersections asynchronously, so give it time to report one
+      // after the trigger is observed. The pinned row is visible, but the end of the rows is not.
+      await waitFor(() => {
+        expect(observe.mock.calls.length).to.be.greaterThan(0);
+      });
+      await actSleep(100);
+      expect(handleRowsScrollEnd.mock.calls.length).to.equal(0);
       // arbitrary number to make sure that the bottom of the grid window is reached.
       await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
-      // observer was attached
       await waitFor(() => {
-        expect(observe.mock.calls.length).to.equal(1);
+        expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
       });
     },
   );

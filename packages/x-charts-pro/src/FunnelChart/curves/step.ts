@@ -13,19 +13,19 @@ import { max, min } from './utils';
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/step.js
  */
 export class Step implements FunnelCurveGenerator {
-  private context: CanvasRenderingContext2D;
+  declare private context: CanvasRenderingContext2D;
 
-  private isHorizontal: boolean = false;
+  declare private isHorizontal: boolean;
 
-  private isIncreasing: boolean = false;
+  declare private isIncreasing: boolean;
 
-  private gap: number = 0;
+  declare private gap: number;
 
-  private borderRadius: number = 0;
+  declare private borderRadius: number;
 
-  private position: number = 0;
+  declare private position: number;
 
-  private sections: number = 0;
+  declare private sections: number;
 
   private points: Point[] = [];
 

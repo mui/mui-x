@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "9.13.0",
+  "version": "9.15.0",
   "author": "MUI Team",
   "description": "MUI X License verification.",
   "license": "SEE LICENSE IN LICENSE",
@@ -41,9 +41,6 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "exports": {
     ".": "./src/index.ts",

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, waitFor, within } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
@@ -258,6 +258,46 @@ describe('<DateCalendar />', () => {
       );
 
       expect(screen.getByText('2019/01')).toBeVisible();
+    });
+
+    // test: https://github.com/mui/mui-x/issues/9736
+    it('should remove the exiting month label from the layout during the fade transition', () => {
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      // Use `fireEvent` to assert the transition state before the entering label finishes fading in.
+      fireEvent.click(screen.getByTitle('Next month'));
+
+      const labels = screen.getAllByTestId('calendar-month-and-year-text');
+      expect(labels).to.have.length(1);
+      expect(labels[0]).to.have.text('February 2019');
+
+      // The exiting label unmounts synchronously, so it cannot push the entering label down.
+      expect(getComputedStyle(labels[0]).position).to.equal('static');
+    });
+
+    // test: https://github.com/mui/mui-x/issues/9736
+    it('should keep the month label in the layout when navigating back to it during the fade transition', () => {
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      const initialRect = screen
+        .getByTestId('calendar-month-and-year-text')
+        .getBoundingClientRect();
+
+      // Navigate away and back before the exit timer unmounts the first label.
+      fireEvent.click(screen.getByTitle('Next month'));
+      fireEvent.click(screen.getByTitle('Previous month'));
+
+      const labels = screen.getAllByTestId('calendar-month-and-year-text');
+      expect(labels).to.have.length(1);
+      expect(labels[0]).to.have.text('January 2019');
+
+      // The re-entering label participates in the layout like any other single label.
+      expect(getComputedStyle(labels[0]).position).to.equal('static');
+
+      // The re-entering label must keep its original size.
+      const activeRect = labels[0].getBoundingClientRect();
+      expect(activeRect.width).to.equal(initialRect.width);
+      expect(activeRect.height).to.equal(initialRect.height);
     });
   });
 

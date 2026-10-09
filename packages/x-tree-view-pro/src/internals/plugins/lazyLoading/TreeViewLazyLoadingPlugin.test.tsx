@@ -1,6 +1,6 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import * as React from 'react';
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { vi, describe, it, expect } from 'vitest';
@@ -907,6 +907,41 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         await awaitMockFetch();
 
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+      });
+
+      it('should allow an item removed by a refresh to be loaded under another parent', async () => {
+        const serverTree: Record<string, ItemType[]> = {
+          root: [
+            { id: 'parent', childrenCount: 0 },
+            { id: 'child', childrenCount: 0 },
+          ],
+          parent: [],
+        };
+        const view = render({
+          items: [],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: async (parentId) => serverTree[parentId ?? 'root'],
+          },
+        });
+        await awaitMockFetch();
+        expect(view.getAllTreeItemIds()).to.deep.equal(['parent', 'child']);
+
+        // move "child" under "parent"
+        serverTree.root = [{ id: 'parent', childrenCount: 1 }];
+        serverTree.parent = [{ id: 'child', childrenCount: 0 }];
+        await act(async () => {
+          await view.apiRef.current.updateItemChildren(null);
+        });
+        expect(view.getAllTreeItemIds()).to.deep.equal(['parent']);
+
+        fireEvent.click(view.getItemContent('parent'));
+        await awaitMockFetch();
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['parent', 'child']);
+        expect(
+          view.getItemIconContainer('parent').querySelector(`.${treeItemClasses.errorIcon}`),
+        ).to.equal(null);
       });
 
       it('should remove the children of the item when the refresh fails', async () => {

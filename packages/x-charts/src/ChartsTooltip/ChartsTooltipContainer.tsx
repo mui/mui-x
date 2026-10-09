@@ -11,7 +11,7 @@ import type { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import type { WithDataAttributes } from '@mui/utils/types';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { useIsFineMainPointer } from './utils';
 import type { TriggerOptions } from './utils';
 import { useUtilityClasses } from './chartsTooltipClasses';
@@ -179,21 +179,19 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     const isAxisControlled = store.state.controlledCartesianAxisTooltip !== undefined;
 
     if (trigger !== 'item' && isItemControlled) {
-      warnOnce(
+      errorOnce(
         [
           `MUI X Charts: The \`tooltipItem\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
           "The `tooltipItem` prop only has an effect when the tooltip trigger is 'item'.",
-        ],
-        'error',
+        ].join('\n'),
       );
     }
     if (trigger !== 'axis' && isAxisControlled) {
-      warnOnce(
+      errorOnce(
         [
           `MUI X Charts: The \`tooltipAxis\` prop is provided, but the tooltip trigger is set to '${trigger}'.`,
           "The `tooltipAxis` prop only has an effect when the tooltip trigger is 'axis'.",
-        ],
-        'error',
+        ].join('\n'),
       );
     }
   }
@@ -450,7 +448,7 @@ ChartsTooltipContainer.propTypes /* remove-proptypes */ = {
    * A modifier is a function that is called each time Popper.js needs to
    * compute the position of the popper.
    * For this reason, modifiers should be very performant to avoid bottlenecks.
-   * To learn how to create a modifier, [read the modifiers documentation](https://popper.js.org/docs/v2/modifiers/).
+   * To learn how to create a modifier, [read the modifiers documentation](https://github.com/floating-ui/popper-docs/blob/main/docs/v2/modifiers/index.md).
    */
   modifiers: PropTypes.arrayOf(
     PropTypes.shape({
@@ -501,7 +499,7 @@ ChartsTooltipContainer.propTypes /* remove-proptypes */ = {
     'top',
   ]),
   /**
-   * Options provided to the [`Popper.js`](https://popper.js.org/docs/v2/constructors/#options) instance.
+   * Options provided to the [`Popper.js`](https://github.com/floating-ui/popper-docs/blob/main/docs/v2/constructors.md#options) instance.
    * @default {}
    */
   popperOptions: PropTypes.shape({

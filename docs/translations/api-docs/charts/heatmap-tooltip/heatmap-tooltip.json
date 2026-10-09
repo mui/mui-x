@@ -21,12 +21,12 @@
       "description": "Always keep the children in the DOM. This prop can be useful in SEO situation or when you want to maximize the responsiveness of the Popper."
     },
     "modifiers": {
-      "description": "Popper.js is based on a &quot;plugin-like&quot; architecture, most of its features are fully encapsulated &quot;modifiers&quot;.<br>A modifier is a function that is called each time Popper.js needs to compute the position of the popper. For this reason, modifiers should be very performant to avoid bottlenecks. To learn how to create a modifier, <a href=\"https://popper.js.org/docs/v2/modifiers/\">read the modifiers documentation</a>."
+      "description": "Popper.js is based on a &quot;plugin-like&quot; architecture, most of its features are fully encapsulated &quot;modifiers&quot;.<br>A modifier is a function that is called each time Popper.js needs to compute the position of the popper. For this reason, modifiers should be very performant to avoid bottlenecks. To learn how to create a modifier, <a href=\"https://github.com/floating-ui/popper-docs/blob/main/docs/v2/modifiers/index.md\">read the modifiers documentation</a>."
     },
     "open": { "description": "If <code>true</code>, the component is shown." },
     "placement": { "description": "Popper placement." },
     "popperOptions": {
-      "description": "Options provided to the <a href=\"https://popper.js.org/docs/v2/constructors/#options\"><code>Popper.js</code></a> instance."
+      "description": "Options provided to the <a href=\"https://github.com/floating-ui/popper-docs/blob/main/docs/v2/constructors.md#options\"><code>Popper.js</code></a> instance."
     },
     "popperRef": { "description": "A ref that points to the used popper instance." },
     "position": { "description": "Determines the tooltip position relatively to the anchor." },

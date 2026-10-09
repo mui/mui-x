@@ -126,15 +126,15 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     lastDeltas: null,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare protected readonly isSinglePhase: false;
 
-  protected readonly eventType!: PanEvent;
+  declare protected readonly eventType: PanEvent;
 
-  protected readonly optionsType!: PanGestureOptions<GestureName>;
+  declare protected readonly optionsType: PanGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: Omit<
+  declare protected readonly mutableStateType: Omit<
     Partial<typeof this.state>,
     | 'startPointers'
     | 'startCentroid'
@@ -147,13 +147,13 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
    * Movement threshold in pixels that must be exceeded before the gesture activates.
    * Higher values reduce false positive gesture detection for small movements.
    */
-  protected threshold: number;
+  declare protected threshold: number;
 
   /**
    * Allowed directions for the pan gesture
    * Default allows all directions
    */
-  private direction: Array<'up' | 'down' | 'left' | 'right'>;
+  declare private direction: Array<'up' | 'down' | 'left' | 'right'>;
 
   constructor(options: PanGestureOptions<GestureName>) {
     super(options);

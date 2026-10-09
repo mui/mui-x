@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals",
-  "version": "9.0.0-beta.11",
+  "version": "9.0.0-beta.13",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Scheduler internals.",
   "license": "MIT",
@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "catalog:",
-    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^3.2.0",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^3.2.1",
     "@babel/runtime": "catalog:",
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
@@ -89,9 +89,6 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"

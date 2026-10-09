@@ -3,12 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import refType from '@mui/utils/refType';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import type { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
-import { extractValidationProps, validateDateTime } from '../validation';
+import { extractValidationProps } from '../validation';
+import { useDateTimeManager } from '../managers';
 import type { PickerOwnerState } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -51,6 +51,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
+  const manager = useDateTimeManager();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<MobileDateTimePickerProps>(
@@ -144,9 +145,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker(
   const { renderPicker } = useMobilePicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date-time',
-    validator: validateDateTime,
+    manager,
     steps: STEPS,
   });
 
@@ -324,6 +323,10 @@ MobileDateTimePicker.propTypes /* remove-proptypes */ = {
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
+  /**
+   * Callback fired when the Cancel action is triggered.
+   */
+  onCancel: PropTypes.func,
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.

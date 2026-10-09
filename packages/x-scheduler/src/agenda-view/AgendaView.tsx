@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
-import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import type { EventCalendarViewDefinition } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
@@ -156,6 +155,17 @@ const AgendaViewWeekNumberRow = styled('div', {
   }),
 }));
 
+const AgendaViewEmptyState = styled('p', {
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewEmptyState',
+})(({ theme }) => ({
+  margin: 0,
+  padding: theme.spacing(4, 2),
+  textAlign: 'center',
+  fontSize: theme.typography.body2.fontSize,
+  color: (theme.vars || theme).palette.text.secondary,
+}));
+
 const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(
@@ -163,6 +173,7 @@ const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
       AGENDA_VIEW_DAYS_AMOUNT * delta,
     ),
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
+  fetchRangeSelector: eventCalendarAgendaSelectors.fetchRange,
 };
 
 /**
@@ -178,21 +189,21 @@ export const AgendaView = React.memo(
     const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
-    // Ref hooks
-    const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useMergedRefs(forwardedRef, containerRef);
-
     // Selector hooks
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
     // Feature hooks
-    const { days } = useEventCalendarView(AGENDA_VIEW_DEFINITION);
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
+    const { days: visibleDays } = useEventCalendarView(AGENDA_VIEW_DEFINITION);
 
     // Selector hooks
     const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+    const baseVisibleDays = useStore(store, eventCalendarAgendaSelectors.baseVisibleDays);
+
+    // While loading with no day to show, render the base days so the skeletons have rows.
+    const days = isLoading && visibleDays.length === 0 ? baseVisibleDays : visibleDays;
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     const daysWithOccurrences = React.useMemo(
       () =>
@@ -213,9 +224,14 @@ export const AgendaView = React.memo(
     return (
       <AgendaViewRoot
         {...props}
-        ref={handleRef}
+        ref={forwardedRef}
         className={clsx(props.className, classes.agendaView)}
       >
+        {!isLoading && days.length === 0 && (
+          <AgendaViewEmptyState className={classes.agendaViewEmptyState} role="status">
+            {localeText.agendaViewEmptyStateLabel}
+          </AgendaViewEmptyState>
+        )}
         {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (
           <React.Fragment key={date.key}>
             {showWeekNumber && isFirstDayOfWeek && (
@@ -271,12 +287,7 @@ export const AgendaView = React.memo(
                   occurrences.map((occurrence) => (
                     <li key={occurrence.key} className={classes.agendaViewEventListItem}>
                       <EventContextMenuTrigger occurrence={occurrence}>
-                        <EventItem
-                          occurrence={occurrence}
-                          date={date}
-                          variant="regular"
-                          ariaLabelledBy={`${schedulerId}-DayHeaderCell-${date.key}`}
-                        />
+                        <EventItem occurrence={occurrence} date={date} variant="regular" />
                       </EventContextMenuTrigger>
                     </li>
                   ))}

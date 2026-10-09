@@ -66,4 +66,5 @@ export * from './ChartsToolbarPro';
 export type {
   ChartImageExportOptions,
   ChartPrintExportOptions,
+  StylesheetErrorReason,
 } from './internals/plugins/useChartProExport';

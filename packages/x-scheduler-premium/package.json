@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "9.0.0-beta.11",
+  "version": "9.0.0-beta.13",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
@@ -48,8 +48,9 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "build": "code-infra build --tsgo --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\" --ignore 'src/**/*.bench.ts'",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts"
   },
   "repository": {
     "type": "git",
@@ -98,9 +99,6 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"

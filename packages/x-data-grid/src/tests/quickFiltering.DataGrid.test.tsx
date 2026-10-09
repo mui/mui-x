@@ -62,6 +62,42 @@ describe('<DataGrid /> - Quick filter', () => {
       });
     });
 
+    // https://github.com/mui/mui-x/issues/23572
+    it('should commit the pending search when a re-render recreates an inline parser during the debounce window', async () => {
+      const onFilterModelChange = vi.fn();
+
+      // The `marker` prop only exists to force re-renders through `setProps`.
+      function Test(_props: { marker: number }) {
+        return (
+          <TestCase
+            onFilterModelChange={onFilterModelChange}
+            slotProps={{
+              toolbar: {
+                quickFilterProps: {
+                  // Recreated on every render, like any inline callback prop.
+                  quickFilterParser: (searchInput: string) => [searchInput],
+                },
+              },
+            }}
+          />
+        );
+      }
+
+      const { user, setProps } = render(<Test marker={0} />);
+
+      await user.type(screen.getByRole('searchbox'), 'a');
+
+      // Re-render inside the debounce window, giving the parser a new identity.
+      setProps({ marker: 1 });
+      setProps({ marker: 2 });
+
+      await waitFor(() => {
+        expect(onFilterModelChange.mock.calls.length).to.equal(1);
+      });
+      expect(onFilterModelChange.mock.lastCall?.[0].quickFilterValues).to.deep.equal(['a']);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+    });
+
     it('should allow to customize input splitting', async () => {
       const onFilterModelChange = vi.fn();
 
