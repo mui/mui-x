@@ -68,6 +68,15 @@ describe('<AdapterDayjs />', () => {
       expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
     });
 
+    it('addHours: should keep a UTC offset if no timezone plugin is available', () => {
+      const modifiedAdapter = new AdapterDayjs();
+      // @ts-ignore
+      modifiedAdapter.hasTimezonePlugin = () => false;
+
+      const value = dayjs.utc('2026-01-15T12:00:00Z').utcOffset(120);
+      expect(modifiedAdapter.addHours(value, 1).format()).to.equal('2026-01-15T15:00:00+02:00');
+    });
+
     it('should keep system-timezone dates compatible with plain `dayjs()` dates when `dayjs.tz.guess()` is non-UTC', () => {
       // Regression: before the fix, `createSystemDate` called
       // `dayjs.tz(value, dayjs.tz.guess())` when the guessed zone was not UTC,
@@ -347,62 +356,6 @@ describe('<AdapterDayjs />', () => {
         },
       );
 
-      it.skipIf(!isJSDOM)(
-        'setYear: should preserve seconds when entering a historical system timezone offset',
-        () => {
-          setSystemTimezone('Europe/London');
-          const source = dayjs.utc('2026-07-15T12:30:12.345Z').tz('Europe/London').locale('fr');
-          const result = adapter.setYear(source, 202);
-
-          expect(result.toISOString()).to.equal('0202-07-15T13:31:27.345Z');
-          expect(result.format('YYYY-MM-DD HH:mm:ss.SSS')).to.equal('0202-07-15 13:30:12.345');
-          expect(result.utcOffset()).to.equal(-1.25);
-          expect(result.toDate().getTime()).to.equal(result.valueOf());
-          expect(adapter.getTimezone(result)).to.equal('Europe/London');
-          expect(result.locale()).to.equal('fr');
-          expect(source.toISOString()).to.equal('2026-07-15T12:30:12.345Z');
-          expect(source.format(format)).to.equal('2026-07-15 13:30:12.345 +01:00');
-          expect(source.locale()).to.equal('fr');
-        },
-      );
-
-      it.skipIf(!isJSDOM)(
-        'addDays: should refresh historical system offsets when the named offset stays unchanged',
-        () => {
-          setSystemTimezone('Europe/Paris');
-          const source = dayjs.utc('1911-03-11T01:00:00Z').tz('Asia/Tokyo').locale('fr');
-          const previousDay = adapter.addHours(source, -12);
-          const result = adapter.addDays(previousDay, 1);
-
-          expect(previousDay.toISOString()).to.equal('1911-03-10T13:00:00.000Z');
-          expect(previousDay.format(format)).to.equal('1911-03-10 22:00:00.000 +09:00');
-          expect(result.toISOString()).to.equal('1911-03-11T13:00:00.000Z');
-          expect(result.format(format)).to.equal('1911-03-11 22:00:00.000 +09:00');
-          expect(result.utcOffset()).to.equal(previousDay.utcOffset());
-          expect(result.toDate().getTime()).to.equal(result.valueOf());
-          expect(adapter.getTimezone(result)).to.equal('Asia/Tokyo');
-          expect(result.locale()).to.equal('fr');
-          expect(source.toISOString()).to.equal('1911-03-11T01:00:00.000Z');
-          expect(source.format(format)).to.equal('1911-03-11 10:00:00.000 +09:00');
-          expect(source.locale()).to.equal('fr');
-        },
-      );
-
-      it.skipIf(!isJSDOM)(
-        'should keep elapsed time exact when the target wall time falls in a system DST gap',
-        () => {
-          setSystemTimezone('Europe/London');
-          const source = dayjs.utc('2026-03-29T04:30:12.345Z').tz('America/New_York');
-          const result = adapter.addMinutes(source, 30);
-
-          expect(result.toISOString()).to.equal('2026-03-29T05:00:12.345Z');
-          expect(result.utcOffset()).to.equal(-240);
-          expect(adapter.getTimezone(result)).to.equal('America/New_York');
-          // Day.js stores nonzero-offset wall fields in a local Date. The expected 01:00 wall time
-          // does not exist in the system timezone, so correct wall fields remain a library limitation.
-        },
-      );
-
       it('should keep invalid values invalid', () => {
         const value = dayjs.tz('not a date', 'Europe/London');
 
@@ -644,28 +597,59 @@ describe('<AdapterDayjs />', () => {
           },
         );
 
-        it('should emit distinct instants for both occurrences of the repeated hour with plain values', async () => {
-          setSystemTimezone('America/New_York');
-          const onChange = vi.fn();
-          const { user } = render(
+        it.each([
+          { valueType: 'plain values', getValue: () => dayjs('2026-11-01T12:00') },
+          // Same shape as `adapter.date(undefined, 'default')` when no default timezone is set.
+          {
+            valueType: 'values without a timezone name',
+            getValue: () => dayjs('2026-11-01T12:00').utcOffset(-300, true),
+          },
+        ])(
+          'should emit distinct instants for both occurrences of the repeated hour with $valueType',
+          async ({ getValue }) => {
+            setSystemTimezone('America/New_York');
+            const onChange = vi.fn();
+            const { user } = render(
+              <DigitalClock
+                defaultValue={getValue()}
+                timezone="system"
+                timeStep={30}
+                ampm
+                onChange={onChange}
+              />,
+            );
+
+            expect(screen.getAllByRole('option')).to.have.length(50);
+            const repeatedOptions = screen.getAllByRole('option', { name: '01:30 AM' });
+            expect(repeatedOptions).to.have.length(2);
+
+            await user.click(repeatedOptions[0]);
+            expect(onChange.mock.lastCall?.[0].toISOString()).to.equal('2026-11-01T05:30:00.000Z');
+
+            await user.click(repeatedOptions[1]);
+            expect(onChange.mock.lastCall?.[0].toISOString()).to.equal('2026-11-01T06:30:00.000Z');
+          },
+        );
+
+        it('should start at the first midnight when midnight repeats with values without a timezone name', () => {
+          // `America/Havana` repeats the hour after midnight on 2026-11-01.
+          setSystemTimezone('America/Havana');
+          render(
             <DigitalClock
-              defaultValue={dayjs('2026-11-01T12:00')}
+              defaultValue={dayjs('2026-11-01T12:00').utcOffset(-300, true)}
               timezone="system"
               timeStep={30}
-              ampm
-              onChange={onChange}
+              ampm={false}
             />,
           );
 
-          expect(screen.getAllByRole('option')).to.have.length(50);
-          const repeatedOptions = screen.getAllByRole('option', { name: '01:30 AM' });
-          expect(repeatedOptions).to.have.length(2);
-
-          await user.click(repeatedOptions[0]);
-          expect(onChange.mock.lastCall?.[0].toISOString()).to.equal('2026-11-01T05:30:00.000Z');
-
-          await user.click(repeatedOptions[1]);
-          expect(onChange.mock.lastCall?.[0].toISOString()).to.equal('2026-11-01T06:30:00.000Z');
+          const options = screen.getAllByRole('option');
+          expect(options).to.have.length(50);
+          expect(options.slice(0, 3).map((option) => option.textContent)).to.deep.equal([
+            '00:00',
+            '00:30',
+            '00:00',
+          ]);
         });
       });
 

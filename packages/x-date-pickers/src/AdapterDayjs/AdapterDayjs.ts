@@ -174,10 +174,6 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     return value.locale(expectedLocale);
   };
 
-  private timezoneFormatters = new Map<string, Intl.DateTimeFormat>();
-
-  private valueOfDSTFix: boolean | undefined;
-
   private hasUTCPlugin = () => typeof dayjs.utc !== 'undefined';
 
   private hasTimezonePlugin = () => typeof dayjs.tz !== 'undefined';
@@ -275,26 +271,14 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
       return value;
     }
 
-    // Before 1.11.22, `tz` derives the offset through the system timezone, so read it from Intl.
-    if (timezone !== 'system' && this.hasValueOfDSTFix() && value.isValid()) {
-      const wallDate = new Date(0);
-      wallDate.setUTCFullYear(value.year(), value.month(), value.date());
-      wallDate.setUTCHours(value.hour(), value.minute(), value.second(), value.millisecond());
-      // @ts-ignore
-      const currentOffset: number = value.$u ? 0 : value.$offset;
-      const offset = this.getWallTimeOffset(wallDate.getTime(), timezone, currentOffset);
-      const timestamp = wallDate.getTime() - offset * 60_000;
-      if (offset === currentOffset && value.valueOf() === timestamp) {
-        return value;
-      }
-
-      // Rebuild the local displacement as well: setters copy `$localOffset` across system-offset
-      // changes, and historical system offsets can include seconds that `getTimezoneOffset()` omits.
-      return this.createNamedZoneValue(timestamp, offset, timezone, value.locale());
+    // `tz(timezone, true)` breaks when the offset changes to or from 0, so rebuild the value from its wall time.
+    if (timezone !== 'system' && value.isValid()) {
+      return this.getWallTimeValue(this.getWallTime(value), timezone, value.utcOffset()).locale(
+        value.locale(),
+      );
     }
 
-    // dayjs 1.11.12 and 1.11.13 change the value itself when the new offset is 0.
-    const fixedValue = value.clone().tz(this.cleanTimezone(timezone), true);
+    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
     // An offset of `0` equals no offset, and before dayjs 1.11.12 assigning `0` breaks UTC values.
     // @ts-ignore
     if ((fixedValue.$offset ?? 0) !== (value.$offset ?? 0)) {
@@ -305,175 +289,60 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * Before 1.11.2, `valueOf()` of a value without `$x.$localOffset` uses the system offset of today,
-   * not of the value date (https://github.com/iamkun/dayjs/issues/1448).
+   * The wall time of the value, in milliseconds as if it was UTC.
    */
-  private hasValueOfDSTFix = () => {
-    if (this.valueOfDSTFix === undefined) {
-      const probe = dayjs(0);
-      const date = new Date(0);
-      date.getTimezoneOffset = () => 1;
-      // @ts-ignore
-      probe.$d = date;
-      // @ts-ignore
-      probe.$offset = 0;
-      this.valueOfDSTFix = probe.valueOf() === -60_000;
-    }
-
-    return this.valueOfDSTFix;
+  private getWallTime = (value: Dayjs) => {
+    const wallDate = new Date(0);
+    wallDate.setUTCFullYear(value.year(), value.month(), value.date());
+    wallDate.setUTCHours(value.hour(), value.minute(), value.second(), value.millisecond());
+    return wallDate.getTime();
   };
 
   /**
-   * The offset of the timezone at the timestamp, in minutes. Local Mean Time offsets keep their seconds.
-   * Older dayjs.tz() implementations derive the offset through the system timezone, hence reading it from Intl.
-   * The numeric parts also work on Node 14 and 16, which do not support `timeZoneName: 'longOffset'`.
+   * The value of a timezone at a timestamp. Before 1970, `tz()` adds a second to an instant with milliseconds,
+   * so convert the whole second, then add the milliseconds (a setter can move a repeated local time).
    */
-  private getTimezoneOffsetAt = (timezone: string, timestamp: number) => {
-    let formatter = this.timezoneFormatters.get(timezone);
-    if (!formatter) {
-      formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: timezone,
-        hourCycle: 'h23',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-      });
-      this.timezoneFormatters.set(timezone, formatter);
-    }
-
-    const wall: Partial<Record<Intl.DateTimeFormatPartTypes, number>> = {};
-    formatter.formatToParts(timestamp).forEach((part) => {
-      wall[part.type] = Number(part.value);
-    });
-    const date = new Date(timestamp);
-    let seconds =
-      (wall.hour! - date.getUTCHours()) * 3600 +
-      (wall.minute! - date.getUTCMinutes()) * 60 +
-      (wall.second! - date.getUTCSeconds());
-    // An offset is shorter than a day, so another day of the month is the next or the previous day.
-    if (wall.day !== date.getUTCDate()) {
-      seconds += seconds < 0 ? 86_400 : -86_400;
-    }
-
-    return seconds / 60;
+  private toTimezone = (timestamp: number, timezone: string) => {
+    const milliseconds = ((timestamp % 1000) + 1000) % 1000;
+    const value = this.setTimezone(dayjs(timestamp - milliseconds), timezone);
+    return value.add(milliseconds, 'millisecond');
   };
 
   /**
-   * Builds the value of a named timezone at the timestamp, with the offset (in minutes) of that timezone.
+   * The value of a timezone at a wall time. A repeated wall time keeps the given offset when it is valid,
+   * else it takes the first occurrence. A wall time in a DST gap moves forward.
    */
-  private createNamedZoneValue = (
-    timestamp: number,
-    offset: number,
-    timezone: string,
-    locale: string,
-  ) => {
-    let result: Dayjs;
-    if (offset === 0) {
-      // A UTC value keeps the wall time, even when it falls in a DST gap of the system timezone.
-      result = dayjs.utc(timestamp).locale(locale);
-    } else {
-      const wallDate = new Date(timestamp + offset * 60_000);
-      const localDate = new Date(0);
-      localDate.setFullYear(
-        wallDate.getUTCFullYear(),
-        wallDate.getUTCMonth(),
-        wallDate.getUTCDate(),
-      );
-      localDate.setHours(
-        wallDate.getUTCHours(),
-        wallDate.getUTCMinutes(),
-        wallDate.getUTCSeconds(),
-        wallDate.getUTCMilliseconds(),
-      );
-      result = dayjs(localDate).locale(locale);
-      // @ts-ignore
-      result.$offset = offset;
-      // System DST gaps and historical offsets with seconds require the actual local displacement.
-      // Later `set` and `add` calls copy it, so only store it when it is needed.
-      if (result.valueOf() !== timestamp) {
-        // dayjs ignores a falsy `$localOffset`. A boxed zero keeps numeric coercion equal to zero.
-        // @ts-ignore
-        result.$x.$localOffset =
-          (localDate.getTime() - timestamp) / 60_000 - offset || new Number(0);
-      }
-    }
-    // @ts-ignore
-    result.$x.$timezone = timezone;
-    return result;
-  };
-
-  /**
-   * The offset of the timezone for a wall time, given in milliseconds as if it was UTC.
-   * A repeated wall time keeps the preferred offset when it is valid, else it takes the occurrence nearest to
-   * that offset, or the first occurrence. A wall time in a gap takes the offset before the gap, so its instant
-   * moves forward past the gap.
-   */
-  private getWallTimeOffset = (wallTime: number, timezone: string, preferredOffset?: number) => {
-    const isValidOffset = (offset: number) =>
-      this.getTimezoneOffsetAt(timezone, wallTime - offset * 60_000) === offset;
-    if (preferredOffset !== undefined) {
-      if (isValidOffset(preferredOffset)) {
-        return preferredOffset;
-      }
-
-      const nearestOffset = this.getTimezoneOffsetAt(timezone, wallTime - preferredOffset * 60_000);
-      if (isValidOffset(nearestOffset)) {
-        return nearestOffset;
+  private getWallTimeValue = (wallTime: number, timezone: string, offset?: number) => {
+    const getValue = (candidate: number) =>
+      this.toTimezone(wallTime - candidate * 60_000, timezone);
+    if (offset !== undefined) {
+      const value = getValue(offset);
+      if (this.getWallTime(value) === wallTime) {
+        return value;
       }
     }
 
-    const offsets = [
-      this.getTimezoneOffsetAt(timezone, wallTime - 86_400_000),
-      this.getTimezoneOffsetAt(timezone, wallTime + 86_400_000),
-    ];
-    const validOffsets = offsets.filter(isValidOffset);
-    return validOffsets.length > 0 ? Math.max(...validOffsets) : Math.min(...offsets);
+    // The offsets of the day before and the day after cover a DST change on that day.
+    const valueBefore = getValue(this.toTimezone(wallTime - 86_400_000, timezone).utcOffset());
+    if (this.getWallTime(valueBefore) === wallTime) {
+      return valueBefore;
+    }
+
+    const valueAfter = getValue(this.toTimezone(wallTime + 86_400_000, timezone).utcOffset());
+    return this.getWallTime(valueAfter) === wallTime ? valueAfter : valueBefore;
   };
 
   /**
-   * For a named timezone, `startOf('day')` can give a midnight in a DST gap (`America/Santiago`) or the
-   * previous day. Elapsed-time additions from such a value leave the day, so build the first instant of the day.
-   */
-  private getStartOfDayInTimezone = (value: Dayjs, timezone: string) => {
-    const midnight = new Date(0);
-    midnight.setUTCFullYear(value.year(), value.month(), value.date());
-    const timestamp =
-      midnight.getTime() - this.getWallTimeOffset(midnight.getTime(), timezone) * 60_000;
-
-    return this.createNamedZoneValue(
-      timestamp,
-      this.getTimezoneOffsetAt(timezone, timestamp),
-      timezone,
-      value.locale(),
-    );
-  };
-
-  /**
-   * Hours, minutes and seconds measure elapsed time. Rebuild named-zone values from the target
-   * instant: adjusting the offset while keeping the wall time changes the elapsed duration.
+   * Hours, minutes, and seconds measure elapsed time: add them to the instant, then convert back to the timezone.
    */
   private addTime = (value: Dayjs, amount: number, unit: 'hour' | 'minute' | 'second') => {
-    // @ts-ignore
-    const timezone = value.$x?.$timezone;
-    if (!this.hasTimezonePlugin() || !timezone || !this.hasValueOfDSTFix()) {
+    // Without the `timezone` plugin, a value with a UTC offset keeps that offset.
+    if (!this.hasTimezonePlugin()) {
       return this.adjustOffset(value.add(amount, unit));
     }
 
-    // Match Date's millisecond precision and range before comparing local displacements.
-    const timestamp = new Date(
-      value.valueOf() + amount * { hour: 3_600_000, minute: 60_000, second: 1000 }[unit],
-    ).getTime();
-    if (!Number.isFinite(timestamp)) {
-      return value.add(amount, unit);
-    }
-
-    return this.createNamedZoneValue(
-      timestamp,
-      this.getTimezoneOffsetAt(timezone, timestamp),
-      timezone,
-      value.locale(),
-    );
+    const timestamp = dayjs(value.valueOf()).add(amount, unit).valueOf();
+    return this.toTimezone(timestamp, this.getTimezone(value)).locale(value.locale());
   };
 
   /**
@@ -738,13 +607,20 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   public startOfDay = (value: Dayjs) => {
-    // @ts-ignore
-    const timezone = value.$x?.$timezone;
-    if (this.hasTimezonePlugin() && timezone && this.hasValueOfDSTFix() && value.isValid()) {
-      return this.getStartOfDayInTimezone(value, timezone);
+    const timezone = this.getTimezone(value);
+    if (timezone === 'UTC' || !this.hasTimezonePlugin() || !value.isValid()) {
+      return this.adjustOffset(value.startOf('day'));
     }
 
-    return this.adjustOffset(value.startOf('day'));
+    // The native `Date` gives the first instant of the day.
+    if (timezone === 'system') {
+      return dayjs(value.valueOf()).startOf('day').locale(value.locale());
+    }
+
+    // `startOf('day')` can give a midnight in a DST gap or the previous day.
+    const midnight = new Date(this.getWallTime(value));
+    midnight.setUTCHours(0, 0, 0, 0);
+    return this.getWallTimeValue(midnight.getTime(), timezone).locale(value.locale());
   };
 
   public endOfYear = (value: Dayjs) => {
