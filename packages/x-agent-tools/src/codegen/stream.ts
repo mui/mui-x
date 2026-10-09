@@ -190,7 +190,7 @@ function handleCodegenChunk(
 }
 
 async function pumpStream(
-  body: ReadableStream<Uint8Array>,
+  body: NonNullable<Response['body']>,
   parser: ReturnType<typeof createParser>,
   onDone: (err?: Error) => void,
   isFinished: () => boolean,
