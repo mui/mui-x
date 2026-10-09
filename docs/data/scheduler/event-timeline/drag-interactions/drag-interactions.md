@@ -47,7 +47,8 @@ Set the `areEventsResizable` property to `"start"` or `"end"` to enable resizing
 :::
 
 :::info
-The editing form isn't customizable yet, but you'll be able to apply the same logic there in a future release.
+Disabling resizing doesn't prevent changing the dates from the event dialog.
+To prevent it there too, leave `EventDialogDateTimeSection` out of the [`eventDialogGeneralTab` slot](/x/react-scheduler/components/event-dialog/#reordering-and-omitting-sections).
 :::
 
 ## Only disable on some events
