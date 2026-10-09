@@ -6,7 +6,6 @@ import { isCoarsePointer } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { useEventEditingTriggerProps } from '../event-editing';
 import { EventContextMenu } from './EventContextMenu';
-import { getFocusFallback } from './EventContextMenuItems';
 import type {
   EventContextMenuAnchorPosition,
   EventContextMenuContextValue,
@@ -35,7 +34,7 @@ interface EventContextMenuState {
   anchorPosition: EventContextMenuAnchorPosition | null;
   onEditingCanceled?: () => void;
   stableAnchor?: HTMLElement | null;
-  focusFallback?: HTMLElement | null;
+  getFocusFallback?: () => HTMLElement | null;
 }
 
 const INITIAL_STATE: EventContextMenuState = {
@@ -62,6 +61,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
         anchorPosition: options.anchorPosition ?? null,
         onEditingCanceled: options.onEditingCanceled,
         stableAnchor: options.stableAnchor,
+        getFocusFallback: options.getFocusFallback,
       });
     },
   );
@@ -73,11 +73,9 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
 
   // The event can be removed while its menu is open, which would leave the menu without an anchor.
   const closeMenuForAnchor = useStableCallback((anchorEl: HTMLElement) => {
-    // Read while `anchorEl` is still attached — see `getFocusFallback`.
-    const focusFallback = getFocusFallback(anchorEl);
-    setState((prev) =>
-      prev.open && prev.anchorEl === anchorEl ? { ...prev, open: false, focusFallback } : prev,
-    );
+    if (state.open && state.anchorEl === anchorEl) {
+      closeMenu();
+    }
   });
 
   const contextValue = React.useMemo<EventContextMenuContextValue>(
@@ -96,7 +94,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
           anchorPosition={state.anchorPosition}
           onEditingCanceled={state.onEditingCanceled}
           stableAnchor={state.stableAnchor}
-          focusFallback={state.focusFallback}
+          getFocusFallback={state.getFocusFallback}
           onClose={closeMenu}
         />
       )}
@@ -108,7 +106,8 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
  * Wraps an element so it edits its occurrence on click (same as `EventEditingTrigger`) and opens
  * the event context menu on right-click or on `Space` while it is focused. `onEditingCanceled` and
  * `stableAnchor` behave exactly as they do on `EventEditingTrigger` — forwarded to `startEditing`
- * both for the direct click and for Edit chosen from the menu.
+ * both for the direct click and for Edit chosen from the menu. Unmounting closes the menu opened
+ * from it.
  *
  * On a coarse pointer, activation arms the toolbar instead of opening the dialog directly
  * (`editingModePolicy.ts`), and that toolbar already exposes Edit and Delete — so right-click and
@@ -116,7 +115,8 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
  * redundant menu whose own Edit item would otherwise just re-arm a no-op.
  */
 export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
-  const { occurrence, onClick, onEditingCanceled, stableAnchor, children } = props;
+  const { occurrence, onClick, onEditingCanceled, stableAnchor, getFocusFallback, children } =
+    props;
   const editing = useEventEditingTriggerProps(occurrence, { onEditingCanceled, stableAnchor });
   const menuContext = useEventContextMenuContext();
 
@@ -143,6 +143,7 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
         anchorPosition: { top: event.clientY - 4, left: event.clientX - 2 },
         onEditingCanceled,
         stableAnchor,
+        getFocusFallback,
       });
     },
     onKeyUp: (event: React.KeyboardEvent<HTMLElement>) => {
@@ -159,7 +160,11 @@ export function EventContextMenuTrigger(props: EventContextMenuTriggerProps) {
       // suppresses it.
       (event as unknown as { preventBaseUIHandler?: () => void }).preventBaseUIHandler?.();
       event.preventDefault();
-      menuContext.openMenu(occurrence, event.currentTarget, { onEditingCanceled, stableAnchor });
+      menuContext.openMenu(occurrence, event.currentTarget, {
+        onEditingCanceled,
+        stableAnchor,
+        getFocusFallback,
+      });
     },
   });
 }

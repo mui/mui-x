@@ -26,10 +26,10 @@ interface UseEventContextMenuItemsParameters {
  * The nearest surviving focusable ancestor of an event about to be removed from the DOM — the
  * grid column/cell it lives in, which (unlike the event itself) doesn't unmount on delete.
  *
- * An immediate delete removes `anchorEl` from the DOM in the same commit that closes the menu.
- * MUI's `Menu` tries to restore focus to the element that had it when the menu opened (`anchorEl`
- * itself here), but since that node is now detached, the restore silently fails and focus is lost
- * to `<body>`. Falling back to this ancestor keeps a keyboard user's place in the grid.
+ * When the event is removed while its menu is open (deleted from the menu, or unmounted from
+ * outside), MUI's `Menu` tries to restore focus to the element that had it when the menu opened
+ * (`anchorEl` itself here), but since that node is now detached, the restore silently fails and
+ * focus is lost to `<body>`. Falling back to this ancestor keeps a keyboard user's place in the grid.
  */
 export function getFocusFallback(anchorEl: HTMLElement): HTMLElement | null {
   return anchorEl.parentElement?.closest<HTMLElement>('[tabindex]') ?? null;

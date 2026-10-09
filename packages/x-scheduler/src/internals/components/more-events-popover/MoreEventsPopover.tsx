@@ -19,6 +19,7 @@ import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
 import { EventContextMenuTrigger } from '../event-context-menu';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { isFocusLostWith } from '../../utils/focus-utils';
 
 const MoreEventsPopoverHeader = styled('div', {
   name: 'MuiEventCalendar',
@@ -100,7 +101,8 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     );
   }, [store, onClose]);
 
-  // Editing an event can unmount the "+N more" button, so remember the cell as a focus fallback.
+  // Changing the day's events can unmount the "+N more" button, so remember the cell as a focus
+  // fallback.
   const fallbackFocusRef = React.useRef<HTMLElement | null>(null);
   useIsoLayoutEffect(() => {
     if (open && anchor) {
@@ -108,50 +110,55 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     }
   }, [open, anchor]);
 
-  // Deleting an event unmounts its item, so move focus to the one taking its place.
+  // Where focus goes once an item unmounted: the item taking its place while the popover is open,
+  // else the "+N more" button, else the cell.
   const bodyRef = React.useRef<HTMLDivElement>(null);
-  const previousOccurrencesRef = React.useRef(occurrences);
-  useIsoLayoutEffect(() => {
-    const previousOccurrences = previousOccurrencesRef.current;
-    previousOccurrencesRef.current = occurrences;
+  const removedIndexRef = React.useRef<number | null>(null);
+  const getFocusFallback = useStableCallback((): HTMLElement | null => {
     const body = bodyRef.current;
-    if (!open || !body || occurrences.length === 0) {
+    const removedIndex = removedIndexRef.current;
+    if (open && body?.isConnected && removedIndex !== null && body.children.length > 0) {
+      return body.children[Math.min(removedIndex, body.children.length - 1)] as HTMLElement;
+    }
+    return anchor?.isConnected ? anchor : fallbackFocusRef.current;
+  });
+
+  // Removing an event unmounts its item, so move focus to the one taking its place. When focus is
+  // in the item's context menu, the menu does it once it closes (`getFocusFallback`).
+  const previousRef = React.useRef({ open, dayKey: day.key, occurrences });
+  useIsoLayoutEffect(() => {
+    const previous = previousRef.current;
+    previousRef.current = { open, dayKey: day.key, occurrences };
+    // Only an update of the list on screen removes items, not a reopen.
+    if (!open || !previous.open || previous.dayKey !== day.key) {
+      removedIndexRef.current = null;
       return;
     }
-    const removedIndex = previousOccurrences.findIndex(
-      (previous) => !occurrences.some((occurrence) => occurrence.key === previous.key),
+    const removedIndex = previous.occurrences.findIndex(
+      (previousOccurrence) =>
+        !occurrences.some((occurrence) => occurrence.key === previousOccurrence.key),
     );
-    if (removedIndex === -1) {
+    const body = bodyRef.current;
+    if (removedIndex === -1 || !body) {
       return;
     }
-    const ownerDocument = body.ownerDocument;
-    const activeElement = getActiveElement(ownerDocument);
+    removedIndexRef.current = removedIndex;
+    // Focus left on the paper (or the document) went away with the item.
+    const paper = body.parentElement;
+    const activeElement = getActiveElement(body.ownerDocument);
     const focusIsLost =
       activeElement === null ||
-      activeElement === ownerDocument.body ||
-      activeElement === body.parentElement;
-    if (!focusIsLost) {
-      return;
+      activeElement === body.ownerDocument.body ||
+      (paper !== null && paper.contains(activeElement) && !body.contains(activeElement));
+    if (focusIsLost) {
+      getFocusFallback()?.focus();
     }
-    const target = body.children[Math.min(removedIndex, occurrences.length - 1)];
-    (target as HTMLElement | undefined)?.focus();
-  }, [open, occurrences]);
+  }, [open, day.key, occurrences, getFocusFallback]);
 
-  // Restore focus when it is about to be lost with the closing popover: on the document, or on
-  // something unmounting with the popover. Focus already moved elsewhere is preserved.
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
-    const ownerDocument = paper.ownerDocument;
-    // `getActiveElement` pierces shadow roots, where `document.activeElement` stops at the host.
-    const activeElement = getActiveElement(ownerDocument);
-    const focusIsAboutToBeLost =
-      activeElement === null ||
-      activeElement === ownerDocument.body ||
-      paper.contains(activeElement);
-    if (!focusIsAboutToBeLost) {
-      return;
+    if (isFocusLostWith(paper)) {
+      getFocusFallback()?.focus({ preventScroll: true });
     }
-    const target = anchor?.isConnected ? anchor : fallbackFocusRef.current;
-    target?.focus({ preventScroll: true });
   });
 
   return (
@@ -175,6 +182,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             onEditingCanceled={onClose}
             // A cancellation closes this popover and unmounts the clicked item.
             stableAnchor={anchor}
+            getFocusFallback={getFocusFallback}
           >
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
@@ -213,18 +221,16 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
 
   // The day's occurrences are laid out by the view, not stored, so the trigger pushes them.
   const updatePopover = useStableCallback((data: MoreEventsData) => {
-    setState((prev) =>
-      prev.open && prev.data?.day.key === data.day.key && prev.data.occurrences !== data.occurrences
-        ? { ...prev, data }
-        : prev,
-    );
+    if (state.open && state.data?.day.key === data.day.key) {
+      setState((prev) => ({ ...prev, data }));
+    }
   });
 
   // The trigger unmounts once every event fits in the cell, taking the popover's anchor with it.
   const closePopoverForDay = useStableCallback((dayKey: string) => {
-    setState((prev) =>
-      prev.open && prev.data?.day.key === dayKey ? { ...prev, open: false } : prev,
-    );
+    if (state.open && state.data?.day.key === dayKey) {
+      closePopover();
+    }
   });
 
   const contextValue = React.useMemo<MoreEventsPopoverContextValue>(

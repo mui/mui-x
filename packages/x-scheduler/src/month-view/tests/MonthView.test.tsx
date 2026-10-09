@@ -42,6 +42,12 @@ describe('<MonthView />', () => {
     EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event 6').build(),
   ];
 
+  const nextDayEvents = [
+    EventBuilder.new().singleDay('2025-05-02T08:00:00Z').title('Next day 1').build(),
+    EventBuilder.new().singleDay('2025-05-02T09:00:00Z').title('Next day 2').build(),
+    EventBuilder.new().singleDay('2025-05-02T10:00:00Z').title('Next day 3').build(),
+  ];
+
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
       <EventCalendarProvider {...standaloneDefaults}>
@@ -141,7 +147,8 @@ describe('<MonthView />', () => {
           ? ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>
           : undefined,
       });
-      const moreButton = await screen.findByRole('button', { name: /more/i });
+      // The first "+N more" button is May 1st's.
+      const [moreButton] = await screen.findAllByRole('button', { name: /more/i });
       await user.click(moreButton);
       const popover = await screen.findByRole('presentation');
       return { user, setProps, popover };
@@ -156,16 +163,35 @@ describe('<MonthView />', () => {
       });
       applyChange = (events) => setProps({ events });
 
-      // Deletes through the context menu opened with Space, like a keyboard user would.
-      async function deleteEvent(title: string) {
-        within(other.popover)
-          .getByRole('button', { name: new RegExp(`^${title},`) })
-          .focus();
+      // Opens the context menu with Space, like a keyboard user would.
+      async function openMenu(title: string) {
+        await act(async () => {
+          getPopoverEvent(other.popover, title).focus();
+        });
         await other.user.keyboard(' ');
+        await screen.findByRole('menu');
+      }
+
+      async function deleteEvent(title: string) {
+        await openMenu(title);
         await other.user.click(screen.getByRole('menuitem', { name: /delete/i }));
       }
 
-      return { setProps, deleteEvent, ...other };
+      return { setProps, openMenu, deleteEvent, ...other };
+    }
+
+    function getPopoverEvent(popover: HTMLElement, title: string) {
+      return within(popover).getByRole('button', { name: new RegExp(`^${title},`) });
+    }
+
+    function getMoreButtonLabels() {
+      return screen
+        .queryAllByRole('button', { name: /more/i, hidden: true })
+        .map((button) => button.textContent);
+    }
+
+    function getMay1Cell() {
+      return screen.getAllByRole('gridcell').find((cell) => within(cell).queryByText(/may 1/i));
     }
 
     function getPopoverEventTitles(popover: HTMLElement) {
@@ -468,11 +494,96 @@ describe('<MonthView />', () => {
         expect(document.body.contains(popover)).to.equal(false);
       });
 
-      const may1Cell = screen
-        .getAllByRole('gridcell')
-        .find((cell) => within(cell).queryByText(/may 1/i));
       await waitFor(() => {
-        expect(document.activeElement).to.equal(may1Cell);
+        expect(document.activeElement).to.equal(getMay1Cell());
+      });
+    });
+
+    it('should not move focus when an event is removed while another one is focused', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      const firstEvent = getPopoverEvent(popover, 'Event 1');
+      await act(async () => {
+        firstEvent.focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).not.to.include('Event 3');
+      });
+      expect(document.activeElement).to.equal(firstEvent);
+    });
+
+    it('should ignore changes to the events of another day', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover([
+        ...manyEvents,
+        ...nextDayEvents,
+      ]);
+      const labelsBefore = getMoreButtonLabels();
+
+      setProps({ events: [...manyEvents, ...nextDayEvents.slice(1)] });
+
+      await waitFor(() => {
+        expect(getMoreButtonLabels()).not.to.deep.equal(labelsBefore);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+      expect(getPopoverEventTitles(popover)).to.deep.equal([
+        'Event 1',
+        'Event 2',
+        'Event 3',
+        'Event 4',
+        'Event 5',
+        'Event 6',
+      ]);
+    });
+
+    it('should not focus an event when the popover is reopened for another day', async () => {
+      const { user } = await renderAndOpenPopover({
+        events: [...manyEvents, ...nextDayEvents],
+      });
+      // Reopened right away, while the previous popover is still on its way out.
+      await user.keyboard('{Escape}');
+      const nextDayMoreButton = screen.getAllByRole('button', { name: /more/i })[1];
+      // Some browsers (Safari) don't focus a button on click, so focus stays on the document.
+      await act(async () => {
+        (document.activeElement as HTMLElement | null)?.blur();
+      });
+      await act(async () => {
+        nextDayMoreButton.click();
+      });
+
+      const nextDayPopover = await screen.findByRole('presentation');
+      expect(within(nextDayPopover).getAllByRole('button')).not.to.include(document.activeElement);
+    });
+
+    it('should move focus to the next event when the event of an open context menu is removed', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 3');
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 4'));
+      });
+    });
+
+    it('should focus the day cell when the popover closes under an open context menu', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 2');
+
+      setProps({ events: manyEvents.slice(0, 1) });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getMay1Cell());
       });
     });
 

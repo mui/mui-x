@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
-import getActiveElement from '@mui/utils/getActiveElement';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useEventEditingStyledContext } from '../event-editing';
-import { useEventContextMenuItems } from './EventContextMenuItems';
+import { isFocusLostWith } from '../../utils/focus-utils';
+import { getFocusFallback, useEventContextMenuItems } from './EventContextMenuItems';
 import type { EventContextMenuProps } from './EventContextMenu.types';
 
 /**
- * The menu shown on right-click of an event, or on pressing `Space` while it is focused. Thin
- * presentational wrapper around `@mui/material/Menu` — all the actual logic lives in
- * `useEventContextMenuItems`.
+ * The menu shown on right-click of an event, or on pressing `Space` while it is focused. Wraps
+ * `@mui/material/Menu`; the item logic lives in `useEventContextMenuItems`.
  */
 export function EventContextMenu(props: EventContextMenuProps) {
   const {
@@ -19,7 +19,7 @@ export function EventContextMenu(props: EventContextMenuProps) {
     anchorPosition,
     onEditingCanceled,
     stableAnchor,
-    focusFallback,
+    getFocusFallback: getCustomFocusFallback,
     onClose,
   } = props;
 
@@ -32,16 +32,21 @@ export function EventContextMenu(props: EventContextMenuProps) {
     stableAnchor,
   });
 
-  // The menu restores focus to its anchor, which is gone when the anchor unmounted.
-  const handleExited = (paper: HTMLElement) => {
-    const activeElement = getActiveElement(paper.ownerDocument);
-    const focusIsAboutToBeLost =
-      activeElement === null ||
-      activeElement === paper.ownerDocument.body ||
-      paper.contains(activeElement);
-    if (focusIsAboutToBeLost && !anchorEl.isConnected) {
-      focusFallback?.focus({ preventScroll: true });
+  // The menu restores focus to its anchor, which fails once the anchor has unmounted, so the
+  // fallback is read on open, while the anchor is attached.
+  const fallbackFocusRef = React.useRef<HTMLElement | null>(null);
+  useIsoLayoutEffect(() => {
+    if (open) {
+      fallbackFocusRef.current = getFocusFallback(anchorEl);
     }
+  }, [open, anchorEl]);
+
+  const handleExited = (paper: HTMLElement) => {
+    if (anchorEl.isConnected || !isFocusLostWith(paper)) {
+      return;
+    }
+    const target = getCustomFocusFallback ? getCustomFocusFallback() : fallbackFocusRef.current;
+    target?.focus({ preventScroll: true });
   };
 
   return (

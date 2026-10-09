@@ -143,6 +143,7 @@ describe('EventContextMenu', () => {
   it('should close the menu and keep focus in the grid when its event is removed while it is open', async () => {
     const { setProps } = renderEvent();
     const event = getEvent();
+    const column = event.parentElement!.closest('[tabindex]');
     event.focus();
 
     fireEvent.keyDown(event, { key: ' ' });
@@ -155,7 +156,20 @@ describe('EventContextMenu', () => {
       expect(screen.queryByRole('menu')).to.equal(null);
     });
     await waitFor(() => {
-      expect(document.activeElement).to.have.attribute('tabindex', '0');
+      expect(document.activeElement).to.equal(column);
+    });
+  });
+
+  it('should close the menu opened with a right-click when its event is removed', async () => {
+    const { setProps } = renderEvent();
+
+    fireEvent.contextMenu(getEvent());
+    expect(screen.getByRole('menu')).not.to.equal(null);
+
+    setProps({ events: [] });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
     });
   });
 
