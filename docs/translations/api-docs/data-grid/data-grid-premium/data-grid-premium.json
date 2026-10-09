@@ -36,7 +36,7 @@
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "cellSelection": { "description": "If <code>true</code>, the cell selection mode is enabled." },
     "cellSelectionFillHandle": {
-      "description": "If <code>true</code>, a fill handle is shown at the bottom-right corner of the cell selection. Dragging the fill handle fills target cells with the values from selected cells. Requires <code>cellSelection</code> to be enabled."
+      "description": "If <code>true</code>, a fill handle is shown at the bottom-right corner of the cell selection. Dragging the fill handle fills target cells with the values from selected cells. Pass an object to set the fill directions. Requires <code>cellSelection</code> to be enabled."
     },
     "cellSelectionModel": { "description": "Set the cell selection model of the grid." },
     "chartsIntegration": {
