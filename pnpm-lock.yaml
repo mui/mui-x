@@ -387,9 +387,6 @@ catalogs:
 overrides:
   stylis: ^4.4.0
   caniuse-lite: ^1.0.30001814
-  '@mui/internal-code-infra>@mui/internal-babel-plugin-display-name': 2.0.1-canary.1
-  '@mui/internal-code-infra>@mui/internal-babel-plugin-minify-errors': 3.0.1-canary.1
-  '@mui/internal-code-infra>@mui/internal-babel-plugin-resolve-imports': 3.0.1-canary.2
 
 importers:
 
@@ -438,8 +435,8 @@ importers:
         specifier: 1.1.1-canary.2
         version: 1.1.1-canary.2(@types/node@22.20.5)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.2.12)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0)
       '@mui/internal-code-infra':
-        specifier: https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@1bb17fc
-        version: https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@1bb17fc(@next/eslint-plugin-next@16.3.8(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0)))(@types/node@22.20.5)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(@vitest/expect@4.1.11)(eslint-import-resolver-node@0.3.9(supports-color@11.0.0))(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.28)(prettier@3.9.9)(stylelint@17.16.0(@typescript/typescript6@6.0.2)(supports-color@11.0.0))(supports-color@11.0.0)(vitest@5.0.3)
+        specifier: 0.1.1-canary.7
+        version: 0.1.1-canary.7(@next/eslint-plugin-next@16.3.8(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0)))(@types/node@22.20.5)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(@vitest/expect@4.1.11)(eslint-import-resolver-node@0.3.9(supports-color@11.0.0))(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.28)(prettier@3.9.9)(stylelint@17.16.0(@typescript/typescript6@6.0.2)(supports-color@11.0.0))(supports-color@11.0.0)(vitest@5.0.3)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
         version: 9.4.1-canary.0(04b245869f2b22f156f274ac35a84173)
@@ -4637,9 +4634,8 @@ packages:
     resolution: {integrity: sha512-FJPyn+vIH/IbdHef9qY2BCdXKHPJAsnwAV/fz9Im01o1blE7MeAVn1CsjWoAdeijylm7Zb+qKgZaJma5+24w/w==}
     hasBin: true
 
-  '@mui/internal-code-infra@https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@1bb17fc':
-    resolution: {integrity: sha512-usihwrkDRwxPzdzHAg4UChEw8ehwoC0Ifukj1zvXvD6hGrfbBEea/ZRi0hO+pa9ifgPFIcEcToeblxsMY+H33Q==, tarball: https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@1bb17fc}
-    version: 0.1.0
+  '@mui/internal-code-infra@0.1.1-canary.7':
+    resolution: {integrity: sha512-si/BzHjAyLDcoloN2Yy40UJ+dTyAarr5keOl1vADgnlv/pUoTCgNq5gR01aMPkHq6ljNfzlJbefGU08J48vdJA==}
     hasBin: true
     peerDependencies:
       '@next/eslint-plugin-next': '*'
@@ -7569,12 +7565,6 @@ packages:
     resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
     engines: {node: '>=12'}
 
-  eslint-compat-utils@0.5.1:
-    resolution: {integrity: sha512-3z3vFexKIEnjHE3zCMRo6fn/e44U7T1khUjg+Hp0ZQMCigh28rALD0nPFBcGZuiLC5rLZa2ubQHDRln09JfU2Q==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      eslint: '>=6.0.0'
-
   eslint-config-prettier@10.1.8:
     resolution: {integrity: sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==}
     hasBin: true
@@ -7647,12 +7637,6 @@ packages:
     resolution: {integrity: sha512-gqW7dnJbWMxI5H6/Pyz6Sl/vBMwOktePMI2iuuKPb4N82uvemUkfaWhsRZCKndSzpIVaCZ9wdspCVO1tm0wXJQ==}
     engines: {node: '>=0.10.0'}
 
-  eslint-plugin-es-x@7.8.0:
-    resolution: {integrity: sha512-7Ds8+wAAoV3T+LAKeu39Y5BzXCrGKrcISfgKEqTS4BDN8SFEDQd0S43jiQ8vIa3wUKD07qitZdfzlenSi8/0qQ==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    peerDependencies:
-      eslint: '>=8'
-
   eslint-plugin-import@2.32.0:
     resolution: {integrity: sha512-whOE1HFo/qJDyX4SnXzP4N6zOWn79WhnCUY/iDR0mPfQZO8wcYE4JClzI2oZrhBnnMUCBCHZhO6VQyoBU95mZA==}
     engines: {node: '>=4'}
@@ -7684,19 +7668,6 @@ packages:
     engines: {node: '>=18.0.0'}
     peerDependencies:
       eslint: '>=8.0.0'
-
-  eslint-plugin-n@18.4.1:
-    resolution: {integrity: sha512-2sBReWOvCbzgkPri9M5SFmD5EbIwZLa1xz6B5RZsrI19WSFKpyx1sOMr+pdk8puCiXuEgCbErEHy1PuaUrc/4w==}
-    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
-    peerDependencies:
-      eslint: '>=8.57.1'
-      ts-declaration-location: ^1.0.6
-      typescript: '>=5.0.0'
-    peerDependenciesMeta:
-      ts-declaration-location:
-        optional: true
-      typescript:
-        optional: true
 
   eslint-plugin-react-compiler@19.1.0-rc.2:
     resolution: {integrity: sha512-oKalwDGcD+RX9mf3NEO4zOoUMeLvjSvcbbEOpquzmzqEEM2MQdp7/FY/Hx9NzmUwFzH1W9SKTz5fihfMldpEYw==}
@@ -8173,9 +8144,6 @@ packages:
 
   globjoin@0.1.4:
     resolution: {integrity: sha512-xYfnw62CKG8nLkZBfWbhWwDw02CHty86jfPcc2cr3ZfeuK9ysoVPPEUxf21bAD/rWAgk52SuBrLJlefNy8mvFg==}
-
-  globrex@0.1.2:
-    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
 
   gm@1.25.1:
     resolution: {integrity: sha512-jgcs2vKir9hFogGhXIfs0ODhJTfIrbECCehg38tqFgHm8zqXx7kAJyCYAFK4jTjx71AxrkFtkJBawbAxYUPX9A==}
@@ -8747,10 +8715,6 @@ packages:
 
   js-yaml@4.3.0:
     resolution: {integrity: sha512-1td788aAnnZ5qs7V2QIRl1owjtYpbKt749Y3xauqQgwIIGF/xXWz1wMTEBx5O3LK3lXLVuqXPdPxj2BoFHaW9Q==}
-    hasBin: true
-
-  js-yaml@5.4.2:
-    resolution: {integrity: sha512-m+aqu+LwO1O6sIopafj8HUVl5aawITwZQe/yHpMCKjaWBaA/d07B/QdMb3529REftiU+RMMHL3Vlsw3hON7vWg==}
     hasBin: true
 
   jscodeshift@17.4.0:
@@ -13804,7 +13768,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@1bb17fc(@next/eslint-plugin-next@16.3.8(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0)))(@types/node@22.20.5)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(@vitest/expect@4.1.11)(eslint-import-resolver-node@0.3.9(supports-color@11.0.0))(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.28)(prettier@3.9.9)(stylelint@17.16.0(@typescript/typescript6@6.0.2)(supports-color@11.0.0))(supports-color@11.0.0)(vitest@5.0.3)':
+  '@mui/internal-code-infra@0.1.1-canary.7(@next/eslint-plugin-next@16.3.8(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0)))(@types/node@22.20.5)(@typescript-eslint/eslint-plugin@8.71.0(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(@typescript/typescript6@6.0.2)(@vitest/expect@4.1.11)(eslint-import-resolver-node@0.3.9(supports-color@11.0.0))(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(postcss@8.5.28)(prettier@3.9.9)(stylelint@17.16.0(@typescript/typescript6@6.0.2)(supports-color@11.0.0))(supports-color@11.0.0)(vitest@5.0.3)':
     dependencies:
       '@argos-ci/core': 6.8.6(@types/node@22.20.5)(supports-color@11.0.0)
       '@babel/cli': 8.0.6(@babel/core@8.0.6)
@@ -13853,7 +13817,6 @@ snapshots:
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(eslint-import-resolver-typescript@4.4.5)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))
       eslint-plugin-mdx: 3.8.1(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0)
-      eslint-plugin-n: 18.4.1(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))
       eslint-plugin-react: 7.37.5(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))
       eslint-plugin-react-compiler: 19.1.0-rc.2(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0)
       eslint-plugin-react-hooks: 7.1.1(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0)
@@ -13914,7 +13877,6 @@ snapshots:
       - remark-lint-file-extension
       - stylelint
       - supports-color
-      - ts-declaration-location
       - vitest
 
   '@mui/internal-core-docs@9.4.1-canary.0(04b245869f2b22f156f274ac35a84173)':
@@ -16988,11 +16950,6 @@ snapshots:
 
   escape-string-regexp@5.0.0: {}
 
-  eslint-compat-utils@0.5.1(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0)):
-    dependencies:
-      eslint: 10.12.0(jiti@2.7.0)(supports-color@11.0.0)
-      semver: 7.8.5
-
   eslint-config-prettier@10.1.8(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0)):
     dependencies:
       eslint: 10.12.0(jiti@2.7.0)(supports-color@11.0.0)
@@ -17072,13 +17029,6 @@ snapshots:
     dependencies:
       lodash: 4.18.1
       pkg-dir: 5.0.0
-
-  eslint-plugin-es-x@7.8.0(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0)):
-    dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))
-      '@eslint-community/regexpp': 4.12.2
-      eslint: 10.12.0(jiti@2.7.0)(supports-color@11.0.0)
-      eslint-compat-utils: 0.5.1(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))
 
   eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.0(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0))(eslint-import-resolver-typescript@4.4.5)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0):
     dependencies:
@@ -17168,21 +17118,6 @@ snapshots:
       - bluebird
       - remark-lint-file-extension
       - supports-color
-
-  eslint-plugin-n@18.4.1(@typescript/typescript6@6.0.2)(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0)):
-    dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))
-      enhanced-resolve: 5.23.0
-      eslint: 10.12.0(jiti@2.7.0)(supports-color@11.0.0)
-      eslint-plugin-es-x: 7.8.0(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))
-      get-tsconfig: 4.10.1
-      globals: 15.15.0
-      globrex: 0.1.2
-      ignore: 5.3.2
-      js-yaml: 5.4.2
-      semver: 7.8.5
-    optionalDependencies:
-      typescript: '@typescript/typescript6@6.0.2'
 
   eslint-plugin-react-compiler@19.1.0-rc.2(eslint@10.12.0(jiti@2.7.0)(supports-color@11.0.0))(supports-color@11.0.0):
     dependencies:
@@ -17793,8 +17728,6 @@ snapshots:
 
   globjoin@0.1.4: {}
 
-  globrex@0.1.2: {}
-
   gm@1.25.1(supports-color@11.0.0):
     dependencies:
       array-parallel: 0.1.3
@@ -18339,10 +18272,6 @@ snapshots:
   js-tokens@4.0.0: {}
 
   js-yaml@4.3.0:
-    dependencies:
-      argparse: 2.0.1
-
-  js-yaml@5.4.2:
     dependencies:
       argparse: 2.0.1
 
