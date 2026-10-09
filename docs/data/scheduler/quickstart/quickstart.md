@@ -19,21 +19,21 @@ Install the Scheduler package that best suits your needs—Community or Premium:
 
 #### Material UI
 
-The Scheduler packages have a peer dependency on `@mui/material`.
-If you're not already using it, install it now:
+The Scheduler packages have peer dependencies on `@mui/material` and `@mui/icons-material`.
+If you're not already using them, install them now:
 
 <codeblock storageKey="package-manager">
 
 ```bash npm
-npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/material @mui/icons-material @emotion/react @emotion/styled
 ```
 
 ```bash pnpm
-pnpm add @mui/material @emotion/react @emotion/styled
+pnpm add @mui/material @mui/icons-material @emotion/react @emotion/styled
 ```
 
 ```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled
 ```
 
 </codeblock>
@@ -59,7 +59,7 @@ Import the Event Calendar component that corresponds to the version you're using
 
 ```js
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { EventCalendarPremium } from '@mui/x-scheduler/event-calendar-premium';
+import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 ```
 
@@ -74,20 +74,20 @@ const events: SchedulerEvent[] = [
   {
     id: 1,
     title: 'Team Meeting',
-    start: new Date(2024, 0, 15, 10, 0),
-    end: new Date(2024, 0, 15, 11, 0),
+    start: '2024-01-15T10:00:00',
+    end: '2024-01-15T11:00:00',
   },
   {
     id: 2,
     title: 'Project Review',
-    start: new Date(2024, 0, 16, 14, 0),
-    end: new Date(2024, 0, 16, 15, 30),
+    start: '2024-01-16T14:00:00',
+    end: '2024-01-16T15:30:00',
   },
   {
     id: 3,
     title: 'Client Call',
-    start: new Date(2024, 0, 17, 9, 0),
-    end: new Date(2024, 0, 17, 10, 0),
+    start: '2024-01-17T09:00:00',
+    end: '2024-01-17T10:00:00',
   },
 ];
 ```
@@ -120,15 +120,15 @@ const events: SchedulerEvent[] = [
   {
     id: 1,
     title: 'Project Kickoff',
-    start: new Date(2024, 0, 15, 9, 0),
-    end: new Date(2024, 0, 15, 17, 0),
+    start: '2024-01-15T09:00:00',
+    end: '2024-01-15T17:00:00',
     resource: 'team-a',
   },
   {
     id: 2,
     title: 'Development Phase',
-    start: new Date(2024, 0, 16, 9, 0),
-    end: new Date(2024, 0, 19, 17, 0),
+    start: '2024-01-16T09:00:00',
+    end: '2024-01-19T17:00:00',
     resource: 'team-b',
   },
 ];
@@ -158,7 +158,7 @@ These types use module augmentation to extend the default theme structure.
 
 ```tsx
 // Premium users: add `-premium` suffix to package name
-import type {} from '@mui/x-scheduler/themeAugmentation';
+import type {} from '@mui/x-scheduler/theme-augmentation';
 
 const theme = createTheme({
   components: {
@@ -175,11 +175,9 @@ const theme = createTheme({
 
 ## API
 
-TODO: Uncomment once available
-
-<!-- - [EventCalendar](/x/api/scheduler/event-calendar/)
- - [EventCalendarPremium](/x/api/scheduler/event-calendar-premium/)
-- [EventTimelinePremium](/x/api/scheduler/event-timeline-premium/) -->
+- [EventCalendar](/x/api/scheduler/event-calendar/)
+- [EventCalendarPremium](/x/api/scheduler/event-calendar-premium/)
+- [EventTimelinePremium](/x/api/scheduler/event-timeline-premium/)
 
 ## Using this documentation
 
