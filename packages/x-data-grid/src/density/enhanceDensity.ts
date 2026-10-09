@@ -59,8 +59,13 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     { width: touchTarget, height: touchTarget },
     'toolbarQuickFilterTrigger',
   );
-  addRootOverride(components, 'MuiDataGrid', { marginInline: spacing('xSmall') }, 'toolbarDivider');
-  addRootOverride(components, 'MuiDataGrid', { marginInline: spacing('xSmall') }, 'toolbarLabel');
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { marginInline: spacing('xxSmall') },
+    'toolbarDivider',
+  );
+  addRootOverride(components, 'MuiDataGrid', { marginInline: spacing('xxSmall') }, 'toolbarLabel');
 
   // Columns management panel. The row checkbox+label is the grid's internal
   // FormControlLabel wrapper (no slot key of its own), so its gap nests here.
@@ -68,8 +73,8 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     components,
     'MuiDataGrid',
     {
-      padding: `${spacing('xSmall')} ${spacing('medium')}`,
-      [`& .${formControlLabelClasses.root}`]: { gap: spacing('xSmall') },
+      padding: `${spacing('xxSmall')} ${spacing('small')}`,
+      [`& .${formControlLabelClasses.root}`]: { gap: spacing('xxSmall') },
     },
     'columnsManagement',
   );
@@ -87,21 +92,21 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(
     components,
     'MuiDataGrid',
-    { padding: `${spacing('medium')} ${spacing('large')}`, ...searchField },
+    { padding: `${spacing('small')} ${spacing('medium')}`, ...searchField },
     'columnsManagementHeader',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
     {
-      padding: `${spacing('small')} ${spacing('small')} ${spacing('small')} ${spacing('medium')}`,
+      padding: `${spacing('xSmall')} ${spacing('xSmall')} ${spacing('xSmall')} ${spacing('small')}`,
     },
     'columnsManagementFooter',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { paddingBlock: spacing('small') },
+    { paddingBlock: spacing('xSmall') },
     'columnsManagementEmptyText',
   );
 
@@ -131,7 +136,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(
     components,
     'MuiDataGrid',
-    { gridGap: spacing('small'), ...glyph },
+    { gridGap: spacing('xSmall'), ...glyph },
     'actionsCell',
   );
   // Edit input: master pads the input 16px against the cell's 10px, so the
@@ -164,18 +169,18 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     'MuiDataGrid',
     {
       [`& .${gridClasses.panelContent}`]: {
-        padding: `${spacing('medium')} ${spacing('small')} ${spacing('large')} ${spacing('large')}`,
-        gap: spacing('medium'),
+        padding: `${spacing('large')} ${spacing('small')} ${spacing('medium')} ${spacing('xSmall')}`,
+        gap: spacing('large'),
       },
     },
     'panel',
   );
-  addRootOverride(components, 'MuiDataGrid', { padding: spacing('medium') }, 'panelFooter');
+  addRootOverride(components, 'MuiDataGrid', { padding: spacing('xSmall') }, 'panelFooter');
   addRootOverride(
     components,
     'MuiDataGrid',
     {
-      gap: spacing('medium'),
+      gap: spacing('small'),
       [`& .${gridClasses.filterFormDeleteIcon} svg`]: { fontSize: iconSize },
     },
     'filterForm',
@@ -196,11 +201,11 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     },
     'footerContainer',
   );
-  addRootOverride(components, 'MuiDataGrid', { marginInline: spacing('large') }, 'rowCount');
+  addRootOverride(components, 'MuiDataGrid', { marginInline: spacing('medium') }, 'rowCount');
   addRootOverride(
     components,
     'MuiDataGrid',
-    { marginInline: spacing('large') },
+    { marginInline: spacing('medium') },
     'selectedRowCount',
   );
   return { ...theme, components };

@@ -71,10 +71,10 @@ describe('enhanceDensity', () => {
 
   it('emits the columns management panel insets and the toolbar divider/label pulls', () => {
     const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
-    expect(styleOverrides?.toolbarDivider).toEqual([{ marginInline: '8px' }]);
-    expect(styleOverrides?.toolbarLabel).toEqual([{ marginInline: '8px' }]);
+    expect(styleOverrides?.toolbarDivider).toEqual([{ marginInline: '4px' }]);
+    expect(styleOverrides?.toolbarLabel).toEqual([{ marginInline: '4px' }]);
     expect(styleOverrides?.columnsManagement).toEqual([
-      { padding: '8px 16px', '& .MuiFormControlLabel-root': { gap: '8px' } },
+      { padding: '4px 12px', '& .MuiFormControlLabel-root': { gap: '4px' } },
     ]);
     const searchField = {
       '& svg': { fontSize: '16px' },
@@ -84,10 +84,10 @@ describe('enhanceDensity', () => {
     };
     expect(styleOverrides?.toolbarQuickFilterControl).toEqual([searchField]);
     expect(styleOverrides?.columnsManagementHeader).toEqual([
-      { padding: '16px 24px', ...searchField },
+      { padding: '12px 16px', ...searchField },
     ]);
-    expect(styleOverrides?.columnsManagementFooter).toEqual([{ padding: '12px 12px 12px 16px' }]);
-    expect(styleOverrides?.columnsManagementEmptyText).toEqual([{ paddingBlock: '12px' }]);
+    expect(styleOverrides?.columnsManagementFooter).toEqual([{ padding: '8px 8px 8px 12px' }]);
+    expect(styleOverrides?.columnsManagementEmptyText).toEqual([{ paddingBlock: '8px' }]);
   });
 
   it('emits the header insets, menu pull, and the cell glyph/inset rules', () => {
@@ -100,7 +100,7 @@ describe('enhanceDensity', () => {
     ]);
     expect(styleOverrides?.booleanCell).toEqual([{ fontSize: '16px' }]);
     expect(styleOverrides?.actionsCell).toEqual([
-      { gridGap: '12px', '& svg': { fontSize: '16px' } },
+      { gridGap: '8px', '& svg': { fontSize: '16px' } },
     ]);
     expect(styleOverrides?.editInputCell).toEqual([
       { '& input': { paddingInline: '8px' }, '& svg': { fontSize: '16px' } },
@@ -117,11 +117,11 @@ describe('enhanceDensity', () => {
   it('emits the filter panel insets', () => {
     const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
     expect(styleOverrides?.panel).toEqual([
-      { '& .MuiDataGrid-panelContent': { padding: '16px 12px 24px 24px', gap: '16px' } },
+      { '& .MuiDataGrid-panelContent': { padding: '24px 12px 16px 8px', gap: '24px' } },
     ]);
-    expect(styleOverrides?.panelFooter).toEqual([{ padding: '16px' }]);
+    expect(styleOverrides?.panelFooter).toEqual([{ padding: '8px' }]);
     expect(styleOverrides?.filterForm).toEqual([
-      { gap: '16px', '& .MuiDataGrid-filterFormDeleteIcon svg': { fontSize: '16px' } },
+      { gap: '12px', '& .MuiDataGrid-filterFormDeleteIcon svg': { fontSize: '16px' } },
     ]);
   });
 
@@ -135,8 +135,8 @@ describe('enhanceDensity', () => {
         },
       },
     ]);
-    expect(styleOverrides?.rowCount).toEqual([{ marginInline: '24px' }]);
-    expect(styleOverrides?.selectedRowCount).toEqual([{ marginInline: '24px' }]);
+    expect(styleOverrides?.rowCount).toEqual([{ marginInline: '16px' }]);
+    expect(styleOverrides?.selectedRowCount).toEqual([{ marginInline: '16px' }]);
   });
 
   it("lets the theme's own styleOverrides win", () => {

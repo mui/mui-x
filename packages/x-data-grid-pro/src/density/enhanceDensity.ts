@@ -61,13 +61,13 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(
     components,
     'MuiDataGrid',
-    { marginRight: spacing('xSmall'), marginBottom: spacing('-xxSmall') },
+    { marginRight: spacing('xxSmall'), marginBottom: spacing('-xxSmall') },
     'columnHeaderFilterInput',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { marginRight: spacing('xSmall') },
+    { marginRight: spacing('xxSmall') },
     'columnHeaderFilterOperatorLabel',
   );
 
@@ -79,7 +79,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // master) and its gap to the label.
   const toggle = {
     flexBasis: `calc(${touchTarget} - ${spacing('xxSmall')})`,
-    marginRight: spacing('large'),
+    marginRight: spacing('medium'),
   };
   addRootOverride(components, 'MuiDataGrid', toggle, 'treeDataGroupingCellToggle');
   addRootOverride(components, 'MuiDataGrid', toggle, 'groupingCriteriaCellToggle');

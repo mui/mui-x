@@ -41,12 +41,12 @@ describe('enhanceDensity (pro)', () => {
       },
     ]);
     expect(styleOverrides?.columnHeaderFilterInput).toEqual([
-      { marginRight: '8px', marginBottom: '-4px' },
+      { marginRight: '4px', marginBottom: '-4px' },
     ]);
-    expect(styleOverrides?.columnHeaderFilterOperatorLabel).toEqual([{ marginRight: '8px' }]);
+    expect(styleOverrides?.columnHeaderFilterOperatorLabel).toEqual([{ marginRight: '4px' }]);
     expect(styleOverrides?.rowReorderCellContainer).toEqual([{ paddingInline: 0 }]);
     expect(styleOverrides?.treeDataGroupingCellToggle).toEqual([
-      { flexBasis: 'calc(32px - 4px)', marginRight: '24px' },
+      { flexBasis: 'calc(32px - 4px)', marginRight: '16px' },
     ]);
     expect(styleOverrides?.groupingCriteriaCellToggle).toEqual(
       styleOverrides?.treeDataGroupingCellToggle,

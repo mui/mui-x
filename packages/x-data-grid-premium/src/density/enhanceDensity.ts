@@ -22,7 +22,6 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // The same bar the toolbar and footer ride; the row-high controls; the
   // glyph rule for the panels' `fontSize="small"` icons.
   const bar = `calc(${touchTarget} + ${spacing('medium')})`;
-  const rowBox = `calc(${touchTarget} + 2 * ${spacing('xxSmall')})`;
   const glyph = { '& svg': { fontSize: iconSize } };
   // Search fields: clear button pull restated above the grid's internal
   // adornment rule (same as the community columns panel).
@@ -38,8 +37,8 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     'MuiDataGrid',
     {
       height: bar,
-      gap: spacing('small'),
-      padding: `0 ${spacing('xSmall')} 0 ${spacing('small')}`,
+      gap: spacing('xSmall'),
+      padding: `0 ${spacing('xSmall')}`,
       ...glyph,
     },
     'pivotPanelHeader',
@@ -47,31 +46,31 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(
     components,
     'MuiDataGrid',
-    { padding: `0 ${spacing('small')} ${spacing('small')}`, ...searchField },
+    { padding: `0 ${spacing('xSmall')} ${spacing('xSmall')}`, ...searchField },
     'pivotPanelSearchContainer',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { margin: `${spacing('xSmall')} ${spacing('small')}` },
+    { margin: `${spacing('xxSmall')} ${spacing('xSmall')}` },
     'pivotPanelSection',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { marginRight: spacing('medium'), gap: spacing('small') },
+    { marginRight: spacing('small'), gap: spacing('xSmall') },
     'pivotPanelSectionTitle',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { paddingBlock: spacing('xSmall') },
+    { paddingBlock: spacing('xxSmall') },
     'pivotPanelFieldList',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { minHeight: `calc(${touchTarget} + ${spacing('xxSmall')})`, paddingInline: spacing('small') },
+    { minHeight: touchTarget, paddingInline: spacing('xSmall') },
     'pivotPanelPlaceholder',
   );
   // Field row: the interactive box high; `marginInlineStart` pulls the row off
@@ -81,8 +80,8 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     'MuiDataGrid',
     {
       height: touchTarget,
-      padding: `0 ${spacing('small')} 0 ${spacing('large')}`,
-      gap: spacing('xSmall'),
+      padding: `0 ${spacing('xSmall')} 0 ${spacing('medium')}`,
+      gap: spacing('xxSmall'),
       marginInlineStart: spacing('xSmall'),
       ...glyph,
     },
@@ -92,7 +91,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(
     components,
     'MuiDataGrid',
-    { marginLeft: spacing('-small') },
+    { marginLeft: spacing('-xSmall') },
     'pivotPanelFieldCheckbox',
   );
 
@@ -100,7 +99,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(
     components,
     'MuiDataGrid',
-    { height: bar, padding: `0 ${spacing('xSmall')} 0 ${spacing('large')}`, ...glyph },
+    { height: bar, padding: `0 ${spacing('xSmall')} 0 ${spacing('medium')}`, ...glyph },
     'aiAssistantPanelHeader',
   );
   addRootOverride(
@@ -118,7 +117,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(
     components,
     'MuiDataGrid',
-    { gap: spacing('small'), padding: spacing('small') },
+    { gap: spacing('xSmall'), padding: spacing('xSmall') },
     'aiAssistantPanelFooter',
   );
   addRootOverride(
@@ -130,20 +129,20 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   addRootOverride(
     components,
     'MuiDataGrid',
-    { gap: spacing('xSmall'), padding: spacing('small'), margin: spacing('-small') },
+    { gap: spacing('xSmall'), padding: spacing('xSmall'), margin: spacing('-xSmall') },
     'aiAssistantPanelSuggestionsList',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { gap: spacing('small'), paddingLeft: spacing('xSmall') },
+    { gap: spacing('xSmall'), paddingLeft: spacing('xxSmall') },
     'aiAssistantPanelSuggestionsLabel',
   );
   // Prompt entries in the conversation.
   addRootOverride(
     components,
     'MuiDataGrid',
-    { padding: `${spacing('small')} ${spacing('small')}`, ...glyph },
+    { padding: `${spacing('xSmall')} ${spacing('small')}`, ...glyph },
     'prompt',
   );
   addRootOverride(
@@ -152,29 +151,30 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     {
       width: `calc(${touchTarget} + ${spacing('xxSmall')})`,
       height: `calc(${touchTarget} + ${spacing('xxSmall')})`,
-      marginRight: spacing('medium'),
+      marginRight: spacing('small'),
     },
     'promptIconContainer',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { gap: spacing('xSmall'), marginTop: spacing('small') },
+    { gap: spacing('xxSmall'), marginTop: spacing('xSmall') },
     'promptChangeList',
   );
   addRootOverride(components, 'MuiDataGrid', { gap: spacing('xxSmall') }, 'promptChangesToggle');
 
-  // Collapsible sections (sidebar) and the formula bar: row-high.
+  // Actionable rows (collapsible trigger, formula bar): the interactive box
+  // high, inline inset only.
   addRootOverride(
     components,
     'MuiDataGrid',
-    { height: rowBox, paddingInline: spacing('medium') },
+    { height: touchTarget, paddingInline: spacing('small') },
     'collapsibleTrigger',
   );
   addRootOverride(
     components,
     'MuiDataGrid',
-    { minHeight: rowBox, paddingInline: spacing('xSmall'), gap: spacing('small') },
+    { minHeight: touchTarget, paddingInline: spacing('xSmall'), gap: spacing('xSmall') },
     'formulaBar',
   );
   addRootOverride(
