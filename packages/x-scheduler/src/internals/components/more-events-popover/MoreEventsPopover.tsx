@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled } from '@mui/material/styles';
-import getActiveElement from '@mui/utils/getActiveElement';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -19,7 +18,7 @@ import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
 import { EventContextMenuTrigger } from '../event-context-menu';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
-import { isFocusLostWith } from '../../utils/focus-utils';
+import { isFocusLostWith, isFocusOnDocument } from '../../utils/focus-utils';
 
 const MoreEventsPopoverHeader = styled('div', {
   name: 'MuiEventCalendar',
@@ -110,8 +109,8 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     }
   }, [open, anchor]);
 
-  // Where focus goes once an item unmounted: the item taking its place while the popover is open,
-  // else the "+N more" button, else the cell.
+  // Where focus goes when it would be lost: the item that took the place of a removed one while
+  // the popover is open, else the "+N more" button, else the cell.
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const removedIndexRef = React.useRef<number | null>(null);
   const getFocusFallback = useStableCallback((): HTMLElement | null => {
@@ -123,14 +122,15 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     return anchor?.isConnected ? anchor : fallbackFocusRef.current;
   });
 
-  // Removing an event unmounts its item, so move focus to the one taking its place. When focus is
-  // in the item's context menu, the menu does it once it closes (`getFocusFallback`).
-  const previousRef = React.useRef({ open, dayKey: day.key, occurrences });
+  // Removing an event unmounts its item, so remember where it was for `getFocusFallback`. Focus that
+  // was on the item moves to the one taking its place right away; focus in the item's context menu
+  // moves there once the menu closes.
+  const previousRef = React.useRef({ open, occurrences });
   useIsoLayoutEffect(() => {
     const previous = previousRef.current;
-    previousRef.current = { open, dayKey: day.key, occurrences };
+    previousRef.current = { open, occurrences };
     // Only an update of the list on screen removes items, not a reopen.
-    if (!open || !previous.open || previous.dayKey !== day.key) {
+    if (!open || !previous.open) {
       removedIndexRef.current = null;
       return;
     }
@@ -143,17 +143,10 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       return;
     }
     removedIndexRef.current = removedIndex;
-    // Focus left on the paper (or the document) went away with the item.
-    const paper = body.parentElement;
-    const activeElement = getActiveElement(body.ownerDocument);
-    const focusIsLost =
-      activeElement === null ||
-      activeElement === body.ownerDocument.body ||
-      (paper !== null && paper.contains(activeElement) && !body.contains(activeElement));
-    if (focusIsLost) {
-      getFocusFallback()?.focus();
+    if (isFocusOnDocument(body.ownerDocument)) {
+      getFocusFallback()?.focus({ preventScroll: true });
     }
-  }, [open, day.key, occurrences, getFocusFallback]);
+  }, [open, occurrences, getFocusFallback]);
 
   const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
     if (isFocusLostWith(paper)) {

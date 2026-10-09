@@ -1,10 +1,9 @@
 'use client';
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
-import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useEventEditingStyledContext } from '../event-editing';
 import { isFocusLostWith } from '../../utils/focus-utils';
-import { getFocusFallback, useEventContextMenuItems } from './EventContextMenuItems';
+import { useEventContextMenuItems } from './EventContextMenuItems';
 import type { EventContextMenuProps } from './EventContextMenu.types';
 
 /**
@@ -19,7 +18,7 @@ export function EventContextMenu(props: EventContextMenuProps) {
     anchorPosition,
     onEditingCanceled,
     stableAnchor,
-    getFocusFallback: getCustomFocusFallback,
+    getFocusFallback,
     onClose,
   } = props;
 
@@ -32,21 +31,12 @@ export function EventContextMenu(props: EventContextMenuProps) {
     stableAnchor,
   });
 
-  // The menu restores focus to its anchor, which fails once the anchor has unmounted, so the
-  // fallback is read on open, while the anchor is attached.
-  const fallbackFocusRef = React.useRef<HTMLElement | null>(null);
-  useIsoLayoutEffect(() => {
-    if (open) {
-      fallbackFocusRef.current = getFocusFallback(anchorEl);
-    }
-  }, [open, anchorEl]);
-
+  // The menu restores focus to its anchor, which fails once the anchor has unmounted.
   const handleExited = (paper: HTMLElement) => {
     if (anchorEl.isConnected || !isFocusLostWith(paper)) {
       return;
     }
-    const target = getCustomFocusFallback ? getCustomFocusFallback() : fallbackFocusRef.current;
-    target?.focus({ preventScroll: true });
+    getFocusFallback?.()?.focus({ preventScroll: true });
   };
 
   return (

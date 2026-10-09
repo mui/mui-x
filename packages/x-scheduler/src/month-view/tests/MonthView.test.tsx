@@ -499,6 +499,36 @@ describe('<MonthView />', () => {
       });
     });
 
+    it('should move focus to the next event when the focused event is removed', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      await act(async () => {
+        getPopoverEvent(popover, 'Event 3').focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 4'));
+      });
+    });
+
+    it('should not move focus when an event is removed while the popover itself is focused', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      const paper = popover.querySelector(
+        `.${eventCalendarClasses.moreEventsPopoverBody}`,
+      )!.parentElement!;
+      await act(async () => {
+        paper.focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).not.to.include('Event 3');
+      });
+      expect(document.activeElement).to.equal(paper);
+    });
+
     it('should not move focus when an event is removed while another one is focused', async () => {
       const { popover, setProps } = await renderAndOpenStatefulPopover();
       const firstEvent = getPopoverEvent(popover, 'Event 1');
@@ -521,7 +551,8 @@ describe('<MonthView />', () => {
       ]);
       const labelsBefore = getMoreButtonLabels();
 
-      setProps({ events: [...manyEvents, ...nextDayEvents.slice(1)] });
+      // One event left, so the next day's "+N more" button unmounts.
+      setProps({ events: [...manyEvents, ...nextDayEvents.slice(2)] });
 
       await waitFor(() => {
         expect(getMoreButtonLabels()).not.to.deep.equal(labelsBefore);
@@ -553,6 +584,9 @@ describe('<MonthView />', () => {
       });
 
       const nextDayPopover = await screen.findByRole('presentation');
+      await waitFor(() => {
+        expect(nextDayPopover.contains(document.activeElement)).to.equal(true);
+      });
       expect(within(nextDayPopover).getAllByRole('button')).not.to.include(document.activeElement);
     });
 

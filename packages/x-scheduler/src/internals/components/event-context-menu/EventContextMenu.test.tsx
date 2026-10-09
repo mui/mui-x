@@ -160,16 +160,22 @@ describe('EventContextMenu', () => {
     });
   });
 
-  it('should close the menu opened with a right-click when its event is removed', async () => {
+  it('should close the menu opened with a right-click and keep focus in the grid when its event is removed', async () => {
     const { setProps } = renderEvent();
+    const event = getEvent();
+    const column = event.parentElement!.closest('[tabindex]');
+    event.focus();
 
-    fireEvent.contextMenu(getEvent());
+    fireEvent.contextMenu(event);
     expect(screen.getByRole('menu')).not.to.equal(null);
 
     setProps({ events: [] });
 
     await waitFor(() => {
       expect(screen.queryByRole('menu')).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(column);
     });
   });
 
