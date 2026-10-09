@@ -2,6 +2,7 @@ import type { Theme } from '@mui/material/styles';
 import { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import { iconButtonClasses } from '@mui/material/IconButton';
 import { inputAdornmentClasses } from '@mui/material/InputAdornment';
+import { tablePaginationClasses } from '@mui/material/TablePagination';
 import { addDefaultProps, addRootOverride } from '@mui/x-internals/densityTheme';
 import { gridClasses } from '../constants/gridClasses';
 import { getDensityScale, getDensitySizing, gridDensityHeight } from './densityScale';
@@ -28,6 +29,10 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const { spacing } = theme;
   const { touchTarget, iconSize } = getDensitySizing(theme);
   addRootOverride(components, 'MuiDataGrid', { paddingInline: spacing('xSmall') }, 'cell');
+  // Master zeroes the checkbox column's inset after the shared cell/header
+  // rule; the emissions above land later still, so the zero is restated.
+  addRootOverride(components, 'MuiDataGrid', { paddingInline: 0 }, 'cellCheckbox');
+  addRootOverride(components, 'MuiDataGrid', { paddingInline: 0 }, 'columnHeaderCheckbox');
   // Same bar as material's regular Toolbar: the interactive box plus one xSmall
   // above and below, with the padding carrying that inset. The grid renders its
   // icons with `fontSize="small"`, which material's enhancer maps to the small
@@ -174,6 +179,29 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
       [`& .${gridClasses.filterFormDeleteIcon} svg`]: { fontSize: iconSize },
     },
     'filterForm',
+  );
+
+  // Footer: the same bar material gives TablePagination (`touchTarget + medium`).
+  // The pagination's own toolbar is held 1px under the footer (the footer's
+  // top border) by an internal grid rule, restated here at higher specificity.
+  const footerBar = `calc(${touchTarget} + ${spacing('medium')})`;
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    {
+      minHeight: footerBar,
+      [`& .${tablePaginationClasses.root} .${tablePaginationClasses.toolbar}`]: {
+        minHeight: `calc(${footerBar} - 1px)`,
+      },
+    },
+    'footerContainer',
+  );
+  addRootOverride(components, 'MuiDataGrid', { marginInline: spacing('large') }, 'rowCount');
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { marginInline: spacing('large') },
+    'selectedRowCount',
   );
   return { ...theme, components };
 }

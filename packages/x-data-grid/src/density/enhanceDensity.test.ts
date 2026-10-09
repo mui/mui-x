@@ -23,6 +23,12 @@ describe('enhanceDensity', () => {
   it('emits the cell inline inset as the xSmall step, var ref on a vars theme', () => {
     const plain = enhanceDensity(enhancedTheme());
     expect(plain.components.MuiDataGrid?.styleOverrides?.cell).toEqual([{ paddingInline: '8px' }]);
+    expect(plain.components.MuiDataGrid?.styleOverrides?.cellCheckbox).toEqual([
+      { paddingInline: 0 },
+    ]);
+    expect(plain.components.MuiDataGrid?.styleOverrides?.columnHeaderCheckbox).toEqual([
+      { paddingInline: 0 },
+    ]);
 
     const vars = enhanceDensity(enhancedTheme({}, { cssVariables: true }));
     expect(vars.components.MuiDataGrid?.styleOverrides?.cell).toEqual([
@@ -117,6 +123,20 @@ describe('enhanceDensity', () => {
     expect(styleOverrides?.filterForm).toEqual([
       { gap: '16px', '& .MuiDataGrid-filterFormDeleteIcon svg': { fontSize: '16px' } },
     ]);
+  });
+
+  it('emits the footer bar paired with the pagination toolbar', () => {
+    const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
+    expect(styleOverrides?.footerContainer).toEqual([
+      {
+        minHeight: 'calc(32px + 16px)',
+        '& .MuiTablePagination-root .MuiTablePagination-toolbar': {
+          minHeight: 'calc(calc(32px + 16px) - 1px)',
+        },
+      },
+    ]);
+    expect(styleOverrides?.rowCount).toEqual([{ marginInline: '24px' }]);
+    expect(styleOverrides?.selectedRowCount).toEqual([{ marginInline: '24px' }]);
   });
 
   it("lets the theme's own styleOverrides win", () => {
