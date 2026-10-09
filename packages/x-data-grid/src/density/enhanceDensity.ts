@@ -151,5 +151,29 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   );
   addRootOverride(components, 'MuiDataGrid', popupInset, 'editLongTextCellPopperContent');
   addRootOverride(components, 'MuiDataGrid', popupInset, 'longTextCellPopperContent');
+
+  // Filter panel. `panelContent` resolves on both the filter content wrapper
+  // and the panel shell's inner slot, so the content inset nests under `panel`.
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    {
+      [`& .${gridClasses.panelContent}`]: {
+        padding: `${spacing('medium')} ${spacing('small')} ${spacing('large')} ${spacing('large')}`,
+        gap: spacing('medium'),
+      },
+    },
+    'panel',
+  );
+  addRootOverride(components, 'MuiDataGrid', { padding: spacing('medium') }, 'panelFooter');
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    {
+      gap: spacing('medium'),
+      [`& .${gridClasses.filterFormDeleteIcon} svg`]: { fontSize: iconSize },
+    },
+    'filterForm',
+  );
   return { ...theme, components };
 }

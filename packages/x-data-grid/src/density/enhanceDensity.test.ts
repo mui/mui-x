@@ -108,6 +108,17 @@ describe('enhanceDensity', () => {
     expect(styleOverrides?.longTextCellPopperContent).toEqual([popupInset]);
   });
 
+  it('emits the filter panel insets', () => {
+    const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
+    expect(styleOverrides?.panel).toEqual([
+      { '& .MuiDataGrid-panelContent': { padding: '16px 12px 24px 24px', gap: '16px' } },
+    ]);
+    expect(styleOverrides?.panelFooter).toEqual([{ padding: '16px' }]);
+    expect(styleOverrides?.filterForm).toEqual([
+      { gap: '16px', '& .MuiDataGrid-filterFormDeleteIcon svg': { fontSize: '16px' } },
+    ]);
+  });
+
   it("lets the theme's own styleOverrides win", () => {
     const theme = enhanceDensity(
       enhancedTheme({ MuiDataGrid: { styleOverrides: { cell: { paddingInline: 4 } } } }),
