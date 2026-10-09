@@ -38,6 +38,9 @@
     "@mui/internal-test-utils": "catalog:",
     "rimraf": "catalog:"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "exports": {
     ".": "./src/index.ts"
   }
