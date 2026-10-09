@@ -12,7 +12,7 @@ import {
   SchedulerStoreRunner,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
-import { act, fireEvent, screen, within, waitFor } from '@mui/internal-test-utils';
+import { act, screen, within, waitFor } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { vi, describe, it, expect } from 'vitest';
@@ -155,20 +155,23 @@ describe('<MonthView />', () => {
         onEventsChange: (events) => applyChange(events),
       });
       applyChange = (events) => setProps({ events });
-      return { setProps, ...other };
+
+      // Deletes through the context menu opened with Space, like a keyboard user would.
+      async function deleteEvent(title: string) {
+        within(other.popover)
+          .getByRole('button', { name: new RegExp(`^${title},`) })
+          .focus();
+        await other.user.keyboard(' ');
+        await other.user.click(screen.getByRole('menuitem', { name: /delete/i }));
+      }
+
+      return { setProps, deleteEvent, ...other };
     }
 
     function getPopoverEventTitles(popover: HTMLElement) {
       return within(popover)
         .getAllByRole('button')
         .map((button) => button.getAttribute('aria-label')!.split(',')[0]);
-    }
-
-    function deleteFromPopover(popover: HTMLElement, title: string) {
-      fireEvent.contextMenu(
-        within(popover).getByRole('button', { name: new RegExp(`^${title},`) }),
-      );
-      fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
     }
 
     it('should have tabindex and role="button" on events in the popover', async () => {
@@ -411,9 +414,9 @@ describe('<MonthView />', () => {
     });
 
     it('should stop listing an event once it is deleted from the popover', async () => {
-      const { popover } = await renderAndOpenStatefulPopover();
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
 
-      deleteFromPopover(popover, 'Event 3');
+      await deleteEvent('Event 3');
 
       await waitFor(() => {
         expect(getPopoverEventTitles(popover)).to.deep.equal([
@@ -428,9 +431,9 @@ describe('<MonthView />', () => {
     });
 
     it('should move focus to the next event after deleting one from the popover', async () => {
-      const { popover } = await renderAndOpenStatefulPopover();
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
 
-      deleteFromPopover(popover, 'Event 3');
+      await deleteEvent('Event 3');
 
       await waitFor(() => {
         expect(document.activeElement).to.equal(
@@ -440,9 +443,9 @@ describe('<MonthView />', () => {
     });
 
     it('should move focus to the previous event after deleting the last one from the popover', async () => {
-      const { popover } = await renderAndOpenStatefulPopover();
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
 
-      deleteFromPopover(popover, 'Event 6');
+      await deleteEvent('Event 6');
 
       await waitFor(() => {
         expect(document.activeElement).to.equal(
@@ -452,13 +455,15 @@ describe('<MonthView />', () => {
     });
 
     it('should close the popover and focus the day cell once every event fits in it', async () => {
-      const { popover } = await renderAndOpenStatefulPopover(manyEvents.slice(0, 3));
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
 
-      deleteFromPopover(popover, 'Event 3');
+      // How many events fit in a cell depends on its measured height, which differs between
+      // jsdom and the browser. `hidden` because the open popover hides the page from queries.
+      while (screen.queryByRole('button', { name: /more/i, hidden: true })) {
+        // eslint-disable-next-line no-await-in-loop
+        await deleteEvent(getPopoverEventTitles(popover).at(-1)!);
+      }
 
-      await waitFor(() => {
-        expect(screen.queryByRole('button', { name: /more/i })).to.equal(null);
-      });
       await waitFor(() => {
         expect(document.body.contains(popover)).to.equal(false);
       });

@@ -211,7 +211,7 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
     setState((prev) => (prev.open ? { ...prev, open: false } : prev));
   });
 
-  // The trigger pushes the fresh occurrences of its day, so the list never goes stale.
+  // The day's occurrences are laid out by the view, not stored, so the trigger pushes them.
   const updatePopover = useStableCallback((data: MoreEventsData) => {
     setState((prev) =>
       prev.open && prev.data?.day.key === data.day.key && prev.data.occurrences !== data.occurrences
