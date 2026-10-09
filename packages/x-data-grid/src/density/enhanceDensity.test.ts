@@ -84,6 +84,30 @@ describe('enhanceDensity', () => {
     expect(styleOverrides?.columnsManagementEmptyText).toEqual([{ paddingBlock: '12px' }]);
   });
 
+  it('emits the header insets, menu pull, and the cell glyph/inset rules', () => {
+    const { styleOverrides } = enhanceDensity(enhancedTheme()).components.MuiDataGrid!;
+    expect(styleOverrides?.columnHeader).toEqual([{ paddingInline: '8px' }]);
+    expect(styleOverrides?.columnHeaderTitleContainer).toEqual([{ gap: '4px' }]);
+    expect(styleOverrides?.menuIcon).toEqual([{ marginRight: 'calc((32px - 4px - 16px) / -2)' }]);
+    expect(styleOverrides?.['columnHeader--alignRight']).toEqual([
+      { '& .MuiDataGrid-menuIcon': { marginLeft: 'calc((32px - 4px - 16px) / -2)' } },
+    ]);
+    expect(styleOverrides?.booleanCell).toEqual([{ fontSize: '16px' }]);
+    expect(styleOverrides?.actionsCell).toEqual([
+      { gridGap: '12px', '& svg': { fontSize: '16px' } },
+    ]);
+    expect(styleOverrides?.editInputCell).toEqual([
+      { '& input': { paddingInline: '8px' }, '& svg': { fontSize: '16px' } },
+    ]);
+    const popupInset = {
+      paddingInline: 'calc(8px - 1px)',
+      paddingBlock: 'calc((32px + 2 * 4px - 1px - 1lh) / 2)',
+    };
+    expect(styleOverrides?.editLongTextCellValue).toEqual([{ paddingInline: '8px' }]);
+    expect(styleOverrides?.editLongTextCellPopperContent).toEqual([popupInset]);
+    expect(styleOverrides?.longTextCellPopperContent).toEqual([popupInset]);
+  });
+
   it("lets the theme's own styleOverrides win", () => {
     const theme = enhanceDensity(
       enhancedTheme({ MuiDataGrid: { styleOverrides: { cell: { paddingInline: 4 } } } }),

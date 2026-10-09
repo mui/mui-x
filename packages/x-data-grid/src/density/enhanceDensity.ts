@@ -3,6 +3,7 @@ import { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import { iconButtonClasses } from '@mui/material/IconButton';
 import { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import { addDefaultProps, addRootOverride } from '@mui/x-internals/densityTheme';
+import { gridClasses } from '../constants/gridClasses';
 import { getDensityScale, getDensitySizing, gridDensityHeight } from './densityScale';
 
 /** A theme whose `components` object the enhancer chain owns and can write into. */
@@ -98,5 +99,57 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     { paddingBlock: spacing('small') },
     'columnsManagementEmptyText',
   );
+
+  // Headers: the same inline inset as cells, title↔icon gap, and the menu
+  // button pull (master -5 cancelled the small button's padding so the glyph
+  // sits at the header edge; the small box is `touchTarget - xxSmall` now).
+  const menuPull = `calc((${touchTarget} - ${spacing('xxSmall')} - ${iconSize}) / -2)`;
+  addRootOverride(components, 'MuiDataGrid', { paddingInline: spacing('xSmall') }, 'columnHeader');
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { gap: spacing('xxSmall') },
+    'columnHeaderTitleContainer',
+  );
+  addRootOverride(components, 'MuiDataGrid', { marginRight: menuPull }, 'menuIcon');
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { [`& .${gridClasses.menuIcon}`]: { marginLeft: menuPull } },
+    'columnHeader--alignRight',
+  );
+
+  // Cells with icons or inner controls.
+  const glyph = { '& svg': { fontSize: iconSize } };
+  // The boolean cell class is on the icon itself.
+  addRootOverride(components, 'MuiDataGrid', { fontSize: iconSize }, 'booleanCell');
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { gridGap: spacing('small'), ...glyph },
+    'actionsCell',
+  );
+  // Edit input: master pads the input 16px against the cell's 10px, so the
+  // value jumps on edit entry; both ride the cell inset here.
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { '& input': { paddingInline: spacing('xSmall') }, ...glyph },
+    'editInputCell',
+  );
+  // Long-text popups: inline inset = cell inset minus the 1px border; block
+  // inset centres the first line on the row the way master's 15.5px did.
+  const popupInset = {
+    paddingInline: `calc(${spacing('xSmall')} - 1px)`,
+    paddingBlock: `calc((${touchTarget} + 2 * ${spacing('xxSmall')} - 1px - 1lh) / 2)`,
+  };
+  addRootOverride(
+    components,
+    'MuiDataGrid',
+    { paddingInline: spacing('xSmall') },
+    'editLongTextCellValue',
+  );
+  addRootOverride(components, 'MuiDataGrid', popupInset, 'editLongTextCellPopperContent');
+  addRootOverride(components, 'MuiDataGrid', popupInset, 'longTextCellPopperContent');
   return { ...theme, components };
 }
