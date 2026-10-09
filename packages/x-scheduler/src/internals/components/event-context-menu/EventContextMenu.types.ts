@@ -13,6 +13,8 @@ export interface OpenEventContextMenuOptions {
   onEditingCanceled?: () => void;
   /** Forwarded to `startEditing` when Edit is chosen — see `EventEditingTriggerProps`. */
   stableAnchor?: HTMLElement | null;
+  /** See `EventContextMenuTriggerProps`. */
+  getFocusFallback?: () => HTMLElement | null;
 }
 
 export interface EventContextMenuContextValue {
@@ -25,6 +27,8 @@ export interface EventContextMenuContextValue {
     anchorEl: HTMLElement,
     options?: OpenEventContextMenuOptions,
   ) => void;
+  /** Closes the menu if it was opened from `anchorEl`, which is about to unmount. */
+  closeMenuForAnchor: (anchorEl: HTMLElement) => void;
 }
 
 export interface EventContextMenuProviderProps {
@@ -47,6 +51,11 @@ export interface EventContextMenuTriggerProps {
    * it defaults to the trigger element itself. See `EventEditingTriggerProps`.
    */
   stableAnchor?: HTMLElement | null;
+  /**
+   * Element to focus if the menu closes after the trigger has unmounted. Defaults to the trigger's
+   * nearest focusable ancestor.
+   */
+  getFocusFallback?: () => HTMLElement | null;
 }
 
 export interface EventContextMenuProps {
@@ -56,5 +65,6 @@ export interface EventContextMenuProps {
   anchorPosition: EventContextMenuAnchorPosition | null;
   onEditingCanceled?: () => void;
   stableAnchor?: HTMLElement | null;
+  getFocusFallback?: () => HTMLElement | null;
   onClose: () => void;
 }

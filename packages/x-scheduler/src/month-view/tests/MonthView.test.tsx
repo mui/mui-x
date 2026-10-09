@@ -13,6 +13,7 @@ import {
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { vi, describe, it, expect } from 'vitest';
@@ -40,6 +41,13 @@ describe('<MonthView />', () => {
     EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event 4').build(),
     EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event 5').build(),
     EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event 6').build(),
+  ];
+
+  const nextDayEvents = [
+    EventBuilder.new().singleDay('2025-05-02T08:00:00Z').title('Next day 1').build(),
+    EventBuilder.new().singleDay('2025-05-02T09:00:00Z').title('Next day 2').build(),
+    EventBuilder.new().singleDay('2025-05-02T10:00:00Z').title('Next day 3').build(),
+    EventBuilder.new().singleDay('2025-05-02T11:00:00Z').title('Next day 4').build(),
   ];
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
@@ -141,10 +149,56 @@ describe('<MonthView />', () => {
           ? ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>
           : undefined,
       });
-      const moreButton = await screen.findByRole('button', { name: /more/i });
+      // The first "+N more" button is May 1st's.
+      const [moreButton] = await screen.findAllByRole('button', { name: /more/i });
       await user.click(moreButton);
       const popover = await screen.findByRole('presentation');
       return { user, setProps, popover };
+    }
+
+    // Feeds `onEventsChange` back into `events`, so a delete actually removes the event.
+    async function renderAndOpenStatefulPopover(initialEvents = manyEvents) {
+      let applyChange: (events: object[]) => void = () => {};
+      const { setProps, ...other } = await renderAndOpenPopover({
+        events: initialEvents,
+        onEventsChange: (events) => applyChange(events),
+      });
+      applyChange = (events) => setProps({ events });
+
+      async function openMenu(title: string) {
+        await act(async () => {
+          getPopoverEvent(other.popover, title).focus();
+        });
+        await other.user.keyboard(' ');
+        await screen.findByRole('menu');
+      }
+
+      async function deleteEvent(title: string) {
+        await openMenu(title);
+        await other.user.click(screen.getByRole('menuitem', { name: /delete/i }));
+      }
+
+      return { setProps, openMenu, deleteEvent, ...other };
+    }
+
+    function getPopoverEvent(popover: HTMLElement, title: string) {
+      return within(popover).getByRole('button', { name: new RegExp(`^${title},`) });
+    }
+
+    function getMoreButtonLabels() {
+      return screen
+        .queryAllByRole('button', { name: /more/i, hidden: true })
+        .map((button) => button.textContent);
+    }
+
+    function getMay1Cell() {
+      return screen.getAllByRole('gridcell').find((cell) => within(cell).queryByText(/may 1/i));
+    }
+
+    function getPopoverEventTitles(popover: HTMLElement) {
+      return within(popover)
+        .getAllByRole('button')
+        .map((button) => button.getAttribute('aria-label')!.split(',')[0]);
     }
 
     it('should have tabindex and role="button" on events in the popover', async () => {
@@ -384,6 +438,340 @@ describe('<MonthView />', () => {
         expect(document.body.contains(popover)).to.equal(false);
       });
       expect(document.activeElement).to.equal(movedTo);
+    });
+
+    it('should stop listing an event once it is deleted from the popover', async () => {
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+
+      await deleteEvent('Event 3');
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).to.deep.equal([
+          'Event 1',
+          'Event 2',
+          'Event 4',
+          'Event 5',
+          'Event 6',
+        ]);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+    });
+
+    it('should move focus to the next event after deleting one from the popover', async () => {
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+
+      await deleteEvent('Event 3');
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(
+          within(popover).getByRole('button', { name: /^Event 4,/ }),
+        );
+      });
+    });
+
+    it('should move focus to the previous event after deleting the last one from the popover', async () => {
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+
+      await deleteEvent('Event 6');
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(
+          within(popover).getByRole('button', { name: /^Event 5,/ }),
+        );
+      });
+    });
+
+    it('should close the popover and focus the day cell once every event fits in it', async () => {
+      const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+
+      // How many events fit in a cell depends on its measured height, which differs between
+      // jsdom and the browser. `hidden` because the open popover hides the page from queries.
+      while (screen.queryByRole('button', { name: /more/i, hidden: true })) {
+        // eslint-disable-next-line no-await-in-loop
+        await deleteEvent(getPopoverEventTitles(popover).at(-1)!);
+      }
+
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getMay1Cell());
+      });
+    });
+
+    it('should move focus to the next event when the focused event is removed', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      await act(async () => {
+        getPopoverEvent(popover, 'Event 3').focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 4'));
+      });
+    });
+
+    it('should not move focus when an event is removed while the popover itself is focused', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      const paper = popover.querySelector(
+        `.${eventCalendarClasses.moreEventsPopoverBody}`,
+      )!.parentElement!;
+      await act(async () => {
+        paper.focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).not.to.include('Event 3');
+      });
+      expect(document.activeElement).to.equal(paper);
+    });
+
+    // jsdom doesn't lay out the page, so every position is the same.
+    it.skipIf(isJSDOM)(
+      'should keep the popover in place while it closes once every event fits in the cell',
+      async () => {
+        const { popover, deleteEvent } = await renderAndOpenStatefulPopover();
+        const paper = popover.querySelector(
+          `.${eventCalendarClasses.moreEventsPopoverBody}`,
+        )!.parentElement!;
+        const getPosition = () => `${paper.style.top} ${paper.style.left}`;
+        // The popover moves while the list shrinks, so only the closing delete is checked.
+        let positionBeforeDelete = getPosition();
+        let positions: string[] = [];
+        const observer = new MutationObserver(() => {
+          positions.push(getPosition());
+        });
+        observer.observe(paper, { attributes: true, attributeFilter: ['style'] });
+
+        try {
+          while (screen.queryByRole('button', { name: /more/i, hidden: true })) {
+            positionBeforeDelete = getPosition();
+            positions = [];
+            // eslint-disable-next-line no-await-in-loop
+            await deleteEvent(getPopoverEventTitles(popover).at(-1)!);
+          }
+          await waitFor(() => {
+            expect(document.body.contains(popover)).to.equal(false);
+          });
+        } finally {
+          observer.disconnect();
+        }
+
+        expect(positions).to.deep.equal(positions.map(() => positionBeforeDelete));
+      },
+    );
+
+    it('should move focus past every removed event when several are removed at once', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      await act(async () => {
+        getPopoverEvent(popover, 'Event 4').focus();
+      });
+
+      setProps({
+        events: manyEvents.filter(
+          (event) => event.title !== 'Event 1' && event.title !== 'Event 4',
+        ),
+      });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 5'));
+      });
+    });
+
+    it('should move focus past every removed event when several are removed under an open context menu', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 4');
+
+      setProps({
+        events: manyEvents.filter(
+          (event) => event.title !== 'Event 1' && event.title !== 'Event 4',
+        ),
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 5'));
+      });
+    });
+
+    it('should open the popover in the document the calendar is rendered in', async () => {
+      const iframe = document.createElement('iframe');
+      iframe.style.width = '1000px';
+      iframe.style.height = '800px';
+      document.body.appendChild(iframe);
+      const iframeBody = iframe.contentDocument!.body;
+      const { unmount } = render(
+        <EventCalendarProvider events={manyEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+        { container: iframeBody.appendChild(iframe.contentDocument!.createElement('div')) },
+      );
+
+      try {
+        const [moreButton] = await within(iframeBody).findAllByRole('button', { name: /more/i });
+        await act(async () => {
+          moreButton.click();
+        });
+
+        expect(await within(iframeBody).findByRole('presentation')).not.to.equal(null);
+      } finally {
+        unmount();
+        iframe.remove();
+      }
+    });
+
+    it('should not move focus when an event is removed while another one is focused', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+      const firstEvent = getPopoverEvent(popover, 'Event 1');
+      await act(async () => {
+        firstEvent.focus();
+      });
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).not.to.include('Event 3');
+      });
+      expect(document.activeElement).to.equal(firstEvent);
+    });
+
+    it('should ignore changes to the events of another day that still overflows', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover([
+        ...manyEvents,
+        ...nextDayEvents,
+      ]);
+      const labelsBefore = getMoreButtonLabels();
+
+      setProps({ events: [...manyEvents, ...nextDayEvents.slice(1)] });
+
+      await waitFor(() => {
+        expect(getMoreButtonLabels()).not.to.deep.equal(labelsBefore);
+      });
+      expect(getMoreButtonLabels()).to.have.length(2);
+      expect(getPopoverEventTitles(popover)).to.deep.equal([
+        'Event 1',
+        'Event 2',
+        'Event 3',
+        'Event 4',
+        'Event 5',
+        'Event 6',
+      ]);
+    });
+
+    it('should ignore the "+N more" button of another day unmounting', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover([
+        ...manyEvents,
+        ...nextDayEvents,
+      ]);
+      const labelsBefore = getMoreButtonLabels();
+
+      // One event left, so the next day's "+N more" button unmounts.
+      setProps({ events: [...manyEvents, ...nextDayEvents.slice(3)] });
+
+      await waitFor(() => {
+        expect(getMoreButtonLabels()).not.to.deep.equal(labelsBefore);
+      });
+      expect(document.body.contains(popover)).to.equal(true);
+      expect(getPopoverEventTitles(popover)).to.deep.equal([
+        'Event 1',
+        'Event 2',
+        'Event 3',
+        'Event 4',
+        'Event 5',
+        'Event 6',
+      ]);
+    });
+
+    it('should not focus an event when the popover is reopened for another day', async () => {
+      const { user } = await renderAndOpenPopover({
+        events: [...manyEvents, ...nextDayEvents],
+      });
+      // Reopened right away, while the previous popover is still on its way out.
+      await user.keyboard('{Escape}');
+      const nextDayMoreButton = screen.getAllByRole('button', { name: /more/i })[1];
+      // Some browsers (Safari) don't focus a button on click, so focus stays on the document.
+      await act(async () => {
+        (document.activeElement as HTMLElement | null)?.blur();
+      });
+      const focusedElements: Element[] = [];
+      const recordFocus = (event: FocusEvent) => {
+        focusedElements.push(event.target as Element);
+      };
+      document.addEventListener('focusin', recordFocus);
+
+      try {
+        await act(async () => {
+          nextDayMoreButton.click();
+        });
+
+        const nextDayPopover = await screen.findByRole('presentation');
+        await waitFor(() => {
+          expect(nextDayPopover.contains(document.activeElement)).to.equal(true);
+        });
+        // Not even briefly on an event or the "+N more" button.
+        expect(
+          focusedElements.filter((element) => !nextDayPopover.contains(element)),
+        ).to.deep.equal([]);
+        expect(within(nextDayPopover).getAllByRole('button')).not.to.include(
+          document.activeElement,
+        );
+      } finally {
+        document.removeEventListener('focusin', recordFocus);
+      }
+    });
+
+    it('should list an event added to the day while the popover is open', async () => {
+      const { popover, setProps } = await renderAndOpenStatefulPopover();
+
+      setProps({
+        events: [
+          ...manyEvents,
+          EventBuilder.new().singleDay('2025-05-01T14:00:00Z').title('Event 7').build(),
+        ],
+      });
+
+      await waitFor(() => {
+        expect(getPopoverEventTitles(popover)).to.include('Event 7');
+      });
+    });
+
+    it('should move focus to the next event when the event of an open context menu is removed', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 3');
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 4'));
+      });
+    });
+
+    it('should focus the day cell when the popover closes under an open context menu', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 2');
+
+      setProps({ events: manyEvents.slice(0, 1) });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.body.contains(popover)).to.equal(false);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getMay1Cell());
+      });
     });
 
     it('should return focus to the trigger when the popover is dismissed without editing', async () => {

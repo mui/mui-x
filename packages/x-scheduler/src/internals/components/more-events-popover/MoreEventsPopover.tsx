@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled } from '@mui/material/styles';
-import getActiveElement from '@mui/utils/getActiveElement';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -19,6 +18,7 @@ import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
 import { EventContextMenuTrigger } from '../event-context-menu';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { isFocusLostWith, isFocusOnDocument } from '../../utils/focus-utils';
 
 const MoreEventsPopoverHeader = styled('div', {
   name: 'MuiEventCalendar',
@@ -61,7 +61,8 @@ interface MoreEventsData {
 
 interface MoreEventsPopoverContextValue {
   openPopover: (anchorEl: HTMLElement, data: MoreEventsData) => void;
-  closePopover: () => void;
+  updatePopover: (data: MoreEventsData) => void;
+  closePopoverForDay: (dayKey: string) => void;
 }
 
 export const MoreEventsPopoverContext = React.createContext<
@@ -79,7 +80,7 @@ export function useMoreEventsPopoverContext(): MoreEventsPopoverContextValue {
 }
 
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
-  const { open, anchor, occurrences, day, onClose } = props;
+  const { open, anchor, cell, occurrences, day, onClose } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -98,36 +99,94 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     );
   }, [store, onClose]);
 
-  // Editing an event can unmount the "+N more" button, so remember the cell as a focus fallback.
-  const fallbackFocusRef = React.useRef<HTMLElement | null>(null);
-  useIsoLayoutEffect(() => {
-    if (open && anchor) {
-      fallbackFocusRef.current = anchor.closest<HTMLElement>('[role="gridcell"]');
+  // Where focus goes when it would be lost: the item replacing a removed one, else the "+N more"
+  // button, else the cell.
+  const bodyRef = React.useRef<HTMLDivElement>(null);
+  const replacementRef = React.useRef<HTMLElement | null>(null);
+  const getFocusFallback = useStableCallback((): HTMLElement | null => {
+    if (replacementRef.current?.isConnected) {
+      return replacementRef.current;
     }
-  }, [open, anchor]);
+    return anchor.isConnected ? anchor : cell;
+  });
 
-  // Restore focus when it is about to be lost with the closing popover: on the document, or on
-  // something unmounting with the popover. Focus already moved elsewhere is preserved.
-  const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
-    const ownerDocument = paper.ownerDocument;
-    // `getActiveElement` pierces shadow roots, where `document.activeElement` stops at the host.
-    const activeElement = getActiveElement(ownerDocument);
-    const focusIsAboutToBeLost =
-      activeElement === null ||
-      activeElement === ownerDocument.body ||
-      paper.contains(activeElement);
-    if (!focusIsAboutToBeLost) {
+  // The item last focused or right-clicked, which is the one an open context menu belongs to.
+  const lastItemKeyRef = React.useRef<string | null>(null);
+  const handleItemInteraction = (event: React.SyntheticEvent<HTMLDivElement>) => {
+    const index = Array.from(event.currentTarget.children).findIndex((child) =>
+      child.contains(event.target as Node),
+    );
+    lastItemKeyRef.current = occurrences[index]?.key ?? null;
+  };
+
+  // Remember which item replaces a removed one. Focus left on the document moves there now; focus
+  // in the item's context menu moves there when the menu closes.
+  const previousRef = React.useRef({ open, occurrences });
+  useIsoLayoutEffect(() => {
+    const previous = previousRef.current;
+    previousRef.current = { open, occurrences };
+    // Only an update of the list on screen removes items, not a reopen.
+    if (!open || !previous.open) {
+      replacementRef.current = null;
       return;
     }
-    const target = anchor?.isConnected ? anchor : fallbackFocusRef.current;
-    target?.focus({ preventScroll: true });
+    const isListed = (key: string) => occurrences.some((occurrence) => occurrence.key === key);
+    const lastItemIndex = previous.occurrences.findIndex(
+      (occurrence) => occurrence.key === lastItemKeyRef.current,
+    );
+    // Prefer the item the user was on, else the first removed one.
+    const removedIndex =
+      lastItemIndex !== -1 && !isListed(previous.occurrences[lastItemIndex].key)
+        ? lastItemIndex
+        : previous.occurrences.findIndex((occurrence) => !isListed(occurrence.key));
+    const body = bodyRef.current;
+    if (removedIndex === -1 || !body) {
+      return;
+    }
+    // The next item still listed, else the previous one.
+    const replacement =
+      previous.occurrences.slice(removedIndex).find((occurrence) => isListed(occurrence.key)) ??
+      previous.occurrences
+        .slice(0, removedIndex)
+        .findLast((occurrence) => isListed(occurrence.key));
+    const replacementIndex = occurrences.findIndex(
+      (occurrence) => occurrence.key === replacement?.key,
+    );
+    replacementRef.current = (body.children[replacementIndex] as HTMLElement | undefined) ?? null;
+    if (isFocusOnDocument(body.ownerDocument)) {
+      getFocusFallback()?.focus({ preventScroll: true });
+    }
+  }, [open, occurrences, getFocusFallback]);
+
+  // Keeps the closing popover where the "+N more" button was, not in the top-left corner, once the
+  // button unmounts.
+  const anchorRectRef = React.useRef<DOMRect | null>(null);
+  const anchorEl = React.useMemo(
+    () => ({
+      // Popover reads these to treat it as an element and to portal into the right document.
+      nodeType: 1 as const,
+      ownerDocument: anchor.ownerDocument,
+      getBoundingClientRect: () => {
+        if (anchor.isConnected || anchorRectRef.current === null) {
+          anchorRectRef.current = anchor.getBoundingClientRect();
+        }
+        return anchorRectRef.current;
+      },
+    }),
+    [anchor],
+  );
+
+  const restoreFocusOnExit = useStableCallback((paper: HTMLElement) => {
+    if (isFocusLostWith(paper)) {
+      getFocusFallback()?.focus({ preventScroll: true });
+    }
   });
 
   return (
     <Popover
       className={classes.moreEventsPopover}
       open={open}
-      anchorEl={anchor}
+      anchorEl={anchorEl}
       onClose={onClose}
       slotProps={{ transition: { onExited: restoreFocusOnExit } }}
     >
@@ -136,7 +195,12 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
         </MoreEventsPopoverTitle>
       </MoreEventsPopoverHeader>
-      <MoreEventsPopoverBody className={classes.moreEventsPopoverBody}>
+      <MoreEventsPopoverBody
+        ref={bodyRef}
+        className={classes.moreEventsPopoverBody}
+        onFocus={handleItemInteraction}
+        onContextMenu={handleItemInteraction}
+      >
         {occurrences.map((occurrence) => (
           <EventContextMenuTrigger
             occurrence={occurrence}
@@ -144,6 +208,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             onEditingCanceled={onClose}
             // A cancellation closes this popover and unmounts the clicked item.
             stableAnchor={anchor}
+            getFocusFallback={getFocusFallback}
           >
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
@@ -160,6 +225,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 interface MoreEventsPopoverState {
   open: boolean;
   anchorEl: HTMLElement | null;
+  cell: HTMLElement | null;
   data: MoreEventsData | null;
 }
 
@@ -168,11 +234,17 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
   const [state, setState] = React.useState<MoreEventsPopoverState>({
     open: false,
     anchorEl: null,
+    cell: null,
     data: null,
   });
 
   const openPopover = useStableCallback((anchorEl: HTMLElement, data: MoreEventsData) => {
-    setState({ open: true, anchorEl, data });
+    setState({
+      open: true,
+      anchorEl,
+      cell: anchorEl.closest<HTMLElement>('[role="gridcell"]'),
+      data,
+    });
   });
 
   // Keep the anchor and data, else the popover unmounts before its exit transition can play.
@@ -180,9 +252,23 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
     setState((prev) => (prev.open ? { ...prev, open: false } : prev));
   });
 
+  // The day's occurrences are laid out by the view, not stored, so the trigger pushes them.
+  const updatePopover = useStableCallback((data: MoreEventsData) => {
+    if (state.open && state.data?.day.key === data.day.key) {
+      setState((prev) => ({ ...prev, data }));
+    }
+  });
+
+  // The trigger unmounts once every event fits in the cell, taking the popover's anchor with it.
+  const closePopoverForDay = useStableCallback((dayKey: string) => {
+    if (state.open && state.data?.day.key === dayKey) {
+      closePopover();
+    }
+  });
+
   const contextValue = React.useMemo<MoreEventsPopoverContextValue>(
-    () => ({ openPopover, closePopover }),
-    [openPopover, closePopover],
+    () => ({ openPopover, updatePopover, closePopoverForDay }),
+    [openPopover, updatePopover, closePopoverForDay],
   );
 
   return (
@@ -192,6 +278,7 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
         <MoreEventsPopoverContent
           open={state.open}
           anchor={state.anchorEl}
+          cell={state.cell}
           occurrences={state.data.occurrences}
           day={state.data.day}
           onClose={closePopover}
@@ -211,7 +298,15 @@ interface MoreEventsPopoverTriggerProps {
 
 export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
   const { occurrences, day, onClick, children } = props;
-  const { openPopover } = useMoreEventsPopoverContext();
+  const { openPopover, updatePopover, closePopoverForDay } = useMoreEventsPopoverContext();
+
+  useIsoLayoutEffect(() => {
+    updatePopover({ occurrences, day });
+  }, [occurrences, day, updatePopover]);
+
+  useIsoLayoutEffect(() => {
+    return () => closePopoverForDay(day.key);
+  }, [day.key, closePopoverForDay]);
 
   return React.cloneElement(children as React.ReactElement<any>, {
     onClick: (event: React.MouseEvent<HTMLElement>) => {
