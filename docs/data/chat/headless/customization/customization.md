@@ -135,6 +135,7 @@ The headless boundary is clear:
 - See [Conversation list](/x/react-chat/headless/conversation-list/) for owner state on row-level slots.
 - See [Messages](/x/react-chat/headless/messages/) for selective message-part replacement.
 - See [Slot customization](/x/react-chat/headless/examples/slot-customization/) for a demo that replaces multiple slots in one surface.
+- See [Localization](/x/react-chat/customization/structure/#localization) for overriding the user-facing strings through `localeText`.
 
 ## API
 

@@ -38,6 +38,9 @@
     "layoutModeBreakpoints": {
       "description": "Container-width breakpoints used when <code>layoutMode</code> is not provided."
     },
+    "localeText": {
+      "description": "Overrides for the user-facing strings of every chat component rendered below the provider. Omitted keys fall back to the locale of the closest parent provider, then to the built-in English defaults."
+    },
     "members": {
       "description": "Known chat participants. Used to derive the local user / assistant user when explicit props are omitted, and to enrich message authors by resolved author id at render time."
     },
