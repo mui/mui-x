@@ -1,12 +1,16 @@
 'use client';
+import * as React from 'react';
 import type {
   PickerManagerFieldInternalProps,
+  PickerValue,
   UseFieldReturnValue,
 } from '@mui/x-date-pickers/internals';
 import {
   useControlledValue,
   useFieldInternalPropsWithDefaults,
+  useNullableFieldPrivateContext,
 } from '@mui/x-date-pickers/internals';
+import type { FieldRef } from '@mui/x-date-pickers/models';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import type { UseTextFieldBaseForwardedProps } from './useTextFieldProps';
 import { useTextFieldProps } from './useTextFieldProps';
@@ -14,6 +18,7 @@ import { useMultiInputRangeFieldSelectedSections } from './useMultiInputRangeFie
 import type { PickerAnyRangeManager } from '../../internals/models/managers';
 import type { UseMultiInputRangeFieldRootPropsReturnValue } from './useMultiInputRangeFieldRootProps';
 import { useMultiInputRangeFieldRootProps } from './useMultiInputRangeFieldRootProps';
+import { useNullablePickerRangePositionContext } from '../../internals/hooks/useNullablePickerRangePositionContext';
 
 /**
  * Basic example:
@@ -60,6 +65,11 @@ export function useMultiInputRangeField<
   parameters: UseMultiInputRangeFieldParameters<TManager, TTextFieldProps, TRootProps>,
 ): UseMultiInputRangeFieldReturnValue<TTextFieldProps, TRootProps> {
   const { manager, internalProps, rootProps, startTextFieldProps, endTextFieldProps } = parameters;
+
+  const fieldPrivateContext = useNullableFieldPrivateContext();
+  const rangePositionContext = useNullablePickerRangePositionContext();
+  const startInternalFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const endInternalFieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     manager,
@@ -130,6 +140,7 @@ export function useMultiInputRangeField<
     forwardedProps: startTextFieldProps,
     selectedSectionProps: selectedSectionsResponse.start,
     sharedInternalProps,
+    internalFieldRef: startInternalFieldRef,
   });
 
   const endTextFieldResponse = useTextFieldProps<TManager, TTextFieldProps>({
@@ -142,6 +153,21 @@ export function useMultiInputRangeField<
     forwardedProps: endTextFieldProps,
     selectedSectionProps: selectedSectionsResponse.end,
     sharedInternalProps,
+    internalFieldRef: endInternalFieldRef,
+  });
+
+  // The Picker interacts with the field of the current range position, but its clear action resets both fields.
+  React.useImperativeHandle(fieldPrivateContext?.internalFieldRef, () => {
+    const activeFieldRef =
+      rangePositionContext?.rangePosition === 'end' ? endInternalFieldRef : startInternalFieldRef;
+
+    return {
+      ...activeFieldRef.current!,
+      clearValue: () => {
+        startInternalFieldRef.current?.clearValue();
+        endInternalFieldRef.current?.clearValue();
+      },
+    };
   });
 
   return {

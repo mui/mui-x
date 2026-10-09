@@ -65,8 +65,9 @@ export function useFieldInternalPropsWithDefaults<TManager extends PickerAnyMana
         formatDensity: fieldPrivateContext.formatDensity,
         selectedSections: fieldPrivateContext.selectedSections,
         onSelectedSectionsChange: fieldPrivateContext.onSelectedSectionsChange,
-        fieldRef: handleFieldRef,
         ...internalProps,
+        // `handleFieldRef` already forwards to `internalProps.fieldRef`.
+        fieldRef: handleFieldRef,
       };
     }
 
@@ -80,7 +81,8 @@ interface UseFieldInternalPropsWithDefaultsParameters<TManager extends PickerAny
   manager: TManager;
   internalProps: PickerManagerFieldInternalProps<TManager>;
   /**
-   * Hack to make sure that on multi input range field, the `useNullableFieldPrivateContext().fieldRef` is only bound to the field matching the range position.
+   * If `true`, the field does not bind the refs of `useNullableFieldPrivateContext()`.
+   * The multi input range field binds them itself to control both of its fields.
    * @default false
    */
   skipContextFieldRefAssignment?: boolean;
