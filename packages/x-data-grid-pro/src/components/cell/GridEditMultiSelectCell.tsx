@@ -25,6 +25,7 @@ import {
   vars,
   isMultiSelectColDef,
   getValueOptions,
+  getRowIndexRelativeToAllRows,
   gridRowHeightSelector,
 } from '@mui/x-data-grid/internals';
 import type { AutocompleteProps } from '@mui/x-data-grid/internals';
@@ -210,9 +211,11 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
       return;
     }
     if (!prevHasFocusRef.current) {
+      const colIndex = apiRef.current.getColumnIndex(field, true);
       apiRef.current.scrollToIndexes({
-        colIndex: apiRef.current.getColumnIndex(field, true),
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        // `-1` means the column is not visible, so there is nothing to scroll to horizontally.
+        colIndex: colIndex === -1 ? undefined : colIndex,
+        rowIndex: getRowIndexRelativeToAllRows(apiRef, id),
       });
       prevHasFocusRef.current = true;
     }
