@@ -319,7 +319,8 @@ describe('WeekView - Drag and Drop', () => {
     expect(handleEventsChange.mock.calls.length).to.equal(1);
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.equal(true);
-    expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(4);
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-04T22:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-05T06:00:00.000Z');
   });
 
   it('should resize the end of the part of a time event crossing midnight on its end day', async () => {

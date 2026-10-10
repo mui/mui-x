@@ -27,7 +27,9 @@ export function isOccurrenceInDayGrid(
   switch (timeGridEvents) {
     case 'same-day-only':
       return isOccurrenceAllDayOrMultipleDay(occurrence, adapter);
+    // Invalid values fall back to the default, like the other `viewConfig` options.
     case 'shorter-than-one-day':
+    default:
       return (
         !!occurrence.allDay ||
         !adapter.isBefore(
@@ -35,9 +37,5 @@ export function isOccurrenceInDayGrid(
           adapter.addDays(occurrence.displayTimezone.start.value, 1),
         )
       );
-    default: {
-      const unhandledValue: never = timeGridEvents;
-      return unhandledValue;
-    }
   }
 }
