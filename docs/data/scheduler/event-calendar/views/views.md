@@ -74,6 +74,13 @@ The `agenda` view lets users manage events in a list layout.
 
 {{"demo": "BasicAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
 
+The agenda displays 12 days at a time by default, and the navigation moves by the same amount.
+Use the `viewConfig` prop to change it with `dayCount`, either to another number of days or to `'month'` to display the month of the visible date and navigate one month at a time:
+
+{{"demo": "AgendaViewDayCount.js", "bg": "inline", "defaultCodeOpen": false}}
+
+When the empty days are hidden, the `'month'` mode only lists the days of that month that have events, instead of continuing into the next month.
+
 ### Year view 🚧
 
 :::warning

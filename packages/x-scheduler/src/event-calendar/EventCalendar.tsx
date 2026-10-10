@@ -348,6 +348,9 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig: PropTypes.shape({
+    agenda: PropTypes.shape({
+      dayCount: PropTypes.oneOfType([PropTypes.oneOf(['month']), PropTypes.number]),
+    }),
     day: PropTypes.shape({
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,

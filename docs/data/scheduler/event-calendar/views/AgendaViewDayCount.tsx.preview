@@ -1,0 +1,7 @@
+<StandaloneAgendaView
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  viewConfig={{ agenda: { dayCount: 'month' } }}
+/>
