@@ -22,9 +22,8 @@ export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResour
     SchedulerSlotsAndSlotProps {
   /**
    * Configuration applied to the view, keyed by the view name.
-   * The `agenda` view does not support any configuration keys yet.
    */
-  viewConfig?: Omit<EventCalendarViewConfig, 'day' | 'week'>;
+  viewConfig?: Pick<EventCalendarViewConfig, 'agenda'>;
   /**
    * Set the locale text of the view.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)

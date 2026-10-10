@@ -152,6 +152,74 @@ describe('<AgendaView />', () => {
     });
   });
 
+  describe('viewConfig.agenda.dayCount', () => {
+    it('should render dayCount day rows', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          view="agenda"
+          viewConfig={{ agenda: { dayCount: 5 } }}
+        />,
+      );
+
+      expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(5);
+    });
+
+    it('should move by dayCount days when clicking on the Next and Previous Agenda buttons', async () => {
+      const onVisibleDateChange = vi.fn();
+
+      const { user } = render(
+        <EventCalendar
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          onVisibleDateChange={onVisibleDateChange}
+          view="agenda"
+          viewConfig={{ agenda: { dayCount: 5 } }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /next agenda/i }));
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
+        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 5),
+      );
+
+      await user.click(screen.getByRole('button', { name: /previous agenda/i }));
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
+        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -5),
+      );
+    });
+
+    it("should render the month and move by one month when dayCount is 'month'", async () => {
+      const onVisibleDateChange = vi.fn();
+      const visibleDate = adapter.date('2025-07-15T00:00:00Z', 'default');
+
+      const { user } = render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          onVisibleDateChange={onVisibleDateChange}
+          view="agenda"
+          viewConfig={{ agenda: { dayCount: 'month' } }}
+        />,
+      );
+
+      expect(document.querySelectorAll(`.${eventCalendarClasses.agendaViewRow}`)).to.have.length(
+        31,
+      );
+
+      await user.click(screen.getByRole('button', { name: /next agenda/i }));
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
+        adapter.date('2025-08-01T00:00:00Z', 'default'),
+      );
+
+      await user.click(screen.getByRole('button', { name: /previous agenda/i }));
+      expect(onVisibleDateChange.mock.lastCall?.[0]).toEqualDateTime(
+        adapter.date('2025-06-01T00:00:00Z', 'default'),
+      );
+    });
+  });
+
   describe('week number label', () => {
     it('does not render week number rows when showWeekNumber is not set', () => {
       render(

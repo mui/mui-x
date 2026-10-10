@@ -307,9 +307,12 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
   /**
    * Configuration applied to the view, keyed by the view name.
-   * The `agenda` view does not support any configuration keys yet.
    */
-  viewConfig: PropTypes.object,
+  viewConfig: PropTypes.shape({
+    agenda: PropTypes.shape({
+      dayCount: PropTypes.oneOfType([PropTypes.oneOf(['month']), PropTypes.number]),
+    }),
+  }),
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

@@ -22,4 +22,5 @@ export * from './useEventCreation';
 export * from './useKeyboardEventCreation';
 export * from './getNavigationTarget';
 export * from './getDisplayedHourRange';
+export * from './getAgendaDayCount';
 export * from './getInitialScrollTime';
