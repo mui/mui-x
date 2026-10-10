@@ -6,10 +6,8 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import {
-  useCalendarGridTimeColumnContext,
-  useElementPositionInCollection,
-} from '@mui/x-scheduler-internals/internals';
+import { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { PaletteName } from '../../../utils/tokens';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 
@@ -35,12 +33,14 @@ export interface UseTimeGridEventReturnValue {
   rootPositionProps: {
     start: TimeGridEventProps['occurrence']['displayTimezone']['start'];
     end: TimeGridEventProps['occurrence']['displayTimezone']['end'];
+    elementPosition: useElementPositionInCollection.ReturnValue;
     style: React.CSSProperties;
   };
 }
 
 export function useTimeGridEvent(
   occurrence: TimeGridEventProps['occurrence'],
+  column: TimelineAxis,
 ): UseTimeGridEventReturnValue {
   const store = useEventCalendarStoreContext();
 
@@ -58,19 +58,15 @@ export function useTimeGridEvent(
     useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end') && !isEditedInForm;
   const palette = useStore(store, schedulerEventSelectors.color, occurrence.id, undefined);
 
-  // Measured on the part rendered in this column, shorter than the event when it crosses midnight.
-  const {
-    start: columnStart,
-    end: columnEnd,
-    dayStartMinute,
-    dayEndMinute,
-  } = useCalendarGridTimeColumnContext();
-  const { duration } = useElementPositionInCollection({
+  // Measured on the rendered part, clipped at midnight and by the visible hours.
+  const elementPosition = useElementPositionInCollection({
     start: occurrence.displayTimezone.start,
     end: occurrence.displayTimezone.end,
-    collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
+    collection: column,
   });
-  const durationMinutes = Math.round(duration * (dayEndMinute - dayStartMinute));
+  const durationMinutes = Math.round(
+    elementPosition.duration * (column.dayEndMinute - column.dayStartMinute),
+  );
   const isUnderHour = durationMinutes < 60;
   // Inclusive on purpose: an exactly-15-minute event gets the tightest (zero-padding) tier. See the
   // `duration thresholds` boundary tests in `DayView.test.tsx`.
@@ -90,6 +86,7 @@ export function useTimeGridEvent(
     () => ({
       start: occurrence.displayTimezone.start,
       end: occurrence.displayTimezone.end,
+      elementPosition,
       style: {
         '--first-index': occurrence.position.firstIndex,
         '--last-index': occurrence.position.lastIndex,
@@ -98,6 +95,7 @@ export function useTimeGridEvent(
     [
       occurrence.displayTimezone.start,
       occurrence.displayTimezone.end,
+      elementPosition,
       occurrence.position.firstIndex,
       occurrence.position.lastIndex,
     ],

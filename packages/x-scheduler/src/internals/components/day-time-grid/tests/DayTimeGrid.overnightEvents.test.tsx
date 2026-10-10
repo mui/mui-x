@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { screen, within } from '@mui/internal-test-utils';
 import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { describe, it, expect } from 'vitest';
@@ -19,10 +19,16 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
     .resizable(true)
     .build();
 
-  function getDayGridEvents() {
-    return document.querySelectorAll(
-      `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid} .${eventCalendarClasses.dayGridEvent}`,
-    );
+  const longShift = EventBuilder.new()
+    .title('Long shift')
+    .span('2025-07-03T08:00:00Z', '2025-07-04T08:00:00Z')
+    .build();
+
+  function getDayGridEvents(name: RegExp) {
+    const dayGrid = document.querySelector<HTMLElement>(
+      `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid}`,
+    )!;
+    return within(dayGrid).queryAllByRole('button', { name });
   }
 
   function getTimeGridColumns() {
@@ -37,7 +43,7 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
     it('should split a timed event across the time grid of the days it covers', () => {
       render(<EventCalendar events={[nightShift]} visibleDate={visibleDate} view="week" />);
 
-      expect(getDayGridEvents()).to.have.length(0);
+      expect(getDayGridEvents(/Night shift/)).to.have.length(0);
 
       const parts = screen.getAllByRole('button', { name: /Night shift/ });
       expect(parts).to.have.length(2);
@@ -61,7 +67,7 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
 
       render(<EventCalendar events={[lateShift]} visibleDate={visibleDate} view="week" />);
 
-      expect(getDayGridEvents()).to.have.length(0);
+      expect(getDayGridEvents(/Late shift/)).to.have.length(0);
 
       const parts = screen.getAllByRole('button', { name: /Late shift/ });
       expect(parts).to.have.length(1);
@@ -69,35 +75,29 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
     });
 
     it('should keep a timed event lasting 23 hours and 59 minutes in the time grid', () => {
-      const longShift = EventBuilder.new()
-        .title('Long shift')
+      const almostOneDay = EventBuilder.new()
+        .title('Almost one day')
         .span('2025-07-03T08:00:00Z', '2025-07-04T07:59:00Z')
         .build();
 
-      render(<EventCalendar events={[longShift]} visibleDate={visibleDate} view="week" />);
+      render(<EventCalendar events={[almostOneDay]} visibleDate={visibleDate} view="week" />);
 
-      expect(getDayGridEvents()).to.have.length(0);
-      expect(screen.getAllByRole('button', { name: /Long shift/ })).to.have.length(2);
+      expect(getDayGridEvents(/Almost one day/)).to.have.length(0);
+      expect(screen.getAllByRole('button', { name: /Almost one day/ })).to.have.length(2);
     });
 
     it('should keep timed events lasting one day or more in the day grid', () => {
-      const longShift = EventBuilder.new()
-        .title('Long shift')
-        .span('2025-07-03T08:00:00Z', '2025-07-04T08:00:00Z')
-        .build();
-
       render(<EventCalendar events={[longShift]} visibleDate={visibleDate} view="week" />);
 
-      expect(getDayGridEvents()).not.to.have.length(0);
+      expect(getDayGridEvents(/Long shift/)).to.have.length(1);
       expect(document.querySelector(`.${eventCalendarClasses.timeGridEvent}`)).to.equal(null);
     });
 
     it('should split an event at the midnight of the display timezone', () => {
-      // 18:00 to 21:00 in New York is 22:00 to 01:00 the next day in UTC.
+      // 01:00 to 07:00 UTC on July 4 is 21:00 on July 3 to 03:00 on July 4 in New York.
       const evening = EventBuilder.new()
         .title('Evening')
-        .withDataTimezone('America/New_York')
-        .span('2025-07-03T18:00:00', '2025-07-03T21:00:00')
+        .span('2025-07-04T01:00:00Z', '2025-07-04T07:00:00Z')
         .build();
 
       render(
@@ -105,14 +105,22 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
           events={[evening]}
           visibleDate={visibleDate}
           view="week"
-          displayTimezone="UTC"
+          displayTimezone="America/New_York"
         />,
       );
 
       const parts = screen.getAllByRole('button', { name: /Evening/ });
       expect(parts).to.have.length(2);
-      expect(getColumn(parts[0])).to.equal(getTimeGridColumns()[JULY_3_COLUMN_INDEX]);
-      expect(getColumn(parts[1])).to.equal(getTimeGridColumns()[JULY_4_COLUMN_INDEX]);
+      const [firstPart, secondPart] = parts;
+      const columns = getTimeGridColumns();
+
+      expect(getColumn(firstPart)).to.equal(columns[JULY_3_COLUMN_INDEX]);
+      expect(firstPart.style.getPropertyValue('--y-position')).to.equal('87.5%');
+      expect(firstPart.style.getPropertyValue('--height')).to.equal('12.5%');
+
+      expect(getColumn(secondPart)).to.equal(columns[JULY_4_COLUMN_INDEX]);
+      expect(secondPart.style.getPropertyValue('--y-position')).to.equal('0%');
+      expect(secondPart.style.getPropertyValue('--height')).to.equal('12.5%');
     });
 
     it('should render the part of an event that starts before the visible week', () => {
@@ -123,7 +131,7 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
 
       render(<EventCalendar events={[previousNightShift]} visibleDate={visibleDate} view="week" />);
 
-      expect(getDayGridEvents()).to.have.length(0);
+      expect(getDayGridEvents(/Night shift/)).to.have.length(0);
 
       const parts = screen.getAllByRole('button', { name: /Night shift/ });
       expect(parts).to.have.length(1);
@@ -193,16 +201,34 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
         />,
       );
 
-      expect(getDayGridEvents()).not.to.have.length(0);
+      expect(getDayGridEvents(/Night shift/)).to.have.length(1);
       expect(document.querySelector(`.${eventCalendarClasses.timeGridEvent}`)).to.equal(null);
     });
+
+    it.each(['same-day', null])(
+      'should fall back to `shorter-than-one-day` when `timeGridEvents` is %s',
+      (timeGridEvents) => {
+        render(
+          <EventCalendar
+            events={[nightShift, longShift]}
+            visibleDate={visibleDate}
+            view="week"
+            viewConfig={{ week: { timeGridEvents: timeGridEvents as any } }}
+          />,
+        );
+
+        expect(getDayGridEvents(/Night shift/)).to.have.length(0);
+        expect(screen.getAllByRole('button', { name: /Night shift/ })).to.have.length(2);
+        expect(getDayGridEvents(/Long shift/)).to.have.length(1);
+      },
+    );
   });
 
   describe('day view', () => {
     it('should render a timed event crossing midnight in the time grid', () => {
       render(<EventCalendar events={[nightShift]} visibleDate={visibleDate} view="day" />);
 
-      expect(getDayGridEvents()).to.have.length(0);
+      expect(getDayGridEvents(/Night shift/)).to.have.length(0);
 
       const part = screen.getByRole('button', { name: /Night shift/ });
       expect(part.style.getPropertyValue('--y-position')).to.equal('75%');
@@ -218,7 +244,7 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
         />,
       );
 
-      expect(getDayGridEvents()).to.have.length(0);
+      expect(getDayGridEvents(/Night shift/)).to.have.length(0);
 
       const part = screen.getByRole('button', { name: /Night shift/ });
       expect(part.style.getPropertyValue('--y-position')).to.equal('0%');
@@ -238,7 +264,7 @@ describe('<DayTimeGrid /> - events crossing midnight', () => {
         />,
       );
 
-      expect(getDayGridEvents()).not.to.have.length(0);
+      expect(getDayGridEvents(/Night shift/)).to.have.length(1);
       expect(document.querySelector(`.${eventCalendarClasses.timeGridEvent}`)).to.equal(null);
     });
   });
