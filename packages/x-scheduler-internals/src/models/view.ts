@@ -5,6 +5,11 @@ import type { SchedulerProcessedDate } from './event';
 export type CalendarView = 'day' | 'week' | 'month' | 'agenda';
 
 /**
+ * Which timed events are rendered in the time grid of the `day` and `week` views.
+ */
+export type EventCalendarTimeGridEvents = 'shorter-than-one-day' | 'same-day-only';
+
+/**
  * Definition provided by each view.
  * This is used to determine how the components outside of the view should behave based on the current view.
  */
@@ -58,6 +63,13 @@ export interface EventCalendarTimeGridViewConfig {
    * @default 7 when it is a displayed hour, otherwise `startTime`
    */
   initialScrollTime?: number;
+  /**
+   * Which timed events are rendered in the time grid, the others go to the day grid above it.
+   * - `'shorter-than-one-day'`: timed events shorter than one day, split across the days they cover.
+   * - `'same-day-only'`: timed events that start and end on the same day.
+   * @default 'shorter-than-one-day'
+   */
+  timeGridEvents?: EventCalendarTimeGridEvents;
 }
 
 /**

@@ -194,6 +194,7 @@ const heILCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'כל היום',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (count) => (count === 1 ? 'אירוע נוסף' : `עוד ${count} אירועים`),
   nextTimeSpan: (view) =>
     ({

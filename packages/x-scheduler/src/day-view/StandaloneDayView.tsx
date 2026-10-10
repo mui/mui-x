@@ -297,6 +297,7 @@ StandaloneDayView.propTypes /* remove-proptypes */ = {
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
+      timeGridEvents: PropTypes.oneOf(['same-day-only', 'shorter-than-one-day']),
     }),
   }),
   /**

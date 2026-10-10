@@ -99,7 +99,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ week?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
+        "description": "{ week?: { endTime?: number, initialScrollTime?: number, startTime?: number, timeGridEvents?: 'same-day-only'<br>&#124;&nbsp;'shorter-than-one-day' } }"
       }
     },
     "views": {

@@ -228,6 +228,7 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
 
   // WeekView
   allDay: string;
+  dayGridLabel: string;
 
   // MonthView
   hiddenEvents: (hiddenEventsCount: number) => string;

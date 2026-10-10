@@ -77,6 +77,21 @@ describe('<AgendaView />', () => {
     expect(eventButton).not.to.have.attribute('aria-labelledby');
   });
 
+  it('should label all-day events with the `allDay` locale text', () => {
+    const event = EventBuilder.new().title('Conference').fullDay('2025-07-03').build();
+
+    render(
+      <EventCalendar
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        view="agenda"
+        localeText={{ allDay: 'Ganztägig' }}
+      />,
+    );
+
+    expect(screen.getByText('Ganztägig')).toBeVisible();
+  });
+
   describe('multi-resource events', () => {
     const resourceA = ResourceBuilder.new().title('Room A').build();
     const resourceB = ResourceBuilder.new().title('Room B').build();

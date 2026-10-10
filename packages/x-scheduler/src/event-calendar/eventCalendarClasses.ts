@@ -140,7 +140,7 @@ export interface EventCalendarClasses
   dayTimeGridAllDayEventsRow: string;
   /** Styles applied to day time grid all day events cell elements. */
   dayTimeGridAllDayEventsCell: string;
-  /** Styles applied to the day time grid all day events header cell element. */
+  /** Styles applied to the day time grid all day events header cell (visually hidden row label). */
   dayTimeGridAllDayEventsHeaderCell: string;
   /** Styles applied to day time grid header content elements. */
   dayTimeGridHeaderContent: string;

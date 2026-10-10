@@ -7,7 +7,8 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
-import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
+import { computeElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
+import type { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapterContext } from '../../use-adapter-context';
 import type {
@@ -35,6 +36,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     occurrenceKey,
     renderDragPreview,
     isDraggable = false,
+    elementPosition: elementPositionProp,
     nativeButton = false,
     interactive = true,
     // Props forwarded to the DOM element
@@ -88,11 +90,25 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     source: 'CalendarGridTimeEvent',
   }));
 
-  const elementPosition = useElementPositionInCollection({
-    start,
-    end,
-    collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
-  });
+  const elementPosition = React.useMemo(
+    () =>
+      elementPositionProp ??
+      computeElementPositionInCollection(adapter, {
+        start,
+        end,
+        collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
+      }),
+    [
+      adapter,
+      columnEnd,
+      columnStart,
+      dayEndMinute,
+      dayStartMinute,
+      elementPositionProp,
+      end,
+      start,
+    ],
+  );
   const { position, duration } = elementPosition;
 
   const {
@@ -161,6 +177,10 @@ export namespace CalendarGridTimeEvent {
      * @default true
      */
     interactive?: boolean;
+    /**
+     * The position of the event in its column, computed from `start` and `end` when not provided.
+     */
+    elementPosition?: useElementPositionInCollection.ReturnValue;
   }
 
   export interface SharedDragData {

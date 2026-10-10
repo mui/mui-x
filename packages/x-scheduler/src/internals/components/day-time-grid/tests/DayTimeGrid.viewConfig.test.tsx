@@ -73,6 +73,26 @@ describe('<DayTimeGrid /> - viewConfig (startTime / endTime)', () => {
       expect(event.style.getPropertyValue('--height')).to.equal(`${(1 / 12) * 100}%`);
     });
 
+    it('should lay out events clipped by the window from their visible part', () => {
+      const clippedEvent = EventBuilder.new()
+        .title('Clipped')
+        .span('2025-07-03T07:00:00Z', '2025-07-03T08:30:00Z')
+        .build();
+      render(
+        <EventCalendar
+          events={[clippedEvent]}
+          visibleDate={visibleDate}
+          view="week"
+          viewConfig={{ week: { startTime: 8, endTime: 20 } }}
+        />,
+      );
+      // Only 08:00 → 08:30 is visible, so the event gets the compact layout of a 30-minute event.
+      expect(screen.getByRole('button', { name: /Clipped/ })).to.have.attribute(
+        'data-under-hour',
+        'true',
+      );
+    });
+
     describe('resize handles on clipped edges', () => {
       // A bound hidden by the hour window renders at the window edge, not at its real
       // position, so offering a handle there would rewrite the hidden bound from the

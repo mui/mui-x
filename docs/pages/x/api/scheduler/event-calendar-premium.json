@@ -112,7 +112,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ day?: { endTime?: number, initialScrollTime?: number, startTime?: number }, week?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
+        "description": "{ day?: { endTime?: number, initialScrollTime?: number, startTime?: number, timeGridEvents?: 'same-day-only'<br>&#124;&nbsp;'shorter-than-one-day' }, week?: { endTime?: number, initialScrollTime?: number, startTime?: number, timeGridEvents?: 'same-day-only'<br>&#124;&nbsp;'shorter-than-one-day' } }"
       }
     },
     "views": {
@@ -352,7 +352,7 @@
     {
       "key": "dayTimeGridAllDayEventsHeaderCell",
       "className": "MuiEventCalendarPremium-dayTimeGridAllDayEventsHeaderCell",
-      "description": "Styles applied to the day time grid all day events header cell element.",
+      "description": "Styles applied to the day time grid all day events header cell (visually hidden row label).",
       "isGlobal": false
     },
     {

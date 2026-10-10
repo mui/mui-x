@@ -138,6 +138,7 @@ const itITCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'Tutto il giorno',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} altri..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} successivo`,
   previousTimeSpan: (timeSpan) => `${timeSpan} precedente`,
