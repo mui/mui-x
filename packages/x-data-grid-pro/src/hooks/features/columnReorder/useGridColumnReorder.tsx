@@ -17,10 +17,10 @@ import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   finishColumnReorder,
-  getColumnReorderForbiddenIndexes,
   getColumnReorderTargetIndex,
   hasCursorPositionChanged,
   setColumnReorderDragCol,
+  startColumnReorder,
 } from './columnReorderUtils';
 import type { ColumnReorderForbiddenIndexes } from './columnReorderUtils';
 
@@ -147,15 +147,13 @@ export const useGridColumnReorder = (
       if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = 'move';
       }
-      setColumnReorderDragCol(apiRef, params.field);
+      const drag = startColumnReorder(apiRef, params.field);
+      originColumnIndex.current = drag.originIndex;
+      forbiddenIndexes.current = drag.forbiddenIndexes;
 
       removeDnDStylesTimeout.current = setTimeout(() => {
         dragColNode.current!.classList.remove(classes.columnHeaderDragging);
       });
-
-      originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
-
-      forbiddenIndexes.current = getColumnReorderForbiddenIndexes(apiRef, params.field);
     },
     [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );

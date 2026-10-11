@@ -226,6 +226,23 @@ export function setColumnReorderDragCol(apiRef: RefObject<GridPrivateApiPro>, dr
 }
 
 /**
+ * Starts a column drag: stores the dragged column, and returns what the drag needs to move it.
+ * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
+ * @param {string} field The dragged column.
+ * @returns {object} The index of the column among all columns, and the indexes it can't move to.
+ */
+export function startColumnReorder(
+  apiRef: RefObject<GridPrivateApiPro>,
+  field: string,
+): { originIndex: number; forbiddenIndexes: ColumnReorderForbiddenIndexes } {
+  setColumnReorderDragCol(apiRef, field);
+  return {
+    originIndex: apiRef.current.getColumnIndex(field, false),
+    forbiddenIndexes: getColumnReorderForbiddenIndexes(apiRef, field),
+  };
+}
+
+/**
  * Ends a column drag: restores the column to its origin index when it was dropped outside the grid
  * and the position isn't kept, otherwise publishes `columnOrderChange`. Then clears the dragged column.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
