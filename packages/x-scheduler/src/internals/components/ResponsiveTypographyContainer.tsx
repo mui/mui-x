@@ -1,13 +1,15 @@
 'use client';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { EVENT_CALENDAR_CONTAINER_NAME, responsiveTokens } from '../constants/responsiveTypography';
+import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 
 // Establishes the @container ancestor (named EVENT_CALENDAR_CONTAINER_NAME)
 // and declares the tier/effective CSS custom properties. Wraps either
 // EventCalendarContent (inside EventCalendarRoot) or the view rendered by a
 // Standalone*View — its descendants host the @container queries that
 // retarget the effective vars at each tier.
-export const ResponsiveTypographyContainer = styled('div', {
+const ResponsiveTypographyContainerRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'ResponsiveTypographyContainer',
 })({
@@ -22,3 +24,10 @@ export const ResponsiveTypographyContainer = styled('div', {
   containerName: EVENT_CALENDAR_CONTAINER_NAME,
   ...responsiveTokens,
 });
+
+export function ResponsiveTypographyContainer(props: React.ComponentProps<'div'>) {
+  // Standalone views render this outside of the styled context, so default to the static class.
+  const { className = eventCalendarClasses.responsiveTypographyContainer, ...other } = props;
+
+  return <ResponsiveTypographyContainerRoot className={className} {...other} />;
+}

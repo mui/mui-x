@@ -48,7 +48,7 @@ const theme = createTheme({
   components: {
     MuiEventCalendar: {
       styleOverrides: {
-        ResponsiveTypographyContainer: {
+        responsiveTypographyContainer: {
           '--EventCalendar-fontSize-eventTitle-sm': '0.7rem',
           '--EventCalendar-fontSize-dayNumber-sm': '1.1rem',
         },
