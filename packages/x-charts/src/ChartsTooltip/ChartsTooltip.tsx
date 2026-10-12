@@ -56,7 +56,7 @@ ChartsTooltip.propTypes /* remove-proptypes */ = {
    */
   anchor: PropTypes.oneOf(['chart', 'node', 'pointer']),
   /**
-   * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
+   * An HTML element, [virtualElement](https://github.com/floating-ui/popper-docs/blob/main/docs/v2/virtual-elements.md),
    * or a function that returns either.
    * It's used to set the position of the popper.
    * The return value will passed as the reference object of the Popper instance.
