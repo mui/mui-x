@@ -583,6 +583,68 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
   });
 
+  describe('read-only date and time', () => {
+    function renderReadonlyDetails(builder: EventBuilder) {
+      const event: SchedulerEvent = builder.resource(personalResource).readOnly().build();
+
+      render(
+        <EventCalendarProvider events={[event]} resources={resources}>
+          <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+        </EventCalendarProvider>,
+      );
+
+      const label = document.querySelector<HTMLElement>(
+        `.${eventCalendarClasses.eventDialogDateTimeLabel}`,
+      )!;
+      const times = Array.from(label.querySelectorAll('time')).map((time) =>
+        time.getAttribute('datetime'),
+      );
+      return { text: label.textContent, times };
+    }
+
+    it('should show the date and the time range of a single-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().title('Running').span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 7:30 AM - 8:15 AM');
+      expect(times).to.deep.equal(['2025-05-26T07:30', '2025-05-26T08:15']);
+    });
+
+    it('should show the end date of a multi-day timed event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().title('Trip').span('2025-05-26T10:00:00Z', '2025-05-28T11:00:00Z'),
+      );
+
+      expect(text).to.equal(
+        'Monday, May 26th, 2025, 10:00 AM - Wednesday, May 28th, 2025, 11:00 AM',
+      );
+      expect(times).to.deep.equal(['2025-05-26T10:00', '2025-05-28T11:00']);
+    });
+
+    it('should show the date of a single-day all-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new()
+          .title('Holiday')
+          .span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, All Day');
+      expect(times).to.deep.equal(['2025-05-26']);
+    });
+
+    it('should show the date range of a multi-day all-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new()
+          .title('Conference')
+          .span('2025-05-26T00:00:00Z', '2025-05-28T23:59:59Z', { allDay: true }),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025 - Wednesday, May 28th, 2025, All Day');
+      expect(times).to.deep.equal(['2025-05-26', '2025-05-28']);
+    });
+  });
+
   describe('eventDialogGeneralTab slot', () => {
     // `defaultProps.occurrence` has no description, and the seeding assertions below need one.
     const occurrenceWithDescription = EventBuilder.new()

@@ -5,7 +5,10 @@ import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerRenderableEventOccurrence,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -27,6 +30,7 @@ import {
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
+import { formatIsoDate, formatIsoDateTime } from '../../utils/date-utils';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 
@@ -135,6 +139,11 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
 
   // Feature hook
   const formatTime = useFormatTime();
+  const start = occurrence.displayTimezone.start.value;
+  const end = occurrence.displayTimezone.end.value;
+  const isMultiDay = !adapter.isSameDay(start, end);
+  const formatDate = (date: TemporalSupportedObject) =>
+    adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
   const eventTimezone = getEventTimezone(occurrence);
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
@@ -169,33 +178,28 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
       </EventDialogResourceContainer>
       <EventDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
         <CalendarMonthRounded className={classes.eventDialogDateTimeIcon} fontSize="small" />
-        <Typography
-          className={classes.eventDialogDateTimeLabel}
-          variant="body2"
-          component="p"
-          noWrap
-        >
-          <time
-            dateTime={adapter.format(
-              occurrence.displayTimezone.start.value,
-              'localizedNumericDate',
-            )}
-          >
-            <span>
-              {adapter.format(
-                occurrence.displayTimezone.start.value,
-                'localizedDateWithFullMonthAndWeekDay',
-              )}
-              ,{' '}
-            </span>
-          </time>
+        <Typography className={classes.eventDialogDateTimeLabel} variant="body2" component="p">
           {occurrence.allDay ? (
-            <span> {localeText.allDayLabel}</span>
+            <React.Fragment>
+              <time dateTime={formatIsoDate(start, adapter)}>{formatDate(start)}</time>
+              {isMultiDay && (
+                <React.Fragment>
+                  {' - '}
+                  <time dateTime={formatIsoDate(end, adapter)}>{formatDate(end)}</time>
+                </React.Fragment>
+              )}
+              {`, ${localeText.allDayLabel}`}
+            </React.Fragment>
           ) : (
-            <time>
-              <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
-              <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
-            </time>
+            <React.Fragment>
+              <time dateTime={formatIsoDateTime(start, adapter)}>
+                {`${formatDate(start)}, ${formatTime(start)}`}
+              </time>
+              {' - '}
+              <time dateTime={formatIsoDateTime(end, adapter)}>
+                {isMultiDay ? `${formatDate(end)}, ${formatTime(end)}` : formatTime(end)}
+              </time>
+            </React.Fragment>
           )}
         </Typography>
       </EventDialogDateTimeContainer>

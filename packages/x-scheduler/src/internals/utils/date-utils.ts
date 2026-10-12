@@ -56,3 +56,22 @@ export function formatHourAndMinutes(
 
   return adapter.formatByString(date, timeFormat);
 }
+
+/**
+ * @example "2025-07-13"
+ */
+export function formatIsoDate(date: TemporalSupportedObject, adapter: Adapter): string {
+  const f = adapter.formats;
+
+  return adapter.formatByString(date, `${f.yearPadded}-${f.monthPadded}-${f.dayOfMonthPadded}`);
+}
+
+/**
+ * @example "2025-07-13T13:30"
+ */
+export function formatIsoDateTime(date: TemporalSupportedObject, adapter: Adapter): string {
+  const f = adapter.formats;
+  const time = adapter.formatByString(date, `${f.hours24hPadded}:${f.minutesPadded}`);
+
+  return `${formatIsoDate(date, adapter)}T${time}`;
+}
