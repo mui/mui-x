@@ -70,7 +70,7 @@ describe('<AdapterDayjs />', () => {
 
     it('addHours: should keep a UTC offset if no timezone plugin is available', () => {
       const modifiedAdapter = new AdapterDayjs();
-      // @ts-ignore
+      // @ts-expect-error Override the private timezone plugin probe to simulate Dayjs without the timezone plugin.
       modifiedAdapter.hasTimezonePlugin = () => false;
 
       const value = dayjs.utc('2026-01-15T12:00:00Z').utcOffset(120);
