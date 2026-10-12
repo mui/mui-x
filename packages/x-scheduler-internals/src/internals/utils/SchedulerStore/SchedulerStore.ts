@@ -687,21 +687,14 @@ export class SchedulerStore<
     if (hasChanges) {
       if (process.env.NODE_ENV !== 'production') {
         if (!this.parameters.onEventsChange && !hasDataSource(this.parameters)) {
-          warnOnce([
-            'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
-            'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
-            'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
-          ]);
+          warnOnce(
+            [
+              'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+              'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+              'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+            ].join('\n'),
+          );
         }
-    if (process.env.NODE_ENV !== 'production') {
-      if (!this.parameters.onEventsChange && !hasDataSource(this.parameters)) {
-        warnOnce(
-          [
-            'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
-            'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
-            'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
-          ].join('\n'),
-        );
       }
 
       this.parameters.onEventsChange?.(newEvents, eventDetails);
@@ -808,10 +801,12 @@ export class SchedulerStore<
           );
 
         if (isRealChange) {
-          warnOnce([
-            `MUI X Scheduler: The \`${property}\` date of the event with id="${String(changes.id)}" was not updated.`,
-            `\`eventModelStructure.${property}\` declares a getter but no setter, so it cannot be written back to your event model. Add a \`setter\` to make it editable.`,
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: The \`${property}\` date of the event with id="${String(changes.id)}" was not updated.`,
+              `\`eventModelStructure.${property}\` declares a getter but no setter, so it cannot be written back to your event model. Add a \`setter\` to make it editable.`,
+            ].join('\n'),
+          );
         }
       }
 
@@ -845,10 +840,12 @@ export class SchedulerStore<
       // hundred events built with the same `eventModelStructure`) are one structural mistake, not
       // one per event — per-instance feedback is what `rejection` is for.
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: An event was not created because a date could not be written back.',
-          datesNotWritableReason(this.state),
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: An event was not created because a date could not be written back.',
+            datesNotWritableReason(this.state),
+          ].join('\n'),
+        );
       }
       return createDatesNotWritableError(this.state);
     }
@@ -865,10 +862,12 @@ export class SchedulerStore<
       };
       if (isDatesMove(entry, reference, entry.allDay ?? original.allDay, adapter)) {
         if (process.env.NODE_ENV !== 'production') {
-          warnOnce([
-            'MUI X Scheduler: An event was not moved because a date could not be written back.',
-            datesNotWritableReason(this.state),
-          ]);
+          warnOnce(
+            [
+              'MUI X Scheduler: An event was not moved because a date could not be written back.',
+              datesNotWritableReason(this.state),
+            ].join('\n'),
+          );
         }
         return createDatesNotWritableError(this.state);
       }
@@ -1070,10 +1069,12 @@ export class SchedulerStore<
         );
         if (isMove && !schedulerEventSelectors.canWriteEventDates(this.state)) {
           if (process.env.NODE_ENV !== 'production') {
-            warnOnce([
-              'MUI X Scheduler: An event was not moved because a date could not be written back.',
-              datesNotWritableReason(this.state),
-            ]);
+            warnOnce(
+              [
+                'MUI X Scheduler: An event was not moved because a date could not be written back.',
+                datesNotWritableReason(this.state),
+              ].join('\n'),
+            );
           }
           this.pushError(createDatesNotWritableError(this.state), { transient: true });
           return;
@@ -1201,10 +1202,12 @@ export class SchedulerStore<
 
     const refuse = (reason: string) => {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          `MUI X Scheduler: The event with id="${String(copiedEvent.id)}" was not pasted.`,
-          reason,
-        ]);
+        warnOnce(
+          [
+            `MUI X Scheduler: The event with id="${String(copiedEvent.id)}" was not pasted.`,
+            reason,
+          ].join('\n'),
+        );
       }
       return null;
     };
