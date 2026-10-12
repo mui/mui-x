@@ -332,7 +332,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
     operatorValue?: string,
   ) => {
     if (operatorValue === 'isAnyOf') {
-      return `${column} is any of: ${value}`;
+      return `${column} ${operator}: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
@@ -343,7 +343,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
     operatorValue?: string,
   ) => {
     if (operatorValue === 'isAnyOf') {
-      return `Filter where ${column} is any of: ${value}`;
+      return `Filter where ${column} ${operator}: ${value}`;
     }
     return `Filter where ${column} ${operator} ${value}`;
   },

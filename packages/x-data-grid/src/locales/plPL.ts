@@ -320,13 +320,13 @@ const plPLGrid: Partial<GridLocaleText> = {
   // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
   // promptChangeFilterLabel: (column: string, operator: string, value: string, operatorValue?: string) => {
   //   if (operatorValue === 'isAnyOf') {
-  //     return `${column} is any of: ${value}`;
+  //     return `${column} ${operator}: ${value}`;
   //   }
   //   return `${column} ${operator} ${value}`;
   // },
   // promptChangeFilterDescription: (column: string, operator: string, value: string, operatorValue?: string) => {
   //   if (operatorValue === 'isAnyOf') {
-  //     return `Filter where ${column} is any of: ${value}`;
+  //     return `Filter where ${column} ${operator}: ${value}`;
   //   }
   //   return `Filter where ${column} ${operator} ${value}`;
   // },
