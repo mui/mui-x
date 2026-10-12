@@ -310,7 +310,9 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
   /**
    * The value of a timezone at a wall time. A repeated wall time keeps the given offset when it is valid,
-   * else it takes the first occurrence. A wall time in a DST gap moves forward.
+   * else it takes the first occurrence. A wall time in a DST gap or a skipped day (`Pacific/Apia` on
+   * 2011-12-30) moves forward. It reads the offsets 24 hours before and after, so it does not see a second
+   * offset change within 48 hours.
    */
   private getWallTimeValue = (wallTime: number, timezone: string, offset?: number) => {
     const getValue = (candidate: number) =>
