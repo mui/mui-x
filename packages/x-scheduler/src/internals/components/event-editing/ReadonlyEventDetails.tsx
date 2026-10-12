@@ -31,7 +31,7 @@ import {
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { formatIsoDate } from '../../utils/date-utils';
+import { formatFullDate, formatIsoDate } from '../../utils/date-utils';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 
@@ -143,11 +143,9 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const start = occurrence.displayTimezone.start.value;
   const end = occurrence.displayTimezone.end.value;
   const isMultiDay = !adapter.isSameDay(start, end);
-  const formatDate = (date: TemporalSupportedObject) =>
-    adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
   const formatBound = occurrence.allDay
-    ? formatDate
-    : (date: TemporalSupportedObject) => `${formatDate(date)}, ${formatTime(date)}`;
+    ? (date: TemporalSupportedObject) => formatFullDate(date, adapter)
+    : (date: TemporalSupportedObject) => `${formatFullDate(date, adapter)}, ${formatTime(date)}`;
   const formatBoundDateTime = occurrence.allDay
     ? (date: TemporalSupportedObject) => formatIsoDate(date, adapter)
     : (date: TemporalSupportedObject) =>
