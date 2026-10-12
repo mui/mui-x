@@ -789,7 +789,8 @@ export interface ChartsAxisData {
   seriesValues: Record<
     string,
     HasProperty<ChartsTypeFeatureFlags, 'seriesValuesOverride'> extends true
-      ? // @ts-ignore this property is added through module augmentation
+      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium supplies seriesValuesOverride only when its augmentation is loaded.
+        // @ts-ignore Premium supplies seriesValuesOverride only when its augmentation is loaded.
         ChartsTypeFeatureFlags['seriesValuesOverride']
       : number | null | undefined
   >;
