@@ -244,5 +244,6 @@ export const useGridTreeDataPreProcessors = (
     } else {
       isFirstRender.current = false;
     }
+    // `setStrategyAvailability` is stable. These props trigger the `strategyAvailabilityChange` event.
   }, [setStrategyAvailability, props.treeData, props.dataSource]);
 };
