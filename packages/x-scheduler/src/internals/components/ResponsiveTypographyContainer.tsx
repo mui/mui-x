@@ -26,8 +26,10 @@ const ResponsiveTypographyContainerRoot = styled('div', {
 });
 
 export function ResponsiveTypographyContainer(props: React.ComponentProps<'div'>) {
-  // Standalone views render this outside of the styled context, so default to the static class.
-  const { className = eventCalendarClasses.responsiveTypographyContainer, ...other } = props;
-
-  return <ResponsiveTypographyContainerRoot className={className} {...other} />;
+  return (
+    <ResponsiveTypographyContainerRoot
+      className={eventCalendarClasses.responsiveTypographyContainer}
+      {...props}
+    />
+  );
 }
