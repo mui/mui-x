@@ -85,15 +85,15 @@ export interface RowsMetaState {
    */
   rowCount: number;
   /**
-   * The height shared by every row of the current page.
-   * Only meaningful while `positions` is `null`.
+   * The height shared by every row of the current page, or `null` if the rows have
+   * different heights.
    */
-  uniformRowHeight: number;
+  uniformRowHeight: number | null;
   /**
-   * The position of each row, or `null` while every row has `uniformRowHeight` (the common
-   * case, where the array is never built). Read through `RowsMeta.getPosition`.
+   * The position of each row.
+   * With uniform rows, the array is only built on first access: prefer `RowsMeta.getPosition`.
    */
-  positions: number[] | null;
+  positions: number[];
   /**
    * The sum of all visible grid rows in the current rows.
    */
@@ -124,9 +124,27 @@ export type HeightEntry = {
 };
 
 export const RowsMeta = {
+  /** Creates the state; with uniform rows, `positions` is built lazily on first access. */
+  create: (
+    rowsMeta: Omit<RowsMetaState, 'positions'> & { positions: number[] | null },
+  ): RowsMetaState => {
+    const { uniformRowHeight, rowCount, positions } = rowsMeta;
+    if (uniformRowHeight === null || positions !== null) {
+      return rowsMeta as RowsMetaState;
+    }
+    let lazyPositions: number[] | undefined;
+    // Enumerable so that spreading or serializing the state keeps the `positions` key.
+    return Object.defineProperty(rowsMeta, 'positions', {
+      enumerable: true,
+      get: () => {
+        lazyPositions ??= Array.from({ length: rowCount }, (_, i) => i * uniformRowHeight);
+        return lazyPositions;
+      },
+    }) as RowsMetaState;
+  },
   /** Position of the row at `index`, or `undefined` out of range, like an array lookup. */
   getPosition: (rowsMeta: RowsMetaState, index: number): number | undefined => {
-    if (rowsMeta.positions !== null) {
+    if (rowsMeta.uniformRowHeight === null) {
       return rowsMeta.positions[index];
     }
     return index >= 0 && index < rowsMeta.rowCount ? index * rowsMeta.uniformRowHeight : undefined;

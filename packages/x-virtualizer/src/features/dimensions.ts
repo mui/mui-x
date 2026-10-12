@@ -69,6 +69,7 @@ const selectors = {
   autoHeight: (state: BaseState) => state.dimensions.autoHeight,
   minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
+  rowPositions: (state: BaseState) => state.rowsMeta.positions,
   rowPosition: (state: BaseState, index: number) => RowsMeta.getPosition(state.rowsMeta, index),
   // Memoized on the columns alone.
   // Without an input selector, the whole state is the memoization key.
@@ -151,11 +152,11 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     },
   };
 
-  const rowsMeta: RowsMetaState = {
+  const rowsMeta = RowsMeta.create({
     ...rowsLayout,
     pinnedTopRowsTotalHeight: 0,
     pinnedBottomRowsTotalHeight: 0,
-  };
+  });
 
   const rowHeights = new Map();
 
@@ -609,11 +610,11 @@ function useRowsMeta(
       pinnedBottomRowsTotalHeight !== store.state.rowsMeta.pinnedBottomRowsTotalHeight ||
       rowsLayout.currentPageTotalHeight !== store.state.rowsMeta.currentPageTotalHeight;
 
-    const rowsMeta: RowsMetaState = {
+    const rowsMeta = RowsMeta.create({
       ...rowsLayout,
       pinnedTopRowsTotalHeight,
       pinnedBottomRowsTotalHeight,
-    };
+    });
 
     store.set('rowsMeta', rowsMeta);
     if (didHeightsChange) {
@@ -721,23 +722,28 @@ function measureRows(
   rowCount: number,
   defaultRowHeight: number,
   getRowHeight: (index: number) => number,
-): Pick<RowsMetaState, 'rowCount' | 'uniformRowHeight' | 'positions' | 'currentPageTotalHeight'> {
-  let uniformRowHeight = defaultRowHeight;
+) {
+  let firstRowHeight = defaultRowHeight;
   let positions: number[] | null = null;
   let currentPageTotalHeight = 0;
 
   for (let i = 0; i < rowCount; i += 1) {
     const height = getRowHeight(i);
     if (i === 0) {
-      uniformRowHeight = height;
-    } else if (positions === null && height !== uniformRowHeight) {
-      positions = uniformPositions(i, uniformRowHeight);
+      firstRowHeight = height;
+    } else if (positions === null && height !== firstRowHeight) {
+      positions = uniformPositions(i, firstRowHeight);
     }
     positions?.push(currentPageTotalHeight);
     currentPageTotalHeight += height;
   }
 
-  return { rowCount, uniformRowHeight, positions, currentPageTotalHeight };
+  return {
+    rowCount,
+    uniformRowHeight: positions === null ? firstRowHeight : null,
+    positions,
+    currentPageTotalHeight,
+  };
 }
 
 function uniformPositions(rowCount: number, rowHeight: number) {

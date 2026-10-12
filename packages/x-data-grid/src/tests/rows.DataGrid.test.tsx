@@ -26,6 +26,7 @@ import {
 import type {
   DataGridProps,
   GridRowIdGetter,
+  GridRowHeightParams,
   GridRowClassNameParams,
   GridRowModel,
   GridRenderCellParams,
@@ -1263,11 +1264,19 @@ describe('<DataGrid /> - Rows', () => {
       it('should only build the row positions once the rows have different heights', () => {
         const { setProps } = render(<TestCase />);
 
-        expect(gridRowsMetaSelector(apiRef).positions).to.equal(null);
+        expect(gridRowsMetaSelector(apiRef).uniformRowHeight).to.equal(ROW_HEIGHT);
         expect(gridRowPositionSelector(apiRef, 2)).to.equal(2 * ROW_HEIGHT);
+        expect(gridRowsMetaSelector(apiRef).positions).to.deep.equal([
+          0,
+          ROW_HEIGHT,
+          2 * ROW_HEIGHT,
+        ]);
 
-        setProps({ getRowHeight: ({ id }) => (id === 'c2' ? 100 : null) });
+        setProps({
+          getRowHeight: ({ id }: GridRowHeightParams) => (id === 'c2' ? 100 : null),
+        });
 
+        expect(gridRowsMetaSelector(apiRef).uniformRowHeight).to.equal(null);
         expect(gridRowsMetaSelector(apiRef).positions).to.deep.equal([
           0,
           ROW_HEIGHT,

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import { RowsMeta } from '@mui/x-virtualizer';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -26,14 +27,14 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state, props, api
 
   return {
     ...state,
-    rowsMeta: {
+    rowsMeta: RowsMeta.create({
       rowCount,
       uniformRowHeight: baseRowHeight,
       positions: null,
       currentPageTotalHeight: rowCount * baseRowHeight,
       pinnedTopRowsTotalHeight: 0,
       pinnedBottomRowsTotalHeight: 0,
-    },
+    }),
   };
 };
 

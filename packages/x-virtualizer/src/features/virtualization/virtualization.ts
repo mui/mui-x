@@ -1082,7 +1082,7 @@ function getNearestIndexToRender(
   options?: SearchOptions,
 ) {
   const { rowsMeta } = inputs;
-  if (rowsMeta.positions === null) {
+  if (rowsMeta.uniformRowHeight !== null) {
     return searchRows(rowsMeta, offset, options);
   }
 
@@ -1212,9 +1212,9 @@ function searchRows(
   offset: number,
   options: SearchOptions | undefined = undefined,
 ): number {
-  const { positions, rowCount, uniformRowHeight } = rowsMeta;
-  if (positions !== null) {
-    return binarySearch(offset, positions, options);
+  const { rowCount, uniformRowHeight } = rowsMeta;
+  if (uniformRowHeight === null) {
+    return binarySearch(offset, rowsMeta.positions, options);
   }
   if (rowCount <= 0) {
     return -1;

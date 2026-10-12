@@ -1,22 +1,40 @@
 import { describe, it, expect } from 'vitest';
 import { RowsMeta, type RowsMetaState } from './dimensions';
 
-const uniform: RowsMetaState = {
+const createUniform = () =>
+  RowsMeta.create({
+    rowCount: 3,
+    uniformRowHeight: 50,
+    positions: null,
+    currentPageTotalHeight: 150,
+    pinnedTopRowsTotalHeight: 0,
+    pinnedBottomRowsTotalHeight: 0,
+  });
+
+const uniform = createUniform();
+
+const variable: RowsMetaState = {
   rowCount: 3,
-  uniformRowHeight: 50,
-  positions: null,
-  currentPageTotalHeight: 150,
+  uniformRowHeight: null,
+  positions: [0, 50, 130],
+  currentPageTotalHeight: 180,
   pinnedTopRowsTotalHeight: 0,
   pinnedBottomRowsTotalHeight: 0,
 };
 
-const variable: RowsMetaState = {
-  ...uniform,
-  positions: [0, 50, 130],
-  currentPageTotalHeight: 180,
-};
-
 describe('RowsMeta', () => {
+  describe('create', () => {
+    it('builds the positions of uniform rows on first access, once', () => {
+      const rowsMeta = createUniform();
+      expect(rowsMeta.positions).to.deep.equal([0, 50, 100]);
+      expect(rowsMeta.positions).to.equal(rowsMeta.positions);
+    });
+
+    it('keeps the positions key when the state is spread', () => {
+      expect({ ...createUniform() }.positions).to.deep.equal([0, 50, 100]);
+    });
+  });
+
   describe('getPosition', () => {
     it('derives the positions of uniform rows from their height', () => {
       expect(RowsMeta.getPosition(uniform, 0)).to.equal(0);
