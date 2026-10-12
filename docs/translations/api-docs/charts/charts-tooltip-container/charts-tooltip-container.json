@@ -5,7 +5,7 @@
       "description": "Determine if the tooltip should be placed on the pointer location or on the node."
     },
     "anchorEl": {
-      "description": "An HTML element, <a href=\"https://popper.js.org/docs/v2/virtual-elements/\">virtualElement</a>, or a function that returns either. It&#39;s used to set the position of the popper. The return value will passed as the reference object of the Popper instance."
+      "description": "An HTML element, <a href=\"https://github.com/floating-ui/popper-docs/blob/main/docs/v2/virtual-elements.md\">virtualElement</a>, or a function that returns either. It&#39;s used to set the position of the popper. The return value will passed as the reference object of the Popper instance."
     },
     "children": { "description": "Popper render function or node." },
     "classes": { "description": "Override or extend the styles applied to the component." },
