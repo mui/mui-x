@@ -431,7 +431,7 @@ describe('<DataGrid /> - Column grouping', () => {
               nbColumns={2}
               columnGroupingModel={[
                 {
-                  // @ts-ignore
+                  // @ts-expect-error Test the runtime warning for a group without its required groupId.
                   groupId: undefined,
                   children: [
                     { field: 'col1' },
@@ -468,7 +468,7 @@ describe('<DataGrid /> - Column grouping', () => {
           <TestWithError
             nbColumns={2}
             columnGroupingModel={[
-              // @ts-ignore
+              // @ts-expect-error Test the runtime warning for a group without its required children.
               {
                 groupId: 'col12',
               },
