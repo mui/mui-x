@@ -194,7 +194,16 @@ Use the `areEventsResizable` property to prevent resizing a resource's events by
 ```ts
 const resource = {
   // ...other properties
-  areEventsResizable: false, // or "start" / "end" to only resize from that edge
+  areEventsResizable: false,
+};
+```
+
+Set it to `"start"` or `"end"` to enable resizing only for one side:
+
+```ts
+const resource = {
+  // ...other properties
+  areEventsResizable: 'end',
 };
 ```
 
