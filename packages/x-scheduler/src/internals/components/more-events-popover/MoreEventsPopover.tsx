@@ -130,7 +130,8 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       replacementRef.current = null;
       return;
     }
-    const isListed = (key: string) => occurrences.some((occurrence) => occurrence.key === key);
+    const listedKeys = new Set(occurrences.map((occurrence) => occurrence.key));
+    const isListed = (key: string) => listedKeys.has(key);
     const lastItemIndex = previous.occurrences.findIndex(
       (occurrence) => occurrence.key === lastItemKeyRef.current,
     );
