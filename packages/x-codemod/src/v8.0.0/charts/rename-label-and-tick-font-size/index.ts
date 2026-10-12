@@ -40,7 +40,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
                 elementNode.name.name === `${attributeName}Style`,
             );
 
-            // @ts-ignore receives an object.
+            // @ts-expect-error The style attribute contains an object expression with a fontSize property.
             const styleValue = attributeStyle?.value.expression.properties.find(
               (prop) => prop.key.name === 'fontSize',
             );
@@ -54,7 +54,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
                     j.objectExpression([
                       j.objectProperty(
                         j.identifier('fontSize'),
-                        // @ts-ignore receives an object.
+                        // @ts-expect-error The font size JSX attribute contains an expression rather than a string literal.
                         attributeValue.value.expression,
                       ),
                     ]),
@@ -66,7 +66,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
                 elementPath,
                 `${attributeName}Style`,
                 'fontSize',
-                // @ts-ignore receives an object.
+                // @ts-expect-error The font size JSX attribute contains an expression rather than a string literal.
                 styleValue?.value ?? attributeValue.value.expression,
                 j,
               );
