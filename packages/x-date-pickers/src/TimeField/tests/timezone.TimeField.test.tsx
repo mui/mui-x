@@ -1,8 +1,7 @@
 import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { expectFieldValue } from 'test/utils/pickers';
-import { describeAdapters } from 'test/utils/pickers/describeAdapters';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { expectFieldValueV7, describeAdapters } from 'test/utils/pickers';
 
 describe('<TimeField /> - Timezone', () => {
   describeAdapters('DST meridiem toggling', TimeField, ({ adapter, renderWithProps }) => {
@@ -82,12 +81,13 @@ describe('<TimeField /> - Timezone', () => {
         const view = renderWithProps({
           format: adapter.formats.fullTime12h,
           timezone: 'America/Santiago',
+          enableAccessibleFieldDOMStructure: true,
         });
 
-        await view.selectSection('hours');
-        await view.pressKey('1');
-        await view.pressKey('0');
-        expectFieldValue(view.getSectionsContainer(), '10:mm aa');
+        await view.selectSectionAsync('hours');
+        view.pressKey(undefined, '1');
+        view.pressKey(undefined, '0');
+        expectFieldValueV7(view.getSectionsContainer(), '10:mm aa');
       },
     );
   });

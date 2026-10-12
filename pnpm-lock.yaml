@@ -148,8 +148,8 @@ catalogs:
       specifier: ^4.1.0-0
       version: 4.1.0-0
     dayjs:
-      specifier: ^1.11.18
-      version: 1.11.18
+      specifier: ^1.11.23
+      version: 1.11.23
     jscodeshift:
       specifier: 17.3.0
       version: 17.3.0
@@ -628,7 +628,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.23
       es-toolkit:
         specifier: ^1.43.0
         version: 1.43.0
@@ -1109,7 +1109,7 @@ importers:
         version: 17.3.0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.23
       moment-timezone:
         specifier: 'catalog:'
         version: 0.6.0
@@ -1419,7 +1419,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.23
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -1508,7 +1508,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.23
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -1979,7 +1979,7 @@ importers:
         version: 7.7.1
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.18
+        version: 1.11.23
       moment:
         specifier: 'catalog:'
         version: 2.30.1
@@ -7444,6 +7444,9 @@ packages:
 
   dayjs@1.11.18:
     resolution: {integrity: sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==}
+
+  dayjs@1.11.23:
+    resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
 
   debounce-fn@5.1.2:
     resolution: {integrity: sha512-Sr4SdOZ4vw6eQDvPYNxHogvrxmCIld/VenC5JbNrFwMiwd7lY/Z18ZFfo+EWNG4DD9nFlAujWAo/wGuOPHmy5A==}
@@ -19369,6 +19372,8 @@ snapshots:
   dateformat@3.0.3: {}
 
   dayjs@1.11.18: {}
+
+  dayjs@1.11.23: {}
 
   debounce-fn@5.1.2:
     dependencies:
