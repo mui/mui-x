@@ -11,15 +11,15 @@ import type { Timer } from '@mui/x-charts-vendor/d3-timer';
  * stopped.
  */
 export class Transition {
-  private readonly duration: number;
+  declare private readonly duration: number;
 
   private elapsed: number = 0;
 
-  private readonly easingFn: (t: number) => number;
+  declare private readonly easingFn: (t: number) => number;
 
   private transitionTimer: Timer | null = null;
 
-  private readonly onTickCallback: (easedT: number) => void;
+  declare private readonly onTickCallback: (easedT: number) => void;
 
   /**
    * Create a new ResumableTransition.

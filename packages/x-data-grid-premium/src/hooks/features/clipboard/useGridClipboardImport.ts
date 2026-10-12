@@ -92,9 +92,9 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
 export class CellValueUpdater {
   rowsToUpdate: Map<GridRowId, GridValidRowModel> = new Map();
 
-  updateRow: (row: GridRowModel) => void;
+  declare updateRow: (row: GridRowModel) => void;
 
-  options: {
+  declare options: {
     apiRef: RefObject<GridPrivateApiPremium>;
     processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
     onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];

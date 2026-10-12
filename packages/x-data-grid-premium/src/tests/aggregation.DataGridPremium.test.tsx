@@ -189,6 +189,90 @@ describe('<DataGridPremium /> - Aggregation', () => {
         fireEvent.doubleClick(cell);
         expect(cell.querySelector('input')).to.equal(null);
       });
+
+      // See https://github.com/mui/mui-x/issues/12958
+      it('should re-apply the aggregation when the valueGetter of an aggregated column changes', async () => {
+        const getColumns = (multiplier: number): GridColDef[] => [
+          { field: 'value', type: 'number', valueGetter: (value: number) => value * multiplier },
+        ];
+        const { setProps } = await render(
+          <Test
+            columns={getColumns(1)}
+            rows={[
+              { id: 1, value: 1 },
+              { id: 2, value: 10 },
+            ]}
+            aggregationModel={{ value: 'sum' }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['1', '10', '11' /* Agg */]);
+
+        setProps({ columns: getColumns(2) });
+        await microtasks();
+        expect(getColumnValues(0)).to.deep.equal(['2', '20', '22' /* Agg */]);
+      });
+
+      it('should re-apply the grouped aggregation when the valueGetter of an aggregated column changes', async () => {
+        const getColumns = (multiplier: number): GridColDef[] => [
+          { field: 'category' },
+          { field: 'value', type: 'number', valueGetter: (value: number) => value * multiplier },
+        ];
+        const { setProps } = await render(
+          <Test
+            columns={getColumns(1)}
+            rows={[
+              { id: 1, category: 'A', value: 1 },
+              { id: 2, category: 'A', value: 10 },
+              { id: 3, category: 'B', value: 100 },
+            ]}
+            rowGroupingModel={['category']}
+            defaultGroupingExpansionDepth={-1}
+            aggregationModel={{ value: 'sum' }}
+          />,
+        );
+        expect(getColumnValues(2)).to.deep.equal([
+          '11' /* Agg "A" */,
+          '1',
+          '10',
+          '100' /* Agg "B" */,
+          '100',
+          '111' /* Agg root */,
+        ]);
+
+        setProps({ columns: getColumns(2) });
+        await microtasks();
+        expect(getColumnValues(2)).to.deep.equal([
+          '22' /* Agg "A" */,
+          '2',
+          '20',
+          '200' /* Agg "B" */,
+          '200',
+          '222' /* Agg root */,
+        ]);
+      });
+
+      it('should not re-apply the aggregation when a column update keeps the valueGetter', async () => {
+        const apply = vi.fn(GRID_AGGREGATION_FUNCTIONS.sum.apply);
+        const valueGetter = (value: number) => value * 2;
+        const { setProps } = await render(
+          <Test
+            columns={[{ field: 'value', type: 'number', valueGetter }]}
+            rows={[
+              { id: 1, value: 1 },
+              { id: 2, value: 10 },
+            ]}
+            aggregationFunctions={{ sum: { ...GRID_AGGREGATION_FUNCTIONS.sum, apply } }}
+            aggregationModel={{ value: 'sum' }}
+          />,
+        );
+        apply.mockClear();
+
+        setProps({ columns: [{ field: 'value', type: 'number', valueGetter, width: 200 }] });
+        await microtasks();
+        await act(() => apiRef.current!.setColumnWidth('value', 250));
+        await microtasks();
+        expect(apply.mock.calls.length).to.equal(0);
+      });
     });
   });
 
@@ -591,6 +675,42 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+    });
+
+    it('should remove the aggregation when selecting the empty "Aggregation" select value', async () => {
+      const onAggregationModelChange = vi.fn();
+      const { user } = await render(
+        <Test
+          initialState={{ aggregation: { model: { id: 'max', category1: 'size' } } }}
+          onAggregationModelChange={onAggregationModelChange}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+
+      await act(async () => apiRef.current?.showColumnMenu('id'));
+
+      await user.click(screen.getByLabelText('Aggregation'));
+      await user.click(
+        within(
+          screen.getByRole('listbox', {
+            name: 'Aggregation',
+          }),
+        ).getByText('...'),
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '']);
+      // The other column keeps its own aggregation.
+      expect(getColumnValues(1)).to.deep.equal([
+        'Cat A',
+        'Cat A',
+        'Cat A',
+        'Cat A',
+        'Cat A',
+        'Cat B',
+        '6' /* Agg */,
+      ]);
+      expect(onAggregationModelChange.mock.lastCall?.[0]).to.deep.equal({ category1: 'size' });
     });
   });
 

@@ -120,10 +120,25 @@ const initialEvents: SchedulerEvent[] = [
 const initialDependencies: SchedulerDependency[] = [
   // Adjacent events in the same row: the short arrow over the junction.
   { id: 'd1', source: 'api', target: 'backend-impl', type: 'FinishToStart' },
-  // Across rows: the forward elbow.
-  { id: 'd2', source: 'api', target: 'ui', type: 'FinishToStart' },
-  // The test plan starts once the API design has started: wraps around the left.
-  { id: 'd3', source: 'api', target: 'test-plan', type: 'StartToStart' },
+  // Across rows: the forward elbow. The UI starts half an hour after the API design ends.
+  {
+    id: 'd2',
+    source: 'api',
+    target: 'ui',
+    type: 'FinishToStart',
+    lag: 30,
+    lagUnit: 'minute',
+  },
+  // The test plan starts half an hour after the API design has started: wraps around
+  // the left.
+  {
+    id: 'd3',
+    source: 'api',
+    target: 'test-plan',
+    type: 'StartToStart',
+    lag: 30,
+    lagUnit: 'minute',
+  },
   { id: 'd4', source: 'backend-impl', target: 'staging', type: 'FinishToStart' },
   // Same row, forward: the straight arrow.
   { id: 'd5', source: 'ui', target: 'polish', type: 'FinishToStart' },

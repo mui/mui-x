@@ -8,9 +8,9 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateDateTime } from '../validation';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 import type { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { mergeSx } from '../internals/utils/utils';
@@ -23,6 +23,13 @@ import { digitalClockClasses } from '../DigitalClock';
 import type { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
 import { DATE_VIEWS } from '../internals/utils/date-utils';
 import { EXPORTED_TIME_VIEWS } from '../internals/utils/time-utils';
+
+// Static pickers render no field, so they skip the field-only manager members.
+const manager = {
+  valueType: 'date-time' as const,
+  validator: validateDateTime,
+  internal_valueManager: singleItemValueManager,
+};
 
 const STEPS: PickerStep[] = [{ views: DATE_VIEWS }, { views: EXPORTED_TIME_VIEWS }];
 
@@ -125,9 +132,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
   const { renderPicker } = useStaticPicker<DateOrTimeViewWithMeridiem, typeof props>({
     ref,
     props,
-    valueManager: singleItemValueManager,
-    valueType: 'date-time',
-    validator: validateDateTime,
+    manager,
     steps: STEPS,
   });
 
