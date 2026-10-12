@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- The spatial index buffer and queue types do not yet cover all operations.
 // @ts-nocheck
 /* eslint-disable */
 import FlatQueue from '@mui/x-charts-vendor/flatqueue';
