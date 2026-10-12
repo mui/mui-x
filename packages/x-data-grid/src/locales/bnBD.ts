@@ -323,14 +323,14 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
   // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
   // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
+  // promptChangeFilterLabel: (column: string, operator: string, value: string, operatorValue?: string) => {
+  //   if (operatorValue === 'isAnyOf') {
   //     return `${column} is any of: ${value}`;
   //   }
   //   return `${column} ${operator} ${value}`;
   // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
+  // promptChangeFilterDescription: (column: string, operator: string, value: string, operatorValue?: string) => {
+  //   if (operatorValue === 'isAnyOf') {
   //     return `Filter where ${column} is any of: ${value}`;
   //   }
   //   return `Filter where ${column} ${operator} ${value}`;
