@@ -34,6 +34,25 @@ export interface RowReorderDropTarget {
 }
 
 /**
+ * Adds classes from `composeClasses`, which can hold the default class and custom ones separated by spaces.
+ * `classList.add` throws on a token with a space.
+ * @param {Element | null | undefined} element The element to update.
+ * @param {string} className Space-separated classes.
+ */
+export function addClasses(element: Element | null | undefined, className: string) {
+  element?.classList.add(...className.split(' ').filter(Boolean));
+}
+
+/**
+ * Removes classes added with `addClasses`.
+ * @param {Element | null | undefined} element The element to update.
+ * @param {string} className Space-separated classes.
+ */
+export function removeClasses(element: Element | null | undefined, className: string) {
+  element?.classList.remove(...className.split(' ').filter(Boolean));
+}
+
+/**
  * Returns whether rows can be reordered in the current grid state.
  * @param {object} params The values the decision depends on.
  * @param {boolean | undefined} params.rowReordering The `rowReordering` prop.
@@ -244,13 +263,14 @@ export function setRowReorderDropTarget(
 
 /**
  * Moves the dragged row to the drop target and publishes `rowOrderChange`.
- * Throws when the row disappears from the tree before or during the move. The event isn't published then.
+ * When the move fails, for example because the row disappeared from the tree, the event isn't published.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
  * @param {GridRowId} rowId The dragged row.
  * @param {RowReorderDropTarget} dropTarget Where to drop the row.
  * @param {(move: () => Promise<void>) => Promise<void>} animate Runs `move`, and can animate the rows around it.
  * @param {() => void} onBeforePublish Called after the move, before `rowOrderChange`. The reorder state must be clear when the event runs.
- * @returns {Promise<void>} Resolves once the row moved and the event was published.
+ * @returns {Promise<void>} Resolves once the row moved and the event was published, or once the move failed.
+ * Rejects only with an error thrown by a `rowOrderChange` listener, such as `onRowOrderChange`.
  */
 export async function commitRowReorder(
   apiRef: RefObject<GridPrivateApiPro>,
@@ -259,38 +279,55 @@ export async function commitRowReorder(
   animate: (move: () => Promise<void>) => Promise<void>,
   onBeforePublish: () => void,
 ): Promise<void> {
-  const sourceNode = gridRowNodeSelector(apiRef, rowId);
-  if (!sourceNode) {
-    throw new Error(`MUI X: No row node found for id #${rowId}`);
-  }
+  // The error of a listener is kept apart from the failures of the move, which are expected and swallowed
+  const listener = { failed: false, error: undefined as unknown };
 
-  const oldParent = sourceNode.parent!;
-  const oldParentNode = gridRowTreeSelector(apiRef)[oldParent] as GridGroupNode;
-  const oldIndex = oldParentNode.children.indexOf(rowId);
-
-  await animate(async () => {
-    await apiRef.current.setRowPosition(rowId, dropTarget.rowId, dropTarget.position);
-
-    const updatedTree = gridRowTreeSelector(apiRef);
-    const updatedNode = updatedTree[rowId];
-    if (!updatedNode) {
-      throw new Error(`MUI X: Row node for id #${rowId} not found after move`);
+  try {
+    const sourceNode = gridRowNodeSelector(apiRef, rowId);
+    if (!sourceNode) {
+      return;
     }
 
-    const newParent = updatedNode.parent!;
-    const newParentNode = updatedTree[newParent] as GridGroupNode;
+    const oldParent = sourceNode.parent!;
+    const oldParentNode = gridRowTreeSelector(apiRef)[oldParent] as GridGroupNode;
+    const oldIndex = oldParentNode.children.indexOf(rowId);
 
-    const rowOrderChangeParams: GridRowOrderChangeParams = {
-      row: apiRef.current.getRow(rowId)!,
-      oldIndex,
-      targetIndex: newParentNode.children.indexOf(rowId),
-      oldParent: oldParent === GRID_ROOT_GROUP_ID ? null : oldParent,
-      newParent: newParent === GRID_ROOT_GROUP_ID ? null : newParent,
-    };
+    await animate(async () => {
+      await apiRef.current.setRowPosition(rowId, dropTarget.rowId, dropTarget.position);
 
-    onBeforePublish();
-    apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
-  });
+      const updatedTree = gridRowTreeSelector(apiRef);
+      const updatedNode = updatedTree[rowId];
+      if (!updatedNode) {
+        return;
+      }
+
+      const newParent = updatedNode.parent!;
+      const newParentNode = updatedTree[newParent] as GridGroupNode;
+
+      const rowOrderChangeParams: GridRowOrderChangeParams = {
+        row: apiRef.current.getRow(rowId)!,
+        oldIndex,
+        targetIndex: newParentNode.children.indexOf(rowId),
+        oldParent: oldParent === GRID_ROOT_GROUP_ID ? null : oldParent,
+        newParent: newParent === GRID_ROOT_GROUP_ID ? null : newParent,
+      };
+
+      onBeforePublish();
+      try {
+        apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
+      } catch (error) {
+        listener.failed = true;
+        listener.error = error;
+      }
+    });
+  } catch {
+    // The move failed, for example a rejected `setRowPosition`: `rowOrderChange` isn't published.
+    return;
+  }
+
+  if (listener.failed) {
+    throw listener.error;
+  }
 }
 
 /**

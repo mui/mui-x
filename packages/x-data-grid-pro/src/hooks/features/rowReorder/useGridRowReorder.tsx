@@ -37,6 +37,7 @@ import type { ReorderValidationContext } from './models';
 import { findCellElement } from './utils';
 import {
   EXPAND_DELAY,
+  addClasses,
   animateRowMove,
   commitRowReorder,
   evaluateRowDropTarget,
@@ -44,6 +45,7 @@ import {
   hasLeftPendingExpansion,
   isRowReorderAllowed,
   checkRowReorderValid,
+  removeClasses,
   setRowReorderDropTarget,
   shouldExpandGroupOnHover,
   toggleHoveredGroupExpansion,
@@ -167,9 +169,9 @@ export const useGridRowReorder = (
         );
         if (draggedRow) {
           if (isDragged) {
-            draggedRow.classList.add(classes.rowBeingDragged);
+            addClasses(draggedRow, classes.rowBeingDragged);
           } else {
-            draggedRow.classList.remove(classes.rowBeingDragged);
+            removeClasses(draggedRow, classes.rowBeingDragged);
           }
         }
       }
@@ -223,14 +225,14 @@ export const useGridRowReorder = (
 
       dragRowNode.current = event.currentTarget;
       // Apply cell-level dragging class to the drag handle
-      dragRowNode.current.classList.add(classes.rowDragging);
+      addClasses(dragRowNode.current, classes.rowDragging);
       setDragRowId(params.id);
 
       // Apply the dragged state to the entire row
       applyDraggedState(params.id, true);
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragRowNode.current!.classList.remove(classes.rowDragging);
+        removeClasses(dragRowNode.current, classes.rowDragging);
       });
 
       apiRef.current.setCellFocus(params.id, GRID_REORDER_COL_DEF.field);
@@ -410,22 +412,19 @@ export const useGridRowReorder = (
         });
 
         if (isValid) {
-          try {
-            // Only emit event and clear state after successful reorder
-            await commitRowReorder(
-              apiRef,
-              dragRowId,
-              {
-                rowId: dropTarget.current.targetRowId,
-                position: dropTarget.current.dropPosition as RowReorderDropPosition,
-              },
-              applyRowAnimation,
-              resetAfterCommit,
-            );
-          } catch {
-            // The reorder failed: skip the `rowOrderChange` event.
-            // The catch-all cleanup below resets the visual and reorder state.
-          }
+          // Only emit event and clear state after successful reorder.
+          // A failed move is handled inside. It only rejects with the error of a `rowOrderChange` listener,
+          // which must reach the user. The state is already clear then.
+          await commitRowReorder(
+            apiRef,
+            dragRowId,
+            {
+              rowId: dropTarget.current.targetRowId,
+              position: dropTarget.current.dropPosition as RowReorderDropPosition,
+            },
+            applyRowAnimation,
+            resetAfterCommit,
+          );
         }
       }
 

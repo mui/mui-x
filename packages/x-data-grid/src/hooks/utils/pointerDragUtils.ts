@@ -1,7 +1,8 @@
 // Helpers for drags built on `usePointerDrag`.
 // Like the hook, they must not depend on the Data Grid, so they can be moved to `@mui/x-internals`.
 
-// Smaller than a row, so picking up the first or last visible row doesn't scroll right away
+// Rows can be smaller than this zone, so a drag that starts in place, like a long press, can start inside it.
+// Callers wait for the pointer to move before they auto-scroll.
 const EDGE_SCROLL_SIZE = 24;
 const EDGE_SCROLL_MAX_SPEED = 20;
 
@@ -24,6 +25,20 @@ export function getEdgeScrollDelta(position: number, start: number, end: number)
     return Math.ceil(ratio * EDGE_SCROLL_MAX_SPEED);
   }
   return 0;
+}
+
+/**
+ * Returns the vertical bounds of the part of the page on screen, in client coordinates.
+ * With pinch zoom, the visual viewport is smaller than the layout viewport that client coordinates refer to.
+ * @param {Window} win The window of the dragged element.
+ * @returns {{ top: number; bottom: number }} The top and bottom edges on screen.
+ */
+export function getVisibleViewportBounds(win: Window): { top: number; bottom: number } {
+  const viewport = win.visualViewport;
+  if (viewport) {
+    return { top: viewport.offsetTop, bottom: viewport.offsetTop + viewport.height };
+  }
+  return { top: 0, bottom: win.innerHeight };
 }
 
 export interface DragPreview {
