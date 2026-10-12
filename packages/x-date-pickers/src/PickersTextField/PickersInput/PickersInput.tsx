@@ -43,7 +43,8 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
     },
     variants: [
       ...Object.keys((theme.vars ?? theme).palette)
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Dynamic palette keys error only in consumers enabling noImplicitAny.
+        // @ts-ignore Palette entries are discovered and filtered for their main color at runtime.
         .filter((key) => (theme.vars ?? theme).palette[key].main)
         .map((color) => ({
           props: {
@@ -52,7 +53,8 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
           },
           style: {
             '&::after': {
-              // @ts-ignore
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Dynamic palette keys error only in consumers enabling noImplicitAny.
+              // @ts-ignore Palette entries are discovered and filtered for their main color at runtime.
               borderBottom: `2px solid ${(theme.vars || theme).palette[color].main}`,
             },
           },
