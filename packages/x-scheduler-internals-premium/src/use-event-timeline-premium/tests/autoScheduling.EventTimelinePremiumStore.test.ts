@@ -238,6 +238,68 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(emittedB.end).to.equal('2025-07-03T15:00:00');
     });
 
+    it('should push a successor whose timezone change advances its lagged bound', () => {
+      const onEventsChange = vi.fn();
+      // New York springs forward on 2025-03-09, making that day 23h long.
+      const predecessor = EventBuilder.new()
+        .id('a')
+        .span('2025-03-09T03:00:00Z', '2025-03-09T04:00:00Z')
+        .build();
+      const newYorkB = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/New_York')
+        .span('2025-03-10T03:00:00Z', '2025-03-10T04:00:00Z')
+        .build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [predecessor, newYorkB],
+          dependencies: [{ ...DEP_AB, lag: 1 }],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      // A day after 04:00Z is 03:00Z the next day in New York, but 04:00Z in UTC.
+      store.updateEvent({ id: 'b', timezone: 'UTC' });
+
+      const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
+      const emittedB = events.find((event) => event.id === 'b')!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-03-10T04:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-03-10T05:00:00Z')));
+    });
+
+    it('should push an all-day successor turned timed when its lag stops rounding down', () => {
+      const onEventsChange = vi.fn();
+      const predecessor = EventBuilder.new()
+        .id('a')
+        .span('2025-07-03T17:00:00Z', '2025-07-03T18:00:00Z')
+        .build();
+      const allDayB = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('UTC')
+        .span('2025-07-05T00:00:00', '2025-07-05T23:59:59', { allDay: true })
+        .build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [predecessor, allDayB],
+          dependencies: [{ ...DEP_AB, lag: 36, lagUnit: 'hour' }],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      // All-day, the 36h lag rounds down to one day; timed, it lands at 06:00 on the 5th.
+      store.updateEvent({ id: 'b', allDay: false });
+
+      const events: SchedulerEvent[] = onEventsChange.mock.calls[0][0];
+      const emittedB = events.find((event) => event.id === 'b')!;
+      expect(emittedB).not.to.have.property('allDay');
+      expect(emittedB.start).to.equal('2025-07-05T06:00:00');
+      expect(emittedB.end).to.equal('2025-07-06T05:59:59');
+    });
+
     it('should cascade a timezone reset', () => {
       const onEventsChange = vi.fn();
       const parisA = EventBuilder.new()

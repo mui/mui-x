@@ -37,7 +37,8 @@ export function getAxisClickPayload({
       AXIS_CLICK_SERIES_TYPES.has(seriesType as AxisClickSeriesType),
     )
     .forEach((seriesType) => {
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Range bar is added by Premium augmentation, absent in the community build.
+      // @ts-ignore Range bar is added by Premium augmentation, absent in the community build.
       const seriesTypeConfig = processedSeries[seriesType];
 
       seriesTypeConfig?.seriesOrder.forEach((seriesId: SeriesId) => {
@@ -48,8 +49,9 @@ export function getAxisClickPayload({
 
         const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
         if (axisKey === undefined || axisKey === axisId) {
-          // @ts-ignore This is safe because users need to opt in to use range bar series.
-          // In that case, they should import the module augmentation from `x-charts-pro/moduleAugmentation/rangeBarOnClick`
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Range-bar click data is valid only with the opt-in axis-data augmentation.
+          // @ts-ignore Range-bar click data is valid only with the opt-in axis-data augmentation.
+          // In that case, they should import the module augmentation from `x-charts-premium/moduleAugmentation/rangeBarOnClick`
           // Which adds the proper type to the series data.
           // TODO(v10): Remove this ts-ignore when we can make the breaking change to ChartsAxisData.
           seriesValues[seriesId] = seriesItem.data[dataIndex];

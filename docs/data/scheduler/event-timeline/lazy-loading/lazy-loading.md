@@ -36,6 +36,8 @@ When `dataSource` is provided, the `events` prop is not needed because all event
 
 The `persistEvents` method is called whenever events are created, updated, or deleted, letting you persist the changes back to the server.
 
+Fetched ranges are cached, so navigating to a range that is already loaded doesn't call `getEvents` again, and moving to a range that extends a loaded one only requests the new days.
+
 {{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info

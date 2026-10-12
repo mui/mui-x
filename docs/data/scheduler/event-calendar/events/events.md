@@ -173,6 +173,7 @@ const eventModelStructure = {
     getter: (event) => event.name,
     setter: (event, newValue) => {
       event.name = newValue;
+      return event;
     },
   },
 };

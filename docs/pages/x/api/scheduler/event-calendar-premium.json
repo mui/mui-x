@@ -158,6 +158,12 @@
       "isGlobal": false
     },
     {
+      "key": "agendaViewEmptyState",
+      "className": "MuiEventCalendarPremium-agendaViewEmptyState",
+      "description": "Styles applied to the agenda view empty state element.",
+      "isGlobal": false
+    },
+    {
       "key": "agendaViewEventListItem",
       "className": "MuiEventCalendarPremium-agendaViewEventListItem",
       "description": "Styles applied to the agenda view event list item elements.",

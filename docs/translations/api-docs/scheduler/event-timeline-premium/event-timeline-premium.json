@@ -56,6 +56,16 @@
     "events": {
       "description": "The events currently available in the calendar.<br>Event models are compared by reference to avoid reprocessing unchanged events. Replace an event model with a new object when updating it instead of mutating it in place."
     },
+    "getEventAriaLabel": {
+      "description": "Returns the accessible name of an event block. Use it to announce details rendered through the <code>timelineEventContent</code> slot.",
+      "typeDescriptions": {
+        "parameters": {
+          "name": "parameters",
+          "description": "The occurrence, its row resource and the default name."
+        },
+        "string": { "name": "string", "description": "The accessible name of the event block." }
+      }
+    },
     "localeText": {
       "description": "Set the locale text of the Event Timeline. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts\">the source</a> in the GitHub repository."
     },
@@ -472,7 +482,7 @@
   },
   "slotDescriptions": {
     "eventDialogGeneralTab": "The content of the &quot;General&quot; tab of the event editing surface: the dialog on regular views, the compact editing drawer on compact views. It is rendered inside the tab panel, so it must not render a tab panel of its own. Return a fragment rather than a wrapper element to keep the spacing between the sections.",
-    "timelineEventContent": "The content of an event block. It replaces the title text and is rendered inside the block, so the block keeps its geometry, its drag and resize handles, and its button semantics. The content is part of the accessible name of the event.",
-    "timelineResourceTitle": "The content of a resource title cell. It replaces the title text and is rendered next to the legend color and the collapse toggle. The content is part of the accessible name of every event in the row."
+    "timelineEventContent": "The content of an event block. It replaces the title text and is rendered inside the block, so the block keeps its geometry, its drag and resize handles, and its button semantics. The content doesn&#39;t change the accessible name of the event, which is built from its data: use <code>getEventAriaLabel</code> to announce the details it adds.",
+    "timelineResourceTitle": "The content of a resource title cell. It replaces the title text and is rendered next to the legend color and the collapse toggle. The events of the row announce the resource through their own accessible name, so the content doesn&#39;t change it."
   }
 }

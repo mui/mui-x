@@ -18,7 +18,7 @@ export class PointerManager {
 
   protected count = 0;
 
-  public readonly mode: PointerType;
+  declare public readonly mode: PointerType;
 
   constructor(mode: PointerType) {
     this.mode = mode;
