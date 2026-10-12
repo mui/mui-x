@@ -20,6 +20,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   getOccurrenceDataTimezone,
   getPrimaryResourceId,
+  getWallTimeIsoFormat,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
@@ -30,7 +31,7 @@ import {
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { formatIsoDate, formatIsoDateTime } from '../../utils/date-utils';
+import { formatIsoDate } from '../../utils/date-utils';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 
@@ -57,7 +58,7 @@ const EventDialogDateTimeContainer = styled('div', {
   slot: 'DateTimeContainer',
 })(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   gap: theme.spacing(1),
 }));
 
@@ -144,6 +145,13 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const isMultiDay = !adapter.isSameDay(start, end);
   const formatDate = (date: TemporalSupportedObject) =>
     adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
+  const formatBound = occurrence.allDay
+    ? formatDate
+    : (date: TemporalSupportedObject) => `${formatDate(date)}, ${formatTime(date)}`;
+  const formatBoundDateTime = occurrence.allDay
+    ? (date: TemporalSupportedObject) => formatIsoDate(date, adapter)
+    : (date: TemporalSupportedObject) =>
+        adapter.formatByString(date, getWallTimeIsoFormat(adapter));
   const eventTimezone = getEventTimezone(occurrence);
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
@@ -179,28 +187,16 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
       <EventDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
         <CalendarMonthRounded className={classes.eventDialogDateTimeIcon} fontSize="small" />
         <Typography className={classes.eventDialogDateTimeLabel} variant="body2" component="p">
-          {occurrence.allDay ? (
+          <time dateTime={formatBoundDateTime(start)}>{formatBound(start)}</time>
+          {(isMultiDay || !occurrence.allDay) && (
             <React.Fragment>
-              <time dateTime={formatIsoDate(start, adapter)}>{formatDate(start)}</time>
-              {isMultiDay && (
-                <React.Fragment>
-                  {' - '}
-                  <time dateTime={formatIsoDate(end, adapter)}>{formatDate(end)}</time>
-                </React.Fragment>
-              )}
-              {`, ${localeText.allDayLabel}`}
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <time dateTime={formatIsoDateTime(start, adapter)}>
-                {`${formatDate(start)}, ${formatTime(start)}`}
-              </time>
               {' - '}
-              <time dateTime={formatIsoDateTime(end, adapter)}>
-                {isMultiDay ? `${formatDate(end)}, ${formatTime(end)}` : formatTime(end)}
+              <time dateTime={formatBoundDateTime(end)}>
+                {isMultiDay ? formatBound(end) : formatTime(end)}
               </time>
             </React.Fragment>
           )}
+          {occurrence.allDay && `, ${localeText.allDayLabel}`}
         </Typography>
       </EventDialogDateTimeContainer>
       {defaultRecurrenceKey != null && (

@@ -584,11 +584,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('read-only date and time', () => {
-    function renderReadonlyDetails(builder: EventBuilder) {
+    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: TemporalTimezone) {
+      if (displayTimezone) {
+        builder.withDisplayTimezone(displayTimezone);
+      }
       const event: SchedulerEvent = builder.readOnly().build();
 
       render(
-        <EventCalendarProvider events={[event]}>
+        <EventCalendarProvider events={[event]} displayTimezone={displayTimezone}>
           <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
         </EventCalendarProvider>,
       );
@@ -608,18 +611,34 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       );
 
       expect(text).to.equal('Monday, May 26th, 2025, 7:30 AM - 8:15 AM');
-      expect(times).to.deep.equal(['2025-05-26T07:30', '2025-05-26T08:15']);
+      expect(times).to.deep.equal(['2025-05-26T07:30:00', '2025-05-26T08:15:00']);
     });
 
     it('should show the end date of a multi-day timed event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new().span('2025-05-26T10:00:00Z', '2025-05-28T11:00:00Z'),
+        EventBuilder.new().span('2025-05-03T13:30:00Z', '2025-05-05T14:15:00Z'),
       );
 
-      expect(text).to.equal(
-        'Monday, May 26th, 2025, 10:00 AM - Wednesday, May 28th, 2025, 11:00 AM',
+      expect(text).to.equal('Saturday, May 3rd, 2025, 1:30 PM - Monday, May 5th, 2025, 2:15 PM');
+      expect(times).to.deep.equal(['2025-05-03T13:30:00', '2025-05-05T14:15:00']);
+    });
+
+    it('should show a timed event ending at midnight as a multi-day event, like the grid', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T22:00:00Z', '2025-05-27T00:00:00Z'),
       );
-      expect(times).to.deep.equal(['2025-05-26T10:00', '2025-05-28T11:00']);
+
+      expect(text).to.equal('Monday, May 26th, 2025, 10:00 PM - Tuesday, May 27th, 2025, 12:00 AM');
+    });
+
+    it('should show the dates and times in the display timezone', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 4:30 PM - 5:15 PM');
+      expect(times).to.deep.equal(['2025-05-26T16:30:00', '2025-05-26T17:15:00']);
     });
 
     it('should show the date of a single-day all-day event', () => {
@@ -633,11 +652,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should show the date range of a multi-day all-day event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-28T23:59:59Z', { allDay: true }),
+        EventBuilder.new().span('2025-05-03T00:00:00Z', '2025-05-05T23:59:59Z', { allDay: true }),
       );
 
-      expect(text).to.equal('Monday, May 26th, 2025 - Wednesday, May 28th, 2025, All Day');
-      expect(times).to.deep.equal(['2025-05-26', '2025-05-28']);
+      expect(text).to.equal('Saturday, May 3rd, 2025 - Monday, May 5th, 2025, All Day');
+      expect(times).to.deep.equal(['2025-05-03', '2025-05-05']);
     });
   });
 
