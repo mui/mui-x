@@ -214,12 +214,12 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
   public getInvalidDate = () => this.moment(new Date('Invalid Date'));
 
   public getTimezone = (value: Moment): string => {
-    // @ts-ignore
+    // @ts-expect-error Moment does not declare the timezone plugin internal zone metadata.
     // eslint-disable-next-line no-underscore-dangle
     const zone = value._z?.name;
     const defaultZone = value.isUTC() ? 'UTC' : 'system';
 
-    // @ts-ignore
+    // @ts-expect-error Moment does not declare the timezone plugin defaultZone property.
     return zone ?? this.moment.defaultZone?.name ?? defaultZone;
   };
 
@@ -247,7 +247,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
 
     const cleanZone =
       timezone === 'default'
-        ? // @ts-ignore
+        ? // @ts-expect-error Moment does not declare the timezone plugin defaultZone property.
           (this.moment.defaultZone?.name ?? 'system')
         : timezone;
 
