@@ -17,14 +17,14 @@ components: EventTimelinePremium
 Use the `resources` prop to define available resources, and the `resource` property on the event model to link an event to its resource:
 
 ```tsx
-const event = [
+const events = [
   { resource: 'work' /** other properties */ },
   { resource: 'holidays' /** other properties */ },
 ];
 
 const resources = [
-  { name: 'Work', id: 'work' },
-  { name: 'Holidays', id: 'holidays' },
+  { title: 'Work', id: 'work' },
+  { title: 'Holidays', id: 'holidays' },
 ];
 
 <EventTimelinePremium events={events} resources={resources} />;
@@ -203,9 +203,7 @@ Use the `areEventsResizable` property to prevent resizing a resource's events by
 ```ts
 const resource = {
   // ...other properties
-  areEventsResizable: false,
-  areEventsResizable: "start" // only the start edge is draggable.
-  areEventsResizable: "end" // only the end edge is draggable.
+  areEventsResizable: false, // or "start" / "end" to only resize from that edge
 };
 ```
 
