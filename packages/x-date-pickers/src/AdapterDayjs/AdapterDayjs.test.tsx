@@ -37,9 +37,9 @@ describe('<AdapterDayjs />', () => {
   describeGregorianAdapter(AdapterDayjs, {
     ...commonParams,
     prepareAdapter: (adapter) => {
-      // @ts-ignore
+      // @ts-expect-error Override the private UTC plugin probe to simulate Dayjs without plugins.
       adapter.hasUTCPlugin = () => false;
-      // @ts-ignore
+      // @ts-expect-error Override the private timezone plugin probe to simulate Dayjs without plugins.
       adapter.hasTimezonePlugin = () => false;
       // Makes sure that we don't run timezone related tests, that would not work.
       adapter.isTimezoneCompatible = false;
@@ -49,7 +49,7 @@ describe('<AdapterDayjs />', () => {
   describe('Adapter timezone', () => {
     it('setTimezone: should throw warning if no plugin is available', () => {
       const modifiedAdapter = new AdapterDayjs();
-      // @ts-ignore
+      // @ts-expect-error Override the private timezone plugin probe to test the missing-plugin error.
       modifiedAdapter.hasTimezonePlugin = () => false;
 
       const date = modifiedAdapter.date(TEST_DATE_ISO_STRING) as Dayjs;
