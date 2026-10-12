@@ -146,6 +146,31 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(getColumnHeaderCell(0)).not.to.have.class(gridClasses['columnHeader--moving']);
   });
 
+  it('should support custom classes for the dragged column header', () => {
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          rows={rows}
+          columns={columns}
+          classes={{ 'columnHeader--dragging': 'custom-dragging' }}
+        />
+      </div>,
+    );
+
+    // `composeClasses` joins the default and the custom class with a space, which `classList.add` rejects
+    const dragCol = getColumnHeaderCell(0).firstChild! as Element;
+    fireEvent.dragStart(dragCol);
+    expect(dragCol).to.have.class('custom-dragging');
+    expect(dragCol).to.have.class(gridClasses['columnHeader--dragging']);
+
+    fireEvent(dragCol, createDragEndEvent(dragCol));
+    expect(dragCol).not.to.have.class('custom-dragging');
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc']);
+  });
+
   it('should cancel the reordering when dropping the column outside the grid', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];

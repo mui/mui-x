@@ -15,6 +15,7 @@ import type { GridStateInitializer } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { addClasses, removeClasses } from '../../../utils/classListUtils';
 import {
   finishColumnReorder,
   getColumnReorderTargetIndex,
@@ -96,9 +97,7 @@ export const useGridColumnReorder = (
       clearTimeout(removeDnDStylesTimeout.current);
 
       // For more information check here https://github.com/mui/mui-x/issues/14678
-      if (dragColNode.current!.classList.contains(classes.columnHeaderDragging)) {
-        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
-      }
+      removeClasses(dragColNode.current, classes.columnHeaderDragging);
 
       dragColNode.current = null;
 
@@ -136,7 +135,7 @@ export const useGridColumnReorder = (
       event.stopPropagation();
 
       dragColNode.current = event.currentTarget;
-      dragColNode.current.classList.add(classes.columnHeaderDragging);
+      addClasses(dragColNode.current, classes.columnHeaderDragging);
 
       const handleDragEndEvent = (dragEndEvent: DragEvent) => {
         dragColNode.current!.removeEventListener('dragend', handleDragEndEvent);
@@ -152,7 +151,7 @@ export const useGridColumnReorder = (
       forbiddenIndexes.current = drag.forbiddenIndexes;
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
+        removeClasses(dragColNode.current, classes.columnHeaderDragging);
       });
     },
     [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
