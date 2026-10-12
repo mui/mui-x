@@ -585,10 +585,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
   describe('read-only date and time', () => {
     function renderReadonlyDetails(builder: EventBuilder) {
-      const event: SchedulerEvent = builder.resource(personalResource).readOnly().build();
+      const event: SchedulerEvent = builder.readOnly().build();
 
       render(
-        <EventCalendarProvider events={[event]} resources={resources}>
+        <EventCalendarProvider events={[event]}>
           <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
         </EventCalendarProvider>,
       );
@@ -604,7 +604,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should show the date and the time range of a single-day event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new().title('Running').span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
+        EventBuilder.new().span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
       );
 
       expect(text).to.equal('Monday, May 26th, 2025, 7:30 AM - 8:15 AM');
@@ -613,7 +613,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should show the end date of a multi-day timed event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new().title('Trip').span('2025-05-26T10:00:00Z', '2025-05-28T11:00:00Z'),
+        EventBuilder.new().span('2025-05-26T10:00:00Z', '2025-05-28T11:00:00Z'),
       );
 
       expect(text).to.equal(
@@ -624,9 +624,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should show the date of a single-day all-day event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new()
-          .title('Holiday')
-          .span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
+        EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
       );
 
       expect(text).to.equal('Monday, May 26th, 2025, All Day');
@@ -635,9 +633,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should show the date range of a multi-day all-day event', () => {
       const { text, times } = renderReadonlyDetails(
-        EventBuilder.new()
-          .title('Conference')
-          .span('2025-05-26T00:00:00Z', '2025-05-28T23:59:59Z', { allDay: true }),
+        EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-28T23:59:59Z', { allDay: true }),
       );
 
       expect(text).to.equal('Monday, May 26th, 2025 - Wednesday, May 28th, 2025, All Day');
