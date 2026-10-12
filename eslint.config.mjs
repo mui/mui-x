@@ -200,7 +200,6 @@ export default defineConfig(
       // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
       // migration rules
-      '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       'react-hooks/exhaustive-deps': [
         'error',
