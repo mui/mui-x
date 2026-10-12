@@ -34,7 +34,7 @@ describe('Core - EventCalendarStore', () => {
         selection: null,
         eventColor: 'teal',
         eventCreation: true,
-        eventDeletion: undefined,
+        eventDeletion: { confirmation: true },
         eventIdList: [],
         eventModelList: [],
         eventModelLookup: new Map(),

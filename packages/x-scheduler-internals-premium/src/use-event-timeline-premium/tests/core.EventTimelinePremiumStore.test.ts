@@ -30,7 +30,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         dependencyModelLookup: new Map(),
         eventColor: 'teal',
         eventCreation: true,
-        eventDeletion: undefined,
+        eventDeletion: { confirmation: true },
         eventIdList: [],
         eventModelList: [],
         eventModelLookup: new Map(),

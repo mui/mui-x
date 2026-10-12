@@ -853,6 +853,20 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('Method: requestEventDeletion / resolveEventDeletion', () => {
+      it('should default `eventDeletion.confirmation` to `true`, including when explicitly `undefined`', () => {
+        const defaultStore = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [] },
+          adapter,
+        );
+        expect(defaultStore.state.eventDeletion).to.deep.equal({ confirmation: true });
+
+        const undefinedStore = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [], eventDeletion: { confirmation: undefined } },
+          adapter,
+        );
+        expect(undefinedStore.state.eventDeletion).to.deep.equal({ confirmation: true });
+      });
+
       it('should open the delete confirmation dialog instead of deleting immediately by default', () => {
         const onEventsChange = vi.fn();
         const event = EventBuilder.new().build();
@@ -886,6 +900,32 @@ storeClasses.forEach((storeClass) => {
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
         expect(onSubmit.mock.calls.length).to.equal(1);
         expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should push a transient error and not call onSubmit when the event left the store while the dialog was open', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+        // A controlled `events` change (or a dataSource refetch) can drop the event while the
+        // confirmation dialog is still open.
+        store.updateStateFromParameters(
+          { resources: TEST_RESOURCES, events: [], onEventsChange },
+          adapter,
+        );
+
+        store.resolveEventDeletion(true);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(onSubmit.mock.calls.length).to.equal(0);
+        expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
+          'This event is still being saved, so the change was not applied. Try again once it is saved.',
+        ]);
       });
 
       it('should keep the event and not call onSubmit when the deletion is canceled', () => {

@@ -7,24 +7,33 @@ const AGENDA_EVENT_SELECTOR = `.${eventCalendarClasses.agendaViewEventListItem} 
 /**
  * Where focus should go once `element` (an event) is removed by a delete, without leaving the
  * scheduler view: the cell or row it lives in, or in the agenda the next (else previous) event.
+ * Returns a thunk rather than resolving right away: a multi-day or recurring event can render
+ * several rows in the agenda (one per day/occurrence), and all of them unmount together once the
+ * delete actually applies — picking a fallback before then can land on one of those other rows,
+ * which then unmounts too. Call the thunk after the delete has applied, not before.
  */
-export function getFocusFallback(element: HTMLElement): HTMLElement | null {
+export function getFocusFallback(element: HTMLElement): () => HTMLElement | null {
   const view = element.closest<HTMLElement>(VIEW_SELECTOR);
   if (view == null) {
-    return null;
+    return () => null;
   }
 
   const owner = element.parentElement?.closest<HTMLElement>('[tabindex]');
   if (owner != null && view.contains(owner)) {
-    return owner;
+    return () => (owner.isConnected ? owner : null);
   }
 
-  const agendaEvents = Array.from(view.querySelectorAll<HTMLElement>(AGENDA_EVENT_SELECTOR)).filter(
-    (candidate) => !element.contains(candidate),
-  );
+  const agendaEvents = Array.from(view.querySelectorAll<HTMLElement>(AGENDA_EVENT_SELECTOR));
   const isAfter = (candidate: HTMLElement) =>
     element.compareDocumentPosition(candidate) === Node.DOCUMENT_POSITION_FOLLOWING;
-  return agendaEvents.find(isAfter) ?? agendaEvents.filter((c) => !isAfter(c)).pop() ?? null;
+  const ordered = [
+    ...agendaEvents.filter(isAfter),
+    ...agendaEvents.filter((candidate) => !isAfter(candidate)).reverse(),
+  ];
+
+  // Resolved lazily: any other row of the deleted event is gone from the document by the time
+  // this runs, which `isConnected` catches along with `element` itself.
+  return () => ordered.find((candidate) => candidate.isConnected) ?? null;
 }
 
 /**
@@ -42,10 +51,10 @@ export function deleteOccurrenceAndRestoreFocus(
   anchor: HTMLElement | null | undefined,
   onDelete?: () => void,
 ) {
-  const focusFallback = anchor ? getFocusFallback(anchor) : null;
+  const resolveFocusFallback = anchor ? getFocusFallback(anchor) : () => null;
   store.deleteOccurrence(occurrence, () => {
     onDelete?.();
     // Deferred: a dialog's focus trap pulls back any focus moved while it is still mounted.
-    setTimeout(() => focusFallback?.focus());
+    setTimeout(() => resolveFocusFallback()?.focus());
   });
 }

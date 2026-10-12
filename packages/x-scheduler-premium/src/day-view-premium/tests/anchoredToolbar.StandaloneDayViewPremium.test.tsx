@@ -165,12 +165,35 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
       expect(wheelEvent.defaultPrevented).to.equal(false);
     });
 
+    it('should move focus to the owning grid column after confirming a scope', async () => {
+      const { user } = renderResizableRecurringEvent();
+      const column = getTimeGridColumn();
+
+      fireEvent.click(getEventElement());
+      fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+      await screen.findByText(/Apply this change to:/i);
+
+      await user.click(screen.getByRole('radio', { name: /All events/i }));
+      await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByText('Daily Standup')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(column);
+      });
+    });
+
     // Deleting a recurring event must not additionally prompt through the (non-recurring) delete
     // confirmation dialog — the scope dialog is the only confirmation shown.
     it('should not also open the delete confirmation dialog', async () => {
       await armAndOpenScopeDialog();
 
-      expect(screen.queryByRole('dialog', { name: /delete this event\?/i })).to.equal(null);
+      // A role query would miss a second dialog too: the scope dialog (on top) sets the
+      // background `aria-hidden`, which `queryByRole` skips regardless of which dialog is in it.
+      expect(document.querySelectorAll('[id$="delete-confirmation-dialog-title"]')).to.have.length(
+        0,
+      );
     });
   });
 
@@ -186,18 +209,9 @@ describe('StandaloneDayViewPremium - anchored toolbar (recurring resize)', () =>
       await screen.findByRole('dialog', { name: /delete this event\?/i });
     }
 
-    it('should close on a click outside the dialog paper', async () => {
-      await armAndOpenDeleteConfirmation();
-
-      const container = document.querySelector<HTMLElement>('.MuiDialog-container')!;
-      fireEvent.mouseDown(container);
-      fireEvent.click(container);
-
-      await waitFor(() => {
-        expect(screen.queryByRole('dialog', { name: /delete this event\?/i })).to.equal(null);
-      });
-    });
-
+    // A click outside the dialog paper closing it is MUI's own backdrop handling, unrelated to
+    // the toolbar's gating — see `eventToolbar.DayView.test.tsx` (community, non-recurring) for a
+    // test that actually depends on it: clicking outside must not also disarm the toolbar.
     it('should not block scrolling inside the dialog', async () => {
       await armAndOpenDeleteConfirmation();
 

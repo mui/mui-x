@@ -79,7 +79,7 @@ const heILDialog: SchedulerDialogTranslations = {
   eventActionsToolbarAriaLabel: 'פעולות באירוע',
   deleteEvent: 'מחיקת האירוע',
   deleteConfirmationTitle: 'למחוק את האירוע הזה?',
-  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  deleteConfirmationMessage: 'פעולה זו אינה הפיכה. האם ברצונך להמשיך?',
   editEvent: 'עריכת האירוע',
   showEventDetails: 'הצגת פרטים',
   eventContextMenuAriaLabel: 'פעולות באירוע',

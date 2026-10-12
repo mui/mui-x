@@ -17,14 +17,21 @@ describe('DayView - event toolbar', () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  function renderEvent(onEventsChange = vi.fn()) {
+  function renderEvent(onEventsChange = vi.fn(), extraProps: Record<string, unknown> = {}) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
       .singleDay('2025-07-03T10:00:00Z', 60)
       .build();
 
-    render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    render(
+      <StandaloneDayView
+        events={[event]}
+        resources={[]}
+        onEventsChange={onEventsChange}
+        {...extraProps}
+      />,
+    );
 
     return { onEventsChange };
   }
@@ -242,21 +249,7 @@ describe('DayView - event toolbar', () => {
 
   it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {
     window.matchMedia = createMatchMedia(true);
-    const onEventsChange = vi.fn();
-    const event = EventBuilder.new()
-      .id('event-1')
-      .title('Morning Meeting')
-      .singleDay('2025-07-03T10:00:00Z', 60)
-      .build();
-
-    render(
-      <StandaloneDayView
-        events={[event]}
-        resources={[]}
-        onEventsChange={onEventsChange}
-        eventDeletion={{ confirmation: false }}
-      />,
-    );
+    const { onEventsChange } = renderEvent(vi.fn(), { eventDeletion: { confirmation: false } });
 
     fireEvent.click(getEvent());
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
@@ -266,6 +259,40 @@ describe('DayView - event toolbar', () => {
     expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: 'Edit event' })).to.equal(null);
+  });
+
+  it('should close the confirmation dialog on Escape without deleting or disarming the toolbar', async () => {
+    window.matchMedia = createMatchMedia(true);
+    const { onEventsChange } = renderEvent();
+
+    fireEvent.click(getEvent());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+    // MUI focuses the dialog paper itself, not a specific action, once it opens.
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    fireEvent.keyDown(dialog, { key: 'Escape' });
+
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
+    expect(document.querySelector('[role="toolbar"]')).not.to.equal(null);
+  });
+
+  it('should not disarm the toolbar or delete anything when clicking outside the open confirmation dialog', () => {
+    window.matchMedia = createMatchMedia(true);
+    const { onEventsChange } = renderEvent();
+
+    fireEvent.click(getEvent());
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+    expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
+
+    // The backdrop only visually covers the grid; jsdom doesn't enforce that, so this simulates a
+    // click reaching the grid behind it. Without the toolbar's own outside-pointer handler
+    // standing down while the confirmation is open, this would disarm it.
+    fireEvent.click(document.body);
+
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    expect(document.querySelector('[role="toolbar"]')).not.to.equal(null);
   });
 
   // Navigating drops the toolbar's anchor, so it stops rendering — but the store stayed armed, which

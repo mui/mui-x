@@ -131,11 +131,11 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ### Menus and popovers
 
-|                          Keys | Description                                                                                               |
-| ----------------------------: | :-------------------------------------------------------------------------------------------------------- |
-| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, or event context menu               |
-|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                         |
-|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below) |
+|                          Keys | Description                                                                                                             |
+| ----------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
+| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog |
+|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                                       |
+|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below)               |
 
 ## Live region announcements
 
@@ -158,6 +158,7 @@ The dialog is labeled by its event title via `aria-labelledby`.
 - When the dialog shows the General and Recurrence tabs, the General tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab; without tabs the panel claims no tab semantics. The panel and its attributes stay owned by the dialog when the tab content is replaced through the [`eventDialogGeneralTab` slot](/x/react-scheduler/components/event-dialog/).
 - The Recurrence tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab.
 - The recurring scope confirmation dialog radio group has an `aria-label` (default: `"Editing recurring events scope"`).
+- The delete confirmation dialog, unlike the Event Dialog itself, is modal. It is labeled by its title via `aria-labelledby` and described by its message via `aria-describedby`. On Cancel, Escape, or a backdrop click, nothing is deleted and focus returns to the control that opened it (the toolbar's Delete button, the dialog's own Delete event button, or the event itself from the context menu). Once a deletion is confirmed, focus moves to the grid cell that owned the event, or — in the agenda view, which has no such cell — to the next event, or the previous one if none follows.
 
 ## More Events popover
 
@@ -204,6 +205,8 @@ The following keys are specifically relevant to accessibility:
   colorPickerLabel: 'Event color',
   selectColorAriaLabel: (color) => `Select ${color} as event color`,
   radioGroupAriaLabel: 'Editing recurring events scope',
+  deleteConfirmationTitle: 'Delete this event?',
+  deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
 
   // Event context menu
   eventContextMenuAriaLabel: 'Event actions',

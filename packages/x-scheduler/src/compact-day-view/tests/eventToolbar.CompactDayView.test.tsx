@@ -14,7 +14,11 @@ describe('CompactDayView - event toolbar', () => {
 
   function renderEvent(
     onEventsChange = vi.fn(),
-    { readOnly = false, onEventEditingStart = undefined as any } = {},
+    {
+      readOnly = false,
+      onEventEditingStart = undefined as any,
+      ...extraProps
+    }: Record<string, unknown> & { readOnly?: boolean; onEventEditingStart?: any } = {},
   ) {
     const event = EventBuilder.new()
       .id('event-1')
@@ -30,6 +34,7 @@ describe('CompactDayView - event toolbar', () => {
         onEventsChange={onEventsChange}
         visibleDate={new Date('2025-07-03T00:00:00Z')}
         onEventEditingStart={onEventEditingStart}
+        {...extraProps}
       />,
     );
 
@@ -241,22 +246,7 @@ describe('CompactDayView - event toolbar', () => {
   });
 
   it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {
-    const onEventsChange = vi.fn();
-    const event = EventBuilder.new()
-      .id('event-1')
-      .title('Morning Meeting')
-      .singleDay('2025-07-03T10:00:00Z', 60)
-      .build();
-
-    render(
-      <StandaloneCompactDayView
-        events={[event]}
-        resources={[]}
-        onEventsChange={onEventsChange}
-        visibleDate={new Date('2025-07-03T00:00:00Z')}
-        eventDeletion={{ confirmation: false }}
-      />,
-    );
+    const { onEventsChange } = renderEvent(vi.fn(), { eventDeletion: { confirmation: false } });
 
     fireEvent.click(getEvent());
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
@@ -318,22 +308,7 @@ describe('CompactDayView - event toolbar', () => {
     });
 
     it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {
-      const onEventsChange = vi.fn();
-      const event = EventBuilder.new()
-        .id('event-1')
-        .title('Morning Meeting')
-        .singleDay('2025-07-03T10:00:00Z', 60)
-        .build();
-
-      render(
-        <StandaloneCompactDayView
-          events={[event]}
-          resources={[]}
-          onEventsChange={onEventsChange}
-          visibleDate={new Date('2025-07-03T00:00:00Z')}
-          eventDeletion={{ confirmation: false }}
-        />,
-      );
+      const { onEventsChange } = renderEvent(vi.fn(), { eventDeletion: { confirmation: false } });
 
       fireEvent.click(getEvent());
       fireEvent.click(screen.getByRole('button', { name: 'Edit event' }));

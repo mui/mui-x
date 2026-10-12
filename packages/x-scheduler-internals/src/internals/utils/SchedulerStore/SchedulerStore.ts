@@ -233,9 +233,7 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
-      // Left as-is (including `undefined`); `schedulerEventSelectors.deletionConfig` fills in
-      // the defaults.
-      eventDeletion: parameters.eventDeletion,
+      eventDeletion: { confirmation: parameters.eventDeletion?.confirmation ?? true },
       displayTimezone: parameters.displayTimezone ?? 'default',
     };
   }
@@ -835,8 +833,8 @@ export class SchedulerStore<
   };
 
   /**
-   * Deletes an event from the calendar, with no recurring scope step: the interactive
-   * surfaces go through `deleteOccurrence`.
+   * Deletes an event from the calendar immediately, with no recurring scope step and no
+   * confirmation: the interactive surfaces go through `deleteOccurrence` instead.
    */
   public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
@@ -846,8 +844,7 @@ export class SchedulerStore<
    * Requests deletion of an event, opening the confirmation dialog when configured.
    */
   public requestEventDeletion = ({ eventId, onSubmit }: RequestEventDeletionParameters) => {
-    const { confirmation } = schedulerEventSelectors.deletionConfig(this.state);
-    if (!confirmation) {
+    if (!this.state.eventDeletion.confirmation) {
       this.deleteEvent(eventId);
       onSubmit?.();
       return;
@@ -866,10 +863,19 @@ export class SchedulerStore<
     }
 
     this.set('pendingDeleteConfirmation', null);
-    if (confirmed) {
-      this.deleteEvent(pending.eventId);
-      pending.onSubmit?.();
+    if (!confirmed) {
+      return;
     }
+
+    // The event can leave the store while the dialog is open (a fetch replacing the loaded
+    // range, a controlled `events` change).
+    if (schedulerEventSelectors.processedEvent(this.state, pending.eventId) == null) {
+      this.pushError(createEventNotLoadedError(), { transient: true });
+      return;
+    }
+
+    this.deleteEvent(pending.eventId);
+    pending.onSubmit?.();
   };
 
   /**

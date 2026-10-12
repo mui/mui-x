@@ -170,6 +170,18 @@ storeClasses.forEach((storeClass) => {
         store.requestEventDeletion({ eventId: 'event-1' });
         expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(true);
       });
+
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should return true while only the recurring scope dialog is open',
+        () => {
+          const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
+          store.deleteRecurringEvent({
+            eventId: 'event-1',
+            occurrenceStart: adapter.date('2025-07-07T10:00:00', 'default'),
+          });
+          expect(schedulerOtherSelectors.isConfirmationDialogOpen(store.state)).to.equal(true);
+        },
+      );
     });
 
     describe('shouldEventRequireResource', () => {
