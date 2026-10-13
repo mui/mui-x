@@ -50,6 +50,7 @@ const ruRUDialog: SchedulerDialogTranslations = {
   deleteEvent: 'Удалить событие',
   // deleteConfirmationTitle: 'Delete this event?',
   // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Отмена',
   editEvent: 'Редактировать событие',
   showEventDetails: 'Показать подробности',
   eventContextMenuAriaLabel: 'Действия с событием',
@@ -105,7 +106,6 @@ const ruRUDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Все события',
-  cancel: 'Отмена',
   confirm: 'Подтвердить',
   onlyThis: 'Только это событие',
   radioGroupAriaLabel: 'Редактирование повторяющихся событий',

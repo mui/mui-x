@@ -22,6 +22,7 @@ const roRODialog: SchedulerDialogTranslations = {
   deleteEvent: 'Șterge evenimentul',
   // deleteConfirmationTitle: 'Delete this event?',
   // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Anulează',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -76,7 +77,6 @@ const roRODialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Toate evenimentele',
-  cancel: 'Anulează',
   confirm: 'Confirmă',
   onlyThis: 'Doar acest eveniment',
   radioGroupAriaLabel: 'Aria de aplicare a modificării evenimentelor recurente',

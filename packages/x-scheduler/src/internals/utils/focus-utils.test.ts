@@ -17,7 +17,7 @@ describe('getFocusFallback', () => {
       '<div role="grid"><div role="gridcell" id="cell" tabindex="0"><div id="event" tabindex="0"></div></div></div>',
     );
 
-    expect(getFocusFallback(event)()).to.equal(document.getElementById('cell'));
+    expect(getFocusFallback(event, 'event-1')).to.equal(document.getElementById('cell'));
   });
 
   it('should not look past the view for a focusable ancestor of the host page', () => {
@@ -25,57 +25,59 @@ describe('getFocusFallback', () => {
       '<div role="dialog" tabindex="-1"><div role="grid"><div id="event" tabindex="0"></div></div></div>',
     );
 
-    expect(getFocusFallback(event)()).to.equal(null);
+    expect(getFocusFallback(event, 'event-1')).to.equal(null);
   });
 
   it('should return null for an element outside any scheduler view', () => {
     const event = mountEvent('<div tabindex="0"><div id="event" tabindex="0"></div></div>');
 
-    expect(getFocusFallback(event)()).to.equal(null);
+    expect(getFocusFallback(event, 'event-1')).to.equal(null);
   });
 
   describe('agenda', () => {
-    function mountAgenda(eventIds: string[], deletedId: string) {
-      const items = eventIds
+    function mountAgenda(rows: { id: string; eventId: string }[]) {
+      const items = rows
         .map(
-          (id) =>
-            `<li class="${eventCalendarClasses.agendaViewEventListItem}"><div id="${id}" tabindex="0"></div></li>`,
+          ({ id, eventId }) =>
+            `<li class="${eventCalendarClasses.agendaViewEventListItem}"><div id="${id}" data-event-id="${eventId}" tabindex="0"></div></li>`,
         )
         .join('');
       document.body.innerHTML = `<div class="${eventCalendarClasses.agendaView}">${items}</div>`;
-      return document.getElementById(deletedId)!;
     }
 
-    it('should skip a sibling row of the same deleted event, resolved after it unmounts too', () => {
+    it('should skip every other row of the deleted event, even one still in the document (e.g. a pending dataSource persist)', () => {
       // A multi-day or recurring event renders one row per day/occurrence; `jul3` and `jul4` are
-      // both rows of the event being deleted.
-      const jul3 = mountAgenda(['jul3', 'jul4', 'other'], 'jul3');
-      const resolve = getFocusFallback(jul3);
+      // both rows of the event being deleted. Neither is removed here — the exclusion is by
+      // `eventId`, not by whether a row has unmounted, so a `dataSource` persist still in flight
+      // (which only removes the rows once it resolves) can't fool it into picking `jul4`.
+      mountAgenda([
+        { id: 'jul3', eventId: 'multi-day' },
+        { id: 'jul4', eventId: 'multi-day' },
+        { id: 'other', eventId: 'other-event' },
+      ]);
 
-      // Resolving now (before the delete applies) would wrongly return `jul4`: both are removed
-      // in the same commit once the delete actually happens.
-      document.getElementById('jul3')!.remove();
-      document.getElementById('jul4')!.remove();
+      const fallback = getFocusFallback(document.getElementById('jul3')!, 'multi-day');
 
-      expect(resolve()).to.equal(document.getElementById('other'));
+      expect(fallback).to.equal(document.getElementById('other'));
     });
 
     it('should fall back to the previous event when the deleted one was last', () => {
-      const event = mountAgenda(['first', 'last'], 'last');
-      const resolve = getFocusFallback(event);
+      mountAgenda([
+        { id: 'first', eventId: 'event-1' },
+        { id: 'last', eventId: 'event-2' },
+      ]);
 
-      document.getElementById('last')!.remove();
+      const fallback = getFocusFallback(document.getElementById('last')!, 'event-2');
 
-      expect(resolve()).to.equal(document.getElementById('first'));
+      expect(fallback).to.equal(document.getElementById('first'));
     });
 
     it('should return null when no other event survives the delete', () => {
-      const event = mountAgenda(['only'], 'only');
-      const resolve = getFocusFallback(event);
+      mountAgenda([{ id: 'only', eventId: 'event-1' }]);
 
-      document.getElementById('only')!.remove();
+      const fallback = getFocusFallback(document.getElementById('only')!, 'event-1');
 
-      expect(resolve()).to.equal(null);
+      expect(fallback).to.equal(null);
     });
   });
 });

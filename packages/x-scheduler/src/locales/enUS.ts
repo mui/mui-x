@@ -22,6 +22,7 @@ const enUSDialog: EventEditingLocaleText = {
   deleteEvent: 'Delete event',
   deleteConfirmationTitle: 'Delete this event?',
   deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Cancel',
   editEvent: 'Edit event',
   showEventDetails: 'Show details',
   eventContextMenuAriaLabel: 'Event actions',
@@ -76,7 +77,6 @@ const enUSDialog: EventEditingLocaleText = {
 
   // RecurringScopeDialog
   all: 'All events',
-  cancel: 'Cancel',
   confirm: 'Confirm',
   onlyThis: 'Only this event',
   radioGroupAriaLabel: 'Editing recurring events scope',

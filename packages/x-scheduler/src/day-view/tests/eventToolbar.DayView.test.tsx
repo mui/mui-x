@@ -278,7 +278,7 @@ describe('DayView - event toolbar', () => {
     expect(document.querySelector('[role="toolbar"]')).not.to.equal(null);
   });
 
-  it('should not disarm the toolbar or delete anything when clicking outside the open confirmation dialog', () => {
+  it('should not disarm the toolbar or delete anything when clicking outside the open confirmation dialog', async () => {
     window.matchMedia = createMatchMedia(true);
     const { onEventsChange } = renderEvent();
 
@@ -286,11 +286,18 @@ describe('DayView - event toolbar', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
     expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
 
-    // The backdrop only visually covers the grid; jsdom doesn't enforce that, so this simulates a
-    // click reaching the grid behind it. Without the toolbar's own outside-pointer handler
-    // standing down while the confirmation is open, this would disarm it.
-    fireEvent.click(document.body);
+    // What a user actually triggers by clicking outside the dialog: MUI detects a "backdrop
+    // click" on the dialog container (the transparent area around the paper), which is a sibling
+    // of the `role="dialog"` paper, not the paper itself. That's a click the toolbar's own
+    // outside-pointer handler never sees — it's inside `.MuiModal-root`, which the handler already
+    // ignores — so the dialog closing here is MUI's own backdrop handling, not the toolbar's.
+    const container = document.querySelector<HTMLElement>('.MuiDialog-container')!;
+    fireEvent.mouseDown(container);
+    fireEvent.click(container);
 
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
     expect(onEventsChange.mock.calls.length).to.equal(0);
     expect(document.querySelector('[role="toolbar"]')).not.to.equal(null);
   });

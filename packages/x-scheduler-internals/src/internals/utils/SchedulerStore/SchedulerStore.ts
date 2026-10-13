@@ -92,6 +92,17 @@ function createEventNotLoadedError() {
   );
 }
 
+/**
+ * Surfaced when a confirmed delete no longer matches what the confirmation was requested for: the
+ * event, its resource, or the scheduler became read-only, or (with the recurring events plugin)
+ * the event gained a recurrence rule and now needs a scope choice instead of a flat delete.
+ */
+function createEventChangedWhileConfirmingError() {
+  return /* minify-error-disabled */ new Error(
+    'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+  );
+}
+
 function toUpdateEventResult(result: {
   updatedEntries: SchedulerEventUpdatedProperties[];
   rejection: Error | null;
@@ -180,6 +191,7 @@ export class SchedulerStore<
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
+      eventDeletion: { confirmation: parameters.eventDeletion?.confirmation ?? true },
       pendingDeleteConfirmation: null,
     };
 
@@ -233,7 +245,6 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
-      eventDeletion: { confirmation: parameters.eventDeletion?.confirmation ?? true },
       displayTimezone: parameters.displayTimezone ?? 'default',
     };
   }
@@ -285,6 +296,15 @@ export class SchedulerStore<
       parameters,
       adapter,
     ) as Partial<State>;
+
+    // Kept out of `deriveStateFromParameters`, which has no previous state to compare against:
+    // a fresh object on every call would make `update()` treat an unchanged `confirmation` as a
+    // change and notify every subscriber.
+    const confirmation = parameters.eventDeletion?.confirmation ?? true;
+    newSchedulerState.eventDeletion =
+      confirmation === this.state.eventDeletion.confirmation
+        ? this.state.eventDeletion
+        : { confirmation };
 
     if (
       !hasDataSource(parameters) &&
@@ -871,6 +891,17 @@ export class SchedulerStore<
     // range, a controlled `events` change).
     if (schedulerEventSelectors.processedEvent(this.state, pending.eventId) == null) {
       this.pushError(createEventNotLoadedError(), { transient: true });
+      return;
+    }
+
+    // The confirmation was requested for a flat delete; that premise can also change while the
+    // dialog is open — the event (or its resource, or the scheduler) can become read-only, or
+    // gain a recurrence rule, which needs a scope choice instead.
+    if (
+      schedulerEventSelectors.isReadOnly(this.state, pending.eventId) ||
+      schedulerEventSelectors.isRecurring(this.state, pending.eventId)
+    ) {
+      this.pushError(createEventChangedWhileConfirmingError(), { transient: true });
       return;
     }
 

@@ -235,7 +235,6 @@ export interface SchedulerState<TEvent extends object = any> {
   eventDeletion: SchedulerEventDeletionConfig;
   /**
    * The event for which the delete confirmation dialog is open, if any. `null` when the dialog is closed.
-   * The dialog reads from here to know which event is being deleted and to call its `onSubmit` callback.
    */
   pendingDeleteConfirmation: { eventId: SchedulerEventId; onSubmit?: () => void } | null;
 }

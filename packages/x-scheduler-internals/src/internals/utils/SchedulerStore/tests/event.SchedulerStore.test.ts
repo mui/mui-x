@@ -928,6 +928,63 @@ storeClasses.forEach((storeClass) => {
         ]);
       });
 
+      it('should push a transient error and not call onSubmit when the event became read-only while the dialog was open', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange },
+          adapter,
+        );
+
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+        // The confirmation was requested for a flat delete; a controlled `events` update can turn
+        // the event read-only while the dialog is still open.
+        store.updateStateFromParameters(
+          { resources: TEST_RESOURCES, events: [{ ...event, readOnly: true }], onEventsChange },
+          adapter,
+        );
+
+        store.resolveEventDeletion(true);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(onSubmit.mock.calls.length).to.equal(0);
+        expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
+          'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+        ]);
+      });
+
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should push a transient error and not call onSubmit when the event gained a recurrence rule while the dialog was open',
+        () => {
+          const onEventsChange = vi.fn();
+          const onSubmit = vi.fn();
+          const event = EventBuilder.new().id('meeting').build();
+          const recurringEvent = EventBuilder.new().id('meeting').recurrent('DAILY').build();
+          const store = new storeClass.Value(
+            { resources: TEST_RESOURCES, events: [event], onEventsChange },
+            adapter,
+          );
+
+          store.requestEventDeletion({ eventId: event.id, onSubmit });
+          // The confirmation was requested for a flat delete; a controlled `events` update can
+          // give the event a recurrence rule while the dialog is open, which now needs a scope
+          // choice instead.
+          store.updateStateFromParameters(
+            { resources: TEST_RESOURCES, events: [recurringEvent], onEventsChange },
+            adapter,
+          );
+
+          store.resolveEventDeletion(true);
+
+          expect(onEventsChange.mock.calls.length).to.equal(0);
+          expect(onSubmit.mock.calls.length).to.equal(0);
+          expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
+            'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+          ]);
+        },
+      );
+
       it('should keep the event and not call onSubmit when the deletion is canceled', () => {
         const onEventsChange = vi.fn();
         const onSubmit = vi.fn();
@@ -998,6 +1055,19 @@ storeClasses.forEach((storeClass) => {
         expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
         expect(onSubmit.mock.calls.length).to.equal(1);
         expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should keep the same `eventDeletion` reference when an unrelated update leaves `confirmation` unchanged', () => {
+        const params = { resources: TEST_RESOURCES, events: [], onEventsChange: vi.fn() };
+        const store = new storeClass.Value(params, adapter);
+        const eventDeletionBefore = store.state.eventDeletion;
+
+        // A parent re-rendering for an unrelated reason (e.g. a fresh inline callback) shouldn't
+        // make the store treat an unchanged `confirmation` as a change: `Store.update()` compares
+        // each key by reference, so a fresh object here would spuriously notify every subscriber.
+        store.updateStateFromParameters({ ...params, onEventsChange: vi.fn() }, adapter);
+
+        expect(store.state.eventDeletion).to.equal(eventDeletionBefore);
       });
     });
 

@@ -22,6 +22,7 @@ const hyAMDialog: SchedulerDialogTranslations = {
   // deleteEvent: 'Delete event',
   // deleteConfirmationTitle: 'Delete this event?',
   // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  // cancel: 'Cancel',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -85,7 +86,6 @@ const hyAMDialog: SchedulerDialogTranslations = {
   // startTimeLabel: 'Start time',
   // RecurringScopeDialog
   // all: 'All events',
-  // cancel: 'Cancel',
   // confirm: 'Confirm',
   // onlyThis: 'Only this event',
   // radioGroupAriaLabel: 'Editing recurring events scope',

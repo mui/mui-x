@@ -41,7 +41,7 @@ export interface EventEditingLocaleText {
   // DeleteConfirmationDialog
   deleteConfirmationTitle: string;
   deleteConfirmationMessage: string;
-  // Shared with the RecurringScopeDialog's own Cancel action below.
+  // Also used by the RecurringScopeDialog's own Cancel action.
   cancel: string;
   // EventContextMenu (shown on right-click of an event, or on Space while it is focused)
   editEvent: string;

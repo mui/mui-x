@@ -80,6 +80,7 @@ const heILDialog: SchedulerDialogTranslations = {
   deleteEvent: 'מחיקת האירוע',
   deleteConfirmationTitle: 'למחוק את האירוע הזה?',
   deleteConfirmationMessage: 'פעולה זו אינה הפיכה. האם ברצונך להמשיך?',
+  cancel: 'ביטול',
   editEvent: 'עריכת האירוע',
   showEventDetails: 'הצגת פרטים',
   eventContextMenuAriaLabel: 'פעולות באירוע',
@@ -132,7 +133,6 @@ const heILDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'כל האירועים בסדרה',
-  cancel: 'ביטול',
   confirm: 'אישור',
   onlyThis: 'האירוע הזה בלבד',
   radioGroupAriaLabel: 'בחירת האירועים בסדרה שעליהם יחול השינוי',

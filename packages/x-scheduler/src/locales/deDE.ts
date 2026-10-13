@@ -22,6 +22,7 @@ const deDEDialog: SchedulerDialogTranslations = {
   deleteEvent: 'Ereignis löschen',
   // deleteConfirmationTitle: 'Delete this event?',
   // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Abbrechen',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -76,7 +77,6 @@ const deDEDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Alle Ereignisse',
-  cancel: 'Abbrechen',
   confirm: 'Bestätigen',
   onlyThis: 'Nur dieses Ereignis',
   radioGroupAriaLabel: 'Bearbeitungsbereich für wiederkehrende Ereignisse',

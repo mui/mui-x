@@ -22,6 +22,7 @@ const nbNODialog: SchedulerDialogTranslations = {
   deleteEvent: 'Slett hendelse',
   // deleteConfirmationTitle: 'Delete this event?',
   // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Avbryt',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -75,7 +76,6 @@ const nbNODialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Alle hendelser',
-  cancel: 'Avbryt',
   confirm: 'Bekreft',
   onlyThis: 'Bare denne hendelsen',
   radioGroupAriaLabel: 'Rediger omfang for gjentakende hendelser',

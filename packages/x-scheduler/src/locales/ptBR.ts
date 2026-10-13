@@ -22,6 +22,7 @@ const ptBRDialog: SchedulerDialogTranslations = {
   deleteEvent: 'Excluir evento',
   // deleteConfirmationTitle: 'Delete this event?',
   // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Cancelar',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -74,7 +75,6 @@ const ptBRDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Todos os eventos',
-  cancel: 'Cancelar',
   confirm: 'Confirmar',
   onlyThis: 'Apenas este evento',
   radioGroupAriaLabel: 'Escopo de edição de eventos recorrentes',
