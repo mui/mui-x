@@ -1720,6 +1720,25 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(lastSearchParams.get('end')).to.equal('5'); // 6th row
     });
 
+    it('should request the rows after the last row when `scrollEndThreshold` is larger than the rendered rows buffer', async () => {
+      // See https://github.com/mui/mui-x/issues/16747
+      render(<TestDataSourceLazyLoader disableVirtualization={false} scrollEndThreshold={400} />);
+
+      // 10 rows are 500px high and the viewport is 200px high, so the trigger is within the visible area.
+      // The last row is further away than the rendered rows buffer, but the new fetch is triggered anyway.
+      await waitFor(() => {
+        expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+      });
+      expect(() => getRow(9)).to.throw();
+      const lastSearchParams = new URL(fetchRowsSpy.mock.lastCall?.[0]).searchParams;
+      expect(lastSearchParams.get('start')).to.equal('10');
+      expect(lastSearchParams.get('end')).to.equal('19');
+
+      // 20 rows are 1000px high, so the trigger is outside of the visible area.
+      await actSleep(100);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+    });
+
     it('should stop making data source requests if the new rows were not added on the last call', async () => {
       render(
         <TestDataSourceLazyLoader

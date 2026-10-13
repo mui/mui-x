@@ -126,7 +126,7 @@ export class PointerManager {
   declare private passive: boolean;
 
   /** Whether to prevent interrupt events like blur or contextmenu */
-  private preventEventInterruption: boolean = true;
+  declare private preventEventInterruption: boolean;
 
   /** Map of all currently active pointers by their pointerId */
   private pointers: Map<number, PointerData> = new Map();
