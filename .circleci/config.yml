@@ -114,64 +114,34 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.63.0-noble
-    parameters:
-      <<: *default-parameters
-      resource-class:
-        type: string
-        default: large.gen2
-      max-workers:
-        type: string
-        default: ''
-      playwright-server:
-        type: boolean
-        default: true
-    resource_class: << parameters.resource-class >>
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
-      - run:
-          name: Record cgroup stats before tests
-          command: cat /sys/fs/cgroup/cpu.stat | grep usage_usec | tee /tmp/cpu-before
-      - run:
-          name: Sample peak anonymous memory
-          background: true
-          command: |
-            PEAK=0
-            while true; do
-              ANON=$(awk '$1 == "anon" { print int($2 / 1048576) }' /sys/fs/cgroup/memory.stat)
-              if [ "$ANON" -gt "$PEAK" ]; then PEAK=$ANON; echo $PEAK > /tmp/anon-peak; fi
-              sleep 1
-            done
       - when:
-          condition: << parameters.playwright-server >>
+          condition:
+            not:
+              equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
                 environment:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                  VITEST_MAX_WORKERS: << parameters.max-workers >>
                 name: Test Browser
                 command: |
                   pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
-      - unless:
-          condition: << parameters.playwright-server >>
+      - when:
+          condition:
+            equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
+                name: Test Browser
                 environment:
                   TZ: UTC
-                  VITEST_MAX_WORKERS: << parameters.max-workers >>
-                name: Test Browser
-                command: pnpm test:unit:browser
-      - run:
-          name: Report cgroup stats
-          when: always
-          command: |
-            echo "memory.peak: $(( $(cat /sys/fs/cgroup/memory.peak) / 1048576 )) MB"
-            echo "anon.peak: $(cat /tmp/anon-peak) MB"
-            grep -E 'oom' /sys/fs/cgroup/memory.events || true
-            echo "cpu before: $(cat /tmp/cpu-before)"
-            echo "cpu after:  $(grep usage_usec /sys/fs/cgroup/cpu.stat)"
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                command: |
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
       - store_test_results:
           path: test-results
   test_lint:
@@ -330,14 +300,6 @@ workflows:
           <<: *default-context
       - test_browser:
           <<: *default-context
-      # TODO: temporary experiment matrix, remove before merging
-      - test_browser:
-          <<: *default-context
-          name: exp_xlarge.gen2_mw<< matrix.max-workers >>
-          resource-class: xlarge.gen2
-          matrix:
-            parameters:
-              max-workers: ['8', '12']
       - test_lint:
           <<: *default-context
       - test_static:

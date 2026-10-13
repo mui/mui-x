@@ -133,7 +133,9 @@ export default defineConfig({
       testTimeout: 60000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
-      maxWorkers: process.env.VITEST_MAX_WORKERS ? Number(process.env.VITEST_MAX_WORKERS) : 4,
+      // Since vitest 5.0.4 this is the total number of browser pages across all projects,
+      // not per project. 4 saturates the CPU of the `large.gen2` browser job without running out of memory.
+      maxWorkers: 4,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
