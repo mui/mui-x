@@ -8,12 +8,12 @@ packages:
 catalog:
   '@atlaskit/pragmatic-drag-and-drop': ^4.0.0
   '@babel/cli': ^8.0.6
-  '@babel/core': ^8.0.6
+  '@babel/core': ^8.0.7
   '@babel/plugin-transform-modules-commonjs': ^8.0.1
   '@babel/plugin-transform-runtime': ^8.0.6
-  '@babel/preset-typescript': ^8.0.1
+  '@babel/preset-typescript': ^8.0.7
   '@babel/runtime': '^7.29.7 || ^8.0.0'
-  '@babel/traverse': ^8.0.6
+  '@babel/traverse': ^8.0.7
   '@base-ui/react': ^1.8.0
   '@base-ui/utils': ^0.4.0
   '@date-fns/tz': ^1.5.0
@@ -41,7 +41,7 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.8.0
   '@types/use-sync-external-store': ^1.7.0
-  '@typescript-eslint/parser': ^8.71.0
+  '@typescript-eslint/parser': ^8.71.1
   '@vitejs/plugin-react': ^6.1.1
   '@vitejs/plugin-react-swc': ^4.3.3
   '@vitest/browser': ^5.0.4
@@ -123,4 +123,4 @@ overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
-  caniuse-lite: ^1.0.30001814
+  caniuse-lite: ^1.0.30001815
