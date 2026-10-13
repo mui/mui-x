@@ -114,7 +114,7 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.63.0-noble
-    resource_class: large.gen2
+    resource_class: xlarge.gen2
     steps:
       - checkout
       - install-deps:

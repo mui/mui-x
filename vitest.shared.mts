@@ -134,8 +134,8 @@ export default defineConfig({
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Since vitest 5.0.4 this is the total number of browser pages across all projects,
-      // not per project. 4 saturates the CPU of the `large.gen2` browser job without running out of memory.
-      maxWorkers: 4,
+      // not per project. 8 saturates the CPU of the `xlarge.gen2` browser job; higher values bring no speedup.
+      maxWorkers: 8,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
