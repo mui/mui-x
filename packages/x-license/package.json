@@ -42,9 +42,6 @@
     "react-dom": "catalog:",
     "rimraf": "catalog:"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
   "exports": {
     ".": "./src/index.ts",
     "./internals": "./src/internals/index.ts"

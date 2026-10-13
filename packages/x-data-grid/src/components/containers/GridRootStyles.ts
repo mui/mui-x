@@ -683,6 +683,12 @@ export const GridRootStyles = styled('div', {
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'grab',
       opacity: 1,
+      // A long press must not scroll, select text, or open the iOS callout.
+      // Not under `(pointer: coarse)`: a touch laptop with a mouse reports a fine primary pointer.
+      touchAction: 'none',
+      userSelect: 'none',
+      WebkitUserSelect: 'none',
+      WebkitTouchCallout: 'none',
     },
     [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,

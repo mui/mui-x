@@ -326,14 +326,24 @@ const deDEGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `${column} aggregieren (${aggregation})`,
-  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `${column} entspricht einem der Werte: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
-  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `Filtern, bei dem ${column} einem der folgenden Werte entspricht: ${value}`;
     }
     return `Filtern wo ${column} ${operator} ${value}`;
