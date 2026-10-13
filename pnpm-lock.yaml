@@ -7442,8 +7442,6 @@ packages:
   dateformat@3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
 
-  dayjs@1.11.18:
-    resolution: {integrity: sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==}
 
   dayjs@1.11.23:
     resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
@@ -16169,7 +16167,7 @@ snapshots:
   '@mui/x-internal-exceljs-fork@5.0.0':
     dependencies:
       '@types/node': 14.18.63
-      dayjs: 1.11.18
+      dayjs: 1.11.23
       fast-csv: 5.0.7
       jszip: 3.10.1
       readable-stream: 3.6.2
@@ -19371,7 +19369,6 @@ snapshots:
 
   dateformat@3.0.3: {}
 
-  dayjs@1.11.18: {}
 
   dayjs@1.11.23: {}
 
