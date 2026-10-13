@@ -138,6 +138,13 @@ function getSundayDayNumber(adapter: Adapter): number {
 }
 
 /**
+ * The JS weekday (0=Sun … 6=Sat) of a date, read in its own timezone.
+ */
+export function getJsDayOfWeek(adapter: Adapter, date: TemporalSupportedObject): number {
+  return (adapter.getDayOfWeek(date) - getSundayDayNumber(adapter) + 7) % 7;
+}
+
+/**
  * Returns the start of the week for `date`, using `weekStartsOn` as the first
  * day of the week (0 = Sunday … 6 = Saturday).
  *

@@ -40,6 +40,7 @@ import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
+import { createEventTimelinePremiumOccurrenceIndex } from '../utils/eventTimelinePremiumOccurrenceIndex';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import {
   EventTimelinePremiumVirtualizerContext,
@@ -516,37 +517,40 @@ function EventList({
   occurrences: EventTimelinePremiumLayoutOccurrence[];
 }) {
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
-  const { schedulerId } = useEventTimelinePremiumStyledContext();
 
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
   const store = useEventTimelinePremiumStoreContext();
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const occurrenceIndex = React.useMemo(
+    () =>
+      createEventTimelinePremiumOccurrenceIndex(
+        occurrences.map((occurrence) => {
+          const { position, duration } = occurrence.timelinePosition;
+          return { occurrence, start: position, end: position + duration };
+        }),
+      ),
+    [occurrences],
+  );
 
   // Convert virtualizer column range to fraction range
   const { start: visibleStart, end: visibleEnd } = getVisibleFractionRange(
     renderContext,
     config.tickCount,
   );
+  const visibleOccurrences = occurrenceIndex(visibleStart, visibleEnd);
 
   return (
     <React.Fragment>
-      {occurrences.map((occurrence) => {
-        const { position, duration } = occurrence.timelinePosition;
-        return (
-          position + duration > visibleStart &&
-          position < visibleEnd && (
-            <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
-              <EventTimelinePremiumEvent
-                occurrence={occurrence}
-                elementPosition={occurrence.timelinePosition}
-                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
-                variant="regular"
-                resourceId={resourceId}
-              />
-            </EventContextMenuTrigger>
-          )
-        );
-      })}
+      {visibleOccurrences.map(({ occurrence }) => (
+        <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
+          <EventTimelinePremiumEvent
+            occurrence={occurrence}
+            elementPosition={occurrence.timelinePosition}
+            variant="regular"
+            resourceId={resourceId}
+          />
+        </EventContextMenuTrigger>
+      ))}
     </React.Fragment>
   );
 }
@@ -561,7 +565,6 @@ function EventRowContent({
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }) {
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId } = useEventTimelinePremiumStyledContext();
   const { rowRef } = useTimelineGridEventRowContext();
   const { startEditing } = useEventEditingContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
@@ -593,7 +596,6 @@ function EventRowContent({
         <EventTimelinePremiumEvent
           ref={placeholderRef}
           occurrence={placeholder}
-          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
           variant="placeholder"
           resourceId={resourceId}
         />

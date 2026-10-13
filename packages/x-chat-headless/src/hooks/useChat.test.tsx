@@ -670,7 +670,7 @@ describe('useChat', () => {
     expect(result.current.hasMoreHistory).toBe(false);
   });
 
-  it('exposes isLoadingHistory transitioning false → true → false across the initial history load, mirrored by useChatStatus', async () => {
+  it('reports the initial history load as pending from the first render, mirrored by useChatStatus', async () => {
     let resolveListMessages!: (value: any) => void;
     const adapter = createAdapter({
       listMessages: vi.fn(
@@ -685,25 +685,21 @@ describe('useChat', () => {
       initialActiveConversationId: 'c1',
     });
 
-    const observedFlags: boolean[] = [];
+    const observed: Array<[boolean, string]> = [];
     const { result } = renderHook(
       () => {
         const chat = useChat();
         const status = useChatStatus();
-        observedFlags.push(chat.isLoadingHistory);
+        observed.push([chat.isLoadingHistory, chat.historyStatus]);
         return { chat, status };
       },
       { wrapper: Wrapper },
     );
 
-    // The flag is false on the very first render (SSR-safe) and flips to true
-    // once the client effect kicks off the initial history fetch.
-    expect(observedFlags[0]).toBe(false);
-
-    await waitFor(() => {
-      expect(result.current.chat.isLoadingHistory).toBe(true);
-    });
+    // The first committed frame must not look like an empty, settled conversation.
+    expect(observed[0]).toEqual([true, 'loading']);
     expect(result.current.status.isLoadingHistory).toBe(true);
+    expect(result.current.status.historyStatus).toBe('loading');
 
     await act(async () => {
       resolveListMessages({
@@ -722,8 +718,44 @@ describe('useChat', () => {
     });
 
     expect(result.current.chat.isLoadingHistory).toBe(false);
+    expect(result.current.chat.historyStatus).toBe('loaded');
     expect(result.current.status.isLoadingHistory).toBe(false);
+    expect(result.current.status.historyStatus).toBe('loaded');
     expect(result.current.chat.messages.map((message) => message.id)).toEqual(['m1']);
+    expect(observed).not.toContainEqual([false, 'idle']);
+  });
+
+  it('reports historyStatus "loaded" with no messages for an empty conversation', async () => {
+    const adapter = createAdapter({
+      listMessages: vi.fn(async () => ({ messages: [], cursor: undefined, hasMore: false })),
+    });
+    const { Wrapper } = createProviderWrapper({ adapter, initialActiveConversationId: 'c1' });
+
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.historyStatus).toBe('loaded');
+    });
+    expect(result.current.messages).toEqual([]);
+  });
+
+  it('keeps historyStatus "idle" when there is no history to load', () => {
+    const { Wrapper: NoLoader } = createProviderWrapper({
+      adapter: createAdapter(),
+      initialActiveConversationId: 'c1',
+    });
+    const { result: withoutLoader } = renderHook(() => useChat(), { wrapper: NoLoader });
+    expect(withoutLoader.current.historyStatus).toBe('idle');
+    expect(withoutLoader.current.isLoadingHistory).toBe(false);
+
+    const { Wrapper: NoConversation } = createProviderWrapper({
+      adapter: createAdapter({ listMessages: vi.fn() }),
+    });
+    const { result: withoutConversation } = renderHook(() => useChat(), {
+      wrapper: NoConversation,
+    });
+    expect(withoutConversation.current.historyStatus).toBe('idle');
+    expect(withoutConversation.current.isLoadingHistory).toBe(false);
   });
 
   it('does not double-fire loadConversationMessages on initial mount with initialActiveConversationId', async () => {

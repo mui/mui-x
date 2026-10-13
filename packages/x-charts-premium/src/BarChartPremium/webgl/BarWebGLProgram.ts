@@ -14,17 +14,17 @@ import type { BarWebGLPlotData } from './useBarWebGLPlotData';
 export class BarWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
 
-  private readonly program: WebGLProgram;
-  private readonly vao: WebGLVertexArrayObject;
-  private readonly quadBuffer: WebGLBuffer;
+  declare private readonly program: WebGLProgram;
+  declare private readonly vao: WebGLVertexArrayObject;
+  declare private readonly quadBuffer: WebGLBuffer;
 
-  private readonly centers: InstancedAttribute;
-  private readonly halfSizes: InstancedAttribute;
+  declare private readonly centers: InstancedAttribute;
+  declare private readonly halfSizes: InstancedAttribute;
   /* Colors come in as Uint8 [0, 255]; normalized=true makes the GPU read them back as vec4 in [0, 1]. */
-  private readonly colors: InstancedAttribute;
-  private readonly cornerRadii: InstancedAttribute;
+  declare private readonly colors: InstancedAttribute;
+  declare private readonly cornerRadii: InstancedAttribute;
 
-  private readonly uResolution: WebGLUniformLocation | null;
+  declare private readonly uResolution: WebGLUniformLocation | null;
 
   constructor(private gl: WebGL2RenderingContext) {
     setupStandardBlending(gl);

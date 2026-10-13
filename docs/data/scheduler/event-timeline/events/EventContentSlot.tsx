@@ -2,7 +2,10 @@ import * as React from 'react';
 import FlagRounded from '@mui/icons-material/FlagRounded';
 import BuildRounded from '@mui/icons-material/BuildRounded';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
-import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import {
+  EventTimelinePremium,
+  EventTimelineGetEventAriaLabelParameters,
+} from '@mui/x-scheduler-premium/event-timeline-premium';
 import { TimelineEventContentProps } from '@mui/x-scheduler-premium/models';
 import { defaultVisibleDate } from '../../datasets/company-roadmap';
 
@@ -64,6 +67,14 @@ function EventContent({ occurrence }: TimelineEventContentProps) {
   );
 }
 
+function getEventAriaLabel({
+  occurrence,
+  defaultAriaLabel,
+}: EventTimelineGetEventAriaLabelParameters) {
+  const event = eventLookup.get(occurrence.id);
+  return event ? `${defaultAriaLabel}, ${event.code}` : defaultAriaLabel;
+}
+
 export default function EventContentSlot() {
   const [events, setEvents] = React.useState<DemoEvent[]>(initialEvents);
 
@@ -76,6 +87,7 @@ export default function EventContentSlot() {
         onEventsChange={setEvents}
         defaultPreset="dayAndMonth"
         slots={{ timelineEventContent: EventContent }}
+        getEventAriaLabel={getEventAriaLabel}
       />
     </div>
   );

@@ -284,6 +284,7 @@ export interface PickerActionsContextValue<
   /**
    * Cancel the changes made to the current value of the Picker.
    * The value will be reset to the last accepted value.
+   * Will call `onCancel` if defined.
    */
   cancelValueChanges: () => void;
   /**

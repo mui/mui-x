@@ -30,7 +30,14 @@ export const createFakeServer = (
     ...column,
   }));
 
-  const useQuery = (queryOptions: QueryOptions) => {
+  const useQuery = (queryOptionsProp: QueryOptions) => {
+    // Keep the previous object when the content is the same, so callers can pass a new object
+    // on every render (for example `useQuery({})`) without refetching in a loop.
+    const [queryOptions, setQueryOptions] = React.useState(queryOptionsProp);
+    if (queryOptions !== queryOptionsProp && !isDeepEqual(queryOptions, queryOptionsProp)) {
+      setQueryOptions(queryOptionsProp);
+    }
+
     const {
       data: { rows },
       loading: dataGenerationIsLoading,

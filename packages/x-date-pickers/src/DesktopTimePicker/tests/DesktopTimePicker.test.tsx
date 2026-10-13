@@ -13,7 +13,7 @@ describe('<DesktopTimePicker />', () => {
 
       expect(screen.getByRole('button', { name: 'OK' })).not.to.equal(null);
       expect(screen.getByRole('listbox', { name: 'Select hours' })).not.to.equal(null);
-      expect(screen.getByRole('option', { name: '1 hours' })).not.to.equal(null);
+      expect(screen.getByRole('option', { name: '1 hour' })).not.to.equal(null);
       expect(screen.getByRole('listbox', { name: 'Select minutes' })).not.to.equal(null);
       expect(screen.getByRole('option', { name: '5 minutes' })).not.to.equal(null);
       expect(screen.getByRole('listbox', { name: 'Select meridiem' })).not.to.equal(null);

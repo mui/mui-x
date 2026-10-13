@@ -158,6 +158,12 @@
       "isGlobal": false
     },
     {
+      "key": "agendaViewEmptyState",
+      "className": "MuiEventCalendarPremium-agendaViewEmptyState",
+      "description": "Styles applied to the agenda view empty state element.",
+      "isGlobal": false
+    },
+    {
       "key": "agendaViewEventListItem",
       "className": "MuiEventCalendarPremium-agendaViewEventListItem",
       "description": "Styles applied to the agenda view event list item elements.",
@@ -683,6 +689,12 @@
       "key": "eventDialogRecurrenceSelectorToggleGroup",
       "className": "MuiEventCalendarPremium-eventDialogRecurrenceSelectorToggleGroup",
       "description": "Styles applied to the event dialog recurrence selector toggle group element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogRecurrenceTimezoneLabel",
+      "className": "MuiEventCalendarPremium-eventDialogRecurrenceTimezoneLabel",
+      "description": "Styles applied to the recurrence timezone note and label suffix elements.",
       "isGlobal": false
     },
     {

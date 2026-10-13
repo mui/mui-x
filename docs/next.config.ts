@@ -170,7 +170,6 @@ export default withDeploymentConfig({
       ],
     },
   },
-  // @ts-ignore
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
 
@@ -237,11 +236,9 @@ export default withDeploymentConfig({
   // However, we don't in order to prevent any regression in the `findPages()` method.
   exportPathMap: () => {
     const pages = findPages();
-    const map = {};
+    const map: Record<string, { page: string }> = {};
 
-    // @ts-ignore
-    function traverse(pages2) {
-      // @ts-ignore
+    function traverse(pages2: typeof pages) {
       pages2.forEach((page) => {
         // The experiments pages are only meant for experiments, they shouldn't leak to production.
         if (page.pathname.includes('/experiments/') && process.env.DEPLOY_ENV === 'production') {
@@ -249,7 +246,6 @@ export default withDeploymentConfig({
         }
 
         if (!page.children) {
-          // @ts-ignore
           map[page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')] = {
             page: page.pathname,
           };
