@@ -273,7 +273,7 @@ catalogs:
       specifier: ^8.71.1
       version: 8.71.1
     '@vitejs/plugin-react':
-      specifier: ^6.1.1
+      specifier: ^6.1.2
       version: 6.1.2
     '@vitest/browser':
       specifier: ^5.0.3
@@ -375,7 +375,7 @@ catalogs:
       specifier: ^1.7.0
       version: 1.7.0
     vite:
-      specifier: ^8.3.2
+      specifier: ^8.3.4
       version: 8.3.4
     vitest:
       specifier: ^5.0.3
