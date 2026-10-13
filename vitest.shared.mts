@@ -81,22 +81,14 @@ export default defineConfig({
     },
     browser: {
       provider: playwright({
-        ...(process.env.PLAYWRIGHT_SERVER_WS
-          ? {
-              connectOptions: {
-                wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
-              },
-            }
-          : {
-              launchOptions: {
-                args: [
-                  // Enable GPU so WebGL2 is enabled in browser tests
-                  '--enable-gpu',
-                ],
-                // Required for tests which use scrollbars.
-                ignoreDefaultArgs: ['--hide-scrollbars'],
-              },
-            }),
+        launchOptions: {
+          args: [
+            // Enable GPU so WebGL2 is enabled in browser tests
+            '--enable-gpu',
+          ],
+          // Required for tests which use scrollbars.
+          ignoreDefaultArgs: ['--hide-scrollbars'],
+        },
       }),
       viewport: { width: 1280, height: 800 },
       headless: true,
