@@ -16,6 +16,10 @@ export function isElementInGrid(root: Element | null | undefined, element: Eleme
   return !!root && element.closest(`.${gridClasses.root}`) === root;
 }
 
+// Allowlist, not `!== 'mouse'`: an empty or missing `pointerType` must keep HTML drag and drop
+const isPointerDragType = (pointerType: string | null | undefined) =>
+  pointerType === 'touch' || pointerType === 'pen';
+
 interface UseGridPointerDragRoutingOptions {
   /**
    * Selector of the drag handles. A handle that can't be dragged must not match it.
@@ -31,7 +35,7 @@ interface UseGridPointerDragRoutingOptions {
 
 /**
  * Sends each press on a drag handle to one drag implementation, from its pointer type.
- * - Mouse: HTML drag and drop, unchanged.
+ * - Mouse, or an unknown pointer type: HTML drag and drop, unchanged.
  * - Touch and pen: `onPointerDown`, which starts a `usePointerDrag` session.
  *   The native drag that some browsers start on a long press is blocked, so it can't cancel the pointer events.
  */
@@ -58,7 +62,7 @@ export function useGridPointerDragRouting(
       return;
     }
     handlePointerTypeRef.current = event.pointerType;
-    if (event.pointerType !== 'mouse') {
+    if (isPointerDragType(event.pointerType)) {
       onPointerDown(event, handle);
     }
   });
@@ -68,11 +72,7 @@ export function useGridPointerDragRouting(
   // `pointerdown` always comes before `dragstart`, so the pointer type is the one of this press.
   // Stopping the propagation in the capture phase also keeps the HTML drag and drop handlers from seeing it.
   const handleNativeDragStart = useEventCallback((event: DragEvent) => {
-    if (
-      handlePointerTypeRef.current !== null &&
-      handlePointerTypeRef.current !== 'mouse' &&
-      getHandle(event.target)
-    ) {
+    if (isPointerDragType(handlePointerTypeRef.current) && getHandle(event.target)) {
       event.preventDefault();
       event.stopPropagation();
     }
