@@ -65,7 +65,7 @@ describe('<ChartsToolbarPremium />', () => {
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
 
-    expect(screen.getByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
+    expect(screen.getByRole('menuitem', { name: 'Export as Excel' })).not.to.equal(null);
     expect(screen.getByRole('menuitem', { name: 'Print' })).not.to.equal(null);
   });
 
@@ -73,7 +73,7 @@ describe('<ChartsToolbarPremium />', () => {
     const { user } = render(chart({ excelExportOptions: { fileName: 'sales' } }));
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
-    await user.click(screen.getByRole('menuitem', { name: 'Download as Excel' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Export as Excel' }));
 
     await vi.waitFor(() => expect(downloads).to.deep.equal(['sales.xlsx']));
   });
@@ -83,7 +83,7 @@ describe('<ChartsToolbarPremium />', () => {
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
 
-    expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: 'Export as Excel' })).to.equal(null);
   });
 
   it('hides the entry when the chart does not opt into the plugin', async () => {
@@ -100,7 +100,7 @@ describe('<ChartsToolbarPremium />', () => {
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
 
-    expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: 'Export as Excel' })).to.equal(null);
     expect(screen.getByRole('menuitem', { name: 'Print' })).not.to.equal(null);
   });
 
@@ -132,7 +132,7 @@ describe('<ChartsToolbarPremium />', () => {
     await user.click(screen.getByRole('button', { name: 'Export' }));
 
     expect(screen.getByRole('menuitem', { name: 'Download as PDF' })).not.to.equal(null);
-    expect(screen.getByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
+    expect(screen.getByRole('menuitem', { name: 'Export as Excel' })).not.to.equal(null);
   });
 
   it('exports through onExport when the chart has no plugin', async () => {
@@ -153,7 +153,7 @@ describe('<ChartsToolbarPremium />', () => {
                 onExport={onExport}
                 onClick={onClose}
               >
-                Download as Excel
+                Export as Excel
               </ChartsToolbarExcelExportTrigger>
             ),
           },
@@ -162,7 +162,7 @@ describe('<ChartsToolbarPremium />', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
-    await user.click(screen.getByRole('menuitem', { name: 'Download as Excel' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Export as Excel' }));
 
     expect(onExport.mock.calls).to.have.length(1);
   });
@@ -174,10 +174,10 @@ describe('<ChartsToolbarPremium />', () => {
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
 
-      expect(screen.getByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
-      expect(
-        screen.getByRole('menuitem', { name: 'Download Data Grid data as Excel' }),
-      ).not.to.equal(null);
+      expect(screen.getByRole('menuitem', { name: 'Export as Excel' })).not.to.equal(null);
+      expect(screen.getByRole('menuitem', { name: 'Export Data Grid data as Excel' })).not.to.equal(
+        null,
+      );
     });
 
     it('calls the Data Grid export, not the chart one, when its entry is clicked', async () => {
@@ -185,7 +185,7 @@ describe('<ChartsToolbarPremium />', () => {
       const { user } = render(chart({ onDataGridExcelExport }));
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
-      await user.click(screen.getByRole('menuitem', { name: 'Download Data Grid data as Excel' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Export Data Grid data as Excel' }));
 
       expect(onDataGridExcelExport.mock.calls).to.have.length(1);
       expect(downloads).to.deep.equal([]);
@@ -196,7 +196,7 @@ describe('<ChartsToolbarPremium />', () => {
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
 
-      expect(screen.queryByRole('menuitem', { name: 'Download Data Grid data as Excel' })).to.equal(
+      expect(screen.queryByRole('menuitem', { name: 'Export Data Grid data as Excel' })).to.equal(
         null,
       );
     });
@@ -209,10 +209,10 @@ describe('<ChartsToolbarPremium />', () => {
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
 
-      expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).to.equal(null);
-      expect(
-        screen.getByRole('menuitem', { name: 'Download Data Grid data as Excel' }),
-      ).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Export as Excel' })).to.equal(null);
+      expect(screen.getByRole('menuitem', { name: 'Export Data Grid data as Excel' })).not.to.equal(
+        null,
+      );
     });
 
     it('hides the Data Grid entry through dataGridExportOptions', async () => {
@@ -223,8 +223,8 @@ describe('<ChartsToolbarPremium />', () => {
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
 
-      expect(screen.getByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
-      expect(screen.queryByRole('menuitem', { name: 'Download Data Grid data as Excel' })).to.equal(
+      expect(screen.getByRole('menuitem', { name: 'Export as Excel' })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Export Data Grid data as Excel' })).to.equal(
         null,
       );
     });
@@ -252,7 +252,7 @@ describe('<ChartsToolbarPremium />', () => {
           toolbar: {
             exportMenuItems: ({ onClose }) => (
               <ChartsToolbarExcelExportTrigger render={<li role="menuitem" />} onClick={onClose}>
-                Download as Excel
+                Export as Excel
               </ChartsToolbarExcelExportTrigger>
             ),
           },
@@ -261,7 +261,7 @@ describe('<ChartsToolbarPremium />', () => {
     );
 
     await user.click(screen.getByRole('button', { name: 'Export' }));
-    await user.click(screen.getByRole('menuitem', { name: 'Download as Excel' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Export as Excel' }));
 
     const logged = consoleError.mock.calls.map((call) => call.join(' ')).join('\n');
     expect(logged).to.contain('The Excel export trigger has nothing to export.');

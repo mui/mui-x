@@ -34,7 +34,7 @@ export default function ExportChartAsExcel() {
   return (
     <Stack sx={{ width: '100%' }}>
       <Typography sx={{ alignSelf: 'center', my: 1 }}>
-        Open the export menu and pick Download as Excel
+        Open the export menu and pick Export as Excel
       </Typography>
       <ChartsDataProviderPremium<'bar', Signatures> {...settings} plugins={plugins}>
         <ChartsWrapper>
