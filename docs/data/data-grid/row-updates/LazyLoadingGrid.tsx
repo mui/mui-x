@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-deprecated -- This demo documents deprecated lazy loading and links to the server-side data replacement. */
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
 import {
