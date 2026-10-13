@@ -114,34 +114,53 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.63.0-noble
-    resource_class: xlarge.gen2
+    parameters:
+      <<: *default-parameters
+      resource-class:
+        type: string
+        default: xlarge.gen2
+      max-workers:
+        type: string
+        default: ''
+      playwright-server:
+        type: boolean
+        default: true
+    resource_class: << parameters.resource-class >>
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
+      - run:
+          name: Record cgroup stats before tests
+          command: cat /sys/fs/cgroup/cpu.stat | grep usage_usec | tee /tmp/cpu-before
       - when:
-          condition:
-            not:
-              equal: ['stable', << parameters.react-version >>]
+          condition: << parameters.playwright-server >>
           steps:
             - run:
                 environment:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                  VITEST_MAX_WORKERS: << parameters.max-workers >>
                 name: Test Browser
                 command: |
                   pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
-      - when:
-          condition:
-            equal: ['stable', << parameters.react-version >>]
+      - unless:
+          condition: << parameters.playwright-server >>
           steps:
             - run:
-                name: Test Browser
                 environment:
                   TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
+                  VITEST_MAX_WORKERS: << parameters.max-workers >>
+                name: Test Browser
+                command: pnpm test:unit:browser
+      - run:
+          name: Report cgroup stats
+          when: always
+          command: |
+            echo "memory.peak: $(( $(cat /sys/fs/cgroup/memory.peak) / 1048576 )) MB"
+            grep -E 'oom' /sys/fs/cgroup/memory.events || true
+            echo "cpu before: $(cat /tmp/cpu-before)"
+            echo "cpu after:  $(grep usage_usec /sys/fs/cgroup/cpu.stat)"
       - store_test_results:
           path: test-results
   test_lint:
