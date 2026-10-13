@@ -319,6 +319,24 @@ workflows:
           <<: *default-context
       - test_browser:
           <<: *default-context
+      # TODO: temporary experiment matrix, remove before merging
+      - test_browser:
+          <<: *default-context
+          name: exp_<< matrix.resource-class >>_mw<< matrix.max-workers >>_server
+          matrix:
+            parameters:
+              resource-class: [medium.gen2, large.gen2, xlarge.gen2]
+              max-workers: ['2', '4', '8']
+            exclude:
+              - { resource-class: medium.gen2, max-workers: '8' }
+              - { resource-class: xlarge.gen2, max-workers: '2' }
+      - test_browser:
+          <<: *default-context
+          name: exp_xlarge.gen2_mw<< matrix.max-workers >>_local
+          playwright-server: false
+          matrix:
+            parameters:
+              max-workers: ['4', '8']
       - test_lint:
           <<: *default-context
       - test_static:
