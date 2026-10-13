@@ -7,6 +7,8 @@ import {
   DataGridPro,
   Toolbar,
   FilterPanelTrigger,
+  gridDensitySelector,
+  useGridSelector,
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
@@ -15,6 +17,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 function GridCustomToolbar({ syncState }) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
+  const density = useGridSelector(apiRef, gridDensitySelector);
 
   return (
     <Toolbar>
@@ -22,7 +25,7 @@ function GridCustomToolbar({ syncState }) {
       <Select
         native
         size="small"
-        defaultValue="standard"
+        value={density}
         inputProps={{ 'aria-label': 'Density' }}
         onChange={(event) => apiRef.current.setDensity(event.target.value)}
       >

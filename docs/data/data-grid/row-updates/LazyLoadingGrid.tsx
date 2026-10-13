@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-deprecated -- This demo documents the legacy lazy-loading API. */
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
 import {

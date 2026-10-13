@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-deprecated -- This demo documents the legacy toolbar API. */
 import Typography from '@mui/material/Typography';
 import {
   DataGrid,

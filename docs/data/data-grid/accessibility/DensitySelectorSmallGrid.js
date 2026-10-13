@@ -5,69 +5,74 @@ import {
   Toolbar,
   ToolbarButton,
   useGridApiContext,
+  useGridRootProps,
   useGridSelector,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import CheckIcon from '@mui/icons-material/Check';
-import SettingsIcon from '@mui/icons-material/Settings';
-
-const DENISTY_OPTIONS = [
-  { label: 'Compact density', value: 'compact' },
-  { label: 'Standard density', value: 'standard' },
-  { label: 'Comfortable density', value: 'comfortable' },
-];
 
 function CustomToolbar() {
   const apiRef = useGridApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
-  const [densityMenuOpen, setDensityMenuOpen] = React.useState(false);
-  const densityMenuTriggerRef = React.useRef(null);
+  const rootProps = useGridRootProps();
+  const densityOptions = [
+    {
+      value: 'compact',
+      Icon: rootProps.slots.densityCompactIcon,
+      label: apiRef.current.getLocaleText('toolbarDensityCompact'),
+    },
+    {
+      value: 'standard',
+      Icon: rootProps.slots.densityStandardIcon,
+      label: apiRef.current.getLocaleText('toolbarDensityStandard'),
+    },
+    {
+      value: 'comfortable',
+      Icon: rootProps.slots.densityComfortableIcon,
+      label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
+    },
+  ];
+
+  const DensityIcon = densityOptions.find((option) => option.value === density).Icon;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const menuId = React.useId();
+  const triggerId = React.useId();
 
   return (
-    <Toolbar>
-      <Tooltip title="Settings">
-        <ToolbarButton
-          ref={densityMenuTriggerRef}
-          id="density-menu-trigger"
-          aria-controls="density-menu"
-          aria-haspopup="true"
-          aria-expanded={densityMenuOpen ? 'true' : undefined}
-          onClick={() => setDensityMenuOpen(true)}
-        >
-          <SettingsIcon fontSize="small" sx={{ ml: 'auto' }} />
-        </ToolbarButton>
-      </Tooltip>
-
-      <Menu
-        id="density-menu"
-        anchorEl={densityMenuTriggerRef.current}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={densityMenuOpen}
-        onClose={() => setDensityMenuOpen(false)}
-        slotProps={{
-          list: {
-            'aria-labelledby': 'density-menu-trigger',
-          },
-        }}
+    <Toolbar style={{ justifyContent: 'flex-start' }}>
+      <ToolbarButton
+        render={<Button size="small" startIcon={<DensityIcon />} />}
+        id={triggerId}
+        aria-haspopup="menu"
+        aria-controls={anchorEl ? menuId : undefined}
+        aria-expanded={Boolean(anchorEl)}
+        onClick={(event) => setAnchorEl(event.currentTarget)}
       >
-        {DENISTY_OPTIONS.map((option) => (
+        {apiRef.current.getLocaleText('toolbarDensity')}
+      </ToolbarButton>
+      <Menu
+        id={menuId}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        slotProps={{ list: { 'aria-labelledby': triggerId } }}
+      >
+        {densityOptions.map((option) => (
           <MenuItem
             key={option.value}
+            selected={density === option.value}
             onClick={() => {
               apiRef.current.setDensity(option.value);
-              setDensityMenuOpen(false);
+              setAnchorEl(null);
             }}
           >
             <ListItemIcon>
-              {density === option.value && <CheckIcon fontSize="small" />}
+              <option.Icon />
             </ListItemIcon>
-            <ListItemText>{option.label}</ListItemText>
+            {option.label}
           </MenuItem>
         ))}
       </Menu>

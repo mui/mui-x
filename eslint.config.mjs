@@ -386,17 +386,16 @@ export default defineConfig(
     },
   },
 
-  // Type-aware docs linting exceeds CI memory: JS demo twins fall outside the
-  // docs project and each gets an inferred one.
   {
-    files: [`docs/**/*${EXTENSION_TS}`],
+    // Generated JavaScript twins need a project that includes them explicitly.
+    files: ['docs/**/*.{js,jsx}'],
+    ignores: ['**/*.config.*', '**/scripts/**'],
     languageOptions: {
       parserOptions: {
         projectService: false,
+        project: ['./docs/tsconfig.eslint.json'],
+        tsconfigRootDir: dirname,
       },
-    },
-    rules: {
-      '@typescript-eslint/no-deprecated': 'off',
     },
   },
 
