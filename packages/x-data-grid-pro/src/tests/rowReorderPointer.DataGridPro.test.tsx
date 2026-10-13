@@ -44,6 +44,13 @@ async function waitForFrames(duration = 150) {
   });
 }
 
+// The HTML drag and drop handlers read `dataTransfer`
+function createDragStartEvent(handle: HTMLElement) {
+  const event = createEvent.dragStart(handle);
+  Object.defineProperty(event, 'dataTransfer', { value: { effectAllowed: 'copy' } });
+  return event;
+}
+
 function getScroller() {
   return document.querySelector<HTMLElement>(`.${gridClasses.virtualScroller}`)!;
 }
@@ -571,9 +578,43 @@ describe('<DataGridPro /> - Row reorder with pointer events', () => {
 
       fireEvent.pointerDown(handle, pointer('mouse', start.x, start.y));
       fireEvent.pointerUp(handle, pointer('mouse', start.x, start.y));
-      const dragStartEvent = createEvent.dragStart(handle);
-      Object.defineProperty(dragStartEvent, 'dataTransfer', { value: { effectAllowed: 'copy' } });
-      fireEvent(handle, dragStartEvent);
+      fireEvent(handle, createDragStartEvent(handle));
+      expect(onRowDragStart).toHaveBeenCalledTimes(1);
+    });
+
+    // The spec allows an empty `pointerType`. A bare `fireEvent.pointerDown` in an app test has none.
+    it.each<[string, (x: number, y: number) => Record<string, unknown>]>([
+      ['an empty pointer type', (x, y) => pointer('', x, y)],
+      ['no pointer type', () => ({})],
+    ])('should keep the native drag that starts from a press with %s', (_, init) => {
+      render(<Test />);
+      const onRowDragStart = vi.fn();
+      apiRef.current!.subscribeEvent('rowDragStart', onRowDragStart);
+      const handle = getHandle(0);
+      const start = getPointInRow(0, 0.5);
+
+      fireEvent.pointerDown(handle, init(start.x, start.y));
+      fireEvent.pointerUp(handle, init(start.x, start.y));
+      expect(fireEvent(handle, createDragStartEvent(handle))).to.equal(true);
+      expect(onRowDragStart).toHaveBeenCalledTimes(1);
+    });
+
+    // A hybrid device reports the type of each press
+    it('should route each press from its own pointer type', () => {
+      render(<Test />);
+      const onRowDragStart = vi.fn();
+      apiRef.current!.subscribeEvent('rowDragStart', onRowDragStart);
+      const handle = getHandle(0);
+      const start = getPointInRow(0, 0.5);
+
+      fireEvent.pointerDown(handle, pointer('touch', start.x, start.y));
+      fireEvent.pointerUp(handle, pointer('touch', start.x, start.y));
+      expect(fireEvent.dragStart(handle)).to.equal(false);
+      expect(onRowDragStart).toHaveBeenCalledTimes(0);
+
+      fireEvent.pointerDown(handle, pointer('mouse', start.x, start.y));
+      fireEvent.pointerUp(handle, pointer('mouse', start.x, start.y));
+      expect(fireEvent(handle, createDragStartEvent(handle))).to.equal(true);
       expect(onRowDragStart).toHaveBeenCalledTimes(1);
     });
   });

@@ -683,14 +683,12 @@ export const GridRootStyles = styled('div', {
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'grab',
       opacity: 1,
-      // Touch input drags rows with pointer events after a long press.
-      // The handle must not scroll the grid, select text, or open the iOS callout.
+      // A long press must not scroll, select text, or open the iOS callout.
+      // Not under `(pointer: coarse)`: a touch laptop with a mouse reports a fine primary pointer.
       touchAction: 'none',
-      '@media (pointer: coarse)': {
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        WebkitTouchCallout: 'none',
-      },
+      userSelect: 'none',
+      WebkitUserSelect: 'none',
+      WebkitTouchCallout: 'none',
     },
     [`& .${c.rowReorderCellContainer}`]: {
       padding: 0,
