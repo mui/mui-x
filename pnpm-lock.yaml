@@ -312,8 +312,8 @@ catalogs:
       specifier: ^1.52.0
       version: 1.52.0
     execa:
-      specifier: 10.0.1
-      version: 10.0.1
+      specifier: 10.1.0
+      version: 10.1.0
     jscodeshift:
       specifier: 17.4.0
       version: 17.4.0
@@ -556,7 +556,7 @@ importers:
         version: link:packages/eslint-plugin-mui-x
       execa:
         specifier: 'catalog:'
-        version: 10.0.1
+        version: 10.1.0
       globby:
         specifier: 16.2.4
         version: 16.2.4
@@ -1273,7 +1273,7 @@ importers:
         version: 5.0.3
       execa:
         specifier: 'catalog:'
-        version: 10.0.1
+        version: 10.1.0
       rimraf:
         specifier: 'catalog:'
         version: 6.1.3
@@ -7856,10 +7856,6 @@ packages:
   eventsource@3.0.7:
     resolution: {integrity: sha512-CRT1WTyuQoD771GW56XEZFQ/ZoSfWid1alKGDYMmkt2yl8UXrVR4pspqWNEcqKvVIzg6PAltWjxcSSPrboA4iA==}
     engines: {node: '>=18.0.0'}
-
-  execa@10.0.1:
-    resolution: {integrity: sha512-ge98qjkRK4IB7tL7Ju/6qmm5LHoH1eEMt5FNZrz3f4UIYhF28lggX20z3FaX1sgc67msLEn0N0BscOs29iuwyw==}
-    engines: {node: '>=22'}
 
   execa@10.1.0:
     resolution: {integrity: sha512-5HT/600HqXEtmkb9mK/PkTWw+bQSCzPnWiZ4/87wD3Hi0wFzCapOuNT9p4M08PDd+KLHdHvFhKjOWmNx/npRNQ==}
@@ -17487,21 +17483,6 @@ snapshots:
   eventsource@3.0.7:
     dependencies:
       eventsource-parser: 3.1.1
-
-  execa@10.0.1:
-    dependencies:
-      '@sindresorhus/merge-streams': 4.0.0
-      figures: 6.1.0
-      get-stream: 9.0.1
-      human-signals: 8.0.1
-      is-plain-obj: 4.1.0
-      is-stream: 4.0.1
-      npm-run-path: 6.0.0
-      pretty-ms: 9.3.1
-      signal-exit: 4.1.0
-      strip-final-newline: 4.0.0
-      which-command: 0.1.0
-      yoctocolors: 2.2.0
 
   execa@10.1.0:
     dependencies:
