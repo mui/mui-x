@@ -45,7 +45,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
                 j.jsxIdentifier('slotProps'),
                 j.jsxExpressionContainer(
                   j.objectExpression([
-                    // @ts-ignore legend receives an object.
+                    // @ts-expect-error The legend JSX attribute contains an expression rather than a string literal.
                     j.objectProperty(j.identifier('legend'), legendProps.value.expression),
                   ]),
                 ),
@@ -56,7 +56,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
               elementPath,
               'slotProps',
               'legend',
-              // @ts-ignore legend receives an object.
+              // @ts-expect-error The legend JSX attribute contains an expression rather than a string literal.
               legendProps.value.expression,
               j,
             );

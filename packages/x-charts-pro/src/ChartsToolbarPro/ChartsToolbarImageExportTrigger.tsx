@@ -41,7 +41,9 @@ const ChartsToolbarImageExportTrigger = forwardRef<
   const apiRef = useChartProApiContext();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    apiRef.current.exportAsImage(options);
+    apiRef.current.exportAsImage(options).catch((error) => {
+      console.error('MUI X Charts: Error exporting chart as image:', error);
+    });
     onClick?.(event);
   };
 
@@ -73,6 +75,7 @@ ChartsToolbarImageExportTrigger.propTypes /* remove-proptypes */ = {
     fileName: PropTypes.string,
     nonce: PropTypes.string,
     onBeforeExport: PropTypes.func,
+    onStylesheetError: PropTypes.func,
     pixelRatio: PropTypes.number,
     quality: PropTypes.number,
     type: PropTypes.string.isRequired,

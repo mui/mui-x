@@ -39,11 +39,13 @@ export function getDisplayedHourRange(
 
   if (!isValid) {
     if (process.env.NODE_ENV !== 'production') {
-      warnOnce([
-        `MUI X Scheduler: \`${source}\` received an invalid hour range (startTime: ${resolvedStartTime}, endTime: ${resolvedEndTime}).`,
-        '`startTime` and `endTime` must be whole hours between 0 and 24 with `startTime` lower than `endTime`.',
-        'Falling back to the full day (0–24).',
-      ]);
+      warnOnce(
+        [
+          `MUI X Scheduler: \`${source}\` received an invalid hour range (startTime: ${resolvedStartTime}, endTime: ${resolvedEndTime}).`,
+          '`startTime` and `endTime` must be whole hours between 0 and 24 with `startTime` lower than `endTime`.',
+          'Falling back to the full day (0–24).',
+        ].join('\n'),
+      );
     }
     return { startTime: DEFAULT_START_TIME, endTime: DEFAULT_END_TIME };
   }

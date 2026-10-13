@@ -655,7 +655,7 @@ async function initializeEnvironment(
         await page.evaluate(() => {
           const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
           virtualScroller.addEventListener('scroll', () => {
-            // @ts-ignore
+            // @ts-expect-error Playwright exposes storeScrollPosition on the browser window for this test.
             window.storeScrollPosition(virtualScroller.scrollTop);
           });
         });

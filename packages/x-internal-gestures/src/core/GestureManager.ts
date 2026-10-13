@@ -143,7 +143,7 @@ export class GestureManager<
   private activeGesturesRegistry: ActiveGesturesRegistry<GestureName> =
     new ActiveGesturesRegistry();
 
-  private pointerManager: PointerManager;
+  declare private pointerManager: PointerManager;
 
   private keyboardManager: KeyboardManager = new KeyboardManager();
 

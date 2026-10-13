@@ -1,7 +1,7 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { getDateKey, TimeoutManager } from '@mui/x-scheduler-internals/internals';
+import { TimeoutManager } from '@mui/x-scheduler-internals/internals';
 
 const MAX_CONCURRENT_REQUESTS = 3;
 const MAX_QUEUED_REQUESTS = 3;
@@ -24,8 +24,8 @@ export interface DateRange {
  * Format: "startTimestamp:endTimestamp"
  */
 function getDateRangeKey(adapter: Adapter, range: DateRange): string {
-  const startTimestamp = getDateKey(range.start, adapter);
-  const endTimestamp = getDateKey(range.end, adapter);
+  const startTimestamp = adapter.getTime(range.start);
+  const endTimestamp = adapter.getTime(range.end);
   return `${startTimestamp}:${endTimestamp}`;
 }
 
@@ -47,13 +47,13 @@ export class SchedulerDataManager {
 
   private settledRequests: Set<string> = new Set();
 
-  private adapter: Adapter;
+  declare private adapter: Adapter;
 
-  private maxConcurrentRequests: number;
+  declare private maxConcurrentRequests: number;
 
-  private maxQueuedRequests: number;
+  declare private maxQueuedRequests: number;
 
-  private debounceMs: number;
+  declare private debounceMs: number;
 
   private readonly disposables = new DisposableStack();
 
@@ -66,7 +66,7 @@ export class SchedulerDataManager {
 
   private pendingDebounceResolve: (() => void) | null = null;
 
-  private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
+  declare private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
 
   public get disposed(): boolean {
     return this.disposables.disposed;

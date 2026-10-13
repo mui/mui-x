@@ -95,13 +95,12 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
 
   const contextValue: CalendarGridDayCellContext = React.useMemo(
     () => ({
-      index,
       hasFocus,
     }),
-    [index, hasFocus],
+    [hasFocus],
   );
 
-  // Associate this cell with its column header, matching the pattern used by DayEvent and TimeEvent.
+  // Associate this cell with its column header.
   // Any additional aria-labelledby passed by the styled layer (e.g., an "All day" row header) is appended.
   const { 'aria-labelledby': elementAriaLabelledBy, ...restElementProps } = elementProps;
   const ariaLabelledBy = [columnHeaderId, elementAriaLabelledBy].filter(Boolean).join(' ');

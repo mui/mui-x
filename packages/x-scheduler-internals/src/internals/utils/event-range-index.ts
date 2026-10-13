@@ -115,7 +115,7 @@ export function createEventRangeIndex(
       event.displayTimezone.end.timestamp,
     ];
 
-    if (expandRecurringEvents && event.displayTimezone.rrule) {
+    if (expandRecurringEvents && event.dataTimezone.rrule) {
       recurringEntries.push(entry);
     } else {
       rangeEntries.push(entry);
@@ -150,7 +150,7 @@ export function createEventRangeIndex(
       if (matches.length > rangeEntries.length * EVENT_RANGE_INDEX_LINEAR_SCAN_THRESHOLD) {
         return events.filter(
           (event) =>
-            (expandRecurringEvents && Boolean(event.displayTimezone.rrule)) ||
+            (expandRecurringEvents && Boolean(event.dataTimezone.rrule)) ||
             (event.displayTimezone.start.timestamp <= endTimestamp &&
               event.displayTimezone.end.timestamp >= startTimestamp),
         );

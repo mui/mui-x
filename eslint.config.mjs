@@ -200,7 +200,6 @@ export default defineConfig(
       // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
       // migration rules
-      '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       'react-hooks/exhaustive-deps': [
         'error',
@@ -309,6 +308,13 @@ export default defineConfig(
     },
   },
 
+  {
+    files: [`packages/**/*${EXTENSION_TS}`],
+    rules: {
+      'mui-x/no-computed-key-with-rest': 'error',
+    },
+  },
+
   // TODO remove, shouldn't disable prop-type generation rule.
   // lot of public components are missing it.
   {
@@ -377,6 +383,20 @@ export default defineConfig(
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
       'react-hooks/set-state-in-effect': 'off',
+    },
+  },
+
+  // Type-aware docs linting exceeds CI memory: JS demo twins fall outside the
+  // docs project and each gets an inferred one.
+  {
+    files: [`docs/**/*${EXTENSION_TS}`],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-deprecated': 'off',
     },
   },
 

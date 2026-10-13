@@ -10,6 +10,17 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Meridiane',
 };
 
+// Romanian inserts "de" before the plural noun for counts of 20 and above
+function getPluralForm(count: number, one: string, few: string) {
+  if (count === 1) {
+    return one;
+  }
+  if (count < 20) {
+    return few;
+  }
+  return `de ${few}`;
+}
+
 const roROPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Luna anterioară',
@@ -48,9 +59,12 @@ const roROPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Selectați ${timeViews[view] ?? view}. ${!formattedTime ? 'Nicio oră selectată' : `Ora selectată este ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
-  minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
-  secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
+  hoursClockNumberText: (hours) =>
+    `${hours} ${getPluralForm(Number(hours), 'Oră', timeViews.hours)}`,
+  minutesClockNumberText: (minutes) =>
+    `${minutes} ${getPluralForm(Number(minutes), 'Minut', timeViews.minutes)}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${getPluralForm(Number(seconds), 'Secundă', timeViews.seconds)}`,
 
   // Digital clock labels
   selectViewText: (view) => `Selectați ${timeViews[view]}`,

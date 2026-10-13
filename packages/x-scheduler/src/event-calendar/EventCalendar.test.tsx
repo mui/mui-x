@@ -38,6 +38,56 @@ describe('EventCalendar', () => {
     .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
     .build();
 
+  it('should announce the primary resource of the event', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const other = ResourceBuilder.new().id('other').title('Other').build();
+    const running = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+      .resources([sport, other])
+      .build();
+
+    render(<EventCalendar events={[running]} resources={[sport, other]} />);
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025, Resource: Sport',
+      }),
+    ).not.to.equal(null);
+  });
+
+  it('should keep the resource color indicator out of the accessibility tree', () => {
+    const sport = ResourceBuilder.new().id('sport').title('Sport').build();
+    const running = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
+      .resource(sport)
+      .build();
+
+    render(<EventCalendar events={[running]} resources={[sport]} defaultView="month" />);
+
+    const indicators = document.querySelectorAll(`.${eventCalendarClasses.eventColorIndicator}`);
+    expect(indicators.length).to.be.greaterThan(0);
+    indicators.forEach((indicator) => {
+      expect(indicator).to.have.attribute('aria-hidden', 'true');
+      expect(indicator).not.to.have.attribute('role');
+      expect(indicator).not.to.have.attribute('aria-label');
+    });
+  });
+
+  it('should translate the event accessible name through localeText', () => {
+    render(
+      <EventCalendar
+        events={[event1]}
+        localeText={{ eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}` }}
+      />,
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday, May 26th, 2025' }),
+    ).not.to.equal(null);
+  });
+
   // TODO: Move in a test file specific to the TimeGrid component.
   it('should render events in the correct column', () => {
     render(<EventCalendar events={[event1, event2]} />);
@@ -51,8 +101,15 @@ describe('EventCalendar', () => {
     expect(mondayEvent.textContent).to.equal('Running 7:30 AM');
     expect(tuesdayEvent.textContent).to.equal('Weekly4:00 PM - 5:00 PM');
 
-    expect(mondayEvent.getAttribute('aria-labelledby')).to.include('header-cell-1');
-    expect(tuesdayEvent.getAttribute('aria-labelledby')).to.include('header-cell-2');
+    expect(mondayEvent).to.have.attribute(
+      'aria-label',
+      'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025',
+    );
+    expect(tuesdayEvent).to.have.attribute(
+      'aria-label',
+      'Weekly, 4:00 PM to 5:00 PM, Tuesday, May 27th, 2025',
+    );
+    expect(mondayEvent).not.to.have.attribute('aria-labelledby');
 
     expect(screen.getByRole('columnheader', { name: /Monday 26/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Tuesday 27/i })).not.to.equal(null);
@@ -316,7 +373,7 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to change the time format using the UI in the week view', async () => {
-      const { user } = render(<EventCalendar events={[]} />);
+      const { user } = render(<EventCalendar events={[event1]} />);
 
       // 12 hours format should be visible by default
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
@@ -328,6 +385,11 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
+
+      expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
+        'aria-label',
+        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+      );
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
@@ -351,6 +413,10 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
+      expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
+        'aria-label',
+        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+      );
 
       // Show 12 hours format again
       await openPreferencesMenu(user);

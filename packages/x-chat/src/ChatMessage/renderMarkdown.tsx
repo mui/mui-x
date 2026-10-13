@@ -7,13 +7,17 @@ import { normalizeMarkdownForRender, safeUri } from '@mui/x-chat-headless/intern
 import { ChatCodeBlock } from '../ChatCodeBlock';
 import { useStreamingMarkdownRepair } from '../internals/streamingMarkdownRepair';
 
+// remend (>= 1.4) replaces a half-streamed image URL with this placeholder.
+const INCOMPLETE_IMAGE_URL = 'streamdown:incomplete-image';
+
 // Applied by markdown-to-jsx to every link `href` / image `src`. Shares `safeUri`
 // with the source/file part renderers so links behave the same across markdown and
 // parts: the value is returned when safe, or `null` to drop the attribute — so a
 // `javascript:`/`data:` URL (or remend's `streamdown:incomplete-link` placeholder
 // for a half-streamed link) renders as inert text rather than a navigable target.
-const sanitizer: NonNullable<MarkdownToJSX.Options['sanitizer']> = (value) =>
-  safeUri(value) || null;
+// remend's half-streamed image placeholder is kept so `renderRule` can hide it.
+const sanitizer: NonNullable<MarkdownToJSX.Options['sanitizer']> = (value, tag) =>
+  tag === 'img' && value === INCOMPLETE_IMAGE_URL ? value : safeUri(value) || null;
 
 // Markdown links open in a new tab (the sanitizer above already neutralised the
 // href) and participate in the message list's drill-in model: inside a roving
@@ -51,6 +55,10 @@ const markdownOptions: MarkdownToJSX.Options = {
         </ChatCodeBlock>
       );
     }
+    // Hide a half-streamed image until its URL completes, instead of a broken `<img>`.
+    if (node.type === RuleType.image && node.target === INCOMPLETE_IMAGE_URL) {
+      return null;
+    }
     return next();
   },
 };
@@ -59,12 +67,18 @@ const markdownOptions: MarkdownToJSX.Options = {
 // Public API
 // ---------------------------------------------------------------------------
 
+// Past this length we skip parsing: markdown-to-jsx is super-linear on inline syntax.
+const MAX_MARKDOWN_LENGTH = 50_000;
+
 /**
  * Renders a markdown string to React elements via `markdown-to-jsx`. Output stays
  * XSS-safe by construction (React elements, no `dangerouslySetInnerHTML`); only
  * link/image URLs are guarded, by {@link sanitizer}.
  */
 export function renderMarkdown(text: string): React.ReactNode {
+  if (text.length > MAX_MARKDOWN_LENGTH) {
+    return text;
+  }
   return <Markdown options={markdownOptions}>{normalizeMarkdownForRender(text)}</Markdown>;
 }
 
@@ -77,6 +91,9 @@ export function renderMarkdown(text: string): React.ReactNode {
 function StreamingMarkdownText({ text }: { text: string }): React.ReactElement {
   const repair = useStreamingMarkdownRepair();
   const source = React.useMemo(() => repair(text), [repair, text]);
+  if (source.length > MAX_MARKDOWN_LENGTH) {
+    return <React.Fragment>{source}</React.Fragment>;
+  }
   return <Markdown options={markdownOptions}>{source}</Markdown>;
 }
 
