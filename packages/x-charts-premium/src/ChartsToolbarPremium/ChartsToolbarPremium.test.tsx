@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { vi, describe, it, expect, beforeEach, onTestFinished } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -19,7 +20,10 @@ const PLUGINS = [...BAR_CHART_PREMIUM_PLUGINS, useChartPremiumExport] as const;
 
 type Signatures = [...BarChartPremiumPluginSignatures, UseChartPremiumExportSignature];
 
-describe('<ChartsToolbarPremium />', () => {
+// Opening the export menu hovers a tooltip-wrapped button, and in a real browser the tooltip
+// clones the trigger, so queries by accessible name match twice and its state update lands
+// outside `act`. These tests cover the menu's composition, not its layout, so JSDOM is enough.
+describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
   const { render } = createRenderer();
 
   let downloads: string[];

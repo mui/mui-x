@@ -319,14 +319,24 @@ const thTHGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `รวมค่า ${column} (${aggregation})`,
-  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `${column} เป็นหนึ่งใน: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
-  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `กรองโดยที่ ${column} เป็นหนึ่งใน: ${value}`;
     }
     return `กรองโดยที่ ${column} ${operator} ${value}`;

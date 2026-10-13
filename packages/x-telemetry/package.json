@@ -39,10 +39,9 @@
     "rimraf": "catalog:"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=20"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    ".": "./src/index.ts"
   }
 }
