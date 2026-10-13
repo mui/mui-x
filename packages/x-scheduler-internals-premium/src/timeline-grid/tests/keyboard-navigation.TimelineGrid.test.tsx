@@ -39,6 +39,7 @@ describe('TimelineGrid keyboard navigation', () => {
     resources: resourcesProp = resources,
     children,
     titleContent,
+    scrollRowIntoView,
   }: {
     onStoreMount?: (store: AnyEventCalendarStore) => void;
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
@@ -47,6 +48,7 @@ describe('TimelineGrid keyboard navigation', () => {
     resources?: typeof resources;
     children?: React.ReactNode;
     titleContent?: React.ReactNode;
+    scrollRowIntoView?: (rowIndex: number) => void;
   } = {}) {
     return (
       <EventTimelinePremiumProvider
@@ -56,7 +58,7 @@ describe('TimelineGrid keyboard navigation', () => {
         eventCreation={eventCreation}
         onEventEditingStart={onEventEditingStart}
       >
-        <TimelineGrid.Root columnTypes={columnTypes}>
+        <TimelineGrid.Root columnTypes={columnTypes} scrollRowIntoView={scrollRowIntoView}>
           <TimelineGrid.Row data-testid="header-row" aria-rowindex={1}>
             <TimelineGrid.Cell>title header</TimelineGrid.Cell>
             <TimelineGrid.Cell>events header</TimelineGrid.Cell>
@@ -164,6 +166,44 @@ describe('TimelineGrid keyboard navigation', () => {
       await user.keyboard('{ArrowDown}');
 
       expect(lastCell).toHaveFocus();
+    });
+
+    it('should scroll the target row into view before moving the focus to it', async () => {
+      // The focus is still on the previous row when the target row is scrolled into view.
+      const focusedRowOnScroll: number[] = [];
+      const scrollRowIntoView = vi.fn(() => {
+        focusedRowOnScroll.push(getEventsCells().indexOf(document.activeElement as HTMLElement));
+      });
+      const { user } = render(<Grid scrollRowIntoView={scrollRowIntoView} />);
+
+      const cells = getEventsCells();
+      act(() => {
+        cells[0].focus();
+      });
+      await user.keyboard('{ArrowDown}');
+      expect(cells[1]).toHaveFocus();
+      await user.keyboard('{ArrowUp}');
+      expect(cells[0]).toHaveFocus();
+
+      expect(scrollRowIntoView.mock.calls).to.deep.equal([[1], [0]]);
+      expect(focusedRowOnScroll).to.deep.equal([0, 1]);
+    });
+
+    it('should not scroll when the focus stays on the first or last row', async () => {
+      const scrollRowIntoView = vi.fn();
+      const { user } = render(<Grid scrollRowIntoView={scrollRowIntoView} />);
+
+      const cells = getEventsCells();
+      act(() => {
+        cells[0].focus();
+      });
+      await user.keyboard('{ArrowUp}');
+      act(() => {
+        cells[cells.length - 1].focus();
+      });
+      await user.keyboard('{ArrowDown}');
+
+      expect(scrollRowIntoView.mock.calls).to.have.length(0);
     });
   });
 

@@ -26,6 +26,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     render,
     style,
     columnTypes = DEFAULT_COLUMN_TYPES,
+    scrollRowIntoView,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -173,8 +174,22 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   const totalRowCount = resources.length;
 
   const contextValue: TimelineGridRootContext = React.useMemo(
-    () => ({ focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount }),
-    [focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount],
+    () => ({
+      focusedCell,
+      setFocusedCell,
+      clearFocusedCellIfMatches,
+      columnTypes,
+      totalRowCount,
+      scrollRowIntoView,
+    }),
+    [
+      focusedCell,
+      setFocusedCell,
+      clearFocusedCellIfMatches,
+      columnTypes,
+      totalRowCount,
+      scrollRowIntoView,
+    ],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -209,5 +224,10 @@ export namespace TimelineGridRoot {
      * @default ['title', 'events']
      */
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
+    /**
+     * Scrolls the row at the given index into view.
+     * Needed when rows are virtualized.
+     */
+    scrollRowIntoView?: (rowIndex: number) => void;
   }
 }

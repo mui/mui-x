@@ -30,6 +30,10 @@ export interface TimelineGridRootContext {
    * where only a subset of rows are in the DOM).
    */
   totalRowCount: number;
+  /**
+   * Scrolls the row at the given index into view.
+   */
+  scrollRowIntoView: ((rowIndex: number) => void) | undefined;
 }
 
 export const DEFAULT_COLUMN_TYPES = ['title', 'events'] as const satisfies readonly [

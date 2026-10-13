@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
@@ -291,7 +292,8 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
 
 // In macOS Safari and Gnome Web, scrollbars are overlaid and report size 0.
 // The virtual scrollbar container needs a real size, so we clamp to at least 14px.
-const SCROLLBAR_SIZE_CSS = 'calc(max(var(--scrollbar-size, 10px), 14px))';
+const MIN_SCROLLBAR_SIZE = 14;
+const SCROLLBAR_SIZE_CSS = `calc(max(var(--scrollbar-size, 10px), ${MIN_SCROLLBAR_SIZE}px))`;
 
 const Scrollbar = styled('div', {
   name: 'MuiEventTimeline',
@@ -848,6 +850,36 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     titleColumnWidth,
   });
 
+  // Arrow keys move the focus to rows the virtualizer may not have mounted yet, so the row is
+  // scrolled into view first. Same rule as the Data Grid's `scrollToIndexes`.
+  const scrollRowIntoView = useStableCallback((rowIndex: number) => {
+    const scroller = gridRef.current;
+    const { positions, currentPageTotalHeight } = Dimensions.selectors.rowsMeta(
+      virtualizer.store.state,
+    );
+    const rowTop = positions[rowIndex];
+    if (!scroller || rowTop === undefined) {
+      return;
+    }
+    const rowBottom = positions[rowIndex + 1] ?? currentPageTotalHeight;
+    const { viewportInnerSize, hasScrollX, scrollbarSize } = Dimensions.selectors.dimensions(
+      virtualizer.store.state,
+    );
+    // The bottom scrollbars are drawn over the rows, and can be taller than the native one.
+    const viewportHeight =
+      viewportInnerSize.height +
+      (hasScrollX ? scrollbarSize : 0) -
+      (hasScrollX || hasTitleOverflow ? Math.max(scrollbarSize, MIN_SCROLLBAR_SIZE) : 0);
+    let scrollTop = scroller.scrollTop;
+    // A row taller than the viewport is aligned to its top.
+    if (rowTop < scrollTop || rowBottom - rowTop > viewportHeight) {
+      scrollTop = rowTop;
+    } else if (rowBottom > scrollTop + viewportHeight) {
+      scrollTop = rowBottom - viewportHeight;
+    }
+    scroller.scrollTop = scrollTop;
+  });
+
   const eventsWidth = config.tickCount * config.tickWidth;
   const hasScrollX = dimensions.hasScrollX;
   const hasScrollY = dimensions.hasScrollY;
@@ -884,6 +916,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               {...scrollerProps}
               ref={gridMergedRef}
               onKeyDown={handleEventTabKeyDown}
+              scrollRowIntoView={scrollRowIntoView}
             >
               <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
                 <EventTimelinePremiumViewport {...viewportProps}>
