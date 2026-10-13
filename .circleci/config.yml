@@ -118,7 +118,7 @@ jobs:
       <<: *default-parameters
       resource-class:
         type: string
-        default: xlarge.gen2
+        default: large.gen2
       max-workers:
         type: string
         default: ''
@@ -133,6 +133,16 @@ jobs:
       - run:
           name: Record cgroup stats before tests
           command: cat /sys/fs/cgroup/cpu.stat | grep usage_usec | tee /tmp/cpu-before
+      - run:
+          name: Sample peak anonymous memory
+          background: true
+          command: |
+            PEAK=0
+            while true; do
+              ANON=$(awk '$1 == "anon" { print int($2 / 1048576) }' /sys/fs/cgroup/memory.stat)
+              if [ "$ANON" -gt "$PEAK" ]; then PEAK=$ANON; echo $PEAK > /tmp/anon-peak; fi
+              sleep 1
+            done
       - when:
           condition: << parameters.playwright-server >>
           steps:
@@ -158,6 +168,7 @@ jobs:
           when: always
           command: |
             echo "memory.peak: $(( $(cat /sys/fs/cgroup/memory.peak) / 1048576 )) MB"
+            echo "anon.peak: $(cat /tmp/anon-peak) MB"
             grep -E 'oom' /sys/fs/cgroup/memory.events || true
             echo "cpu before: $(cat /tmp/cpu-before)"
             echo "cpu after:  $(grep usage_usec /sys/fs/cgroup/cpu.stat)"
@@ -322,21 +333,11 @@ workflows:
       # TODO: temporary experiment matrix, remove before merging
       - test_browser:
           <<: *default-context
-          name: exp_<< matrix.resource-class >>_mw<< matrix.max-workers >>_server
+          name: exp_xlarge.gen2_mw<< matrix.max-workers >>
+          resource-class: xlarge.gen2
           matrix:
             parameters:
-              resource-class: [medium.gen2, large.gen2, xlarge.gen2]
-              max-workers: ['2', '4', '8']
-            exclude:
-              - { resource-class: medium.gen2, max-workers: '8' }
-              - { resource-class: xlarge.gen2, max-workers: '2' }
-      - test_browser:
-          <<: *default-context
-          name: exp_xlarge.gen2_mw<< matrix.max-workers >>_local
-          playwright-server: false
-          matrix:
-            parameters:
-              max-workers: ['4', '8']
+              max-workers: ['8', '12']
       - test_lint:
           <<: *default-context
       - test_static:
