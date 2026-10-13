@@ -114,34 +114,16 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.64.0-noble
-    resource_class: xlarge.gen2
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
-      - when:
-          condition:
-            not:
-              equal: ['stable', << parameters.react-version >>]
-          steps:
-            - run:
-                environment:
-                  TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                name: Test Browser
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
-      - when:
-          condition:
-            equal: ['stable', << parameters.react-version >>]
-          steps:
-            - run:
-                name: Test Browser
-                environment:
-                  TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
+      - run:
+          name: Test Browser
+          environment:
+            TZ: UTC
+          command: pnpm test:unit:browser
       - store_test_results:
           path: test-results
   test_lint:
