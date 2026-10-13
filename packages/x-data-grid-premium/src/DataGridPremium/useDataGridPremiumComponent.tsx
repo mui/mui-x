@@ -285,7 +285,7 @@ export const useDataGridPremiumComponent = (
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);
-  useGridScroll(apiRef, props);
+  useGridScroll(apiRef);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
   useGridDataSourceLazyLoader(apiRef, props);
