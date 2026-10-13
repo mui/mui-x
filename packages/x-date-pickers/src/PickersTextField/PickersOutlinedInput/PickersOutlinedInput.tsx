@@ -56,14 +56,16 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       },
     },
     variants: Object.keys((theme.vars ?? theme).palette)
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Dynamic palette keys error only in consumers enabling noImplicitAny.
+      // @ts-ignore Palette entries are discovered and filtered for their main color at runtime.
       .filter((key) => (theme.vars ?? theme).palette[key]?.main ?? false)
       .map((color) => ({
         props: { inputColor: color },
         style: {
           [`&.${pickersOutlinedInputClasses.focused}:not(.${pickersOutlinedInputClasses.error}) .${pickersOutlinedInputClasses.notchedOutline}`]:
             {
-              // @ts-ignore
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Dynamic palette keys error only in consumers enabling noImplicitAny.
+              // @ts-ignore Palette entries are discovered and filtered for their main color at runtime.
               borderColor: (theme.vars || theme).palette[color].main,
             },
         },

@@ -49,9 +49,6 @@
     "react-dom": "catalog:",
     "rimraf": "catalog:"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
   "exports": {
     ".": "./src/index.ts",
     "./useVirtualizer": "./src/useVirtualizer.ts",
