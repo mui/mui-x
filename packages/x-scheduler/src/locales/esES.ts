@@ -144,6 +144,9 @@ const esESCalendar: SchedulerCalendarTranslations = {
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
+  // AgendaView
+  agendaViewEmptyStateLabel: 'No hay eventos próximos',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Finaliza ${endDate}`,
 

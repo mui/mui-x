@@ -142,6 +142,9 @@ const ptPTCalendar: SchedulerCalendarTranslations = {
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
 
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Termina a ${endDate}`,
 

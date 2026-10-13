@@ -236,6 +236,9 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;
 
+  // AgendaView
+  agendaViewEmptyStateLabel: string;
+
   // EventItem
   eventItemMultiDayLabel: (endDate: string) => string;
 

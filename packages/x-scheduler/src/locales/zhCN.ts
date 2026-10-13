@@ -147,6 +147,8 @@ const zhCNCalendar: SchedulerCalendarTranslations = {
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
   // EventItem
   // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
   // MiniCalendar
