@@ -1,4 +1,5 @@
 import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { expectFieldValueV7, describeAdapters } from 'test/utils/pickers';
 
@@ -66,5 +67,28 @@ describe('<TimeField /> - Timezone', () => {
         expect(onChange.lastCall.firstArg).toEqualDateTime(expectedDate);
       });
     });
+  });
+
+  describeAdapters('Day without midnight', TimeField, ({ adapter, renderWithProps }) => {
+    beforeEach(() => {
+      // `America/Santiago` skips from 00:00 to 01:00 on 2026-09-06.
+      vi.setSystemTime(new Date('2026-09-06T15:00:00.000Z'));
+    });
+
+    it.skipIf(!adapter.isTimezoneCompatible)(
+      'should accept every hour in a 12-hour format',
+      async () => {
+        const view = renderWithProps({
+          format: adapter.formats.fullTime12h,
+          timezone: 'America/Santiago',
+          enableAccessibleFieldDOMStructure: true,
+        });
+
+        await view.selectSectionAsync('hours');
+        view.pressKey(undefined, '1');
+        view.pressKey(undefined, '0');
+        expectFieldValueV7(view.getSectionsContainer(), '10:mm aa');
+      },
+    );
   });
 });
