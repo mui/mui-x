@@ -12,6 +12,22 @@ import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 const defaultEvent = EventBuilder.new().build();
 const readOnlyEvent = EventBuilder.new().id(defaultEvent.id).readOnly().build();
 
+// The docs' `TitleProperty` shape: maps one property, `title`, and leaves every other key
+// (including `start` / `end`) out of the object entirely — a different input than omitting
+// `eventModelStructure` altogether, which every "true by default" test below used until now.
+// `eventModelStructure?.[property]` and a broken `!structure?.[property]?.setter` refactor agree
+// on "no structure at all" (both read as `undefined`) but disagree here, where the object exists
+// but doesn't mention the property.
+const titleOnlyEventModelStructure = {
+  title: {
+    getter: (event: Partial<typeof defaultEvent>) => event.title!,
+    setter: (event: Partial<typeof defaultEvent>, value: string) => {
+      event.title = value;
+      return event;
+    },
+  },
+};
+
 describe('schedulerEventSelectors', () => {
   describe('processedEventRangeIndex', () => {
     it('should reuse the index until its date-processing inputs change', () => {
@@ -101,6 +117,19 @@ describe('schedulerEventSelectors', () => {
         eventCreation: true,
       });
       expect(schedulerEventSelectors.creationConfig(state)).to.equal(false);
+    });
+
+    // See `canWriteEventDates` above: a defined structure that only maps an unrelated property
+    // is a different input than no structure at all, and must not disable creation either.
+    it('should return the default config when eventModelStructure maps only an unrelated property', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventCreation: true,
+        eventModelStructure: titleOnlyEventModelStructure,
+      });
+      expect(schedulerEventSelectors.creationConfig(state)).to.deep.equal(
+        DEFAULT_EVENT_CREATION_CONFIG,
+      );
     });
 
     it('should return false when the start property is declared without a setter', () => {
@@ -947,6 +976,17 @@ describe('schedulerEventSelectors', () => {
       expect(schedulerEventSelectors.canWriteEventDates(state)).to.equal(true);
     });
 
+    // Distinct from "by default": a *defined* `eventModelStructure` that simply doesn't mention
+    // `start` / `end` should leave them on the built-in default access, not treat the property
+    // as declared-without-a-setter.
+    it('should return true when eventModelStructure maps only an unrelated property', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: titleOnlyEventModelStructure,
+      });
+      expect(schedulerEventSelectors.canWriteEventDates(state)).to.equal(true);
+    });
+
     it('should return false when the start property is declared without a setter', () => {
       const state = getEventCalendarStateFromParameters({
         events: [defaultEvent],
@@ -977,6 +1017,17 @@ describe('schedulerEventSelectors', () => {
   describe('isDateWritable', () => {
     it('should return true by default for both properties', () => {
       const state = getEventCalendarStateFromParameters({ events: [defaultEvent] });
+      expect(schedulerEventSelectors.isDateWritable(state, 'start')).to.equal(true);
+      expect(schedulerEventSelectors.isDateWritable(state, 'end')).to.equal(true);
+    });
+
+    // See `canWriteEventDates` above: a defined structure that only maps an unrelated property
+    // is a different input than no structure at all.
+    it('should return true for both properties when eventModelStructure maps only an unrelated property', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [defaultEvent],
+        eventModelStructure: titleOnlyEventModelStructure,
+      });
       expect(schedulerEventSelectors.isDateWritable(state, 'start')).to.equal(true);
       expect(schedulerEventSelectors.isDateWritable(state, 'end')).to.equal(true);
     });

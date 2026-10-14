@@ -325,6 +325,25 @@ premiumStoreClasses.forEach((storeClass) => {
       );
     }
 
+    // Shared by the "all" scope and "refused because a date has no setter" describes below —
+    // both need a store whose `start` has no setter, differing only in whether a test supplies
+    // its own event (a split-scope refusal needs one with an explicit `rrule.byDay`/exDates
+    // shape, the rest just reuse `RECURRING_EVENT`).
+    function createStoreWithReadOnlyStart(
+      onEventsChange: (...args: any[]) => void,
+      event: SchedulerEvent = RECURRING_EVENT,
+    ) {
+      return new storeClass.Value(
+        {
+          ...DEFAULT_PARAMS,
+          events: [event],
+          eventModelStructure: { start: { getter: (evt) => evt.start } },
+          onEventsChange,
+        },
+        adapter,
+      );
+    }
+
     function armOccurrence(store: any, occurrenceStart: ReturnType<typeof adapter.date>) {
       store.startEditing(
         {
@@ -773,18 +792,6 @@ premiumStoreClasses.forEach((storeClass) => {
     // `updateEvents` — not covered by the generic `dates declared without a setter` suite, which
     // never combines a recurring "all" scope with an unwritable date.
     describe('scope "all" with an unwritable date', () => {
-      function createStoreWithReadOnlyStart(onEventsChange: (...args: any[]) => void) {
-        return new storeClass.Value(
-          {
-            ...DEFAULT_PARAMS,
-            events: [RECURRING_EVENT],
-            eventModelStructure: { start: { getter: (event) => event.start } },
-            onEventsChange,
-          },
-          adapter,
-        );
-      }
-
       // Regression guard: without the "all"-scope handling, `updateRecurringEvent` would realign
       // the rule's pattern off a `start` that was never actually applied, since it can't be
       // written back — silently corrupting the series instead of refusing the edit.
@@ -816,8 +823,9 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(store.state.errors.length).to.equal(1);
       });
 
-      // A resize-style "all" edit — only the time changes, the day (`start`) is resubmitted
-      // unchanged — still applies: it's not a move, so only the genuinely-changing bound matters.
+      // A resize-style "all" edit — only `end` is submitted, the day (`start`) isn't part of the
+      // change at all (as the real editing dialog gates per-bound) — still applies: a single
+      // submitted bound is a resize, not a move.
       it('should apply an "all" edit that only resizes the time when start lacks a setter', () => {
         const onEventsChange = vi.fn();
         const store = createStoreWithReadOnlyStart(onEventsChange);
@@ -825,7 +833,7 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(() => {
           store.updateRecurringEvent({
             occurrenceStart: dayA,
-            changes: { id: 'standup', start: dayA, end: adapter.addMinutes(dayA, 90) },
+            changes: { id: 'standup', end: adapter.addMinutes(dayA, 90) },
           });
           store.selectRecurringEventScope('all');
         }).not.toWarnDev();
@@ -844,6 +852,77 @@ premiumStoreClasses.forEach((storeClass) => {
         // the model keeps its original string as-is instead of being reformatted.
         expect(updated.start).to.equal(RECURRING_EVENT.start);
       });
+
+      // The tests above use the shared, daily `RECURRING_EVENT`, where every occurrence falls on
+      // the same weekday as DTSTART — moving one to a new day never touches `byDay`, so it can't
+      // expose a pattern realignment bug. This series is weekly instead, and the edit targets its
+      // *second* occurrence: on the first, the occurrence start equals DTSTART, so a reference
+      // bug (falling back to the series' own bounds instead of the occurrence's) would be
+      // invisible too — both mutations survive the tests above unnoticed.
+      describe('on a weekly rule, at a non-first occurrence', () => {
+        const WEEKLY_EVENT = EventBuilder.new()
+          .id('standup')
+          .startAt('2025-07-07T09:00:00Z') // a Monday
+          .endAt('2025-07-07T10:00:00Z')
+          .recurrent('WEEKLY')
+          .build();
+        const secondMonday = adapter.addDays(dayA, 7);
+
+        // A store whose host feeds every change back into the controlled `events` prop, with the
+        // getter-only `start` override — `createStoreWithReadOnlyStart` above isn't controlled,
+        // and `createControlledStore` below doesn't take an `eventModelStructure` override.
+        function createControlledWeeklyStore() {
+          let store: any;
+          const parameters = {
+            ...DEFAULT_PARAMS,
+            events: [WEEKLY_EVENT],
+            eventModelStructure: { start: { getter: (event: any) => event.start } },
+            onEventsChange: (nextEvents: any[]) =>
+              store.updateStateFromParameters({ ...parameters, events: nextEvents }, adapter),
+          };
+          store = new storeClass.Value(parameters, adapter);
+          return store;
+        }
+
+        it('should not realign BYDAY when a non-first occurrence\'s unwritable start is "moved"', () => {
+          const store = createControlledWeeklyStore();
+
+          expect(() => {
+            store.updateRecurringEvent({
+              occurrenceStart: secondMonday,
+              changes: { id: 'standup', start: adapter.addDays(secondMonday, -1) },
+            });
+            store.selectRecurringEventScope('all');
+          }).toWarnDev([
+            "MUI X Scheduler: An event's `start` date was not updated.\n" +
+              '`eventModelStructure.start` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+          ]);
+
+          const series = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+          expect(series.dataTimezone.rrule!.byDay).to.deep.equal(['MO']);
+        });
+
+        it('should keep the armed occurrence on its day when its unwritable start is "moved"', () => {
+          const store = createControlledWeeklyStore();
+          const armedKey = getRecurringOccurrenceKey('standup', secondMonday, adapter);
+          armOccurrence(store, secondMonday);
+
+          expect(() => {
+            store.updateRecurringEvent({
+              occurrenceStart: secondMonday,
+              changes: { id: 'standup', start: adapter.addDays(secondMonday, -1) },
+            });
+            store.selectRecurringEventScope('all');
+          }).toWarnDev([
+            "MUI X Scheduler: An event's `start` date was not updated.\n" +
+              '`eventModelStructure.start` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+          ]);
+
+          const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+          expect(occurrence?.key).to.equal(armedKey);
+          expect(occurrence?.dataTimezone.start.value).toEqualDateTime(secondMonday);
+        });
+      });
     });
 
     // `selectRecurringEventScope` feeds the plugin's split straight into `updateEvents`, bypassing
@@ -853,21 +932,6 @@ premiumStoreClasses.forEach((storeClass) => {
     // original series in the same call, and applying that half while dropping the detached
     // occurrence would corrupt the series instead of leaving it untouched.
     describe('refused because a date has no setter', () => {
-      function createStoreWithReadOnlyStart(
-        onEventsChange: (...args: any[]) => void,
-        event: SchedulerEvent = RECURRING_EVENT,
-      ) {
-        return new storeClass.Value(
-          {
-            ...DEFAULT_PARAMS,
-            events: [event],
-            eventModelStructure: { start: { getter: (evt) => evt.start } },
-            onEventsChange,
-          },
-          adapter,
-        );
-      }
-
       it('should refuse an "only-this" split and leave the series untouched', () => {
         const onEventsChange = vi.fn();
         // Seeded with an exDate unrelated to `dayA` so the before/after comparison below has

@@ -150,6 +150,26 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(adapter.getTime(changes.end!)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
     });
 
+    // The cascade appends `b`'s entry to the batch regardless of where either id sits in the
+    // `events` prop — `changes` has to stay the caller's own entry, not whichever one the main
+    // loop (which walks `events` in its own order) happens to visit first.
+    it("should report the caller's own entry first, not whichever id the `events` prop lists first", () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, events: [eventB, eventA], onEventsChange: () => {} },
+        adapter,
+      );
+
+      const result = store.updateEvent({
+        id: 'a',
+        start: date('2025-07-03T11:00:00Z'),
+        end: date('2025-07-03T12:00:00Z'),
+      });
+
+      expect(result.applied).to.equal(true);
+      const { changes } = result as Extract<typeof result, { applied: true }>;
+      expect(changes.id).to.equal('a');
+    });
+
     it('should sync the armed occurrence with the clamped dates after a start resize', () => {
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, onEventsChange: () => {} },
@@ -436,6 +456,44 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(onEventsChange.mock.calls.length).to.equal(0);
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
+
+    // The dependency cleanup for `deleted` is computed inside `handleEventsUpdate`, before the
+    // store's own date-writability check runs on the merged batch — it must not go out just
+    // because this hook itself had nothing to veto.
+    it('should emit nothing, not even the dependency cleanup, when the batch is refused because a date cannot be written back', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const orphan = EventBuilder.new().id('d').singleDay('2025-07-04T09:00:00Z').build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, eventB, orphan],
+          dependencies: [DEP_AB, { id: 'dep-2', source: 'a', target: 'd', type: 'FinishToStart' }],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onEventsChange,
+          onDependenciesChange,
+        },
+        adapter,
+      );
+
+      // Only recurring scope changes build such batches today, so the store method is
+      // called directly.
+      let result: any;
+      expect(() => {
+        result = (store as any).updateEvents({
+          deleted: ['d'],
+          updated: [
+            { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+          ],
+        });
+      }).toWarnDev([
+        'MUI X Scheduler: An event was not moved because a date could not be written back.',
+      ]);
+
+      expect(result.rejection).not.to.equal(null);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+    });
   });
 
   // Combines the scheduling cascade with an `eventModelStructure` date that can't be written
@@ -463,6 +521,44 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
 
       expect(result!.applied).to.equal(false);
       expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    // The opposite shape: `a`'s own `end` (not `start`) is unwritable, and it's the only bound
+    // in this change — a resize, not a move. Stripped before the plugin ever computes from it,
+    // so the cascade never triggers at all, and the unrelated `title` change still goes through.
+    // If the strip ran after the plugin instead, the raw (pre-strip) `end` would still push `b`
+    // forward, and that push would refuse the whole batch once `b`'s shifted bounds are checked.
+    it('should strip a single-side unwritable bound before the plugin runs, instead of refusing an unrelated change', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { end: { getter: (event: any) => event.end } };
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({
+          id: 'a',
+          end: date('2025-07-03T10:30:00Z'),
+          title: 'x',
+        });
+      }).toWarnDev([
+        "MUI X Scheduler: An event's `end` date was not updated.\n" +
+          '`eventModelStructure.end` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(result!.applied).to.equal(true);
+      const { changes } = result! as Extract<typeof result, { applied: true }>;
+      expect(changes.title).to.equal('x');
+      expect('end' in changes).to.equal(false);
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+      const emittedB = newEvents.find((event) => event.id === 'b')!;
+      // `b` never moved: the cascade never saw a changed `end` to push it from.
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
     });
   });
 

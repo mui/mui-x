@@ -12,8 +12,17 @@ export interface SchedulerSchedulingPluginInterface {
    * (`{ id, start, end }` only) fold into the same update and the same `onEventsChange`
    * emission, overriding the dates of an entry already in the batch. `rejected` vetoes
    * the whole batch: nothing is applied or emitted, and the caller surfaces `error`.
+   *
+   * `updateEvents` can still refuse the merged batch afterward (e.g. a date
+   * `eventModelStructure` can't write back) for a reason this hook has no way to predict, so any
+   * of its own side effects (such as dropping dependencies that reference a deleted event) must
+   * not happen here — return them from `commit` instead, called only once the batch is confirmed
+   * to go ahead.
    */
   handleEventsUpdate: (
     parameters: UpdateEventsParameters,
-  ) => { updated: SchedulerEventUpdatedProperties[] } | { rejected: true; error: Error } | void;
+  ) =>
+    | { updated?: SchedulerEventUpdatedProperties[]; commit?: () => void }
+    | { rejected: true; error: Error }
+    | void;
 }
