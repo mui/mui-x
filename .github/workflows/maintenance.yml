@@ -4,14 +4,16 @@ on:
   # So that PRs touching the same files as the push are updated
   push:
     branches:
-      - master
+      # #target-branch-reference
+      - v9.x
       - next
   # So that the `dirtyLabel` is removed if conflicts are resolved
   # Could put too much strain on rate limit
   # If we hit the rate limit too often remove this event
   pull_request_target:
     branches:
-      - master
+      # #target-branch-reference
+      - v9.x
       - next
     types: [synchronize]
 

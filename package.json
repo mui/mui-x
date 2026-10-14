@@ -1,6 +1,7 @@
 {
   "version": "9.14.0",
   "private": true,
+  "//": "#target-branch-reference: scripts.prettier",
   "scripts": {
     "preinstall": "npx only-allow@1.2.2 pnpm",
     "start": "pnpm i && pnpm docs:dev",
@@ -31,7 +32,7 @@
     "stylelint": "stylelint --reportInvalidScopeDisables --reportNeedlessDisables \"docs/**/*.?(c|m)[jt]s?(x)\" \"**/*.css\" --ignore-path .lintignore",
     "vale:fix": "pnpm valelint --auto-fix all",
     "valelint": "pnpm code-infra vale sync --vale-version $npm_package_config_valeVersion && git ls-files | grep -E \"\\.(md|mdx)$\" | xargs pnpm code-infra vale --vale-version $npm_package_config_valeVersion --filter='.Level==\"error\"'",
-    "prettier": "pretty-quick --ignore-path .lintignore --branch master",
+    "prettier": "pretty-quick --ignore-path .lintignore --branch v9.x",
     "prettier:all": "prettier --write . --ignore-path .lintignore",
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
     "size:snapshot": "pnpm -F ./test/bundle-size check",
