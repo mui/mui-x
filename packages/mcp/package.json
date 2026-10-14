@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@modelcontextprotocol/sdk": "^1.32.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "@mui/x-agent-tools": "workspace:^",
     "zod": "^4.6.5"
   },
