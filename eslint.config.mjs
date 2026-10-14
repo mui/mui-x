@@ -372,6 +372,7 @@ export default defineConfig(
   // Common config from core start
   {
     files: [`docs/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.config.*', '**/scripts/**'],
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
