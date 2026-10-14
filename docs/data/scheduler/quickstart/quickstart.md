@@ -59,9 +59,11 @@ Import the Event Calendar component that corresponds to the version you're using
 
 ```ts
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
-// Premium users: add `-premium` suffix to package name
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
+
+// or, with the Premium package
+import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import type { SchedulerEvent } from '@mui/x-scheduler-premium/models';
 ```
 
 ### Define events
