@@ -26,7 +26,7 @@ declare module '@mui/x-chat-headless/types' {
 
 const demoMembers = [demoUsers.alice, demoUsers.agent];
 
-function createAdapter(failNextRef: React.MutableRefObject<boolean>): ChatAdapter {
+function createAdapter(failNextRef: React.RefObject<boolean>): ChatAdapter {
   return {
     async sendMessage({ message }) {
       const messageId = `events-assistant-${message.id}`;
