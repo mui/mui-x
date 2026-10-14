@@ -9,6 +9,31 @@ import { vi, onTestFinished, describe, it, expect } from 'vitest';
 describe('<DataGridPro /> - Infinite loader', () => {
   const { render } = createRenderer();
 
+  it('should not throw when `IntersectionObserver` is not available', async () => {
+    vi.stubGlobal('IntersectionObserver', undefined);
+    onTestFinished(() => {
+      vi.unstubAllGlobals();
+    });
+
+    const handleRowsScrollEnd = vi.fn();
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          columns={[{ field: 'brand', width: 100 }]}
+          rows={[
+            { id: 0, brand: 'Nike' },
+            { id: 1, brand: 'Adidas' },
+          ]}
+          onRowsScrollEnd={handleRowsScrollEnd}
+        />
+      </div>,
+    );
+
+    // The observer is created in an effect after the dimensions are ready
+    await actSleep(50);
+    expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+  });
+
   // Needs layout
   it.skipIf(isJSDOM)(
     'should call `onRowsScrollEnd` when viewport scroll reaches the bottom',
