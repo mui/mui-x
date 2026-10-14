@@ -16,7 +16,7 @@ export const ptPTLocaleText: Partial<ChartsLocaleText> = {
   toolbarExportPrint: 'Imprimir',
   toolbarExportImage: (mimeType) => `Exportar como ${imageMimeTypes[mimeType] ?? mimeType}`,
   // toolbarExportExcel: 'Export as Excel',
-  // toolbarExportDataGridExcel: 'Export Data Grid data as Excel',
+  // toolbarExportDataGridExcel: 'Export grid data as Excel',
 
   // Charts renderer configuration
   chartTypeBar: 'Barras',

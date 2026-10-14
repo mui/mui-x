@@ -179,7 +179,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
       await user.click(screen.getByRole('button', { name: 'Export' }));
 
       expect(screen.getByRole('menuitem', { name: 'Export as Excel' })).not.to.equal(null);
-      expect(screen.getByRole('menuitem', { name: 'Export Data Grid data as Excel' })).not.to.equal(
+      expect(screen.getByRole('menuitem', { name: 'Export grid data as Excel' })).not.to.equal(
         null,
       );
     });
@@ -189,7 +189,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
       const { user } = render(chart({ onDataGridExcelExport }));
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
-      await user.click(screen.getByRole('menuitem', { name: 'Export Data Grid data as Excel' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Export grid data as Excel' }));
 
       expect(onDataGridExcelExport.mock.calls).to.have.length(1);
       expect(downloads).to.deep.equal([]);
@@ -200,9 +200,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
 
-      expect(screen.queryByRole('menuitem', { name: 'Export Data Grid data as Excel' })).to.equal(
-        null,
-      );
+      expect(screen.queryByRole('menuitem', { name: 'Export grid data as Excel' })).to.equal(null);
     });
 
     it('each entry can be disabled on its own', async () => {
@@ -214,7 +212,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
       await user.click(screen.getByRole('button', { name: 'Export' }));
 
       expect(screen.queryByRole('menuitem', { name: 'Export as Excel' })).to.equal(null);
-      expect(screen.getByRole('menuitem', { name: 'Export Data Grid data as Excel' })).not.to.equal(
+      expect(screen.getByRole('menuitem', { name: 'Export grid data as Excel' })).not.to.equal(
         null,
       );
     });
@@ -228,9 +226,7 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
       await user.click(screen.getByRole('button', { name: 'Export' }));
 
       expect(screen.getByRole('menuitem', { name: 'Export as Excel' })).not.to.equal(null);
-      expect(screen.queryByRole('menuitem', { name: 'Export Data Grid data as Excel' })).to.equal(
-        null,
-      );
+      expect(screen.queryByRole('menuitem', { name: 'Export grid data as Excel' })).to.equal(null);
     });
   });
 

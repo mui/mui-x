@@ -16,7 +16,7 @@ export const elGRLocaleText: Partial<ChartsLocaleText> = {
   toolbarExportPrint: 'Εκτύπωση',
   toolbarExportImage: (mimeType) => `Εξαγωγή ως ${imageMimeTypes[mimeType] ?? mimeType}`,
   // toolbarExportExcel: 'Export as Excel',
-  // toolbarExportDataGridExcel: 'Export Data Grid data as Excel',
+  // toolbarExportDataGridExcel: 'Export grid data as Excel',
 
   // Charts renderer configuration
   chartTypeBar: 'Μπάρα',

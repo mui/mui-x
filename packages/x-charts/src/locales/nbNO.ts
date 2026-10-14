@@ -16,7 +16,7 @@ export const nbNOLocaleText: Partial<ChartsLocaleText> = {
   toolbarExportPrint: 'Skriv ut',
   toolbarExportImage: (mimeType) => `Eksporter som ${imageMimeTypes[mimeType] ?? mimeType}`,
   // toolbarExportExcel: 'Export as Excel',
-  // toolbarExportDataGridExcel: 'Export Data Grid data as Excel',
+  // toolbarExportDataGridExcel: 'Export grid data as Excel',
 
   // Charts renderer configuration
   chartTypeBar: 'Stolpe',
