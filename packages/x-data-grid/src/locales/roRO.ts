@@ -219,13 +219,13 @@ const roROGrid: Partial<GridLocaleText> = {
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     const unknownRowCount = count == null || count === -1;
     if (!estimated) {
-      return `${formatNumber(from)}-${formatNumber(to)} din ${!unknownRowCount ? formatNumber(count) : `mai mult de ${formatNumber(to)}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} din ${!unknownRowCount ? formatNumber(count) : `mai mult de ${formatNumber(to)}`}`;
     }
     const estimatedLabel =
       estimated && estimated > to
         ? `aproximativ ${formatNumber(estimated)}`
         : `mai mult de ${formatNumber(to)}`;
-    return `${formatNumber(from)}-${formatNumber(to)} din ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
+    return `${formatNumber(from)}–${formatNumber(to)} din ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
