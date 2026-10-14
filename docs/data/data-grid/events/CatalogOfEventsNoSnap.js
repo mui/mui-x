@@ -2,11 +2,15 @@ import * as React from 'react';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import {
   DataGridPro,
-  GridToolbarContainer,
-  GridToolbarQuickFilter,
+  Toolbar as GridToolbar,
+  QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
 } from '@mui/x-data-grid-pro';
 import events from './events.json';
 
@@ -122,9 +126,21 @@ const COLUMNS = [
 
 function Toolbar() {
   return (
-    <GridToolbarContainer sx={{ p: 1 }}>
-      <GridToolbarQuickFilter />
-    </GridToolbarContainer>
+    <GridToolbar render={<Box sx={{ p: 1 }} />}>
+      <QuickFilter expanded>
+        <QuickFilterControl
+          render={({ ref, ...props }) => (
+            <TextField
+              {...props}
+              inputRef={ref}
+              slotProps={{ htmlInput: { 'aria-label': 'Search events' } }}
+              size="small"
+            />
+          )}
+        />
+        <QuickFilterClear render={<Button />}>Clear search</QuickFilterClear>
+      </QuickFilter>
+    </GridToolbar>
   );
 }
 
