@@ -153,7 +153,13 @@ function ChartsToolbarPremium({
           <React.Fragment>
             {showExcelExport && (
               <ExcelExportMenuItem
-                label={localeText.toolbarExportExcel}
+                // Qualified only when the grid entry sits next to it, so a chart on its own does
+                // not say "chart" inside its own toolbar.
+                label={
+                  showDataGridExport
+                    ? localeText.toolbarExportChartExcel
+                    : localeText.toolbarExportExcel
+                }
                 options={excelExportOptions}
                 onExport={onExcelExport}
                 onClose={params.onClose}
