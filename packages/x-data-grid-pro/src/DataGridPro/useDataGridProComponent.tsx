@@ -53,8 +53,8 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
-  useFirstRender,
 } from '@mui/x-data-grid/internals';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridConfiguration } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -82,6 +82,7 @@ import {
   rowReorderStateInitializer,
 } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+import { useGridRowReorderPointer } from '../hooks/features/rowReorder/useGridRowReorderPointer';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 import {
@@ -179,6 +180,7 @@ export const useDataGridProComponent = (
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);
+  useGridRowReorderPointer(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
@@ -197,7 +199,7 @@ export const useDataGridProComponent = (
   useGridListView(apiRef, props);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });
   React.useEffect(() => {

@@ -22,10 +22,6 @@ export interface CalendarGridTimeColumnContext {
    */
   dayEndMinute: number;
   /**
-   * The index of the column in the grid.
-   */
-  index: number;
-  /**
    * Whether this column currently owns focus within the grid.
    * When `true`, interactive children (e.g. events) should use `tabIndex={0}`
    * so they are reachable via Tab; when `false`, they should use `tabIndex={-1}`.

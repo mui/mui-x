@@ -178,6 +178,7 @@ describe('selector hooks', () => {
       isStreaming: false,
       hasMoreHistory: false,
       isLoadingHistory: false,
+      historyStatus: 'idle',
       error: null,
       typingUserIds: [],
     });
@@ -202,6 +203,7 @@ describe('selector hooks', () => {
       isStreaming: false,
       hasMoreHistory: true,
       isLoadingHistory: false,
+      historyStatus: 'idle',
       error: null,
       typingUserIds: [],
     });
@@ -218,6 +220,7 @@ describe('selector hooks', () => {
       isStreaming: true,
       hasMoreHistory: true,
       isLoadingHistory: false,
+      historyStatus: 'idle',
       error: streamError,
       typingUserIds: [],
     });

@@ -8,20 +8,19 @@ const DEFAULT_MAX_CACHE_SIZE = 1000;
 const DEFAULT_CLEAN_UP_FREQ_MS = 60 * 60 * 1000; // 1 hour in milliseconds
 
 export class LRUCache {
-  private cache: Map<string, CacheEntry>;
+  private cache: Map<string, CacheEntry> = new Map();
 
-  private cache_ttl_ms: number;
+  declare private cache_ttl_ms: number;
 
-  private max_cache_size: number;
+  declare private max_cache_size: number;
 
-  private cleanupTimer: ReturnType<typeof setInterval>;
+  declare private cleanupTimer: ReturnType<typeof setInterval>;
 
   constructor(
     cache_ttl_ms: number = DEFAULT_CACHE_TTL_MS,
     max_cache_size: number = DEFAULT_MAX_CACHE_SIZE,
     clean_up_freq_ms: number = DEFAULT_CLEAN_UP_FREQ_MS,
   ) {
-    this.cache = new Map();
     this.cache_ttl_ms = cache_ttl_ms;
     this.max_cache_size = max_cache_size;
     // Periodically evict expired entries. `unref()` so the timer never keeps the process alive.

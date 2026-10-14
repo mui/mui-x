@@ -5,6 +5,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import {
   computeElementPositionInCollection,
+  createEventRangeIndex,
   getOccurrencesFromEvents,
 } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
@@ -658,7 +659,7 @@ describe('dependencyArrowGeometry', () => {
             adapter,
             start: collectionStart,
             end: twoDayAxis.end,
-            events,
+            eventRangeIndex: createEventRangeIndex(events, adapter, false),
             displayTimezone: 'default',
             visibleResources: {},
             recurringEventsPlugin: null,

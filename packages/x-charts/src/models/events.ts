@@ -12,6 +12,7 @@ import type { ChartsTypeFeatureFlags } from './featureFlags';
 export type ChartsActivationEvent<Element = never> =
   | ([Element] extends [never] ? MouseEvent : React.MouseEvent<Element, MouseEvent>)
   | (HasProperty<ChartsTypeFeatureFlags, 'keyboardActivationOverride'> extends true
-      ? // @ts-ignore this property is added through module augmentation
+      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- The optional keyboard augmentation adds this property only in consumers that import it.
+        // @ts-ignore The optional keyboard augmentation adds this property only in consumers that import it.
         ChartsTypeFeatureFlags['keyboardActivationOverride']
       : never);

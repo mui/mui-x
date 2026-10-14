@@ -48,7 +48,7 @@ export function formatHourAndMinutes(
   date: TemporalSupportedObject,
   adapter: Adapter,
   ampm: boolean,
-) {
+): string {
   const f = adapter.formats;
   const timeFormat = ampm
     ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`

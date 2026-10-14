@@ -14,10 +14,7 @@ export interface UseTimeGridEventReturnValue {
   isDraggable: boolean;
   isStartResizable: boolean;
   isEndResizable: boolean;
-  palette: PaletteName | undefined;
-  isLessThan15Minutes: boolean;
-  isLessThan30Minutes: boolean;
-  isBetween30and60Minutes: boolean;
+  isStacked: boolean;
   /**
    * Data attributes shared by both variants. Spread on the root of the styled wrapper.
    */
@@ -60,21 +57,19 @@ export function useTimeGridEvent(
   const durationMs =
     occurrence.displayTimezone.end.timestamp - occurrence.displayTimezone.start.timestamp;
   const durationMinutes = durationMs / 60000;
-  const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
-  const isLessThan30Minutes = durationMinutes < 30;
+  const isUnderHour = durationMinutes < 60;
   // Inclusive on purpose: an exactly-15-minute event gets the tightest (zero-padding) tier. See the
   // `duration thresholds` boundary tests in `DayView.test.tsx`.
   const isLessThan15Minutes = durationMinutes <= 15;
 
   const rootDataAttributes = React.useMemo(
     () => ({
-      'data-under-hour': (isLessThan30Minutes || isBetween30and60Minutes || undefined) as
-        true | undefined,
+      'data-under-hour': (isUnderHour || undefined) as true | undefined,
       'data-under-fifteen-minutes': (isLessThan15Minutes || undefined) as true | undefined,
       'data-recurrent': (isRecurring || undefined) as true | undefined,
       'data-palette': palette,
     }),
-    [isLessThan30Minutes, isBetween30and60Minutes, isLessThan15Minutes, isRecurring, palette],
+    [isUnderHour, isLessThan15Minutes, isRecurring, palette],
   );
 
   const rootPositionProps = React.useMemo(
@@ -99,10 +94,7 @@ export function useTimeGridEvent(
     isDraggable,
     isStartResizable,
     isEndResizable,
-    palette,
-    isLessThan15Minutes,
-    isLessThan30Minutes,
-    isBetween30and60Minutes,
+    isStacked: !isUnderHour,
     rootDataAttributes,
     rootPositionProps,
   };

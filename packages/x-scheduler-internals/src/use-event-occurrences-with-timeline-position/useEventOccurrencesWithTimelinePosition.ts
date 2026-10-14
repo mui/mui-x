@@ -108,7 +108,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
 }
 
 class BinaryIndexedTree {
-  private readonly values: number[];
+  declare private readonly values: number[];
 
   constructor(size: number) {
     this.values = new Array(size + 1).fill(0);

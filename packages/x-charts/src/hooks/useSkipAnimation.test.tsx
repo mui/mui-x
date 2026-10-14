@@ -31,13 +31,13 @@ describe('useSkipAnimation', () => {
   const oldMatchMedia = window.matchMedia;
 
   beforeEach(() => {
-    // @ts-expect-error
+    // @ts-expect-error Remove the required matchMedia method before installing the test implementation.
     delete window?.matchMedia;
     window.matchMedia = createMatchMedia(false);
   });
 
   afterEach(() => {
-    // @ts-expect-error
+    // @ts-expect-error Remove the required matchMedia method before restoring the original implementation.
     delete window?.matchMedia;
     window.matchMedia = oldMatchMedia;
   });

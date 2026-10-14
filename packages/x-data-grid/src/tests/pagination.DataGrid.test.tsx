@@ -21,14 +21,16 @@ describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();
   let apiRef: RefObject<GridApi | null>;
 
-  function BaselineTestCase(props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number }) {
-    const { height = 300, ...other } = props;
+  function BaselineTestCase(
+    props: Omit<DataGridProps, 'rows' | 'columns'> & { wrapperHeight?: number },
+  ) {
+    const { wrapperHeight = 300, ...other } = props;
 
     apiRef = useGridApiRef();
     const basicData = useBasicDemoData(100, 2);
 
     return (
-      <div style={{ width: 300, height }}>
+      <div style={{ width: 300, height: wrapperHeight }}>
         <DataGrid {...basicData} apiRef={apiRef} autoHeight={isJSDOM} {...other} />
       </div>
     );

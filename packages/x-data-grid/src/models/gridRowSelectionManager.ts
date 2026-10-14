@@ -9,7 +9,7 @@ export interface RowSelectionManager {
 }
 
 class IncludeManager implements RowSelectionManager {
-  data: RowSelectionManager['data'];
+  declare data: RowSelectionManager['data'];
 
   constructor(model: GridRowSelectionModel) {
     this.data = model.ids;
@@ -29,7 +29,7 @@ class IncludeManager implements RowSelectionManager {
 }
 
 class ExcludeManager implements RowSelectionManager {
-  data: RowSelectionManager['data'];
+  declare data: RowSelectionManager['data'];
 
   constructor(model: GridRowSelectionModel) {
     this.data = model.ids;

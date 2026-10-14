@@ -1,5 +1,4 @@
 import type * as React from 'react';
-import { warn } from '@base-ui/utils/warn';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
@@ -8,6 +7,7 @@ import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internal
 import {
   DEFAULT_SCHEDULER_PREFERENCES,
   getDisplayedHourRange,
+  getShouldEventRequireResource,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
@@ -92,11 +92,13 @@ function validatePresetConfig(presetConfig: EventTimelinePremiumPresetConfig) {
       const hourConfig = presetConfig[preset];
       if (hourConfig) {
         if (!PRESET_ZOOM_ORDER.includes(preset)) {
-          warnOnce([
-            `MUI X Scheduler: \`presetConfig.${preset}\` is not a known preset, so the configuration is ignored.`,
-            `Use one of the built-in presets (${PRESET_ZOOM_ORDER.join(', ')}), or remove the entry from \`presetConfig\`.`,
-            'See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.',
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: \`presetConfig.${preset}\` is not a known preset, so the configuration is ignored.`,
+              `Use one of the built-in presets (${PRESET_ZOOM_ORDER.join(', ')}), or remove the entry from \`presetConfig\`.`,
+              'See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.',
+            ].join('\n'),
+          );
         }
         getDisplayedHourRange(hourConfig.startTime, hourConfig.endTime, `presetConfig.${preset}`);
       }
@@ -124,38 +126,28 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) => {
   const enabled = parameters.dependencies !== undefined;
   if (!enabled && parameters.onDependenciesChange !== undefined) {
-    warnOnce([
-      'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
-      'The `dependencies` prop is fully controlled, so without it the handler could never display anything and the dependencies feature stays disabled.',
-      'Pass a `dependencies` array next to the handler — an empty one enables the feature.',
-    ]);
+    warnOnce(
+      [
+        'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
+        'The `dependencies` prop is fully controlled, so without it the handler could never display anything and the dependencies feature stays disabled.',
+        'Pass a `dependencies` array next to the handler — an empty one enables the feature.',
+      ].join('\n'),
+    );
   }
   return enabled;
 };
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
-function warnIfShouldEventRequireResourceMisconfigured(
-  shouldEventRequireResource: boolean,
-  resources: readonly unknown[] | undefined,
-) {
-  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
-    warnOnce([
-      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
-      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
-    ]);
-  }
-}
-
 const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumState,
   EventTimelinePremiumStoreParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => {
-    const shouldEventRequireResource =
-      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
-    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const shouldEventRequireResource = getShouldEventRequireResource(
+      parameters,
+      DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
+    );
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
@@ -169,9 +161,10 @@ const mapper: SchedulerParametersToStateMapper<
     };
   },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
-    const shouldEventRequireResource =
-      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
-    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const shouldEventRequireResource = getShouldEventRequireResource(
+      parameters,
+      DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
+    );
     const areDependenciesEnabled = deriveAreDependenciesEnabled(parameters);
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
@@ -202,9 +195,9 @@ export class EventTimelinePremiumStore<
   EventTimelinePremiumState,
   EventTimelinePremiumStoreParameters<TEvent, TResource>
 > {
-  public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
+  declare public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
 
-  public scheduling: SchedulerSchedulingPlugin<
+  declare public scheduling: SchedulerSchedulingPlugin<
     TEvent,
     EventTimelinePremiumState,
     EventTimelinePremiumStoreParameters<TEvent, TResource>
@@ -321,7 +314,7 @@ export class EventTimelinePremiumStore<
   public setPreset = (preset: EventTimelinePremiumPreset, event: Event) => {
     const { preset: presetProp, onPresetChange } = this.parameters;
     if (process.env.NODE_ENV !== 'production' && presetProp !== undefined && !onPresetChange) {
-      warn(
+      warnOnce(
         'MUI X Scheduler: EventTimelinePremium is controlled (received a `preset` prop) but `onPresetChange` is not provided. Preset changes will be silently ignored.',
       );
     }
