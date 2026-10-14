@@ -236,4 +236,53 @@ describe.skipIf(isJSDOM)('exportImage', () => {
 
     expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
   });
+
+  function addStylesheetLink() {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `data:text/css,${encodeURIComponent('body { margin: 0; }')}`;
+    document.head.appendChild(link);
+    onTestFinished(() => link.remove());
+  }
+
+  /* The policy is set on the export document only, so that it doesn't apply to the other tests. */
+  function setExportPolicy(iframe: HTMLIFrameElement) {
+    const meta = iframe.contentDocument!.createElement('meta');
+    meta.httpEquiv = 'Content-Security-Policy';
+    meta.content = "style-src 'nonce-export'";
+    iframe.contentDocument!.head.appendChild(meta);
+  }
+
+  it('rejects when the policy blocks the style that inlines a stylesheet link', async () => {
+    addStylesheetLink();
+
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+
+    render(<Chart apiRef={apiRef} />);
+
+    const iframeCount = document.querySelectorAll('iframe').length;
+
+    await act(async () => {
+      await expect(
+        apiRef.current!.exportAsImage({ onBeforeExport: setExportPolicy }),
+      ).rejects.toThrow(/`nonce` export option/);
+    });
+
+    expect(vi.mocked(HTMLAnchorElement.prototype.click).mock.calls.length).to.equal(0);
+    expect(document.querySelectorAll('iframe').length).to.equal(iframeCount);
+  });
+
+  it('exports a chart with a stylesheet link when the nonce is provided', async () => {
+    addStylesheetLink();
+
+    const apiRef: React.RefObject<ChartProApi<'bar'> | undefined> = { current: undefined };
+
+    render(<Chart apiRef={apiRef} />);
+
+    await act(async () => {
+      await apiRef.current!.exportAsImage({ nonce: 'export', onBeforeExport: setExportPolicy });
+    });
+
+    expect(vi.mocked(HTMLAnchorElement.prototype.click).mock.calls.length).to.equal(1);
+  });
 });

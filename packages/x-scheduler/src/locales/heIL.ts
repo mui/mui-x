@@ -212,6 +212,9 @@ const heILCalendar: SchedulerCalendarTranslations = {
   weekAbbreviation: 'שב׳',
   weekNumberAriaLabel: (weekNumber) => `שבוע ${weekNumber}`,
 
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `מסתיים ב־${localizeDate(endDate)}`,
 

@@ -67,7 +67,7 @@ const ChartsContainer = React.forwardRef(function ChartsContainer<
   props: ChartsContainerProps<SeriesType> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.JSX.Element;
 
-// @ts-ignore
+// @ts-expect-error The generic call signature does not declare the generated propTypes property.
 
 ChartsContainer.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------

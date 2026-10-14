@@ -14,8 +14,9 @@ describe('getInlineTypographyStyle', () => {
       },
     });
 
+    const mediaQueryKey = baseTheme.breakpoints.up('md');
     const {
-      [baseTheme.breakpoints.up('md')]: mediaQuery,
+      [mediaQueryKey]: mediaQuery,
       '&:hover': hover,
       ...flat
     } = theme.typography.caption as Record<string, unknown>;

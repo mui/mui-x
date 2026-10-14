@@ -117,13 +117,13 @@ export class SchedulerStore<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
 > extends Store<State> {
-  public parameters: Parameters;
+  declare public parameters: Parameters;
 
   private initialParameters: Parameters | null = null;
 
-  public instanceName: SchedulerInstanceName;
+  declare public instanceName: SchedulerInstanceName;
 
-  private mapper: SchedulerParametersToStateMapper<State, Parameters>;
+  declare private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected readonly disposables = new DisposableStack();
 
@@ -149,7 +149,7 @@ export class SchedulerStore<
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
-      ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
+      ...stateFromParameters,
       ...(hasDataSource(parameters)
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
         : buildEventsState({
@@ -161,7 +161,6 @@ export class SchedulerStore<
           })),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
-      adapter,
       occurrencePlaceholder: null,
       editingOccurrence: null,
       copiedEvent: null,

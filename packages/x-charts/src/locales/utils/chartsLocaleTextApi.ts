@@ -33,6 +33,10 @@ export interface ChartsLocaleText {
    * @returns {string} The localized string for an export image button.
    */
   toolbarExportImage: (mimeType: ChartImageExportMimeType | (string & {})) => string;
+  /**
+   * Text for the Excel button in the toolbar's export menu.
+   */
+  toolbarExportExcel: string;
 
   // Charts renderer configuration
   /**

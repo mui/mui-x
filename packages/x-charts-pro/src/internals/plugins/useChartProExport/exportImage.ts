@@ -18,18 +18,32 @@ export const getDrawDocument = async () => {
   }
 };
 
+function isInlineStyleBlocked(exportDoc: Document, nonce?: string) {
+  const style = exportDoc.createElement('style');
+  style.textContent = ':root{}';
+  if (nonce) {
+    style.setAttribute('nonce', nonce);
+  }
+  exportDoc.head.appendChild(style);
+  const blocked = style.sheet === null;
+  style.remove();
+  return blocked;
+}
+
 /**
  * A style element that the Content Security Policy blocked has no `sheet`, which makes the export
  * fail with an error that doesn't point to the actual problem.
  * `rasterizehtml` reads the rules of every style element in the document, so this checks all of
  * them, not only the copied ones.
  */
-export function checkStyleSheetsLoaded(exportDoc: Document) {
+export function checkStyleSheetsLoaded(exportDoc: Document, nonce?: string) {
   const blockedStyle = Array.from(exportDoc.querySelectorAll('style')).some(
     (style) => style.textContent && style.sheet === null,
   );
+  /* `rasterizehtml` inlines stylesheet links into style elements, which the policy blocks the same way. */
+  const hasLink = exportDoc.querySelector("link[rel='stylesheet']") !== null;
 
-  if (blockedStyle) {
+  if (blockedStyle || (hasLink && isInlineStyleBlocked(exportDoc, nonce))) {
     throw new Error(
       `MUI X Charts: The Content Security Policy blocked the styles copied to the export document.\n` +
         `The chart cannot be exported because the export process needs to read those styles.\n` +
@@ -138,7 +152,7 @@ export async function exportImage(
 
     if (copyStyles) {
       /* After `onBeforeExport`, so that styles it adds are checked too. */
-      checkStyleSheetsLoaded(iframe.contentDocument!);
+      checkStyleSheetsLoaded(iframe.contentDocument!, nonce);
     }
 
     const drawDocument = await drawDocumentPromise;

@@ -4,12 +4,12 @@ export class GridGetRowsError<T extends GridGetRowsParams = GridGetRowsParams> e
   /**
    * The parameters used in the failed request
    */
-  readonly params: T;
+  declare readonly params: T;
 
   /**
    * The original error that caused this error
    */
-  readonly cause?: Error;
+  declare readonly cause?: Error;
 
   constructor(options: { message: string; params: T; cause?: Error }) {
     super(options.message);
@@ -23,12 +23,12 @@ export class GridUpdateRowError extends Error {
   /**
    * The parameters used in the failed request
    */
-  readonly params: GridUpdateRowParams;
+  declare readonly params: GridUpdateRowParams;
 
   /**
    * The original error that caused this error
    */
-  readonly cause?: Error;
+  declare readonly cause?: Error;
 
   constructor(options: { message: string; params: GridUpdateRowParams; cause?: Error }) {
     super(options.message);

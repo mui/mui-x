@@ -12,7 +12,7 @@ function GridActionsCellItemLabelTyping() {
         label={<div>test</div>}
         icon={<EditIcon fontSize="small" />}
       />
-      {/* @ts-expect-error */}
+      {/* @ts-expect-error A non-menu action requires a string label for its icon button. */}
       <GridActionsCellItem label={<div>test</div>} icon={<EditIcon fontSize="small" />} />
     </React.Fragment>
   );

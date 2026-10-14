@@ -21,9 +21,9 @@ export type UserGestureOptions = {
 };
 
 export class UserGesture {
-  protected pointerManager: PointerManager;
+  declare protected pointerManager: PointerManager;
 
-  protected advanceTimers?: (ms: number) => Promise<void>;
+  declare protected advanceTimers?: (ms: number) => Promise<void>;
 
   /**
    * Creates a new UserGesture instance.

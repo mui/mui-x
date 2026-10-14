@@ -143,6 +143,9 @@ const nbNOCalendar: SchedulerCalendarTranslations = {
   weekAbbreviation: 'U',
   weekNumberAriaLabel: (weekNumber) => `Uke ${weekNumber}`,
 
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Slutter ${endDate}`,
 
