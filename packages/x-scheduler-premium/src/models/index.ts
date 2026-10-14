@@ -2,6 +2,7 @@ export type {
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
   EventTimelinePremiumHourPresetConfig,
+  EventTimelinePremiumPreferences,
 } from '@mui/x-scheduler-internals-premium/models';
 export type {
   SchedulerSlots,
