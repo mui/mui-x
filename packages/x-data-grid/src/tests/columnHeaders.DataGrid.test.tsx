@@ -1,7 +1,7 @@
 import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -186,6 +186,35 @@ describe('<DataGrid /> - Column headers', () => {
       await waitFor(() => {
         expect(screen.queryByRole('menu')).to.equal(null);
       });
+    });
+
+    it('should call onMenuOpen and onMenuClose only when a menu opens or closes', async () => {
+      const onMenuOpen = vi.fn();
+      const onMenuClose = vi.fn();
+      const { user } = render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'brand' }]}
+            showToolbar
+            onMenuOpen={onMenuOpen}
+            onMenuClose={onMenuClose}
+          />
+        </div>,
+      );
+
+      expect(onMenuOpen).toHaveBeenCalledTimes(0);
+      expect(onMenuClose).toHaveBeenCalledTimes(0);
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+      expect(onMenuOpen).toHaveBeenCalledTimes(1);
+      expect(onMenuClose).toHaveBeenCalledTimes(0);
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('brand column menu'));
+      await waitFor(() => {
+        expect(onMenuClose).toHaveBeenCalledTimes(1);
+      });
+      expect(onMenuOpen).toHaveBeenCalledTimes(1);
     });
 
     it('should prevent wheel scroll event from closing the menu when scrolling within the menu', async () => {

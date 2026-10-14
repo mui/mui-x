@@ -291,7 +291,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "menuClose",
-    "description": "Fired when the grid menu is closed.",
+    "description": "Fired when a grid menu is closed. This includes the column menu, the actions cell menu, and the toolbar menus.",
     "params": "GridMenuParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onMenuClose"
@@ -299,7 +299,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "menuOpen",
-    "description": "Fired when the menu is opened.",
+    "description": "Fired when a grid menu is opened. This includes the column menu, the actions cell menu, and the toolbar menus.",
     "params": "GridMenuParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onMenuOpen"
