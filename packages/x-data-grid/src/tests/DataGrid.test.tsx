@@ -56,6 +56,39 @@ describe('<DataGrid />', () => {
     expect(document.querySelector('[aria-label="Grid one"]')).to.equal(mainElement);
   });
 
+  it('should log an error when data or aria attributes are passed as props', () => {
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'brand' }]}
+            data-cy="grid-cy"
+            aria-describedby="grid-description"
+          />
+        </div>,
+      );
+    }).toErrorDev(
+      'MUI X Data Grid: The `data-cy`, `aria-describedby` prop(s) are not forwarded to the DOM.',
+    );
+    expect(document.querySelector('[data-cy="grid-cy"]')).to.equal(null);
+  });
+
+  it('should not log an error for the supported `aria-label` and `aria-labelledby` props', () => {
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'brand' }]}
+            aria-label="Brands"
+            aria-labelledby="brands-title"
+          />
+        </div>,
+      );
+    }).not.toErrorDev();
+  });
+
   it('should not fail when row have IDs match Object prototype keys (constructor, hasOwnProperty, etc)', () => {
     const rows = [
       { id: 'a', col1: 'Hello', col2: 'World' },
