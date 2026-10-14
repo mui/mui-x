@@ -7,8 +7,10 @@ To use other locales, follow the instructions below.
 
 ## Translation keys
 
+<!-- #target-branch-reference -->
+
 You can use the `localeText` prop to pass in your own text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/-/packages/x-data-grid/src/constants/localeTextConstants.ts)
+You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/v9.x/packages/x-data-grid/src/constants/localeTextConstants.ts)
 in the GitHub repository.
 In the following example, the label of the quick filter placeholder is customized.
 
@@ -81,7 +83,9 @@ import { nlNL } from '@mui/x-data-grid/locales';
 
 {{"demo": "DataGridLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
-You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-data-grid/src/locales) in the GitHub repository.
+<!-- #target-branch-reference -->
+
+You can [find the source](https://github.com/mui/mui-x/tree/v9.x/packages/x-data-grid/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data Grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.

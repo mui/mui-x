@@ -40,7 +40,7 @@ export interface EventCalendarProviderProps<TEvent extends object, TResource ext
   extends UnstyledEventCalendarProvider.Props<TEvent, TResource>, SchedulerSlotsAndSlotProps {
   /**
    * Set the locale text of the view.
-   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts)
+   * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/v9.x/packages/x-scheduler/src/models/translations.ts)
    * in the GitHub repository.
    */
   localeText?: Partial<EventCalendarLocaleText>;

@@ -106,9 +106,11 @@ For example, for the `tooltip` slot, the interface name is `TooltipPropsOverride
 
 These files list every overridable interface for the Charts packages:
 
-- [`@mui/x-charts`](https://github.com/mui/mui-x/blob/-/packages/x-charts/src/models/chartsSlotsComponentsProps.ts)
-- [`@mui/x-charts-pro`](https://github.com/mui/mui-x/blob/-/packages/x-charts-pro/src/models/chartsSlotsComponentsPropsPro.ts) (pro-only slots: heatmap `cell`, funnel sections, pro toolbar icons, pro base slots)
-- [`@mui/x-charts-premium`](https://github.com/mui/mui-x/blob/-/packages/x-charts-premium/src/models/chartsSlotsComponentsPropsPremium.ts) (premium-only slots: `radialLineHighlight`)
+<!-- #target-branch-reference -->
+
+- [`@mui/x-charts`](https://github.com/mui/mui-x/blob/v9.x/packages/x-charts/src/models/chartsSlotsComponentsProps.ts)
+- [`@mui/x-charts-pro`](https://github.com/mui/mui-x/blob/v9.x/packages/x-charts-pro/src/models/chartsSlotsComponentsPropsPro.ts) (pro-only slots: heatmap `cell`, funnel sections, pro toolbar icons, pro base slots)
+- [`@mui/x-charts-premium`](https://github.com/mui/mui-x/blob/v9.x/packages/x-charts-premium/src/models/chartsSlotsComponentsPropsPremium.ts) (premium-only slots: `radialLineHighlight`)
 
 <codeblock storageKey="pricing-plan">
 

@@ -10,8 +10,10 @@ description: Learn how to use aggregation functions and row grouping in Data Gri
 This tutorial walks you through building a client-side Data Grid that demonstrates aggregation functions and row grouping using Data Grid Premium.
 You will define data locally and use the grid to group rows by column values and apply aggregation functions (such as sum, average, min, max) to analyze data within those groups.
 
+<!-- #target-branch-reference -->
+
 :::success
-If you'd rather skip the tutorial entirely, you can check out [the complete app code on GitHub](https://github.com/mui/mui-x/tree/master/examples/aggregation-row-grouping/).
+If you'd rather skip the tutorial entirely, you can check out [the complete app code on GitHub](https://github.com/mui/mui-x/tree/v9.x/examples/aggregation-row-grouping/).
 :::
 
 ## Prerequisites
