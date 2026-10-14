@@ -1,4 +1,3 @@
-import Select from '@mui/material/Select';
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -6,33 +5,40 @@ import Stack from '@mui/material/Stack';
 import {
   DataGridPro,
   Toolbar,
+  ToolbarRoot,
   FilterPanelTrigger,
-  gridDensitySelector,
-  useGridSelector,
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import GridDensitySelector from '../../../src/modules/components/GridDensitySelector';
 
 function GridCustomToolbar({ syncState }) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const density = useGridSelector(apiRef, gridDensitySelector);
 
   return (
-    <Toolbar>
-      <FilterPanelTrigger render={<Button />}>Filters</FilterPanelTrigger>
-      <Select
-        native
-        size="small"
-        value={density}
-        inputProps={{ 'aria-label': 'Density' }}
-        onChange={(event) => apiRef.current.setDensity(event.target.value)}
+    <Toolbar
+      render={
+        <ToolbarRoot sx={{ minHeight: 'auto', p: 0.5, gap: 1, flexWrap: 'wrap' }} />
+      }
+    >
+      <FilterPanelTrigger
+        render={(props, { filterCount }) => (
+          <rootProps.slots.baseButton
+            {...props}
+            size="small"
+            startIcon={
+              <rootProps.slots.baseBadge badgeContent={filterCount} color="primary">
+                <rootProps.slots.openFilterButtonIcon />
+              </rootProps.slots.baseBadge>
+            }
+          />
+        )}
       >
-        <option value="compact">Compact</option>
-        <option value="standard">Standard</option>
-        <option value="comfortable">Comfortable</option>
-      </Select>
+        {apiRef.current.getLocaleText('toolbarFilters')}
+      </FilterPanelTrigger>
+      <GridDensitySelector />
       <Button
         size="small"
         startIcon={<rootProps.slots.columnSelectorIcon />}

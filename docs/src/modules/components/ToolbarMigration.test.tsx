@@ -29,7 +29,8 @@ describe('Toolbar migration', () => {
 
   it('shows the grid density in the state restoration control', () => {
     render(<RestoreStateInitialState />);
-    expect(screen.getByRole('combobox', { name: 'Density' })).to.have.property('value', 'compact');
+    fireEvent.click(screen.getByRole('button', { name: 'Density' }));
+    expect(screen.getByRole('menuitem', { name: 'Compact' })).to.have.class('Mui-selected');
   });
 
   it('keeps export actions in a menu', () => {

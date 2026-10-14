@@ -6,11 +6,11 @@ import {
   GridColDef,
   GridRowParams,
   Toolbar as GridToolbar,
+  ToolbarRoot,
   GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -79,7 +79,17 @@ function Toolbar({ view, onChangeView }: ToolbarProps) {
   return (
     <GridToolbar
       render={
-        <Box sx={{ borderBottom: '1px solid', borderColor: 'divider', py: 1 }} />
+        <ToolbarRoot
+          sx={{
+            minHeight: 'auto',
+            borderBottom: '1px solid',
+            borderColor: 'currentColor',
+            gap: 1,
+            px: 0.5,
+            py: 1,
+            flexWrap: 'wrap',
+          }}
+        />
       }
     >
       <ToggleButtonGroup
