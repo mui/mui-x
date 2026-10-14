@@ -114,9 +114,20 @@ function getDependencyBound(
   return Number.isFinite(timestamp) ? { date, timestamp } : null;
 }
 
+// Minimal whole-day shift bringing `edge` to `bound`; the full-day count floors, so a
+// DST day may need one more.
+function minimalDayShift(adapter: Adapter, edge: TemporalSupportedObject, bound: Bound): number {
+  let dayCount = Math.max(0, adapter.differenceInDays(bound.date, edge));
+  while (adapter.getTime(adapter.addDays(edge, dayCount)) < bound.timestamp) {
+    dayCount += 1;
+  }
+  return dayCount;
+}
+
 /**
- * How far, in milliseconds, the target of `dependency` has to move for the dependency to
- * hold with the current event dates: `0` when it already holds or the engine ignores it.
+ * How far the target of `dependency` has to move for the dependency to hold with the
+ * current event dates: in milliseconds, or in whole days for an all-day target (the
+ * cascade shifts those by days). `0` when it already holds or the engine ignores it.
  */
 export function getDependencyViolation(
   adapter: Adapter,
@@ -144,6 +155,9 @@ export function getDependencyViolation(
     return 0;
   }
   const targetEdge = targetDates[getDependencyEdges(dependency.type).target];
+  if (targetDates.allDay) {
+    return minimalDayShift(adapter, targetEdge, bound);
+  }
   return Math.max(0, bound.timestamp - adapter.getTime(targetEdge));
 }
 
@@ -490,12 +504,15 @@ export function computeAutoSchedulingCascade(
 
     if (base.allDay) {
       if (keptStartBound !== null) {
-        const newEnd = adapter.addDays(base.end, minimalDayShift(base.end, keptStartBound));
+        const newEnd = adapter.addDays(
+          base.end,
+          minimalDayShift(adapter, base.end, keptStartBound),
+        );
         return { ...base, end: newEnd, endTimestamp: adapter.getTime(newEnd) };
       }
       const dayCount = Math.max(
-        required.start === null ? 0 : minimalDayShift(base.start, required.start),
-        required.end === null ? 0 : minimalDayShift(base.end, required.end),
+        required.start === null ? 0 : minimalDayShift(adapter, base.start, required.start),
+        required.end === null ? 0 : minimalDayShift(adapter, base.end, required.end),
       );
       const newStart = adapter.addDays(base.start, dayCount);
       const newStartTimestamp = adapter.getTime(newStart);
@@ -549,15 +566,5 @@ export function computeAutoSchedulingCascade(
   function roundUpToSecond(date: TemporalSupportedObject): TemporalSupportedObject {
     const milliseconds = adapter.getMilliseconds(date);
     return milliseconds === 0 ? date : adapter.addMilliseconds(date, 1000 - milliseconds);
-  }
-
-  // Minimal whole-day shift bringing `edge` to `bound`; the full-day count floors, so a
-  // DST day may need one more.
-  function minimalDayShift(edge: TemporalSupportedObject, bound: Bound): number {
-    let dayCount = Math.max(0, adapter.differenceInDays(bound.date, edge));
-    while (adapter.getTime(adapter.addDays(edge, dayCount)) < bound.timestamp) {
-      dayCount += 1;
-    }
-    return dayCount;
   }
 }

@@ -11,10 +11,7 @@ import {
   useDependencyGeometry,
   useSetDependencyHoveredId,
 } from './EventTimelinePremiumDependencyGeometry';
-import {
-  DEPENDENCY_ARROW_HIT_STROKE_WIDTH,
-  DEPENDENCY_ARROW_HIT_TRIM_END,
-} from './dependencyArrowHitArea';
+import { DEPENDENCY_ARROW_HIT_STROKE_WIDTH } from './dependencyArrowHitArea';
 import { useDependencySelectionInteraction } from './useDependencySelectionInteraction';
 import type { DependencyContextMenuState } from './EventTimelinePremiumDependencyContextMenu';
 import type { DependencyArrow } from './dependencyArrowGeometry';
@@ -199,18 +196,16 @@ function DependencyInteractionsLayer({
               />
               {/* The line's hit-area stops short of the tip: the arrowhead gets its
                     own, outside the target event. */}
-              <rect
-                data-dependency-hit-head={String(arrow.id)}
-                x={
-                  buttonDirection < 0
-                    ? arrow.endPoint.x - DEPENDENCY_ARROW_HIT_TRIM_END
-                    : arrow.endPoint.x
-                }
-                y={arrow.endPoint.y - DEPENDENCY_ARROW_HIT_STROKE_WIDTH / 2}
-                width={DEPENDENCY_ARROW_HIT_TRIM_END}
-                height={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
-                fill="transparent"
-              />
+              {arrow.hitHead && (
+                <rect
+                  data-dependency-hit-head={String(arrow.id)}
+                  x={arrow.hitHead.x}
+                  y={arrow.endPoint.y - DEPENDENCY_ARROW_HIT_STROKE_WIDTH / 2}
+                  width={arrow.hitHead.width}
+                  height={DEPENDENCY_ARROW_HIT_STROKE_WIDTH}
+                  fill="transparent"
+                />
+              )}
             </g>
             {hasDeleteButton && arrow.id === selectedId && (
               <g
