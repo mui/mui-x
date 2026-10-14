@@ -58,7 +58,7 @@ const theme = createTheme({
 });
 ```
 
-Overriding the effective var directly is also valid. It disables the tier switching for that token.
+To use the same value at every width, set all three tiers (`-sm`, `-md`, and `-lg`) of the token. Overriding the effective var on this slot only applies to the `lg` tier, since the narrower tiers set it again on the descendants.
 
 ### Demo
 
