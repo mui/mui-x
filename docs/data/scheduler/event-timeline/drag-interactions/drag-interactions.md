@@ -49,6 +49,7 @@ Set the `areEventsResizable` property to `"start"` or `"end"` to enable resizing
 :::info
 Disabling resizing doesn't prevent changing the dates from the event dialog.
 To prevent it there too, leave `EventDialogDateTimeSection` out of the [`eventDialogGeneralTab` slot](/x/react-scheduler/components/event-dialog/#reordering-and-omitting-sections).
+This removes the date, time, and all-day fields for every event, including new ones.
 :::
 
 ## Only disable on some events
