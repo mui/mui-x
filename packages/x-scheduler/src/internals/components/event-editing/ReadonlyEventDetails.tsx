@@ -20,6 +20,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   getOccurrenceDataTimezone,
   getPrimaryResourceId,
+  getIsoDateFormat,
   getWallTimeIsoFormat,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
@@ -31,7 +32,7 @@ import {
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { formatFullDate, formatIsoDate } from '../../utils/date-utils';
+import { formatFullDate } from '../../utils/date-utils';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 
@@ -147,7 +148,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     ? (date: TemporalSupportedObject) => formatFullDate(date, adapter)
     : (date: TemporalSupportedObject) => `${formatFullDate(date, adapter)}, ${formatTime(date)}`;
   const formatBoundDateTime = occurrence.allDay
-    ? (date: TemporalSupportedObject) => formatIsoDate(date, adapter)
+    ? (date: TemporalSupportedObject) => adapter.formatByString(date, getIsoDateFormat(adapter))
     : (date: TemporalSupportedObject) =>
         adapter.formatByString(date, getWallTimeIsoFormat(adapter));
   const eventTimezone = getEventTimezone(occurrence);

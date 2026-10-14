@@ -63,16 +63,3 @@ export function formatHourAndMinutes(
 export function formatFullDate(date: TemporalSupportedObject, adapter: Adapter): string {
   return adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
 }
-
-/**
- * @example "2025-07-13"
- */
-export function formatIsoDate(date: TemporalSupportedObject, adapter: Adapter): string {
-  const f = adapter.formats;
-  const separator = `${adapter.escapedCharacters.start}-${adapter.escapedCharacters.end}`;
-
-  return adapter.formatByString(
-    date,
-    [f.yearPadded, f.monthPadded, f.dayOfMonthPadded].join(separator),
-  );
-}

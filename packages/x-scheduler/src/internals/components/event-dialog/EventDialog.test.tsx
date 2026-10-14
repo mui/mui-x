@@ -641,6 +641,24 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(times).to.deep.equal(['2025-05-26T16:30:00', '2025-05-26T17:15:00']);
     });
 
+    it('should show both dates when the event crosses midnight only in the display timezone', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T14:30:00Z', '2025-05-26T15:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 11:30 PM - Tuesday, May 27th, 2025, 12:15 AM');
+    });
+
+    it('should show a single date when the event crosses midnight only in its own timezone', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T23:30:00Z', '2025-05-27T00:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Tuesday, May 27th, 2025, 8:30 AM - 9:15 AM');
+    });
+
     it('should show the date of a single-day all-day event', () => {
       const { text, times } = renderReadonlyDetails(
         EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
