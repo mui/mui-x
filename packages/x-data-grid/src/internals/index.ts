@@ -181,6 +181,18 @@ export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibl
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 export { usePinnedScrollOffset } from '../hooks/utils/usePinnedScrollOffset';
+export { usePointerDrag, getElementAtPoint } from '../hooks/utils/usePointerDrag';
+export {
+  createDragPreview,
+  getEdgeScrollDelta,
+  getVisibleViewportBounds,
+} from '../hooks/utils/pointerDragUtils';
+export type { DragPreview } from '../hooks/utils/pointerDragUtils';
+export type {
+  PointerDragPosition,
+  UsePointerDragOptions,
+  UsePointerDragReturnValue,
+} from '../hooks/utils/usePointerDrag';
 
 export type * as BaseSlots from '../models/gridBaseSlots';
 export type { TextFieldProps, AutocompleteProps, SelectProps } from '../models/gridBaseSlots';
@@ -198,6 +210,7 @@ export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataS
 export { CacheChunkManager } from '../hooks/features/dataSource/utils';
 export { gridGetRowsParamsSelector } from '../hooks/features/dataSource/gridDataSourceSelector';
 export { useGridDataSourceFilterModelChange } from '../hooks/features/dataSource/useGridDataSourceFilterModelChange';
+export { useGridDataSourcePolling } from '../hooks/features/dataSource/useGridDataSourcePolling';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
@@ -214,6 +227,7 @@ export {
   findParentElementFromClassName,
   getActiveElement,
   getGridCellElement,
+  getGridRowElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
 export {

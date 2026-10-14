@@ -863,7 +863,6 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current?.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
@@ -885,7 +884,6 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       act(() => apiRef.current?.setColumnIndex('brand', 1));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
@@ -900,7 +898,6 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current?.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
@@ -930,9 +927,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
       // Re-apply twice: the resized width must survive repeated hydration, which requires
       // `hasBeenResized` to be carried over on each pass, not just the first.
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
     });

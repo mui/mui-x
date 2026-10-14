@@ -336,6 +336,73 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       );
     });
 
+    it('should describe a lagged dependency with its lag', async () => {
+      await renderTimeline({
+        events: [eventA, eventB, eventC],
+        dependencies: [
+          { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: 30, lagUnit: 'minute' },
+          { ...buildDependency('dep-2', 'event-c', 'event-b', 'StartToStart'), lag: 1 },
+        ],
+      });
+
+      expect(getEventElement('Event B')).toHaveAccessibleDescription(
+        'Cannot start until 30 minutes after Event A finishes. ' +
+          'Cannot start until 1 day after Event C starts.',
+      );
+    });
+
+    it('should describe a lagged dependency of every type with its lag', async () => {
+      const eventD = EventBuilder.new()
+        .id('event-d')
+        .title('Event D')
+        .singleDay('2025-07-03T15:00:00Z')
+        .resource(resource1)
+        .build();
+      const eventE = EventBuilder.new()
+        .id('event-e')
+        .title('Event E')
+        .singleDay('2025-07-03T16:00:00Z')
+        .resource(resource1)
+        .build();
+      await renderTimeline({
+        events: [eventA, eventB, eventD, eventE],
+        dependencies: [
+          {
+            ...buildDependency('dep-1', 'event-d', 'event-b', 'FinishToFinish'),
+            lag: 2,
+            lagUnit: 'hour',
+          },
+          {
+            ...buildDependency('dep-2', 'event-e', 'event-b', 'StartToFinish'),
+            lag: 2,
+            lagUnit: 'day',
+          },
+        ],
+      });
+
+      // The plural follows the amount, and the lag sits before the predecessor title.
+      expect(getEventElement('Event B')).toHaveAccessibleDescription(
+        'Cannot finish until 2 hours after Event D finishes. ' +
+          'Cannot finish until 2 days after Event E starts.',
+      );
+    });
+
+    it('should leave an ignored lag out of the description', async () => {
+      // The negative lag is dropped by the store with its usual warning.
+      await expect(() =>
+        renderTimeline({
+          events: [eventA, eventB],
+          dependencies: [
+            { ...buildDependency('dep-1', 'event-a', 'event-b'), lag: -2, lagUnit: 'hour' },
+          ],
+        }),
+      ).toWarnDev(['MUI X Scheduler: The dependency "dep-1" has a negative lag (-2).']);
+
+      expect(getEventElement('Event B')).toHaveAccessibleDescription(
+        'Cannot start until Event A finishes.',
+      );
+    });
+
     it('should keep the predecessor titles out of the successor accessible name', async () => {
       await renderTimeline({
         events: [eventA, eventB, eventC],

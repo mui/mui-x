@@ -157,37 +157,37 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
    * Scaling factor for delta values
    * Values > 1 increase sensitivity, values < 1 decrease sensitivity
    */
-  private sensitivity: number;
+  declare private sensitivity: number;
 
   /**
    * Maximum value for totalDelta values
    * Limits how large the accumulated wheel deltas can be
    */
-  private max: number;
+  declare private max: number;
 
   /**
    * Minimum value for totalDelta values
    * Sets a lower bound for accumulated wheel deltas
    */
-  private min: number;
+  declare private min: number;
 
   /**
    * Initial value for totalDelta values
    * Sets the starting value for delta trackers
    */
-  private initialDelta: number;
+  declare private initialDelta: number;
 
   /**
    * Whether to invert the direction of delta changes
    * When true, reverses the sign of deltaX, deltaY, and deltaZ values
    */
-  private invert: boolean;
+  declare private invert: boolean;
 
   /**
    * Whether the underlying wheel listener is registered as passive.
    * Defaults to `true`; forced to `false` when `preventDefault` is `true`.
    */
-  private passive: boolean;
+  declare private passive: boolean;
 
   constructor(options: TurnWheelGestureOptions<GestureName>) {
     super(options);

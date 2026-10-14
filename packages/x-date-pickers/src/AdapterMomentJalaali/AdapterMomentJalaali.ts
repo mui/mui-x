@@ -123,7 +123,7 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
 
   public lib = 'moment-jalaali';
 
-  public moment: typeof defaultJMoment;
+  declare public moment: typeof defaultJMoment;
 
   public formatTokenMap = formatTokenMap;
 

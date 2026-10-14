@@ -290,8 +290,18 @@ export interface GridLocaleText {
   promptChangeGroupDescription: (column: string) => string;
   promptChangeAggregationLabel: (column: string, aggregation: string) => string;
   promptChangeAggregationDescription: (column: string, aggregation: string) => string;
-  promptChangeFilterLabel: (column: string, operator: string, value: string) => string;
-  promptChangeFilterDescription: (column: string, operator: string, value: string) => string;
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => string;
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => string;
   promptChangeSortDescription: (column: string, direction: string) => string;
   promptChangePivotEnableLabel: string;
   promptChangePivotEnableDescription: string;

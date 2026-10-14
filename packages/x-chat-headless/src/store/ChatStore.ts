@@ -165,7 +165,7 @@ function deriveStateFromParameters<Cursor = string>(parameters: ChatStoreParamet
 }
 
 export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>> {
-  public parameters: ChatStoreParameters<Cursor>;
+  declare public parameters: ChatStoreParameters<Cursor>;
 
   /** Local (sending) user: explicit prop → members list → active conversation participants. */
   get currentUser(): ChatUser | undefined {
