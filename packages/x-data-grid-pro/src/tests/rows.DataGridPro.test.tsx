@@ -656,19 +656,11 @@ describe('<DataGridPro /> - Rows', () => {
 
     describe('controlled layout', () => {
       const controlledLayout = { virtualizerLayoutMode: 'controlled' as const };
-      const getColumns = (count: number, width: number) =>
-        Array.from({ length: count }, (_, index) => ({
-          field: `column${index}`,
-          width,
-          minWidth: width,
-        }));
 
       // Lets the browser fire the scroll event and the grid handle it, like a real scroll.
       const scrollTo = (position: { top?: number; left?: number }) =>
         act(async () => {
-          const virtualScroller = grid('virtualScroller')!;
-          virtualScroller.scrollTop = position.top ?? virtualScroller.scrollTop;
-          virtualScroller.scrollLeft = position.left ?? virtualScroller.scrollLeft;
+          grid('virtualScroller')!.scrollTo(position);
           await raf();
         });
 
@@ -729,12 +721,7 @@ describe('<DataGridPro /> - Rows', () => {
 
       it('should render the columns in the viewport when scrolling left by less than a column', async () => {
         const columnWidth = 100;
-        render(
-          <TestCaseVirtualization
-            columns={getColumns(20, columnWidth)}
-            experimentalFeatures={controlledLayout}
-          />,
-        );
+        render(<TestCaseVirtualization nbCols={20} experimentalFeatures={controlledLayout} />);
 
         // Start in the middle of a column and step by less than the column threshold.
         const initialLeft = 10 * columnWidth + columnWidth / 2;
@@ -747,11 +734,13 @@ describe('<DataGridPro /> - Rows', () => {
       });
 
       it('should render the columns in the viewport when scrolling right past columns narrower than the threshold', async () => {
+        const columns = Array.from({ length: 60 }, (_, index) => ({
+          field: `column${index}`,
+          width: 30,
+          minWidth: 30,
+        }));
         render(
-          <TestCaseVirtualization
-            columns={getColumns(60, 30)}
-            experimentalFeatures={controlledLayout}
-          />,
+          <TestCaseVirtualization columns={columns} experimentalFeatures={controlledLayout} />,
         );
 
         for (let left = 0; left <= 400; left += 10) {
