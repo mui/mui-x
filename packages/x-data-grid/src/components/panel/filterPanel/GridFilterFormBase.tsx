@@ -26,6 +26,7 @@ import type {
   GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
+import { getGridFilterFormColumnLabel as getColumnLabel } from './GridFilterFormColumnInput';
 import {
   gridPivotActiveSelector,
   gridPivotInitialColumnsSelector,
@@ -184,11 +185,6 @@ const FilterFormLogicOperatorInput = styled('div', {
   justifyContent: 'end',
 });
 
-const FilterFormColumnInput = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'FilterFormColumnInput',
-})<{ ownerState: OwnerState }>({ width: 150 });
-
 const FilterFormOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormOperatorInput',
@@ -209,8 +205,6 @@ const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
       throw new Error('MUI X: Invalid `logicOperator` property in the `GridFilterPanel`.');
   }
 };
-
-const getColumnLabel = (col: GridColDef) => col.headerName || col.field;
 
 const collator = new Intl.Collator();
 
@@ -242,8 +236,6 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
     const apiRef = useGridApiContext();
     const columnLookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
-    const columnSelectId = useId();
-    const columnSelectLabelId = useId();
     const operatorSelectId = useId();
     const operatorSelectLabelId = useId();
     const rootProps = useGridRootProps();
@@ -260,6 +252,7 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
     const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
+    const columnInputSlotProps = rootProps.slotProps?.filterFormColumnInput;
 
     const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
     const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
@@ -345,8 +338,7 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
     }, [item, currentColumn]);
 
     const changeColumn = React.useCallback(
-      (event: React.ChangeEvent<any>) => {
-        const field = event.target.value as string;
+      (field: GridColDef['field']) => {
         const column = apiRef.current.getColumn(field)!;
 
         if (column.field === currentColumn!.field) {
@@ -527,32 +519,20 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
             </rootProps.slots.baseSelectOption>
           ))}
         </FilterFormLogicOperatorInput>
-        <FilterFormColumnInput
-          as={rootProps.slots.baseSelect}
+        <rootProps.slots.filterFormColumnInput
           {...columnInputProps}
-          className={clsx(classes.columnInput, columnInputProps.className)}
-          ownerState={rootProps}
-          size="small"
-          labelId={columnSelectLabelId}
-          id={columnSelectId}
-          label={apiRef.current.getLocaleText('filterPanelColumn')}
-          value={selectedField ?? ''}
+          {...columnInputSlotProps}
+          className={clsx(
+            classes.columnInput,
+            columnInputProps.className,
+            columnInputSlotProps?.className,
+          )}
+          item={item}
+          columns={sortedFilteredColumns}
+          value={selectedField}
           onChange={changeColumn}
-          native={isBaseSelectNative}
           disabled={readOnly}
-          {...rootProps.slotProps?.baseSelect}
-        >
-          {sortedFilteredColumns.map((col) => (
-            <rootProps.slots.baseSelectOption
-              {...baseSelectOptionProps}
-              native={isBaseSelectNative}
-              key={col.field}
-              value={col.field}
-            >
-              {getColumnLabel(col)}
-            </rootProps.slots.baseSelectOption>
-          ))}
-        </FilterFormColumnInput>
+        />
         <FilterFormOperatorInput
           as={rootProps.slots.baseSelect}
           size="small"
