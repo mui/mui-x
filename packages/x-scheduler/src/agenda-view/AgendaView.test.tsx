@@ -80,6 +80,10 @@ describe('<AgendaView />', () => {
     expect(currentElements.length).to.equal(1);
     expect(currentElements[0]).to.have.attribute('aria-current', 'date');
     expect(currentElements[0]).to.have.class(eventCalendarClasses.agendaViewDayHeaderCell);
+    expect(currentElements[0]).to.have.attribute(
+      'aria-label',
+      `${adapter.format(today, 'weekday')} ${adapter.format(today, 'dayOfMonth')}`,
+    );
   });
 
   it('should name each event with its title, time range and date', () => {

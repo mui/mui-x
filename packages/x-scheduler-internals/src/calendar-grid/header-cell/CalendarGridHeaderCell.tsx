@@ -141,7 +141,7 @@ export namespace CalendarGridHeaderCell {
      */
     ariaLabelFormat?: string;
     /**
-     * Whether to skip adding the `data-current` attribute to the root element when the header cell represents the current day.
+     * Whether to skip adding the `data-current` and `aria-current` attributes to the root element when the header cell represents the current day.
      * This can be useful when the cells in the column are not representing a single day (e.g. in the month view).
      * @default false
      */

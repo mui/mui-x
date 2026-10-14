@@ -274,6 +274,7 @@ describe('<WeekView />', () => {
       );
       expect(currentElements.length).to.equal(1);
       expect(currentElements[0]).to.have.attribute('role', 'columnheader');
+      expect(currentElements[0]).to.have.attribute('aria-label', 'Sunday 4');
       expect(currentElements[0]).to.have.attribute('aria-current', 'date');
       expect(currentElements[0]).to.have.attribute('data-current');
     });

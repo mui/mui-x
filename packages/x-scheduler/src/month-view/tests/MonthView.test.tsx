@@ -800,6 +800,9 @@ describe('<MonthView />', () => {
       const currentElements = document.querySelectorAll('[aria-current]');
       expect(currentElements.length).to.equal(1);
       expect(currentElements[0]).to.have.attribute('role', 'gridcell');
+      expect(
+        currentElements[0].querySelector(`.${eventCalendarClasses.monthViewCellNumber}`),
+      ).to.have.text('May 1');
       expect(currentElements[0]).to.have.attribute('aria-current', 'date');
       expect(currentElements[0]).to.have.attribute('data-current');
     });
