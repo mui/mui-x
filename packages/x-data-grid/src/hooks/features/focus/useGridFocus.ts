@@ -317,6 +317,33 @@ export const useGridFocus = (
     [apiRef],
   );
 
+  const handleRowClick = React.useCallback<GridEventListener<'rowClick'>>(
+    (params, event) => {
+      // The empty cell that fills the space after the last column is not focusable.
+      // Move the focus to the last cell of the row so that keyboard shortcuts keep working.
+      if (!(event.target as HTMLElement).closest?.(`.${gridClasses.cellEmpty}`)) {
+        return;
+      }
+
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+      const lastColumn = visibleColumns[visibleColumns.length - 1];
+      if (!lastColumn) {
+        return;
+      }
+
+      const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
+        event: event.nativeEvent,
+        cell: null,
+      });
+      if (!canUpdateFocus) {
+        return;
+      }
+
+      apiRef.current.setCellFocus(params.id, lastColumn.field);
+    },
+    [apiRef],
+  );
+
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (
@@ -552,6 +579,7 @@ export const useGridFocus = (
   useGridEvent(apiRef, 'cellDoubleClick', handleCellDoubleClick);
   useGridEvent(apiRef, 'cellMouseDown', handleCellMouseDown);
   useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridEvent(apiRef, 'rowClick', handleRowClick);
   useGridEvent(apiRef, 'cellModeChange', handleCellModeChange);
   useGridEvent(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
   useGridEvent(apiRef, 'columnGroupHeaderFocus', handleColumnGroupHeaderFocus);
