@@ -345,7 +345,9 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
    * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
    * scrolls to on mount.
-   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
+   * For the `agenda` view, `dayCount` is how many days are displayed (and how far the
+   * navigation moves), or `'month'` to display the month of the visible date and navigate one month at a time.
+   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 }, agenda: { dayCount: 'month' } }
    */
   viewConfig: PropTypes.shape({
     agenda: PropTypes.shape({

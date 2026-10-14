@@ -22,6 +22,9 @@ export interface StandaloneAgendaViewPremiumProps<TEvent extends object, TResour
     SchedulerSlotsAndSlotProps {
   /**
    * Configuration applied to the view, keyed by the view name.
+   * For the `agenda` view, `dayCount` is how many days are displayed (and how far the
+   * navigation moves), or `'month'` to display the month of the visible date and navigate one month at a time.
+   * @example { agenda: { dayCount: 'month' } }
    */
   viewConfig?: Pick<EventCalendarViewConfig, 'agenda'>;
   /**

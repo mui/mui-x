@@ -77,7 +77,9 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "view": { "description": "The view currently displayed in the calendar." },
-    "viewConfig": { "description": "Configuration applied to the view, keyed by the view name." },
+    "viewConfig": {
+      "description": "Configuration applied to the view, keyed by the view name. For the <code>agenda</code> view, <code>dayCount</code> is how many days are displayed (and how far the navigation moves), or <code>&#39;month&#39;</code> to display the month of the visible date and navigate one month at a time."
+    },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
       "description": "The date currently used to determine the visible date range."
