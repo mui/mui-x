@@ -545,6 +545,25 @@ describe('<DateCalendar />', () => {
   });
 
   describe('view: month', () => {
+    it('should call onMonthChange once when selecting a month', async () => {
+      const onMonthChange = vi.fn();
+
+      const { user } = render(
+        <DateCalendar
+          value={adapterToUse.date('2019-01-01')}
+          onMonthChange={onMonthChange}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      await user.click(april);
+
+      expect(onMonthChange.mock.calls.length).to.equal(1);
+      expect(onMonthChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 1));
+    });
+
     it('should select the closest enabled date in the month if the current date is disabled', async () => {
       const onChange = vi.fn();
 
