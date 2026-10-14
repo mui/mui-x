@@ -7,6 +7,7 @@ import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internal
 import {
   DEFAULT_SCHEDULER_PREFERENCES,
   getDisplayedHourRange,
+  getShouldEventRequireResource,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
@@ -138,29 +139,15 @@ const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameter
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
-function warnIfShouldEventRequireResourceMisconfigured(
-  shouldEventRequireResource: boolean,
-  resources: readonly unknown[] | undefined,
-) {
-  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
-    warnOnce(
-      [
-        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
-        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
-      ].join('\n'),
-    );
-  }
-}
-
 const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumState,
   EventTimelinePremiumStoreParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => {
-    const shouldEventRequireResource =
-      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
-    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const shouldEventRequireResource = getShouldEventRequireResource(
+      parameters,
+      DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
+    );
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
@@ -174,9 +161,10 @@ const mapper: SchedulerParametersToStateMapper<
     };
   },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
-    const shouldEventRequireResource =
-      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
-    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const shouldEventRequireResource = getShouldEventRequireResource(
+      parameters,
+      DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
+    );
     const areDependenciesEnabled = deriveAreDependenciesEnabled(parameters);
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
