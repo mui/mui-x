@@ -82,15 +82,15 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
     multiTapResetTimeoutId: null,
   };
 
-  protected readonly isSinglePhase!: true;
+  declare protected readonly isSinglePhase: true;
 
-  protected readonly eventType!: TapEvent;
+  declare protected readonly eventType: TapEvent;
 
-  protected readonly optionsType!: TapGestureOptions<GestureName>;
+  declare protected readonly optionsType: TapGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: never;
+  declare protected readonly mutableStateType: never;
 
   /**
    * Maximum distance a pointer can move for a gesture to still be considered a tap

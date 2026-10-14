@@ -97,15 +97,18 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     dragTimeoutId: null,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare protected readonly isSinglePhase: false;
 
-  protected readonly eventType!: TapAndDragEvent;
+  declare protected readonly eventType: TapAndDragEvent;
 
-  protected readonly optionsType!: TapAndDragGestureOptions<GestureName>;
+  declare protected readonly optionsType: TapAndDragGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: Omit<Partial<typeof this.state>, 'phase' | 'dragTimeoutId'>;
+  declare protected readonly mutableStateType: Omit<
+    Partial<typeof this.state>,
+    'phase' | 'dragTimeoutId'
+  >;
 
   /**
    * Maximum distance a pointer can move during tap for it to still be considered a tap

@@ -10,13 +10,13 @@ export class MockGoodGesture extends Gesture<string> {
     customValue: '',
   };
 
-  protected readonly isSinglePhase!: false;
+  declare protected readonly isSinglePhase: false;
 
-  protected readonly eventType!: never;
+  declare protected readonly eventType: never;
 
-  protected readonly optionsType!: never;
+  declare protected readonly optionsType: never;
 
-  protected readonly mutableOptionsType!: {
+  declare protected readonly mutableOptionsType: {
     preventDefault?: boolean;
     stopPropagation?: boolean;
     preventIf?: string[];
@@ -24,7 +24,7 @@ export class MockGoodGesture extends Gesture<string> {
     arrayOption?: string[];
   };
 
-  protected readonly mutableStateType!: MockState;
+  declare protected readonly mutableStateType: MockState;
 
   protected resetState(): void {
     this.state = {

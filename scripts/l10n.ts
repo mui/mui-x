@@ -75,7 +75,7 @@ function git(args: any) {
   });
 }
 
-function plugin(existingTranslations: Translations): babel.PluginObj {
+function plugin(existingTranslations: Translations): babel.PluginObject {
   return {
     visitor: {
       VariableDeclarator: {

@@ -106,15 +106,18 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
     dragTimeoutId: null,
   };
 
-  protected readonly isSinglePhase!: false;
+  declare protected readonly isSinglePhase: false;
 
-  protected readonly eventType!: PressAndDragEvent;
+  declare protected readonly eventType: PressAndDragEvent;
 
-  protected readonly optionsType!: PressAndDragGestureOptions<GestureName>;
+  declare protected readonly optionsType: PressAndDragGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  declare protected readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly mutableStateType!: Omit<Partial<typeof this.state>, 'phase' | 'dragTimeoutId'>;
+  declare protected readonly mutableStateType: Omit<
+    Partial<typeof this.state>,
+    'phase' | 'dragTimeoutId'
+  >;
 
   /**
    * Duration required for press recognition
