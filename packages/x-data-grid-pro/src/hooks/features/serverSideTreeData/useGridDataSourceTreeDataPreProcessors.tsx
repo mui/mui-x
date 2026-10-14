@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
+import { useValueAsRef } from '@base-ui/utils/useValueAsRef';
 import type { RefObject } from '@mui/x-internals/types';
 import { gridRowTreeSelector } from '@mui/x-data-grid';
 import type {
@@ -53,13 +54,16 @@ export const useGridDataSourceTreeDataPreProcessors = (
     | 'dataSource'
   >,
 ) => {
+  // Read lazily so processor re-registrations in the same commit see the new mode (#10251).
+  const isTreeDataActiveRef = useValueAsRef(!!props.treeData && !!props.dataSource);
+
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.RowTree,
       TreeDataStrategy.DataSource,
-      props.treeData && props.dataSource ? () => true : () => false,
+      () => isTreeDataActiveRef.current,
     );
-  }, [privateApiRef, props.treeData, props.dataSource]);
+  }, [privateApiRef, isTreeDataActiveRef]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
@@ -247,5 +251,6 @@ export const useGridDataSourceTreeDataPreProcessors = (
     } else {
       isFirstRender.current = false;
     }
-  }, [setStrategyAvailability]);
+    // `setStrategyAvailability` is stable. These props trigger the `strategyAvailabilityChange` event.
+  }, [setStrategyAvailability, props.treeData, props.dataSource]);
 };
