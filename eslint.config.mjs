@@ -386,6 +386,8 @@ export default defineConfig(
     },
   },
 
+  // Type-aware docs linting exceeds CI memory: JS demo twins fall outside the
+  // docs project and each gets an inferred one.
   {
     files: [`docs/**/*${EXTENSION_TS}`],
     languageOptions: {
