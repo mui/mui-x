@@ -3,7 +3,7 @@ import {
   DataGridPro,
   useGridApiContext,
   useGridApiRef,
-  GridToolbarContainer,
+  Toolbar,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -234,7 +234,7 @@ function CustomToolbar() {
   };
 
   return (
-    <GridToolbarContainer>
+    <Toolbar>
       <Button
         aria-describedby={popperId}
         type="button"
@@ -288,7 +288,7 @@ function CustomToolbar() {
         onSubmit={createNewView}
         isValid={isNewViewLabelValid}
       />
-    </GridToolbarContainer>
+    </Toolbar>
   );
 }
 

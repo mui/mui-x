@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/46d7844970a13df535908a1f3f0d353d992feb87/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/e15cf53015fb529c870cbc6ed088429355435928/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -113,35 +113,17 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
-    resource_class: xlarge.gen2
+      playwright-img-version: v1.64.0-noble
+    resource_class: large.gen2
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
-      - when:
-          condition:
-            not:
-              equal: ['stable', << parameters.react-version >>]
-          steps:
-            - run:
-                environment:
-                  TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                name: Test Browser
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
-      - when:
-          condition:
-            equal: ['stable', << parameters.react-version >>]
-          steps:
-            - run:
-                name: Test Browser
-                environment:
-                  TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
+      - run:
+          name: Test Browser
+          environment:
+            TZ: UTC
+          command: pnpm test:unit:browser
       - store_test_results:
           path: test-results
   test_lint:
@@ -199,7 +181,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
+      playwright-img-version: v1.64.0-noble
     resource_class: medium
     steps:
       - checkout
@@ -215,7 +197,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
+      playwright-img-version: v1.64.0-noble
     resource_class: medium
     steps:
       - checkout
@@ -240,7 +222,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
+      playwright-img-version: v1.64.0-noble
     resource_class: large.gen2
     steps:
       - checkout
@@ -257,7 +239,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.63.0-noble
+      playwright-img-version: v1.64.0-noble
     resource_class: medium
     steps:
       - checkout

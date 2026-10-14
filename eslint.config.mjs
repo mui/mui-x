@@ -378,11 +378,26 @@ export default defineConfig(
   // Common config from core start
   {
     files: [`docs/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.config.*', '**/scripts/**'],
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
       'react-hooks/set-state-in-effect': 'off',
+    },
+  },
+
+  // Type-aware docs linting exceeds CI memory: JS demo twins fall outside the
+  // docs project and each gets an inferred one.
+  {
+    files: [`docs/**/*${EXTENSION_TS}`],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-deprecated': 'off',
     },
   },
 
