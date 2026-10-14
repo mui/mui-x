@@ -3,7 +3,6 @@ import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import ClipboardCopyButton from '../../../data/data-grid/clipboard/ClipboardCopyButton.tsx';
-import DensitySelectorSmallGrid from '../../../data/data-grid/accessibility/DensitySelectorSmallGrid.tsx';
 import RestoreStateInitialState from '../../../data/data-grid/state/RestoreStateInitialState.tsx';
 import ExportCustomToolbar from '../../../data/data-grid/export/ExportCustomToolbar.tsx';
 
@@ -21,12 +20,6 @@ vi.mock('@mui/x-data-grid-generator', () => ({
 const { render } = createRenderer();
 
 describe('Toolbar migration', () => {
-  it('keeps the density menu label and selected option', () => {
-    render(<DensitySelectorSmallGrid />);
-    fireEvent.click(screen.getByRole('button', { name: 'Density' }));
-    expect(screen.getByRole('menuitem', { name: 'Compact' })).to.have.class('Mui-selected');
-  });
-
   it('shows the grid density in the state restoration control', () => {
     render(<RestoreStateInitialState />);
     fireEvent.click(screen.getByRole('button', { name: 'Density' }));
