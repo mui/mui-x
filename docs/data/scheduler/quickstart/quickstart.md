@@ -57,10 +57,11 @@ yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled
 
 Import the Event Calendar component that corresponds to the version you're using, along with the `SchedulerEvent` type:
 
-```js
+```ts
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+// Premium users: add `-premium` suffix to package name
+import type { SchedulerEvent } from '@mui/x-scheduler/models';
 ```
 
 ### Define events
@@ -104,16 +105,19 @@ With the component imported and events defined, you're now ready to render the E
 
 Import the `EventTimelinePremium` component along with the `SchedulerEvent` and `SchedulerResource` types:
 
-```js
+```ts
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import type {
+  SchedulerEvent,
+  SchedulerResource,
+} from '@mui/x-scheduler-premium/models';
 ```
 
 ### Define events and resources
 
 Each event in the Event Timeline is an object with properties that define when it occurs and what it displays.
 
-The code snippet below defines three events with `id`, `title`, `start`, and `end` properties:
+The code snippet below defines two events with `id`, `title`, `start`, `end`, and `resource` properties:
 
 ```ts
 const events: SchedulerEvent[] = [
