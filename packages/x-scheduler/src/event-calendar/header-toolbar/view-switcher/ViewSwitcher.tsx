@@ -79,7 +79,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         slotProps={{
           list: {
             'aria-labelledby': `${schedulerId}-view-switcher-button`,
-            role: 'listbox',
           },
         }}
       >
@@ -87,7 +86,8 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
           <MenuItem
             key={viewItem}
             selected={view === viewItem}
-            aria-selected={view === viewItem}
+            role="menuitemradio"
+            aria-checked={view === viewItem}
             onClick={(event) => handleMenuItemClick(event, viewItem)}
           >
             {localeText[viewItem]}
