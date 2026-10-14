@@ -57,14 +57,7 @@ yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled
 
 Import the Event Calendar component that corresponds to the version you're using, along with the `SchedulerEvent` type:
 
-```ts
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import type { SchedulerEvent } from '@mui/x-scheduler/models';
-
-// or, with the Premium package
-import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
-import type { SchedulerEvent } from '@mui/x-scheduler-premium/models';
-```
+{{"component": "modules/components/SchedulerImportInstructions.js"}}
 
 ### Define events
 
@@ -162,22 +155,7 @@ With the component imported and events and resources defined, you're now ready t
 To benefit from [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
 These types use module augmentation to extend the default theme structure.
 
-```tsx
-// Premium users: add `-premium` suffix to package name
-import type {} from '@mui/x-scheduler/theme-augmentation';
-
-const theme = createTheme({
-  components: {
-    MuiEventCalendar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'lightblue',
-        },
-      },
-    },
-  },
-});
-```
+{{"component": "modules/components/SchedulerThemeAugmentationInstructions.js"}}
 
 ## API
 
