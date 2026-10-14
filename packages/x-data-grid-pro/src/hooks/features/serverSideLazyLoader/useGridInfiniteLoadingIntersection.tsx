@@ -106,7 +106,7 @@ export const useGridInfiniteLoadingIntersection = (
 
   React.useEffect(() => {
     const virtualScroller = apiRef.current.virtualScrollerRef.current;
-    // Not available in some test environments, e.g. jsdom
+    // Also, check for the availability of the `IntersectionObserver`. It is not available in some test environments, e.g. jsdom
     if (!isEnabledAndReady || !virtualScroller || typeof IntersectionObserver === 'undefined') {
       return;
     }
