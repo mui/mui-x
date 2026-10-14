@@ -27,7 +27,7 @@ const defaultPreferences = {
 Available properties:
 
 - `ampm`: Whether the component displays time in 12-hour format with AM/PM.
-- `weekStartsOn`: The day the week starts on (`0` = Sunday, `1` = Monday, `6` = Saturday).
+- `weekStartsOn`: The first day of the week, from `0` (Sunday) to `6` (Saturday). Defaults to the locale's first day of the week.
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 

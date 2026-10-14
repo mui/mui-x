@@ -46,6 +46,11 @@ export interface PickerLayoutOwnerState extends PickerOwnerState {
    * This flag is used to adjust the layout accordingly.
    */
   hasShortcuts: boolean;
+  /**
+   * Whether the layout displays the toolbar or not.
+   * This flag is used to adjust the layout accordingly.
+   */
+  hasToolbar: boolean;
 }
 
 export interface ExportedPickersLayoutSlotProps<TValue extends PickerValidValue> {

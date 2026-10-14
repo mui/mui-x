@@ -1,3 +1,4 @@
+import { gridRowNodeSelector } from '@mui/x-data-grid';
 import * as React from 'react';
 import {
   DataGridPremium,
@@ -26,7 +27,10 @@ export default function RowGroupingGetRowGroupChildren() {
   const handleRowClick = React.useCallback(
     (params) => {
       // Only log groups
-      if (apiRef.current?.getRowNode(params.id)?.type !== 'group') {
+      if (
+        !apiRef.current ||
+        gridRowNodeSelector(apiRef, params.id)?.type !== 'group'
+      ) {
         return;
       }
 
