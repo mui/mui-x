@@ -73,7 +73,6 @@ export default function LegendClick() {
         <ChartsDataProvider series={barSeries} width={400} height={60}>
           <ChartsLegend
             direction="horizontal"
-            // @ts-ignore
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
         </ChartsDataProvider>
@@ -86,7 +85,6 @@ export default function LegendClick() {
         </ChartsDataProvider>
         <Typography>Piecewise Color Legend</Typography>
         <ChartsDataProvider
-          // @ts-ignore
           series={lineSeries}
           width={400}
           height={60}
@@ -106,7 +104,6 @@ export default function LegendClick() {
           <PiecewiseColorLegend
             direction="horizontal"
             axisDirection="x"
-            // @ts-ignore
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
         </ChartsDataProvider>
@@ -125,7 +122,6 @@ export default function LegendClick() {
             aria-label="reset"
             size="small"
             onClick={() => {
-              // @ts-ignore
               setItemData(null);
             }}
           >
