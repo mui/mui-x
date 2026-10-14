@@ -77,6 +77,13 @@ export const PickersLayoutRoot = styled('div', {
       },
     },
     {
+      // In landscape, column 1 is empty when the toolbar is hidden (the default on desktop).
+      props: { pickerOrientation: 'landscape', hasShortcuts: false, hasToolbar: false },
+      style: {
+        [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '2 / 4' },
+      },
+    },
+    {
       props: { hasShortcuts: true, layoutDirection: 'rtl' },
       style: {
         [`& .${pickersLayoutClasses.shortcuts}`]: {
