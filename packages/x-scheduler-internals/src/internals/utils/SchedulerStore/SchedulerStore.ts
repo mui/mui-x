@@ -161,7 +161,7 @@ export class SchedulerStore<
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
-      ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
+      ...stateFromParameters,
       ...(hasDataSource(parameters)
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
         : buildEventsState({
@@ -173,7 +173,6 @@ export class SchedulerStore<
           })),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
-      adapter,
       occurrencePlaceholder: null,
       editingOccurrence: null,
       copiedEvent: null,

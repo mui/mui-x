@@ -40,6 +40,7 @@ The day-time grid is exposed as a `role="grid"` with three logical rows:
 |   Timed | `3`             | Per-column time cells                                                                                                                                                                               |
 
 The grid also exposes `aria-colcount` for the number of visible days and `aria-colindex` on every cell.
+Today's column header carries `aria-current="date"`.
 
 The time axis (hour labels and grid lines) is `aria-hidden="true"` as it is decorative.
 
@@ -47,6 +48,7 @@ The time axis (hour labels and grid lines) is `aria-hidden="true"` as it is deco
 
 The month grid uses the same `role="grid"` pattern with `aria-rowcount`, `aria-colcount`, `aria-rowindex`, and `aria-colindex`.
 Each weekday header cell carries a `role="columnheader"`.
+Today's cell carries `aria-current="date"`.
 
 When `showWeekNumber` is enabled, the week-number labels are `aria-hidden="true"` but each day cell in that row references the week-number element via `aria-labelledby`, so screen readers can announce it.
 
@@ -79,6 +81,7 @@ Recurring event icons are `aria-hidden="true"` as they are decorative.
 ### Agenda view
 
 Each day group in the agenda carries `aria-labelledby` pointing to its day header cell. The day header cell itself has an `aria-label` composed of the weekday name and day-of-month (for example, `"Monday 26"`).
+Today's day header cell carries `aria-current="date"`.
 
 ### Main calendar region
 
@@ -169,6 +172,11 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 - Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd>. On a mouse/trackpad, <kbd class="key">Space</kbd> opens the [event context menu](#event-context-menu) instead of activating the event directly.
 - Editing an event from the popover closes the popover with it. When focus would otherwise be lost, it returns to the **"X more"** button that opened it, or to the day cell if editing left the day with too few events for that button to be displayed. Focus that already moved outside the popover is preserved.
 - Deleting an event from the popover's context menu does not close the popover.
+
+## View switcher
+
+The view switcher button exposes `aria-haspopup="true"`, `aria-expanded`, and `aria-controls`.
+Inside the menu, each view uses `role="menuitemradio"` with `aria-checked`, so the current view is announced as checked.
 
 ## Preferences menu
 

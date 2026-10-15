@@ -839,6 +839,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the resources tree section label element"
     },
+    "responsiveTypographyContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element that hosts the responsive typography tokens"
+    },
     "root": { "description": "Styles applied to the root element." },
     "sidePanel": {
       "description": "Styles applied to {{nodeName}}.",
