@@ -58,7 +58,7 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
       elementProps,
       {
         style: {
-          [TimelineGridEventPlaceholderCssVars.startPosition]: `${position * 100}%`,
+          [TimelineGridEventPlaceholderCssVars.xPosition]: `${position * 100}%`,
           [TimelineGridEventPlaceholderCssVars.width]: `${duration * 100}%`,
         } as React.CSSProperties,
       },

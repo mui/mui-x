@@ -345,3 +345,23 @@ describe('side panel toggle', () => {
     expect(panel).not.to.have.attribute('aria-hidden');
   });
 });
+
+describe('header toolbar classes', () => {
+  const { render } = createSchedulerRenderer();
+
+  it('should apply the start element class to the element wrapping the side panel toggle', () => {
+    render(
+      <EventCalendarProvider events={[]} resources={[]}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const startElement = document.querySelector(
+      `.${eventCalendarClasses.headerToolbarStartElement}`,
+    );
+    expect(startElement).not.to.equal(null);
+    expect(startElement).to.contain(
+      document.querySelector(`.${eventCalendarClasses.headerToolbarSidePanelToggle}`),
+    );
+  });
+});

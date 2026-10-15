@@ -66,7 +66,7 @@ describe('<TimelineGrid.Event />', () => {
     );
 
     const event = screen.getByTestId('event');
-    expect(event.style.getPropertyValue('--start-position')).to.equal('25%');
+    expect(event.style.getPropertyValue('--x-position')).to.equal('25%');
     expect(event.style.getPropertyValue('--width')).to.equal('50%');
     expect(event).to.have.attribute('data-starting-before-edge');
     expect(event).not.to.have.attribute('data-ending-after-edge');

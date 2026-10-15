@@ -104,7 +104,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       render(<Grid events={[event]} presetConfig={PRESET_CONFIG} />);
 
       const element = screen.getByTestId('event-visible');
-      expect(parseFloat(element.style.getPropertyValue('--start-position'))).to.be.closeTo(
+      expect(parseFloat(element.style.getPropertyValue('--x-position'))).to.be.closeTo(
         (120 / AXIS_MINUTES) * 100,
         0.001,
       );
@@ -123,7 +123,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       const { rerender } = render(<Grid events={[event]} />);
 
       const element = screen.getByTestId('event-visible');
-      expect(parseFloat(element.style.getPropertyValue('--start-position'))).to.be.closeTo(
+      expect(parseFloat(element.style.getPropertyValue('--x-position'))).to.be.closeTo(
         (600 / FULL_DAY_AXIS_MINUTES) * 100,
         0.001,
       );
@@ -134,7 +134,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
 
       rerender(<Grid events={[event]} presetConfig={PRESET_CONFIG} />);
 
-      expect(parseFloat(element.style.getPropertyValue('--start-position'))).to.be.closeTo(
+      expect(parseFloat(element.style.getPropertyValue('--x-position'))).to.be.closeTo(
         (120 / AXIS_MINUTES) * 100,
         0.001,
       );
@@ -145,7 +145,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
 
       rerender(<Grid events={[event]} />);
 
-      expect(parseFloat(element.style.getPropertyValue('--start-position'))).to.be.closeTo(
+      expect(parseFloat(element.style.getPropertyValue('--x-position'))).to.be.closeTo(
         (600 / FULL_DAY_AXIS_MINUTES) * 100,
         0.001,
       );
@@ -164,7 +164,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       render(<Grid events={[event]} presetConfig={PRESET_CONFIG} />);
 
       const element = screen.getByTestId('event-clamped');
-      expect(parseFloat(element.style.getPropertyValue('--start-position'))).to.be.closeTo(
+      expect(parseFloat(element.style.getPropertyValue('--x-position'))).to.be.closeTo(
         (600 / AXIS_MINUTES) * 100,
         0.001,
       );
@@ -265,7 +265,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
       const placeholder = screen.getByTestId('placeholder');
       // 10:00 sits 120 axis minutes into the 2880-minute axis, not 600 of 5760
       // (the full-day mapping).
-      expect(parseFloat(placeholder.style.getPropertyValue('--start-position'))).to.be.closeTo(
+      expect(parseFloat(placeholder.style.getPropertyValue('--x-position'))).to.be.closeTo(
         (120 / AXIS_MINUTES) * 100,
         0.001,
       );
@@ -446,7 +446,7 @@ describe('TimelineGrid - presetConfig (startTime / endTime)', () => {
         const indicator = screen.getByTestId('indicator');
         // 10:00 sits 120 axis minutes into the 2880-minute axis, not 600 of 5760
         // (the full-day mapping).
-        expect(parseFloat(indicator.style.getPropertyValue('--start-position'))).to.be.closeTo(
+        expect(parseFloat(indicator.style.getPropertyValue('--x-position'))).to.be.closeTo(
           120 / AXIS_MINUTES,
           0.0001,
         );

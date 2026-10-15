@@ -508,10 +508,10 @@ describe('EventTimelinePremium - Drag and Drop', () => {
      */
     function mockEventBoundsFromRender(title: string): { element: HTMLElement; left: number } {
       const element = screen.getByText(title).closest('.MuiEventTimeline-event') as HTMLElement;
-      const startPosition = parseFloat(element.style.getPropertyValue('--start-position'));
+      const xPosition = parseFloat(element.style.getPropertyValue('--x-position'));
       const width = parseFloat(element.style.getPropertyValue('--width'));
-      expect(Number.isNaN(startPosition), '--start-position must be set on the event').to.equal(false);
-      const left = (startPosition / 100) * AXIS_WIDTH;
+      expect(Number.isNaN(xPosition), '--x-position must be set on the event').to.equal(false);
+      const left = (xPosition / 100) * AXIS_WIDTH;
       mockElementBounds(element, {
         left,
         width: (width / 100) * AXIS_WIDTH,
