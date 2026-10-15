@@ -15,5 +15,7 @@ export async function downloadWorkbook(workbook: Excel.Workbook, fileName: strin
   anchor.download = `${fileName || 'untitled'}.xlsx`;
   anchor.click();
 
-  URL.revokeObjectURL(url);
+  // Revoked a tick later: some browsers cancel the download if the object URL goes away while
+  // the click is still being handled. Matches the Data Grid's `exportAs`.
+  setTimeout(() => URL.revokeObjectURL(url));
 }
