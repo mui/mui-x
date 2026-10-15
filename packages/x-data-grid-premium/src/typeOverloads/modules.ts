@@ -86,6 +86,11 @@ interface GridEventLookupPremium extends GridEventLookupPro {
     params: {
       oldRows: Map<GridRowId, GridValidRowModel>;
       newRows: Map<GridRowId, GridValidRowModel>;
+      /**
+       * The rows that the paste added to the grid.
+       * The paste adds rows only when `clipboardPasteOptions.createRows()` is set.
+       */
+      createdRows?: Map<GridRowId, GridValidRowModel>;
     };
   };
   /**

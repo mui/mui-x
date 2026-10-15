@@ -949,6 +949,70 @@ describe('<DataGridPremium /> - History', () => {
       });
       expect(getCell(0, 1)).to.have.text(originalValues[0]);
     });
+
+    describe('created rows', () => {
+      const createRows = ({ count }: { count: number }) =>
+        Array.from({ length: count }, (_, index) => ({ id: `new-${index}` }));
+
+      async function pasteIntoLastRow(user: MuiRenderResult['user']) {
+        const cell = getCell(9, 1);
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, ['A', 'B', 'C'].join('\n'));
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(12);
+        });
+        // Let the debounced history validation run
+        await act(() => sleep(50));
+      }
+
+      it('should remove the created rows on undo and add them again on redo', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+        const originalValue = getCell(9, 1).textContent;
+
+        await pasteIntoLastRow(user);
+        expect(getColumnValues(1).slice(9)).to.deep.equal(['A', 'B', 'C']);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+        expect(getCell(9, 1)).to.have.text(originalValue!);
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.redo();
+        });
+        expect(getColumnValues(1).slice(9)).to.deep.equal(['A', 'B', 'C']);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
+
+      it('should keep the undo step when the sorting moves the created rows', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoLastRow(user);
+
+        await act(() => apiRef.current!.sortColumn('currencyPair', 'asc'));
+        await act(() => sleep(50));
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+      });
+
+      it('should not undo when a created row was changed', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoLastRow(user);
+
+        await act(() => apiRef.current!.updateRows([{ id: 'new-0', currencyPair: 'CHANGED' }]));
+        await act(() => sleep(50));
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      });
+    });
   });
 
   describe('Restoring rows that a merge cannot rebuild', () => {

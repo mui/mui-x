@@ -128,7 +128,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "clipboardPasteEnd",
     "description": "Fired when the clipboard paste operation ends.",
-    "params": "{\n  oldRows: Map<GridRowId, GridValidRowModel>\n  newRows: Map<GridRowId, GridValidRowModel>\n}",
+    "params": "{\n  oldRows: Map<GridRowId, GridValidRowModel>\n  newRows: Map<GridRowId, GridValidRowModel>\n  /**\n   * The rows that the paste added to the grid.\n   * The paste adds rows only when `clipboardPasteOptions.createRows()` is set.\n   */\n  createdRows?: Map<GridRowId, GridValidRowModel>\n}",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardPasteEnd"
   },

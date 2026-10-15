@@ -10,12 +10,17 @@ import {
   gridExpandedSortedRowIdsSelector,
   gridRowSelectionIdsSelector,
   gridRowSelectionCountSelector,
+  gridRowMaximumTreeDepthSelector,
+  GRID_ROOT_GROUP_ID,
+  GridCellModes,
 } from '@mui/x-data-grid';
 import type {
+  GridCellCoordinates,
   GridColDef,
   GridRowId,
   GridValidRowModel,
   GridRowModel,
+  GridRowModelReplace,
   GridEventListener,
 } from '@mui/x-data-grid';
 import {
@@ -28,9 +33,10 @@ import {
   isEventTargetInPortal,
   isReplaceUpdate,
   getReplaceRow,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid/internals';
-import type { GridPipeProcessor } from '@mui/x-data-grid/internals';
-import { errorOnce } from '@mui/x-internals/warning';
+import type { GridPipeProcessor, GridStateColDef } from '@mui/x-data-grid/internals';
+import { errorOnce, warnOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import debounce from '@mui/utils/debounce';
 import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -113,9 +119,64 @@ export class CellValueUpdater {
     getRowId: DataGridPremiumProcessedProps['getRowId'];
   };
 
+  /**
+   * The rows that the paste can add to the grid, as `clipboardPasteOptions.createRows()` returned them.
+   * The paste adds a row only if it writes at least one value into it.
+   */
+  rowsToCreate: Map<GridRowId, GridValidRowModel> = new Map();
+
   constructor(options: CellValueUpdater['options']) {
     this.options = options;
     this.rowUpdates = batchRowUpdates(options.apiRef.current.updateRows, 50);
+  }
+
+  /**
+   * Registers rows that are not in the grid yet, so that the paste can write values into them.
+   * @returns {GridRowId[]} The ids of the registered rows.
+   */
+  addRowsToCreate(rows: GridValidRowModel[]): GridRowId[] {
+    const { apiRef, getRowId } = this.options;
+    const rowIds: GridRowId[] = [];
+
+    rows.forEach((row) => {
+      const rowId = getRowIdFromRowModel(row, getRowId);
+      if (apiRef.current.getRow(rowId) !== null || this.rowsToCreate.has(rowId)) {
+        warnOnce(
+          [
+            `MUI X: The row with id "${rowId}" returned by \`clipboardPasteOptions.createRows()\` was ignored, because its id is not unique.`,
+            'Return rows with ids that are not used by other rows.',
+          ].join('\n'),
+        );
+        return;
+      }
+      this.rowsToCreate.set(rowId, row);
+      rowIds.push(rowId);
+    });
+
+    return rowIds;
+  }
+
+  private getCellParams(rowId: GridRowId, colDef: GridStateColDef) {
+    const { apiRef } = this.options;
+    const rowToCreate = this.rowsToCreate.get(rowId);
+    if (!rowToCreate) {
+      return apiRef.current.getCellParams(rowId, colDef.field);
+    }
+
+    // `getCellParams()` requires a row that is in the grid
+    return apiRef.current.getCellParamsForRow(rowId, colDef.field, rowToCreate, {
+      colDef,
+      rowNode: {
+        type: 'leaf',
+        id: rowId,
+        depth: 0,
+        parent: GRID_ROOT_GROUP_ID,
+        groupingKey: null,
+      },
+      cellMode: GridCellModes.View,
+      hasFocus: false,
+      tabIndex: -1,
+    });
   }
 
   updateCell({
@@ -136,13 +197,12 @@ export class CellValueUpdater {
     if (!colDef || !colDef.editable) {
       return;
     }
-    const row = this.rowsToUpdate.get(rowId) || { ...apiRef.current.getRow(rowId) };
-    if (!row) {
-      return;
-    }
+    const row = this.rowsToUpdate.get(rowId) || {
+      ...(this.rowsToCreate.get(rowId) ?? apiRef.current.getRow(rowId)),
+    };
 
     // Check if the cell is editable using the API method, which respects the isCellEditable prop
-    const cellParams = apiRef.current.getCellParams(rowId, field);
+    const cellParams = this.getCellParams(rowId, colDef);
     if (!apiRef.current.isCellEditable(cellParams)) {
       return;
     }
@@ -182,17 +242,36 @@ export class CellValueUpdater {
       apiRef.current.publishEvent('clipboardPasteEnd', {
         oldRows: new Map<GridRowId, GridValidRowModel>(),
         newRows: new Map<GridRowId, GridValidRowModel>(),
+        createdRows: new Map<GridRowId, GridValidRowModel>(),
       });
       return;
     }
 
     const oldRows = new Map<GridRowId, GridValidRowModel>();
     const newRows = new Map<GridRowId, GridValidRowModel>();
+    // The final rows to create, by the id that the paste gave to `processRowUpdate()`
+    const rowsToInsert = new Map<GridRowId, GridValidRowModel>();
 
     const handleRowUpdate = async (rowId: GridRowId) => {
-      const oldRow = apiRef.current.getRow(rowId);
+      const rowToCreate = this.rowsToCreate.get(rowId);
+      const oldRow = rowToCreate ?? apiRef.current.getRow(rowId)!;
       const newRow = rowsToUpdate.get(rowId)!;
-      oldRows.set(rowId, oldRow);
+      if (!rowToCreate) {
+        oldRows.set(rowId, oldRow);
+      }
+
+      const applyRowUpdate = (rowUpdate: GridRowModel | GridRowModelReplace) => {
+        // A `{ _action: 'replace', row }` update is unwrapped so that the
+        // `clipboardPasteEnd` event exposes the stored row, not the envelope.
+        const row = isReplaceUpdate(rowUpdate) ? getReplaceRow(rowUpdate) : rowUpdate;
+        if (rowToCreate) {
+          // The rows are inserted after all updates are done, to keep the order of the paste
+          rowsToInsert.set(rowId, row);
+          return;
+        }
+        newRows.set(rowId, row);
+        this.rowUpdates.push(rowUpdate);
+      };
 
       if (typeof processRowUpdate === 'function') {
         const handleError = (errorThrown: any) => {
@@ -210,20 +289,12 @@ export class CellValueUpdater {
         };
 
         try {
-          const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
-          // A `{ _action: 'replace', row }` update is unwrapped so that the
-          // `clipboardPasteEnd` event exposes the stored row, not the envelope.
-          newRows.set(
-            rowId,
-            isReplaceUpdate(finalRowUpdate) ? getReplaceRow(finalRowUpdate) : finalRowUpdate,
-          );
-          this.rowUpdates.push(finalRowUpdate);
+          applyRowUpdate(await processRowUpdate(newRow, oldRow, { rowId }));
         } catch (error) {
           handleError(error);
         }
       } else {
-        newRows.set(rowId, newRow);
-        this.rowUpdates.push(newRow);
+        applyRowUpdate(newRow);
       }
     };
 
@@ -235,16 +306,121 @@ export class CellValueUpdater {
       });
     });
     Promise.all(promises).then(() => {
+      const createdRows = new Map<GridRowId, GridValidRowModel>();
+      rowIdsToUpdate.forEach((rowId) => {
+        const row = rowsToInsert.get(rowId);
+        if (!row) {
+          return;
+        }
+        // `processRowUpdate()` can give the new row its final id, for example one from the server
+        const finalRowId = getRowIdFromRowModel(row, this.options.getRowId);
+        if (apiRef.current.getRow(finalRowId) !== null || createdRows.has(finalRowId)) {
+          warnOnce(
+            [
+              `MUI X: The pasted row with id "${finalRowId}" was not added, because its id is not unique.`,
+              'Make sure that `processRowUpdate()` returns the new rows with ids that are not used by other rows.',
+            ].join('\n'),
+          );
+          return;
+        }
+        createdRows.set(finalRowId, row);
+        this.rowUpdates.push(row);
+      });
+
       // Apply the pending rows before `clipboardPasteEnd`, so that its listeners (for example,
       // the undo/redo history) see the grid with the pasted values.
       this.rowUpdates.flush();
       apiRef.current.publishEvent('clipboardPasteEnd', {
         oldRows,
         newRows,
+        createdRows,
       });
       this.rowsToUpdate.clear();
+      this.rowsToCreate.clear();
     });
   }
+}
+
+/**
+ * Returns the cell where the paste starts, when the paste does not target a cell range or selected rows.
+ */
+function getPasteStartCell(
+  apiRef: RefObject<GridApiPremium>,
+  pastedData: string[][],
+): GridCellCoordinates | null {
+  const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
+  const selectedCellsArray = apiRef.current.getSelectedCellsAsArray();
+  if (apiRef.current.getCellSelectionModel() && selectedCellsArray.length > 1) {
+    return null;
+  }
+  if (gridRowSelectionCountSelector(apiRef) > 0 && !isSingleValuePasted) {
+    return null;
+  }
+
+  let selectedCell = gridFocusCellSelector(apiRef);
+  if (!selectedCell && selectedCellsArray.length === 1) {
+    selectedCell = selectedCellsArray[0];
+  }
+
+  if (!selectedCell || columnFieldsToExcludeFromPaste.includes(selectedCell.field)) {
+    return null;
+  }
+  return selectedCell;
+}
+
+/**
+ * Returns the rows that a paste from a cell can write into, and the index of the row where it starts.
+ */
+function getPasteTargetRows(
+  apiRef: RefObject<GridApiPremium>,
+  rowId: GridRowId,
+  pagination: DataGridPremiumProcessedProps['pagination'],
+  paginationMode: DataGridPremiumProcessedProps['paginationMode'],
+) {
+  const allRowIds = gridExpandedSortedRowIdsSelector(apiRef);
+  const rowIds =
+    pagination && paginationMode === 'client'
+      ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+      : allRowIds;
+
+  return {
+    rowIds,
+    startIndex: apiRef.current.getRowIndexRelativeToVisibleRows(rowId) as number | undefined,
+    // The paste can add rows after the last row of the grid, but not after the last row of other pages
+    canAddRows: rowIds.length > 0 && rowIds[rowIds.length - 1] === allRowIds[allRowIds.length - 1],
+  };
+}
+
+/**
+ * Returns the pasted data that goes past the last row of the grid.
+ */
+function getDataForRowsToCreate({
+  pastedData,
+  apiRef,
+  pagination,
+  paginationMode,
+}: {
+  pastedData: string[][];
+  apiRef: RefObject<GridApiPremium>;
+  pagination: DataGridPremiumProcessedProps['pagination'];
+  paginationMode: DataGridPremiumProcessedProps['paginationMode'];
+}): string[][] {
+  const startCell = getPasteStartCell(apiRef, pastedData);
+  if (!startCell) {
+    return [];
+  }
+
+  const { rowIds, startIndex, canAddRows } = getPasteTargetRows(
+    apiRef,
+    startCell.id,
+    pagination,
+    paginationMode,
+  );
+  if (!canAddRows || startIndex === undefined) {
+    return [];
+  }
+
+  return pastedData.slice(rowIds.length - startIndex);
 }
 
 function defaultPasteResolver({
@@ -253,12 +429,17 @@ function defaultPasteResolver({
   updateCell,
   pagination,
   paginationMode,
+  rowIdsToCreate,
 }: {
   pastedData: string[][];
   apiRef: RefObject<GridApiPremium>;
   updateCell: CellValueUpdater['updateCell'];
   pagination: DataGridPremiumProcessedProps['pagination'];
   paginationMode: DataGridPremiumProcessedProps['paginationMode'];
+  /**
+   * The rows that are not in the grid yet, for the pasted data that goes past the last row.
+   */
+  rowIdsToCreate: GridRowId[];
 }) {
   const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
@@ -326,29 +507,30 @@ function defaultPasteResolver({
     return;
   }
 
-  let selectedCell = gridFocusCellSelector(apiRef);
-  if (!selectedCell && selectedCellsArray.length === 1) {
-    selectedCell = selectedCellsArray[0];
-  }
-
+  const selectedCell = getPasteStartCell(apiRef, pastedData);
   if (!selectedCell) {
     return;
   }
 
-  if (columnFieldsToExcludeFromPaste.includes(selectedCell.field)) {
+  const {
+    rowIds: visibleRowIds,
+    startIndex: selectedRowIndex,
+    canAddRows,
+  } = getPasteTargetRows(apiRef, selectedCell.id, pagination, paginationMode);
+  if (selectedRowIndex === undefined) {
     return;
   }
 
-  const selectedRowId = selectedCell.id;
-  const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
-  const visibleRowIds =
-    pagination && paginationMode === 'client'
-      ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
-      : gridExpandedSortedRowIdsSelector(apiRef);
-
   const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
+  const getRowId = (rowIndex: number): GridRowId | undefined => {
+    if (rowIndex < visibleRowIds.length) {
+      return visibleRowIds[rowIndex];
+    }
+    return canAddRows ? rowIdsToCreate[rowIndex - visibleRowIds.length] : undefined;
+  };
+
   pastedData.forEach((rowData, index) => {
-    const rowId = visibleRowIds[selectedRowIndex + index];
+    const rowId = getRowId(selectedRowIndex + index);
 
     if (typeof rowId === 'undefined') {
       return;
@@ -377,6 +559,9 @@ export const useGridClipboardImport = (
     | 'disableClipboardPaste'
     | 'onBeforeClipboardPasteStart'
     | 'clipboardCopyCellDelimiter'
+    | 'clipboardPasteOptions'
+    | 'dataSource'
+    | 'treeData'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
@@ -391,7 +576,59 @@ export const useGridClipboardImport = (
     pagination,
     paginationMode,
     onBeforeClipboardPasteStart,
+    dataSource,
+    treeData,
   } = props;
+  const createRows = props.clipboardPasteOptions?.createRows;
+
+  const getRowIdsToCreate = React.useCallback(
+    async (pastedData: string[][], cellUpdater: CellValueUpdater): Promise<GridRowId[]> => {
+      if (!createRows) {
+        return [];
+      }
+
+      const data = getDataForRowsToCreate({
+        pastedData,
+        apiRef: getPublicApiRef(apiRef),
+        pagination,
+        paginationMode,
+      });
+      if (data.length === 0) {
+        return [];
+      }
+
+      let unsupportedFeature: string | null = null;
+      if (dataSource) {
+        unsupportedFeature = 'the `dataSource` prop';
+      } else if (pagination && paginationMode === 'server') {
+        unsupportedFeature = 'server-side pagination';
+      } else if (treeData || gridRowMaximumTreeDepthSelector(apiRef) > 1) {
+        unsupportedFeature = 'tree data or row grouping';
+      } else if (gridPivotActiveSelector(apiRef)) {
+        unsupportedFeature = 'pivoting';
+      }
+      if (unsupportedFeature) {
+        warnOnce(
+          `MUI X: The paste did not add rows, because \`clipboardPasteOptions.createRows()\` is not supported with ${unsupportedFeature}.`,
+        );
+        return [];
+      }
+
+      let rows: GridValidRowModel[] = [];
+      try {
+        rows = await createRows({ count: data.length, data });
+      } catch (error) {
+        logger.debug('The paste did not add rows, because `createRows()` was rejected');
+        return [];
+      }
+      if (!Array.isArray(rows)) {
+        return [];
+      }
+
+      return cellUpdater.addRowsToCreate(rows.slice(0, data.length));
+    },
+    [apiRef, createRows, dataSource, treeData, pagination, paginationMode, logger],
+  );
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -447,6 +684,8 @@ export const useGridClipboardImport = (
         getRowId,
       });
 
+      const rowIdsToCreate = await getRowIdsToCreate(pastedData, cellUpdater);
+
       apiRef.current.publishEvent('clipboardPasteStart', {
         data: pastedData,
       });
@@ -459,6 +698,7 @@ export const useGridClipboardImport = (
         },
         pagination,
         paginationMode,
+        rowIdsToCreate,
       });
 
       cellUpdater.applyUpdates();
@@ -474,6 +714,7 @@ export const useGridClipboardImport = (
       pagination,
       paginationMode,
       onBeforeClipboardPasteStart,
+      getRowIdsToCreate,
       logger,
     ],
   );
