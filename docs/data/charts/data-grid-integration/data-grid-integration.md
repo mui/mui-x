@@ -44,4 +44,6 @@ Each entry can be removed on its own through the toolbar's props:
 />
 ```
 
-The entry labels come from the `toolbarExportExcel` and `toolbarExportDataGridExcel` [localization keys](/x/react-charts/localization/).
+The entry labels come from [localization keys](/x/react-charts/localization/): `toolbarExportChartExcel` and `toolbarExportDataGridExcel` while both entries are shown, and `toolbarExportExcel` when the chart entry stands alone, for instance because the Grid entry is disabled.
+
+The chart entry takes the options described in [Excel export](/x/react-charts/export/#excel-export-options), except `includeHiddenSeries` and `includeFormattedValues`, which have no meaning for a selection the Grid has already resolved. The Grid entry uses the Grid's own `excelOptions`, so it writes the same file as the Grid's export button.

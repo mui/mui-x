@@ -50,13 +50,15 @@ export function getGridChartsExcelTables(
   const columns: ChartExcelColumn[] = [
     ...dimensions.map((dimension, index) => ({
       key: dimensionKeys[index],
-      header: dimension.label,
+      // Escaped like any other text cell: a column label also lands in a cell.
+      header: String(toSafeCell(dimension.label, escapeFormulas) ?? ''),
     })),
     { key: 'series', header: 'series' },
     { key: 'value', header: 'value' },
   ];
 
-  // The grid pads every selection to the same length, so the longest series covers them all.
+  // The selections can differ in length, since the Grid drops null cells when it collects them,
+  // so the longest one decides the row count and the rest are padded here.
   const rowCount = Math.max(
     ...values.map((value) => value.data.length),
     ...dimensions.map((dimension) => dimension.data.length),

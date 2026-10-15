@@ -193,7 +193,11 @@ describe.skipIf(!isJSDOM)('<ChartsToolbarPremium />', () => {
       await user.click(screen.getByRole('button', { name: 'Export' }));
       await user.click(screen.getByRole('menuitem', { name: 'Export grid data as Excel' }));
 
-      expect(onDataGridExcelExport.mock.calls).to.have.length(1);
+      await vi.waitFor(() => expect(onDataGridExcelExport.mock.calls).to.have.length(1));
+      // The chart's own export is async, so give it the chance to land before ruling it out.
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
       expect(downloads).to.deep.equal([]);
     });
 

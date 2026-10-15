@@ -72,6 +72,8 @@ export interface ChartsRendererProps {
  * @param {Function} [props.onRender] - Optional callback function called before rendering to modify chart props. Receives chart type, props and component as arguments and should return a React node
  * @returns {React.ReactNode} The rendered chart component
  */
+const EXCEL_EXPORT_SLOTS = { toolbar: ChartsToolbarPremium };
+
 function ChartsRenderer({
   dimensions,
   values,
@@ -131,6 +133,8 @@ function ChartsRenderer({
 
   // The integration renders Pro charts, which cannot register the Premium export plugin, and the
   // rendered axis mangles its labels. So the export reads the grid's selection instead.
+  // Only the options that mean something for a selection the Grid already resolved:
+  // `includeHiddenSeries` and `includeFormattedValues` have no counterpart here.
   const onExcelExport = React.useCallback(
     async (options?: ChartExcelExportOptions) => {
       try {
@@ -156,9 +160,22 @@ function ChartsRenderer({
     [dimensions, values, label],
   );
 
-  const excelExportSlots = { toolbar: ChartsToolbarPremium };
+  const onDataGridExcelExport = React.useMemo(
+    () =>
+      exportDataAsExcel &&
+      (async () => {
+        try {
+          await exportDataAsExcel();
+        } catch (error) {
+          // The Grid runs this export, so its failure is not the chart's.
+          console.error('MUI X Data Grid: Error exporting the data as Excel:', error);
+        }
+      }),
+    [exportDataAsExcel],
+  );
+
   const excelExportSlotProps = {
-    toolbar: { onExcelExport, onDataGridExcelExport: exportDataAsExcel },
+    toolbar: { onExcelExport, onDataGridExcelExport },
   };
 
   if (chartType === 'bar' || chartType === 'column') {
@@ -235,7 +252,7 @@ function ChartsRenderer({
       },
       skipAnimation: chartConfiguration.skipAnimation,
       showToolbar: chartConfiguration.showToolbar,
-      slots: excelExportSlots,
+      slots: EXCEL_EXPORT_SLOTS,
       slotProps: {
         ...excelExportSlotProps,
         tooltip: {
@@ -296,7 +313,7 @@ function ChartsRenderer({
         vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
         horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
       },
-      slots: excelExportSlots,
+      slots: EXCEL_EXPORT_SLOTS,
       slotProps: {
         ...excelExportSlotProps,
         tooltip: {
@@ -365,7 +382,7 @@ function ChartsRenderer({
       hideLegend: legendPosition === undefined,
       colors: colorPaletteLookup.get(chartConfiguration.colors),
       showToolbar: chartConfiguration.showToolbar,
-      slots: excelExportSlots,
+      slots: EXCEL_EXPORT_SLOTS,
       slotProps: {
         ...excelExportSlotProps,
         legend: {

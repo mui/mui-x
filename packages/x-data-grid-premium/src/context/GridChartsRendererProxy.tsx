@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGridChartsIntegrationContext } from '../hooks/utils/useGridChartIntegration';
-import type { ChartState } from '../models/gridChartsIntegration';
+import type { ChartState, GridChartsExcelExport } from '../models/gridChartsIntegration';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 export type GridChartsRendererProxyRendererCallback = (
@@ -16,7 +16,7 @@ type GridChartsRendererProxyRenderer = React.ComponentType<{
   values: ChartState['values'];
   chartType: ChartState['type'];
   configuration: ChartState['configuration'];
-  exportDataAsExcel?: ChartState['exportDataAsExcel'];
+  exportDataAsExcel?: GridChartsExcelExport;
   label?: ChartState['label'];
   onRender?: GridChartsRendererProxyRendererCallback;
 }>;
@@ -43,7 +43,8 @@ export interface GridChartsRendererProxyProps {
 
 function GridChartsRendererProxy(props: GridChartsRendererProxyProps) {
   const { renderer: Renderer, id, label, onRender } = props;
-  const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
+  const { chartStateLookup, setChartState, exportGridDataAsExcel } =
+    useGridChartsIntegrationContext();
 
   React.useEffect(() => {
     if (!chartStateLookup[id]) {
@@ -63,14 +64,7 @@ function GridChartsRendererProxy(props: GridChartsRendererProxyProps) {
     return null;
   }
 
-  const {
-    dimensions,
-    values,
-    type,
-    configuration,
-    exportDataAsExcel,
-    label: chartLabel,
-  } = chartStateLookup[id];
+  const { dimensions, values, type, configuration } = chartStateLookup[id];
 
   return (
     <Renderer
@@ -78,8 +72,8 @@ function GridChartsRendererProxy(props: GridChartsRendererProxyProps) {
       values={values}
       chartType={type}
       configuration={configuration}
-      exportDataAsExcel={exportDataAsExcel}
-      label={chartLabel}
+      exportDataAsExcel={exportGridDataAsExcel ?? undefined}
+      label={label}
       onRender={onRender}
     />
   );

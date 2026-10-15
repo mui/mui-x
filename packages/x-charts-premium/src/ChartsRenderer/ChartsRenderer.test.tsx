@@ -1,4 +1,4 @@
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, beforeEach, onTestFinished } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
 import { screen } from '@mui/internal-test-utils';
@@ -120,7 +120,7 @@ describe('<ChartsRenderer />', () => {
       expect(typeof props.slotProps.toolbar.onExcelExport).to.equal('function');
     });
 
-    it('passes the Data Grid export to the toolbar as a second entry', () => {
+    it('passes the Data Grid export to the toolbar as a second entry', async () => {
       const onRenderSpy = vi.fn();
       const exportDataAsExcel = vi.fn(async () => {});
       render(
@@ -137,8 +137,75 @@ describe('<ChartsRenderer />', () => {
       );
 
       const props = onRenderSpy.mock.lastCall?.[1];
-      expect(props.slotProps.toolbar.onDataGridExcelExport).to.equal(exportDataAsExcel);
       expect(typeof props.slotProps.toolbar.onExcelExport).to.equal('function');
+
+      // Wrapped rather than passed through, so a Grid failure is not reported as a chart one.
+      await props.slotProps.toolbar.onDataGridExcelExport();
+      expect(exportDataAsExcel.mock.calls).to.have.length(1);
+    });
+
+    describe('its own Excel export', () => {
+      let downloads: string[];
+
+      beforeEach(() => {
+        downloads = [];
+        const click = vi
+          .spyOn(HTMLAnchorElement.prototype, 'click')
+          .mockImplementation(function recordDownload(this: HTMLAnchorElement) {
+            downloads.push(this.download);
+          });
+        // JSDOM does not implement object URLs.
+        const createObjectURL = URL.createObjectURL;
+        const revokeObjectURL = URL.revokeObjectURL;
+        URL.createObjectURL = () => 'blob:chart-export';
+        URL.revokeObjectURL = () => {};
+        onTestFinished(() => {
+          click.mockRestore();
+          URL.createObjectURL = createObjectURL;
+          URL.revokeObjectURL = revokeObjectURL;
+        });
+      });
+
+      const renderAndExport = async (props: Record<string, any>, options?: any) => {
+        const onRenderSpy = vi.fn();
+        render(
+          <div data-testid="container">
+            <ChartsRenderer
+              dimensions={[{ id: 'country', label: 'Country', data: ['France', 'Spain'] }]}
+              values={[{ id: 'visits', label: 'Visits', data: [1, 2] }]}
+              chartType="column"
+              configuration={{ showToolbar: true }}
+              onRender={onRenderSpy}
+              {...props}
+            />
+          </div>,
+        );
+
+        await onRenderSpy.mock.lastCall?.[1].slotProps.toolbar.onExcelExport(options);
+        return downloads;
+      };
+
+      it('names the file after the chart label', async () => {
+        expect(await renderAndExport({ label: 'Visits by country' })).to.deep.equal([
+          'Visits by country.xlsx',
+        ]);
+      });
+
+      it('lets the fileName option win over the label', async () => {
+        expect(
+          await renderAndExport({ label: 'Visits by country' }, { fileName: 'chosen' }),
+        ).to.deep.equal(['chosen.xlsx']);
+      });
+
+      it('falls back to the document title when there is no label', async () => {
+        const title = document.title;
+        document.title = 'Report';
+        onTestFinished(() => {
+          document.title = title;
+        });
+
+        expect(await renderAndExport({})).to.deep.equal(['Report.xlsx']);
+      });
     });
 
     it('exports the grid selection, keeping a column per dimension', async () => {
