@@ -58,8 +58,8 @@ export interface EventCalendarClasses
   headerToolbar: string;
   /** Styles applied to the header toolbar actions element. */
   headerToolbarActions: string;
-  /** Styles applied to the header toolbar start side element. */
-  headerToolbarStartElement: string;
+  /** Styles applied to the header toolbar start element. */
+  headerToolbarStart: string;
   /** Styles applied to the header toolbar label element. */
   headerToolbarLabel: string;
   /** Styles applied to the header toolbar date navigator buttons container element. */
@@ -334,7 +334,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'miniCalendarDayButton',
     'headerToolbar',
     'headerToolbarActions',
-    'headerToolbarStartElement',
+    'headerToolbarStart',
     'headerToolbarLabel',
     'headerToolbarDateNavigator',
     'viewSwitcher',
@@ -483,7 +483,7 @@ const slots = {
   miniCalendarDayButton: ['miniCalendarDayButton'],
   headerToolbar: ['headerToolbar'],
   headerToolbarActions: ['headerToolbarActions'],
-  headerToolbarStartElement: ['headerToolbarStartElement'],
+  headerToolbarStart: ['headerToolbarStart'],
   headerToolbarLabel: ['headerToolbarLabel'],
   headerToolbarDateNavigator: ['headerToolbarDateNavigator'],
   viewSwitcher: ['viewSwitcher'],

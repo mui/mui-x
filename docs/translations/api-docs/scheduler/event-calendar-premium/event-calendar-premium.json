@@ -649,9 +649,9 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar side panel toggle button element"
     },
-    "headerToolbarStartElement": {
+    "headerToolbarStart": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header toolbar start side element"
+      "nodeName": "the header toolbar start element"
     },
     "headerToolbarTodayButton": {
       "description": "Styles applied to {{nodeName}}.",

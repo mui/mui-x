@@ -260,6 +260,13 @@ describe('week number badge', () => {
 describe('side panel toggle', () => {
   const { render } = createSchedulerRenderer();
 
+  it('should wrap the side panel toggle in the header toolbar start element', () => {
+    render(<EventCalendar events={[]} resources={[]} />);
+
+    const toggleButton = screen.getByRole('button', { name: 'Close side panel' });
+    expect(toggleButton.parentElement).to.have.class(eventCalendarClasses.headerToolbarStart);
+  });
+
   // Rendering the full EventCalendar (rather than HeaderToolbar standalone) so the toggle
   // button and the side panel it controls share the same generated `schedulerId`.
   it('should expose aria-expanded and aria-controls reflecting the side panel state', async () => {
@@ -343,25 +350,5 @@ describe('side panel toggle', () => {
 
     // Same `isSidePanelOpen` gate as the reopen path above: clears synchronously.
     expect(panel).not.to.have.attribute('aria-hidden');
-  });
-});
-
-describe('header toolbar classes', () => {
-  const { render } = createSchedulerRenderer();
-
-  it('should apply the start element class to the element wrapping the side panel toggle', () => {
-    render(
-      <EventCalendarProvider events={[]} resources={[]}>
-        <HeaderToolbar />
-      </EventCalendarProvider>,
-    );
-
-    const startElement = document.querySelector(
-      `.${eventCalendarClasses.headerToolbarStartElement}`,
-    );
-    expect(startElement).not.to.equal(null);
-    expect(startElement).to.contain(
-      document.querySelector(`.${eventCalendarClasses.headerToolbarSidePanelToggle}`),
-    );
   });
 });
