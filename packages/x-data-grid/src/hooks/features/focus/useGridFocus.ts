@@ -20,12 +20,16 @@ import {
 } from './gridFocusStateSelector';
 import { focusElement } from '../../../utils/focusElement';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
+import {
+  gridVisibleColumnDefinitionsSelector,
+  gridVisiblePinnedColumnDefinitionsSelector,
+} from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
 import type { GridCellCoordinates } from '../../../models/gridCell';
 import type { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+import { GridRowModes } from '../../../models/gridEditRowModel';
 
 export const focusStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -325,9 +329,13 @@ export const useGridFocus = (
         return;
       }
 
+      // Keep the row editing behavior: the click must stop the edit with `rowFocusOut`.
+      if (apiRef.current.getRowMode(params.id) === GridRowModes.Edit) {
+        return;
+      }
+
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-      const lastColumn = visibleColumns[visibleColumns.length - 1];
-      if (!lastColumn) {
+      if (visibleColumns.length === 0) {
         return;
       }
 
@@ -339,7 +347,19 @@ export const useGridFocus = (
         return;
       }
 
-      apiRef.current.setCellFocus(params.id, lastColumn.field);
+      // The empty space sits before the right-pinned columns, so focus the last unpinned column.
+      const rightPinnedCount = gridVisiblePinnedColumnDefinitionsSelector(apiRef).right.length;
+      let columnIndex = visibleColumns.length - 1;
+      if (rightPinnedCount > 0 && rightPinnedCount < visibleColumns.length) {
+        columnIndex -= rightPinnedCount;
+      }
+
+      const colSpanInfo = apiRef.current.unstable_getCellColSpanInfo(params.id, columnIndex);
+      if (colSpanInfo?.spannedByColSpan) {
+        columnIndex = colSpanInfo.leftVisibleCellIndex;
+      }
+
+      apiRef.current.setCellFocus(params.id, visibleColumns[columnIndex].field);
     },
     [apiRef],
   );
