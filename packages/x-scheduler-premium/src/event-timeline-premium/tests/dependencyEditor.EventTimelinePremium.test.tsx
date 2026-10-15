@@ -1,4 +1,5 @@
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -211,6 +212,32 @@ describe('<EventTimelinePremium /> dependency editor', () => {
         ['To', 'Event B'],
       ]);
     });
+
+    // Regression: a native double-click on an unselected arrowhead used to delete the
+    // dependency. The first click selects the arrow and mounts the delete button under
+    // the pointer, so the second physical click landed on Delete. A synthetic
+    // `fireEvent.doubleClick` keeps the same target across both clicks and misses it, so
+    // this drives a real browser double-click.
+    it.skipIf(isJSDOM)(
+      'should open the editor and not delete on a double click on the unselected arrowhead',
+      async () => {
+        const { userEvent } = await import('vitest/browser');
+        const handleDependenciesChange = vi.fn();
+        await renderTimeline({
+          events: [eventA, eventB],
+          dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+          onDependenciesChange: handleDependenciesChange,
+        });
+
+        // eslint-disable-next-line testing-library/no-unnecessary-act
+        await act(async () => {
+          await userEvent.dblClick(getHeadHitArea('dep-1'));
+        });
+
+        expect(screen.getByRole('dialog')).not.to.equal(null);
+        expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      },
+    );
 
     it('should show the source and target in the colors of their events', async () => {
       await renderTimeline({

@@ -210,7 +210,18 @@ function DependencyInteractionsLayer({
             {hasDeleteButton && arrow.id === selectedId && (
               <g
                 data-dependency-delete-button=""
-                onClick={() => store.deleteSelectedDependency()}
+                onClick={(event) => {
+                  // Selecting an unselected arrow from its arrowhead mounts this button
+                  // right under the pointer, so the second click of a double-click lands
+                  // here instead of on the hit-area the first click selected from. A
+                  // double-click is always an edit gesture: route that tail click to the
+                  // editor rather than deleting the dependency the user meant to open.
+                  if (event.detail > 1) {
+                    handleDoubleClick(arrow, event);
+                    return;
+                  }
+                  store.deleteSelectedDependency();
+                }}
                 onContextMenu={(event) => handleContextMenu(arrow, event)}
               >
                 <circle
