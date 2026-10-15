@@ -14,7 +14,7 @@ import type {
 } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
-  private store: MinimalTreeViewStore<R, any>;
+  declare private store: MinimalTreeViewStore<R, any>;
 
   // We can't type `store`, otherwise we get the following TS error:
   // 'items' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
@@ -310,16 +310,41 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       };
     }
 
+    const itemModelLookup = { ...this.store.state.itemModelLookup };
+    const itemMetaLookup = { ...this.store.state.itemMetaLookup };
+    const itemOrderedChildrenIdsLookup = { ...this.store.state.itemOrderedChildrenIdsLookup };
+    const itemChildrenIndexesLookup = { ...this.store.state.itemChildrenIndexesLookup };
+
+    // Remove the previous children that are not part of the new ones (and their descendants),
+    // otherwise they could not be added back under another parent (for example after a move).
+    const removeItem = (itemId: TreeViewItemId) => {
+      if (lookups.itemMetaLookup[itemId] != null) {
+        return;
+      }
+      for (const childId of itemOrderedChildrenIdsLookup[itemId] ?? []) {
+        removeItem(childId);
+      }
+      delete itemModelLookup[itemId];
+      delete itemMetaLookup[itemId];
+      delete itemOrderedChildrenIdsLookup[itemId];
+      delete itemChildrenIndexesLookup[itemId];
+    };
+    for (const replacedParentId of Object.keys(lookups.itemOrderedChildrenIdsLookup)) {
+      for (const childId of itemOrderedChildrenIdsLookup[replacedParentId] ?? []) {
+        removeItem(childId);
+      }
+    }
+
     // A single update, so the listeners are notified once no matter how many groups of items were added.
     this.store.update({
-      itemModelLookup: { ...this.store.state.itemModelLookup, ...lookups.itemModelLookup },
-      itemMetaLookup: { ...this.store.state.itemMetaLookup, ...lookups.itemMetaLookup },
+      itemModelLookup: { ...itemModelLookup, ...lookups.itemModelLookup },
+      itemMetaLookup: { ...itemMetaLookup, ...lookups.itemMetaLookup },
       itemOrderedChildrenIdsLookup: {
-        ...this.store.state.itemOrderedChildrenIdsLookup,
+        ...itemOrderedChildrenIdsLookup,
         ...lookups.itemOrderedChildrenIdsLookup,
       },
       itemChildrenIndexesLookup: {
-        ...this.store.state.itemChildrenIndexesLookup,
+        ...itemChildrenIndexesLookup,
         ...lookups.itemChildrenIndexesLookup,
       },
     });

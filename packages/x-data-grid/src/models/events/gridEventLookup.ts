@@ -480,17 +480,17 @@ export interface GridEventLookup
   // Rows
   /**
    * Fired when the rows are updated.
-   * @ignore - do not document.
+   * The filtering and sorting of the updated rows run after this event.
    */
   rowsSet: {};
   /**
-   * Fired when the filtered rows are updated
-   * @ignore - do not document.
+   * Fired when the filtered rows are updated.
+   * The event fires after the state update and before the re-render.
    */
   filteredRowsSet: {};
   /**
-   * Fired when the sorted rows are updated
-   * @ignore - do not document
+   * Fired when the sorted rows are updated.
+   * The event fires after the state update and before the re-render.
    */
   sortedRowsSet: {};
   /**

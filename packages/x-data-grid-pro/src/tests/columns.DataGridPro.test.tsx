@@ -35,11 +35,11 @@ describe('<DataGridPro /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  function Test(props: Partial<DataGridProProps> & { width?: number; height?: number }) {
+  function Test(props: Partial<DataGridProProps> & { width?: number; wrapperHeight?: number }) {
     apiRef = useGridApiRef();
-    const { width = 300, height = 500, ...otherProps } = props;
+    const { width = 300, wrapperHeight = 500, ...otherProps } = props;
     return (
-      <div style={{ width, height }}>
+      <div style={{ width, height: wrapperHeight }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...otherProps} />
       </div>
     );
@@ -746,6 +746,27 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
+    // Regression test for https://github.com/mui/mui-x/issues/23234
+    it('should compute a stable width when the header text wraps to multiple lines', async () => {
+      render(
+        <Test
+          rows={rows}
+          columns={[{ field: 'brand', headerName: 'This is the brand column', width: 60 }]}
+          sx={{
+            [`& .${gridClasses.columnHeaderTitle}`]: {
+              whiteSpace: 'normal',
+              lineHeight: 1.2,
+            },
+          }}
+        />,
+      );
+      await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: true }));
+      const widthAfterFirstCall = parseInt(getColumnHeaderCell(0).style.width, 10);
+      await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: true }));
+      const widthAfterSecondCall = parseInt(getColumnHeaderCell(0).style.width, 10);
+      expect(widthAfterSecondCall).to.equal(widthAfterFirstCall);
+    });
+
     it('should work with custom column header sort icon', async () => {
       const iconSize = 24;
       const gap = 2;
@@ -842,7 +863,6 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current?.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
@@ -864,7 +884,6 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       act(() => apiRef.current?.setColumnIndex('brand', 1));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
@@ -879,7 +898,6 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current?.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
@@ -909,9 +927,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
       // Re-apply twice: the resized width must survive repeated hydration, which requires
       // `hasBeenResized` to be carried over on each pass, not just the first.
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
-      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
     });

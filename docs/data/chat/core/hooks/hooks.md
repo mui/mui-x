@@ -39,15 +39,16 @@ It returns both the public state fields and every runtime action in a single obj
 
 ### State
 
-| Field                  | Type                  | Description                                                           |
-| :--------------------- | :-------------------- | :-------------------------------------------------------------------- |
-| `messages`             | `ChatMessage[]`       | All messages in the active conversation                               |
-| `conversations`        | `ChatConversation[]`  | All conversations                                                     |
-| `activeConversationId` | `string \| undefined` | Currently active conversation                                         |
-| `isStreaming`          | `boolean`             | Whether a response is being streamed                                  |
-| `hasMoreHistory`       | `boolean`             | Whether older messages can be loaded                                  |
-| `isLoadingHistory`     | `boolean`             | Whether a history fetch is in flight (initial page or older messages) |
-| `error`                | `ChatError \| null`   | Current error state                                                   |
+| Field                  | Type                                         | Description                                                                                |
+| :--------------------- | :------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| `messages`             | `ChatMessage[]`                              | All messages in the active conversation                                                    |
+| `conversations`        | `ChatConversation[]`                         | All conversations                                                                          |
+| `activeConversationId` | `string \| undefined`                        | Currently active conversation                                                              |
+| `isStreaming`          | `boolean`                                    | Whether a response is being streamed                                                       |
+| `hasMoreHistory`       | `boolean`                                    | Whether older messages can be loaded                                                       |
+| `isLoadingHistory`     | `boolean`                                    | Whether a history fetch is in flight (initial page or older messages)                      |
+| `historyStatus`        | `'idle' \| 'loading' \| 'loaded' \| 'error'` | Lifecycle of the initial history page—tells "not loaded yet" apart from "loaded and empty" |
+| `error`                | `ChatError \| null`                          | Current error state                                                                        |
 
 ### Actions
 
@@ -167,13 +168,14 @@ function DraftArea() {
 
 A lightweight hook for status indicators, loading spinners, and error banners.
 
-| Field              | Type                | Description                                                           |
-| :----------------- | :------------------ | :-------------------------------------------------------------------- |
-| `isStreaming`      | `boolean`           | Whether a response is being streamed                                  |
-| `hasMoreHistory`   | `boolean`           | Whether older messages can be loaded                                  |
-| `isLoadingHistory` | `boolean`           | Whether a history fetch is in flight (initial page or older messages) |
-| `error`            | `ChatError \| null` | Current error state                                                   |
-| `typingUserIds`    | `string[]`          | IDs of users currently typing in the active conversation              |
+| Field              | Type                                         | Description                                                                                |
+| :----------------- | :------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| `isStreaming`      | `boolean`                                    | Whether a response is being streamed                                                       |
+| `hasMoreHistory`   | `boolean`                                    | Whether older messages can be loaded                                                       |
+| `isLoadingHistory` | `boolean`                                    | Whether a history fetch is in flight (initial page or older messages)                      |
+| `historyStatus`    | `'idle' \| 'loading' \| 'loaded' \| 'error'` | Lifecycle of the initial history page—tells "not loaded yet" apart from "loaded and empty" |
+| `error`            | `ChatError \| null`                          | Current error state                                                                        |
+| `typingUserIds`    | `string[]`                                   | IDs of users currently typing in the active conversation                                   |
 
 Use this hook when you need to show a status chip, typing indicator, or error banner without subscribing to the full message list.
 
@@ -256,7 +258,7 @@ This is the escape hatch for advanced use cases that need direct store access—
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 
 function MessageCounter() {
   const store = useChatStore();

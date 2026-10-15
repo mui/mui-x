@@ -3,16 +3,26 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import type { DragLocationHistory, ElementDragType } from '@atlaskit/pragmatic-drag-and-drop/types';
-import type { SchedulerEventId, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import type {
+  SchedulerEventId,
+  SchedulerEventSide,
+  SchedulerResourceId,
+} from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/TimelineGridEventDependencyTerminal';
+import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/dependencyTerminalDragData';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
 import type { SchedulerDependencyRejectionReason } from '../../models';
+import { getDependencyType } from './dependency-utils';
 
 interface DependencyDropTargetData {
   targetEventId: SchedulerEventId;
   targetOccurrenceKey: string | null;
   targetResourceId: SchedulerResourceId | null;
+  /**
+   * The edge of the target the drop lands on: the hovered terminal's, or the start
+   * edge on the event body.
+   */
+  targetSide: SchedulerEventSide;
   /**
    * `false` for a recurring or read-only event: hovering it gives no highlight or
    * snap, but a drop still goes through `addDependency` so its rejection reaches the
@@ -33,6 +43,8 @@ function getDependencyDropTarget(
         targetEventId: eventId,
         targetOccurrenceKey: typeof occurrenceKey === 'string' ? occurrenceKey : null,
         targetResourceId: typeof resourceId === 'string' ? resourceId : null,
+        // The event body registers the start edge; only a terminal can target the end.
+        targetSide: dropTarget.data.dependencyTargetSide === 'end' ? 'end' : 'start',
         isValid: dropTarget.data.dependencyTargetIsValid === true,
       };
     }
@@ -40,20 +52,21 @@ function getDependencyDropTarget(
   return null;
 }
 
-// TODO(dependencies public flip): source these messages from the locale text so the
+// TODO(dependencies public flip, #23420): source these messages from the locale text so the
 // feedback is translatable.
 // The `Record` is exhaustive on the rejection union: a new reason fails to compile
 // until it brings a message.
 const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
   cyclicDependency: 'This dependency would create a cycle between events.',
-  duplicateDependency: 'This dependency already exists between these two events.',
+  duplicateDependency: 'A dependency of this type already exists between these two events.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
   readOnlyEvent: 'Dependencies cannot involve read-only events.',
   unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',
 };
 
 /**
- * Handles the whole create-dependency drag gesture, from any terminal to any event.
+ * Handles the whole create-dependency drag gesture, from any terminal to any event or
+ * terminal.
  * A global monitor mounted by the grid root (rather than callbacks on the terminal's
  * draggable) so the gesture survives the source element being unmounted by
  * virtualization mid-drag; `canMonitor` scopes it back to this timeline's gestures.
@@ -89,6 +102,7 @@ export function useDependencyCreationMonitor() {
         targetEventId: validTarget?.targetEventId ?? null,
         targetOccurrenceKey: validTarget?.targetOccurrenceKey ?? null,
         targetResourceId: validTarget?.targetResourceId ?? null,
+        targetSide: validTarget?.targetSide ?? null,
       });
     };
 
@@ -115,7 +129,7 @@ export function useDependencyCreationMonitor() {
         const result = store.addDependency({
           source: source.data.eventId,
           target: target.targetEventId,
-          type: 'FinishToStart',
+          type: getDependencyType(source.data.sourceSide, target.targetSide),
         });
 
         if (result.status === 'rejected') {

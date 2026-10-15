@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { screen, waitFor, within } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DateCalendar, dateCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DIALOG_WIDTH,
   DIALOG_WIDTH_COMPACT,
@@ -106,6 +107,63 @@ describe('<DateCalendar />', () => {
 
     expect(cells.length).to.equal(35);
     expect(disabledDays.length).to.equal(31);
+  });
+
+  describe('prop: onYearChange', () => {
+    it('should be called with the start of the new year when navigating from December to January', async () => {
+      const onYearChange = vi.fn();
+      const { user } = render(
+        <DateCalendar defaultValue={adapterToUse.date('2019-12-15')} onYearChange={onYearChange} />,
+      );
+
+      await user.click(screen.getByTitle('Next month'));
+
+      expect(onYearChange.mock.calls.length).to.equal(1);
+      expect(onYearChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2020, 0, 1));
+    });
+
+    it('should be called when selecting a year in the year view', async () => {
+      const onYearChange = vi.fn();
+      const { user } = render(
+        <DateCalendar
+          value={adapterToUse.date('2019-04-29')}
+          onYearChange={onYearChange}
+          views={['year', 'day']}
+          openTo="year"
+        />,
+      );
+
+      await user.click(screen.getByText('2022', { selector: 'button' }));
+
+      expect(onYearChange.mock.calls.length).to.equal(1);
+      expect(onYearChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 0, 1));
+    });
+
+    it('should not be called again when the controlled value moves to the selected year', async () => {
+      const onYearChange = vi.fn();
+
+      function ControlledDateCalendar() {
+        const [value, setValue] = React.useState<PickerValidDate | null>(
+          adapterToUse.date('2019-04-29'),
+        );
+
+        return (
+          <DateCalendar
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            onYearChange={onYearChange}
+            views={['year', 'day']}
+            openTo="year"
+          />
+        );
+      }
+
+      const { user } = render(<ControlledDateCalendar />);
+
+      await user.click(screen.getByText('2022', { selector: 'button' }));
+
+      expect(onYearChange.mock.calls.length).to.equal(1);
+    });
   });
 
   describe('grid semantics', () => {
@@ -264,6 +322,46 @@ describe('<DateCalendar />', () => {
       );
 
       expect(screen.getByText('2019/01')).toBeVisible();
+    });
+
+    // test: https://github.com/mui/mui-x/issues/9736
+    it('should remove the exiting month label from the layout during the fade transition', () => {
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      // Use `fireEvent` to assert the transition state before the entering label finishes fading in.
+      fireEvent.click(screen.getByTitle('Next month'));
+
+      const labels = screen.getAllByTestId('calendar-month-and-year-text');
+      expect(labels).to.have.length(1);
+      expect(labels[0]).to.have.text('February 2019');
+
+      // The exiting label unmounts synchronously, so it cannot push the entering label down.
+      expect(getComputedStyle(labels[0]).position).to.equal('static');
+    });
+
+    // test: https://github.com/mui/mui-x/issues/9736
+    it('should keep the month label in the layout when navigating back to it during the fade transition', () => {
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      const initialRect = screen
+        .getByTestId('calendar-month-and-year-text')
+        .getBoundingClientRect();
+
+      // Navigate away and back before the exit timer unmounts the first label.
+      fireEvent.click(screen.getByTitle('Next month'));
+      fireEvent.click(screen.getByTitle('Previous month'));
+
+      const labels = screen.getAllByTestId('calendar-month-and-year-text');
+      expect(labels).to.have.length(1);
+      expect(labels[0]).to.have.text('January 2019');
+
+      // The re-entering label participates in the layout like any other single label.
+      expect(getComputedStyle(labels[0]).position).to.equal('static');
+
+      // The re-entering label must keep its original size.
+      const activeRect = labels[0].getBoundingClientRect();
+      expect(activeRect.width).to.equal(initialRect.width);
+      expect(activeRect.height).to.equal(initialRect.height);
     });
   });
 
@@ -453,6 +551,25 @@ describe('<DateCalendar />', () => {
   });
 
   describe('view: month', () => {
+    it('should call onMonthChange once when selecting a month', async () => {
+      const onMonthChange = vi.fn();
+
+      const { user } = render(
+        <DateCalendar
+          value={adapterToUse.date('2019-01-01')}
+          onMonthChange={onMonthChange}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      await user.click(april);
+
+      expect(onMonthChange.mock.calls.length).to.equal(1);
+      expect(onMonthChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 1));
+    });
+
     it('should select the closest enabled date in the month if the current date is disabled', async () => {
       const onChange = vi.fn();
 

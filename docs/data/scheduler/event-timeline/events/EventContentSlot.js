@@ -59,6 +59,11 @@ function EventContent({ occurrence }) {
   );
 }
 
+function getEventAriaLabel({ occurrence, defaultAriaLabel }) {
+  const event = eventLookup.get(occurrence.id);
+  return event ? `${defaultAriaLabel}, ${event.code}` : defaultAriaLabel;
+}
+
 export default function EventContentSlot() {
   const [events, setEvents] = React.useState(initialEvents);
 
@@ -71,6 +76,7 @@ export default function EventContentSlot() {
         onEventsChange={setEvents}
         defaultPreset="dayAndMonth"
         slots={{ timelineEventContent: EventContent }}
+        getEventAriaLabel={getEventAriaLabel}
       />
     </div>
   );

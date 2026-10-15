@@ -46,9 +46,3 @@ export interface ResolvedChartExcelOptions {
   /** Escape text cells that Excel would read as a formula. */
   escapeFormulas: boolean;
 }
-
-export const DEFAULT_CHART_EXCEL_OPTIONS: ResolvedChartExcelOptions = {
-  includeHiddenSeries: true,
-  includeFormattedValues: false,
-  escapeFormulas: true,
-};

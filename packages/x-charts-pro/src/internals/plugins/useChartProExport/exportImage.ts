@@ -1,6 +1,6 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
-import { warnOnce } from '@mui/x-internals/warning';
+import { errorOnce } from '@mui/x-internals/warning';
 import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
 import type { ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
@@ -18,6 +18,42 @@ export const getDrawDocument = async () => {
   }
 };
 
+function isInlineStyleBlocked(exportDoc: Document, nonce?: string) {
+  const style = exportDoc.createElement('style');
+  style.textContent = ':root{}';
+  if (nonce) {
+    style.setAttribute('nonce', nonce);
+  }
+  exportDoc.head.appendChild(style);
+  const blocked = style.sheet === null;
+  style.remove();
+  return blocked;
+}
+
+/**
+ * A style element that the Content Security Policy blocked has no `sheet`, which makes the export
+ * fail with an error that doesn't point to the actual problem.
+ * `rasterizehtml` reads the rules of every style element in the document, so this checks all of
+ * them, not only the copied ones.
+ */
+export function checkStyleSheetsLoaded(exportDoc: Document, nonce?: string) {
+  const blockedStyle = Array.from(exportDoc.querySelectorAll('style')).some(
+    (style) => style.textContent && style.sheet === null,
+  );
+  /* `rasterizehtml` inlines stylesheet links into style elements, which the policy blocks the same way. */
+  const hasLink = exportDoc.querySelector("link[rel='stylesheet']") !== null;
+
+  if (blockedStyle || (hasLink && isInlineStyleBlocked(exportDoc, nonce))) {
+    throw new Error(
+      `MUI X Charts: The Content Security Policy blocked the styles copied to the export document.\n` +
+        `The chart cannot be exported because the export process needs to read those styles.\n` +
+        `Set the \`nonce\` export option to the nonce used by your Content Security Policy, or set the \`copyStyles\` export option to \`false\` to export the chart without the page styles.\n` +
+        `A policy that allows styles by hash instead of by nonce always blocks them, because the export rebuilds the styles from the page rules and their hashes no longer match, so \`copyStyles\` is the only option there.\n` +
+        `See https://mui.com/x/react-charts/content-security-policy/ for more details.`,
+    );
+  }
+}
+
 export async function exportImage(
   element: Element,
   svg: HTMLElement | SVGElement,
@@ -30,6 +66,7 @@ export async function exportImage(
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
     nonce,
+    onStylesheetError,
     pixelRatio,
   } = params ?? {};
   if (
@@ -37,95 +74,119 @@ export async function exportImage(
     pixelRatio !== undefined &&
     (!Number.isFinite(pixelRatio) || pixelRatio <= 0)
   ) {
-    warnOnce(
+    errorOnce(
       'MUI X Charts: `pixelRatio` must be a finite number greater than 0 when exporting a chart as an image.',
-      'error',
     );
   }
 
   const drawDocumentPromise = getDrawDocument();
+  /* The import starts before the export document is ready. This only marks the promise as handled:
+   * an import failure still rejects the export when the promise is awaited below. It's only dropped
+   * when an earlier step already failed, which avoids an unhandled rejection on top of that error. */
+  drawDocumentPromise.catch(() => {});
   const doc = ownerDocument(element);
 
   const ratio = pixelRatio ?? Math.max(window.devicePixelRatio || 1, 1);
   const iframe = createExportIframe(fileName);
 
-  let resolve: (value: void) => void;
-  const iframeLoadPromise = new Promise((res) => {
-    resolve = res;
+  const rootCandidate = element.getRootNode();
+  const root =
+    rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
+
+  /* Resolves to `false` when `onStylesheetError` cancels the export. */
+  const iframeLoadPromise = new Promise<boolean>((resolve, reject) => {
+    iframe.onload = () => {
+      (async () => {
+        const exportDoc = iframe.contentDocument!;
+        /* The layer container has no intrinsic size, so it collapses in the export document when sized by
+         * the parent element instead of the `width`/`height` props. Freeze its rendered size.
+         * We apply to the original element so that the cloned tree contains the styles, and revert these
+         * styles changes right after the chart is cloned. */
+        const svgRect = svg.getBoundingClientRect();
+        const previousStyles = applyStyles(svg, {
+          width: `${svgRect.width}px`,
+          height: `${svgRect.height}px`,
+        });
+        const elementClone = element.cloneNode(true) as HTMLElement;
+        applyStyles(svg, previousStyles);
+        elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
+        /* Charts without a `height` prop set `height: 100%` on the root, which resolves to 0 in the export document as the
+         * body has no definite height. Size the root from its content, which is frozen to the rendered size above, so that
+         * elements added by `onBeforeExport` can still grow it. */
+        elementClone.style.height = 'fit-content';
+        exportDoc.body.replaceChildren(elementClone);
+        exportDoc.body.style.margin = '0px';
+        /* Set display block through styles to ensure that CSS rules that target `body` don't accidentally target this
+         * iframe's body, which might cause the body to have no intrinsic width or height, leading to the canvas having a
+         * size of 0px, which causes the `toBlob` call to return null. */
+        exportDoc.body.style.display = 'block';
+        /* The body's parent has a size of 0, so we use fit-content to ensure that the body adjusts to the size of its
+         * children. Without it, charts sized by their parent element (no `width`/`height` props) collapse to 0. */
+        exportDoc.body.style.width = 'fit-content';
+        exportDoc.body.style.height = 'fit-content';
+
+        if (copyStyles) {
+          const loaded = await Promise.all(
+            loadStyleSheets(exportDoc, root, { nonce, onStylesheetError }),
+          );
+          if (loaded.includes(false)) {
+            return false;
+          }
+        }
+
+        await copyCanvasesContent(element, elementClone);
+        return true;
+      })().then(resolve, reject);
+    };
   });
-
-  iframe.onload = async () => {
-    const exportDoc = iframe.contentDocument!;
-    /* The layer container has no intrinsic size, so it collapses in the export document when sized by
-     * the parent element instead of the `width`/`height` props. Freeze its rendered size.
-     * We apply to the original element so that the cloned tree contains the styles, and revert these
-     * styles changes right after the chart is cloned. */
-    const svgRect = svg.getBoundingClientRect();
-    const previousStyles = applyStyles(svg, {
-      width: `${svgRect.width}px`,
-      height: `${svgRect.height}px`,
-    });
-    const elementClone = element.cloneNode(true) as HTMLElement;
-    applyStyles(svg, previousStyles);
-    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
-    /* Charts without a `height` prop set `height: 100%` on the root, which resolves to 0 in the export document as the
-     * body has no definite height. Size the root from its content, which is frozen to the rendered size above, so that
-     * elements added by `onBeforeExport` can still grow it. */
-    elementClone.style.height = 'fit-content';
-    exportDoc.body.replaceChildren(elementClone);
-    exportDoc.body.style.margin = '0px';
-    /* Set display block through styles to ensure that CSS rules that target `body` don't accidentally target this
-     * iframe's body, which might cause the body to have no intrinsic width or height, leading to the canvas having a
-     * size of 0px, which causes the `toBlob` call to return null. */
-    exportDoc.body.style.display = 'block';
-    /* The body's parent has a size of 0, so we use fit-content to ensure that the body adjusts to the size of its
-     * children. Without it, charts sized by their parent element (no `width`/`height` props) collapse to 0. */
-    exportDoc.body.style.width = 'fit-content';
-    exportDoc.body.style.height = 'fit-content';
-
-    const rootCandidate = element.getRootNode();
-    const root =
-      rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
-
-    if (copyStyles) {
-      await Promise.all(loadStyleSheets(exportDoc, root, nonce));
-    }
-
-    await copyCanvasesContent(element, elementClone);
-
-    resolve();
-  };
 
   doc.body.appendChild(iframe);
 
-  await iframeLoadPromise;
-  await onBeforeExport(iframe);
-
-  const drawDocument = await drawDocumentPromise;
-
-  /* Use the size from the export body in case `onBeforeExport` adds some elements that should be in the export. */
-  const exportDocBodySize = iframe.contentDocument!.body.getBoundingClientRect();
   const canvas = document.createElement('canvas');
-  canvas.width = exportDocBodySize.width * ratio;
-  canvas.height = exportDocBodySize.height * ratio;
-  canvas.style.width = `${exportDocBodySize.width}px`;
-  canvas.style.height = `${exportDocBodySize.height}px`;
-
-  if (canvas.width === 0 || canvas.height === 0) {
-    doc.body.removeChild(iframe);
-    throw new Error(
-      `MUI X Charts: Cannot export an image with zero width or height. Width: ${canvas.width}px. Height: ${canvas.height}px.`,
-    );
-  }
 
   try {
-    await drawDocument(iframe.contentDocument!, canvas, {
-      // Handle retina displays: https://github.com/cburgmer/rasterizeHTML.js/blob/262b3404d1c469ce4a7750a2976dec09b8ae2d6c/examples/retina.html#L71
-      zoom: ratio,
-      nonce,
-    });
+    if (!(await iframeLoadPromise)) {
+      return;
+    }
+    await onBeforeExport(iframe);
+
+    if (copyStyles) {
+      /* After `onBeforeExport`, so that styles it adds are checked too. */
+      checkStyleSheetsLoaded(iframe.contentDocument!, nonce);
+    }
+
+    const drawDocument = await drawDocumentPromise;
+
+    /* Use the size from the export body in case `onBeforeExport` adds some elements that should be in the export. */
+    const exportDocBodySize = iframe.contentDocument!.body.getBoundingClientRect();
+    canvas.width = exportDocBodySize.width * ratio;
+    canvas.height = exportDocBodySize.height * ratio;
+    canvas.style.width = `${exportDocBodySize.width}px`;
+    canvas.style.height = `${exportDocBodySize.height}px`;
+
+    if (canvas.width === 0 || canvas.height === 0) {
+      throw new Error(
+        `MUI X Charts: Cannot export an image with zero width or height. Width: ${canvas.width}px. Height: ${canvas.height}px.`,
+      );
+    }
+
+    try {
+      await drawDocument(iframe.contentDocument!, canvas, {
+        // Handle retina displays: https://github.com/cburgmer/rasterizeHTML.js/blob/262b3404d1c469ce4a7750a2976dec09b8ae2d6c/examples/retina.html#L71
+        zoom: ratio,
+        nonce,
+      });
+    } catch (error) {
+      /* `rasterizehtml` rejects with a plain object, which gives the caller no stack. */
+      throw new Error(
+        `MUI X Charts: Failed to render the chart as an image.\n` +
+          `The chart is drawn through an image with a \`data:\` or \`blob:\` URL, so a Content Security Policy needs \`img-src 'self' data: blob:\`.\n` +
+          `See https://mui.com/x/react-charts/content-security-policy/ for more details.`,
+        { cause: error },
+      );
+    }
   } finally {
-    doc.body.removeChild(iframe);
+    iframe.remove();
   }
 
   let resolveBlobPromise: (value: Blob | null) => void;

@@ -1,4 +1,4 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventByDayValue,
@@ -8,6 +8,34 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
+
+// `yyyyMMddTHHmmssZ`, the UTC date-time form of `UNTIL`.
+const UNTIL_UTC_REGEX = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/;
+
+/**
+ * Reads a UTC `UNTIL` without going through the host timezone, whose daylight saving gap
+ * would shift some times. Returns `null` for a malformed value or a date that does not
+ * exist: the date setters roll them over (February 31st becomes March 3rd).
+ */
+function parseUntilUtc(adapter: Adapter, value: string): TemporalSupportedObject | null {
+  const match = UNTIL_UTC_REGEX.exec(value);
+  if (!match) {
+    return null;
+  }
+  const [year, month, day, hours, minutes, seconds] = match.slice(1).map(Number);
+  // Not `Date.UTC`, which maps the years 0 to 99 to 1900 to 1999.
+  const date = new Date(0);
+  date.setUTCFullYear(year, month - 1, day);
+  date.setUTCHours(hours, minutes, seconds);
+  const exists =
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day &&
+    date.getUTCHours() === hours &&
+    date.getUTCMinutes() === minutes &&
+    date.getUTCSeconds() === seconds;
+  return exists ? adapter.date(date.toISOString(), 'default') : null;
+}
 
 const SUPPORTED_RRULE_KEYS = new Set([
   'FREQ',
@@ -158,9 +186,10 @@ export function parseRRule(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.parse(rruleObject.UNTIL, getAdapterCache(adapter).untilFormat, timezone);
+    // The trailing `Z` makes the value a UTC instant (RFC 5545).
+    const parsed = parseUntilUtc(adapter, rruleObject.UNTIL);
 
-    if (!adapter.isValid(parsed)) {
+    if (parsed === null) {
       throw new Error(
         `MUI X Scheduler: Invalid UNTIL date "${rruleObject.UNTIL}". ` +
           'The UNTIL value must be a valid date in ISO format. ' +
@@ -168,7 +197,7 @@ export function parseRRule(
       );
     }
 
-    rrule.until = parsed;
+    rrule.until = adapter.setTimezone(parsed, timezone);
   }
 
   return rrule;

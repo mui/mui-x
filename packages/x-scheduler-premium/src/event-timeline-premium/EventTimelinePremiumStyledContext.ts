@@ -2,12 +2,14 @@
 import * as React from 'react';
 import type { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
+import type { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 
 export interface EventTimelinePremiumStyledContextValue {
   schedulerId: string | undefined;
   classes: EventTimelinePremiumClasses;
   localeText: EventTimelineLocaleText;
   resourceColumnLabel?: string;
+  getEventAriaLabel?: EventTimelinePremiumProps<any, any>['getEventAriaLabel'];
 }
 
 export const EventTimelinePremiumStyledContext =

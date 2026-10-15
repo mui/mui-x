@@ -12,6 +12,8 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
+import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -467,13 +469,8 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
 
   const { classes } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const {
-    isRecurring,
-    isLessThan30Minutes,
-    isBetween30and60Minutes,
-    rootDataAttributes,
-    rootPositionProps,
-  } = useTimeGridEvent(occurrence);
+  const { isRecurring, isStacked, rootDataAttributes, rootPositionProps } =
+    useTimeGridEvent(occurrence);
 
   // Creation / internal-resize placeholders host sizing handles; move placeholders don't. Suppressed
   // in `edit` mode where the form owns the times — matching the regular event (see `useTimeGridEvent`).
@@ -483,13 +480,12 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
     (placeholderType === 'creation' || placeholderType === 'internal-resize') &&
     editingMode !== 'edit';
 
-  const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
-
   return (
     <TimeGridEventPlaceholderRoot
       isDraggable={false}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-armed={placeholderHasResizeHandles || undefined}
       // Non-interactive keeps the preview out of the tab order without `aria-hidden`, which would
@@ -527,32 +523,36 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
 ) {
   const { occurrence, className, ...other } = props;
 
-  const { classes } = useEventCalendarStyledContext();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
   const {
     isRecurring,
     isDraggable,
     isStartResizable,
     isEndResizable,
-    isLessThan30Minutes,
-    isBetween30and60Minutes,
+    isStacked,
     rootDataAttributes,
     rootPositionProps,
   } = useTimeGridEvent(occurrence);
+  const accessibleName = useEventAccessibleName({
+    occurrence,
+    isRecurring,
+    localeText,
+  });
 
   // Armed = this occurrence shows its action toolbar (touch). Touch styles reveal the resize dots +
   // outline; inert on a mouse. Editing = the surface is open for it (either mode), for the selected look.
   const isArmed = useStore(store, schedulerOtherSelectors.isEditedOccurrenceArmed, occurrence.key);
   const isEditing = useStore(store, schedulerOtherSelectors.isEditedOccurrence, occurrence.key);
 
-  const isStacked = !isLessThan30Minutes && !isBetween30and60Minutes;
-
   return (
     <TimeGridEventRoot
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
+      dataTimezone={getOccurrenceDataTimezone(occurrence)}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      aria-label={accessibleName}
       data-armed={isArmed || undefined}
       data-editing={isEditing || undefined}
       {...rootDataAttributes}

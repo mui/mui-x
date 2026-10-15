@@ -15,7 +15,7 @@ export class EventCalendarPremiumStore<
   TResource,
   EventCalendarPremiumParameters<TEvent, TResource>
 > {
-  public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent>;
+  declare public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent>;
 
   public constructor(
     parameters: EventCalendarPremiumParameters<TEvent, TResource>,

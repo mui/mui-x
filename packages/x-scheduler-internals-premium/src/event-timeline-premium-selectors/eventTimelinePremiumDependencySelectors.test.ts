@@ -126,43 +126,171 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(first).to.equal(second);
   });
 
-  it('should group the source event titles by target event id', () => {
-    const state = getState();
+  it('should exclude a dependency with an unknown type', () => {
+    let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    expect(() => {
+      state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [
+          DEP_1,
+          { id: 'dep-x', source: 'event-b', target: 'event-a', type: 'FS' as any },
+        ],
+      });
+    }).toWarnDev(['MUI X Scheduler: The dependency "dep-x" has the unknown type "FS".']);
 
-    const titlesByTarget =
-      eventTimelinePremiumDependencySelectors.activeSourceTitlesByTarget(state);
-
-    expect(titlesByTarget.get('event-b')).to.deep.equal([eventA.title]);
-    expect(titlesByTarget.get('event-a')).to.equal(undefined);
+    expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([DEP_1]);
   });
 
-  it('should return the source titles of all the active dependencies targeting the event', () => {
+  it('should keep a dependency with a negative lag active, with a dev warning', () => {
+    let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    const lagged: SchedulerDependency = { ...DEP_1, id: 'dep-lag', lag: -2 };
+    expect(() => {
+      state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [lagged],
+      });
+    }).toWarnDev(['MUI X Scheduler: The dependency "dep-lag" has a negative lag (-2).']);
+
+    expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([lagged]);
+  });
+
+  it('should not warn about a valid lag', () => {
+    const lagged: SchedulerDependency = { ...DEP_1, id: 'dep-lag', lag: 2, lagUnit: 'hour' };
+    expect(() => {
+      getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [lagged],
+      });
+    }).not.toWarnDev();
+  });
+
+  it('should keep a dependency with a fractional lag active, with a dev warning', () => {
+    let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    const lagged: SchedulerDependency = { ...DEP_1, id: 'dep-lag', lag: 0.5 };
+    expect(() => {
+      state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [lagged],
+      });
+    }).toWarnDev([
+      'MUI X Scheduler: The dependency "dep-lag" has a lag that is not a whole number (0.5).',
+    ]);
+
+    expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([lagged]);
+  });
+
+  it('should keep a dependency with an unknown lag unit active, with a dev warning', () => {
+    let state: ReturnType<typeof getEventTimelinePremiumStateFromParameters>;
+    const lagged: SchedulerDependency = {
+      ...DEP_1,
+      id: 'dep-lag',
+      lag: 2,
+      lagUnit: 'fortnight' as any,
+    };
+    expect(() => {
+      state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [eventA, eventB],
+        dependencies: [lagged],
+      });
+    }).toWarnDev([
+      'MUI X Scheduler: The dependency "dep-lag" has the unknown lag unit "fortnight".',
+    ]);
+
+    expect(eventTimelinePremiumDependencySelectors.activeModelList(state!)).to.deep.equal([lagged]);
+  });
+
+  it('should group the source event titles and dependency types by target event id', () => {
+    const state = getState();
+
+    const sourcesByTarget = eventTimelinePremiumDependencySelectors.activeSourcesByTarget(state);
+
+    expect(sourcesByTarget.get('event-b')).to.deep.equal([
+      { title: eventA.title, type: 'FinishToStart', lag: null },
+    ]);
+    expect(sourcesByTarget.get('event-a')).to.equal(undefined);
+  });
+
+  it('should return the sources of all the active dependencies targeting the event', () => {
     const eventC = EventBuilder.new().id('event-c').title('Event C').build();
     const state = getEventTimelinePremiumStateFromParameters({
       resources: TEST_RESOURCES,
       events: [eventA, eventB, eventC],
       dependencies: [
         DEP_1,
-        { id: 'dep-c', source: 'event-c', target: 'event-b', type: 'FinishToStart' },
+        { id: 'dep-c', source: 'event-c', target: 'event-b', type: 'FinishToFinish' },
       ],
     });
 
     expect(
-      eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(state, 'event-b'),
-    ).to.deep.equal([eventA.title, 'Event C']);
+      eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-b'),
+    ).to.deep.equal([
+      { title: eventA.title, type: 'FinishToStart', lag: null },
+      { title: 'Event C', type: 'FinishToFinish', lag: null },
+    ]);
+  });
+
+  it('should describe the sources with their effective lag', () => {
+    const eventC = EventBuilder.new().id('event-c').title('Event C').build();
+    const state = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, eventB, eventC],
+      dependencies: [
+        { ...DEP_1, lag: 30, lagUnit: 'minute' },
+        { id: 'dep-c', source: 'event-c', target: 'event-b', type: 'FinishToFinish', lag: 2 },
+      ],
+    });
+
+    expect(
+      eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-b'),
+    ).to.deep.equal([
+      { title: eventA.title, type: 'FinishToStart', lag: { amount: 30, unit: 'minute' } },
+      { title: 'Event C', type: 'FinishToFinish', lag: { amount: 2, unit: 'day' } },
+    ]);
+  });
+
+  it('should describe an all-day successor with the lag it can actually carry', () => {
+    const allDayTarget = EventBuilder.new().id('event-all-day').allDay().build();
+    const state = getEventTimelinePremiumStateFromParameters({
+      resources: TEST_RESOURCES,
+      events: [eventA, allDayTarget],
+      dependencies: [
+        {
+          id: 'dep-short',
+          source: 'event-a',
+          target: 'event-all-day',
+          type: 'FinishToStart',
+          lag: 2,
+          lagUnit: 'hour',
+        },
+        {
+          id: 'dep-long',
+          source: 'event-a',
+          target: 'event-all-day',
+          type: 'FinishToFinish',
+          lag: 36,
+          lagUnit: 'hour',
+        },
+      ],
+    });
+
+    expect(
+      eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-all-day'),
+    ).to.deep.equal([
+      { title: eventA.title, type: 'FinishToStart', lag: null },
+      { title: eventA.title, type: 'FinishToFinish', lag: { amount: 1, unit: 'day' } },
+    ]);
   });
 
   it('should return the same empty instance for every event without predecessors', () => {
     const state = getState();
 
-    const first = eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(
-      state,
-      'event-a',
-    );
-    const second = eventTimelinePremiumDependencySelectors.activeSourceTitlesForTarget(
-      state,
-      'event-r',
-    );
+    const first = eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-a');
+    const second = eventTimelinePremiumDependencySelectors.activeSourcesForTarget(state, 'event-r');
 
     expect(first).to.deep.equal([]);
     expect(first).to.equal(second);
@@ -192,7 +320,7 @@ describe('eventTimelinePremiumDependencySelectors', () => {
     expect(eventTimelinePremiumDependencySelectors.enabled(stateWithHandlerOnly)).to.equal(false);
   });
 
-  it('should return the creation gesture source and target flags', () => {
+  it('should return the creation gesture target flag', () => {
     const state = {
       ...getState(),
       dependencyCreation: {
@@ -203,23 +331,15 @@ describe('eventTimelinePremiumDependencySelectors', () => {
         targetEventId: 'event-b',
         targetOccurrenceKey: 'event-b-0',
         targetResourceId: 'r1',
+        targetSide: 'start' as const,
       },
     };
 
     expect(
-      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r1'),
+      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
     ).to.equal(true);
     // A multi-resource event repeats the same occurrence key on another row: that
     // appearance is not the gesture's appearance.
-    expect(
-      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r2'),
-    ).to.equal(false);
-    expect(
-      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-b-0', 'r1'),
-    ).to.equal(false);
-    expect(
-      eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
-    ).to.equal(true);
     expect(
       eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r2'),
     ).to.equal(false);
@@ -231,9 +351,6 @@ describe('eventTimelinePremiumDependencySelectors', () => {
   it('should not flag any occurrence when no creation gesture is in progress', () => {
     const state = getState();
 
-    expect(
-      eventTimelinePremiumDependencySelectors.isCreationSource(state, 'event-a-0', 'r1'),
-    ).to.equal(false);
     expect(
       eventTimelinePremiumDependencySelectors.isCreationTarget(state, 'event-b-0', 'r1'),
     ).to.equal(false);

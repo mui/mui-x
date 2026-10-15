@@ -117,6 +117,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view day number cell elements"
     },
+    "agendaViewEmptyState": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the agenda view empty state element"
+    },
     "agendaViewEventListItem": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the agenda view event list item elements"
@@ -468,6 +472,10 @@
     "eventDialogRecurrenceSelectorToggleGroup": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog recurrence selector toggle group element"
+    },
+    "eventDialogRecurrenceTimezoneLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the recurrence timezone note and label suffix elements"
     },
     "eventDialogRepeatSectionContent": {
       "description": "Styles applied to {{nodeName}}.",
@@ -832,6 +840,10 @@
     "resourcesTreeLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the resources tree section label element"
+    },
+    "responsiveTypographyContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element that hosts the responsive typography tokens"
     },
     "root": { "description": "Styles applied to the root element." },
     "sidePanel": {

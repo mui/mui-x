@@ -1,4 +1,4 @@
-import { Store } from '@mui/x-internals/store';
+import { Store } from '@base-ui/utils/store';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import type { RowRange } from '../models';
 import type { RowSpanningState, RowSpanningCaches } from '../models/rowspan';

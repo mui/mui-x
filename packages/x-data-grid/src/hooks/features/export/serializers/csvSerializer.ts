@@ -66,7 +66,7 @@ type CSVRowOptions = {
   csvOptions: CSVOptions;
 };
 class CSVRow {
-  options: CSVRowOptions;
+  declare options: CSVRowOptions;
 
   rowString = '';
 
@@ -112,10 +112,12 @@ const serializeRow = ({
     const cellParams = getCellParams(id, column.field);
     if (String(cellParams.formattedValue) === '[object Object]') {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
-          'You can provide a `valueFormatter` with a string representation to be used.',
-        ]);
+        warnOnce(
+          [
+            'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+            'You can provide a `valueFormatter` with a string representation to be used.',
+          ].join('\n'),
+        );
       }
     }
     row.addValue(
@@ -150,18 +152,16 @@ export function buildCSV(options: BuildCSVOptions): string {
   const { columns, rowIds, csvOptions, ignoreValueFormatter, apiRef } = options;
 
   const CSVBody = rowIds
-    .reduce<string>(
-      (acc, id) =>
-        `${acc}${serializeRow({
-          id,
-          columns,
-          getCellParams: apiRef.current.getCellParams,
-          ignoreValueFormatter,
-          csvOptions,
-        })}\r\n`,
-      '',
+    .map((id) =>
+      serializeRow({
+        id,
+        columns,
+        getCellParams: apiRef.current.getCellParams,
+        ignoreValueFormatter,
+        csvOptions,
+      }),
     )
-    .trim();
+    .join('\r\n');
 
   if (!csvOptions.includeHeaders) {
     return CSVBody;
@@ -209,7 +209,7 @@ export function buildCSV(options: BuildCSVOptions): string {
   });
   headerRows.push(mainHeaderRow);
 
-  const CSVHead = `${headerRows.map((row) => row.getRowString()).join('\r\n')}\r\n`;
+  const CSVHead = headerRows.map((row) => row.getRowString()).join('\r\n');
 
-  return `${CSVHead}${CSVBody}`.trim();
+  return rowIds.length > 0 ? `${CSVHead}\r\n${CSVBody}` : CSVHead;
 }

@@ -155,6 +155,12 @@
       "isGlobal": false
     },
     {
+      "key": "agendaViewEmptyState",
+      "className": "MuiEventCalendar-agendaViewEmptyState",
+      "description": "Styles applied to the agenda view empty state element.",
+      "isGlobal": false
+    },
+    {
       "key": "agendaViewEventListItem",
       "className": "MuiEventCalendar-agendaViewEventListItem",
       "description": "Styles applied to the agenda view event list item elements.",
@@ -680,6 +686,12 @@
       "key": "eventDialogRecurrenceSelectorToggleGroup",
       "className": "MuiEventCalendar-eventDialogRecurrenceSelectorToggleGroup",
       "description": "Styles applied to the event dialog recurrence selector toggle group element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogRecurrenceTimezoneLabel",
+      "className": "MuiEventCalendar-eventDialogRecurrenceTimezoneLabel",
+      "description": "Styles applied to the recurrence timezone note and label suffix elements.",
       "isGlobal": false
     },
     {
@@ -1226,6 +1238,12 @@
       "key": "resourcesTreeLabel",
       "className": "MuiEventCalendar-resourcesTreeLabel",
       "description": "Styles applied to the resources tree section label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "responsiveTypographyContainer",
+      "className": "MuiEventCalendar-responsiveTypographyContainer",
+      "description": "Styles applied to the element that hosts the responsive typography tokens.",
       "isGlobal": false
     },
     {

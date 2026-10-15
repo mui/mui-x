@@ -31,7 +31,11 @@ export default function ExportCompositionNoSnap() {
   return (
     <Stack sx={{ width: '100%', display: 'block' }}>
       <Button
-        onClick={() => apiRef.current!.exportAsPrint()}
+        onClick={() =>
+          apiRef.current!.exportAsPrint().catch((error) => {
+            console.error(error);
+          })
+        }
         variant="contained"
         sx={{ mb: 1 }}
       >

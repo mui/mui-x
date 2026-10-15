@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import type { TreeViewItemId } from '@mui/x-tree-view/models';
 import type { RichTreeViewProState } from '../../RichTreeViewProStore';

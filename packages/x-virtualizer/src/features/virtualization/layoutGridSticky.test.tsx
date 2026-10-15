@@ -1,7 +1,13 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
-import { useVirtualizer, Virtualization, LayoutGridSticky, Dimensions } from '@mui/x-virtualizer';
+import {
+  useVirtualizer,
+  Virtualization,
+  LayoutGridSticky,
+  Dimensions,
+  type Virtualizer,
+} from '@mui/x-virtualizer';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect, vi } from 'vitest';
 
@@ -141,7 +147,26 @@ const Scrollbar = React.forwardRef<
   );
 });
 
-function StickyGrid(props: { width?: number; scrollbarSize?: number; tall?: boolean }) {
+const HorizontalPropsProbe = React.memo(function HorizontalPropsProbe(props: {
+  store: Virtualizer['store'];
+  onRender: () => void;
+}) {
+  const { store, onRender } = props;
+  store.use(LayoutGridSticky.selectors.spacerLeftProps, columns);
+  store.use(LayoutGridSticky.selectors.innerContainerProps, columns);
+  store.use(LayoutGridSticky.selectors.innerWindowProps, columns);
+  onRender();
+  return null;
+});
+
+type StickyGridProps = {
+  width?: number;
+  scrollbarSize?: number;
+  tall?: boolean;
+  onHorizontalPropsRender?: () => void;
+};
+
+function StickyGrid(props: StickyGridProps) {
   const gridRows = props.tall ? tallRows : rows;
   const gridRange = props.tall ? tallRange : range;
   const refs = {
@@ -294,6 +319,9 @@ function StickyGrid(props: { width?: number; scrollbarSize?: number; tall?: bool
         dimensions={dimensions}
         {...scrollbarHorizontalProps}
       />
+      {props.onHorizontalPropsRender ? (
+        <HorizontalPropsProbe store={virtualizer.store} onRender={props.onHorizontalPropsRender} />
+      ) : null}
     </div>
   );
 }
@@ -375,7 +403,7 @@ function middleColumnsOf(rowId: string | number) {
 describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
   const { render } = createRenderer();
 
-  async function renderGrid(props?: { width?: number; scrollbarSize?: number; tall?: boolean }) {
+  async function renderGrid(props?: StickyGridProps) {
     const view = render(<StickyGrid {...props} />);
     await waitFor(() => {
       expect(getWindowRowIds().length).to.be.greaterThan(0);
@@ -750,6 +778,28 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
       expect(getWindowRowIds()).to.include(30);
     });
     expect(getWindowRowIds()).not.to.deep.equal(idsAfterDirectionChange);
+  });
+
+  it('keeps the horizontal props across scroll events that keep the render context', async () => {
+    const onRender = vi.fn();
+    await renderGrid({ onHorizontalPropsRender: onRender });
+    const scroller = screen.getByTestId('scroller');
+
+    // Establish the DOWN direction: a direction change always updates the context.
+    act(() => {
+      scroller.scrollTop = ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    const idsAfterDirectionChange = getWindowRowIds();
+    const renderCount = onRender.mock.calls.length;
+
+    // Within half of the leading buffer: the render context is kept.
+    act(() => {
+      scroller.scrollTop = 6 * ROW_HEIGHT;
+      scroller.dispatchEvent(new Event('scroll'));
+    });
+    expect(getWindowRowIds()).to.deep.equal(idsAfterDirectionChange);
+    expect(onRender.mock.calls.length).to.equal(renderCount);
   });
 
   it('keeps retained rows at identical content-local offsets across context updates', async () => {

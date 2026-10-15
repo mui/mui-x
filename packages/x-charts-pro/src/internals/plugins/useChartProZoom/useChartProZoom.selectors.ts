@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector } from '@base-ui/utils/store';
 import { selectorChartZoomMap, selectorChartZoomOptionsLookup } from '@mui/x-charts/internals';
 import type { AxisId, ChartRootSelector } from '@mui/x-charts/internals';
 import type { UseChartProZoomSignature } from './useChartProZoom.types';

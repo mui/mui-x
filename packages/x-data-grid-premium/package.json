@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "9.13.0",
+  "version": "9.15.0",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Data Grid Components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -77,9 +77,6 @@
     "react-dom": "catalog:",
     "react-transition-group": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.17.0"
   },
   "exports": {
     ".": "./src/index.ts",

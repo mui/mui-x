@@ -8,7 +8,8 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { integer } from '@mui/x-internals/types';
 import { platform } from '@base-ui/utils/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
-import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
+import { createSelector, useStore, Store } from '@base-ui/utils/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import useRefCallback from '../../utils/useRefCallback';
 import { PinnedRows, PinnedColumns, Size } from '../../models/core';
 import type { CellColSpanInfo } from '../../models/colspan';
@@ -244,7 +245,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     scrollReset,
 
     renderRow,
-    renderInfiniteLoadingTrigger,
   } = params;
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
@@ -792,13 +792,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       const panel = panels.get(id);
       if (panel) {
         rowElements.push(panel);
-      }
-      if (
-        rowParams.position === undefined &&
-        isLastVisibleInSection &&
-        renderInfiniteLoadingTrigger
-      ) {
-        rowElements.push(renderInfiniteLoadingTrigger(id));
       }
     });
     return rowElements;

@@ -100,5 +100,26 @@ describe('<DataGridPro /> - Clipboard', () => {
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       expect(writeText.mock.calls[0][0]).to.equal(['1 " 1', '2'].join('\r\n'));
     });
+
+    it('should keep empty first and last cells when copying rows to clipboard', () => {
+      render(
+        <Test
+          columns={[{ field: 'first' }, { field: 'second' }, { field: 'third' }]}
+          rows={[
+            { id: 0, first: '', second: 'ITEM-001', third: '' },
+            { id: 1, first: '', second: '', third: '' },
+          ]}
+          disableRowSelectionOnClick
+        />,
+      );
+
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
+
+      act(() => apiRef.current?.selectRows([0, 1]));
+      const cell = getCell(0, 0);
+      fireUserEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
+      expect(writeText.mock.calls[0][0]).to.equal(['\tITEM-001\t', '\t\t'].join('\r\n'));
+    });
   });
 });

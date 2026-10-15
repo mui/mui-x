@@ -328,12 +328,20 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
   }, [autoFocus]);
 
-  const yearRange = adapter.getYearRange([minDate, maxDate]);
-  if (yearsOrder === 'desc') {
-    yearRange.reverse();
-  }
+  const years = React.useMemo(() => {
+    const yearRange = adapter.getYearRange([minDate, maxDate]);
+    if (yearsOrder === 'desc') {
+      yearRange.reverse();
+    }
 
-  let fillerAmount = yearsPerRow - (yearRange.length % yearsPerRow);
+    return yearRange.map((year) => ({
+      date: year,
+      yearNumber: adapter.getYear(year),
+      label: adapter.format(year, 'year'),
+    }));
+  }, [adapter, minDate, maxDate, yearsOrder]);
+
+  let fillerAmount = yearsPerRow - (years.length % yearsPerRow);
   if (fillerAmount === yearsPerRow) {
     fillerAmount = 0;
   }
@@ -348,14 +356,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
       yearsPerRow={yearsPerRow}
       {...other}
     >
-      {yearRange.map((year) => {
-        const yearNumber = adapter.getYear(year);
+      {years.map(({ date, yearNumber, label }) => {
         const isSelected = yearNumber === selectedYear;
-        const isDisabled = disabled || isYearDisabled(year);
+        const isDisabled = disabled || isYearDisabled(date);
 
         return (
           <YearCalendarButton
-            key={adapter.format(year, 'year')}
+            key={label}
             selected={isSelected}
             value={yearNumber}
             onClick={handleYearSelection}
@@ -371,7 +378,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
             classes={classesProp}
             compact={compact}
           >
-            {adapter.format(year, 'year')}
+            {label}
           </YearCalendarButton>
         );
       })}

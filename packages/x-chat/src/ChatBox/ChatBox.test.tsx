@@ -93,6 +93,59 @@ describe('ChatBox', () => {
       expect(screen.getByText('No messages yet')).not.toBe(null);
     });
 
+    it('does not flash the empty state or suggestions while the initial history page loads', async () => {
+      let resolveListMessages!: (value: any) => void;
+      const adapter = createAdapter({
+        listMessages: () =>
+          new Promise((resolve) => {
+            resolveListMessages = resolve;
+          }),
+      });
+
+      render(
+        <ChatBox
+          adapter={adapter}
+          initialActiveConversationId="c1"
+          suggestions={['Tell me a joke']}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      expect(document.querySelector('.MuiChatSuggestions-root')).toBe(null);
+      expect(screen.queryByText('No messages yet')).toBe(null);
+
+      await act(async () => {
+        resolveListMessages({ messages: [], hasMore: false });
+      });
+
+      expect(document.querySelector('.MuiChatSuggestions-root')).not.toBe(null);
+    });
+
+    it('renders the empty state once the initial history page resolves empty', async () => {
+      let resolveListMessages!: (value: any) => void;
+      const adapter = createAdapter({
+        listMessages: () =>
+          new Promise((resolve) => {
+            resolveListMessages = resolve;
+          }),
+      });
+
+      render(
+        <ChatBox adapter={adapter} initialActiveConversationId="c1">
+          {null}
+        </ChatBox>,
+      );
+
+      expect(screen.queryByText('No messages yet')).toBe(null);
+
+      await act(async () => {
+        resolveListMessages({ messages: [], hasMore: false });
+      });
+
+      expect(screen.getByText('No messages yet')).not.toBe(null);
+    });
+
     it('renders children inside the internal ChatProvider', () => {
       function StatusChild() {
         const { isStreaming } = useChatStatus();

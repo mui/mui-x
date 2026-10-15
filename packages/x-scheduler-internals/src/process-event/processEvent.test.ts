@@ -51,8 +51,10 @@ describe('processEvent', () => {
       );
     });
 
-    it('should convert rrule.until to the display timezone when rrule is an object', () => {
+    it('should keep rrule.until in the data timezone when rrule is an object', () => {
+      // The rule is expressed in the timezone the series expands in, not the display one.
       const event = EventBuilder.new(adapter)
+        .withDataTimezone('America/New_York')
         .rrule({
           freq: 'DAILY',
           until: '2025-01-10T23:59:00Z',
@@ -61,11 +63,13 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Asia/Tokyo', adapter, schedulerRecurringEventsPlugin);
 
-      expect(adapter.getTimezone(processed.displayTimezone.rrule!.until!)).to.equal('Asia/Tokyo');
+      expect(adapter.getTimezone(processed.dataTimezone.rrule!.until!)).to.equal(
+        'America/New_York',
+      );
     });
 
-    it('should parse rrule string and apply timezone conversion to UNTIL', () => {
-      const event = EventBuilder.new(adapter).build();
+    it('should parse an rrule string and keep its UNTIL in the data timezone', () => {
+      const event = EventBuilder.new(adapter).withDataTimezone('America/New_York').build();
 
       const processed = processEvent(
         {
@@ -77,8 +81,8 @@ describe('processEvent', () => {
         schedulerRecurringEventsPlugin,
       );
 
-      expect(adapter.getTimezone(processed.displayTimezone.rrule!.until!)).to.equal(
-        'Pacific/Kiritimati',
+      expect(adapter.getTimezone(processed.dataTimezone.rrule!.until!)).to.equal(
+        'America/New_York',
       );
     });
   });
@@ -184,24 +188,6 @@ describe('processEvent', () => {
       expect(adapter.formatByString(processed.dataTimezone.exDates![0], 'HH:mm')).to.equal('09:00');
     });
 
-    it('should project the display BYDAY from the data-timezone weekday for instant strings', () => {
-      // Thursday 21:00 in New York is already Friday in UTC.
-      const event = EventBuilder.new(adapter)
-        .withDataTimezone('America/New_York')
-        .span('2025-01-03T02:00:00Z', '2025-01-03T03:00:00Z')
-        .rrule({ freq: 'WEEKLY', interval: 1, byDay: ['TH'] })
-        .build();
-
-      const processed = processEvent(
-        event,
-        'America/New_York',
-        adapter,
-        schedulerRecurringEventsPlugin,
-      );
-
-      expect(processed.displayTimezone.rrule?.byDay).to.deep.equal(['TH']);
-    });
-
     it('should keep local hour across DST spring-forward for wall-time events', () => {
       // 2025 US spring-forward: March 9 at 02:00 → 03:00
       // Before DST (Jan 1): 09:00 NY = UTC-5 → 14:00 UTC
@@ -271,7 +257,6 @@ describe('processEvent', () => {
       ]);
 
       expect(processed.dataTimezone.rrule).to.equal(undefined);
-      expect(processed.displayTimezone.rrule).to.equal(undefined);
     });
   });
 });

@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import type { SeriesId } from '../../../../models/seriesType/common';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';

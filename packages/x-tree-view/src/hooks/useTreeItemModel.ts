@@ -1,5 +1,5 @@
 'use client';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import type { TreeViewDefaultItemModelProperties, TreeViewItemId } from '../models';
 import { itemsSelectors } from '../internals/plugins/items';

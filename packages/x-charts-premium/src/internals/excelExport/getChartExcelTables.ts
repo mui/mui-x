@@ -7,7 +7,7 @@ import {
 } from '@mui/x-charts/internals';
 import type { ProcessedSeries } from '@mui/x-charts/internals';
 import type { ChartExcelTable, ResolvedChartExcelOptions } from './chartExcelData.types';
-import { DEFAULT_CHART_EXCEL_OPTIONS } from './chartExcelData.types';
+import { DEFAULT_CHART_EXCEL_OPTIONS } from './defaults';
 import { CHART_EXCEL_EXTRACTORS } from './extractors';
 import type { AxisGetter, ChartExcelExtractorParams } from './extractors';
 

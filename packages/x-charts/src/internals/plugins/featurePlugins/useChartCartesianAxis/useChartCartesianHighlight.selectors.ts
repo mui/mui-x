@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import type { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {

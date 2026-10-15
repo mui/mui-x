@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useStore } from '@mui/x-internals/store';
+import { useStore } from '@base-ui/utils/store';
 import type { TreeItemProviderProps } from './TreeItemProvider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { idSelectors } from '../internals/plugins/id';

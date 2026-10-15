@@ -5,11 +5,33 @@ import type {
   SchedulerProcessedDate,
   SchedulerEventOccurrence,
   SchedulerEventId,
+  SchedulerRenderableEventOccurrence,
   SchedulerResourceId,
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from './date-utils';
+import type { SchedulerEventRangeIndex } from './event-range-index';
+
+/**
+ * Whether the occurrence is a persisted event occurrence, as opposed to a
+ * placeholder (creation draft, drag preview) that has no `dataTimezone`.
+ */
+export function isEventOccurrence(
+  occurrence: SchedulerRenderableEventOccurrence,
+): occurrence is SchedulerEventOccurrence {
+  return 'dataTimezone' in occurrence;
+}
+
+/**
+ * The occurrence in the data timezone, the identity recurring drag updates target;
+ * placeholders have none.
+ */
+export function getOccurrenceDataTimezone(
+  occurrence: SchedulerRenderableEventOccurrence,
+): SchedulerEventOccurrence['dataTimezone'] | undefined {
+  return isEventOccurrence(occurrence) ? occurrence.dataTimezone : undefined;
+}
 
 /**
  * The render key of a non-recurring occurrence: the event id stringified.
@@ -39,12 +61,18 @@ export function generateOccurrenceFromEvent({
   occurrenceKey,
   start,
   end,
+  dataTimezone,
 }: {
   event: SchedulerProcessedEvent;
   eventId: SchedulerEventId;
   occurrenceKey: string;
   start: SchedulerProcessedDate;
   end: SchedulerProcessedDate;
+  /**
+   * The occurrence in the data timezone; only its bounds are read. Defaults to the display
+   * `start`/`end`, a fallback only placeholder occurrences may rely on.
+   */
+  dataTimezone?: SchedulerEventOccurrence['dataTimezone'];
 }): SchedulerEventOccurrence {
   return {
     ...event,
@@ -57,8 +85,8 @@ export function generateOccurrenceFromEvent({
     },
     dataTimezone: {
       ...event?.dataTimezone,
-      start,
-      end,
+      start: dataTimezone?.start ?? start,
+      end: dataTimezone?.end ?? end,
     },
   };
 }
@@ -92,13 +120,22 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
 /**
  * Returns the occurrences to render in the given date range, expanding recurring events.
+ * Build eventRangeIndex with expandRecurringEvents set to whether recurringEventsPlugin is non-null.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources, displayTimezone, recurringEventsPlugin } =
-    parameters;
+  const {
+    adapter,
+    start,
+    end,
+    eventRangeIndex,
+    visibleResources,
+    displayTimezone,
+    recurringEventsPlugin,
+  } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
+  const eventsInRange = eventRangeIndex.getEventsForRange(start, end);
 
-  for (const event of events) {
+  for (const event of eventsInRange) {
     // STEP 1: Skip events from resources that are not visible
     const eventResourceIds = getEventResourceIds(event.resource);
     const allHidden =
@@ -107,17 +144,11 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
-    if (event.displayTimezone.rrule) {
+    // STEP 2: Recurrent event processing, if it is recurrent expand it for the visible days
+    if (event.dataTimezone.rrule) {
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.
       if (recurringEventsPlugin == null) {
-        if (
-          adapter.isAfter(event.displayTimezone.start.value, end) ||
-          adapter.isBefore(event.displayTimezone.end.value, start)
-        ) {
-          continue;
-        }
         occurrences.push({ ...event, key: getOccurrenceKey(event.id) });
         continue;
       }
@@ -132,14 +163,6 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
           displayTimezone,
         ),
       );
-      continue;
-    }
-
-    // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
-    if (
-      adapter.isAfter(event.displayTimezone.start.value, end) ||
-      adapter.isBefore(event.displayTimezone.end.value, start)
-    ) {
       continue;
     }
 
@@ -216,7 +239,7 @@ export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
-  events: SchedulerProcessedEvent[];
+  eventRangeIndex: SchedulerEventRangeIndex;
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;

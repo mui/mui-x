@@ -48,9 +48,10 @@ const daDKPickers: Partial<PickersLocaleText> = {
   // Clock labels
   clockLabelText: (view, formattedTime) =>
     `Vælg ${timeViews[view] ?? view}. ${!formattedTime ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${formattedTime}`}`,
-  hoursClockNumberText: (hours) => `${hours} timer`,
-  minutesClockNumberText: (minutes) => `${minutes} minutter`,
-  secondsClockNumberText: (seconds) => `${seconds} sekunder`,
+  hoursClockNumberText: (hours) => `${hours} ${Number(hours) === 1 ? 'time' : 'timer'}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${Number(minutes) === 1 ? 'minut' : 'minutter'}`,
+  secondsClockNumberText: (seconds) =>
+    `${seconds} ${Number(seconds) === 1 ? 'sekund' : 'sekunder'}`,
 
   // Digital clock labels
   selectViewText: (view) => `Vælg ${timeViews[view]}`,

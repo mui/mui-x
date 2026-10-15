@@ -3,11 +3,10 @@ import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 /**
- * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
- * **without** the trailing `Z` (wall-time representation).
- * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
+ * Builds an adapter-agnostic format string that produces an ISO 8601 date.
+ * Produces e.g. `yyyy'-'MM'-'dd` for date-fns.
  */
-export function getWallTimeIsoFormat(adapter: Adapter): string {
+export function getIsoDateFormat(adapter: Adapter): string {
   const f = adapter.formats;
   const esc = adapter.escapedCharacters;
   return [
@@ -20,6 +19,19 @@ export function getWallTimeIsoFormat(adapter: Adapter): string {
     '-',
     esc.end,
     f.dayOfMonthPadded,
+  ].join('');
+}
+
+/**
+ * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
+ * **without** the trailing `Z` (wall-time representation).
+ * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
+ */
+export function getWallTimeIsoFormat(adapter: Adapter): string {
+  const f = adapter.formats;
+  const esc = adapter.escapedCharacters;
+  return [
+    getIsoDateFormat(adapter),
     esc.start,
     'T',
     esc.end,
@@ -135,6 +147,13 @@ function getSundayDayNumber(adapter: Adapter): number {
     sundayDayNumberCache.set(adapter, cached);
   }
   return cached;
+}
+
+/**
+ * The JS weekday (0=Sun … 6=Sat) of a date, read in its own timezone.
+ */
+export function getJsDayOfWeek(adapter: Adapter, date: TemporalSupportedObject): number {
+  return (adapter.getDayOfWeek(date) - getSundayDayNumber(adapter) + 7) % 7;
 }
 
 /**

@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
-import { useStoreEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/useStoreEffect';
 import {
   useVirtualizer,
   Dimensions,
@@ -13,7 +13,7 @@ import {
   EMPTY_RENDER_CONTEXT,
 } from '@mui/x-virtualizer';
 import type { VirtualizerParams } from '@mui/x-virtualizer';
-import { useFirstRender } from '../utils/useFirstRender';
+import { useOnFirstRender } from '@base-ui/utils/useOnFirstRender';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
@@ -340,28 +340,29 @@ export function useGridVirtualizer() {
         visibleColumns,
       ],
     ),
-
-    renderInfiniteLoadingTrigger: React.useCallback(
-      (id: any) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
-      [apiRef],
-    ),
   });
+
+  // `virtualizer` is a new object on each render that references the callbacks of that render, so it must stay out of this scope.
+  // Otherwise every render stays reachable from the next one, along with its rows.
+  // The store is the same object for the grid's lifetime.
+  // https://github.com/mui/mui-x/issues/20699
+  const virtualizerStore = virtualizer.store;
 
   // HACK: Keep the grid's store in sync with the virtualizer store. We set up the
   // subscription in the render phase rather than in an effect because other grid
   // initialization code runs between those two moments.
   //
   // TODO(v9): Remove this
-  useFirstRender(() => {
+  useOnFirstRender(() => {
     apiRef.current.store.state.dimensions = addGridDimensions(
-      virtualizer.store.state.dimensions,
+      virtualizerStore.state.dimensions,
       headerHeight,
       groupHeaderHeight,
       headerFilterHeight,
       headersTotalHeight,
     );
-    apiRef.current.store.state.rowsMeta = virtualizer.store.state.rowsMeta;
-    apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
+    apiRef.current.store.state.rowsMeta = virtualizerStore.state.rowsMeta;
+    apiRef.current.store.state.virtualization = virtualizerStore.state.virtualization;
   });
 
   useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {

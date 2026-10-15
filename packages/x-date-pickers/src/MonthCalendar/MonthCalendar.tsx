@@ -261,15 +261,14 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, month: number) => {
     const monthsInYear = 12;
-    const monthsInRow = 3;
 
     switch (event.key) {
       case 'ArrowUp':
-        focusMonth((monthsInYear + month - monthsInRow) % monthsInYear);
+        focusMonth((monthsInYear + month - monthsPerRow) % monthsInYear);
         event.preventDefault();
         break;
       case 'ArrowDown':
-        focusMonth((monthsInYear + month + monthsInRow) % monthsInYear);
+        focusMonth((monthsInYear + month + monthsPerRow) % monthsInYear);
         event.preventDefault();
         break;
       case 'ArrowLeft':

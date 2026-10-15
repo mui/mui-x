@@ -21,6 +21,29 @@ import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/Sche
 import { dateToEventString } from '../date-utils';
 
 /**
+ * Resolves `shouldEventRequireResource` and warns when it is enabled without any resource.
+ */
+export function getShouldEventRequireResource(
+  parameters: SchedulerParameters<any, any>,
+  defaultValue: boolean,
+): boolean {
+  const shouldEventRequireResource = parameters.shouldEventRequireResource ?? defaultValue;
+  if (
+    shouldEventRequireResource &&
+    (parameters.resources == null || parameters.resources.length === 0)
+  ) {
+    warnOnce(
+      [
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+      ].join('\n'),
+    );
+  }
+  return shouldEventRequireResource;
+}
+
+/**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
  */
 export function shouldUpdateOccurrencePlaceholder(
@@ -55,8 +78,6 @@ export function shouldUpdateOccurrencePlaceholder(
 
   return false;
 }
-
-export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
 
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   id: true,
@@ -141,10 +162,9 @@ export function getProcessedEventFromModel<TEvent extends object>(
   const modelInDefaultFormat = {} as SchedulerEvent;
 
   for (const key of EVENT_PROPERTIES) {
-    // @ts-ignore
     const getter = eventModelStructure?.[key]?.getter;
 
-    // @ts-ignore
+    // @ts-expect-error Each property getter returns its corresponding property type, but the key is a union.
     modelInDefaultFormat[key] = getter ? getter(model) : model[key];
   }
 
@@ -211,7 +231,7 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
 }
 
 /**
- * Create an event model from a processed event using the provided model structure.
+ * Creates an event model from the creation properties using the provided model structure.
  */
 export function createEventModel<TEvent extends object>(
   event: SchedulerEventCreationProperties,
@@ -270,15 +290,14 @@ function createOrUpdateEventModelFromBuiltInEventModel<
       const typedKey = key as keyof SchedulerEvent;
       const setter = eventModelStructure?.[typedKey]?.setter;
       if (setter) {
-        // @ts-ignore
         propertiesWithSetter.push([setter, changes[key]]);
       } else if (changes[key] === undefined) {
-        // @ts-ignore
+        // @ts-expect-error Custom event models do not declare an index signature for property names.
         delete eventModel[key];
       }
       // If the property was set to its default value, remove it from the model
       else if (oldModel != null && key === 'allDay' && changes[key] === false) {
-        // @ts-ignore
+        // @ts-expect-error Custom event models do not declare an index signature for property names.
         delete eventModel[key];
       } else {
         setOwnProperty(eventModel, key, changes[key]);
@@ -305,7 +324,8 @@ export function getProcessedResourceFromModel<TResource extends object>(
   for (const key of RESOURCE_PROPERTIES) {
     const getter = resourceModelStructure?.[key]?.getter;
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Custom resource indexing errors only in consumers enabling noImplicitAny.
+    // @ts-ignore Custom resource indexing errors only in consumers enabling noImplicitAny.
     const resourceProperty = getter ? getter(resource) : resource[key];
 
     if (key === 'children' && Array.isArray(resourceProperty)) {
@@ -313,12 +333,11 @@ export function getProcessedResourceFromModel<TResource extends object>(
       const children = resourceProperty.map((child) =>
         getProcessedResourceFromModel(child, resourceModelStructure),
       );
-      // @ts-ignore
       processedResource[key] = children;
       continue;
     }
 
-    // @ts-ignore
+    // @ts-expect-error The resource getter returns the value for this key, but TypeScript loses the correlation.
     processedResource[key] = resourceProperty;
   }
 
@@ -450,10 +469,12 @@ export function buildEventsState<TEvent extends object, TResource extends object
 
     if (alreadySeen) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          `MUI X Scheduler: Two or more events share the same id "${String(id)}".`,
-          'Event ids must be unique. Only the last event with a given id is kept, the others are ignored.',
-        ]);
+        warnOnce(
+          [
+            `MUI X Scheduler: Two or more events share the same id "${String(id)}".`,
+            'Event ids must be unique. Only the last event with a given id is kept, the others are ignored.',
+          ].join('\n'),
+        );
       }
     } else {
       if (

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "9.13.0",
+  "version": "9.15.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Data Grid components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-data-grid": "workspace:^",
     "@mui/x-internals": "workspace:^",
@@ -73,9 +74,6 @@
     "react-dom": "catalog:",
     "react-transition-group": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "exports": {
     ".": "./src/index.ts",
