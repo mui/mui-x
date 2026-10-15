@@ -104,7 +104,7 @@ const roROPickers: Partial<PickersLocaleText> = {
   year: 'An',
   month: 'Luna',
   day: 'Ziua',
-  weekDay: 'Ziua saptămânii',
+  weekDay: 'Ziua săptămânii',
   hours: 'Ore',
   minutes: 'Minute',
   seconds: 'Secunde',

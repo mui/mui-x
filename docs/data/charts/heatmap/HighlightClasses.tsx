@@ -8,11 +8,11 @@ export default function HighlightClasses() {
       <Heatmap
         sx={{
           [`.${heatmapClasses.cell}`]: {
-            [`&.${heatmapClasses.highlighted}`]: {
+            '&[data-highlighted]': {
               filter: 'none', // Remove the default filter effect.
               rx: '10px', // Round the corners
             },
-            [`&.${heatmapClasses.faded}`]: {
+            '&[data-faded]': {
               filter: 'saturated(95%)', // Reduce the faded default saturation
             },
           },
