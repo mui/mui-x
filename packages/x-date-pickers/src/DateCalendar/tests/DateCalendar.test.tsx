@@ -2,6 +2,7 @@ import * as React from 'react';
 import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
@@ -100,6 +101,63 @@ describe('<DateCalendar />', () => {
 
     expect(cells.length).to.equal(35);
     expect(disabledDays.length).to.equal(31);
+  });
+
+  describe('prop: onYearChange', () => {
+    it('should be called with the start of the new year when navigating from December to January', async () => {
+      const onYearChange = spy();
+      const { user } = render(
+        <DateCalendar defaultValue={adapterToUse.date('2019-12-15')} onYearChange={onYearChange} />,
+      );
+
+      await user.click(screen.getByTitle('Next month'));
+
+      expect(onYearChange.callCount).to.equal(1);
+      expect(onYearChange.lastCall.firstArg).toEqualDateTime(new Date(2020, 0, 1));
+    });
+
+    it('should be called when selecting a year in the year view', async () => {
+      const onYearChange = spy();
+      const { user } = render(
+        <DateCalendar
+          value={adapterToUse.date('2019-04-29')}
+          onYearChange={onYearChange}
+          views={['year', 'day']}
+          openTo="year"
+        />,
+      );
+
+      await user.click(screen.getByText('2022', { selector: 'button' }));
+
+      expect(onYearChange.callCount).to.equal(1);
+      expect(onYearChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1));
+    });
+
+    it('should not be called again when the controlled value moves to the selected year', async () => {
+      const onYearChange = spy();
+
+      function ControlledDateCalendar() {
+        const [value, setValue] = React.useState<PickerValidDate | null>(
+          adapterToUse.date('2019-04-29'),
+        );
+
+        return (
+          <DateCalendar
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            onYearChange={onYearChange}
+            views={['year', 'day']}
+            openTo="year"
+          />
+        );
+      }
+
+      const { user } = render(<ControlledDateCalendar />);
+
+      await user.click(screen.getByText('2022', { selector: 'button' }));
+
+      expect(onYearChange.callCount).to.equal(1);
+    });
   });
 
   it('should render column header according to dayOfWeekFormatter', () => {
@@ -297,6 +355,25 @@ describe('<DateCalendar />', () => {
   });
 
   describe('view: month', () => {
+    it('should call onMonthChange once when selecting a month', async () => {
+      const onMonthChange = spy();
+
+      const { user } = render(
+        <DateCalendar
+          value={adapterToUse.date('2019-01-01')}
+          onMonthChange={onMonthChange}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      await user.click(april);
+
+      expect(onMonthChange.callCount).to.equal(1);
+      expect(onMonthChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 1));
+    });
+
     it('should select the closest enabled date in the month if the current date is disabled', async () => {
       const onChange = spy();
 

@@ -1,6 +1,7 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
+import { spy } from 'sinon';
 
 describe('<DateCalendar /> keyboard interactions', () => {
   const { render } = createPickerRenderer();
@@ -58,16 +59,22 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
     [
       // Switch between months
-      { initialDay: '01', key: 'ArrowLeft', expectFocusedDay: '31' },
-      { initialDay: '05', key: 'ArrowUp', expectFocusedDay: '29' },
-      { initialDay: '31', key: 'ArrowRight', expectFocusedDay: '1' },
-      { initialDay: '30', key: 'ArrowDown', expectFocusedDay: '6' },
+      { initialDay: '01', key: 'ArrowLeft', expectFocusedDay: '31', expectMonthChangeCalls: 1 },
+      { initialDay: '05', key: 'ArrowUp', expectFocusedDay: '29', expectMonthChangeCalls: 1 },
+      { initialDay: '31', key: 'ArrowRight', expectFocusedDay: '1', expectMonthChangeCalls: 1 },
+      { initialDay: '30', key: 'ArrowDown', expectFocusedDay: '6', expectMonthChangeCalls: 1 },
       // Switch between weeks
-      { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
-      { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
-    ].forEach(({ initialDay, key, expectFocusedDay }) => {
+      { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9', expectMonthChangeCalls: 0 },
+      { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10', expectMonthChangeCalls: 0 },
+    ].forEach(({ initialDay, key, expectFocusedDay, expectMonthChangeCalls }) => {
       it(`${key}`, async () => {
-        render(<DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />);
+        const onMonthChange = spy();
+        render(
+          <DateCalendar
+            defaultValue={adapterToUse.date(`2020-08-${initialDay}`)}
+            onMonthChange={onMonthChange}
+          />,
+        );
 
         await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
         // Don't care about what's focused.
@@ -77,6 +84,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
+        expect(onMonthChange.callCount).to.equal(expectMonthChangeCalls);
       });
     });
 
