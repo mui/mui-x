@@ -112,8 +112,6 @@ function GridMenu(props: GridMenuProps) {
       onExited={onExited}
       clickAwayMouseEvent="onMouseDown"
       onKeyDown={handleKeyDown}
-      // Remove the popper's default `role="tooltip"`, the menu list inside already has `role="menu"`
-      role={undefined}
       {...other}
       {...rootProps.slotProps?.basePopper}
     >

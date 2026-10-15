@@ -1,6 +1,6 @@
 import { act, createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import type { RefObject } from '@mui/x-internals/types';
-import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, useGridApiRef, GridPreferencePanelsValue } from '@mui/x-data-grid';
 import type { GridApi } from '@mui/x-data-grid';
 import {
   getCell,
@@ -216,6 +216,30 @@ describe('<DataGrid /> - Accessibility', () => {
       expect(button).to.have.attribute('aria-controls', dialog.id);
       expect(dialog).to.have.attribute('aria-labelledby', button.id);
       expect(screen.queryByRole('tooltip')).to.equal(null);
+    });
+
+    it('should fall back to an aria-label on the filter panel opened from the column menu', async () => {
+      const { user } = render(<DataGrid {...baselineProps} />);
+
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+      await user.click(screen.getByRole('menuitem', { name: 'Filter' }));
+
+      const dialog = screen.getByRole('dialog', { name: 'Show filters' });
+      expect(dialog).not.to.have.attribute('aria-labelledby');
+    });
+
+    it('should fall back to an aria-label on the columns panel opened programmatically', async () => {
+      let apiRef: RefObject<GridApi | null>;
+      function Test() {
+        apiRef = useGridApiRef();
+        return <DataGrid {...baselineProps} apiRef={apiRef} />;
+      }
+      render(<Test />);
+
+      await act(async () => apiRef.current?.showPreferences(GridPreferencePanelsValue.columns));
+
+      const dialog = screen.getByRole('dialog', { name: 'Select columns' });
+      expect(dialog).not.to.have.attribute('aria-labelledby');
     });
   });
 
