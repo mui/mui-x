@@ -22,8 +22,14 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   handleFocus: (event: React.FocusEvent<HTMLDivElement>) => void;
 } {
   const { columnType } = params;
-  const { focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount } =
-    useTimelineGridRootContext();
+  const {
+    focusedCell,
+    setFocusedCell,
+    clearFocusedCellIfMatches,
+    columnTypes,
+    totalRowCount,
+    scrollRowIntoView,
+  } = useTimelineGridRootContext();
 
   const bodyRowContext = useTimelineGridBodyRowContext();
   const index = bodyRowContext.index;
@@ -70,6 +76,7 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     if (event.key === 'ArrowUp') {
       event.preventDefault();
       if (index > 0) {
+        scrollRowIntoView?.(index - 1);
         setFocusedCell({ columnType, rowIndex: index - 1 });
       }
       return true;
@@ -77,6 +84,7 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       if (index < totalRowCount - 1) {
+        scrollRowIntoView?.(index + 1);
         setFocusedCell({ columnType, rowIndex: index + 1 });
       }
       return true;
