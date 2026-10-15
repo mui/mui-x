@@ -1,18 +1,13 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui/utils/store';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import type { TreeItemWrapper, TreeViewItemPlugin } from '../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import {
-  TreeViewChildrenItemContext,
-  TreeViewChildrenItemProvider,
-} from '../../TreeViewProvider/TreeViewChildrenItemProvider';
+import { TreeViewChildrenItemContext } from '../../TreeViewProvider/TreeViewChildrenItemProvider';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
-import { idSelectors } from '../id';
 import type { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
 
 export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
@@ -27,24 +22,13 @@ It looks like you rendered your component outside of a SimpleTreeView parent com
 This can also happen if you are bundling multiple versions of the Tree View.`,
     );
   }
-  const { registerChild, unregisterChild, parentId } = parentContext;
+  const { parentId } = parentContext;
 
   const expandable = itemHasChildren(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useMergedRefs(pluginContentRef, contentRef);
-  const idAttribute = useStore(store, idSelectors.treeItemIdAttribute, itemId, id);
   const isMountedRef = React.useRef(true);
   const ownerTokenRef = useRefWithInit(Symbol);
-
-  // Prevent any flashing
-  useIsoLayoutEffect(() => {
-    registerChild(idAttribute, itemId);
-
-    return () => {
-      unregisterChild(idAttribute);
-      unregisterChild(idAttribute);
-    };
-  }, [store, registerChild, unregisterChild, idAttribute, itemId]);
 
   useIsoLayoutEffect(() => {
     isMountedRef.current = true;
@@ -74,6 +58,10 @@ This can also happen if you are bundling multiple versions of the Tree View.`,
     };
   }, [store, parentId, itemId, expandable, disabled, disableSelection, id, ownerTokenRef]);
 
+  useIsoLayoutEffect(() => {
+    store.jsxItems.checkItemOrder(itemId);
+  });
+
   React.useEffect(() => {
     if (label) {
       return store.jsxItems.mapLabelFromJSX(
@@ -93,16 +81,17 @@ This can also happen if you are bundling multiple versions of the Tree View.`,
 export const jsxItemsitemWrapper: TreeItemWrapper<SimpleTreeViewStore<any>> = ({
   children,
   itemId,
-  idAttribute,
 }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const depthContext = React.useContext(TreeViewItemDepthContext);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const parentContext = React.useMemo(() => ({ parentId: itemId }), [itemId]);
 
   return (
-    <TreeViewChildrenItemProvider itemId={itemId} idAttribute={idAttribute}>
+    <TreeViewChildrenItemContext.Provider value={parentContext}>
       <TreeViewItemDepthContext.Provider value={(depthContext as number) + 1}>
         {children}
       </TreeViewItemDepthContext.Provider>
-    </TreeViewChildrenItemProvider>
+    </TreeViewChildrenItemContext.Provider>
   );
 };
