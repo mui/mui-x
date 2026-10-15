@@ -236,7 +236,7 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock this f
   );
 
   const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(
-    (updates, groupKeys) => {
+    (updates, groupKeys, options) => {
       const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
       const cache = updateCacheWithNewRows({
@@ -244,9 +244,10 @@ You need to upgrade to DataGridPro or DataGridPremium component to unlock this f
         getRowId: props.getRowId,
         previousCache: apiRef.current.caches.rows,
         groupKeys: groupKeys ?? [],
+        replaceChildrenOf: options?.replaceChildrenOf,
       });
 
-      throttledRowsChange({ cache, throttle: false });
+      throttledRowsChange({ cache, throttle: options?.throttle ?? false });
     },
     [props.getRowId, throttledRowsChange, apiRef],
   );

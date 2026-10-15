@@ -263,6 +263,67 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
     ).to.deep.equal(['company-A', 'company-B']);
   });
 
+  // https://github.com/mui/mui-x/issues/23635
+  it('should insert a new leaf row at the position returned by the data source', async () => {
+    const companyChildren = [
+      { id: 'A-1', trader: 'Trader 1', descendantCount: 0 },
+      { id: 'A-3', trader: 'Trader 3', descendantCount: 0 },
+    ];
+    const dataSource: GridDataSource = {
+      getRows: async (params: GridGetRowsParams) => {
+        if (params.groupKeys!.length === 0) {
+          const rootRows = [{ id: 'company-A', group: 'A', descendantCount: 2 }];
+          return { rows: rootRows, rowCount: rootRows.length };
+        }
+        if (params.groupKeys![0] === 'A') {
+          return { rows: companyChildren, rowCount: companyChildren.length };
+        }
+        return { rows: [], rowCount: 0 };
+      },
+      getGroupKey: (row) => row.group,
+      getChildrenCount: (row) => row.descendantCount,
+    };
+
+    function TestComponent() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            apiRef={apiRef}
+            columns={[{ field: 'company' }, { field: 'trader' }]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            disableVirtualization
+            rowGroupingModel={['company']}
+          />
+        </div>
+      );
+    }
+
+    render(<TestComponent />);
+    await waitFor(() => {
+      expect(apiRef.current!.state.rows.tree['company-A']).not.to.equal(undefined);
+    });
+
+    const getCompanyChildren = () =>
+      (apiRef.current!.state.rows.tree['company-A'] as GridGroupNode).children;
+    act(() => {
+      apiRef.current!.dataSource.fetchRows('company-A');
+    });
+    await waitFor(() => {
+      expect(getCompanyChildren()).to.deep.equal(['A-1', 'A-3']);
+    });
+
+    companyChildren.splice(1, 0, { id: 'A-2', trader: 'Trader 2', descendantCount: 0 });
+    act(() => {
+      apiRef.current!.dataSource.fetchRows('company-A');
+    });
+
+    await waitFor(() => {
+      expect(getCompanyChildren()).to.deep.equal(['A-1', 'A-2', 'A-3']);
+    });
+  });
+
   describe('Nested lazy loading', () => {
     type RowGroupingRow = {
       id: string;

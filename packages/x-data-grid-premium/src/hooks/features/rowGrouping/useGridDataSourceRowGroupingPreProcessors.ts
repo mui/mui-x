@@ -95,6 +95,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: RowGroupingStrategy.DataSource,
         maxDepth,
+        childrenOrder: (params.updates as GridRowsPartialUpdates).childrenOrder,
       });
     },
     [apiRef, props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
