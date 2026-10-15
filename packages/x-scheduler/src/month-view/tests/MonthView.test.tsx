@@ -757,6 +757,25 @@ describe('<MonthView />', () => {
       });
     });
 
+    it('should keep the next event as the focus target when another event is removed while the context menu closes', async () => {
+      const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
+      await openMenu('Event 3');
+
+      setProps({ events: manyEvents.filter((event) => event.title !== 'Event 3') });
+      setProps({
+        events: manyEvents.filter(
+          (event) => event.title !== 'Event 3' && event.title !== 'Event 6',
+        ),
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getPopoverEvent(popover, 'Event 4'));
+      });
+    });
+
     it('should focus the day cell when the popover closes under an open context menu', async () => {
       const { popover, setProps, openMenu } = await renderAndOpenStatefulPopover();
       await openMenu('Event 2');

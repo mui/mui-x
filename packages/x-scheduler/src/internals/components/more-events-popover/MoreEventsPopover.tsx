@@ -135,11 +135,16 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     const lastItemIndex = previous.occurrences.findIndex(
       (occurrence) => occurrence.key === lastItemKeyRef.current,
     );
+    const isLastItemRemoved =
+      lastItemIndex !== -1 && !isListed(previous.occurrences[lastItemIndex].key);
+    // Keep the replacement of an earlier removal when an unrelated item goes.
+    if (!isLastItemRemoved && replacementRef.current?.isConnected) {
+      return;
+    }
     // Prefer the item the user was on, else the first removed one.
-    const removedIndex =
-      lastItemIndex !== -1 && !isListed(previous.occurrences[lastItemIndex].key)
-        ? lastItemIndex
-        : previous.occurrences.findIndex((occurrence) => !isListed(occurrence.key));
+    const removedIndex = isLastItemRemoved
+      ? lastItemIndex
+      : previous.occurrences.findIndex((occurrence) => !isListed(occurrence.key));
     const body = bodyRef.current;
     if (removedIndex === -1 || !body) {
       return;
