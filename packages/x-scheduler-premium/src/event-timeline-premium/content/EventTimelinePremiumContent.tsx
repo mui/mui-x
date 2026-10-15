@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
@@ -774,6 +775,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [titleColumn],
   );
 
+  const isRtl = useRtl();
+
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
@@ -782,7 +785,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       columnsTotalWidth,
       leftPinnedWidth: titleColumnWidth,
     },
-    virtualization: { layoutMode: 'controlled' },
+    virtualization: { layoutMode: 'controlled', isRtl },
     rows,
     range,
     rowCount: rows.length,

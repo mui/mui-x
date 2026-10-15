@@ -16,6 +16,7 @@ import {
   ErrorContainer,
   SharedComponentsStyledContext,
   SchedulerSlotsProvider,
+  SchedulerDirectionProvider,
   eventDialogSlots,
   eventContextMenuSlots,
   EventEditingStyledContext,
@@ -143,15 +144,17 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventTimelinePremiumRoot
-                ref={forwardedRef}
-                className={clsx(classes.root, className)}
-                {...other}
-              >
-                <EventTimelinePremiumContent />
-                <ErrorContainer />
-                {watermark}
-              </EventTimelinePremiumRoot>
+              <SchedulerDirectionProvider>
+                <EventTimelinePremiumRoot
+                  ref={forwardedRef}
+                  className={clsx(classes.root, className)}
+                  {...other}
+                >
+                  <EventTimelinePremiumContent />
+                  <ErrorContainer />
+                  {watermark}
+                </EventTimelinePremiumRoot>
+              </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
