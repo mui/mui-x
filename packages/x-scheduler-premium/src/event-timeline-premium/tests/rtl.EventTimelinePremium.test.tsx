@@ -1,4 +1,4 @@
-import { act, screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   EventTimelinePremium,
@@ -15,13 +15,46 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 
-// The virtualizer reads the scroll position and the layout, so this only runs in the browser.
-describe.skipIf(isJSDOM)('<EventTimelinePremium /> - RTL', () => {
+describe('<EventTimelinePremium /> - RTL', () => {
   const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  it('should virtualize the columns from the RTL scroll position', async () => {
+  it('should mirror the arrow keys of the Base UI components', async () => {
+    const resource = ResourceBuilder.new().title('Resource').build();
+    const event = EventBuilder.new()
+      .title('Meeting')
+      .resource(resource)
+      .span('2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z')
+      .build();
+
+    const { user } = await renderSettled(
+      <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
+        <div dir="rtl" style={{ width: 1200, height: 600 }}>
+          <EventTimelinePremium
+            events={[event]}
+            resources={[resource]}
+            visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          />
+        </div>
+      </ThemeProvider>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /^Meeting,/ }));
+    const dialog = await screen.findByRole('dialog');
+    // The color picker is a Base UI ToggleGroup, which reads the direction from the root.
+    const colorGroup = within(dialog).getByRole('group', { name: 'Event color' });
+    const colors = within(colorGroup).getAllByRole('button');
+
+    await user.click(colors[0]);
+    await user.keyboard('{ArrowLeft}');
+
+    // In LTR, ArrowLeft from the first color loops to the last one.
+    expect(colors[1]).toHaveFocus();
+  });
+
+  // The virtualizer reads the scroll position and the layout, so this only runs in the browser.
+  it.skipIf(isJSDOM)('should virtualize the columns from the RTL scroll position', async () => {
     const resource = ResourceBuilder.new().title('Resource').build();
     // On the last day of the `dayAndHour` axis, so it's virtualized out before scrolling.
     const lateEvent = EventBuilder.new()
