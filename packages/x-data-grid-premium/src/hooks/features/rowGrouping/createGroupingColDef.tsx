@@ -241,8 +241,10 @@ export const createGroupingColDefForOneGroupingCriteria = ({
             api: params.api,
             hasFocus: params.hasFocus,
           };
-          if (leafColDef.renderCell) {
-            return leafColDef.renderCell(leafParams);
+          // Like in a regular cell, a `renderCell` returning `undefined` renders the formatted value.
+          const renderedLeaf = leafColDef.renderCell?.(leafParams);
+          if (renderedLeaf !== undefined) {
+            return renderedLeaf;
           }
 
           return <GridGroupingColumnLeafCell {...leafParams} />;
@@ -375,8 +377,10 @@ export const createGroupingColDefForAllGroupingCriteria = ({
             api: params.api,
             hasFocus: params.hasFocus,
           };
-          if (leafColDef.renderCell) {
-            return leafColDef.renderCell(leafParams);
+          // Like in a regular cell, a `renderCell` returning `undefined` renders the formatted value.
+          const renderedLeaf = leafColDef.renderCell?.(leafParams);
+          if (renderedLeaf !== undefined) {
+            return renderedLeaf;
           }
 
           return <GridGroupingColumnLeafCell {...leafParams} />;

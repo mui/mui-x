@@ -1,0 +1,9 @@
+<DataGridPremium
+  featureDependencies={{ formula: formulaFeature }}
+  rows={rows}
+  columns={columns}
+  initialState={{ computedColumns: { model: computedColumns } }}
+  showToolbar
+  rowSelection={false}
+  disablePivoting
+/>

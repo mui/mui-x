@@ -1,6 +1,7 @@
 export enum GridSidebarValue {
   Pivot = 'pivot',
   Charts = 'charts',
+  ComputedColumns = 'computedColumns',
 }
 
 export interface GridSidebarApi {

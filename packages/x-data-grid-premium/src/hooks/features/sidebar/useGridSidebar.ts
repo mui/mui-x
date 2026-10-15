@@ -42,16 +42,21 @@ export const useGridSidebar = (
 
   const showSidebar = React.useCallback<GridSidebarApi['showSidebar']>(
     (newValue, sidebarId, labelId) => {
-      apiRef.current.setState((state) => ({
-        ...state,
-        sidebar: {
-          ...state.sidebar,
-          open: true,
-          value: newValue,
-          sidebarId,
-          labelId,
-        },
-      }));
+      apiRef.current.setState((state) => {
+        // A panel shown again from an entry point without ids (a column menu, the API)
+        // keeps the ids its trigger registered: `aria-controls` stays valid.
+        const keepIds = state.sidebar.value === newValue;
+        return {
+          ...state,
+          sidebar: {
+            ...state.sidebar,
+            open: true,
+            value: newValue,
+            sidebarId: sidebarId ?? (keepIds ? state.sidebar.sidebarId : undefined),
+            labelId: labelId ?? (keepIds ? state.sidebar.labelId : undefined),
+          },
+        };
+      });
       apiRef.current.publishEvent('sidebarOpen', {
         value: newValue,
       });
