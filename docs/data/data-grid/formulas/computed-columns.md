@@ -8,7 +8,7 @@ title: Data Grid - Computed columns
 
 A computed column is defined once, by a formula, and evaluated for every row of the grid.
 Users create and edit computed columns from the toolbar, the column menu, or a side panel; you can also define them in code.
-The definitions are a serializable list, so they persist, restore, and travel with the rest of the grid state, and every change is one undo step.
+The definitions are a serializable list, so they persist, restore, and travel with the rest of the grid state, and every change made from the grid UI is one undo step.
 
 The demo below has two computed columns—**Total** and **Margin**—defined from the **Price**, **Cost**, **Qty**, and **Discount** columns.
 Edit any of those values and watch the computed cells update, or open the **Computed columns** panel from the toolbar to add a column of your own.
@@ -126,11 +126,11 @@ const computedColDef = (
 ```
 
 A change of the `computedColDef` prop applies right away.
-The columns are only re-created when the properties it resolves to change, so an inline object or function with the same content keeps them as they are.
+The columns are only re-created when the properties it resolves to change—they are compared one by one—so an inline object or function resolving to the same values keeps them as they are.
 A width that the user set by resizing a column is kept.
 
 :::success
-For better performance, keep the `computedColDef` prop reference stable between two renders when it holds functions, such as a `valueFormatter`: a new function re-creates the computed columns.
+For better performance, keep the `computedColDef` prop reference stable between two renders when it holds functions, arrays, or objects, such as a `valueFormatter` or `filterOperators`: a new one re-creates the computed columns.
 :::
 
 The `field`, `type`, `editable`, `allowFormulas`, `valueGetter`, `valueSetter`, `groupingValueGetter`, and `rowSpanValueGetter` properties are owned by the feature and cannot be overridden; `cellClassName` and `headerClassName` are merged with the classes of the feature.

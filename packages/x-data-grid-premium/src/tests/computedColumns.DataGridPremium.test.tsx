@@ -765,6 +765,31 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getRecordColDef('ratio')).to.equal(ratioColDef);
     });
 
+    it('should resolve the overrides again when only the `editable` flag of a definition changes', async () => {
+      const computedColDef = (definition: GridComputedColumnDefinition) => ({
+        headerClassName:
+          definition.field === 'total' && definition.editable === false ? 'locked' : 'open',
+      });
+      await render(
+        <Test
+          initialState={{ computedColumns: { model: [total, ratio] } }}
+          computedColDef={computedColDef}
+        />,
+      );
+      expect(getHeader('total')).to.have.class('open');
+
+      act(() => apiRef.current!.updateComputedColumn('total', { editable: false }));
+      expect(getHeader('total')).to.have.class('locked');
+
+      // A flag change that resolves to the same overrides keeps the column.
+      const ratioColDef = getRecordColDef('ratio');
+      act(() => apiRef.current!.updateComputedColumn('ratio', { editable: false }));
+      expect(getRecordColDef('ratio')).to.equal(ratioColDef);
+
+      act(() => apiRef.current!.updateComputedColumn('total', { editable: undefined }));
+      expect(getHeader('total')).to.have.class('open');
+    });
+
     it('should not hydrate the columns without computed columns and apply the prop to the next one', async () => {
       const { setProps } = await render(<Test computedColDef={{ width: 120 }} />);
       const columnsChange = subscribeColumnsChange();

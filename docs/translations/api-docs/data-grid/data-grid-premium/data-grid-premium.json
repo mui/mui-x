@@ -74,7 +74,7 @@
       "description": "Set the column visibility model of the Data Grid. If defined, the Data Grid will ignore the <code>hide</code> property in <a href='/x/api/data-grid/grid-col-def/'>GridColDef</a>."
     },
     "computedColDef": {
-      "description": "The column definition properties applied to the columns generated from the <code>computedColumns</code> model. Pass a function to return different properties for each computed column. Keep the reference stable between renders when it holds functions: overrides whose content changes re-create the computed columns."
+      "description": "The column definition properties applied to the columns generated from the <code>computedColumns</code> model. Pass a function to return different properties for each computed column. Keep the reference stable between renders when it holds functions, arrays, or objects: the overrides are compared property by property, so a new one re-creates the computed columns."
     },
     "computedColumns": {
       "description": "Set the computed columns of the grid: read-only columns whose value is a formula evaluated for every row from the other fields of the same row. Has no effect unless the formula feature is provided through <code>featureDependencies</code>."

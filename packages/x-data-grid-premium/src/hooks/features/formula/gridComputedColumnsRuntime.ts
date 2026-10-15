@@ -374,13 +374,17 @@ export function ensureComputedColumnRecords(
     let record: GridComputedColumnRecord;
     if (previous !== undefined && areDefinitionsEqual(previous.definition, definition)) {
       record = previous;
-      if (overridesChanged) {
+      // The `editable` flag does not change the column, but a `computedColDef` function
+      // can read it, so it receives the new definition.
+      const definitionChanged = previous.definition.editable !== definition.editable;
+      if (overridesChanged || definitionChanged) {
         // An inline prop is a new object on every render: the column is only re-created
         // when the overrides of the definition changed.
         const overrides = resolveComputedColDefOverrides(definition, computedColDef);
         if (!areComputedColDefOverridesEqual(overrides, previous.overrides)) {
           record = {
             ...previous,
+            definition,
             overrides,
             colDef: applyComputedColDefOverrides(
               previous.baseColDef,
@@ -389,6 +393,8 @@ export function ensureComputedColumnRecords(
               previous.isErrorRow,
             ),
           };
+        } else if (definitionChanged) {
+          record = { ...previous, definition };
         }
       }
     } else {
