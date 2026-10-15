@@ -118,10 +118,10 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   return (
     <DayTimeGridColumn
       className={classes.dayTimeGridColumn}
-      start={start}
-      end={end}
-      dayStartMinute={startTime * 60}
-      dayEndMinute={endTime * 60}
+      start={column.start}
+      end={column.end}
+      dayStartMinute={column.dayStartMinute}
+      dayEndMinute={column.dayEndMinute}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
       data-weekend={isWeekend(adapter, day.value) || undefined}

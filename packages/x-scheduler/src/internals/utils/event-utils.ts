@@ -27,7 +27,7 @@ export function isOccurrenceInDayGrid(
   switch (timeGridEvents) {
     case 'same-day-only':
       return isOccurrenceAllDayOrMultipleDay(occurrence, adapter);
-    // Invalid values fall back to the default, like the other `viewConfig` options.
+    // Invalid values fall back to the default.
     case 'shorter-than-one-day':
     default:
       return (
