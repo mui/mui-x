@@ -366,6 +366,7 @@ export const createColumnsState = ({
     const { field } = newColumn;
     columnsToKeep[field] = true;
     let existingState = columnsState.lookup[field];
+    const isPartialUpdate = existingState != null && newColumn.type === undefined;
 
     if (existingState == null) {
       existingState = {
@@ -379,7 +380,7 @@ export const createColumnsState = ({
     }
 
     // If the column type has changed - merge the existing state with the default column type definition
-    if (existingState && existingState.type !== newColumn.type) {
+    if (existingState && !isPartialUpdate && existingState.type !== newColumn.type) {
       existingState = {
         ...getColTypeDef(newColumn.type),
         field,
@@ -398,7 +399,7 @@ export const createColumnsState = ({
     });
 
     const mergedProps = {
-      ...getColTypeDef(newColumn.type),
+      ...(!isPartialUpdate ? getColTypeDef(newColumn.type) : {}),
       hasBeenResized,
       field,
     };
