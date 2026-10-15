@@ -213,11 +213,7 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       ]);
     });
 
-    // Regression: a native double-click on an unselected arrowhead used to delete the
-    // dependency. The first click selects the arrow and mounts the delete button under
-    // the pointer, so the second physical click landed on Delete. A synthetic
-    // `fireEvent.doubleClick` keeps the same target across both clicks and misses it, so
-    // this drives a real browser double-click.
+    // `fireEvent.doubleClick` keeps the same target for both clicks, so it can't reproduce this.
     it.skipIf(isJSDOM)(
       'should open the editor and not delete on a double click on the unselected arrowhead',
       async () => {

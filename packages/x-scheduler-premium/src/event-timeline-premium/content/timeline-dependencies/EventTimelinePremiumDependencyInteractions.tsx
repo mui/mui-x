@@ -211,11 +211,8 @@ function DependencyInteractionsLayer({
               <g
                 data-dependency-delete-button=""
                 onClick={(event) => {
-                  // Selecting an unselected arrow from its arrowhead mounts this button
-                  // right under the pointer, so the second click of a double-click lands
-                  // here instead of on the hit-area the first click selected from. A
-                  // double-click is always an edit gesture: route that tail click to the
-                  // editor rather than deleting the dependency the user meant to open.
+                  // The button mounts under the pointer when selecting from the arrowhead,
+                  // so the second click of a double-click lands here.
                   if (event.detail > 1) {
                     handleDoubleClick(arrow, event);
                     return;
