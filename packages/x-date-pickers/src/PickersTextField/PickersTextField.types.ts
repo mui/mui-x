@@ -36,6 +36,7 @@ export interface PickersTextFieldSlots {
   htmlInput?: React.ElementType;
   /**
    * The component used for the form helper text slot.
+   * Always rendered as an ARIA live region; a custom component must forward `aria-live` and render its root even without children.
    * @default FormHelperText
    */
   formHelperText?: React.ElementType;
