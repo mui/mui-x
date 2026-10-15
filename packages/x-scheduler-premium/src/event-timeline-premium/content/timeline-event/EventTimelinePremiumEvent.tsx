@@ -51,7 +51,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   position: 'relative',
   width: 'var(--width)',
   height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)})`,
-  marginLeft: 'var(--x-position)',
+  marginInlineStart: 'var(--start-position)',
   gridRow: 'var(--row-index, 1)',
   gridColumn: 1,
   display: 'flex',

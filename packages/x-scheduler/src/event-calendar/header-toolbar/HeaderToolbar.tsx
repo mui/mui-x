@@ -53,9 +53,9 @@ const HeaderToolbarDateNavigator = styled('div', {
   gap: theme.spacing(2),
 }));
 
-const HeaderToolbarLeftElement = styled('div', {
+const HeaderToolbarStartElement = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'HeaderToolbarLeftElement',
+  slot: 'HeaderToolbarStartElement',
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -122,7 +122,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       {...other}
       className={clsx(className, classes.headerToolbar)}
     >
-      <HeaderToolbarLeftElement className={classes.headerToolbarLeftElement}>
+      <HeaderToolbarStartElement className={classes.headerToolbarStartElement}>
         {/* Compact: opens the side panel drawer. */}
         <IconButton
           data-compact-only
@@ -154,7 +154,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             </HeaderToolbarWeekNumber>
           )}
         </HeaderToolbarLabel>
-      </HeaderToolbarLeftElement>
+      </HeaderToolbarStartElement>
       <HeaderToolbarActions className={classes.headerToolbarActions}>
         <HeaderToolbarDateNavigator
           role="navigation"

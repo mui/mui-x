@@ -1,3 +1,3 @@
 export enum TimelineGridCurrentTimeIndicatorCssVars {
-  xPosition = '--x-position',
+  startPosition = '--start-position',
 }

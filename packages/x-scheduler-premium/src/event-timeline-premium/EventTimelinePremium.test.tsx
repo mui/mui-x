@@ -473,9 +473,9 @@ describe('<EventTimelinePremium />', () => {
 
       const eventElement = getEventByTitle(event1.title);
       expect(eventElement).not.to.equal(null);
-      const xPositioning = eventElement.style.getPropertyValue('--x-position');
+      const startPositioning = eventElement.style.getPropertyValue('--start-position');
 
-      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+      const eventPosition = (totalWidth * parseFloat(startPositioning)) / 100;
 
       expect(eventPosition).to.be.greaterThanOrEqual(hourBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
@@ -488,9 +488,9 @@ describe('<EventTimelinePremium />', () => {
 
       const eventElement = getEventByTitle(event3.title);
       expect(eventElement).not.to.equal(null);
-      const xPositioning = eventElement.style.getPropertyValue('--x-position');
+      const startPositioning = eventElement.style.getPropertyValue('--start-position');
 
-      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+      const eventPosition = (totalWidth * parseFloat(startPositioning)) / 100;
 
       expect(eventPosition).to.be.greaterThanOrEqual(dayBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
@@ -509,9 +509,9 @@ describe('<EventTimelinePremium />', () => {
 
       const eventElement = getEventByTitle(event1.title);
       expect(eventElement).not.to.equal(null);
-      const xPositioning = eventElement.style.getPropertyValue('--x-position');
+      const startPositioning = eventElement.style.getPropertyValue('--start-position');
 
-      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+      const eventPosition = (totalWidth * parseFloat(startPositioning)) / 100;
 
       expect(eventPosition).to.be.greaterThanOrEqual(dayBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
@@ -538,17 +538,17 @@ describe('<EventTimelinePremium />', () => {
 
       const event1Element = getEventByTitle(event1.title);
       expect(event1Element).not.to.equal(null);
-      const xPositioning = event1Element.style.getPropertyValue('--x-position');
+      const startPositioning = event1Element.style.getPropertyValue('--start-position');
 
-      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+      const eventPosition = (totalWidth * parseFloat(startPositioning)) / 100;
 
       expect(eventPosition).to.be.lessThanOrEqual(monthWidth); // first month
 
       const nextMonthEventElement = getEventByTitle('Next month');
       expect(nextMonthEventElement).not.to.equal(null);
-      const xPositioning2 = nextMonthEventElement.style.getPropertyValue('--x-position');
+      const startPositioning2 = nextMonthEventElement.style.getPropertyValue('--start-position');
 
-      const eventPosition2 = (totalWidth * parseFloat(xPositioning2)) / 100;
+      const eventPosition2 = (totalWidth * parseFloat(startPositioning2)) / 100;
 
       expect(eventPosition2).to.be.greaterThanOrEqual(monthWidth); // second month
       expect(eventPosition2).to.be.lessThanOrEqual(monthWidth * 2); // second month
@@ -569,17 +569,17 @@ describe('<EventTimelinePremium />', () => {
       const totalWidth = 30 * 200;
       const thisYearEventElement = getEventByTitle(thisYearEvent.title);
       expect(thisYearEventElement).not.to.equal(null);
-      const xPositioning = thisYearEventElement.style.getPropertyValue('--x-position');
+      const startPositioning = thisYearEventElement.style.getPropertyValue('--start-position');
 
-      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+      const eventPosition = (totalWidth * parseFloat(startPositioning)) / 100;
 
       expect(eventPosition).to.be.lessThanOrEqual(200); // 2025
 
       const nextYearEventElement = getEventByTitle(nextYearEvent.title);
       expect(nextYearEventElement).not.to.equal(null);
-      const xPositioning2 = nextYearEventElement.style.getPropertyValue('--x-position');
+      const startPositioning2 = nextYearEventElement.style.getPropertyValue('--start-position');
 
-      const eventPosition2 = (totalWidth * parseFloat(xPositioning2)) / 100;
+      const eventPosition2 = (totalWidth * parseFloat(startPositioning2)) / 100;
 
       expect(eventPosition2).to.be.greaterThanOrEqual(200); // 2026
       expect(eventPosition2).to.be.lessThanOrEqual(400); // 2026

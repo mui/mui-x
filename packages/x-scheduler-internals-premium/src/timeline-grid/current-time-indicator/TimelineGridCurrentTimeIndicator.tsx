@@ -59,7 +59,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
         elementProps,
         {
           style: {
-            [TimelineGridCurrentTimeIndicatorCssVars.xPosition]: position,
+            [TimelineGridCurrentTimeIndicatorCssVars.startPosition]: position,
           } as React.CSSProperties,
         },
       ],

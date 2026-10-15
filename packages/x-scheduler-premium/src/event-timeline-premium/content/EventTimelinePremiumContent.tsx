@@ -263,7 +263,7 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   // Extend below the row container by the filler height so the line reaches
   // the very bottom of the viewport when the rows don't fill it.
   bottom: 'calc(-1 * var(--filler-height, 0px))',
-  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
+  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--start-position))',
   width: 0,
   zIndex: 2,
   borderLeft: `2px solid ${(theme.vars || theme).palette.primary.main}`,
@@ -278,7 +278,7 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   // `bottom: -4` so the circle sits centered on the header/body boundary line.
   bottom: -4,
   // 3px = half the circle's width (4px) minus half the line's width (1px), to center the circle on the line.
-  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
+  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--start-position) - 3px)',
   width: 8,
   height: 8,
   borderRadius: '50%',

@@ -935,12 +935,6 @@
       "isGlobal": false
     },
     {
-      "key": "headerToolbarLeftElement",
-      "className": "MuiEventCalendar-headerToolbarLeftElement",
-      "description": "Styles applied to the header toolbar left side element.",
-      "isGlobal": false
-    },
-    {
       "key": "headerToolbarNextButton",
       "className": "MuiEventCalendar-headerToolbarNextButton",
       "description": "Styles applied to the header toolbar next button element.",
@@ -956,6 +950,12 @@
       "key": "headerToolbarSidePanelToggle",
       "className": "MuiEventCalendar-headerToolbarSidePanelToggle",
       "description": "Styles applied to the header toolbar side panel toggle button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarStartElement",
+      "className": "MuiEventCalendar-headerToolbarStartElement",
+      "description": "Styles applied to the header toolbar start side element.",
       "isGlobal": false
     },
     {

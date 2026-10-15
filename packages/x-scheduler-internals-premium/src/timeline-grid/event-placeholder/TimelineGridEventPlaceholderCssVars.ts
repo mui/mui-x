@@ -1,4 +1,4 @@
 export enum TimelineGridEventPlaceholderCssVars {
-  xPosition = '--x-position',
+  startPosition = '--start-position',
   width = '--width',
 }
