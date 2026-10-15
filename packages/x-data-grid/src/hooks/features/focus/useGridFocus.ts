@@ -369,8 +369,9 @@ export const useGridFocus = (
       if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.columnHeader)) {
         return;
       }
-      // Don't clear focus when it moves to a body cell — setCellFocus already set it
-      if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.cell)) {
+      // Don't clear focus when it moves to a body cell — setCellFocus already set it.
+      // The focus can also move to an element inside the cell, for example an editor.
+      if ((event.relatedTarget as Element | null)?.closest?.(`.${gridClasses.cell}`)) {
         return;
       }
       logger.debug(`Clearing focus`);

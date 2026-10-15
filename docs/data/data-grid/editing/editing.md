@@ -80,6 +80,32 @@ When a cell is in `view` mode, users can start editing a cell (or row if `editMo
 You can also enter edit mode with a single click by following [this recipe](/x/react-data-grid/recipes-editing/#single-click-editing).
 :::
 
+#### Start editing with an input method editor
+
+Korean, Japanese, and Chinese text is typed through an input method editor (IME).
+Browsers only start an IME composition in an editable element that has focus.
+By default, a focused cell is not editable, so the first key of the composition is typed as a Latin character.
+
+Use the `imeFastEdit` key inside `experimentalFeatures` to start editing with the first key of a composition:
+
+```tsx
+<DataGrid experimentalFeatures={{ imeFastEdit: true }} />
+```
+
+With this feature, the focused editable cell renders its edit component before edit mode starts, and the edit component gets the focus.
+The composition starts in the edit component, and edit mode starts with the `compositionStart` reason.
+
+:::warning
+This feature is experimental:
+
+- It only applies to columns of type `string` that use the default edit component.
+- It is disabled on devices with a coarse pointer, such as touch screens, to not open the virtual keyboard.
+- The focus is on the edit component instead of the cell, so screen readers can announce the focused cell differently.
+
+:::
+
+{{"demo": "ImeFastEditGrid.js", "bg": "inline"}}
+
 ### Stop editing
 
 When a cell is in `edit` mode, the user can stop editing with any of the following interactions:

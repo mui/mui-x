@@ -7,7 +7,7 @@ import { errorOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
-import { GridEditModes, GridRowModes } from '../../../models/gridEditRowModel';
+import { GridEditModes, GridRowModes, GridCellModes } from '../../../models/gridEditRowModel';
 import type {
   GridEditingState,
   GridEditCellProps,
@@ -30,6 +30,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
 import type { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
+import { isEventFromPreMountedEditor } from '../../../utils/cellEditor';
 import {
   gridColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
@@ -279,13 +280,36 @@ export const useGridRowEditing = (
             reason,
             // Only pass the pressed key when the row editing is controlled via `rowModesModel`.
             // In uncontrolled mode, the default editor already inserts the character and passing it here would duplicate it.
-            key: rowModesModelProp && isPrintableKey(event) ? event.key : undefined,
+            // An editor rendered before edit mode starts already receives the character.
+            key:
+              rowModesModelProp && isPrintableKey(event) && !isEventFromPreMountedEditor(event)
+                ? event.key
+                : undefined,
           };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
         }
       }
     },
     [apiRef, hasFieldsWithErrors, rowModesModelProp],
+  );
+
+  const handleCellCompositionStart = React.useCallback<GridEventListener<'cellCompositionStart'>>(
+    (params, event) => {
+      if (params.cellMode !== GridCellModes.View || !params.isEditable) {
+        return;
+      }
+      if (apiRef.current.getRowMode(params.id) !== GridRowModes.View) {
+        return;
+      }
+      const rowParams = apiRef.current.getRowParams(params.id);
+      const newParams: GridRowEditStartParams = {
+        ...rowParams,
+        field: params.field,
+        reason: GridRowEditStartReasons.compositionStart,
+      };
+      apiRef.current.publishEvent('rowEditStart', newParams, event);
+    },
+    [apiRef],
   );
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
@@ -296,7 +320,8 @@ export const useGridRowEditing = (
 
       if (
         reason === GridRowEditStartReasons.printableKeyDown ||
-        reason === GridRowEditStartReasons.deleteKeyDown
+        reason === GridRowEditStartReasons.deleteKeyDown ||
+        reason === GridRowEditStartReasons.compositionStart
       ) {
         // If the user typed a printable key, initialize the value with that key
         // to avoid losing the first character when the component is controlled.
@@ -344,6 +369,7 @@ export const useGridRowEditing = (
   useGridEvent(apiRef, 'cellFocusIn', runIfEditModeIsRow(handleCellFocusIn));
   useGridEvent(apiRef, 'cellFocusOut', runIfEditModeIsRow(handleCellFocusOut));
   useGridEvent(apiRef, 'cellKeyDown', runIfEditModeIsRow(handleCellKeyDown));
+  useGridEvent(apiRef, 'cellCompositionStart', runIfEditModeIsRow(handleCellCompositionStart));
 
   useGridEvent(apiRef, 'rowEditStart', runIfEditModeIsRow(handleRowEditStart));
   useGridEvent(apiRef, 'rowEditStop', runIfEditModeIsRow(handleRowEditStop));

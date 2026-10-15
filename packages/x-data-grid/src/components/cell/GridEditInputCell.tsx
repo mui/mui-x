@@ -86,6 +86,12 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
 
   const handleChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
+      // The editor can be rendered before edit mode starts (`experimentalFeatures.imeFastEdit`).
+      // If edit mode does not start, ignore the text, so that the input stays empty.
+      if (apiRef.current.getCellMode(id, field) === 'view') {
+        return;
+      }
+
       const newValue = event.target.value;
 
       const column = apiRef.current.getColumn(field);
