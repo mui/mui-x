@@ -20,10 +20,13 @@ import {
   useGridApiRef,
   gridClasses,
   GridActionsCell,
+  gridRowsMetaSelector,
+  gridRowPositionSelector,
 } from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridRowIdGetter,
+  GridRowHeightParams,
   GridRowClassNameParams,
   GridRowModel,
   GridRenderCellParams,
@@ -1256,6 +1259,30 @@ describe('<DataGrid /> - Rows', () => {
         expect(getRow(0).clientHeight).to.equal(30);
         expect(getRow(1).clientHeight).to.equal(30);
         expect(getRow(2).clientHeight).to.equal(30);
+      });
+
+      it('should only build the row positions once the rows have different heights', () => {
+        const { setProps } = render(<TestCase />);
+
+        expect(gridRowsMetaSelector(apiRef).uniformRowHeight).to.equal(ROW_HEIGHT);
+        expect(gridRowPositionSelector(apiRef, 2)).to.equal(2 * ROW_HEIGHT);
+        expect(gridRowsMetaSelector(apiRef).positions).to.deep.equal([
+          0,
+          ROW_HEIGHT,
+          2 * ROW_HEIGHT,
+        ]);
+
+        setProps({
+          getRowHeight: ({ id }: GridRowHeightParams) => (id === 'c2' ? 100 : null),
+        });
+
+        expect(gridRowsMetaSelector(apiRef).uniformRowHeight).to.equal(null);
+        expect(gridRowsMetaSelector(apiRef).positions).to.deep.equal([
+          0,
+          ROW_HEIGHT,
+          ROW_HEIGHT + 100,
+        ]);
+        expect(gridRowPositionSelector(apiRef, 2)).to.equal(ROW_HEIGHT + 100);
       });
 
       it('should set the second row to have a different row height than the others', () => {

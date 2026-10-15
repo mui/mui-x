@@ -17,7 +17,7 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import type { GridEventListener, GridRenderEditCellParams } from '@mui/x-data-grid-pro';
-import { vars } from '@mui/x-data-grid/internals';
+import { RowsMeta, vars } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getFormulaReferencePaletteStyles } from '../hooks/features/formula/gridFormulaReferenceHighlights';
@@ -327,15 +327,11 @@ function GridFormulaEditorFloating(props: GridFormulaEditorFloatingProps) {
   const viewportWidth = dimensions.viewportInnerSize.width;
   const viewportHeight = dimensions.viewportInnerSize.height;
   const rowIndexInPage = apiRef.current.getRowIndexRelativeToVisibleRows(id) as number | undefined;
-  const rowPosition = rowsMeta.positions[rowIndexInPage ?? 0] ?? 0;
-  const nextRowPosition = rowsMeta.positions[(rowIndexInPage ?? 0) + 1];
+  const rowPosition = RowsMeta.getPosition(rowsMeta, rowIndexInPage ?? 0) ?? 0;
   const rowTop = (dimensions.topContainerHeight ?? 0) + rowPosition;
   // The row box including the 1px border seam, i.e. the surface's height before it
   // ever wraps (and its permanent minimum).
-  const rowBoxHeight =
-    (nextRowPosition !== undefined ? nextRowPosition : rowsMeta.currentPageTotalHeight) -
-    rowPosition +
-    1;
+  const rowBoxHeight = RowsMeta.getSlotHeight(rowsMeta, rowIndexInPage ?? 0) + 1;
 
   // The ratcheted height, floored at the row box. Reading the refs here mirrors
   // `appliedWidth`: the imperative growth below writes the same values to the DOM,

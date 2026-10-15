@@ -46,9 +46,10 @@ export interface DependencyAnchorResolverParameters {
    */
   resources: readonly { resource: SchedulerResource; occurrences: SchedulerEventOccurrence[] }[];
   /**
-   * The y offset of each row in pixels, in the same order as `resources`.
+   * The y offset in pixels of the row at `rowIndex` (in `resources` order), or `undefined`
+   * out of range.
    */
-  rowPositions: readonly number[];
+  getRowPosition: (rowIndex: number) => number | undefined;
   /**
    * The visible date range and daily hour window the arrows are positioned in.
    */
@@ -121,7 +122,7 @@ export function createDependencyAnchorResolver(
   const {
     adapter,
     resources,
-    rowPositions,
+    getRowPosition,
     axis,
     durationMs,
     positionByOccurrenceKey,
@@ -200,7 +201,7 @@ export function createDependencyAnchorResolver(
 
   const laneStep = laneMetrics.laneMinHeight + laneMetrics.laneGap;
   const getLaneTop = (rowIndex: number, lane: number): number =>
-    rowPositions[rowIndex] + laneMetrics.topPadding + (lane - 1) * laneStep;
+    getRowPosition(rowIndex)! + laneMetrics.topPadding + (lane - 1) * laneStep;
 
   const getEdgePoint = (
     anchor: DependencyArrowAnchor,
@@ -243,7 +244,7 @@ export function createDependencyAnchorResolver(
     detourOffset: laneMetrics.laneMinHeight / 2 + DEPENDENCY_ARROW_DETOUR_CLEARANCE,
     getAppearances,
     getPosition,
-    hasRowPosition: (rowIndex: number) => rowPositions[rowIndex] != null,
+    hasRowPosition: (rowIndex: number) => getRowPosition(rowIndex) != null,
     getEdgePoint,
     getRowObstacles,
   };
