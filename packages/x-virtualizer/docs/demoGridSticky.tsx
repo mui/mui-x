@@ -21,7 +21,6 @@ const columns = Array.from({ length: COLUMN_COUNT }, (_, index) => ({
   field: `col-${index}`,
   computedWidth: COLUMN_WIDTH,
 }));
-const columnsTotalWidth = COLUMN_COUNT * COLUMN_WIDTH;
 const pinnedColumns = { left: [columns[0]], right: [columns[COLUMN_COUNT - 1]] };
 
 const rows = Array.from({ length: ROW_COUNT }, (_, index) => ({
@@ -256,7 +255,7 @@ const Scrollbar = React.memo(function Scrollbar(props: {
         }
       : {
           height: 1,
-          width: dimensions.hasScrollX ? dimensions.columnsTotalWidth : 0,
+          width: dimensions.hasScrollX ? dimensions.contentSize.width : 0,
         };
   return (
     <div {...other} aria-hidden style={style}>
@@ -277,10 +276,7 @@ function Grid() {
     layout,
     dimensions: {
       rowHeight: ROW_HEIGHT,
-      columnsTotalWidth,
       topPinnedHeight: HEADER_HEIGHT,
-      leftPinnedWidth: COLUMN_WIDTH,
-      rightPinnedWidth: COLUMN_WIDTH,
     },
     virtualization: { layoutMode: 'sticky' },
 
@@ -318,19 +314,10 @@ function Grid() {
   const contentProps = virtualizer.store.use(LayoutGridSticky.selectors.contentProps);
   const topContainerProps = virtualizer.store.use(LayoutGridSticky.selectors.topContainerProps);
   const spacerTopProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerTopProps);
-  const spacerLeftProps = virtualizer.store.use(
-    LayoutGridSticky.selectors.spacerLeftProps,
-    columns,
-  );
-  const innerContainerProps = virtualizer.store.use(
-    LayoutGridSticky.selectors.innerContainerProps,
-    columns,
-  );
+  const spacerLeftProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerLeftProps);
+  const innerContainerProps = virtualizer.store.use(LayoutGridSticky.selectors.innerContainerProps);
   const windowProps = virtualizer.store.use(LayoutGridSticky.selectors.windowProps);
-  const innerWindowProps = virtualizer.store.use(
-    LayoutGridSticky.selectors.innerWindowProps,
-    columns,
-  );
+  const innerWindowProps = virtualizer.store.use(LayoutGridSticky.selectors.innerWindowProps);
   const windowContentProps = virtualizer.store.use(LayoutGridSticky.selectors.windowContentProps);
   const spacerBottomProps = virtualizer.store.use(LayoutGridSticky.selectors.spacerBottomProps);
   const bottomContainerProps = virtualizer.store.use(
