@@ -23,6 +23,10 @@ The demo below stores the data copied with <kbd><kbd class="key">Ctrl</kbd>+<kbd
 
 {{"demo": "ClipboardCopyAddRows.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::info
+To add new rows when users paste data past the last row, see [Add new rows on paste](#add-new-rows-on-paste).
+:::
+
 ### Triggering a copy without the keyboard shortcut
 
 To let users copy the current selection from a button (or any other UI, such as a context menu), combine public APIs: `apiRef.current.getSelectedCellsAsArray()` and `getCellSelectionModel()` for cell selection, `apiRef.current.getDataAsCsv()` for row selection, and `gridFocusCellSelector` as a fallback for a single focused cell.
@@ -127,6 +131,27 @@ If the callback throws or returns a rejected promise, the row will not be update
 The demo below shows how to persist the pasted data in the browser's `sessionStorage`.
 
 {{"demo": "ClipboardPastePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Add new rows on paste
+
+By default, the Data Grid ignores pasted rows that go past the last row. To add new rows for this data, use the `onBeforeClipboardPasteStart()` prop.
+Add empty rows with `apiRef.current.updateRows()` before the paste starts. The Data Grid then pastes the values into the new rows and parses them like any other value.
+
+Focus a cell in the last row and paste some tab-separated rows to try it.
+
+{{"demo": "ClipboardPasteAddRows.js", "bg": "inline"}}
+
+:::info
+To add the copied rows from a button, without the paste shortcut, see [Add new rows from copied data](#add-new-rows-from-copied-data).
+:::
+
+:::warning
+This recipe works only when the paste starts from the focused cell.
+When rows or a cell range are selected, the Data Grid pastes only into the selection.
+The empty rows are added at the end of the visible rows.
+With sorting, filtering, or pagination, the new rows can show in a different position.
+Undo does not remove the added rows. It only clears their values.
+:::
 
 ### Events
 
