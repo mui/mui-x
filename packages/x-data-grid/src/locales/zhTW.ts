@@ -148,6 +148,15 @@ const zhTWGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `${count} 個篩選器`,
   columnHeaderFiltersLabel: '顯示篩選器',
   columnHeaderSortIconLabel: '排序',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) => `已選取 ${count.toLocaleString()} 個`,

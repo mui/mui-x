@@ -150,6 +150,15 @@ const arSDGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} من المرشِحات النشطة` : `مرشِح نشط`,
   columnHeaderFiltersLabel: 'إظهار المرشحات',
   columnHeaderSortIconLabel: 'فرز',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) =>

@@ -146,6 +146,15 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `${count} filtre aktif`,
   columnHeaderFiltersLabel: 'Filtreleri göster',
   columnHeaderSortIconLabel: 'Sırala',
+  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
+  //   if (direction === 'asc') {
+  //     return `Sort ${columnName} in ascending order`;
+  //   }
+  //   if (direction === 'desc') {
+  //     return `Sort ${columnName} in descending order`;
+  //   }
+  //   return `Remove sorting from ${columnName}`;
+  // },
 
   // Rows selected footer text
   footerRowSelected: (count) => `${count.toLocaleString()} satır seçildi`,
