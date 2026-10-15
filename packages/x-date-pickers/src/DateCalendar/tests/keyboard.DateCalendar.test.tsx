@@ -1,7 +1,7 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
-import { vi, describe, it, expect } from 'vitest';
+import { spy } from 'sinon';
 
 describe('<DateCalendar /> keyboard interactions', () => {
   const { render } = createPickerRenderer();
@@ -68,8 +68,8 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10', expectMonthChangeCalls: 0 },
     ].forEach(({ initialDay, key, expectFocusedDay, expectMonthChangeCalls }) => {
       it(`${key}`, async () => {
-        const onMonthChange = vi.fn();
-        const { user } = render(
+        const onMonthChange = spy();
+        render(
           <DateCalendar
             defaultValue={adapterToUse.date(`2020-08-${initialDay}`)}
             onMonthChange={onMonthChange}
@@ -84,7 +84,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
-        expect(onMonthChange.mock.calls.length).to.equal(expectMonthChangeCalls);
+        expect(onMonthChange.callCount).to.equal(expectMonthChangeCalls);
       });
     });
 
