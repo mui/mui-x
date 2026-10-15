@@ -173,6 +173,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     referenceDate: referenceDateProp,
     reduceAnimations,
     onMonthChange,
+    onYearChange,
     minDate,
     maxDate,
     shouldDisableDate,
