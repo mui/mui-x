@@ -648,7 +648,7 @@
     },
     "headerToolbarStart": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header toolbar start element"
+      "nodeName": "the header toolbar start side element"
     },
     "headerToolbarTodayButton": {
       "description": "Styles applied to {{nodeName}}.",

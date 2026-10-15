@@ -958,7 +958,7 @@
     {
       "key": "headerToolbarStart",
       "className": "MuiEventCalendar-headerToolbarStart",
-      "description": "Styles applied to the header toolbar start element.",
+      "description": "Styles applied to the header toolbar start side element.",
       "isGlobal": false
     },
     {

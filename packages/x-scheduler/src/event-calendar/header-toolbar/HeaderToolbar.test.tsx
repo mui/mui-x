@@ -260,11 +260,18 @@ describe('week number badge', () => {
 describe('side panel toggle', () => {
   const { render } = createSchedulerRenderer();
 
-  it('should wrap the side panel toggle in the header toolbar start element', () => {
+  it('should wrap the side panel toggle in the header toolbar start side element', () => {
     render(<EventCalendar events={[]} resources={[]} />);
 
     const toggleButton = screen.getByRole('button', { name: 'Close side panel' });
     expect(toggleButton.parentElement).to.have.class(eventCalendarClasses.headerToolbarStart);
+  });
+
+  it('should apply the header toolbar label class to the visible date label', () => {
+    render(<EventCalendar events={[]} resources={[]} />);
+
+    const toggleButton = screen.getByRole('button', { name: 'Close side panel' });
+    expect(toggleButton.nextElementSibling).to.have.class(eventCalendarClasses.headerToolbarLabel);
   });
 
   // Rendering the full EventCalendar (rather than HeaderToolbar standalone) so the toggle

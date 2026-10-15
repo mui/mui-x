@@ -58,7 +58,7 @@ export interface EventCalendarClasses
   headerToolbar: string;
   /** Styles applied to the header toolbar actions element. */
   headerToolbarActions: string;
-  /** Styles applied to the header toolbar start element. */
+  /** Styles applied to the header toolbar start side element. */
   headerToolbarStart: string;
   /** Styles applied to the header toolbar label element. */
   headerToolbarLabel: string;
