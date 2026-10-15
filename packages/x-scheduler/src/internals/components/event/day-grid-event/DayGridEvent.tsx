@@ -23,13 +23,7 @@ import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
-import {
-  ARROW_DEPTH,
-  LEFT_ARROW_CLIP,
-  RIGHT_ARROW_CLIP,
-  BOTH_ARROWS_CLIP,
-  getArrowFocusVisibleStyles,
-} from '../arrowClips';
+import { ARROW_DEPTH, getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -77,21 +71,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
         color: 'var(--event-on-surface-bold)',
       },
-      '&[data-starting-before-edge]': {
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0,
-        clipPath: LEFT_ARROW_CLIP,
-        paddingLeft: ARROW_DEPTH + 8,
-      },
-      '&[data-ending-after-edge]': {
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-        clipPath: RIGHT_ARROW_CLIP,
-        paddingRight: ARROW_DEPTH + 8,
-      },
-      '&[data-starting-before-edge][data-ending-after-edge]': {
-        clipPath: BOTH_ARROWS_CLIP,
-      },
+      ...getArrowEdgeStyles(theme, ARROW_DEPTH + 8),
       ...getArrowFocusVisibleStyles((theme.shape.borderRadius as number) * 0.75),
     },
     '&[data-variant="invisible"]': {
@@ -210,10 +190,10 @@ const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
     opacity: 1,
   },
   '&[data-start]': {
-    left: 0,
+    insetInlineStart: 0,
   },
   '&[data-end]': {
-    right: 0,
+    insetInlineEnd: 0,
   },
 });
 
