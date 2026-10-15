@@ -669,6 +669,35 @@ describe('<DataGridPremium /> - History', () => {
     });
   });
 
+  describe('Pagination', () => {
+    it('should undo a cell edit on a page after the first page', async () => {
+      const { user } = render(
+        <Test
+          pagination
+          pageSizeOptions={[5]}
+          initialState={{ pagination: { paginationModel: { page: 1, pageSize: 5 } } }}
+        />,
+      );
+
+      const cell = document.querySelector<HTMLElement>(
+        '[role="row"][data-id="5"] [data-field="price1M"]',
+      )!;
+      await user.dblClick(cell);
+      await user.keyboard('1{Enter}');
+      // Let the debounced history validation run
+      await act(() => sleep(50));
+
+      expect(apiRef.current!.getRow(5).price1M).not.to.equal(51);
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.getRow(5).price1M).to.equal(51);
+    });
+  });
+
   describe('Data source integration', () => {
     it('should not track history when dataSource exists without updateRow method', async () => {
       function TestWithDataSourceNoUpdate() {

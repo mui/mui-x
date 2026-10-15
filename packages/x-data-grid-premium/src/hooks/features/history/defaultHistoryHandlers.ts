@@ -82,15 +82,8 @@ export const createCellEditHistoryHandler = (
         return false;
       }
 
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
-
       // Check if row is in the current page
-      const rowIndex = rowIdToIndexMap.get(id);
-      if (
-        rowIndex === undefined ||
-        rowIndex < (range?.firstRowIndex || 0) ||
-        rowIndex > (range?.lastRowIndex || rowIndex)
-      ) {
+      if (!gridVisibleRowsSelector(apiRef).rowIdToIndexMap.has(id)) {
         return false;
       }
 
@@ -198,15 +191,8 @@ export const createRowEditHistoryHandler = (
     validate: (data: GridRowEditHistoryData, direction: 'undo' | 'redo') => {
       const { id, oldRow, newRow } = data;
 
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
-
       // Check if row is in the current page
-      const rowIndex = rowIdToIndexMap.get(id);
-      if (
-        rowIndex === undefined ||
-        rowIndex < (range?.firstRowIndex || 0) ||
-        rowIndex > (range?.lastRowIndex || rowIndex)
-      ) {
+      if (!gridVisibleRowsSelector(apiRef).rowIdToIndexMap.has(id)) {
         return false;
       }
 
@@ -316,16 +302,12 @@ export const createClipboardPasteHistoryHandler = (
       }
 
       // Check if all affected rows are still visible and have expected values
-      const { rowIdToIndexMap, range } = gridVisibleRowsSelector(apiRef);
+      // `rowIdToIndexMap` only has the rows of the current page
+      const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
 
       for (let i = 0; i < updatedRowIds.length; i += 1) {
         const rowId = updatedRowIds[i];
-        const rowIndex = rowIdToIndexMap.get(rowId);
-        if (
-          rowIndex === undefined ||
-          rowIndex < (range?.firstRowIndex || 0) ||
-          rowIndex > (range?.lastRowIndex || rowIndex)
-        ) {
+        if (!rowIdToIndexMap.has(rowId)) {
           return false;
         }
 
