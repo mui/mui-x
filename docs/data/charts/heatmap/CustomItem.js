@@ -6,6 +6,9 @@ import { data } from './dumbData';
 function CustomCell(props) {
   const { x, y, width, height, ownerState, ...other } = props;
 
+  // Cells on the diagonal are rendered as circles.
+  const isDiagonal = ownerState.xIndex === ownerState.yIndex;
+
   return (
     <React.Fragment>
       <rect
@@ -15,7 +18,14 @@ function CustomCell(props) {
         width={width - 2 * 4}
         height={height - 2 * 4}
         fill={ownerState.color}
-        clipPath={ownerState.isHighlighted ? undefined : 'inset(0px round 10px)'}
+        clipPath={
+          // eslint-disable-next-line no-nested-ternary
+          ownerState.isHighlighted
+            ? undefined
+            : isDiagonal
+              ? 'circle(40%)'
+              : 'inset(0px round 10px)'
+        }
       />
       <text
         x={x + width / 2}

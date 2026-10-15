@@ -119,6 +119,7 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: MapShapeItemIdentifier;
       itemIdentifierWithData: MapShapeItemIdentifier;
       valueType: MapShapeValueType;
+      colorGetter: (name?: string) => string | null;
       highlightScope: CommonHighlightScope;
       descriptionGetterParams: {
         identifier: MapShapeItemIdentifier;

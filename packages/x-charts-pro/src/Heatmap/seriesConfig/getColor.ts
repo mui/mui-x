@@ -1,6 +1,10 @@
 import type { ColorProcessor } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'heatmap'> = (series, xAxis, yAxis, zAxis) => {
+  if (series.colorGetter) {
+    return series.colorGetter;
+  }
+
   const zColorScale = zAxis?.colorScale;
 
   if (zColorScale) {
