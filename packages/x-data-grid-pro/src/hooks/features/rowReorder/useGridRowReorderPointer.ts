@@ -20,6 +20,7 @@ import {
   getVisibleViewportBounds,
   gridDimensionsSelector,
   gridEditRowsStateSelector,
+  hasReachedAutoScrollDistance,
   usePointerDrag,
 } from '@mui/x-data-grid/internals';
 import type {
@@ -88,10 +89,6 @@ interface RowDragSession {
 // The scroll areas of HTML drag and drop show while a row is dragged.
 // They cover the edges of the rows, so hit-testing skips them.
 const HIT_TEST_IGNORE_SELECTOR = `.${gridClasses.scrollArea}`;
-
-// A long press starts the drag in place, maybe inside an edge scroll zone.
-// Auto-scroll waits until the pointer moves this far, so picking up a row at an edge doesn't scroll.
-const AUTO_SCROLL_ACTIVATION_DISTANCE = 10;
 
 /**
  * Row reordering with pointer events, for touch and pen input.
@@ -328,8 +325,12 @@ export const useGridRowReorderPointer = (
     session.clientY = position.clientY;
     if (
       !session.canAutoScroll &&
-      Math.hypot(session.clientX - session.startClientX, session.clientY - session.startClientY) >
-        AUTO_SCROLL_ACTIVATION_DISTANCE
+      hasReachedAutoScrollDistance(
+        session.startClientX,
+        session.startClientY,
+        session.clientX,
+        session.clientY,
+      )
     ) {
       session.canAutoScroll = true;
     }

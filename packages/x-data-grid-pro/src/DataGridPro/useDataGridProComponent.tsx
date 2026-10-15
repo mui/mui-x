@@ -64,6 +64,7 @@ import {
   useGridColumnReorder,
   columnReorderStateInitializer,
 } from '../hooks/features/columnReorder/useGridColumnReorder';
+import { useGridColumnReorderPointer } from '../hooks/features/columnReorder/useGridColumnReorderPointer';
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 import { useGridDataSourceTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridDataSourceTreeDataPreProcessors';
@@ -177,6 +178,7 @@ export const useDataGridProComponent = (
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
+  useGridColumnReorderPointer(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);

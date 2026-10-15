@@ -752,6 +752,15 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       width: '100%',
       height: '100%',
+      // A long press on a header starts a touch drag: it must not select text or open the iOS callout.
+      // Only on devices with a touch screen, so header text stays selectable with a mouse.
+      '@media (any-pointer: coarse)': {
+        '&[draggable="true"]': {
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          WebkitTouchCallout: 'none',
+        },
+      },
     },
     [`& .${c.rowReorderCellPlaceholder}`]: {
       display: 'none',
