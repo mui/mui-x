@@ -570,7 +570,7 @@ describe('<DateField /> - Editing', () => {
         composed: true,
       });
 
-      // @ts-ignore
+      // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
       clipboardEvent.clipboardData = {
         getData: () => pastedValue,
       };

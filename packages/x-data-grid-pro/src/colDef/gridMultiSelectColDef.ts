@@ -48,13 +48,11 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
   type: 'multiSelect',
   display: 'flex',
-  // @ts-ignore premium-only
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds availableAggregationFunctions only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds availableAggregationFunctions only when the Premium package is included.
   availableAggregationFunctions: ['size'],
-  // @ts-ignore premium-only
   pivotable: false,
-  // @ts-ignore premium-only
   chartable: true,
-  // @ts-ignore premium-only
   groupingValueGetter: ((value: (string | number)[]) => multiSelectKey(value)) as any,
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
@@ -112,7 +110,6 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   },
   filterOperators: getGridMultiSelectOperators(),
   getApplyQuickFilterFn: getGridMultiSelectQuickFilterFn,
-  // @ts-ignore premium-only
   pastedValueParser: (value: string, _row: any, column: any) => {
     const colDef = column as GridMultiSelectColDef;
     const valueOptions = getValueOptions(colDef) || [];

@@ -6,6 +6,8 @@ import {
 } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
+import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { isJSDOM } from 'test/utils/skipIf';
 import { fr } from 'date-fns/locale/fr';
 import {
   createDateLocaleTheme,
@@ -124,5 +126,37 @@ describe('<StandaloneWeekView />', () => {
 
       expect(screen.getByText('Ganztägig')).toBeVisible();
     });
+  });
+
+  describe('theme style overrides', () => {
+    it.skipIf(isJSDOM)(
+      'should apply the responsiveTypographyContainer style overrides from the theme',
+      () => {
+        const theme = createTheme({
+          components: {
+            MuiEventCalendar: {
+              styleOverrides: {
+                responsiveTypographyContainer: {
+                  '--EventCalendar-fontSize-eventTitle-sm': '0.7rem',
+                },
+              },
+            },
+          },
+        });
+
+        render(
+          <ThemeProvider theme={theme}>
+            <StandaloneWeekView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+          </ThemeProvider>,
+        );
+
+        const container = document.querySelector<HTMLElement>(
+          `.${eventCalendarClasses.responsiveTypographyContainer}`,
+        )!;
+        expect(
+          getComputedStyle(container).getPropertyValue('--EventCalendar-fontSize-eventTitle-sm'),
+        ).to.equal('0.7rem');
+      },
+    );
   });
 });

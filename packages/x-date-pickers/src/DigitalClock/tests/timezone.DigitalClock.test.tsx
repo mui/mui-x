@@ -59,7 +59,7 @@ describe('<DigitalClock /> - Timezone', () => {
               adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
             ),
           ),
-        ).to.have.length(adapter.lib === 'dayjs' ? 1 : 2);
+        ).to.have.length(2);
         expect(
           screen.getAllByText(
             adapter.format(
