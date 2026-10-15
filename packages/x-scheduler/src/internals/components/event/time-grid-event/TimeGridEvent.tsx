@@ -59,9 +59,8 @@ const getTouchResizeHandleStyles = (): CSSObject => ({
   position: 'absolute',
   width: TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX,
   height: TOUCH_RESIZE_HANDLE_VISUAL_SIZE_PX,
-  // Reset the full-width base geometry: the dot is anchored by a single side (inline start for
-  // start, inline end for end), and keeping both set would over-constrain it and pin both dots to
-  // the inline start.
+  // Reset the full-width base geometry: each dot is anchored by one inline side (start or end);
+  // keeping both would over-constrain it and pin both dots to the inline start.
   insetInline: 'auto',
   borderRadius: '50%',
   backgroundColor: 'var(--event-main)',
@@ -383,7 +382,9 @@ const TimeGridEventPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
   slot: 'TimeGridEventPlaceholder',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   ...getTimeGridEventRootStyles(theme),
-  padding: theme.spacing(0.5, 2, 0.5, 1.5),
+  paddingBlock: theme.spacing(0.5),
+  paddingInlineStart: theme.spacing(1.5),
+  paddingInlineEnd: theme.spacing(2),
   backgroundColor: 'var(--event-surface-subtle-hover)',
   color: 'var(--event-on-surface-subtle-primary)',
   // The placeholder fill is lighter than a real event, so bump the time label to the primary tone for

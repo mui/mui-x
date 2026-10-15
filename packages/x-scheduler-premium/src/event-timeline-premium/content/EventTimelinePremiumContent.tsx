@@ -359,8 +359,8 @@ const ScrollbarTitleHorizontal = styled(Scrollbar, {
 });
 
 // When the title scrollbar is not rendered (no overflow) but the events
-// horizontal scrollbar is, this filler sits in the bottom strip under the title column to
-// extend the title column's border down to the very bottom.
+// horizontal scrollbar is, this filler sits under the title column, in the scrollbar strip, to
+// extend the title column's inline-end border down to the very bottom.
 const TitleScrollbarFiller = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'TitleScrollbarFiller',

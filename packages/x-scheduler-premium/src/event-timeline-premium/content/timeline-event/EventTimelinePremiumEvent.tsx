@@ -17,7 +17,6 @@ import type { SchedulerDependencySourceDescription } from '@mui/x-scheduler-inte
 import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
-  ARROW_DEPTH,
   EventDragPreview,
   getArrowEdgeStyles,
   getPaletteVariants,
@@ -90,7 +89,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
-  ...getArrowEdgeStyles(theme, ARROW_DEPTH + 8),
+  ...getArrowEdgeStyles(theme, 8),
   '&[data-starting-before-edge]::before': {
     display: 'none',
   },

@@ -1,0 +1,46 @@
+import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
+import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import {
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
+} from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
+import { describe, it, expect } from 'vitest';
+
+// Reads the laid out styles, so this only runs in the browser.
+describe.skipIf(isJSDOM)('<StandaloneWeekView /> - RTL', () => {
+  const { renderSettled } = createSchedulerRenderer({
+    clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
+  });
+
+  it('should lay out overlapping events from the inline start', async () => {
+    const first = EventBuilder.new()
+      .title('First')
+      .span('2025-07-03T09:00:00Z', '2025-07-03T11:00:00Z')
+      .build();
+    const second = EventBuilder.new()
+      .title('Second')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z')
+      .build();
+
+    await renderSettled(
+      <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
+        <div dir="rtl" style={{ width: 1000, height: 800 }}>
+          <StandaloneWeekView events={[first, second]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+        </div>
+      </ThemeProvider>,
+    );
+
+    const getEventRect = (title: string) =>
+      screen
+        .getByText(title)
+        .closest(`.${eventCalendarClasses.timeGridEvent}`)!
+        .getBoundingClientRect();
+
+    expect(getEventRect('First').left).to.be.greaterThan(getEventRect('Second').right - 1);
+  });
+});

@@ -23,7 +23,7 @@ import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
-import { ARROW_DEPTH, getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
+import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -71,7 +71,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
         color: 'var(--event-on-surface-bold)',
       },
-      ...getArrowEdgeStyles(theme, ARROW_DEPTH + 8),
+      ...getArrowEdgeStyles(theme, 8),
       ...getArrowFocusVisibleStyles((theme.shape.borderRadius as number) * 0.75),
     },
     '&[data-variant="invisible"]': {

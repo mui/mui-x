@@ -1,16 +1,18 @@
 import type { Theme } from '@mui/material/styles';
 
-export const ARROW_DEPTH = 8; // px - depth of the chevron point
+const ARROW_DEPTH = 8; // px - depth of the chevron point
 const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
 const RIGHT_ARROW_CLIP = `polygon(0 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, 0 100%)`;
 const BOTH_ARROWS_CLIP = `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
 
 /**
- * Cuts a chevron on the edges of an event that continues before or after the visible range.
- * `clip-path` isn't flipped by the stylis RTL plugin, so the chevron side follows the theme direction.
+ * Squares the corners of the cut edges of an event that continues past its row or the visible range,
+ * and cuts a chevron there. `gap` is the space between the chevron and the content.
+ * `clip-path` has no logical form, so the chevron side follows `theme.direction`.
  */
-export const getArrowEdgeStyles = (theme: Theme, padding: number) => {
+export const getArrowEdgeStyles = (theme: Theme, gap: number = 0) => {
   const isRtl = theme.direction === 'rtl';
+  const padding = ARROW_DEPTH + gap;
   return {
     '&[data-starting-before-edge]': {
       borderStartStartRadius: 0,

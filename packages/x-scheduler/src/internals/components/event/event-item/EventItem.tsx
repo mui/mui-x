@@ -18,7 +18,7 @@ import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
-import { ARROW_DEPTH, getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
+import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -51,7 +51,7 @@ const EventItemCard = styled('div', {
         backgroundColor: 'var(--event-surface-selected-hover)',
       },
     },
-    ...getArrowEdgeStyles(theme, ARROW_DEPTH),
+    ...getArrowEdgeStyles(theme),
     ...getArrowFocusVisibleStyles(theme.shape.borderRadius),
   },
   '&[data-editing]': {

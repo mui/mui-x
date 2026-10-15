@@ -34,8 +34,8 @@ const CompactEventDrawerRoot = styled(SwipeableDrawer, {
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
-    borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
-    borderTopRightRadius: (theme.vars || theme).shape.borderRadius,
+    borderStartStartRadius: (theme.vars || theme).shape.borderRadius,
+    borderStartEndRadius: (theme.vars || theme).shape.borderRadius,
   },
 }));
 
