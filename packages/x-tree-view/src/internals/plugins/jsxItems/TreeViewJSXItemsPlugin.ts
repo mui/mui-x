@@ -115,6 +115,9 @@ Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
     orderedChildrenIds: TreeViewItemId[],
   ) => {
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+    const previousChildrenIds = new Set(
+      itemsSelectors.itemOrderedChildrenIds(this.store.state, parentId),
+    );
 
     this.store.update({
       itemOrderedChildrenIdsLookup: {
@@ -128,19 +131,15 @@ Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
     });
 
     // If a parent was selected while its children were unmounted (collapsed with unmountOnExit),
-    // re-run selection propagation now that the children are registered.
-    // The multiSelect guard matches the documented contract: selectionPropagation only works with multiSelect.
-    if (
-      parentId !== null &&
-      selectionSelectors.isMultiSelectEnabled(this.store.state) &&
-      selectionSelectors.propagationRules(this.store.state).descendants &&
-      selectionSelectors.isItemSelected(this.store.state, parentId)
-    ) {
-      this.store.selection.setItemSelection({
-        itemId: parentId,
-        shouldBeSelected: true,
-        keepExistingSelection: true,
-      });
-    }
+    // select its new selectable children. The other children keep their selection.
+    this.store.selection.propagateSelectionToNewItems(
+      parentId,
+      orderedChildrenIds.filter(
+        (childId) =>
+          !previousChildrenIds.has(childId) &&
+          !selectionSelectors.isItemSelected(this.store.state, childId) &&
+          selectionSelectors.canItemBeSelected(this.store.state, childId),
+      ),
+    );
   };
 }
