@@ -1241,6 +1241,12 @@
       "isGlobal": false
     },
     {
+      "key": "responsiveTypographyContainer",
+      "className": "MuiEventCalendar-responsiveTypographyContainer",
+      "description": "Styles applied to the element that hosts the responsive typography tokens.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiEventCalendar-root",
       "description": "Styles applied to the root element.",

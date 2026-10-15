@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridToolbarContainer,
+  Toolbar as GridToolbar,
+  ToolbarRoot,
   GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -60,8 +61,20 @@ const VISIBLE_FIELDS = ['avatar', 'name', 'position'];
 
 function Toolbar({ view, onChangeView }) {
   return (
-    <GridToolbarContainer
-      sx={{ borderBottom: '1px solid', borderColor: 'divider', py: 1 }}
+    <GridToolbar
+      render={
+        <ToolbarRoot
+          sx={{
+            minHeight: 'auto',
+            borderBottom: '1px solid',
+            borderColor: 'currentColor',
+            gap: 1,
+            px: 0.5,
+            py: 1,
+            flexWrap: 'wrap',
+          }}
+        />
+      }
     >
       <ToggleButtonGroup
         size="small"
@@ -93,7 +106,7 @@ function Toolbar({ view, onChangeView }) {
           <ListViewIcon fontSize="small" /> List
         </ToggleButton>
       </ToggleButtonGroup>
-    </GridToolbarContainer>
+    </GridToolbar>
   );
 }
 
