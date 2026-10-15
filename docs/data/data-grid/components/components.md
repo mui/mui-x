@@ -150,7 +150,7 @@ For example, `<DataGrid data-testid="grid" />` doesn't add the `data-testid` att
 To add attributes such as `data-*` or `aria-*`, use the `root` and `main` slot props:
 
 - `slotProps.root`: the outermost element of the Data Grid. Use it for test selectors.
-- `slotProps.main`: the element with `role="grid"`. Use it for ARIA attributes that describe the grid.
+- `slotProps.main`: the `.MuiDataGrid-main` element, with `role="grid"` (or `role="treegrid"` with tree data or row grouping). Use it for ARIA attributes that describe the grid.
 
 ```tsx
 <DataGrid
@@ -163,7 +163,7 @@ To add attributes such as `data-*` or `aria-*`, use the `root` and `main` slot p
 
 :::info
 The `aria-label` and `aria-labelledby` props are supported directly on the Data Grid.
-They are applied to the element with `role="grid"`.
+They are applied to the `.MuiDataGrid-main` element.
 :::
 
 ## Custom slot props with TypeScript

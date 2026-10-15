@@ -74,6 +74,21 @@ describe('<DataGrid />', () => {
     expect(document.querySelector('[data-cy="grid-cy"]')).to.equal(null);
   });
 
+  it('should not log an error for other `data-*` props, such as ones injected by build tools', () => {
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'brand' }]}
+            data-sentry-element="DataGrid"
+            data-source-file="Orders.tsx"
+          />
+        </div>,
+      );
+    }).not.toErrorDev();
+  });
+
   it('should not log an error for the supported `aria-label` and `aria-labelledby` props', () => {
     expect(() => {
       render(

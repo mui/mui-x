@@ -8,11 +8,15 @@ export type PropValidator<TProps> = (props: TProps) => string | undefined;
 // Hyphenated props that the Data Grid supports. TypeScript doesn't type-check other hyphenated props.
 const SUPPORTED_ATTRIBUTE_PROPS = new Set(['aria-label', 'aria-labelledby']);
 
+// Only common test selectors, because build tools (Sentry, FullStory) inject other `data-*` props.
+const WARNED_DATA_ATTRIBUTE_PROPS = new Set(['data-testid', 'data-cy', 'data-test', 'data-qa']);
+
 export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
   (props) => {
     const ignoredProps = Object.keys(props).filter(
       (key) =>
-        (key.startsWith('data-') || key.startsWith('aria-')) && !SUPPORTED_ATTRIBUTE_PROPS.has(key),
+        (key.startsWith('aria-') && !SUPPORTED_ATTRIBUTE_PROPS.has(key)) ||
+        WARNED_DATA_ATTRIBUTE_PROPS.has(key),
     );
     if (ignoredProps.length === 0) {
       return undefined;
@@ -20,7 +24,7 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
     return [
       `MUI X Data Grid: The ${ignoredProps.map((key) => `\`${key}\``).join(', ')} prop(s) are not forwarded to the DOM.`,
       'The Data Grid does not spread unknown props on its root element, so these attributes are ignored.',
-      'Pass them with `slotProps.root` for the root element, or `slotProps.main` for the element with `role="grid"`.',
+      'Pass them with `slotProps.root` for the root element, or `slotProps.main` for the `.MuiDataGrid-main` element.',
       'For more details, see https://mui.com/x/react-data-grid/components/#root-and-main-elements',
     ].join('\n');
   },
