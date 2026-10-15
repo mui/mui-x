@@ -57,7 +57,8 @@ export const useGridComputedColumnsPreProcessors = (
   const hasDataSource = !!props.dataSource;
   // Read lazily. `formulaFunctions` only seeds the cache (the registry follows the prop in
   // `useGridFormula`), and `computedColDef` is often an inline object or function: as a dependency
-  // of the processor, it would hydrate the columns again on every render of the parent.
+  // of the processor, it would hydrate the columns again on every render of the parent. An effect
+  // of `useGridFormula` hydrates them only when the overrides it resolves to changed.
   const propsRef = React.useRef(props);
   propsRef.current = props;
 
@@ -102,13 +103,7 @@ export const useGridComputedColumnsPreProcessors = (
       // Every change of the column set goes through this processor, so the definitions are
       // validated against the columns being hydrated: a column whose formula reads a removed
       // column is invalid in the same pass.
-      validateComputedColumnRecords(
-        apiRef,
-        cache,
-        columnsState.lookup,
-        !!props.formulaA1Notation,
-        propsRef.current.computedColDef,
-      );
+      validateComputedColumnRecords(apiRef, cache, columnsState.lookup, !!props.formulaA1Notation);
       const { records } = cache.computedColumns;
 
       let removedFields: Set<string> | null = null;

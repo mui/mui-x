@@ -3,6 +3,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import {
   getCell,
+  getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
   microtasks,
@@ -669,6 +670,178 @@ describe('<DataGridPremium /> - Computed columns', () => {
         '<ok>',
       ]);
       expect(valueFormatter.mock.calls.some(([value]) => value === '#DIV/0!')).to.equal(false);
+    });
+  });
+
+  describe('computedColDef changes', () => {
+    const getRecordColDef = (field: string) =>
+      unwrapPrivateAPI<GridPrivateApiPremium, GridApi>(
+        apiRef.current!,
+      ).caches.formula!.computedColumns.records.get(field)!.colDef;
+    const getHeader = (field: string) => getColumnHeaderCell(getFields().indexOf(field));
+    const subscribeColumnsChange = () => {
+      const columnsChange = vi.fn();
+      apiRef.current!.subscribeEvent('columnsChange', columnsChange);
+      return columnsChange;
+    };
+
+    it('should apply a new `computedColDef` right away', async () => {
+      const { setProps } = await render(
+        <Test computedColumns={[total]} computedColDef={{ width: 100 }} />,
+      );
+      expect(getColumn('total').width).to.equal(100);
+
+      setProps({ computedColDef: { width: 350, headerAlign: 'center' } });
+      await microtasks();
+      expect(getColumn('total').width).to.equal(350);
+      expect(getHeader('total')).to.have.class(gridClasses['columnHeader--alignCenter']);
+
+      setProps({ computedColDef: { width: 100 } });
+      await microtasks();
+      expect(getColumn('total').width).to.equal(100);
+      expect(getHeader('total')).not.to.have.class(gridClasses['columnHeader--alignCenter']);
+    });
+
+    it('should not re-create the columns for an inline object with the same content', async () => {
+      const { setProps } = await render(
+        <Test computedColumns={[total]} computedColDef={{ width: 120 }} />,
+      );
+      const colDef = getRecordColDef('total');
+      const columnsChange = subscribeColumnsChange();
+
+      setProps({ computedColDef: { width: 120 } });
+      await microtasks();
+      expect(columnsChange).toHaveBeenCalledTimes(0);
+
+      // An unrelated hydration keeps the column built from the same overrides.
+      act(() => apiRef.current!.updateColumns([{ field: 'item', width: 80 }]));
+      expect(getRecordColDef('total')).to.equal(colDef);
+    });
+
+    it('should not re-create the columns for a function returning the same content', async () => {
+      const { setProps } = await render(
+        <Test
+          computedColumns={[total, ratio]}
+          computedColDef={(definition) => ({ width: 120, description: definition.field })}
+        />,
+      );
+      const colDef = getRecordColDef('total');
+      const columnsChange = subscribeColumnsChange();
+
+      setProps({
+        computedColDef: (definition: GridComputedColumnDefinition) => ({
+          width: 120,
+          description: definition.field,
+        }),
+      });
+      await microtasks();
+      expect(columnsChange).toHaveBeenCalledTimes(0);
+
+      act(() => apiRef.current!.updateColumns([{ field: 'item', width: 80 }]));
+      expect(getRecordColDef('total')).to.equal(colDef);
+    });
+
+    it('should only re-create the columns whose overrides changed', async () => {
+      const { setProps } = await render(
+        <Test computedColumns={[total, ratio]} computedColDef={() => ({ width: 120 })} />,
+      );
+      const ratioColDef = getRecordColDef('ratio');
+
+      setProps({
+        computedColDef: (definition: GridComputedColumnDefinition) => ({
+          width: definition.field === 'total' ? 300 : 120,
+        }),
+      });
+      await microtasks();
+      expect(getColumn('total').width).to.equal(300);
+      expect(getColumn('ratio').width).to.equal(120);
+      expect(getRecordColDef('ratio')).to.equal(ratioColDef);
+    });
+
+    it('should not hydrate the columns without computed columns and apply the prop to the next one', async () => {
+      const { setProps } = await render(<Test computedColDef={{ width: 120 }} />);
+      const columnsChange = subscribeColumnsChange();
+
+      setProps({ computedColDef: { width: 300 } });
+      await microtasks();
+      expect(columnsChange).toHaveBeenCalledTimes(0);
+
+      act(() => apiRef.current!.addComputedColumn(total));
+      expect(getColumn('total').width).to.equal(300);
+    });
+
+    it('should hydrate the columns once when another prop that hydrates them changes in the same render', async () => {
+      // `setProps` starts from the first props: the props kept between the steps are repeated.
+      const model = [total, ratio];
+      const formulaFunctions = { ...GRID_FORMULA_FUNCTIONS };
+      const { setProps } = await render(
+        <Test computedColumns={[total]} computedColDef={{ width: 100 }} />,
+      );
+      const columnsChange = subscribeColumnsChange();
+
+      setProps({ computedColumns: model, computedColDef: { width: 300 } });
+      await microtasks();
+      expect(columnsChange).toHaveBeenCalledTimes(1);
+      expect(getColumn('total').width).to.equal(300);
+      expect(getColumn('ratio').width).to.equal(300);
+
+      columnsChange.mockClear();
+      setProps({ computedColumns: model, computedColDef: { width: 200 }, formulaFunctions });
+      await microtasks();
+      expect(columnsChange).toHaveBeenCalledTimes(1);
+      expect(getColumn('total').width).to.equal(200);
+
+      columnsChange.mockClear();
+      setProps({
+        computedColumns: model,
+        computedColDef: { width: 250 },
+        formulaFunctions,
+        disableComputedColumns: true,
+      });
+      await microtasks();
+      expect(columnsChange).toHaveBeenCalledTimes(1);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+
+      setProps({ computedColumns: model, computedColDef: { width: 250 }, formulaFunctions });
+      await microtasks();
+      expect(getColumn('total').width).to.equal(250);
+    });
+
+    it('should keep the width set by the user', async () => {
+      const { setProps } = await render(
+        <Test computedColumns={[total]} computedColDef={{ width: 100 }} />,
+      );
+      act(() => apiRef.current!.setColumnWidth('total', 200));
+
+      setProps({ computedColDef: { width: 350, headerAlign: 'center' } });
+      await microtasks();
+      expect(getColumn('total').width).to.equal(200);
+      expect(getHeader('total')).to.have.class(gridClasses['columnHeader--alignCenter']);
+    });
+
+    it('should keep the values and the position of the columns', async () => {
+      const apply = vi.fn((args: any[]) => args[0]);
+      const formulaFunctions = {
+        ...GRID_FORMULA_FUNCTIONS,
+        PROBE: { name: 'PROBE', minArgs: 1, maxArgs: 1, apply },
+      } as any;
+      const { setProps } = await render(
+        <Test
+          computedColumns={[{ ...total, formula: '=PROBE(price) * quantity' }]}
+          formulaFunctions={formulaFunctions}
+          computedColDef={{ width: 100 }}
+        />,
+      );
+      act(() => apiRef.current!.setColumnIndex('total', 0));
+      const applications = apply.mock.calls.length;
+      expect(applications).to.be.greaterThan(0);
+
+      setProps({ computedColDef: { width: 350 } });
+      await microtasks();
+      expect(getColumn('total').width).to.equal(350);
+      expect(getFields()).to.deep.equal(['total', 'item', 'price', 'quantity']);
+      expect(getColumnValuesOf('total')).to.deep.equal(['6', '50', '8']);
+      expect(apply.mock.calls.length).to.equal(applications);
     });
   });
 

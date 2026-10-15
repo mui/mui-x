@@ -176,6 +176,11 @@ export interface GridComputedColumnRecord {
    */
   isErrorRow: GridComputedErrorRowPredicate;
   /**
+   * The `computedColDef` overrides resolved for the definition, `null` when there are none.
+   * A new `computedColDef` prop only re-creates the column when they change.
+   */
+  overrides: Partial<GridColDef> | null;
+  /**
    * The column definition without the `computedColDef` overrides. Its getters are
    * created once per definition, so their identity only changes with the definition.
    */

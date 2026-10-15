@@ -40,7 +40,7 @@ function createHarness(
   dataColumns.forEach((column) => {
     lookup[column.field] = column;
   });
-  validateComputedColumnRecords(apiRef, cache, lookup, a1Notation, undefined);
+  validateComputedColumnRecords(apiRef, cache, lookup, a1Notation);
 
   const validate = (
     definition: Partial<GridComputedColumnDefinition>,
@@ -122,7 +122,7 @@ describe('gridComputedColumnsValidation', () => {
         createComputedColumnValidationScope(apiRef, cache, lookup, false, { intern: false }),
       );
       expect(interned).to.deep.equal([]);
-      validateComputedColumnRecords(apiRef, cache, lookup, false, undefined);
+      validateComputedColumnRecords(apiRef, cache, lookup, false);
       expect(interned).to.deep.equal(['price * quantity']);
     });
 
@@ -365,17 +365,17 @@ describe('gridComputedColumnsValidation', () => {
       const { apiRef, cache, lookup } = createHarness([define('total', '=price * quantity')]);
       const valid = cache.computedColumns.records.get('total')!;
 
-      validateComputedColumnRecords(apiRef, cache, lookup, false, undefined);
+      validateComputedColumnRecords(apiRef, cache, lookup, false);
       expect(cache.computedColumns.records.get('total')).to.equal(valid);
 
       delete lookup.quantity;
-      validateComputedColumnRecords(apiRef, cache, lookup, false, undefined);
+      validateComputedColumnRecords(apiRef, cache, lookup, false);
       const invalid = cache.computedColumns.records.get('total')!;
       expect(invalid.issues.map((issue) => issue.field)).to.deep.equal(['quantity']);
       expect(invalid.baseColDef.valueGetter).to.equal(valid.baseColDef.valueGetter);
 
       lookup.quantity = { field: 'quantity' };
-      validateComputedColumnRecords(apiRef, cache, lookup, false, undefined);
+      validateComputedColumnRecords(apiRef, cache, lookup, false);
       const recovered = cache.computedColumns.records.get('total')!;
       expect(recovered.issues).to.deep.equal([]);
       expect(recovered.staticResult).to.equal(null);

@@ -111,13 +111,23 @@ The generated columns are regular [column definitions](/x/react-data-grid/column
 To customize them, pass a partial column definition—or a function returning one for each computed column—through the `computedColDef` prop:
 
 ```tsx
-<DataGridPremium
-  computedColDef={(definition) => ({
-    width: definition.type === 'number' ? 120 : 180,
-    headerAlign: 'center',
-  })}
-/>
+const computedColDef = (
+  definition: GridComputedColumnDefinition,
+): Partial<GridColDef> => ({
+  width: definition.type === 'number' ? 120 : 180,
+  headerAlign: 'center',
+});
+
+<DataGridPremium computedColDef={computedColDef} />;
 ```
+
+A change of the `computedColDef` prop applies right away.
+The columns are only re-created when the properties it resolves to change, so an inline object or function with the same content keeps them as they are.
+A width that the user set by resizing a column is kept.
+
+:::success
+For better performance, keep the `computedColDef` prop reference stable between two renders when it holds functions, such as a `valueFormatter`: a new function re-creates the computed columns.
+:::
 
 The `field`, `type`, `editable`, `allowFormulas`, `valueGetter`, `valueSetter`, `groupingValueGetter`, and `rowSpanValueGetter` properties are owned by the feature and cannot be overridden; `cellClassName` and `headerClassName` are merged with the classes of the feature.
 The functions you pass—such as `valueFormatter`, `renderCell`, `sortComparator`, `getSortComparator`, `filterOperators`, and `getApplyQuickFilterFn`—only receive values of the column type: error codes are handled by the grid (sorted last, shown with the error cell, skipped by the filters).
@@ -248,7 +258,6 @@ The undo and redo shortcuts typed in the text fields of the panel keep their nat
 - A cell formula that reads a computed column which in turn reads a cell formula is refreshed on the next update of its row, not immediately.
 - Excel export writes the evaluated values of computed columns, not live formulas.
 - In a `string` column, a result equal to an error code, such as `"#REF!"`, is treated as an error by sorting and by the quick filter; the cell itself renders it as text.
-- A change of the `computedColDef` prop applies the next time the columns are updated.
 - Validation messages are localized when a definition is validated: after a change of `localeText` at runtime, the issues listed in the panel and in the badge tooltip keep the previous language until the columns are next updated.
 - The display format is limited to number formats; date and time results use the default formatting of their column type, and `Intl.NumberFormat` uses the locale of the browser.
 

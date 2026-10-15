@@ -265,6 +265,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
   /**
    * The column definition properties applied to the columns generated from the `computedColumns` model.
    * Pass a function to return different properties for each computed column.
+   * Keep the reference stable between renders when it holds functions: overrides whose content changes re-create the computed columns.
    */
   computedColDef?:
     Partial<GridColDef> | ((definition: GridComputedColumnDefinition) => Partial<GridColDef>);

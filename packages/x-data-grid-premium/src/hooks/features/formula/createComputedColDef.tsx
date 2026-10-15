@@ -397,25 +397,62 @@ function guardOverrides(
 }
 
 /**
- * Applies the `computedColDef` prop on top of the base column.
+ * Resolves the `computedColDef` prop for one computed column.
+ * @param {GridComputedColumnDefinition} definition The definition of the column.
+ * @param {DataGridPremiumProcessedProps['computedColDef']} computedColDef The `computedColDef` prop.
+ * @returns {Partial<GridColDef> | null} The overrides of the column, `null` when there are none.
+ */
+export function resolveComputedColDefOverrides(
+  definition: GridComputedColumnDefinition,
+  computedColDef: DataGridPremiumProcessedProps['computedColDef'],
+): Partial<GridColDef> | null {
+  const overrides =
+    typeof computedColDef === 'function' ? computedColDef(definition) : computedColDef;
+  return overrides ?? null;
+}
+
+/**
+ * Compares two resolved overrides key by key, so that an inline `computedColDef`
+ * with the same content does not re-create the column.
+ * @param {Partial<GridColDef> | null} a The first overrides.
+ * @param {Partial<GridColDef> | null} b The second overrides.
+ * @returns {boolean} `true` when both have the same keys with the same values.
+ */
+export function areComputedColDefOverridesEqual(
+  a: Partial<GridColDef> | null,
+  b: Partial<GridColDef> | null,
+): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (a === null || b === null) {
+    return false;
+  }
+  const aKeys = Object.keys(a) as (keyof GridColDef)[];
+  if (aKeys.length !== Object.keys(b).length) {
+    return false;
+  }
+  return aKeys.every((key) => Object.hasOwn(b, key) && Object.is(a[key], b[key]));
+}
+
+/**
+ * Applies the `computedColDef` overrides on top of the base column.
  * The properties that make the column a computed column cannot be overridden:
  * the three getters are the only way to the evaluated value (the grid hands a
  * replacement `row[field]`, which a synthetic column never has).
  * @param {GridColDef} baseColDef The column without the overrides.
  * @param {GridComputedColumnDefinition} definition The definition of the column.
- * @param {DataGridPremiumProcessedProps['computedColDef']} computedColDef The `computedColDef` prop.
+ * @param {Partial<GridColDef> | null} overrides The overrides resolved by `resolveComputedColDefOverrides()`.
  * @param {GridComputedErrorRowPredicate} isErrorRow Tells whether the result of a row is an error.
  * @returns {GridColDef} The column.
  */
 export function applyComputedColDefOverrides(
   baseColDef: GridColDef,
   definition: GridComputedColumnDefinition,
-  computedColDef: DataGridPremiumProcessedProps['computedColDef'],
+  overrides: Partial<GridColDef> | null,
   isErrorRow: GridComputedErrorRowPredicate,
 ): GridColDef {
-  const overrides =
-    typeof computedColDef === 'function' ? computedColDef(definition) : computedColDef;
-  if (overrides == null) {
+  if (overrides === null) {
     return baseColDef;
   }
   return {

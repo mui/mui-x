@@ -72,6 +72,7 @@ import { createFormulaExcelExportLayout, getCellExcelFormula } from './gridFormu
 import {
   bumpComputedColumnsRevision,
   evictComputedResultsForRows,
+  haveComputedColDefOverridesChanged,
   resetComputedResults,
 } from './gridComputedColumnsRuntime';
 import {
@@ -131,6 +132,7 @@ export const useGridFormula = (
     | 'dataSource'
     | 'formulaA1Notation'
     | 'disableComputedColumns'
+    | 'computedColDef'
   >,
 ) => {
   const a1NotationActive = !!props.formulaA1Notation && !props.disableFormulas && !props.dataSource;
@@ -829,6 +831,28 @@ export const useGridFormula = (
       computedColumnsChanged,
     });
   }, [apiRef, effectiveFormulaFunctions, runPass, triggerDependentFeatures]);
+
+  // After the effects that hydrate the columns for another prop (the model, `formulaFunctions`):
+  // their pass already applies the current `computedColDef`, read lazily by the processor.
+  React.useEffect(() => {
+    const cache = apiRef.current.caches.formula!;
+    // While the computed columns are off, the hydration that removes them is pending, and the
+    // records are created from the current prop when they come back.
+    if (
+      !computedColumnsEnabled ||
+      gridPivotActiveSelector(apiRef) ||
+      cache.computedColumns.computedColDef === props.computedColDef
+    ) {
+      return;
+    }
+    if (haveComputedColDefOverridesChanged(cache, props.computedColDef)) {
+      // The overrides don't change the values: the results are kept.
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+    } else {
+      // Same overrides for every record: the next hydration doesn't need to resolve them again.
+      cache.computedColumns.computedColDef = props.computedColDef;
+    }
+  }, [apiRef, computedColumnsEnabled, props.computedColDef]);
 
   const isFirstEnablementEffect = React.useRef(true);
   React.useEffect(() => {

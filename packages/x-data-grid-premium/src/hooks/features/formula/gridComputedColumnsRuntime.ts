@@ -25,7 +25,12 @@ import {
 } from './engine';
 import type { FormulaErrorValue, FormulaScalar } from './engine';
 import { EMPTY_POSITION_CONTEXT } from './gridFormulaPositionContext';
-import { applyComputedColDefOverrides, createComputedBaseColDef } from './createComputedColDef';
+import {
+  applyComputedColDefOverrides,
+  areComputedColDefOverridesEqual,
+  createComputedBaseColDef,
+  resolveComputedColDefOverrides,
+} from './createComputedColDef';
 import type { GridComputedColumnGetters } from './createComputedColDef';
 import type {
   GridComputedColumnRecord,
@@ -304,6 +309,7 @@ function buildComputedColumnRecord(
     staticResult !== null,
     isErrorRow,
   );
+  const overrides = resolveComputedColDefOverrides(definition, computedColDef);
   return {
     definition,
     ast: parse.ast,
@@ -311,8 +317,9 @@ function buildComputedColumnRecord(
     staticResult,
     issues: [],
     isErrorRow,
+    overrides,
     baseColDef,
-    colDef: applyComputedColDefOverrides(baseColDef, definition, computedColDef, isErrorRow),
+    colDef: applyComputedColDefOverrides(baseColDef, definition, overrides, isErrorRow),
   };
 }
 
@@ -366,17 +373,24 @@ export function ensureComputedColumnRecords(
     const previous = runtime.records.get(definition.field);
     let record: GridComputedColumnRecord;
     if (previous !== undefined && areDefinitionsEqual(previous.definition, definition)) {
-      record = overridesChanged
-        ? {
+      record = previous;
+      if (overridesChanged) {
+        // An inline prop is a new object on every render: the column is only re-created
+        // when the overrides of the definition changed.
+        const overrides = resolveComputedColDefOverrides(definition, computedColDef);
+        if (!areComputedColDefOverridesEqual(overrides, previous.overrides)) {
+          record = {
             ...previous,
+            overrides,
             colDef: applyComputedColDefOverrides(
               previous.baseColDef,
               definition,
-              computedColDef,
+              overrides,
               previous.isErrorRow,
             ),
-          }
-        : previous;
+          };
+        }
+      }
     } else {
       record = buildComputedColumnRecord(apiRef, cache, definition, previous, computedColDef);
       if (record.baseColDef.valueGetter !== previous?.baseColDef.valueGetter) {
@@ -400,6 +414,30 @@ export function ensureComputedColumnRecords(
     runtime.referencedFields = referencedFields;
     resetComputedResults(cache);
   }
+}
+
+/**
+ * Tells whether a new `computedColDef` prop changes the overrides of a computed column,
+ * so that the columns must be hydrated again to apply it.
+ * @param {GridFormulaInternalCache} cache The internal cache of the formula feature.
+ * @param {DataGridPremiumProcessedProps['computedColDef']} computedColDef The `computedColDef` prop.
+ * @returns {boolean} `true` when the overrides of at least one record differ.
+ */
+export function haveComputedColDefOverridesChanged(
+  cache: GridFormulaInternalCache,
+  computedColDef: DataGridPremiumProcessedProps['computedColDef'],
+): boolean {
+  const runtime = cache.computedColumns;
+  if (runtime.computedColDef === computedColDef) {
+    return false;
+  }
+  for (const record of runtime.records.values()) {
+    const overrides = resolveComputedColDefOverrides(record.definition, computedColDef);
+    if (!areComputedColDefOverridesEqual(overrides, record.overrides)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export function resetComputedResults(cache: GridFormulaInternalCache) {

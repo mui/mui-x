@@ -1,6 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridColDef, GridLocaleText } from '@mui/x-data-grid-pro';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type {
   GridComputedColumnDefinition,
@@ -421,14 +420,12 @@ function areStaticResultsEqual(a: GridFormulaResult | null, b: GridFormulaResult
  * @param {GridFormulaInternalCache} cache The internal cache of the formula feature.
  * @param {Record<string, GridColDef>} columnsLookup The columns being hydrated.
  * @param {boolean} a1Notation If `true`, A1 notation is active.
- * @param {DataGridPremiumProcessedProps['computedColDef']} computedColDef The `computedColDef` prop.
  */
 export function validateComputedColumnRecords(
   apiRef: RefObject<GridPrivateApiPremium>,
   cache: GridFormulaInternalCache,
   columnsLookup: Record<string, GridColDef>,
   a1Notation: boolean,
-  computedColDef: DataGridPremiumProcessedProps['computedColDef'],
 ) {
   const { records } = cache.computedColumns;
   if (records.size === 0) {
@@ -456,7 +453,7 @@ export function validateComputedColumnRecords(
           colDef: applyComputedColDefOverrides(
             baseColDef,
             record.definition,
-            computedColDef,
+            record.overrides,
             record.isErrorRow,
           ),
         };
