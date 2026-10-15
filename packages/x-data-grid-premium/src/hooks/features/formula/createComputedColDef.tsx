@@ -408,6 +408,15 @@ export function resolveComputedColDefOverrides(
 ): Partial<GridColDef> | null {
   const overrides =
     typeof computedColDef === 'function' ? computedColDef(definition) : computedColDef;
+  if (process.env.NODE_ENV !== 'production' && overrides?.editable !== undefined) {
+    warnOnce(
+      [
+        'MUI X Data Grid: The `editable` property of `computedColDef` is ignored: the cells of a computed column are never editable.',
+        'To prevent users from editing a computed column, set `editable: false` on its definition in the `computedColumns` model.',
+        'See https://mui.com/x/react-data-grid/computed-columns/#prevent-changes',
+      ].join('\n'),
+    );
+  }
   return overrides ?? null;
 }
 

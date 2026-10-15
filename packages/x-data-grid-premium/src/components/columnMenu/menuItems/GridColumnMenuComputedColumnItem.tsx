@@ -7,6 +7,8 @@ import {
 } from '@mui/x-data-grid-pro';
 import type { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
 import { gridPivotActiveSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
+import { gridComputedColumnsSelector } from '../../../hooks/features/computedColumns/gridComputedColumnsSelectors';
+import { isComputedColumnEditable } from '../../../hooks/features/computedColumns/gridComputedColumnsUtils';
 import { isGroupingColumn } from '../../../hooks/features/rowGrouping/gridRowGroupingUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
@@ -14,14 +16,20 @@ import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApi
 /**
  * The computed columns entries of the column menu: "Add computed column" on
  * every data column (the new column is inserted right after it), plus "Edit"
- * and "Remove" on a computed column. Only pushed into the menu by the computed
- * columns hook when the feature is available.
+ * and "Remove" on a computed column — "View" alone when its definition sets
+ * `editable: false`. Only pushed into the menu by the computed columns hook when
+ * the feature is available.
  */
 function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const model = useGridSelector(apiRef, gridComputedColumnsSelector);
+  const definition = colDef.computed
+    ? model.find((item) => item.field === colDef.field)
+    : undefined;
+  const editable = definition === undefined || isComputedColumnEditable(definition);
 
   // Utility columns are no position anchor for a new column.
   const isUtilityColumn =
@@ -60,14 +68,18 @@ function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps) {
             onClick={editComputedColumn}
             iconStart={<rootProps.slots.computedColumnIcon fontSize="small" />}
           >
-            {apiRef.current.getLocaleText('columnMenuEditComputedColumn')}
+            {apiRef.current.getLocaleText(
+              editable ? 'columnMenuEditComputedColumn' : 'columnMenuViewComputedColumn',
+            )}
           </rootProps.slots.baseMenuItem>
-          <rootProps.slots.baseMenuItem
-            onClick={removeComputedColumn}
-            iconStart={<rootProps.slots.columnMenuClearIcon fontSize="small" />}
-          >
-            {apiRef.current.getLocaleText('columnMenuRemoveComputedColumn')}
-          </rootProps.slots.baseMenuItem>
+          {editable && (
+            <rootProps.slots.baseMenuItem
+              onClick={removeComputedColumn}
+              iconStart={<rootProps.slots.columnMenuClearIcon fontSize="small" />}
+            >
+              {apiRef.current.getLocaleText('columnMenuRemoveComputedColumn')}
+            </rootProps.slots.baseMenuItem>
+          )}
         </React.Fragment>
       )}
       <rootProps.slots.baseMenuItem

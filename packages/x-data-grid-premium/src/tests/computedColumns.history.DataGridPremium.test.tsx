@@ -594,6 +594,49 @@ describe('<DataGridPremium /> - Computed columns history', () => {
     });
   });
 
+  describe('editable: false', () => {
+    // Locking is a change made from code: like any other, it drops the steps it conflicts with.
+    it('drops the undo step of a user edit when the column is locked from code', async () => {
+      await render(
+        <Test showToolbar initialState={{ computedColumns: { model: [total, tax] } }} />,
+      );
+      await userEdit('total', { headerName: 'Amount' });
+      expect(canUndo()).to.equal(true);
+
+      await act(async () => api().updateComputedColumn('total', { editable: false }));
+      await waitFor(() => {
+        expect(canUndo()).to.equal(false);
+      });
+      expect(getToolbarButton('Undo').disabled).to.equal(true);
+      expect(await undo()).to.equal(false);
+      expect(getModel()).to.deep.equal([{ ...total, headerName: 'Amount', editable: false }, tax]);
+    });
+
+    it('does not revert a code change of a locked column on Ctrl+Z', async () => {
+      const locked = { ...total, editable: false };
+      await render(<Test initialState={{ computedColumns: { model: [locked, tax] } }} />);
+      await userEdit('tax', { formula: '=price * 0.25' });
+      expect(canUndo()).to.equal(true);
+
+      await act(async () =>
+        api().updateComputedColumn('total', { formula: '=price * quantity * 1.2' }),
+      );
+      const cell = getCell(0, 0);
+      await act(async () => {
+        api().setCellFocus(0, 'item');
+        cell.focus();
+      });
+      fireEvent.keyDown(cell, UNDO_KEY);
+      await microtasks();
+
+      expect(getModel()).to.deep.equal([
+        { ...locked, formula: '=price * quantity * 1.2' },
+        { ...tax, formula: '=price * 0.25' },
+      ]);
+      expect(canUndo()).to.equal(false);
+    });
+  });
+
   describe('availability', () => {
     it('enables the history for a grid without editable columns', async () => {
       await render(<Test showToolbar />);

@@ -435,6 +435,7 @@ DataGridPremiumRaw.propTypes /* remove-proptypes */ = {
   computedColumns: PropTypes.arrayOf(
     PropTypes.shape({
       description: PropTypes.string,
+      editable: PropTypes.bool,
       field: PropTypes.string.isRequired,
       formula: PropTypes.string.isRequired,
       headerName: PropTypes.string.isRequired,

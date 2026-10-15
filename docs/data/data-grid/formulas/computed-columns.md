@@ -36,19 +36,10 @@ Computed columns and [cell formulas](/x/react-data-grid/formulas/) share the sam
 With the feature injected, computed columns are available out of the box:
 
 - The **Computed columns** button in the default toolbar opens the side panel, which lists the computed columns of the grid. From there, add a column, or open one to edit or remove it.
-- The column menu of any column offers **Add computed column**, which inserts the new column right after it. The column menu of a computed column also offers **Edit computed column** and **Remove computed column**.
-- Double-clicking a computed cell, or pressing <kbd class="key">Enter</kbd> on it, opens the editor with that row as the preview row.
+- The column menu of any column offers **Add computed column**, which inserts the new column right after it. The column menu of a computed column also offers **Edit computed column** and **Remove computed column**, or only **View computed column** when the column is [locked](#prevent-changes).
+- Double-clicking a computed cell, or pressing <kbd class="key">Enter</kbd> on it, opens the editor with that row as the preview row. Set `event.defaultMuiPrevented` in the `onCellDoubleClick` or `onCellKeyDown` prop to keep a gesture from opening it.
 
-To remove the toolbar button while keeping the default toolbar, set `showComputedColumnsButton` to `false` in the toolbar's slot props.
-The column menu and the cells still open the panel.
-
-```tsx
-<DataGridPremium
-  showToolbar
-  featureDependencies={{ formula: formulaFeature }}
-  slotProps={{ toolbar: { showComputedColumnsButton: false } }}
-/>
-```
+To restrict what users can change, or to remove the toolbar button, see [Prevent changes](#prevent-changes).
 
 The editor asks for a name, a field, a formula, a result type, and—for numbers—a display format.
 The field is derived from the name until you edit it and cannot be changed once the column exists.
@@ -79,6 +70,8 @@ interface GridComputedColumnDefinition {
   numberFormat?: Intl.NumberFormatOptions;
   // Shown as the header tooltip.
   description?: string;
+  // `false` prevents users from editing or removing the column; see "Prevent changes".
+  editable?: boolean;
 }
 
 type GridComputedColumnsModel = GridComputedColumnDefinition[];
@@ -146,6 +139,116 @@ In `string` columns, the filters receive the error codes like any other text.
 A `valueFormatter` replaces the `numberFormat` formatting.
 
 The generated column definitions carry a `computed: true` flag, which lets you tell them apart from the other columns—in a custom column menu, for instance.
+
+## Prevent changes
+
+To keep users from changing a computed column, set `editable: false` on its definition:
+
+```ts
+const computedColumns: GridComputedColumnsModel = [
+  {
+    field: 'total',
+    headerName: 'Total',
+    formula: '=price * quantity',
+    type: 'number',
+    editable: false,
+  },
+];
+```
+
+Users can still look at a locked column, but not change it:
+
+- The column menu offers **View computed column** instead of **Edit computed column** and **Remove computed column**.
+- In the panel, the column shows a lock and has no actions menu.
+- The editor opens read-only—from the column menu, the panel, or a double-click or <kbd class="key">Enter</kbd> on a cell. It shows the name, the formula, the result type, the format, and the preview, with a **Close** button instead of **Cancel**, and without **Apply** and **Delete column**.
+
+The flag only restricts the grid UI: the `apiRef` methods and the controlled `computedColumns` prop still change a locked definition, the same way `editable: false` on a column does not prevent `updateRows()`.
+A definition that is locked or unlocked while its editor is open switches the editor right away and discards the draft.
+
+The demo below locks the **Total** column and leaves **Tax** editable: open their column menus, or the **Computed columns** panel, to compare them.
+
+{{"demo": "ComputedColumnsReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+The `editable` flag of a definition is not the `editable` property of the generated column.
+The cells of a computed column are never editable, so `computedColDef` cannot change that property—passing `editable` there logs a warning in development builds.
+:::
+
+A lock covers its own definition, not the columns its formula reads.
+If a locked **Margin** column reads an editable computed column **Cost**, editing **Cost** changes the values of **Margin**, and removing it makes **Margin** invalid (`#REF!`).
+Lock the computed columns a locked column depends on as well.
+
+Locking or unlocking a definition from code is a change of the model like any other: it drops the undo and redo steps that no longer match the model—see [Undo and redo](#undo-and-redo).
+
+### Hide the toolbar button
+
+To remove the toolbar button while keeping the default toolbar, set `showComputedColumnsButton` to `false` in the toolbar's slot props.
+The column menu and the cells still open the panel.
+
+```tsx
+<DataGridPremium
+  showToolbar
+  featureDependencies={{ formula: formulaFeature }}
+  slotProps={{ toolbar: { showComputedColumnsButton: false } }}
+/>
+```
+
+### Read-only computed columns
+
+The flag applies to the columns of the model: users can still add new computed columns from the panel and from the **Add computed column** item of the column menu.
+The panel stays reachable from the cells too: the **Back** button of the read-only editor leads to the list, which offers **Add computed column**.
+To prevent any change, lock every definition, hide the toolbar button, remove the computed columns item from the column menu, and keep the cells from opening the editor by setting `event.defaultMuiPrevented` in the `onCellDoubleClick` and `onCellKeyDown` props:
+
+```tsx
+const lockAll = (model: GridComputedColumnsModel) =>
+  model.map((definition) => ({ ...definition, editable: false }));
+
+<DataGridPremium
+  showToolbar
+  featureDependencies={{ formula: formulaFeature }}
+  initialState={{ computedColumns: { model: lockAll(computedColumns) } }}
+  slotProps={{
+    toolbar: { showComputedColumnsButton: false },
+    columnMenu: { slots: { columnMenuComputedColumnItem: null } },
+  }}
+  onCellDoubleClick={(params, event) => {
+    if (params.colDef.computed) {
+      event.defaultMuiPrevented = true;
+    }
+  }}
+  onCellKeyDown={(params, event) => {
+    if (params.colDef.computed && event.key === 'Enter') {
+      event.defaultMuiPrevented = true;
+    }
+  }}
+/>;
+```
+
+### Restoring a saved model
+
+The flag is part of the definition, so it is saved and restored with the model.
+A model saved before you locked a column brings it back unlocked: re-apply the locks from code when you restore it.
+
+```ts
+const LOCKED_FIELDS = new Set(['total']);
+
+const lockFields = (model: GridComputedColumnsModel) =>
+  model.map((definition) =>
+    LOCKED_FIELDS.has(definition.field)
+      ? { ...definition, editable: false }
+      : definition,
+  );
+
+const savedState: GridInitialState = JSON.parse(localStorage.getItem('gridState')!);
+apiRef.current.restoreState(
+  savedState.computedColumns?.model
+    ? {
+        ...savedState,
+        computedColumns: { model: lockFields(savedState.computedColumns.model) },
+      }
+    : savedState,
+);
+```
 
 ## Controlled and persisted models
 
@@ -245,7 +348,7 @@ Every feature reads the evaluated value of a computed cell through the column de
 - **Aggregation** functions apply to the computed values, from the column menu or the `aggregationModel`, and a computed column can be **grouped** by, or used for **row spanning**, like any column.
 - **Cell formulas** can reference a computed column by field (`=total * 1.2`), and a computed column can reference a column that contains cell formulas: the formula results are the values it reads.
 - **Pivoting** does not include computed columns: while pivot mode is active they are not added to the grid, the toolbar trigger and the column menu items are hidden, `showComputedColumnEditor()` is ignored, and the model is kept for when pivoting is turned off.
-- **Editing**: a computed cell never enters edit mode. Double-clicking it or pressing <kbd class="key">Enter</kbd> opens the editor of the column instead.
+- **Editing**: a computed cell never enters edit mode. Double-clicking it or pressing <kbd class="key">Enter</kbd> opens the editor of the column instead, read-only for a [locked column](#prevent-changes).
 
 Computed values are evaluated lazily and memoized per row: nothing is computed until a cell is read, and a row is re-evaluated only when it changes.
 

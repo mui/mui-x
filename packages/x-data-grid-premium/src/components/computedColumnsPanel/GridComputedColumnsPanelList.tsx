@@ -18,6 +18,7 @@ import type {
   GridComputedColumnValidationIssue,
 } from '../../hooks/features/computedColumns/gridComputedColumnsInterfaces';
 import { gridComputedColumnsSelector } from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
+import { isComputedColumnEditable } from '../../hooks/features/computedColumns/gridComputedColumnsUtils';
 import { FORMULA_FONT_FAMILY } from '../GridFormulaEditable';
 
 export interface GridComputedColumnsPanelListProps {
@@ -157,6 +158,15 @@ const GridComputedColumnsPanelListItemFormula = styled('span', {
   color: vars.colors.foreground.muted,
 });
 
+const GridComputedColumnsPanelListItemReadOnly = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'ComputedColumnsPanelListItemReadOnly',
+})<{ ownerState: OwnerState }>({
+  display: 'flex',
+  flexShrink: 0,
+  color: vars.colors.foreground.muted,
+});
+
 const GridComputedColumnsPanelEmpty = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ComputedColumnsPanelEmpty',
@@ -247,7 +257,9 @@ function GridComputedColumnsPanelListItemMenu(props: GridComputedColumnsPanelLis
 
 /**
  * The list view of the computed columns panel: one row per stored definition
- * (badge, name, formula, kebab menu), an empty state and the Add button. The
+ * (badge, name, formula, kebab menu), an empty state and the Add button. A
+ * definition with `editable: false` shows a lock instead of the kebab menu, and
+ * opens the editor read-only. The
  * issues come from the runtime records, which the columns hydration refreshes —
  * the list re-renders with the column lookup for that reason.
  */
@@ -367,12 +379,23 @@ function GridComputedColumnsPanelList(props: GridComputedColumnsPanelListProps) 
                     {definition.formula}
                   </GridComputedColumnsPanelListItemFormula>
                 </GridComputedColumnsPanelListItemText>
+                {!isComputedColumnEditable(definition) && (
+                  <GridComputedColumnsPanelListItemReadOnly
+                    ownerState={rootProps}
+                    role="img"
+                    aria-label={getLocaleText('computedColumnsPanelItemReadOnlyLabel')}
+                  >
+                    <rootProps.slots.computedColumnReadOnlyIcon fontSize="small" />
+                  </GridComputedColumnsPanelListItemReadOnly>
+                )}
               </GridComputedColumnsPanelListItemButton>
-              <GridComputedColumnsPanelListItemMenu
-                field={definition.field}
-                onEdit={onEdit}
-                onRemove={handleRemove}
-              />
+              {isComputedColumnEditable(definition) && (
+                <GridComputedColumnsPanelListItemMenu
+                  field={definition.field}
+                  onEdit={onEdit}
+                  onRemove={handleRemove}
+                />
+              )}
             </GridComputedColumnsPanelListItem>
           ))}
         </GridComputedColumnsPanelListItems>

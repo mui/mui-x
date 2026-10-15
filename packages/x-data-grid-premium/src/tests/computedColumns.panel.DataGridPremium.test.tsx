@@ -832,6 +832,34 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getSidebar().open).to.equal(false);
     });
 
+    it('does not open the editor when the `onCellDoubleClick` or `onCellKeyDown` prop prevents it', async () => {
+      const onCellDoubleClick = vi.fn((params, event) => {
+        event.defaultMuiPrevented = true;
+      });
+      const onCellKeyDown = vi.fn((params, event) => {
+        event.defaultMuiPrevented = true;
+      });
+      await render(
+        <Test
+          initialState={{ computedColumns: { model: [total] } }}
+          onCellDoubleClick={onCellDoubleClick}
+          onCellKeyDown={onCellKeyDown}
+        />,
+      );
+      fireEvent.doubleClick(getCell(1, 3));
+      await microtasks();
+      expect(onCellDoubleClick).toHaveBeenCalled();
+      expect(getSidebar().open).to.equal(false);
+
+      const cell = getCell(1, 3);
+      await act(async () => apiRef.current!.setCellFocus(1, 'total'));
+      await act(async () => cell.focus());
+      fireEvent.keyDown(cell, { key: 'Enter' });
+      await microtasks();
+      expect(onCellKeyDown).toHaveBeenCalled();
+      expect(getSidebar().open).to.equal(false);
+    });
+
     it('ignores the gestures on data cells', async () => {
       await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
       fireEvent.doubleClick(getCell(1, 1));
@@ -975,6 +1003,344 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await microtasks();
       expect(getSidebar().open).to.equal(false);
       expect(getModel()).to.deep.equal([]);
+    });
+  });
+
+  describe('editable: false', () => {
+    const locked = define('total', '=price * quantity', { headerName: 'Total', editable: false });
+    const tax = define('tax', '=price * 0.2', { headerName: 'Tax' });
+    const openList = async () => {
+      await act(async () => apiRef.current!.showSidebar(GridSidebarValue.ComputedColumns));
+    };
+    const getListItems = () =>
+      Array.from(getPanel()!.querySelectorAll(`.${gridClasses.computedColumnsPanelListItem}`));
+    const getItemButton = (name: string) =>
+      within(getPanel()!).getByRole('button', { name: new RegExp(name) });
+    const queryPanelButton = (name: string) => within(getPanel()!).queryByRole('button', { name });
+
+    // The editor of a locked definition: everything shown, nothing editable.
+    const expectReadOnlyEditor = () => {
+      const panel = within(getPanel()!);
+      expect(panel.getByText('View computed column')).not.to.equal(null);
+      expect(panel.getByText('This computed column cannot be edited.')).not.to.equal(null);
+      expect(getNameInput().value).to.equal('Total');
+      expect(getNameInput().readOnly).to.equal(true);
+      expect(getFieldInput().value).to.equal('total');
+      const formula = getFormulaEditable();
+      expect(formula.textContent).to.equal('=price * quantity');
+      expect(formula.getAttribute('contenteditable')).to.equal('false');
+      expect(formula.getAttribute('aria-readonly')).to.equal('true');
+      expect(formula.getAttribute('role')).to.equal('textbox');
+      expect(getTypeSelect().getAttribute('aria-disabled')).to.equal('true');
+      expect(panel.queryByText('Insert')).to.equal(null);
+      expect(queryPanelButton('Close')).not.to.equal(null);
+      expect(queryPanelButton('Cancel')).to.equal(null);
+      expect(queryPanelButton('Apply')).to.equal(null);
+      expect(queryPanelButton('Delete column')).to.equal(null);
+    };
+
+    it('shows "View computed column" without "Remove" in the column menu, and opens the read-only editor', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [locked] } }} />);
+      await act(async () => apiRef.current!.showColumnMenu('total'));
+
+      expect(screen.queryByRole('menuitem', { name: 'Edit computed column' })).to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Remove computed column' })).to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Add computed column' })).not.to.equal(null);
+
+      fireEvent.click(screen.getByRole('menuitem', { name: 'View computed column' }));
+      await microtasks();
+      expectReadOnlyEditor();
+      // The read-only formula cannot take the focus: the name does.
+      expect(document.activeElement).to.equal(getNameInput());
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('6');
+      });
+    });
+
+    it('treats an absent flag and `editable: true` as editable', async () => {
+      const unlocked = { ...tax, editable: true };
+      await render(<Test initialState={{ computedColumns: { model: [total, unlocked] } }} />);
+      const expectEditableMenu = async (field: string) => {
+        await act(async () => apiRef.current!.showColumnMenu(field));
+        expect(screen.queryByRole('menuitem', { name: 'Edit computed column' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'Remove computed column' })).not.to.equal(
+          null,
+        );
+        expect(screen.queryByRole('menuitem', { name: 'View computed column' })).to.equal(null);
+        await act(async () => apiRef.current!.hideColumnMenu());
+        // In a browser, the closing menu stays in the DOM until its transition ends.
+        await waitFor(() => {
+          expect(screen.queryByRole('menu')).to.equal(null);
+        });
+      };
+      await expectEditableMenu('total');
+      await expectEditableMenu('tax');
+
+      await openEditor('tax');
+      expect(within(getPanel()!).getByText('Edit computed column')).not.to.equal(null);
+      expect(getNameInput().readOnly).to.equal(false);
+      expect(getFormulaEditable().getAttribute('contenteditable')).to.equal('true');
+      expect(queryPanelButton('Apply')).not.to.equal(null);
+      expect(queryPanelButton('Delete column')).not.to.equal(null);
+    });
+
+    it('opens the read-only editor from a double-click and from Enter on a cell', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [locked] } }} />);
+      fireEvent.doubleClick(getCell(2, 3));
+      await microtasks();
+      expectReadOnlyEditor();
+      expect(getPanel()!.querySelector(PREVIEW_SELECTOR)!.textContent).to.include('Row 3');
+
+      fireEvent.click(getButton('Close'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+
+      const cell = getCell(1, 3);
+      await act(async () => apiRef.current!.setCellFocus(1, 'total'));
+      await act(async () => cell.focus());
+      fireEvent.keyDown(cell, { key: 'Enter' });
+      await microtasks();
+      expectReadOnlyEditor();
+    });
+
+    it('opens the read-only editor from `showComputedColumnEditor()` without a warning', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [locked] } }} />);
+      await openEditor('total');
+      expectReadOnlyEditor();
+    });
+
+    it('marks a locked item in the list without its menu and opens it read-only', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [locked, tax] } }} />);
+      await openList();
+
+      const items = getListItems();
+      const readOnlyMarks = items.map((item) =>
+        item.querySelector('[role="img"][aria-label="Read-only"]'),
+      );
+      expect(readOnlyMarks[0]).not.to.equal(null);
+      expect(readOnlyMarks[1]).to.equal(null);
+      expect(
+        within(items[0] as HTMLElement).queryByRole('button', { name: 'Computed column actions' }),
+      ).to.equal(null);
+      expect(
+        within(items[1] as HTMLElement).queryByRole('button', { name: 'Computed column actions' }),
+      ).not.to.equal(null);
+
+      fireEvent.click(getItemButton('Total'));
+      await microtasks();
+      expectReadOnlyEditor();
+
+      fireEvent.click(getButton('Close'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+      expect(getListItems()).to.have.length(2);
+      expect(document.activeElement).to.equal(getItemButton('Total'));
+    });
+
+    it('applies nothing on Enter or Ctrl+Enter, and closes on Escape', async () => {
+      const onComputedColumnsChange = vi.fn();
+      await render(
+        <Test
+          initialState={{ computedColumns: { model: [locked] } }}
+          onComputedColumnsChange={onComputedColumnsChange}
+        />,
+      );
+      await openEditor('total');
+      // A read-only input still receives the keys (the editor does not change it).
+      fireEvent.change(getNameInput(), { target: { value: 'Changed' } });
+      fireEvent.keyDown(getNameInput(), { key: 'Enter' });
+      await microtasks();
+      fireEvent.keyDown(getNameInput(), { key: 'Enter', ctrlKey: true });
+      await microtasks();
+      fireEvent.keyDown(getNameInput(), { key: 'Enter', metaKey: true });
+      await microtasks();
+
+      expect(onComputedColumnsChange).not.toHaveBeenCalled();
+      expect(getModel()).to.deep.equal([locked]);
+      expect(getSidebar().open).to.equal(true);
+
+      fireEvent.keyDown(getNameInput(), { key: 'Escape' });
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(getModel()).to.deep.equal([locked]);
+    });
+
+    it('leaves no way to change the model with the read-only recipe', async () => {
+      const lockedTax = { ...tax, editable: false };
+      await render(
+        <Test
+          showToolbar
+          initialState={{ computedColumns: { model: [locked, lockedTax] } }}
+          slotProps={{
+            toolbar: { showComputedColumnsButton: false },
+            columnMenu: { slots: { columnMenuComputedColumnItem: null } },
+          }}
+          onCellDoubleClick={(params, event) => {
+            if (params.colDef.computed) {
+              event.defaultMuiPrevented = true;
+            }
+          }}
+          onCellKeyDown={(params, event) => {
+            if (params.colDef.computed && event.key === 'Enter') {
+              event.defaultMuiPrevented = true;
+            }
+          }}
+        />,
+      );
+      expect(screen.queryByRole('button', { name: 'Computed columns' })).to.equal(null);
+      await act(async () => apiRef.current!.showColumnMenu('price'));
+      expect(screen.queryByRole('menuitem', { name: 'Add computed column' })).to.equal(null);
+      await act(async () => apiRef.current!.showColumnMenu('total'));
+      expect(screen.queryByRole('menuitem', { name: 'View computed column' })).to.equal(null);
+      await act(async () => apiRef.current!.hideColumnMenu());
+
+      fireEvent.doubleClick(getCell(1, 3));
+      await microtasks();
+      const cell = getCell(1, 3);
+      await act(async () => apiRef.current!.setCellFocus(1, 'total'));
+      await act(async () => cell.focus());
+      fireEvent.keyDown(cell, { key: 'Enter' });
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+      expect(getModel()).to.deep.equal([locked, lockedTax]);
+    });
+
+    it('keeps the API working on a locked definition', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [locked, tax] } }} />);
+      await act(async () =>
+        apiRef.current!.updateComputedColumn('total', { formula: '=price + quantity' }),
+      );
+      expect(getModel()[0]).to.deep.equal({ ...locked, formula: '=price + quantity' });
+      expect([0, 1, 2].map((id) => apiRef.current!.getCellValue(id, 'total'))).to.deep.equal([
+        5, 15, 6,
+      ]);
+
+      await act(async () => apiRef.current!.removeComputedColumn('total'));
+      expect(getModel()).to.deep.equal([tax]);
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'tax']);
+    });
+
+    it('keeps the flag of every definition through a user edit', async () => {
+      const unlocked = { ...tax, editable: true };
+      const other = define('other', '=quantity * 2', { headerName: 'Other', editable: false });
+      await render(
+        <Test initialState={{ computedColumns: { model: [unlocked, total, other] } }} />,
+      );
+      await openEditor('tax');
+      typeFormula('=price * 0.3');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+      await openEditor('total');
+      typeName('Amount');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+
+      expect(getModel()).to.deep.equal([
+        { ...unlocked, formula: '=price * 0.3' },
+        { ...total, headerName: 'Amount' },
+        other,
+      ]);
+    });
+
+    it('keeps the flag through `exportState()` and `restoreState()`', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [locked, tax] } }} />);
+      const exported = apiRef.current!.exportState();
+      expect(exported.computedColumns!.model).to.deep.equal([locked, tax]);
+
+      await act(async () => apiRef.current!.setComputedColumns([]));
+      await act(async () => apiRef.current!.restoreState(exported));
+      expect(getModel()).to.deep.equal([locked, tax]);
+
+      await openEditor('total');
+      expectReadOnlyEditor();
+    });
+
+    it('switches an open editor to read-only and drops the draft when the column is locked', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      typeName('Draft name');
+      // The formula takes the focus on open, and cannot keep it once read-only.
+      expect(document.activeElement).to.equal(getFormulaEditable());
+
+      await act(async () => apiRef.current!.updateComputedColumn('total', { editable: false }));
+      await microtasks();
+      expectReadOnlyEditor();
+      // The focus stays in the panel.
+      expect(document.activeElement).to.equal(getButton('Close'));
+
+      // A locked definition changed from code shows as it is now.
+      await act(async () =>
+        apiRef.current!.updateComputedColumn('total', { formula: '=price + quantity' }),
+      );
+      await microtasks();
+      expect(getFormulaEditable().textContent).to.equal('=price + quantity');
+
+      // Unlocked again: the editor starts from the current definition.
+      await act(async () => apiRef.current!.updateComputedColumn('total', { editable: undefined }));
+      await microtasks();
+      expect(within(getPanel()!).getByText('Edit computed column')).not.to.equal(null);
+      expect(getNameInput().readOnly).to.equal(false);
+      expect(getFormulaEditable().textContent).to.equal('=price + quantity');
+      typeName('Amount');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+      expect(getModel()).to.deep.equal([
+        { ...total, headerName: 'Amount', formula: '=price + quantity' },
+      ]);
+    });
+
+    it('keeps the focus in the panel when a lock removes the focused control', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      await act(async () => getButton('Apply').focus());
+      expect(document.activeElement).to.equal(getButton('Apply'));
+
+      await act(async () => apiRef.current!.updateComputedColumn('total', { editable: false }));
+      await microtasks();
+      expectReadOnlyEditor();
+      expect(document.activeElement).to.equal(getButton('Close'));
+    });
+
+    it('does not move the focus into the panel on a lock when the editor does not have it', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      await act(async () => (document.activeElement as HTMLElement).blur());
+      expect(document.activeElement).to.equal(document.body);
+
+      await act(async () => apiRef.current!.updateComputedColumn('total', { editable: false }));
+      await microtasks();
+      expectReadOnlyEditor();
+      expect(document.activeElement).to.equal(document.body);
+    });
+
+    it('leaves the focus alone when a locked definition changes', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [locked] } }} />);
+      await openEditor('total');
+      expect(document.activeElement).to.equal(getNameInput());
+      expect(getNameInput().getAttribute('aria-describedby')).to.equal(
+        within(getPanel()!).getByText('This computed column cannot be edited.').id,
+      );
+
+      await act(async () =>
+        apiRef.current!.updateComputedColumn('total', { formula: '=price + quantity' }),
+      );
+      await microtasks();
+      expect(getFormulaEditable().textContent).to.equal('=price + quantity');
+      expect(document.activeElement).to.equal(getNameInput());
+    });
+
+    it('updates the open column menu when the column is locked or unlocked', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
+      await act(async () => apiRef.current!.showColumnMenu('total'));
+      expect(screen.queryByRole('menuitem', { name: 'Remove computed column' })).not.to.equal(null);
+
+      await act(async () => apiRef.current!.updateComputedColumn('total', { editable: false }));
+      expect(screen.queryByRole('menuitem', { name: 'Remove computed column' })).to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'View computed column' })).not.to.equal(null);
+
+      await act(async () => apiRef.current!.updateComputedColumn('total', { editable: true }));
+      expect(screen.queryByRole('menuitem', { name: 'Remove computed column' })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Edit computed column' })).not.to.equal(null);
     });
   });
 

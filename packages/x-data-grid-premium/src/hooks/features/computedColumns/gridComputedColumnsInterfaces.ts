@@ -34,6 +34,13 @@ export interface GridComputedColumnDefinition {
    * The description of the generated column, shown as the header tooltip.
    */
   description?: string;
+  /**
+   * If `false`, end users cannot edit or remove the column from the formula editor, the column menu, or the panel; the editor opens read-only.
+   * The API and the controlled model are not affected.
+   * Not related to cell editing: the cells of a computed column are never editable.
+   * @default true
+   */
+  editable?: boolean;
 }
 
 export type GridComputedColumnsModel = GridComputedColumnDefinition[];

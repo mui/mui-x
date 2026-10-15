@@ -259,17 +259,24 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValuesOf('missing')).to.deep.equal(['#REF!', '#REF!', '#REF!']);
     });
 
-    it('should apply `computedColDef` without letting it make the column editable', async () => {
-      await render(
-        <Test
-          computedColumns={[total]}
-          computedColDef={(definition) => ({
-            width: 222,
-            editable: true,
-            cellClassName: `custom-${definition.field}`,
-          })}
-        />,
-      );
+    it('should apply `computedColDef` without letting it make the column editable, and warn', async () => {
+      expect(() => {
+        originalRender(
+          <Test
+            computedColumns={[total]}
+            computedColDef={(definition) => ({
+              width: 222,
+              editable: true,
+              cellClassName: `custom-${definition.field}`,
+            })}
+          />,
+        );
+      }).toWarnDev([
+        'MUI X Data Grid: The `editable` property of `computedColDef` is ignored: the cells of a computed column are never editable.\n' +
+          'To prevent users from editing a computed column, set `editable: false` on its definition in the `computedColumns` model.\n' +
+          'See https://mui.com/x/react-data-grid/computed-columns/#prevent-changes',
+      ]);
+      await microtasks();
       const column = getColumn('total');
       expect(column.width).to.equal(222);
       expect(column.editable).to.equal(false);

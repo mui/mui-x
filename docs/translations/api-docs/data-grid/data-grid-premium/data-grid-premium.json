@@ -2179,6 +2179,7 @@
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
     "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "computedColumnIcon": "Icon used for the computed columns entry points (column menu, panel).",
+    "computedColumnReadOnlyIcon": "Icon marking a computed column whose definition sets <code>editable: false</code>, in the computed columns panel.",
     "computedColumnsPanelBackIcon": "Icon displayed in the back button of the computed columns panel editor.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",

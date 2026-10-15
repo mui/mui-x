@@ -22,6 +22,7 @@ import {
   gridComputedColumnDefinitionSelector,
   gridComputedColumnsSelector,
 } from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
+import { isComputedColumnEditable } from '../../hooks/features/computedColumns/gridComputedColumnsUtils';
 import {
   registerFormulaFocusSafeElement,
   unregisterFormulaFocusSafeElement,
@@ -142,7 +143,7 @@ function focusOpener(apiRef: RefObject<GridPrivateApiPremium>, opener: PanelOpen
 
 const isTextField = (target: EventTarget | null): boolean =>
   target instanceof HTMLElement &&
-  (target.tagName === 'INPUT' ||
+  ((target.tagName === 'INPUT' && !(target as HTMLInputElement).readOnly) ||
     target.tagName === 'TEXTAREA' ||
     target.closest('[contenteditable]:not([contenteditable="false"])') !== null);
 
@@ -271,9 +272,11 @@ function GridComputedColumnsPanel() {
   // arguments, reporting the column as gone and sending the editor straight back.
   const model = useGridSelector(apiRef, gridComputedColumnsSelector);
   const editedField = view.kind === 'editor' ? view.session.definition?.field : undefined;
-  const editedDefinitionGone =
-    editedField !== undefined &&
-    model.find((definition) => definition.field === editedField) === undefined;
+  const editedDefinition =
+    editedField === undefined
+      ? undefined
+      : model.find((definition) => definition.field === editedField);
+  const editedDefinitionGone = editedField !== undefined && editedDefinition === undefined;
   React.useEffect(() => {
     if (editedDefinitionGone) {
       const root = rootRef.current;
@@ -329,11 +332,16 @@ function GridComputedColumnsPanel() {
   }, [view, showList]);
 
   let titleKey:
-    'computedColumnsPanelTitle' | 'computedColumnEditorNewTitle' | 'computedColumnEditorEditTitle';
+    | 'computedColumnsPanelTitle'
+    | 'computedColumnEditorNewTitle'
+    | 'computedColumnEditorEditTitle'
+    | 'computedColumnEditorViewTitle';
   if (view.kind === 'list') {
     titleKey = 'computedColumnsPanelTitle';
   } else if (view.session.definition === null) {
     titleKey = 'computedColumnEditorNewTitle';
+  } else if (editedDefinition !== undefined && !isComputedColumnEditable(editedDefinition)) {
+    titleKey = 'computedColumnEditorViewTitle';
   } else {
     titleKey = 'computedColumnEditorEditTitle';
   }

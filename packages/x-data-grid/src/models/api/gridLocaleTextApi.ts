@@ -63,6 +63,7 @@ export interface GridLocaleText {
   // Computed columns (Premium)
   columnMenuAddComputedColumn: string;
   columnMenuEditComputedColumn: string;
+  columnMenuViewComputedColumn: string;
   columnMenuRemoveComputedColumn: string;
   toolbarComputedColumns: string;
   computedColumnsPanelTitle: string;
@@ -71,8 +72,11 @@ export interface GridLocaleText {
   computedColumnsPanelEmpty: string;
   computedColumnsPanelAddButton: string;
   computedColumnsPanelItemMenuLabel: string;
+  computedColumnsPanelItemReadOnlyLabel: string;
   computedColumnEditorNewTitle: string;
   computedColumnEditorEditTitle: string;
+  computedColumnEditorViewTitle: string;
+  computedColumnReadOnlyHint: string;
   computedColumnNameLabel: string;
   computedColumnFieldLabel: string;
   computedColumnFormulaLabel: string;
@@ -100,6 +104,7 @@ export interface GridLocaleText {
   computedColumnApplyButton: string;
   computedColumnAddButton: string;
   computedColumnCancelButton: string;
+  computedColumnCloseButton: string;
   computedColumnDeleteButton: string;
   computedColumnHeaderLabel: string;
   computedColumnHeaderInvalidLabel: string;

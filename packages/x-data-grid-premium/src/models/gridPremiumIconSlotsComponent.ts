@@ -35,6 +35,11 @@ export interface GridPremiumIconSlotsComponent {
    */
   computedColumnIcon: React.JSXElementConstructor<IconProps>;
   /**
+   * Icon marking a computed column whose definition sets `editable: false`, in the computed columns panel.
+   * @default GridLockIcon
+   */
+  computedColumnReadOnlyIcon: React.JSXElementConstructor<IconProps>;
+  /**
    * Icon displayed in the back button of the computed columns panel editor.
    * @default GridArrowBackIcon
    */

@@ -27,6 +27,7 @@ import {
   gridComputedColumnsSelector,
 } from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
 import { deriveComputedColumnField } from '../../hooks/features/computedColumns/deriveComputedColumnField';
+import { isComputedColumnEditable } from '../../hooks/features/computedColumns/gridComputedColumnsUtils';
 import { getFormulaExpression, isFormulaSource } from '../../hooks/features/formula/engine';
 import type { FormulaSourceSpan } from '../../hooks/features/formula/engine';
 import { previewFormulaResult } from '../../hooks/features/formula/gridFormulaPreview';
@@ -252,6 +253,18 @@ const GridComputedColumnsPanelPreviewValue = styled('span', {
   },
 });
 
+const GridComputedColumnsPanelReadOnlyHint = styled('p', {
+  name: 'MuiDataGrid',
+  slot: 'ComputedColumnsPanelReadOnlyHint',
+})<{ ownerState: OwnerState }>({
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.spacing(1),
+  margin: 0,
+  font: vars.typography.font.small,
+  color: vars.colors.foreground.muted,
+});
+
 const GridComputedColumnsPanelValidation = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ComputedColumnsPanelValidation',
@@ -447,6 +460,8 @@ function inferColumnType(value: unknown): GridComputedColumnType | null {
  * definition (name, field, formula, result type and number format), validated
  * on every change, with a debounced preview of the formula on one row. The
  * draft only reaches the model on Apply; unmounting discards it.
+ * A definition with `editable: false` opens read-only: the controls show it, and
+ * nothing can be applied or deleted.
  */
 function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorProps) {
   const { session, onDone } = props;
@@ -456,8 +471,12 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   const id = React.useId();
   const editableRef = React.useRef<GridFormulaEditableHandle | null>(null);
   const nameInputRef = React.useRef<HTMLInputElement | null>(null);
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const cancelButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
-  const storedDefinition = session.definition;
+  // The definition the draft starts from: the one the session opened, until the column
+  // is locked or unlocked under the editor (see the effect below).
+  const [storedDefinition, setStoredDefinition] = React.useState(session.definition);
   const isEditing = storedDefinition !== null;
   const a1Notation = Boolean(rootProps.formulaA1Notation);
 
@@ -467,6 +486,43 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // The result type stops following the preview once the user picks one.
   const [typeTouched, setTypeTouched] = React.useState(isEditing);
   const [dirty, setDirty] = React.useState(false);
+
+  // ----- Read-only (`editable: false`) -----
+
+  // The lock is read from the model: a definition locked or unlocked while the editor is
+  // open (from code or by the parent) switches the editor right away.
+  const model = useGridSelector(apiRef, gridComputedColumnsSelector);
+  const liveDefinition = isEditing
+    ? (model.find((definition) => definition.field === storedDefinition.field) ?? storedDefinition)
+    : null;
+  const readOnly = liveDefinition !== null && !isComputedColumnEditable(liveDefinition);
+
+  // Whether the focus is in the editor, read during the render that applies a lock: by the
+  // time the effect below runs, the browser has moved the focus away from a control the lock
+  // removed (Apply, the Insert pane) or made unfocusable (the formula).
+  const root = rootRef.current;
+  const focusInside = root !== null && root.contains(root.ownerDocument.activeElement);
+
+  // A read-only editor shows the definition as it is now, and a lock or an unlock starts
+  // over from it: the draft of a column that became locked is dropped. A change of an
+  // editable definition keeps the draft, as before.
+  React.useEffect(() => {
+    if (
+      liveDefinition === null ||
+      liveDefinition === storedDefinition ||
+      (!readOnly && isComputedColumnEditable(storedDefinition!))
+    ) {
+      return;
+    }
+    setStoredDefinition(liveDefinition);
+    setDraft(createDraft(liveDefinition));
+    setDirty(false);
+    // Only a lock moves the focus, and only when the editor had it: the focus is left
+    // alone when a locked definition changes or the user is elsewhere.
+    if (readOnly && isComputedColumnEditable(storedDefinition!) && focusInside) {
+      cancelButtonRef.current?.focus({ preventScroll: true });
+    }
+  }, [focusInside, liveDefinition, readOnly, storedDefinition]);
 
   const updateDraft = React.useCallback((changes: Partial<EditorDraft>) => {
     setDraft((prev) => ({ ...prev, ...changes }));
@@ -767,7 +823,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   );
 
   const handleApply = React.useCallback(() => {
-    if (!canApply) {
+    if (!canApply || readOnly) {
       return;
     }
     let definition = draftDefinition;
@@ -823,19 +879,23 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     isEditing,
     onDone,
     previewRowId,
+    readOnly,
     session.columnIndex,
     storedDefinition,
     typeTouched,
   ]);
 
   const handleDelete = React.useCallback(() => {
+    if (readOnly) {
+      return;
+    }
     if (isEditing) {
       apiRef.current.applyUserComputedColumnsChange(() =>
         apiRef.current.removeComputedColumn(storedDefinition.field),
       );
     }
     onDone({ type: 'deleted' });
-  }, [apiRef, isEditing, onDone, storedDefinition]);
+  }, [apiRef, isEditing, onDone, readOnly, storedDefinition]);
 
   const handleCancel = React.useCallback(() => {
     onDone({ type: 'cancelled' });
@@ -919,6 +979,10 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   // Clicking the formula surface around the editable focuses it (like an input's padding).
   const handleFormulaSurfaceMouseDown = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
+      // A read-only formula is selected like any text.
+      if (readOnly) {
+        return;
+      }
       const root = editableRef.current?.getRoot();
       if (root && !root.contains(event.target as Node)) {
         event.preventDefault();
@@ -926,12 +990,14 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
         editableRef.current?.placeCaret(null);
       }
     },
-    [],
+    [readOnly],
   );
 
-  // Focus on open: the name of a new column, the formula of an existing one.
+  // Focus on open: the name of a new column, the formula of an existing one, the name of a
+  // read-only one (the read-only formula cannot take the focus).
+  const openedReadOnlyRef = React.useRef(readOnly);
   React.useEffect(() => {
-    if (isEditing) {
+    if (isEditing && !openedReadOnlyRef.current) {
       editableRef.current?.focus();
       editableRef.current?.placeCaret(null);
     } else {
@@ -948,15 +1014,23 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   const styleId = `${id}-style`;
   const styleLabelId = `${id}-style-label`;
   const previewLabelId = `${id}-preview-label`;
+  const readOnlyHintId = `${id}-read-only-hint`;
 
   return (
     <GridComputedColumnsPanelEditorRoot
+      ref={rootRef}
       ownerState={rootProps}
       className={classes.root}
       onKeyDown={handleRootKeyDown}
       onKeyDownCapture={handleRootKeyDownCapture}
     >
       <GridComputedColumnsPanelEditorBody ownerState={rootProps}>
+        {readOnly && (
+          <GridComputedColumnsPanelReadOnlyHint ownerState={rootProps} id={readOnlyHintId}>
+            <rootProps.slots.computedColumnReadOnlyIcon fontSize="small" />
+            {getLocaleText('computedColumnReadOnlyHint')}
+          </GridComputedColumnsPanelReadOnlyHint>
+        )}
         <GridComputedColumnsPanelFieldRoot ownerState={rootProps} className={classes.field}>
           <rootProps.slots.baseTextField
             id={nameId}
@@ -966,7 +1040,13 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
             onChange={handleNameChange}
             size="small"
             fullWidth
-            slotProps={{ htmlInput: { onKeyDown: handleInputKeyDown } }}
+            slotProps={{
+              htmlInput: {
+                onKeyDown: handleInputKeyDown,
+                readOnly,
+                'aria-describedby': readOnly ? readOnlyHintId : undefined,
+              },
+            }}
             {...rootProps.slotProps?.baseTextField}
           />
         </GridComputedColumnsPanelFieldRoot>
@@ -999,7 +1079,8 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
               value={draft.formula}
               ownerCell={previewRowId === null ? null : { id: previewRowId, field: ownerField }}
               a1Notation={a1Notation}
-              suggestionsEnabled={!rootProps.disableFormulaAutocomplete}
+              suggestionsEnabled={!rootProps.disableFormulaAutocomplete && !readOnly}
+              readOnly={readOnly}
               popupId={`${id}-formula-popup`}
               ariaLabel={getLocaleText('computedColumnFormulaLabel')}
               errorSpans={errorSpans}
@@ -1007,11 +1088,13 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
               onCommitKey={handleApply}
             />
           </GridComputedColumnsPanelFormula>
-          <GridComputedColumnsPanelReferencePane
-            excludeField={draftDefinition.field}
-            a1Notation={a1Notation}
-            onInsert={handleInsert}
-          />
+          {!readOnly && (
+            <GridComputedColumnsPanelReferencePane
+              excludeField={draftDefinition.field}
+              a1Notation={a1Notation}
+              onInsert={handleInsert}
+            />
+          )}
         </GridComputedColumnsPanelFieldRoot>
         <GridComputedColumnsPanelFieldRoot ownerState={rootProps} className={classes.field}>
           <GridComputedColumnsPanelFieldRow ownerState={rootProps}>
@@ -1021,6 +1104,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
               label={getLocaleText('computedColumnTypeLabel')}
               value={draft.type}
               onChange={handleTypeChange}
+              disabled={readOnly}
               size="small"
               fullWidth
               {...rootProps.slotProps?.baseSelect}
@@ -1040,6 +1124,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
                 onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
                   updateDraft({ formatStyle: event.target.value as NumberFormatStyle })
                 }
+                disabled={readOnly}
                 size="small"
                 fullWidth
                 {...rootProps.slotProps?.baseSelect}
@@ -1065,7 +1150,9 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
                   error={currencyInvalid}
                   size="small"
                   fullWidth
-                  slotProps={{ htmlInput: { maxLength: 3, onKeyDown: handleInputKeyDown } }}
+                  slotProps={{
+                    htmlInput: { maxLength: 3, onKeyDown: handleInputKeyDown, readOnly },
+                  }}
                   {...rootProps.slotProps?.baseTextField}
                 />
               )}
@@ -1081,7 +1168,12 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
                 size="small"
                 fullWidth
                 slotProps={{
-                  htmlInput: { min: 0, max: MAX_FRACTION_DIGITS, onKeyDown: handleInputKeyDown },
+                  htmlInput: {
+                    min: 0,
+                    max: MAX_FRACTION_DIGITS,
+                    onKeyDown: handleInputKeyDown,
+                    readOnly,
+                  },
                 }}
                 {...rootProps.slotProps?.baseTextField}
               />
@@ -1093,6 +1185,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 updateDraft({ grouping: event.target.checked })
               }
+              disabled={readOnly}
               size="small"
               label={getLocaleText('computedColumnFormatGroupingLabel')}
               {...rootProps.slotProps?.baseSwitch}
@@ -1136,13 +1229,14 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
       </GridComputedColumnsPanelEditorBody>
       <GridComputedColumnsPanelFooter ownerState={rootProps} className={classes.footer}>
         <rootProps.slots.baseButton
+          ref={cancelButtonRef}
           size="small"
           onClick={handleCancel}
           {...rootProps.slotProps?.baseButton}
         >
-          {getLocaleText('computedColumnCancelButton')}
+          {getLocaleText(readOnly ? 'computedColumnCloseButton' : 'computedColumnCancelButton')}
         </rootProps.slots.baseButton>
-        {isEditing && (
+        {isEditing && !readOnly && (
           <rootProps.slots.baseButton
             size="small"
             onClick={handleDelete}
@@ -1151,14 +1245,16 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
             {getLocaleText('computedColumnDeleteButton')}
           </rootProps.slots.baseButton>
         )}
-        <rootProps.slots.baseButton
-          size="small"
-          onClick={handleApply}
-          disabled={!canApply}
-          {...rootProps.slotProps?.baseButton}
-        >
-          {getLocaleText(isEditing ? 'computedColumnApplyButton' : 'computedColumnAddButton')}
-        </rootProps.slots.baseButton>
+        {!readOnly && (
+          <rootProps.slots.baseButton
+            size="small"
+            onClick={handleApply}
+            disabled={!canApply}
+            {...rootProps.slotProps?.baseButton}
+          >
+            {getLocaleText(isEditing ? 'computedColumnApplyButton' : 'computedColumnAddButton')}
+          </rootProps.slots.baseButton>
+        )}
       </GridComputedColumnsPanelFooter>
     </GridComputedColumnsPanelEditorRoot>
   );

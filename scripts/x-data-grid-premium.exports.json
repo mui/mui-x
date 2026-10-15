@@ -520,6 +520,7 @@
   { "name": "GridLoadingOverlayVariant", "kind": "TypeAlias" },
   { "name": "GridLocaleText", "kind": "Interface" },
   { "name": "GridLocaleTextApi", "kind": "Interface" },
+  { "name": "GridLockIcon", "kind": "Variable" },
   { "name": "GridLogicOperator", "kind": "Enum" },
   { "name": "GridLongTextCell", "kind": "Function" },
   { "name": "GridLongTextCellCollapseIcon", "kind": "Variable" },
