@@ -62,7 +62,6 @@ import {
   DAY_RANGE_SIZE,
   DAY_RANGE_SIZE_COMPACT,
   DAY_MARGIN,
-  DAY_MARGIN_COMPACT,
 } from '../internals/constants/dimensions';
 import type { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
 import { PickersRangeCalendarHeader } from '../PickersRangeCalendarHeader';
@@ -93,9 +92,9 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
-const weeksContainerHeightCompact = (DAY_RANGE_SIZE_COMPACT + DAY_MARGIN_COMPACT * 2) * 6;
+const weeksContainerHeightCompact = (DAY_RANGE_SIZE_COMPACT + DAY_MARGIN * 2) * 6;
 const dayCalendarMinWidth = 7 * (DAY_RANGE_SIZE + DAY_MARGIN * 2) + 32;
-const dayCalendarMinWidthCompact = 7 * (DAY_RANGE_SIZE_COMPACT + DAY_MARGIN_COMPACT * 2) + 4;
+const dayCalendarMinWidthCompact = 7 * (DAY_RANGE_SIZE_COMPACT + DAY_MARGIN * 2) + 4;
 
 const InnerDayCalendarForRange = styled(DayCalendar, {
   slot: 'internal',
@@ -223,7 +222,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     view: inView,
     openTo,
     onViewChange,
-    compact = false,
+    compact: compactProp,
     ...other
   } = props;
 
@@ -338,10 +337,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   );
 
   const pickersOwnerState = privateContextValue.ownerState;
+  const compact = compactProp ?? pickersOwnerState.isPickerCompact;
   const ownerState: DateRangeCalendarOwnerState = {
     ...pickersOwnerState,
+    isPickerCompact: compact,
     isDraggingDay: isDragging,
-    compact,
   };
   const classes = useUtilityClasses(classesProp, ownerState);
 

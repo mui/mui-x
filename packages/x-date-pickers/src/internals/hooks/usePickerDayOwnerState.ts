@@ -21,6 +21,7 @@ export function usePickerDayOwnerState(parameters: UsePickerDayOwnerStateParamet
   return React.useMemo<PickerDayOwnerState>(
     () => ({
       ...pickerOwnerState,
+      isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
       day,
       isDaySelected: selected ?? false,
       isDayDisabled: disabled ?? false,
@@ -30,7 +31,6 @@ export function usePickerDayOwnerState(parameters: UsePickerDayOwnerStateParamet
       isDayEndOfWeek: adapter.isSameDay(day, adapter.endOfWeek(day)),
       disableHighlightToday: disableHighlightToday ?? false,
       showDaysOutsideCurrentMonth: showDaysOutsideCurrentMonth ?? false,
-      compact: compact ?? false,
     }),
     [
       adapter,
@@ -55,5 +55,5 @@ interface UsePickerDayOwnerStateParameters {
   outsideCurrentMonth: boolean | undefined;
   disableHighlightToday: boolean | undefined;
   showDaysOutsideCurrentMonth: boolean | undefined;
-  compact?: boolean;
+  compact: boolean | undefined;
 }

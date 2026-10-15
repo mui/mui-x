@@ -9,13 +9,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import { shouldForwardProp } from '@mui/system/createStyled';
-import {
-  DAY_MARGIN,
-  DAY_SIZE,
-  DAY_MARGIN_COMPACT,
-  DAY_SIZE_COMPACT,
-} from '../internals/constants/dimensions';
+import { DAY_MARGIN, DAY_SIZE, DAY_SIZE_COMPACT } from '../internals/constants/dimensions';
 import type { PickerDayClassKey, PickerDayClasses } from './pickerDayClasses';
 import { pickerDayClasses, getPickerDayUtilityClass } from './pickerDayClasses';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
@@ -52,7 +46,6 @@ const useUtilityClasses = (
 const PickerDayRoot = styled(ButtonBase, {
   name: 'MuiPickerDay',
   slot: 'Root',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
   overridesResolver: (
     props: { ownerState: PickerDayOwnerState },
     styles: Record<PickerDayClassKey, CSSInterpolation>,
@@ -147,11 +140,8 @@ const PickerDayRoot = styled(ButtonBase, {
       },
     },
     {
-      props: { compact: true },
-      style: {
-        '--PickerDay-horizontalMargin': `${DAY_MARGIN_COMPACT}px`,
-        '--PickerDay-size': `${DAY_SIZE_COMPACT}px`,
-      },
+      props: { isPickerCompact: true },
+      style: { '--PickerDay-size': `${DAY_SIZE_COMPACT}px` },
     },
   ],
 }));

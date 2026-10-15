@@ -20,7 +20,7 @@ export interface YearCalendarButtonProps {
   selected: boolean;
   disabled: boolean;
   autoFocus: boolean;
-  compact?: boolean;
+  compact: boolean;
   classes: Partial<YearCalendarClasses> | undefined;
   slots: YearCalendarSlots | undefined;
   slotProps: YearCalendarSlotProps | undefined;
@@ -125,7 +125,7 @@ export const YearCalendarButton = React.memo(function YearCalendarButton(
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const ownerState: YearButtonOwnerState = {
     ...pickerOwnerState,
-    isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
+    isPickerCompact: compact,
     isYearDisabled: disabled,
     isYearSelected: selected,
   };

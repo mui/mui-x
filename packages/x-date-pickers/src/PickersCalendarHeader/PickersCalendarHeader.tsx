@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
-import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
@@ -41,9 +40,8 @@ const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | unde
 const PickersCalendarHeaderRoot = styled('div', {
   name: 'MuiPickersCalendarHeader',
   slot: 'Root',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
 })<{
-  ownerState: PickerOwnerState & { compact: boolean };
+  ownerState: PickerOwnerState;
 }>({
   display: 'flex',
   alignItems: 'center',
@@ -56,7 +54,7 @@ const PickersCalendarHeaderRoot = styled('div', {
   minHeight: 40,
   variants: [
     {
-      props: { compact: true },
+      props: { isPickerCompact: true },
       style: {
         marginTop: 6,
         marginBottom: 2,
@@ -65,10 +63,6 @@ const PickersCalendarHeaderRoot = styled('div', {
         maxHeight: 32,
         minHeight: 32,
       },
-    },
-    {
-      props: { compact: true, isPickerStaticVariant: true },
-      style: { paddingRight: 0 },
     },
   ],
 });
@@ -169,13 +163,16 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
     className,
     classes: classesProp,
     timezone,
-    compact = false,
+    compact,
     format = `${adapter.formats.month} ${adapter.formats.year}`,
     ...other
   } = props;
 
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const ownerState = { ...pickerOwnerState, compact };
+  const ownerState: PickerOwnerState = {
+    ...pickerOwnerState,
+    isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
+  };
   const classes = useUtilityClasses(classesProp);
 
   const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;

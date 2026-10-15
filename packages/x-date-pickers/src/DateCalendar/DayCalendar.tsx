@@ -4,7 +4,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useRtl } from '@mui/system/RtlProvider';
-import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
@@ -15,12 +14,7 @@ import type { ExportedPickerDayProps } from '../PickerDay/PickerDay.types';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import type { PickerOnChangeFn } from '../internals/hooks/useViews';
-import {
-  DAY_SIZE,
-  DAY_MARGIN,
-  DAY_SIZE_COMPACT,
-  DAY_MARGIN_COMPACT,
-} from '../internals/constants/dimensions';
+import { DAY_SIZE, DAY_MARGIN, DAY_SIZE_COMPACT } from '../internals/constants/dimensions';
 import type { SlideDirection, SlideTransitionProps } from './PickersSlideTransition';
 import { PickersSlideTransition } from './PickersSlideTransition';
 import type {
@@ -52,11 +46,6 @@ export interface DayCalendarSlotProps {
 }
 
 export interface ExportedDayCalendarProps extends ExportedPickerDayProps {
-  /**
-   * If `true`, the picker uses compact dimensions following the Material Design spec.
-   * @default false
-   */
-  compact?: boolean;
   /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
@@ -143,7 +132,7 @@ const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) =>
 };
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
-const weeksContainerHeightCompact = (DAY_SIZE_COMPACT + DAY_MARGIN_COMPACT * 2) * 6;
+const weeksContainerHeightCompact = (DAY_SIZE_COMPACT + DAY_MARGIN * 2) * 6;
 
 const PickerCalendarDayRoot = styled('div', {
   name: 'MuiDayCalendar',
@@ -162,7 +151,6 @@ const PickerCalendarDayHeader = styled('div', {
 const PickerCalendarWeekDayLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekDayLabel',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
 })<{ ownerState: { compact: boolean } }>(({ theme }) => ({
   width: 36,
   height: 40,
@@ -175,11 +163,7 @@ const PickerCalendarWeekDayLabel = styled(Typography, {
   variants: [
     {
       props: { compact: true },
-      style: {
-        width: DAY_SIZE_COMPACT,
-        height: DAY_SIZE_COMPACT + DAY_MARGIN_COMPACT * 2,
-        margin: `0 ${DAY_MARGIN_COMPACT}px`,
-      },
+      style: { width: DAY_SIZE_COMPACT, height: DAY_SIZE_COMPACT + DAY_MARGIN * 2 },
     },
   ],
 }));
@@ -187,7 +171,6 @@ const PickerCalendarWeekDayLabel = styled(Typography, {
 const PickerCalendarWeekNumberLabel = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumberLabel',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
 })<{ ownerState: { compact: boolean } }>(({ theme }) => ({
   width: 36,
   height: 40,
@@ -200,11 +183,7 @@ const PickerCalendarWeekNumberLabel = styled(Typography, {
   variants: [
     {
       props: { compact: true },
-      style: {
-        width: DAY_SIZE_COMPACT,
-        height: DAY_SIZE_COMPACT + DAY_MARGIN_COMPACT * 2,
-        margin: `0 ${DAY_MARGIN_COMPACT}px`,
-      },
+      style: { width: DAY_SIZE_COMPACT, height: DAY_SIZE_COMPACT + DAY_MARGIN * 2 },
     },
   ],
 }));
@@ -212,7 +191,6 @@ const PickerCalendarWeekNumberLabel = styled(Typography, {
 const PickerCalendarWeekNumber = styled(Typography, {
   name: 'MuiDayCalendar',
   slot: 'WeekNumber',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
 })<{ ownerState: { compact: boolean } }>(({ theme }) => ({
   ...theme.typography.caption,
   width: DAY_SIZE,
@@ -227,11 +205,7 @@ const PickerCalendarWeekNumber = styled(Typography, {
   variants: [
     {
       props: { compact: true },
-      style: {
-        width: DAY_SIZE_COMPACT,
-        height: DAY_SIZE_COMPACT,
-        margin: `0 ${DAY_MARGIN_COMPACT}px`,
-      },
+      style: { width: DAY_SIZE_COMPACT, height: DAY_SIZE_COMPACT },
     },
   ],
 }));
@@ -239,7 +213,6 @@ const PickerCalendarWeekNumber = styled(Typography, {
 const PickerCalendarLoadingContainer = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'LoadingContainer',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
 })<{ ownerState: { compact: boolean } }>({
   display: 'flex',
   justifyContent: 'center',
@@ -248,9 +221,7 @@ const PickerCalendarLoadingContainer = styled('div', {
   variants: [
     {
       props: { compact: true },
-      style: {
-        minHeight: weeksContainerHeightCompact,
-      },
+      style: { minHeight: weeksContainerHeightCompact },
     },
   ],
 });
@@ -258,15 +229,12 @@ const PickerCalendarLoadingContainer = styled('div', {
 const PickerCalendarSlideTransition = styled(PickersSlideTransition, {
   name: 'MuiDayCalendar',
   slot: 'SlideTransition',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
 })<{ ownerState: { compact: boolean } }>({
   minHeight: weeksContainerHeight,
   variants: [
     {
       props: { compact: true },
-      style: {
-        minHeight: weeksContainerHeightCompact,
-      },
+      style: { minHeight: weeksContainerHeightCompact },
     },
   ],
 });
@@ -279,19 +247,10 @@ const PickerCalendarWeekContainer = styled('div', {
 const PickerCalendarWeek = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'WeekContainer',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
-})<{ ownerState: { compact: boolean } }>({
+})({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
   justifyContent: 'center',
-  variants: [
-    {
-      props: { compact: true },
-      style: {
-        margin: `${DAY_MARGIN_COMPACT}px 0`,
-      },
-    },
-  ],
 });
 
 function WrappedDay({
@@ -658,7 +617,6 @@ export function DayCalendar(inProps: DayCalendarProps) {
           >
             {weeksToDisplay.map((week, index) => (
               <PickerCalendarWeek
-                ownerState={ownerState}
                 role="row"
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}

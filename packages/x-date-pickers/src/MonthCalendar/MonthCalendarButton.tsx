@@ -19,7 +19,7 @@ export interface MonthCalendarButtonProps {
   selected: boolean;
   disabled: boolean;
   autoFocus: boolean;
-  compact?: boolean;
+  compact: boolean;
   classes: Partial<MonthCalendarClasses> | undefined;
   slots: MonthCalendarSlots | undefined;
   slotProps: MonthCalendarSlotProps | undefined;
@@ -127,7 +127,7 @@ export const MonthCalendarButton = React.memo(function MonthCalendarButton(
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const ownerState: MonthButtonOwnerState = {
     ...pickerOwnerState,
-    isPickerCompact: compact ?? pickerOwnerState.isPickerCompact,
+    isPickerCompact: compact,
     isMonthDisabled: disabled,
     isMonthSelected: selected,
   };

@@ -26,7 +26,7 @@ import {
 } from '../MultiSectionDigitalClock';
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
-import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { VIEW_HEIGHT, VIEW_HEIGHT_COMPACT } from '../internals/constants/dimensions';
 import type {
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
@@ -52,7 +52,7 @@ const rendererInterceptor = function RendererInterceptor(
         },
         [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
           {
-            maxHeight: VIEW_HEIGHT,
+            maxHeight: rendererProps.compact ? VIEW_HEIGHT_COMPACT : VIEW_HEIGHT,
           },
       },
     ],

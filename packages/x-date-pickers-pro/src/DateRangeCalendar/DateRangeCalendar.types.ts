@@ -142,7 +142,6 @@ export interface DateRangeCalendarProps
 
 export interface DateRangeCalendarOwnerState extends PickerOwnerState {
   isDraggingDay: boolean;
-  compact: boolean;
 }
 
 export type DateRangeCalendarDefaultizedProps = DefaultizedProps<

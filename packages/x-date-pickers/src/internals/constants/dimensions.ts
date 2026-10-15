@@ -9,7 +9,7 @@ export const MULTI_SECTION_CLOCK_SECTION_WIDTH = 48;
 // Dimensions used when the `compact` prop is set to `true`, following the Material Design spec
 // for a 256px wide date picker: https://m2.material.io/components/date-pickers#specs
 export const DAY_SIZE_COMPACT = 32;
-export const DAY_MARGIN_COMPACT = 2;
 export const DIALOG_WIDTH_COMPACT = 256;
-export const MAX_CALENDAR_HEIGHT_COMPACT = 224;
-export const VIEW_HEIGHT_COMPACT = 288;
+// Calendar header (40px) + weekday labels + 6 weeks, each row is `DAY_SIZE_COMPACT + 2 * DAY_MARGIN`.
+export const VIEW_HEIGHT_COMPACT = 40 + 7 * (DAY_SIZE_COMPACT + 2 * DAY_MARGIN);
+export const MAX_CALENDAR_HEIGHT_COMPACT = VIEW_HEIGHT_COMPACT - 40;

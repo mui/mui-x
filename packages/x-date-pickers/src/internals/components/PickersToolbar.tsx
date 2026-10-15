@@ -49,7 +49,7 @@ const PickersToolbarRoot = styled('div', {
       },
     },
     {
-      props: { isPickerCompact: true, isPickerStaticVariant: true },
+      props: { isPickerCompact: true },
       style: ({ theme }) => ({ padding: theme.spacing(1, 1.5) }),
     },
   ],

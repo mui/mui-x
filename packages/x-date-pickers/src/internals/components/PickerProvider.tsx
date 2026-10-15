@@ -34,7 +34,6 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
     pickerVariant: 'desktop',
     pickerOrientation: 'portrait',
     isPickerCompact: false,
-    isPickerStaticVariant: false,
   },
   rootRefObject: { current: null },
   labelId: undefined,

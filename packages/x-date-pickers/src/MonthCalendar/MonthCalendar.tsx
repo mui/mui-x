@@ -336,7 +336,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             slots={slots}
             slotProps={slotProps}
             classes={classesProp}
-            compact={compact}
+            compact={ownerState.isPickerCompact}
           >
             {monthText}
           </MonthCalendarButton>

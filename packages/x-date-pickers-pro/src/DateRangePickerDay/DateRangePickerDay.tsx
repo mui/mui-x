@@ -10,11 +10,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import {
-  usePickerDayOwnerState,
-  DAY_SIZE_COMPACT,
-  DAY_MARGIN_COMPACT,
-} from '@mui/x-date-pickers/internals';
+import { usePickerDayOwnerState, DAY_SIZE_COMPACT } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import type {
   DateRangePickerDayOwnerState,
@@ -419,11 +415,8 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       style: startEdgeStyles(theme),
     },
     {
-      props: { compact: true },
-      style: {
-        '--PickerDay-horizontalMargin': `${DAY_MARGIN_COMPACT}px`,
-        '--PickerDay-size': `${DAY_SIZE_COMPACT}px`,
-      },
+      props: { isPickerCompact: true },
+      style: { '--PickerDay-size': `${DAY_SIZE_COMPACT}px` },
     },
   ],
 }));

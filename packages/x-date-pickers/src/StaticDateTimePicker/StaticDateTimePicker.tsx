@@ -18,7 +18,12 @@ import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
-import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
+import {
+  DIALOG_WIDTH,
+  DIALOG_WIDTH_COMPACT,
+  VIEW_HEIGHT,
+  VIEW_HEIGHT_COMPACT,
+} from '../internals/constants/dimensions';
 import { digitalClockClasses } from '../DigitalClock';
 import type { PickerStep } from '../internals/utils/createNonRangePickerStepNavigation';
 import { DATE_VIEWS } from '../internals/utils/date-utils';
@@ -82,6 +87,9 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
     : defaultizedProps.views;
 
   // Props with the default values specific to the static variant
+  const viewWidth = defaultizedProps.compact ? DIALOG_WIDTH_COMPACT : DIALOG_WIDTH;
+  const viewHeight = defaultizedProps.compact ? VIEW_HEIGHT_COMPACT : VIEW_HEIGHT;
+
   const props = {
     ...defaultizedProps,
     viewRenderers,
@@ -105,19 +113,19 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
       [
         {
           [`& .${multiSectionDigitalClockClasses.root}`]: {
-            width: DIALOG_WIDTH,
+            width: viewWidth,
           },
           [`& .${multiSectionDigitalClockSectionClasses.root}`]: {
             flex: 1,
             // account for the border on `MultiSectionDigitalClock`
-            maxHeight: VIEW_HEIGHT - 1,
+            maxHeight: viewHeight - 1,
             [`.${multiSectionDigitalClockSectionClasses.item}`]: {
               width: 'auto',
             },
           },
           [`& .${digitalClockClasses.root}`]: {
-            width: DIALOG_WIDTH,
-            maxHeight: VIEW_HEIGHT,
+            width: viewWidth,
+            maxHeight: viewHeight,
             flex: 1,
             [`.${digitalClockClasses.item}`]: {
               justifyContent: 'center',

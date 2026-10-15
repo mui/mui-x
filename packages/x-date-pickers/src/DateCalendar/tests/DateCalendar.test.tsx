@@ -953,6 +953,13 @@ describe('<DateCalendar />', () => {
       );
     });
 
+    it.skipIf(isJSDOM)('should fit the day view in the compact height', () => {
+      render(<DateCalendar compact defaultValue={adapterToUse.date('2019-01-01')} />);
+
+      const root = screen.getByRole('grid').closest<HTMLElement>(`.${dateCalendarClasses.root}`)!;
+      expect(root.scrollHeight).to.equal(root.clientHeight);
+    });
+
     it('should use the compact dimensions on the year view', async () => {
       render(
         <DateCalendar

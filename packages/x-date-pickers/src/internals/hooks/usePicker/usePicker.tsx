@@ -241,7 +241,6 @@ export const usePicker = <
       pickerOrientation: orientation,
       pickerVariant: variant,
       isPickerCompact: props.compact ?? false,
-      isPickerStaticVariant: viewContainerRole === null,
     }),
     [
       adapter,
@@ -250,7 +249,6 @@ export const usePicker = <
       state.open,
       orientation,
       variant,
-      viewContainerRole,
       props.disabled,
       props.readOnly,
       props.compact,

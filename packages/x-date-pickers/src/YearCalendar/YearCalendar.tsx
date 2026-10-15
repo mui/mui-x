@@ -376,7 +376,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
             slots={slots}
             slotProps={slotProps}
             classes={classesProp}
-            compact={compact}
+            compact={ownerState.isPickerCompact}
           >
             {label}
           </YearCalendarButton>

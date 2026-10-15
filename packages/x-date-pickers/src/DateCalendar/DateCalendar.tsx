@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
@@ -25,11 +24,7 @@ import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import type { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import {
-  VIEW_HEIGHT,
-  DIALOG_WIDTH_COMPACT,
-  VIEW_HEIGHT_COMPACT,
-} from '../internals/constants/dimensions';
+import { VIEW_HEIGHT, VIEW_HEIGHT_COMPACT } from '../internals/constants/dimensions';
 import type { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
@@ -70,18 +65,14 @@ function useDateCalendarDefaultizedProps(
 const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
-})<{ ownerState: PickerOwnerState & { compact: boolean } }>({
+})<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   height: VIEW_HEIGHT,
   variants: [
     {
-      props: { compact: true },
-      style: {
-        width: DIALOG_WIDTH_COMPACT,
-        height: VIEW_HEIGHT_COMPACT,
-      },
+      props: { isPickerCompact: true },
+      style: { height: VIEW_HEIGHT_COMPACT },
     },
   ],
 });
@@ -89,8 +80,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
   slot: 'ViewTransitionContainer',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'compact',
-})<{ ownerState: PickerOwnerState & { compact: boolean } }>({});
+})<{ ownerState: PickerOwnerState }>({});
 
 type DateCalendarComponent = ((
   props: DateCalendarProps & React.RefAttributes<HTMLDivElement>,
@@ -155,11 +145,12 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
-    compact = false,
+    compact: compactProp,
     ...other
   } = props;
 
-  const ownerState = { ...pickerOwnerState, compact };
+  const compact = compactProp ?? pickerOwnerState.isPickerCompact;
+  const ownerState: PickerOwnerState = { ...pickerOwnerState, isPickerCompact: compact };
 
   const { value, handleValueChange, timezone } = useControlledValue({
     name: 'DateCalendar',
