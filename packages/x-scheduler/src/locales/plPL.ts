@@ -20,6 +20,9 @@ const plPLDialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Usuń wydarzenie',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Anuluj',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -85,7 +88,6 @@ const plPLDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Wszystkie wydarzenia',
-  cancel: 'Anuluj',
   confirm: 'Potwierdź',
   onlyThis: 'Tylko to wydarzenie',
   radioGroupAriaLabel: 'Zakres edycji wydarzeń cyklicznych',
