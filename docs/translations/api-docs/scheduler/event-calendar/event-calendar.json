@@ -114,6 +114,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view day number cell elements"
     },
+    "agendaViewEmptyState": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the agenda view empty state element"
+    },
     "agendaViewEventListItem": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the agenda view event list item elements"
@@ -833,6 +837,10 @@
     "resourcesTreeLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the resources tree section label element"
+    },
+    "responsiveTypographyContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element that hosts the responsive typography tokens"
     },
     "root": { "description": "Styles applied to the root element." },
     "sidePanel": {

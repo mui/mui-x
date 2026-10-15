@@ -148,8 +148,6 @@ async function main() {
       // is a no-op on Linux Chromium, so without this flag screenshots pick
       // up LCD subpixel color fringes that vary across hosts.
       '--disable-lcd-text',
-      // Skia otherwise picks SIMD code paths per host CPU, which shifts glyph edges.
-      '--disable-skia-runtime-opts',
       // Not `--hide-scrollbars`: it also hides the scrollbars of the components under test.
       // Only the page scrollbar is hidden, see `TestViewer`.
     ],

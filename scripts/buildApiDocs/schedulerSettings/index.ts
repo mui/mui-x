@@ -7,8 +7,9 @@ import {
   HookReactApi,
   findApiPages,
 } from '@mui/internal-api-docs-builder';
-import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
+import { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
+import generateSchedulerClassName from './generateSchedulerClassName';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
@@ -139,7 +140,7 @@ export default schedulerApiPages;
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),
   },
-  generateClassName: generateUtilityClass,
+  generateClassName: generateSchedulerClassName,
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [...getNonComponentFolders()],
 };

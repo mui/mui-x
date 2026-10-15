@@ -1,14 +1,30 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization } from '../utils/getGridLocalization';
+import { getGridLocalization, buildLocaleFormat } from '../utils/getGridLocalization';
 import type { Localization } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('ro-RO');
+
+// Romanian inserts "de" before the plural noun for counts of 20 and above,
+// unless the count ends in 01 to 19: "2 filtre active", "20 de filtre active", "101 filtre active"
+function getPluralForm(count: number, one: string, few: string) {
+  if (count === 1) {
+    return one;
+  }
+  const lastTwoDigits = count % 100;
+  if (count < 20 || (lastTwoDigits >= 1 && lastTwoDigits <= 19)) {
+    return few;
+  }
+  return `de ${few}`;
+}
 
 const roROGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Lipsă date',
   noResultsOverlayLabel: 'Nu au fost găsite rezultate.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
-  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  noColumnsOverlayLabel: 'Nicio coloană',
+  noColumnsOverlayManageColumns: 'Gestionează coloane',
+  emptyPivotOverlayLabel:
+    'Adaugă câmpuri la rânduri, coloane și valori pentru a crea un tabel pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Înălțime rând',
@@ -31,7 +47,7 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipHide: 'Ascunde filtru',
   toolbarFiltersTooltipShow: 'Afișează filtru',
   toolbarFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} filtru activ` : `${count} filtru activ`,
+    `${count} ${getPluralForm(count, 'filtru activ', 'filtre active')}`,
 
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'Căutare…',
@@ -41,23 +57,23 @@ const roROGrid: Partial<GridLocaleText> = {
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
-  toolbarExportCSV: 'Download în format CSV',
+  toolbarExportCSV: 'Descarcă în format CSV',
   toolbarExportPrint: 'Printare',
-  toolbarExportExcel: 'Download în format Excel',
+  toolbarExportExcel: 'Descarcă în format Excel',
 
   // Toolbar pivot button
-  // toolbarPivot: 'Pivot',
+  toolbarPivot: 'Pivot',
 
   // Toolbar charts button
-  // toolbarCharts: 'Charts',
+  toolbarCharts: 'Grafice',
 
   // Toolbar AI Assistant button
-  // toolbarAssistant: 'AI Assistant',
+  toolbarAssistant: 'Asistent AI',
 
   // Formula bar (Premium formulas)
-  // formulaBarLabel: 'Formula bar',
-  // formulaBarInputLabel: 'Formula',
-  // formulaBarAddressLabel: 'Active cell',
+  formulaBarLabel: 'Bara de formule',
+  formulaBarInputLabel: 'Formulă',
+  formulaBarAddressLabel: 'Celula activă',
 
   // Columns management text
   columnsManagementSearchTitle: 'Caută',
@@ -70,11 +86,11 @@ const roROGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Adăugare filtru',
   filterPanelRemoveAll: 'Șterge tot',
   filterPanelDeleteIconLabel: 'Ștergere',
-  filterPanelLogicOperator: 'Operatori logici',
-  filterPanelOperator: 'Operatori',
+  filterPanelLogicOperator: 'Operator logic',
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Și',
   filterPanelOperatorOr: 'Sau',
-  filterPanelColumn: 'Coloane',
+  filterPanelColumn: 'Coloană',
   filterPanelInputLabel: 'Valoare',
   filterPanelInputPlaceholder: 'Filtrare valoare',
 
@@ -113,7 +129,7 @@ const roROGrid: Partial<GridLocaleText> = {
   headerFilterOperatorAfter: 'Este după',
   headerFilterOperatorOnOrAfter: 'Este la sau după',
   headerFilterOperatorBefore: 'Este înainte de',
-  headerFilterOperatorOnOrBefore: 'este la sau înainte de',
+  headerFilterOperatorOnOrBefore: 'Este la sau înainte de',
   headerFilterOperatorIsEmpty: 'Este gol',
   headerFilterOperatorIsNotEmpty: 'Nu este gol',
   headerFilterOperatorIsAnyOf: 'Este una din valori',
@@ -123,16 +139,16 @@ const roROGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Mai mare sau egal cu',
   'headerFilterOperator<': 'Mai mic decât',
   'headerFilterOperator<=': 'Mai mic sau egal cu',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Șterge filtrul',
 
   // Filter values text
-  filterValueAny: 'Aleatoriu',
+  filterValueAny: 'Oricare',
   filterValueTrue: 'Da',
   filterValueFalse: 'Nu',
 
   // Column menu text
   columnMenuLabel: 'Meniu',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `Meniul coloanei ${columnName}`,
   columnMenuShowColumns: 'Afișează toate coloanele',
   columnMenuManageColumns: 'Gestionează coloane',
   columnMenuFilter: 'Filtru',
@@ -140,12 +156,12 @@ const roROGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Dezactivare sortare',
   columnMenuSortAsc: 'Sortează crescător',
   columnMenuSortDesc: 'Sortează descrescător',
-  // columnMenuManagePivot: 'Manage pivot',
-  // columnMenuManageCharts: 'Manage charts',
+  columnMenuManagePivot: 'Gestionează pivotul',
+  columnMenuManageCharts: 'Gestionează graficele',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} filtru activ` : `${count} filtru activ`,
+    `${count} ${getPluralForm(count, 'filtru activ', 'filtre active')}`,
   columnHeaderFiltersLabel: 'Afișează filtru',
   columnHeaderSortIconLabel: 'Sortare',
   // columnHeaderSortIconAriaLabel: (columnName, direction) => {
@@ -160,9 +176,7 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1
-      ? `${count.toLocaleString()} Înregistrări selectate`
-      : `${count.toLocaleString()} Înregistrare selectată`,
+    `${count.toLocaleString()} ${getPluralForm(count, 'înregistrare selectată', 'înregistrări selectate')}`,
 
   // Total row amount footer text
   footerTotalRows: 'Total:',
@@ -172,7 +186,7 @@ const roROGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} din ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'Checkbox Selecție',
+  checkboxSelectionHeaderName: 'Selecție prin bifare',
   checkboxSelectionSelectAllRows: 'Selectare toate rândurile',
   checkboxSelectionUnselectAllRows: 'Deselectare toate rândurile',
   checkboxSelectionSelectRow: 'Selectare rând',
@@ -202,7 +216,7 @@ const roROGrid: Partial<GridLocaleText> = {
   // Grouping columns
   groupingColumnHeaderName: 'Grupare',
   groupColumn: (name) => `Grupare după ${name}`,
-  unGroupColumn: (name) => `Anulare Grupare după ${name}`,
+  unGroupColumn: (name) => `Anulare grupare după ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Comutare panou detalii',
@@ -211,19 +225,17 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Rânduri pe pagină:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   const unknownRowCount = count == null || count === -1;
-  //   if (!estimated) {
-  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
-  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    const unknownRowCount = count == null || count === -1;
+    if (!estimated) {
+      return `${formatNumber(from)}–${formatNumber(to)} din ${!unknownRowCount ? formatNumber(count) : `mai mult de ${formatNumber(to)}`}`;
+    }
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `aproximativ ${formatNumber(estimated)}`
+        : `mai mult de ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} din ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Mergi la prima pagină';
@@ -243,7 +255,7 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregare',
-  // aggregationFunctionLabelNone: 'none',
+  aggregationFunctionLabelNone: 'Niciuna',
   aggregationFunctionLabelSum: 'Sumă',
   aggregationFunctionLabelAvg: 'Medie',
   aggregationFunctionLabelMin: 'Minim',
@@ -251,108 +263,127 @@ const roROGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'Numărul elementelor',
 
   // Pivot panel
-  // pivotToggleLabel: 'Pivot',
-  // pivotRows: 'Rows',
-  // pivotColumns: 'Columns',
-  // pivotValues: 'Values',
-  // pivotCloseButton: 'Close pivot settings',
-  // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search fields',
-  // pivotSearchControlLabel: 'Search fields',
-  // pivotSearchControlClear: 'Clear search',
-  // pivotNoFields: 'No fields',
-  // pivotMenuMoveUp: 'Move up',
-  // pivotMenuMoveDown: 'Move down',
-  // pivotMenuMoveToTop: 'Move to top',
-  // pivotMenuMoveToBottom: 'Move to bottom',
-  // pivotMenuRows: 'Rows',
-  // pivotMenuColumns: 'Columns',
-  // pivotMenuValues: 'Values',
-  // pivotMenuOptions: 'Field options',
-  // pivotMenuAddToRows: 'Add to Rows',
-  // pivotMenuAddToColumns: 'Add to Columns',
-  // pivotMenuAddToValues: 'Add to Values',
-  // pivotMenuRemove: 'Remove',
-  // pivotDragToRows: 'Drag here to create rows',
-  // pivotDragToColumns: 'Drag here to create columns',
-  // pivotDragToValues: 'Drag here to create values',
-  // pivotYearColumnHeaderName: '(Year)',
-  // pivotQuarterColumnHeaderName: '(Quarter)',
+  pivotToggleLabel: 'Pivot',
+  pivotRows: 'Rânduri',
+  pivotColumns: 'Coloane',
+  pivotValues: 'Valori',
+  pivotCloseButton: 'Închide setările pivot',
+  pivotSearchButton: 'Caută câmpuri',
+  pivotSearchControlPlaceholder: 'Caută câmpuri',
+  pivotSearchControlLabel: 'Caută câmpuri',
+  pivotSearchControlClear: 'Șterge căutarea',
+  pivotNoFields: 'Niciun câmp',
+  pivotMenuMoveUp: 'Mută în sus',
+  pivotMenuMoveDown: 'Mută în jos',
+  pivotMenuMoveToTop: 'Mută la început',
+  pivotMenuMoveToBottom: 'Mută la sfârșit',
+  pivotMenuRows: 'Rânduri',
+  pivotMenuColumns: 'Coloane',
+  pivotMenuValues: 'Valori',
+  pivotMenuOptions: 'Opțiuni câmp',
+  pivotMenuAddToRows: 'Adaugă la rânduri',
+  pivotMenuAddToColumns: 'Adaugă la coloane',
+  pivotMenuAddToValues: 'Adaugă la valori',
+  pivotMenuRemove: 'Elimină',
+  pivotDragToRows: 'Trage aici pentru a crea rânduri',
+  pivotDragToColumns: 'Trage aici pentru a crea coloane',
+  pivotDragToValues: 'Trage aici pentru a crea valori',
+  pivotYearColumnHeaderName: '(An)',
+  pivotQuarterColumnHeaderName: '(Trimestru)',
 
   // Charts configuration panel
-  // chartsNoCharts: 'There are no charts available',
-  // chartsChartNotSelected: 'Select a chart type to configure its options',
-  // chartsTabChart: 'Chart',
-  // chartsTabFields: 'Fields',
-  // chartsTabCustomize: 'Customize',
-  // chartsCloseButton: 'Close charts configuration',
-  // chartsSyncButtonLabel: 'Sync chart',
-  // chartsSearchPlaceholder: 'Search fields',
-  // chartsSearchLabel: 'Search fields',
-  // chartsSearchClear: 'Clear search',
-  // chartsNoFields: 'No fields',
-  // chartsFieldBlocked: 'This field cannot be added to any section',
-  // chartsCategories: 'Categories',
-  // chartsSeries: 'Series',
-  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
-  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
-  // chartsMenuMoveUp: 'Move up',
-  // chartsMenuMoveDown: 'Move down',
-  // chartsMenuMoveToTop: 'Move to top',
-  // chartsMenuMoveToBottom: 'Move to bottom',
-  // chartsMenuOptions: 'Field options',
-  // chartsMenuRemove: 'Remove',
-  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
-  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
+  chartsNoCharts: 'Nu există grafice disponibile',
+  chartsChartNotSelected: 'Selectează un tip de grafic pentru a-i configura opțiunile',
+  chartsTabChart: 'Grafic',
+  chartsTabFields: 'Câmpuri',
+  chartsTabCustomize: 'Personalizare',
+  chartsCloseButton: 'Închide configurarea graficelor',
+  chartsSyncButtonLabel: 'Sincronizează graficul',
+  chartsSearchPlaceholder: 'Caută câmpuri',
+  chartsSearchLabel: 'Caută câmpuri',
+  chartsSearchClear: 'Șterge căutarea',
+  chartsNoFields: 'Niciun câmp',
+  chartsFieldBlocked: 'Acest câmp nu poate fi adăugat în nicio secțiune',
+  chartsCategories: 'Categorii',
+  chartsSeries: 'Serii',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Adaugă la ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Adaugă la ${valuesLabel}`,
+  chartsMenuMoveUp: 'Mută în sus',
+  chartsMenuMoveDown: 'Mută în jos',
+  chartsMenuMoveToTop: 'Mută la început',
+  chartsMenuMoveToBottom: 'Mută la sfârșit',
+  chartsMenuOptions: 'Opțiuni câmp',
+  chartsMenuRemove: 'Elimină',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Trage aici pentru a folosi coloana ca ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Trage aici pentru a folosi coloana ca ${valuesLabel}`,
 
   // AI Assistant panel
-  // aiAssistantPanelTitle: 'AI Assistant',
-  // aiAssistantPanelClose: 'Close AI Assistant',
-  // aiAssistantPanelNewConversation: 'New conversation',
-  // aiAssistantPanelConversationHistory: 'Conversation history',
-  // aiAssistantPanelEmptyConversation: 'No prompt history',
-  // aiAssistantSuggestions: 'Suggestions',
+  aiAssistantPanelTitle: 'Asistent AI',
+  aiAssistantPanelClose: 'Închide asistentul AI',
+  aiAssistantPanelNewConversation: 'Conversație nouă',
+  aiAssistantPanelConversationHistory: 'Istoricul conversațiilor',
+  aiAssistantPanelEmptyConversation: 'Niciun prompt în istoric',
+  aiAssistantSuggestions: 'Sugestii',
 
   // Prompt field
   promptFieldLabel: 'Prompt',
   promptFieldPlaceholder: 'Scrie un prompt…',
   promptFieldPlaceholderWithRecording: 'Scrie sau înregistrează un prompt…',
   promptFieldPlaceholderListening: 'Ascultare prompt…',
-  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSpeechRecognitionNotSupported:
+    'Recunoașterea vocală nu este acceptată în acest browser',
   promptFieldSend: 'Trimite',
   promptFieldRecord: 'Înregistrează',
-  promptFieldStopRecording: 'Oprește înregistrare',
+  promptFieldStopRecording: 'Oprește înregistrarea',
 
   // Prompt
-  // promptRerun: 'Run again',
-  // promptProcessing: 'Processing…',
-  // promptAppliedChanges: 'Applied changes',
+  promptRerun: 'Rulează din nou',
+  promptProcessing: 'Se procesează…',
+  promptAppliedChanges: 'Modificări aplicate',
 
   // Prompt changes
-  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
-  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `${column} is any of: ${value}`;
-  //   }
-  //   return `${column} ${operator} ${value}`;
-  // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `Filter where ${column} is any of: ${value}`;
-  //   }
-  //   return `Filter where ${column} ${operator} ${value}`;
-  // },
-  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
-  // promptChangePivotEnableLabel: 'Pivot',
-  // promptChangePivotEnableDescription: 'Enable pivot',
-  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
-  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
-  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
-  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
-  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
+  promptChangeGroupDescription: (column: string) => `Grupare după ${column}`,
+  promptChangeAggregationLabel: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeAggregationDescription: (column: string, aggregation: string) =>
+    `Agregare ${column} (${aggregation})`,
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
+      return `${column} este una din valorile: ${value}`;
+    }
+    return `${column} ${operator} ${value}`;
+  },
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
+      return `Filtrare rânduri în care ${column} este una din valorile: ${value}`;
+    }
+    return `Filtrare rânduri în care ${column} ${operator} ${value}`;
+  },
+  promptChangeSortDescription: (column: string, direction: string) =>
+    `Sortare după ${column} (${direction})`,
+  promptChangePivotEnableLabel: 'Pivot',
+  promptChangePivotEnableDescription: 'Activare pivot',
+  promptChangePivotColumnsLabel: (count: number) => `Coloane (${count})`,
+  promptChangePivotColumnsDescription: (column: string, direction: string) =>
+    `${column}${direction ? ` (${direction})` : ''}`,
+  promptChangePivotRowsLabel: (count: number) => `Rânduri (${count})`,
+  promptChangePivotValuesLabel: (count: number) => `Valori (${count})`,
+  promptChangePivotValuesDescription: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Dimensiuni (${dimensionsCount}), Valori (${valuesCount})`,
 };
 
 export const roRO: Localization = getGridLocalization(roROGrid);

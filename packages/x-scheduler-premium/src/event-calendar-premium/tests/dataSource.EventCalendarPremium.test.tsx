@@ -71,6 +71,29 @@ describe('<EventCalendarPremium /> - Data Source', () => {
     expect(screen.getByRole('button', { name: /Fetched Event/i })).not.to.equal(null);
   });
 
+  it('should render the agenda empty state next to the error when the fetch fails while hiding empty days', async () => {
+    const dataSource = {
+      getEvents: async () => {
+        throw new Error('Network down');
+      },
+      persistEvents: async () => ({ success: true }),
+    };
+
+    await renderSettled(
+      <EventCalendarPremium
+        dataSource={dataSource}
+        defaultView="agenda"
+        defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        defaultPreferences={{ showEmptyDaysInAgenda: false }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Network down')).not.to.equal(null);
+    });
+    expect(screen.getByRole('status')).to.have.text('No upcoming events');
+  });
+
   it('should not forward the dataSource prop to the root element', async () => {
     const dataSource = {
       getEvents: async () => [],

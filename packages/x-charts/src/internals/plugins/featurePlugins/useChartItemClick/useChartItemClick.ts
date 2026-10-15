@@ -21,7 +21,7 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
 
     return instance.registerItemActivationHandler({}, (event, item) => {
       const seriesTypeConfig = store.state.seriesConfig.config[item.type];
-      // @ts-ignore The type inference for store.state does not support generic yet
+      // @ts-expect-error The series-specific handler expects a narrowed store state and item type.
       const itemWithData = seriesTypeConfig?.getItemWithData?.(store.state, item);
 
       // The callback only describes the pointer event unless the user augments the types.
@@ -45,8 +45,8 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature<any>> = (
 
     let item: SeriesItemIdentifierWithType<ChartSeriesType> | undefined = undefined;
 
-    for (const seriesType of Object.keys(store.state.seriesConfig.config)) {
-      // @ts-ignore The type inference for store.state does not support generic yet
+    for (const seriesType of Object.keys(store.state.seriesConfig.config) as ChartSeriesType[]) {
+      // @ts-expect-error The series handler requires its own plugin state, but the store type keeps the plugin union.
       item = store.state.seriesConfig.config[seriesType].getItemAtPosition?.(store.state, {
         x: svgPoint.x,
         y: svgPoint.y,

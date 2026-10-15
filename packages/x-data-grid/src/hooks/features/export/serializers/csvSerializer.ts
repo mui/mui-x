@@ -152,18 +152,16 @@ export function buildCSV(options: BuildCSVOptions): string {
   const { columns, rowIds, csvOptions, ignoreValueFormatter, apiRef } = options;
 
   const CSVBody = rowIds
-    .reduce<string>(
-      (acc, id) =>
-        `${acc}${serializeRow({
-          id,
-          columns,
-          getCellParams: apiRef.current.getCellParams,
-          ignoreValueFormatter,
-          csvOptions,
-        })}\r\n`,
-      '',
+    .map((id) =>
+      serializeRow({
+        id,
+        columns,
+        getCellParams: apiRef.current.getCellParams,
+        ignoreValueFormatter,
+        csvOptions,
+      }),
     )
-    .trim();
+    .join('\r\n');
 
   if (!csvOptions.includeHeaders) {
     return CSVBody;
@@ -211,7 +209,7 @@ export function buildCSV(options: BuildCSVOptions): string {
   });
   headerRows.push(mainHeaderRow);
 
-  const CSVHead = `${headerRows.map((row) => row.getRowString()).join('\r\n')}\r\n`;
+  const CSVHead = headerRows.map((row) => row.getRowString()).join('\r\n');
 
-  return `${CSVHead}${CSVBody}`.trim();
+  return rowIds.length > 0 ? `${CSVHead}\r\n${CSVBody}` : CSVHead;
 }
