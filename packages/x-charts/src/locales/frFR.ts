@@ -14,7 +14,9 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   // Toolbar Export Menu
   // toolbarExportPrint: 'Print',
   // toolbarExportImage: mimeType => `Export as ${imageMimeTypes[mimeType] ?? mimeType}`,
-  // toolbarExportExcel: 'Export as Excel',
+  // toolbarExportExcel: 'Export data as Excel',
+  // toolbarExportChartExcel: 'Export chart data as Excel',
+  // toolbarExportDataGridExcel: 'Export grid data as Excel',
 
   // Charts renderer configuration
   chartTypeBar: 'Barre',

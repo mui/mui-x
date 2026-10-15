@@ -6,6 +6,8 @@ import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { configurationOptions } from './configuration';
 import { colorPaletteLookup } from './colors';
 import type { BarSeries } from '../BarChart';
+import { ChartsToolbarPremium } from '../ChartsToolbarPremium';
+import type { ChartExcelExportOptions } from '../internals/plugins/useChartPremiumExport';
 
 const getLegendPosition = (position: string) => {
   let horizontal: 'start' | 'center' | 'end' | undefined = 'center';
@@ -39,6 +41,16 @@ export interface ChartsRendererProps {
   values: { id: string; label: string; data: (number | null)[] }[];
   chartType: string;
   configuration: Record<string, any>;
+  /**
+   * Exports the data of the Data Grid the chart is bound to.
+   * Passed by `GridChartsRendererProxy`, and offered next to the chart's own export.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  exportDataAsExcel?: () => Promise<void>;
+  /**
+   * The label of the chart, used to name the exported file.
+   */
+  label?: string;
   onRender?: (
     type: string,
     props: Record<string, any>,
@@ -60,11 +72,15 @@ export interface ChartsRendererProps {
  * @param {Function} [props.onRender] - Optional callback function called before rendering to modify chart props. Receives chart type, props and component as arguments and should return a React node
  * @returns {React.ReactNode} The rendered chart component
  */
+const EXCEL_EXPORT_SLOTS = { toolbar: ChartsToolbarPremium };
+
 function ChartsRenderer({
   dimensions,
   values,
   chartType,
   configuration,
+  exportDataAsExcel,
+  label,
   onRender,
 }: ChartsRendererProps): React.ReactNode {
   const hasMultipleDimensions = dimensions.length > 1;
@@ -114,6 +130,53 @@ function ChartsRenderer({
       ...configuration,
     };
   }, [defaultOptions, configuration]);
+
+  // The integration renders Pro charts, which cannot register the Premium export plugin, and the
+  // rendered axis mangles its labels. So the export reads the grid's selection instead.
+  // Only the options that mean something for a selection the Grid already resolved:
+  // `includeHiddenSeries` and `includeFormattedValues` have no counterpart here.
+  const onExcelExport = React.useCallback(
+    async (options?: ChartExcelExportOptions) => {
+      try {
+        const { getGridChartsExcelTables, buildChartExcelWorkbook, downloadWorkbook } =
+          await import('../internals/excelExport');
+
+        const tables = getGridChartsExcelTables(dimensions, values, {
+          escapeFormulas: options?.escapeFormulas,
+        });
+        const workbook = await buildChartExcelWorkbook(tables, {
+          includeHeaders: options?.includeHeaders,
+        });
+
+        if (workbook) {
+          // The chart's label beats the document title here: a page holding several charts
+          // would otherwise export every one of them under the same name.
+          await downloadWorkbook(workbook, options?.fileName || label || document.title);
+        }
+      } catch (error) {
+        console.error('MUI X Charts: Error exporting chart as Excel:', error);
+      }
+    },
+    [dimensions, values, label],
+  );
+
+  const onDataGridExcelExport = React.useMemo(
+    () =>
+      exportDataAsExcel &&
+      (async () => {
+        try {
+          await exportDataAsExcel();
+        } catch (error) {
+          // The Grid runs this export, so its failure is not the chart's.
+          console.error('MUI X Data Grid: Error exporting the data as Excel:', error);
+        }
+      }),
+    [exportDataAsExcel],
+  );
+
+  const excelExportSlotProps = {
+    toolbar: { onExcelExport, onDataGridExcelExport },
+  };
 
   if (chartType === 'bar' || chartType === 'column') {
     const layout = chartType === 'bar' ? 'horizontal' : 'vertical';
@@ -189,7 +252,9 @@ function ChartsRenderer({
       },
       skipAnimation: chartConfiguration.skipAnimation,
       showToolbar: chartConfiguration.showToolbar,
+      slots: EXCEL_EXPORT_SLOTS,
       slotProps: {
+        ...excelExportSlotProps,
         tooltip: {
           trigger: chartConfiguration.tooltipTrigger,
           placement: chartConfiguration.tooltipPlacement,
@@ -248,7 +313,9 @@ function ChartsRenderer({
         vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
         horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
       },
+      slots: EXCEL_EXPORT_SLOTS,
       slotProps: {
+        ...excelExportSlotProps,
         tooltip: {
           trigger: chartConfiguration.tooltipTrigger,
           placement: chartConfiguration.tooltipPlacement,
@@ -315,7 +382,9 @@ function ChartsRenderer({
       hideLegend: legendPosition === undefined,
       colors: colorPaletteLookup.get(chartConfiguration.colors),
       showToolbar: chartConfiguration.showToolbar,
+      slots: EXCEL_EXPORT_SLOTS,
       slotProps: {
+        ...excelExportSlotProps,
         legend: {
           direction: chartConfiguration.pieLegendDirection,
           position: legendPosition,
@@ -355,6 +424,16 @@ ChartsRenderer.propTypes /* remove-proptypes */ = {
       label: PropTypes.string.isRequired,
     }),
   ).isRequired,
+  /**
+   * Exports the data of the Data Grid the chart is bound to.
+   * Passed by `GridChartsRendererProxy`, and offered next to the chart's own export.
+   * @returns {Promise<void>} A promise that resolves once the export is done.
+   */
+  exportDataAsExcel: PropTypes.func,
+  /**
+   * The label of the chart, used to name the exported file.
+   */
+  label: PropTypes.string,
   onRender: PropTypes.func,
   values: PropTypes.arrayOf(
     PropTypes.shape({
