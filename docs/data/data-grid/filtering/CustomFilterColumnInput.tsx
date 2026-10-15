@@ -11,6 +11,7 @@ function AutocompleteColumnInput(props: GridFilterFormColumnInputProps) {
 
   return (
     <Autocomplete
+      disableClearable
       className={className}
       sx={{ width: 200 }}
       size="small"
