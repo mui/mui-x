@@ -7,6 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
 import type {
   PickersArrowSwitcherOwnerState,
@@ -41,6 +42,7 @@ const PickersArrowSwitcherButton = styled(IconButton, {
 })<{
   ownerState: PickersArrowSwitcherOwnerState;
 }>({
+  ...applyInsetFocusVisible(1),
   variants: [
     {
       props: { isButtonHidden: true },

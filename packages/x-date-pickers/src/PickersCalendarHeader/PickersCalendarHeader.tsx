@@ -6,6 +6,7 @@ import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
+import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import IconButton from '@mui/material/IconButton';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
@@ -83,8 +84,9 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   slot: 'SwitchViewButton',
 })<{
   ownerState: PickerOwnerState & { view: DateView };
-}>({
+}>(({ theme }) => ({
   marginRight: 'auto',
+  ...(theme.focusVisible && applyInsetFocusVisible(1)),
   variants: [
     {
       props: { view: 'year' },
@@ -95,7 +97,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
       },
     },
   ],
-});
+}));
 
 const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
