@@ -9,7 +9,7 @@ import type { GridColumnMenuItemProps } from '@mui/x-data-grid-pro';
 import { gridPivotActiveSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
 import { isGroupingColumn } from '../../../hooks/features/rowGrouping/gridRowGroupingUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
 
 /**
  * The computed columns entries of the column menu: "Add computed column" on
@@ -20,7 +20,7 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
 
   // Utility columns are no position anchor for a new column.
@@ -47,7 +47,9 @@ function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps) {
 
   const removeComputedColumn = (event: React.MouseEvent<HTMLElement>) => {
     onClick(event);
-    apiRef.current.removeComputedColumn(colDef.field);
+    apiRef.current.applyUserComputedColumnsChange(() =>
+      apiRef.current.removeComputedColumn(colDef.field),
+    );
   };
 
   return (

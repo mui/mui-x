@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -1915,17 +1915,26 @@ describe('<DataGridPremium /> - Computed columns', () => {
 
       it('should not record a history step when pivoting is deactivated', async () => {
         await render(
-          <Test initialState={{ computedColumns: { model: [total] } }} pivotModel={pivotModel} />,
+          <Test
+            initialState={{ computedColumns: { model: [total, ratio] } }}
+            pivotModel={pivotModel}
+          />,
         );
+        // A step made from the column menu before pivoting.
+        await act(async () => apiRef.current!.showColumnMenu('ratio'));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'Remove computed column' }));
+        await microtasks();
+        expect(apiRef.current!.state.history.stack).to.have.length(1);
+
         await activatePivot();
-        await act(async () => apiRef.current!.addComputedColumn(ratio));
         await act(async () => apiRef.current!.setPivotActive(false));
+        expect(apiRef.current!.state.history.stack).to.have.length(1);
         expect(apiRef.current!.history.canUndo()).to.equal(true);
 
         await act(async () => {
           await apiRef.current!.history.undo();
         });
-        expect(getModelFields()).to.deep.equal(['total']);
+        expect(getModelFields()).to.deep.equal(['total', 'ratio']);
         expect(apiRef.current!.history.canUndo()).to.equal(false);
       });
 

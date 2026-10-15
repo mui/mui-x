@@ -150,6 +150,18 @@ export interface GridComputedColumnsInternalCache {
    * operation itself, not a new step.
    */
   historyEcho: { model: GridComputedColumnsModel; columns: GridComputedColumnSnapshot[] } | null;
+  /**
+   * `true` while `applyUserComputedColumnsChange()` runs a change made from the grid UI
+   * (the panel, the column menu, the cells), until `setComputedColumns()` takes it.
+   */
+  isApplyingUserChange: boolean;
+  /**
+   * The model of the last change made from the grid UI, until `setComputedColumns()` applies
+   * it: the history handler records a change as a step only when it is this one. With a
+   * controlled model, it waits for the parent to echo it; any other model (the parent
+   * rejected or rewrote the change, or a change from code) drops it.
+   */
+  userModel: GridComputedColumnsModel | null;
 }
 
 /**
@@ -235,4 +247,18 @@ export interface GridComputedColumnsPrivateApi {
    * @returns {GridComputedColumnValidationIssue[]} The issues of the stored definition.
    */
   getComputedColumnIssues: (field: string) => GridComputedColumnValidationIssue[];
+}
+
+/**
+ * Registered by the bundled half of the feature, with the model.
+ */
+export interface GridComputedColumnsModelPrivateApi {
+  /**
+   * Runs a change of the model made from the grid UI (the panel, the column menu, the
+   * cells). Only these changes are undo steps: a change made from code is not, as for
+   * `updateRows()` and cell edits.
+   * @param {() => void} change The callback that changes the model through one API call:
+   * only its first `setComputedColumns()` is the user's change.
+   */
+  applyUserComputedColumnsChange: (change: () => void) => void;
 }

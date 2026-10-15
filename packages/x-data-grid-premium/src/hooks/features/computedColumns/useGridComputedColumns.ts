@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import { useGridApiMethod, useGridRegisterPipeProcessor } from '@mui/x-data-grid-pro/internals';
 import type {
@@ -17,6 +18,7 @@ import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 import type {
   GridComputedColumnsApi,
   GridComputedColumnsModel,
+  GridComputedColumnsModelPrivateApi,
 } from './gridComputedColumnsInterfaces';
 import {
   gridComputedColumnDefinitionSelector,
@@ -75,6 +77,8 @@ export const computedColumnsStateInitializer: GridStateInitializer<
     pendingColumnDimensions: new Map(),
     previousModel: null,
     historyEcho: null,
+    isApplyingUserChange: false,
+    userModel: null,
   };
 
   return {
@@ -118,6 +122,12 @@ export const useGridComputedColumns = (
    */
   const setComputedColumns = React.useCallback<GridComputedColumnsApi['setComputedColumns']>(
     (model) => {
+      const cache = apiRef.current.caches.computedColumns;
+      // The flag marks the first call only: a model change the parent makes from code while
+      // the change runs (an API call from `onComputedColumnsChange()`) is not the user's.
+      let isUserChange = cache.isApplyingUserChange;
+      cache.isApplyingUserChange = false;
+
       const currentModel = gridComputedColumnsSelector(apiRef);
       const newModel = removeDuplicateFields(
         typeof model === 'function' ? model(currentModel) : model,
@@ -126,11 +136,25 @@ export const useGridComputedColumns = (
         return;
       }
 
+      // Only a change made from the grid UI is an undo step. A controlled parent echoes it
+      // through here later, without the flag: the echo is recognized by its model. A model
+      // equal to the current one (an inline prop re-created by a render of the parent before
+      // the echo) is neither the change nor a new one.
+      if (isUserChange) {
+        cache.userModel = newModel;
+      } else if (cache.userModel !== null) {
+        if (newModel === cache.userModel || isDeepEqual(newModel, cache.userModel)) {
+          isUserChange = true;
+        } else if (!isDeepEqual(newModel, currentModel)) {
+          cache.userModel = null;
+        }
+      }
+
       // The `computedColumnsChange` event is published from inside `setState`, once the
       // state holds the new model: the history handler reads the previous one from here.
       // A write the controlled parent has not echoed yet stashes it too, and the echo
       // (which comes back through here) stashes the same model again.
-      apiRef.current.caches.computedColumns.previousModel = currentModel;
+      cache.previousModel = currentModel;
 
       apiRef.current.setState((state) => ({
         ...state,
@@ -142,11 +166,14 @@ export const useGridComputedColumns = (
       if (appliedModel === currentModel) {
         return;
       }
+      if (isUserChange) {
+        // Recorded (or not, with the history off) by the handler inside `setState`.
+        cache.userModel = null;
+      }
 
       // An index or dimensions still pending for a field that is not part of the applied
       // model belong to an insertion the parent rejected.
-      const { pendingColumnIndexes, pendingColumnDimensions } =
-        apiRef.current.caches.computedColumns;
+      const { pendingColumnIndexes, pendingColumnDimensions } = cache;
       if (pendingColumnIndexes.size > 0 || pendingColumnDimensions.size > 0) {
         const fields = new Set(appliedModel.map((definition) => definition.field));
         for (const field of Array.from(pendingColumnIndexes.keys())) {
@@ -316,6 +343,27 @@ export const useGridComputedColumns = (
   };
 
   useGridApiMethod(apiRef, computedColumnsApi, 'public');
+
+  const applyUserComputedColumnsChange = React.useCallback<
+    GridComputedColumnsModelPrivateApi['applyUserComputedColumnsChange']
+  >(
+    (change) => {
+      const cache = apiRef.current.caches.computedColumns;
+      cache.isApplyingUserChange = true;
+      try {
+        change();
+      } finally {
+        cache.isApplyingUserChange = false;
+      }
+    },
+    [apiRef],
+  );
+
+  const computedColumnsPrivateApi: GridComputedColumnsModelPrivateApi = {
+    applyUserComputedColumnsChange,
+  };
+
+  useGridApiMethod(apiRef, computedColumnsPrivateApi, 'private');
 
   /**
    * PRE-PROCESSING

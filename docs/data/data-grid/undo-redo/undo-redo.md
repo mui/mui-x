@@ -95,11 +95,11 @@ If you use a Data Source that doesn't have an `updateRow` method, then the histo
 
 When [computed columns](/x/react-data-grid/computed-columns/) are available (conditions: the formula feature is injected and neither `disableComputedColumns`, `disableFormulas`, nor `dataSource` is set) the following event is tracked as well, whether or not the grid has editable cells:
 
-- `computedColumnsChange` - Tracks changes made to the computed columns model: adding, editing, or removing a computed column from the panel, the column menu, or the API
+- `computedColumnsChange` - Tracks changes made to the computed columns model: adding, editing, or removing a computed column from the panel, the column menu, or the cells
 
 Undoing the removal of a computed column restores it with its previous position, width, and visibility.
-Model changes made from code — through `apiRef.current.restoreState()` or a new value of the controlled `computedColumns` prop — are tracked too.
-To leave them out, provide your own map through the `historyEventHandlers` prop without the `computedColumnsChange` handler.
+Model changes made from code — the `apiRef` methods, `apiRef.current.restoreState()`, or a new value of the controlled `computedColumns` prop — are not tracked, the same way `updateRows()` is not tracked for cell edits, and they invalidate the steps that no longer match the model.
+To leave computed columns out of the history, provide your own map through the `historyEventHandlers` prop without the `computedColumnsChange` handler.
 
 :::warning
 Default handlers invalidate the stack if the data is not visible to the user anymore due to filtering, grouping, page change, etc.

@@ -252,11 +252,14 @@ Computed values are evaluated lazily and memoized per row: nothing is computed u
 ## Undo and redo
 
 When computed columns are available, the [undo and redo](/x/react-data-grid/undo-redo/) feature tracks the `computedColumnsChange` event out of the box, even if the grid has no editable column.
-Every change of the model—adding, editing, or removing a column, from the panel, the column menu, or the API—is one step.
+Every change made from the panel, the column menu, or the cells—adding, editing, or removing a column—is one step.
 Undoing a removal restores the column with its previous position, width, and visibility.
 
-Model changes made from code, such as `apiRef.current.restoreState()` or a new value of the controlled `computedColumns` prop, are recorded as steps too.
-To opt out, provide your own map through the `historyEventHandlers` prop and leave the `computedColumnsChange` handler out of it; the default handler is exported as `createComputedColumnsHistoryHandler()` so you can combine it with your own handlers.
+Changes made from code—the `apiRef` methods, `apiRef.current.restoreState()`, or a new value of the controlled `computedColumns` prop—are not steps, the same way `updateRows()` is not a step for cell edits.
+They drop the undo and redo steps that no longer match the model.
+For example, after a user edits the `total` column in the panel, a call to `apiRef.current.updateComputedColumn('total', { formula: '=price * quantity * 1.2' })` disables Undo, so the user cannot revert your change by undoing their own edit.
+
+To leave computed columns out of the history, provide your own map through the `historyEventHandlers` prop without the `computedColumnsChange` handler; the default handler is exported as `createComputedColumnsHistoryHandler()` so you can combine it with your own handlers.
 
 The undo and redo shortcuts typed in the text fields of the panel keep their native meaning—they undo and redo your typing, not the grid.
 
