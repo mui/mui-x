@@ -46,14 +46,26 @@ const columnFieldsToExcludeFromPaste = [
 function batchRowUpdates<R>(func: (rows: R[]) => void, wait?: number) {
   let rows: R[] = [];
 
-  const debounced = debounce(() => {
-    func(rows);
+  const applyRows = () => {
+    if (rows.length === 0) {
+      return;
+    }
+    const rowsToApply = rows;
     rows = [];
-  }, wait);
+    func(rowsToApply);
+  };
 
-  return (row: R) => {
-    rows.push(row);
-    debounced();
+  const debounced = debounce(applyRows, wait);
+
+  return {
+    push: (row: R) => {
+      rows.push(row);
+      debounced();
+    },
+    flush: () => {
+      debounced.clear();
+      applyRows();
+    },
   };
 }
 
@@ -92,7 +104,7 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
 export class CellValueUpdater {
   rowsToUpdate: Map<GridRowId, GridValidRowModel> = new Map();
 
-  declare updateRow: (row: GridRowModel) => void;
+  declare rowUpdates: ReturnType<typeof batchRowUpdates<GridRowModel>>;
 
   declare options: {
     apiRef: RefObject<GridPrivateApiPremium>;
@@ -103,7 +115,7 @@ export class CellValueUpdater {
 
   constructor(options: CellValueUpdater['options']) {
     this.options = options;
-    this.updateRow = batchRowUpdates(options.apiRef.current.updateRows, 50);
+    this.rowUpdates = batchRowUpdates(options.apiRef.current.updateRows, 50);
   }
 
   updateCell({
@@ -205,13 +217,13 @@ export class CellValueUpdater {
             rowId,
             isReplaceUpdate(finalRowUpdate) ? getReplaceRow(finalRowUpdate) : finalRowUpdate,
           );
-          this.updateRow(finalRowUpdate);
+          this.rowUpdates.push(finalRowUpdate);
         } catch (error) {
           handleError(error);
         }
       } else {
         newRows.set(rowId, newRow);
-        this.updateRow(newRow);
+        this.rowUpdates.push(newRow);
       }
     };
 
@@ -223,6 +235,9 @@ export class CellValueUpdater {
       });
     });
     Promise.all(promises).then(() => {
+      // Apply the pending rows before `clipboardPasteEnd`, so that its listeners (for example,
+      // the undo/redo history) see the grid with the pasted values.
+      this.rowUpdates.flush();
       apiRef.current.publishEvent('clipboardPasteEnd', {
         oldRows,
         newRows,

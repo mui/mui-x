@@ -11,7 +11,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { createRenderer, waitFor, act, fireEvent, screen } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
-import { getCell, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
@@ -880,6 +880,45 @@ describe('<DataGridPremium /> - History', () => {
       });
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
+    });
+
+    it('should keep the history when the rows change while the paste is in progress', async () => {
+      const { user } = render(
+        <Test
+          onBeforeClipboardPasteStart={async () => {
+            // Fires `rowsSet`, which validates the history while the paste is in progress
+            apiRef.current!.updateRows([{ id: 100, currencyPair: 'NEW' }]);
+          }}
+        />,
+      );
+      const originalValues = getColumnValues(1);
+
+      const pasteInto = async (cell: HTMLElement, text: string) => {
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, text);
+        await waitFor(() => {
+          expect(cell).to.have.text(text);
+        });
+        // Let the debounced history validation run
+        await act(() => sleep(100));
+      };
+
+      await pasteInto(getCell(0, 1), 'FIRST');
+      await pasteInto(getCell(1, 1), 'SECOND');
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+      expect(getCell(1, 1)).to.have.text(originalValues[1]);
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+      expect(getCell(0, 1)).to.have.text(originalValues[0]);
     });
   });
 
