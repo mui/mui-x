@@ -16,6 +16,7 @@ import {
   EventCalendarRoot,
   SharedComponentsStyledContext,
   SchedulerSlotsProvider,
+  SchedulerDirectionProvider,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
   EventCalendarStyledContext,
   useEventCalendarUtilityClasses,
@@ -82,11 +83,13 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-                  {watermark}
-                </EventCalendarRoot>
-              </EventDialogProvider>
+              <SchedulerDirectionProvider>
+                <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+                  <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                    {watermark}
+                  </EventCalendarRoot>
+                </EventDialogProvider>
+              </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
