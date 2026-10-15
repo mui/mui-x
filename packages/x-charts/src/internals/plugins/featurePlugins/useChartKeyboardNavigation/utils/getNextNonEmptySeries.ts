@@ -12,7 +12,10 @@ import { getNonEmptySeriesArray } from './getNonEmptySeriesArray';
  * @param seriesId - The current series id.
  */
 export function getNextNonEmptySeries<
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = Exclude<ChartSeriesType, 'sankey'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'treemap'> = Exclude<
+    ChartSeriesType,
+    'sankey' | 'treemap'
+  >,
 >(
   series: ProcessedSeries<ChartSeriesType>,
   availableSeriesTypes: Set<OutSeriesType>,
