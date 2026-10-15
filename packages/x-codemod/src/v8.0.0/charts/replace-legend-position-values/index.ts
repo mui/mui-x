@@ -37,9 +37,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
           const position = (
             (slotProps?.value as JSXExpressionContainer | null)?.expression as ObjectExpression
           )?.properties
-            // @ts-expect-error
+            // @ts-expect-error Only object properties with identifier keys can match the legend name.
             ?.find((v) => v?.key?.name === 'legend')
-            // @ts-expect-error
+            // @ts-expect-error The matching legend property contains an object expression with nested properties.
             ?.value?.properties?.find((v) => v?.key?.name === 'position');
 
           const horizontal = position?.value?.properties?.find(

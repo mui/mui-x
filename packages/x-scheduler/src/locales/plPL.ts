@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const plPLDialog: Partial<EventEditingLocaleText> = {
+const plPLDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Kolor wydarzenia',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Usuń wydarzenie',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Anuluj',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -84,7 +88,6 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
 
   // RecurringScopeDialog
   all: 'Wszystkie wydarzenia',
-  cancel: 'Anuluj',
   confirm: 'Potwierdź',
   onlyThis: 'Tylko to wydarzenie',
   radioGroupAriaLabel: 'Zakres edycji wydarzeń cyklicznych',
@@ -92,7 +95,23 @@ const plPLDialog: Partial<EventEditingLocaleText> = {
   title: 'Zastosuj tę zmianę do:',
 };
 
-const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const plPLEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  resourceAriaLabel: (resourceName) => `Zasób: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const plPLCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Zasoby',
 
@@ -135,9 +154,11 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} więcej..`,
   nextTimeSpan: (timeSpan) => `Następny ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Poprzedni ${timeSpan}`,
-  resourceAriaLabel: (resourceName) => `Zasób: ${resourceName}`,
   weekAbbreviation: 'T',
   weekNumberAriaLabel: (weekNumber) => `Tydzień ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Kończy się ${endDate}`,
@@ -154,13 +175,14 @@ const plPLCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };
 
-const plPLTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const plPLTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Tytuł zasobu',
 };
 
 export const plPL: SchedulerLocalization = getSchedulerLocalization({
   dialog: plPLDialog,
+  event: plPLEvent,
   calendar: plPLCalendar,
   timeline: plPLTimeline,
 });

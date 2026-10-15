@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const trTRDialog: Partial<EventEditingLocaleText> = {
+const trTRDialog: SchedulerDialogTranslations = {
   // EventDialog
   // colorPickerLabel: 'Event color',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const trTRDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  // cancel: 'Cancel',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -82,7 +86,6 @@ const trTRDialog: Partial<EventEditingLocaleText> = {
   // startTimeLabel: 'Start time',
   // RecurringScopeDialog
   // all: 'All events',
-  // cancel: 'Cancel',
   // confirm: 'Confirm',
   // onlyThis: 'Only this event',
   // radioGroupAriaLabel: 'Editing recurring events scope',
@@ -90,7 +93,23 @@ const trTRDialog: Partial<EventEditingLocaleText> = {
   // title: 'Apply this change to:',
 };
 
-const trTRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const trTREvent: SchedulerEventTranslations = {
+  // Event accessible name
+  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
+  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
+  // eventAriaLabelAllDay: 'All day',
+  // eventAriaLabelRecurring: 'Recurring',
+  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const trTRCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   // resourcesLabel: 'Resources',
   // ViewSwitcher
@@ -128,9 +147,10 @@ const trTRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
-  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
   // EventItem
   // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
   // MiniCalendar
@@ -143,13 +163,14 @@ const trTRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   // timelineResourceTitleHeader: 'Resource title',
 };
 
-const trTRTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const trTRTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   // timelineResourceTitleHeader: 'Resource title',
 };
 
 export const trTR: SchedulerLocalization = getSchedulerLocalization({
   dialog: trTRDialog,
+  event: trTREvent,
   calendar: trTRCalendar,
   timeline: trTRTimeline,
 });

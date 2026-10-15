@@ -40,9 +40,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             (slotProps?.value as JSXExpressionContainer | null)?.expression as ObjectExpression
           )?.properties?.find(
             (v) =>
-              // @ts-expect-error
+              // @ts-expect-error Only object properties with identifier keys can match the legend name.
               v?.key?.name === 'legend',
-            // @ts-expect-error
+            // @ts-expect-error The matching legend property contains the slot props object expression.
           )?.value;
           const hiddenIndex = legendSlotProps?.properties?.findIndex(
             (v) => v?.key?.name === 'hidden',

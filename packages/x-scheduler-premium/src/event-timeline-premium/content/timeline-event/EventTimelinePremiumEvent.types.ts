@@ -13,10 +13,6 @@ export interface EventTimelinePremiumEventProps extends React.HTMLAttributes<HTM
    */
   variant: 'regular' | 'placeholder';
   /**
-   * ID of the header this event is associated with (for aria-labelledby).
-   */
-  ariaLabelledBy: string;
-  /**
    * The id of the resource row this event is rendered in.
    * Used to resolve the event's color against that row's resource instead of the event's
    * primary resource, so a multi-resource event can render a different color per row.

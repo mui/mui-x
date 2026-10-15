@@ -395,14 +395,24 @@ const ptBRGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `Agregar ${column} (${aggregation})`,
-  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `${column} é um destes: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
-  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `Filtrar onde ${column} é um destes: ${value}`;
     }
     return `Filtrar onde ${column} ${operator} ${value}`;

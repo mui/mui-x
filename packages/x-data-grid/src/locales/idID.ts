@@ -386,14 +386,24 @@ export const idIDGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `Agregasikan ${column} (${aggregation})`,
-  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `${column} salah satu dari: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
-  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `Filter di mana ${column} salah satu dari: ${value}`;
     }
     return `Filter di mana ${column} ${operator} ${value}`;

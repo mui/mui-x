@@ -56,7 +56,11 @@ function ExportParamsSelector({ apiRef }) {
       </FormControl>
       <div>
         <Button
-          onClick={() => apiRef.current.exportAsImage({ type, quality })}
+          onClick={() =>
+            apiRef.current.exportAsImage({ type, quality }).catch((error) => {
+              console.error(error);
+            })
+          }
           variant="contained"
         >
           Export Image

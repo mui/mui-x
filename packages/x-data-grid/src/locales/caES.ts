@@ -394,14 +394,24 @@ const caESGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `Agrega ${column} (${aggregation})`,
-  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterLabel: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `${column} és un de: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
-  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-    if (operator === 'is any of') {
+  promptChangeFilterDescription: (
+    column: string,
+    operator: string,
+    value: string,
+    operatorValue?: string,
+  ) => {
+    if (operatorValue === 'isAnyOf') {
       return `Filtra per ${column} quan sigui un de: ${value}`;
     }
     return `Filtra per ${column} ${operator} ${value}`;

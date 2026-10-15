@@ -10,7 +10,7 @@ import {
 } from '../../utils/tree';
 
 export class TreeViewFocusPlugin {
-  private store: MinimalTreeViewStore<any, any>;
+  declare private store: MinimalTreeViewStore<any, any>;
 
   // We can't type `store`, otherwise we get the following TS error:
   // 'focus' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.

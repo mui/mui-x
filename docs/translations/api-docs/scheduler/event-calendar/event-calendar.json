@@ -47,6 +47,7 @@
     "eventCreation": {
       "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
     },
+    "eventDeletion": { "description": "Configures how events are deleted." },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
@@ -113,6 +114,10 @@
     "agendaViewDayNumberCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view day number cell elements"
+    },
+    "agendaViewEmptyState": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the agenda view empty state element"
     },
     "agendaViewEventListItem": {
       "description": "Styles applied to {{nodeName}}.",
@@ -833,6 +838,10 @@
     "resourcesTreeLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the resources tree section label element"
+    },
+    "responsiveTypographyContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element that hosts the responsive typography tokens"
     },
     "root": { "description": "Styles applied to the root element." },
     "sidePanel": {

@@ -54,6 +54,7 @@ import {
   useGridInfiniteLoader,
   useGridColumnSpanning,
   useGridRowReorder,
+  useGridRowReorderPointer,
   useGridRowReorderPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
@@ -296,6 +297,7 @@ export const useDataGridPremiumComponent = (
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);
+  useGridRowReorderPointer(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);

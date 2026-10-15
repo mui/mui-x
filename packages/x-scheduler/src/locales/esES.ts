@@ -1,12 +1,13 @@
-import type {
-  EventEditingLocaleText,
-  EventCalendarLocaleText,
-  EventTimelineLocaleText,
-} from '../models/translations';
 import { getSchedulerLocalization } from '../utils/getSchedulerLocalization';
-import type { SchedulerLocalization } from '../utils/getSchedulerLocalization';
+import type {
+  SchedulerLocalization,
+  SchedulerDialogTranslations,
+  SchedulerEventTranslations,
+  SchedulerCalendarTranslations,
+  SchedulerTimelineTranslations,
+} from '../utils/getSchedulerLocalization';
 
-const esESDialog: Partial<EventEditingLocaleText> = {
+const esESDialog: SchedulerDialogTranslations = {
   // EventDialog
   colorPickerLabel: 'Color del evento',
   // colorSectionLabel: 'Color',
@@ -19,6 +20,9 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Cancelar',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -73,7 +77,6 @@ const esESDialog: Partial<EventEditingLocaleText> = {
 
   // RecurringScopeDialog
   all: 'Todos los eventos',
-  cancel: 'Cancelar',
   confirm: 'Confirmar',
   onlyThis: 'Solo este evento',
   radioGroupAriaLabel: 'Alcance de edición de eventos recurrentes',
@@ -81,7 +84,23 @@ const esESDialog: Partial<EventEditingLocaleText> = {
   title: 'Aplicar este cambio a:',
 };
 
-const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLocaleText>> = {
+const esESEvent: SchedulerEventTranslations = {
+  // Event accessible name
+  eventAriaLabelTimeRange: (start, end) => `de ${start} a ${end}`,
+  eventAriaLabelDateRange: (start, end) => `Del ${start} al ${end}`,
+  eventAriaLabelAllDay: 'Todo el día',
+  eventAriaLabelRecurring: 'Recurrente',
+  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
+  // eventAriaLabel: ({
+  //   title,
+  //   when,
+  //   date,
+  //   resource,
+  //   recurring
+  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+};
+
+const esESCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
   resourcesLabel: 'Recursos',
 
@@ -124,9 +143,11 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} más..`,
   nextTimeSpan: (timeSpan) => `Siguiente ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,
-  resourceAriaLabel: (resourceName) => `Recurso: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Semana ${weekNumber}`,
+
+  // AgendaView
+  agendaViewEmptyStateLabel: 'No hay eventos próximos',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Finaliza ${endDate}`,
@@ -143,13 +164,14 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventEditingLoca
   timelineResourceTitleHeader: 'Nombre del recurso',
 };
 
-const esESTimeline: Partial<Omit<EventTimelineLocaleText, keyof EventEditingLocaleText>> = {
+const esESTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Nombre del recurso',
 };
 
 export const esES: SchedulerLocalization = getSchedulerLocalization({
   dialog: esESDialog,
+  event: esESEvent,
   calendar: esESCalendar,
   timeline: esESTimeline,
 });

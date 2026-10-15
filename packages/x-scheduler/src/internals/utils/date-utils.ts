@@ -48,11 +48,18 @@ export function formatHourAndMinutes(
   date: TemporalSupportedObject,
   adapter: Adapter,
   ampm: boolean,
-) {
+): string {
   const f = adapter.formats;
   const timeFormat = ampm
     ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
     : `${f.hours24h}:${f.minutesPadded}`;
 
   return adapter.formatByString(date, timeFormat);
+}
+
+/**
+ * @example "Sunday, July 13th, 2025"
+ */
+export function formatFullDate(date: TemporalSupportedObject, adapter: Adapter): string {
+  return adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
 }

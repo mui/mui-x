@@ -121,9 +121,9 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
 
   public lib = 'luxon';
 
-  public locale: string;
+  declare public locale: string;
 
-  public formats: AdapterFormats;
+  declare public formats: AdapterFormats;
 
   public escapedCharacters = { start: "'", end: "'" };
 
@@ -154,13 +154,12 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
 
     if (typeof value === 'undefined') {
       return DateTime.fromJSDate(new Date(), {
-        // @ts-ignore
+        // @ts-expect-error Luxon accepts locale here at runtime, but fromJSDate only declares zone.
         locale: this.locale,
         zone: timezone,
       }) as unknown as R;
     }
 
-    // @ts-ignore
     return DateTime.fromISO(value, { locale: this.locale, zone: timezone }) as unknown as R;
   };
 

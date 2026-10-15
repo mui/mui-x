@@ -10,6 +10,9 @@ import { vi, describe, it, expect } from 'vitest';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartsInteractionPointer } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { selectorChartSkipAnimation } from '../internals/plugins/corePlugins/useChartAnimation';
+import type { UseChartAnimationSignature } from '../internals/plugins/corePlugins/useChartAnimation';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
 
 const data = [1, 4, 2, 5, 3];
 
@@ -20,6 +23,17 @@ function PointerListener({ onChange }: { onChange: (pointer: unknown) => void })
   React.useEffect(() => {
     onChange(pointer);
   }, [onChange, pointer]);
+
+  return null;
+}
+
+function SkipAnimationListener({ onChange }: { onChange: (skipAnimation: boolean) => void }) {
+  const store = useStore<[UseChartAnimationSignature]>();
+  const skipAnimation = store.use(selectorChartSkipAnimation);
+
+  React.useEffect(() => {
+    onChange(skipAnimation);
+  }, [onChange, skipAnimation]);
 
   return null;
 }
@@ -125,6 +139,41 @@ describe('<SparkLineChart />', () => {
       await waitFor(() =>
         expect(container.querySelectorAll(`.${lineClasses.highlight}`)).to.have.length(1),
       );
+    });
+  });
+
+  it('should pass container props to the data provider', async () => {
+    const onSkipAnimationChange = vi.fn();
+    render(
+      <SparkLineChart data={data} width={100} height={100} skipAnimation>
+        <SkipAnimationListener onChange={onSkipAnimationChange} />
+      </SparkLineChart>,
+    );
+
+    await waitFor(() => expect(onSkipAnimationChange.mock.lastCall?.[0]).to.equal(true));
+  });
+
+  describe.skipIf(isJSDOM)('onHighlightedAxisChange', () => {
+    it('should forward onHighlightedAxisChange to the data provider', async () => {
+      const onHighlightedAxisChange = vi.fn();
+      const { user, container } = render(
+        <SparkLineChart
+          data={data}
+          width={100}
+          height={100}
+          onHighlightedAxisChange={onHighlightedAxisChange}
+        />,
+      );
+      const svg = container.querySelector('svg')!;
+
+      await user.pointer({ target: svg, coords: getCenter(svg) });
+
+      await waitFor(() => expect(onHighlightedAxisChange.mock.calls.length).to.be.greaterThan(0));
+
+      expect(onHighlightedAxisChange.mock.calls[0][0]).to.deep.include({
+        axisId: DEFAULT_X_AXIS_KEY,
+        dataIndex: 2,
+      });
     });
   });
 });

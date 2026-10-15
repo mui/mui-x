@@ -22,9 +22,9 @@ type TreeViewStoreWithLabelEditing = TreeViewAnyStore & {
 type TreeViewLabelMap = { [itemId: string]: string };
 
 export class TreeViewKeyboardNavigationPlugin {
-  private store: TreeViewStoreWithLabelEditing;
+  declare private store: TreeViewStoreWithLabelEditing;
 
-  private labelMap: TreeViewLabelMap;
+  declare private labelMap: TreeViewLabelMap;
 
   private typeaheadQuery = '';
 
