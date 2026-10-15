@@ -16,6 +16,8 @@ import {
   gridColumnVisibilityModelSelector,
   gridComputedColumnsSelector,
   gridVisibleColumnFieldsSelector,
+  getGridDateOperators,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
 } from '@mui/x-data-grid-premium';
 import { GRID_FORMULA_FUNCTIONS, formulaFeature } from '@mui/x-data-grid-premium/formula';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
@@ -299,6 +301,374 @@ describe('<DataGridPremium /> - Computed columns', () => {
           'constructor',
         ).map((issue) => issue.code),
       ).to.deep.equal(['fieldInvalid']);
+    });
+  });
+
+  describe('computedColDef overrides', () => {
+    // `margin` divides by zero for Keyboard; `shipped` reads a number for Monitor.
+    const sampleProps: Partial<DataGridPremiumProps> = {
+      rows: [
+        { id: 1, product: 'Keyboard', price: 40, quantity: 3, shippedAt: new Date(2026, 0, 12) },
+        { id: 2, product: 'Mouse', price: 25, quantity: 10, shippedAt: new Date(2026, 1, 3) },
+        { id: 3, product: 'Monitor', price: 220, quantity: 2, shippedAt: 42 },
+        { id: 4, product: 'Cable', price: 5, quantity: 50, shippedAt: new Date(2026, 2, 21) },
+        { id: 5, product: 'Dock', price: 130, quantity: 1, shippedAt: new Date(2026, 3, 8) },
+      ],
+      columns: [
+        { field: 'product' },
+        { field: 'price', type: 'number' },
+        { field: 'quantity', type: 'number' },
+        // Not a date column: the date formatter of the grid throws on the number of Monitor.
+        { field: 'shippedAt' },
+      ],
+      columnVisibilityModel: { shippedAt: false },
+    };
+    const margin: GridComputedColumnDefinition = {
+      field: 'margin',
+      headerName: 'Margin',
+      formula: '=price / (quantity - 3)',
+      type: 'number',
+    };
+    const shipped: GridComputedColumnDefinition = {
+      field: 'shipped',
+      headerName: 'Shipped',
+      formula: '=shippedAt',
+      type: 'date',
+    };
+    const dateFormat = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
+    const formatDate = (value: Date) => dateFormat.format(value);
+    const formattedDates = [
+      'Jan 12, 2026',
+      'Feb 3, 2026',
+      '#VALUE!',
+      'Mar 21, 2026',
+      'Apr 8, 2026',
+    ];
+    const isErrorCode = (value: unknown) =>
+      typeof value === 'string' && value.startsWith('#') && value.endsWith('!');
+    // `shippedAt` is hidden: the cells are found by their visible column index.
+    const getVisibleIndex = (field: string) =>
+      gridVisibleColumnFieldsSelector(apiRef as RefObject<GridApi>).indexOf(field);
+    const getVisibleValuesOf = (field: string) => getColumnValues(getVisibleIndex(field));
+    const receivedCodes = (spy: { mock: { calls: unknown[][] } }, argCount: number) =>
+      spy.mock.calls.some((args) => args.slice(0, argCount).some(isErrorCode));
+
+    it('should sort with a `sortComparator` override and keep the errors last', async () => {
+      const sortComparator = vi.fn((value1: number, value2: number) => value2 - value1);
+      await render(
+        <Test {...sampleProps} computedColumns={[margin]} computedColDef={{ sortComparator }} />,
+      );
+      act(() => apiRef.current!.sortColumn('margin', 'asc'));
+      expect(getVisibleValuesOf('product')).to.deep.equal([
+        'Mouse',
+        'Cable',
+        'Dock',
+        'Monitor',
+        'Keyboard',
+      ]);
+      act(() => apiRef.current!.sortColumn('margin', 'desc'));
+      expect(getVisibleValuesOf('product')).to.deep.equal([
+        'Monitor',
+        'Dock',
+        'Cable',
+        'Mouse',
+        'Keyboard',
+      ]);
+      expect(sortComparator.mock.calls.length).to.be.greaterThan(0);
+      expect(receivedCodes(sortComparator, 2)).to.equal(false);
+    });
+
+    it('should sort with a `getSortComparator` override and keep the errors last', async () => {
+      const comparator = vi.fn((value1: number, value2: number) => value2 - value1);
+      await render(
+        <Test
+          {...sampleProps}
+          computedColumns={[margin]}
+          computedColDef={{
+            getSortComparator: (direction) =>
+              direction === 'asc' ? comparator : (value1, value2) => -comparator(value1, value2),
+          }}
+        />,
+      );
+      act(() => apiRef.current!.sortColumn('margin', 'asc'));
+      expect(getVisibleValuesOf('product')).to.deep.equal([
+        'Mouse',
+        'Cable',
+        'Dock',
+        'Monitor',
+        'Keyboard',
+      ]);
+      act(() => apiRef.current!.sortColumn('margin', 'desc'));
+      expect(getVisibleValuesOf('product')).to.deep.equal([
+        'Monitor',
+        'Dock',
+        'Cable',
+        'Mouse',
+        'Keyboard',
+      ]);
+      expect(comparator.mock.calls.length).to.be.greaterThan(0);
+      expect(receivedCodes(comparator, 2)).to.equal(false);
+    });
+
+    it('should render the errors without passing them to a `valueFormatter` override', async () => {
+      const valueFormatter = vi.fn(formatDate);
+      await render(
+        <Test {...sampleProps} computedColumns={[shipped]} computedColDef={{ valueFormatter }} />,
+      );
+      expect(getVisibleValuesOf('shipped')).to.deep.equal(formattedDates);
+      const errorCell = getCell(2, getVisibleIndex('shipped'));
+      expect(errorCell).to.have.class(gridClasses['cell--computedError']);
+      expect(errorCell.querySelector('[title]')).not.to.equal(null);
+      expect(valueFormatter.mock.calls.length).to.be.greaterThan(0);
+      expect(receivedCodes(valueFormatter, 1)).to.equal(false);
+    });
+
+    describe('export and clipboard', () => {
+      let writeText: MockInstance<typeof navigator.clipboard.writeText> | undefined;
+
+      afterEach(() => {
+        writeText?.mockRestore();
+        writeText = undefined;
+      });
+
+      it('should export and copy the values formatted by a `valueFormatter` override and the error codes', async () => {
+        const valueFormatter = vi.fn(formatDate);
+        const { user } = await render(
+          <Test
+            {...sampleProps}
+            computedColumns={[shipped]}
+            computedColDef={{ valueFormatter }}
+            cellSelection
+            disableRowSelectionOnClick
+          />,
+        );
+        expect(apiRef.current!.getDataAsCsv({ fields: ['product', 'shipped'] })).to.equal(
+          [
+            'product,Shipped',
+            'Keyboard,"Jan 12, 2026"',
+            'Mouse,"Feb 3, 2026"',
+            'Monitor,#VALUE!',
+            'Cable,"Mar 21, 2026"',
+            'Dock,"Apr 8, 2026"',
+          ].join('\r\n'),
+        );
+
+        writeText = vi.spyOn(navigator.clipboard, 'writeText');
+        const shippedIndex = getVisibleIndex('shipped');
+        await user.click(getCell(0, shippedIndex));
+        fireEvent.keyDown(getCell(0, shippedIndex), { key: 'c', keyCode: 67, ctrlKey: true });
+        expect(writeText.mock.lastCall?.[0]).to.equal('Jan 12, 2026');
+        await user.click(getCell(2, shippedIndex));
+        fireEvent.keyDown(getCell(2, shippedIndex), { key: 'c', keyCode: 67, ctrlKey: true });
+        expect(writeText.mock.lastCall?.[0]).to.equal('#VALUE!');
+
+        // Excel keeps the dates as dates.
+        const workbook = await apiRef.current!.getDataAsExcel({ fields: ['product', 'shipped'] });
+        const worksheet = workbook!.worksheets[0];
+        expect(worksheet.getCell('B2').value).to.be.instanceOf(Date);
+        expect(worksheet.getCell('B4').value).to.equal('#VALUE!');
+
+        expect(receivedCodes(valueFormatter, 1)).to.equal(false);
+      });
+    });
+
+    it('should format with a `valueFormatter` override instead of `numberFormat`', async () => {
+      await render(
+        <Test
+          {...sampleProps}
+          computedColumns={[{ ...margin, numberFormat: { style: 'currency', currency: 'USD' } }]}
+          computedColDef={{ valueFormatter: (value: number) => `${value.toFixed(1)} units` }}
+        />,
+      );
+      expect(getVisibleValuesOf('margin')).to.deep.equal([
+        '#DIV/0!',
+        '3.6 units',
+        '-220.0 units',
+        '0.1 units',
+        '-65.0 units',
+      ]);
+    });
+
+    it('should render the errors with the error cell instead of a `renderCell` override', async () => {
+      await render(
+        <Test
+          {...sampleProps}
+          computedColumns={[
+            shipped,
+            { field: 'label', headerName: 'Label', formula: '="#VALUE!"', type: 'string' },
+          ]}
+          computedColDef={(definition) => ({
+            renderCell: (params) => (
+              <span className="custom-cell">
+                {definition.type === 'date'
+                  ? (params.value as Date).toLocaleDateString('en-US')
+                  : String(params.value)}
+              </span>
+            ),
+          })}
+        />,
+      );
+      const shippedIndex = getVisibleIndex('shipped');
+      const labelIndex = getVisibleIndex('label');
+      expect(getCell(0, shippedIndex).querySelector('.custom-cell')).to.have.text('1/12/2026');
+      const errorCell = getCell(2, shippedIndex);
+      expect(errorCell.querySelector('.custom-cell')).to.equal(null);
+      expect(errorCell).to.have.class(gridClasses['cell--computedError']);
+      expect(errorCell.querySelector('[title]')).not.to.equal(null);
+      expect(errorCell).to.have.text('#VALUE!');
+      // A text result that reads like an error code is not an error.
+      expect(getCell(2, labelIndex).querySelector('.custom-cell')).to.have.text('#VALUE!');
+    });
+
+    it('should not pass the errors to the `filterOperators` override', async () => {
+      const receivedValues: unknown[] = [];
+      const filterOperators = getGridDateOperators().map((operator) => ({
+        ...operator,
+        getApplyFilterFn: (
+          filterItem: Parameters<typeof operator.getApplyFilterFn>[0],
+          column: Parameters<typeof operator.getApplyFilterFn>[1],
+        ) => {
+          const applyFilterFn = operator.getApplyFilterFn(filterItem, column);
+          if (!applyFilterFn) {
+            return applyFilterFn;
+          }
+          return (...args: Parameters<typeof applyFilterFn>) => {
+            receivedValues.push(args[0]);
+            return applyFilterFn(...args);
+          };
+        },
+      }));
+      await render(
+        <Test {...sampleProps} computedColumns={[shipped]} computedColDef={{ filterOperators }} />,
+      );
+      act(() =>
+        apiRef.current!.setFilterModel({
+          items: [{ field: 'shipped', operator: 'after', value: '2026-02-01' }],
+        }),
+      );
+      expect(getVisibleValuesOf('product')).to.deep.equal(['Mouse', 'Cable', 'Dock']);
+      expect(receivedValues.length).to.be.greaterThan(0);
+      expect(receivedValues.some(isErrorCode)).to.equal(false);
+
+      // The null checks count the errors as values.
+      act(() =>
+        apiRef.current!.setFilterModel({ items: [{ field: 'shipped', operator: 'isNotEmpty' }] }),
+      );
+      expect(getVisibleValuesOf('product')).to.deep.equal([
+        'Keyboard',
+        'Mouse',
+        'Monitor',
+        'Cable',
+        'Dock',
+      ]);
+    });
+
+    it('should match the error codes without passing them to a `getApplyQuickFilterFn` override', async () => {
+      const applyQuickFilter = vi.fn(
+        (value: unknown, search: number) =>
+          typeof value === 'number' && Math.round(value) === search,
+      );
+      await render(
+        <Test
+          {...sampleProps}
+          computedColumns={[margin]}
+          computedColDef={{
+            getApplyQuickFilterFn: (search) => {
+              const searchNumber = Number(search);
+              if (search === '' || Number.isNaN(searchNumber)) {
+                return null;
+              }
+              return (value) => applyQuickFilter(value, searchNumber);
+            },
+          }}
+        />,
+      );
+      act(() => apiRef.current!.setQuickFilterValues(['#DIV']));
+      expect(getVisibleValuesOf('product')).to.deep.equal(['Keyboard']);
+      act(() => apiRef.current!.setQuickFilterValues(['-65']));
+      expect(getVisibleValuesOf('product')).to.deep.equal(['Dock']);
+      expect(applyQuickFilter.mock.calls.length).to.be.greaterThan(0);
+      expect(receivedCodes(applyQuickFilter, 1)).to.equal(false);
+    });
+
+    it('should not pass the errors to the `sortComparator` override when grouping by the column', async () => {
+      const sortComparator = vi.fn((value1: number, value2: number) => value2 - value1);
+      await render(
+        <Test
+          {...sampleProps}
+          computedColumns={[
+            {
+              field: 'bucket',
+              headerName: 'Bucket',
+              formula: '=IF(price > 100, 1, IF(price > 20, 2, 1 / 0))',
+              type: 'number',
+            },
+          ]}
+          computedColDef={{ sortComparator }}
+          initialState={{
+            rowGrouping: { model: ['bucket'] },
+            sorting: {
+              sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'asc' }],
+            },
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['2 (2)', '1 (2)', '#DIV/0! (1)']);
+      expect(sortComparator.mock.calls.length).to.be.greaterThan(0);
+      expect(receivedCodes(sortComparator, 2)).to.equal(false);
+    });
+
+    it('should render a group of errors as text instead of calling the `renderCell` override', async () => {
+      const renderCell = vi.fn((params: { value?: unknown }) => (
+        <span className="custom-cell">{(params.value as number).toFixed(1)}</span>
+      ));
+      await render(
+        <Test
+          {...sampleProps}
+          computedColumns={[
+            {
+              field: 'bucket',
+              headerName: 'Bucket',
+              formula: '=IF(price > 100, 1, IF(price > 20, 2, 1 / 0))',
+              type: 'number',
+            },
+          ]}
+          computedColDef={{ renderCell }}
+          initialState={{ rowGrouping: { model: ['bucket'] } }}
+          // The cells of the column itself receive `null` on the group rows, like any column.
+          columnVisibilityModel={{ shippedAt: false, bucket: false }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['2.0 (2)', '1.0 (2)', '#DIV/0! (1)']);
+      expect(renderCell.mock.calls.some(([params]) => isErrorCode(params.value))).to.equal(false);
+    });
+
+    it('should pass a text result equal to an error code to the `valueFormatter` override of a `string` column', async () => {
+      const valueFormatter = vi.fn((value: string) => `<${value}>`);
+      await render(
+        <Test
+          {...sampleProps}
+          computedColumns={[
+            { field: 'label', headerName: 'Label', formula: '="#VALUE!"', type: 'string' },
+            {
+              field: 'status',
+              headerName: 'Status',
+              formula: '=IF(quantity = 3, 1 / 0, "ok")',
+              type: 'string',
+            },
+          ]}
+          computedColDef={{ valueFormatter }}
+        />,
+      );
+      expect(getVisibleValuesOf('label')).to.deep.equal(Array(5).fill('<#VALUE!>'));
+      expect(getVisibleValuesOf('status')).to.deep.equal([
+        '#DIV/0!',
+        '<ok>',
+        '<ok>',
+        '<ok>',
+        '<ok>',
+      ]);
+      expect(valueFormatter.mock.calls.some(([value]) => value === '#DIV/0!')).to.equal(false);
     });
   });
 

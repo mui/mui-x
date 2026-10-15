@@ -453,7 +453,12 @@ export function validateComputedColumnRecords(
         nextRecord = {
           ...nextRecord,
           baseColDef,
-          colDef: applyComputedColDefOverrides(baseColDef, record.definition, computedColDef),
+          colDef: applyComputedColDefOverrides(
+            baseColDef,
+            record.definition,
+            computedColDef,
+            record.isErrorRow,
+          ),
         };
       }
     }

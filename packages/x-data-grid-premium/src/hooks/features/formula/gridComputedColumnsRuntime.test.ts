@@ -2,6 +2,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { GridColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { describe, it, expect } from 'vitest';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridComputedColumnsModel } from '../computedColumns/gridComputedColumnsInterfaces';
 import { createFormulaFunctionRegistry } from './engine';
 import type { FormulaScalar } from './engine';
@@ -18,7 +19,11 @@ import { createFormulaInternalCache, GRID_FORMULA_FUNCTIONS } from './gridFormul
  * driven directly against a stubbed apiRef. The evaluation only reads
  * `state.props.getRowId`, the columns lookup and the formula cache.
  */
-function createHarness(model: GridComputedColumnsModel, dataColumns: GridColDef[]) {
+function createHarness(
+  model: GridComputedColumnsModel,
+  dataColumns: GridColDef[],
+  computedColDef?: DataGridPremiumProcessedProps['computedColDef'],
+) {
   let evaluations = 0;
   const cache = createFormulaInternalCache(GRID_FORMULA_FUNCTIONS);
   cache.registry = createFormulaFunctionRegistry([
@@ -43,7 +48,7 @@ function createHarness(model: GridComputedColumnsModel, dataColumns: GridColDef[
     },
   } as unknown as RefObject<GridPrivateApiPremium>;
 
-  ensureComputedColumnRecords(apiRef, cache, model, undefined);
+  ensureComputedColumnRecords(apiRef, cache, model, computedColDef);
   dataColumns.forEach((column) => {
     lookup[column.field] = column;
   });
@@ -112,9 +117,12 @@ describe('gridComputedColumnsRuntime', () => {
     expect(cache.computedColumns.referencedFields.has('quantity')).to.equal(true);
   });
 
-  it('should sort 100,000 rows by a computed column within the perf budget', () => {
+  const sortRowsWithinBudget = (
+    computedColDef: DataGridPremiumProcessedProps['computedColDef'],
+    expectedFirstValue: number,
+  ) => {
     const ROW_COUNT = 100_000;
-    const { apiRef, lookup, getEvaluations } = createHarness(model, dataColumns);
+    const { apiRef, lookup, getEvaluations } = createHarness(model, dataColumns, computedColDef);
     const rows: GridValidRowModel[] = [];
     for (let i = 0; i < ROW_COUNT; i += 1) {
       rows.push({ id: i, price: (i * 7919) % 1000, quantity: (i % 13) + 1 });
@@ -129,10 +137,19 @@ describe('gridComputedColumnsRuntime', () => {
     rows.sort((a, b) => comparator(getValue(a), getValue(b), {} as any, {} as any));
     const elapsed = performance.now() - start;
 
-    expect(getValue(rows[0])).to.equal(999 * 13);
+    expect(getValue(rows[0])).to.equal(expectedFirstValue);
     expect(getEvaluations()).to.equal(ROW_COUNT);
     // Catastrophic-regression bound only: it catches an evaluation per comparison.
     expect(elapsed).to.be.lessThan(5_000);
+  };
+
+  it('should sort 100,000 rows by a computed column within the perf budget', () => {
+    sortRowsWithinBudget(undefined, 999 * 13);
+  });
+
+  it('should sort 100,000 rows with a `sortComparator` override within the perf budget', () => {
+    // Reversed: the descending order starts with the smallest value.
+    sortRowsWithinBudget({ sortComparator: (value1, value2) => value2 - value1 }, 0);
   });
 
   describe('coerceComputedResult', () => {

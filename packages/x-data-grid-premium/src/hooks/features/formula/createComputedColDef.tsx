@@ -92,27 +92,72 @@ function createNumberFormatter(definition: GridComputedColumnDefinition) {
 
 /**
  * Keeps the errors last in both directions — a plain `sortComparator` is
- * negated for the descending order, which would move them first.
+ * negated for the descending order, which would move them first — so the
+ * comparator only receives values of the column type.
+ * @param {GridComparatorFn} comparator The comparator of the values.
+ * @param {number} errorsModifier `-1` to sort two error codes in descending order.
+ * @param {number} valuesModifier `-1` to negate the comparator of the values.
+ * @returns {GridComparatorFn} The comparator.
+ */
+function createErrorsLastComparator(
+  comparator: GridComparatorFn,
+  errorsModifier: number,
+  valuesModifier: number,
+): GridComparatorFn {
+  return (value1, value2, cellParams1, cellParams2) => {
+    const isError1 = isComputedErrorValue(value1);
+    const isError2 = isComputedErrorValue(value2);
+    if (isError1 || isError2) {
+      if (isError1 && isError2) {
+        return errorsModifier * (value1 as string).localeCompare(value2 as string);
+      }
+      return isError1 ? 1 : -1;
+    }
+    return valuesModifier * comparator(value1, value2, cellParams1, cellParams2);
+  };
+}
+
+/**
+ * Sorts with a `sortComparator`, negated for the descending order like the grid does.
  */
 function createGetSortComparator(
-  typeColDef: GridColTypeDef,
+  sortComparator: GridComparatorFn,
 ): NonNullable<GridColDef['getSortComparator']> {
   return (sortDirection) => {
     const modifier = sortDirection === 'desc' ? -1 : 1;
-    const typeComparator = typeColDef.sortComparator!;
-    const comparator: GridComparatorFn = (value1, value2, cellParams1, cellParams2) => {
-      const isError1 = isComputedErrorValue(value1);
-      const isError2 = isComputedErrorValue(value2);
-      if (isError1 || isError2) {
-        if (isError1 && isError2) {
-          return modifier * (value1 as string).localeCompare(value2 as string);
-        }
-        return isError1 ? 1 : -1;
-      }
-      return modifier * typeComparator(value1, value2, cellParams1, cellParams2);
-    };
-    return comparator;
+    return createErrorsLastComparator(sortComparator, modifier, modifier);
   };
+}
+
+/**
+ * Sorts with a `getSortComparator`, whose comparators already follow the direction.
+ */
+function guardGetSortComparator(
+  getSortComparator: NonNullable<GridColDef['getSortComparator']>,
+): NonNullable<GridColDef['getSortComparator']> {
+  return (sortDirection) => {
+    const comparator = getSortComparator(sortDirection);
+    if (!comparator) {
+      return comparator;
+    }
+    return createErrorsLastComparator(comparator, sortDirection === 'desc' ? -1 : 1, 1);
+  };
+}
+
+/**
+ * The error codes bypass the formatter: the date formatters throw on anything but a `Date`.
+ * A text column only bypasses it for the rows whose result is an error: a text
+ * result that reads like an error code is formatted like any other text.
+ */
+function guardValueFormatter(
+  valueFormatter: NonNullable<GridColDef['valueFormatter']>,
+  type: GridComputedColumnType,
+  isErrorRow: GridComputedErrorRowPredicate,
+): NonNullable<GridColDef['valueFormatter']> {
+  return (value, row, column, apiRef) =>
+    isComputedErrorValue(value) && (type !== 'string' || isErrorRow(row))
+      ? value
+      : valueFormatter(value as never, row, column, apiRef);
 }
 
 /**
@@ -123,12 +168,12 @@ function createGetSortComparator(
  */
 function createFilterOperators(
   type: GridComputedColumnType,
-  typeColDef: GridColTypeDef,
+  filterOperators: readonly GridFilterOperator<any, any, any>[] | undefined,
 ): GridFilterOperator[] | undefined {
-  if (type === 'string' || typeColDef.filterOperators === undefined) {
-    return typeColDef.filterOperators as GridFilterOperator[] | undefined;
+  if (type === 'string' || filterOperators === undefined) {
+    return filterOperators as GridFilterOperator[] | undefined;
   }
-  return typeColDef.filterOperators.map((operator) => {
+  return filterOperators.map((operator) => {
     if (NULL_CHECK_OPERATORS.has(operator.value)) {
       return operator;
     }
@@ -149,25 +194,27 @@ function createFilterOperators(
 /**
  * The quick filter of the non-text types only matches values of their type
  * (the numeric one ignores a search that is not a number), so the error codes
- * are matched here: a computed cell is found by the text it shows.
+ * are matched here: a computed cell is found by the text it shows. The quick
+ * filter of the type only receives values of the type.
  */
 function createGetApplyQuickFilterFn(
   type: GridComputedColumnType,
-  typeColDef: GridColTypeDef,
+  typeGetApplyQuickFilterFn: GridColDef['getApplyQuickFilterFn'],
 ): GridColDef['getApplyQuickFilterFn'] {
-  const typeGetApplyQuickFilterFn = typeColDef.getApplyQuickFilterFn;
   if (type === 'string') {
     return typeGetApplyQuickFilterFn;
   }
   return (value, colDef, apiRef) => {
     const typeApplyFn = typeGetApplyQuickFilterFn?.(value, colDef, apiRef) ?? null;
     const search = String(value ?? '').toLowerCase();
-    if (search === '' || !FORMULA_ERROR_CODES.some((code) => code.toLowerCase().includes(search))) {
-      return typeApplyFn;
+    const searchesErrors =
+      search !== '' && FORMULA_ERROR_CODES.some((code) => code.toLowerCase().includes(search));
+    if (!searchesErrors && typeApplyFn === null) {
+      return null;
     }
     return (cellValue, row, column, api) => {
       if (isComputedErrorValue(cellValue)) {
-        return (cellValue as string).toLowerCase().includes(search);
+        return searchesErrors && (cellValue as string).toLowerCase().includes(search);
       }
       return typeApplyFn ? typeApplyFn(cellValue, row, column, api) : false;
     };
@@ -239,9 +286,12 @@ export function createComputedBaseColDef(
       }
       return typeValueFormatter ? typeValueFormatter(value as never, row, column, apiRef) : value;
     },
-    getSortComparator: createGetSortComparator(typeColDef),
-    filterOperators: createFilterOperators(definition.type, typeColDef),
-    getApplyQuickFilterFn: createGetApplyQuickFilterFn(definition.type, typeColDef),
+    getSortComparator: createGetSortComparator(typeColDef.sortComparator!),
+    filterOperators: createFilterOperators(definition.type, typeColDef.filterOperators),
+    getApplyQuickFilterFn: createGetApplyQuickFilterFn(
+      definition.type,
+      typeColDef.getApplyQuickFilterFn,
+    ),
     cellClassName,
     headerClassName: getComputedHeaderClassName(invalid),
     // Returning `undefined` makes the cell render its formatted value.
@@ -288,15 +338,80 @@ function mergeHeaderClassNames(
 }
 
 /**
+ * Wraps the functions of the overrides that receive the cell value, so that they
+ * only receive values of the column type, as the ones of the base column do:
+ * the errors are sorted last, rendered with the error cell and skipped by the filters.
+ * The functions that only add to the cell (`cellClassName`, `colSpan`) are not wrapped.
+ */
+function guardOverrides(
+  overrides: Partial<GridColDef>,
+  definition: GridComputedColumnDefinition,
+  isErrorRow: GridComputedErrorRowPredicate,
+): Partial<GridColDef> {
+  const guarded: Partial<GridColDef> = {};
+  const {
+    getSortComparator,
+    sortComparator,
+    valueFormatter,
+    renderCell,
+    filterOperators,
+    getApplyQuickFilterFn,
+  } = overrides;
+  if (typeof sortComparator === 'function') {
+    // The grouping column sorts with `sortComparator` directly.
+    guarded.sortComparator = createErrorsLastComparator(sortComparator, 1, 1);
+  }
+  if (typeof getSortComparator === 'function') {
+    guarded.getSortComparator = guardGetSortComparator(getSortComparator);
+  } else if (typeof sortComparator === 'function') {
+    // The `getSortComparator` of the base column takes precedence over `sortComparator`.
+    guarded.getSortComparator = createGetSortComparator(sortComparator);
+  }
+  if (typeof valueFormatter === 'function') {
+    guarded.valueFormatter = guardValueFormatter(valueFormatter, definition.type, isErrorRow);
+  }
+  if (typeof renderCell === 'function') {
+    guarded.renderCell = (params) => {
+      if (isComputedErrorValue(params.value)) {
+        if (isErrorRow(params.row)) {
+          return <GridComputedErrorCell {...params} />;
+        }
+        // The grouping cell of a group of errors: returning `undefined` renders the code as text.
+        if (params.rowNode.type !== 'leaf') {
+          return undefined;
+        }
+      }
+      return renderCell(params);
+    };
+  }
+  if (Array.isArray(filterOperators)) {
+    guarded.filterOperators = createFilterOperators(definition.type, filterOperators);
+  }
+  if (typeof getApplyQuickFilterFn === 'function') {
+    guarded.getApplyQuickFilterFn = createGetApplyQuickFilterFn(
+      definition.type,
+      getApplyQuickFilterFn,
+    );
+  }
+  return guarded;
+}
+
+/**
  * Applies the `computedColDef` prop on top of the base column.
  * The properties that make the column a computed column cannot be overridden:
  * the three getters are the only way to the evaluated value (the grid hands a
  * replacement `row[field]`, which a synthetic column never has).
+ * @param {GridColDef} baseColDef The column without the overrides.
+ * @param {GridComputedColumnDefinition} definition The definition of the column.
+ * @param {DataGridPremiumProcessedProps['computedColDef']} computedColDef The `computedColDef` prop.
+ * @param {GridComputedErrorRowPredicate} isErrorRow Tells whether the result of a row is an error.
+ * @returns {GridColDef} The column.
  */
 export function applyComputedColDefOverrides(
   baseColDef: GridColDef,
   definition: GridComputedColumnDefinition,
   computedColDef: DataGridPremiumProcessedProps['computedColDef'],
+  isErrorRow: GridComputedErrorRowPredicate,
 ): GridColDef {
   const overrides =
     typeof computedColDef === 'function' ? computedColDef(definition) : computedColDef;
@@ -306,6 +421,7 @@ export function applyComputedColDefOverrides(
   return {
     ...baseColDef,
     ...overrides,
+    ...guardOverrides(overrides, definition, isErrorRow),
     field: baseColDef.field,
     type: baseColDef.type,
     computed: true,

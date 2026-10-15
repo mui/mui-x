@@ -310,8 +310,9 @@ function buildComputedColumnRecord(
     dependencies,
     staticResult,
     issues: [],
+    isErrorRow,
     baseColDef,
-    colDef: applyComputedColDefOverrides(baseColDef, definition, computedColDef),
+    colDef: applyComputedColDefOverrides(baseColDef, definition, computedColDef, isErrorRow),
   };
 }
 
@@ -368,7 +369,12 @@ export function ensureComputedColumnRecords(
       record = overridesChanged
         ? {
             ...previous,
-            colDef: applyComputedColDefOverrides(previous.baseColDef, definition, computedColDef),
+            colDef: applyComputedColDefOverrides(
+              previous.baseColDef,
+              definition,
+              computedColDef,
+              previous.isErrorRow,
+            ),
           }
         : previous;
     } else {

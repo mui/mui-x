@@ -120,6 +120,9 @@ To customize them, pass a partial column definition—or a function returning on
 ```
 
 The `field`, `type`, `editable`, `allowFormulas`, `valueGetter`, `valueSetter`, `groupingValueGetter`, and `rowSpanValueGetter` properties are owned by the feature and cannot be overridden; `cellClassName` and `headerClassName` are merged with the classes of the feature.
+The functions you pass—such as `valueFormatter`, `renderCell`, `sortComparator`, `getSortComparator`, `filterOperators`, and `getApplyQuickFilterFn`—only receive values of the column type: error codes are handled by the grid (sorted last, shown with the error cell, skipped by the filters).
+In `string` columns, the filters receive the error codes like any other text.
+A `valueFormatter` replaces the `numberFormat` formatting.
 
 The generated column definitions carry a `computed: true` flag, which lets you tell them apart from the other columns—in a custom column menu, for instance.
 

@@ -6,6 +6,7 @@ import type {
 } from '@mui/x-data-grid-pro';
 import type { GridStateColDef } from '@mui/x-data-grid/internals';
 import type { FormulaExcelExportLayout, ExcelFormulaCell } from './gridFormulaExcelExport';
+import type { GridComputedErrorRowPredicate } from './createComputedColDef';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {
   GridComputedColumnDefinition,
@@ -169,6 +170,11 @@ export interface GridComputedColumnRecord {
    * The validation issues of the stored definition.
    */
   issues: GridComputedColumnValidationIssue[];
+  /**
+   * Tells whether the memoized result of a row is an error. The cells of the
+   * column, with or without the `computedColDef` overrides, render errors with it.
+   */
+  isErrorRow: GridComputedErrorRowPredicate;
   /**
    * The column definition without the `computedColDef` overrides. Its getters are
    * created once per definition, so their identity only changes with the definition.
