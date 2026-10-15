@@ -339,9 +339,9 @@ const GridFilterFormBase = forwardRef<HTMLDivElement, GridFilterFormBaseProps>(
 
     const changeColumn = React.useCallback(
       (field: GridColDef['field']) => {
-        const column = apiRef.current.getColumn(field)!;
+        const column = apiRef.current.getColumn(field);
 
-        if (column.field === currentColumn!.field) {
+        if (!column || column.field === currentColumn!.field) {
           // column did not change
           return;
         }
