@@ -39,6 +39,17 @@ With the feature injected, computed columns are available out of the box:
 - The column menu of any column offers **Add computed column**, which inserts the new column right after it. The column menu of a computed column also offers **Edit computed column** and **Remove computed column**.
 - Double-clicking a computed cell, or pressing <kbd class="key">Enter</kbd> on it, opens the editor with that row as the preview row.
 
+To remove the toolbar button while keeping the default toolbar, set `showComputedColumnsButton` to `false` in the toolbar's slot props.
+The column menu and the cells still open the panel.
+
+```tsx
+<DataGridPremium
+  showToolbar
+  featureDependencies={{ formula: formulaFeature }}
+  slotProps={{ toolbar: { showComputedColumnsButton: false } }}
+/>
+```
+
 The editor asks for a name, a field, a formula, a result type, and—for numbers—a display format.
 The field is derived from the name until you edit it and cannot be changed once the column exists.
 While you type the formula, the referenced cells of the preview row are outlined in the grid and the result is previewed below the formula, through the same path the cells use—so the preview shows exactly what the cells show, including errors.

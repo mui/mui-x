@@ -18,7 +18,7 @@ import {
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const { excelOptions, formulaBar, ...other } = props;
+  const { excelOptions, formulaBar, showComputedColumnsButton = true, ...other } = props;
   // The formula bar component comes from the injected formula feature.
   const FormulaBar = rootProps.featureDependencies?.formula?.FormulaBar;
 
@@ -88,17 +88,19 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
         />
       )}
       {/* Renders nothing when computed columns are not available. */}
-      <ComputedColumnsPanelTrigger
-        render={(triggerProps) => (
-          <rootProps.slots.baseTooltip
-            title={apiRef.current.getLocaleText('toolbarComputedColumns')}
-          >
-            <ToolbarButton {...triggerProps} color="default">
-              <rootProps.slots.computedColumnIcon fontSize="small" />
-            </ToolbarButton>
-          </rootProps.slots.baseTooltip>
-        )}
-      />
+      {showComputedColumnsButton && (
+        <ComputedColumnsPanelTrigger
+          render={(triggerProps) => (
+            <rootProps.slots.baseTooltip
+              title={apiRef.current.getLocaleText('toolbarComputedColumns')}
+            >
+              <ToolbarButton {...triggerProps} color="default">
+                <rootProps.slots.computedColumnIcon fontSize="small" />
+              </ToolbarButton>
+            </rootProps.slots.baseTooltip>
+          )}
+        />
+      )}
       {rootProps.chartsIntegration && (
         <ChartsPanelTrigger
           render={(triggerProps) => (

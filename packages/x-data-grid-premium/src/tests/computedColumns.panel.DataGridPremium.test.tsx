@@ -1065,6 +1065,53 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getTrigger()).to.equal(null);
     });
 
+    it('is hidden with `slotProps.toolbar.showComputedColumnsButton: false` while the column menu and the cells still open the panel', async () => {
+      await render(
+        <Test
+          showToolbar
+          slotProps={{ toolbar: { showComputedColumnsButton: false } }}
+          initialState={{ computedColumns: { model: [total] } }}
+        />,
+      );
+      expect(getTrigger()).to.equal(null);
+      expect(screen.queryByRole('button', { name: 'Columns' })).not.to.equal(null);
+
+      await act(async () => apiRef.current!.showColumnMenu('total'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit computed column' }));
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+      expect(getNameInput().value).to.equal('Total');
+      expect(getTrigger()).to.equal(null);
+
+      fireEvent.click(getButton('Close computed columns panel'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+
+      fireEvent.doubleClick(getCell(1, 3));
+      await microtasks();
+      expect(getSidebar().open).to.equal(true);
+      expect(getNameInput().value).to.equal('Total');
+    });
+
+    it('is shown when `showComputedColumnsButton` is `true` or not set', async () => {
+      const { setProps } = await render(
+        <Test showToolbar slotProps={{ toolbar: { showComputedColumnsButton: false } }} />,
+      );
+      expect(getTrigger()).to.equal(null);
+
+      setProps({ slotProps: { toolbar: { showComputedColumnsButton: true } } });
+      await microtasks();
+      expect(getTrigger()).not.to.equal(null);
+
+      setProps({ slotProps: { toolbar: { showComputedColumnsButton: false } } });
+      await microtasks();
+      expect(getTrigger()).to.equal(null);
+
+      setProps({ slotProps: { toolbar: {} } });
+      await microtasks();
+      expect(getTrigger()).not.to.equal(null);
+    });
+
     it('returns the focus to the trigger when the panel closes', async () => {
       await render(<Test showToolbar />);
       const trigger = getTrigger()!;

@@ -19,6 +19,7 @@ Future versions of the Computed Columns Panel component will make it possible to
 :::
 
 The computed columns panel is part of the [computed columns feature](/x/react-data-grid/computed-columns/) and is enabled by default when `showToolbar` is passed to the `<DataGridPremium />` component and the formula feature is injected through `featureDependencies`.
+To keep the default toolbar without the trigger, set `slotProps.toolbar.showComputedColumnsButton` to `false`.
 
 You can use the Computed Columns Panel Trigger and [Toolbar](/x/react-data-grid/components/toolbar/) components when you need to customize the computed columns panel trigger, or when implementing a custom toolbar.
 

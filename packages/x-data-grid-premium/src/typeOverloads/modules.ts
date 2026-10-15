@@ -231,6 +231,12 @@ declare module '@mui/x-data-grid' {
      * @default false
      */
     formulaBar?: boolean;
+    /**
+     * Show the computed columns button.
+     * The panel stays reachable from the column menu and the cells.
+     * @default true
+     */
+    showComputedColumnsButton?: boolean;
   }
 }
 
