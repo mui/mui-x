@@ -32,6 +32,8 @@ export interface EventCalendarClasses
   mainPanel: string;
   /** Styles applied to the content section element. */
   content: string;
+  /** Styles applied to the element that hosts the responsive typography tokens. */
+  responsiveTypographyContainer: string;
   /** Styles applied to the mini calendar root element. */
   miniCalendar: string;
   /** Styles applied to the mini calendar header element. */
@@ -319,6 +321,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'sidePanel',
     'mainPanel',
     'content',
+    'responsiveTypographyContainer',
     'miniCalendar',
     'miniCalendarHeader',
     'miniCalendarNavigation',
@@ -467,6 +470,7 @@ const slots = {
   sidePanel: ['sidePanel'],
   mainPanel: ['mainPanel'],
   content: ['content'],
+  responsiveTypographyContainer: ['responsiveTypographyContainer'],
   miniCalendar: ['miniCalendar'],
   miniCalendarHeader: ['miniCalendarHeader'],
   miniCalendarNavigation: ['miniCalendarNavigation'],

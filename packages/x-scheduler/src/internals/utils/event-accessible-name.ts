@@ -4,7 +4,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerEventLocaleText } from '../../models/translations';
-import { formatHourAndMinutes } from './date-utils';
+import { formatFullDate, formatHourAndMinutes } from './date-utils';
 
 export interface GetEventAccessibleNameParameters {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -29,8 +29,7 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
   const end = occurrence.displayTimezone.end.value;
   const isMultiDay = !adapter.isSameDay(start, end);
 
-  const formatDate = (date: TemporalSupportedObject) =>
-    adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
+  const formatDate = (date: TemporalSupportedObject) => formatFullDate(date, adapter);
   const formatDateTime = (date: TemporalSupportedObject) =>
     `${formatDate(date)} ${formatHourAndMinutes(date, adapter, ampm)}`;
 
