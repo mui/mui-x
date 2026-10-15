@@ -7,6 +7,67 @@ import type { GridColumnsState } from './gridColumnsInterfaces';
 
 describe('gridColumnsUtils', () => {
   describe('createColumnsState', () => {
+    it('should preserve existing properties when updating a column without changing its type', () => {
+      const renderCell = () => null;
+      const mockState: { columns: GridColumnsState } = {
+        columns: {
+          orderedFields: [],
+          lookup: {},
+          columnVisibilityModel: {},
+          initialColumnVisibilityModel: {},
+        },
+      };
+      const mockApiRef = {
+        current: {
+          state: mockState,
+          unstable_applyPipeProcessors: (_name: string, state: any) => state,
+        },
+      } as React.RefObject<GridApiCommunity>;
+
+      mockState.columns = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: [
+          {
+            field: 'city',
+            type: 'string',
+            editable: true,
+            headerName: 'City',
+            renderCell,
+          },
+        ],
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: true,
+      });
+
+      const partiallyUpdatedState = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: [{ field: 'city', width: 150 }],
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: false,
+      });
+
+      expect(partiallyUpdatedState.lookup.city).toMatchObject({
+        editable: true,
+        headerName: 'City',
+        renderCell,
+        width: 150,
+      });
+
+      mockState.columns = partiallyUpdatedState;
+      const typeChangedState = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: [{ field: 'city', type: 'number' }],
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: false,
+      });
+
+      expect(typeChangedState.lookup.city).toMatchObject({
+        type: 'number',
+        align: 'right',
+        editable: false,
+      });
+    });
+
     it('should sync columns state when column props are removed', () => {
       const fn = () => null;
 
