@@ -5,6 +5,7 @@ import {
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
+  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
@@ -20,9 +21,9 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> - RTL', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  it('should render the columns in view after scrolling to the end of the time axis', async () => {
+  it('should virtualize the columns from the RTL scroll position', async () => {
     const resource = ResourceBuilder.new().title('Resource').build();
-    // On the last visible day, so it's virtualized out before scrolling.
+    // On the last day of the `dayAndHour` axis, so it's virtualized out before scrolling.
     const lateEvent = EventBuilder.new()
       .title('Late')
       .resource(resource)
@@ -43,6 +44,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> - RTL', () => {
       </ThemeProvider>,
     );
 
+    expect(screen.getByText('Resource')).not.to.equal(null);
     expect(document.querySelector(`.${classes.event}`)).to.equal(null);
 
     // In RTL, `scrollLeft` goes from 0 down to negative values.
@@ -50,6 +52,8 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> - RTL', () => {
     act(() => {
       scroller.scrollLeft = -scroller.scrollWidth;
     });
+
+    await absorbObserverFrames();
 
     await waitFor(() => {
       expect(document.querySelector(`.${classes.event}`)).not.to.equal(null);

@@ -4,7 +4,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { DirectionProvider } from '@base-ui/react/direction-provider';
 
 /**
- * Passes the theme direction to the headless primitives, which read it with Base UI's `useDirection()`.
+ * Passes the theme direction to Base UI's `DirectionProvider`.
  */
 export function SchedulerDirectionProvider(props: { children: React.ReactNode }) {
   const isRtl = useRtl();

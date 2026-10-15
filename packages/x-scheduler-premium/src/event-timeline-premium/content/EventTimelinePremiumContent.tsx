@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { useRtl } from '@mui/system/RtlProvider';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
@@ -775,7 +775,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [titleColumn],
   );
 
-  const isRtl = useRtl();
+  const isRtl = useDirection() === 'rtl';
 
   const virtualizer = useVirtualizer({
     layout,
