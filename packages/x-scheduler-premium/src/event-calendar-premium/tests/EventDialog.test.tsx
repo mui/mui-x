@@ -593,6 +593,9 @@ describe('<EventDialogContent open />', () => {
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
+    // `TestEventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
+    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
+    // component's own direct wiring to the store.
     const onEventsChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
@@ -600,6 +603,7 @@ describe('<EventDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
         storeClass={PremiumTestStore}
+        eventDeletion={{ confirmation: false }}
       >
         <TestEventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
@@ -617,6 +621,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
         onEventsChange={() => {}}
+        eventDeletion={{ confirmation: false }}
       >
         <StoreSpy
           Context={SchedulerStoreContext}
