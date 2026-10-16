@@ -236,6 +236,12 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     ((hasFocus && isEditable) || editorHasDomFocus) &&
     canPreMountEditor(column) &&
     !isCoarsePointer();
+  // React does not call `onBlur` when it removes an element that has the focus.
+  // For example, a change of the column type removes the editor.
+  // Reset the state, so that the cell does not render the editor again when the column changes back.
+  if (editorHasDomFocus && !isEditorPreMounted && cellMode === GridCellModes.View) {
+    setEditorHasDomFocus(false);
+  }
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
@@ -436,6 +442,18 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       focusPreMountedEditor();
     }
   }, [isEditorPreMounted, focusPreMountedEditor]);
+
+  // If React removes the editor while it has the focus, the browser moves the focus to the body.
+  // For example, a change of the column type removes the editor. Give the focus back to the cell.
+  useEnhancedEffect(() => {
+    if (!imeFastEdit || isEditorPreMounted || !hasFocus || cellMode !== GridCellModes.View) {
+      return;
+    }
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
+    if (cellRef.current && doc.activeElement === doc.body) {
+      focusElement(cellRef.current, apiRef);
+    }
+  }, [imeFastEdit, isEditorPreMounted, hasFocus, cellMode, apiRef]);
 
   if (isCellRowSpanned) {
     return <div data-colindex={colIndex} role="none" style={{ width: 'var(--width)', ...style }} />;

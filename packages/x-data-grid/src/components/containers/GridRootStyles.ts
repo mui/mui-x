@@ -268,11 +268,16 @@ export const GridRootStyles = styled('div', {
       outline: `solid ${setOpacity(vars.colors.interactive.focus, 0.5)} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
     },
-    [`& .${c.columnHeader}:focus, & .${c.cell}:focus, & .${c.cell}:has(> [data-cell-editor="preMounted"]:focus-within)`]:
-      {
-        outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
-        outlineOffset: focusOutlineWidth * -1,
-      },
+    [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
+      outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
+    },
+    // A browser that does not support `:has()` ignores all selectors of the rule.
+    // Keep this selector in a separate rule, so that the other focus outlines stay.
+    [`& .${c.cell}:has(> [data-cell-editor="preMounted"]:focus-within)`]: {
+      outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
+      outlineOffset: focusOutlineWidth * -1,
+    },
     // The editor rendered before edit mode starts (`experimentalFeatures.imeFastEdit`).
     // It must stay focusable, so it is not hidden with `display: none` or `visibility: hidden`.
     // It has no offsets, so it stays at its static position and needs no positioned ancestor.

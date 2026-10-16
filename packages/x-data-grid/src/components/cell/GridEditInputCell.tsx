@@ -13,6 +13,8 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { GridCellModes } from '../../models/gridEditRowModel';
+import { isEventFromPreMountedEditor } from '../../utils/cellEditor';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -86,9 +88,12 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
 
   const handleChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
-      // The editor can be rendered before edit mode starts (`experimentalFeatures.imeFastEdit`).
+      // The cell can render this editor before edit mode starts (`experimentalFeatures.imeFastEdit`).
       // If edit mode does not start, ignore the text, so that the input stays empty.
-      if (apiRef.current.getCellMode(id, field) === 'view') {
+      if (
+        isEventFromPreMountedEditor(event) &&
+        apiRef.current.getCellMode(id, field) === GridCellModes.View
+      ) {
         return;
       }
 

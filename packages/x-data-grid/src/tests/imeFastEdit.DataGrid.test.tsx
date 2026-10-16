@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridEditInputCell } from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridCellModesModel,
@@ -410,6 +410,40 @@ describe('<DataGrid /> - IME fast edit', () => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     });
 
+    it('removes the editor and keeps the DOM focus in the cell when the column type changes', async () => {
+      const { user, setProps } = render(<TestCase />);
+      const cell = await focusCell(user, 0, 1);
+      expect(document.activeElement).to.equal(getInput(cell));
+
+      const numberColumns = columns.map((column) =>
+        column.field === 'city' ? { ...column, type: 'number' as const } : column,
+      );
+      setProps({ columns: numberColumns });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getCell(0, 1));
+      });
+      expect(getInput(getCell(0, 1))).to.equal(null);
+    });
+
+    it('does not keep the editor in a cell that lost the focus while its editor was removed', async () => {
+      const { user, setProps } = render(<TestCase />);
+      await focusCell(user, 0, 1);
+      setProps({
+        columns: columns.map((column) =>
+          column.field === 'city' ? { ...column, type: 'number' as const } : column,
+        ),
+      });
+      await focusCell(user, 1, 0);
+      setProps({ columns });
+
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getInput(getCell(1, 0)));
+      });
+      expect(document.querySelectorAll('[data-cell-editor]')).to.have.length(1);
+      expect(getInput(getCell(0, 1))).to.equal(null);
+      expect(getCell(0, 1)).to.have.attribute('tabindex', '-1');
+    });
+
     it('removes the editor when the DOM focus leaves it', async () => {
       const { user } = render(
         <React.Fragment>
@@ -423,7 +457,57 @@ describe('<DataGrid /> - IME fast edit', () => {
     });
   });
 
+  describe('edit input in `renderCell`', () => {
+    it.each([{ imeFastEdit: true }, { imeFastEdit: false }])(
+      'keeps the typed text in a `GridEditInputCell` rendered by `renderCell` (imeFastEdit: $imeFastEdit)',
+      async ({ imeFastEdit }) => {
+        const onValueChange: string[] = [];
+        const { user } = render(
+          <TestCase
+            experimentalFeatures={{ imeFastEdit }}
+            columns={[
+              {
+                field: 'note',
+                renderCell: (params) => (
+                  <GridEditInputCell
+                    {...(params as any)}
+                    onValueChange={(_event: unknown, value: string) => {
+                      onValueChange.push(value);
+                    }}
+                  />
+                ),
+              },
+            ]}
+          />,
+        );
+        const input = getInput(getCell(0, 0))!;
+        await user.click(input);
+        await user.keyboard('x');
+        expect(input.value).to.equal('Ax');
+        expect(onValueChange).to.deep.equal(['Ax']);
+      },
+    );
+  });
+
   describe('layout', () => {
+    it.skipIf(isJSDOM)('keeps the `:has()` selector out of the other focus outline rules', () => {
+      render(<TestCase />);
+      const selectors: string[] = [];
+      Array.from(document.styleSheets).forEach((sheet) => {
+        Array.from(sheet.cssRules).forEach((rule) => {
+          if (rule instanceof CSSStyleRule && rule.selectorText.includes('data-cell-editor')) {
+            selectors.push(rule.selectorText);
+          }
+        });
+      });
+      const hasRules = selectors.filter((selector) => selector.includes(':has('));
+      expect(hasRules.length).to.be.greaterThan(0);
+      hasRules.forEach((selector) => {
+        expect(selector).not.to.contain('columnHeader');
+        expect(selector).not.to.contain(':focus,');
+      });
+    });
+
     it.skipIf(isJSDOM)('does not scroll or move the content of the focused cell', async () => {
       const { user } = render(<TestCase />);
       const cell = await focusCell(user, 0, 1);
