@@ -1,0 +1,41 @@
+diff --git a/nextFonts/index.js b/nextFonts/index.js
+index 88f6b3da015a2c0cedd4f099bbc4053787869c73..822a01190bd78e3531e118f3a03f0ea65eee601a 100644
+--- a/nextFonts/index.js
++++ b/nextFonts/index.js
+@@ -1,17 +1,20 @@
+ import { Inter, Roboto } from 'next/font/google';
+ import localFont from 'next/font/local';
+ export const inter = Inter({
++  variable: '--font-inter',
+   weight: ['300', '400', '500', '600', '700'],
+   subsets: ['latin'],
+   preload: false
+ });
+ export const roboto = Roboto({
++  variable: '--font-roboto',
+   weight: ['300', '400', '500', '700'],
+   style: ['normal', 'italic'],
+   subsets: ['latin'],
+   preload: false
+ });
+ export const generalSans = localFont({
++  variable: '--font-general-sans',
+   declarations: [{
+     prop: 'font-family',
+     value: 'General Sans'
+@@ -50,6 +53,7 @@ const generalSansDeferred = localFont({
+ // "⌘K" badge; each preloaded file delays LCP on slow links (~0.3s per 55kB
+ // on Lighthouse mobile), so those two stay deferred.
+ export const ibmPlexSans = localFont({
++  variable: '--font-ibm-plex-sans',
+   declarations: [{
+     prop: 'font-family',
+     value: 'IBM Plex Sans'
+@@ -81,4 +85,5 @@ const ibmPlexSansDeferred = localFont({
+   }]
+ });
+ export const fonts = [ibmPlexSans, generalSans, ibmPlexSansDeferred, generalSansDeferred, inter, roboto];
+-export const fontClasses = fonts.map(font => font.className).join(' ');
+\ No newline at end of file
++// `className` also sets font-weight for single-file loaders, so body only gets the variables.
++export const fontClasses = [ibmPlexSans, generalSans, inter, roboto].map(font => font.variable).join(' ');
