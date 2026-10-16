@@ -18,6 +18,7 @@ import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   EventDragPreview,
+  getArrowEdgeStyles,
   getPaletteVariants,
   useEventAccessibleName,
   useSchedulerSlots,
@@ -35,11 +36,6 @@ const INERT_PROPS = (isReactVersionAtLeast(19) ? { inert: true } : { inert: '' }
   inert?: boolean;
 };
 
-const ARROW_DEPTH = 8; // px - depth of the chevron point
-const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
-const RIGHT_ARROW_CLIP = `polygon(0 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, 0 100%)`;
-const BOTH_ARROWS_CLIP = `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
-
 const EventTimelinePremiumEventRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Event',
@@ -51,7 +47,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   position: 'relative',
   width: 'var(--width)',
   height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)})`,
-  marginLeft: 'var(--x-position)',
+  marginInlineStart: 'var(--x-position)',
   gridRow: 'var(--row-index, 1)',
   gridColumn: 1,
   display: 'flex',
@@ -86,29 +82,16 @@ const EventTimelinePremiumEventRoot = styled('div', {
     position: 'absolute',
     top: 0,
     bottom: 0,
-    left: 0,
+    insetInlineStart: 0,
     width: 3,
-    borderRadius: '4px 0 0 4px',
+    borderStartStartRadius: 4,
+    borderEndStartRadius: 4,
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
-  '&[data-starting-before-edge]': {
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    clipPath: LEFT_ARROW_CLIP,
-    paddingLeft: ARROW_DEPTH + 8,
-    '&::before': {
-      display: 'none',
-    },
-  },
-  '&[data-ending-after-edge]': {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    clipPath: RIGHT_ARROW_CLIP,
-    paddingRight: ARROW_DEPTH + 8,
-  },
-  '&[data-starting-before-edge][data-ending-after-edge]': {
-    clipPath: BOTH_ARROWS_CLIP,
+  ...getArrowEdgeStyles(theme, 8),
+  '&[data-starting-before-edge]::before': {
+    display: 'none',
   },
   variants: getPaletteVariants(theme),
 }));
@@ -146,10 +129,10 @@ const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHa
   cursor: 'ew-resize',
   opacity: 0,
   '&[data-start]': {
-    left: 0,
+    insetInlineStart: 0,
   },
   '&[data-end]': {
-    right: 0,
+    insetInlineEnd: 0,
   },
 });
 

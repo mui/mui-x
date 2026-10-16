@@ -18,13 +18,7 @@ import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
-import {
-  ARROW_DEPTH,
-  LEFT_ARROW_CLIP,
-  RIGHT_ARROW_CLIP,
-  BOTH_ARROWS_CLIP,
-  getArrowFocusVisibleStyles,
-} from '../arrowClips';
+import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -57,21 +51,7 @@ const EventItemCard = styled('div', {
         backgroundColor: 'var(--event-surface-selected-hover)',
       },
     },
-    '&[data-starting-before-edge]': {
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      clipPath: LEFT_ARROW_CLIP,
-      paddingLeft: ARROW_DEPTH,
-    },
-    '&[data-ending-after-edge]': {
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
-      clipPath: RIGHT_ARROW_CLIP,
-      paddingRight: ARROW_DEPTH,
-    },
-    '&[data-starting-before-edge][data-ending-after-edge]': {
-      clipPath: BOTH_ARROWS_CLIP,
-    },
+    ...getArrowEdgeStyles(theme),
     ...getArrowFocusVisibleStyles(theme.shape.borderRadius),
   },
   '&[data-editing]': {
