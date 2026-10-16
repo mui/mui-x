@@ -5,8 +5,10 @@ import type { SimpleTreeViewApiRef } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { describe, it, expect } from 'vitest';
 
-describe('<TreeViewChildrenItemProvider />', () => {
-  const { render } = createRenderer();
+// In StrictMode, the double-invoked layout effects always call `unregisterChild` on a
+// mount, which hides a missing refresh in `registerChild`. Run both states.
+describe.each([true, false])('<TreeViewChildrenItemProvider /> (strict: %s)', (strict) => {
+  const { render } = createRenderer({ strict });
 
   function createSuspender() {
     let resolvePromise: () => void = () => {};
