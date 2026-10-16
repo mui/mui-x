@@ -20,6 +20,7 @@ import type {
   TemporalSupportedObject,
   SchedulerEventSide,
   SchedulerEventDeletionConfig,
+  RecurringEventScope,
 } from '../../../models';
 import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -472,9 +473,11 @@ export type DeleteRecurringEventParameters = {
    */
   eventId: SchedulerEventId;
   /**
-   * Callback fired when the user submits the recurring scope dialog.
+   * Callback fired when the user submits the recurring scope dialog, with the scope they picked —
+   * the agenda's focus-fallback (`resolveAgendaFallback` in `x-scheduler`) needs it to tell which
+   * of the series' other rows are also being removed.
    */
-  onSubmit?: () => void;
+  onSubmit?: (scope: RecurringEventScope) => void;
 };
 
 /**

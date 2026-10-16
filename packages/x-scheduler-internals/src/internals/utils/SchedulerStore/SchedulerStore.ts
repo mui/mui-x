@@ -737,11 +737,12 @@ export class SchedulerStore<
 
   /**
    * Deletes an occurrence from a UI surface: a recurring one opens the scope dialog, any other
-   * goes through `requestEventDeletion`. `onDelete` runs once the delete actually applied.
+   * goes through `requestEventDeletion`. `onDelete` runs once the delete actually applied, with
+   * the scope that was picked when the occurrence was recurring.
    */
   public deleteOccurrence = (
     occurrence: SchedulerRenderableEventOccurrence,
-    onDelete?: () => void,
+    onDelete?: (scope?: RecurringEventScope) => void,
   ) => {
     // Not loaded yet: a `dataSource` persist of the event (e.g. a split) is still in flight.
     // Neither path can act on it, a scope confirmation reads the stored event.
@@ -783,7 +784,7 @@ export class SchedulerStore<
       return;
     }
 
-    const { occurrenceStart, onSubmit } = pendingRecurringEventOperation;
+    const { occurrenceStart } = pendingRecurringEventOperation;
     const eventId =
       pendingRecurringEventOperation.kind === 'update'
         ? pendingRecurringEventOperation.changes.id
@@ -846,8 +847,18 @@ export class SchedulerStore<
       });
     }
 
-    if (onSubmit) {
-      queueMicrotask(() => onSubmit());
+    // Branched by kind, not a shared destructured `onSubmit`: a delete's callback takes the
+    // picked scope (the agenda's focus-fallback needs it), an update's takes none.
+    if (pendingRecurringEventOperation.kind === 'delete') {
+      const { onSubmit } = pendingRecurringEventOperation;
+      if (onSubmit) {
+        queueMicrotask(() => onSubmit(scope));
+      }
+    } else {
+      const { onSubmit } = pendingRecurringEventOperation;
+      if (onSubmit) {
+        queueMicrotask(() => onSubmit());
+      }
     }
   };
 

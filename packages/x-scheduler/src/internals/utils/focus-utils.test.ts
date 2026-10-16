@@ -1,6 +1,10 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
-import { getFocusFallback } from './focus-utils';
+import {
+  getFocusFallback,
+  captureAgendaFallbackCandidates,
+  resolveAgendaFallback,
+} from './focus-utils';
 
 describe('getFocusFallback', () => {
   afterEach(() => {
@@ -79,5 +83,110 @@ describe('getFocusFallback', () => {
 
       expect(fallback).to.equal(null);
     });
+  });
+});
+
+describe('captureAgendaFallbackCandidates / resolveAgendaFallback', () => {
+  afterEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  function mountAgenda(rows: { id: string; eventId: string; timestamp: number }[]) {
+    const items = rows
+      .map(
+        ({ id, eventId, timestamp }) =>
+          `<li class="${eventCalendarClasses.agendaViewEventListItem}"><div id="${id}" data-event-id="${eventId}" data-occurrence-timestamp="${timestamp}" tabindex="0"></div></li>`,
+      )
+      .join('');
+    document.body.innerHTML = `<div class="${eventCalendarClasses.agendaView}">${items}</div>`;
+  }
+
+  it('should return null when the clicked row is in a grid, not the agenda', () => {
+    document.body.innerHTML =
+      '<div role="grid"><div role="gridcell" tabindex="0"><div id="event" tabindex="0"></div></div></div>';
+
+    const snapshot = captureAgendaFallbackCandidates(document.getElementById('event')!, 'e1', 100);
+
+    expect(snapshot).to.equal(null);
+  });
+
+  it('should return null for an element outside any scheduler view', () => {
+    document.body.innerHTML = '<div tabindex="0"><div id="event" tabindex="0"></div></div>';
+
+    const snapshot = captureAgendaFallbackCandidates(document.getElementById('event')!, 'e1', 100);
+
+    expect(snapshot).to.equal(null);
+  });
+
+  // "Only this" only excludes an EXDATE: a daily series keeps every other occurrence, so the
+  // other rows of the same `eventId` must stay eligible fallbacks instead of being skipped
+  // wholesale like a non-recurring (or "all"-scope) delete would.
+  it('should only skip the deleted occurrence for "only-this", keeping earlier and later occurrences of the same series', () => {
+    mountAgenda([
+      { id: 'mon', eventId: 'daily', timestamp: 1 },
+      { id: 'tue', eventId: 'daily', timestamp: 2 },
+      { id: 'wed', eventId: 'daily', timestamp: 3 },
+    ]);
+
+    const snapshot = captureAgendaFallbackCandidates(document.getElementById('tue')!, 'daily', 2)!;
+
+    expect(resolveAgendaFallback(snapshot, 'only-this')).to.equal(document.getElementById('wed'));
+  });
+
+  it('should fall back to the previous occurrence for "only-this" when the deleted one is last', () => {
+    mountAgenda([
+      { id: 'mon', eventId: 'daily', timestamp: 1 },
+      { id: 'tue', eventId: 'daily', timestamp: 2 },
+    ]);
+
+    const snapshot = captureAgendaFallbackCandidates(document.getElementById('tue')!, 'daily', 2)!;
+
+    expect(resolveAgendaFallback(snapshot, 'only-this')).to.equal(document.getElementById('mon'));
+  });
+
+  // "This and following" truncates the rule from the edited occurrence onward: every later
+  // occurrence is also gone, but anything before it survives.
+  it('should skip the deleted occurrence and every later one for "this-and-following", keeping earlier occurrences', () => {
+    mountAgenda([
+      { id: 'mon', eventId: 'daily', timestamp: 1 },
+      { id: 'tue', eventId: 'daily', timestamp: 2 },
+      { id: 'wed', eventId: 'daily', timestamp: 3 },
+      { id: 'other', eventId: 'other-event', timestamp: 5 },
+    ]);
+
+    const snapshot = captureAgendaFallbackCandidates(document.getElementById('tue')!, 'daily', 2)!;
+
+    expect(resolveAgendaFallback(snapshot, 'this-and-following')).to.equal(
+      document.getElementById('other'),
+    );
+  });
+
+  it('should fall back to an earlier occurrence for "this-and-following" when nothing survives after it', () => {
+    mountAgenda([
+      { id: 'mon', eventId: 'daily', timestamp: 1 },
+      { id: 'tue', eventId: 'daily', timestamp: 2 },
+    ]);
+
+    const snapshot = captureAgendaFallbackCandidates(document.getElementById('tue')!, 'daily', 2)!;
+
+    expect(resolveAgendaFallback(snapshot, 'this-and-following')).to.equal(
+      document.getElementById('mon'),
+    );
+  });
+
+  // `null` ("all", or a non-recurring delete) still skips every row of the event, matching
+  // `getFocusFallback`'s own behavior for the same scenario.
+  it('should skip every occurrence of the series for "all" (and for no scope at all)', () => {
+    mountAgenda([
+      { id: 'mon', eventId: 'daily', timestamp: 1 },
+      { id: 'tue', eventId: 'daily', timestamp: 2 },
+      { id: 'wed', eventId: 'daily', timestamp: 3 },
+      { id: 'other', eventId: 'other-event', timestamp: 5 },
+    ]);
+
+    const snapshot = captureAgendaFallbackCandidates(document.getElementById('tue')!, 'daily', 2)!;
+
+    expect(resolveAgendaFallback(snapshot, 'all')).to.equal(document.getElementById('other'));
+    expect(resolveAgendaFallback(snapshot, null)).to.equal(document.getElementById('other'));
   });
 });
