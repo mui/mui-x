@@ -30,7 +30,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
 import type { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { isEventFromPreMountedEditor } from '../../../utils/cellEditor';
+import { isEventFromPreMountedEditor, isImeKeyDown } from '../../../utils/cellEditor';
 import {
   gridColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
@@ -250,6 +250,12 @@ export const useGridRowEditing = (
           apiRef.current.publishEvent('rowEditStop', newParams, event);
         }
       } else if (params.isEditable) {
+        // The composition in the editor starts edit mode, see `handleCellCompositionStart`.
+        // Ignore the IME keydown, so that the start reason does not change with the browser.
+        if (isEventFromPreMountedEditor(event) && isImeKeyDown(event)) {
+          return;
+        }
+
         let reason: GridRowEditStartReasons | undefined;
 
         const canStartEditing = apiRef.current.unstable_applyPipeProcessors(

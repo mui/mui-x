@@ -14,7 +14,7 @@ import { useStore } from '@base-ui/utils/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { focusElement } from '../../utils/focusElement';
-import { PRE_MOUNTED_EDITOR_SELECTOR } from '../../utils/cellEditor';
+import { PRE_MOUNTED_EDITOR_SELECTOR, isImeKeyDown } from '../../utils/cellEditor';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { GridCellModes } from '../../models';
 import type { GridCellEventLookup, GridEvents, GridRowId, GridEditCellProps } from '../../models';
@@ -125,6 +125,14 @@ const PRE_MOUNTED_EDITOR_INPUT_PROPS = {
   'data-bwignore': '',
   'data-form-type': 'other',
 };
+
+// Enter in a text input submits the parent form. Enter in a cell has no default action.
+// Keep the behavior of the cell. Do not prevent the Enter that confirms an IME composition.
+function handlePreMountedEditorKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+  if (event.key === 'Enter' && !isImeKeyDown(event)) {
+    event.preventDefault();
+  }
+}
 
 function isCoarsePointer() {
   // On touch devices, an editable element with focus opens the virtual keyboard.
@@ -302,8 +310,12 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   };
   const classes = useUtilityClasses(ownerState);
 
+  // Tells if the next focus event of the cell comes from a mousedown.
+  const isMouseDownRef = React.useRef(false);
+
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      isMouseDownRef.current = false;
       // The row might have been deleted during the click
       if (!apiRef.current.getRow(rowId)) {
         return;
@@ -321,6 +333,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+      isMouseDownRef.current = true;
       // The row might have been deleted during the click
       if (!apiRef.current.getRow(rowId)) {
         return;
@@ -504,6 +517,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     const handleFocusWithoutEditor = handleFocus;
     handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
       handleFocusWithoutEditor?.(event);
+      const isFromMouseDown = isMouseDownRef.current;
+      isMouseDownRef.current = false;
       if (event.target !== event.currentTarget) {
         return;
       }
@@ -511,6 +526,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
         // For example, a click on the cell gives the focus to the cell.
         focusPreMountedEditor();
       } else if (
+        !isFromMouseDown &&
         !hasFocus &&
         cellMode === GridCellModes.View &&
         isEditable &&
@@ -518,7 +534,15 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       ) {
         // The cell can get the focus without the focus state, for example with Tab.
         // Sync the focus state, so that the cell renders its editor.
-        apiRef.current.setCellFocus(rowId, field);
+        // A click does not need this step. The mouseup sets the focus state, as without the editor.
+        // The same pipe as the click handler can keep the focus state on another cell.
+        const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
+          event: event.nativeEvent as unknown as MouseEvent,
+          cell: cellParams,
+        });
+        if (canUpdateFocus) {
+          apiRef.current.setCellFocus(rowId, field);
+        }
       }
     };
   }
@@ -603,6 +627,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
           onCompositionStart={
             editorState === 'preMounted' ? publish('cellCompositionStart', undefined) : undefined
           }
+          onKeyDown={editorState === 'preMounted' ? handlePreMountedEditorKeyDown : undefined}
           onFocus={() => setEditorHasDomFocus(true)}
           onBlur={() => setEditorHasDomFocus(false)}
         >

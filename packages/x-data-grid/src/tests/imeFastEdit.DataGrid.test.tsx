@@ -457,6 +457,78 @@ describe('<DataGrid /> - IME fast edit', () => {
     });
   });
 
+  describe('Enter in a form', () => {
+    function FormTestCase(props: Partial<DataGridProps> & { onSubmit: () => void }) {
+      const { onSubmit, ...other } = props;
+      return (
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            onSubmit();
+          }}
+        >
+          <TestCase {...other} />
+          <button type="submit">submit</button>
+        </form>
+      );
+    }
+
+    it.each([{ imeFastEdit: true }, { imeFastEdit: false }])(
+      'does not submit the form when `onCellKeyDown` prevents Enter (imeFastEdit: $imeFastEdit)',
+      async ({ imeFastEdit }) => {
+        const submits: number[] = [];
+        const { user } = render(
+          <FormTestCase
+            experimentalFeatures={{ imeFastEdit }}
+            onSubmit={() => submits.push(1)}
+            onCellKeyDown={(_, event) => {
+              if (event.key === 'Enter') {
+                event.defaultMuiPrevented = true;
+              }
+            }}
+          />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        await user.keyboard('{Enter}');
+        expect(submits).to.deep.equal([]);
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      },
+    );
+
+    it('does not prevent the Enter that confirms an IME composition', async () => {
+      const { user } = render(<TestCase />);
+      const input = getInput(await focusCell(user, 0, 1))!;
+      expect(fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 })).to.equal(true);
+      expect(fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 })).to.equal(false);
+    });
+  });
+
+  describe('click timing', () => {
+    it.each([{ imeFastEdit: true }, { imeFastEdit: false }])(
+      'stops edit mode of the edited cell on mouseup, not on mousedown (imeFastEdit: $imeFastEdit)',
+      async ({ imeFastEdit }) => {
+        const { user } = render(<TestCase experimentalFeatures={{ imeFastEdit }} />);
+        const edited = getCell(0, 1);
+        await user.dblClick(edited);
+        expect(edited).to.have.class('MuiDataGrid-cell--editing');
+
+        const target = getCell(1, 0);
+        await user.pointer({ keys: '[MouseLeft>]', target });
+        expect(edited).to.have.class('MuiDataGrid-cell--editing');
+
+        await user.pointer({ keys: '[/MouseLeft]', target });
+        await waitFor(() => {
+          expect(edited).not.to.have.class('MuiDataGrid-cell--editing');
+        });
+        // With the flag, the focus moves from the cell to its hidden editor.
+        const getExpectedFocus = () => (imeFastEdit ? getInput(target) : target);
+        await waitFor(() => {
+          expect(document.activeElement).to.equal(getExpectedFocus());
+        });
+      },
+    );
+  });
+
   describe('hidden editor attributes', () => {
     it('labels the hidden editor with the value of the cell', async () => {
       const { user } = render(<TestCase />);
@@ -615,10 +687,37 @@ describe('<DataGrid /> - IME fast edit', () => {
       const input = getInput(cell)!;
       // Safari and Chromium on macOS can report the key of the IME keydown.
       fireEvent.keyDown(input, { key: 'ㅁ', keyCode: 229 });
+      expect(reasons).to.deep.equal([]);
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       fireEvent.compositionStart(input);
-      expect(reasons).to.have.length(1);
+      expect(reasons).to.deep.equal(['compositionStart']);
       expect(getInput(cell)).to.equal(input);
+      expect(input.value).to.equal('');
       expect(document.activeElement).to.equal(input);
+    });
+
+    it('starts row edit mode with the composition when the IME keydown has a printable key', async () => {
+      const reasons: string[] = [];
+      const { user } = render(
+        <TestCase editMode="row" onRowEditStart={(params) => reasons.push(params.reason!)} />,
+      );
+      const cell = await focusCell(user, 0, 1);
+      const input = getInput(cell)!;
+      fireEvent.keyDown(input, { key: 'ㅁ', keyCode: 229 });
+      expect(reasons).to.deep.equal([]);
+      fireEvent.compositionStart(input);
+      expect(reasons).to.deep.equal(['compositionStart']);
+      expect(getInput(cell)).to.equal(input);
+    });
+
+    it('starts edit mode with a printable key when the keydown does not come from an IME', async () => {
+      const reasons: string[] = [];
+      const { user } = render(
+        <TestCase onCellEditStart={(params) => reasons.push(params.reason!)} />,
+      );
+      await focusCell(user, 0, 1);
+      await user.keyboard('x');
+      expect(reasons).to.deep.equal(['printableKeyDown']);
     });
 
     it('keeps the editor empty when `onCellEditStart` prevents edit mode', async () => {
