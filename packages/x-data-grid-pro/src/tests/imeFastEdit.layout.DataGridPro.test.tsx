@@ -12,6 +12,17 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getActiveCell, getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
+import {
+  compareWithBaseline,
+  composeAndCommitInCell,
+  describeActiveElement,
+  expectFocusMatchesCell as expectFocusMatchesCellWithLookup,
+  focusCell,
+  getEditorWrappers,
+  getInput,
+  pressKeys as pressKeysWithLookup,
+} from 'test/utils/imeFastEdit';
+import type { User } from 'test/utils/imeFastEdit';
 
 const columns: GridColDef[] = [
   { field: 'id', type: 'number', width: 100 },
@@ -57,93 +68,13 @@ function TestCase(props: TestCaseProps) {
   return <ThemeProvider theme={createTheme({ direction: 'rtl' })}>{grid}</ThemeProvider>;
 }
 
-const getInput = (cell: HTMLElement) => cell.querySelector('input');
-const getPreMountedEditor = (cell: HTMLElement) =>
-  cell.querySelector<HTMLElement>('[data-cell-editor="preMounted"]');
-
-// Describes the active element without a reference to a DOM node, so that two renders can be compared.
-function describeActiveElement() {
-  const active = document.activeElement;
-  if (!active || active === document.body) {
-    return 'body';
-  }
-  const cell = active.closest('[role="gridcell"], [role="rowheader"]');
-  if (cell) {
-    // The hidden editor and its cell describe the same position. `expectFocusMatchesCell` checks the element.
-    return `cell:${getActiveCell()}`;
-  }
-  const header = active.closest('[role="columnheader"]');
-  if (header) {
-    const kind = header.classList.contains('MuiDataGrid-columnHeader--filter')
-      ? 'filter'
-      : 'header';
-    return `${kind}:${header.getAttribute('aria-colindex')}`;
-  }
-  return `${active.tagName.toLowerCase()}:${active.getAttribute('data-testid') ?? active.textContent}`;
-}
-
-// With the flag, the active element is the hidden editor when the focused cell is an editable string cell.
-function expectFocusMatchesCell(imeFastEdit: boolean) {
-  const active = document.activeElement as HTMLElement;
-  const cell = active.closest<HTMLElement>('[role="gridcell"]');
-  if (!cell) {
-    return;
-  }
-  const field = cell.getAttribute('data-field')!;
-  const column = apiRef.current!.getColumn(field);
-  const isEditable = cell.classList.contains('MuiDataGrid-cell--editable');
-  const isEditableString = isEditable && (column?.type ?? 'string') === 'string';
-  if (imeFastEdit && isEditableString) {
-    expect(active.tagName).to.equal('INPUT');
-    expect(getPreMountedEditor(cell)).not.to.equal(null);
-  } else {
-    expect(active).to.equal(cell);
-    expect(getPreMountedEditor(cell)).to.equal(null);
-  }
-}
-
-async function composeAndCommit(user: any, cell: HTMLElement, text: string) {
-  const input = getInput(cell)!;
-  expect(document.activeElement).to.equal(input);
-  fireEvent.compositionStart(input);
-  expect(getInput(cell)).to.equal(input);
-  expect(document.activeElement).to.equal(input);
-  expect(input.value).to.equal('');
-  fireEvent.change(input, { target: { value: text } });
-  fireEvent.compositionEnd(input);
-  await user.keyboard('{Enter}');
-  await waitFor(() => {
-    expect(cell.textContent).to.equal(text);
-  });
-}
-
 describe('<DataGridPro /> - IME fast edit layout', () => {
   const { render } = createRenderer();
 
-  async function focusCell(user: any, row: number, col: number) {
-    const cell = getCell(row, col);
-    await user.click(cell);
-    return cell;
-  }
-
-  async function compareWithBaseline<T>(
-    scenario: (imeFastEdit: boolean) => Promise<T>,
-  ): Promise<{ baseline: T; withFlag: T }> {
-    const baseline = await scenario(false);
-    const withFlag = await scenario(true);
-    return { baseline, withFlag };
-  }
-
-  async function pressKeys(user: any, keys: string[], imeFastEdit: boolean) {
-    const result: string[] = [];
-    for (const key of keys) {
-      // eslint-disable-next-line no-await-in-loop
-      await user.keyboard(key);
-      result.push(describeActiveElement());
-      expectFocusMatchesCell(imeFastEdit);
-    }
-    return result;
-  }
+  const pressKeys = (user: User, keys: string[], imeFastEdit: boolean) =>
+    pressKeysWithLookup(user, keys, imeFastEdit, apiRef);
+  const expectFocusMatchesCell = (imeFastEdit: boolean) =>
+    expectFocusMatchesCellWithLookup(imeFastEdit, apiRef);
 
   [false, true].forEach((rtl) => {
     describe(`pinned columns${rtl ? ' in RTL' : ''}`, () => {
@@ -166,7 +97,7 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
         expect(rightCell).to.have.class('MuiDataGrid-cell--pinnedRight');
         expect(document.activeElement).to.equal(getInput(rightCell));
         expect(getActiveCell()).to.equal('0-5');
-        expect(document.querySelectorAll('[data-cell-editor]')).to.have.length(1);
+        expect(getEditorWrappers()).to.have.length(1);
       });
 
       it('navigates across the pinned columns like the baseline', async () => {
@@ -209,9 +140,9 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
       it('commits a composition in the pinned cells', async () => {
         const { user } = render(<TestCase {...pinnedProps} />);
         const leftCell = await focusCell(user, 0, 0);
-        await composeAndCommit(user, leftCell, '나이키');
+        await composeAndCommitInCell(user, leftCell, '나이키');
         const rightCell = await focusCell(user, 1, 5);
-        await composeAndCommit(user, rightCell, '日本');
+        await composeAndCommitInCell(user, rightCell, '日本');
         expect(getCell(0, 0).textContent).to.equal('나이키');
       });
 
@@ -333,11 +264,11 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
       const topCell = await focusCell(user, 0, 2);
       expect(topCell.textContent).to.equal('Busan');
       expect(topCell.closest('.MuiDataGrid-pinnedRows--top')).not.to.equal(null);
-      await composeAndCommit(user, topCell, '부산');
+      await composeAndCommitInCell(user, topCell, '부산');
 
       const bottomCell = await focusCell(user, 4, 2);
       expect(bottomCell.textContent).to.equal('Kyoto');
-      await composeAndCommit(user, bottomCell, '京都');
+      await composeAndCommitInCell(user, bottomCell, '京都');
     });
 
     it('navigates between the pinned rows and the body like the baseline', async () => {
@@ -404,11 +335,11 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
       expect(groupingCell).to.have.attribute('data-field', '__tree_data_group__');
       expect(getInput(groupingCell)).to.equal(null);
       expect(document.activeElement).to.equal(groupingCell);
-      expect(document.querySelectorAll('[data-cell-editor]')).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
 
       const nameCell = await focusCell(user, 0, 1);
       expect(document.activeElement).to.equal(getInput(nameCell));
-      await composeAndCommit(user, nameCell, '나이키');
+      await composeAndCommitInCell(user, nameCell, '나이키');
     });
 
     it('expands a group with the keyboard and edits a child like the baseline', async () => {
@@ -423,7 +354,7 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
         result.push(...(await pressKeys(user, ['{ArrowDown}', '{ArrowRight}'], imeFastEdit)));
         // Only the flag starts edit mode with a composition.
         if (imeFastEdit) {
-          await composeAndCommit(user, getCell(1, 1), '아디다스');
+          await composeAndCommitInCell(user, getCell(1, 1), '아디다스');
           committedText = getCell(1, 1).textContent!;
         }
         unmount();
@@ -526,7 +457,7 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
         'filter:3',
         'cell:0-2',
         'filter:3',
-        'header:3',
+        'header:3:city',
         'filter:3',
         'cell:0-2',
       ]);

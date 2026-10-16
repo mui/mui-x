@@ -6,6 +6,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getActiveCell, getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
+import {
+  compareWithBaseline,
+  describeActiveElement,
+  expectFocusMatchesCell as expectFocusMatchesCellWithLookup,
+  focusCell,
+  getInput,
+  getPreMountedEditor,
+  pressKeys as pressKeysWithLookup,
+} from 'test/utils/imeFastEdit';
+import type { User } from 'test/utils/imeFastEdit';
 
 const columns: GridColDef[] = [
   { field: 'name', editable: true },
@@ -49,76 +59,142 @@ function TestCase(props: TestCaseProps) {
   return <ThemeProvider theme={createTheme({ direction: 'rtl' })}>{grid}</ThemeProvider>;
 }
 
-const getInput = (cell: HTMLElement) => cell.querySelector('input');
-const getPreMountedEditor = (cell: HTMLElement) =>
-  cell.querySelector<HTMLElement>('[data-cell-editor="preMounted"]');
-
-// Describes the active element without a reference to a DOM node, so that two renders can be compared.
-function describeActiveElement() {
-  const active = document.activeElement;
-  if (!active || active === document.body) {
-    return 'body';
-  }
-  const cell = active.closest('[role="gridcell"], [role="rowheader"]');
-  if (cell) {
-    // The hidden editor and its cell describe the same position. `expectFocusMatchesCell` checks the element.
-    return `cell:${getActiveCell()}`;
-  }
-  const header = active.closest('[role="columnheader"]');
-  if (header) {
-    return `header:${header.getAttribute('aria-colindex')}:${header.textContent}`;
-  }
-  return `${active.tagName.toLowerCase()}:${active.getAttribute('aria-label') ?? active.textContent}`;
-}
-
-// With the flag, the active element is the hidden editor when the focused cell is an editable string cell.
-function expectFocusMatchesCell(imeFastEdit: boolean) {
-  const active = document.activeElement as HTMLElement;
-  const cell = active.closest<HTMLElement>('[role="gridcell"]');
-  if (!cell) {
-    return;
-  }
-  const field = cell.getAttribute('data-field')!;
-  const column = apiRef.current!.getColumn(field);
-  const isEditableString = !!column?.editable && (column.type ?? 'string') === 'string';
-  if (imeFastEdit && isEditableString) {
-    expect(active.tagName).to.equal('INPUT');
-    expect(getPreMountedEditor(cell)).not.to.equal(null);
-    expect(cell).to.have.attribute('tabindex', '-1');
-  } else {
-    expect(active).to.equal(cell);
-    expect(getPreMountedEditor(cell)).to.equal(null);
-  }
-}
-
 describe('<DataGrid /> - IME fast edit layout', () => {
   const { render } = createRenderer();
 
-  async function focusCell(user: any, row: number, col: number) {
-    const cell = getCell(row, col);
-    await user.click(cell);
-    return cell;
-  }
+  const pressKeys = (user: User, keys: string[], imeFastEdit: boolean) =>
+    pressKeysWithLookup(user, keys, imeFastEdit, apiRef);
+  const expectFocusMatchesCell = (imeFastEdit: boolean) =>
+    expectFocusMatchesCellWithLookup(imeFastEdit, apiRef);
 
-  // Runs the same scenario without and with the flag and returns the results.
-  async function compareWithBaseline<T>(
-    scenario: (imeFastEdit: boolean) => Promise<T>,
-  ): Promise<{ baseline: T; withFlag: T }> {
-    const baseline = await scenario(false);
-    const withFlag = await scenario(true);
-    return { baseline, withFlag };
-  }
+  // The same tests in LTR and RTL. The LTR result is the reference for RTL.
+  describe.each([{ rtl: false }, { rtl: true }])('rtl: $rtl', ({ rtl }) => {
+    it('keeps Latin typing working', async () => {
+      const { user } = render(<TestCase rtl={rtl} />);
+      const cell = await focusCell(user, 0, 1);
+      const input = getInput(cell)!;
+      await user.keyboard('x');
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      expect(getInput(cell)).to.equal(input);
+      expect(input.value).to.equal('x');
+    });
 
-  async function pressKeys(user: any, keys: string[], imeFastEdit: boolean) {
-    const result: string[] = [];
-    for (const key of keys) {
-      // eslint-disable-next-line no-await-in-loop
-      await user.keyboard(key);
-      result.push(describeActiveElement());
-      expectFocusMatchesCell(imeFastEdit);
-    }
-    return result;
-  }
+    it.skipIf(isJSDOM)('keeps the cell layout and the scroll position', async () => {
+      const measure = async (imeFastEdit: boolean) => {
+        const { user, unmount } = render(<TestCase rtl={rtl} imeFastEdit={imeFastEdit} />);
+        const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+        const cell = await focusCell(user, 0, 1);
+        const range = document.createRange();
+        range.selectNodeContents(cell.firstChild!);
+        const textRect = range.getBoundingClientRect();
+        const cellRect = cell.getBoundingClientRect();
+        const result = {
+          cellScrollTop: cell.scrollTop,
+          cellScrollLeft: cell.scrollLeft,
+          textInsideCell:
+            textRect.left >= cellRect.left &&
+            textRect.right <= cellRect.right &&
+            textRect.top >= cellRect.top &&
+            textRect.bottom <= cellRect.bottom,
+          textLeft: Math.round(textRect.left - cellRect.left),
+          textRight: Math.round(cellRect.right - textRect.right),
+          cellWidth: Math.round(cellRect.width),
+          rowHeight: Math.round(getRow(0).getBoundingClientRect().height),
+          scrollerScrollWidth: scroller.scrollWidth,
+          scrollerScrollLeft: scroller.scrollLeft,
+          scrollerScrollTop: scroller.scrollTop,
+        };
+        unmount();
+        return result;
+      };
+      const { baseline, withFlag } = await compareWithBaseline(measure);
+      expect(withFlag.cellScrollTop).to.equal(0);
+      expect(withFlag.cellScrollLeft).to.equal(0);
+      expect(withFlag.textInsideCell).to.equal(true);
+      expect(withFlag).to.deep.equal(baseline);
+    });
+
+    it.skipIf(isJSDOM)('keeps the hidden editor out of the layout', async () => {
+      const { user } = render(<TestCase rtl={rtl} />);
+      const cell = await focusCell(user, 0, 1);
+      const wrapper = getPreMountedEditor(cell)!;
+      const rect = wrapper.getBoundingClientRect();
+      const cellRect = cell.getBoundingClientRect();
+      expect(rect.width).to.equal(0);
+      expect(rect.height).to.equal(0);
+      expect(getComputedStyle(wrapper).opacity).to.equal('0');
+      expect(getComputedStyle(wrapper).position).to.equal('absolute');
+      // The wrapper stays inside the cell, so it does not extend the scrollable area.
+      expect(rect.left).to.be.at.least(cellRect.left);
+      expect(rect.right).to.be.at.most(cellRect.right);
+    });
+
+    it.skipIf(isJSDOM)('keeps the focus outline', async () => {
+      const { user } = render(<TestCase rtl={rtl} />);
+      // The number cell has no editor, so the cell itself has the focus.
+      const numberCell = await focusCell(user, 0, 2);
+      const expected = getComputedStyle(numberCell);
+      const expectedOutline = [expected.outlineStyle, expected.outlineWidth, expected.outlineColor];
+
+      const cell = await focusCell(user, 0, 1);
+      expect(document.activeElement).to.equal(getInput(cell));
+      const actual = getComputedStyle(cell);
+      expect([actual.outlineStyle, actual.outlineWidth, actual.outlineColor]).to.deep.equal(
+        expectedOutline,
+      );
+      // The number cell lost its outline.
+      expect(getComputedStyle(numberCell).outlineStyle).to.equal('none');
+    });
+
+    it.skipIf(isJSDOM)(
+      'keeps the focus when the focused column is scrolled out of the render window',
+      async () => {
+        const manyColumns: GridColDef[] = Array.from({ length: 40 }, (_, index) => ({
+          field: `c${index}`,
+          editable: true,
+          width: 100,
+        }));
+        const manyRows = [
+          Object.fromEntries([['id', 0], ...manyColumns.map((c) => [c.field, 'x'])]),
+        ];
+        const { user } = render(
+          <React.Fragment>
+            <input data-testid="outside" />
+            <TestCase rtl={rtl} columns={manyColumns} rows={manyRows} columnBufferPx={0} />
+          </React.Fragment>,
+        );
+        const cell = await focusCell(user, 0, 0);
+        const input = getInput(cell)!;
+        expect(document.activeElement).to.equal(input);
+        const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+
+        // In RTL, the scroll position moves to negative values.
+        await act(async () => {
+          scroller.scrollLeft = rtl ? -3000 : 3000;
+          scroller.dispatchEvent(new Event('scroll'));
+        });
+        await waitFor(() => {
+          expect(getCell(0, 30)).not.to.equal(null);
+        });
+        expect(document.activeElement).to.equal(input);
+        expect(getActiveCell()).to.equal('0-0');
+
+        // The editor must not take the focus back from an element outside of the grid.
+        const outside = document.querySelector<HTMLInputElement>('[data-testid="outside"]')!;
+        await act(async () => {
+          outside.focus();
+        });
+        await act(async () => {
+          scroller.scrollLeft = 0;
+          scroller.dispatchEvent(new Event('scroll'));
+        });
+        await waitFor(() => {
+          expect(getCell(0, 0)).not.to.equal(null);
+        });
+        expect(document.activeElement).to.equal(outside);
+      },
+    );
+  });
 
   describe('RTL', () => {
     it('focuses the hidden editor in the focused editable cell', async () => {
@@ -210,131 +286,6 @@ describe('<DataGrid /> - IME fast edit layout', () => {
       });
       expect(getCell(0, 0).textContent).to.equal('Nike');
     });
-
-    it('keeps Latin typing working', async () => {
-      const { user } = render(<TestCase rtl />);
-      const cell = await focusCell(user, 0, 0);
-      const input = getInput(cell)!;
-      await user.keyboard('x');
-      expect(cell).to.have.class('MuiDataGrid-cell--editing');
-      expect(getInput(cell)).to.equal(input);
-      expect(input.value).to.equal('x');
-    });
-
-    it.skipIf(isJSDOM)('keeps the cell layout and the scroll position', async () => {
-      const measure = async (imeFastEdit: boolean) => {
-        const { user, unmount } = render(<TestCase rtl imeFastEdit={imeFastEdit} />);
-        const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
-        const cell = await focusCell(user, 0, 1);
-        const range = document.createRange();
-        range.selectNodeContents(cell.firstChild!);
-        const textRect = range.getBoundingClientRect();
-        const cellRect = cell.getBoundingClientRect();
-        const result = {
-          cellScrollTop: cell.scrollTop,
-          cellScrollLeft: cell.scrollLeft,
-          textInsideCell:
-            textRect.left >= cellRect.left &&
-            textRect.right <= cellRect.right &&
-            textRect.top >= cellRect.top &&
-            textRect.bottom <= cellRect.bottom,
-          textLeft: Math.round(textRect.left - cellRect.left),
-          textRight: Math.round(cellRect.right - textRect.right),
-          cellWidth: Math.round(cellRect.width),
-          rowHeight: Math.round(getRow(0).getBoundingClientRect().height),
-          scrollerScrollWidth: scroller.scrollWidth,
-          scrollerScrollLeft: scroller.scrollLeft,
-          scrollerScrollTop: scroller.scrollTop,
-        };
-        unmount();
-        return result;
-      };
-      const { baseline, withFlag } = await compareWithBaseline(measure);
-      expect(withFlag.cellScrollTop).to.equal(0);
-      expect(withFlag.cellScrollLeft).to.equal(0);
-      expect(withFlag.textInsideCell).to.equal(true);
-      expect(withFlag).to.deep.equal(baseline);
-    });
-
-    it.skipIf(isJSDOM)('keeps the hidden editor out of the layout', async () => {
-      const { user } = render(<TestCase rtl />);
-      const cell = await focusCell(user, 0, 1);
-      const wrapper = getPreMountedEditor(cell)!;
-      const rect = wrapper.getBoundingClientRect();
-      const cellRect = cell.getBoundingClientRect();
-      expect(rect.width).to.equal(0);
-      expect(rect.height).to.equal(0);
-      expect(getComputedStyle(wrapper).opacity).to.equal('0');
-      expect(getComputedStyle(wrapper).position).to.equal('absolute');
-      // The wrapper stays inside the cell, so it does not extend the scrollable area.
-      expect(rect.left).to.be.at.least(cellRect.left);
-      expect(rect.right).to.be.at.most(cellRect.right);
-    });
-
-    it.skipIf(isJSDOM)('keeps the focus outline', async () => {
-      const { user } = render(<TestCase rtl />);
-      const numberCell = await focusCell(user, 0, 2);
-      const expected = getComputedStyle(numberCell);
-      const expectedOutline = [expected.outlineStyle, expected.outlineWidth, expected.outlineColor];
-
-      const cell = await focusCell(user, 0, 1);
-      expect(document.activeElement).to.equal(getInput(cell));
-      const actual = getComputedStyle(cell);
-      expect([actual.outlineStyle, actual.outlineWidth, actual.outlineColor]).to.deep.equal(
-        expectedOutline,
-      );
-      // The number cell lost its outline.
-      expect(getComputedStyle(numberCell).outlineStyle).to.equal('none');
-    });
-
-    it.skipIf(isJSDOM)(
-      'keeps the focus when the focused column is scrolled out of the render window',
-      async () => {
-        const manyColumns: GridColDef[] = Array.from({ length: 40 }, (_, index) => ({
-          field: `c${index}`,
-          editable: true,
-          width: 100,
-        }));
-        const manyRows = [
-          Object.fromEntries([['id', 0], ...manyColumns.map((c) => [c.field, 'x'])]),
-        ];
-        const { user } = render(
-          <React.Fragment>
-            <input data-testid="outside" />
-            <TestCase rtl columns={manyColumns} rows={manyRows} columnBufferPx={0} />
-          </React.Fragment>,
-        );
-        const cell = await focusCell(user, 0, 0);
-        const input = getInput(cell)!;
-        expect(document.activeElement).to.equal(input);
-        const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
-
-        // In RTL, the scroll position moves to negative values.
-        await act(async () => {
-          scroller.scrollLeft = -3000;
-          scroller.dispatchEvent(new Event('scroll'));
-        });
-        await waitFor(() => {
-          expect(getCell(0, 30)).not.to.equal(null);
-        });
-        expect(document.activeElement).to.equal(input);
-        expect(getActiveCell()).to.equal('0-0');
-
-        // The editor must not take the focus back from an element outside of the grid.
-        const outside = document.querySelector<HTMLInputElement>('[data-testid="outside"]')!;
-        await act(async () => {
-          outside.focus();
-        });
-        await act(async () => {
-          scroller.scrollLeft = 0;
-          scroller.dispatchEvent(new Event('scroll'));
-        });
-        await waitFor(() => {
-          expect(getCell(0, 0)).not.to.equal(null);
-        });
-        expect(document.activeElement).to.equal(outside);
-      },
-    );
 
     it.skipIf(isJSDOM)('keeps the editor focused after a horizontal keyboard scroll', async () => {
       const manyColumns: GridColDef[] = Array.from({ length: 12 }, (_, index) => ({

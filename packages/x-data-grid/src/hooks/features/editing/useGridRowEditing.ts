@@ -29,8 +29,8 @@ import type {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
 import type { GridRowId, GridValidRowModel } from '../../../models/gridRows';
-import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { isEventFromPreMountedEditor, isImeKeyDown } from '../../../utils/cellEditor';
+import { isPrintableKey, isPasteShortcut, isImeKeyDown } from '../../../utils/keyboardUtils';
+import { isEventFromPreMountedEditor } from '../../../utils/cellEditor';
 import {
   gridColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
@@ -197,9 +197,8 @@ export const useGridRowEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
-        // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
-        if (event.which === 229) {
+        // Wait until the IME composition ends, for example in Japanese, Chinese, and Korean.
+        if (isImeKeyDown(event)) {
           return;
         }
 

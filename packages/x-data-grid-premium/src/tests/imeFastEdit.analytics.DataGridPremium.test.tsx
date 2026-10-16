@@ -15,23 +15,18 @@ import type {
   GridApi,
   GridColDef,
 } from '@mui/x-data-grid-premium';
-import { getCell, getRows, microtasks } from 'test/utils/helperFn';
+import { getCell, getRow, getRows, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, afterEach } from 'vitest';
 import type { MockInstance } from 'vitest';
-
-const EDITOR_SELECTOR = '[data-cell-editor]';
-const PRE_MOUNTED_SELECTOR = '[data-cell-editor="preMounted"]';
-
-const getInput = (cell: HTMLElement) => cell.querySelector('input');
-const getEditors = () => document.querySelectorAll(EDITOR_SELECTOR);
-
-// The element that has the focus in a focused editable string cell: the hidden editor with the flag, the cell without it.
-function getFocusTarget(cell: HTMLElement, imeFastEdit: boolean) {
-  const target = imeFastEdit ? getInput(cell)! : cell;
-  expect(document.activeElement).to.equal(target);
-  return target;
-}
+import {
+  compose,
+  expectHiddenEditor,
+  getEditorWrappers,
+  getFocusTarget,
+  getInput,
+  getPreMountedEditor,
+} from 'test/utils/imeFastEdit';
 
 // Joins the string values of a column, so that an edit of a leaf changes the aggregated value.
 const joinAggregation: GridAggregationFunction<string> = {
@@ -51,12 +46,6 @@ const columns: GridColDef[] = [
   { field: 'name', editable: true },
   { field: 'amount', type: 'number', editable: true },
 ];
-
-function compose(input: HTMLInputElement, value: string) {
-  fireEvent.compositionStart(input);
-  fireEvent.change(input, { target: { value } });
-  fireEvent.compositionEnd(input);
-}
 
 describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
   const { render: originalRender } = createRenderer();
@@ -106,7 +95,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       expect(input).not.to.equal(null);
       expect(document.activeElement).to.equal(input);
       expect(cell.textContent).to.equal('Nike');
-      expect(getEditors()).to.have.length(1);
+      expect(getEditorWrappers()).to.have.length(1);
     });
 
     it('does not render the editor in a group row', async () => {
@@ -114,13 +103,13 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       const groupingCell = getCell(0, colIndex(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD));
       await user.click(groupingCell);
       expect(document.activeElement).to.equal(groupingCell);
-      expect(getEditors()).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
 
       // The `name` column is editable, but the group row is not.
       const nameCell = getCell(0, colIndex('name'));
       await user.click(nameCell);
       expect(document.activeElement).to.equal(nameCell);
-      expect(getEditors()).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
     });
 
     it('moves the editor across a group row with the keyboard', async () => {
@@ -133,13 +122,13 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       await waitFor(() => {
         expect(document.activeElement).to.equal(getCell(0, nameIndex));
       });
-      expect(getEditors()).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
 
       await user.keyboard('{ArrowDown}');
       await waitFor(() => {
         expect(document.activeElement).to.equal(getInput(getCell(1, nameIndex)));
       });
-      expect(getEditors()).to.have.length(1);
+      expect(getEditorWrappers()).to.have.length(1);
     });
 
     [true, false].forEach((imeFastEdit) => {
@@ -165,7 +154,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
         await waitFor(() => {
           expect(getRows()).to.have.length(3);
         });
-        expect(getEditors()).to.have.length(0);
+        expect(getEditorWrappers()).to.have.length(0);
 
         await user.keyboard(' ');
         await waitFor(() => {
@@ -174,12 +163,16 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       });
     });
 
-    it('commits a composed value in a leaf cell and keeps the grouping', async () => {
-      const { user } = await render(<Test {...groupingProps} />);
+    it('commits a composed value in a leaf cell through `processRowUpdate` and keeps the grouping', async () => {
+      const processRowUpdate = vi.fn((newRow) => newRow);
+      const { user } = await render(
+        <Test {...groupingProps} processRowUpdate={processRowUpdate} />,
+      );
       const nameIndex = colIndex('name');
       const cell = getCell(1, nameIndex);
       await user.click(cell);
-      const input = getInput(cell)!;
+      const input = expectHiddenEditor(cell);
+      expect(getEditorWrappers()).to.have.length(1);
 
       compose(input, '나이키');
       expect(cell).to.have.class(gridClasses['cell--editing']);
@@ -190,11 +183,64 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       await waitFor(() => {
         expect(getCell(1, nameIndex).textContent).to.equal('나이키');
       });
+      expect(processRowUpdate.mock.calls.length).to.equal(1);
+      expect(processRowUpdate.mock.calls[0][0]).to.deep.equal({ ...rows[0], name: '나이키' });
       expect(getRows()).to.have.length(5);
       expect(getCell(0, colIndex(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD)).textContent).to.equal(
         'Cat A (2)',
       );
       expect(apiRef.current!.getRow(0).name).to.equal('나이키');
+      // Enter moves the focus to the next leaf row, which renders the hidden editor.
+      expectHiddenEditor(getCell(2, nameIndex));
+    });
+
+    it('keeps the hidden editor focused when `updateRows` moves the row to another group', async () => {
+      const { user } = await render(<Test {...groupingProps} />);
+      const cell = getCell(1, colIndex('name'));
+      await user.click(cell);
+      const input = expectHiddenEditor(cell);
+
+      await act(async () => {
+        apiRef.current!.updateRows([{ id: 0, category: 'Cat B' }]);
+      });
+      // Rows: Cat A (group), Adidas, Cat B (group), Nike, Puma
+      const movedCell = apiRef.current!.getCellElement(0, 'name')!;
+      expect(movedCell.textContent).to.equal('Nike');
+      expect(getInput(movedCell)).to.equal(input);
+      expect(document.activeElement).to.equal(input);
+      expect(input.value).to.equal('');
+      expect(getEditorWrappers()).to.have.length(1);
+    });
+
+    it('keeps the hidden editor when the row grouping model changes', async () => {
+      const { user } = await render(<Test {...groupingProps} />);
+      const cell = getCell(1, colIndex('name'));
+      await user.click(cell);
+      const input = expectHiddenEditor(cell);
+
+      await act(async () => {
+        apiRef.current!.setRowGroupingModel([]);
+      });
+      // Without grouping, the rows are flat and the focused row keeps its editor.
+      expect(getRow(0).dataset.id).to.equal('0');
+      await waitFor(() => {
+        expect(getCell(0, colIndex('name')).contains(document.activeElement)).to.equal(true);
+      });
+      expect(getEditorWrappers()).to.have.length(1);
+      expect(getInput(getCell(0, colIndex('name')))!.value).to.equal('');
+      expect(input.isConnected).to.equal(true);
+
+      await act(async () => {
+        apiRef.current!.setRowGroupingModel(['category']);
+      });
+      expect(getRow(0).dataset.id).to.equal('auto-generated-row-category/Cat A');
+      expect(apiRef.current!.getColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD)).not.to.equal(
+        undefined,
+      );
+      await waitFor(() => {
+        expect(getCell(1, colIndex('name')).contains(document.activeElement)).to.equal(true);
+      });
+      expectHiddenEditor(getCell(1, colIndex('name')));
     });
 
     it('starts edit mode with a Latin key in a leaf cell', async () => {
@@ -230,10 +276,10 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       expect(footerCell.textContent).to.equal('Nike,Adidas,Puma');
       await user.click(footerCell);
       expect(document.activeElement).to.equal(footerCell);
-      expect(getEditors()).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
     });
 
-    it('does not render the editor in an aggregated group row', async () => {
+    it('does not render the editor in group rows, aggregation footers, and number cells with row grouping', async () => {
       const { user } = await render(
         <Test
           {...aggregationProps}
@@ -244,11 +290,21 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      const groupCell = getCell(0, colIndex('name'));
-      expect(groupCell.textContent).to.equal('Nike,Adidas');
-      await user.click(groupCell);
-      expect(document.activeElement).to.equal(groupCell);
-      expect(getEditors()).to.have.length(0);
+      // Rows: Cat A (group), Nike, Adidas, Cat B (group), Puma, footer
+      expect(getRow(0).dataset.id).to.equal('auto-generated-row-category/Cat A');
+      const expectNoEditor = async (row: number, field: string, text: string) => {
+        const cell = getCell(row, colIndex(field));
+        expect(cell.textContent).to.equal(text);
+        await user.click(cell);
+        expect(getInput(cell)).to.equal(null);
+        expect(document.activeElement).to.equal(cell);
+        expect(getEditorWrappers()).to.have.length(0);
+      };
+      // The group row shows the aggregated value of the editable string column.
+      await expectNoEditor(0, 'name', 'Nike,Adidas');
+      await expectNoEditor(0, GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'Cat A (2)');
+      await expectNoEditor(5, 'name', 'Nike,Adidas,Puma');
+      await expectNoEditor(1, 'amount', '10');
     });
 
     it('recomputes the footer aggregation after a composed value is committed', async () => {
@@ -306,7 +362,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       expect(document.activeElement).to.equal(getCell(0, 0));
       await user.click(getCell(0, 1));
       expect(document.activeElement).to.equal(getCell(0, 1));
-      expect(getEditors()).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
     });
 
     it('removes the hidden editor when pivot mode starts and renders it again after pivot mode stops', async () => {
@@ -319,7 +375,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       await waitFor(() => {
         expect(getCell(0, 0).textContent).to.equal('Cat A (2)');
       });
-      expect(getEditors()).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
 
       setProps({ pivotActive: false });
       await waitFor(() => {
@@ -330,7 +386,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       await waitFor(() => {
         expect(document.activeElement).to.equal(getInput(cellAfter));
       });
-      expect(getEditors()).to.have.length(1);
+      expect(getEditorWrappers()).to.have.length(1);
     });
   });
 
@@ -383,7 +439,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       expect(cell.textContent).to.equal('a');
       await user.click(cell);
       expect(document.activeElement).to.equal(cell);
-      expect(getEditors()).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
 
       // Editing still works with the formula edit component.
       await user.keyboard('x');
@@ -398,7 +454,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       expect(cell.textContent).to.equal('6');
       await user.click(cell);
       expect(document.activeElement).to.equal(cell);
-      expect(getEditors()).to.have.length(0);
+      expect(getEditorWrappers()).to.have.length(0);
     });
 
     it('composes in a plain string column next to a formula column', async () => {
@@ -431,7 +487,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       clickIntoBar();
       expect(document.activeElement).to.equal(getBarEditable());
       // The hidden editor stays rendered for the active cell, but it does not take the focus.
-      expect(getEditors()).to.have.length(1);
+      expect(getEditorWrappers()).to.have.length(1);
 
       // A composition in the bar does not start edit mode in the cell.
       fireEvent.compositionStart(getBarEditable());
@@ -457,7 +513,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       await waitFor(() => {
         expect(document.activeElement).to.equal(getInput(getCell(1, 0)));
       });
-      expect(getEditors()).to.have.length(1);
+      expect(getEditorWrappers()).to.have.length(1);
       expect(getBarEditable().textContent).to.equal('Banana');
     });
   });
@@ -726,7 +782,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       await waitFor(() => {
         expect(getCell(0, nameIndex).textContent).to.equal('나이키');
       });
-      expect(getEditors()).to.have.length(1);
+      expect(getEditorWrappers()).to.have.length(1);
     });
 
     it('undoes a paste with Ctrl+Z sent to the hidden editor', async () => {
@@ -752,7 +808,7 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       await waitFor(() => {
         expect(getCell(0, nameIndex).textContent).to.equal('Nike');
       });
-      expect(document.querySelector(PRE_MOUNTED_SELECTOR)).not.to.equal(null);
+      expect(getPreMountedEditor(getCell(0, nameIndex))).not.to.equal(null);
     });
   });
 });

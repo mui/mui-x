@@ -8,12 +8,20 @@ import type {
   GridApi,
   GridCellModesModel,
   GridColDef,
-  GridDataSource,
-  GridGetRowsParams,
   GridRowModesModel,
 } from '@mui/x-data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 import { vi, describe, it, expect } from 'vitest';
+import {
+  composeAndCommit,
+  createMockDataSource,
+  describeFocus,
+  expectFocusedCell,
+  expectHiddenEditor,
+  focusCell,
+  getEditorWrappers,
+  getInput,
+} from 'test/utils/imeFastEdit';
 
 const columns: GridColDef[] = [
   { field: 'name', editable: true },
@@ -26,32 +34,6 @@ const rows = [
   { id: 1, name: 'Adidas', city: 'Tokyo', age: 36 },
   { id: 2, name: 'Puma', city: 'Osaka', age: 42 },
 ];
-
-const getInput = (cell: HTMLElement) => cell.querySelector('input');
-
-// Describes the element that has the focus: `body`, `cell r,c`, `input r,c` (the hidden editor), or `other`.
-function describeFocus() {
-  const element = document.activeElement;
-  if (element === null || element === document.body) {
-    return 'body';
-  }
-  const cell = element.closest<HTMLElement>('[role="gridcell"]');
-  if (cell === null) {
-    return 'other';
-  }
-  const rowIndex = cell.closest<HTMLElement>('[data-rowindex]')?.dataset.rowindex;
-  const position = `${rowIndex},${cell.dataset.colindex}`;
-  return element === cell ? `cell ${position}` : `input ${position}`;
-}
-const getEditorWrappers = () => document.querySelectorAll('[data-cell-editor]');
-
-// Composes an IME text in the focused hidden editor and commits it with Enter.
-async function composeAndCommit(user: any, input: HTMLInputElement, text: string) {
-  fireEvent.compositionStart(input);
-  fireEvent.change(input, { target: { value: text } });
-  fireEvent.compositionEnd(input);
-  await user.keyboard('{Enter}');
-}
 
 describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
   const { render } = createRenderer();
@@ -70,35 +52,6 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
         />
       </div>
     );
-  }
-
-  async function focusCell(user: any, row: number, col: number) {
-    const cell = getCell(row, col);
-    await user.click(cell);
-    return cell;
-  }
-
-  // Asserts that the focused editable string cell has its hidden editor focused.
-  function expectHiddenEditor(cell: HTMLElement) {
-    const input = getInput(cell)!;
-    expect(input).not.to.equal(null);
-    expect(cell.querySelector('[data-cell-editor]')).to.have.attribute(
-      'data-cell-editor',
-      'preMounted',
-    );
-    expect(document.activeElement).to.equal(input);
-    expect(input.value).to.equal('');
-    return input;
-  }
-
-  // Asserts the DOM focus of the cell with the focus state, with and without the flag.
-  function expectFocusedCell(cell: HTMLElement, imeFastEdit: boolean) {
-    if (imeFastEdit) {
-      expectHiddenEditor(cell);
-    } else {
-      expect(document.activeElement).to.equal(cell);
-      expect(getEditorWrappers()).to.have.length(0);
-    }
   }
 
   describe('data source', () => {
@@ -134,28 +87,12 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
       mockServer = useMockServer(dataSetOptions, serverOptions, false);
       const { fetchRows, editRow } = mockServer;
 
-      const dataSource: GridDataSource = React.useMemo(
-        () => ({
-          getRows: async (params: GridGetRowsParams) => {
-            const urlParams = new URLSearchParams({
-              filterModel: JSON.stringify(params.filterModel),
-              sortModel: JSON.stringify(params.sortModel),
-              start: `${params.start}`,
-              end: `${params.end}`,
-            });
-            const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
-            fetchRowsSpy(url);
-            const response = await fetchRows(url);
-            return { rows: response.rows, rowCount: response.rowCount };
-          },
-          updateRow: async (params) => {
-            updateRowSpy(params);
-            if (updateRowFails) {
-              throw new Error('update failed');
-            }
-            return editRow(params.rowId, params.updatedRow);
-          },
-        }),
+      const dataSource = React.useMemo(
+        () =>
+          createMockDataSource(
+            { fetchRows, editRow },
+            { fetchRowsSpy, updateRowSpy, updateRowFails },
+          ),
         [fetchRows, editRow, updateRowFails],
       );
 
@@ -503,7 +440,7 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
             field: 'city',
           });
         });
-        // Pre-existing behaviour: the cell with the focus state takes the DOM focus back.
+        // Pre-existing behavior: the cell with the focus state takes the DOM focus back.
         const cell = getCell(0, 1);
         await waitFor(() => {
           expect(cell.contains(document.activeElement)).to.equal(true);
