@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "types": [
+      "node",
       "@mui/internal-test-utils/initMatchers",
       "@mui/material/themeCssVarsAugmentation",
       "dayjs/plugin/timezone.d.ts",
