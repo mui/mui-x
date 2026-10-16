@@ -48,7 +48,7 @@
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
     "params": "GridCellEditStartParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement> | React.CompositionEvent<HTMLElement>>",
     "componentProp": "onCellEditStart"
   },
   {
@@ -412,7 +412,7 @@
     "name": "rowEditStart",
     "description": "Fired when the row turns to edit mode.",
     "params": "GridRowEditStartParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>>",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement> | React.CompositionEvent<HTMLElement>>",
     "componentProp": "onRowEditStart"
   },
   {

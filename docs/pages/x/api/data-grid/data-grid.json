@@ -69,7 +69,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ imeFastEdit?: bool, virtualizerLayoutMode?: 'controlled'<br>&#124;&nbsp;'uncontrolled', warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
