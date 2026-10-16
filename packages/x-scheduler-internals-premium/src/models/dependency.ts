@@ -125,11 +125,23 @@ export interface SchedulerDependencyCreation {
   targetSide: SchedulerEventSide | null;
 }
 
-export type SchedulerDependencyEventRejectionReason =
-  'recurringEvent' | 'unknownEvent' | 'readOnlyEvent';
+export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknownEvent';
 
 export type SchedulerDependencyRejectionReason =
-  SchedulerDependencyEventRejectionReason | 'duplicateDependency' | 'cyclicDependency';
+  | SchedulerDependencyEventRejectionReason
+  | 'readOnly'
+  | 'duplicateDependency'
+  | 'cyclicDependency'
+  | 'cascadeBlocked';
+
+/**
+ * Restoring the created or stricter dependency would move the read-only `eventId`.
+ */
+export type SchedulerDependencyCascadeBlockedRejection = {
+  status: 'rejected';
+  reason: 'cascadeBlocked';
+  eventId: SchedulerEventId;
+};
 
 export type SchedulerAddDependencyResult =
   | { status: 'added'; id: SchedulerDependencyId }
@@ -139,7 +151,43 @@ export type SchedulerAddDependencyResult =
       eventId: SchedulerEventId;
     }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
-  | { status: 'rejected'; reason: 'cyclicDependency' };
+  | { status: 'rejected'; reason: 'cyclicDependency' }
+  | { status: 'rejected'; reason: 'readOnly' }
+  | SchedulerDependencyCascadeBlockedRejection;
+
+/**
+ * Properties to change on an existing dependency with `updateDependency()`.
+ * A `lag` or `lagUnit` passed as `undefined` is removed from the dependency.
+ */
+export type SchedulerDependencyUpdatedProperties = Partial<
+  Pick<SchedulerDependency, 'type' | 'lag' | 'lagUnit'>
+>;
+
+export type SchedulerUpdateDependencyResult =
+  | { status: 'updated' }
+  | { status: 'rejected'; reason: 'unknownDependency' }
+  | { status: 'rejected'; reason: 'readOnly' }
+  | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
+  | SchedulerDependencyCascadeBlockedRejection;
+
+/**
+ * The dependency open in the dependency dialog, and where the dialog is anchored.
+ */
+export interface SchedulerDependencyEditor {
+  dependencyId: SchedulerDependencyId;
+  /**
+   * `x` from the start of the events area, `y` in absolute row-space.
+   */
+  anchor: { x: number; y: number };
+  /**
+   * The row the opened arrow leaves, for the colors. `undefined` uses the primary resource.
+   */
+  sourceResourceId?: SchedulerResourceId;
+  /**
+   * The row the opened arrow enters, for the colors. `undefined` uses the primary resource.
+   */
+  targetResourceId?: SchedulerResourceId;
+}
 
 /**
  * State slice holding the dependencies collection.

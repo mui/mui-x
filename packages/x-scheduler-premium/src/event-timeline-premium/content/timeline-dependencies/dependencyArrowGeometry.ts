@@ -1,4 +1,4 @@
-import type { SchedulerEventSide } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventSide, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerDependency,
   SchedulerDependencyId,
@@ -20,6 +20,7 @@ import {
   DEPENDENCY_ARROW_HIT_TRIM_END,
   DEPENDENCY_ARROW_HIT_TRIM_START,
   clipRouteAroundObstacles,
+  getArrowHeadHitArea,
   trimRouteEnds,
 } from './dependencyArrowHitArea';
 
@@ -30,6 +31,11 @@ export interface DependencyArrow {
    */
   key: string;
   id: SchedulerDependencyId;
+  /**
+   * The resources of the rows the arrow leaves and enters.
+   */
+  sourceResourceId: SchedulerResourceId;
+  targetResourceId: SchedulerResourceId;
   /**
    * The SVG path of the arrow, in absolute row-space pixels (y = 0 is the top of the
    * first row), so it does not depend on the scroll position.
@@ -44,6 +50,12 @@ export interface DependencyArrow {
    * Derived on first read and cached: only the interactions layer needs it.
    */
   readonly hitD: string;
+  /**
+   * The click hit-area of the arrowhead, next to `endPoint` on the side the arrow comes
+   * from and cut before any event box, or `null` when an event leaves no room for it.
+   * Derived on first read and cached, like `hitD`.
+   */
+  readonly hitHead: { x: number; width: number } | null;
   /**
    * The point where the arrowhead is drawn, in the same coordinate space as `d`: the
    * target edge anchor, except when the route clamps at the timeline edge.
@@ -153,12 +165,16 @@ export function computeDependencyArrows(
 
     let d: string | null = null;
     let hitD: string | null = null;
+    let hitHead: DependencyArrow['hitHead'] | undefined;
+    const endPoint = points[points.length - 1];
 
     return {
       // The id type is part of the key: `SchedulerDependencyId` accepts both strings
       // and numbers, so `1` and `"1"` would otherwise share a key on the same row pair.
       key: `${typeof dependency.id}:${String(dependency.id)}:${sourceAnchor.rowIndex}:${targetAnchor.rowIndex}`,
       id: dependency.id,
+      sourceResourceId: sourceAnchor.resourceId,
+      targetResourceId: targetAnchor.resourceId,
       get d() {
         if (d === null) {
           d = buildRoundedOrthogonalPath(points, DEPENDENCY_ARROW_CORNER_RADIUS);
@@ -177,7 +193,21 @@ export function computeDependencyArrows(
         }
         return hitD;
       },
-      endPoint: points[points.length - 1],
+      get hitHead() {
+        if (hitHead === undefined) {
+          // Unlike `getObstacles`, the source stays in: a back-to-back predecessor sits
+          // right under the arrowhead.
+          hitHead = getArrowHeadHitArea(
+            endPoint,
+            edges.target === 'start' ? -1 : 1,
+            resolver
+              .getRowObstacles(targetAnchor.rowIndex)
+              .filter((obstacle) => obstacle.occurrenceKey !== targetAnchor.occurrence.key),
+          );
+        }
+        return hitHead;
+      },
+      endPoint,
       targetEdge: edges.target,
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
