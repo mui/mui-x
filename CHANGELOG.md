@@ -5,6 +5,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.29.5
+
+_Oct 16, 2026_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to this community member for their valuable contribution:
+@vicuts
+
+The following team members contributed to this release:
+@arminmeh, @LukasTy, @michelengelen
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.29.5`
+
+- [DataGrid] Fix memory leak on row updates (#23783) @arminmeh
+
+#### `@mui/x-data-grid-pro@8.29.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.29.5`.
+
+#### `@mui/x-data-grid-premium@8.29.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.29.5`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.29.5`
+
+- [pickers] Fix Day.js named-zone elapsed-time additions across DST (#23842) @LukasTy
+- [pickers] Fix missing `onYearChange` and duplicate `onMonthChange` calls (#23879) @LukasTy
+- [pickers] Use `monthsPerRow` for keyboard navigation in `MonthCalendar` (#23884) @vicuts
+
+#### `@mui/x-date-pickers-pro@8.29.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.29.5`.
+
+### Docs
+
+- [docs][pickers] Add a Year Range Picker placeholder section (#23797) @michelengelen
+
+### Core
+
+- [code-infra] Fix React 18 install failure on v8.x (#23904) @LukasTy
+
 ## 8.29.4
 
 _Oct 6, 2026_
