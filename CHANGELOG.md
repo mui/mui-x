@@ -50,6 +50,10 @@ Same changes as in `@mui/x-date-pickers@8.29.5`.
 
 - [docs][pickers] Add a Year Range Picker placeholder section (#23797) @michelengelen
 
+### Core
+
+- [code-infra] Fix React 18 install failure on v8.x (#23904) @LukasTy
+
 ## 8.29.4
 
 _Oct 6, 2026_
