@@ -340,6 +340,41 @@ describe('<DataGridPremium /> - Formulas A1 notation', () => {
         expect(getColumnValues(4)).to.deep.equal(['2', '1', '8']);
       });
 
+      it('should anchor the fill offset to the start cell when the focus moves during the paste', async () => {
+        const { user } = await render(
+          <Test
+            formulaA1Notation
+            cellSelection
+            disableRowSelectionOnClick
+            clipboardPasteOptions={{
+              createRows: async ({ count }) => {
+                await new Promise((resolve) => {
+                  setTimeout(resolve, 100);
+                });
+                return Array.from({ length: count }, (_, index) => ({ id: `new-${index}` }));
+              },
+            }}
+          />,
+        );
+        const cell = getCell(1, 4);
+        await user.click(cell);
+
+        const pasteEvent = new Event('paste');
+        // @ts-expect-error The synthetic Event supplies clipboardData, which only ClipboardEvent declares.
+        pasteEvent.clipboardData = { getData: () => '=B1\n=B1\n=B1' };
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
+        await act(async () => document.activeElement!.dispatchEvent(pasteEvent));
+        // Move the focus while `createRows()` runs
+        await user.click(getCell(0, 1));
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(4);
+        });
+        // The origin is the start cell (row 1), not the focused cell (row 0)
+        expect(apiRef.current!.getRow(1).total).to.equal('=REF(COLUMN("price"), ROW(0))');
+        expect(apiRef.current!.getRow(2).total).to.equal('=REF(COLUMN("price"), ROW(1))');
+      });
+
       it('should anchor the fill offset to the top-left cell even when it is not a formula', async () => {
         const { user } = await render(
           <Test formulaA1Notation cellSelection disableRowSelectionOnClick />,

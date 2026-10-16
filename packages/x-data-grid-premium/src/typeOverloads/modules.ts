@@ -78,7 +78,15 @@ interface GridEventLookupPremium extends GridEventLookupPro {
   /**
    * Fired when the clipboard paste operation starts.
    */
-  clipboardPasteStart: { params: { data: string[][] } };
+  clipboardPasteStart: {
+    params: {
+      data: string[][];
+      /**
+       * The cell where the paste starts, when the paste starts from a cell.
+       */
+      startCell?: GridCellCoordinates;
+    };
+  };
   /**
    * Fired when the clipboard paste operation ends.
    */

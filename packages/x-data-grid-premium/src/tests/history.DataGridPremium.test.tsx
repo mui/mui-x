@@ -1114,6 +1114,90 @@ describe('<DataGridPremium /> - History', () => {
         expect(apiRef.current!.history.canUndo()).to.equal(true);
       });
 
+      it('should keep the history when a paste changes nothing', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoLastRow(user);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        // Paste into a read-only cell
+        await act(() =>
+          apiRef.current!.updateColumns([{ field: 'currencyPair', editable: false }]),
+        );
+        const cell = getCell(0, 1);
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, 'NOTHING');
+        await act(() => sleep(50));
+        await act(() => apiRef.current!.sortColumn('price1M', 'asc'));
+        await act(() => sleep(50));
+
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
+
+      it('should not restore the rows that `processRowUpdate()` rejected on undo', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows }}
+            processRowUpdate={(newRow) => {
+              if (!String(newRow.id).startsWith('new-')) {
+                throw new Error('Rejected');
+              }
+              return newRow;
+            }}
+            onProcessRowUpdateError={() => {}}
+          />,
+        );
+
+        await pasteIntoLastRow(user);
+
+        // Another change of the rejected row, for example from the server
+        await act(() => apiRef.current!.updateRows([{ id: 9, currencyPair: 'SERVER' }]));
+        await act(() => sleep(50));
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+        expect(apiRef.current!.getRow(9).currencyPair).to.equal('SERVER');
+      });
+
+      it('should not focus a row on another page on undo', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows }}
+            pagination
+            pageSizeOptions={[5]}
+            initialState={{ pagination: { paginationModel: { page: 1, pageSize: 5 } } }}
+          />,
+        );
+
+        const cell = document.querySelector<HTMLElement>(
+          '[role="row"][data-id="9"] [data-field="currencyPair"]',
+        )!;
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, ['A', 'B', 'C'].join('\n'));
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(12);
+        });
+        await act(() => sleep(50));
+
+        await act(() => apiRef.current!.setPage(0));
+        await act(() => sleep(50));
+        const firstPageCell = getCell(0, 1);
+        await act(() => firstPageCell.focus());
+        await user.click(firstPageCell);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        await act(() => sleep(50));
+
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+        expect(apiRef.current!.state.focus.cell?.id).to.equal(0);
+      });
+
       it('should not undo when a field was added to a created row', async () => {
         const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
 

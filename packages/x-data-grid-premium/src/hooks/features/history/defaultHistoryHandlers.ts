@@ -317,15 +317,17 @@ const focusFirstChangedCell = (
     }
   }
 
-  if (differentFieldIndex >= 0) {
-    requestAnimationFrame(() => {
-      apiRef.current.setCellFocus(rowId, columnOrder[differentFieldIndex]);
-      apiRef.current.scrollToIndexes({
-        rowIndex: getRowIndexToScroll(apiRef, rowId),
-        colIndex: differentFieldIndex,
-      });
+  requestAnimationFrame(() => {
+    // The row can be on another page, for example when the paste added rows
+    if (!gridVisibleRowsSelector(apiRef).rowIdToIndexMap.has(rowId)) {
+      return;
+    }
+    apiRef.current.setCellFocus(rowId, columnOrder[differentFieldIndex]);
+    apiRef.current.scrollToIndexes({
+      rowIndex: getRowIndexToScroll(apiRef, rowId),
+      colIndex: differentFieldIndex,
     });
-  }
+  });
 };
 
 /**
@@ -335,7 +337,23 @@ export const createClipboardPasteHistoryHandler = (
   apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridClipboardPasteHistoryData> => {
   return {
-    store: (params: GridClipboardPasteHistoryData) => params,
+    store: (params: GridClipboardPasteHistoryData) => {
+      const { newRows, createdRows = new Map() } = params;
+      // A paste that changed nothing has no undo step
+      if (newRows.size === 0 && createdRows.size === 0) {
+        return null;
+      }
+
+      // Keep only the rows that the paste changed.
+      // Undo must not restore the rows that `processRowUpdate()` rejected.
+      const oldRows = new Map<GridRowId, GridValidRowModel>();
+      newRows.forEach((_, rowId) => {
+        if (params.oldRows.has(rowId)) {
+          oldRows.set(rowId, params.oldRows.get(rowId)!);
+        }
+      });
+      return { oldRows, newRows, createdRows };
+    },
     validate: (data: GridClipboardPasteHistoryData, direction: 'undo' | 'redo') => {
       const { oldRows, newRows, createdRows = new Map() } = data;
       const updatedRowIds = Array.from(newRows.keys());

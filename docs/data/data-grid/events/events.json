@@ -136,7 +136,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "clipboardPasteStart",
     "description": "Fired when the clipboard paste operation starts.",
-    "params": "{ data: string[][] }",
+    "params": "{\n  data: string[][]\n  /**\n   * The cell where the paste starts, when the paste starts from a cell.\n   */\n  startCell?: GridCellCoordinates\n}",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardPasteStart"
   },

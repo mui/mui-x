@@ -243,6 +243,11 @@ export interface GridFormulaInternalCache {
    */
   pasteOrigin: { rowPosition: number | undefined; columnPosition: number | undefined } | null;
   /**
+   * The cell where the current clipboard paste starts, from the `clipboardPasteStart` event.
+   * The paste origin uses it instead of the focused cell, because the focus can move while the paste waits.
+   */
+  pasteStartCell: GridCellCoordinates | null;
+  /**
    * "Focus-safe" formula elements of THIS grid instance: formula-bar roots and
    * suggestion-popup panels. Both can live outside the grid root (a portaled
    * bar, the body-portaled popup), so DOM containment cannot scope them — the

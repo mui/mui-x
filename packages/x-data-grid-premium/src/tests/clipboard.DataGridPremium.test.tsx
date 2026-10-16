@@ -1772,6 +1772,105 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(row.label).to.equal('Product B');
       });
 
+      it('should show the updated rows before the slowest `processRowUpdate()` resolves', async () => {
+        const { user } = render(
+          <Test
+            processRowUpdate={async (newRow) => {
+              await sleep(newRow.id === 2 ? 400 : 10);
+              return newRow;
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(1, 1), ['A', 'B'].join('\n'));
+        await act(() => sleep(150));
+        expect(getCell(1, 1)).to.have.text('A');
+        expect(getCell(2, 1)).not.to.have.text('B');
+
+        await act(() => sleep(400));
+        expect(getCell(2, 1)).to.have.text('B');
+      });
+
+      it('should apply the other rows when one row of the paste fails', async () => {
+        const onClipboardPasteEnd = vi.fn();
+        const { user } = render(
+          <Test
+            // `undefined` is not a valid row
+            processRowUpdate={(newRow) => (newRow.id === 'new-0' ? undefined! : newRow)}
+            onClipboardPasteEnd={onClipboardPasteEnd}
+            clipboardPasteOptions={{ createRows: createNewRows }}
+          />,
+        );
+
+        await expect(async () => {
+          await pasteIntoCell(user, getCell(3, 1), clipboardData);
+          await waitFor(() => {
+            expect(onClipboardPasteEnd.mock.calls).to.have.length(1);
+          });
+        }).toErrorDev('MUI X: The paste skipped the row with id "new-0"');
+
+        expect(getCell(3, 1)).to.have.text('A');
+        expect(apiRef.current!.getRow('new-0')).to.equal(null);
+        expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
+      });
+
+      it('should keep the pasted data of each row when `createRows()` returns a row with a used id', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{
+              // The id `0` is used by another row
+              createRows: () => [{ id: 0 }, { id: 'new-1' }],
+            }}
+          />,
+        );
+
+        await expect(async () => {
+          await pasteIntoCell(user, getCell(3, 1), clipboardData);
+          await waitFor(() => {
+            expect(apiRef.current!.getRowsCount()).to.equal(5);
+          });
+        }).toWarnDev('MUI X: The row with id "0" returned by `clipboardPasteOptions.createRows()`');
+
+        // `B` was for the ignored row, so `new-1` gets `C`
+        expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
+      });
+
+      it('should not keep the fields of a class row that `processRowUpdate()` removed', async () => {
+        class Product {
+          id: string;
+
+          isNew = true;
+
+          currencyPair?: string;
+
+          constructor(id: string) {
+            this.id = id;
+          }
+        }
+
+        const { user } = render(
+          <Test
+            processRowUpdate={(newRow) => {
+              const { isNew, ...row } = newRow;
+              return row;
+            }}
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, (_, index) => new Product(`new-${index}`)),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        const row = apiRef.current!.getRow('new-0');
+        expect(row).to.be.instanceOf(Product);
+        expect(Object.keys(row)).not.to.include('isNew');
+      });
+
       it('should not add rows with row grouping', async () => {
         const createRows = vi.fn(createNewRows);
         const { user } = render(
