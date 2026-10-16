@@ -1646,6 +1646,132 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
       });
 
+      it('should not add rows twice when a paste starts before the previous paste ends', async () => {
+        const { user } = render(
+          <Test
+            processRowUpdate={async (newRow) => {
+              await sleep(100);
+              return newRow;
+            }}
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, () => ({ id: `new-${Math.random()}` })),
+            }}
+          />,
+        );
+
+        const cell = getCell(3, 1);
+        await pasteIntoCell(user, cell, clipboardData);
+        paste(cell, clipboardData);
+        await act(() => sleep(500));
+
+        // The second paste overwrites the rows that the first paste added
+        expect(getColumnValues(1).slice(3)).to.deep.equal(['A', 'B', 'C']);
+        expect(apiRef.current!.getRowsCount()).to.equal(6);
+      });
+
+      it('should paste into the cell that had the focus when the paste started', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{
+              createRows: async (params) => {
+                await sleep(100);
+                return createNewRows(params);
+              },
+            }}
+          />,
+        );
+        const originalValues = getColumnValues(1);
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+        // Move the focus while `createRows()` runs
+        await user.click(getCell(0, 1));
+        await act(() => sleep(300));
+
+        expect(getColumnValues(1)).to.deep.equal([...originalValues.slice(0, 3), 'A', 'B', 'C']);
+      });
+
+      it('should not add the rows that `processRowUpdate()` deletes', async () => {
+        const onClipboardPasteEnd = vi.fn();
+        const { user } = render(
+          <Test
+            processRowUpdate={(newRow, oldRow) =>
+              oldRow.isNew ? { ...newRow, _action: 'delete' } : newRow
+            }
+            onClipboardPasteEnd={onClipboardPasteEnd}
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, (_, index) => ({ id: `new-${index}`, isNew: true })),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(onClipboardPasteEnd.mock.calls).to.have.length(1);
+        });
+        expect(onClipboardPasteEnd.mock.calls[0][0].createdRows.size).to.equal(0);
+        expect(apiRef.current!.getRowsCount()).to.equal(4);
+        expect(getCell(3, 1)).to.have.text('A');
+      });
+
+      it('should fire `clipboardPasteEnd` after the rows are in the state when `throttleRowsMs` is set', async () => {
+        const rowsInStateOnPasteEnd: unknown[] = [];
+        const { user } = render(
+          <Test
+            throttleRowsMs={100}
+            onClipboardPasteEnd={() => {
+              rowsInStateOnPasteEnd.push(
+                apiRef.current!.getRow(3)?.currencyPair,
+                apiRef.current!.getRow('new-1')?.currencyPair,
+              );
+            }}
+            clipboardPasteOptions={{ createRows: createNewRows }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(rowsInStateOnPasteEnd).to.deep.equal(['A', 'C']);
+        });
+      });
+
+      it('should keep the class of the rows that `createRows()` returns', async () => {
+        class Product {
+          id: string;
+
+          currencyPair?: string;
+
+          constructor(id: string) {
+            this.id = id;
+          }
+
+          get label() {
+            return `Product ${this.currencyPair}`;
+          }
+        }
+
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, (_, index) => new Product(`new-${index}`)),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        const row = apiRef.current!.getRow('new-0');
+        expect(row).to.be.instanceOf(Product);
+        expect(row.label).to.equal('Product B');
+      });
+
       it('should not add rows with row grouping', async () => {
         const createRows = vi.fn(createNewRows);
         const { user } = render(

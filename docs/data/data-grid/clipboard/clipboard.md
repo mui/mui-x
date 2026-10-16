@@ -159,6 +159,39 @@ To try it, copy a range of cells, select a cell in the last row, and paste.
 
 {{"demo": "ClipboardPasteCreateRows.js", "bg": "inline"}}
 
+#### Controlled rows
+
+When you control the `rows` prop, add the new rows to your state.
+Otherwise, the next change of the `rows` prop removes them from the Data Grid, and the undo step for the paste is lost.
+Add the rows in `onClipboardPasteEnd()`, from its `createdRows` parameter.
+At this time, the Data Grid has the rows already, so your state and the Data Grid stay the same.
+
+```tsx
+const [rows, setRows] = React.useState(initialRows);
+
+<DataGridPremium
+  rows={rows}
+  clipboardPasteOptions={{
+    createRows: ({ count }) =>
+      Array.from({ length: count }, () => ({ id: randomId() })),
+  }}
+  processRowUpdate={(newRow) => {
+    setRows((prevRows) =>
+      prevRows.map((row) => (row.id === newRow.id ? newRow : row)),
+    );
+    return newRow;
+  }}
+  onClipboardPasteEnd={({ createdRows }) => {
+    setRows((prevRows) => [...prevRows, ...createdRows.values()]);
+  }}
+/>;
+```
+
+:::warning
+Do not add the new rows to your state in `processRowUpdate()`.
+The Data Grid adds the rows after `processRowUpdate()`, and it ignores a row with an id that is already in the Data Grid.
+:::
+
 :::info
 The paste adds rows only when it starts from one cell, not when it targets a cell range or selected rows.
 With pagination, the paste adds rows only on the last page.

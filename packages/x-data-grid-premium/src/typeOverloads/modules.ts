@@ -90,7 +90,7 @@ interface GridEventLookupPremium extends GridEventLookupPro {
        * The rows that the paste added to the grid.
        * The paste adds rows only when `clipboardPasteOptions.createRows()` is set.
        */
-      createdRows?: Map<GridRowId, GridValidRowModel>;
+      createdRows: Map<GridRowId, GridValidRowModel>;
     };
   };
   /**

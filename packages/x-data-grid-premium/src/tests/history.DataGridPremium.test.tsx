@@ -8,6 +8,7 @@ import type {
   GridEvents,
   GridDataSource,
   GridUpdateRowParams,
+  GridValidRowModel,
 } from '@mui/x-data-grid-premium';
 import { createRenderer, waitFor, act, fireEvent, screen } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
@@ -696,6 +697,43 @@ describe('<DataGridPremium /> - History', () => {
 
       expect(apiRef.current!.getRow(5).price1M).to.equal(51);
     });
+
+    // JSDOM has no layout, so the grid cannot scroll
+    it.skipIf(isJSDOM)(
+      'should scroll to the undone cell on a page after the first page',
+      async () => {
+        const { user } = render(
+          <Test
+            rows={getBasicGridData(20, 5).rows}
+            pagination
+            pageSizeOptions={[10]}
+            initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
+          />,
+        );
+
+        const cell = document.querySelector<HTMLElement>(
+          '[role="row"][data-id="19"] [data-field="price1M"]',
+        )!;
+        await user.dblClick(cell);
+        await user.keyboard('1{Enter}');
+        await act(() => sleep(50));
+
+        const virtualScroller = document.querySelector<HTMLElement>(
+          '.MuiDataGrid-virtualScroller',
+        )!;
+        await act(() => apiRef.current!.scroll({ top: 0 }));
+        expect(virtualScroller.scrollTop).to.equal(0);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        // The focus and the scroll happen in the next animation frame
+        await act(() => sleep(50));
+
+        expect(apiRef.current!.getRow(19).price1M).to.equal(191);
+        expect(virtualScroller.scrollTop).to.be.greaterThan(0);
+      },
+    );
   });
 
   describe('Data source integration', () => {
@@ -911,6 +949,39 @@ describe('<DataGridPremium /> - History', () => {
       expect(apiRef.current!.history.canUndo()).to.equal(false);
     });
 
+    it('should keep the history when the rows change during a paste with `throttleRowsMs`', async () => {
+      const { user } = render(
+        <Test
+          throttleRowsMs={100}
+          onBeforeClipboardPasteStart={async () => {
+            apiRef.current!.updateRows([{ id: 100, currencyPair: 'NEW' }]);
+          }}
+        />,
+      );
+      const originalValues = getColumnValues(1);
+
+      const pasteInto = async (cell: HTMLElement, text: string) => {
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, text);
+        await waitFor(() => {
+          expect(cell).to.have.text(text);
+        });
+        await act(() => sleep(250));
+      };
+
+      await pasteInto(getCell(0, 1), 'FIRST');
+      await pasteInto(getCell(1, 1), 'SECOND');
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+      await act(() => sleep(250));
+      expect(getCell(1, 1)).to.have.text(originalValues[1]);
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+    });
+
     it('should keep the history when the rows change while the paste is in progress', async () => {
       const { user } = render(
         <Test
@@ -1011,6 +1082,112 @@ describe('<DataGridPremium /> - History', () => {
         await act(() => apiRef.current!.updateRows([{ id: 'new-0', currencyPair: 'CHANGED' }]));
         await act(() => sleep(50));
         expect(apiRef.current!.history.canUndo()).to.equal(false);
+      });
+
+      it('should keep the created rows and the undo step with controlled rows', async () => {
+        const initialRows = getBasicGridData(10, 5).rows;
+        function ControlledTest() {
+          const [rows, setRows] = React.useState<GridValidRowModel[]>(initialRows);
+          return (
+            <Test
+              rows={rows}
+              clipboardPasteOptions={{ createRows }}
+              processRowUpdate={async (newRow) => {
+                await sleep(10);
+                setRows((prevRows) =>
+                  prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow)),
+                );
+                return newRow;
+              }}
+              onClipboardPasteEnd={({ createdRows }) => {
+                setRows((prevRows) => [...prevRows, ...createdRows.values()]);
+              }}
+            />
+          );
+        }
+        const { user } = render(<ControlledTest />);
+
+        await pasteIntoLastRow(user);
+        await act(() => sleep(50));
+
+        expect(getColumnValues(1).slice(9)).to.deep.equal(['A', 'B', 'C']);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
+
+      it('should not undo when a field was added to a created row', async () => {
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoLastRow(user);
+
+        // Undo would remove the row, and the new field with it
+        await act(() => apiRef.current!.updateRows([{ id: 'new-0', comment: 'Added later' }]));
+        await act(() => sleep(50));
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      });
+
+      it('should undo when `processRowUpdate()` rejects all updated rows', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows }}
+            processRowUpdate={(newRow) => {
+              if (!String(newRow.id).startsWith('new-')) {
+                throw new Error('Rejected');
+              }
+              return newRow;
+            }}
+            onProcessRowUpdateError={() => {}}
+          />,
+        );
+        const originalValue = getCell(9, 1).textContent;
+
+        await pasteIntoLastRow(user);
+        expect(getCell(9, 1)).to.have.text(originalValue!);
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(10);
+        expect(apiRef.current!.history.canRedo()).to.equal(true);
+      });
+
+      it('should keep the undo step when the created rows move the updated rows to another page', async () => {
+        const { user } = render(
+          <Test
+            rows={[
+              { id: 1, currencyPair: 'A' },
+              { id: 2, currencyPair: 'B' },
+              { id: 3, currencyPair: 'C' },
+              { id: 4, currencyPair: 'D' },
+            ]}
+            clipboardPasteOptions={{ createRows }}
+            pagination
+            pageSizeOptions={[2]}
+            initialState={{
+              pagination: { paginationModel: { page: 1, pageSize: 2 } },
+              sorting: { sortModel: [{ field: 'currencyPair', sort: 'asc' }] },
+            }}
+          />,
+        );
+
+        const cell = document.querySelector<HTMLElement>(
+          '[role="row"][data-id="4"] [data-field="currencyPair"]',
+        )!;
+        await act(() => cell.focus());
+        await user.click(cell);
+        // `AA` and `AB` sort before `D`, so `D` moves to the next page
+        paste(cell, ['DD', 'AA', 'AB'].join('\n'));
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        await act(() => sleep(50));
+
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(4);
+        expect(apiRef.current!.getRow(4).currencyPair).to.equal('D');
       });
     });
   });

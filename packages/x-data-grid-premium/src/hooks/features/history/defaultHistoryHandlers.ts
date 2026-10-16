@@ -3,7 +3,7 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   gridVisibleRowsSelector,
   gridVisibleColumnFieldsSelector,
-  gridColumnFieldsSelector,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid-pro';
 import type {
   GridCellEditStopParams,
@@ -36,6 +36,12 @@ const rowToRestore = (row: GridValidRowModel | undefined): GridValidRowModel | u
   const proto = Object.getPrototypeOf(row);
   return proto === Object.prototype || proto === null ? undefined : row;
 };
+
+/**
+ * The index of the row for `scrollToIndexes()`, which expects an index over the rows of all pages.
+ */
+const getRowIndexToScroll = (apiRef: RefObject<GridApiPremium>, id: GridRowId) =>
+  gridExpandedSortedRowIndexLookupSelector(apiRef)[id];
 
 /**
  * The row as it stood when the entry was created. A cell entry cannot be undone from
@@ -130,7 +136,7 @@ export const createCellEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexToScroll(apiRef, id),
           colIndex: apiRef.current.getColumnIndex(field),
         });
       });
@@ -158,7 +164,7 @@ export const createCellEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexToScroll(apiRef, id),
           colIndex: apiRef.current.getColumnIndex(field),
         });
       });
@@ -239,7 +245,7 @@ export const createRowEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexToScroll(apiRef, id),
           colIndex: 0,
         });
       });
@@ -267,7 +273,7 @@ export const createRowEditHistoryHandler = (
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
         apiRef.current.scrollToIndexes({
-          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          rowIndex: getRowIndexToScroll(apiRef, id),
           colIndex: 0,
         });
       });
@@ -295,11 +301,12 @@ const focusFirstChangedCell = (
   currentRow: GridValidRowModel,
   restoredRow: GridValidRowModel,
 ) => {
-  if (apiRef.current.getVisibleColumns().length === 0) {
+  // `scrollToIndexes()` expects the index of a visible column
+  const columnOrder = gridVisibleColumnFieldsSelector(apiRef);
+  if (columnOrder.length === 0) {
     return;
   }
 
-  const columnOrder = gridColumnFieldsSelector(apiRef);
   let differentFieldIndex = columnOrder.length - 1;
   // Find the first field that is different to set the focus on
   for (let i = 0; i < columnOrder.length; i += 1) {
@@ -314,7 +321,7 @@ const focusFirstChangedCell = (
     requestAnimationFrame(() => {
       apiRef.current.setCellFocus(rowId, columnOrder[differentFieldIndex]);
       apiRef.current.scrollToIndexes({
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(rowId),
+        rowIndex: getRowIndexToScroll(apiRef, rowId),
         colIndex: differentFieldIndex,
       });
     });
@@ -341,10 +348,12 @@ export const createClipboardPasteHistoryHandler = (
       // Check if all affected rows are still visible and have expected values
       // `rowIdToIndexMap` only has the rows of the current page
       const { rowIdToIndexMap } = gridVisibleRowsSelector(apiRef);
+      // The created rows can move the updated rows to another page, for example when they sort first
+      const checkVisibility = createdRows.size === 0;
 
       for (let i = 0; i < updatedRowIds.length; i += 1) {
         const rowId = updatedRowIds[i];
-        if (!rowIdToIndexMap.has(rowId)) {
+        if (checkVisibility && !rowIdToIndexMap.has(rowId)) {
           return false;
         }
 
@@ -376,7 +385,9 @@ export const createClipboardPasteHistoryHandler = (
           if (!row) {
             return false;
           }
-          for (const field of Object.keys(createdRow)) {
+          // Also check the fields that were added later, because undo removes the whole row
+          const fields = new Set([...Object.keys(createdRow), ...Object.keys(row)]);
+          for (const field of fields) {
             if (!isDeepEqual(row[field], createdRow[field])) {
               return false;
             }
@@ -403,9 +414,10 @@ export const createClipboardPasteHistoryHandler = (
       }
 
       // Focus the first affected cell
-      if (oldRows.size > 0) {
-        const [rowId, oldRow] = Array.from(oldRows.entries())[0];
-        focusFirstChangedCell(apiRef, rowId, Array.from(newRows.values())[0], oldRow);
+      const [rowId, newRow] = Array.from(newRows.entries())[0] ?? [];
+      const oldRow = rowId === undefined ? undefined : oldRows.get(rowId);
+      if (newRow && oldRow) {
+        focusFirstChangedCell(apiRef, rowId!, newRow, oldRow);
       }
     },
 
@@ -424,9 +436,10 @@ export const createClipboardPasteHistoryHandler = (
       }
 
       // Focus the first affected cell
-      if (newRows.size > 0) {
-        const [rowId, newRow] = Array.from(newRows.entries())[0];
-        focusFirstChangedCell(apiRef, rowId, Array.from(oldRows.values())[0], newRow);
+      const [rowId, newRow] = Array.from(newRows.entries())[0] ?? [];
+      const oldRow = rowId === undefined ? undefined : oldRows.get(rowId);
+      if (newRow && oldRow) {
+        focusFirstChangedCell(apiRef, rowId!, oldRow, newRow);
       }
     },
   };
