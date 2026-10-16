@@ -86,7 +86,7 @@ storeClasses.forEach((storeClass) => {
         start: { getter: (event) => event.myStart },
       };
 
-      const UNCHANGED_EVENT: MyEvent = {
+      const unchangedEvent: MyEvent = {
         myId: '1',
         myTitle: 'Event 1',
         myStart: '2025-07-01T09:00:00.000Z',
@@ -105,7 +105,7 @@ storeClasses.forEach((storeClass) => {
         new storeClass.Value(
           {
             resources: TEST_RESOURCES,
-            events: overrides?.events ?? [{ ...UNCHANGED_EVENT }],
+            events: overrides?.events ?? [{ ...unchangedEvent }],
             eventModelStructure: overrides?.eventModelStructure ?? readOnlyStartStructure,
             onEventsChange,
           },
@@ -291,8 +291,8 @@ storeClasses.forEach((storeClass) => {
           const onEventsChange = vi.fn();
           const store = createStore(onEventsChange, {
             events: [
-              { ...UNCHANGED_EVENT, myId: '1' },
-              { ...UNCHANGED_EVENT, myId: '2' },
+              { ...unchangedEvent, myId: '1' },
+              { ...unchangedEvent, myId: '2' },
             ],
           });
 
@@ -333,7 +333,7 @@ storeClasses.forEach((storeClass) => {
 
           expect(onEventsChange.mock.calls.length).to.equal(1);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
-            { ...UNCHANGED_EVENT, myTitle: 'Event 1 updated' },
+            { ...unchangedEvent, myTitle: 'Event 1 updated' },
           ]);
 
           // The result reports what was actually applied: the stripped `start` is absent, not
@@ -358,18 +358,11 @@ storeClasses.forEach((storeClass) => {
           }).not.toWarnDev();
 
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
-            { ...UNCHANGED_EVENT, myEnd: '2025-07-01T11:00:00.000Z' },
+            { ...unchangedEvent, myEnd: '2025-07-01T11:00:00.000Z' },
           ]);
         });
 
-        // Earlier, "unchanged" was decided by comparing the resubmitted value against the
-        // event's current bounds — across both timezones for an all-day event, which is exactly
-        // the comparison that caused a cross-timezone bug (a resubmitted-but-unchanged bound
-        // compared against the wrong timezone's reference misread as a real move, or vice
-        // versa). The simpler rule removes the comparison entirely: both bounds present is
-        // unconditionally a move, so resubmitting an all-day event's current (unwritable)
-        // `start` — read in whichever timezone — alongside a real `end` change is refused, not
-        // silently tolerated.
+        // Both bounds present is unconditionally a move, regardless of timezone or value.
         it('should reject a move on an all-day event viewed in another timezone even when start is unchanged', () => {
           const event = utcJuly4AllDayBuilder().id('1').build();
           const onEventsChange = vi.fn();
@@ -442,7 +435,7 @@ storeClasses.forEach((storeClass) => {
           ]);
 
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
-            { ...UNCHANGED_EVENT, myTitle: 'Event 1 updated' },
+            { ...unchangedEvent, myTitle: 'Event 1 updated' },
           ]);
         });
 
@@ -562,7 +555,7 @@ storeClasses.forEach((storeClass) => {
 
           expect(onEventsChange.mock.calls.length).to.equal(1);
           expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([
-            { ...UNCHANGED_EVENT, allDay: true },
+            { ...unchangedEvent, allDay: true },
           ]);
         });
 
@@ -1581,7 +1574,7 @@ storeClasses.forEach((storeClass) => {
       // A normal (fully writable) structure throughout, so every case here isolates the `readOnly`
       // business rule from the `eventModelStructure` one covered above.
       describe('read-only event', () => {
-        const READ_ONLY_EVENT = EventBuilder.new()
+        const readOnlyEvent = EventBuilder.new()
           .id('1')
           .title('Event 1')
           .span('2025-07-01T09:00:00.000Z', '2025-07-01T10:00:00.000Z')
@@ -1592,7 +1585,7 @@ storeClasses.forEach((storeClass) => {
           new storeClass.Value(
             {
               resources: TEST_RESOURCES,
-              events: [READ_ONLY_EVENT],
+              events: [readOnlyEvent],
               onEventsChange,
               ...extra,
             },
@@ -1683,7 +1676,7 @@ storeClasses.forEach((storeClass) => {
       // A writable event throughout, so a refusal here can only come from the destination — not
       // from folding in the source event's own `readOnly` (which a copy never touches).
       describe('paste destination', () => {
-        const WRITABLE_EVENT = EventBuilder.new()
+        const writableEvent = EventBuilder.new()
           .id('1')
           .title('Event 1')
           .span('2025-07-01T09:00:00.000Z', '2025-07-01T10:00:00.000Z')
@@ -1694,7 +1687,7 @@ storeClasses.forEach((storeClass) => {
           extra?: object,
         ) =>
           new storeClass.Value(
-            { resources: TEST_RESOURCES, events: [WRITABLE_EVENT], onEventsChange, ...extra },
+            { resources: TEST_RESOURCES, events: [writableEvent], onEventsChange, ...extra },
             adapter,
           );
 

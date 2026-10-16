@@ -560,6 +560,59 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
       expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
     });
+
+    // Same ordering as above, but for `checkCreatedDatesWritable`: a "this and following" split
+    // on the series' first occurrence detaches as `{ created: [...], deleted: ['standup'] }`,
+    // and the refusal must beat `commit()` to the dependency cleanup for the deleted series.
+    it('should not clean up a dependency on a recurring split refused because a date cannot be written back', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const recurringEvent = EventBuilder.new()
+        .id('standup')
+        .startAt('2025-07-03T09:00:00Z')
+        .endAt('2025-07-03T10:00:00Z')
+        .recurrent('DAILY')
+        .build();
+      const other = EventBuilder.new().id('other').singleDay('2025-07-04T09:00:00Z').build();
+
+      let store: EventTimelinePremiumStore<any, any>;
+      expect(() => {
+        // Dependencies don't support recurring events (hence the second warning below), but
+        // cleanup still reads the raw `dependencyModelList`, so this one is still there to drop.
+        store = new EventTimelinePremiumStore(
+          {
+            resources: TEST_RESOURCES,
+            events: [recurringEvent, other],
+            dependencies: [
+              { id: 'dep-1', source: 'standup', target: 'other', type: 'FinishToStart' },
+            ],
+            eventModelStructure: { start: { getter: (event: any) => event.start } },
+            onEventsChange,
+            onDependenciesChange,
+          },
+          adapter,
+        );
+
+        store.updateRecurringEvent({
+          occurrenceStart: date('2025-07-03T09:00:00Z'),
+          changes: {
+            id: 'standup',
+            start: date('2025-07-03T09:30:00Z'),
+            end: date('2025-07-03T10:30:00Z'),
+          },
+        });
+        store.selectRecurringEventScope('this-and-following');
+      }).toWarnDev([
+        'MUI X Scheduler: The dependency "dep-1" references the recurring event "standup".\n' +
+          'Dependencies on recurring events are not supported, so it is ignored by the timeline.',
+        'MUI X Scheduler: An event was not created because a date could not be written back.\n' +
+          '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(store!.state.dependencyModelList).to.have.length(1);
+    });
   });
 
   describe('method: pasteEvent', () => {

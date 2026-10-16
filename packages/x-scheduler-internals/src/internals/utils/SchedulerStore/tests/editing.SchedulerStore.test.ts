@@ -496,10 +496,11 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     // A store whose host feeds every change back into the controlled `events` prop.
-    function createControlledStore(events: any[]) {
+    function createControlledStore(events: any[], overrides?: { eventModelStructure?: object }) {
       let store: any;
       const parameters = {
         ...DEFAULT_PARAMS,
+        ...overrides,
         events,
         onEventsChange: (nextEvents: any[]) =>
           store.updateStateFromParameters({ ...parameters, events: nextEvents }, adapter),
@@ -860,32 +861,19 @@ premiumStoreClasses.forEach((storeClass) => {
       // bug (falling back to the series' own bounds instead of the occurrence's) would be
       // invisible too — both mutations survive the tests above unnoticed.
       describe('on a weekly rule, at a non-first occurrence', () => {
-        const WEEKLY_EVENT = EventBuilder.new()
+        const weeklyStandupEvent = EventBuilder.new()
           .id('standup')
           .startAt('2025-07-07T09:00:00Z') // a Monday
           .endAt('2025-07-07T10:00:00Z')
           .recurrent('WEEKLY')
           .build();
         const secondMonday = adapter.addDays(dayA, 7);
-
-        // A store whose host feeds every change back into the controlled `events` prop, with the
-        // getter-only `start` override — `createStoreWithReadOnlyStart` above isn't controlled,
-        // and `createControlledStore` below doesn't take an `eventModelStructure` override.
-        function createControlledWeeklyStore() {
-          let store: any;
-          const parameters = {
-            ...DEFAULT_PARAMS,
-            events: [WEEKLY_EVENT],
-            eventModelStructure: { start: { getter: (event: any) => event.start } },
-            onEventsChange: (nextEvents: any[]) =>
-              store.updateStateFromParameters({ ...parameters, events: nextEvents }, adapter),
-          };
-          store = new storeClass.Value(parameters, adapter);
-          return store;
-        }
+        const readOnlyStartStructure = {
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+        };
 
         it('should not realign BYDAY when a non-first occurrence\'s unwritable start is "moved"', () => {
-          const store = createControlledWeeklyStore();
+          const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
 
           expect(() => {
             store.updateRecurringEvent({
@@ -903,7 +891,7 @@ premiumStoreClasses.forEach((storeClass) => {
         });
 
         it('should keep the armed occurrence on its day when its unwritable start is "moved"', () => {
-          const store = createControlledWeeklyStore();
+          const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
           const armedKey = getRecurringOccurrenceKey('standup', secondMonday, adapter);
           armOccurrence(store, secondMonday);
 
@@ -971,6 +959,29 @@ premiumStoreClasses.forEach((storeClass) => {
         // The dialog has no surface of its own for this rejection, so it's pushed as a toast
         // instead of the save silently doing nothing.
         expect(store.state.errors.length).to.equal(1);
+      });
+
+      // A title edit never touches a date, but "only-this" still detaches the occurrence into
+      // its own event — refused the same way as a date move, but the message shown to the user
+      // must not claim a date was edited when it wasn't.
+      it('should refuse an "only-this" split over a title-only edit with a message that does not blame a date', () => {
+        const store = createStoreWithReadOnlyStart(vi.fn());
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: { id: 'standup', title: 'Renamed' },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(store.state.errors).to.have.length(1);
+        expect(store.state.errors[0].error.message).to.equal(
+          "This can't be saved as a new event, so the change was not applied.",
+        );
       });
 
       it('should refuse a "this-and-following" split and leave the series untouched', () => {

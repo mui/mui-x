@@ -131,11 +131,19 @@ function createDatesNotWritableError(): Error {
 }
 
 /**
- * Whether `changes` is a move of both bounds, as opposed to a resize that only submits one of
- * them. A submitted bound is a request to set it, not merely information, so both present is
- * unconditionally a move — including a resubmission of a bound's current value, which a caller
- * has no legitimate reason to send unless it means it (see `removeUnwritableDates` for the
- * single-bound case).
+ * Surfaced to the user, for a refused creation — unlike a move, nothing the user did
+ * necessarily touched a date: a recurring split detaching an occurrence hits this from an edit
+ * to any field (the title, say), so the message doesn't blame "this date" for it.
+ */
+function createEventNotCreatableError(): Error {
+  return /* minify-error-disabled */ new Error(
+    "This can't be saved as a new event, so the change was not applied.",
+  );
+}
+
+/**
+ * Whether `changes` is a move of both bounds, as opposed to a resize that only submits one. A
+ * submitted bound is a request, not information, so both present is unconditionally a move.
  */
 function isDatesMove(changes: SchedulerEventUpdatedProperties): boolean {
   return 'start' in changes && 'end' in changes;
@@ -598,20 +606,30 @@ export class SchedulerStore<
         if (deleted.has(entry.id)) {
           continue;
         }
-        // Append, never rebuild: `pasteEvent` reads the caller's entry from `.updated[0]`.
+        // Append, never rebuild: `pasteEvent` reads the caller's entry from `.updated[0]`. Only
+        // the bound(s) the contribution carries override the existing entry, so a single-bound
+        // clamp can't manufacture a two-bound move.
         const existing = updated.get(entry.id);
-        updated.set(
-          entry.id,
-          existing ? { ...existing, start: entry.start, end: entry.end } : entry,
-        );
+        if (!existing) {
+          updated.set(entry.id, entry);
+          continue;
+        }
+        const merged = { ...existing };
+        if ('start' in entry) {
+          merged.start = entry.start;
+        }
+        if ('end' in entry) {
+          merged.end = entry.end;
+        }
+        updated.set(entry.id, merged);
       }
     }
 
-    // Checked after the plugin's contributions are merged in, so a cascaded successor (which
-    // always carries both `start` and `end`) is covered too — not only the caller's own entries.
-    // Refuses the whole call, not only the offending entry: `updated` / `deleted` in the same
-    // call can be one edit (a recurring scope split truncates the series), and applying part of
-    // it while dropping the rest would corrupt the series instead of leaving it untouched.
+    // Checked after the plugin's contributions are merged in, so a cascaded successor is covered
+    // too — not only the caller's own entries. Refuses the whole call, not only the offending
+    // entry: `updated` / `deleted` in the same call can be one edit (a recurring scope split
+    // truncates the series), and applying part of it while dropping the rest would corrupt the
+    // series instead of leaving it untouched.
     const datesNotWritableRejection = this.checkUpdatedDatesWritable(updated.values());
     if (datesNotWritableRejection) {
       return {
@@ -838,7 +856,7 @@ export class SchedulerStore<
         ].join('\n'),
       );
     }
-    return createDatesNotWritableError();
+    return createEventNotCreatableError();
   }
 
   /**
