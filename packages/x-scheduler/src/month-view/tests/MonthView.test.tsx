@@ -176,6 +176,11 @@ describe('<MonthView />', () => {
       async function deleteEvent(title: string) {
         await openMenu(title);
         await other.user.click(screen.getByRole('menuitem', { name: /delete/i }));
+        await other.user.click(await screen.findByRole('button', { name: 'Delete event' }));
+        // The confirmation dialog hides the popover from queries until it is gone.
+        await waitFor(() => {
+          expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+        });
       }
 
       return { setProps, openMenu, deleteEvent, ...other };

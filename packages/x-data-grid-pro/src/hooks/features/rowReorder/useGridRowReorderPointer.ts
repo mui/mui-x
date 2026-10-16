@@ -32,10 +32,10 @@ import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { isElementInGrid, useGridPointerDragRouting } from '../../utils/useGridPointerDragRouting';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
+import { addClasses, removeClasses } from '../../../utils/classListUtils';
 import { findCellElement } from './utils';
 import {
   EXPAND_DELAY,
-  addClasses,
   animateRowMove,
   checkRowReorderValid,
   commitRowReorder,
@@ -44,7 +44,6 @@ import {
   getRowIdFromElement,
   hasLeftPendingExpansion,
   isRowReorderAllowed,
-  removeClasses,
   setRowReorderDropTarget,
   shouldExpandGroupOnHover,
   toggleHoveredGroupExpansion,

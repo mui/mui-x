@@ -11,6 +11,7 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
 interface UseEventContextMenuItemsParameters {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -56,12 +57,9 @@ export function useEventContextMenuItems(
     }
   };
 
-  // Recurring events open the scope dialog; single events delete immediately.
-  // No confirmation step here either — see #18025.
-  // `EventContextMenu` restores focus once the event unmounts.
   const handleDelete = () => {
     onRequestClose();
-    store.deleteOccurrence(occurrence);
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchorEl);
   };
 
   const EditIcon = isReadOnly ? SearchRounded : EditRounded;

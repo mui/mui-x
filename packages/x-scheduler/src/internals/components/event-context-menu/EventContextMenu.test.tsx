@@ -3,7 +3,6 @@ import { screen, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
-import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -20,7 +19,7 @@ describe('EventContextMenu', () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  function renderEvent(onEventsChange = vi.fn()) {
+  function renderEvent(onEventsChange = vi.fn(), extraProps: Record<string, unknown> = {}) {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -28,7 +27,12 @@ describe('EventContextMenu', () => {
       .build();
 
     const { setProps } = render(
-      <StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />,
+      <StandaloneDayView
+        events={[event]}
+        resources={[]}
+        onEventsChange={onEventsChange}
+        {...extraProps}
+      />,
     );
 
     return { onEventsChange, setProps };
@@ -38,15 +42,11 @@ describe('EventContextMenu', () => {
     return screen.getByRole('button', { name });
   }
 
-  function getColumn(event: HTMLElement) {
-    return event.closest(`.${eventCalendarClasses.dayTimeGridColumn}`);
-  }
-
   // `events` is a fully-controlled prop (the store warns if nothing feeds `onEventsChange` back
   // into it) — `renderEvent`'s fixed array intentionally never does, since most tests here only
   // assert on the `onEventsChange` call args. Deleting through it never actually removes the
   // event from the DOM, so it can't exercise what happens once an occurrence really unmounts.
-  function renderStatefulEvent() {
+  function renderStatefulEvent(extraProps: Record<string, unknown> = {}) {
     const initialEvent = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
@@ -55,7 +55,14 @@ describe('EventContextMenu', () => {
 
     function StatefulDayView() {
       const [events, setEvents] = React.useState<SchedulerEvent[]>([initialEvent]);
-      return <StandaloneDayView events={events} resources={[]} onEventsChange={setEvents} />;
+      return (
+        <StandaloneDayView
+          events={events}
+          resources={[]}
+          onEventsChange={setEvents}
+          {...extraProps}
+        />
+      );
     }
 
     render(<StatefulDayView />);
@@ -118,8 +125,81 @@ describe('EventContextMenu', () => {
     expect(screen.getByRole('textbox', { name: /Event title/i })).not.to.equal(null);
   });
 
-  it('should delete a non-recurring event immediately, with no confirmation, when Delete is clicked', () => {
+  it('should open the delete confirmation dialog instead of deleting immediately when Delete is clicked', () => {
     const { onEventsChange } = renderEvent();
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    // The menu itself closes right away; the confirmation dialog takes over.
+    expect(screen.queryByRole('menu')).to.equal(null);
+    expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    // The dialog leaves the background `aria-hidden`, so the event is read from the DOM's text
+    // content directly rather than through a role query (which skips `aria-hidden` subtrees).
+    expect(document.body.textContent).to.contain('Morning Meeting');
+  });
+
+  it('should describe the delete confirmation dialog with its message', () => {
+    renderEvent();
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    expect(screen.getDescriptionOf(dialog).textContent).to.equal(
+      'This action is irreversible. Are you sure you want to proceed?',
+    );
+  });
+
+  it('should delete the event once Delete event is confirmed in the dialog', async () => {
+    const { onEventsChange } = renderEvent();
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
+
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
+    // The dialog closes through an exit transition, so it lingers in the DOM for a tick.
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
+    expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
+  });
+
+  it('should not delete anything when Cancel is clicked in the confirmation dialog', async () => {
+    const { onEventsChange } = renderEvent();
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
+    expect(getEvent()).not.to.equal(null);
+  });
+
+  it('should not delete anything when Escape is pressed in the confirmation dialog', async () => {
+    const { onEventsChange } = renderEvent();
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+    // MUI focuses the dialog paper itself, not a specific action, once it opens.
+    const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+    fireEvent.keyDown(dialog, { key: 'Escape' });
+
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
+    expect(getEvent()).not.to.equal(null);
+  });
+
+  it('should delete a non-recurring event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', () => {
+    const { onEventsChange } = renderEvent(vi.fn(), { eventDeletion: { confirmation: false } });
 
     fireEvent.contextMenu(getEvent());
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
@@ -127,15 +207,41 @@ describe('EventContextMenu', () => {
     expect(onEventsChange.mock.calls.length).to.equal(1);
     expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
     expect(screen.queryByRole('menu')).to.equal(null);
+    expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
     expect(screen.queryByRole('textbox', { name: /Event title/i })).to.equal(null);
   });
 
-  it('should not lose focus to <body> after Delete: it falls back to the owning grid column', async () => {
-    renderStatefulEvent();
-    const column = getColumn(getEvent());
+  it('should open the delete confirmation dialog for a recurring event when there is no recurring-events plugin', () => {
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .recurrent('DAILY')
+      .build();
+
+    expect(() => {
+      render(<StandaloneDayView events={[event]} resources={[]} onEventsChange={onEventsChange} />);
+    }).toWarnDev([
+      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+    ]);
 
     fireEvent.contextMenu(getEvent());
     fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    // No recurring-events plugin, so there's no scope to ask for: this goes through the same
+    // confirmation dialog as any other non-recurring delete, not straight to `deleteEvent`.
+    expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
+    expect(onEventsChange.mock.calls.length).to.equal(0);
+  });
+
+  it('should move focus to the owning grid column after a confirmed Delete', async () => {
+    renderStatefulEvent();
+    const column = getEvent().closest<HTMLElement>('[role="gridcell"]')!;
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete event' }));
 
     // Confirms the event actually unmounts here (unlike the other tests' fixed `events` array),
     // so the assertion below exercises the real focus-loss scenario, not a no-op.
@@ -143,15 +249,52 @@ describe('EventContextMenu', () => {
       expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
     });
 
+    // The fallback focus is deferred past the dialog's own focus trap releasing.
     await waitFor(() => {
       expect(document.activeElement).to.equal(column);
     });
   });
 
+  it('should move focus to the owning grid column after a delete with no confirmation', async () => {
+    renderStatefulEvent({ eventDeletion: { confirmation: false } });
+    const column = getEvent().closest<HTMLElement>('[role="gridcell"]')!;
+
+    fireEvent.contextMenu(getEvent());
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Morning Meeting/i })).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(column);
+    });
+  });
+
+  it('should return focus to the event after Cancel', async () => {
+    renderStatefulEvent();
+    const eventElement = getEvent();
+    // `fireEvent.contextMenu` alone doesn't focus the target the way a real keyboard/pointer
+    // interaction would; focusing it first reflects what MUI's dialog actually captures on open.
+    eventElement.focus();
+
+    fireEvent.contextMenu(eventElement);
+    fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    // The dialog closes through an exit transition, so it lingers in the DOM for a tick — asserting
+    // before it's gone would only catch focus still sitting on the (still-mounted) Cancel button.
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+    });
+    // Nothing was deleted, so MUI's own restore-on-close returns focus to the event — the element
+    // that had it when the confirmation dialog opened.
+    expect(document.activeElement).to.equal(eventElement);
+  });
+
   it('should close the menu and keep focus in the grid when its event is removed while it is open', async () => {
     const { setProps } = renderEvent();
     const event = getEvent();
-    const column = getColumn(event);
+    const column = event.closest<HTMLElement>('[role="gridcell"]')!;
     event.focus();
 
     fireEvent.keyDown(event, { key: ' ' });
@@ -171,7 +314,7 @@ describe('EventContextMenu', () => {
   it('should close the menu opened with a right-click and keep focus in the grid when its event is removed', async () => {
     const { setProps } = renderEvent();
     const event = getEvent();
-    const column = getColumn(event);
+    const column = event.closest<HTMLElement>('[role="gridcell"]')!;
     event.focus();
 
     fireEvent.contextMenu(event);
