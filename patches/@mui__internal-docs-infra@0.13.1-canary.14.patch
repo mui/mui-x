@@ -1,0 +1,145 @@
+diff --git a/pipeline/loadPrecomputedCodeHighlighter/loadPrecomputedCodeHighlighter.mjs b/pipeline/loadPrecomputedCodeHighlighter/loadPrecomputedCodeHighlighter.mjs
+index e5d7298e25487623053aa38d027fdba2f9089036..77a18bf8278c98a8c0d7fe8eced78514ea61345e 100644
+--- a/pipeline/loadPrecomputedCodeHighlighter/loadPrecomputedCodeHighlighter.mjs
++++ b/pipeline/loadPrecomputedCodeHighlighter/loadPrecomputedCodeHighlighter.mjs
+@@ -15,6 +15,52 @@ import { getFileNameFromUrl, IGNORE_COMMENT_PREFIXES } from "../loaderUtils/inde
+ import { createPerformanceLogger, logPerformance, performanceMeasure } from "./performanceLogger.mjs";
+ import { fallbackToHast } from "../../CodeHighlighter/fallbackFormat.mjs";
+ 
++// Compilation identity prevents reuse across compilers and watch rebuilds.
++const deferredCaches = new WeakMap();
++
++function isSerializable(value, ancestors = new Set()) {
++  if (value === null || typeof value === 'string' || typeof value === 'boolean') {
++    return true;
++  }
++  if (typeof value === 'number') {
++    return Number.isFinite(value);
++  }
++  if (typeof value !== 'object' || ancestors.has(value) || Object.getOwnPropertySymbols(value).length) {
++    return false;
++  }
++  const prototype = Object.getPrototypeOf(value);
++  if (!Array.isArray(value) && prototype !== Object.prototype && prototype !== null) {
++    return false;
++  }
++  ancestors.add(value);
++  const supported = Object.entries(Object.getOwnPropertyDescriptors(value)).every(([name, descriptor]) => {
++    if (Array.isArray(value) && name === 'length') {
++      return true;
++    }
++    return descriptor.enumerable && 'value' in descriptor && isSerializable(descriptor.value, ancestors);
++  });
++  ancestors.delete(value);
++  return supported;
++}
++
++function getDeferredCache(context, source, options) {
++  if (!options.deferPrecompute || !context._compilation || !isSerializable(options)) {
++    return undefined;
++  }
++  let entries = deferredCaches.get(context._compilation);
++  if (!entries) {
++    entries = new Map();
++    deferredCaches.set(context._compilation, entries);
++  }
++  return { entries, key: JSON.stringify([context.resourcePath, source, options]) };
++}
++
++function registerDependencies(context, dependencies) {
++  dependencies.forEach(dependency => {
++    context.addDependency(dependency.startsWith('file://') ? fileURLToPath(dependency) : dependency);
++  });
++}
++
+ /**
+  * Extracts a string array from structured options data.
+  * Handles the parser's array format: [[element1, element2, ...]]
+@@ -115,6 +161,14 @@ export async function loadPrecomputedCodeHighlighter(source) {
+   const callback = this.async();
+   this.cacheable();
+   const options = this.getOptions();
++  const isDeferredRequest = this.resourceQuery === '?mui-deferred-precompute';
++  const deferredCache = getDeferredCache(this, source, options);
++  const cached = isDeferredRequest ? deferredCache?.entries.get(deferredCache.key) : undefined;
++  if (cached) {
++    registerDependencies(this, cached.dependencies);
++    callback(null, cached.source);
++    return;
++  }
+   const performanceNotableMs = options.performance?.notableMs ?? 100;
+   const performanceShowWrapperMeasures = options.performance?.showWrapperMeasures ?? false;
+   const relativePath = path.relative(this.rootContext || process.cwd(), this.resourcePath);
+@@ -276,9 +330,13 @@ export async function loadPrecomputedCodeHighlighter(source) {
+       measure: 'Complete Variants Loading'
+     }, [functionName, relativePath], true);
+     const deferredRequest = `./${path.basename(this.resourcePath)}?mui-deferred-precompute`;
+-    const isDeferredRequest = this.resourceQuery === '?mui-deferred-precompute';
++    const deferredSource = isDeferredRequest || deferredCache ? `export default ${JSON.stringify(variantData)};` : undefined;
++    registerDependencies(this, allDependencies);
++    if (deferredCache) {
++      deferredCache.entries.set(deferredCache.key, { source: deferredSource, dependencies: allDependencies });
++    }
+     if (isDeferredRequest) {
+-      callback(null, `export default ${JSON.stringify(variantData)};`);
++      callback(null, deferredSource);
+       return;
+     }
+ 
+@@ -293,13 +351,6 @@ export async function loadPrecomputedCodeHighlighter(source) {
+       measure: 'Precompute Replacement'
+     }, [functionName, relativePath]);
+ 
+-    // Add all dependencies to webpack's watch list
+-    allDependencies.forEach(dep => {
+-      // Convert file:// URLs to proper file system paths for webpack's dependency tracking
+-      // Using fileURLToPath handles Windows drive letters correctly (e.g., file:///C:/... → C:\...)
+-      this.addDependency(dep.startsWith('file://') ? fileURLToPath(dep) : dep);
+-    });
+-
+     // log any pending performance entries before completing
+     observer?.takeRecords()?.forEach(entry => logPerformance(entry, performanceNotableMs, performanceShowWrapperMeasures, relativePath));
+     observer?.disconnect();
+diff --git a/useDemo/exportVariant.d.mts b/useDemo/exportVariant.d.mts
+index f2ccb993de2e97ed06acb6b75fe5ae70ccb3a0b8..5b8713538a668becb0a4facdccc296dbafe02abd 100644
+--- a/useDemo/exportVariant.d.mts
++++ b/useDemo/exportVariant.d.mts
+@@ -180,7 +180,7 @@ export interface ExportConfig {
+    *   return { [packageName]: 'latest' };
+    * }
+    */
+-  resolveDependencies?: (packageName: string, envVars?: Record<string, string>) => Record<string, string>;
++  resolveDependencies?: (packageName: string, envVars?: Record<string, string>, importedModules?: string[]) => Record<string, string>;
+ }
+ /**
+  * Export a variant as a standalone project with metadata files properly scoped
+diff --git a/useDemo/exportVariant.mjs b/useDemo/exportVariant.mjs
+index 77c0f79191a8135cc21af71df277a903fcbd565b..fb0cc3d4e85aa717e750d7a8110a2f67a20c1053 100644
+--- a/useDemo/exportVariant.mjs
++++ b/useDemo/exportVariant.mjs
+@@ -286,18 +286,14 @@ export function exportVariant(variantCode, config = {}) {
+ 
+   // Check if they're providing their own framework
+   const isFramework = 'frameworkFiles' in config;
+-  const externalPackages = externalsToPackages(processedVariantCode.externals || []);
++  const importedModules = processedVariantCode.externals || [];
++  const externalPackages = externalsToPackages(importedModules);
+   const variantDeps = Object.keys(externalPackages).reduce((acc, pkg) => {
+-    // Check if we have a specific version for this package first
+-    if (versions[pkg]) {
+-      acc[pkg] = versions[pkg];
+-    } else if (resolveDependencies) {
+-      const resolvedDeps = resolveDependencies(pkg);
+-      Object.assign(acc, resolvedDeps);
+-    } else {
+-      // Simple fallback: just use 'latest' for each package
+-      acc[pkg] = 'latest';
+-    }
++    // Pinned versions still need adapter and product peer dependencies.
++    const packageImports = importedModules.filter(name => name === pkg || name.startsWith(`${pkg}/`));
++    const resolvedDeps = resolveDependencies?.(pkg, undefined, packageImports) ?? {};
++    Object.assign(acc, resolvedDeps);
++    acc[pkg] = versions[pkg] ?? resolvedDeps[pkg] ?? 'latest';
+     return acc;
+   }, {});
+ 
