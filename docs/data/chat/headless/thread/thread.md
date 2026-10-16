@@ -12,7 +12,7 @@ githubLabel: 'scope: chat'
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-{{"demo": "../examples/two-pane-inbox/TwoPaneInbox.js", "hideToolbar": true}}
+{{"component": "file://../examples/two-pane-inbox/demos/two-pane-inbox/index.ts", "hideToolbar": true}}
 
 ```tsx
 import {

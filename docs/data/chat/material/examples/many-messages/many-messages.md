@@ -19,7 +19,7 @@ The Chat Box supports long message histories with auto-scroll to the latest mess
 
 The demo below shows the Chat Box rendering thirty grouped messages with auto-scroll on load:
 
-{{"demo": "ManyMessages.js", "bg": "inline"}}
+{{"component": "file://./demos/many-messages/index.ts", "bg": "inline"}}
 
 ## API
 

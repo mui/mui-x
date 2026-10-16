@@ -1,0 +1,30 @@
+import * as React from 'react';
+import type { GridRowSelectionModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+
+export default function ControlledSelectionGrid() {
+  // @focus-start @padding 1
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 10,
+    maxColumns: 6,
+  });
+
+  const [rowSelectionModel, setRowSelectionModel] =
+    React.useState<GridRowSelectionModel>({ type: 'include', ids: new Set() });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        checkboxSelection
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          setRowSelectionModel(newRowSelectionModel);
+        }}
+        rowSelectionModel={rowSelectionModel}
+        {...data}
+      />
+    </div>
+  );
+  // @focus-end
+}

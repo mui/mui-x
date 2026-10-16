@@ -10,35 +10,35 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 ## SimpleLineChart
 
-{{"demo": "SimpleLineChart.js"}}
+{{"component": "file://./demos/simple-line-chart/index.ts"}}
 
 ## TinyLineChart
 
-{{"demo": "TinyLineChart.js"}}
+{{"component": "file://./demos/tiny-line-chart/index.ts"}}
 
 ## DashedLineChart
 
-{{"demo": "DashedLineChart.js"}}
+{{"component": "file://./demos/dashed-line-chart/index.ts"}}
 
 ## BiaxialLineChart
 
-{{"demo": "BiaxialLineChart.js"}}
+{{"component": "file://./demos/biaxial-line-chart/index.ts"}}
 
 ## LineChartWithReferenceLines
 
-{{"demo": "LineChartWithReferenceLines.js"}}
+{{"component": "file://./demos/line-chart-with-reference-lines/index.ts"}}
 
 ## LineChartConnectNulls
 
-{{"demo": "LineChartConnectNulls.js"}}
+{{"component": "file://./demos/line-chart-connect-nulls/index.ts"}}
 
 ## CustomLabelLineChart
 
-{{"demo": "CustomLabelChart.js"}}
+{{"component": "file://./demos/custom-label-chart/index.ts"}}
 
 ## Line chart with live data
 
-{{"demo": "LiveLineChartNoSnap.js"}}
+{{"component": "file://./demos/live-line-chart-no-snap/index.ts"}}
 
 ## Line with forecast
 
@@ -52,14 +52,14 @@ Set the `slots.line` prop to a custom component that renders the default line tw
 
 An uncertainty area illustrates the forecast uncertainty.
 
-{{"demo": "LineWithUncertaintyArea.js"}}
+{{"component": "file://./demos/line-with-uncertainty-area/index.ts"}}
 
 ## CustomLineMarks
 
 Using a shape other than `"circle"` renders a `<path />` instead of a `<circle />` for mark elements.
 That change can reduce rendering performance (for example, around 50 ms to render 1,000 marks).
 
-{{"demo": "CustomLineMarks.js"}}
+{{"component": "file://./demos/custom-line-marks/index.ts"}}
 
 ## Larger interaction area
 
@@ -70,4 +70,4 @@ Use two paths: a thin visible one for the line and a wider invisible one for poi
 
 When lines cross, the highlighted series is the last one defined in the slots, not necessarily the one closest to the pointer.
 
-{{"demo": "LargerHighlightLineNoSnap.js"}}
+{{"component": "file://./demos/larger-highlight-line-no-snap/index.ts"}}

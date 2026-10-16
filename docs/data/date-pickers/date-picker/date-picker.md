@@ -13,7 +13,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Basic usage
 
-{{"demo": "BasicDatePicker.js"}}
+{{"component": "file://./demos/basic-date-picker/index.ts"}}
 
 ## Component composition
 
@@ -31,7 +31,7 @@ Some [DateField props](/x/api/date-pickers/date-field/#props) are not available 
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "DatePickerValue.js"}}
+{{"component": "file://./demos/date-picker-value/index.ts"}}
 
 :::info
 
@@ -55,7 +55,7 @@ The component is available in four variants:
 
 - The `StaticDatePicker` component which renders without the popover/modal and field.
 
-{{"demo": "ResponsiveDatePickers.js"}}
+{{"component": "file://./demos/responsive-date-pickers/index.ts"}}
 
 By default, the `DatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
@@ -78,7 +78,7 @@ See the [Fields documentation](/x/react-date-pickers/fields/) for more details.
 
 The component supports the `disabled`, `readOnly` and `name` form props:
 
-{{"demo": "FormPropsDatePickers.js"}}
+{{"component": "file://./demos/form-props-date-pickers/index.ts"}}
 
 ## Views
 
@@ -87,12 +87,12 @@ The component supports three views: `day`, `month`, and `year`.
 By default, the `day` and `year` views are enabled.
 Use the `views` prop to change this behavior:
 
-{{"demo": "DatePickerViews.js"}}
+{{"component": "file://./demos/date-picker-views/index.ts"}}
 
 By default, the component renders the `day` view on mount.
 Use the `openTo` prop to change this behavior:
 
-{{"demo": "DatePickerOpenTo.js"}}
+{{"component": "file://./demos/date-picker-open-to/index.ts"}}
 
 :::success
 The views will appear in the order defined by the `views` array.
@@ -104,14 +104,14 @@ If the view defined in `openTo` is not the first view, then the views before wil
 By default, years are displayed in ascending order, chronologically from the minimum year to the maximum.
 Set the `yearsOrder` prop to `desc` to show the years in descending order.
 
-{{"demo": "DatePickerYearsOrder.js"}}
+{{"component": "file://./demos/date-picker-years-order/index.ts"}}
 
 ## Landscape orientation
 
 By default, the Date Picker component automatically sets the orientation based on the `window.orientation` value.
 You can force a specific orientation using the `orientation` prop:
 
-{{"demo": "StaticDatePickerLandscape.js", "bg": true}}
+{{"component": "file://./demos/static-date-picker-landscape/index.ts", "bg": true}}
 
 :::info
 You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
@@ -121,13 +121,13 @@ You can find more information about the layout customization in the [custom layo
 
 You can show a helper text with the date format accepted:
 
-{{"demo": "HelperText.js"}}
+{{"component": "file://./demos/helper-text/index.ts"}}
 
 ## Clearing the value
 
 You can enable the clearable behavior:
 
-{{"demo": "ClearableProp.js"}}
+{{"component": "file://./demos/clearable-prop/index.ts"}}
 
 :::info
 See [Field components—Clearable behavior](/x/react-date-pickers/fields/#clearable-behavior) for more details.
@@ -145,4 +145,4 @@ See the [Validation](/x/react-date-pickers/validation/) documentation page for m
 
 You can check out multiple examples of how to customize the date pickers and their subcomponents.
 
-{{"demo": "CustomizationExamplesNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/customization-examples-no-snap/index.ts", "hideToolbar": true, "bg": "inline"}}

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
+
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useDrawingArea, useChartsLayerContainerRef } from '@mui/x-charts/hooks';

@@ -11,7 +11,7 @@ import { addDays } from 'date-fns/addDays';
 import { addWeeks } from 'date-fns/addWeeks';
 import { addMonths } from 'date-fns/addMonths';
 import { addYears } from 'date-fns/addYears';
-import {
+import type {
   SchedulerEvent,
   SchedulerEventId,
   SchedulerResource,

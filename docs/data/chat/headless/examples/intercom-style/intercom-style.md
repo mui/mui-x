@@ -20,7 +20,7 @@ Customize the headless primitives to produce a compact Intercom-style support wi
 
 The demo below shows the full Intercom-style widget assembled from the headless primitives:
 
-{{"demo": "IntercomStyleChat.js"}}
+{{"component": "file://./demos/intercom-style-chat/index.ts"}}
 
 ## Implementing the widget shell
 

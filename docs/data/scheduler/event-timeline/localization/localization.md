@@ -20,7 +20,7 @@ Use the `localeText` prop to pass in your own text and translations.
 You can find all supported translation keys in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts) on GitHub.
 The demo below customizes the resource column header and loading text.
 
-{{"demo": "CustomLocaleTextTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-locale-text-timeline/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::success
 You can also customize the resource column header using the [`resourceColumnLabel`](/x/react-scheduler/event-timeline/resources/#resource-column-label) prop.
@@ -88,7 +88,7 @@ import { frFR } from '@mui/x-scheduler/locales';
 />;
 ```
 
-{{"demo": "LocaleTextTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/locale-text-timeline/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Date locale
 
@@ -127,13 +127,13 @@ import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-pr
 <EventTimelinePremium dateLocale={fr} />;
 ```
 
-{{"demo": "DateLocaleTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-locale-timeline/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Supported locales
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-scheduler/src/locales) on GitHub.
 
-{{"demo": "SchedulerLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/scheduler-localisation-table-no-snap/index.ts", "hideToolbar": true, "bg": "inline"}}
 
 To create your own translation or customize the English text, copy this file to your project, make any needed changes, and import the locale from there.
 These translations follow the [Localization strategy](/material-ui/guides/localization/) of the whole library.

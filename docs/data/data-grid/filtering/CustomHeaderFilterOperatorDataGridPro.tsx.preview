@@ -1,1 +1,0 @@
-<DataGridPro {...data} loading={loading} columns={columns} headerFilters />

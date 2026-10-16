@@ -16,7 +16,7 @@ packageName: '@mui/x-tree-view'
 Use the `isItemEditable` prop to enable editing.
 If set to `true`, this prop enables label editing on all items as shown in the demo below:
 
-{{"demo": "LabelEditingAllItems.js"}}
+{{"component": "file://./demos/label-editing-all-items/index.ts"}}
 
 :::success
 If an item is editable, the editing state can be toggled by double clicking on it, or by pressing <kbd class="key">Enter</kbd> on the keyboard when the item is in focus.
@@ -31,44 +31,44 @@ Pressing <kbd class="key">Esc</kbd> will cancel the action and restore the item 
 
 If you pass a method to `isItemEditable`, then only the items for which the method returns `true` will be editable:
 
-{{"demo": "LabelEditingSomeItems.js"}}
+{{"component": "file://./demos/label-editing-some-items/index.ts"}}
 
 ### Limit editing to leaves
 
 You can limit editing to just the leaves of the tree, as shown below:
 
-{{"demo": "EditLeaves.js"}}
+{{"component": "file://./demos/edit-leaves/index.ts"}}
 
 ## Track item label change
 
 Use the `onItemLabelChange` prop to trigger an action when an item label changes:
 
-{{"demo": "EditingCallback.js"}}
+{{"component": "file://./demos/editing-callback/index.ts"}}
 
 ## Change the default behavior
 
 By default, blurring a `TreeItem` saves the new value if there is one.
 To modify this behavior, use the `slotProps` on the `TreeItem` as shown below:
 
-{{"demo": "CustomBehavior.js"}}
+{{"component": "file://./demos/custom-behavior/index.ts"}}
 
 ## Validation
 
 You can override the event handlers of the `labelInput` and implement a custom validation logic using the interaction methods from `useTreeItemUtils()`:
 
-{{"demo": "Validation.js"}}
+{{"component": "file://./demos/validation/index.ts"}}
 
 ## Enable editing using only icons
 
 The demo below shows how to completely override the editing behavior and implement it using icons:
 
-{{"demo": "EditWithIcons.js"}}
+{{"component": "file://./demos/edit-with-icons/index.ts"}}
 
 ## Create a custom labelInput
 
 The demo below shows how to use a different component in the `labelInput` slot:
 
-{{"demo": "CustomLabelInput.js"}}
+{{"component": "file://./demos/custom-label-input/index.ts"}}
 
 ## Imperative API
 
@@ -102,7 +102,7 @@ apiRef.current.updateItemLabel(
 );
 ```
 
-{{"demo": "ApiMethodUpdateItemLabel.js"}}
+{{"component": "file://./demos/api-method-update-item-label/index.ts"}}
 
 ### Change edition mode of an item
 
@@ -115,7 +115,7 @@ apiRef.current.setEditedItem(
 );
 ```
 
-{{"demo": "ApiMethodSetEditedItem.js"}}
+{{"component": "file://./demos/api-method-set-edited-item/index.ts"}}
 
 ## Editing lazy loaded children
 

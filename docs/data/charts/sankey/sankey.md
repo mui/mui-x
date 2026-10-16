@@ -15,7 +15,7 @@ Links connect sources to targets, and link width shows how large each flow is.
 
 The demo below shows flow from revenue to net income in billions USD.
 
-{{"demo": "SankeyOverview.js"}}
+{{"component": "file://./demos/sankey-overview/index.ts"}}
 
 ## Basics
 
@@ -28,13 +28,13 @@ Provide a data structure with `nodes` and `links`:
 
 If a node appears in `links` but not in `nodes`, the chart creates it automatically and uses its ID as the label.
 
-{{"demo": "SankeyBasicDataStructure.js"}}
+{{"component": "file://./demos/sankey-basic-data-structure/index.ts"}}
 
 ### Explicit nodes
 
 When you define nodes in the `nodes` array, you can set labels and colors for each.
 
-{{"demo": "SankeyDetailedDataStructure.js"}}
+{{"component": "file://./demos/sankey-detailed-data-structure/index.ts"}}
 
 ## Styling
 
@@ -42,13 +42,13 @@ When you define nodes in the `nodes` array, you can set labels and colors for ea
 
 Use the `nodeOptions` prop to apply default styles to all nodes.
 
-{{"demo": "SankeyNodeStyling.js"}}
+{{"component": "file://./demos/sankey-node-styling/index.ts"}}
 
 ### Default link styles
 
 Use the `linkOptions` prop to apply default styles to all links.
 
-{{"demo": "SankeyLinkStyling.js"}}
+{{"component": "file://./demos/sankey-link-styling/index.ts"}}
 
 ### Link color keywords
 
@@ -56,7 +56,7 @@ Link colors can use `'source'` to inherit from the source node or `'target'` to 
 
 This works for individual link colors and for the default in `linkOptions`.
 
-{{"demo": "SankeyLinkKeywordColors.js"}}
+{{"component": "file://./demos/sankey-link-keyword-colors/index.ts"}}
 
 ### Node alignment
 
@@ -73,7 +73,7 @@ In the demo below:
 - Node E can sit in the first or second column
 - Node F can sit in columns 4, 5, or 6
 
-{{"demo": "SankeyNodeAlignment.js"}}
+{{"component": "file://./demos/sankey-node-alignment/index.ts"}}
 
 ### Curve correction
 
@@ -82,7 +82,7 @@ The effect depends on the graph layout and chart height.
 Higher values make links look thicker; lower values make them look thinner.
 The default is `10`.
 
-{{"demo": "SankeyCurveCorrection.js"}}
+{{"component": "file://./demos/sankey-curve-correction/index.ts"}}
 
 ## Value formatting
 
@@ -92,7 +92,7 @@ The context includes `location` (`'tooltip'` or `'label'`), `type` (`'node'` or 
 
 The demo below adds units to values and shows "total" when the pointer is over a node.
 
-{{"demo": "SankeyValueFormatter.js"}}
+{{"component": "file://./demos/sankey-value-formatter/index.ts"}}
 
 ## Sorting
 
@@ -109,7 +109,7 @@ It accepts:
 - `'auto'` (default): automatic sorting to reduce link crossings
 - `'fixed'`: keep the order from the `nodes` array
 
-{{"demo": "SankeyNodeSorting.js"}}
+{{"component": "file://./demos/sankey-node-sorting/index.ts"}}
 
 ### Link sorting
 
@@ -120,14 +120,14 @@ It accepts:
 - `'auto'` (default): automatic sorting to reduce link crossings
 - `'fixed'`: keep the order from the `links` array
 
-{{"demo": "SankeyLinkSorting.js"}}
+{{"component": "file://./demos/sankey-link-sorting/index.ts"}}
 
 ## Layout iterations
 
 The `iterations` prop sets how many times the layout algorithm runs.
 More iterations usually improve the layout but take longer.
 
-{{"demo": "SankeyIterations.js"}}
+{{"component": "file://./demos/sankey-iterations/index.ts"}}
 
 ## Interaction
 
@@ -137,14 +137,14 @@ Use the `onNodeClick` and `onLinkClick` props to handle clicks on nodes and link
 Each callback receives the mouse event and an identifier object (`SankeyNodeIdentifierWithData` or `SankeyLinkIdentifierWithData`) with details about the clicked item.
 Use `SankeyItemIdentifierWithData` when you handle both in one callback.
 
-{{"demo": "SankeyClick.js"}}
+{{"component": "file://./demos/sankey-click/index.ts"}}
 
 ### Highlighting
 
 You can highlight nodes and links by hovering or programmatically.
 When an item is highlighted, you can fade others to improve focus.
 
-{{"demo": "SankeyHighlighting.js"}}
+{{"component": "file://./demos/sankey-highlighting/index.ts"}}
 
 Highlighting is configured separately for nodes and links.
 
@@ -214,7 +214,7 @@ For links:
 
 The `onHighlightChange` callback runs when the highlighted item changes (from user interaction or programmatic updates).
 
-{{"demo": "SankeyControlledHighlight.js"}}
+{{"component": "file://./demos/sankey-controlled-highlight/index.ts"}}
 
 ## Tooltip
 

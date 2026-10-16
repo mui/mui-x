@@ -14,7 +14,7 @@ Line charts work well when you want to show how values change over a continuous 
 They emphasize trends, patterns, and fluctuations, so they are useful for exploring relationships, spotting cycles, or tracking performance over time.
 Each line usually represents one series, so you can compare multiple variables or groups at a glance.
 
-{{"demo": "LineOverview.js"}}
+{{"component": "file://./demos/line-overview/index.ts"}}
 
 ## Basics
 
@@ -29,7 +29,7 @@ The axis can use any `scaleType`, and its `data` should have the same length as 
 When you omit the `xAxis` prop entirely, `LineChart` supplies a default x-axis with `scaleType='point'`.
 Its `data` is `[0, 1, 2, …]` with length matching the longest series, so each y-value pairs with its index in the series `data` array.
 
-{{"demo": "BasicLineChart.js"}}
+{{"component": "file://./demos/basic-line-chart/index.ts"}}
 
 ### Using a dataset
 
@@ -41,13 +41,13 @@ For example, `xAxis={[{ dataKey: 'x' }]}` or `series={[{ dataKey: 'y' }]}`.
 
 The demo below plots the evolution of world electricity production by source.
 
-{{"demo": "LineDataset.js"}}
+{{"component": "file://./demos/line-dataset/index.ts"}}
 
 ### Area
 
 Set the series `area` property to `true` to fill the area under the line.
 
-{{"demo": "BasicArea.js"}}
+{{"component": "file://./demos/basic-area/index.ts"}}
 
 ### Marks
 
@@ -63,7 +63,7 @@ The `'start' | 'end'` options render the highlight marks instead of the regular 
 As a result, while the pointer highlights a value, the start/end mark is replaced by the highlighted one.
 :::
 
-{{"demo": "LineMarkShape.js", "bg": "outline"}}
+{{"component": "file://./demos/line-mark-shape/index.ts", "bg": "outline"}}
 
 ### Log scale
 
@@ -81,7 +81,7 @@ By default, they are stacked in the order you defined them, with positive values
 
 See [Stacking](/x/react-charts/stacking/) for more details.
 
-{{"demo": "StackedAreas.js"}}
+{{"component": "file://./demos/stacked-areas/index.ts"}}
 
 ### Axis domain
 
@@ -89,7 +89,7 @@ By default, the x-axis domain limit for line charts is set to `'strict'`, meanin
 For other chart types, axes round their limits to match human-readable values (for example, data ranging from 2 to 195 displays values from 0 to 200).
 This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
 
-{{"demo": "LineDefaultDomainLimit.js"}}
+{{"component": "file://./demos/line-default-domain-limit/index.ts"}}
 
 ## Partial data
 
@@ -101,7 +101,7 @@ Use `null` values when you have partial data or series that start at different p
 By default, the tooltip omits series that have no value at the hovered position.
 To show a tooltip for missing values, use `valueFormatter` to return a string when the value is `null` or `undefined`.
 
-{{"demo": "DifferentLength.js"}}
+{{"component": "file://./demos/different-length/index.ts"}}
 
 :::info
 When the series `data` array is shorter than the axis `data`, values outside the series length are `undefined`, not `null`.
@@ -126,7 +126,7 @@ Set the `connectNulls` property on a line series to continue the curve across po
 This links two segments with a gap of `null` values in between.
 The curve is not extrapolated before the first non-null point or after the last one.
 
-{{"demo": "ConnectNulls.js"}}
+{{"component": "file://./demos/connect-nulls/index.ts"}}
 
 ## Click event
 
@@ -146,7 +146,7 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "LineClick.js"}}
+{{"component": "file://./demos/line-click/index.ts"}}
 
 :::info
 The `event` differs slightly between `onAxisClick` and the others:
@@ -185,7 +185,7 @@ For line series (without area), it finds the series whose curve is closest to th
 
 This uses the same curve interpolation as the rendered line (for example, `monotoneX`, `catmullRom`), so the hit detection matches the visual shape.
 
-{{"demo": "LinePointerInteraction.js"}}
+{{"component": "file://./demos/line-pointer-interaction/index.ts"}}
 
 ### Highlight
 
@@ -202,7 +202,7 @@ You can add a grid in the background of the chart with the `grid` prop.
 
 See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
-{{"demo": "GridDemo.js"}}
+{{"component": "file://./demos/grid-demo/index.ts"}}
 
 ### Color scale
 
@@ -217,7 +217,7 @@ Line charts use the following, in order of priority:
 
 See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
 
-{{"demo": "ColorScale.js"}}
+{{"component": "file://./demos/color-scale/index.ts"}}
 
 :::warning
 Ordinal color config is not yet supported for line charts.
@@ -232,7 +232,7 @@ Use the select in the demo below to compare how each value renders on the same d
 
 You can set `curve` per series, so different series can use different interpolations.
 
-{{"demo": "InterpolationDemo.js", "hideToolbar": true}}
+{{"component": "file://./demos/interpolation-demo/index.ts", "hideToolbar": true}}
 
 #### Expanding steps
 
@@ -240,7 +240,7 @@ For step interpolations (when `curve` is set to `'step'`, `'stepBefore'`, or `'s
 
 Use the `strictStepCurve` series property to turn off this behavior.
 
-{{"demo": "ExpandingStep.js"}}
+{{"component": "file://./demos/expanding-step/index.ts"}}
 
 ### Baseline
 
@@ -254,7 +254,7 @@ You can also set `baseline` to a number to fix the baseline at a specific value.
 Do not use `baseline` with stacked areas; the result will not match expectations.
 :::
 
-{{"demo": "AreaBaseline.js"}}
+{{"component": "file://./demos/area-baseline/index.ts"}}
 
 ### Optimization
 
@@ -267,7 +267,7 @@ Or you can display a subset of the marks by providing a callback to `showMarks`.
 This demo shows one mark for values with even index.
 The highlighted point always shows a mark, whether its index is even or odd.
 
-{{"demo": "MarkOptimization.js"}}
+{{"component": "file://./demos/mark-optimization/index.ts"}}
 
 For large datasets, set the `sampling` prop on `LineChartPro` to reduce the line when zoomed out,
 with a choice of algorithms (`'m4'`, `'minmax'`, `'lttb'`). See [Charts—Performance](/x/react-charts/performance/#sampling)
@@ -302,11 +302,11 @@ The gradient is defined as a child of the chart (`myGradient` referenced in `fil
 />
 ```
 
-{{"demo": "CSSCustomization.js"}}
+{{"component": "file://./demos/css-customization/index.ts"}}
 
 The next example shows how to apply a dashed stroke to the chart line, legend mark, and tooltip mark for each series using the `[data-series]` attribute selector.
 
-{{"demo": "StyledLineChart.js"}}
+{{"component": "file://./demos/styled-line-chart/index.ts"}}
 
 #### Mark size
 
@@ -316,7 +316,7 @@ The default `'circle'` shape renders an SVG `circle` element, so use the `r` (ra
 The other shapes render an SVG `path` element that `r` does not affect.
 For those, use the `scale` property, which resizes the mark around its own center.
 
-{{"demo": "MarkSize.js"}}
+{{"component": "file://./demos/mark-size/index.ts"}}
 
 ## Animation
 
@@ -340,7 +340,7 @@ Otherwise the chart cannot tell whether you are updating, removing, or adding a 
 </ChartsContainer>
 ```
 
-{{"demo": "LineAnimation.js"}}
+{{"component": "file://./demos/line-animation/index.ts"}}
 
 ## Composition
 

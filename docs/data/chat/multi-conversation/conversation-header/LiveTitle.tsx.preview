@@ -1,9 +1,0 @@
-<ScopedChat conversations={conversations} activeConversationId="crit">
-  <ChatConversation>
-    <ChatConversationHeader>
-      <ChatConversationHeaderInfo>
-        <CustomConversationTitle />
-      </ChatConversationHeaderInfo>
-    </ChatConversationHeader>
-  </ChatConversation>
-</ScopedChat>

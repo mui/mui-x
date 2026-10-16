@@ -18,7 +18,7 @@ The `ChatBox` component renders with seeded conversation state from `@mui/x-chat
 
 The demo below shows the resulting `ChatBox` surface:
 
-{{"demo": "BasicAiChat.js", "bg": "inline"}}
+{{"component": "file://./demos/basic-ai-chat/index.ts", "bg": "inline"}}
 
 ## Seeding initial state
 

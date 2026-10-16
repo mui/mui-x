@@ -18,7 +18,7 @@ MUI X Chat ships each region as a themed component built with `styled()` and Ma
 
 The following demo shows the thread in action:
 
-{{"demo": "../examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
+{{"component": "file://../examples/basic-ai-chat/demos/basic-ai-chat/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Component anatomy
 
@@ -78,7 +78,7 @@ Use `hasConversation` to hide action buttons or show a placeholder when no conve
 
 The most targeted customization is to replace the element type on one slot while keeping everything else:
 
-{{"demo": "GradientHeader.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/gradient-header/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Using ownerState in a custom title
 
@@ -187,7 +187,7 @@ If no display name or avatar resolves for a message author, the built-in thread 
 To customize the bubble, wrap `ChatMessageContent` and replace only its inner `bubble` slot.
 This preserves part iteration, markdown rendering, tool-call renderers, and source citations:
 
-{{"demo": "PaperBubble.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/paper-bubble/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Forward `ref` and spread `...props` before your overrides so the wrapping pattern does not silently discard required props.
 
@@ -258,14 +258,14 @@ Use `slotProps` on `ChatBox` for light prop-only overrides that do not require a
 
 The `isStreaming` flag lets you replace the send icon with a stop icon while a response is in progress:
 
-{{"demo": "AdaptiveSendButton.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/adaptive-send-button/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Accessing message state in custom children
 
 Custom children placed inside `ChatMessage` receive the message's `ownerState` through the slot system.
 When you need to read message state (role, streaming status, error) inside a deeply nested component, define a custom slot and accept `ownerState` as a prop:
 
-{{"demo": "BubbleWithStatus.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/bubble-with-status/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar`—the same fields listed in the message ownerState table above.
 
@@ -279,7 +279,7 @@ When `ChatBox` slots are not enough—for example when you want to add a pinned 
 The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults.
 It inserts a custom warning banner between the header and the message list:
 
-{{"demo": "ThreadRecomposition.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/thread-recomposition/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Wrap your custom thread with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter.
 

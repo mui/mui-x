@@ -18,11 +18,11 @@ components: ChatConversationList
 
 Toggle the list variant, conversation count, and unread badges:
 
-{{"demo": "ChatConversationListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-conversation-list-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The example below shows a complete two-pane inbox using controlled state:
 
-{{"demo": "../../material/examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://../../material/examples/multi-conversation/demos/multi-conversation/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Component anatomy
 
@@ -63,7 +63,7 @@ ChatConversationList              <- scrolling listbox (role="listbox")
 
 When `variant="compact"`, the root carries the `.MuiChatConversationList-compact` class hook, so you can target the compact layout from a theme override or `sx`.
 
-{{"demo": "ConversationListVariants.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/conversation-list-variants/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Slot reference
 
@@ -306,7 +306,7 @@ The `role="option"` and `aria-selected` attributes are set automatically before 
 
 The `conversation` object in `ownerState` lets you derive everything you need to render a rich row without additional data fetching or selectors. The demo below builds a full item renderer that shows an avatar with initials, a bold title for unread conversations, a truncated preview, a human-readable timestamp, and a count badge:
 
-{{"demo": "ConversationListFullCustomRow.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/conversation-list-full-custom-row/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 A small helper turns the ISO `lastMessageAt` field into a relative label:
 

@@ -19,7 +19,7 @@ You don't need to catch errors inside adapter methods. The runtime handles them 
 
 The demo below lets you toggle a message error and observe the `ChatMessageError` component rendered under the failed message:
 
-{{"demo": "ChatMessageErrorPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-message-error-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Error propagation
 
@@ -49,7 +49,7 @@ Use the `onError` prop on `ChatBox` to handle errors at the application level:
 
 The demo below shows the default error UI surfaced by `ChatBox` when `sendMessage()` fails:
 
-{{"demo": "../../material/examples/error-state/ErrorState.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/examples/error-state/demos/error-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Error object structure
 
@@ -133,7 +133,7 @@ function RetryButton({ messageId }: { messageId: string }) {
 
 The demo below fails the first send attempt, then succeeds when you click **Retry**:
 
-{{"demo": "RetryRecovery.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://./demos/retry-recovery/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Error from adapter methods
 

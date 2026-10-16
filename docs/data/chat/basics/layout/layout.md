@@ -50,7 +50,7 @@ ChatLayout
 The default composition renders the conversation list and the active thread side by side.
 Select a conversation in the sidebar to switch the thread:
 
-{{"demo": "LayoutTwoPaneStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/layout-two-pane-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Sizing the panes
 
@@ -73,7 +73,7 @@ Each pane slot receives a `pane` owner state (`'conversations'` or `'thread'`), 
 When your application manages conversations externally, render only the thread pane inside `ChatLayout`.
 The demo below keeps the provider, message list, and composer but omits the conversation pane:
 
-{{"demo": "LayoutThreadOnlyStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/layout-thread-only-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 In thread-only mode the active conversation fills the entire `ChatLayout` container.
 
@@ -140,7 +140,7 @@ function CustomThread() {
 }
 ```
 
-{{"demo": "LayoutRecomposedStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/layout-recomposed-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Wrap `CustomThread` with a [`ChatProvider`](/x/react-chat/headless/) from `@mui/x-chat/headless` to wire runtime state to your adapter.
 
@@ -174,7 +174,7 @@ Drag the slider below to switch the same composition between:
 
 The demo below keeps the logic explicit so you can swap it for route-based navigation, a drawer, or any other responsive pattern:
 
-{{"demo": "LayoutResponsiveStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/layout-responsive-standalone/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When collapsing to a single pane, keep the navigation accessible: label the conversation list (for example `aria-label="Conversations"`) and give the narrow-mode back control an explicit label such as `aria-label="Back to conversations"`, as the demo above does.
 

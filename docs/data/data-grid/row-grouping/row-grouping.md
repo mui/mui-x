@@ -10,7 +10,7 @@ The Data Grid Premium provides a row grouping feature to create subsets of rows 
 
 For example, in the demo below, movies are grouped based on their respective values in the **Company** column—try clicking the **>** on the left side of a row group to expand it:
 
-{{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-basic-example/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 This document covers client-side implementation.
@@ -34,14 +34,14 @@ The model's parameters correspond to the columns to be checked for repeating val
 
 This example creates groups for the **Company** column with nested subgroups based on the **Director** column:
 
-{{"demo": "RowGroupingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-initial-state/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Controlled row grouping
 
 Use the `rowGroupingModel` prop to control the state of the criteria used for grouping.
 You can use the `onRowGroupingModelChange` prop to listen to changes to the grouping criteria and update the prop accordingly.
 
-{{"demo": "RowGroupingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-controlled/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Grouping columns
 
@@ -56,13 +56,13 @@ By default, the Data Grid displays a single column that holds all grouped column
 If there's only one criterion, the name of the grouping column will be the same as that of the grouped column from which it's derived.
 When there are multiple criteria, the grouping column is named **Group**.
 
-{{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-single-grouping-col/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Multiple grouping columns
 
 To display a grouping column for each criterion, set the `rowGroupingColumnMode` prop to `multiple`.
 
-{{"demo": "RowGroupingMultipleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-multiple-grouping-col/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Custom grouping column
 
@@ -73,7 +73,7 @@ You can override any property from the column definition (`GridColDef`) interfac
 For better performance, keep `groupingColDef` prop reference stable between two renders.
 :::
 
-{{"demo": "RowGroupingCustomGroupingColDefObject.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-custom-grouping-col-def-object/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 By default, when using the object format, the properties are applied to all grouping columns.
 This means that if `rowGroupingColumnMode` is set to `multiple`, then all columns will share the same `groupingColDef` properties.
@@ -83,7 +83,7 @@ The callback is called for each grouping column, and it receives the respective 
 
 The demo below illustrates this approach to provide buttons for toggling between different grouping criteria:
 
-{{"demo": "RowGroupingCustomGroupingColDefCallback.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-custom-grouping-col-def-callback/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Grouping rows with custom cell renderer
 
@@ -92,7 +92,7 @@ By default, when rows are grouped by a column that uses a [custom cell component
 For example, the demo below groups together movies based on the values in the **Rating** column.
 Those cells contain a custom component with a star icon, and that same component is used to fill the grouping column.
 
-{{"demo": "RowGroupingCustomCell.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-custom-cell/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 You can opt out of this default behavior by returning `params.value` from the `renderCell()` function—this ensures that the grouping rows will only display the shared value rather than the entire component.
 
@@ -111,7 +111,7 @@ const ratingColDef: GridColDef = {
 };
 ```
 
-{{"demo": "RowGroupingCustomCellDefault.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-custom-cell-default/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Show values for leaves
 
@@ -120,14 +120,14 @@ To display a value in a leaf, provide the `leafField` property to the `groupingC
 
 The demo below uses `leafField` to display values from the **Title** column in the leaves.
 
-{{"demo": "RowGroupingLeafWithValue.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-leaf-with-value/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Hide descendant count
 
 By default, row group cells display the number of descendant rows they contain, in parentheses.
 Use the `hideDescendantCount` property of the `groupingColDef` to hide this number.
 
-{{"demo": "RowGroupingHideDescendantCount.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-hide-descendant-count/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Hide grouped columns
 
@@ -183,7 +183,7 @@ return (
 );
 ```
 
-{{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-use-keep-grouped-columns-hidden/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Disable row grouping
 
@@ -192,7 +192,7 @@ return (
 To disable row grouping for all columns, set the `disableRowGrouping` prop to `true`.
 This disables all features related to row grouping, unless a model is provided, in which case row grouping is set to read-only mode as described in [Grouping non-groupable columns programmatically](#grouping-non-groupable-columns-programmatically).
 
-{{"demo": "RowGroupingDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-disabled/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### For specific columns
 
@@ -201,7 +201,7 @@ To disable grouping for a specific column, set the `groupable` property on its `
 In the example below, the **Director** column cannot be grouped, even though there are repeating values.
 (The **Title** and **Gross** columns cannot be grouped in any examples in this doc because there are no repeating values.)
 
-{{"demo": "RowGroupingColDefCanBeGrouped.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-col-def-can-be-grouped/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Grouping non-groupable columns programmatically
 
@@ -213,7 +213,7 @@ To apply row grouping programmatically on non-groupable columns (columns with `g
 
 In the following example, the **Company** column is not groupable through the interface, but the `rowGroupingModel` prop is passed to generate a read-only row group.
 
-{{"demo": "RowGroupingReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-read-only/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Using groupingValueGetter() for complex grouping value
 
@@ -236,7 +236,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "RowGroupingGroupingValueGetter.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-grouping-value-getter/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 If your column also has a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
@@ -248,7 +248,7 @@ If a grouping criterion's key is `null` or `undefined` for a given row, the Data
 
 The demo below illustrates this behavior—movies are grouped by **Cinematic Universe**, and rows with no value for this column are displayed individually before those with values are displayed in groups:
 
-{{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-rows-with-missing-groups/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Group expansion
 
@@ -256,7 +256,7 @@ By default, all groups are initially displayed collapsed.
 You can change this behavior by setting the `defaultGroupingExpansionDepth` prop to expand all the groups up to a given depth when loading the data.
 To expand the whole tree, set `defaultGroupingExpansionDepth = -1`.
 
-{{"demo": "RowGroupingDefaultExpansionDepth.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-default-expansion-depth/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Use the `isGroupExpandedByDefault()` prop to expand groups by default according to more complex logic.
 This prop is a callback that receives a node as an argument.
@@ -270,14 +270,14 @@ isGroupExpandedByDefault={
 
 The example below uses this pattern to render the Grid with the **20th Century Fox** group expanded:
 
-{{"demo": "RowGroupingIsGroupExpandedByDefault.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-is-group-expanded-by-default/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Use the `setRowChildrenExpansion()` method on [the `apiRef` object](#apiref) to programmatically set the expansion of a row.
 Changing the expansion of a row emits a `rowExpansionChange` event that you can listen for to react to the expansion change.
 
 The demo below uses this pattern to implement the expansion toggle button:
 
-{{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-set-children-expansion/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 The `apiRef.current.setRowChildrenExpansion()` method is not compatible with [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) or [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/).
@@ -297,7 +297,7 @@ Use the `--DataGrid-cellOffsetMultiplier` CSS variable to change the default cel
 />
 ```
 
-{{"demo": "RowGroupingCustomCellIndent.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-custom-cell-indent/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Sorting and filtering
 
@@ -309,7 +309,7 @@ If you're rendering leaves with the `leafField` property of the `groupingColDef`
 
 You can force the filtering to be applied to other grouping criteria using the `mainGroupingCriteria` property of `groupingColDef`.
 
-{{"demo": "RowGroupingFilteringSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-filtering-single-grouping-col-def/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Multiple grouping columns
 
@@ -321,7 +321,7 @@ If you want to render leaves but apply the sorting and filtering on the grouping
 
 In the example below, sorting and filtering from the **Company** grouping column are applied to the `company` field, while sorting and filtering from the **Director** grouping column are applied to the `director` field even though it has leaves.
 
-{{"demo": "RowGroupingSortingMultipleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-sorting-multiple-grouping-col-def/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 If you're dynamically switching the `leafField` or `mainGroupingCriteria`, sorting and filtering models will not be cleaned up automatically, and the sorting or filtering will not be reapplied.
@@ -352,7 +352,7 @@ When `rowSelectionPropagation.parents` is set to `true`:
 
 The example below demonstrates the usage of the `rowSelectionPropagation` prop—use the checkboxes at the top to see how the selection behavior changes between parents and children.
 
-{{"demo": "RowGroupingPropagateSelection.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-propagate-selection/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Row selection propagation also affects the **Select all** checkbox like any other checkbox group.
 Selected rows that do not pass the filtering criteria are automatically deselected when the filter is applied.
@@ -392,7 +392,7 @@ To enable this feature with row grouping, pass the `rowReordering` prop to the D
 <DataGridPremium rowGroupingModel={['category']} rowReordering />
 ```
 
-{{"demo": "RowGroupingReordering.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-reordering/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Reacting to group updates
 
@@ -437,7 +437,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "RowGroupingGroupingValueSetter.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-grouping-value-setter/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Get all rows in a group
 
@@ -464,7 +464,7 @@ const rows = apiRef.current.getRowGroupChildren({
 });
 ```
 
-{{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-get-row-group-children/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 The `apiRef.current.getRowGroupChildren()` method is not compatible with [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/) because not all rows may be available to retrieve in any given instance.
@@ -485,7 +485,7 @@ The demo below provides an example of row grouping that's closer to a real-world
 
 See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more advanced use cases.
 
-{{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/row-grouping-full-example/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## apiRef
 
@@ -497,7 +497,7 @@ See [API object](/x/react-data-grid/api-object/) for more details.
 This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
-{{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/row-grouping-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

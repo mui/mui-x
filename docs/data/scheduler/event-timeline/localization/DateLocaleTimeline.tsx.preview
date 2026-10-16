@@ -1,9 +1,0 @@
-<ThemeProvider theme={theme}>
-  <EventTimelinePremium
-    events={events}
-    resources={resources}
-    defaultVisibleDate={defaultVisibleDate}
-    onEventsChange={setEvents}
-    defaultPreset="monthAndYear"
-  />
-</ThemeProvider>

@@ -29,7 +29,7 @@ Available properties:
 - `ampm`: Whether the component displays time in 12-hour format with AM/PM.
 - `weekStartsOn`: The first day of the week, from `0` (Sunday) to `6` (Saturday). Defaults to the locale's first day of the week.
 
-{{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/default-preferences/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::success
 You can also control the preferences using the `preferences` prop.

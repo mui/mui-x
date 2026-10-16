@@ -20,7 +20,7 @@ The bar renders nothing when formulas are unavailable (`disableFormulas`, a [dat
 
 The demo below renders the Formula Bar from a custom toolbar.
 
-{{"demo": "GridFormulaBar.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-formula-bar/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 

@@ -12,13 +12,13 @@ packageName: '@mui/x-date-pickers-pro'
 
 ## Basic usage
 
-{{"demo": "BasicDateRangeCalendar.js"}}
+{{"component": "file://./demos/basic-date-range-calendar/index.ts"}}
 
 ## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "DateRangeCalendarValue.js"}}
+{{"component": "file://./demos/date-range-calendar-value/index.ts"}}
 
 :::info
 
@@ -32,7 +32,7 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 The component can be disabled or read-only.
 
-{{"demo": "DateRangeCalendarFormProps.js"}}
+{{"component": "file://./demos/date-range-calendar-form-props/index.ts"}}
 
 ## Customization
 
@@ -40,19 +40,19 @@ The component can be disabled or read-only.
 
 You can render up to 3 months at the same time using the `calendars` prop:
 
-{{"demo": "DateRangeCalendarCalendarsProp.js"}}
+{{"component": "file://./demos/date-range-calendar-calendars-prop/index.ts"}}
 
 You can choose the position where the current month is rendered using the `currentMonthCalendarPosition` prop.
 This can be useful when using `disableFuture` to render the current month and the month before instead of the current month and the month after.
 
-{{"demo": "DateRangeCalendarCurrentMonthCalendarPositionProp.js"}}
+{{"component": "file://./demos/date-range-calendar-current-month-calendar-position-prop/index.ts"}}
 
 ### Custom day rendering
 
 The displayed days are customizable with the `Day` component slot.
 You can take advantage of the [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
 
-{{"demo": "CustomDateRangePickerDay.js"}}
+{{"component": "file://./demos/custom-date-range-picker-day/index.ts"}}
 
 ## Localization
 

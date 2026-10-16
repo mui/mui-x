@@ -6,7 +6,7 @@ Filtering can be run server-side by setting the `filterMode` prop to `server`, a
 
 The example below demonstrates how to achieve server-side filtering.
 
-{{"demo": "ServerFilterGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/server-filter-grid/index.ts", "bg": "inline"}}
 
 :::success
 You can combine server-side filtering with [server-side sorting](/x/react-data-grid/sorting/#server-side-sorting) and [server-side pagination](/x/react-data-grid/pagination/#server-side-pagination) to avoid fetching more data than needed, since it's already processed outside of the Data Grid.

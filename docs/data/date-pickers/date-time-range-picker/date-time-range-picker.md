@@ -13,7 +13,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Basic usage
 
-{{"demo": "BasicDateTimeRangePicker.js"}}
+{{"component": "file://./demos/basic-date-time-range-picker/index.ts"}}
 
 ## Component composition
 
@@ -32,7 +32,7 @@ Some [SingleInputDateTimeRangeField props](/x/api/date-pickers/single-input-date
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "DateTimeRangePickerValue.js"}}
+{{"component": "file://./demos/date-time-range-picker-value/index.ts"}}
 
 :::info
 
@@ -54,7 +54,7 @@ The component is available in three variants:
 
 - The `DateTimeRangePicker` component which renders `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker` depending on the device it runs on.
 
-{{"demo": "ResponsiveDateTimeRangePickers.js"}}
+{{"component": "file://./demos/responsive-date-time-range-pickers/index.ts"}}
 
 By default, the `DateTimeRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
@@ -68,7 +68,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 The component supports the `disabled`, `readOnly` and `name` form props:
 
-{{"demo": "FormPropsDateTimeRangePickers.js"}}
+{{"component": "file://./demos/form-props-date-time-range-pickers/index.ts"}}
 
 ## Customization
 
@@ -80,13 +80,13 @@ You can render up to 3 months at the same time using the `calendars` prop.
 This prop will be ignored on the mobile picker.
 :::
 
-{{"demo": "DateTimeRangePickerCalendarProp.js"}}
+{{"component": "file://./demos/date-time-range-picker-calendar-prop/index.ts"}}
 
 ### Use a multi input field
 
 You can pass the `MultiInputDateTimeRangeField` component to the Date Time Range Picker to use it for keyboard editing:
 
-{{"demo": "MultiInputDateTimeRangePicker.js"}}
+{{"component": "file://./demos/multi-input-date-time-range-picker/index.ts"}}
 
 :::info
 You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
@@ -100,7 +100,7 @@ You can find the documentation in the [Custom field page](/x/react-date-pickers/
 
 You can pass a different view renderer to the Date Time Range Picker to customize the views.
 
-{{"demo": "DateTimeRangePickerViewRenderer.js"}}
+{{"component": "file://./demos/date-time-range-picker-view-renderer/index.ts"}}
 
 ## Localization
 

@@ -29,7 +29,7 @@ const event = {
 
 Use the [`eventModelStructure`](#store-data-in-custom-properties) property to switch the resource between several fields:
 
-{{"demo": "DynamicResourceProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/dynamic-resource-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### All day
 
@@ -42,7 +42,7 @@ const event = {
 };
 ```
 
-{{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/all-day/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Timezone
 
@@ -70,7 +70,7 @@ const event = {
 
 The available color palettes are shown below:
 
-{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/color-palettes/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 Event colors can also be defined on the resources or at the component level.
@@ -109,7 +109,7 @@ const event = {
 };
 ```
 
-{{"demo": "ClassNameProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/class-name-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When defined, it applies to the event root DOM element in all views (Week, Month, Day, and Agenda views).
 
@@ -188,7 +188,7 @@ function Calendar() {
 }
 ```
 
-{{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/title-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Event constraints 🚧
 

@@ -17,7 +17,7 @@ Use heatmaps to spot areas of higher or lower intensity, clusters, or anomalies.
 
 The demo below shows bicycle counts in Paris by day and hour.
 
-{{"demo": "HeatmapDemo.js", "disableAd": true, "defaultCodeOpen": false}}
+{{"component": "file://./demos/heatmap-demo/index.ts", "disableAd": true, "collapseToEmpty": true}}
 
 ## Basics
 
@@ -40,7 +40,7 @@ The first two numbers are the cell's x and y indices, and the third is the cell 
 
 Use the `xAxis` and `yAxis` props to set x and y ticks.
 
-{{"demo": "BasicHeatmap.js"}}
+{{"component": "file://./demos/basic-heatmap/index.ts"}}
 
 ### Using a dataset
 
@@ -53,21 +53,21 @@ Use the `zAxis` configuration to customize how values map to color.
 You can use piecewise or continuous scales.
 See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for details.
 
-{{"demo": "ColorConfig.js"}}
+{{"component": "file://./demos/color-config/index.ts"}}
 
 ## Highlight
 
 Set `highlightScope.highlight` to `'item'` to highlight the hovered cell.
 Set `highlightScope.fade` to `'global'` to fade the other cells.
 
-{{"demo": "HighlightHeatmap.js"}}
+{{"component": "file://./demos/highlight-heatmap/index.ts"}}
 
 By default, the highlight and fade use the CSS `filter: saturate(...)` property.
 You can override the effect with the `heatmapClasses.highlighted` and `heatmapClasses.faded` classes.
 
 The demo below uses border radius on the highlighted cell and reduced saturation for faded cells.
 
-{{"demo": "HighlightClasses.js"}}
+{{"component": "file://./demos/highlight-classes/index.ts"}}
 
 ## Click events
 
@@ -76,7 +76,7 @@ Use `onItemClick` to handle cell clicks.
 The handler receives the click event as the first argument and an item object as the second.
 The item includes `xIndex` and `yIndex` (cell position on the x- and y-axes) and, when the cell has data, `dataIndex` (index in the series `data` array).
 
-{{"demo": "HeatmapCellClick.js"}}
+{{"component": "file://./demos/heatmap-cell-click/index.ts"}}
 
 ## Shared features
 
@@ -108,13 +108,13 @@ The heatmap includes a [`ContinuousColorLegend`](/x/react-charts/legend/#color-l
 Set `hideLegend` to `true` to hide the legend.
 Customize it with `slots.legend` and `slotProps.legend`.
 
-{{"demo": "HeatmapLegend.js"}}
+{{"component": "file://./demos/heatmap-legend/index.ts"}}
 
 ## Custom cells
 
 Use the `cell` slot to replace the default cell shape or add labels.
 
-{{"demo": "CustomItem.js"}}
+{{"component": "file://./demos/custom-item/index.ts"}}
 
 ## WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
@@ -128,4 +128,4 @@ The WebGL renderer has some limitations:
 
 The demo below shows roughly 8,800 cells rendered with WebGL.
 
-{{"demo": "WebGLHeatmap.js"}}
+{{"component": "file://./demos/web-gl-heatmap/index.ts"}}

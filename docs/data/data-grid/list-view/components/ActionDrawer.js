@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import OpenIcon from '@mui/icons-material/Visibility';
 import { FileIcon } from './FileIcon';
 import { formatDate, formatSize } from '../utils';
+
 import { Drawer, DrawerHeader } from './Drawer';
 
 function DrawerContent(props) {

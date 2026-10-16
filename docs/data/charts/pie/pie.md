@@ -18,7 +18,7 @@ You need:
 
 The demo below compares survival rates of passengers by class on the Titanic.
 
-{{"demo": "TitanicPie.js"}}
+{{"component": "file://./demos/titanic-pie/index.ts"}}
 
 ## Basics
 
@@ -28,7 +28,7 @@ You can add optional properties such as `label`.
 
 Add an `id` property to each item if you will update or reorder the data, since it is used for React `key` props.
 
-{{"demo": "BasicPie.js"}}
+{{"component": "file://./demos/basic-pie/index.ts"}}
 
 ## Donut chart
 
@@ -36,7 +36,7 @@ A donut chart (or doughnut chart) is a pie chart with a hollow center.
 
 Set the `innerRadius` property to a value greater than 0 to turn any pie chart into a donut.
 
-{{"demo": "DonutChart.js"}}
+{{"component": "file://./demos/donut-chart/index.ts"}}
 
 ## Colors
 
@@ -59,7 +59,7 @@ You can customize pie colors in two ways:
 />
 ```
 
-{{"demo": "PieColor.js"}}
+{{"component": "file://./demos/pie-color/index.ts"}}
 
 ## Sizing
 
@@ -73,7 +73,7 @@ Pie series shape is controlled by these properties:
 - `startAngle` / `endAngle`: angle range of the pie in degrees.
 - `cx` / `cy`: center of the pie. Default is the center of the drawing area.
 
-{{"demo": "PieShape.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/pie-shape/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 The following accept percentage strings (for example `'50%'`):
 
@@ -91,7 +91,7 @@ Pass a function that receives the arc's data object and returns the label string
 
 Set `arcLabelMinAngle` so that arcs with an angle smaller than that value (in degrees) do not show a label.
 
-{{"demo": "PieArcLabel.js"}}
+{{"component": "file://./demos/pie-arc-label/index.ts"}}
 
 ## Highlight
 
@@ -106,7 +106,7 @@ To change the size of an arc when highlighted or faded, use the `highlighted` an
 Use `additionalRadius` to add to `outerRadius` instead of setting an absolute value.
 A negative value shrinks the arc.
 
-{{"demo": "PieActiveArc.js"}}
+{{"component": "file://./demos/pie-active-arc/index.ts"}}
 
 ## Click event
 
@@ -120,7 +120,7 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "PieClick.js"}}
+{{"component": "file://./demos/pie-click/index.ts"}}
 
 ## CSS
 
@@ -128,7 +128,7 @@ You can customize the pie chart elements using CSS selectors.
 
 The demo below uses the `data-series` attribute to select the outer series and reduce its opacity.
 
-{{"demo": "PieCSSStyling.js"}}
+{{"component": "file://./demos/pie-css-styling/index.ts"}}
 
 ## Animation
 
@@ -146,7 +146,7 @@ When you set `skipAnimation` to `true`, the chart renders without animations.
 </ChartsContainer>
 ```
 
-{{"demo": "PieAnimation.js"}}
+{{"component": "file://./demos/pie-animation/index.ts"}}
 
 ## Composition
 
