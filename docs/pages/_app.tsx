@@ -15,6 +15,7 @@ import type { VersionEntry } from '@mui/internal-core-docs/DocsProvider';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import xPages from 'docs/data/pages'; // DO NOT REMOVE
+import { registerServiceWorker } from 'docs/src/modules/utils/serviceWorker';
 import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
@@ -270,6 +271,9 @@ export default function MyApp(
   props: AppProps<{ userLanguage: string; translations: Translations; versions: VersionEntry[] }>,
 ) {
   const { Component } = props;
+  React.useEffect(() => {
+    registerServiceWorker('/x/sw.js');
+  }, []);
   const pageProps = React.useMemo(() => {
     const {
       userLanguage = 'en',

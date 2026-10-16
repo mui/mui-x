@@ -1,5 +1,0 @@
-<EventCalendar
-  events={events}
-  onEventsChange={setEvents}
-  defaultVisibleDate={new Date(2024, 0, 15)}
-/>

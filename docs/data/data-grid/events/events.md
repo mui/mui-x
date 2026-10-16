@@ -39,7 +39,7 @@ Check out the examples in the [Catalog of events](#catalog-of-events) below to d
 
 The following demo shows how to subscribe to the `rowClick` event using the `onRowClick` prop—try it out by clicking on any row:
 
-{{"demo": "SubscribeToEventsProp.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/subscribe-to-events-prop/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### With `useGridEvent`
 
@@ -53,7 +53,7 @@ This hook can only be used inside the scope of the Data Grid (that is inside com
 
 The following demo shows how to subscribe to the `rowClick` event using `useGridEvent()`—try it out by clicking on any row:
 
-{{"demo": "SubscribeToEventsHook.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/subscribe-to-events-hook/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### With `apiRef.current.subscribeEvent`
 
@@ -63,7 +63,7 @@ apiRef.current.subscribeEvent('rowClick', handleEvent);
 
 The following demo shows how to subscribe to the `rowClick` event using `apiRef.current.subscribeEvent`—try it out by clicking on any row:
 
-{{"demo": "SubscribeToEventsApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/subscribe-to-events-api-ref/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 The `apiRef.current.subscribeEvent` method returns a cleaning callback that unsubscribes the given handler when called.
@@ -88,13 +88,13 @@ Set it to `true` to block the default handling of an event and implement your ow
 Usually, double-clicking a cell will put it into [edit mode](/x/react-data-grid/editing/).
 The following example changes this behavior by also requiring the end user to press the <kbd class="key">Ctrl</kbd> key:
 
-{{"demo": "DoubleClickWithCtrlToEdit.js", "bg": "inline"}}
+{{"component": "file://./demos/double-click-with-ctrl-to-edit/index.ts", "bg": "inline"}}
 
 ## Catalog of events
 
 Expand the rows to see how to use each event.
 
-{{"demo": "CatalogOfEventsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/catalog-of-events-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

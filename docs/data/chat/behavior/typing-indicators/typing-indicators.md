@@ -21,7 +21,7 @@ For the animated dots shown while the _assistant_ generates a response, see the 
 
 Toggle which users appear as typing in the current conversation:
 
-{{"demo": "ChatTypingIndicatorPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-typing-indicator-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 Typing indicators show labels like "Alice Chen is typing" or "Alice Chen, Mira Patel are typing" in the chat UI.
 The feature connects the adapter's `setTyping()` method (outbound) with real-time `typing` events (inbound) so the local composer's typing state and remote participants' typing state stay in sync.

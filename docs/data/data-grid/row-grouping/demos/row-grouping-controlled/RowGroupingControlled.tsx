@@ -1,0 +1,23 @@
+import * as React from 'react';
+import type { GridRowGroupingModel } from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { useMovieData } from '@mui/x-data-grid-generator';
+
+export default function RowGroupingControlled() {
+  // @focus-start @padding 1
+  const data = useMovieData();
+
+  const [rowGroupingModel, setRowGroupingModel] =
+    React.useState<GridRowGroupingModel>(['company', 'director']);
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        {...data}
+        rowGroupingModel={rowGroupingModel}
+        onRowGroupingModelChange={(model) => setRowGroupingModel(model)}
+      />
+    </div>
+  );
+  // @focus-end
+}

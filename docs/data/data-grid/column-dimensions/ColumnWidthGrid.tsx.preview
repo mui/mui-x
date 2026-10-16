@@ -1,7 +1,0 @@
-<DataGrid
-  columns={[
-    { field: 'username', width: 200, rowHeader: true },
-    { field: 'age' },
-  ]}
-  rows={rows}
-/>

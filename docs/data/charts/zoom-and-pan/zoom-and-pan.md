@@ -30,10 +30,10 @@ The following actions are enabled by default:
 You can enable additional zoom interactions through configuration.
 See [Interactions](#interactions) for the full list.
 
-{{"demo": "ZoomScatterChart.js"}}
-{{"demo": "ZoomBarChart.js"}}
-{{"demo": "ZoomLineChart.js"}}
-{{"demo": "ZoomHeatmap.js"}}
+{{"component": "file://./demos/zoom-scatter-chart/index.ts"}}
+{{"component": "file://./demos/zoom-bar-chart/index.ts"}}
+{{"component": "file://./demos/zoom-line-chart/index.ts"}}
+{{"component": "file://./demos/zoom-heatmap/index.ts"}}
 
 ## Zooming options
 
@@ -48,7 +48,7 @@ The following options are available:
 - **maxSpan**: Restricts the maximum span size
 - **panning**: Enables or disables panning
 
-{{"demo": "ZoomOptions.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/zoom-options/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ## Zoom filtering
 
@@ -59,13 +59,13 @@ Make the zoom of an axis affect one or more axes' extents by setting the `zoom.f
 
 The demo below shows how the secondary axis adapts to the visible part of the primary axis.
 
-{{"demo": "ZoomFilterMode.js"}}
+{{"component": "file://./demos/zoom-filter-mode/index.ts"}}
 
 ## Zoom slider
 
 Provide an overview that lets users manipulate the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
 
-{{"demo": "ZoomSlider.js"}}
+{{"component": "file://./demos/zoom-slider/index.ts"}}
 
 Set the `zoom.slider.size` property to customize the size reserved for the zoom slider.
 This is useful if you're using a custom zoom slider and want to update the space reserved for it.
@@ -90,7 +90,7 @@ Customize the value shown in the tooltip by using the `valueFormatter` property 
 
 When formatting the zoom slider tooltip, the chart calls `valueFormatter()` with `zoom-slider-tooltip` as its location.
 
-{{"demo": "ZoomSliderTooltip.js"}}
+{{"component": "file://./demos/zoom-slider-tooltip/index.ts"}}
 
 ### Limits
 
@@ -103,26 +103,26 @@ The zoom slider does not display values outside the range delimited by `minStart
 
 When composing a custom component, render the `ChartsZoomSlider` component to show the axes' sliders.
 
-{{"demo": "ZoomSliderComposition.js"}}
+{{"component": "file://./demos/zoom-slider-composition/index.ts"}}
 
 ## Preview
 
 When the zoom slider is enabled, preview the zoomed area by enabling the `zoom.slider.preview` property on the axis config.
 
-{{"demo": "ZoomSliderPreview.js"}}
+{{"component": "file://./demos/zoom-slider-preview/index.ts"}}
 
 ### Series filter
 
 Use `zoom.slider.preview.seriesIds` to select the series to display in the preview.
 
-{{"demo": "ZoomSliderPreviewSeriesFilter.js"}}
+{{"component": "file://./demos/zoom-slider-preview-series-filter/index.ts"}}
 
 ### Scatter marker size
 
 The size of the preview marker in scatter charts is 1px by default.
 Customize it by setting the `zoom.slider.preview.markerSize` property on the series configuration object.
 
-{{"demo": "ZoomSliderPreviewCustomMarkerSize.js"}}
+{{"component": "file://./demos/zoom-slider-preview-custom-marker-size/index.ts"}}
 
 ## Zoom management
 
@@ -141,7 +141,7 @@ The `zoom` state is an array of objects that define the zoom state for each axis
 - **start**: The starting percentage of the axis range
 - **end**: The ending percentage of the zoom range
 
-{{"demo": "ExternalZoomManagement.js"}}
+{{"component": "file://./demos/external-zoom-management/index.ts"}}
 
 #### Initialize with a range value
 
@@ -171,13 +171,13 @@ This feature does not support SSR.
 When providing a range value, the initial frame is rendered un-zoomed and the zoom is applied on the client right after hydration.
 :::
 
-{{"demo": "ZoomInitialRange.js"}}
+{{"component": "file://./demos/zoom-initial-range/index.ts"}}
 
 ### Zoom synchronization
 
 Control the zoom state to synchronize zoom between multiple charts.
 
-{{"demo": "ZoomControlled.js"}}
+{{"component": "file://./demos/zoom-controlled/index.ts"}}
 
 ## Zoom interactions configuration
 
@@ -232,14 +232,14 @@ For example, the "drag" and "brush" interactions do not work well together.
 If both are needed, the `pointerMode` and `requiredKeys` options described in the next sections can help.
 :::
 
-{{"demo": "ZoomAndPanInteractions.js"}}
+{{"component": "file://./demos/zoom-and-pan-interactions/index.ts"}}
 
 ### Brush zoom
 
 The brush zoom interaction lets users select a specific area to zoom into by clicking and dragging to create a selection rectangle.
 This provides an intuitive way to focus on a particular region of interest in the chart.
 
-{{"demo": "BrushZoom.js"}}
+{{"component": "file://./demos/brush-zoom/index.ts"}}
 
 ### Keyboard zoom and pan
 
@@ -280,7 +280,7 @@ The visible range is announced to screen readers each time it changes from the k
 The default message reads `Showing 5% to 95% of the horizontal axis`, and can be customized with the `zoomRangeDescription` [localization key](/x/react-charts/localization/#localize-text).
 A zoom coming from the pointer or from the application is not announced, because it is not the user driving the chart from the keyboard.
 
-{{"demo": "ZoomKeyboard.js"}}
+{{"component": "file://./demos/zoom-keyboard/index.ts"}}
 
 ### Key modifiers
 

@@ -48,7 +48,7 @@ if (geometry) {
 }
 ```
 
-{{"demo": "UsePolarGeometry.js"}}
+{{"component": "file://./demos/use-polar-geometry/index.ts"}}
 
 ## Caveats
 

@@ -29,7 +29,7 @@ const event = {
 
 Use the [`eventModelStructure`](#store-data-in-custom-properties) property to switch the resource between several fields:
 
-{{"demo": "DynamicResourceProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/dynamic-resource-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### All day
 
@@ -42,7 +42,7 @@ const event = {
 };
 ```
 
-{{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/all-day/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Timezone
 
@@ -70,7 +70,7 @@ const event = {
 
 The available color palettes are shown below:
 
-{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/color-palettes/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 Event colors can also be defined on the resources or at the component level.
@@ -111,7 +111,7 @@ const event = {
 };
 ```
 
-{{"demo": "ClassNameProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/class-name-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 When defined, it applies to the event root DOM element across all views.
 
@@ -190,7 +190,7 @@ function Timeline() {
 }
 ```
 
-{{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/title-property/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom event content
 
@@ -198,7 +198,7 @@ Use the `timelineEventContent` slot to replace the text rendered inside an event
 The slot receives the `occurrence`, the `resource` of the row it is rendered in and the `variant` of the block.
 It is placed inside the block, so the block keeps its geometry, its drag and resize handles, and its button semantics.
 
-{{"demo": "EventContentSlot.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/event-content-slot/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The slot also renders in the placeholder that previews a drag, a resize or a creation, with `variant` set to `"placeholder"` and an `occurrence` carrying the pending dates.
 

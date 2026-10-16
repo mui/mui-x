@@ -13,7 +13,7 @@ components: ScatterChart, ScatterChartPro, ScatterChartPremium
 A bubble chart is a scatter chart where each point can have a variable size and color determined by data values.
 The x and y positions encode two variables, while the bubble size and color encode additional ones.
 
-{{"demo": "BubbleChartCO2Emissions.js"}}
+{{"component": "file://./demos/bubble-chart-co2-emissions/index.ts"}}
 
 ## Mapping data to color
 
@@ -50,7 +50,7 @@ You can set the color value in three ways:
 
 See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
 
-{{"demo": "ColorScale.js"}}
+{{"component": "file://./demos/color-scale/index.ts"}}
 
 ## Mapping data to size
 
@@ -62,7 +62,7 @@ The mapped value comes from the `sizeValue` property on each data point, or from
 The `sizeMap` supports the same `continuous`, `piecewise`, and `ordinal` types as `colorMap`, but it maps values to a marker radius in pixels.
 A series can set both `colorAxisId` and `sizeAxisId` to style points by two values at once.
 
-{{"demo": "SizeScale.js"}}
+{{"component": "file://./demos/size-scale/index.ts"}}
 
 ### Using zAxis in custom components
 
@@ -80,7 +80,7 @@ It uses 4 z-axes to map:
 - The petal length to the size of the mark
 - The confidence to the stroke width
 
-{{"demo": "ScatterZAxis.js"}}
+{{"component": "file://./demos/scatter-z-axis/index.ts"}}
 
 ### Different size scales
 
@@ -91,4 +91,4 @@ You can change that behavior with `sizeMap.interpolator: 'log' | 'linear' | 'sqr
 
 When you do, make the choice explicit in the copy so the size encoding is not misleading.
 
-{{"demo": "DifferentSizeScale.js"}}
+{{"component": "file://./demos/different-size-scale/index.ts"}}

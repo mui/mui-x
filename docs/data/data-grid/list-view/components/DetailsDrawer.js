@@ -8,6 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 import { Drawer, DrawerHeader } from './Drawer';
 import { FileIcon } from './FileIcon';
 import { formatDate, formatSize, stringAvatar } from '../utils';

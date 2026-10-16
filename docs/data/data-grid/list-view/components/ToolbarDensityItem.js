@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   GridViewStreamIcon,
   useGridApiContext,
@@ -15,6 +16,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
+
 import { Drawer, DrawerHeader } from './Drawer';
 
 const DENSITY_ICONS = {

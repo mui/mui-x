@@ -1,0 +1,21 @@
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { dataset, valueFormatter } from '../../letterFrequency';
+
+export default function ZoomFilterMode() {
+  return (
+    // @focus-start @padding 2
+    <BarChartPro
+      height={300}
+      dataset={dataset}
+      xAxis={[
+        {
+          dataKey: 'letter',
+          zoom: { filterMode: 'discard' },
+        },
+      ]}
+      yAxis={[{ valueFormatter }]}
+      series={[{ label: 'Letter Frequency', dataKey: 'frequency', valueFormatter }]}
+    />
+    // @focus-end
+  );
+}

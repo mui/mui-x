@@ -20,7 +20,7 @@ Use the `localeText` prop to pass in your own text and translations.
 You can find all supported translation keys in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts) on GitHub.
 The demo below customizes the labels of the view switcher buttons.
 
-{{"demo": "CustomLocaleTextCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-locale-text-calendar/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Locale text
 
@@ -84,7 +84,7 @@ import { frFR } from '@mui/x-scheduler/locales';
 />;
 ```
 
-{{"demo": "LocaleTextCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/locale-text-calendar/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Date locale
 
@@ -123,13 +123,13 @@ import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 <EventCalendar dateLocale={fr} />;
 ```
 
-{{"demo": "DateLocaleCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-locale-calendar/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Supported locales
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-scheduler/src/locales) on GitHub.
 
-{{"demo": "SchedulerLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "file://./demos/scheduler-localisation-table-no-snap/index.ts", "hideToolbar": true, "bg": "inline"}}
 
 To create your own translation or customize the English text, copy this file to your project, make any needed changes, and import the locale from there.
 These translations follow [Material UI's localization strategy](/material-ui/guides/localization/).

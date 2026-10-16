@@ -39,7 +39,7 @@ The `persistEvents` method runs whenever events are created, updated, or deleted
 Fetched ranges are cached, so navigating to a range that is already loaded doesn't call `getEvents` again, and moving to a range that extends a loaded one only requests the new days.
 When `showEmptyDaysInAgenda` is `false`, the agenda view requests the 180 days starting from the visible date instead of only the visible ones, so it can find the next days with events.
 
-{{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-data-source/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 The demos on this page use a fake server utility to simulate asynchronous data fetching.
@@ -51,4 +51,4 @@ In a real-world scenario, you would replace it with your own server-side data fe
 When the `dataSource.getEvents` method rejects, the Event Calendar displays an error state.
 Use the toggle button to simulate a server error.
 
-{{"demo": "ErrorHandling.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/error-handling/index.ts", "bg": "inline", "collapseToEmpty": true}}

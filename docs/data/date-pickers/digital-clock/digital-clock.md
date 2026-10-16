@@ -18,13 +18,13 @@ The `DigitalClock` is more appropriate when there is a limited number of time op
 
 ## Basic usage
 
-{{"demo": "DigitalClockBasic.js"}}
+{{"component": "file://./demos/digital-clock-basic/index.ts"}}
 
 ## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "DigitalClockValue.js"}}
+{{"component": "file://./demos/digital-clock-value/index.ts"}}
 
 :::info
 
@@ -38,7 +38,7 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 The components can be disabled or read-only.
 
-{{"demo": "DigitalClockFormProps.js"}}
+{{"component": "file://./demos/digital-clock-form-props/index.ts"}}
 
 ## Views
 
@@ -48,7 +48,7 @@ By default, only the `hours` and `minutes` views are enabled.
 You can customize the enabled views using the `views` prop.
 Views will appear in the order they're included in the `views` array.
 
-{{"demo": "DigitalClockViews.js"}}
+{{"component": "file://./demos/digital-clock-views/index.ts"}}
 
 ## 12h/24h format
 
@@ -58,7 +58,7 @@ You can force a specific format using the `ampm` prop.
 
 You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#meridiem-12h-24h-format).
 
-{{"demo": "DigitalClockAmPm.js"}}
+{{"component": "file://./demos/digital-clock-am-pm/index.ts"}}
 
 ## Time steps
 
@@ -73,7 +73,7 @@ The prop accepts:
 - The `DigitalClock` component accepts a `number` value `timeStep` prop;
 - The `MultiSectionDigitalClock` component accepts a `timeSteps` prop with `number` values for `hours`, `minutes`, or `seconds` units;
 
-{{"demo": "DigitalClockTimeStep.js"}}
+{{"component": "file://./demos/digital-clock-time-step/index.ts"}}
 
 ## Skip rendering disabled options
 
@@ -84,7 +84,7 @@ The following example combines these properties to customize which options are r
 - The first component does not show options before `9:00` (the value of `minTime`).
 - The second one shows options between `09:00` and `13:20` thanks to `shouldDisableTime`.
 
-{{"demo": "DigitalClockSkipDisabled.js"}}
+{{"component": "file://./demos/digital-clock-skip-disabled/index.ts"}}
 
 ## Localization
 

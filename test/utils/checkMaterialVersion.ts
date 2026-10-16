@@ -7,16 +7,41 @@ type PackageJson = {
   version: string;
 };
 
-let catalogCache: Record<string, string> | null = null;
+interface WorkspaceConfig {
+  catalog: Record<string, string>;
+  overrides?: Record<string, string>;
+}
 
-async function getCatalog(): Promise<Record<string, string>> {
-  if (!catalogCache) {
+interface InstalledPackage {
+  version: string;
+  resolved: string;
+}
+
+interface InstalledWorkspace {
+  name?: string;
+  dependencies?: Record<string, InstalledPackage>;
+  devDependencies?: Record<string, InstalledPackage>;
+}
+
+let configCache: WorkspaceConfig | null = null;
+let installedCache: InstalledWorkspace[] | null = null;
+
+async function getWorkspaceConfig(): Promise<WorkspaceConfig> {
+  if (!configCache) {
     const { execa } = await import('execa');
     const { stdout } = await execa('pnpm', ['config', 'list', '--json']);
-    const pnpmWorkspaceConfig = JSON.parse(stdout);
-    catalogCache = pnpmWorkspaceConfig.catalog as Record<string, string>;
+    configCache = JSON.parse(stdout) as WorkspaceConfig;
   }
-  return catalogCache;
+  return configCache!;
+}
+
+async function getInstalledWorkspaces(): Promise<InstalledWorkspace[]> {
+  if (!installedCache) {
+    const { execa } = await import('execa');
+    const { stdout } = await execa('pnpm', ['list', '@mui/material', '--depth', '0', '--json']);
+    installedCache = JSON.parse(stdout) as InstalledWorkspace[];
+  }
+  return installedCache!;
 }
 
 export function checkMaterialVersion({
@@ -29,11 +54,25 @@ export function checkMaterialVersion({
   it.skipIf(!isJSDOM)(
     `${packageJson.name} should resolve proper @mui/material version`,
     async () => {
-      let versionRange = packageJson.devDependencies['@mui/material'];
+      const config = await getWorkspaceConfig();
+      const override = config.overrides?.['@mui/material'];
+      let versionRange = override ?? packageJson.devDependencies['@mui/material'];
 
       if (versionRange === 'catalog:') {
-        const catalog = await getCatalog();
-        versionRange = catalog['@mui/material'];
+        versionRange = config.catalog['@mui/material'];
+      }
+
+      // Preview tarballs can report a version outside the published catalog.
+      // Verify the installed source against the explicit override instead.
+      if (versionRange.startsWith('https://')) {
+        const workspaces = await getInstalledWorkspaces();
+        const workspace = workspaces.find((entry) => entry.name === packageJson.name);
+        const installed =
+          workspace?.devDependencies?.['@mui/material'] ??
+          workspace?.dependencies?.['@mui/material'];
+        expect(installed?.resolved).to.equal(versionRange);
+        expect(installed?.version).to.equal(materialPackageJson.version);
+        return;
       }
 
       expect(semver.satisfies(materialPackageJson.version, versionRange)).to.equal(

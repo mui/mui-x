@@ -1,8 +1,0 @@
-<StaticDatePicker
-  defaultValue={dayjs('2022-04-17')}
-  slotProps={{
-    actionBar: {
-      actions: ['today'],
-    },
-  }}
-/>

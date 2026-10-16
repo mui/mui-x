@@ -16,7 +16,7 @@ components: ChatBox
 
 The recipes below cover common customizations.
 
-{{"demo": "StructureRecipes.js"}}
+{{"component": "file://./demos/structure-recipes/index.ts"}}
 
 Several of the recipes below applied at once.
 

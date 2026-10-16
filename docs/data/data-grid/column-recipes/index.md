@@ -13,7 +13,7 @@ This is because the Data Grid considers update of the columns prop as a new set 
 
 To persist the column width and order when the `columns` prop is updated, consider persisting the state of the columns in the userland.
 
-{{"demo": "ColumnSizingPersistWidthOrder.js", "disableAd": true, "bg": "inline"}}
+{{"component": "file://./demos/column-sizing-persist-width-order/index.ts", "disableAd": true, "bg": "inline"}}
 
 :::warning
 [Column ordering](/x/react-data-grid/column-ordering/) is a Pro feature, to use it you must be on a Pro or Premium plan.
@@ -27,7 +27,7 @@ To keep the column width of the pivoted grid after `columns` reference is change
 
 The demo below uses modified version of the `useColumnsState()` from the previous example in combination with a callbacks for grouping and pivoting columns.
 
-{{"demo": "ColumnSizingPersistWidthPivoting.js", "disableAd": true, "bg": "inline"}}
+{{"component": "file://./demos/column-sizing-persist-width-pivoting/index.ts", "disableAd": true, "bg": "inline"}}
 
 ## Custom long text popup content
 
@@ -38,7 +38,7 @@ The example below demonstrates two customizations:
 - **Character count**: Shows character count below the text
 - **Markdown preview**: Renders markdown content as formatted HTML
 
-{{"demo": "LongTextCustomPopupContent.js", "disableAd": true, "bg": "inline"}}
+{{"component": "file://./demos/long-text-custom-popup-content/index.ts", "disableAd": true, "bg": "inline"}}
 
 ## Custom multi-select chips [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -49,4 +49,4 @@ The demo below shows two customizations:
 - **Colored chips**: maps each tag to a different chip color
 - **Avatar chips**: adds an avatar to each assignee chip
 
-{{"demo": "MultiSelectCustomChips.js", "disableAd": true, "bg": "inline"}}
+{{"component": "file://./demos/multi-select-custom-chips/index.ts", "disableAd": true, "bg": "inline"}}

@@ -17,13 +17,13 @@ They provide refined navigation through arrow keys and support advanced behavior
 
 ### Fields to edit a single element
 
-{{"demo": "SingleDateFieldExamples.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/single-date-field-examples/index.ts", "collapseToEmpty": true}}
 
 ### Fields to edit a range [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 All fields to edit a range are available in a single input version and in a multi-input version.
 
-{{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/date-range-field-examples/index.ts", "collapseToEmpty": true}}
 
 ## Advanced
 
@@ -54,21 +54,21 @@ This prop accepts the following formats:
 You need to make sure the input is focused before imperatively updating the selected sections.
 :::
 
-{{"demo": "ControlledSelectedSections.js", "defaultCodeOpen": false }}
+{{"component": "file://./demos/controlled-selected-sections/index.ts", "collapseToEmpty": true}}
 
 #### Usage with single input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 For single input range fields, you won't be able to use the section name to select a single section because each section is present both in the start and in the end date.
 Instead, you can pass the index of the section using the `fieldRef` prop to access the full list of sections:
 
-{{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}
+{{"component": "file://./demos/controlled-selected-sections-single-input-range-field/index.ts", "collapseToEmpty": true}}
 
 #### Usage with multi-input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 For multi-input range fields, you just have to make sure that the right input is focused before updating the selected section(s).
 Otherwise, the section(s) might be selected on the wrong input.
 
-{{"demo": "ControlledSelectedSectionsMultiInputRangeField.js", "defaultCodeOpen": false }}
+{{"component": "file://./demos/controlled-selected-sections-multi-input-range-field/index.ts", "collapseToEmpty": true}}
 
 ### Clearable behavior
 
@@ -78,11 +78,11 @@ You can use the `clearable` prop to enable the clearing behavior on a field. You
 For **multi-input** range fields the clearable behavior is not supported yet.
 :::
 
-{{"demo": "ClearableBehavior.js"}}
+{{"component": "file://./demos/clearable-behavior/index.ts"}}
 
 You can also customize the icon you want to be displayed inside the clear `IconButton`.
 
-{{"demo": "CustomizeClearIcon.js"}}
+{{"component": "file://./demos/customize-clear-icon/index.ts"}}
 
 #### Imperative API
 
@@ -93,4 +93,4 @@ Use `fieldRef.current.focusField()` to focus a field programmatically instead of
 The field renders a visually hidden `<input>` for form interop (so that `name`, native form submission, and `FormData` work as expected), and `focusField()` is the API that reliably focuses the visible section instead of that hidden element.
 :::
 
-{{"demo": "ImperativeClear.js"}}
+{{"component": "file://./demos/imperative-clear/index.ts"}}
