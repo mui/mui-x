@@ -34,8 +34,15 @@ describe('<TreeViewChildrenItemProvider />', () => {
   function renderTreeWithSuspendingChild({ nested }: { nested: boolean }) {
     const suspender = createSuspender();
     const apiRef: SimpleTreeViewApiRef = { current: undefined };
+    const suspendRef = { current: () => {} };
 
-    function Child({ shouldSuspend }: { shouldSuspend: boolean }) {
+    // The state lives in `Child` so that suspending does not rerender the provider.
+    function Child() {
+      const [shouldSuspend, setShouldSuspend] = React.useState(false);
+      React.useEffect(() => {
+        suspendRef.current = () => setShouldSuspend(true);
+      }, []);
+
       if (shouldSuspend && suspender.isPending) {
         throw suspender.promise;
       }
@@ -44,40 +51,33 @@ describe('<TreeViewChildrenItemProvider />', () => {
     }
 
     function App() {
-      const [shouldSuspend, setShouldSuspend] = React.useState(false);
-
       const siblings = (
         <React.Fragment>
           <TreeItem itemId="before" label="before" data-testid="before" />
           <React.Suspense fallback={<span>loading</span>}>
-            <Child shouldSuspend={shouldSuspend} />
+            <Child />
           </React.Suspense>
           <TreeItem itemId="after" label="after" data-testid="after" />
         </React.Fragment>
       );
 
       return (
-        <React.Fragment>
-          <button type="button" onClick={() => setShouldSuspend(true)}>
-            suspend
-          </button>
-          <SimpleTreeView apiRef={apiRef} defaultExpandedItems={['parent']}>
-            {nested ? (
-              <TreeItem itemId="parent" label="parent" data-testid="parent">
-                {siblings}
-              </TreeItem>
-            ) : (
-              siblings
-            )}
-          </SimpleTreeView>
-        </React.Fragment>
+        <SimpleTreeView apiRef={apiRef} defaultExpandedItems={['parent']}>
+          {nested ? (
+            <TreeItem itemId="parent" label="parent" data-testid="parent">
+              {siblings}
+            </TreeItem>
+          ) : (
+            siblings
+          )}
+        </SimpleTreeView>
       );
     }
 
-    const { user } = render(<App />);
+    render(<App />);
 
     return {
-      user,
+      suspend: () => suspendRef.current(),
       suspender,
       getOrderedChildrenIds: () =>
         apiRef.current!.getItemOrderedChildrenIds!(nested ? 'parent' : null),
@@ -86,7 +86,9 @@ describe('<TreeViewChildrenItemProvider />', () => {
 
   [false, true].forEach((nested) => {
     it(`should drop a ${nested ? 'nested' : 'root'} child that suspends after it mounted and restore it once it resolves`, async () => {
-      const { user, suspender, getOrderedChildrenIds } = renderTreeWithSuspendingChild({ nested });
+      const { suspend, suspender, getOrderedChildrenIds } = renderTreeWithSuspendingChild({
+        nested,
+      });
 
       expect(getOrderedChildrenIds()).to.deep.equal(['before', 'child', 'after']);
 
@@ -96,14 +98,16 @@ describe('<TreeViewChildrenItemProvider />', () => {
       // resolves, and a nullish id points `itemsSelectors.itemOrderedChildrenIds`
       // back at the root of the tree, so the selection status traversal recurses
       // until the stack overflows.
-      await user.click(screen.getByRole('button', { name: 'suspend' }));
+      act(() => {
+        suspend();
+      });
 
       expect(screen.getByText('loading')).not.to.equal(null);
       expect(getOrderedChildrenIds()).to.deep.equal(['before', 'after']);
 
-      // Resolving only rerenders the Suspense subtree, so the child registers itself
-      // again without the provider rerendering. The order must pick that registration
-      // up anyway, otherwise the item is back on the screen but unreachable.
+      // Neither suspending nor resolving rerenders the provider, so the child's
+      // unregistration and registration alone must refresh the order, otherwise the
+      // item is back on the screen but unreachable.
       await act(async () => {
         suspender.resolve();
         await suspender.promise;
