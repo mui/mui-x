@@ -187,9 +187,6 @@ export default withDeploymentConfig({
       '**/@mui/internal-core-docs/MarkdownDocs/RichMarkdownElement.js': {
         loaders: [path.join(currentDirectory, 'scripts/loadMigratedMarkdown.cjs')],
       },
-      '**/DemoContent/DemoContentLoading.js': {
-        loaders: [path.join(currentDirectory, 'scripts/loadCompactDemoToolbar.cjs')],
-      },
       '**/DemoContent/exportConfig.js': {
         loaders: [path.join(currentDirectory, 'scripts/loadDemoExportDeps.cjs')],
       },
@@ -278,10 +275,6 @@ export default withDeploymentConfig({
           {
             test: /[/\\]@mui[/\\]internal-core-docs[/\\]MarkdownDocs[/\\]RichMarkdownElement\.js$/,
             use: [path.join(currentDirectory, 'scripts/loadMigratedMarkdown.cjs')],
-          },
-          {
-            test: /[/\\]@mui[/\\]internal-core-docs[/\\]DemoContent[/\\]DemoContentLoading\.js$/,
-            use: [path.join(currentDirectory, 'scripts/loadCompactDemoToolbar.cjs')],
           },
           {
             test: /[/\\]@mui[/\\]internal-core-docs[/\\]DemoContent[/\\]exportConfig\.js$/,
