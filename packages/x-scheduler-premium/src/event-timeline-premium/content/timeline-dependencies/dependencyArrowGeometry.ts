@@ -21,6 +21,7 @@ import {
   DEPENDENCY_ARROW_HIT_TRIM_END,
   DEPENDENCY_ARROW_HIT_TRIM_START,
   clipRouteAroundObstacles,
+  getArrowHeadHitArea,
   trimRouteEnds,
 } from './dependencyArrowHitArea';
 
@@ -50,6 +51,12 @@ export interface DependencyArrow {
    * Derived on first read and cached: only the interactions layer needs it.
    */
   readonly hitD: string;
+  /**
+   * The click hit-area of the arrowhead, next to `endPoint` on the side the arrow comes
+   * from and cut before any event box, or `null` when an event leaves no room for it.
+   * Derived on first read and cached, like `hitD`.
+   */
+  readonly hitHead: { x: number; width: number } | null;
   /**
    * The point where the arrowhead is drawn, in the same coordinate space as `d`: the
    * target edge anchor, except when the route clamps at the timeline edge.
@@ -190,6 +197,8 @@ export function computeDependencyArrows(
 
     let d: string | null = null;
     let hitD: string | null = null;
+    let hitHead: DependencyArrow['hitHead'] | undefined;
+    const endPoint = points[points.length - 1];
 
     return {
       // The id type is part of the key: `SchedulerDependencyId` accepts both strings
@@ -216,7 +225,21 @@ export function computeDependencyArrows(
         }
         return hitD;
       },
-      endPoint: points[points.length - 1],
+      get hitHead() {
+        if (hitHead === undefined) {
+          // Unlike `getObstacles`, the source stays in: a back-to-back predecessor sits
+          // right under the arrowhead.
+          hitHead = getArrowHeadHitArea(
+            endPoint,
+            targetEdge === 'start' ? -1 : 1,
+            resolver
+              .getRowObstacles(targetAnchor.rowIndex)
+              .filter((obstacle) => obstacle.occurrenceKey !== targetAnchor.occurrence?.key),
+          );
+        }
+        return hitHead;
+      },
+      endPoint,
       targetEdge,
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,

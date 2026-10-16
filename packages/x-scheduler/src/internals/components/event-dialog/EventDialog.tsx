@@ -26,6 +26,10 @@ import {
 import { EventContextMenuProvider } from '../event-context-menu';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 import { AnchoredEventToolbar } from '../event-toolbar';
+import {
+  DeleteConfirmationDialog,
+  DeleteConfirmationDialogHostContext,
+} from '../delete-confirmation-dialog';
 import ReadonlyContent from './ReadonlyContent';
 
 export const EventDialogRoot = styled(Dialog, {
@@ -120,6 +124,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       occurrence={occurrence}
       onClose={onClose}
       dragHandlerRef={dragHandlerRef}
+      anchor={anchor}
     />
   );
 
@@ -186,7 +191,8 @@ function EventDialogSurface() {
 
 /**
  * Desktop editing surface: anchored, draggable dialog via `EventEditingProvider`, with the armed
- * action toolbar and the recurring scope confirmation rendered as independent top-level siblings.
+ * action toolbar, the delete confirmation, and the recurring scope confirmation rendered as
+ * independent top-level siblings.
  */
 export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, optionalRenderers } = props;
@@ -199,9 +205,12 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
     >
       <EventEditingProvider surface="dialog">
-        <EventContextMenuProvider>{children}</EventContextMenuProvider>
+        <DeleteConfirmationDialogHostContext.Provider value>
+          <EventContextMenuProvider>{children}</EventContextMenuProvider>
+        </DeleteConfirmationDialogHostContext.Provider>
         <AnchoredEventToolbarSurface />
         <EventDialogSurface />
+        <DeleteConfirmationDialog />
         {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
       </EventEditingProvider>
     </EventEditingOptionalRenderersContext.Provider>

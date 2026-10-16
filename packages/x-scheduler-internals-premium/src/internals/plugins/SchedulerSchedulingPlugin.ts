@@ -267,6 +267,10 @@ export class SchedulerSchedulingPlugin<
     }
 
     const updated: SchedulerDependency = { ...dependency, ...changes };
+    // A dependency always has a type: an explicit `undefined` keeps the current one.
+    if (changes.type === undefined) {
+      updated.type = dependency.type;
+    }
     for (const key of ['lag', 'lagUnit'] as const) {
       if (key in changes && changes[key] === undefined) {
         delete updated[key];

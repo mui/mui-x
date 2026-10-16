@@ -3090,17 +3090,15 @@ describe('getDependencyViolation', () => {
       .toProcessed();
     const successor = allDayEvent('b', '2025-07-03');
 
-    // 36 hours wait one whole day: the bound is 2025-07-04T10:00.
+    // 36 hours wait one whole day: the bound is 2025-07-04T10:00, so the start moves
+    // two days, from the 3rd to the 5th.
     expect(
       getDependencyViolation(
         adapter,
         buildLookup([predecessor, successor]),
         dependency('a', 'b', { lag: 36, lagUnit: 'hour' }),
       ),
-    ).to.equal(
-      adapter.getTime(utcDate('2025-07-04T10:00:00')) -
-        adapter.getTime(utcDate('2025-07-03T00:00:00')),
-    );
+    ).to.equal(2);
   });
 
   it('should return 0 when the lag runs past the supported date range', () => {

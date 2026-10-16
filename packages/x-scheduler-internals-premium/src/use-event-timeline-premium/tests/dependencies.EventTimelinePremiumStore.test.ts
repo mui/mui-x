@@ -729,6 +729,20 @@ describe('Dependencies - EventTimelinePremiumStore', () => {
       expect('lagUnit' in emitted).to.equal(false);
     });
 
+    it('should keep the type when passed as undefined', () => {
+      const onDependenciesChange = vi.fn();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, dependencies: [DEP_AB], onDependenciesChange },
+        adapter,
+      );
+
+      store.updateDependency('dep-1', { type: undefined, lag: 30, lagUnit: 'minute' });
+
+      expect(onDependenciesChange.mock.lastCall?.[0]).to.deep.equal([
+        { ...DEP_AB, lag: 30, lagUnit: 'minute' },
+      ]);
+    });
+
     it('should not reject a lag change on a dependency duplicated in the props', () => {
       const onDependenciesChange = vi.fn();
       const store = new EventTimelinePremiumStore(

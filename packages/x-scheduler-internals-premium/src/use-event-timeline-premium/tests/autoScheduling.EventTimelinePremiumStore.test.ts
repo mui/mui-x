@@ -742,6 +742,40 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
     });
 
+    it('should push an all-day target when a type change needs more days across a DST change', () => {
+      const onEventsChange = vi.fn();
+      // New York falls back on 2025-11-02, making that day 25h long.
+      const newYorkA = EventBuilder.new()
+        .id('a')
+        .withDataTimezone('America/New_York')
+        .span('2025-11-03T00:00:00', '2025-11-04T00:00:00')
+        .build();
+      const allDayB = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/New_York')
+        .span('2025-11-02T00:00:00', '2025-11-02T23:59:59', { allDay: true })
+        .build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [newYorkA, allDayB],
+          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      // StartToStart breaks by 1 day (25h), FinishToFinish by 2 days (24h + 1ms).
+      store.updateDependency('dep-1', { type: 'FinishToFinish' });
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const emittedB = (onEventsChange.mock.lastCall![0] as SchedulerEvent[]).find(
+        (event) => event.id === 'b',
+      )!;
+      expect(emittedB.start).to.equal('2025-11-04T00:00:00');
+      expect(emittedB.end).to.equal('2025-11-04T23:59:59');
+    });
+
     it('should cascade the push of a stricter type change to the successors of the target', () => {
       const onEventsChange = vi.fn();
       const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
