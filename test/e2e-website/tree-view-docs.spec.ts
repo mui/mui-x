@@ -83,7 +83,7 @@ test.describe('Tree View docs-infra migration', () => {
     await checkSourceLanguage('TypeScript');
   });
 
-  test('keeps the loading toolbar height when the live controls hydrate', async ({ page }) => {
+  test('shows toolbar controls before scripts load and keeps their height', async ({ page }) => {
     let releaseScripts!: () => void;
     const scriptsReady = new Promise<void>((resolve) => {
       releaseScripts = resolve;
@@ -98,6 +98,8 @@ test.describe('Tree View docs-infra migration', () => {
         name: 'demo source',
       });
       await expect(toolbar).toHaveAttribute('aria-busy', 'true');
+      await expect(toolbar.locator('button[data-ga-event-action="expand"]')).toBeVisible();
+      await expect(toolbar.locator('button[data-ga-event-action="copy"]')).toBeVisible();
       const loadingHeight = await toolbar.evaluate(
         (element) => element.getBoundingClientRect().height,
       );
