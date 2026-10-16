@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/023c96ed6ca37cdb1ff687787e61257c0960285a/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/49ceb69d6aab71ab39f5cd9a3694d9c18faee7bc/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -154,6 +154,10 @@ jobs:
       - checkout
       - install-deps
       - code-infra/run-linters
+      # The orb no longer runs markdownlint, but v8.x still uses it.
+      - run:
+          name: Lint Markdown
+          command: pnpm markdownlint
   test_static:
     <<: *default-job
     steps:
