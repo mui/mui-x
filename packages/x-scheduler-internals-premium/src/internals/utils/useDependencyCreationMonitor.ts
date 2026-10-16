@@ -8,6 +8,7 @@ import type {
   SchedulerEventSide,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
+import type { SchedulerUserFacingErrorDescriptor } from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { isDependencyTerminalDrag } from '../../timeline-grid/event-dependency-terminal/dependencyTerminalDragData';
 import { eventTimelinePremiumDependencySelectors } from '../../event-timeline-premium-selectors';
@@ -51,18 +52,19 @@ function getDependencyDropTarget(
   return null;
 }
 
-// TODO(dependencies public flip, #23420): source these messages from the locale text so the
-// feedback is translatable.
 // The `Record` is exhaustive on the rejection union: a new reason fails to compile
-// until it brings a message.
-const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
-  cascadeBlocked: 'This dependency would move a read-only event, so it was not created.',
-  cyclicDependency: 'This dependency would create a cycle between events.',
-  duplicateDependency: 'A dependency of this type already exists between these two events.',
-  featureDisabled: 'Dependencies are not enabled on this timeline.',
-  recurringEvent: 'Dependencies cannot involve recurring events.',
-  readOnly: 'Dependencies cannot be changed while the scheduler is read-only.',
-  unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',
+// until it brings a `localeText` code.
+const REJECTION_ERRORS: Record<
+  SchedulerDependencyRejectionReason,
+  SchedulerUserFacingErrorDescriptor
+> = {
+  cascadeBlocked: { code: 'dependencyCascadeBlockedError' },
+  cyclicDependency: { code: 'dependencyCycleError' },
+  duplicateDependency: { code: 'dependencyDuplicateError' },
+  featureDisabled: { code: 'dependenciesDisabledError' },
+  recurringEvent: { code: 'dependencyRecurringEventError' },
+  readOnly: { code: 'dependencyReadOnlyError' },
+  unknownEvent: { code: 'dependencyUnknownEventError' },
 };
 
 /**
@@ -138,12 +140,7 @@ export function useDependencyCreationMonitor() {
           if (result.reason === 'duplicateDependency') {
             store.setSelectedDependencyId(result.dependencyId);
           }
-          store.pushError(
-            /* minify-error-disabled */ new Error(REJECTION_MESSAGES[result.reason]),
-            {
-              transient: true,
-            },
-          );
+          store.pushUserFacingError(REJECTION_ERRORS[result.reason], { transient: true });
         }
       },
     });

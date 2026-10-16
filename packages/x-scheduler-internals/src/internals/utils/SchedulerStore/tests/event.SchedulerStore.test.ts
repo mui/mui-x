@@ -1261,8 +1261,8 @@ storeClasses.forEach((storeClass) => {
         expect(onDelete.mock.calls.length).to.equal(0);
         expect(onEventsChange.mock.calls.length).to.equal(0);
         expect(store.state.pendingRecurringEventOperation).to.equal(null);
-        expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
-          'This event is still being saved, so the change was not applied. Try again once it is saved.',
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'eventNotLoadedError',
         ]);
       });
     });
@@ -1289,8 +1289,8 @@ storeClasses.forEach((storeClass) => {
           expect(store.state.pendingRecurringEventOperation).to.equal(null);
           expect(onSubmit.mock.calls.length).to.equal(0);
           expect(onEventsChange.mock.calls.length).to.equal(0);
-          expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
-            'This event is still being saved, so the change was not applied. Try again once it is saved.',
+          expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+            'eventNotLoadedError',
           ]);
         },
       );
@@ -1390,8 +1390,8 @@ storeClasses.forEach((storeClass) => {
 
         expect(onEventsChange.mock.calls.length).to.equal(0);
         expect(onSubmit.mock.calls.length).to.equal(0);
-        expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
-          'This event is still being saved, so the change was not applied. Try again once it is saved.',
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'eventNotLoadedError',
         ]);
       });
 
@@ -1416,8 +1416,8 @@ storeClasses.forEach((storeClass) => {
 
         expect(onEventsChange.mock.calls.length).to.equal(0);
         expect(onSubmit.mock.calls.length).to.equal(0);
-        expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
-          'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+        expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+          'eventChangedWhileConfirmingError',
         ]);
       });
 
@@ -1446,8 +1446,8 @@ storeClasses.forEach((storeClass) => {
 
           expect(onEventsChange.mock.calls.length).to.equal(0);
           expect(onSubmit.mock.calls.length).to.equal(0);
-          expect(store.state.errors.map((entry) => entry.error.message)).to.deep.equal([
-            'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+          expect(store.state.errors.map((entry) => entry.code)).to.deep.equal([
+            'eventChangedWhileConfirmingError',
           ]);
         },
       );

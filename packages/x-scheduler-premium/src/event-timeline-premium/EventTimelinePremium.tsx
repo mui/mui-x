@@ -143,7 +143,10 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
     [schedulerId, classes, mergedLocaleText],
   );
 
-  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+  const sharedComponentsStyledContextValue = React.useMemo(
+    () => ({ classes, localeText: mergedLocaleText }),
+    [classes, mergedLocaleText],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>

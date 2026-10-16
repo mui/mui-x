@@ -21,8 +21,29 @@ export interface SchedulerMonthlyWeekNumberLabelParams extends SchedulerWeekdayL
   ord: number;
 }
 
+/**
+ * Errors shown to the user, in the error container or next to the field they apply to.
+ */
+export interface SchedulerErrorLocaleText {
+  /**
+   * Shown when the `dataSource` fails to load or save events.
+   */
+  somethingWentWrongError: string;
+  eventNotLoadedError: string;
+  eventChangedWhileConfirmingError: string;
+  /**
+   * Shown when a change would move a read-only event through its dependencies.
+   */
+  readOnlyEventMovedError: (title: string) => string;
+  dependencyCycleError: string;
+  dependencyDuplicateError: string;
+  dependencyRecurringEventError: string;
+  dependencyReadOnlyEventError: string;
+  dependencyUnknownEventError: string;
+}
+
 // Strings shared by every event-editing surface: the dialog, the drawer, and the armed-event toolbar.
-export interface EventEditingLocaleText {
+export interface EventEditingLocaleText extends SchedulerErrorLocaleText {
   // EventDialog
   colorPickerLabel: string;
   colorSectionLabel: string;

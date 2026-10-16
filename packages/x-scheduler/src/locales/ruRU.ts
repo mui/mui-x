@@ -111,6 +111,17 @@ const ruRUDialog: SchedulerDialogTranslations = {
   radioGroupAriaLabel: 'Редактирование повторяющихся событий',
   thisAndFollowing: 'Это и последующие события',
   title: 'К каким событиям применить изменение:',
+
+  // Errors
+  // somethingWentWrongError: 'Something went wrong.',
+  // eventNotLoadedError: 'This event is still being saved, so the change was not applied. Try again once it is saved.',
+  // eventChangedWhileConfirmingError: 'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+  // readOnlyEventMovedError: title => `This change would move the read-only event "${title}", so it was not applied.`,
+  // dependencyCycleError: 'This dependency would create a cycle between events.',
+  // dependencyDuplicateError: 'A dependency of this type already exists between these two events.',
+  // dependencyRecurringEventError: 'Dependencies cannot involve recurring events.',
+  // dependencyReadOnlyEventError: 'Dependencies cannot involve read-only events.',
+  // dependencyUnknownEventError: 'This dependency cannot be created because one of its events no longer exists.',
 };
 
 const ruRUEvent: SchedulerEventTranslations = {
