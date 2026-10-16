@@ -37,6 +37,7 @@ export function loadStyleSheets(
   root: Document | ShadowRoot,
   options: LoadStyleSheetsOptions | string = {},
 ) {
+  // TODO v10: remove the string form, which `@mui/x-*` 9.14.0 and earlier pass.
   const {
     nonce,
     onStylesheetError: handleStylesheetError = (element, reason) =>

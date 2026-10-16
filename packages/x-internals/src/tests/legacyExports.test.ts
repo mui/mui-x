@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { isJSDOM } from '../platform';
 
-// Published `@mui/x-*` 9.0.0 to 9.14.0 import these through a `^9` range, so keep them until v10.
+// TODO v10: remove with the legacy exports. Published `@mui/x-*` 9.0.0 to 9.14.0 import them.
 // https://github.com/mui/mui-x/issues/23905
 describe('legacy exports', () => {
   it.each([
