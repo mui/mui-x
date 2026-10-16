@@ -335,6 +335,17 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
       isMouseDownRef.current = true;
+      if (imeFastEdit) {
+        // A mousedown with `preventDefault()` does not give the focus, for example a drag in Premium.
+        // The mouseup can also occur on another cell. Thus, reset the flag on each mouseup in the document.
+        ownerDocument(event.currentTarget).addEventListener(
+          'mouseup',
+          () => {
+            isMouseDownRef.current = false;
+          },
+          { once: true, capture: true },
+        );
+      }
       // The row might have been deleted during the click
       if (!apiRef.current.getRow(rowId)) {
         return;
@@ -346,7 +357,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
         onMouseDown(event);
       }
     },
-    [apiRef, field, onMouseDown, rowId],
+    [apiRef, field, imeFastEdit, onMouseDown, rowId],
   );
 
   const publish = React.useCallback(

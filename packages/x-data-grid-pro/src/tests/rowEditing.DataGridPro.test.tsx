@@ -1123,6 +1123,22 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.mock.calls.length).to.equal(1);
         expect(input.value).to.equal('あ');
       });
+
+      it(`should ignore the Escape keydown while the IME composition is active`, () => {
+        render(<TestCase />);
+        const listener = vi.fn();
+        apiRef.current?.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        const input = cell.querySelector('input')!;
+        fireEvent.change(input, { target: { value: 'あ' } });
+        // Escape cancels the IME candidates. It must not cancel the edit.
+        fireEvent.keyDown(input, { key: 'Escape', keyCode: 27, isComposing: true });
+        expect(listener.mock.calls.length).to.equal(0);
+        fireEvent.keyDown(input, { key: 'Escape', keyCode: 27 });
+        expect(listener.mock.calls.length).to.equal(1);
+        expect(listener.mock.lastCall?.[0].reason).to.equal('escapeKeyDown');
+      });
     });
   });
 

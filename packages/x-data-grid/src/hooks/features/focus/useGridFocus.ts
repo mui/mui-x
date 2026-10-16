@@ -369,9 +369,20 @@ export const useGridFocus = (
       if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.columnHeader)) {
         return;
       }
-      // Don't clear focus when it moves to a body cell — setCellFocus already set it.
-      // The focus can also move to an element inside the cell, for example an editor.
-      if ((event.relatedTarget as Element | null)?.closest?.(`.${gridClasses.cell}`)) {
+      // Don't clear focus when it moves to a body cell — setCellFocus already set it
+      if (event.relatedTarget?.getAttribute('class')?.includes(gridClasses.cell)) {
+        return;
+      }
+      // The focus can also move into the focused cell, for example to its editor or checkbox.
+      // Only the cell in the focus state counts, because Tab can also move to a button in `renderCell`.
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (
+        focusedCell &&
+        event.relatedTarget &&
+        apiRef.current
+          .getCellElement(focusedCell.id, focusedCell.field)
+          ?.contains(event.relatedTarget as Node)
+      ) {
         return;
       }
       logger.debug(`Clearing focus`);

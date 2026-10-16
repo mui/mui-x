@@ -102,6 +102,8 @@ The `onCellEditStart` and `onRowEditStart` callbacks receive the `compositionSta
 If your code prevents edit mode for the `printableKeyDown` reason, also prevent it for the `compositionStart` reason:
 
 ```tsx
+import { DataGrid, GridCellEditStartReasons } from '@mui/x-data-grid';
+
 <DataGrid
   experimentalFeatures={{ imeFastEdit: true }}
   onCellEditStart={(params, event) => {
@@ -112,8 +114,12 @@ If your code prevents edit mode for the `printableKeyDown` reason, also prevent 
       event.defaultMuiPrevented = true;
     }
   }}
-/>
+/>;
 ```
+
+With the `compositionStart` reason, the `event` argument is a `compositionstart` event, not a keyboard event.
+The TypeScript type of the argument does not include composition events.
+Do not read keyboard properties, such as `event.key`, for this reason.
 
 :::warning
 This feature is experimental. It has these limits:
@@ -123,7 +129,7 @@ This feature is experimental. It has these limits:
 - It is not available on devices with a coarse primary pointer, such as touch screens and tablets.
   On these devices, an input that has the focus opens the virtual keyboard.
 - Screen readers announce a text field instead of a cell. The label of the text field is the value of the cell.
-- The hidden edit component sends the keyboard events of the focused cell.
+- The hidden input receives the keyboard events of the focused cell.
   In `onCellKeyDown`, `event.target` is the input element, not the cell element.
   Use `params` to identify the cell.
 

@@ -597,6 +597,21 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       expect(cell).not.to.have.class(gridClasses['cell--editing']);
     });
 
+    it('gives the focus to the hidden editor after a Shift+drag that started in the cell', async () => {
+      const { user } = await render(<FillTest />);
+      await user.click(getCell(0, 1));
+      // Shift+mousedown extends the cell selection and prevents the focus change.
+      // The drag ends on another cell, so the first cell does not get a mouseup.
+      const cell = getCell(2, 1);
+      fireEvent.mouseDown(cell, { shiftKey: true });
+      fireEvent.mouseUp(getCell(2, 2), { shiftKey: true });
+      expect(getInput(cell)).to.equal(null);
+
+      // Programmatic focus and Tab use the same focus sync.
+      await act(async () => cell.focus());
+      expect(document.activeElement).to.equal(getInput(cell));
+    });
+
     it('selects all cells with Ctrl+A from the hidden editor', async () => {
       const { user } = await render(<FillTest />);
       const cell = getCell(0, 1);
