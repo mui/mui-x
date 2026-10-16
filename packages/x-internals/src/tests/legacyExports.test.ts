@@ -1,0 +1,37 @@
+import { describe, it, expect } from 'vitest';
+import { isJSDOM } from '../platform';
+
+// Published `@mui/x-*` 9.0.0 to 9.14.0 import these through a `^9` range, so keep them until v10.
+// https://github.com/mui/mui-x/issues/23905
+describe('legacy exports', () => {
+  it.each([
+    { entryPoint: 'domUtils', names: ['getTarget'] },
+    { entryPoint: 'fastArrayCompare', names: ['fastArrayCompare'] },
+    { entryPoint: 'fastObjectShallowCompare', names: ['fastObjectShallowCompare'] },
+    { entryPoint: 'platform', names: ['iOSMediaQuery', 'isFirefox', 'isJSDOM'] },
+    { entryPoint: 'reactMajor', names: ['default'] },
+    {
+      entryPoint: 'store',
+      names: [
+        'Store',
+        'createSelector',
+        'createSelectorMemoized',
+        'createSelectorMemoizedWithOptions',
+        'useStore',
+        'useStoreEffect',
+      ],
+    },
+    { entryPoint: 'useFirstRender', names: ['useFirstRender'] },
+  ])(
+    '@mui/x-internals/$entryPoint keeps the exports that 9.x packages import',
+    async ({ entryPoint, names }) => {
+      const namespace = await import(`@mui/x-internals/${entryPoint}`);
+      expect(Object.keys(namespace)).toEqual(expect.arrayContaining(names));
+    },
+  );
+
+  // The x-virtualizer of data grid 9.0.0 to 9.6.0 reads it for its default virtualization state.
+  it('detects jsdom in platform.isJSDOM', () => {
+    expect(isJSDOM).to.equal(true);
+  });
+});
