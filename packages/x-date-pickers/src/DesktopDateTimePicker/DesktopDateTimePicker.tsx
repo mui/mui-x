@@ -26,7 +26,7 @@ import {
 } from '../MultiSectionDigitalClock';
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
-import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { VIEW_HEIGHT, VIEW_HEIGHT_COMPACT } from '../internals/constants/dimensions';
 import type {
   PickerRendererInterceptorProps,
   PickerViewRendererLookup,
@@ -52,7 +52,7 @@ const rendererInterceptor = function RendererInterceptor(
         },
         [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
           {
-            maxHeight: VIEW_HEIGHT,
+            maxHeight: rendererProps.compact ? VIEW_HEIGHT_COMPACT : VIEW_HEIGHT,
           },
       },
     ],
@@ -209,6 +209,11 @@ DesktopDateTimePicker.propTypes /* remove-proptypes */ = {
    * @default false
    */
   closeOnSelect: PropTypes.bool,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {PickerValidDate} date The date of the day of week provided by the adapter.

@@ -19,7 +19,12 @@ import {
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 import type { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import type { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
-import { DIALOG_WIDTH, VIEW_HEIGHT } from '../internals/constants/dimensions';
+import {
+  DIALOG_WIDTH,
+  DIALOG_WIDTH_COMPACT,
+  VIEW_HEIGHT,
+  VIEW_HEIGHT_COMPACT,
+} from '../internals/constants/dimensions';
 import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
@@ -82,6 +87,9 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker(
     : defaultizedProps.views;
 
   // Props with the default values specific to the mobile variant
+  const viewWidth = defaultizedProps.compact ? DIALOG_WIDTH_COMPACT : DIALOG_WIDTH;
+  const viewHeight = defaultizedProps.compact ? VIEW_HEIGHT_COMPACT : VIEW_HEIGHT;
+
   const props = {
     ...defaultizedProps,
     viewRenderers,
@@ -116,19 +124,19 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker(
           [
             {
               [`& .${multiSectionDigitalClockClasses.root}`]: {
-                width: DIALOG_WIDTH,
+                width: viewWidth,
               },
               [`& .${multiSectionDigitalClockSectionClasses.root}`]: {
                 flex: 1,
                 // account for the border on `MultiSectionDigitalClock`
-                maxHeight: VIEW_HEIGHT - 1,
+                maxHeight: viewHeight - 1,
                 [`.${multiSectionDigitalClockSectionClasses.item}`]: {
                   width: 'auto',
                 },
               },
               [`& .${digitalClockClasses.root}`]: {
-                width: DIALOG_WIDTH,
-                maxHeight: VIEW_HEIGHT,
+                width: viewWidth,
+                maxHeight: viewHeight,
                 flex: 1,
                 [`.${digitalClockClasses.item}`]: {
                   justifyContent: 'center',
@@ -180,6 +188,11 @@ MobileDateTimePicker.propTypes /* remove-proptypes */ = {
    * @default false
    */
   closeOnSelect: PropTypes.bool,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {PickerValidDate} date The date of the day of week provided by the adapter.

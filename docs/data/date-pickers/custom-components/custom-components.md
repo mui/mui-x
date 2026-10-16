@@ -267,6 +267,17 @@ If your application uses a single date library, prefer using the date library di
 
 {{"demo": "UsePickerAdapter.js", "defaultCodeOpen": false}}
 
+## Compact layout
+
+Use the `compact` prop to render the picker with reduced dimensions, following the [Material Design compact date picker spec](https://m2.material.io/components/date-pickers#specs).
+The calendar width shrinks from 320px to 256px, and the day cells shrink from 36px to 32px.
+The year, month, and time views use the same reduced dimensions.
+Use the toolbar to switch between views in the demo below.
+
+{{"demo": "CompactPicker.js"}}
+
+The `compact` prop is available on all the date and date time pickers (desktop, mobile, static, and range variants) and on the `DateCalendar`, `DateRangeCalendar`, `MonthCalendar`, and `YearCalendar` components.
+
 ## Shortcuts
 
 You can add shortcuts to every Picker component.
