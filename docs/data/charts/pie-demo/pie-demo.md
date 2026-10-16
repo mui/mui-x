@@ -10,24 +10,24 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 
 ## TwoLevelPieChart
 
-{{"demo": "TwoLevelPieChart.js"}}
+{{"component": "file://./demos/two-level-pie-chart/index.ts"}}
 
 ## StraightAnglePieChart
 
-{{"demo": "StraightAnglePieChart.js"}}
+{{"component": "file://./demos/straight-angle-pie-chart/index.ts"}}
 
 ## PieChartWithCustomizedLabel
 
-{{"demo": "PieChartWithCustomizedLabel.js"}}
+{{"component": "file://./demos/pie-chart-with-customized-label/index.ts"}}
 
 ## PieChartWithPaddingAngle
 
-{{"demo": "PieChartWithPaddingAngle.js"}}
+{{"component": "file://./demos/pie-chart-with-padding-angle/index.ts"}}
 
 ## PieChartWithCenterLabel
 
-{{"demo": "PieChartWithCenterLabel.js"}}
+{{"component": "file://./demos/pie-chart-with-center-label/index.ts"}}
 
 ## Pie chart with custom mark in legend and tooltip
 
-{{"demo": "PieChartWithCustomLegendAndTooltip.js"}}
+{{"component": "file://./demos/pie-chart-with-custom-legend-and-tooltip/index.ts"}}

@@ -1,0 +1,31 @@
+import Box from '@mui/material/Box';
+import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+
+export default function FunnelLabels() {
+  return (
+    <Box sx={{ width: '100%', maxWidth: 400 }}>
+      {/* @focus-start */}
+      <FunnelChart
+        series={[
+          {
+            data: [
+              { value: 200, label: 'A' },
+              { value: 180, label: 'B' },
+              { value: 90, label: 'C' },
+              { value: 50, label: 'D' },
+            ],
+            valueFormatter: (item, context) =>
+              `${item.label}${context.dataIndex} ${item.value}.00`,
+          },
+        ]}
+        {...funnelProps}
+      />
+      {/* @focus-end */}
+    </Box>
+  );
+}
+
+const funnelProps = {
+  height: 300,
+  hideLegend: true,
+} as const;

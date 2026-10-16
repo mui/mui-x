@@ -1,5 +1,5 @@
-import { ExtendedFeatureCollection } from '@mui/x-charts-premium/Map';
-import { ExtendedFeature } from '@mui/x-charts-vendor/d3-geo';
+import type { ExtendedFeatureCollection } from '@mui/x-charts-premium/Map';
+import type { ExtendedFeature } from '@mui/x-charts-vendor/d3-geo';
 
 export const continents = [
   'Europe',

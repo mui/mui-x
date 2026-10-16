@@ -136,7 +136,7 @@ The zoom `minSpan` is a percentage, so the most zoomed-in view always renders ab
 
 The same 8,784-point series rendered with each method at the same zoom. `'none'` is the reference (every point); the others approximate it with far fewer elements while preserving the overall shape.
 
-{{"demo": "SamplingMethodComparison.js"}}
+{{"component": "file://./demos/sampling-method-comparison/index.ts"}}
 
 ### Bar sampling
 
@@ -147,7 +147,7 @@ Any method other than `'none'` enables it (bars always use a min/max envelope).
 <BarChartPro series={series} sampling="minmax" />
 ```
 
-{{"demo": "BarSampling.js"}}
+{{"component": "file://./demos/bar-sampling/index.ts"}}
 
 ### Line sampling
 
@@ -158,8 +158,8 @@ See [Comparing methods](#comparing-methods).
 <LineChartPro series={series} sampling="m4" />
 ```
 
-{{"demo": "LineSampling.js"}}
+{{"component": "file://./demos/line-sampling/index.ts"}}
 
 Series with `null` values are still sampled; the gaps are preserved, so the line breaks at them instead of bridging them.
 
-{{"demo": "LineSamplingNulls.js"}}
+{{"component": "file://./demos/line-sampling-nulls/index.ts"}}

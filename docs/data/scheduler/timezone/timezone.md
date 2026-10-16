@@ -58,7 +58,7 @@ const event = {
 This event always happens at 09:00 in New York, regardless of DST changes.
 A local time that a DST transition skips or repeats follows the same rules as the [occurrences of recurring events](#recurring-events-and-timezones).
 
-{{"demo": "TimezoneDatasetWallTime.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/timezone-dataset-wall-time/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## The `timezone` field
 
@@ -88,7 +88,7 @@ The visible date is read in `displayTimezone` too: the visible range starts on t
 />
 ```
 
-{{"demo": "TimezoneInstantBased.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/timezone-instant-based/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Supported timezones
 
@@ -140,4 +140,4 @@ The event dialog reads and writes the recurrence rule in the event's `timezone` 
 When the event's timezone differs from the `displayTimezone`, the Recurrence tab shows a "Timezone: …" note under the recurrence selector and the read-only details append the timezone name to the recurrence label.
 An event created from the UI has no `timezone` field, so the note names the system timezone (the `default` one) when the calendar displays another.
 
-{{"demo": "TimezoneRecurringEvents.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/timezone-recurring-events/index.ts", "bg": "inline", "collapseToEmpty": true}}

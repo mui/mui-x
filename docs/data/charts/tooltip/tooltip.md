@@ -22,7 +22,7 @@ You can trigger the tooltip with two kinds of events:
 
 To pass this trigger attribute to the tooltip, use `slotProps.tooltip.trigger`.
 
-{{"demo": "Interaction.js"}}
+{{"component": "file://./demos/interaction/index.ts"}}
 
 ## Formatting
 
@@ -34,7 +34,7 @@ The demo below shows:
 - Time axis values formatted to show only the year
 - Series values formatted in US dollars
 
-{{"demo": "Formatting.js"}}
+{{"component": "file://./demos/formatting/index.ts"}}
 
 ### Advanced formatting
 
@@ -42,7 +42,7 @@ The series `valueFormatter` function receives a context as its second argument c
 
 The demo below uses `dataIndex` to add each team's rank in the tooltip.
 
-{{"demo": "SeriesFormatter.js"}}
+{{"component": "file://./demos/series-formatter/index.ts"}}
 
 ### Axis formatter
 
@@ -55,7 +55,7 @@ In this demo, you can see:
 - The country axis displays only the country code
 - The label displays annotated data: `Country: name (code)`
 
-{{"demo": "AxisFormatter.js"}}
+{{"component": "file://./demos/axis-formatter/index.ts"}}
 
 ### Label formatting
 
@@ -109,7 +109,7 @@ This prop accepts the following values:
 
 Regardless of the `sort` prop being `'asc'` or `'desc'`, series whose value is `null` are always sorted last.
 
-{{"demo": "SortDemo.js"}}
+{{"component": "file://./demos/sort-demo/index.ts"}}
 
 ## Position
 
@@ -128,7 +128,7 @@ For example, setting `anchor: 'node'`, `position: 'bottom'`, and `placement: 'to
 
 You can pass these props to the tooltip using `slotProps.tooltip`, or directly to either `ChartsTooltip` or `ChartsTooltipContainer` if you're composing a custom component.
 
-{{"demo": "TooltipPosition.js", "hideToolbar": true, "bg": "playground"}}
+{{"component": "file://./demos/tooltip-position/index.ts", "hideToolbar": true, "bg": "playground"}}
 
 ## Portaling the tooltip
 
@@ -165,7 +165,7 @@ import { chartsTooltipClasses } from '@mui/x-charts';
 
 You can also use the `sx` prop of the tooltip itself via `slotProps.tooltip`.
 
-{{"demo": "TooltipStyle.js"}}
+{{"component": "file://./demos/tooltip-style/index.ts"}}
 
 ## Using a custom tooltip
 
@@ -196,13 +196,13 @@ Make sure the tooltip `trigger` is set to `"item"`.
 Otherwise no tooltip will be shown.
 :::
 
-{{"demo": "ControlledTooltip.js"}}
+{{"component": "file://./demos/controlled-tooltip/index.ts"}}
 
 ### Synchronizing item tooltip
 
 The item tooltip control can be used to sync tooltips between multiple charts.
 
-{{"demo": "SyncTooltip.js"}}
+{{"component": "file://./demos/sync-tooltip/index.ts"}}
 
 ## Controlling the axis tooltip
 
@@ -216,7 +216,7 @@ Make sure the tooltip `trigger` is set to `"axis"`.
 Otherwise no tooltip will be shown.
 :::
 
-{{"demo": "ControlledAxisTooltip.js"}}
+{{"component": "file://./demos/controlled-axis-tooltip/index.ts"}}
 
 ### Synchronizing tooltips across charts
 
@@ -225,7 +225,7 @@ To compare values at the same position across stacked charts, share the highligh
 Each chart receives the same `highlightedAxis` state and updates it with `onHighlightedAxisChange`, so hovering one chart moves the crosshair on every chart.
 The built-in tooltip is turned off with `slotProps={{ tooltip: { trigger: 'none' } }}`, and one tooltip reads the value of every chart at the shared `dataIndex`.
 
-{{"demo": "SynchronizedTooltip.js"}}
+{{"component": "file://./demos/synchronized-tooltip/index.ts"}}
 
 ## Creating a tooltip
 
@@ -263,7 +263,7 @@ Then you can either render built-in content (with `ChartsItemTooltipContent` or 
 
 The demo below shows how to use additional hooks such as `useXAxis()` and `useDrawingArea()` to customize the tooltip position.
 
-{{"demo": "CustomTooltipPosition.js"}}
+{{"component": "file://./demos/custom-tooltip-position/index.ts"}}
 
 #### Modifying the content
 
@@ -279,7 +279,7 @@ It contains:
 - `color`: The color used to display the item, which includes the impact of [`colorMap`](/x/react-charts/styling/#value-based-colors)
 - `label`, `value`, `formattedValue`: Values computed to simplify tooltip creation
 
-{{"demo": "CustomTooltipContent.js"}}
+{{"component": "file://./demos/custom-tooltip-content/index.ts"}}
 
 #### Axis content
 
@@ -290,4 +290,4 @@ For each axis, it contains:
 - `color`: The color used to display the item, which includes the impact of [`colorMap`](/x/react-charts/styling/#value-based-colors)
 - `label`, `value`, `formattedValue`: Values computed to simplify tooltip creation
 
-{{"demo": "CustomAxisTooltipContent.js"}}
+{{"component": "file://./demos/custom-axis-tooltip-content/index.ts"}}

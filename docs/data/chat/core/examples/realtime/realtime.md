@@ -89,7 +89,7 @@ onEvent({
 
 The demo below wires all three event types into a single adapter:
 
-{{"demo": "RealtimeHeadlessChat.js"}}
+{{"component": "file://./demos/realtime-headless-chat/index.ts"}}
 
 ## Key takeaways
 

@@ -1,0 +1,51 @@
+import * as React from 'react';
+import { BarPlot } from '@mui/x-charts/BarChart';
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { LinePlot } from '@mui/x-charts/LineChart';
+import { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';
+import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
+import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
+import { Chance } from 'chance';
+
+const chance = new Chance(42);
+
+const xAxisData = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+const firstSeriesData = Array.from({ length: 26 }, () =>
+  chance.integer({ min: 0, max: 10 }),
+);
+const secondSeriesData = Array.from({ length: 26 }, () =>
+  chance.integer({ min: 0, max: 10 }),
+);
+
+export default function ZoomSliderComposition() {
+  // @focus-start @padding 1
+  const clipPathId = React.useId();
+
+  return (
+    <ChartsContainerPro
+      series={[
+        { type: 'line', data: firstSeriesData },
+        { type: 'line', data: secondSeriesData },
+      ]}
+      xAxis={[
+        {
+          data: xAxisData,
+          scaleType: 'band',
+          id: 'x-axis-id',
+          height: 45,
+          zoom: { slider: { enabled: true } },
+        },
+      ]}
+      height={200}
+    >
+      <g clipPath={`url(#${clipPathId})`}>
+        <BarPlot />
+        <LinePlot />
+      </g>
+      <ChartsXAxis label="X axis" axisId="x-axis-id" />
+      <ChartsZoomSlider />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsContainerPro>
+  );
+  // @focus-end
+}

@@ -11,7 +11,7 @@ The following demo shows a full-featured CRUD (Create, Read, Update, Delete) typ
 You will find the details of the editing API in the next sections.
 :::
 
-{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/full-featured-crud-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Making a column editable
 
@@ -27,7 +27,7 @@ For example, with the code snippet below, users can edit cells in the `name` col
 The following demo shows an example of how to make all columns editable.
 Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> on any cell.
 
-{{"demo": "BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-editing-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Row editing
 
@@ -43,7 +43,7 @@ To enable this behavior, set the `editMode` prop on the Data Grid to `"row"`. No
 The following demo illustrates how row editing works.
 The user can [start](#start-editing) and [stop](#stop-editing) editing a row using the same actions as those provided for cell editing (for example double-clicking a cell).
 
-{{"demo": "BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-row-editing-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 By design, when changing the value of a cell all `preProcessEditCellProps` callbacks from other columns are also called.
@@ -124,7 +124,7 @@ It is called with a [`GridCellParams`](/x/api/data-grid/grid-cell-params/) objec
 In the following demo, only the rows with an even `Age` value are editable.
 The editable cells have a green background for better visibility.
 
-{{"demo": "IsCellEditableGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/is-cell-editable-grid/index.ts", "bg": "inline"}}
 
 ## Value parser and value setter
 
@@ -159,7 +159,7 @@ const columns: GridColDef[] = [
 In the following demo, both the `valueParser` and the `valueSetter` are defined for the **Full name** column.
 The `valueParser` capitalizes the value entered, and the `valueSetter` splits the value and saves it correctly into the row model:
 
-{{"demo": "ValueParserSetterGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/value-parser-setter-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Validation
 
@@ -198,7 +198,7 @@ In this case, the callback returns a promise that resolves to the modified props
 Note that the value passed to `props.error` is passed directly to the edit component as the `error` prop.
 While the promise is not resolved, the edit component will receive an `isProcessingProps` prop with value equal to `true`.
 
-{{"demo": "ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/validate-server-name-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Controlled model
 
@@ -242,7 +242,7 @@ Use them to update the respective prop.
 In the demo below, `cellModesModel` is used to control the mode of selected cell using the external buttons.
 For an example using row editing check the [full-featured CRUD component](#full-featured-crud).
 
-{{"demo": "StartEditButtonGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/start-edit-button-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 The options passed to both model props only take effect when `mode` changes.
@@ -260,7 +260,7 @@ See [API object](/x/react-data-grid/api-object/) for more details.
 This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
-{{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/edit-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

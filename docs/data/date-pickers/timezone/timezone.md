@@ -20,11 +20,11 @@ Only `AdapterDayjs`, `AdapterLuxon` and `AdapterMoment` are currently compatible
 
 By default, the components will always use the timezone of your `value` / `defaultValue` prop:
 
-{{"demo": "BasicValueProp.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-value-prop/index.ts", "collapseToEmpty": true}}
 
 You can use the `timezone` prop to explicitly define the timezone in which the value should be rendered:
 
-{{"demo": "BasicTimezoneProp.js"}}
+{{"component": "file://./demos/basic-timezone-prop/index.ts"}}
 
 This will be needed if the component has no `value` or `defaultValue` to deduce the timezone from, or if you don't want to render the value in its original timezone.
 
@@ -38,7 +38,7 @@ This will be needed if the component has no `value` or `defaultValue` to deduce 
 | IANA standard zones | Example: `"Europe/Paris"`, `"America/New_York"`<br/>[List of all the IANA zones](https://timezonedb.com/time-zones)                                                                                                                                                                                                                                                                                            |
 |        Fixed offset | Example: `"UTC+7"`<br/>**Only available with Luxon**                                                                                                                                                                                                                                                                                                                                                           |
 
-{{"demo": "TimezonePlayground.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/timezone-playground/index.ts", "collapseToEmpty": true}}
 
 ## Usage with Day.js
 
@@ -86,7 +86,7 @@ function App() {
 }
 ```
 
-{{"demo": "DayjsUTC.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/dayjs-utc/index.ts", "collapseToEmpty": true}}
 
 ### Day.js and timezones
 
@@ -155,7 +155,7 @@ function App() {
 }
 ```
 
-{{"demo": "DayjsTimezone.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/dayjs-timezone/index.ts", "collapseToEmpty": true}}
 
 :::info
 Please check out the documentation of the [dayjs timezone plugin](https://day.js.org/docs/en/timezone/timezone) for more details on how to manipulate the timezones.
@@ -212,7 +212,7 @@ function App() {
 }
 ```
 
-{{"demo": "LuxonUTC.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/luxon-utc/index.ts", "collapseToEmpty": true}}
 
 ### Luxon and timezone
 
@@ -264,7 +264,7 @@ function App() {
 }
 ```
 
-{{"demo": "LuxonTimezone.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/luxon-timezone/index.ts", "collapseToEmpty": true}}
 
 :::info
 Please check out the documentation of the [UTC and timezones on Luxon](https://moment.github.io/luxon/#/zones) for more details on how to manipulate the timezones.
@@ -304,7 +304,7 @@ function App() {
 }
 ```
 
-{{"demo": "MomentUTC.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/moment-utc/index.ts", "collapseToEmpty": true}}
 
 ### Moment and timezone
 
@@ -365,7 +365,7 @@ function App() {
 }
 ```
 
-{{"demo": "MomentTimezone.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/moment-timezone/index.ts", "collapseToEmpty": true}}
 
 ## More advanced examples
 
@@ -379,10 +379,10 @@ please refer to the sections above to know how to pass a UTC date or a date in a
 
 The demo below shows how to store dates in UTC while displaying using the system timezone.
 
-{{"demo": "StoreUTCButDisplaySystemTimezone.js",  "defaultCodeOpen": false}}
+{{"component": "file://./demos/store-utc-but-display-system-timezone/index.ts", "collapseToEmpty": true}}
 
 ### Store UTC dates but display in another timezone
 
 The demo below shows how to store dates in UTC while displaying using the `Pacific/Honolulu` timezone.
 
-{{"demo": "StoreUTCButDisplayOtherTimezone.js",  "defaultCodeOpen": false}}
+{{"component": "file://./demos/store-utc-but-display-other-timezone/index.ts", "collapseToEmpty": true}}

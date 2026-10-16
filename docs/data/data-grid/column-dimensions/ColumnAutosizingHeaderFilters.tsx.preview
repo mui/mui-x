@@ -1,9 +1,0 @@
-<DataGridPremium
-  density="compact"
-  rows={rows}
-  columns={columns}
-  headerFilters
-  autosizeOptions={{
-    includeHeaderFilters: true,
-  }}
-/>

@@ -12,7 +12,7 @@ The evaluated value flows through rendering, sorting, filtering, aggregation, cl
 The demo below is an invoice where every **Amount** cell is a formula.
 Edit a quantity, a unit price, or a discount, and watch the line amount, the subtotal, the tax, and the total due update in order.
 
-{{"demo": "FormulaBasic.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/formula-basic/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 For the complete formula language—operators, cell references, ranges, built-in functions, and error values—see the [Syntax reference](/x/react-data-grid/formula-syntax/) page.
 The [Formula engine](/x/react-data-grid/formula-engine/) page explains how evaluation works and how to register custom functions.
@@ -98,7 +98,7 @@ Suggestions are spliced at the caret, so the rest of the formula is preserved.
 The demo below registers a custom `MARGIN` function.
 Click the empty **Gross margin** cell and type `=M` to see it in the dropdown with its signature help.
 
-{{"demo": "FormulaAutocomplete.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/formula-autocomplete/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 The dropdown is on by default.
 While it is open, <kbd class="key">Down</kbd> and <kbd class="key">Up</kbd> move the highlight, <kbd class="key">Enter</kbd> and <kbd class="key">Tab</kbd> accept the highlighted suggestion, and <kbd class="key">Escape</kbd> closes it—so those keys do not commit the edit or move between cells until the dropdown is closed.
@@ -110,7 +110,7 @@ While editing a formula, each distinct cell, range, or column reference is shown
 
 Double-click any **Q1 total** cell in the demo below to see its three references highlighted, or an **All departments** cell for a range outline.
 
-{{"demo": "FormulaReferenceHighlighting.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/formula-reference-highlighting/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 - Colors are keyed on the **resolved target**, so two references to the same cell share a color, and a reference repeated in the formula is outlined once.
 - A reference that cannot be resolved—a hidden column, a filtered-out row, or the edited cell itself—is left uncolored and is not outlined.
@@ -140,7 +140,7 @@ The bar is a permanently open formula editor for the focused cell:
 
 Click any **Amount** cell in the demo below and edit its formula from the bar, or double-click a cell and watch the bar mirror the edit.
 
-{{"demo": "FormulaBarBasic.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/formula-bar-basic/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 To place the bar in a custom toolbar—or anywhere else in the page through a portal—compose the exported component; see the [Formula Bar component](/x/react-data-grid/components/formula-bar/) page.
 
@@ -159,7 +159,7 @@ When the cell selection [fill handle](/x/react-data-grid/clipboard/#drag-to-fill
 In the demo below, select the first **Total with tax** cell and drag the fill handle down: the relative `amount` reference follows each row, while the absolute `$C$1` reference stays pinned to the shared tax rate.
 Then edit the tax rate and watch every total update.
 
-{{"demo": "FormulaFillHandle.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/formula-fill-handle/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 - **Relative references shift** by the distance the cell moved: a formula written as `=A1 * B1` becomes `=A2 * B2` one row down, and same-row field references such as `=price * quantity` move to the next column when filled sideways.
 - **Absolute references stay fixed**: positional references (the `$A$1` form) are never shifted.
@@ -206,7 +206,7 @@ Excel itself stores a relative range endpoint as an offset from the formula cell
 The demo below compares mortgage offers with amortized-payment formulas.
 Export it through the toolbar, open the file in Excel, and change an APR—the monthly payment and the best offer recalculate inside Excel, because the cells hold live formulas.
 
-{{"demo": "FormulaExcelExport.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/formula-excel-export/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::warning
 `escapeFormulas` defaults to `true` to prevent [CSV and Excel formula injection](https://owasp.org/www-community/attacks/CSV_Injection): any string value that starts with `=`, `+`, `-`, or `@` is written as text.

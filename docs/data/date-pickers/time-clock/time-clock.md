@@ -12,13 +12,13 @@ packageName: '@mui/x-date-pickers'
 
 ## Basic usage
 
-{{"demo": "BasicTimeClock.js"}}
+{{"component": "file://./demos/basic-time-clock/index.ts"}}
 
 ## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "TimeClockValue.js"}}
+{{"component": "file://./demos/time-clock-value/index.ts"}}
 
 :::info
 
@@ -32,7 +32,7 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 The component can be disabled or read-only.
 
-{{"demo": "TimeClockFormProps.js"}}
+{{"component": "file://./demos/time-clock-form-props/index.ts"}}
 
 ## Views
 
@@ -42,7 +42,7 @@ By default, only the `hours` and `minutes` views are enabled.
 You can customize the enabled views using the `views` prop.
 Views will appear in the order they're included in the `views` array.
 
-{{"demo": "TimeClockViews.js"}}
+{{"component": "file://./demos/time-clock-views/index.ts"}}
 
 ## 12h/24h format
 
@@ -52,7 +52,7 @@ You can force a specific format using the `ampm` prop.
 
 You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#meridiem-12h-24h-format).
 
-{{"demo": "TimeClockAmPm.js"}}
+{{"component": "file://./demos/time-clock-am-pm/index.ts"}}
 
 ## Localization
 

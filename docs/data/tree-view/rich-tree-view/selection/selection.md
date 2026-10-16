@@ -14,7 +14,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 By default, `RichTreeView` lets users select one item at a time.
 
-{{"demo": "SingleSelectTreeView.js"}}
+{{"component": "file://./demos/single-select-tree-view/index.ts"}}
 
 :::success
 When `RichTreeView` is set to allow one seletion at a time, users can select an item by clicking it or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
@@ -24,7 +24,7 @@ When `RichTreeView` is set to allow one seletion at a time, users can select an 
 
 Use the `multiSelect` prop to enable multi-selection.
 
-{{"demo": "MultiSelectTreeView.js"}}
+{{"component": "file://./demos/multi-select-tree-view/index.ts"}}
 
 :::success
 When multi-selection is enabled, users can select multiple items using the mouse in two ways:
@@ -39,17 +39,17 @@ You can also use [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi
 
 Use the `disableSelection` prop if you don't want the items to be selectable:
 
-{{"demo": "DisableSelection.js"}}
+{{"component": "file://./demos/disable-selection/index.ts"}}
 
 ## Checkbox selection
 
 To enable checkbox selection, set `checkboxSelection={true}`:
 
-{{"demo": "CheckboxSelection.js"}}
+{{"component": "file://./demos/checkbox-selection/index.ts"}}
 
 This is also compatible with multi-selection:
 
-{{"demo": "CheckboxMultiSelection.js"}}
+{{"component": "file://./demos/checkbox-multi-selection/index.ts"}}
 
 ## Selectable items
 
@@ -58,14 +58,14 @@ When an item is not selectable, the checkbox is hidden regardless of [`checkboxS
 
 In the example below, only leaf items (items without children) are selectable.
 
-{{"demo": "SelectableItems.js"}}
+{{"component": "file://./demos/selectable-items/index.ts"}}
 
 ## Controlled selection
 
 Use the `selectedItems` prop to control selected `TreeItem` components.
 You can also use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
 
-{{"demo": "ControlledSelection.js"}}
+{{"component": "file://./demos/controlled-selection/index.ts"}}
 
 :::info
 
@@ -79,7 +79,7 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 Use the `onItemSelectionToggle` prop to react to an item selection change:
 
-{{"demo": "TrackItemSelectionToggle.js"}}
+{{"component": "file://./demos/track-item-selection-toggle/index.ts"}}
 
 ## Automatic parents and children selection
 
@@ -107,7 +107,7 @@ When `selectionPropagation.parents` is set to `true`:
 
 The example below demonstrates the usage of the `selectionPropagation` prop.
 
-{{"demo": "SelectionPropagation.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/selection-propagation/index.ts", "collapseToEmpty": true}}
 
 :::warning
 This feature only works when multi-selection is enabled using `props.multiSelect`.
@@ -124,7 +124,7 @@ This means:
 In the example below, some items are marked as out of stock (disabled).
 Try selecting a parent to see that only available items are selected, or select all available children to see the parent become checked automatically.
 
-{{"demo": "SelectionPropagationDisabled.js"}}
+{{"component": "file://./demos/selection-propagation-disabled/index.ts"}}
 
 ### Apply propagation on mount
 
@@ -170,7 +170,7 @@ return (
 In the example below, only Anna, Michael, Elizabeth, and William are selected in the raw data.
 Their ancestors are added to the `defaultSelectedItems` prop by the hook:
 
-{{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/selection-propagation-mount/index.ts", "collapseToEmpty": true}}
 
 :::success
 The `useApplyPropagationToSelectedItemsOnMount()` must receive the following props as provided to `RichTreeView`:
@@ -222,11 +222,11 @@ apiRef.current.setItemSelection({
 });
 ```
 
-{{"demo": "ApiMethodSetItemSelection.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-set-item-selection/index.ts", "collapseToEmpty": true}}
 
 You can use the `keepExistingSelection` property to avoid losing the items that have already been selected when using `multiSelect`:
 
-{{"demo": "ApiMethodSetItemSelectionKeepExistingSelection.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-set-item-selection-keep-existing-selection/index.ts", "collapseToEmpty": true}}
 
 ### Get the selection status of an item
 
@@ -240,7 +240,7 @@ apiRef.current.getItemSelection(
 // Returns 'selected', 'indeterminate' or 'unselected'
 ```
 
-{{"demo": "ApiMethodGetItemSelection.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-get-item-selection/index.ts", "collapseToEmpty": true}}
 
 :::info
 An item is `indeterminate` when it isn't selected but some of its selectable descendants are.

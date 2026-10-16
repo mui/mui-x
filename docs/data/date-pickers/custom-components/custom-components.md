@@ -43,7 +43,7 @@ You can override the actions displayed by passing the `actions` prop to the `act
 
 In the example below, the action bar contains only one button, which resets the selection to today's date:
 
-{{"demo": "ActionBarComponentProps.js"}}
+{{"component": "file://./demos/action-bar-component-props/index.ts"}}
 
 #### Available actions
 
@@ -65,7 +65,7 @@ This can be used in combination with `slotProps`.
 
 In the example below, the actions are the same as in the section above, but they are rendered inside a menu:
 
-{{"demo": "ActionBarComponent.js"}}
+{{"component": "file://./demos/action-bar-component/index.ts"}}
 
 ## Tabs
 
@@ -107,7 +107,7 @@ This can be used in combination with `slotProps`.
 
 In the example below, the tabs are using different icons and have an additional component:
 
-{{"demo": "Tabs.js"}}
+{{"component": "file://./demos/tabs/index.ts"}}
 
 ## Toolbar
 
@@ -142,7 +142,7 @@ This behavior can be overridden by setting the `hidden` prop:
 
 Each component comes with its own toolbar (`DatePickerToolbar`, `TimePickerToolbar`, and `DateTimePickerToolbar`) that you can reuse and customize.
 
-{{"demo": "ToolbarComponent.js"}}
+{{"component": "file://./demos/toolbar-component/index.ts"}}
 
 ## Calendar header
 
@@ -153,13 +153,13 @@ It lets users navigate through months and switch to the month and year views whe
 
 You can pass props to the calendar header as shown below:
 
-{{"demo": "CalendarHeaderComponentProps.js"}}
+{{"component": "file://./demos/calendar-header-component-props/index.ts"}}
 
 ### Component
 
 You can pass a custom component to replace the header, as shown below:
 
-{{"demo": "CalendarHeaderComponent.js"}}
+{{"component": "file://./demos/calendar-header-component/index.ts"}}
 
 When used with a date range component,
 you receive three additional props to let you handle scenarios where multiple months are rendered:
@@ -170,7 +170,7 @@ you receive three additional props to let you handle scenarios where multiple mo
 
 The demo below shows how to navigate the months two by two:
 
-{{"demo": "CalendarHeaderComponentRange.js"}}
+{{"component": "file://./demos/calendar-header-component-range/index.ts"}}
 
 ## Year button
 
@@ -180,13 +180,13 @@ This button lets users change the selected year in the `year` view.
 
 You can pass props to the year button as shown below:
 
-{{"demo": "YearButtonComponentProps.js"}}
+{{"component": "file://./demos/year-button-component-props/index.ts"}}
 
 ### Component
 
 You can pass a custom component to replace the year button, as shown below:
 
-{{"demo": "YearButtonComponent.js"}}
+{{"component": "file://./demos/year-button-component/index.ts"}}
 
 ## Month button
 
@@ -200,13 +200,13 @@ You can learn more about how to enable the `month` view on the [`DateCalendar` d
 
 You can pass props to the month button as shown below:
 
-{{"demo": "MonthButtonComponentProps.js"}}
+{{"component": "file://./demos/month-button-component-props/index.ts"}}
 
 ### Component
 
 You can pass a custom component to replace the month button, as shown below:
 
-{{"demo": "MonthButtonComponent.js"}}
+{{"component": "file://./demos/month-button-component/index.ts"}}
 
 ## Day
 
@@ -233,11 +233,11 @@ For more details on how to adapt your custom styles, check the [Day slot migrati
 
 Use the `--PickerDay-horizontalMargin` and `--PickerDay-size` CSS variables to easily customize the dimensions and spacing of the day slot.
 
-{{"demo": "PickerDayDemoCSSVars.js"}}
+{{"component": "file://./demos/picker-day-demo-css-vars/index.ts"}}
 
 Customize the look and feel by creating a custom theme with `styleOverrides`.
 
-{{"demo": "PickerDayDemoCustomTheme.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/picker-day-demo-custom-theme/index.ts", "collapseToEmpty": true}}
 
 ## Arrow switcher
 
@@ -248,13 +248,13 @@ to navigate to the "Previous" and "Next" steps of the picker: `PreviousIconButto
 
 You can pass props to the icons and buttons as shown below:
 
-{{"demo": "ArrowSwitcherComponentProps.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/arrow-switcher-component-props/index.ts", "collapseToEmpty": true}}
 
 ### Component
 
 You can pass custom components to replace the icons, as shown below:
 
-{{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/arrow-switcher-component/index.ts", "collapseToEmpty": true}}
 
 ## Access date adapter
 
@@ -265,7 +265,7 @@ This hook returns the date adapter instance used by the picker, which you can us
 If your application uses a single date library, prefer using the date library directly in your components to avoid unnecessary complexity and possible breaking changes.
 :::
 
-{{"demo": "UsePickerAdapter.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/use-picker-adapter/index.ts", "collapseToEmpty": true}}
 
 ## Shortcuts
 

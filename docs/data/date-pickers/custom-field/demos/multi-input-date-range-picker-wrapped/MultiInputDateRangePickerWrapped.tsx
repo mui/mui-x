@@ -1,0 +1,24 @@
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import type { MultiInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+
+function WrappedMultiInputDateRangeField(props: MultiInputDateRangeFieldProps) {
+  return <MultiInputDateRangeField spacing={4} {...props} />;
+}
+
+WrappedMultiInputDateRangeField.fieldType = 'multi-input';
+
+export default function MultiInputDateRangePickerWrapped() {
+  return (
+    // @focus-start @padding 2
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['MultiInputDateRangeField']}>
+        <DateRangePicker slots={{ field: WrappedMultiInputDateRangeField }} />
+      </DemoContainer>
+    </LocalizationProvider>
+    // @focus-end
+  );
+}

@@ -20,7 +20,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 `SimpleTreeView` receives its items directly as JSX children.
 
-{{"demo": "BasicSimpleTreeView.js"}}
+{{"component": "file://./demos/basic-simple-tree-view/index.ts"}}
 
 ### Item identifier
 
@@ -47,7 +47,7 @@ You must pass a `label` prop to each `TreeItem`, as shown below:
 
 Use the `disabled` prop on `TreeItem` to disable interaction and focus:
 
-{{"demo": "DisabledJSXItem.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disabled-jsx-item/index.ts", "collapseToEmpty": true}}
 
 #### Focusable disabled items
 
@@ -71,27 +71,27 @@ When it's set to true:
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
 
-{{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/disabled-items-focusable/index.ts", "collapseToEmpty": true}}
 
 ## Track item clicks
 
 Use the `onItemClick` prop to track the clicked item:
 
-{{"demo": "OnItemClick.js"}}
+{{"component": "file://./demos/on-item-click/index.ts"}}
 
 ## Item height
 
 Use the `itemHeight` prop to set the height of each item in the tree.
 If not provided, no height restriction is applied to the tree item content element.
 
-{{"demo": "ItemHeight.js"}}
+{{"component": "file://./demos/item-height/index.ts"}}
 
 ## Get the root DOM element
 
 `SimpleTreeView` forwards its `ref` to the root `<ul>` element.
 Pass a regular React `ref` to the component to access this element:
 
-{{"demo": "RootElementRef.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/root-element-ref/index.ts", "collapseToEmpty": true}}
 
 ## Imperative API
 
@@ -117,4 +117,4 @@ const itemElement = apiRef.current.getItemDOMElement(
 );
 ```
 
-{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}
+{{"component": "file://./demos/api-method-get-item-dom-element/index.ts", "collapseToEmpty": true}}

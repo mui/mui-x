@@ -8,7 +8,7 @@ Each column header comes with a column menu with quickly accessible Data Grid fe
 
 It can be accessed by clicking on the 3-dots icon that appears on hover on a header cell or when focusing on a column header and pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS).
 
-{{"demo": "ColumnMenuGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/column-menu-grid/index.ts", "bg": "inline"}}
 
 ## Customize column menu items
 
@@ -45,7 +45,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
-{{"demo": "AddNewColumnMenuGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/add-new-column-menu-grid/index.ts", "bg": "inline"}}
 
 ### Overriding default menu items
 
@@ -66,7 +66,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
-{{"demo": "OverrideColumnMenuGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/override-column-menu-grid/index.ts", "bg": "inline"}}
 
 ### Hiding a menu item
 
@@ -87,7 +87,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
-{{"demo": "HideColumnMenuGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/hide-column-menu-grid/index.ts", "bg": "inline"}}
 
 ### Reordering menu items
 
@@ -116,19 +116,19 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
-{{"demo": "ReorderColumnMenuGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/reorder-column-menu-grid/index.ts", "bg": "inline"}}
 
 ### Default column menu items
 
 As a reference, here are the column menu `slots` along with the default item components and `displayOrder`.
 
-{{"demo": "ColumnMenuGridReferencesNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "file://./demos/column-menu-grid-references-no-snap/index.ts", "bg": "inline", "hideToolbar": true}}
 
 ## Custom menu component
 
 You can also customize and replace the column menu by [passing a fully custom component](/x/react-data-grid/components/#component-slots) to the `columnMenu` slot of the Data Grid. If you want to add some of the default menu items to your custom component, you can import and re-use them.
 
-{{"demo": "CustomColumnMenuGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-column-menu-grid/index.ts", "bg": "inline"}}
 
 :::info
 <strong>Tip</strong>: The `columnMenu` component and its components slots receive the `colDef` prop corresponding to the current column; you can use this to conditionally render some items or change some logic.
@@ -138,13 +138,13 @@ You can also customize and replace the column menu by [passing a fully custom co
 
 By default, each column header has the column menu enabled. To disable the column menu, set the prop `disableColumnMenu={true}`.
 
-{{"demo": "DisabledColumnMenuGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/disabled-column-menu-grid/index.ts", "bg": "inline"}}
 
 ## Column menu with Pro/Premium features [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 In the following demo, in addition to Data Grid MIT features, you can see commercial features like [grouping](/x/react-data-grid/row-grouping/), [aggregation](/x/react-data-grid/aggregation/), and [computed columns](/x/react-data-grid/computed-columns/) in action. Try tweaking the values from respective column menu items.
 
-{{"demo": "ColumnMenuGridPremium.js", "bg": "inline"}}
+{{"component": "file://./demos/column-menu-grid-premium/index.ts", "bg": "inline"}}
 
 ## API
 

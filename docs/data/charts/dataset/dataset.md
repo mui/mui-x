@@ -19,7 +19,7 @@ You can reference individual properties by using
 This is a convenient alternative to providing `data` directly on each series or axis.
 It simplifies configuration when multiple series share the same underlying data source, but has no performance impact.
 
-{{"demo": "DatasetBasic.js"}}
+{{"component": "file://./demos/dataset-basic/index.ts"}}
 
 ## Value getter
 
@@ -44,7 +44,7 @@ xAxis={[
 ]}
 ```
 
-{{"demo": "AxisValueGetter.js"}}
+{{"component": "file://./demos/axis-value-getter/index.ts"}}
 
 ### Series value getter
 
@@ -60,7 +60,7 @@ series={[
 ]}
 ```
 
-{{"demo": "SeriesValueGetter.js"}}
+{{"component": "file://./demos/series-value-getter/index.ts"}}
 
 ## Multi fields series
 

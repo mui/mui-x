@@ -1,4 +1,0 @@
-<Box sx={{ height: 300, width: '100%' }}>
-  <DataGridPro apiRef={apiRef} {...data} />
-</Box>
-{message && <Alert severity="info">{message}</Alert>}

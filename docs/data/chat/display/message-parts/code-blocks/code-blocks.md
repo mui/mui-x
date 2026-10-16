@@ -18,7 +18,7 @@ components: ChatCodeBlock
 
 The demo below lets you swap languages and content live:
 
-{{"demo": "ChatCodeBlockPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-code-block-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Import
 
@@ -39,7 +39,7 @@ def greet(name):
 
 The language specified after the opening backticks (for example, `python`) appears in the header bar, as the demo below shows:
 
-{{"demo": "../../../material/examples/code-block/CodeBlock.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../../material/examples/code-block/demos/code-block/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Standalone usage
 

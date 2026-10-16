@@ -15,13 +15,13 @@ To apply pagination to exported files, review the available [row selectors](/x/r
 
 For the Community Data Grid, pagination is enabled by default and cannot be disabled.
 
-{{"demo": "PaginationCommunityNoSnap.js", "bg": "inline"}}
+{{"component": "file://./demos/pagination-community-no-snap/index.ts", "bg": "inline"}}
 
 ### Pro [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and Premium [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 For the Pro and Premium Data Grid, pagination is disabled by default; use the `pagination` prop to enable it.
 
-{{"demo": "PageSizeAutoPremium.js", "bg": "inline"}}
+{{"component": "file://./demos/page-size-auto-premium/index.ts", "bg": "inline"}}
 
 ## Size of the page
 
@@ -47,7 +47,7 @@ You should provide an array of items, each item should be one of these types:
   <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }, { value: -1, label: 'All' }]}>
   ```
 
-{{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
+{{"component": "file://./demos/page-size-custom-options/index.ts", "bg": "inline"}}
 
 ### Automatic page size
 
@@ -57,7 +57,7 @@ Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container 
 You cannot use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the Data Grid according to the `pageSize`.
 :::
 
-{{"demo": "PageSizeAuto.js", "bg": "inline"}}
+{{"component": "file://./demos/page-size-auto/index.ts", "bg": "inline"}}
 
 ## Pagination model
 
@@ -77,7 +77,7 @@ To initialize the pagination model without controlling it, provide the `paginati
 />
 ```
 
-{{"demo": "PaginationModelInitialState.js", "bg": "inline"}}
+{{"component": "file://./demos/pagination-model-initial-state/index.ts", "bg": "inline"}}
 
 ### Controlled pagination model
 
@@ -95,7 +95,7 @@ const [paginationModel, setPaginationModel] = React.useState({
 />;
 ```
 
-{{"demo": "PaginationModelControlled.js", "bg": "inline"}}
+{{"component": "file://./demos/pagination-model-controlled/index.ts", "bg": "inline"}}
 
 ## Server-side pagination
 
@@ -109,7 +109,7 @@ To be able to work with the entire dataset, you must also implement [server-side
 The demo below does exactly that.
 :::
 
-{{"demo": "ServerPaginationFilterSortGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/server-pagination-filter-sort-grid/index.ts", "bg": "inline"}}
 
 In general, the server-side pagination could be categorized into two types:
 
@@ -164,7 +164,7 @@ You can configure `rowCount`, `paginationMeta.hasNextPage`, and `estimatedRowCou
 
 Pass the props to the Data Grid as explained in the table above to handle the case when the actual row count is known, as the following example demonstrates.
 
-{{"demo": "ServerPaginationGrid.js", "bg": "inline"}}
+{{"component": "file://./demos/server-pagination-grid/index.ts", "bg": "inline"}}
 
 :::warning
 If the value `rowCount` becomes `undefined` during loading, it will reset the page to zero.
@@ -189,7 +189,7 @@ const rowCount = React.useMemo(() => {
 
 Pass the props to the Data Grid as explained in the table above to handle the case when the actual row count is unknown, as the following example demonstrates.
 
-{{"demo": "ServerPaginationGridNoRowCount.js", "bg": "inline"}}
+{{"component": "file://./demos/server-pagination-grid-no-row-count/index.ts", "bg": "inline"}}
 
 :::warning
 The value of the `hasNextPage` variable might become `undefined` during loading if it's handled by some external fetching hook resulting in unwanted computations, one possible solution could be to memoize the `paginationMeta`:
@@ -223,7 +223,7 @@ When the `hasNextPage` returns `false` or `rowCount` is set to a positive number
 In the following example, the actual row count is `1000` but the Data Grid is initially provided with `estimatedRowCount={100}`.
 You can set the `rowCount` to the actual row count by pressing the "Set Row Count" button.
 
-{{"demo": "ServerPaginationGridEstimated.js", "bg": "inline"}}
+{{"component": "file://./demos/server-pagination-grid-estimated/index.ts", "bg": "inline"}}
 
 :::warning
 The `hasNextPage` must not be set to `false` until there are _actually_ no records left to fetch, because when `hasNextPage` becomes `false`, the Grid considers this as the last page and tries to set the `rowCount` value to a finite value.
@@ -262,7 +262,7 @@ For more information, see the [Translation keys](/x/react-data-grid/localization
 You can also handle servers with cursor-based pagination.
 To do so, you just have to keep track of the next cursor associated with each page you fetched.
 
-{{"demo": "CursorPaginationGrid.js", "bg": "inline", "defaultCodeOpen": false }}
+{{"component": "file://./demos/cursor-pagination-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom pagination UI
 
@@ -278,7 +278,7 @@ See [API object](/x/react-data-grid/api-object/) for more details.
 This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
-{{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}
+{{"component": "file://./demos/pagination-api-no-snap/index.ts", "bg": "inline", "hideToolbar": true, "collapseToEmpty": true}}
 
 ## Selectors
 
