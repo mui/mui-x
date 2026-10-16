@@ -27,6 +27,7 @@ The following team members contributed to this release:
 - [DataGrid] Fix memory leak on row updates (#23779) @arminmeh
 - [DataGrid] Fix the "is any of" prompt filter text in translated locales (#23833) @LukasTy
 - [DataGrid] Keep keyboard focus after a click on the empty row space (#23862) @michelengelen
+- [DataGrid] Extract column reorder utils (#23834) @noraleonte
 - [l10n] Improve Romanian (ro-RO) locale (#23816) @vicuts
 
 #### `@mui/x-data-grid-pro@9.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -92,7 +93,6 @@ Same changes as in `@mui/x-tree-view@9.16.0`.
 #### `@mui/x-scheduler@9.0.0-beta.14`
 
 - [scheduler] Add confirmation dialog for event deletion (#23593) @mustafajw07
-- [scheduler] Document `weekStartsOn` and export `EventTimelinePremiumPreferences` (#23811) @rita-codes
 - [scheduler] Extract a generic form store from the event dialog form (#23781) @rita-codes
 - [scheduler] Fix the style overrides key of the responsiveness example (#23838) @rita-codes
 - [scheduler] Mark today with `aria-current="date"` (#23809) @rita-codes
@@ -104,6 +104,7 @@ Same changes as in `@mui/x-tree-view@9.16.0`.
 
 Same changes as in `@mui/x-scheduler@9.0.0-beta.14`, plus:
 
+- [scheduler-premium] Document `weekStartsOn` and export `EventTimelinePremiumPreferences` (#23811) @rita-codes
 - [scheduler-premium] Include the community models and theme augmentation in the Premium package (#23813) @rita-codes
 
 ### Chat
