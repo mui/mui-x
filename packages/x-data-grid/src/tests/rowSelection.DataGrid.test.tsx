@@ -13,6 +13,7 @@ import {
   GridEditModes,
   useGridApiRef,
   gridRowSelectionIdsSelector,
+  gridClasses,
 } from '@mui/x-data-grid';
 import type { DataGridProps, GridRowId, GridApi, GridRowSelectionModel } from '@mui/x-data-grid';
 import {
@@ -659,6 +660,17 @@ describe('<DataGrid /> - Row selection', () => {
   });
 
   describe('prop: checkboxSelection = true (multi selection), with keyboard events', () => {
+    // Context: https://github.com/mui/mui-x/issues/15352
+    it('should select all rows when pressing Ctrl+A after a click on the empty space of a row', async () => {
+      const { user } = render(<TestDataGridSelection checkboxSelection />);
+      await user.click(getRow(1).querySelector(`.${gridClasses.cellEmpty}`)!);
+      expect(getSelectedRowIds()).to.deep.equal([1]);
+      expect(getActiveCell()).to.equal('1-2');
+
+      fireEvent.keyDown(getCell(1, 2), { key: 'a', keyCode: 65, ctrlKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+    });
+
     it('should select row below when pressing "ArrowDown" + shiftKey', async () => {
       const { user } = render(<TestDataGridSelection checkboxSelection />);
       await user.click(getCell(2, 1));
