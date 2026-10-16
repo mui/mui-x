@@ -457,6 +457,53 @@ describe('<DataGrid /> - IME fast edit', () => {
     });
   });
 
+  describe('hidden editor attributes', () => {
+    it('labels the hidden editor with the value of the cell', async () => {
+      const { user } = render(<TestCase />);
+      const cell = await focusCell(user, 0, 1);
+      expect(getInput(cell)).to.have.attribute('aria-label', 'Seoul');
+    });
+
+    it('labels the hidden editor with the formatted value of the cell', async () => {
+      const { user } = render(
+        <TestCase
+          columns={[{ field: 'city', editable: true, valueFormatter: (value) => `City: ${value}` }]}
+        />,
+      );
+      const cell = await focusCell(user, 0, 0);
+      expect(getInput(cell)).to.have.attribute('aria-label', 'City: Seoul');
+    });
+
+    it('does not label the hidden editor of an empty cell', async () => {
+      const { user } = render(<TestCase rows={[{ id: 0, name: '', city: '' }]} />);
+      const cell = await focusCell(user, 0, 1);
+      expect(getInput(cell)).not.to.have.attribute('aria-label');
+    });
+
+    it('turns off autofill, spell check, and password managers on the hidden editor', async () => {
+      const { user } = render(<TestCase />);
+      const input = getInput(await focusCell(user, 0, 1))!;
+      expect(input).to.have.attribute('autocomplete', 'off');
+      expect(input).to.have.attribute('spellcheck', 'false');
+      expect(input).to.have.attribute('data-lpignore', 'true');
+      expect(input).to.have.attribute('data-1p-ignore', '');
+      expect(input).to.have.attribute('data-bwignore', '');
+      expect(input).to.have.attribute('data-form-type', 'other');
+    });
+
+    it('removes the label when a composition starts edit mode', async () => {
+      const { user } = render(<TestCase />);
+      const cell = await focusCell(user, 0, 1);
+      const input = getInput(cell)!;
+      fireEvent.compositionStart(input);
+      await waitFor(() => {
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      });
+      expect(getInput(cell)).to.equal(input);
+      expect(input).not.to.have.attribute('aria-label');
+    });
+  });
+
   describe('edit input in `renderCell`', () => {
     it.each([{ imeFastEdit: true }, { imeFastEdit: false }])(
       'keeps the typed text in a `GridEditInputCell` rendered by `renderCell` (imeFastEdit: $imeFastEdit)',

@@ -115,6 +115,17 @@ function canPreMountEditor(column: GridStateColDef) {
   return column.type === 'string' && column.renderEditCell === renderEditInputCell;
 }
 
+// Prevents autofill, spell check, and password manager icons on the editor before edit mode starts.
+// The editor gets the focus each time that the user moves the focus to an editable cell.
+const PRE_MOUNTED_EDITOR_INPUT_PROPS = {
+  autoComplete: 'off',
+  spellCheck: false,
+  'data-lpignore': 'true',
+  'data-1p-ignore': '',
+  'data-bwignore': '',
+  'data-form-type': 'other',
+};
+
 function isCoarsePointer() {
   // On touch devices, an editable element with focus opens the virtual keyboard.
   return typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
@@ -564,8 +575,19 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
         isProcessingProps: false,
         // The cell gives the focus to the editor, see `focusPreMountedEditor`.
         hasFocus: false,
-        // The editor replaces the cell as the tab stop.
-        slotProps: { root: { slotProps: { htmlInput: { tabIndex: cellParams.tabIndex } } } },
+        slotProps: {
+          root: {
+            slotProps: {
+              htmlInput: {
+                ...PRE_MOUNTED_EDITOR_INPUT_PROPS,
+                // The editor replaces the cell as the tab stop.
+                tabIndex: cellParams.tabIndex,
+                // The input is empty. Screen readers must announce the value of the cell.
+                'aria-label': valueToRender?.toString() || undefined,
+              },
+            },
+          },
+        },
       });
       editorState = 'preMounted';
     }
