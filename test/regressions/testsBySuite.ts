@@ -16,53 +16,56 @@ const removeExtension = (filePath: string) => {
 const docsImports = import.meta.glob<React.ComponentType>(
   [
     'docs/data/**/[A-Z]*.js',
+    // Docs-infra demos keep a single TSX source instead of generated JS.
+    'docs/data/**/demos/*/[A-Z]*.tsx',
     // Hooks examples
     'docs/data/**/use[A-Z]*.js',
+    'docs/data/**/demos/*/use[A-Z]*.tsx',
     // ================== Exclusions ==================
-    '!docs/data/charts/lines/GDPperCapita.js',
+    '!docs/data/charts/lines/{,demos/*/}GDPperCapita.{js,tsx}',
     '!docs/data/data-grid/list-view/components/*.js',
     // Excludes demos that we don't want
     '!docs/data/**/*NoSnap.*',
-    '!docs/data/data-grid/filtering/RemoveBuiltInOperators', // Needs interaction
-    '!docs/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
-    '!docs/data/data-grid/filtering/CustomInputComponent', // Needs interaction
-    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingRevalidation', // Flashes cause flaky argos screenshots
-    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingTreeDataRevalidation', // Flashes cause flaky argos screenshots
-    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingGroupingRevalidation', // Flashes cause flaky argos screenshots
-    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingRevalidationTabs', // Flashes cause flaky argos screenshots
-    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingFullyReplaced', // Flashes cause flaky argos screenshots
-    '!docs/data/data-grid/server-side-data/ServerSideDataGridRevalidation', // Flashes cause flaky argos screenshots
-    '!docs/data/data-grid/server-side-data/ServerSideTreeDataRevalidation', // Flashes cause flaky argos screenshots
-    '!docs/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
-    '!docs/data/charts/tooltip/Custom*', // Composition example
-    '!docs/data/charts/tooltip/Item*', // Composition example
-    '!docs/data/charts/tooltip/AxisFormatter',
-    '!docs/data/charts/tooltip/Formatting',
-    '!docs/data/charts/tooltip/SeriesFormatter',
-    '!docs/data/charts/tooltip/TooltipStyle',
-    '!docs/data/charts/brush/*',
-    '!docs/data/data-grid/server-side-data/useNestedPagination',
-    '!docs/data/data-grid/server-side-data/NestedPaginationGroupingCell',
-    '!docs/data/data-grid/tree-data/utils/TreeDataSyncRowDataGroupingCell',
-    '!docs/data/data-grid/tree-data/utils/DataStore',
-    '!docs/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
-    '!docs/data/charts/axis-ticks/SelectTimeFrequency', // sub-component for demo purpose
-    '!docs/data/charts/sankey/CustomNodeLabelPlot', // sub-component for demo purpose
-    '!docs/data/charts/references/ReferenceArea', // sub-component for demo purpose
-    '!docs/data/charts/references/ReferencePoint', // sub-component for demo purpose
-    '!docs/data/charts/scatter/ScatterWebGLRenderer', // Timeout due to the large number of points.
-    '!docs/data/charts/scatter/ScatterAsyncRenderer', // Progressive renderer paints over several animation frames, screenshots are unstable.
-    '!docs/data/charts/range-bar/WebGLRangeBars', // Timeout due to the large number of bars.
+    '!docs/data/data-grid/filtering/{,demos/*/}RemoveBuiltInOperators.{js,tsx}', // Needs interaction
+    '!docs/data/data-grid/filtering/{,demos/*/}CustomRatingOperator.{js,tsx}', // Needs interaction
+    '!docs/data/data-grid/filtering/{,demos/*/}CustomInputComponent.{js,tsx}', // Needs interaction
+    '!docs/data/data-grid/server-side-data/{,demos/*/}ServerSideLazyLoadingRevalidation.{js,tsx}', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/{,demos/*/}ServerSideLazyLoadingTreeDataRevalidation.{js,tsx}', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/{,demos/*/}ServerSideLazyLoadingGroupingRevalidation.{js,tsx}', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/{,demos/*/}ServerSideLazyLoadingRevalidationTabs.{js,tsx}', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/{,demos/*/}ServerSideLazyLoadingFullyReplaced.{js,tsx}', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/{,demos/*/}ServerSideDataGridRevalidation.{js,tsx}', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/{,demos/*/}ServerSideTreeDataRevalidation.{js,tsx}', // Flashes cause flaky argos screenshots
+    '!docs/data/date-pickers/date-calendar/{,demos/*/}DateCalendarServerRequest.{js,tsx}', // Has random behavior (TODO: Use seeded random)
+    '!docs/data/charts/tooltip/{,demos/*/}Custom*.{js,tsx}', // Composition example
+    '!docs/data/charts/tooltip/{,demos/*/}Item*.{js,tsx}', // Composition example
+    '!docs/data/charts/tooltip/{,demos/*/}AxisFormatter.{js,tsx}',
+    '!docs/data/charts/tooltip/{,demos/*/}Formatting.{js,tsx}',
+    '!docs/data/charts/tooltip/{,demos/*/}SeriesFormatter.{js,tsx}',
+    '!docs/data/charts/tooltip/{,demos/*/}TooltipStyle.{js,tsx}',
+    '!docs/data/charts/brush/**/*',
+    '!docs/data/data-grid/server-side-data/{,demos/*/}useNestedPagination.{js,tsx}',
+    '!docs/data/data-grid/server-side-data/{,demos/*/}NestedPaginationGroupingCell.{js,tsx}',
+    '!docs/data/data-grid/tree-data/utils/{,demos/*/}TreeDataSyncRowDataGroupingCell.{js,tsx}',
+    '!docs/data/data-grid/tree-data/utils/{,demos/*/}DataStore.{js,tsx}',
+    '!docs/data/charts/export/{,demos/*/}ExportOptionSelector.{js,tsx}', // sub-component for demo purpose
+    '!docs/data/charts/axis-ticks/{,demos/*/}SelectTimeFrequency.{js,tsx}', // sub-component for demo purpose
+    '!docs/data/charts/sankey/{,demos/*/}CustomNodeLabelPlot.{js,tsx}', // sub-component for demo purpose
+    '!docs/data/charts/references/{,demos/*/}ReferenceArea.{js,tsx}', // sub-component for demo purpose
+    '!docs/data/charts/references/{,demos/*/}ReferencePoint.{js,tsx}', // sub-component for demo purpose
+    '!docs/data/charts/scatter/{,demos/*/}ScatterWebGLRenderer.{js,tsx}', // Timeout due to the large number of points.
+    '!docs/data/charts/scatter/{,demos/*/}ScatterAsyncRenderer.{js,tsx}', // Progressive renderer paints over several animation frames, screenshots are unstable.
+    '!docs/data/charts/range-bar/{,demos/*/}WebGLRangeBars.{js,tsx}', // Timeout due to the large number of bars.
 
     // Exclude shared utility files that don't have a default export
     '!docs/data/**/shared/*',
 
     // Streaming demos conflict with the fake timers (cancelAnimationFrame on native timer)
-    '!docs/data/chat/core/examples/controlled-state/ControlledStateHeadlessChat',
+    '!docs/data/chat/core/examples/controlled-state/{,demos/*/}ControlledStateHeadlessChat.{js,tsx}',
 
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
-    '!docs/data/migration/migration-pickers-v5/MobileKeyboardView',
-    '!docs/data/migration/migration-data-grid-v4/CoreV5WithCoreV4',
+    '!docs/data/migration/migration-pickers-v5/{,demos/*/}MobileKeyboardView.{js,tsx}',
+    '!docs/data/migration/migration-data-grid-v4/{,demos/*/}CoreV5WithCoreV4.{js,tsx}',
     //
   ],
   { eager: true, import: 'default' },
@@ -70,7 +73,10 @@ const docsImports = import.meta.glob<React.ComponentType>(
 Object.keys(docsImports).forEach((path: string) => {
   const [name, ...suiteArray] = path
     .replace('../../docs/data/', '')
-    .replace('.js', '')
+    // Only TSX entries use the new layout during the staged migration.
+    // Legacy Data Grid pages also have a `demos` directory: preserve it.
+    .replace(/\/demos\/[^/]+(?=\/[^/]+\.tsx$)/, '')
+    .replace(/\.(js|tsx)$/, '')
     .split('/')
     .reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
