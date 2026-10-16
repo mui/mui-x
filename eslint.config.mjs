@@ -13,6 +13,7 @@ import eslintPluginMuiX from 'eslint-plugin-mui-x';
 import { defineConfig } from 'eslint/config';
 import * as path from 'node:path';
 import * as url from 'node:url';
+import { lintJavascriptDemoFocus } from '@mui/internal-docs-infra/pipeline/lintJavascriptDemoFocus';
 import remarkConfig from './.remarkrc.mjs';
 
 const eslintPluginConsistentName = fixupPluginRules(eslintPluginConsistentNameRaw);
@@ -189,6 +190,9 @@ export default defineConfig(
             'ts-ignore',
             'ts-nocheck',
             'typescript-to-proptypes-ignore',
+            // Docs-infra reads these plain block comments as source metadata.
+            'focus-start',
+            'focus-end',
           ],
         },
       ],
@@ -457,6 +461,48 @@ export default defineConfig(
       // them differently and reports `aria-hidden` as unsupported on `none`.
       // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090
       'jsx-a11y/role-supports-aria-props': 'off',
+    },
+  },
+
+  {
+    files: [
+      'docs/data/**/demos/*/*.tsx',
+      'docs/data/**/demos/*/*.jsx',
+      'docs/src/pages/production-error/demos/*/*.tsx',
+    ],
+    // Legacy showcase directories also contain shared helpers.
+    ignores: ['docs/data/data-grid/demos/*/*.tsx'],
+    plugins: {
+      'docs-infra': { rules: { 'require-demo-focus': lintJavascriptDemoFocus } },
+    },
+    rules: {
+      'docs-infra/require-demo-focus': ['error', { wrapReturn: true }],
+    },
+  },
+  {
+    files: ['docs/src/pages/production-error/demos/*/*.tsx'],
+    // The decoder has no Grid API and needs no type-aware state checks.
+    rules: {
+      'mui-x/no-direct-state-access': 'off',
+    },
+  },
+  {
+    files: ['docs/data/**/demos/*/client.ts'],
+    rules: {
+      'consistent-default-export-name/default-export-match-filename': 'off',
+    },
+  },
+
+  {
+    // The precomputed live editor imports runtime symbols explicitly. Type-only
+    // imports must not become editor externals, including shared demo helpers.
+    files: ['docs/data/**/*.{ts,tsx}', 'docs/src/pages/production-error/demos/*/*.tsx'],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { fixStyle: 'separate-type-imports' },
+      ],
+      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
     },
   },
 
