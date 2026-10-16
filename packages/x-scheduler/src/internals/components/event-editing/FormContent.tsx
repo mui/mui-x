@@ -62,6 +62,7 @@ import {
 import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
 export const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -133,6 +134,8 @@ interface FormContentProps {
    * @default true
    */
   isDraggable?: boolean;
+  /** The element the surface is anchored to, where focus goes back to after a delete. */
+  anchor?: HTMLElement | null;
 }
 
 export function FormContent(props: FormContentProps) {
@@ -224,7 +227,7 @@ export function FormContent(props: FormContentProps) {
 }
 
 function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
-  const { onClose, dragHandlerRef, isDraggable } = props;
+  const { onClose, dragHandlerRef, isDraggable, anchor } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -535,8 +538,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    // A recurring delete closes the dialog on scope submit instead of right away.
-    store.deleteOccurrence(occurrence, onClose);
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchor, onClose);
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
