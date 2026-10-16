@@ -673,11 +673,14 @@ describe('<DataGridPremium /> - IME fast edit with analytics features', () => {
       fireEvent.compositionStart(input);
       expect(cell).to.have.class(gridClasses['cell--editing']);
 
-      fireEvent.keyDown(input, { key: 'v', keyCode: 86, ctrlKey: true });
+      paste(input, 'X\nY');
       await microtasks();
-      // The paste did not create its own input, so the editor keeps the focus.
+      // The cell is in edit mode, so the grid does not paste into the cells.
       expect(document.activeElement).to.equal(input);
+      expect(cell).to.have.class(gridClasses['cell--editing']);
       expect(apiRef.current!.getRow(0).name).to.equal('Nike');
+      expect(apiRef.current!.getRow(1).name).to.equal('Adidas');
+      expect(getCell(1, nameIndex).textContent).to.equal('Adidas');
     });
   });
 

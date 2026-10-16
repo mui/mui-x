@@ -69,6 +69,7 @@ function describeActiveElement() {
   }
   const cell = active.closest('[role="gridcell"], [role="rowheader"]');
   if (cell) {
+    // The hidden editor and its cell describe the same position. `expectFocusMatchesCell` checks the element.
     return `cell:${getActiveCell()}`;
   }
   const header = active.closest('[role="columnheader"]');
@@ -95,7 +96,7 @@ function expectFocusMatchesCell(imeFastEdit: boolean) {
   if (imeFastEdit && isEditableString) {
     expect(active.tagName).to.equal('INPUT');
     expect(getPreMountedEditor(cell)).not.to.equal(null);
-  } else if (!imeFastEdit) {
+  } else {
     expect(active).to.equal(cell);
     expect(getPreMountedEditor(cell)).to.equal(null);
   }
@@ -411,6 +412,7 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
     });
 
     it('expands a group with the keyboard and edits a child like the baseline', async () => {
+      let committedText = '';
       const { baseline, withFlag } = await compareWithBaseline(async (imeFastEdit) => {
         const { user, unmount } = render(<TestCase {...treeProps} imeFastEdit={imeFastEdit} />);
         await focusCell(user, 0, 1);
@@ -419,17 +421,17 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
           expect(getRow(1).textContent).to.contain('Adidas');
         });
         result.push(...(await pressKeys(user, ['{ArrowDown}', '{ArrowRight}'], imeFastEdit)));
+        // Only the flag starts edit mode with a composition.
         if (imeFastEdit) {
           await composeAndCommit(user, getCell(1, 1), '아디다스');
-          result.push(getCell(1, 1).textContent!);
-        } else {
-          result.push('아디다스');
+          committedText = getCell(1, 1).textContent!;
         }
         unmount();
         return result;
       });
-      expect(baseline).to.deep.equal(['cell:0-0', 'cell:0-0', 'cell:1-0', 'cell:1-1', '아디다스']);
+      expect(baseline).to.deep.equal(['cell:0-0', 'cell:0-0', 'cell:1-0', 'cell:1-1']);
       expect(withFlag).to.deep.equal(baseline);
+      expect(committedText).to.equal('아디다스');
     });
   });
 

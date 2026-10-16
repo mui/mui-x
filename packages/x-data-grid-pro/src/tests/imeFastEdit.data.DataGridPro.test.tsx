@@ -21,6 +21,21 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
 
 const getInput = (cell: HTMLElement) => cell.querySelector('input');
+
+// Describes the element that has the focus: `body`, `cell r,c`, `input r,c` (the hidden editor), or `other`.
+function describeFocus() {
+  const element = document.activeElement;
+  if (element === null || element === document.body) {
+    return 'body';
+  }
+  const cell = element.closest<HTMLElement>('[role="gridcell"]');
+  if (cell === null) {
+    return 'other';
+  }
+  const rowIndex = cell.closest<HTMLElement>('[data-rowindex]')?.dataset.rowindex;
+  const position = `${rowIndex},${cell.dataset.colindex}`;
+  return element === cell ? `cell ${position}` : `input ${position}`;
+}
 const getEditorWrappers = () => document.querySelectorAll('[data-cell-editor]');
 
 describe('<DataGridPro /> - IME fast edit with data loading', () => {
@@ -107,7 +122,7 @@ describe('<DataGridPro /> - IME fast edit with data loading', () => {
         expect(gridFocusCellSelector(apiRef as any)).to.equal(null);
         expect(getEditorWrappers()).to.have.length(0);
         expect(getInput(getCell(0, 1))).to.equal(null);
-        expect(document.activeElement!.isConnected).to.equal(true);
+        expect(describeFocus()).to.equal('other');
       },
     );
 
@@ -326,7 +341,7 @@ describe('<DataGridPro /> - IME fast edit with data loading', () => {
         apiRef.current!.setRowChildrenExpansion(0, false);
       });
       expect(getEditorWrappers()).to.have.length(0);
-      expect(document.activeElement!.isConnected).to.equal(true);
+      expect(describeFocus()).to.equal('body');
 
       await act(async () => {
         apiRef.current!.setRowChildrenExpansion(0, true);

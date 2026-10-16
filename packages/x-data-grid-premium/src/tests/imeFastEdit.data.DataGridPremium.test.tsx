@@ -149,7 +149,7 @@ describe('<DataGridPremium /> - IME fast edit with row grouping and aggregation'
     expect(getEditorWrappers()).to.have.length(1);
   });
 
-  it('drops the hidden editor when the row grouping model changes', async () => {
+  it('keeps the hidden editor when the row grouping model changes', async () => {
     const { user } = render(<Test />);
     const leafCell = await focusCell(user, 1, 2);
     const input = expectHiddenEditor(leafCell);

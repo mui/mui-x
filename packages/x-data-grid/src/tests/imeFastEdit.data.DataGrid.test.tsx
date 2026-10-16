@@ -28,6 +28,21 @@ const rows = [
 ];
 
 const getInput = (cell: HTMLElement) => cell.querySelector('input');
+
+// Describes the element that has the focus: `body`, `cell r,c`, `input r,c` (the hidden editor), or `other`.
+function describeFocus() {
+  const element = document.activeElement;
+  if (element === null || element === document.body) {
+    return 'body';
+  }
+  const cell = element.closest<HTMLElement>('[role="gridcell"]');
+  if (cell === null) {
+    return 'other';
+  }
+  const rowIndex = cell.closest<HTMLElement>('[data-rowindex]')?.dataset.rowindex;
+  const position = `${rowIndex},${cell.dataset.colindex}`;
+  return element === cell ? `cell ${position}` : `input ${position}`;
+}
 const getEditorWrappers = () => document.querySelectorAll('[data-cell-editor]');
 
 // Composes an IME text in the focused hidden editor and commits it with Enter.
@@ -322,7 +337,7 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
 
         // The focused row is not on the page, so no cell has an editor.
         expect(getEditorWrappers()).to.have.length(0);
-        expect(document.activeElement!.isConnected).to.equal(true);
+        expect(describeFocus()).to.equal('body');
 
         // A click on the new page gives the focus to the hidden editor again.
         const cell = await focusCell(user, 2, 1);
@@ -535,7 +550,7 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
 
         setProps({ rows: [] });
         expect(getEditorWrappers()).to.have.length(0);
-        expect(document.activeElement!.isConnected).to.equal(true);
+        expect(describeFocus()).to.equal('body');
       },
     );
 
@@ -666,7 +681,7 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
         });
         expect(getRow(2).textContent).to.contain('Osaka');
         expect(getEditorWrappers()).to.have.length(0);
-        expect(document.activeElement!.isConnected).to.equal(true);
+        expect(describeFocus()).to.equal('body');
 
         // The first cell of the new page is the tab stop.
         expect(getCell(2, 0)).to.have.attribute('tabindex', '0');
@@ -715,7 +730,7 @@ describe('<DataGrid /> - IME fast edit with data loading and updates', () => {
         });
         expect(getRow(0).textContent).to.contain('Tokyo');
         expect(getEditorWrappers()).to.have.length(0);
-        expect(document.activeElement!.isConnected).to.equal(true);
+        expect(describeFocus()).to.equal('body');
 
         await act(async () => {
           apiRef.current!.setFilterModel({ items: [] });

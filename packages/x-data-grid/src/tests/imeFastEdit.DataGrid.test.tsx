@@ -9,7 +9,7 @@ import type {
   GridRowModesModel,
 } from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const columns: GridColDef[] = [
@@ -527,6 +527,183 @@ describe('<DataGrid /> - IME fast edit', () => {
         });
       },
     );
+  });
+
+  describe('IME keys during a composition', () => {
+    // Starts edit mode with a composition and returns the input.
+    async function startComposition(user: any, text: string) {
+      const cell = await focusCell(user, 0, 1);
+      const input = getInput(cell)!;
+      fireEvent.keyDown(input, { key: 'Process', keyCode: 229 });
+      fireEvent.compositionStart(input);
+      fireEvent.change(input, { target: { value: text } });
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      return { cell, input };
+    }
+
+    it.each([{ editMode: 'cell' as const }, { editMode: 'row' as const }])(
+      'does not commit with the Enter that confirms an IME candidate ($editMode edit mode)',
+      async ({ editMode }) => {
+        const processRowUpdate = vi.fn((newRow: any) => newRow);
+        const { user } = render(
+          <TestCase editMode={editMode} processRowUpdate={processRowUpdate} />,
+        );
+        const { cell, input } = await startComposition(user, '東京');
+
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229, isComposing: true });
+        fireEvent.compositionEnd(input);
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+        expect(processRowUpdate.mock.calls).to.have.length(0);
+        expect(input.value).to.equal('東京');
+
+        await user.keyboard('{Enter}');
+        await waitFor(() => {
+          expect(getCell(0, 1).textContent).to.equal('東京');
+        });
+        expect(processRowUpdate.mock.calls).to.have.length(1);
+      },
+    );
+
+    it('does not commit with the IME Enter that Safari sends after `compositionend`', async () => {
+      const { user } = render(<TestCase />);
+      const { cell, input } = await startComposition(user, '東京');
+      fireEvent.compositionEnd(input);
+      fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      expect(input.value).to.equal('東京');
+    });
+
+    it.each([{ editMode: 'cell' as const }, { editMode: 'row' as const }])(
+      'does not cancel edit mode with the Escape that cancels an IME candidate ($editMode edit mode)',
+      async ({ editMode }) => {
+        const { user } = render(<TestCase editMode={editMode} />);
+        const { cell, input } = await startComposition(user, 'とう');
+        fireEvent.keyDown(input, { key: 'Escape', keyCode: 229, isComposing: true });
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+        expect(getInput(cell)).to.equal(input);
+      },
+    );
+
+    it('keeps edit mode and the text when a Korean composition restarts for each syllable', async () => {
+      const reasons: string[] = [];
+      const { user } = render(
+        <TestCase onCellEditStart={(params) => reasons.push(params.reason!)} />,
+      );
+      const { cell, input } = await startComposition(user, '한');
+      fireEvent.compositionEnd(input);
+      fireEvent.keyDown(input, { key: 'Process', keyCode: 229 });
+      fireEvent.compositionStart(input);
+      fireEvent.change(input, { target: { value: '한글' } });
+      fireEvent.compositionEnd(input);
+
+      expect(reasons).to.deep.equal(['compositionStart']);
+      expect(getInput(cell)).to.equal(input);
+      expect(input.value).to.equal('한글');
+      await user.keyboard('{Enter}');
+      await waitFor(() => {
+        expect(getCell(0, 1).textContent).to.equal('한글');
+      });
+    });
+  });
+
+  describe('devices with a coarse pointer', () => {
+    it('does not render the editor when the primary pointer is coarse', async () => {
+      // jsdom has no `matchMedia`, so replace it instead of a spy.
+      const originalMatchMedia = window.matchMedia;
+      window.matchMedia = (query: string) => {
+        if (query === '(pointer: coarse)' || !originalMatchMedia) {
+          return {
+            matches: query === '(pointer: coarse)',
+            media: query,
+            onchange: null,
+            addListener: () => {},
+            removeListener: () => {},
+            addEventListener: () => {},
+            removeEventListener: () => {},
+            dispatchEvent: () => false,
+          };
+        }
+        return originalMatchMedia.call(window, query);
+      };
+      try {
+        const { user } = render(<TestCase />);
+        const cell = await focusCell(user, 0, 1);
+        expect(getInput(cell)).to.equal(null);
+        expect(document.activeElement).to.equal(cell);
+        expect(cell).to.have.attribute('tabindex', '0');
+      } finally {
+        window.matchMedia = originalMatchMedia;
+      }
+    });
+  });
+
+  describe('column changes while the cell has the focus', () => {
+    it('removes the editor and keeps the DOM focus in the cell when `renderEditCell` changes', async () => {
+      const { user, setProps } = render(<TestCase />);
+      const cell = await focusCell(user, 0, 1);
+      expect(document.activeElement).to.equal(getInput(cell));
+      setProps({
+        columns: columns.map((column) =>
+          column.field === 'city'
+            ? { ...column, renderEditCell: () => <input data-testid="custom" /> }
+            : column,
+        ),
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(getCell(0, 1));
+      });
+      expect(getInput(getCell(0, 1))).to.equal(null);
+    });
+
+    it('keeps the DOM focus and does not start edit mode when the column becomes non-editable', async () => {
+      const { user, setProps } = render(<TestCase />);
+      const cell = await focusCell(user, 0, 1);
+      const input = getInput(cell)!;
+      setProps({
+        columns: columns.map((column) =>
+          column.field === 'city' ? { ...column, editable: false } : column,
+        ),
+      });
+      expect(cell.contains(document.activeElement)).to.equal(true);
+      fireEvent.compositionStart(input);
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    });
+  });
+
+  describe('clipboard', () => {
+    it.each([{ imeFastEdit: true }, { imeFastEdit: false }])(
+      'copies the focused cell with Ctrl+C (imeFastEdit: $imeFastEdit)',
+      async ({ imeFastEdit }) => {
+        const copied: string[] = [];
+        const { user } = render(
+          <TestCase
+            experimentalFeatures={{ imeFastEdit }}
+            disableRowSelectionOnClick
+            onClipboardCopy={(text) => copied.push(text)}
+          />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        // The copy shortcut check reads `keyCode`, which `user.keyboard` does not set for letters.
+        const target = imeFastEdit ? getInput(cell)! : cell;
+        expect(document.activeElement).to.equal(target);
+        fireEvent.keyDown(target, { key: 'c', keyCode: 67, ctrlKey: true });
+        expect(copied).to.deep.equal(['Seoul']);
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      },
+    );
+
+    it('pastes the text once with Ctrl+V into the hidden editor', async () => {
+      const { user } = render(<TestCase />);
+      const cell = await focusCell(user, 0, 1);
+      const input = getInput(cell)!;
+      // The browser sends the keydown, then the paste into the input that has the focus.
+      // The paste shortcut check reads `keyCode`, which `user.keyboard` does not set for letters.
+      fireEvent.keyDown(input, { key: 'v', keyCode: 86, ctrlKey: true });
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      expect(getInput(cell)).to.equal(input);
+      await user.paste('Busan');
+      expect(input.value).to.equal('Busan');
+    });
   });
 
   describe('hidden editor attributes', () => {

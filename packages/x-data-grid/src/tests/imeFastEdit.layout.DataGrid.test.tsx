@@ -61,6 +61,7 @@ function describeActiveElement() {
   }
   const cell = active.closest('[role="gridcell"], [role="rowheader"]');
   if (cell) {
+    // The hidden editor and its cell describe the same position. `expectFocusMatchesCell` checks the element.
     return `cell:${getActiveCell()}`;
   }
   const header = active.closest('[role="columnheader"]');
@@ -661,7 +662,10 @@ describe('<DataGrid /> - IME fast edit layout', () => {
         const { user, unmount } = render(
           <TestCase imeFastEdit={imeFastEdit} checkboxSelection disableRowSelectionOnClick />,
         );
+        // Column 0 is the checkbox column, so column 2 is the editable string column `city`.
         const cell = await focusCell(user, 0, 2);
+        expect(cell).to.have.attribute('data-field', 'city');
+        expectFocusMatchesCell(imeFastEdit);
         await user.keyboard('{Shift>}[Space]{/Shift}');
         const afterShiftSpace = apiRef.current!.getSelectedRows().size;
         await user.keyboard('[Space]');
