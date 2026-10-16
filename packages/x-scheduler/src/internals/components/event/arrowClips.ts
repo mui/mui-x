@@ -7,12 +7,12 @@ const BOTH_ARROWS_CLIP = `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}
 
 /**
  * Squares the corners of the cut edges of an event that continues past its row or the visible range,
- * and cuts a chevron there. `gap` is the space between the chevron and the content.
+ * and cuts a chevron there. `extraPadding` is the space between the chevron and the content.
  * `clip-path` has no logical form, so the chevron side follows `theme.direction`.
  */
-export const getArrowEdgeStyles = (theme: Theme, gap: number = 0) => {
+export const getArrowEdgeStyles = (theme: Theme, extraPadding: number = 0) => {
   const isRtl = theme.direction === 'rtl';
-  const padding = ARROW_DEPTH + gap;
+  const padding = ARROW_DEPTH + extraPadding;
   return {
     '&[data-starting-before-edge]': {
       borderStartStartRadius: 0,

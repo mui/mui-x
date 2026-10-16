@@ -17,30 +17,40 @@ describe.skipIf(isJSDOM)('<StandaloneWeekView /> - RTL', () => {
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  it('should lay out overlapping events from the inline start', async () => {
-    const first = EventBuilder.new()
-      .title('First')
-      .span('2025-07-03T09:00:00Z', '2025-07-03T11:00:00Z')
-      .build();
-    const second = EventBuilder.new()
-      .title('Second')
-      .span('2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z')
-      .build();
+  describe.each(['ltr', 'rtl'] as const)('%s', (direction) => {
+    it('should lay out overlapping events from the inline start', async () => {
+      const first = EventBuilder.new()
+        .title('First')
+        .span('2025-07-03T09:00:00Z', '2025-07-03T11:00:00Z')
+        .build();
+      const second = EventBuilder.new()
+        .title('Second')
+        .span('2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z')
+        .build();
 
-    await renderSettled(
-      <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
-        <div dir="rtl" style={{ width: 1000, height: 800 }}>
-          <StandaloneWeekView events={[first, second]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
-        </div>
-      </ThemeProvider>,
-    );
+      await renderSettled(
+        <ThemeProvider theme={createTheme({ direction })}>
+          <div dir={direction} style={{ width: 1000, height: 800 }}>
+            <StandaloneWeekView
+              events={[first, second]}
+              visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            />
+          </div>
+        </ThemeProvider>,
+      );
 
-    const getEventRect = (title: string) =>
-      screen
-        .getByText(title)
-        .closest(`.${eventCalendarClasses.timeGridEvent}`)!
-        .getBoundingClientRect();
+      const getEventRect = (title: string) =>
+        screen
+          .getByText(title)
+          .closest(`.${eventCalendarClasses.timeGridEvent}`)!
+          .getBoundingClientRect();
 
-    expect(getEventRect('First').left).to.be.greaterThan(getEventRect('Second').right - 1);
+      const firstRect = getEventRect('First');
+      const secondRect = getEventRect('Second');
+      // How far the second event sits after the first one, in the inline direction.
+      const spacing =
+        direction === 'rtl' ? firstRect.left - secondRect.right : secondRect.left - firstRect.right;
+      expect(spacing).to.be.greaterThan(-1);
+    });
   });
 });
