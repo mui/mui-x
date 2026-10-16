@@ -257,7 +257,13 @@ export const useGridHistory = (
 
       // Execute the operation
       operationStateRef.current = 'in-progress';
-      await handler[operation](data);
+      try {
+        await handler[operation](data);
+      } catch (error) {
+        // Without the reset, the history would ignore all the next events
+        operationStateRef.current = 'idle';
+        throw error;
+      }
       operationStateRef.current = 'waiting-replay';
 
       updateHistoryState({

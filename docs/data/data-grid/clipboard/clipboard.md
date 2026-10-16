@@ -128,6 +128,99 @@ The demo below shows how to persist the pasted data in the browser's `sessionSto
 
 {{"demo": "ClipboardPastePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Add rows on paste
+
+By default, the paste ignores the pasted rows that go past the last row of the Data Grid.
+To add rows for this data, give a `createRows()` function in the `clipboardPasteOptions` prop.
+The Data Grid calls it with the number of rows to create and the pasted data for these rows.
+The function returns the new rows with a unique `id` and optional default values.
+It can also return a promise.
+
+```tsx
+<DataGridPremium
+  clipboardPasteOptions={{
+    createRows: ({ count }) =>
+      Array.from({ length: count }, () => ({ id: randomId() })),
+  }}
+  disableRowSelectionOnClick
+/>
+```
+
+The paste adds rows only when it starts from one cell.
+By default, a click on a cell also selects its row, and the paste then writes only into the selected rows.
+Set `disableRowSelectionOnClick`, so that the paste starts from the cell.
+
+The Data Grid writes the pasted values into the new rows with the same rules as for the other rows.
+Then it calls `processRowUpdate()` for each new row, with the row from `createRows()` as `oldRow`.
+To find the new rows in `processRowUpdate()`, add a field such as `isNew: true` to the rows in `createRows()`.
+`processRowUpdate()` can return the new row with a different `id`, for example the id that your server gave to the row.
+If `processRowUpdate()` throws an error, the Data Grid does not add the row.
+
+:::warning
+Create the records on your server in `processRowUpdate()`, not in `createRows()`.
+The Data Grid does not add a row from `createRows()` when it cannot write a value into it, or when `processRowUpdate()` rejects it.
+:::
+
+The paste and the new rows are one [undo](/x/react-data-grid/undo-redo/) step.
+Undo removes the new rows and restores the values of the other rows.
+The `clipboardPasteEnd` event gives the new rows in its `createdRows` parameter.
+
+To try it, copy a range of cells, select a cell in the last row, and paste.
+
+{{"demo": "ClipboardPasteCreateRows.js", "bg": "inline"}}
+
+#### Controlled rows
+
+When you control the `rows` prop, add the new rows to your state.
+Otherwise, the next change of the `rows` prop removes the new rows and the undo step of the paste.
+Add the rows in `onClipboardPasteEnd()`, from its `createdRows` parameter.
+At this time, the Data Grid has the rows already, so your state has the same rows as the Data Grid.
+
+```tsx
+const [rows, setRows] = React.useState(initialRows);
+
+<DataGridPremium
+  rows={rows}
+  clipboardPasteOptions={{
+    createRows: ({ count }) =>
+      Array.from({ length: count }, () => ({ id: randomId() })),
+  }}
+  processRowUpdate={(newRow) => {
+    setRows((prevRows) =>
+      prevRows.map((row) => (row.id === newRow.id ? newRow : row)),
+    );
+    return newRow;
+  }}
+  onClipboardPasteEnd={({ createdRows }) => {
+    setRows((prevRows) => [...prevRows, ...createdRows.values()]);
+  }}
+/>;
+```
+
+:::warning
+Do not add the new rows to your state in `processRowUpdate()`.
+The Data Grid adds the rows after `processRowUpdate()`, and it ignores a row with an id that is already in the Data Grid.
+:::
+
+Undo and redo change only the rows in the Data Grid.
+To keep your state the same as the Data Grid, update it in the `onUndo()` and `onRedo()` callbacks.
+
+:::info
+The paste does not add rows when it targets a cell range or selected rows.
+With pagination, the paste adds rows only on the last page.
+On the other pages, the paste stops at the last row of the page.
+
+The Data Grid adds the new rows after the last row.
+When the rows are sorted, the new rows show at their sorted position.
+When the rows are filtered, the filters can hide the new rows.
+
+While a paste adds rows, a second paste does not add rows.
+:::
+
+:::warning
+The paste does not add rows when the Data Grid uses a [data source](/x/react-data-grid/server-side-data/), server-side pagination, tree data, row grouping, or pivoting.
+:::
+
 ### Events
 
 The following events are fired during the clipboard paste operation:

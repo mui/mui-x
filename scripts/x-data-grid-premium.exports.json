@@ -196,6 +196,8 @@
   { "name": "GridClasses", "kind": "Interface" },
   { "name": "GridClassKey", "kind": "TypeAlias" },
   { "name": "GridClearIcon", "kind": "Variable" },
+  { "name": "GridClipboardPasteCreateRowsParams", "kind": "Interface" },
+  { "name": "GridClipboardPasteOptions", "kind": "Interface" },
   { "name": "GridCloseIcon", "kind": "Variable" },
   { "name": "GridColDef", "kind": "TypeAlias" },
   { "name": "GridColSpanFn", "kind": "TypeAlias" },

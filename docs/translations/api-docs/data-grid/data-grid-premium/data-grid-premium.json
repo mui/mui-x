@@ -55,6 +55,7 @@
     "clipboardCopyCellDelimiter": {
       "description": "The character used to separate cell values when copying to the clipboard."
     },
+    "clipboardPasteOptions": { "description": "Options for the clipboard paste." },
     "columnBufferPx": {
       "description": "Column region in pixels to render before/after the viewport"
     },

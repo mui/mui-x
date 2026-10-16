@@ -101,4 +101,5 @@ export interface GridRowEditHistoryData {
 export interface GridClipboardPasteHistoryData {
   oldRows: Map<GridRowId, GridValidRowModel>;
   newRows: Map<GridRowId, GridValidRowModel>;
+  createdRows?: Map<GridRowId, GridValidRowModel>;
 }
