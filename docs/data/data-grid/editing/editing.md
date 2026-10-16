@@ -82,25 +82,50 @@ You can also enter edit mode with a single click by following [this recipe](/x/r
 
 #### Start editing with an input method editor
 
-Korean, Japanese, and Chinese text is typed through an input method editor (IME).
-Browsers only start an IME composition in an editable element that has focus.
-By default, a focused cell is not editable, so the first key of the composition is typed as a Latin character.
+Users type Korean, Japanese, and Chinese text with an input method editor (IME).
+A browser starts an IME composition only in an editable element that has the focus.
+A focused cell is not editable. Thus the browser types the first key of the composition as a Latin character.
 
-Use the `imeFastEdit` key inside `experimentalFeatures` to start editing with the first key of a composition:
+To start edit mode with the first key of a composition, set the `imeFastEdit` key in `experimentalFeatures`:
 
 ```tsx
 <DataGrid experimentalFeatures={{ imeFastEdit: true }} />
 ```
 
-With this feature, the focused editable cell renders its edit component before edit mode starts, and the edit component gets the focus.
-The composition starts in the edit component, and edit mode starts with the `compositionStart` reason.
+With this feature, the focused editable cell renders a hidden edit component before edit mode starts.
+The hidden edit component gets the focus.
+When a composition starts, the cell goes into edit mode, and the composition continues in the same edit component.
+The composition replaces the value of the cell, as a printable key does.
+The feature works with cell editing and row editing.
+
+The `onCellEditStart` and `onRowEditStart` callbacks receive the `compositionStart` reason.
+If your code prevents edit mode for the `printableKeyDown` reason, also prevent it for the `compositionStart` reason:
+
+```tsx
+<DataGrid
+  experimentalFeatures={{ imeFastEdit: true }}
+  onCellEditStart={(params, event) => {
+    if (
+      params.reason === GridCellEditStartReasons.printableKeyDown ||
+      params.reason === GridCellEditStartReasons.compositionStart
+    ) {
+      event.defaultMuiPrevented = true;
+    }
+  }}
+/>
+```
 
 :::warning
-This feature is experimental:
+This feature is experimental. It has these limits:
 
 - It only applies to columns of type `string` that use the default edit component.
-- It is disabled on devices with a coarse pointer, such as touch screens, to not open the virtual keyboard.
-- The focus is on the edit component instead of the cell, so screen readers can announce the focused cell differently.
+  Columns with a custom `renderEditCell`, columns with formulas, and other column types keep the default behavior.
+- It is not available on devices with a coarse primary pointer, such as touch screens and tablets.
+  On these devices, an input that has the focus opens the virtual keyboard.
+- Screen readers announce a text field instead of a cell. The label of the text field is the value of the cell.
+- The hidden edit component sends the keyboard events of the focused cell.
+  In `onCellKeyDown`, `event.target` is the input element, not the cell element.
+  Use `params` to identify the cell.
 
 :::
 

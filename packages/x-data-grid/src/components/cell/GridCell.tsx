@@ -110,7 +110,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 let warnedOnce = false;
 
-// Only the default edit component of string columns supports being rendered before edit mode starts.
+// The cell can render only the default edit component of string columns before edit mode starts.
 function canPreMountEditor(column: GridStateColDef) {
   return column.type === 'string' && column.renderEditCell === renderEditInputCell;
 }
@@ -243,11 +243,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     (cellMode === 'view' || !isEditable) && column.type !== 'actions' ? cellParams.tabIndex : -1;
 
   const imeFastEdit = !!rootProps.experimentalFeatures?.imeFastEdit;
-  // An IME only composes into an editable element that has focus before the first key.
-  // So the focused cell renders its editor before edit mode starts, hidden, and gives it the focus.
-  // The focus state can be cleared while the DOM focus stays in the cell, for example when a mousedown
-  // outside of the grid prevents the default behavior. Keep the editor while it has the DOM focus,
-  // so that the focus does not move to the body.
+  // An IME only composes in an editable element that has focus before the first key.
+  // So the focused cell renders its editor before edit mode starts. The cell hides the editor and focuses it.
+  // A mousedown outside the grid can prevent the default behavior. Then the grid clears the focus state,
+  // but the DOM focus stays in the editor. Keep the editor while it has the DOM focus.
+  // Then the focus does not move to the body.
   const [editorHasDomFocus, setEditorHasDomFocus] = React.useState(false);
   const isEditorPreMounted =
     imeFastEdit &&
@@ -446,8 +446,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     }
   }, [hasFocus, cellMode, apiRef]);
 
-  // Moves the focus from the cell to the editor that is rendered before edit mode starts.
-  // The focus only moves from the cell itself, so the editor never takes the focus from another element.
+  // Moves the focus from the cell to the editor that the cell renders before edit mode starts.
+  // Only the cell itself gives the focus to the editor. Thus the editor never takes the focus from another element.
   const focusPreMountedEditor = React.useCallback(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
     if (!cellRef.current || doc.activeElement !== cellRef.current) {
@@ -583,7 +583,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   }
 
   if (imeFastEdit) {
-    // The editor keeps the same position in view and edit mode, so React keeps the same element,
+    // The editor keeps the same position in view and edit mode. Thus React keeps the same element,
     // and a composition that started before edit mode continues in it.
     let editor: React.ReactNode = null;
     let editorState: 'preMounted' | 'editing' | null = null;
@@ -616,8 +616,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       editorState = 'preMounted';
     }
 
-    // Keep the same children structure in all cells, so that the view content does not remount
-    // when the cell gets the focus.
+    // Keep the same children structure in all cells.
+    // Then the view content does not remount when the cell gets the focus.
     children = [
       <React.Fragment key="view">{children}</React.Fragment>,
       editorState === null ? null : (

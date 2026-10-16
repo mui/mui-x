@@ -37,13 +37,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellCompositionStart",
-    "description": "Fired when an input method editor (IME) starts a composition in a cell.",
-    "params": "GridCellParams<any>",
-    "event": "MuiEvent<React.CompositionEvent<HTMLElement>>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellDoubleClick",
     "description": "Fired when a cell is double-clicked.",
     "params": "GridCellParams<any>",

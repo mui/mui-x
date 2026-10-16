@@ -286,7 +286,7 @@ export const useGridRowEditing = (
             reason,
             // Only pass the pressed key when the row editing is controlled via `rowModesModel`.
             // In uncontrolled mode, the default editor already inserts the character and passing it here would duplicate it.
-            // An editor rendered before edit mode starts already receives the character.
+            // The editor that the cell renders before edit mode starts already receives the character.
             key:
               rowModesModelProp && isPrintableKey(event) && !isEventFromPreMountedEditor(event)
                 ? event.key

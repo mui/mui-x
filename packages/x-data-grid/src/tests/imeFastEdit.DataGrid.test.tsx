@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, GridEditInputCell } from '@mui/x-data-grid';
+import { DataGrid, GridCellEditStartReasons, GridEditInputCell } from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridCellModesModel,
@@ -733,6 +733,34 @@ describe('<DataGrid /> - IME fast edit', () => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(getInput(cell)!.value).to.equal('');
       expect(cell.textContent).to.contain('Seoul');
+    });
+
+    it('does not start edit mode when `onCellEditStart` prevents the `compositionStart` reason', async () => {
+      const { user } = render(
+        <TestCase
+          onCellEditStart={(params, event) => {
+            if (params.reason === GridCellEditStartReasons.compositionStart) {
+              event.defaultMuiPrevented = true;
+            }
+          }}
+        />,
+      );
+      const cell = await focusCell(user, 0, 1);
+      const input = getInput(cell)!;
+      fireEvent.compositionStart(input);
+      fireEvent.change(input, { target: { value: '한' } });
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      expect(cell.textContent).to.contain('Seoul');
+    });
+
+    it('gives the hidden input as `event.target` to `onCellKeyDown`', async () => {
+      const targets: EventTarget[] = [];
+      const { user } = render(
+        <TestCase onCellKeyDown={(_, event) => targets.push(event.target)} />,
+      );
+      const input = getInput(await focusCell(user, 0, 1));
+      await user.keyboard('{ArrowRight}');
+      expect(targets).to.deep.equal([input]);
     });
 
     it('types the first character once with a controlled `cellModesModel`', async () => {

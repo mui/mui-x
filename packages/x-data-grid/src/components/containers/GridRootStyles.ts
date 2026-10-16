@@ -278,9 +278,9 @@ export const GridRootStyles = styled('div', {
       outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
     },
-    // The editor rendered before edit mode starts (`experimentalFeatures.imeFastEdit`).
-    // It must stay focusable, so it is not hidden with `display: none` or `visibility: hidden`.
-    // It has no offsets, so it stays at its static position and needs no positioned ancestor.
+    // The editor that the cell renders before edit mode starts (`experimentalFeatures.imeFastEdit`).
+    // Do not hide it with `display: none` or `visibility: hidden`, because it must stay focusable.
+    // It has no offsets. Thus it stays at its static position and needs no positioned ancestor.
     [`& .${c.cell} > [data-cell-editor="preMounted"]`]: {
       position: 'absolute',
       width: 0,

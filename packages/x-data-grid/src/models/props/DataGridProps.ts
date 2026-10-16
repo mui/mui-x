@@ -70,9 +70,11 @@ export interface GridExperimentalFeatures {
    */
   virtualizerLayoutMode: 'controlled' | 'uncontrolled';
   /**
-   * If `true`, the focused editable cell renders its edit component before editing starts.
-   * The input method editor (IME) can then compose the first character of Korean, Japanese, or Chinese text.
-   * Only applies to string columns that use the default edit component, on devices with a fine pointer.
+   * If `true`, the focused editable cell renders its edit component before edit mode starts.
+   * Then an input method editor (IME) can compose the first character of Korean, Japanese, or Chinese text.
+   * Only applies to string columns that use the default edit component.
+   * Not available on devices with a coarse primary pointer, such as touch screens.
+   * @default false
    */
   imeFastEdit: boolean;
 }

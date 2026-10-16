@@ -337,7 +337,9 @@ export interface GridCellEventLookup {
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
-   * Fired when an input method editor (IME) starts a composition in a cell.
+   * Fired when an input method editor (IME) starts a composition in the hidden editor of a focused cell.
+   * Requires `experimentalFeatures.imeFastEdit`.
+   * @ignore - do not document.
    */
   cellCompositionStart: {
     params: GridCellParams<any>;
