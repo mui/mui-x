@@ -9,10 +9,10 @@ import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occu
 import {
   eventCalendarAgendaSelectors,
   eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-internals/constants';
 import { getStartOfWeek, getWeekNumber } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerNowSelectors,
@@ -167,11 +167,14 @@ const AgendaViewEmptyState = styled('p', {
 }));
 
 const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
-  siblingVisibleDateGetter: ({ state, delta }) =>
-    state.adapter.addDays(
-      schedulerOtherSelectors.visibleDate(state),
-      AGENDA_VIEW_DAYS_AMOUNT * delta,
-    ),
+  siblingVisibleDateGetter: ({ state, delta }) => {
+    const visibleDate = schedulerOtherSelectors.visibleDate(state);
+    const dayCount = eventCalendarViewSelectors.agendaDayCount(state);
+    if (dayCount === 'month') {
+      return state.adapter.addMonths(state.adapter.startOfMonth(visibleDate), delta);
+    }
+    return state.adapter.addDays(visibleDate, dayCount * delta);
+  },
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
   fetchRangeSelector: eventCalendarAgendaSelectors.fetchRange,
 };

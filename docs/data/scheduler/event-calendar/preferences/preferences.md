@@ -33,7 +33,7 @@ Available properties:
 - `showWeekNumber`: Whether the calendar shows the week number.
 - `weekStartsOn`: The first day of the week, from `0` (Sunday) to `6` (Saturday). Defaults to the locale's first day of the week.
 - `isSidePanelOpen`: Whether the side panel is open.
-- `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events. When set to `false`, the agenda view looks for events in the next 180 days and shows a message when none is found, customizable through `localeText.agendaViewEmptyStateLabel`.
+- `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events. When set to `false`, the agenda view looks for events in the next 180 days (or in the visible month when `viewConfig.agenda.dayCount` is `'month'`) and shows a message when none is found, customizable through `localeText.agendaViewEmptyStateLabel`.
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 
