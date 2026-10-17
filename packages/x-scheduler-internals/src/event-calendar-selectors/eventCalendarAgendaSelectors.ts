@@ -9,7 +9,7 @@ import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelec
 import { eventCalendarViewSelectors } from './eventCalendarViewSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
-import { AGENDA_MAX_HORIZON_DAYS } from '../constants';
+import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
 
 /**
@@ -118,7 +118,7 @@ const visibleDays = createSelectorMemoized(
     while (daysWithEvents.length < amount && adapter.isBefore(scannedUntil, horizon)) {
       // Extend forward by one more chunk, without passing the horizon
       const nextStart = adapter.addDays(scannedUntil, 1);
-      const nextEnd = adapter.addDays(nextStart, amount - 1);
+      const nextEnd = adapter.addDays(nextStart, Math.max(amount, AGENDA_VIEW_DAYS_AMOUNT) - 1);
       scannedUntil = adapter.isBefore(nextEnd, horizon) ? nextEnd : horizon;
 
       const more = getDayList({
