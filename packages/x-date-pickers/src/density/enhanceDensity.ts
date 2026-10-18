@@ -99,5 +99,99 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   });
   addRootOverride(components, 'MuiYearCalendar', pill, 'button');
 
+  // Clock lists: their items are MenuItems, so they ride material's actionable
+  // row (`touchTarget` high, no block padding) with the list's own inline inset.
+  // The 2px item gutters are half a step, as on the day grid. The first item's
+  // extra 4px top margin is subtracted as a literal by the digital clock's
+  // scroll code, so it is left alone there.
+  const clockItem = {
+    minHeight: touchTarget,
+    paddingBlock: 0,
+    marginBlock: dayGutter,
+    marginInline: spacing('xxSmall'),
+  };
+  addRootOverride(
+    components,
+    'MuiDigitalClock',
+    { ...clockItem, paddingInline: spacing('medium') },
+    'item',
+  );
+  addRootOverride(
+    components,
+    'MuiMultiSectionDigitalClockSection',
+    {
+      ...clockItem,
+      paddingInline: spacing('xSmall'),
+      '&:first-of-type': { marginTop: spacing('xxSmall') },
+    },
+    'item',
+  );
+  addRootOverride(components, 'MuiClock', { margin: spacing('medium') });
+
+  // Toolbars. The landscape padding resets the portrait one after the base
+  // rule, so it is restated in the same variant.
+  addRootOverride(components, 'MuiPickersToolbar', {
+    padding: `${spacing('medium')} ${spacing('large')}`,
+    variants: [
+      { props: { pickerOrientation: 'landscape' }, style: { padding: spacing('medium') } },
+    ],
+  });
+  // The toolbar values are Buttons holding headline text. Material's enhancer
+  // gives every medium Button a `touchTarget` height, which clips the headline
+  // and drops it below the separators, so the height is released again.
+  addRootOverride(components, 'MuiPickersToolbarButton', { height: 'auto' });
+  addRootOverride(
+    components,
+    'MuiDatePickerToolbar',
+    {
+      variants: [
+        { props: { pickerOrientation: 'landscape' }, style: { marginRight: spacing('medium') } },
+      ],
+    },
+    'title',
+  );
+  const toolbarSeparator = { marginLeft: dayGutter, marginRight: spacing('xxSmall') };
+  // The landscape am/pm block resets the inline margins after the base rule.
+  const ampmSelection = {
+    marginLeft: spacing('small'),
+    variants: [
+      {
+        props: { pickerOrientation: 'landscape' },
+        style: { marginTop: spacing('xxSmall'), marginLeft: 0 },
+      },
+    ],
+  };
+  addRootOverride(components, 'MuiTimePickerToolbar', toolbarSeparator, 'separator');
+  addRootOverride(components, 'MuiTimePickerToolbar', ampmSelection, 'ampmSelection');
+  addRootOverride(components, 'MuiDateTimePickerToolbar', {
+    paddingInline: spacing('medium'),
+    variants: [
+      {
+        props: { toolbarVariant: 'desktop', pickerOrientation: 'portrait' },
+        style: { paddingLeft: spacing('large'), paddingRight: 0 },
+      },
+    ],
+  });
+  addRootOverride(
+    components,
+    'MuiDateTimePickerToolbar',
+    {
+      variants: [
+        {
+          props: { toolbarVariant: 'desktop', pickerOrientation: 'portrait' },
+          style: { gap: spacing('xSmall'), marginRight: spacing('xxSmall') },
+        },
+      ],
+    },
+    'timeContainer',
+  );
+  addRootOverride(
+    components,
+    'MuiDateTimePickerToolbar',
+    { variants: [{ props: { toolbarVariant: 'mobile' }, style: toolbarSeparator }] },
+    'separator',
+  );
+  addRootOverride(components, 'MuiDateTimePickerToolbar', ampmSelection, 'ampmSelection');
+
   return { ...theme, components };
 }

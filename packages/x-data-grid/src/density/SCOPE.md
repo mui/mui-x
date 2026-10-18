@@ -26,6 +26,7 @@ Totals: **81 components in scope** (169 KEEP lines, 5 DYNAMIC → defaultProps l
 - pickers calendar kept a blank band. `DateCalendar` hardcodes `height: VIEW_HEIGHT` (336); with the day grid shrunk to `touchTarget` the content ends 36px short. fix: emit the view height as the same sum master hardcodes (header block + 7 rows), and the year list `maxHeight` as 7 rows (master's 280).
 - pickers day gutters: the 2px day margin maps to half the smallest step (`xxSmall / 2`). A full step would make each column 40px again and cancel the smaller day.
 - pickers year fillers (`YearCalendarButtonFiller`) have a styled slot but no class key in `YearCalendarClasses`, so the key does not typecheck. fix: nest `& > div:empty` under `MuiYearCalendar.root`.
+- pickers toolbar values clipped. `PickersToolbarButton = styled(Button)` holds h3/h4 headline text; material's enhancer sizes medium Buttons `height: touchTarget`, so the value overflowed its box and sat below the `:` separator (am/pm stack 53→64). fix: `MuiPickersToolbarButton.root { height: auto }`.
 ## Porting steps (one per checkbox below)
 
 Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/styles/enhanceDensity.ts` + `densityScale.ts`. Any new case not covered by the rules → look there first, copy the pattern, then add it to the rules list in the PR description.
@@ -181,23 +182,23 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
   - `(root)` → minHeight — KEEP: slideTransition/loadingContainer minHeight = (DAY_SIZE + 2*DAY_MARGIN)*6 = 240 is a build-time literal consumed by CSS only (PickersSlideTransition measures nothing); override alongside the day size or six rows no longer fill the box
   - `(root)` → margin — KEEP: weekContainer `2px 0`, labels `0 2px`, weekNumber `0 ${DAY_MARGIN}px`; static literals, no JS consumer
   - `(root)` → padding — KEEP: weekNumber padding 0, static
-- [ ] [DatePickerToolbar](/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx)
+- [x] [DatePickerToolbar](/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx) — ported 2026-10-18: `title` landscape variant `marginRight: medium`
   - `(root)` → margin — KEEP: title slot landscape `auto 16px auto auto`, static literal, no JS consumer
-- [ ] [DateTimePickerToolbar](/packages/x-date-pickers/src/DateTimePicker/DateTimePickerToolbar.tsx)
+- [x] [DateTimePickerToolbar](/packages/x-date-pickers/src/DateTimePicker/DateTimePickerToolbar.tsx) — ported 2026-10-18: root `paddingInline: medium`, desktop portrait variant `paddingLeft: large` + `paddingRight: 0` restated; `timeContainer` desktop portrait `gap: xSmall`, `marginRight: xxSmall`; `separator` mobile variant `marginLeft: xxSmall / 2`, `marginRight: xxSmall`; `ampmSelection` `marginLeft: small`, landscape variant `marginTop: xxSmall` + `marginLeft: 0` restated; `timeDigitsContainer` gap 1.5 left (sub-step hairline)
   - `(root)` → paddingLeft, paddingRight — KEEP: root 16/16 and desktop-portrait 24/0, static literals
   - `(root)` → gap — KEEP: timeContainer 9 (desktop portrait) and timeDigitsContainer 1.5 (desktop), static literals
   - `(root)` → marginRight — KEEP: timeContainer 4 (desktop portrait), static
   - `(root)` → margin — KEEP: separator `0 4px 0 2px` (0 on desktop) and ampmSelection landscape `4px 0 auto`, static
   - `(root)` → marginLeft — KEEP: ampmSelection 12, static (the hour/minute button `width` is a JS `sx` prop at :356/:442, not a styled value, so it is outside this line)
-- [ ] [DigitalClock](/packages/x-date-pickers/src/DigitalClock/DigitalClock.tsx)
+- [x] [DigitalClock](/packages/x-date-pickers/src/DigitalClock/DigitalClock.tsx) — ported 2026-10-18: `MuiDigitalClock.item` (a MenuItem): `minHeight: touchTarget`, `paddingBlock: 0`, `paddingInline: medium`, `marginBlock: xxSmall / 2`, `marginInline: xxSmall`; first-item `marginTop: 4` left alone (DYNAMIC, the scroll code subtracts it as a literal); list `maxHeight` 232 left as the scroll viewport (denser items show more of the list)
   - `(root)` → maxHeight — KEEP: DIGITAL_CLOCK_VIEW_HEIGHT (232) literal; scroll-to-selected at :232-239 reads runtime `offsetTop`, not the constant
   - `(root)` → padding — KEEP: list 0, item `8px 16px`, static literals
   - `(root)` → margin — KEEP: item `2px 4px`, static; scroll uses measured offsetTop
 - [x] [PickersArrowSwitcher](/packages/x-date-pickers/src/internals/components/PickersArrowSwitcher/PickersArrowSwitcher.tsx) — ported 2026-10-18: `spacer` width `large`
   - `(root)` → width — KEEP: spacer slot `theme.spacing(3)`, gap between the two arrow buttons, no JS consumer
-- [ ] [PickersToolbar](/packages/x-date-pickers/src/internals/components/PickersToolbar.tsx)
+- [x] [PickersToolbar](/packages/x-date-pickers/src/internals/components/PickersToolbar.tsx) — ported 2026-10-18: root `padding: medium large`, landscape variant restates `padding: medium` (it resets the portrait padding after the base rule)
   - `(root)` → padding — KEEP: `theme.spacing(2, 3)` portrait, 16 landscape, static
-- [ ] [PickersToolbarButton](/packages/x-date-pickers/src/internals/components/PickersToolbarButton.tsx)
+- [x] [PickersToolbarButton](/packages/x-date-pickers/src/internals/components/PickersToolbarButton.tsx) — ported 2026-10-18: root `height: auto` — material's enhancer gives every medium Button a `touchTarget` height, which clipped the headline value and dropped it below the separator; padding/minWidth unchanged
   - `(root)` → minWidth — KEEP: literal 16, static (a JS `width` prop may add `sx.width` on top, but minWidth stays CSS-owned)
   - `(root)` → padding — KEEP: literal 0, static
 - [x] [MonthCalendar](/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx) — ported 2026-10-18: `rowGap: medium`, `paddingBlock: xSmall`, three-per-row `columnGap: large` (variant)
@@ -205,7 +206,7 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
   - `(root)` → padding — KEEP: `8px 0`, static
 - [x] [MonthCalendarButton](/packages/x-date-pickers/src/MonthCalendar/MonthCalendarButton.tsx) — ported 2026-10-18: `MuiMonthCalendar.button` pill: height `touchTarget`, width `2 * touchTarget`, radius `touchTarget / 2`
   - `(root)` → height, width — KEEP: literal 36×72 button box (borderRadius 18 pairs), static, no JS consumer
-- [ ] [MultiSectionDigitalClockSection](/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClockSection.tsx)
+- [x] [MultiSectionDigitalClockSection](/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClockSection.tsx) — ported 2026-10-18: `item`: same actionable row as the digital clock with `paddingInline: xSmall`, first item `marginTop: xxSmall`; section and item widths stay (DYNAMIC, toolbar `sx` pairs)
   - `(root)` → maxHeight — KEEP: DIGITAL_CLOCK_VIEW_HEIGHT (232) literal; centering scroll at :209-224 reads runtime clientHeight/scrollHeight/offsetTop, not the constant
   - `(root)` → padding — KEEP: root 0, item 8, static
   - `(root)` → margin — KEEP: item `2px 4px`, static; scroll centering is runtime-measured
@@ -229,9 +230,9 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
   - `(root)` → paddingTop — KEEP: sectionsContainer small 1, static
 - [ ] [PickersOutlinedInput](/packages/x-date-pickers/src/PickersTextField/PickersOutlinedInput/PickersOutlinedInput.tsx)
   - `(root)` → padding — KEEP: root `0 14px` and sectionsContainer `16.5px 0` (small `8.5px 0`) literals, static; runtime-measured active bar follows; pair horizontal padding with the InputLabel outlined transform
-- [ ] [Clock](/packages/x-date-pickers/src/TimeClock/Clock.tsx)
+- [x] [Clock](/packages/x-date-pickers/src/TimeClock/Clock.tsx) — ported 2026-10-18: root `margin: medium`; face geometry stays (DYNAMIC)
   - `(root)` → margin — KEEP: root `theme.spacing(2)`, static, outside the measured face
-- [ ] [TimePickerToolbar](/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx)
+- [x] [TimePickerToolbar](/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx) — ported 2026-10-18: `separator` `marginLeft: xxSmall / 2`, `marginRight: xxSmall`; `ampmSelection` as the date time toolbar
   - `(root)` → margin — KEEP: separator `0 4px 0 2px` and ampmSelection landscape `4px 0 auto`, static
   - `(root)` → marginLeft — KEEP: ampmSelection 12, static
 - [x] [YearCalendar](/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx) — ported 2026-10-18: `rowGap: small`, `maxHeight: (touchTarget + xxSmall) * 7`; three-per-row `columnGap: large` + `paddingBlock: xSmall`, four-per-row `paddingInline: xxSmall / 2` (variants, the four-per-row reset comes after the base); fillers (slot without class key) nested as `& > div:empty`

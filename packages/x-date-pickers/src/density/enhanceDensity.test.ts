@@ -48,6 +48,26 @@ describe('enhanceDensity', () => {
     ]);
   });
 
+  it('puts the clock list items on the touch target with no block padding', () => {
+    const theme = enhanceDensity(enhancedTheme());
+    expect(theme.components.MuiDigitalClock?.styleOverrides?.item).toEqual([
+      {
+        minHeight: '32px',
+        paddingBlock: 0,
+        marginBlock: 'calc(4px / 2)',
+        marginInline: '4px',
+        paddingInline: '16px',
+      },
+    ]);
+  });
+
+  it("releases material's Button height on the toolbar value buttons", () => {
+    const theme = enhanceDensity(enhancedTheme());
+    expect(theme.components.MuiPickersToolbarButton?.styleOverrides?.root).toEqual([
+      { height: 'auto' },
+    ]);
+  });
+
   it("keeps the theme's own overrides as the last layer", () => {
     const own = { '--PickerDay-size': '40px' };
     const theme = enhanceDensity(
