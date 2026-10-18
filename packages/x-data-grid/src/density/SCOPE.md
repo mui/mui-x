@@ -4,15 +4,15 @@ Companion to `unstable_enhanceDensity` (`packages/x-data-grid*/src/density/`). T
 
 Derived by reading every non-deprecated component's styled bodies and their JS consumers on this branch. A line is **KEEP** when a theme `styleOverrides` change of that property is plain CSS with no JS reading or producing the value, and it affects density (padding, margin, gap, control/icon/item sizes). **DYNAMIC → defaultProps** lines are density-relevant but JS-owned (row/header/item heights fed to a virtualizer, prop-driven vars) — the enhancer must set them through `defaultProps`, never CSS. Everything else (layout fills, popover widths, overlays, fillers, skeletons, handles, SVG geometry, JS-set vars) is listed in the appendix with its reason.
 
-Totals: **80 components in scope** (168 KEEP lines, 5 DYNAMIC → defaultProps lines), 40 components excluded.
+Totals: **81 components in scope** (169 KEEP lines, 5 DYNAMIC → defaultProps lines), 39 components excluded.
 
-## Fixes uncovered (chain-only breakage, fixed in the grid enhancer)
+## Fixes uncovered (chain-only breakage, fixed in the enhancers)
 
 - toolbar icons 20→14px. grid hardcodes `fontSize="small"`, material maps small→`iconSize-2`. fix: slot `& svg { fontSize: iconSize }`.
 - boolean cell icon 20→14px. `GridBooleanCell` class sits ON the svg, so `& svg` nesting misses; fix: `booleanCell { fontSize: iconSize }` direct.
 - header sort/menu/actions icons 18→16px: no fix needed, `sortIcon { fontSize: inherit }` rides the IconButton's `iconSize`; actions/edit-cell icons need the glyph rule (`fontSize="small"` hardcoded).
 - panels came out spacious: the earlier playground prototype maps master one step UP (8→small, 16→large); copied into batches 1-6. fix: same-size map (criterion 3) + actionable rows at `touchTarget` (criterion 11), all panel rows remapped 2026-10-09. prototype = which slots, not which step.
-- checkbox / reorder columns stay 50px wide. width is a colDef number → `computedWidth` → inline `--width`; no CSS lever. decision (see the PR description): leave; follow-up = `checkboxColumnWidth` / `rowReorderColumnWidth` root props → `defaultProps`.
+- checkbox / reorder columns 50px wide. width is a colDef number → `computedWidth` → inline `--width`; no CSS lever. checkbox: `checkboxColDef` is a root prop spread over the built-in definition (`useGridRowSelectionPreProcessors.ts`), so the community enhancer sets `defaultProps.checkboxColDef: { width, minWidth }` = `touchTarget + 2 * xSmall` (48 at the default scale; `minWidth` moves too, the inherited 50px floor would clamp it). A `checkboxColDef` passed as a prop replaces the theme one, as any prop does. reorder: `GRID_REORDER_COL_DEF` takes no prop (`useGridRowReorderPreProcessors.ts` builds the column from the constant alone), so it stays 50px; a follow-up would add a `rowReorderColDef`-style root prop to the grid.
 - playground vars fell back to literals. nested `ThemeProvider` reusing the outer prefix (`mui`) skips its style sheet. fix: enhanced theme gets `cssVarPrefix: 'density'`.
 - Premium: `chartsPanel*` (19 styled slots), `formulaEditor`/`formulaEditable`/`formulaAutocompletePopper` have NO `GridClasses` key → no theme override surface at all. port blocked until upstream adds keys. formula bar inner parts are class-less `styled('div')`s.
 - 4 keys silently dropped: `columnHeader--filter`, `rowReorderIcon`, `multiSelectCell`, `editMultiSelectCell` exist in `GridClasses` but not in `gridClassesOverrides` (root resolver list) and have no styled slot of their own → `styleOverrides.<key>` ignored, no error. fix: nest `& .MuiDataGrid-<key>` under `root`. check list before trusting a key.
@@ -23,6 +23,9 @@ Totals: **80 components in scope** (168 KEEP lines, 5 DYNAMIC → defaultProps l
 - search field icons 14px (same glyph cause as toolbar). fix: `& svg { fontSize: iconSize }` on `columnsManagementHeader` + `toolbarQuickFilterControl`.
 - quick filter trigger 36→16px. slot `width/height: min-content`, box came from IconButton padding; material: explicit box + `padding: 0`. fix: slot `width/height: touchTarget`. `--trigger-width` followed.
 
+- pickers calendar kept a blank band. `DateCalendar` hardcodes `height: VIEW_HEIGHT` (336); with the day grid shrunk to `touchTarget` the content ends 36px short. fix: emit the view height as the same sum master hardcodes (header block + 7 rows), and the year list `maxHeight` as 7 rows (master's 280).
+- pickers day gutters: the 2px day margin maps to half the smallest step (`xxSmall / 2`). A full step would make each column 40px again and cancel the smaller day.
+- pickers year fillers (`YearCalendarButtonFiller`) have a styled slot but no class key in `YearCalendarClasses`, so the key does not typecheck. fix: nest `& > div:empty` under `MuiYearCalendar.root`.
 ## Porting steps (one per checkbox below)
 
 Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/styles/enhanceDensity.ts` + `densityScale.ts`. Any new case not covered by the rules → look there first, copy the pattern, then add it to the rules list in the PR description.
@@ -169,9 +172,11 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
 
 ## Date Pickers
 
-### Date Pickers Community (`x-date-pickers`) — 20 in scope, 11 excluded
+### Date Pickers Community (`x-date-pickers`) — 21 in scope, 10 excluded
 
-- [ ] [DayCalendar](/packages/x-date-pickers/src/DateCalendar/DayCalendar.tsx)
+- [x] [DateCalendar](/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx) — ported 2026-10-18: root `height: small + touchTarget + xxSmall + (touchTarget + xxSmall) * 7` (header block plus weekday row plus six weeks, the same sum as master's 336)
+  - `(root)` → height — KEEP (moved from the appendix 2026-10-18): VIEW_HEIGHT is reused by DesktopDateTimePicker.tsx:55 and MobileDateTimePicker.tsx:124 only as `maxHeight` caps on the sibling clock columns, so a shorter calendar leaves that row at the clock height without tearing; standalone, a fixed 336 left a blank band under the shrunk day grid
+- [x] [DayCalendar](/packages/x-date-pickers/src/DateCalendar/DayCalendar.tsx) — ported 2026-10-18: `weekDayLabel` / `weekNumberLabel` width `touchTarget`, height `touchTarget + xxSmall`, `marginInline` half xxSmall; `weekNumber` `touchTarget` box; `weekContainer` `marginBlock` half xxSmall; `slideTransition` + `loadingContainer` `minHeight: (touchTarget + xxSmall) * 6`
   - `(root)` → width, height — KEEP: literal 36/40 on weekDayLabel/weekNumberLabel and DAY_SIZE (36) on weekNumber; CSS-only, no JS reads them; must move together with PickerDay `--PickerDay-size`
   - `(root)` → minHeight — KEEP: slideTransition/loadingContainer minHeight = (DAY_SIZE + 2*DAY_MARGIN)*6 = 240 is a build-time literal consumed by CSS only (PickersSlideTransition measures nothing); override alongside the day size or six rows no longer fill the box
   - `(root)` → margin — KEEP: weekContainer `2px 0`, labels `0 2px`, weekNumber `0 ${DAY_MARGIN}px`; static literals, no JS consumer
@@ -188,30 +193,30 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
   - `(root)` → maxHeight — KEEP: DIGITAL_CLOCK_VIEW_HEIGHT (232) literal; scroll-to-selected at :232-239 reads runtime `offsetTop`, not the constant
   - `(root)` → padding — KEEP: list 0, item `8px 16px`, static literals
   - `(root)` → margin — KEEP: item `2px 4px`, static; scroll uses measured offsetTop
-- [ ] [PickersArrowSwitcher](/packages/x-date-pickers/src/internals/components/PickersArrowSwitcher/PickersArrowSwitcher.tsx)
+- [x] [PickersArrowSwitcher](/packages/x-date-pickers/src/internals/components/PickersArrowSwitcher/PickersArrowSwitcher.tsx) — ported 2026-10-18: `spacer` width `large`
   - `(root)` → width — KEEP: spacer slot `theme.spacing(3)`, gap between the two arrow buttons, no JS consumer
 - [ ] [PickersToolbar](/packages/x-date-pickers/src/internals/components/PickersToolbar.tsx)
   - `(root)` → padding — KEEP: `theme.spacing(2, 3)` portrait, 16 landscape, static
 - [ ] [PickersToolbarButton](/packages/x-date-pickers/src/internals/components/PickersToolbarButton.tsx)
   - `(root)` → minWidth — KEEP: literal 16, static (a JS `width` prop may add `sx.width` on top, but minWidth stays CSS-owned)
   - `(root)` → padding — KEEP: literal 0, static
-- [ ] [MonthCalendar](/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx)
+- [x] [MonthCalendar](/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx) — ported 2026-10-18: `rowGap: medium`, `paddingBlock: xSmall`, three-per-row `columnGap: large` (variant)
   - `(root)` → rowGap — KEEP: literal 16 (columnGap 24/0 per monthsPerRow), static, no JS measurement in MonthCalendar
   - `(root)` → padding — KEEP: `8px 0`, static
-- [ ] [MonthCalendarButton](/packages/x-date-pickers/src/MonthCalendar/MonthCalendarButton.tsx)
+- [x] [MonthCalendarButton](/packages/x-date-pickers/src/MonthCalendar/MonthCalendarButton.tsx) — ported 2026-10-18: `MuiMonthCalendar.button` pill: height `touchTarget`, width `2 * touchTarget`, radius `touchTarget / 2`
   - `(root)` → height, width — KEEP: literal 36×72 button box (borderRadius 18 pairs), static, no JS consumer
 - [ ] [MultiSectionDigitalClockSection](/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClockSection.tsx)
   - `(root)` → maxHeight — KEEP: DIGITAL_CLOCK_VIEW_HEIGHT (232) literal; centering scroll at :209-224 reads runtime clientHeight/scrollHeight/offsetTop, not the constant
   - `(root)` → padding — KEEP: root 0, item 8, static
   - `(root)` → margin — KEEP: item `2px 4px`, static; scroll centering is runtime-measured
   - `&:first-of-type` → marginTop — KEEP: literal 4, no literal offset in the section scroll logic (unlike DigitalClock)
-- [ ] [PickerDay](/packages/x-date-pickers/src/PickerDay/PickerDay.tsx)
+- [x] [PickerDay](/packages/x-date-pickers/src/PickerDay/PickerDay.tsx) — ported 2026-10-18: `--PickerDay-size: touchTarget`, `--PickerDay-horizontalMargin: xxSmall / 2` (the 2px gutter is half the smallest step; a full step would cancel the density gain)
   - `(root)` → --PickerDay-size — KEEP: defined as `${DAY_SIZE}px` literal; read only by CSS (width/height/borderRadius here, DateRangePickerDay pseudo-elements); no JS reads it (grep `PickerDay-size` hits only styled bodies); pair with DayCalendar label widths and slideTransition minHeight
   - `(root)` → width, height — KEEP: `var(--PickerDay-size)`, CSS-only
   - `(root)` → --PickerDay-horizontalMargin — KEEP: `${DAY_MARGIN}px` literal, read only by CSS (margins here, DateRangePickerDay :88/:98 pseudo insets)
   - `(root)` → padding — KEEP: literal 0
   - `(root)` → marginLeft, marginRight — KEEP: `var(--PickerDay-horizontalMargin)`, CSS-only
-- [ ] [PickersCalendarHeader](/packages/x-date-pickers/src/PickersCalendarHeader/PickersCalendarHeader.tsx)
+- [x] [PickersCalendarHeader](/packages/x-date-pickers/src/PickersCalendarHeader/PickersCalendarHeader.tsx) — ported 2026-10-18: root `min/maxHeight: touchTarget` (the bar is as high as its arrow buttons), margins `small`/`xxSmall`, padding `large`/`small`; `label` `marginRight: xSmall`
   - `(root)` → maxHeight, minHeight — KEEP: literal 40/40 header row height, static, no JS consumer
   - `(root)` → marginTop, marginBottom, paddingLeft, paddingRight — KEEP: 12/4/24/12 literals, static
   - `(root)` → marginRight — KEEP: label slot 6 literal (labelContainer/switchViewButton `auto` are layout, ignore)
@@ -229,11 +234,11 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
 - [ ] [TimePickerToolbar](/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx)
   - `(root)` → margin — KEEP: separator `0 4px 0 2px` and ampmSelection landscape `4px 0 auto`, static
   - `(root)` → marginLeft — KEEP: ampmSelection 12, static
-- [ ] [YearCalendar](/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx)
+- [x] [YearCalendar](/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx) — ported 2026-10-18: `rowGap: small`, `maxHeight: (touchTarget + xxSmall) * 7`; three-per-row `columnGap: large` + `paddingBlock: xSmall`, four-per-row `paddingInline: xxSmall / 2` (variants, the four-per-row reset comes after the base); fillers (slot without class key) nested as `& > div:empty`
   - `(root)` → maxHeight — KEEP: MAX_CALENDAR_HEIGHT (280) literal; scroll-into-view at :295-308 measures clientHeight/offsetHeight at runtime
   - `(root)` → rowGap — KEEP: literal 12 (columnGap 24/0 per yearsPerRow), static
   - `(root)` → padding — KEEP: `6px 0` / `0 2px` literals, static
-- [ ] [YearCalendarButton](/packages/x-date-pickers/src/YearCalendar/YearCalendarButton.tsx)
+- [x] [YearCalendarButton](/packages/x-date-pickers/src/YearCalendar/YearCalendarButton.tsx) — ported 2026-10-18: `MuiYearCalendar.button`, same pill as the month button
   - `(root)` → height, width — KEEP: literal 36×72 button box (borderRadius 18 and YearCalendar buttonFiller 36×72 pair), static; scroll math reads runtime offsetHeight
 
 ### Date Pickers Pro (`x-date-pickers-pro`) — 7 in scope, 1 excluded
@@ -532,8 +537,6 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
   - `(root)` → height — UNRELATED: root `100%` fill (buttonFiller 36 pairs with YearCalendarButton, see there)
   - `(root)` → width — UNRELATED: DIALOG_WIDTH structural grid width
   - `(root)` → boxSizing — UNRELATED:
-- [DateCalendar](/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx) — EXCLUDED: only line is DYNAMIC (VIEW_HEIGHT paired in JS sx)
-  - `(root)` → height — DYNAMIC: packages/x-date-pickers/src/DesktopDateTimePicker/DesktopDateTimePicker.tsx:55 and packages/x-date-pickers/src/MobileDateTimePicker/MobileDateTimePicker.tsx:124 re-assert the same VIEW_HEIGHT (336) via `sx` on the sibling clock columns, so a CSS-only change to the calendar height leaves the clock column at 336
 - [DayCalendarSkeleton](/packages/x-date-pickers/src/DayCalendarSkeleton/DayCalendarSkeleton.tsx) — EXCLUDED: all lines UNRELATED (skeleton)
   - `(root)` → margin — UNRELATED: skeleton placeholder (week `2px 0`, day `0 2px`; day size is a JS `width`/`height` prop at :103)
 - [PickersModalDialog](/packages/x-date-pickers/src/internals/components/PickersModalDialog.tsx) — EXCLUDED: all lines UNRELATED (structural dialog; unnamed internal slot, no theme key)
