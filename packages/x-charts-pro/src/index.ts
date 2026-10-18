@@ -68,3 +68,4 @@ export type {
   ChartPrintExportOptions,
   StylesheetErrorReason,
 } from './internals/plugins/useChartProExport';
+export { unstable_enhanceDensity } from './density';

@@ -31,6 +31,7 @@ Totals: **81 components in scope** (169 KEEP lines, 5 DYNAMIC → defaultProps l
 - small picker fields grew to 32. the open picker button is a medium `IconButton` whatever the field size (master: 40 = the small field). fix: small `PickersInputBase` sizes adornment IconButtons to `touchTarget - xxSmall`.
 - `MuiTimeRangePickerTabs` / `MuiTimeRangePickerToolbar` resolve theme overrides by name (`styled(..., { name })`) but are missing from `x-date-pickers-pro`'s theme augmentation, so `components.MuiTimeRange*` does not typecheck. fix: the Pro enhancer pins their keys in a local components type (same move as the grid Pro `defaultProps`). upstream follow-up: add both to the augmentation.
 - tree item checkbox box 24→32 squeezed to 25.5. `TreeItemCheckbox = styled(MuiCheckbox)` with `padding: 0` (box = glyph); material's enhancer sizes every Checkbox to `touchTarget`. fix: `MuiTreeItem.checkbox { width/height: iconSize }`.
+- charts components missing from the theme augmentation: `MuiChartsAxisHighlightValue`, `MuiChartsLabelMark`, `MuiContinuousColorLegend`, `MuiPiecewiseColorLegend`, `MuiChartsToolbar`, `MuiChartsHeatmapTooltip` resolve overrides by name but `components.<name>` does not typecheck. fix: `ChartsDensityComponents` types them loosely in the enhancer. The charts enhancer imports `../themeAugmentation` so the typed keys (`MuiChartsLegend`, `MuiChartsTooltip`) resolve when the Premium package compiles it.
 ## Porting steps (one per checkbox below)
 
 Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/styles/enhanceDensity.ts` + `densityScale.ts`. Any new case not covered by the rules → look there first, copy the pattern, then add it to the rules list in the PR description.
@@ -297,25 +298,25 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
 
 ### Charts Community (`x-charts`) — 7 in scope, 4 excluded
 
-- [ ] [ChartsAxisHighlightValueItem](/packages/x-charts/src/ChartsAxisHighlightValue/ChartsAxisHighlightValueItem.tsx)
+- [x] [ChartsAxisHighlightValueItem](/packages/x-charts/src/ChartsAxisHighlightValue/ChartsAxisHighlightValueItem.tsx) — ported 2026-10-18: `MuiChartsAxisHighlightValue.root` `padding: xxSmall xSmall`
   - `(root)` → padding — KEEP: static `theme.spacing(0.5, 1)`; the JS-set `--min/--max/--space` vars only clamp the `translate` offset and use `100%` of the element's own box, so a padding change is absorbed (ChartsAxisHighlightValueItem.tsx:18,70-78)
-- [ ] [ChartsLabelMark](/packages/x-charts/src/ChartsLabel/ChartsLabelMark.tsx)
+- [x] [ChartsLabelMark](/packages/x-charts/src/ChartsLabel/ChartsLabelMark.tsx) — ported 2026-10-18: glyph sizes off `iconSize`: base `iconSize - 2px`, line `iconSize x iconSize / 2`, square `iconSize - 3px`, circle `iconSize - 1px` (master's 14 / 16x8 / 13 / 15 at the default 16)
   - `(root)` → width, height — KEEP: static `14px` legend/tooltip mark; nothing measures it, the tooltip `markContainer` is sized independently in CSS
   - `&.${labelMarkClasses.line}` → width, height — KEEP: static `16 x 8`
   - `&.${labelMarkClasses.square}` → height, width — KEEP: static `13 x 13`
   - `&.${labelMarkClasses.circle}` → height, width — KEEP: static `15 x 15`
-- [ ] [ChartsLegend](/packages/x-charts/src/ChartsLegend/ChartsLegend.tsx)
+- [x] [ChartsLegend](/packages/x-charts/src/ChartsLegend/ChartsLegend.tsx) — ported 2026-10-18: root `gap: medium`, `marginBlock/Inline: xSmall`, `& .MuiChartsLegend-series { gap: xSmall }`; `paddingInlineStart: 0` / button `padding: 0` are resets, skipped
   - `(root)` → gap, paddingInlineStart, marginBlock, marginInline — KEEP: static `theme.spacing(2)` / `0` (ul reset) / `theme.spacing(1)` / `theme.spacing(1)`; the legend occupies an `auto` grid track of ChartsWrapper and the drawing area is re-measured by ResizeObserver on the layer container (useChartDimensions.ts:140), no legend measurement exists in `packages/x-charts/src`
   - `button.${legendClasses.series}` → padding — KEEP: static `0` button reset; clickable series item inset
   - `& .${legendClasses.series}` → gap — KEEP: static `theme.spacing(1)` between mark and label
-- [ ] [ContinuousColorLegend](/packages/x-charts/src/ChartsLegend/ContinuousColorLegend.tsx)
+- [x] [ContinuousColorLegend](/packages/x-charts/src/ChartsLegend/ContinuousColorLegend.tsx) — ported 2026-10-18: root `gap: xxSmall`, `marginBlock/Inline: xSmall`
   - `(root)` → gap, paddingInlineStart, marginBlock, marginInline — KEEP: static `theme.spacing(0.5)` / `0` (ul reset) / `theme.spacing(1)` / `theme.spacing(1)`; same grid-track/ResizeObserver reasoning as ChartsLegend
-- [ ] [PiecewiseColorLegend](/packages/x-charts/src/ChartsLegend/PiecewiseColorLegend.tsx)
+- [x] [PiecewiseColorLegend](/packages/x-charts/src/ChartsLegend/PiecewiseColorLegend.tsx) — ported 2026-10-18: root `gap: xxSmall`, margins `xSmall`; `.item { gap: xxSmall }`; horizontal inline-start/end `gap: small` (same nesting as master)
   - `(root)` → gap, paddingInlineStart, marginBlock, marginInline — KEEP: static `theme.spacing(0.5)` / `0` (ul reset) / `theme.spacing(1)` / `theme.spacing(1)`; same grid-track/ResizeObserver reasoning as ChartsLegend
   - `button.${classes.item}` → padding — KEEP: static `0` button reset; clickable item inset
   - `.${classes.item}` → gap — KEEP: static `theme.spacing(0.5)` between mark and label
   - `&.${classes.horizontal} > &.${classes.inlineStart}, &.${classes.inlineEnd}` → gap — KEEP: static `theme.spacing(1.5)` between inline items
-- [ ] [ChartsTooltipTable](/packages/x-charts/src/ChartsTooltip/ChartsTooltipTable.ts)
+- [x] [ChartsTooltipTable](/packages/x-charts/src/ChartsTooltip/ChartsTooltipTable.ts) — ported 2026-10-18: `MuiChartsTooltip.table`: markContainer width `iconSize + xxSmall + small`, caption `padding: xxSmall small` + span `marginRight: small`; `row`: first/last `td` block inset `xxSmall`; `cell`: `.cell` `paddingInline: xSmall`, `.valueCell` `small`, first/last cell `small` (master's selector order kept so the first/last insets still win)
   - `& .${chartsTooltipClasses.markContainer}` → width — KEEP: static `calc(20px + theme.spacing(1.5))` cell gutter that holds the mark (max 16px); tooltip is positioned by Popper from a zero-size pointer anchor (packages/x-charts/src/ChartsTooltip/ChartsTooltipContainer.tsx:273) and re-measures the popper itself on update
   - `& caption` → padding — KEEP: static `theme.spacing(0.5, 1.5)`
   - `& caption > & span` → marginRight — KEEP: static `theme.spacing(1.5)`
@@ -325,23 +326,23 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
   - `&.${chartsTooltipClasses.valueCell}` → paddingLeft, paddingRight — KEEP: static `theme.spacing(1.5)`
   - `td:first-of-type&, th:first-of-type&` → paddingLeft — KEEP: static `theme.spacing(1.5)`
   - `td:last-of-type&, th:last-of-type&` → paddingRight — KEEP: static `theme.spacing(1.5)`
-- [ ] [Toolbar](/packages/x-charts/src/Toolbar/Toolbar.tsx)
+- [x] [Toolbar](/packages/x-charts/src/Toolbar/Toolbar.tsx) — ported 2026-10-18: `MuiChartsToolbar.root` `gap: xxSmall / 2`, `padding: xxSmall`, `marginBottom: small`, `minHeight: touchTarget + 2 * xxSmall` (the bar is its IconButtons plus its block padding; 44 → 40)
   - `(root)` → minHeight — KEEP: static `44px` control-bar height; ChartsWrapper gives the toolbar an `auto` grid row (ChartsWrapper.tsx:166) and the drawing area is ResizeObserver-driven, the export plugin only looks the element up by class (packages/x-charts-pro/src/internals/plugins/useChartProExport/defaults.ts:5), no measurement
   - `(root)` → gap, padding, marginBottom — KEEP: static `theme.spacing(0.25)` / `theme.spacing(0.5)` / `theme.spacing(1.5)`
 
 ### Charts Pro (`x-charts-pro`) — 3 in scope, 0 excluded
 
-- [ ] [ChartsToolbarPro](/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarPro.tsx)
+- [x] [ChartsToolbarPro](/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarPro.tsx) — ported 2026-10-18: nothing to emit: the range buttons' `minWidth: unset` is a reset; the ToggleButtons ride material's emission
   - `& .MuiToggleButton-root` → minWidth — KEEP: static `unset` on the range ToggleButtons (styled name `MuiChartsToolbarRangeButtons`), control min-width, nothing measures it
-- [ ] [ChartsToolbarDivider](/packages/x-charts-pro/src/ChartsToolbarPro/internals/ChartsToolbarDivider.tsx)
+- [x] [ChartsToolbarDivider](/packages/x-charts-pro/src/ChartsToolbarPro/internals/ChartsToolbarDivider.tsx) — ported 2026-10-18: `MuiChartsToolbar.divider` `marginInline: xxSmall` (Pro enhancer)
   - `(root)` → margin — KEEP: static `theme.spacing(0, 0.5)` horizontal spacing between toolbar groups (styled name `MuiChartsToolbar`, slot `Divider`)
-- [ ] [HeatmapTooltipAxesValue](/packages/x-charts-pro/src/Heatmap/HeatmapTooltip/HeatmapTooltipAxesValue.tsx)
+- [x] [HeatmapTooltipAxesValue](/packages/x-charts-pro/src/Heatmap/HeatmapTooltip/HeatmapTooltipAxesValue.tsx) — ported 2026-10-18: `MuiChartsHeatmapTooltip.axesValue` `padding: xxSmall small`, `& span { marginRight: small }`. NOT measured live: the heatmap tooltip did not open under hover in the harness
   - `(root)` → padding — KEEP: static `theme.spacing(0.5, 1.5)`, mirrors ChartsTooltipTable caption padding; override together
   - `& span` → marginRight — KEEP: static `theme.spacing(1.5)`, mirrors ChartsTooltipTable caption span
 
 ### Charts Premium (`x-charts-premium`) — 1 in scope, 0 excluded
 
-- [ ] [PaletteOption](/packages/x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx)
+- [x] [PaletteOption](/packages/x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx) — ported 2026-10-18: `MuiDataGrid.paletteOptionRoot` `gap: xSmall`, `paletteOptionIcon` `iconSize` box (Premium charts enhancer; renders inside the grid's charts panel). NOT measured live: the charts panel has no override surface of its own and was not opened
   - `(root)` → gap — KEEP: static `theme.spacing(1)` between swatch and label (styled name `MuiDataGrid`, slot `PaletteOptionRoot`)
   - `(root)` → width, height — KEEP: static `24 x 24` palette swatch (styled name `MuiDataGrid`, slot `PaletteOptionIcon`); nothing measures it
 
