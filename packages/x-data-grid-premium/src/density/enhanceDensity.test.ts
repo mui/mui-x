@@ -14,6 +14,7 @@ describe('enhanceDensity (premium)', () => {
     expect(theme.components?.MuiDataGrid?.defaultProps).toEqual({
       rowHeight: 40,
       columnHeaderHeight: 40,
+      checkboxColDef: { width: 48, minWidth: 48 },
       headerFilterHeight: 40,
     });
   });

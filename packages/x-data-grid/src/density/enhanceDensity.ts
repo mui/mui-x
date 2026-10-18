@@ -22,7 +22,15 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const scale = getDensityScale(theme);
   const components: NonNullable<Theme['components']> = { ...theme.components };
   const height = gridDensityHeight(scale);
-  addDefaultProps(components, 'MuiDataGrid', { rowHeight: height, columnHeaderHeight: height });
+  // The checkbox column's width is a colDef number fed to the virtualizer;
+  // `checkboxColDef` is spread over the built-in definition, so the width
+  // rides it. Its 50px `minWidth` would clamp a narrower width, so both move.
+  const checkboxColumnWidth = scale.touchTarget + 2 * scale.spacing.xSmall;
+  addDefaultProps(components, 'MuiDataGrid', {
+    rowHeight: height,
+    columnHeaderHeight: height,
+    checkboxColDef: { width: checkboxColumnWidth, minWidth: checkboxColumnWidth },
+  });
 
   // Keyed spacing: `@mui/material`'s enhancer wraps `theme.spacing` so a scale
   // key resolves to its step (var ref with px fallback on a vars theme, px otherwise).

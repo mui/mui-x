@@ -17,6 +17,7 @@ describe('enhanceDensity', () => {
     expect(theme.components?.MuiDataGrid?.defaultProps).toEqual({
       rowHeight: 40,
       columnHeaderHeight: 40,
+      checkboxColDef: { width: 48, minWidth: 48 },
     });
   });
 
@@ -156,7 +157,18 @@ describe('enhanceDensity', () => {
     expect(theme.components?.MuiDataGrid?.defaultProps).toEqual({
       rowHeight: 30,
       columnHeaderHeight: 40,
+      checkboxColDef: { width: 48, minWidth: 48 },
       density: 'compact',
+    });
+  });
+
+  it('keeps the checkbox column keys a theme sets, adding only the ones it leaves out', () => {
+    const theme = enhanceDensity(
+      enhancedTheme({ MuiDataGrid: { defaultProps: { checkboxColDef: { width: 60 } } } }),
+    );
+    expect(theme.components?.MuiDataGrid?.defaultProps?.checkboxColDef).toEqual({
+      width: 60,
+      minWidth: 48,
     });
   });
 
