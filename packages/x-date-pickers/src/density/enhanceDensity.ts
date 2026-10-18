@@ -1,4 +1,7 @@
 import type { Theme } from '@mui/material/styles';
+import { inputLabelClasses } from '@mui/material/InputLabel';
+import { inputAdornmentClasses } from '@mui/material/InputAdornment';
+import { iconButtonClasses } from '@mui/material/IconButton';
 import { addRootOverride, getDensityScale, getDensitySizing } from '@mui/x-internals/densityTheme';
 
 /** A theme whose `components` object the enhancer chain owns and can write into. */
@@ -192,6 +195,119 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     'separator',
   );
   addRootOverride(components, 'MuiDateTimePickerToolbar', ampmSelection, 'ampmSelection');
+
+  // Fields. Material's enhancer places every form control label through
+  // `--_restY` / `--_shrinkY` / `--_inlinePad`, read with no fallback, and only
+  // its own inputs write them; the picker inputs write the same values for
+  // their label, and size their sections container the way material sizes its
+  // input element, so a picker field and a TextField of the same variant and
+  // size line up.
+  const padBlock = `calc((${touchTarget} - 1lh) / 2)`;
+  const padBlockSmall = `calc((${touchTarget} - ${spacing('xxSmall')} - 1lh) / 2)`;
+  const inlinePad = theme.direction === 'rtl' ? `calc(-1 * ${spacing('small')})` : spacing('small');
+  const label = `.${inputLabelClasses.root}:has(~ &)`;
+  // The open picker and clear buttons are medium IconButtons whatever the
+  // field size; in master a medium button is exactly as high as a small field,
+  // so the small field sizes its adornment buttons to material's small box.
+  const smallBox = `calc(${touchTarget} - ${spacing('xxSmall')})`;
+  addRootOverride(components, 'MuiPickersInputBase', {
+    variants: [
+      {
+        props: { inputSize: 'small' },
+        style: {
+          [`& .${inputAdornmentClasses.root} .${iconButtonClasses.sizeMedium}`]: {
+            width: smallBox,
+            height: smallBox,
+          },
+        },
+      },
+    ],
+  });
+  addRootOverride(
+    components,
+    'MuiPickersInputBase',
+    {
+      paddingBlock: padBlock,
+      variants: [{ props: { inputSize: 'small' }, style: { paddingBlock: padBlockSmall } }],
+    },
+    'sectionsContainer',
+  );
+
+  addRootOverride(components, 'MuiPickersOutlinedInput', {
+    paddingInline: spacing('small'),
+    [label]: { '--_restY': padBlock, '--_inlinePad': inlinePad },
+    variants: [
+      { props: { inputSize: 'small' }, style: { [label]: { '--_restY': padBlockSmall } } },
+    ],
+  });
+  addRootOverride(
+    components,
+    'MuiPickersOutlinedInput',
+    {
+      paddingBlock: padBlock,
+      variants: [{ props: { inputSize: 'small' }, style: { paddingBlock: padBlockSmall } }],
+    },
+    'sectionsContainer',
+  );
+
+  // Filled: the label takes `medium` above the value.
+  const filledPadTop = `calc(${spacing('medium')} + (${touchTarget} - 1lh) / 2)`;
+  const filledPadTopSmall = `calc(${spacing('medium')} + (${touchTarget} - 1lh) / 4)`;
+  addRootOverride(components, 'MuiPickersFilledInput', {
+    [label]: {
+      '--_restY': `calc((${filledPadTop} + ${padBlock}) / 2)`,
+      '--_shrinkY': '6px',
+      '--_inlinePad': inlinePad,
+    },
+    variants: [
+      {
+        props: { inputSize: 'small' },
+        style: {
+          [label]: {
+            '--_restY': `calc((${filledPadTopSmall} + ${padBlockSmall}) / 2)`,
+            '--_shrinkY': '4px',
+          },
+        },
+      },
+      { props: { hasStartAdornment: true }, style: { paddingLeft: spacing('small') } },
+      { props: { hasEndAdornment: true }, style: { paddingRight: spacing('small') } },
+    ],
+  });
+  addRootOverride(
+    components,
+    'MuiPickersFilledInput',
+    {
+      paddingTop: filledPadTop,
+      paddingBottom: padBlock,
+      paddingInline: spacing('small'),
+      variants: [
+        {
+          props: { inputSize: 'small' },
+          style: { paddingTop: filledPadTopSmall, paddingBottom: padBlockSmall },
+        },
+        { props: { hasStartAdornment: true }, style: { paddingLeft: 0 } },
+        { props: { hasEndAdornment: true }, style: { paddingRight: 0 } },
+        { props: { hiddenLabel: true }, style: { paddingBlock: padBlock } },
+        {
+          props: { hiddenLabel: true, inputSize: 'small' },
+          style: { paddingBlock: padBlockSmall },
+        },
+      ],
+    },
+    'sectionsContainer',
+  );
+
+  // Standard: the label sits in the margin above the underline.
+  addRootOverride(components, 'MuiPickersInput', {
+    'label + &': { marginTop: spacing('small') },
+    [label]: { '--_restY': `calc(${spacing('small')} + ${padBlock})` },
+    variants: [
+      {
+        props: { inputSize: 'small' },
+        style: { [label]: { '--_restY': `calc(${spacing('small')} + ${padBlockSmall})` } },
+      },
+    ],
+  });
 
   return { ...theme, components };
 }

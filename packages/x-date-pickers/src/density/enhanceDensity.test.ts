@@ -68,6 +68,29 @@ describe('enhanceDensity', () => {
     ]);
   });
 
+  it("writes the label variables material's InputLabel reads for the picker inputs", () => {
+    const theme = enhanceDensity(enhancedTheme());
+    const [outlined] = theme.components.MuiPickersOutlinedInput?.styleOverrides?.root as any[];
+    expect(outlined['.MuiInputLabel-root:has(~ &)']).toEqual({
+      '--_restY': 'calc((32px - 1lh) / 2)',
+      '--_inlinePad': '12px',
+    });
+    const [filled] = theme.components.MuiPickersFilledInput?.styleOverrides?.root as any[];
+    expect(filled['.MuiInputLabel-root:has(~ &)']).toEqual({
+      '--_restY': 'calc((calc(16px + (32px - 1lh) / 2) + calc((32px - 1lh) / 2)) / 2)',
+      '--_shrinkY': '6px',
+      '--_inlinePad': '12px',
+    });
+    const [standard] = theme.components.MuiPickersInput?.styleOverrides?.root as any[];
+    expect(standard['label + &']).toEqual({ marginTop: '12px' });
+  });
+
+  it('mirrors the inline label offset on a right-to-left theme', () => {
+    const theme = enhanceDensity(enhancedTheme({}, { direction: 'rtl' }));
+    const [outlined] = theme.components.MuiPickersOutlinedInput?.styleOverrides?.root as any[];
+    expect(outlined['.MuiInputLabel-root:has(~ &)']['--_inlinePad']).toBe('calc(-1 * 12px)');
+  });
+
   it("keeps the theme's own overrides as the last layer", () => {
     const own = { '--PickerDay-size': '40px' };
     const theme = enhanceDensity(

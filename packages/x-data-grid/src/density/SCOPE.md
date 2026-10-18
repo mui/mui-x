@@ -27,6 +27,8 @@ Totals: **81 components in scope** (169 KEEP lines, 5 DYNAMIC → defaultProps l
 - pickers day gutters: the 2px day margin maps to half the smallest step (`xxSmall / 2`). A full step would make each column 40px again and cancel the smaller day.
 - pickers year fillers (`YearCalendarButtonFiller`) have a styled slot but no class key in `YearCalendarClasses`, so the key does not typecheck. fix: nest `& > div:empty` under `MuiYearCalendar.root`.
 - pickers toolbar values clipped. `PickersToolbarButton = styled(Button)` holds h3/h4 headline text; material's enhancer sizes medium Buttons `height: touchTarget`, so the value overflowed its box and sat below the `:` separator (am/pm stack 53→64). fix: `MuiPickersToolbarButton.root { height: auto }`.
+- picker field labels lost their position (rendered at 0,0 inside the field). material's enhancer places every `InputLabel` with `translate(var(--_inlinePad), var(--_restY))`, read with no fallback, and only its own `OutlinedInput`/`FilledInput`/`Input` write the vars (`.MuiInputLabel-root:has(~ &)`). fix: each picker input writes the same values for its label, and its sections container takes material's input padding, so a picker field and a `TextField` of the same variant and size measure the same (outlined 32/28, filled 48/44, standard 32/28).
+- small picker fields grew to 32. the open picker button is a medium `IconButton` whatever the field size (master: 40 = the small field). fix: small `PickersInputBase` sizes adornment IconButtons to `touchTarget - xxSmall`.
 ## Porting steps (one per checkbox below)
 
 Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/styles/enhanceDensity.ts` + `densityScale.ts`. Any new case not covered by the rules → look there first, copy the pattern, then add it to the rules list in the PR description.
@@ -221,14 +223,14 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
   - `(root)` → maxHeight, minHeight — KEEP: literal 40/40 header row height, static, no JS consumer
   - `(root)` → marginTop, marginBottom, paddingLeft, paddingRight — KEEP: 12/4/24/12 literals, static
   - `(root)` → marginRight — KEEP: label slot 6 literal (labelContainer/switchViewButton `auto` are layout, ignore)
-- [ ] [PickersFilledInput](/packages/x-date-pickers/src/PickersTextField/PickersFilledInput/PickersFilledInput.tsx)
+- [x] [PickersFilledInput](/packages/x-date-pickers/src/PickersTextField/PickersFilledInput/PickersFilledInput.tsx) — ported 2026-10-18: root writes `--_restY` = mid of the padding, `--_shrinkY` 6px/4px, `--_inlinePad`; adornment `paddingLeft/Right: small`; `sectionsContainer` `paddingTop: medium + (touchTarget - 1lh) / 2` (small: `/ 4`), `paddingBottom` input pad, `paddingInline: small`, adornment zeros and hiddenLabel variants restated
   - `(root)` → paddingLeft, paddingRight, paddingTop, paddingBottom — KEEP: root adornment 12/12 and sectionsContainer 25/12/8/12 (small 21/4, hiddenLabel 16/17, 8/9) literals; range active-bar math at PickersInputBase.tsx:264/:289 measures offsetWidth/offsetLeft at runtime so it follows any padding; pair paddingTop with the Material InputLabel filled transform
-- [ ] [PickersInput](/packages/x-date-pickers/src/PickersTextField/PickersInput/PickersInput.tsx)
+- [x] [PickersInput](/packages/x-date-pickers/src/PickersTextField/PickersInput/PickersInput.tsx) — ported 2026-10-18: root `label + & { marginTop: small }`, writes `--_restY: small + input pad`
   - `label + &` → marginTop — KEEP: literal 16, static
-- [ ] [PickersInputBase](/packages/x-date-pickers/src/PickersTextField/PickersInputBase/PickersInputBase.tsx)
+- [x] [PickersInputBase](/packages/x-date-pickers/src/PickersTextField/PickersInputBase/PickersInputBase.tsx) — ported 2026-10-18: `sectionsContainer` `paddingBlock: (touchTarget - 1lh) / 2` (small: `(touchTarget - xxSmall - 1lh) / 2`), material's input padding; small root sizes adornment IconButtons to `touchTarget - xxSmall` (in master a medium button is exactly as high as a small field)
   - `(root)` → padding — KEEP: root 0 and sectionsContainer `4px 0 5px` literals; active-bar/offset math (:264, :289) is runtime-measured
   - `(root)` → paddingTop — KEEP: sectionsContainer small 1, static
-- [ ] [PickersOutlinedInput](/packages/x-date-pickers/src/PickersTextField/PickersOutlinedInput/PickersOutlinedInput.tsx)
+- [x] [PickersOutlinedInput](/packages/x-date-pickers/src/PickersTextField/PickersOutlinedInput/PickersOutlinedInput.tsx) — ported 2026-10-18: root `paddingInline: small`, writes the label's `--_restY` (`(touchTarget - 1lh) / 2`, small variant) and `--_inlinePad` (`small`, negated under rtl); `sectionsContainer` `paddingBlock` as the base, small variant scoped
   - `(root)` → padding — KEEP: root `0 14px` and sectionsContainer `16.5px 0` (small `8.5px 0`) literals, static; runtime-measured active bar follows; pair horizontal padding with the InputLabel outlined transform
 - [x] [Clock](/packages/x-date-pickers/src/TimeClock/Clock.tsx) — ported 2026-10-18: root `margin: medium`; face geometry stays (DYNAMIC)
   - `(root)` → margin — KEEP: root `theme.spacing(2)`, static, outside the measured face
