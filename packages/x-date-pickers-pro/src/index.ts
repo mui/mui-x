@@ -35,3 +35,4 @@ export * from './models';
 export * from './hooks';
 export * from './validation';
 export * from './managers';
+export { unstable_enhanceDensity } from './density';
