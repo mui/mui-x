@@ -30,6 +30,7 @@ Totals: **81 components in scope** (169 KEEP lines, 5 DYNAMIC → defaultProps l
 - picker field labels lost their position (rendered at 0,0 inside the field). material's enhancer places every `InputLabel` with `translate(var(--_inlinePad), var(--_restY))`, read with no fallback, and only its own `OutlinedInput`/`FilledInput`/`Input` write the vars (`.MuiInputLabel-root:has(~ &)`). fix: each picker input writes the same values for its label, and its sections container takes material's input padding, so a picker field and a `TextField` of the same variant and size measure the same (outlined 32/28, filled 48/44, standard 32/28).
 - small picker fields grew to 32. the open picker button is a medium `IconButton` whatever the field size (master: 40 = the small field). fix: small `PickersInputBase` sizes adornment IconButtons to `touchTarget - xxSmall`.
 - `MuiTimeRangePickerTabs` / `MuiTimeRangePickerToolbar` resolve theme overrides by name (`styled(..., { name })`) but are missing from `x-date-pickers-pro`'s theme augmentation, so `components.MuiTimeRange*` does not typecheck. fix: the Pro enhancer pins their keys in a local components type (same move as the grid Pro `defaultProps`). upstream follow-up: add both to the augmentation.
+- tree item checkbox box 24→32 squeezed to 25.5. `TreeItemCheckbox = styled(MuiCheckbox)` with `padding: 0` (box = glyph); material's enhancer sizes every Checkbox to `touchTarget`. fix: `MuiTreeItem.checkbox { width/height: iconSize }`.
 ## Porting steps (one per checkbox below)
 
 Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/styles/enhanceDensity.ts` + `densityScale.ts`. Any new case not covered by the rules → look there first, copy the pattern, then add it to the rules list in the PR description.
@@ -274,21 +275,23 @@ Pattern source of truth: mui/material-ui#48749, `packages/mui-material/src/style
 
 ### Tree View Community (`x-tree-view`) — 3 in scope, 3 excluded
 
-- [ ] [TreeItem](/packages/x-tree-view/src/TreeItem/TreeItem.tsx)
+- [x] [TreeItem](/packages/x-tree-view/src/TreeItem/TreeItem.tsx) — ported 2026-10-18: `content`: `minHeight: var(--TreeView-itemHeight, touchTarget)` (the row is the interactive box; a set `itemHeight` stays the floor so CSS never disagrees with the Pro virtualizer), `paddingBlock: 0`, `paddingRight: xSmall`, `paddingLeft: calc(xSmall + indentation * depth)` (indentation term kept), `gap: xSmall`; `iconContainer` width + glyph `iconSize`; `checkbox` box `iconSize` (master sizes it to its glyph, material's enhancer gave it a `touchTarget` box the row squeezed to 25.5px); `label` editable variant `paddingLeft: xxSmall / 2`; indentation → `defaultProps.itemChildrenIndentation: small` (px number, the Pro reordering parses the prop) on `MuiSimpleTreeView` / `MuiRichTreeView`
   - `(root)` → padding, gap — KEEP: Content slot `padding: theme.spacing(0.5, 1)` and `gap: theme.spacing(1)` are static; with `itemHeight` unset (community default) the row height derives from padding + body1 line box, nothing measures it (only reorder DnD reads `rect.height` at drag time and adapts, itemPlugin.ts:118)
   - `(root)` → paddingLeft (Label, editable) — KEEP: static `2px`, pairs with TreeItemLabelInput `padding: 0 2px` so label and inline input align, override both together
   - `(root)` → width (IconContainer) — KEEP: static constant 16px (packages/x-tree-view/src/internals/constants.ts:6); TreeItemLoader iconContainer uses the same constant for alignment (TreeItemLoader.tsx:36), override both together
   - `(root)` → paddingLeft — DYNAMIC → defaultProps: Content `paddingLeft: calc(spacing(1) + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`; the indent var is set from the `itemChildrenIndentation` prop in packages/x-tree-view/src/internals/hooks/useTreeViewRootProps.ts:30 and the reorder plugin parses that same prop to compute the `move-to-parent` cursor threshold (packages/x-tree-view-pro/src/internals/plugins/itemsReordering/utils.ts:44-60, :91); the 8px base offset is a static literal and safe only if the var term is preserved, indent itself must change via `itemChildrenIndentation`
   - `(root)` → height — DYNAMIC → defaultProps: Content `height: var(--TreeView-itemHeight, unset)`; var set per item from the `itemHeight` prop in packages/x-tree-view/src/useTreeItem/useTreeItem.ts:231; in Pro the same store value feeds the virtualizer `rowHeight` (packages/x-tree-view-pro/src/components/RichTreeViewVirtualizedItems.tsx:49,65, default 32 from RichTreeViewProStore.utils.ts:20), so CSS alone would tear virtual row positioning
-- [ ] [TreeItemLabelInput](/packages/x-tree-view/src/TreeItemLabelInput/TreeItemLabelInput.tsx)
+- [x] [TreeItemLabelInput](/packages/x-tree-view/src/TreeItemLabelInput/TreeItemLabelInput.tsx) — ported 2026-10-18: `MuiTreeItem.labelInput` `paddingInline: xxSmall / 2`, paired with the editable label
   - `(root)` → padding — KEEP: static `0 2px`, inline-edit input inset; pairs with TreeItem Label editable `paddingLeft: 2px`
-- [ ] [TreeItemLoader](/packages/x-tree-view/src/TreeItemLoader/TreeItemLoader.tsx)
+- [x] [TreeItemLoader](/packages/x-tree-view/src/TreeItemLoader/TreeItemLoader.tsx) — ported 2026-10-18: root takes the same row as `TreeItem.content`, `& .MuiTreeItemLoader-iconContainer { width: iconSize }`; key typed locally (missing from the theme augmentation). NOT measured live: no loader row mounted in the harness (lazy children show the parent spinner)
   - `(root)` → padding, gap — KEEP: static `theme.spacing(0.5, 1)` / `theme.spacing(1)` mirroring TreeItem Content so loading rows match item height; override together with TreeItem
   - `& .${treeItemLoaderClasses.iconContainer}` → width — KEEP: static constant 16px (constants.ts:6), mirrors TreeItem IconContainer; override together
   - `(root)` → paddingLeft — DYNAMIC → defaultProps: same indent formula as TreeItem Content (`var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth, 0)`), var set from the `itemChildrenIndentation` prop in packages/x-tree-view/src/internals/hooks/useTreeViewRootProps.ts:30
   - `(root)` → height — DYNAMIC → defaultProps: `var(--TreeView-itemHeight, unset)` set in packages/x-tree-view/src/TreeItemLoader/TreeItemLoader.tsx:90 from the `itemHeight` store value (packages/x-tree-view/src/internals/components/RichTreeViewLoading.tsx:182); same value drives the Pro virtualizer row height
 
 ### Tree View Pro (`x-tree-view-pro`) — 0 in scope, 1 excluded
+
+- Pro enhancer (2026-10-18): `MuiRichTreeViewPro.defaultProps` `itemHeight: touchTarget` (the virtualizer's row height, default 32) and `itemChildrenIndentation: small`; no styled slot of its own.
 
 ## Charts
 
