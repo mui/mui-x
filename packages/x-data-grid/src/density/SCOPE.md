@@ -1,6 +1,6 @@
-# Data Grid density overrides — scope and porting log
+# MUI X density overrides — scope and porting log
 
-Companion to `unstable_enhanceDensity` (`packages/x-data-grid*/src/density/`). The checklist below lists the components whose static size/spacing the enhancers port, with the decision per line; the fix log records what broke under the Material UI density chain and how each was fixed.
+Companion to `unstable_enhanceDensity` in every package that ships one (`packages/x-data-grid*/src/density/`, `x-date-pickers*`, `x-tree-view*`, `x-charts*`; shared helpers in `x-internals/src/densityTheme/`). It lives in the grid package because the grid was ported first. The checklist below lists the components whose static size/spacing the enhancers port, with the decision per line; the fix log records what broke under the Material UI density chain and how each was fixed.
 
 Derived by reading every non-deprecated component's styled bodies and their JS consumers on this branch. A line is **KEEP** when a theme `styleOverrides` change of that property is plain CSS with no JS reading or producing the value, and it affects density (padding, margin, gap, control/icon/item sizes). **DYNAMIC → defaultProps** lines are density-relevant but JS-owned (row/header/item heights fed to a virtualizer, prop-driven vars) — the enhancer must set them through `defaultProps`, never CSS. Everything else (layout fills, popover widths, overlays, fillers, skeletons, handles, SVG geometry, JS-set vars) is listed in the appendix with its reason.
 
