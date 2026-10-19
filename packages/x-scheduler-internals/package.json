@@ -73,7 +73,7 @@
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
     "@date-fns/tz": "catalog:",
-    "@mui/x-internals": "workspace:^",
+    "@mui/x-internals": "workspace:*",
     "date-fns": "catalog:",
     "prop-types": "catalog:",
     "use-sync-external-store": "catalog:"
