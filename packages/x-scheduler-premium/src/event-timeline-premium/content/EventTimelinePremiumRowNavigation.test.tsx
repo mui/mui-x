@@ -80,8 +80,8 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     return scroller.scrollTop >= scroller.scrollHeight - scroller.clientHeight - 1;
   }
 
-  // Focused and fully visible once the virtualizer has positioned the rows for the new scroll.
-  // When the grid scrolled, it scrolled just enough: the row is aligned to the edge it entered from.
+  // The row is focused and fully visible. If the grid scrolled, the row is aligned to the edge it
+  // entered from.
   async function expectFocusedInView(resourceId: string, previousScrollTop: number) {
     await waitFor(() => {
       const cell = getTitleCell(resourceId);
@@ -275,7 +275,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     await expectFocusedInView(resources[lastMountedIndex + 3].id, scrollTop);
   });
 
-  it('should switch columns on the row a repeated ArrowDown moved to', async () => {
+  it('should move ArrowRight on the row the focus is moving to', async () => {
     await renderTimeline();
 
     const lastMountedIndex = resources.findLastIndex((resource) => getTitleCell(resource.id));

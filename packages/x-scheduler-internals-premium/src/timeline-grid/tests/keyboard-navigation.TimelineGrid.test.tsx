@@ -229,6 +229,19 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(getEventsCells()[0]).toHaveFocus();
     });
 
+    it('should move from the focused row after a row is added above it', async () => {
+      const { setProps, user } = render(<Grid resources={resources.slice(1)} />);
+
+      act(() => {
+        getEventsCells()[1].focus();
+      });
+      setProps({ resources });
+      expect(getEventsCells()[2]).toHaveFocus();
+
+      await user.keyboard('{ArrowUp}');
+      expect(getEventsCells()[1]).toHaveFocus();
+    });
+
     it('should not move the focus back to the grid when a row it left is removed', async () => {
       const scrollRowIntoView = vi.fn();
       const { setProps } = render(

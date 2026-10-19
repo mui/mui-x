@@ -127,7 +127,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
       );
       const focused = focusedResourceRef.current;
       if (focused?.columnType === columnType && focused.rowIndex === rowIndex) {
-        // Deferred: the row can unmount before `resources` updates.
+        // Deferred: `resourcesRef` can still list the removed row.
         queueMicrotask(() => releaseTrackedRowIfListed(focused));
       }
     },
