@@ -78,7 +78,7 @@ export function buildResolver(parameters: {
   return createDependencyAnchorResolver({
     adapter,
     resources: parameters.resources,
-    rowPositions: parameters.rowPositions,
+    getRowPosition: (rowIndex) => parameters.rowPositions[rowIndex],
     axis: parameters.axis ?? fullDayAxis,
     durationMs: getTimelineAxisDurationMs(adapter, parameters.axis ?? fullDayAxis),
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
