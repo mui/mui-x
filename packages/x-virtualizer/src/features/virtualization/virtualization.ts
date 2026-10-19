@@ -440,7 +440,13 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       // PERF: use the computed minimum column width instead of a static one
       const didCrossThreshold =
         rowScroll >= averageRowHeight(store, rowHeight) || columnScroll >= MINIMUM_COLUMN_WIDTH;
-      shouldUpdate = didCrossThreshold || didChangeDirection;
+      shouldUpdate =
+        didCrossThreshold ||
+        didChangeDirection ||
+        // The controlled layout renders no buffer, so a scroll below the threshold can
+        // already reach past the rendered rows or columns.
+        (layoutMode === 'controlled' &&
+          isLowOnRenderedBuffer(store, params, scrollPosition.current, scrollCache));
     }
 
     if (!shouldUpdate) {
@@ -1458,9 +1464,10 @@ function bufferForDirection(
 /**
  * Whether the viewport has consumed more than half of the rendered buffer on a side
  * that can still be extended.
- * Triggers the sticky-mode rendering logic for computing a new render context.
- * Consecutive updates are thereby spaced half a buffer apart instead of one
+ * In sticky mode, it spaces consecutive updates half a buffer apart instead of one
  * row apart, leaving the raster pipeline idle time to fill the buffers between them.
+ * In controlled mode, where the buffer is empty, it triggers as soon as the viewport
+ * reaches past the rendered rows or columns.
  * The visible bounds mirror the ones `computeRenderContext` searches with.
  */
 function isLowOnRenderedBuffer(
@@ -1495,7 +1502,11 @@ function isLowOnRenderedBuffer(
   const pinnedRightCount = params.pinnedColumns?.right.length ?? 0;
 
   const visibleLeft = Math.abs(scrollPosition.left) + dimensions.leftPinnedWidth;
-  const visibleRight = visibleLeft + dimensions.viewportInnerSize.width;
+  // In controlled mode, the pinned-right section overlays the horizontal window.
+  const visibleRight =
+    visibleLeft +
+    dimensions.viewportInnerSize.width -
+    (store.state.virtualization.layoutMode === 'controlled' ? dimensions.rightPinnedWidth : 0);
   const renderedLeft = columnPositions[context.firstColumnIndex] ?? 0;
   const renderedRight = columnPositions[context.lastColumnIndex] ?? dimensions.columnsTotalWidth;
 
