@@ -145,6 +145,7 @@ Internal changes.
 - [code-infra] Group major and minor pragmatic-drag-and-drop renovate updates (#23782) @LukasTy
 - [code-infra] Use flake-fix dry-run (#23849) @Janpot
 - [x-internals] Restore removed exports and pin internal dependencies (#23907) @LukasTy
+- [x-internals] Fix `useStoreEffect` in Strict Mode (#23857) @cherniavskii
 
 ### Miscellaneous
 
