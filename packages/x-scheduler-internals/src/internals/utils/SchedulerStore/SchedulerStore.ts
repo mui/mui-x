@@ -784,7 +784,7 @@ export class SchedulerStore<
       return;
     }
 
-    const { occurrenceStart } = pendingRecurringEventOperation;
+    const { occurrenceStart, onSubmit } = pendingRecurringEventOperation;
     const eventId =
       pendingRecurringEventOperation.kind === 'update'
         ? pendingRecurringEventOperation.changes.id
@@ -847,18 +847,8 @@ export class SchedulerStore<
       });
     }
 
-    // Branched by kind, not a shared destructured `onSubmit`: a delete's callback takes the
-    // picked scope (the agenda's focus-fallback needs it), an update's takes none.
-    if (pendingRecurringEventOperation.kind === 'delete') {
-      const { onSubmit } = pendingRecurringEventOperation;
-      if (onSubmit) {
-        queueMicrotask(() => onSubmit(scope));
-      }
-    } else {
-      const { onSubmit } = pendingRecurringEventOperation;
-      if (onSubmit) {
-        queueMicrotask(() => onSubmit());
-      }
+    if (onSubmit) {
+      queueMicrotask(() => onSubmit(scope));
     }
   };
 

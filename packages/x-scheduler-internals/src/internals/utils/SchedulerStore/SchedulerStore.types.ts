@@ -473,9 +473,7 @@ export type DeleteRecurringEventParameters = {
    */
   eventId: SchedulerEventId;
   /**
-   * Callback fired when the user submits the recurring scope dialog, with the scope they picked —
-   * the agenda's focus-fallback (`resolveAgendaFallback` in `x-scheduler`) needs it to tell which
-   * of the series' other rows are also being removed.
+   * Callback fired when the user submits the recurring scope dialog, with the scope they picked.
    */
   onSubmit?: (scope: RecurringEventScope) => void;
 };
