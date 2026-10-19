@@ -59,6 +59,10 @@
         "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
+    "eventDeletion": {
+      "type": { "name": "shape", "description": "{ confirmation?: bool }" },
+      "default": "{ confirmation: true }"
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -141,1261 +145,1267 @@
   "classes": [
     {
       "key": "agendaView",
-      "className": "MuiEventCalendarPremium-agendaView",
+      "className": "MuiEventCalendar-agendaView",
       "description": "Styles applied to the agenda view element.",
       "isGlobal": false
     },
     {
       "key": "agendaViewDayHeaderCell",
-      "className": "MuiEventCalendarPremium-agendaViewDayHeaderCell",
+      "className": "MuiEventCalendar-agendaViewDayHeaderCell",
       "description": "Styles applied to agenda view day header cell elements.",
       "isGlobal": false
     },
     {
       "key": "agendaViewDayNumberCell",
-      "className": "MuiEventCalendarPremium-agendaViewDayNumberCell",
+      "className": "MuiEventCalendar-agendaViewDayNumberCell",
       "description": "Styles applied to agenda view day number cell elements.",
       "isGlobal": false
     },
     {
       "key": "agendaViewEmptyState",
-      "className": "MuiEventCalendarPremium-agendaViewEmptyState",
+      "className": "MuiEventCalendar-agendaViewEmptyState",
       "description": "Styles applied to the agenda view empty state element.",
       "isGlobal": false
     },
     {
       "key": "agendaViewEventListItem",
-      "className": "MuiEventCalendarPremium-agendaViewEventListItem",
+      "className": "MuiEventCalendar-agendaViewEventListItem",
       "description": "Styles applied to the agenda view event list item elements.",
       "isGlobal": false
     },
     {
       "key": "agendaViewEventsList",
-      "className": "MuiEventCalendarPremium-agendaViewEventsList",
+      "className": "MuiEventCalendar-agendaViewEventsList",
       "description": "Styles applied to the agenda view events list element.",
       "isGlobal": false
     },
     {
       "key": "agendaViewRow",
-      "className": "MuiEventCalendarPremium-agendaViewRow",
+      "className": "MuiEventCalendar-agendaViewRow",
       "description": "Styles applied to agenda view row elements.",
       "isGlobal": false
     },
     {
       "key": "agendaViewWeekDayCell",
-      "className": "MuiEventCalendarPremium-agendaViewWeekDayCell",
+      "className": "MuiEventCalendar-agendaViewWeekDayCell",
       "description": "Styles applied to agenda view week day cell elements.",
       "isGlobal": false
     },
     {
       "key": "agendaViewWeekDayNameLabel",
-      "className": "MuiEventCalendarPremium-agendaViewWeekDayNameLabel",
+      "className": "MuiEventCalendar-agendaViewWeekDayNameLabel",
       "description": "Styles applied to agenda view week day name label elements.",
       "isGlobal": false
     },
     {
       "key": "agendaViewWeekNumberLabel",
-      "className": "MuiEventCalendarPremium-agendaViewWeekNumberLabel",
+      "className": "MuiEventCalendar-agendaViewWeekNumberLabel",
       "description": "Styles applied to agenda view week number label elements.",
       "isGlobal": false
     },
     {
       "key": "agendaViewWeekNumberRow",
-      "className": "MuiEventCalendarPremium-agendaViewWeekNumberRow",
+      "className": "MuiEventCalendar-agendaViewWeekNumberRow",
       "description": "Styles applied to agenda view week number row elements.",
       "isGlobal": false
     },
     {
       "key": "agendaViewYearAndMonthLabel",
-      "className": "MuiEventCalendarPremium-agendaViewYearAndMonthLabel",
+      "className": "MuiEventCalendar-agendaViewYearAndMonthLabel",
       "description": "Styles applied to agenda view year and month label elements.",
       "isGlobal": false
     },
     {
       "key": "anchoredEventToolbar",
-      "className": "MuiEventCalendarPremium-anchoredEventToolbar",
+      "className": "MuiEventCalendar-anchoredEventToolbar",
       "description": "Styles applied to the anchored (desktop) armed-event toolbar wrapper element.",
       "isGlobal": false
     },
     {
       "key": "compactDayTimeGrid",
-      "className": "MuiEventCalendarPremium-compactDayTimeGrid",
+      "className": "MuiEventCalendar-compactDayTimeGrid",
       "description": "Styles applied to the compact (touch) day time grid root element.",
       "isGlobal": false
     },
     {
       "key": "compactDayTimeGridContent",
-      "className": "MuiEventCalendarPremium-compactDayTimeGridContent",
+      "className": "MuiEventCalendar-compactDayTimeGridContent",
       "description": "Styles applied to the compact (touch) day time grid content element.",
       "isGlobal": false
     },
     {
       "key": "compactEventDrawer",
-      "className": "MuiEventCalendarPremium-compactEventDrawer",
+      "className": "MuiEventCalendar-compactEventDrawer",
       "description": "Styles applied to the compact editing drawer root element.",
       "isGlobal": false
     },
     {
       "key": "compactEventDrawerContent",
-      "className": "MuiEventCalendarPremium-compactEventDrawerContent",
+      "className": "MuiEventCalendar-compactEventDrawerContent",
       "description": "Styles applied to the compact editing drawer content element.",
       "isGlobal": false
     },
     {
       "key": "compactEventDrawerReadonlyHeader",
-      "className": "MuiEventCalendarPremium-compactEventDrawerReadonlyHeader",
+      "className": "MuiEventCalendar-compactEventDrawerReadonlyHeader",
       "description": "Styles applied to the compact editing drawer read-only header element.",
       "isGlobal": false
     },
     {
       "key": "compactEventDrawerReadonlyTitle",
-      "className": "MuiEventCalendarPremium-compactEventDrawerReadonlyTitle",
+      "className": "MuiEventCalendar-compactEventDrawerReadonlyTitle",
       "description": "Styles applied to the compact editing drawer read-only title element.",
       "isGlobal": false
     },
     {
       "key": "compactEventToolbarDock",
-      "className": "MuiEventCalendarPremium-compactEventToolbarDock",
+      "className": "MuiEventCalendar-compactEventToolbarDock",
       "description": "Styles applied to the compact (touch) armed-event toolbar dock element.",
       "isGlobal": false
     },
     {
       "key": "content",
-      "className": "MuiEventCalendarPremium-content",
+      "className": "MuiEventCalendar-content",
       "description": "Styles applied to the content section element.",
       "isGlobal": false
     },
     {
       "key": "dayGridEvent",
-      "className": "MuiEventCalendarPremium-dayGridEvent",
+      "className": "MuiEventCalendar-dayGridEvent",
       "description": "Styles applied to day grid event elements.",
       "isGlobal": false
     },
     {
       "key": "dayGridEventCardContent",
-      "className": "MuiEventCalendarPremium-dayGridEventCardContent",
+      "className": "MuiEventCalendar-dayGridEventCardContent",
       "description": "Styles applied to day grid event card content elements.",
       "isGlobal": false
     },
     {
       "key": "dayGridEventCardWrapper",
-      "className": "MuiEventCalendarPremium-dayGridEventCardWrapper",
+      "className": "MuiEventCalendar-dayGridEventCardWrapper",
       "description": "Styles applied to day grid event card wrapper elements.",
       "isGlobal": false
     },
     {
       "key": "dayGridEventLinesClamp",
-      "className": "MuiEventCalendarPremium-dayGridEventLinesClamp",
+      "className": "MuiEventCalendar-dayGridEventLinesClamp",
       "description": "Styles applied to day grid event lines clamp elements.",
       "isGlobal": false
     },
     {
       "key": "dayGridEventPlaceholder",
-      "className": "MuiEventCalendarPremium-dayGridEventPlaceholder",
+      "className": "MuiEventCalendar-dayGridEventPlaceholder",
       "description": "Styles applied to day grid event placeholder elements.",
       "isGlobal": false
     },
     {
       "key": "dayGridEventRecurringIcon",
-      "className": "MuiEventCalendarPremium-dayGridEventRecurringIcon",
+      "className": "MuiEventCalendar-dayGridEventRecurringIcon",
       "description": "Styles applied to day grid event recurring icon elements.",
       "isGlobal": false
     },
     {
       "key": "dayGridEventResizeHandler",
-      "className": "MuiEventCalendarPremium-dayGridEventResizeHandler",
+      "className": "MuiEventCalendar-dayGridEventResizeHandler",
       "description": "Styles applied to day grid event resize handler elements.",
       "isGlobal": false
     },
     {
       "key": "dayGridEventTime",
-      "className": "MuiEventCalendarPremium-dayGridEventTime",
+      "className": "MuiEventCalendar-dayGridEventTime",
       "description": "Styles applied to day grid event time elements.",
       "isGlobal": false
     },
     {
       "key": "dayGridEventTitle",
-      "className": "MuiEventCalendarPremium-dayGridEventTitle",
+      "className": "MuiEventCalendar-dayGridEventTitle",
       "description": "Styles applied to day grid event title elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGrid",
-      "className": "MuiEventCalendarPremium-dayTimeGrid",
+      "className": "MuiEventCalendar-dayTimeGrid",
       "description": "Styles applied to the day time grid element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridAllDayEventContainer",
-      "className": "MuiEventCalendarPremium-dayTimeGridAllDayEventContainer",
+      "className": "MuiEventCalendar-dayTimeGridAllDayEventContainer",
       "description": "Styles applied to day time grid all day event container elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridAllDayEventsCell",
-      "className": "MuiEventCalendarPremium-dayTimeGridAllDayEventsCell",
+      "className": "MuiEventCalendar-dayTimeGridAllDayEventsCell",
       "description": "Styles applied to day time grid all day events cell elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridAllDayEventsCellEvents",
-      "className": "MuiEventCalendarPremium-dayTimeGridAllDayEventsCellEvents",
+      "className": "MuiEventCalendar-dayTimeGridAllDayEventsCellEvents",
       "description": "Styles applied to day time grid all day events cell events container elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridAllDayEventsGrid",
-      "className": "MuiEventCalendarPremium-dayTimeGridAllDayEventsGrid",
+      "className": "MuiEventCalendar-dayTimeGridAllDayEventsGrid",
       "description": "Styles applied to the day time grid all day events grid element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridAllDayEventsHeaderCell",
-      "className": "MuiEventCalendarPremium-dayTimeGridAllDayEventsHeaderCell",
+      "className": "MuiEventCalendar-dayTimeGridAllDayEventsHeaderCell",
       "description": "Styles applied to the day time grid all day events header cell element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridAllDayEventsRow",
-      "className": "MuiEventCalendarPremium-dayTimeGridAllDayEventsRow",
+      "className": "MuiEventCalendar-dayTimeGridAllDayEventsRow",
       "description": "Styles applied to the day time grid all day events row element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridBody",
-      "className": "MuiEventCalendarPremium-dayTimeGridBody",
+      "className": "MuiEventCalendar-dayTimeGridBody",
       "description": "Styles applied to the day time grid body element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridColumn",
-      "className": "MuiEventCalendarPremium-dayTimeGridColumn",
+      "className": "MuiEventCalendar-dayTimeGridColumn",
       "description": "Styles applied to day time grid column elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridColumnInteractiveLayer",
-      "className": "MuiEventCalendarPremium-dayTimeGridColumnInteractiveLayer",
+      "className": "MuiEventCalendar-dayTimeGridColumnInteractiveLayer",
       "description": "Styles applied to day time grid column interactive layer elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridContainer",
-      "className": "MuiEventCalendarPremium-dayTimeGridContainer",
+      "className": "MuiEventCalendar-dayTimeGridContainer",
       "description": "Styles applied to the day time grid container element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridCurrentTimeIndicator",
-      "className": "MuiEventCalendarPremium-dayTimeGridCurrentTimeIndicator",
+      "className": "MuiEventCalendar-dayTimeGridCurrentTimeIndicator",
       "description": "Styles applied to the day time grid current time indicator element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridCurrentTimeIndicatorCircle",
-      "className": "MuiEventCalendarPremium-dayTimeGridCurrentTimeIndicatorCircle",
+      "className": "MuiEventCalendar-dayTimeGridCurrentTimeIndicatorCircle",
       "description": "Styles applied to the day time grid current time indicator circle element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridCurrentTimeLabel",
-      "className": "MuiEventCalendarPremium-dayTimeGridCurrentTimeLabel",
+      "className": "MuiEventCalendar-dayTimeGridCurrentTimeLabel",
       "description": "Styles applied to the day time grid current time label element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridGrid",
-      "className": "MuiEventCalendarPremium-dayTimeGridGrid",
+      "className": "MuiEventCalendar-dayTimeGridGrid",
       "description": "Styles applied to the day time grid grid element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridHeader",
-      "className": "MuiEventCalendarPremium-dayTimeGridHeader",
+      "className": "MuiEventCalendar-dayTimeGridHeader",
       "description": "Styles applied to the day time grid header element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridHeaderButton",
-      "className": "MuiEventCalendarPremium-dayTimeGridHeaderButton",
+      "className": "MuiEventCalendar-dayTimeGridHeaderButton",
       "description": "Styles applied to day time grid header button elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridHeaderCell",
-      "className": "MuiEventCalendarPremium-dayTimeGridHeaderCell",
+      "className": "MuiEventCalendar-dayTimeGridHeaderCell",
       "description": "Styles applied to day time grid header cell elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridHeaderContent",
-      "className": "MuiEventCalendarPremium-dayTimeGridHeaderContent",
+      "className": "MuiEventCalendar-dayTimeGridHeaderContent",
       "description": "Styles applied to day time grid header content elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridHeaderDayName",
-      "className": "MuiEventCalendarPremium-dayTimeGridHeaderDayName",
+      "className": "MuiEventCalendar-dayTimeGridHeaderDayName",
       "description": "Styles applied to day time grid header day name elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridHeaderDayNumber",
-      "className": "MuiEventCalendarPremium-dayTimeGridHeaderDayNumber",
+      "className": "MuiEventCalendar-dayTimeGridHeaderDayNumber",
       "description": "Styles applied to day time grid header day number elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridScrollableContent",
-      "className": "MuiEventCalendarPremium-dayTimeGridScrollableContent",
+      "className": "MuiEventCalendar-dayTimeGridScrollableContent",
       "description": "Styles applied to the day time grid scrollable content element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridScrollablePlaceholder",
-      "className": "MuiEventCalendarPremium-dayTimeGridScrollablePlaceholder",
+      "className": "MuiEventCalendar-dayTimeGridScrollablePlaceholder",
       "description": "Styles applied to the day time grid scrollable placeholder element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridTimeAxis",
-      "className": "MuiEventCalendarPremium-dayTimeGridTimeAxis",
+      "className": "MuiEventCalendar-dayTimeGridTimeAxis",
       "description": "Styles applied to the day time grid time axis element.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridTimeAxisCell",
-      "className": "MuiEventCalendarPremium-dayTimeGridTimeAxisCell",
+      "className": "MuiEventCalendar-dayTimeGridTimeAxisCell",
       "description": "Styles applied to day time grid time axis cell elements.",
       "isGlobal": false
     },
     {
       "key": "dayTimeGridTimeAxisText",
-      "className": "MuiEventCalendarPremium-dayTimeGridTimeAxisText",
+      "className": "MuiEventCalendar-dayTimeGridTimeAxisText",
       "description": "Styles applied to day time grid time axis text elements.",
       "isGlobal": false
     },
     {
       "key": "errorAlert",
-      "className": "MuiEventCalendarPremium-errorAlert",
+      "className": "MuiEventCalendar-errorAlert",
       "description": "Styles applied to the error alert element.",
       "isGlobal": false
     },
     {
       "key": "errorContainer",
-      "className": "MuiEventCalendarPremium-errorContainer",
+      "className": "MuiEventCalendar-errorContainer",
       "description": "Styles applied to the error container element.",
       "isGlobal": false
     },
     {
       "key": "errorMessage",
-      "className": "MuiEventCalendarPremium-errorMessage",
+      "className": "MuiEventCalendar-errorMessage",
       "description": "Styles applied to the error message element.",
       "isGlobal": false
     },
     {
       "key": "eventColorIndicator",
-      "className": "MuiEventCalendarPremium-eventColorIndicator",
+      "className": "MuiEventCalendar-eventColorIndicator",
       "description": "Styles applied to event color indicator elements.",
       "isGlobal": false
     },
     {
       "key": "eventContextMenu",
-      "className": "MuiEventCalendarPremium-eventContextMenu",
+      "className": "MuiEventCalendar-eventContextMenu",
       "description": "Styles applied to the event context menu root element.",
       "isGlobal": false
     },
     {
       "key": "eventContextMenuDeleteItem",
-      "className": "MuiEventCalendarPremium-eventContextMenuDeleteItem",
+      "className": "MuiEventCalendar-eventContextMenuDeleteItem",
       "description": "Styles applied to the event context menu delete item element.",
       "isGlobal": false
     },
     {
       "key": "eventContextMenuEditItem",
-      "className": "MuiEventCalendarPremium-eventContextMenuEditItem",
+      "className": "MuiEventCalendar-eventContextMenuEditItem",
       "description": "Styles applied to the event context menu edit item element.",
       "isGlobal": false
     },
     {
       "key": "eventContextMenuShowDetailsItem",
-      "className": "MuiEventCalendarPremium-eventContextMenuShowDetailsItem",
+      "className": "MuiEventCalendar-eventContextMenuShowDetailsItem",
       "description": "Styles applied to the event context menu show details item element (read-only events).",
       "isGlobal": false
     },
     {
       "key": "eventDialog",
-      "className": "MuiEventCalendarPremium-eventDialog",
+      "className": "MuiEventCalendar-eventDialog",
       "description": "Styles applied to the event dialog root element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogActions",
-      "className": "MuiEventCalendarPremium-eventDialogActions",
+      "className": "MuiEventCalendar-eventDialogActions",
       "description": "Styles applied to the event dialog actions element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogCloseAction",
-      "className": "MuiEventCalendarPremium-eventDialogCloseAction",
+      "className": "MuiEventCalendar-eventDialogCloseAction",
       "description": "Styles applied to the event dialog close action button element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogCloseButton",
-      "className": "MuiEventCalendarPremium-eventDialogCloseButton",
+      "className": "MuiEventCalendar-eventDialogCloseButton",
       "description": "Styles applied to the event dialog close button element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogContent",
-      "className": "MuiEventCalendarPremium-eventDialogContent",
+      "className": "MuiEventCalendar-eventDialogContent",
       "description": "Styles applied to the event dialog content element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeContainer",
-      "className": "MuiEventCalendarPremium-eventDialogDateTimeContainer",
+      "className": "MuiEventCalendar-eventDialogDateTimeContainer",
       "description": "Styles applied to the event dialog date time container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeFieldsContainer",
-      "className": "MuiEventCalendarPremium-eventDialogDateTimeFieldsContainer",
+      "className": "MuiEventCalendar-eventDialogDateTimeFieldsContainer",
       "description": "Styles applied to the event dialog date time fields container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeFieldsRow",
-      "className": "MuiEventCalendarPremium-eventDialogDateTimeFieldsRow",
+      "className": "MuiEventCalendar-eventDialogDateTimeFieldsRow",
       "description": "Styles applied to the event dialog date time fields row element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeIcon",
-      "className": "MuiEventCalendarPremium-eventDialogDateTimeIcon",
+      "className": "MuiEventCalendar-eventDialogDateTimeIcon",
       "description": "Styles applied to the event dialog date time icon element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDateTimeLabel",
-      "className": "MuiEventCalendarPremium-eventDialogDateTimeLabel",
+      "className": "MuiEventCalendar-eventDialogDateTimeLabel",
       "description": "Styles applied to the event dialog date time label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDeleteButton",
-      "className": "MuiEventCalendarPremium-eventDialogDeleteButton",
+      "className": "MuiEventCalendar-eventDialogDeleteButton",
       "description": "Styles applied to the event dialog delete button element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogDescriptionLabel",
-      "className": "MuiEventCalendarPremium-eventDialogDescriptionLabel",
+      "className": "MuiEventCalendar-eventDialogDescriptionLabel",
       "description": "Styles applied to the event dialog description label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogEndsRadioGroup",
-      "className": "MuiEventCalendarPremium-eventDialogEndsRadioGroup",
+      "className": "MuiEventCalendar-eventDialogEndsRadioGroup",
       "description": "Styles applied to the event dialog ends radio group element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogForm",
-      "className": "MuiEventCalendarPremium-eventDialogForm",
+      "className": "MuiEventCalendar-eventDialogForm",
       "description": "Styles applied to the event dialog form element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogFormActions",
-      "className": "MuiEventCalendarPremium-eventDialogFormActions",
+      "className": "MuiEventCalendar-eventDialogFormActions",
       "description": "Styles applied to the event dialog form actions element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogFormDivider",
-      "className": "MuiEventCalendarPremium-eventDialogFormDivider",
+      "className": "MuiEventCalendar-eventDialogFormDivider",
       "description": "Styles applied to the event dialog form divider element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogFrequencySelect",
-      "className": "MuiEventCalendarPremium-eventDialogFrequencySelect",
+      "className": "MuiEventCalendar-eventDialogFrequencySelect",
       "description": "Styles applied to the event dialog frequency select element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogHeader",
-      "className": "MuiEventCalendarPremium-eventDialogHeader",
+      "className": "MuiEventCalendar-eventDialogHeader",
       "description": "Styles applied to the event dialog header element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogHeaderActions",
-      "className": "MuiEventCalendarPremium-eventDialogHeaderActions",
+      "className": "MuiEventCalendar-eventDialogHeaderActions",
       "description": "Styles applied to the event dialog header actions container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogInlineRow",
-      "className": "MuiEventCalendarPremium-eventDialogInlineRow",
+      "className": "MuiEventCalendar-eventDialogInlineRow",
       "description": "Styles applied to the event dialog inline row element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogPaper",
-      "className": "MuiEventCalendarPremium-eventDialogPaper",
+      "className": "MuiEventCalendar-eventDialogPaper",
       "description": "Styles applied to the event dialog paper element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRadioButtonLabel",
-      "className": "MuiEventCalendarPremium-eventDialogRadioButtonLabel",
+      "className": "MuiEventCalendar-eventDialogRadioButtonLabel",
       "description": "Styles applied to the event dialog radio button label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogReadonlyContent",
-      "className": "MuiEventCalendarPremium-eventDialogReadonlyContent",
+      "className": "MuiEventCalendar-eventDialogReadonlyContent",
       "description": "Styles applied to the event dialog readonly content element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceIcon",
-      "className": "MuiEventCalendarPremium-eventDialogRecurrenceIcon",
+      "className": "MuiEventCalendar-eventDialogRecurrenceIcon",
       "description": "Styles applied to the event dialog recurrence icon element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceLabel",
-      "className": "MuiEventCalendarPremium-eventDialogRecurrenceLabel",
+      "className": "MuiEventCalendar-eventDialogRecurrenceLabel",
       "description": "Styles applied to the event dialog recurrence label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceLabelContainer",
-      "className": "MuiEventCalendarPremium-eventDialogRecurrenceLabelContainer",
+      "className": "MuiEventCalendar-eventDialogRecurrenceLabelContainer",
       "description": "Styles applied to the event dialog recurrence label container element in the readonly content.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceSelectorContainer",
-      "className": "MuiEventCalendarPremium-eventDialogRecurrenceSelectorContainer",
+      "className": "MuiEventCalendar-eventDialogRecurrenceSelectorContainer",
       "description": "Styles applied to the event dialog recurrence selector container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceSelectorToggleGroup",
-      "className": "MuiEventCalendarPremium-eventDialogRecurrenceSelectorToggleGroup",
+      "className": "MuiEventCalendar-eventDialogRecurrenceSelectorToggleGroup",
       "description": "Styles applied to the event dialog recurrence selector toggle group element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRecurrenceTimezoneLabel",
-      "className": "MuiEventCalendarPremium-eventDialogRecurrenceTimezoneLabel",
+      "className": "MuiEventCalendar-eventDialogRecurrenceTimezoneLabel",
       "description": "Styles applied to the recurrence timezone note and label suffix elements.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRepeatSectionContent",
-      "className": "MuiEventCalendarPremium-eventDialogRepeatSectionContent",
+      "className": "MuiEventCalendar-eventDialogRepeatSectionContent",
       "description": "Styles applied to the event dialog repeat section content element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRepeatSectionFieldset",
-      "className": "MuiEventCalendarPremium-eventDialogRepeatSectionFieldset",
+      "className": "MuiEventCalendar-eventDialogRepeatSectionFieldset",
       "description": "Styles applied to the event dialog repeat section fieldset element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogRepeatSectionLabel",
-      "className": "MuiEventCalendarPremium-eventDialogRepeatSectionLabel",
+      "className": "MuiEventCalendar-eventDialogRepeatSectionLabel",
       "description": "Styles applied to the event dialog repeat section label element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceContainer",
-      "className": "MuiEventCalendarPremium-eventDialogResourceContainer",
+      "className": "MuiEventCalendar-eventDialogResourceContainer",
       "description": "Styles applied to the event dialog resource container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceLegendColor",
-      "className": "MuiEventCalendarPremium-eventDialogResourceLegendColor",
+      "className": "MuiEventCalendar-eventDialogResourceLegendColor",
       "description": "Styles applied to the event dialog resource legend color element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceLegendContainer",
-      "className": "MuiEventCalendarPremium-eventDialogResourceLegendContainer",
+      "className": "MuiEventCalendar-eventDialogResourceLegendContainer",
       "description": "Styles applied to the event dialog resource legend container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuColorDot",
-      "className": "MuiEventCalendarPremium-eventDialogResourceMenuColorDot",
+      "className": "MuiEventCalendar-eventDialogResourceMenuColorDot",
       "description": "Styles applied to the event dialog resource menu color dot element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuColorToggle",
-      "className": "MuiEventCalendarPremium-eventDialogResourceMenuColorToggle",
+      "className": "MuiEventCalendar-eventDialogResourceMenuColorToggle",
       "description": "Styles applied to the event dialog resource menu color toggle element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuColorToggleGroup",
-      "className": "MuiEventCalendarPremium-eventDialogResourceMenuColorToggleGroup",
+      "className": "MuiEventCalendar-eventDialogResourceMenuColorToggleGroup",
       "description": "Styles applied to the event dialog resource menu color toggle group element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuItem",
-      "className": "MuiEventCalendarPremium-eventDialogResourceMenuItem",
+      "className": "MuiEventCalendar-eventDialogResourceMenuItem",
       "description": "Styles applied to the event dialog resource menu item element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceMenuListSubheader",
-      "className": "MuiEventCalendarPremium-eventDialogResourceMenuListSubheader",
+      "className": "MuiEventCalendar-eventDialogResourceMenuListSubheader",
       "description": "Styles applied to the event dialog resource menu list subheader element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogResourceTitle",
-      "className": "MuiEventCalendarPremium-eventDialogResourceTitle",
+      "className": "MuiEventCalendar-eventDialogResourceTitle",
       "description": "Styles applied to the event dialog resource title element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogSaveButton",
-      "className": "MuiEventCalendarPremium-eventDialogSaveButton",
+      "className": "MuiEventCalendar-eventDialogSaveButton",
       "description": "Styles applied to the event dialog save button element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogSectionFieldset",
-      "className": "MuiEventCalendarPremium-eventDialogSectionFieldset",
+      "className": "MuiEventCalendar-eventDialogSectionFieldset",
       "description": "Styles applied to the event dialog section fieldset element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogSectionHeaderTitle",
-      "className": "MuiEventCalendarPremium-eventDialogSectionHeaderTitle",
+      "className": "MuiEventCalendar-eventDialogSectionHeaderTitle",
       "description": "Styles applied to the event dialog section header title element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogSmallNumberField",
-      "className": "MuiEventCalendarPremium-eventDialogSmallNumberField",
+      "className": "MuiEventCalendar-eventDialogSmallNumberField",
       "description": "Styles applied to the event dialog small number field element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTab",
-      "className": "MuiEventCalendarPremium-eventDialogTab",
+      "className": "MuiEventCalendar-eventDialogTab",
       "description": "Styles applied to the event dialog tab elements.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTabContent",
-      "className": "MuiEventCalendarPremium-eventDialogTabContent",
+      "className": "MuiEventCalendar-eventDialogTabContent",
       "description": "Styles applied to the event dialog tab content element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTabPanel",
-      "className": "MuiEventCalendarPremium-eventDialogTabPanel",
+      "className": "MuiEventCalendar-eventDialogTabPanel",
       "description": "Styles applied to the event dialog tab panel element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTabsContainer",
-      "className": "MuiEventCalendarPremium-eventDialogTabsContainer",
+      "className": "MuiEventCalendar-eventDialogTabsContainer",
       "description": "Styles applied to the event dialog tabs container element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogTitle",
-      "className": "MuiEventCalendarPremium-eventDialogTitle",
+      "className": "MuiEventCalendar-eventDialogTitle",
       "description": "Styles applied to the event dialog title element.",
       "isGlobal": false
     },
     {
       "key": "eventDialogWeekDaySelectorCheckbox",
-      "className": "MuiEventCalendarPremium-eventDialogWeekDaySelectorCheckbox",
+      "className": "MuiEventCalendar-eventDialogWeekDaySelectorCheckbox",
       "description": "Styles applied to the event dialog week day selector form group element.",
       "isGlobal": false
     },
     {
       "key": "eventDragPreview",
-      "className": "MuiEventCalendarPremium-eventDragPreview",
+      "className": "MuiEventCalendar-eventDragPreview",
       "description": "Styles applied to the event drag preview element.",
       "isGlobal": false
     },
     {
       "key": "eventItemCard",
-      "className": "MuiEventCalendarPremium-eventItemCard",
+      "className": "MuiEventCalendar-eventItemCard",
       "description": "Styles applied to event item card elements.",
       "isGlobal": false
     },
     {
       "key": "eventItemCardContent",
-      "className": "MuiEventCalendarPremium-eventItemCardContent",
+      "className": "MuiEventCalendar-eventItemCardContent",
       "description": "Styles applied to event item card content elements.",
       "isGlobal": false
     },
     {
       "key": "eventItemCardWrapper",
-      "className": "MuiEventCalendarPremium-eventItemCardWrapper",
+      "className": "MuiEventCalendar-eventItemCardWrapper",
       "description": "Styles applied to event item card wrapper elements.",
       "isGlobal": false
     },
     {
       "key": "eventItemLinesClamp",
-      "className": "MuiEventCalendarPremium-eventItemLinesClamp",
+      "className": "MuiEventCalendar-eventItemLinesClamp",
       "description": "Styles applied to event item lines clamp elements.",
       "isGlobal": false
     },
     {
       "key": "eventItemRecurringIcon",
-      "className": "MuiEventCalendarPremium-eventItemRecurringIcon",
+      "className": "MuiEventCalendar-eventItemRecurringIcon",
       "description": "Styles applied to event item recurring icon elements.",
       "isGlobal": false
     },
     {
       "key": "eventItemTime",
-      "className": "MuiEventCalendarPremium-eventItemTime",
+      "className": "MuiEventCalendar-eventItemTime",
       "description": "Styles applied to event item time elements.",
       "isGlobal": false
     },
     {
       "key": "eventItemTitle",
-      "className": "MuiEventCalendarPremium-eventItemTitle",
+      "className": "MuiEventCalendar-eventItemTitle",
       "description": "Styles applied to event item title elements.",
       "isGlobal": false
     },
     {
       "key": "eventSkeleton",
-      "className": "MuiEventCalendarPremium-eventSkeleton",
+      "className": "MuiEventCalendar-eventSkeleton",
       "description": "Styles applied to the event skeleton element.",
       "isGlobal": false
     },
     {
       "key": "eventToolbar",
-      "className": "MuiEventCalendarPremium-eventToolbar",
+      "className": "MuiEventCalendar-eventToolbar",
       "description": "Styles applied to the armed-event toolbar root element.",
       "isGlobal": false
     },
     {
       "key": "eventToolbarDeleteButton",
-      "className": "MuiEventCalendarPremium-eventToolbarDeleteButton",
+      "className": "MuiEventCalendar-eventToolbarDeleteButton",
       "description": "Styles applied to the armed-event toolbar delete button element.",
       "isGlobal": false
     },
     {
       "key": "eventToolbarEditButton",
-      "className": "MuiEventCalendarPremium-eventToolbarEditButton",
+      "className": "MuiEventCalendar-eventToolbarEditButton",
       "description": "Styles applied to the armed-event toolbar edit button element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbar",
-      "className": "MuiEventCalendarPremium-headerToolbar",
+      "className": "MuiEventCalendar-headerToolbar",
       "description": "Styles applied to the header toolbar element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarActions",
-      "className": "MuiEventCalendarPremium-headerToolbarActions",
+      "className": "MuiEventCalendar-headerToolbarActions",
       "description": "Styles applied to the header toolbar actions element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarCompactMenuButton",
-      "className": "MuiEventCalendarPremium-headerToolbarCompactMenuButton",
+      "className": "MuiEventCalendar-headerToolbarCompactMenuButton",
       "description": "Styles applied to the header toolbar compact menu button element (compact layout).",
       "isGlobal": false
     },
     {
       "key": "headerToolbarCompactTodayButton",
-      "className": "MuiEventCalendarPremium-headerToolbarCompactTodayButton",
+      "className": "MuiEventCalendar-headerToolbarCompactTodayButton",
       "description": "Styles applied to the header toolbar compact today button element (compact layout).",
       "isGlobal": false
     },
     {
       "key": "headerToolbarDateNavigator",
-      "className": "MuiEventCalendarPremium-headerToolbarDateNavigator",
+      "className": "MuiEventCalendar-headerToolbarDateNavigator",
       "description": "Styles applied to the header toolbar date navigator buttons container element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarLabel",
-      "className": "MuiEventCalendarPremium-headerToolbarLabel",
+      "className": "MuiEventCalendar-headerToolbarLabel",
       "description": "Styles applied to the header toolbar label element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarLeftElement",
-      "className": "MuiEventCalendarPremium-headerToolbarLeftElement",
+      "className": "MuiEventCalendar-headerToolbarLeftElement",
       "description": "Styles applied to the header toolbar left side element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarNextButton",
-      "className": "MuiEventCalendarPremium-headerToolbarNextButton",
+      "className": "MuiEventCalendar-headerToolbarNextButton",
       "description": "Styles applied to the header toolbar next button element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarPreviousButton",
-      "className": "MuiEventCalendarPremium-headerToolbarPreviousButton",
+      "className": "MuiEventCalendar-headerToolbarPreviousButton",
       "description": "Styles applied to the header toolbar previous button element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarSidePanelToggle",
-      "className": "MuiEventCalendarPremium-headerToolbarSidePanelToggle",
+      "className": "MuiEventCalendar-headerToolbarSidePanelToggle",
       "description": "Styles applied to the header toolbar side panel toggle button element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarTodayButton",
-      "className": "MuiEventCalendarPremium-headerToolbarTodayButton",
+      "className": "MuiEventCalendar-headerToolbarTodayButton",
       "description": "Styles applied to the header toolbar today button element.",
       "isGlobal": false
     },
     {
       "key": "headerToolbarWeekNumber",
-      "className": "MuiEventCalendarPremium-headerToolbarWeekNumber",
+      "className": "MuiEventCalendar-headerToolbarWeekNumber",
       "description": "Styles applied to the header toolbar week number element.",
       "isGlobal": false
     },
     {
       "key": "mainPanel",
-      "className": "MuiEventCalendarPremium-mainPanel",
+      "className": "MuiEventCalendar-mainPanel",
       "description": "Styles applied to the main panel element.",
       "isGlobal": false
     },
     {
       "key": "miniCalendar",
-      "className": "MuiEventCalendarPremium-miniCalendar",
+      "className": "MuiEventCalendar-miniCalendar",
       "description": "Styles applied to the mini calendar root element.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarDayButton",
-      "className": "MuiEventCalendarPremium-miniCalendarDayButton",
+      "className": "MuiEventCalendar-miniCalendarDayButton",
       "description": "Styles applied to mini calendar day buttons.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarDayCell",
-      "className": "MuiEventCalendarPremium-miniCalendarDayCell",
+      "className": "MuiEventCalendar-miniCalendarDayCell",
       "description": "Styles applied to mini calendar day cells.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarGrid",
-      "className": "MuiEventCalendarPremium-miniCalendarGrid",
+      "className": "MuiEventCalendar-miniCalendarGrid",
       "description": "Styles applied to the mini calendar grid (body).",
       "isGlobal": false
     },
     {
       "key": "miniCalendarHeader",
-      "className": "MuiEventCalendarPremium-miniCalendarHeader",
+      "className": "MuiEventCalendar-miniCalendarHeader",
       "description": "Styles applied to the mini calendar header element.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarMonthLabel",
-      "className": "MuiEventCalendarPremium-miniCalendarMonthLabel",
+      "className": "MuiEventCalendar-miniCalendarMonthLabel",
       "description": "Styles applied to the mini calendar month label.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarNavigation",
-      "className": "MuiEventCalendarPremium-miniCalendarNavigation",
+      "className": "MuiEventCalendar-miniCalendarNavigation",
       "description": "Styles applied to the mini calendar header navigation container.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarNextButton",
-      "className": "MuiEventCalendarPremium-miniCalendarNextButton",
+      "className": "MuiEventCalendar-miniCalendarNextButton",
       "description": "Styles applied to the mini calendar next button element.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarPreviousButton",
-      "className": "MuiEventCalendarPremium-miniCalendarPreviousButton",
+      "className": "MuiEventCalendar-miniCalendarPreviousButton",
       "description": "Styles applied to the mini calendar previous button element.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarWeekdayCell",
-      "className": "MuiEventCalendarPremium-miniCalendarWeekdayCell",
+      "className": "MuiEventCalendar-miniCalendarWeekdayCell",
       "description": "Styles applied to individual mini calendar weekday header cells.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarWeekdayHeader",
-      "className": "MuiEventCalendarPremium-miniCalendarWeekdayHeader",
+      "className": "MuiEventCalendar-miniCalendarWeekdayHeader",
       "description": "Styles applied to the mini calendar weekday header row.",
       "isGlobal": false
     },
     {
       "key": "miniCalendarWeekRow",
-      "className": "MuiEventCalendarPremium-miniCalendarWeekRow",
+      "className": "MuiEventCalendar-miniCalendarWeekRow",
       "description": "Styles applied to mini calendar week rows.",
       "isGlobal": false
     },
     {
       "key": "monthView",
-      "className": "MuiEventCalendarPremium-monthView",
+      "className": "MuiEventCalendar-monthView",
       "description": "Styles applied to the month view root element.",
       "isGlobal": false
     },
     {
       "key": "monthViewBody",
-      "className": "MuiEventCalendarPremium-monthViewBody",
+      "className": "MuiEventCalendar-monthViewBody",
       "description": "Styles applied to the month view body element.",
       "isGlobal": false
     },
     {
       "key": "monthViewCell",
-      "className": "MuiEventCalendarPremium-monthViewCell",
+      "className": "MuiEventCalendar-monthViewCell",
       "description": "Styles applied to month view cell elements.",
       "isGlobal": false
     },
     {
       "key": "monthViewCellEvents",
-      "className": "MuiEventCalendarPremium-monthViewCellEvents",
+      "className": "MuiEventCalendar-monthViewCellEvents",
       "description": "Styles applied to month view cell events container elements.",
       "isGlobal": false
     },
     {
       "key": "monthViewCellNumber",
-      "className": "MuiEventCalendarPremium-monthViewCellNumber",
+      "className": "MuiEventCalendar-monthViewCellNumber",
       "description": "Styles applied to month view cell number elements.",
       "isGlobal": false
     },
     {
       "key": "monthViewCellNumberButton",
-      "className": "MuiEventCalendarPremium-monthViewCellNumberButton",
+      "className": "MuiEventCalendar-monthViewCellNumberButton",
       "description": "Styles applied to month view cell number button elements.",
       "isGlobal": false
     },
     {
       "key": "monthViewGrid",
-      "className": "MuiEventCalendarPremium-monthViewGrid",
+      "className": "MuiEventCalendar-monthViewGrid",
       "description": "Styles applied to the month view grid element.",
       "isGlobal": false
     },
     {
       "key": "monthViewHeader",
-      "className": "MuiEventCalendarPremium-monthViewHeader",
+      "className": "MuiEventCalendar-monthViewHeader",
       "description": "Styles applied to the month view header element.",
       "isGlobal": false
     },
     {
       "key": "monthViewHeaderCell",
-      "className": "MuiEventCalendarPremium-monthViewHeaderCell",
+      "className": "MuiEventCalendar-monthViewHeaderCell",
       "description": "Styles applied to month view header cell elements.",
       "isGlobal": false
     },
     {
       "key": "monthViewMoreEvents",
-      "className": "MuiEventCalendarPremium-monthViewMoreEvents",
+      "className": "MuiEventCalendar-monthViewMoreEvents",
       "description": "Styles applied to month view more events button elements.",
       "isGlobal": false
     },
     {
       "key": "monthViewPlaceholderContainer",
-      "className": "MuiEventCalendarPremium-monthViewPlaceholderContainer",
+      "className": "MuiEventCalendar-monthViewPlaceholderContainer",
       "description": "Styles applied to month view placeholder event container elements.",
       "isGlobal": false
     },
     {
       "key": "monthViewRow",
-      "className": "MuiEventCalendarPremium-monthViewRow",
+      "className": "MuiEventCalendar-monthViewRow",
       "description": "Styles applied to month view row elements.",
       "isGlobal": false
     },
     {
       "key": "monthViewWeekHeaderCell",
-      "className": "MuiEventCalendarPremium-monthViewWeekHeaderCell",
+      "className": "MuiEventCalendar-monthViewWeekHeaderCell",
       "description": "Styles applied to the month view week header cell element.",
       "isGlobal": false
     },
     {
       "key": "monthViewWeekNumberCell",
-      "className": "MuiEventCalendarPremium-monthViewWeekNumberCell",
+      "className": "MuiEventCalendar-monthViewWeekNumberCell",
       "description": "Styles applied to month view week number cell elements.",
       "isGlobal": false
     },
     {
       "key": "moreEventsPopover",
-      "className": "MuiEventCalendarPremium-moreEventsPopover",
+      "className": "MuiEventCalendar-moreEventsPopover",
       "description": "Styles applied to the more events popover element.",
       "isGlobal": false
     },
     {
       "key": "moreEventsPopoverBody",
-      "className": "MuiEventCalendarPremium-moreEventsPopoverBody",
+      "className": "MuiEventCalendar-moreEventsPopoverBody",
       "description": "Styles applied to the more events popover body element.",
       "isGlobal": false
     },
     {
       "key": "moreEventsPopoverHeader",
-      "className": "MuiEventCalendarPremium-moreEventsPopoverHeader",
+      "className": "MuiEventCalendar-moreEventsPopoverHeader",
       "description": "Styles applied to the more events popover header element.",
       "isGlobal": false
     },
     {
       "key": "moreEventsPopoverTitle",
-      "className": "MuiEventCalendarPremium-moreEventsPopoverTitle",
+      "className": "MuiEventCalendar-moreEventsPopoverTitle",
       "description": "Styles applied to the more events popover title element.",
       "isGlobal": false
     },
     {
       "key": "preferencesMenu",
-      "className": "MuiEventCalendarPremium-preferencesMenu",
+      "className": "MuiEventCalendar-preferencesMenu",
       "description": "Styles applied to the preferences menu element.",
       "isGlobal": false
     },
     {
       "key": "preferencesMenuButton",
-      "className": "MuiEventCalendarPremium-preferencesMenuButton",
+      "className": "MuiEventCalendar-preferencesMenuButton",
       "description": "Styles applied to the preferences menu button element.",
       "isGlobal": false
     },
     {
       "key": "preferencesMenuDivider",
-      "className": "MuiEventCalendarPremium-preferencesMenuDivider",
+      "className": "MuiEventCalendar-preferencesMenuDivider",
       "description": "Styles applied to the preferences menu divider elements.",
       "isGlobal": false
     },
     {
       "key": "preferencesMenuItem",
-      "className": "MuiEventCalendarPremium-preferencesMenuItem",
+      "className": "MuiEventCalendar-preferencesMenuItem",
       "description": "Styles applied to the preferences menu item elements.",
       "isGlobal": false
     },
     {
       "key": "preferencesMenuList",
-      "className": "MuiEventCalendarPremium-preferencesMenuList",
+      "className": "MuiEventCalendar-preferencesMenuList",
       "description": "Styles applied to the preferences menu list element.",
       "isGlobal": false
     },
     {
       "key": "preferencesMenuListItemIcon",
-      "className": "MuiEventCalendarPremium-preferencesMenuListItemIcon",
+      "className": "MuiEventCalendar-preferencesMenuListItemIcon",
       "description": "Styles applied to the preferences menu list item icon elements.",
       "isGlobal": false
     },
     {
       "key": "preferencesMenuListItemText",
-      "className": "MuiEventCalendarPremium-preferencesMenuListItemText",
+      "className": "MuiEventCalendar-preferencesMenuListItemText",
       "description": "Styles applied to the preferences menu list item text elements.",
       "isGlobal": false
     },
     {
       "key": "preferencesMenuListSubheader",
-      "className": "MuiEventCalendarPremium-preferencesMenuListSubheader",
+      "className": "MuiEventCalendar-preferencesMenuListSubheader",
       "description": "Styles applied to the preferences menu list subheader elements.",
       "isGlobal": false
     },
     {
       "key": "resourceLegendColor",
-      "className": "MuiEventCalendarPremium-resourceLegendColor",
+      "className": "MuiEventCalendar-resourceLegendColor",
       "description": "Styles applied to event item resource legend color elements.",
       "isGlobal": false
     },
     {
       "key": "resourcesTree",
-      "className": "MuiEventCalendarPremium-resourcesTree",
+      "className": "MuiEventCalendar-resourcesTree",
       "description": "Styles applied to the resources tree root element.",
       "isGlobal": false
     },
     {
       "key": "resourcesTreeItem",
-      "className": "MuiEventCalendarPremium-resourcesTreeItem",
+      "className": "MuiEventCalendar-resourcesTreeItem",
       "description": "Styles applied to resources tree item elements.",
       "isGlobal": false
     },
     {
       "key": "resourcesTreeItemCheckbox",
-      "className": "MuiEventCalendarPremium-resourcesTreeItemCheckbox",
+      "className": "MuiEventCalendar-resourcesTreeItemCheckbox",
       "description": "Styles applied to resources tree item checkbox elements.",
       "isGlobal": false
     },
     {
       "key": "resourcesTreeItemLabel",
-      "className": "MuiEventCalendarPremium-resourcesTreeItemLabel",
+      "className": "MuiEventCalendar-resourcesTreeItemLabel",
       "description": "Styles applied to resources tree item label elements.",
       "isGlobal": false
     },
     {
       "key": "resourcesTreeLabel",
-      "className": "MuiEventCalendarPremium-resourcesTreeLabel",
+      "className": "MuiEventCalendar-resourcesTreeLabel",
       "description": "Styles applied to the resources tree section label element.",
       "isGlobal": false
     },
     {
+      "key": "responsiveTypographyContainer",
+      "className": "MuiEventCalendar-responsiveTypographyContainer",
+      "description": "Styles applied to the element that hosts the responsive typography tokens.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
-      "className": "MuiEventCalendarPremium-root",
+      "className": "MuiEventCalendar-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "sidePanel",
-      "className": "MuiEventCalendarPremium-sidePanel",
+      "className": "MuiEventCalendar-sidePanel",
       "description": "Styles applied to the side panel element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelCollapse",
-      "className": "MuiEventCalendarPremium-sidePanelCollapse",
+      "className": "MuiEventCalendar-sidePanelCollapse",
       "description": "Styles applied to the side panel collapse element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDivider",
-      "className": "MuiEventCalendarPremium-sidePanelDivider",
+      "className": "MuiEventCalendar-sidePanelDivider",
       "description": "Styles applied to the side panel divider element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawer",
-      "className": "MuiEventCalendarPremium-sidePanelDrawer",
+      "className": "MuiEventCalendar-sidePanelDrawer",
       "description": "Styles applied to the side panel drawer paper (popup) element (compact layout).",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerBackdrop",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerBackdrop",
+      "className": "MuiEventCalendar-sidePanelDrawerBackdrop",
       "description": "Styles applied to the side panel drawer backdrop element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerCloseButton",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerCloseButton",
+      "className": "MuiEventCalendar-sidePanelDrawerCloseButton",
       "description": "Styles applied to the side panel drawer close button element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerHeader",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerHeader",
+      "className": "MuiEventCalendar-sidePanelDrawerHeader",
       "description": "Styles applied to the side panel drawer header element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerPreferences",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferences",
+      "className": "MuiEventCalendar-sidePanelDrawerPreferences",
       "description": "Styles applied to the side panel drawer preferences entry list element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerPreferencesButton",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesButton",
+      "className": "MuiEventCalendar-sidePanelDrawerPreferencesButton",
       "description": "Styles applied to the side panel drawer preferences button element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerPreferencesList",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerPreferencesList",
+      "className": "MuiEventCalendar-sidePanelDrawerPreferencesList",
       "description": "Styles applied to the side panel drawer collapsible preferences options list element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerTitle",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerTitle",
+      "className": "MuiEventCalendar-sidePanelDrawerTitle",
       "description": "Styles applied to the side panel drawer title element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerViewItem",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerViewItem",
+      "className": "MuiEventCalendar-sidePanelDrawerViewItem",
       "description": "Styles applied to side panel drawer view list item elements.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerViewList",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerViewList",
+      "className": "MuiEventCalendar-sidePanelDrawerViewList",
       "description": "Styles applied to the side panel drawer view list element.",
       "isGlobal": false
     },
     {
       "key": "sidePanelDrawerViewport",
-      "className": "MuiEventCalendarPremium-sidePanelDrawerViewport",
+      "className": "MuiEventCalendar-sidePanelDrawerViewport",
       "description": "Styles applied to the side panel drawer root (modal) element.",
       "isGlobal": false
     },
     {
       "key": "standaloneEvent",
-      "className": "MuiEventCalendarPremium-standaloneEvent",
+      "className": "MuiEventCalendar-standaloneEvent",
       "description": "Styles applied to the standalone event element.",
       "isGlobal": false
     },
     {
       "key": "timeGridEvent",
-      "className": "MuiEventCalendarPremium-timeGridEvent",
+      "className": "MuiEventCalendar-timeGridEvent",
       "description": "Styles applied to time grid event elements.",
       "isGlobal": false
     },
     {
       "key": "timeGridEventPlaceholder",
-      "className": "MuiEventCalendarPremium-timeGridEventPlaceholder",
+      "className": "MuiEventCalendar-timeGridEventPlaceholder",
       "description": "Styles applied to time grid event placeholder elements.",
       "isGlobal": false
     },
     {
       "key": "timeGridEventRecurringIcon",
-      "className": "MuiEventCalendarPremium-timeGridEventRecurringIcon",
+      "className": "MuiEventCalendar-timeGridEventRecurringIcon",
       "description": "Styles applied to time grid event recurring icon elements.",
       "isGlobal": false
     },
     {
       "key": "timeGridEventResizeHandler",
-      "className": "MuiEventCalendarPremium-timeGridEventResizeHandler",
+      "className": "MuiEventCalendar-timeGridEventResizeHandler",
       "description": "Styles applied to time grid event resize handler elements.",
       "isGlobal": false
     },
     {
       "key": "timeGridEventSkeleton",
-      "className": "MuiEventCalendarPremium-timeGridEventSkeleton",
+      "className": "MuiEventCalendar-timeGridEventSkeleton",
       "description": "Styles applied to time grid event skeleton elements.",
       "isGlobal": false
     },
     {
       "key": "timeGridEventTime",
-      "className": "MuiEventCalendarPremium-timeGridEventTime",
+      "className": "MuiEventCalendar-timeGridEventTime",
       "description": "Styles applied to time grid event time elements.",
       "isGlobal": false
     },
     {
       "key": "timeGridEventTitle",
-      "className": "MuiEventCalendarPremium-timeGridEventTitle",
+      "className": "MuiEventCalendar-timeGridEventTitle",
       "description": "Styles applied to time grid event title elements.",
       "isGlobal": false
     },
     {
       "key": "viewSwitcher",
-      "className": "MuiEventCalendarPremium-viewSwitcher",
+      "className": "MuiEventCalendar-viewSwitcher",
       "description": "Styles applied to the view switcher element.",
       "isGlobal": false
     },
     {
       "key": "viewSwitcherButton",
-      "className": "MuiEventCalendarPremium-viewSwitcherButton",
+      "className": "MuiEventCalendar-viewSwitcherButton",
       "description": "Styles applied to the view switcher button element.",
       "isGlobal": false
     },
     {
       "key": "viewSwitcherMenu",
-      "className": "MuiEventCalendarPremium-viewSwitcherMenu",
+      "className": "MuiEventCalendar-viewSwitcherMenu",
       "description": "Styles applied to the view switcher menu element.",
       "isGlobal": false
     }

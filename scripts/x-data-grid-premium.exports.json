@@ -477,6 +477,7 @@
   { "name": "gridHeaderFilteringStateSelector", "kind": "Variable" },
   { "name": "GridHeaderFilterMenu", "kind": "Function" },
   { "name": "GridHeaderFilterMenuContainer", "kind": "Function" },
+  { "name": "GridHeaderFilterMenuProps", "kind": "Interface" },
   { "name": "GridHeaderSelectionCheckboxParams", "kind": "Interface" },
   { "name": "gridHistoryCanRedoSelector", "kind": "Variable" },
   { "name": "gridHistoryCanUndoSelector", "kind": "Variable" },

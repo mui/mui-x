@@ -61,7 +61,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   headerFilterMenuRef: React.RefObject<HTMLButtonElement | null>;
   item: GridFilterItem;
   showClearIcon?: boolean;
-  InputComponentProps: GridFilterOperator['InputComponentProps'];
+  InputComponentProps?: GridFilterOperator['InputComponentProps'];
   pinnedPosition?: PinnedColumnPosition;
   pinnedOffset?: number;
   style?: React.CSSProperties;
