@@ -850,40 +850,41 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     titleColumnWidth,
   });
 
+  const eventsWidth = config.tickCount * config.tickWidth;
+  const hasScrollX = dimensions.hasScrollX;
+  const hasScrollY = dimensions.hasScrollY;
+  const hasBottomScrollbar = hasScrollX || hasTitleOverflow;
+
   // Arrow keys move the focus to rows the virtualizer may not have mounted yet, so the row is
-  // scrolled into view first. Same rule as the Data Grid's `scrollToIndexes`.
+  // scrolled into view first, just enough to show it whole.
   const scrollRowIntoView = useStableCallback((rowIndex: number) => {
     const scroller = gridRef.current;
-    const { positions, currentPageTotalHeight } = Dimensions.selectors.rowsMeta(
-      virtualizer.store.state,
-    );
+    const state = virtualizer.store.state;
+    const { positions, currentPageTotalHeight } = Dimensions.selectors.rowsMeta(state);
     const rowTop = positions[rowIndex];
     if (!scroller || rowTop === undefined) {
       return;
     }
     const rowBottom = positions[rowIndex + 1] ?? currentPageTotalHeight;
-    const { viewportInnerSize, hasScrollX, scrollbarSize } = Dimensions.selectors.dimensions(
-      virtualizer.store.state,
-    );
-    // The bottom scrollbars are drawn over the rows, and can be taller than the native one.
+    const { viewportInnerSize, scrollbarSize } = Dimensions.selectors.dimensions(state);
+    // `viewportInnerSize` already excludes the native scrollbar: swap it for the bottom
+    // scrollbars, which are drawn over the rows and are at least 14px tall.
     const viewportHeight =
       viewportInnerSize.height +
       (hasScrollX ? scrollbarSize : 0) -
-      (hasScrollX || hasTitleOverflow ? Math.max(scrollbarSize, MIN_SCROLLBAR_SIZE) : 0);
-    let scrollTop = scroller.scrollTop;
-    // A row taller than the viewport is aligned to its top.
-    if (rowTop < scrollTop || rowBottom - rowTop > viewportHeight) {
-      scrollTop = rowTop;
-    } else if (rowBottom > scrollTop + viewportHeight) {
-      scrollTop = rowBottom - viewportHeight;
+      (hasBottomScrollbar ? Math.max(scrollbarSize, MIN_SCROLLBAR_SIZE) : 0);
+    // Not measured yet.
+    if (viewportHeight <= 0) {
+      return;
     }
-    scroller.scrollTop = scrollTop;
+    // A row taller than the viewport is aligned to its top.
+    if (rowTop < scroller.scrollTop || rowBottom - rowTop > viewportHeight) {
+      scroller.scrollTop = rowTop;
+    } else if (rowBottom > scroller.scrollTop + viewportHeight) {
+      scroller.scrollTop = rowBottom - viewportHeight;
+    }
   });
 
-  const eventsWidth = config.tickCount * config.tickWidth;
-  const hasScrollX = dimensions.hasScrollX;
-  const hasScrollY = dimensions.hasScrollY;
-  const hasBottomScrollbar = hasScrollX || hasTitleOverflow;
   const fillerHeight = Math.max(
     0,
     dimensions.viewportOuterSize.height - dimensions.minimumSize.height,

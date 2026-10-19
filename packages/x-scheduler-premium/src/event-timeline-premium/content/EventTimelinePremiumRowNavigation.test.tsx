@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { act, screen, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
+  absorbObserverFrames,
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -27,18 +30,38 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
       .build(),
   );
 
+  // Overlapping events stack into lanes, so this row is taller than the viewport.
+  const tallRowIndex = 10;
+  const tallRowEvents = Array.from({ length: 15 }, () =>
+    EventBuilder.new()
+      .resource(resources[tallRowIndex])
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .build(),
+  );
+
   const getTitleCell = (resourceId: string) =>
     document.querySelector<HTMLElement>(`[id$="-EventTimelinePremiumTitleCell-${resourceId}"]`);
 
-  // The visible rows are between the sticky header and the bottom scrollbar, which is drawn
-  // over them. The scrollbars are the hidden siblings of the grid, the bottom one is the lowest.
+  // The visible rows are between the sticky header and the bottom of the scroller, or the
+  // bottom scrollbars, which are drawn over the rows (the wide hidden siblings of the grid).
   function getVisibleBounds() {
     const top = document.querySelector(`.${classes.headerRow}`)!.getBoundingClientRect().bottom;
-    const scrollbars = Array.from(
-      screen.getByRole('grid').parentElement!.querySelectorAll(':scope > [aria-hidden="true"]'),
+    const scroller = screen.getByRole('grid');
+    const bottomScrollbars = Array.from(
+      scroller.parentElement!.querySelectorAll(':scope > [aria-hidden="true"]'),
+    )
+      .map((element) => element.getBoundingClientRect())
+      .filter((rect) => rect.width > rect.height);
+    const bottom = Math.min(
+      scroller.getBoundingClientRect().top + scroller.clientHeight,
+      ...bottomScrollbars.map((rect) => rect.top),
     );
-    const bottom = Math.max(...scrollbars.map((element) => element.getBoundingClientRect().top));
     return { top, bottom };
+  }
+
+  function isScrolledToEnd() {
+    const scroller = screen.getByRole('grid');
+    return scroller.scrollTop >= scroller.scrollHeight - scroller.clientHeight - 1;
   }
 
   // Focused and fully visible once the virtualizer has positioned the rows for the new scroll.
@@ -48,36 +71,49 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
       const cell = getTitleCell(resourceId);
       expect(document.activeElement).to.equal(cell);
 
-      const scroller = screen.getByRole('grid');
-      const scrollTop = scroller.scrollTop;
-      // The content only leaves room for the native scrollbar below the last row, so the
-      // bottom scrollbar can still cover part of it once the grid is scrolled to the end.
-      if (scrollTop >= scroller.scrollHeight - scroller.clientHeight - 1) {
-        return;
-      }
-
+      const scrollTop = screen.getByRole('grid').scrollTop;
       const cellRect = cell!.getBoundingClientRect();
       const visible = getVisibleBounds();
+      // The content only leaves room for the native scrollbar below the last row, so once the
+      // grid is scrolled to the end the bottom scrollbar can still cover a few pixels of it.
+      const bottomTolerance = isScrolledToEnd() ? 4 : 1;
       expect(cellRect.top).to.be.at.least(visible.top - 1);
-      expect(cellRect.bottom).to.be.at.most(visible.bottom + 1);
+      expect(cellRect.bottom).to.be.at.most(visible.bottom + bottomTolerance);
       if (scrollTop > previousScrollTop) {
-        expect(cellRect.bottom).to.be.closeTo(visible.bottom, 1);
+        expect(cellRect.bottom).to.be.closeTo(visible.bottom, bottomTolerance);
       } else if (scrollTop < previousScrollTop) {
         expect(cellRect.top).to.be.closeTo(visible.top, 1);
       }
     });
   }
 
-  async function renderTimeline() {
+  async function expectFocusedAtTop(resourceId: string) {
+    await waitFor(() => {
+      const cell = getTitleCell(resourceId);
+      expect(document.activeElement).to.equal(cell);
+      expect(cell!.getBoundingClientRect().top).to.be.closeTo(getVisibleBounds().top, 1);
+    });
+  }
+
+  async function renderTimeline(options: { events?: SchedulerEvent[]; width?: number } = {}) {
+    const { events = [], width = 1200 } = options;
     return renderSettled(
-      <div style={{ width: 1200, height: 400 }}>
+      <div style={{ width, height: 400 }}>
         <EventTimelinePremium
           resources={resources}
-          events={[]}
+          events={events}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         />
       </div>,
     );
+  }
+
+  async function scrollToEnd() {
+    const scroller = screen.getByRole('grid');
+    act(() => {
+      scroller.scrollTop = scroller.scrollHeight;
+    });
+    await absorbObserverFrames();
   }
 
   it('should scroll a row that is virtualized out into view and focus it with ArrowDown', async () => {
@@ -98,30 +134,13 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     }
   });
 
-  it('should not scroll when the next row is already in view', async () => {
-    const { user } = await renderTimeline();
-    const scroller = screen.getByRole('grid');
-
-    act(() => {
-      getTitleCell(resources[0].id)!.focus();
-    });
-    await user.keyboard('{ArrowDown}');
-    await expectFocusedInView(resources[1].id, 0);
-
-    expect(scroller.scrollTop).to.equal(0);
-  });
-
   it('should scroll a row that is virtualized out into view and focus it with ArrowUp', async () => {
     const { user } = await renderTimeline();
     const lastResource = resources[resources.length - 1];
     const scroller = screen.getByRole('grid');
 
-    act(() => {
-      scroller.scrollTop = scroller.scrollHeight;
-    });
-    await waitFor(() => {
-      expect(getTitleCell(lastResource.id)).not.to.equal(null);
-    });
+    await scrollToEnd();
+    expect(getTitleCell(lastResource.id)).not.to.equal(null);
     expect(getTitleCell(resources[0].id)).to.equal(null);
 
     act(() => {
@@ -134,5 +153,102 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
       // eslint-disable-next-line no-await-in-loop
       await expectFocusedInView(resources[index].id, previousScrollTop);
     }
+  });
+
+  it('should not scroll with ArrowDown when the next row is already in view', async () => {
+    const { user } = await renderTimeline();
+    const scroller = screen.getByRole('grid');
+
+    act(() => {
+      getTitleCell(resources[0].id)!.focus();
+    });
+    await user.keyboard('{ArrowDown}');
+    await expectFocusedInView(resources[1].id, 0);
+
+    expect(scroller.scrollTop).to.equal(0);
+  });
+
+  it('should not scroll with ArrowUp when the previous row is already in view', async () => {
+    const { user } = await renderTimeline();
+    const scroller = screen.getByRole('grid');
+
+    await scrollToEnd();
+    const scrollTop = scroller.scrollTop;
+    const lastResource = resources[resources.length - 1];
+    act(() => {
+      getTitleCell(lastResource.id)!.focus();
+    });
+    await user.keyboard('{ArrowUp}');
+    await expectFocusedInView(resources[resources.length - 2].id, scrollTop);
+
+    expect(scroller.scrollTop).to.equal(scrollTop);
+  });
+
+  it('should scroll the rows into view when there is no bottom scrollbar', async () => {
+    // Wide enough for the whole day, so the grid doesn't scroll horizontally.
+    const { user } = await renderTimeline({ width: 7000 });
+    const scroller = screen.getByRole('grid');
+    expect(scroller.scrollWidth).to.equal(scroller.clientWidth);
+
+    act(() => {
+      getTitleCell(resources[0].id)!.focus();
+    });
+    for (let index = 1; index < 15; index += 1) {
+      const previousScrollTop = scroller.scrollTop;
+      // eslint-disable-next-line no-await-in-loop
+      await user.keyboard('{ArrowDown}');
+      // eslint-disable-next-line no-await-in-loop
+      await expectFocusedInView(resources[index].id, previousScrollTop);
+    }
+  });
+
+  it('should align a row taller than the viewport to its top', async () => {
+    const { user } = await renderTimeline({ events: tallRowEvents });
+    const scroller = screen.getByRole('grid');
+    const tallRow = resources[tallRowIndex];
+
+    act(() => {
+      getTitleCell(resources[0].id)!.focus();
+    });
+    for (let index = 1; index < tallRowIndex; index += 1) {
+      const previousScrollTop = scroller.scrollTop;
+      // eslint-disable-next-line no-await-in-loop
+      await user.keyboard('{ArrowDown}');
+      // eslint-disable-next-line no-await-in-loop
+      await expectFocusedInView(resources[index].id, previousScrollTop);
+    }
+    const visible = getVisibleBounds();
+    expect(getTitleCell(tallRow.id)!.getBoundingClientRect().height).to.be.greaterThan(
+      visible.bottom - visible.top,
+    );
+
+    await user.keyboard('{ArrowDown}');
+    await expectFocusedAtTop(tallRow.id);
+
+    // Leaving it downwards shows the next row whole, then coming back aligns it to its top.
+    const scrollTopOnTallRow = scroller.scrollTop;
+    await user.keyboard('{ArrowDown}');
+    await expectFocusedInView(resources[tallRowIndex + 1].id, scrollTopOnTallRow);
+    await user.keyboard('{ArrowUp}');
+    await expectFocusedAtTop(tallRow.id);
+  });
+
+  it('should keep moving when the key repeats before the target row is mounted', async () => {
+    await renderTimeline();
+
+    // The last mounted row: the rows below it are only mounted after the scroll.
+    const lastMountedIndex = resources.findLastIndex((resource) => getTitleCell(resource.id));
+    const lastMountedCell = getTitleCell(resources[lastMountedIndex].id)!;
+    act(() => {
+      lastMountedCell.focus({ preventScroll: true });
+    });
+    const scrollTop = screen.getByRole('grid').scrollTop;
+    // A held key repeats before the scroll mounts the target row, so the presses are still
+    // dispatched on the row the focus is leaving.
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowDown' });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowDown' });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowDown' });
+
+    await expectFocusedInView(resources[lastMountedIndex + 3].id, scrollTop);
   });
 });

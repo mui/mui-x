@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
@@ -99,6 +100,11 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
       : null;
   }, []);
 
+  const moveFocusToRow = useStableCallback((coordinates: TimelineGridCellCoordinates) => {
+    scrollRowIntoView?.(coordinates.rowIndex);
+    setFocusedCell(coordinates);
+  });
+
   const clearFocusedCellIfMatches = React.useCallback(
     (columnType: TimelineGridColumnType, rowIndex: number) => {
       setFocusedCellState((prev) =>
@@ -165,11 +171,11 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
       return;
     }
 
-    setFocusedCell({
+    moveFocusToRow({
       columnType: focused.columnType,
       rowIndex: Math.min(focused.rowIndex, resources.length - 1),
     });
-  }, [resources, setFocusedCell]);
+  }, [resources, moveFocusToRow]);
 
   const totalRowCount = resources.length;
 
@@ -177,18 +183,18 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     () => ({
       focusedCell,
       setFocusedCell,
+      moveFocusToRow,
       clearFocusedCellIfMatches,
       columnTypes,
       totalRowCount,
-      scrollRowIntoView,
     }),
     [
       focusedCell,
       setFocusedCell,
+      moveFocusToRow,
       clearFocusedCellIfMatches,
       columnTypes,
       totalRowCount,
-      scrollRowIntoView,
     ],
   );
 
@@ -225,7 +231,8 @@ export namespace TimelineGridRoot {
      */
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
     /**
-     * Scrolls the row at the given index into view.
+     * Scrolls a body row into view, before the focus moves to it.
+     * Receives the 0-based index of the row, the `index` of `<TimelineGrid.BodyRow />`.
      * Needed when rows are virtualized.
      */
     scrollRowIntoView?: (rowIndex: number) => void;

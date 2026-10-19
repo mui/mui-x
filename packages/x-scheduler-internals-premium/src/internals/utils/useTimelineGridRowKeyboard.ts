@@ -25,10 +25,10 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   const {
     focusedCell,
     setFocusedCell,
+    moveFocusToRow,
     clearFocusedCellIfMatches,
     columnTypes,
     totalRowCount,
-    scrollRowIntoView,
   } = useTimelineGridRootContext();
 
   const bodyRowContext = useTimelineGridBodyRowContext();
@@ -72,20 +72,21 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     }
 
     const typeIndex = columnTypes.indexOf(columnType);
+    // A key repeated before the target row is mounted still lands on this row: move from the
+    // focused cell, which is ahead of the DOM focus.
+    const rowIndex = focusedCell?.rowIndex ?? index;
 
     if (event.key === 'ArrowUp') {
       event.preventDefault();
-      if (index > 0) {
-        scrollRowIntoView?.(index - 1);
-        setFocusedCell({ columnType, rowIndex: index - 1 });
+      if (rowIndex > 0) {
+        moveFocusToRow({ columnType, rowIndex: rowIndex - 1 });
       }
       return true;
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      if (index < totalRowCount - 1) {
-        scrollRowIntoView?.(index + 1);
-        setFocusedCell({ columnType, rowIndex: index + 1 });
+      if (rowIndex < totalRowCount - 1) {
+        moveFocusToRow({ columnType, rowIndex: rowIndex + 1 });
       }
       return true;
     }

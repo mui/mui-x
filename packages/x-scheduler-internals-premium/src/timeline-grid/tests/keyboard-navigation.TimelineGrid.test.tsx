@@ -205,6 +205,21 @@ describe('TimelineGrid keyboard navigation', () => {
 
       expect(scrollRowIntoView.mock.calls).to.have.length(0);
     });
+
+    it('should scroll the row the focus moves to when the focused row is removed', () => {
+      const scrollRowIntoView = vi.fn();
+      const { setProps } = render(
+        <Grid resources={resources} scrollRowIntoView={scrollRowIntoView} />,
+      );
+
+      act(() => {
+        getEventsCells()[2].focus();
+      });
+      setProps({ resources: resources.slice(0, 2) });
+
+      expect(scrollRowIntoView.mock.calls).to.deep.equal([[1]]);
+      expect(getEventsCells()[1]).toHaveFocus();
+    });
   });
 
   describe('horizontal navigation (ArrowLeft / ArrowRight)', () => {
