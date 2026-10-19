@@ -4,17 +4,18 @@
 
 _Oct 16, 2026_
 
-We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Excel export in the Charts Premium, with a toolbar entry
 - 👆 Data Grid row reordering on touch and pen devices
 - 🗑️ Confirmation dialog before deleting an event in the Scheduler
 - 🌍 Improve Romanian (ro-RO) locale on the Data Grid and the Date and Time Pickers
+- 🌍 Improve Turkish (tr-TR) locale on the Data Grid, the Date and Time Pickers, and the Scheduler
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
-@cpruijsen, @mustafajw07, @vicuts
+@aozmekik, @cpruijsen, @mustafajw07, @reckter, @vicuts
 
 The following team members contributed to this release:
 @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @michelengelen, @noraleonte, @rita-codes
@@ -29,6 +30,7 @@ The following team members contributed to this release:
 - [DataGrid] Keep keyboard focus after a click on the empty row space (#23862) @michelengelen
 - [DataGrid] Extract column reorder utils (#23834) @noraleonte
 - [l10n] Improve Romanian (ro-RO) locale (#23816) @vicuts
+- [l10n] Improve Turkish (tr-TR) locale (#23912) @aozmekik
 
 #### `@mui/x-data-grid-pro@9.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -50,6 +52,7 @@ Same changes as in `@mui/x-data-grid-pro@9.16.0`, plus:
 #### `@mui/x-date-pickers@9.16.0`
 
 - [l10n] Improve Romanian (ro-RO) locale (#23816) @vicuts
+- [l10n] Improve Turkish (tr-TR) locale (#23912) @aozmekik
 - [pickers] Fix `PropsFromSlot` resolving to `any` for `JSXElementConstructor` slots (#23856) @cpruijsen
 - [pickers] Fix Day.js named-zone elapsed-time additions across DST (#23752) @LukasTy
 - [pickers] Fix empty gap next to the digital clock columns (#23698) @michelengelen
@@ -83,6 +86,7 @@ Same changes as in `@mui/x-charts-pro@9.16.0`, plus:
 #### `@mui/x-tree-view@9.16.0`
 
 - [tree view] Fix `PropsFromSlot` resolving to `any` for `JSXElementConstructor` slots (#23856) @cpruijsen
+- [TreeView] Fix infinite recursion when a mounted item suspends (#23668) @reckter
 
 #### `@mui/x-tree-view-pro@9.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -92,6 +96,7 @@ Same changes as in `@mui/x-tree-view@9.16.0`.
 
 #### `@mui/x-scheduler@9.0.0-beta.14`
 
+- [l10n] Improve Turkish (tr-TR) locale (#23912) @aozmekik
 - [scheduler] Add confirmation dialog for event deletion (#23593) @mustafajw07
 - [scheduler] Extract a generic form store from the event dialog form (#23781) @rita-codes
 - [scheduler] Fix the style overrides key of the responsiveness example (#23838) @rita-codes
@@ -139,6 +144,7 @@ Internal changes.
 - [code-infra] Fix ts-ignore lint error in AdapterDayjs test (#23843) @LukasTy
 - [code-infra] Group major and minor pragmatic-drag-and-drop renovate updates (#23782) @LukasTy
 - [code-infra] Use flake-fix dry-run (#23849) @Janpot
+- [x-internals] Restore removed exports and pin internal dependencies (#23907) @LukasTy
 
 ### Miscellaneous
 
