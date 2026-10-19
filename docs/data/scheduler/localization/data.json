@@ -291,7 +291,7 @@
     "languageTag": "tr-TR",
     "importName": "trTR",
     "localeName": "Turkish",
-    "missingKeysCount": 115,
+    "missingKeysCount": 0,
     "totalKeysCount": 115,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/trTR.ts"
   },
