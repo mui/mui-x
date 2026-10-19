@@ -41,7 +41,7 @@ Compact mode applies the following changes to the message list:
 
 The demo below shows the compact variant applied to a `ChatBox`:
 
-{{"demo": "../../material/message-list/CompactVariant.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/message-list/demos/compact-variant/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### When to use each variant
 
@@ -68,7 +68,7 @@ Three values are availableâ€”`compact`, `standard` (default), and `comfortable`â
 
 Use the toggle in the demo below to compare the three density levels:
 
-{{"demo": "../../material/message-list/DensityProp.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"component": "file://../../material/message-list/demos/density-prop/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Density effects
 

@@ -1,0 +1,21 @@
+import Box from '@mui/material/Box';
+import { DataGrid } from '@mui/x-data-grid';
+
+export default function BasicColumnsGrid() {
+  return (
+    <Box sx={{ height: 250, width: '100%' }}>
+      {/* @focus-start */}
+      <DataGrid
+        columns={[{ field: 'username', rowHeader: true }, { field: 'age' }]}
+        rows={[
+          {
+            id: 1,
+            username: '@MUI',
+            age: 20,
+          },
+        ]}
+      />
+      {/* @focus-end */}
+    </Box>
+  );
+}

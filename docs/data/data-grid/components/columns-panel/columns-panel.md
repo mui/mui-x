@@ -29,7 +29,7 @@ You can use the Columns Panel Trigger and [Toolbar](/x/react-data-grid/component
 
 The demo below shows how to add a columns panel trigger to a custom toolbar.
 
-{{"demo": "GridColumnsPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-columns-panel-trigger/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 

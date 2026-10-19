@@ -1,1 +1,0 @@
-<DataGridPremium pagination rows={rows} columns={columns} autoPageSize />

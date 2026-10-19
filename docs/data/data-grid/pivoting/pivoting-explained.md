@@ -14,7 +14,7 @@ With pivoting, you could turn the unique product names into rows and the regions
 You can explore this example use case in the demo below.
 (This same flat dataset is used throughout this page to showcase key pivoting features.)
 
-{{"demo": "GridNonPivoted.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-non-pivoted/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Pivoting parameters
 
@@ -24,7 +24,7 @@ The **Rows** menu defines how the data will be grouped vertically after pivoting
 Each unique value in the fields selected for rows will become a new row in the pivot Data Grid.
 For example, if you pivot by **Product**, each unique product name will become a row.
 
-{{"demo": "GridPivotingRows.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-rows/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 If multiple fields are selected for rows, the rows will be grouped in the order of the selected fields.
 For example, if you pivot with both **Product** and **Size** selected for rows, then each unique combination of the two will become a row in the pivot Data Grid.
@@ -36,7 +36,7 @@ These are typically numeric fields that can be aggregated (often into a sum, an 
 For example, the demo below contains multiple rows for just two kinds of products: apples and oranges.
 By selecting **Product** for the pivot rows and **Sales** for the pivot values, you can see the sum total of sales for each of the two products.
 
-{{"demo": "GridPivotingValues.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-values/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 If multiple fields are selected for values, each field will add a new aggregated column to the pivot Data Grid.
 For example, if you pivot with **Sales** and **Profit** for values, the pivot Data Grid will contain two corresponding aggregated columns.
@@ -47,7 +47,7 @@ The **Columns** menu defines how the data will be grouped horizontally after piv
 Each unique value in the fields you select for columns will create a new column group in the pivot Data Grid.
 For example, if you pivot by **Region** in the demo below, each unique region will become a column group in the pivot Data Grid.
 
-{{"demo": "GridPivotingColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-columns/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 If multiple fields are selected for columns, the columns will be grouped in the order of the selected fields.
 For example, if you pivot with **Region** and **Quarter** for columns, each unique combination of the two will become a column in the pivot Grid.
@@ -58,7 +58,7 @@ Try selecting the **Quarter** checkbox in the **Columns** section in the demo ab
 In the demo below, the goal is to evaluate sales by region and quarter for each product and size available.
 To accomplish this, the dataset can be pivoted with **Product** and **Size** for rows; **Region** and **Quarter** for columns; and **Sales** and **Profit** for aggregated values.
 
-{{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-pivoting-multiple-values/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Next steps
 

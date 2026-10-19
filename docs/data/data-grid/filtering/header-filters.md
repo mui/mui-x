@@ -12,7 +12,7 @@ Filters added through the filter panel are synchronized with header filters, and
 
 In the demo below, you can switch between different operators by clicking the operator button in the header filter cell or pressing <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> on Windows) when focusing on a header filter cell.
 
-{{"demo": "HeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/header-filtering-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Implementing header filters
 
@@ -26,14 +26,14 @@ To enable header filters, pass the `headerFilters` prop to the Data Grid Pro:
 
 You can disable the default filter panel using the `disableColumnFilter` prop, and show only the default operator by passing `slots.headerFilterMenu` as `null`.
 
-{{"demo": "SimpleHeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/simple-header-filtering-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Inline clear button
 
 By default, the **Clear filter** button is located in the header filter menu.
 To display the button in the header filter cell instead, set `slotProps.headerFilterCell.showClearIcon` to `true`:
 
-{{"demo": "HeaderFilteringInlineClearDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/header-filtering-inline-clear-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Customizing header filters
 
@@ -56,7 +56,7 @@ const columns: GridColDef[] = [
 
 The demo below uses the `renderHeaderFilter()` method to hide the header filter cell for the **Phone** column and customize it for the **Is admin?** column:
 
-{{"demo": "CustomHeaderFilterSingleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-header-filter-single-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### All header filter cells in every column
 
@@ -69,7 +69,7 @@ Use `slots.headerFilterCell` to override all header filter cells in the row with
 The default slot component handles keyboard navigation and focus management, so your custom component should also account for these accessibility features.
 The demo below shows how to do this.
 
-{{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-header-filter-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::success
 Similarly, you can use `slots.headerFilterMenu` if you need to customize the header filter menu.
@@ -82,7 +82,7 @@ The custom input component receives the `headerFilterMenu` and `clearButton` pro
 
 In the demo below, the **Rating** column uses a custom input, and you can filter by clicking on a star rating in the header filter cell:
 
-{{"demo": "CustomHeaderFilterOperatorDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-header-filter-operator-data-grid-pro/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Header filter row height
 

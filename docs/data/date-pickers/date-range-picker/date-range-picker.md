@@ -13,7 +13,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 ## Basic usage
 
-{{"demo": "BasicDateRangePicker.js"}}
+{{"component": "file://./demos/basic-date-range-picker/index.ts"}}
 
 ## Component composition
 
@@ -31,7 +31,7 @@ Some [SingleInputDateRangeField props](/x/api/date-pickers/single-input-date-ran
 
 The value of the component can be uncontrolled or controlled.
 
-{{"demo": "DateRangePickerValue.js"}}
+{{"component": "file://./demos/date-range-picker-value/index.ts"}}
 
 :::info
 
@@ -55,7 +55,7 @@ The component is available in four variants:
 
 - The `StaticDateRangePicker` component which renders without the popover/modal and field.
 
-{{"demo": "ResponsiveDateRangePickers.js"}}
+{{"component": "file://./demos/responsive-date-range-pickers/index.ts"}}
 
 By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
@@ -69,7 +69,7 @@ Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-cave
 
 The component supports the `disabled`, `readOnly` and `name` form props:
 
-{{"demo": "FormPropsDateRangePickers.js"}}
+{{"component": "file://./demos/form-props-date-range-pickers/index.ts"}}
 
 :::success
 The `name` prop is not available when using the Date Range Picker with the Multi Input Date Range Field.
@@ -85,13 +85,13 @@ You can render up to 3 months at the same time using the `calendars` prop.
 This prop will be ignored on the mobile picker.
 :::
 
-{{"demo": "DateRangePickerCalendarProp.js"}}
+{{"component": "file://./demos/date-range-picker-calendar-prop/index.ts"}}
 
 ### Use a multi input field
 
 You can pass the `MultiInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
 
-{{"demo": "MultiInputDateRangePicker.js"}}
+{{"component": "file://./demos/multi-input-date-range-picker/index.ts"}}
 
 :::info
 You can find more information in a [dedicated documentation page section](/x/react-date-pickers/custom-field/#usage-inside-a-range-picker).
@@ -101,7 +101,7 @@ You can find more information in a [dedicated documentation page section](/x/rea
 
 To simplify range selection, you can add [shortcuts](/x/react-date-pickers/shortcuts/#range-shortcuts).
 
-{{"demo": "BasicRangeShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/basic-range-shortcuts/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Customize the field
 

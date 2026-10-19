@@ -4,14 +4,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import type { MenuProps } from '@mui/material/Menu';
-import Select, { SelectProps } from '@mui/material/Select';
+import type { SelectProps } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
-import {
+import type {
   GridRenderCellParams,
   GridRenderEditCellParams,
-  useGridApiContext,
 } from '@mui/x-data-grid';
+import { useGridApiContext } from '@mui/x-data-grid';
 
 export const INCOTERM_OPTIONS = [
   'EXW (Ex Works)',

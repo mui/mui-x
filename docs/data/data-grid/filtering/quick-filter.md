@@ -8,7 +8,7 @@ By default, the quick filter considers the input as a list of values separated b
 
 The quick filter is displayed by default when `showToolbar` is passed to the `<DataGrid/>` component. See the [Quick Filter component](/x/react-data-grid/components/quick-filter/) for examples on how to add the quick filter to a custom toolbar.
 
-{{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/quick-filtering-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Initialize the quick filter values
 
@@ -27,7 +27,7 @@ The quick filter values can be initialized by setting the `filter.filterModel.qu
 />
 ```
 
-{{"demo": "QuickFilteringInitialize.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/quick-filtering-initialize/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Including hidden columns
 
@@ -51,7 +51,7 @@ To include hidden columns in the quick filter, set `filterModel.quickFilterExclu
 In the demo below, the `company` column is hidden. You'll only see 5 results because rows where the `company` value is `'Warner Bros.'` are excluded.
 However, when you disable the `Exclude hidden columns` switch, the rows containing `'Warner'` in the `company` field will be displayed again, even though the column remains hidden.
 
-{{"demo": "QuickFilteringExcludeHiddenColumns.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/quick-filtering-exclude-hidden-columns/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Custom filtering logic
 
@@ -99,7 +99,7 @@ To remove the quick filtering on a given column set `getApplyQuickFilterFn: () =
 
 In the demo below, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on."
 
-{{"demo": "QuickFilteringCustomLogic.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/quick-filtering-custom-logic/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Parsing values
 
@@ -140,7 +140,7 @@ For example, the following parser lets you search words containing a space by us
 
 In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will return rows with country is Saint Martin or Saint Lucia.
 
-{{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/quick-filtering-customized-grid/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Ignore diacritics (accents)
 
@@ -155,7 +155,7 @@ If your dataset includes diacritics that need to be ignored, you can pass the `i
 
 In the demo below, you can use the **Ignore diacritics** toggle to see how the filtering behavior changes:
 
-{{"demo": "QuickFilteringDiacritics.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/quick-filtering-diacritics/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 :::info
 The `ignoreDiacritics` prop affects all columns and filter types, including [standard filters](/x/react-data-grid/filtering/), [quick filters](/x/react-data-grid/filtering/quick-filter/), and [header filters](/x/react-data-grid/filtering/header-filters/).

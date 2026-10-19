@@ -1,6 +1,10 @@
 {
   "version": "9.15.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui/mui-x.git"
+  },
   "scripts": {
     "preinstall": "npx only-allow@1.2.2 pnpm",
     "start": "pnpm i && pnpm docs:dev",
@@ -81,6 +85,7 @@
     "@mui/internal-bundle-size-checker": "1.1.1-canary.4",
     "@mui/internal-code-infra": "0.1.1-canary.12",
     "@mui/internal-core-docs": "catalog:",
+    "@mui/internal-docs-infra": "0.13.1-canary.14",
     "@mui/internal-markdown": "3.0.13-canary.0",
     "@mui/internal-netlify-cache": "0.1.1-canary.2",
     "@mui/internal-scripts": "3.0.12-canary.0",

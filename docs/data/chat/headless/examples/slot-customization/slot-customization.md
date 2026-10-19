@@ -20,7 +20,7 @@ Large applications that already standardize avatars, typography, and surfaces ca
 
 The demo below replaces the conversation list, message, and composer slots with custom components driven by owner state:
 
-{{"demo": "SlotCustomization.js"}}
+{{"component": "file://./demos/slot-customization/index.ts"}}
 
 ## Key primitives
 

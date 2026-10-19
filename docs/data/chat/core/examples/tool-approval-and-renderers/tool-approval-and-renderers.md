@@ -81,7 +81,7 @@ See [Type augmentation](/x/react-chat/core/examples/type-augmentation/) for deta
 
 The demo below combines the approval flow and a custom part renderer:
 
-{{"demo": "ToolApprovalAndRenderersHeadlessChat.js"}}
+{{"component": "file://./demos/tool-approval-and-renderers-headless-chat/index.ts"}}
 
 ## Key takeaways
 

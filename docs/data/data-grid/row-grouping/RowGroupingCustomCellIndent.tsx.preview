@@ -1,8 +1,0 @@
-<DataGridPremium
-  {...data}
-  sx={{
-    '--DataGrid-cellOffsetMultiplier': 6,
-  }}
-  apiRef={apiRef}
-  initialState={initialState}
-/>

@@ -1,7 +1,0 @@
-<ScatterChartPro
-  xAxis={[{ zoom: true }]}
-  yAxis={[{ zoom: true }]}
-  height={300}
-  series={series}
-  showToolbar
-/>

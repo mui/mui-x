@@ -65,7 +65,7 @@ const conversation = useConversation('selectors');
 
 The demo below shows the selector-driven thread pattern end to end:
 
-{{"demo": "SelectorDrivenThread.js"}}
+{{"component": "file://./demos/selector-driven-thread/index.ts"}}
 
 ## Key takeaways
 

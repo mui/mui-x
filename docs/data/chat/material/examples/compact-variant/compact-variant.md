@@ -12,7 +12,7 @@ githubLabel: 'scope: chat'
 Set `variant="compact"` on `<ChatBox />` to switch the Chat to a compact layout.
 When `features={{ conversationList: true }}` is enabled, both the conversation list and the message list adapt automatically.
 
-{{"demo": "CompactVariant.js", "bg": "inline"}}
+{{"component": "file://./demos/compact-variant/index.ts", "bg": "inline"}}
 
 ## Compact mode behavior
 

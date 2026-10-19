@@ -18,7 +18,7 @@ You can use the Prompt Field component directly if you want to build your own UI
 
 The demo below shows how to add a prompt field to a custom toolbar.
 
-{{"demo": "GridPromptField.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/grid-prompt-field/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ## Anatomy
 

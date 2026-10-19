@@ -33,7 +33,7 @@ The stream pauses at `approval-requested` until your UI calls `addToolApprovalRe
 
 Send the suggested prompt; the stream pauses at `approval-requested` until you approve or deny the call.
 
-{{"demo": "ToolApprovalFlow.js", "bg": "inline"}}
+{{"component": "file://./demos/tool-approval-flow/index.ts", "bg": "inline"}}
 
 ## Triggering an approval request
 
@@ -126,7 +126,7 @@ import { ChatConfirmation } from '@mui/x-chat';
 
 Preview the `ChatConfirmation` UI in different states:
 
-{{"demo": "ChatConfirmationPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-confirmation-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Custom labels
 

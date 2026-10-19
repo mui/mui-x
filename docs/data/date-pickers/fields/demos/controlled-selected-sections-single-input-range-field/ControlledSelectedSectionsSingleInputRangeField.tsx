@@ -1,0 +1,74 @@
+import * as React from 'react';
+import type { Dayjs } from 'dayjs';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import type {
+  FieldSectionType,
+  FieldSelectedSections,
+  FieldRef,
+} from '@mui/x-date-pickers/models';
+import type { DateRange, RangePosition } from '@mui/x-date-pickers-pro/models';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+
+export default function ControlledSelectedSectionsSingleInputRangeField() {
+  // @focus-start @padding 1
+  const [selectedSections, setSelectedSections] =
+    React.useState<FieldSelectedSections>(null);
+  const fieldRef = React.useRef<FieldRef<DateRange<Dayjs>>>(null);
+
+  const setSelectedSectionType = (
+    selectedSectionType: FieldSectionType,
+    position: RangePosition,
+  ) => {
+    if (!fieldRef.current) {
+      return;
+    }
+
+    fieldRef.current.focusField();
+    const sections = fieldRef.current.getSections().map((el) => el.type);
+    setSelectedSections(
+      position === 'start'
+        ? sections.indexOf(selectedSectionType)
+        : sections.lastIndexOf(selectedSectionType),
+    );
+  };
+
+  const renderDateHeader = (position: RangePosition) => (
+    <Stack spacing={2} sx={{ alignItems: 'center' }}>
+      <Typography sx={{ textTransform: 'capitalize' }}>{position}</Typography>
+      <Stack direction="row" spacing={1}>
+        {(['month', 'day', 'year'] as const).map((sectionName) => (
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => setSelectedSectionType(sectionName, position)}
+            key={sectionName}
+          >
+            {sectionName}
+          </Button>
+        ))}
+      </Stack>
+    </Stack>
+  );
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Stack spacing={2}>
+        <Stack spacing={2}>
+          {renderDateHeader('start')}
+          {renderDateHeader('end')}
+        </Stack>
+        <SingleInputDateRangeField
+          sx={{ minWidth: 300 }}
+          fieldRef={fieldRef}
+          selectedSections={selectedSections}
+          onSelectedSectionsChange={setSelectedSections}
+        />
+      </Stack>
+    </LocalizationProvider>
+  );
+  // @focus-end
+}

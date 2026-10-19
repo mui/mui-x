@@ -65,7 +65,7 @@ The filter button displays a tooltip on hover if there are active filters. Pass 
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
 
-{{"demo": "CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-rating-operator/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Wrap built-in operators
 
@@ -73,7 +73,7 @@ You can create custom operators that re-use the logic of the built-in ones.
 
 In the demo below, the selected rows are always visible even when they don't match the filtering rules.
 
-{{"demo": "CustomSelectionOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-selection-operator/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Multiple values operator
 
@@ -104,7 +104,7 @@ const operator: GridFilterOperator<any, number> = {
 };
 ```
 
-{{"demo": "CustomMultiValueOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-multi-value-operator/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Remove an operator
 
@@ -119,7 +119,7 @@ const filterOperators = getGridNumericOperators().filter(
 
 In the demo below, the `rating` column only has the `<` and `>` operators.
 
-{{"demo": "RemoveBuiltInOperators.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/remove-built-in-operators/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Custom input component
 
@@ -129,7 +129,7 @@ However, a custom component can be rendered instead.
 
 In the demo below, the `rating` column reuses the numeric operators but the rating component is used to enter the value of the filter.
 
-{{"demo": "CustomInputComponent.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-input-component/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Custom column types
 
@@ -173,13 +173,13 @@ More details are available in the demo.
 The value input is a special case, because it can contain a wide variety of components (the one provided or [your custom `InputComponent`](#create-a-custom-operator)).
 To pass props directly to the `InputComponent` and not its wrapper, you can use `valueInputProps.InputComponentProps`.
 
-{{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
+{{"component": "file://./demos/custom-filter-panel-content/index.ts", "bg": "inline"}}
 
 ### Customize the filter panel position
 
 The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
 
-{{"demo": "CustomFilterPanelPosition.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/custom-filter-panel-position/index.ts", "bg": "inline", "collapseToEmpty": true}}
 
 ### Apply filters on demand
 
@@ -187,7 +187,7 @@ By default, the filter panel writes directly to the grid's filter state, so each
 To apply changes on demand instead—for example, to avoid a [server request](/x/react-data-grid/filtering/server-side/) on every change—use the [`<GridFilterPanelBase />`](/x/api/data-grid/grid-filter-panel-base/) component, a controlled version of the filter panel driven by the `filterModel` and `onFilterModelChange` props rather than the grid state.
 Keep a _draft_ filter model in your own state, let the panel edit it, and sync it to the grid only when the user clicks **Apply**.
 
-{{"demo": "ApplyFiltersOnDemand.js", "bg": "inline"}}
+{{"component": "file://./demos/apply-filters-on-demand/index.ts", "bg": "inline"}}
 
 ## API
 

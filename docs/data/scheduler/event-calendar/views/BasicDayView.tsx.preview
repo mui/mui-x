@@ -1,6 +1,0 @@
-<StandaloneDayView
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
-/>

@@ -16,7 +16,7 @@ Each candlestick represents a time period and shows where the price started, whe
 
 This makes it easier to understand overall trends, compare price movements, and see how buying and selling activity evolves.
 
-{{"demo": "CandlestickOverview.js"}}
+{{"component": "file://./demos/candlestick-overview/index.ts"}}
 
 ## Basics
 
@@ -36,7 +36,7 @@ const data = [
 
 You can specify the time period with the `xAxis` prop. This axis must have a band scale and its data should have the same length as your series.
 
-{{"demo": "BasicCandlestick.js"}}
+{{"component": "file://./demos/basic-candlestick/index.ts"}}
 
 ### Using a dataset
 
@@ -44,7 +44,7 @@ You can use the `dataset` prop to provide OHLC data and `datasetKeys` on the ser
 
 See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
-{{"demo": "DatasetCandlestick.js"}}
+{{"component": "file://./demos/dataset-candlestick/index.ts"}}
 
 ## Value formatting
 
@@ -53,7 +53,7 @@ Use the series `valueFormatter` to customize how OHLC values appear in the toolt
 The `valueFormatter` receives the individual field value (a number) and a context object with `dataIndex` and `field` properties.
 The `field` property indicates which OHLC component is being formatted: `'open'`, `'high'`, `'low'`, or `'close'`.
 
-{{"demo": "CandlestickValueFormatter.js"}}
+{{"component": "file://./demos/candlestick-value-formatter/index.ts"}}
 
 ## Customization
 
@@ -61,7 +61,7 @@ Similarly to other chart types, you can customize the appearance and behavior of
 
 The example below shows how to define the formatting of values in both axes.
 
-{{"demo": "CustomizedCandlestick.js"}}
+{{"component": "file://./demos/customized-candlestick/index.ts"}}
 
 ### Color
 
@@ -70,7 +70,7 @@ The `upColor` is used when the close price is greater than or equal to the open 
 
 Those properties accept callback with type `(mode: 'light' | 'dark') => string`.
 
-{{"demo": "ColorCandlestick.js"}}
+{{"component": "file://./demos/color-candlestick/index.ts"}}
 
 ### Custom tooltip
 
@@ -107,4 +107,4 @@ A candlestick series requires a band x-axis, so you need to set the `scaleType` 
 
 Since the candlestick plot is a WebGL canvas, you need to render it inside a `ChartsWebGLLayer`. You can read more about layering in the [Layering](/x/react-charts/composition/#layering) documentation.
 
-{{"demo": "CandlestickComposition.js"}}
+{{"component": "file://./demos/candlestick-composition/index.ts"}}

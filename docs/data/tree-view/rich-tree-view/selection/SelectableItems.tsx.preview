@@ -1,6 +1,0 @@
-<RichTreeView
-  items={MUI_X_PRODUCTS}
-  defaultExpandedItems={['grid']}
-  checkboxSelection
-  isItemSelectionDisabled={isItemSelectionDisabled}
-/>

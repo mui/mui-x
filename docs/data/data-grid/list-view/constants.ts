@@ -1,4 +1,4 @@
-import { FileType } from './types';
+import type { FileType } from './types';
 
 export const FILE_TYPES: FileType[] = [
   'pdf',

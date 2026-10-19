@@ -53,7 +53,7 @@ Render it once per message and pass the required `messageId` prop — the compon
 When you pass a custom `renderItem` to `ChatMessageList`, the `features` prop is ignored — including `features.unreadMarker`. Embed `ChatUnreadMarker` inside your `renderItem` as shown below to keep the marker.
 :::
 
-{{"demo": "UnreadMarkerStandalone.js", "bg": "inline"}}
+{{"component": "file://./demos/unread-marker-standalone/index.ts", "bg": "inline"}}
 
 ## Accessibility
 
@@ -67,4 +67,4 @@ For the full keyboard navigation and screen-reader model of the message list, se
 
 The demo below shows the unread marker rendering above the first unread message:
 
-{{"demo": "ChatUnreadMarkerPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"component": "file://./demos/chat-unread-marker-playground/index.ts", "bg": "inline", "collapseToEmpty": true}}

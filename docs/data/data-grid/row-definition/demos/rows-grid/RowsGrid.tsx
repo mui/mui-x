@@ -1,0 +1,17 @@
+import { DataGrid } from '@mui/x-data-grid';
+
+export default function RowsGrid() {
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      {/* @focus-start */}
+      <DataGrid
+        columns={[{ field: 'name', rowHeader: true }]}
+        rows={[
+          { id: 1, name: 'React' },
+          { id: 2, name: 'MUI' },
+        ]}
+      />
+      {/* @focus-end */}
+    </div>
+  );
+}
