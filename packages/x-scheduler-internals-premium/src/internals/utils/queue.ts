@@ -1,7 +1,7 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
 import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { getDateKey, TimeoutManager } from '@mui/x-scheduler-internals/internals';
+import { TimeoutManager } from '@mui/x-scheduler-internals/internals';
 
 const MAX_CONCURRENT_REQUESTS = 3;
 const MAX_QUEUED_REQUESTS = 3;
@@ -24,8 +24,8 @@ export interface DateRange {
  * Format: "startTimestamp:endTimestamp"
  */
 function getDateRangeKey(adapter: Adapter, range: DateRange): string {
-  const startTimestamp = getDateKey(range.start, adapter);
-  const endTimestamp = getDateKey(range.end, adapter);
+  const startTimestamp = adapter.getTime(range.start);
+  const endTimestamp = adapter.getTime(range.end);
   return `${startTimestamp}:${endTimestamp}`;
 }
 

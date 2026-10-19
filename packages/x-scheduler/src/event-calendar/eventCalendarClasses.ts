@@ -32,6 +32,8 @@ export interface EventCalendarClasses
   mainPanel: string;
   /** Styles applied to the content section element. */
   content: string;
+  /** Styles applied to the element that hosts the responsive typography tokens. */
+  responsiveTypographyContainer: string;
   /** Styles applied to the mini calendar root element. */
   miniCalendar: string;
   /** Styles applied to the mini calendar header element. */
@@ -96,6 +98,8 @@ export interface EventCalendarClasses
   agendaViewWeekNumberLabel: string;
   /** Styles applied to agenda view week number row elements. */
   agendaViewWeekNumberRow: string;
+  /** Styles applied to the agenda view empty state element. */
+  agendaViewEmptyState: string;
   /** Styles applied to the month view root element. */
   monthView: string;
   /** Styles applied to the month view grid element. */
@@ -317,6 +321,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'sidePanel',
     'mainPanel',
     'content',
+    'responsiveTypographyContainer',
     'miniCalendar',
     'miniCalendarHeader',
     'miniCalendarNavigation',
@@ -349,6 +354,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'agendaViewEventsList',
     'agendaViewWeekNumberLabel',
     'agendaViewWeekNumberRow',
+    'agendaViewEmptyState',
     'monthView',
     'monthViewGrid',
     'monthViewHeader',
@@ -464,6 +470,7 @@ const slots = {
   sidePanel: ['sidePanel'],
   mainPanel: ['mainPanel'],
   content: ['content'],
+  responsiveTypographyContainer: ['responsiveTypographyContainer'],
   miniCalendar: ['miniCalendar'],
   miniCalendarHeader: ['miniCalendarHeader'],
   miniCalendarNavigation: ['miniCalendarNavigation'],
@@ -496,6 +503,7 @@ const slots = {
   agendaViewEventsList: ['agendaViewEventsList'],
   agendaViewWeekNumberLabel: ['agendaViewWeekNumberLabel'],
   agendaViewWeekNumberRow: ['agendaViewWeekNumberRow'],
+  agendaViewEmptyState: ['agendaViewEmptyState'],
   monthView: ['monthView'],
   monthViewGrid: ['monthViewGrid'],
   monthViewHeader: ['monthViewHeader'],

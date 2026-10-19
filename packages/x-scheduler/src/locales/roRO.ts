@@ -20,6 +20,9 @@ const roRODialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Șterge evenimentul',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Anulează',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -74,7 +77,6 @@ const roRODialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Toate evenimentele',
-  cancel: 'Anulează',
   confirm: 'Confirmă',
   onlyThis: 'Doar acest eveniment',
   radioGroupAriaLabel: 'Aria de aplicare a modificării evenimentelor recurente',
@@ -143,6 +145,9 @@ const roROCalendar: SchedulerCalendarTranslations = {
   previousTimeSpan: (timeSpan) => `${timeSpan} anterioară`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Săptămâna ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Se termină pe ${endDate}`,

@@ -38,6 +38,11 @@ export interface EventEditingLocaleText {
   deleteEventButtonAriaLabel: string;
   eventActionsToolbarAriaLabel: string;
   deleteEvent: string;
+  // DeleteConfirmationDialog
+  deleteConfirmationTitle: string;
+  deleteConfirmationMessage: string;
+  // Also used by the RecurringScopeDialog's own Cancel action.
+  cancel: string;
   // EventContextMenu (shown on right-click of an event, or on Space while it is focused)
   editEvent: string;
   // Replaces `editEvent` on a read-only event: opens the same non-editable view, so the label
@@ -115,7 +120,6 @@ export interface EventEditingLocaleText {
 
   // RecurringScopeDialog
   all: string;
-  cancel: string;
   confirm: string;
   onlyThis: string;
   radioGroupAriaLabel: string;
@@ -235,6 +239,9 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   previousTimeSpan: (view: CalendarView) => string;
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;
+
+  // AgendaView
+  agendaViewEmptyStateLabel: string;
 
   // EventItem
   eventItemMultiDayLabel: (endDate: string) => string;

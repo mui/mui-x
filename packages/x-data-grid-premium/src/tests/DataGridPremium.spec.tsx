@@ -13,7 +13,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            // @ts-expect-error
+            // @ts-expect-error The inferred row model has firstName, but no lastName property.
             groupingValueGetter: (value, row) => row.lastName,
           },
         ]}
@@ -34,7 +34,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            // @ts-expect-error
+            // @ts-expect-error The explicitly typed row model has firstName, but no lastName property.
             groupingValueGetter: (value, row) => row.lastName,
           },
         ]}
@@ -159,7 +159,7 @@ function FormulaFeatureInjectionTest() {
       {/* No feature dependencies at all is valid */}
       <DataGridPremium rows={[]} columns={[]} featureDependencies={{}} />
       {/* An arbitrary object is not a formula feature */}
-      {/* @ts-expect-error */}
+      {/* @ts-expect-error An arbitrary object does not implement the formula feature interface. */}
       <DataGridPremium rows={[]} columns={[]} featureDependencies={{ formula: {} }} />
     </div>
   );

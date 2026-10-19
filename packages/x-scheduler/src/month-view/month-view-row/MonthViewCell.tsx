@@ -232,6 +232,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       aria-colindex={colIndex}
       aria-labelledby={ariaLabelledBy}
       data-current={isToday || undefined}
+      aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
       data-weekend={isWeekend(adapter, day.value) || undefined}
       lockSurfaceType
