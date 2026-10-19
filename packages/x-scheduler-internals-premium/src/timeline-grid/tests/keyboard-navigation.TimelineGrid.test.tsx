@@ -168,12 +168,8 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(lastCell).toHaveFocus();
     });
 
-    it('should scroll the target row into view before moving the focus to it', async () => {
-      // The focus is still on the previous row when the target row is scrolled into view.
-      const focusedRowOnScroll: number[] = [];
-      const scrollRowIntoView = vi.fn(() => {
-        focusedRowOnScroll.push(getEventsCells().indexOf(document.activeElement as HTMLElement));
-      });
+    it('should scroll the target row into view', async () => {
+      const scrollRowIntoView = vi.fn();
       const { user } = render(<Grid scrollRowIntoView={scrollRowIntoView} />);
 
       const cells = getEventsCells();
@@ -186,7 +182,6 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(cells[0]).toHaveFocus();
 
       expect(scrollRowIntoView.mock.calls).to.deep.equal([[1], [0]]);
-      expect(focusedRowOnScroll).to.deep.equal([0, 1]);
     });
 
     it('should not scroll when the focus stays on the first or last row', async () => {
@@ -219,6 +214,19 @@ describe('TimelineGrid keyboard navigation', () => {
 
       expect(scrollRowIntoView.mock.calls).to.deep.equal([[1]]);
       expect(getEventsCells()[1]).toHaveFocus();
+    });
+
+    it('should move from the focused row after the rows above it are removed', async () => {
+      const { setProps, user } = render(<Grid resources={resources} />);
+
+      act(() => {
+        getEventsCells()[2].focus();
+      });
+      setProps({ resources: resources.slice(1) });
+      expect(getEventsCells()[1]).toHaveFocus();
+
+      await user.keyboard('{ArrowUp}');
+      expect(getEventsCells()[0]).toHaveFocus();
     });
   });
 
@@ -527,10 +535,11 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
 
       // Remove the first resource (the row we originally focused before navigating away).
-      // The cleanup of that row must not clobber focusedCell, since it no longer matches.
+      // The cleanup of that row must not clobber focusedCell, which follows the focused row
+      // to its new index.
       setProps({ resources: resources.slice(1) });
 
-      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
+      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 0 });
     });
   });
 

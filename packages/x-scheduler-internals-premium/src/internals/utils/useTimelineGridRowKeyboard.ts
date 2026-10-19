@@ -72,8 +72,8 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     }
 
     const typeIndex = columnTypes.indexOf(columnType);
-    // A key repeated before the target row is mounted still lands on this row: move from the
-    // focused cell, which is ahead of the DOM focus.
+    // A repeated key can still fire on this row before the next one mounts, so start from the
+    // focused cell.
     const rowIndex = focusedCell?.rowIndex ?? index;
 
     if (event.key === 'ArrowUp') {
@@ -93,14 +93,14 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
       if (typeIndex > 0) {
-        setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex: index });
+        setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex });
       }
       return true;
     }
     if (event.key === 'ArrowRight') {
       event.preventDefault();
       if (typeIndex < columnTypes.length - 1) {
-        setFocusedCell({ columnType: columnTypes[typeIndex + 1], rowIndex: index });
+        setFocusedCell({ columnType: columnTypes[typeIndex + 1], rowIndex });
       }
       return true;
     }

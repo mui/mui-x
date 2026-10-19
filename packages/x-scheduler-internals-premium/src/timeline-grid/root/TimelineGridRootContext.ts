@@ -16,7 +16,7 @@ export interface TimelineGridRootContext {
    */
   setFocusedCell: (coordinates: TimelineGridCellCoordinates) => void;
   /**
-   * Moves the focus to a cell of another row, scrolling that row into view first.
+   * Same as `setFocusedCell`, but scrolls the row into view first.
    */
   moveFocusToRow: (coordinates: TimelineGridCellCoordinates) => void;
   /**

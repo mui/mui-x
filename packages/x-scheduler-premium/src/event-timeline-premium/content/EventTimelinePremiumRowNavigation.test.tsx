@@ -4,7 +4,7 @@ import {
   EventTimelinePremium,
   eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
-import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-internals/models';
 import {
   absorbObserverFrames,
   createSchedulerRenderer,
@@ -42,21 +42,37 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
   const getTitleCell = (resourceId: string) =>
     document.querySelector<HTMLElement>(`[id$="-EventTimelinePremiumTitleCell-${resourceId}"]`);
 
-  // The visible rows are between the sticky header and the bottom of the scroller, or the
-  // bottom scrollbars, which are drawn over the rows (the wide hidden siblings of the grid).
-  function getVisibleBounds() {
-    const top = document.querySelector(`.${classes.headerRow}`)!.getBoundingClientRect().bottom;
-    const scroller = screen.getByRole('grid');
-    const bottomScrollbars = Array.from(
-      scroller.parentElement!.querySelectorAll(':scope > [aria-hidden="true"]'),
+  const getEventsCell = (resourceId: string) =>
+    document.querySelector<HTMLElement>(`.${classes.eventsCell}[data-resource-id="${resourceId}"]`);
+
+  // The bottom scrollbars are drawn over the rows: they are the wide hidden siblings of the grid.
+  function getBottomScrollbars() {
+    return Array.from(
+      screen.getByRole('grid').parentElement!.querySelectorAll(':scope > [aria-hidden="true"]'),
     )
       .map((element) => element.getBoundingClientRect())
       .filter((rect) => rect.width > rect.height);
+  }
+
+  // The visible rows are between the sticky header and the bottom of the scroller, or the
+  // bottom scrollbars.
+  function getVisibleBounds() {
+    const top = document.querySelector(`.${classes.headerRow}`)!.getBoundingClientRect().bottom;
+    const scroller = screen.getByRole('grid');
     const bottom = Math.min(
       scroller.getBoundingClientRect().top + scroller.clientHeight,
-      ...bottomScrollbars.map((rect) => rect.top),
+      ...getBottomScrollbars().map((rect) => rect.top),
     );
     return { top, bottom };
+  }
+
+  // The content only leaves room for the native scrollbar below the last row, so once the
+  // grid is scrolled to the end, the taller bottom scrollbar can still cover part of it.
+  function getCoveredHeightAtEnd() {
+    const scroller = screen.getByRole('grid');
+    const nativeScrollbarHeight = scroller.offsetHeight - scroller.clientHeight;
+    const bottomScrollbarHeight = Math.max(0, ...getBottomScrollbars().map((rect) => rect.height));
+    return Math.max(0, bottomScrollbarHeight - nativeScrollbarHeight);
   }
 
   function isScrolledToEnd() {
@@ -74,9 +90,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
       const scrollTop = screen.getByRole('grid').scrollTop;
       const cellRect = cell!.getBoundingClientRect();
       const visible = getVisibleBounds();
-      // The content only leaves room for the native scrollbar below the last row, so once the
-      // grid is scrolled to the end the bottom scrollbar can still cover a few pixels of it.
-      const bottomTolerance = isScrolledToEnd() ? 4 : 1;
+      const bottomTolerance = (isScrolledToEnd() ? getCoveredHeightAtEnd() : 0) + 1;
       expect(cellRect.top).to.be.at.least(visible.top - 1);
       expect(cellRect.bottom).to.be.at.most(visible.bottom + bottomTolerance);
       if (scrollTop > previousScrollTop) {
@@ -95,17 +109,25 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     });
   }
 
-  async function renderTimeline(options: { events?: SchedulerEvent[]; width?: number } = {}) {
-    const { events = [], width = 1200 } = options;
-    return renderSettled(
-      <div style={{ width, height: 400 }}>
+  function TestTimeline(props: {
+    resources: SchedulerResource[];
+    events: SchedulerEvent[];
+    width: number;
+  }) {
+    return (
+      <div style={{ width: props.width, height: 400 }}>
         <EventTimelinePremium
-          resources={resources}
-          events={events}
+          resources={props.resources}
+          events={props.events}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         />
-      </div>,
+      </div>
     );
+  }
+
+  async function renderTimeline(options: { events?: SchedulerEvent[]; width?: number } = {}) {
+    const { events = [], width = 1200 } = options;
+    return renderSettled(<TestTimeline resources={resources} events={events} width={width} />);
   }
 
   async function scrollToEnd() {
@@ -188,7 +210,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     // Wide enough for the whole day, so the grid doesn't scroll horizontally.
     const { user } = await renderTimeline({ width: 7000 });
     const scroller = screen.getByRole('grid');
-    expect(scroller.scrollWidth).to.equal(scroller.clientWidth);
+    expect(getBottomScrollbars()).to.have.length(0);
 
     act(() => {
       getTitleCell(resources[0].id)!.focus();
@@ -238,6 +260,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
 
     // The last mounted row: the rows below it are only mounted after the scroll.
     const lastMountedIndex = resources.findLastIndex((resource) => getTitleCell(resource.id));
+    expect(lastMountedIndex).to.be.lessThan(resources.length - 3);
     const lastMountedCell = getTitleCell(resources[lastMountedIndex].id)!;
     act(() => {
       lastMountedCell.focus({ preventScroll: true });
@@ -250,5 +273,67 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     fireEvent.keyDown(lastMountedCell, { key: 'ArrowDown' });
 
     await expectFocusedInView(resources[lastMountedIndex + 3].id, scrollTop);
+  });
+
+  it('should keep the row of a repeated key when moving to the next column', async () => {
+    await renderTimeline();
+
+    const lastMountedIndex = resources.findLastIndex((resource) => getTitleCell(resource.id));
+    const lastMountedCell = getTitleCell(resources[lastMountedIndex].id)!;
+    act(() => {
+      lastMountedCell.focus({ preventScroll: true });
+    });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowDown' });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowRight' });
+
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(getEventsCell(resources[lastMountedIndex + 1].id));
+    });
+  });
+
+  it('should make the events of a row reached with the arrow keys tabbable', async () => {
+    const events = resources.map((resource) =>
+      EventBuilder.new().resource(resource).singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR).build(),
+    );
+    const { user } = await renderTimeline({ events });
+    const targetIndex = 15;
+    expect(getEventsCell(resources[targetIndex].id)).to.equal(null);
+
+    act(() => {
+      getEventsCell(resources[0].id)!.focus();
+    });
+    for (let index = 1; index <= targetIndex; index += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await user.keyboard('{ArrowDown}');
+    }
+
+    await waitFor(() => {
+      const cell = getEventsCell(resources[targetIndex].id)!;
+      expect(document.activeElement).to.equal(cell);
+      expect(cell.querySelector('[data-occurrence-key]')!.getAttribute('tabindex')).to.equal('0');
+    });
+  });
+
+  it('should not scroll back to a row the focus left when its resource is removed', async () => {
+    const { setProps } = await renderTimeline();
+    const scroller = screen.getByRole('grid');
+
+    act(() => {
+      getTitleCell(resources[0].id)!.focus();
+    });
+    // Scrolling away unmounts the focused row, so the focus is lost. Away from the end, so the
+    // removal doesn't clamp the scroll.
+    act(() => {
+      scroller.scrollTop = 1000;
+    });
+    await absorbObserverFrames();
+    expect(getTitleCell(resources[0].id)).to.equal(null);
+    const scrollTop = scroller.scrollTop;
+
+    setProps({ resources: resources.slice(1) });
+    await absorbObserverFrames();
+
+    expect(scroller.scrollTop).to.equal(scrollTop);
+    expect(document.activeElement).to.equal(document.body);
   });
 });

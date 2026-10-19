@@ -855,8 +855,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const hasScrollY = dimensions.hasScrollY;
   const hasBottomScrollbar = hasScrollX || hasTitleOverflow;
 
-  // Arrow keys move the focus to rows the virtualizer may not have mounted yet, so the row is
-  // scrolled into view first, just enough to show it whole.
+  // The target row may not be mounted yet: scroll just enough to show it whole.
   const scrollRowIntoView = useStableCallback((rowIndex: number) => {
     const scroller = gridRef.current;
     const state = virtualizer.store.state;
@@ -867,8 +866,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     }
     const rowBottom = positions[rowIndex + 1] ?? currentPageTotalHeight;
     const { viewportInnerSize, scrollbarSize } = Dimensions.selectors.dimensions(state);
-    // `viewportInnerSize` already excludes the native scrollbar: swap it for the bottom
-    // scrollbars, which are drawn over the rows and are at least 14px tall.
+    // `viewportInnerSize` excludes the native scrollbar; use the bottom scrollbars instead,
+    // which are drawn over the rows.
     const viewportHeight =
       viewportInnerSize.height +
       (hasScrollX ? scrollbarSize : 0) -
