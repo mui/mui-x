@@ -24,12 +24,13 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const height = gridDensityHeight(scale);
   // The checkbox column's width is a colDef number fed to the virtualizer;
   // `checkboxColDef` is spread over the built-in definition, so the width
-  // rides it. Its 50px `minWidth` would clamp a narrower width, so both move.
-  const checkboxColumnWidth = scale.touchTarget + 2 * scale.spacing.xSmall;
+  // rides it. Master leaves xxSmall on each side of the checkbox, the same
+  // inset as the row height, so the cell is square. Its 50px `minWidth`
+  // would clamp a narrower width, so both move.
   addDefaultProps(components, 'MuiDataGrid', {
     rowHeight: height,
     columnHeaderHeight: height,
-    checkboxColDef: { width: checkboxColumnWidth, minWidth: checkboxColumnWidth },
+    checkboxColDef: { width: height, minWidth: height },
   });
 
   // Keyed spacing: `@mui/material`'s enhancer wraps `theme.spacing` so a scale

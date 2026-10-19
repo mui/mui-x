@@ -17,7 +17,7 @@ describe('enhanceDensity', () => {
     expect(theme.components?.MuiDataGrid?.defaultProps).toEqual({
       rowHeight: 40,
       columnHeaderHeight: 40,
-      checkboxColDef: { width: 48, minWidth: 48 },
+      checkboxColDef: { width: 40, minWidth: 40 },
     });
   });
 
@@ -157,7 +157,7 @@ describe('enhanceDensity', () => {
     expect(theme.components?.MuiDataGrid?.defaultProps).toEqual({
       rowHeight: 30,
       columnHeaderHeight: 40,
-      checkboxColDef: { width: 48, minWidth: 48 },
+      checkboxColDef: { width: 40, minWidth: 40 },
       density: 'compact',
     });
   });
@@ -168,7 +168,7 @@ describe('enhanceDensity', () => {
     );
     expect(theme.components?.MuiDataGrid?.defaultProps?.checkboxColDef).toEqual({
       width: 60,
-      minWidth: 48,
+      minWidth: 40,
     });
   });
 
