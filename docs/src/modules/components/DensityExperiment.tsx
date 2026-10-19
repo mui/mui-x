@@ -7,17 +7,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
-import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import {
-  createTheme,
-  ThemeProvider,
-  unstable_enhanceDensity as enhanceMaterial,
-  Theme,
-} from '@mui/material/styles';
 import {
   DataGridPremium,
   GridActionsCellItem,
@@ -26,6 +18,7 @@ import {
   GridDeleteIcon,
   unstable_enhanceDensity as enhanceGrid,
 } from '@mui/x-data-grid-premium';
+import DensityExperimentShell, { createEnhancedTheme } from './DensityExperimentShell';
 
 const teams = ['Core', 'Grid', 'Pickers', 'Charts', 'Tree View'];
 const tags = ['math', 'poetry', 'engines', 'notes', 'navy', 'logic', 'crypto'];
@@ -68,79 +61,14 @@ const rows = Array.from({ length: 40 }, (_, i) => ({
       : 'Short note.',
 }));
 
-const vanilla = createTheme({ cssVariables: true });
-// Own prefix: a nested ThemeProvider that reuses the outer theme's prefix skips
-// its style sheet, so every `var(--mui-*)` ref would fall back to the literal.
-const enhanced = enhanceGrid(
-  enhanceMaterial(createTheme({ cssVariables: { cssVarPrefix: 'density' } })),
-);
-
-function Column({ title, theme }: { title: string; theme: Theme }) {
-  const scale = theme.unstable_densityScale;
-  return (
-    <ThemeProvider theme={theme}>
-      <Stack spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-        <Typography variant="h6">{title}</Typography>
-        <Stack direction="row" spacing={2} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Button variant="contained">Contained</Button>
-          <Button variant="outlined">Outlined</Button>
-          <TextField label="Search" />
-          <FormControlLabel control={<Checkbox defaultChecked />} label="Checkbox" />
-          <Chip label="Chip" onDelete={() => {}} />
-        </Stack>
-        <Box sx={{ height: 640 }}>
-          <DataGridPremium
-            rows={rows}
-            columns={columns}
-            showToolbar
-            checkboxSelection
-            headerFilters
-            rowReordering
-            aiAssistant
-            onPrompt={async () => ({
-              select: -1,
-              filters: [],
-              aggregation: {},
-              sorting: [],
-              grouping: [],
-              pivoting: {},
-            })}
-            initialState={{
-              pagination: { paginationModel: { pageSize: 10 } },
-              aggregation: { model: { score: 'sum' } },
-            }}
-            pageSizeOptions={[10, 25]}
-          />
-        </Box>
-        <Box
-          component="pre"
-          sx={{
-            m: 0,
-            p: 1.5,
-            fontSize: 12,
-            bgcolor: 'action.hover',
-            borderRadius: 1,
-            overflow: 'auto',
-          }}
-        >
-          {`theme.unstable_densityScale = ${scale ? JSON.stringify(scale, null, 2) : 'undefined'}\n`}
-          {`components.MuiDataGrid.defaultProps = ${JSON.stringify(theme.components?.MuiDataGrid?.defaultProps ?? {})}\n`}
-          {`styleOverrides slots: ${Object.keys(theme.components?.MuiDataGrid?.styleOverrides ?? {}).length}`}
-        </Box>
-      </Stack>
-    </ThemeProvider>
-  );
-}
+const enhanced = createEnhancedTheme(enhanceGrid);
 
 export default function DensityExperiment() {
   return (
-    <ThemeProvider theme={vanilla}>
-      <CssBaseline />
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h5" sx={{ mb: 0.5 }}>
-          Data Grid density — material enhancer + grid enhancer chain
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+    <DensityExperimentShell
+      title="Data Grid density — material enhancer + grid enhancer chain"
+      description={
+        <React.Fragment>
           Right column:{' '}
           <code>
             enhanceGrid(enhanceMaterial(createTheme(
@@ -148,12 +76,46 @@ export default function DensityExperiment() {
           </code>{' '}
           with the Premium enhancer (Pro and community underneath). Open the columns panel, filter
           panel, pivot sidebar and AI assistant, edit a cell, expand the quick filter.
-        </Typography>
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={4}>
-          <Column title="Vanilla" theme={vanilla} />
-          <Column title="Enhanced" theme={enhanced} />
-        </Stack>
-      </Box>
-    </ThemeProvider>
+        </React.Fragment>
+      }
+      enhanced={enhanced}
+      componentNames={['MuiDataGrid']}
+    >
+      {() => (
+        <React.Fragment>
+          <Stack direction="row" spacing={2} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+            <Button variant="contained">Contained</Button>
+            <Button variant="outlined">Outlined</Button>
+            <TextField label="Search" />
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Checkbox" />
+            <Chip label="Chip" onDelete={() => {}} />
+          </Stack>
+          <Box sx={{ height: 640 }}>
+            <DataGridPremium
+              rows={rows}
+              columns={columns}
+              showToolbar
+              checkboxSelection
+              headerFilters
+              rowReordering
+              aiAssistant
+              onPrompt={async () => ({
+                select: -1,
+                filters: [],
+                aggregation: {},
+                sorting: [],
+                grouping: [],
+                pivoting: {},
+              })}
+              initialState={{
+                pagination: { paginationModel: { pageSize: 10 } },
+                aggregation: { model: { score: 'sum' } },
+              }}
+              pageSizeOptions={[10, 25]}
+            />
+          </Box>
+        </React.Fragment>
+      )}
+    </DensityExperimentShell>
   );
 }
