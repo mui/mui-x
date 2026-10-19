@@ -2,9 +2,9 @@
 
 ## 9.16.0
 
-_Oct 16, 2026_
+_Oct 20, 2026_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Excel export in the Charts Premium, with a toolbar entry
 - 👆 Data Grid row reordering on touch and pen devices
@@ -18,7 +18,7 @@ Special thanks go out to these community members for their valuable contribution
 @aozmekik, @cpruijsen, @mustafajw07, @reckter, @vicuts
 
 The following team members contributed to this release:
-@arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @michelengelen, @noraleonte, @rita-codes
+@arminmeh, @brijeshb42, @cherniavskii, @Janpot, @JCQuintas, @LukasTy, @michelengelen, @noraleonte, @rita-codes
 
 ### Data Grid
 
@@ -144,6 +144,8 @@ Internal changes.
 - [code-infra] Fix ts-ignore lint error in AdapterDayjs test (#23843) @LukasTy
 - [code-infra] Group major and minor pragmatic-drag-and-drop renovate updates (#23782) @LukasTy
 - [code-infra] Use flake-fix dry-run (#23849) @Janpot
+- [code-infra] Skip `MUI.GoogleLatin` in changelogs (#23934) @Janpot
+- [code-infra] Wait for `data-screenshot-pending` before regression screenshots (#23772) @Janpot
 - [x-internals] Restore removed exports and pin internal dependencies (#23907) @LukasTy
 - [x-internals] Fix `useStoreEffect` in Strict Mode (#23857) @cherniavskii
 
@@ -153,6 +155,7 @@ Internal changes.
 - [infra] Remove engines.node from UI packages (#23786) @Janpot
 - [infra] Require explanations for TypeScript error suppressions (#23789) @brijeshb42
 - [pnpm] Prune stale minimumReleaseAgeExclude entries (#23666) @Janpot
+- [virtualizer] Render the rows and columns in view on small scrolls in controlled layout (#23865) @rita-codes
 
 ## 9.15.0
 
