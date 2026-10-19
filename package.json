@@ -88,7 +88,7 @@
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
     "@netlify/types": "3.2.0",
-    "@next/eslint-plugin-next": "16.4.0",
+    "@next/eslint-plugin-next": "16.4.2",
     "@octokit/plugin-retry": "8.1.1",
     "@octokit/rest": "22.0.1",
     "@playwright/test": "catalog:",
