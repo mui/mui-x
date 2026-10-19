@@ -6,7 +6,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'saat',
   minutes: 'dakika',
   seconds: 'saniye',
-  meridiem: 'öğleden sonra',
+  meridiem: 'öğleden önce/sonra',
 };
 
 const trTRPickers: Partial<PickersLocaleText> = {
@@ -15,8 +15,8 @@ const trTRPickers: Partial<PickersLocaleText> = {
   nextMonth: 'Sonraki ay',
 
   // View navigation
-  openPreviousView: 'Sonraki görünüm',
-  openNextView: 'Önceki görünüm',
+  openPreviousView: 'Önceki görünüm',
+  openNextView: 'Sonraki görünüm',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'yıl görünümü açık, takvim görünümüne geç'
@@ -25,13 +25,13 @@ const trTRPickers: Partial<PickersLocaleText> = {
   // DateRange labels
   start: 'Başlangıç',
   end: 'Bitiş',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Başlangıç tarihi',
+  startTime: 'Başlangıç saati',
+  endDate: 'Bitiş tarihi',
+  endTime: 'Bitiş saati',
 
   // Action bar
-  cancelButtonLabel: 'iptal',
+  cancelButtonLabel: 'İptal',
   clearButtonLabel: 'Temizle',
   okButtonLabel: 'Tamam',
   todayButtonLabel: 'Bugün',
@@ -42,7 +42,7 @@ const trTRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Tarih & Saat seç',
   timePickerToolbarTitle: 'Saat seç',
   dateRangePickerToolbarTitle: 'Tarih aralığı seçin',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Saat aralığı seçin',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -52,7 +52,7 @@ const trTRPickers: Partial<PickersLocaleText> = {
   secondsClockNumberText: (seconds) => `${seconds} saniye`,
 
   // Digital clock labels
-  selectViewText: (view) => `Seç ${timeViews[view]}`,
+  selectViewText: (view) => `${timeViews[view]} seç`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Hafta numarası',
@@ -65,8 +65,9 @@ const trTRPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Tarih seçin, seçilen tarih: ${formattedDate}` : 'Tarih seç',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Saat seçin, seçilen saat: ${formattedTime}` : 'Saat seç',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
-  // fieldClearLabel: 'Clear',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `Aralık seçin, seçilen aralık: ${formattedRange}` : 'Aralık seç',
+  fieldClearLabel: 'Temizle',
 
   // Table labels
   timeTableLabel: 'saat seç',
@@ -83,17 +84,17 @@ const trTRPickers: Partial<PickersLocaleText> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Yıl',
+  month: 'Ay',
+  day: 'Gün',
+  weekDay: 'Haftanın günü',
+  hours: 'Saat',
+  minutes: 'Dakika',
+  seconds: 'Saniye',
+  meridiem: 'Öğleden önce/sonra',
 
   // Common
-  // empty: 'Empty',
+  empty: 'Boş',
 };
 
 export const trTR = getPickersLocalization(trTRPickers);

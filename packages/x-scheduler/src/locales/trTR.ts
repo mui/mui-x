@@ -7,165 +7,188 @@ import type {
   SchedulerTimelineTranslations,
 } from '../utils/getSchedulerLocalization';
 
+const colorNames: Record<string, string> = {
+  red: 'kırmızı',
+  pink: 'pembe',
+  purple: 'mor',
+  indigo: 'çivit mavisi',
+  blue: 'mavi',
+  teal: 'turkuaz',
+  green: 'yeşil',
+  lime: 'limon yeşili',
+  amber: 'kehribar',
+  orange: 'turuncu',
+  grey: 'gri',
+};
+
+const viewNames: Record<string, string> = {
+  day: 'Gün',
+  week: 'Hafta',
+  month: 'Ay',
+  agenda: 'Ajanda',
+};
+
+const timeSpanNames: Record<string, string> = {
+  day: 'gün',
+  week: 'hafta',
+  month: 'ay',
+  agenda: 'dönem',
+};
+
 const trTRDialog: SchedulerDialogTranslations = {
   // EventDialog
-  // colorPickerLabel: 'Event color',
-  // colorSectionLabel: 'Color',
-  // dateTimeSectionLabel: 'Date & time',
-  // resourceColorSectionLabel: 'Resource & color',
-  // allDayLabel: 'All Day',
-  // closeButtonAriaLabel: 'Close',
-  // closeButtonLabel: 'Close',
-  // editEventButtonAriaLabel: 'Edit event',
-  // deleteEventButtonAriaLabel: 'Delete event',
-  // eventActionsToolbarAriaLabel: 'Event actions',
-  // deleteEvent: 'Delete event',
-  // deleteConfirmationTitle: 'Delete this event?',
-  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
-  // cancel: 'Cancel',
-  // editEvent: 'Edit event',
-  // showEventDetails: 'Show details',
-  // eventContextMenuAriaLabel: 'Event actions',
-  // descriptionLabel: 'Description',
-  // endDateLabel: 'End date',
-  // endTimeLabel: 'End time',
-  // eventTitleAriaLabel: 'Event title',
-  // generalTabLabel: 'General',
-  // labelNoResource: 'No resource',
-  // labelInvalidResource: 'Invalid resource',
-  // recurrenceLabel: 'Recurrence',
-  // recurrenceNoRepeat: "Don't repeat",
-  // recurrenceCustomRepeat: 'Custom repeat rule',
-  // recurrenceDailyPresetLabel: 'Repeats daily',
-  // recurrenceDailyFrequencyLabel: 'days',
-  // recurrenceEndsLabel: 'Ends',
-  // recurrenceEndsAfterLabel: 'After',
-  // recurrenceEndsNeverLabel: 'Never',
-  // recurrenceEndsUntilLabel: 'Until',
-  // recurrenceEndsTimesLabel: 'times',
-  // recurrenceEveryLabel: 'Every',
-  // recurrenceRepeatLabel: 'Repeat',
-  // recurrenceTabLabel: 'Recurrence',
-  // recurrenceTimezoneLabel: timezone => `Timezone: ${timezone}`,
-  // recurrenceLabelTimezoneSuffix: timezone => `(${timezone})`,
-  // recurrenceMainSelectCustomLabel: 'Recurrence',
-  // recurrenceWeeklyFrequencyLabel: 'weeks',
-  // recurrenceWeeklyPresetLabel: ({
-  //   weekdayName
-  // }) => `Repeats weekly on ${weekdayName}`,
-  // recurrenceMonthlyFrequencyLabel: 'months',
-  // recurrenceMonthlyDayOfMonthLabel: dayNumber => `Day ${dayNumber}`,
-  // recurrenceMonthlyLastWeekAriaLabel: ({
-  //   weekdayName
-  // }) => `${weekdayName} of the last week of the month`,
-  // recurrenceMonthlyLastWeekLabel: ({
-  //   weekdayName
-  // }) => `${weekdayName} last week`,
-  // recurrenceMonthlyPresetLabel: dayNumber => `Repeats monthly on day ${dayNumber}`,
-  // recurrenceMonthlyWeekNumberAriaLabel: ({
-  //   ord,
-  //   weekdayName
-  // }) => `${weekdayName} week ${ord} of the month`,
-  // recurrenceMonthlyWeekNumberLabel: ({
-  //   ord,
-  //   weekdayName
-  // }) => `${weekdayName} week ${ord}`,
-  // recurrenceWeeklyMonthlySpecificInputsLabel: 'On',
-  // recurrenceYearlyFrequencyLabel: 'years',
-  // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
-  // noResourceAriaLabel: 'No specific resource',
-  // selectColorAriaLabel: color => `Select ${color} as event color`,
-  // resourceLabel: 'Resource',
-  // invalidDateError: 'Enter a valid date.',
-  // invalidTimeError: 'Enter a valid time.',
-  // requiredResourceError: 'A resource is required.',
-  // saveChanges: 'Save',
-  // startDateAfterEndDateError: 'End date cannot be before start date.',
-  // startDateLabel: 'Start date',
-  // startTimeAfterEndTimeError: 'End time must be after start time.',
-  // startTimeLabel: 'Start time',
+  colorPickerLabel: 'Etkinlik rengi',
+  colorSectionLabel: 'Renk',
+  dateTimeSectionLabel: 'Tarih ve saat',
+  resourceColorSectionLabel: 'Kaynak ve renk',
+  allDayLabel: 'Tüm gün',
+  closeButtonAriaLabel: 'Kapat',
+  closeButtonLabel: 'Kapat',
+  editEventButtonAriaLabel: 'Etkinliği düzenle',
+  deleteEventButtonAriaLabel: 'Etkinliği sil',
+  eventActionsToolbarAriaLabel: 'Etkinlik işlemleri',
+  deleteEvent: 'Etkinliği sil',
+  deleteConfirmationTitle: 'Bu etkinlik silinsin mi?',
+  deleteConfirmationMessage: 'Bu işlem geri alınamaz. Devam etmek istediğinizden emin misiniz?',
+  cancel: 'İptal',
+  editEvent: 'Etkinliği düzenle',
+  showEventDetails: 'Ayrıntıları göster',
+  eventContextMenuAriaLabel: 'Etkinlik işlemleri',
+  descriptionLabel: 'Açıklama',
+  endDateLabel: 'Bitiş tarihi',
+  endTimeLabel: 'Bitiş saati',
+  eventTitleAriaLabel: 'Etkinlik başlığı',
+  generalTabLabel: 'Genel',
+  labelNoResource: 'Kaynak yok',
+  labelInvalidResource: 'Geçersiz kaynak',
+  recurrenceLabel: 'Tekrarlama',
+  recurrenceNoRepeat: 'Tekrarlanmaz',
+  recurrenceCustomRepeat: 'Özel tekrarlama kuralı',
+  recurrenceDailyPresetLabel: 'Her gün tekrarlanır',
+  recurrenceDailyFrequencyLabel: 'günde bir',
+  recurrenceEndsLabel: 'Bitiş',
+  recurrenceEndsAfterLabel: 'Toplam',
+  recurrenceEndsNeverLabel: 'Hiçbir zaman',
+  recurrenceEndsUntilLabel: 'Şu tarihe kadar',
+  recurrenceEndsTimesLabel: 'tekrardan sonra',
+  recurrenceEveryLabel: 'Her',
+  recurrenceRepeatLabel: 'Tekrar',
+  recurrenceTabLabel: 'Tekrarlama',
+  recurrenceTimezoneLabel: (timezone) => `Saat dilimi: ${timezone}`,
+  recurrenceLabelTimezoneSuffix: (timezone) => `(${timezone})`,
+  recurrenceMainSelectCustomLabel: 'Tekrarlama',
+  recurrenceWeeklyFrequencyLabel: 'haftada bir',
+  recurrenceWeeklyPresetLabel: ({ weekdayName }) => `Her hafta ${weekdayName} günü tekrarlanır`,
+  recurrenceMonthlyFrequencyLabel: 'ayda bir',
+  recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `${dayNumber}. gün`,
+  recurrenceMonthlyLastWeekAriaLabel: ({ weekdayName }) => `Ayın son ${weekdayName} günü`,
+  recurrenceMonthlyLastWeekLabel: ({ weekdayName }) => `Son ${weekdayName}`,
+  recurrenceMonthlyPresetLabel: (dayNumber) => `Her ayın ${dayNumber}. günü tekrarlanır`,
+  recurrenceMonthlyWeekNumberAriaLabel: ({ ord, weekdayName }) =>
+    `Ayın ${ord}. ${weekdayName} günü`,
+  recurrenceMonthlyWeekNumberLabel: ({ ord, weekdayName }) => `${ord}. ${weekdayName}`,
+  recurrenceWeeklyMonthlySpecificInputsLabel: 'Şu günlerde',
+  recurrenceYearlyFrequencyLabel: 'yılda bir',
+  recurrenceYearlyPresetLabel: (date) => `Her yıl ${date} tarihinde tekrarlanır`,
+  noResourceAriaLabel: 'Belirli bir kaynak yok',
+  selectColorAriaLabel: (color) => `Etkinlik rengi olarak ${colorNames[color] ?? color} seç`,
+  resourceLabel: 'Kaynak',
+  invalidDateError: 'Geçerli bir tarih girin.',
+  invalidTimeError: 'Geçerli bir saat girin.',
+  requiredResourceError: 'Kaynak seçimi zorunludur.',
+  saveChanges: 'Kaydet',
+  startDateAfterEndDateError: 'Bitiş tarihi başlangıç tarihinden önce olamaz.',
+  startDateLabel: 'Başlangıç tarihi',
+  startTimeAfterEndTimeError: 'Bitiş saati başlangıç saatinden sonra olmalıdır.',
+  startTimeLabel: 'Başlangıç saati',
+
   // RecurringScopeDialog
-  // all: 'All events',
-  // confirm: 'Confirm',
-  // onlyThis: 'Only this event',
-  // radioGroupAriaLabel: 'Editing recurring events scope',
-  // thisAndFollowing: 'This and following events',
-  // title: 'Apply this change to:',
+  all: 'Tüm etkinlikler',
+  confirm: 'Onayla',
+  onlyThis: 'Yalnızca bu etkinlik',
+  radioGroupAriaLabel: 'Tekrarlanan etkinliklerde düzenleme kapsamı',
+  thisAndFollowing: 'Bu ve sonraki etkinlikler',
+  title: 'Bu değişikliği şunlara uygula:',
 };
 
 const trTREvent: SchedulerEventTranslations = {
   // Event accessible name
-  // eventAriaLabelTimeRange: (start, end) => `${start} to ${end}`,
-  // eventAriaLabelDateRange: (start, end) => `From ${start} to ${end}`,
-  // eventAriaLabelAllDay: 'All day',
-  // eventAriaLabelRecurring: 'Recurring',
-  // resourceAriaLabel: resourceName => `Resource: ${resourceName}`,
-  // eventAriaLabel: ({
-  //   title,
-  //   when,
-  //   date,
-  //   resource,
-  //   recurring
-  // }) => [title, when, date, resource, recurring].filter(Boolean).join(', '),
+  eventAriaLabelTimeRange: (start, end) => `${start} ile ${end} arası`,
+  eventAriaLabelDateRange: (start, end) => `${start} ile ${end} arası`,
+  eventAriaLabelAllDay: 'Tüm gün',
+  eventAriaLabelRecurring: 'Tekrarlanan',
+  resourceAriaLabel: (resourceName) => `Kaynak: ${resourceName}`,
+  eventAriaLabel: ({ title, when, date, resource, recurring }) =>
+    [title, when, date, resource, recurring].filter(Boolean).join(', '),
 };
 
 const trTRCalendar: SchedulerCalendarTranslations = {
   // ResourcesTree
-  // resourcesLabel: 'Resources',
+  resourcesLabel: 'Kaynaklar',
+
   // ViewSwitcher
-  // agenda: 'Agenda',
-  // day: 'Day',
-  // month: 'Month',
-  // other: 'Other',
-  // today: 'Today',
-  // week: 'Week',
-  // time: 'Time',
-  // days: 'Days',
-  // months: 'Months',
-  // weeks: 'Weeks',
-  // years: 'Years',
+  agenda: 'Ajanda',
+  day: 'Gün',
+  month: 'Ay',
+  other: 'Diğer',
+  today: 'Bugün',
+  week: 'Hafta',
+  time: 'Saat',
+  days: 'Günler',
+  months: 'Aylar',
+  weeks: 'Haftalar',
+  years: 'Yıllar',
+
   // DateNavigator
-  // closeSidePanel: 'Close side panel',
-  // openSidePanel: 'Open side panel',
+  closeSidePanel: 'Yan paneli kapat',
+  openSidePanel: 'Yan paneli aç',
+
   // SidePanelDrawer (small screens)
-  // openMenu: 'Open menu',
+  openMenu: 'Menüyü aç',
+
   // Preferences menu
-  // amPm12h: '12-hour (1:00PM)',
-  // hour24h: '24-hour (13:00)',
-  // preferencesMenu: 'Preferences',
-  // showWeekends: 'Show weekends',
-  // showEmptyDaysInAgenda: 'Show empty days',
-  // showWeekNumber: 'Show week number',
-  // timeFormat: 'Time format',
-  // viewSpecificOptions: view => `${view} view options`,
-  // startWeekOn: 'Start week on',
-  // weekdaySunday: 'Sunday',
-  // weekdayMonday: 'Monday',
-  // weekdaySaturday: 'Saturday',
+  amPm12h: '12 saatlik (1:00 ÖS)',
+  hour24h: '24 saatlik (13:00)',
+  preferencesMenu: 'Tercihler',
+  showWeekends: 'Hafta sonlarını göster',
+  showEmptyDaysInAgenda: 'Boş günleri göster',
+  showWeekNumber: 'Hafta numarasını göster',
+  timeFormat: 'Saat biçimi',
+  viewSpecificOptions: (view) => `${viewNames[view] ?? view} görünümü seçenekleri`,
+  startWeekOn: 'Haftanın ilk günü',
+  weekdaySunday: 'Pazar',
+  weekdayMonday: 'Pazartesi',
+  weekdaySaturday: 'Cumartesi',
+
   // WeekView
-  // allDay: 'All day',
-  // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
-  // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
-  // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
-  // weekAbbreviation: 'W',
-  // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
+  allDay: 'Tüm gün',
+  hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} tane daha`,
+  nextTimeSpan: (timeSpan) => `Sonraki ${timeSpanNames[timeSpan] ?? timeSpan}`,
+  previousTimeSpan: (timeSpan) => `Önceki ${timeSpanNames[timeSpan] ?? timeSpan}`,
+  weekAbbreviation: 'H',
+  weekNumberAriaLabel: (weekNumber) => `Hafta ${weekNumber}`,
+
   // AgendaView
-  // agendaViewEmptyStateLabel: 'No upcoming events',
+  agendaViewEmptyStateLabel: 'Yaklaşan etkinlik yok',
+
   // EventItem
-  // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
+  eventItemMultiDayLabel: (endDate) => `Bitiş: ${endDate}`,
+
   // MiniCalendar
-  // miniCalendarLabel: 'Calendar',
-  // miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
-  // miniCalendarGoToNextMonth: 'Show next month in calendar',
+  miniCalendarLabel: 'Takvim',
+  miniCalendarGoToPreviousMonth: 'Takvimde önceki ayı göster',
+  miniCalendarGoToNextMonth: 'Takvimde sonraki ayı göster',
+
   // Main calendar region
-  // calendarContentAriaLabel: 'Calendar content',
+  calendarContentAriaLabel: 'Takvim içeriği',
+
   // Timeline title sub grid
-  // timelineResourceTitleHeader: 'Resource title',
+  timelineResourceTitleHeader: 'Kaynak adı',
 };
 
 const trTRTimeline: SchedulerTimelineTranslations = {
   // Timeline title sub grid
-  // timelineResourceTitleHeader: 'Resource title',
+  timelineResourceTitleHeader: 'Kaynak adı',
 };
 
 export const trTR: SchedulerLocalization = getSchedulerLocalization({
