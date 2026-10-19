@@ -37,9 +37,9 @@
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-charts": "workspace:^",
-    "@mui/x-charts-vendor": "workspace:^",
-    "@mui/x-internal-gestures": "workspace:^",
-    "@mui/x-internals": "workspace:^",
+    "@mui/x-charts-vendor": "workspace:*",
+    "@mui/x-internal-gestures": "workspace:*",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"
