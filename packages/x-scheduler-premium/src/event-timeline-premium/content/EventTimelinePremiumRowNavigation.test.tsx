@@ -275,7 +275,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     await expectFocusedInView(resources[lastMountedIndex + 3].id, scrollTop);
   });
 
-  it('should keep the row of a repeated key when moving to the next column', async () => {
+  it('should switch columns on the row a repeated ArrowDown moved to', async () => {
     await renderTimeline();
 
     const lastMountedIndex = resources.findLastIndex((resource) => getTitleCell(resource.id));
@@ -324,7 +324,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     // Scrolling away unmounts the focused row, so the focus is lost. Away from the end, so the
     // removal doesn't clamp the scroll.
     act(() => {
-      scroller.scrollTop = 1000;
+      scroller.scrollTop = (scroller.scrollHeight - scroller.clientHeight) / 2;
     });
     await absorbObserverFrames();
     expect(getTitleCell(resources[0].id)).to.equal(null);

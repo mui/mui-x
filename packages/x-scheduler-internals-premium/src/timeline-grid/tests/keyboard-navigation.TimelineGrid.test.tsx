@@ -228,6 +228,26 @@ describe('TimelineGrid keyboard navigation', () => {
       await user.keyboard('{ArrowUp}');
       expect(getEventsCells()[0]).toHaveFocus();
     });
+
+    it('should not move the focus back to the grid when a row it left is removed', async () => {
+      const scrollRowIntoView = vi.fn();
+      const { setProps } = render(
+        <Grid resources={resources} scrollRowIntoView={scrollRowIntoView} />,
+      );
+
+      const cells = getEventsCells();
+      act(() => {
+        cells[2].focus();
+      });
+      // The blur is handled once the focus settles.
+      await act(async () => {
+        cells[2].blur();
+      });
+      setProps({ resources: resources.slice(0, 2) });
+
+      expect(document.activeElement).to.equal(document.body);
+      expect(scrollRowIntoView.mock.calls).to.have.length(0);
+    });
   });
 
   describe('horizontal navigation (ArrowLeft / ArrowRight)', () => {
@@ -535,8 +555,8 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
 
       // Remove the first resource (the row we originally focused before navigating away).
-      // The cleanup of that row must not clobber focusedCell, which follows the focused row
-      // to its new index.
+      // The cleanup of that row must not clear focusedCell, which moves with the focused row
+      // to index 0.
       setProps({ resources: resources.slice(1) });
 
       expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 0 });

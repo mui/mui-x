@@ -105,16 +105,20 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     setFocusedCell(coordinates);
   });
 
-  // Whether the focus left the tracked row while its resource is still listed (focus moved
-  // out of the grid, or the virtualizer unmounted the row): a later removal of that resource
-  // must not pull the focus back to the grid.
-  const isTrackedResourceListed = React.useCallback(() => {
-    const focused = focusedResourceRef.current;
-    return (
-      focused !== null &&
-      resourcesRef.current.some((entry) => entry.resource.id === focused.resourceId)
-    );
-  }, []);
+  // The focus left a row that still exists: stop tracking it, so removing it later doesn't
+  // pull the focus back.
+  const releaseTrackedRowIfListed = React.useCallback(
+    (focused: (typeof focusedResourceRef)['current']) => {
+      if (
+        focused !== null &&
+        focusedResourceRef.current === focused &&
+        resourcesRef.current.some((entry) => entry.resource.id === focused.resourceId)
+      ) {
+        focusedResourceRef.current = null;
+      }
+    },
+    [],
+  );
 
   const clearFocusedCellIfMatches = React.useCallback(
     (columnType: TimelineGridColumnType, rowIndex: number) => {
@@ -123,15 +127,11 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
       );
       const focused = focusedResourceRef.current;
       if (focused?.columnType === columnType && focused.rowIndex === rowIndex) {
-        // Checked once the resource list of this update is known.
-        queueMicrotask(() => {
-          if (focusedResourceRef.current === focused && isTrackedResourceListed()) {
-            focusedResourceRef.current = null;
-          }
-        });
+        // Deferred: the row can unmount before `resources` updates.
+        queueMicrotask(() => releaseTrackedRowIfListed(focused));
       }
     },
-    [isTrackedResourceListed],
+    [releaseTrackedRowIfListed],
   );
 
   // Clears focusedCell when focus leaves the grid.
@@ -147,18 +147,16 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
       }
       // `relatedTarget` is null with portals, programmatic blur, or window-blur.
       // Defer to let focus settle, then recheck whether focus truly left the grid.
-      // The tracked resource is kept when it was removed: a null `relatedTarget` also covers
-      // the focused row unmounting on collapse, which the effect below re-homes.
+      // A removed row (collapse) stays tracked so the effect below can re-home the focus.
+      const focused = focusedResourceRef.current;
       queueMicrotask(() => {
         if (!rootRef.current?.contains(document.activeElement)) {
           setFocusedCellState(null);
-          if (isTrackedResourceListed()) {
-            focusedResourceRef.current = null;
-          }
+          releaseTrackedRowIfListed(focused);
         }
       });
     },
-    [isTrackedResourceListed],
+    [releaseTrackedRowIfListed],
   );
 
   // When the focused resource row is removed (e.g. an ancestor collapses), move
