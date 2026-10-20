@@ -635,10 +635,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar label element"
     },
-    "headerToolbarLeftElement": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header toolbar left side element"
-    },
     "headerToolbarNextButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar next button element"
@@ -650,6 +646,10 @@
     "headerToolbarSidePanelToggle": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar side panel toggle button element"
+    },
+    "headerToolbarStart": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar start side element"
     },
     "headerToolbarTodayButton": {
       "description": "Styles applied to {{nodeName}}.",
