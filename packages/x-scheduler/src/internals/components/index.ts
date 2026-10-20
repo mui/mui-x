@@ -9,6 +9,7 @@ export * from './SharedComponentsStyledContext';
 export * from './SchedulerSlotsContext';
 
 export { EventCalendarProvider } from './EventCalendarProvider';
+export { getArrowEdgeStyles } from './event/arrowClips';
 export { ResponsiveTypographyContainer } from './ResponsiveTypographyContainer';
 export { EventCalendarRoot } from '../../event-calendar/EventCalendarRoot';
 export type { EventCalendarRootProps } from '../../event-calendar/EventCalendarRoot';

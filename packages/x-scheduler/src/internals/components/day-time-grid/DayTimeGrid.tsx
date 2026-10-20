@@ -295,8 +295,8 @@ const DayTimeGridTimeAxisCell = styled('div', {
   '&:not(:first-of-type)::after': {
     content: '""',
     position: 'absolute',
-    left: 'var(--fixed-cell-width)',
-    right: 0,
+    insetInlineStart: 'var(--fixed-cell-width)',
+    insetInlineEnd: 0,
     borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
     top: 'calc(var(--hour) * var(--hour-height))',
     zIndex: 1,

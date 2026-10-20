@@ -156,8 +156,7 @@ const MonthViewPlaceholderEventContainer = styled('div', {
 })(({ theme }) => ({
   position: 'absolute',
   top: 0,
-  left: 0,
-  right: 0,
+  insetInline: 0,
   display: 'grid',
   gridTemplateColumns: '1fr',
   gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
