@@ -129,8 +129,9 @@ A change of the `computedColDef` prop applies right away.
 The columns are only re-created when the properties it resolves to change—they are compared one by one—so an inline object or function resolving to the same values keeps them as they are.
 A width that the user set by resizing a column is kept.
 
-:::success
-For better performance, keep the `computedColDef` prop reference stable between two renders when it holds functions, arrays, or objects, such as a `valueFormatter` or `filterOperators`: a new one re-creates the computed columns.
+:::warning
+Keep the `computedColDef` reference stable between two renders when it holds functions, arrays, or objects—define it outside the component, or memoize it with `React.useMemo()` (or `React.useCallback()` for a function).
+Like a new `columns` array, a new one re-creates the computed columns on every render, and loops when the parent re-renders on grid state, for example with an `onStateChange` that stores the state.
 :::
 
 The `field`, `type`, `editable`, `allowFormulas`, `valueGetter`, `valueSetter`, `groupingValueGetter`, and `rowSpanValueGetter` properties are owned by the feature and cannot be overridden; `cellClassName` and `headerClassName` are merged with the classes of the feature.
