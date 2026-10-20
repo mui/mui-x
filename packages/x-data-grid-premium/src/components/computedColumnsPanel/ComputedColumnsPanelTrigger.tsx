@@ -83,7 +83,6 @@ const ComputedColumnsPanelTrigger = forwardRef<HTMLButtonElement, ComputedColumn
       {
         ...rootProps.slotProps?.baseButton,
         id: buttonId,
-        'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
         onClick: handleClick,
