@@ -26,6 +26,7 @@ type ClickAwayMouseEventHandler =
 type ClickAwayTouchEventHandler = 'onTouchStart' | 'onTouchEnd';
 
 export type ChartBasePopperProps = ChartBaseCommonProps & {
+  role?: string;
   ref?: React.Ref<HTMLDivElement>;
   open: boolean;
   children?: React.ReactNode;

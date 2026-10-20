@@ -1188,6 +1188,8 @@ storeClasses.forEach((storeClass) => {
           await Promise.resolve();
 
           expect(onDelete.mock.calls.length).to.equal(1);
+          // `onSubmit` must receive the picked scope, not just fire.
+          expect(onDelete.mock.calls[0]).to.deep.equal(['only-this']);
           const series = onEventsChange.mock.lastCall![0][0];
           expect(series.exDates).to.have.length(1);
         },

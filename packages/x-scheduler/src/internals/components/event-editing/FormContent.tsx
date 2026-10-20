@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useStore } from '@base-ui/utils/store';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -60,9 +61,10 @@ import {
 } from '../event-dialog/form/EventDialogFormContext';
 import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
+import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
-const FormActions = styled(DialogActions, {
+export const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
@@ -70,7 +72,7 @@ const FormActions = styled(DialogActions, {
   gap: theme.spacing(2),
 }));
 
-const DialogContent = styled(MuiDialogContent, {
+export const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
@@ -87,7 +89,7 @@ const DialogContent = styled(MuiDialogContent, {
   maxHeight: '100%',
 });
 
-const EventDialogForm = styled('form', {
+export const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
   slot: 'Form',
 })({
@@ -323,6 +325,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
 
     if (formStore.state.isSubmitting) {
       return;
@@ -437,7 +440,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const failingKeys = Object.keys(formStore.state.errors);
         const onlyRecurrenceFails =
           failingKeys.length > 0 && failingKeys.every((key) => RECURRENCE_FORM_KEYS.has(key));
-        setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general');
+        // Rendered synchronously so the failing field is on screen to take the focus.
+        ReactDOM.flushSync(() => setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general'));
+        focusFirstInvalid(form);
         return;
       }
 
@@ -518,7 +523,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
           warnUnvalidatedField(rejectedField, 'The save was rejected');
           formStore.setError(rejectedField, result.rejection.message);
-          setTabValue('general');
+          ReactDOM.flushSync(() => setTabValue('general'));
+          focusFirstInvalid(form);
           return;
         }
       }
@@ -560,7 +566,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const hasTabs = Boolean(showRecurrence && RecurrenceTabRenderer);
 
   return (
-    <DialogContent className={classes.eventDialogContent}>
+    <EventDialogContentRoot className={classes.eventDialogContent}>
       <EventDialogForm
         onSubmit={handleSubmit}
         onInvalidCapture={handleFormInvalid}
@@ -598,7 +604,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         <Divider className={classes.eventDialogFormDivider} />
         <FormActionButtons onDelete={handleDelete} />
       </EventDialogForm>
-    </DialogContent>
+    </EventDialogContentRoot>
   );
 }
 
@@ -609,7 +615,7 @@ function FormActionButtons(props: { onDelete: () => void }) {
   const isSubmitting = useStore(formStore, eventDialogFormSelectors.isSubmitting);
 
   return (
-    <FormActions className={classes.eventDialogFormActions}>
+    <EventDialogFormActions className={classes.eventDialogFormActions}>
       <Button
         className={classes.eventDialogDeleteButton}
         color="error"
@@ -629,6 +635,6 @@ function FormActionButtons(props: { onDelete: () => void }) {
       >
         {localeText.saveChanges}
       </Button>
-    </FormActions>
+    </EventDialogFormActions>
   );
 }

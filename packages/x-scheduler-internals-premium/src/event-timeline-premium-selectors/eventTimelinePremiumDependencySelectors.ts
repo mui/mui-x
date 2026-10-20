@@ -10,10 +10,9 @@ import type {
 } from '../models';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import {
+  getActiveDependencies,
   getEffectiveDependencyLag,
   groupByEventId,
-  isDependencyActive,
-  isDependencyReadOnly,
 } from '../internals/utils/dependency-utils';
 
 // Typed against the two slices they read, so the scheduling plugin (generic over
@@ -23,12 +22,7 @@ type DependenciesState = SchedulerState & SchedulerDependenciesState;
 const activeModelListSelector = createSelectorMemoized(
   (state: DependenciesState) => state.dependencyModelLookup,
   (state: DependenciesState) => state.processedEventLookup,
-  (dependencyModelLookup, processedEventLookup) =>
-    // `dependencyModelLookup` already deduped duplicate ids (last wins) while
-    // preserving insertion order, so no separate dedup pass is needed here.
-    Array.from(dependencyModelLookup.values()).filter((dependency) =>
-      isDependencyActive(processedEventLookup, dependency),
-    ),
+  getActiveDependencies,
 );
 
 export interface SchedulerDependencySourceDescription {
@@ -137,15 +131,16 @@ export const eventTimelinePremiumDependencySelectors = {
     return selectedId === null ? null : (state.dependencyModelLookup.get(selectedId) ?? null);
   },
   /**
-   * Whether the dependency cannot be deleted because one of its events is read-only.
-   * Unknown ids resolve to `false`.
+   * The dependency open in the dependency dialog and its anchor, or `null`.
+   * Masked by membership like `selectedId`.
    */
-  isModelReadOnly: (state: State, dependencyId: SchedulerDependencyId | null) => {
-    const dependency =
-      dependencyId === null ? undefined : state.dependencyModelLookup.get(dependencyId);
-    if (!dependency) {
-      return false;
-    }
-    return isDependencyReadOnly(state, dependency);
+  editor: (state: State) => {
+    const editor = state.dependencyEditor;
+    return editor !== null && state.dependencyModelLookup.has(editor.dependencyId) ? editor : null;
   },
+  /**
+   * Whether dependencies cannot be created, edited or deleted: only the scheduler-wide
+   * `readOnly` locks them. A read-only event is protected by the cascade veto instead.
+   */
+  isReadOnly: (state: DependenciesState) => state.readOnly,
 };
