@@ -9,6 +9,7 @@ import type {
   SchedulerEventOccurrence,
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumDependencySelectors,
@@ -49,17 +50,51 @@ const EventTimelinePremiumDependencyGeometryContext =
   React.createContext<EventTimelinePremiumDependencyGeometryValue | null>(null);
 
 /**
+ * In its own context so hovering does not re-render the geometry consumers.
+ */
+const DependencyHoveredIdContext = React.createContext<SchedulerDependencyId | null>(null);
+
+/**
+ * Separate from the hovered id so the interactions layer does not re-render on hover.
+ */
+const DependencySetHoveredIdContext = React.createContext<
+  ((dependencyId: SchedulerDependencyId | null) => void) | null
+>(null);
+
+/**
  * The visible arrows with the selected one last, so its highlight (and its hit area)
- * is never covered by a sibling. Returns the input array when nothing is selected.
+ * is never covered by a sibling, and the hovered one right before it. Returns the
+ * input array when nothing is selected nor hovered.
  */
 export function orderArrowsWithSelectedLast(
   arrows: DependencyArrow[],
   selectedId: SchedulerDependencyId | null,
+  hoveredId: SchedulerDependencyId | null = null,
 ): DependencyArrow[] {
-  if (selectedId === null || !arrows.some((arrow) => arrow.id === selectedId)) {
+  const getRank = (arrow: DependencyArrow) => {
+    if (arrow.id === selectedId) {
+      return 2;
+    }
+    return arrow.id === hoveredId ? 1 : 0;
+  };
+  if (arrows.every((arrow) => getRank(arrow) === 0)) {
     return arrows;
   }
-  return arrows.toSorted((a, b) => Number(a.id === selectedId) - Number(b.id === selectedId));
+  return arrows.toSorted((a, b) => getRank(a) - getRank(b));
+}
+
+export function useDependencyHoveredId(): SchedulerDependencyId | null {
+  return React.useContext(DependencyHoveredIdContext);
+}
+
+export function useSetDependencyHoveredId(): (dependencyId: SchedulerDependencyId | null) => void {
+  const setHoveredId = React.useContext(DependencySetHoveredIdContext);
+  if (setHoveredId === null) {
+    throw /* minify-error-disabled */ new Error(
+      'MUI X Scheduler: useSetDependencyHoveredId requires <EventTimelinePremiumDependencyGeometryProvider /> as an ancestor.',
+    );
+  }
+  return setHoveredId;
 }
 
 export function useDependencyGeometry(): EventTimelinePremiumDependencyGeometryValue {
@@ -123,6 +158,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     store,
     eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
   );
+  const processedEventLookup = useStore(store, schedulerEventSelectors.processedEventLookup);
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
@@ -148,6 +184,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
         positionByOccurrenceKey,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
+        processedEventLookup,
         endpointIds,
       }),
     // The config selector is memoized, so the object identity only changes with its content.
@@ -159,6 +196,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
       config,
       eventsWidth,
       theme,
+      processedEventLookup,
       endpointIds,
     ],
   );
@@ -201,9 +239,19 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     };
   }, [arrows, resolver, eventsWidth, renderContext, rowsMeta, config.tickCount, resources]);
 
+  const [hoveredId, setHoveredId] = React.useState<SchedulerDependencyId | null>(null);
+  // An arrow unmounted under the pointer never gets its pointerleave.
+  if (hoveredId !== null && !value.visibleArrows.some((arrow) => arrow.id === hoveredId)) {
+    setHoveredId(null);
+  }
+
   return (
     <EventTimelinePremiumDependencyGeometryContext.Provider value={value}>
-      {children}
+      <DependencySetHoveredIdContext.Provider value={setHoveredId}>
+        <DependencyHoveredIdContext.Provider value={hoveredId}>
+          {children}
+        </DependencyHoveredIdContext.Provider>
+      </DependencySetHoveredIdContext.Provider>
     </EventTimelinePremiumDependencyGeometryContext.Provider>
   );
 }

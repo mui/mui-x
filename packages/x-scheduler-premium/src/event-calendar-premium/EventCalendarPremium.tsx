@@ -16,6 +16,7 @@ import {
   EventCalendarRoot,
   SharedComponentsStyledContext,
   SchedulerSlotsProvider,
+  SchedulerDirectionProvider,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
   EventCalendarStyledContext,
   useEventCalendarUtilityClasses,
@@ -82,11 +83,13 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-                  {watermark}
-                </EventCalendarRoot>
-              </EventDialogProvider>
+              <SchedulerDirectionProvider>
+                <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+                  <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                    {watermark}
+                  </EventCalendarRoot>
+                </EventDialogProvider>
+              </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
@@ -379,8 +382,9 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
   /**
    * Configuration applied to each view, keyed by the view name.
    * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
-   * scrolls to on mount.
+   * limit the hours displayed in the time grid, `initialScrollTime` is the hour the grid
+   * scrolls to on mount, and `timeGridEvents` sets which timed events are rendered in the
+   * time grid.
    * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig: PropTypes.shape({
@@ -388,11 +392,13 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
+      timeGridEvents: PropTypes.oneOf(['same-day-only', 'shorter-than-one-day']),
     }),
     week: PropTypes.shape({
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
+      timeGridEvents: PropTypes.oneOf(['same-day-only', 'shorter-than-one-day']),
     }),
   }),
   /**
