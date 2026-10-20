@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
@@ -40,6 +41,7 @@ import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
+import { createEventTimelinePremiumOccurrenceIndex } from '../utils/eventTimelinePremiumOccurrenceIndex';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import {
   EventTimelinePremiumVirtualizerContext,
@@ -60,7 +62,8 @@ import {
   EventTimelinePremiumDependencyGeometryProvider,
   EventTimelinePremiumDependencyInteractions,
   EventTimelinePremiumDependencyTerminals,
-} from './timeline-dependency-arrows';
+  EventTimelinePremiumDependencyDialog,
+} from './timeline-dependencies';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -127,7 +130,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   fontSize: theme.typography.body2.fontSize,
   alignItems: 'flex-end',
   height: '100%',
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   // `clip` instead of `hidden` so vertical overflow stays visible; the legacy
   // overflow rule forces `visible` to `auto` when paired with `hidden`, which
   // would clip the pseudo-element below.
@@ -145,8 +148,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   '&::after': {
     content: '""',
     position: 'absolute',
-    left: 0,
-    right: 0,
+    insetInline: 0,
     bottom: -4,
     height: 4,
     backgroundColor: (theme.vars || theme).palette.background.default,
@@ -194,8 +196,7 @@ const EventTimelinePremiumViewport = styled('div', {
   top: 0,
   // The viewport spans the scrollport exactly, so both 0-insets resolve to the same
   // offset and it stays pinned in LTR and RTL alike.
-  left: 0,
-  right: 0,
+  insetInline: 0,
   overflow: 'hidden',
 });
 
@@ -226,7 +227,6 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   position: 'relative',
   padding: theme.spacing(2, 0),
   alignContent: 'start',
-  zIndex: 1,
   // Counted by `getRowHeightForLaneCount`, so it has to stay on this element: moving it
   // to the row would shrink the cell's content box and shift every event by a pixel.
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -262,10 +262,11 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   // Extend below the row container by the filler height so the line reaches
   // the very bottom of the viewport when the rows don't fill it.
   bottom: 'calc(-1 * var(--filler-height, 0px))',
-  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
+  insetInlineStart:
+    'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
   zIndex: 2,
-  borderLeft: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+  borderInlineStart: `2px solid ${(theme.vars || theme).palette.primary.main}`,
   pointerEvents: 'none',
 }));
 
@@ -277,7 +278,8 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   // `bottom: -4` so the circle sits centered on the header/body boundary line.
   bottom: -4,
   // 3px = half the circle's width (4px) minus half the line's width (1px), to center the circle on the line.
-  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
+  insetInlineStart:
+    'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
   width: 8,
   height: 8,
   borderRadius: '50%',
@@ -320,7 +322,7 @@ const ScrollbarVertical = styled(Scrollbar, {
     width: 'var(--size)',
   },
   top: 'var(--header-height, 0px)',
-  right: 0,
+  insetInlineEnd: 0,
 });
 
 const ScrollbarHorizontal = styled(Scrollbar, {
@@ -337,7 +339,7 @@ const ScrollbarHorizontal = styled(Scrollbar, {
     height: 'var(--size)',
   },
   bottom: 0,
-  left: 'var(--title-column-width)',
+  insetInlineStart: 'var(--title-column-width)',
 });
 
 const ScrollbarTitleHorizontal = styled(Scrollbar, {
@@ -354,22 +356,22 @@ const ScrollbarTitleHorizontal = styled(Scrollbar, {
     height: 'var(--size)',
   },
   bottom: 0,
-  left: 0,
+  insetInlineStart: 0,
 });
 
-// When the title scrollbar is not rendered (no overflow) but the events
-// horizontal scrollbar is, this filler sits in the bottom-left strip to
-// extend the title column's right border down to the very bottom.
+// When the title scrollbar is not rendered (no overflow) but the events horizontal
+// scrollbar is, this filler sits under the title column, in the scrollbar strip, to
+// extend the title column's inline-end border down to the very bottom.
 const TitleScrollbarFiller = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'TitleScrollbarFiller',
 })(({ theme }) => ({
   position: 'absolute',
   bottom: 0,
-  left: 0,
+  insetInlineStart: 0,
   width: 'var(--title-column-width)',
   height: SCROLLBAR_SIZE_CSS,
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   backgroundColor: (theme.vars || theme).palette.background.default,
   zIndex: 6,
   pointerEvents: 'none',
@@ -393,7 +395,7 @@ const EventTimelinePremiumFillerRow = styled('div', {
   position: 'relative',
   '& > div': {
     width: 'var(--title-column-width)',
-    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
     position: 'absolute',
     height: '100%',
     zIndex: 3,
@@ -516,37 +518,40 @@ function EventList({
   occurrences: EventTimelinePremiumLayoutOccurrence[];
 }) {
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
-  const { schedulerId } = useEventTimelinePremiumStyledContext();
 
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
   const store = useEventTimelinePremiumStoreContext();
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const occurrenceIndex = React.useMemo(
+    () =>
+      createEventTimelinePremiumOccurrenceIndex(
+        occurrences.map((occurrence) => {
+          const { position, duration } = occurrence.timelinePosition;
+          return { occurrence, start: position, end: position + duration };
+        }),
+      ),
+    [occurrences],
+  );
 
   // Convert virtualizer column range to fraction range
   const { start: visibleStart, end: visibleEnd } = getVisibleFractionRange(
     renderContext,
     config.tickCount,
   );
+  const visibleOccurrences = occurrenceIndex(visibleStart, visibleEnd);
 
   return (
     <React.Fragment>
-      {occurrences.map((occurrence) => {
-        const { position, duration } = occurrence.timelinePosition;
-        return (
-          position + duration > visibleStart &&
-          position < visibleEnd && (
-            <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
-              <EventTimelinePremiumEvent
-                occurrence={occurrence}
-                elementPosition={occurrence.timelinePosition}
-                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
-                variant="regular"
-                resourceId={resourceId}
-              />
-            </EventContextMenuTrigger>
-          )
-        );
-      })}
+      {visibleOccurrences.map(({ occurrence }) => (
+        <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
+          <EventTimelinePremiumEvent
+            occurrence={occurrence}
+            elementPosition={occurrence.timelinePosition}
+            variant="regular"
+            resourceId={resourceId}
+          />
+        </EventContextMenuTrigger>
+      ))}
     </React.Fragment>
   );
 }
@@ -561,7 +566,6 @@ function EventRowContent({
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }) {
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId } = useEventTimelinePremiumStyledContext();
   const { rowRef } = useTimelineGridEventRowContext();
   const { startEditing } = useEventEditingContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
@@ -593,7 +597,6 @@ function EventRowContent({
         <EventTimelinePremiumEvent
           ref={placeholderRef}
           occurrence={placeholder}
-          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
           variant="placeholder"
           resourceId={resourceId}
         />
@@ -772,6 +775,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [titleColumn],
   );
 
+  const isRtl = useDirection() === 'rtl';
+
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
@@ -780,7 +785,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       columnsTotalWidth,
       leftPinnedWidth: titleColumnWidth,
     },
-    virtualization: { layoutMode: 'controlled' },
+    virtualization: { layoutMode: 'controlled', isRtl },
     rows,
     range,
     rowCount: rows.length,
@@ -899,6 +904,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                           aria-hidden
                         />
                       )}
+                      <EventTimelinePremiumDependencyDialog />
                       <EventTimelinePremiumDependencyInteractions />
                       {/* Last so the revealed terminals win their z-index ties and
                           paint above the arrows and their click hit-areas. */}

@@ -3,6 +3,8 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  getAllEventsByTitle,
+  getEventNamePattern,
   ResourceBuilder,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
@@ -92,7 +94,7 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allEvents = screen.getAllByLabelText(multiDayEvent.title);
+      const allEvents = getAllEventsByTitle(multiDayEvent.title);
       const mainEvent = allEvents.find((event) => event.getAttribute('aria-hidden') !== 'true');
       const invisibleEvents = allEvents.filter(
         (event) => event.getAttribute('aria-hidden') === 'true',
@@ -132,9 +134,9 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const event1Elements = screen.getAllByLabelText(event1.title);
-      const event2Elements = screen.getAllByLabelText(event2.title);
-      const event3Elements = screen.getAllByLabelText(event3.title);
+      const event1Elements = getAllEventsByTitle(event1.title);
+      const event2Elements = getAllEventsByTitle(event2.title);
+      const event3Elements = getAllEventsByTitle(event3.title);
 
       const event1Main = event1Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
       const event2Main = event2Elements.find((el) => el.getAttribute('aria-hidden') !== 'true');
@@ -168,7 +170,7 @@ describe('<WeekView />', () => {
       const allDayRow = within(allDayGridContainer).getByRole('row');
 
       const mainEvent = within(allDayRow)
-        .getAllByLabelText(fourDayEvent.title)
+        .getAllByLabelText(getEventNamePattern(fourDayEvent.title))
         .find((el) => el.getAttribute('aria-hidden') !== 'true');
       const eventStyle = mainEvent?.getAttribute('style') || '';
       const gridColumnSpan = eventStyle.match(/--grid-column-span:\s*(\d+)/)?.[1];
@@ -262,6 +264,21 @@ describe('<WeekView />', () => {
   });
 
   describe('aria semantics', () => {
+    it('should mark only the header of today with aria-current="date"', () => {
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
+
+      // The side panel's mini calendar marks today too.
+      const currentElements = Array.from(document.querySelectorAll('[aria-current]')).filter(
+        (element) => !element.closest(`.${eventCalendarClasses.miniCalendar}`),
+      );
+      expect(currentElements.length).to.equal(1);
+      expect(currentElements[0]).to.have.attribute('role', 'columnheader');
+      expect(currentElements[0]).to.have.attribute('aria-label', 'Sunday 4');
+      expect(currentElements[0]).to.have.attribute('aria-current', 'date');
+      expect(currentElements[0]).to.have.attribute('data-current');
+    });
+
     it('should declare 7 navigable columns and index every cell from 1 to 7', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
@@ -300,25 +317,30 @@ describe('<WeekView />', () => {
       });
     });
 
-    it('should hide the All day label from AT and reference it via aria-labelledby on each cell', () => {
+    it('should name the day grid cells with a hidden label instead of a visible "All day" label', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const allDayLabel = document.querySelector<HTMLElement>(
+      expect(screen.queryByText('All day')).to.equal(null);
+
+      const dayGridLabel = document.querySelector<HTMLElement>(
         `.${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`,
       );
-      expect(allDayLabel).not.to.equal(null);
-      expect(allDayLabel!.getAttribute('aria-hidden')).to.equal('true');
-      expect(allDayLabel!.getAttribute('role')).to.equal(null);
+      expect(dayGridLabel).not.to.equal(null);
+      expect(dayGridLabel!.getAttribute('aria-hidden')).to.equal('true');
+      expect(dayGridLabel!.getAttribute('role')).to.equal(null);
 
-      const labelId = allDayLabel!.id;
+      const labelId = dayGridLabel!.id;
       expect(labelId.length).to.be.greaterThan(0);
 
       const allDayGridContainer = document.querySelector(
         `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid}`,
       ) as HTMLElement;
       const allDayRow = within(allDayGridContainer).getByRole('row');
-      const allDayCells = within(allDayRow).getAllByRole('gridcell');
+      const allDayCells = within(allDayRow).getAllByRole('gridcell', {
+        name: /All-day and multi-day events/,
+      });
+      expect(allDayCells).to.have.length(7);
       allDayCells.forEach((cell) => {
         const labelledBy = cell.getAttribute('aria-labelledby') ?? '';
         expect(labelledBy.split(' ')).to.include(labelId);

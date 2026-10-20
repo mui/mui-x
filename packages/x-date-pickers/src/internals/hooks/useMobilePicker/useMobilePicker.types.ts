@@ -66,10 +66,7 @@ export interface UseMobilePickerProps<
 export interface UseMobilePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobilePickerProps<TView, any, TExternalProps>,
-> extends Pick<
-  UsePickerParameters<PickerValue, TView, TExternalProps>,
-  'valueManager' | 'valueType' | 'validator' | 'ref'
-> {
+> extends Pick<UsePickerParameters<PickerValue, TView, TExternalProps>, 'manager' | 'ref'> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

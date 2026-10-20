@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "9.14.0",
+  "version": "9.16.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Date and Time Picker components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -39,7 +39,7 @@
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-date-pickers": "workspace:^",
-    "@mui/x-internals": "workspace:^",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:",
@@ -103,9 +103,6 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "exports": {
     ".": "./src/index.ts",

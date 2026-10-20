@@ -391,11 +391,13 @@ function warnOnLargeRangeDependencies(
   materializedCells +=
     dependencies.wholeColumns.length * Math.max(0, context.dataToIndex - context.dataFromIndex + 1);
   if (materializedCells > RANGE_CELLS_WARNING_THRESHOLD) {
-    warnOnce([
-      `MUI X Data Grid: A formula materializes over ${RANGE_CELLS_WARNING_THRESHOLD.toLocaleString('en-US')} range cells per evaluation.`,
-      'Formulas of this size can make editing and scrolling noticeably slow.',
-      'Consider aggregating over fewer rows or using the aggregation feature instead.',
-    ]);
+    warnOnce(
+      [
+        `MUI X Data Grid: A formula materializes over ${RANGE_CELLS_WARNING_THRESHOLD.toLocaleString('en-US')} range cells per evaluation.`,
+        'Formulas of this size can make editing and scrolling noticeably slow.',
+        'Consider aggregating over fewer rows or using the aggregation feature instead.',
+      ].join('\n'),
+    );
   }
 }
 
@@ -485,10 +487,12 @@ function scanRow(
         continue;
       }
       if (process.env.NODE_ENV !== 'production' && columnsLookup[field]?.valueGetter) {
-        warnOnce([
-          `MUI X Data Grid: The column "${field}" defines both \`allowFormulas\` and \`valueGetter\`.`,
-          'The `valueGetter` is ignored for cells holding a formula and only applies to plain cells.',
-        ]);
+        warnOnce(
+          [
+            `MUI X Data Grid: The column "${field}" defines both \`allowFormulas\` and \`valueGetter\`.`,
+            'The `valueGetter` is ignored for cells holding a formula and only applies to plain cells.',
+          ].join('\n'),
+        );
       }
       setRecord(ctx, key, buildRecord(ctx, id, field, raw));
       dirty.add(key);

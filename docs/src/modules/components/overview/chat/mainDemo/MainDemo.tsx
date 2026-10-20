@@ -165,7 +165,7 @@ export default function MainDemo() {
   }
 
   return (
-    <Stack spacing={1} sx={{ p: 1, width: '100%', mb: 6 }}>
+    <Stack spacing={1} sx={{ p: 1, mb: 6 }}>
       {/* Toolbar: view toggle + theme selector */}
       <Stack
         direction="row"

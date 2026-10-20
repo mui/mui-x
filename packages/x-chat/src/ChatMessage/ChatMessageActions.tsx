@@ -123,11 +123,13 @@ const ChatMessageActions = React.forwardRef<HTMLDivElement, ChatMessageActionsPr
     const hasExtraActions = (extraActions?.length ?? 0) > 0;
 
     if (process.env.NODE_ENV !== 'production' && hasExtraActions && chat == null) {
-      warnOnce([
-        'MUI X Chat: `extraActions` on the message actions bar require a `<ChatProvider>` (or `<ChatBox>`/`<ChatRoot>`).',
-        'Without a runtime the action buttons cannot drive `chat.regenerate`/`chat.retry`, so they render disabled.',
-        'Render the actions inside a chat provider to enable them.',
-      ]);
+      warnOnce(
+        [
+          'MUI X Chat: `extraActions` on the message actions bar require a `<ChatProvider>` (or `<ChatBox>`/`<ChatRoot>`).',
+          'Without a runtime the action buttons cannot drive `chat.regenerate`/`chat.retry`, so they render disabled.',
+          'Render the actions inside a chat provider to enable them.',
+        ].join('\n'),
+      );
     }
 
     return (

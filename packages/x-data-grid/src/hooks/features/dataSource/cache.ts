@@ -21,14 +21,13 @@ export function getKeyDefault(params: GridGetRowsParams) {
 }
 
 export class GridDataSourceCacheDefault {
-  private cache: Record<string, { value: GridGetRowsResponse; expiry: number }>;
+  private cache: Record<string, { value: GridGetRowsResponse; expiry: number }> = {};
 
-  private ttl: number;
+  declare private ttl: number;
 
-  private getKey: (params: GridGetRowsParams) => string;
+  declare private getKey: (params: GridGetRowsParams) => string;
 
   constructor({ ttl = 300_000, getKey = getKeyDefault }: GridDataSourceCacheDefaultConfig) {
-    this.cache = {};
     this.ttl = ttl;
     this.getKey = getKey;
   }

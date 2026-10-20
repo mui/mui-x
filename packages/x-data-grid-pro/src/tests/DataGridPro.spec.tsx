@@ -14,7 +14,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            // @ts-expect-error
+            // @ts-expect-error The inferred row model has firstName, but no lastName property.
             valueGetter: (value, row) => row.lastName,
           },
         ]}
@@ -35,7 +35,7 @@ function ColumnPropTest() {
         columns={[
           {
             field: 'firstName',
-            // @ts-expect-error
+            // @ts-expect-error The explicitly typed row model has firstName, but no lastName property.
             valueGetter: (value, row) => row.lastName,
           },
         ]}

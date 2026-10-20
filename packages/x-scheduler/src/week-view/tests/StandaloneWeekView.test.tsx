@@ -1,8 +1,20 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createSchedulerRenderer, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import {
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
+} from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
-import { esES } from '@mui/x-scheduler/locales';
+import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { isJSDOM } from 'test/utils/skipIf';
+import { fr } from 'date-fns/locale/fr';
+import {
+  createDateLocaleTheme,
+  esES,
+  frFR,
+  getSchedulerLocalization,
+} from '@mui/x-scheduler/locales';
 import { describe, it, expect } from 'vitest';
 
 describe('<StandaloneWeekView />', () => {
@@ -14,17 +26,19 @@ describe('<StandaloneWeekView />', () => {
         <StandaloneWeekView
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          localeText={{ allDay: 'Ganztägig' }}
+          localeText={{ dayGridLabel: 'Ganztägig' }}
         />,
       );
 
-      expect(screen.getByText('Ganztägig')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).to.have.length(7);
     });
 
     it('should use the default locale text when the localeText prop is not provided', () => {
       render(<StandaloneWeekView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />);
 
-      expect(screen.getByText('All day')).toBeVisible();
+      expect(
+        screen.getAllByRole('gridcell', { name: /All-day and multi-day events/ }),
+      ).to.have.length(7);
     });
 
     it('should use the locale text provided through the theme', () => {
@@ -34,7 +48,73 @@ describe('<StandaloneWeekView />', () => {
         </ThemeProvider>,
       );
 
-      expect(screen.getByText('Todo el día')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Todo el día y varios días/ })).to.have.length(
+        7,
+      );
+    });
+
+    it('should name events with the locale text provided through the theme', () => {
+      const event = EventBuilder.new()
+        .title('Correr')
+        .startAt('2025-07-03T07:30:00')
+        .endAt('2025-07-03T08:30:00')
+        .build();
+
+      render(
+        <ThemeProvider theme={createTheme({}, esES)}>
+          <StandaloneWeekView events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+        </ThemeProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3rd, 2025',
+        }),
+      ).not.to.equal(null);
+    });
+
+    it('should keep the English event name for a locale that translates nothing', () => {
+      const event = EventBuilder.new()
+        .title('Laufen')
+        .startAt('2025-07-03T07:30:00')
+        .endAt('2025-07-03T08:30:00')
+        .build();
+      const emptyLocale = getSchedulerLocalization({
+        dialog: {},
+        event: {},
+        calendar: {},
+        timeline: {},
+      });
+
+      render(
+        <ThemeProvider theme={createTheme({}, emptyLocale)}>
+          <StandaloneWeekView events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+        </ThemeProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', {
+          name: 'Laufen, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025',
+        }),
+      ).not.to.equal(null);
+    });
+
+    it('should format the date of the event name with the date locale', () => {
+      const event = EventBuilder.new()
+        .title('Courir')
+        .startAt('2025-07-03T07:30:00')
+        .endAt('2025-07-03T08:30:00')
+        .build();
+
+      render(
+        <ThemeProvider theme={createTheme({}, frFR, createDateLocaleTheme(fr))}>
+          <StandaloneWeekView events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+        </ThemeProvider>,
+      );
+
+      expect(
+        screen.getByRole('button', { name: 'Courir, de 7:30 AM à 8:30 AM, jeudi 3 juillet 2025' }),
+      ).not.to.equal(null);
     });
 
     it('should override the theme locale text with the localeText prop', () => {
@@ -43,12 +123,47 @@ describe('<StandaloneWeekView />', () => {
           <StandaloneWeekView
             events={[]}
             visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-            localeText={{ allDay: 'Ganztägig' }}
+            localeText={{ dayGridLabel: 'Ganztägig' }}
           />
         </ThemeProvider>,
       );
 
-      expect(screen.getByText('Ganztägig')).toBeVisible();
+      expect(screen.getAllByRole('gridcell', { name: /Ganztägig/ })).to.have.length(7);
+      expect(
+        screen.queryAllByRole('gridcell', { name: /Todo el día y varios días/ }),
+      ).to.have.length(0);
     });
+  });
+
+  describe('theme style overrides', () => {
+    it.skipIf(isJSDOM)(
+      'should apply the responsiveTypographyContainer style overrides from the theme',
+      () => {
+        const theme = createTheme({
+          components: {
+            MuiEventCalendar: {
+              styleOverrides: {
+                responsiveTypographyContainer: {
+                  '--EventCalendar-fontSize-eventTitle-sm': '0.7rem',
+                },
+              },
+            },
+          },
+        });
+
+        render(
+          <ThemeProvider theme={theme}>
+            <StandaloneWeekView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+          </ThemeProvider>,
+        );
+
+        const container = document.querySelector<HTMLElement>(
+          `.${eventCalendarClasses.responsiveTypographyContainer}`,
+        )!;
+        expect(
+          getComputedStyle(container).getPropertyValue('--EventCalendar-fontSize-eventTitle-sm'),
+        ).to.equal('0.7rem');
+      },
+    );
   });
 });

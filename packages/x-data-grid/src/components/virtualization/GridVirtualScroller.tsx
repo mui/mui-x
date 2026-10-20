@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { iOSMediaQuery } from '@mui/x-internals/platform';
+import { platform } from '@base-ui/utils/platform';
 import clsx from 'clsx';
 import { LayoutDataGrid, Virtualization } from '@mui/x-virtualizer';
 import {
@@ -10,6 +10,7 @@ import {
   gridHasScrollXSelector,
   gridHasScrollYSelector,
 } from '../../hooks/features/dimensions/gridDimensionsSelectors';
+import { gridVisibleRowsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import { gridRowTreeSelector } from '../../hooks/features/rows';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -76,7 +77,7 @@ const Scroller = styled('div', {
   // https://github.com/mui/mui-x/issues/22386
   // So keep this scroller's own native scrollbars and hide the ones in `GridVirtualScrollbar`
   // instead to avoid a duplicate thumb.
-  [iOSMediaQuery]: {
+  [platform.mediaQuery.iOS]: {
     scrollbarWidth: 'auto',
     '&::-webkit-scrollbar': {
       display: 'block',
@@ -109,8 +110,24 @@ const Viewport = styled('div', {
   },
 });
 
+// In the controlled layout mode, the rows are clipped by the viewport, so the infinite loading
+// trigger is placed after it. The content is as tall as the containers and the rows, so the
+// trigger is pushed to its bottom and moved up by the bottom container and scrollbar heights.
+const InfiniteLoadingTriggerPositioner = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
+  position: 'relative',
+  top: 'calc(-1 * (var(--DataGrid-bottomContainerHeight) + var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
+  height: 0,
+  marginTop: 'auto',
+});
+
 const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.dimensions.rightPinnedWidth > 0;
+
+const lastRowIdSelector = (apiRef: RefObject<GridApiCommunity>) =>
+  gridVisibleRowsSelector(apiRef).rows.at(-1)?.id;
 
 export interface GridVirtualScrollerProps {
   children?: React.ReactNode;
@@ -158,6 +175,14 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
 
   const rows = virtualizer.api.getters.getRows(undefined, gridRowTreeSelector(apiRef));
 
+  // The infinite loading trigger is placed at the end of the rows instead of after the last
+  // rendered row, so it is observed in the whole `scrollEndThreshold` area, regardless of the row buffer.
+  const lastRowId = useGridSelector(apiRef, lastRowIdSelector);
+  const infiniteLoadingTrigger =
+    lastRowId !== undefined && loadingOverlayVariant !== 'skeleton'
+      ? apiRef.current.getInfiniteLoadingTriggerElement?.({ lastRowId })
+      : null;
+
   return (
     <Container
       className={clsx(
@@ -194,6 +219,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
             </RenderZone>
 
             {hasContentFiller && <div className={gridClasses.contentFiller} {...contentProps} />}
+            {hasContentFiller && infiniteLoadingTrigger}
 
             {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
 
@@ -201,6 +227,11 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
               <rootProps.slots.pinnedRows position="bottom" />
             </rootProps.slots.bottomContainer>
           </Viewport>
+          {layoutMode === 'controlled' && infiniteLoadingTrigger && (
+            <InfiniteLoadingTriggerPositioner>
+              {infiniteLoadingTrigger}
+            </InfiniteLoadingTriggerPositioner>
+          )}
         </Content>
       </Scroller>
       {hasScrollX && (

@@ -38,6 +38,7 @@ import type {
   SchedulerInstanceName,
   SchedulerEditingMode,
   SchedulerEventEditingStartEventDetails,
+  RequestEventDeletionParameters,
 } from './SchedulerStore.types';
 import { processDate } from '../../../process-date';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -91,6 +92,17 @@ function createEventNotLoadedError() {
   );
 }
 
+/**
+ * Surfaced when a confirmed delete no longer matches what the confirmation was requested for: the
+ * event, its resource, or the scheduler became read-only, or (with the recurring events plugin)
+ * the event gained a recurrence rule and now needs a scope choice instead of a flat delete.
+ */
+function createEventChangedWhileConfirmingError() {
+  return /* minify-error-disabled */ new Error(
+    'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
+  );
+}
+
 function toUpdateEventResult(result: {
   updatedEntries: SchedulerEventUpdatedProperties[];
   rejection: Error | null;
@@ -117,13 +129,13 @@ export class SchedulerStore<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
 > extends Store<State> {
-  public parameters: Parameters;
+  declare public parameters: Parameters;
 
   private initialParameters: Parameters | null = null;
 
-  public instanceName: SchedulerInstanceName;
+  declare public instanceName: SchedulerInstanceName;
 
-  private mapper: SchedulerParametersToStateMapper<State, Parameters>;
+  declare private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected readonly disposables = new DisposableStack();
 
@@ -149,7 +161,7 @@ export class SchedulerStore<
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
-      ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
+      ...stateFromParameters,
       ...(hasDataSource(parameters)
         ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
         : buildEventsState({
@@ -161,7 +173,6 @@ export class SchedulerStore<
           })),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
-      adapter,
       occurrencePlaceholder: null,
       editingOccurrence: null,
       copiedEvent: null,
@@ -179,6 +190,8 @@ export class SchedulerStore<
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
+      eventDeletion: { confirmation: parameters.eventDeletion?.confirmation ?? true },
+      pendingDeleteConfirmation: null,
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -256,20 +269,24 @@ export class SchedulerStore<
         const initialIsControlled = this.initialParameters?.[controlledProp] !== undefined;
 
         if (initialIsControlled !== isControlled) {
-          warnOnce([
-            `MUI X Scheduler: A component is changing the ${
-              initialIsControlled ? '' : 'un'
-            }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: A component is changing the ${
+                initialIsControlled ? '' : 'un'
+              }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
+              'Elements should not switch from uncontrolled to controlled (or vice versa).',
+              `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
+              "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+              'More info: https://fb.me/react-controlled-components',
+            ].join('\n'),
+          );
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warnOnce([
-            `MUI X Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
-            `To suppress this warning opt to use a controlled ${this.instanceName}.`,
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
+              `To suppress this warning opt to use a controlled ${this.instanceName}.`,
+            ].join('\n'),
+          );
         }
       }
     };
@@ -278,6 +295,15 @@ export class SchedulerStore<
       parameters,
       adapter,
     ) as Partial<State>;
+
+    // Kept out of `deriveStateFromParameters`, which has no previous state to compare against:
+    // a fresh object on every call would make `update()` treat an unchanged `confirmation` as a
+    // change and notify every subscriber.
+    const confirmation = parameters.eventDeletion?.confirmation ?? true;
+    newSchedulerState.eventDeletion =
+      confirmation === this.state.eventDeletion.confirmation
+        ? this.state.eventDeletion
+        : { confirmation };
 
     if (
       !hasDataSource(parameters) &&
@@ -489,10 +515,12 @@ export class SchedulerStore<
     if (process.env.NODE_ENV !== 'production') {
       for (const id of deleted) {
         if (updated.has(id)) {
-          warnOnce([
-            `MUI X Scheduler: id "${String(id)}" appears in both \`deleted\` and \`updated\`.`,
-            'These two arrays must be disjoint, otherwise the order of operations is undefined.',
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: id "${String(id)}" appears in both \`deleted\` and \`updated\`.`,
+              'These two arrays must be disjoint, otherwise the order of operations is undefined.',
+            ].join('\n'),
+          );
         }
       }
     }
@@ -570,11 +598,13 @@ export class SchedulerStore<
 
     if (process.env.NODE_ENV !== 'production') {
       if (!this.parameters.onEventsChange && !hasDataSource(this.parameters)) {
-        warnOnce([
-          'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
-          'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
-          'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: An event update was ignored because no `onEventsChange` handler nor `dataSource` is provided.',
+            'The `events` prop is fully controlled, so without one of them the changes are lost and the UI does not update.',
+            'Pass an `onEventsChange` handler that updates the `events` prop, provide a `dataSource`, or set `readOnly` to disable editing.',
+          ].join('\n'),
+        );
       }
     }
 
@@ -623,10 +653,12 @@ export class SchedulerStore<
   public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
     if (this.state.recurringEventsPlugin == null && calendarEvent.rrule) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          ].join('\n'),
+        );
       }
       return this.updateEvents({ created: [{ ...calendarEvent, rrule: undefined }] }).created[0];
     }
@@ -652,10 +684,12 @@ export class SchedulerStore<
 
     if (this.state.recurringEventsPlugin == null && calendarEvent.rrule != null) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          ].join('\n'),
+        );
       }
       return toUpdateEventResult(
         this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
@@ -671,10 +705,12 @@ export class SchedulerStore<
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
     if (this.state.recurringEventsPlugin == null) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: Recurring event updates are a premium feature.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: Recurring event updates are a premium feature.',
+            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          ].join('\n'),
+        );
       }
       return;
     }
@@ -687,10 +723,12 @@ export class SchedulerStore<
   public deleteRecurringEvent = (params: DeleteRecurringEventParameters) => {
     if (this.state.recurringEventsPlugin == null) {
       if (process.env.NODE_ENV !== 'production') {
-        warnOnce([
-          'MUI X Scheduler: Recurring event deletions are a premium feature.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: Recurring event deletions are a premium feature.',
+            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          ].join('\n'),
+        );
       }
       return;
     }
@@ -699,19 +737,19 @@ export class SchedulerStore<
 
   /**
    * Deletes an occurrence from a UI surface: a recurring one opens the scope dialog, any other
-   * goes straight to `deleteEvent`. `onDelete` runs once the delete applied.
-   * @returns Whether the delete applied immediately (`false` when the scope dialog opened).
+   * goes through `requestEventDeletion`. `onDelete` runs once the delete actually applied, with
+   * the scope that was picked when the occurrence was recurring.
    */
   public deleteOccurrence = (
     occurrence: SchedulerRenderableEventOccurrence,
-    onDelete?: () => void,
-  ): boolean => {
+    onDelete?: (scope?: RecurringEventScope) => void,
+  ) => {
     // Not loaded yet: a `dataSource` persist of the event (e.g. a split) is still in flight.
     // Neither path can act on it, a scope confirmation reads the stored event.
     const liveEvent = schedulerEventSelectors.processedEvent(this.state, occurrence.id);
     if (liveEvent == null) {
       this.pushError(createEventNotLoadedError(), { transient: true });
-      return false;
+      return;
     }
     const isRecurring =
       this.state.recurringEventsPlugin != null &&
@@ -723,11 +761,10 @@ export class SchedulerStore<
         eventId: occurrence.id,
         onSubmit: onDelete,
       });
-      return false;
+      return;
     }
-    this.deleteEvent(occurrence.id);
-    onDelete?.();
-    return true;
+
+    this.requestEventDeletion({ eventId: occurrence.id, onSubmit: onDelete });
   };
 
   /**
@@ -811,16 +848,65 @@ export class SchedulerStore<
     }
 
     if (onSubmit) {
-      queueMicrotask(() => onSubmit());
+      queueMicrotask(() => onSubmit(scope));
     }
   };
 
   /**
-   * Deletes an event from the calendar, with no recurring scope step: the interactive
-   * surfaces go through `deleteOccurrence`.
+   * Deletes an event from the calendar immediately, with no recurring scope step and no
+   * confirmation: the interactive surfaces go through `deleteOccurrence` instead.
    */
   public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
+  };
+
+  /**
+   * Requests deletion of an event, opening the confirmation dialog when configured.
+   */
+  public requestEventDeletion = ({ eventId, onSubmit }: RequestEventDeletionParameters) => {
+    if (!this.state.eventDeletion.confirmation) {
+      this.deleteEvent(eventId);
+      onSubmit?.();
+      return;
+    }
+
+    this.set('pendingDeleteConfirmation', { eventId, onSubmit });
+  };
+
+  /**
+   * Resolves the pending event deletion request, deleting the event if confirmed.
+   */
+  public resolveEventDeletion = (confirmed: boolean) => {
+    const pending = this.state.pendingDeleteConfirmation;
+    if (!pending) {
+      return;
+    }
+
+    this.set('pendingDeleteConfirmation', null);
+    if (!confirmed) {
+      return;
+    }
+
+    // The event can leave the store while the dialog is open (a fetch replacing the loaded
+    // range, a controlled `events` change).
+    if (schedulerEventSelectors.processedEvent(this.state, pending.eventId) == null) {
+      this.pushError(createEventNotLoadedError(), { transient: true });
+      return;
+    }
+
+    // The confirmation was requested for a flat delete; that premise can also change while the
+    // dialog is open — the event (or its resource, or the scheduler) can become read-only, or
+    // gain a recurrence rule, which needs a scope choice instead.
+    if (
+      schedulerEventSelectors.isReadOnly(this.state, pending.eventId) ||
+      schedulerEventSelectors.isRecurring(this.state, pending.eventId)
+    ) {
+      this.pushError(createEventChangedWhileConfirmingError(), { transient: true });
+      return;
+    }
+
+    this.deleteEvent(pending.eventId);
+    pending.onSubmit?.();
   };
 
   /**

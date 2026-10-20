@@ -1,7 +1,6 @@
 import path from 'path';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import readFile from '../../../util/readFile';
-// @ts-ignore - JS file without types
 import { transformNestedProp, addItemToObject } from '../../../util/addComponentsSlots';
 import removeProps from '../../../util/removeProps';
 
