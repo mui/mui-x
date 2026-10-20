@@ -172,6 +172,46 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows[0].hitD).to.equal(`M 710 ${LANE_1_CENTER} L 716 ${LANE_1_CENTER}`);
     });
 
+    it('should leave no arrowhead hit-area over a back-to-back predecessor', () => {
+      const eventAdjacent = EventBuilder.new()
+        .id('event-adj')
+        .singleDay('2024-01-15T12:00:00Z')
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: resource1, occurrences: getOccurrences([eventA, eventAdjacent]) },
+          ],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-adj')],
+      );
+
+      // The predecessor's end resize handle sits right under the arrowhead.
+      expect(arrows[0].hitHead).to.equal(null);
+    });
+
+    it('should cut the arrowhead hit-area before an event ending just before the tip', () => {
+      // 12:20–12:58: ends 2px before event-b's start (x = 780).
+      const eventBefore = EventBuilder.new()
+        .id('event-before')
+        .singleDay('2024-01-15T12:20:00Z', 38)
+        .toProcessed();
+
+      const arrows = computeDependencyArrows(
+        buildResolver({
+          resources: [
+            { resource: resource1, occurrences: getOccurrences([eventA, eventBefore, eventB]) },
+          ],
+          rowPositions: [0],
+        }),
+        [buildDependency('dep-1', 'event-a', 'event-b')],
+      );
+
+      expect(arrows[0].hitHead).to.deep.equal({ x: 778, width: 2 });
+    });
+
     it('should scale the hit-area trims down on a short straight arrow', () => {
       // 12:20 → start x = 740, a 20px gap: full trims would leave nothing clickable.
       const eventNear = EventBuilder.new()
@@ -203,6 +243,7 @@ describe('dependencyArrowGeometry', () => {
       expect(arrows).to.have.length(1);
       // The 60px route keeps the full 12px source and 8px target trims.
       expect(arrows[0].hitD).to.equal(`M 732 ${LANE_1_CENTER} L 772 ${LANE_1_CENTER}`);
+      expect(arrows[0].hitHead).to.deep.equal({ x: 772, width: 8 });
     });
 
     it('should cut the hit-area around an event the route crosses', () => {

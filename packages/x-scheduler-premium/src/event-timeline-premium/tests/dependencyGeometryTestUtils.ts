@@ -10,7 +10,7 @@ import type {
   SchedulerDependency,
   SchedulerDependencyType,
 } from '@mui/x-scheduler-internals-premium/models';
-import { createDependencyAnchorResolver } from '../content/timeline-dependency-arrows/dependencyAnchorResolver';
+import { createDependencyAnchorResolver } from '../content/timeline-dependencies/dependencyAnchorResolver';
 
 // Shared by the dependency tests, the anchor resolver and the arrow geometry ones included. Lives in `tests/` so
 // the declaration build (which excludes that folder) never follows its `test/utils`
