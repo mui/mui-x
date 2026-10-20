@@ -11,3 +11,4 @@ export type {
   UseSchedulerFormFieldParameters,
   UseSchedulerFormFieldReturnValue,
 } from './useSchedulerFormField';
+export { focusFirstInvalid } from './focusFirstInvalid';

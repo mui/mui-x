@@ -653,6 +653,34 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       expect(probed.closest(`.${eventTimelinePremiumClasses.titleCell}`)).not.to.equal(null);
     });
 
+    it('should keep the end resize handle of a back-to-back predecessor above the arrowhead', async () => {
+      const adjacentSuccessor = EventBuilder.new()
+        .id('event-adj')
+        .title('Adjacent event')
+        .singleDay('2025-07-03T10:00:00Z')
+        .resource(resource1)
+        .build();
+      await renderTimeline({
+        events: [eventA, adjacentSuccessor],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-adj')],
+      });
+      await waitFor(() => {
+        expect(getHitPath()).not.to.equal(null);
+      });
+
+      // The middle of Event A's 4px end resize handle, right under the arrowhead.
+      const predecessorRect = getEventElement('Event A').getBoundingClientRect();
+      const probed = document.elementFromPoint(
+        predecessorRect.right - 2,
+        predecessorRect.top + predecessorRect.height / 2,
+      )!;
+
+      expect(probed.closest('[data-dependency-interactions]')).to.equal(null);
+      expect(probed.closest(`.${eventTimelinePremiumClasses.eventResizeHandler}`)).not.to.equal(
+        null,
+      );
+    });
+
     it('should let an event drag reach the drop targets under the arrow hit-areas', async () => {
       await renderFarTimelineWithArrow();
 
