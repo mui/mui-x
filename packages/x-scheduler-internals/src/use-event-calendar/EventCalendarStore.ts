@@ -13,7 +13,11 @@ import type {
   SchedulerParametersToStateMapper,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
-import { DEFAULT_SCHEDULER_PREFERENCES, SchedulerStore } from '../internals/utils/SchedulerStore';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  getShouldEventRequireResource,
+  SchedulerStore,
+} from '../internals/utils/SchedulerStore';
 import type { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
@@ -53,29 +57,15 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   return { views, viewConfig: parameters.viewConfig ?? EMPTY_OBJECT };
 };
 
-function warnIfShouldEventRequireResourceMisconfigured(
-  shouldEventRequireResource: boolean,
-  resources: readonly unknown[] | undefined,
-) {
-  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
-    warnOnce(
-      [
-        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
-        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
-      ].join('\n'),
-    );
-  }
-}
-
 const mapper: SchedulerParametersToStateMapper<
   EventCalendarState,
   EventCalendarParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => {
-    const shouldEventRequireResource =
-      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
-    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const shouldEventRequireResource = getShouldEventRequireResource(
+      parameters,
+      DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
+    );
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
@@ -93,9 +83,10 @@ const mapper: SchedulerParametersToStateMapper<
     };
   },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
-    const shouldEventRequireResource =
-      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
-    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    const shouldEventRequireResource = getShouldEventRequireResource(
+      parameters,
+      DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
+    );
     const newState: Partial<EventCalendarState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),

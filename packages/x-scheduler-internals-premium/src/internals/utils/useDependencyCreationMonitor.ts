@@ -24,9 +24,8 @@ interface DependencyDropTargetData {
    */
   targetSide: SchedulerEventSide;
   /**
-   * `false` for a recurring or read-only event: hovering it gives no highlight or
-   * snap, but a drop still goes through `addDependency` so its rejection reaches the
-   * user.
+   * `false` for a recurring event: hovering it gives no highlight or snap, but a drop
+   * still goes through `addDependency` so its rejection reaches the user.
    */
   isValid: boolean;
 }
@@ -57,10 +56,11 @@ function getDependencyDropTarget(
 // The `Record` is exhaustive on the rejection union: a new reason fails to compile
 // until it brings a message.
 const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
+  cascadeBlocked: 'This dependency would move a read-only event, so it was not created.',
   cyclicDependency: 'This dependency would create a cycle between events.',
   duplicateDependency: 'A dependency of this type already exists between these two events.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
-  readOnlyEvent: 'Dependencies cannot involve read-only events.',
+  readOnly: 'Dependencies cannot be changed while the scheduler is read-only.',
   unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',
 };
 
@@ -90,8 +90,7 @@ export function useDependencyCreationMonitor() {
       if (!isDependencyTerminalDrag(source.data)) {
         return;
       }
-      // Invalid targets (recurring or read-only events) never highlight or snap the
-      // rubber band.
+      // Invalid targets (recurring events) never highlight or snap the rubber band.
       const target = getDependencyDropTarget(location.current.dropTargets);
       const validTarget = target?.isValid ? target : null;
       store.setDependencyCreation({

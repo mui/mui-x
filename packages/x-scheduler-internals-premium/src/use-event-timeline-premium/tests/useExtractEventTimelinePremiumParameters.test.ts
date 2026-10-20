@@ -22,6 +22,7 @@ const allParameters: Record<keyof EventTimelinePremiumParameters<any, any>, unkn
   displayTimezone: 'displayTimezone',
   eventColor: 'eventColor',
   eventCreation: 'eventCreation',
+  eventDeletion: 'eventDeletion',
   eventModelStructure: 'eventModelStructure',
   events: 'events',
   onCollapsedResourcesChange: 'onCollapsedResourcesChange',

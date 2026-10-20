@@ -37,6 +37,7 @@
     "eventCreation": {
       "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
     },
+    "eventDeletion": { "description": "Configures how events are deleted." },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
@@ -78,7 +79,7 @@
     },
     "view": { "description": "The view currently displayed in the calendar." },
     "viewConfig": {
-      "description": "Configuration applied to the view, keyed by the view name. For the <code>day</code> view, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid, and <code>initialScrollTime</code> is the hour the grid scrolls to on mount."
+      "description": "Configuration applied to the view, keyed by the view name. For the <code>day</code> view, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid, <code>initialScrollTime</code> is the hour the grid scrolls to on mount, and <code>timeGridEvents</code> sets which timed events are rendered in the time grid."
     },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {

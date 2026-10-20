@@ -29,10 +29,10 @@ function MeetingLinkSection() {
         label="Link"
         value={link.value}
         onChange={(event) => link.setValue(event.target.value)}
+        // Marks the input as invalid: a failed save focuses it, and screen readers then
+        // read the error as its description.
         error={link.error != null}
         helperText={link.error}
-        // Announce the error inserted on save to screen readers, like the built-in fields do.
-        slotProps={{ formHelperText: { role: 'alert' } }}
       />
     </EventDialogSectionFieldset>
   );

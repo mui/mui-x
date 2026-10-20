@@ -44,8 +44,8 @@ interface RouteConfig {
    */
   viewport?: { width: number; height: number };
   /**
-   * Wait for this selector before screenshotting, on top of `navigateToTest`
-   * (fonts loaded, and the timers scheduled while mounting flushed).
+   * Wait for this selector before screenshotting, on top of `navigateToTest`.
+   * Prefer rendering `data-screenshot-pending` while the demo loads, so no rule is needed.
    */
   waitForSelector?: string;
 }
@@ -75,17 +75,6 @@ const TEST_RULES: RouteRule[] = [
     test: '/test-regressions-charts/LineChartPointerInteraction',
     // Dedicated tests handle mouse positioning.
     enabled: false,
-  },
-  {
-    test: '/test-regressions-charts/MapImageProjections',
-    // `MapImagePlot` reprojects each raster on a canvas asynchronously; the demo
-    // reveals this sentinel once every projection has finished rendering.
-    waitForSelector: '[data-testid="map-images-ready"]',
-  },
-  {
-    test: '/test-regressions-charts/MapImageAntimeridian',
-    // Same async reprojection sentinel as MapImageProjections.
-    waitForSelector: '[data-testid="map-images-ready"]',
   },
   {
     test: '/docs-charts-map/MarsMap',
@@ -119,12 +108,6 @@ const TEST_RULES: RouteRule[] = [
     // the one for left:0.
     waitForSelector:
       '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell[data-field="maturityDate"]',
-  },
-  {
-    test: '/docs-data-grid-components-toolbar/GridToolbarCustom',
-    // The demo renders in `TailwindDemoContainer`, which shows a spinner until the Tailwind
-    // script loads from the network. Wait for a real, non-skeleton row before screenshotting.
-    waitForSelector: '.MuiDataGrid-row:not(.MuiDataGrid-rowSkeleton)',
   },
 ];
 
@@ -206,8 +189,13 @@ async function main() {
       window.muiFixture.navigate(_route);
     }, route);
 
+    // Wait until nothing in the test case is marked `data-screenshot-pending`: the viewer until the
+    // test case mounted and its fonts loaded, and demos while they load something the timers
+    // don't cover, for example a script from the network. Content that mounts once that's done
+    // still has its timers faked. The timers only run after this wait, so a marker must not wait
+    // for a timer, or the test times out.
     const testcase = await page.waitForSelector(
-      `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      `[data-testid="testcase"][data-testpath="${route}"]:not(:has([data-screenshot-pending]))`,
     );
 
     // Run the timers the test case scheduled while mounting, then switch to real timers.

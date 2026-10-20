@@ -5,7 +5,7 @@ import HTMLElementType from '@mui/utils/HTMLElementType';
 import { useGridRootProps, useGridApiContext, GridMenu } from '@mui/x-data-grid';
 import type { GridFilterOperator, GridFilterItem, GridColDef } from '@mui/x-data-grid';
 
-interface GridHeaderFilterMenuProps {
+export interface GridHeaderFilterMenuProps {
   field: GridColDef['field'];
   applyFilterChanges: (item: GridFilterItem) => void;
   operators: GridFilterOperator<any, any, any>[];
@@ -14,8 +14,8 @@ interface GridHeaderFilterMenuProps {
   id: string;
   labelledBy: string;
   target: HTMLElement | null;
-  showClearItem: boolean;
-  clearFilterItem: () => void;
+  showClearItem?: boolean;
+  clearFilterItem?: () => void;
 }
 
 function GridHeaderFilterMenu({
@@ -49,7 +49,7 @@ function GridHeaderFilterMenu({
             key="filter-menu-clear-filter"
             iconStart={<rootProps.slots.columnMenuClearIcon fontSize="small" />}
             onClick={() => {
-              clearFilterItem();
+              clearFilterItem?.();
               hideMenu();
             }}
           >
@@ -92,7 +92,7 @@ GridHeaderFilterMenu.propTypes /* remove-proptypes */ = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
-  clearFilterItem: PropTypes.func.isRequired,
+  clearFilterItem: PropTypes.func,
   field: PropTypes.string.isRequired,
   id: PropTypes /* @typescript-to-proptypes-ignore */.string,
   item: PropTypes.shape({
@@ -156,7 +156,7 @@ GridHeaderFilterMenu.propTypes /* remove-proptypes */ = {
       value: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  showClearItem: PropTypes.bool.isRequired,
+  showClearItem: PropTypes.bool,
   target: HTMLElementType,
 } as any;
 

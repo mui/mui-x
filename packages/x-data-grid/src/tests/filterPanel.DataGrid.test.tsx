@@ -467,11 +467,11 @@ describe('<DataGrid /> - Filter panel', () => {
         onFilterModelChange={onFilterModelChange}
       />,
     );
-    expect(screen.queryAllByRole('tooltip').length).to.deep.equal(1);
+    expect(screen.queryAllByRole('dialog').length).to.deep.equal(1);
 
     deleteFilterForm();
 
-    expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
+    expect(screen.queryAllByRole('dialog').length).to.deep.equal(0);
   });
 
   // See https://github.com/mui/mui-x/issues/5402

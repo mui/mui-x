@@ -541,6 +541,20 @@ describe('EventCalendar', () => {
     });
   });
 
+  describe('classes property', () => {
+    it('should apply the responsiveTypographyContainer class to the responsive container', () => {
+      render(
+        <EventCalendar events={[]} classes={{ responsiveTypographyContainer: 'custom-class' }} />,
+      );
+
+      const element = document.querySelector('.custom-class');
+      expect(element).not.to.equal(null);
+      expect(
+        element?.classList.contains(eventCalendarClasses.responsiveTypographyContainer),
+      ).to.equal(true);
+    });
+  });
+
   describe('onEventEditingStart', () => {
     it('should be called with the occurrence when activating an event and still open the built-in dialog', async () => {
       const onEventEditingStart = vi.fn();

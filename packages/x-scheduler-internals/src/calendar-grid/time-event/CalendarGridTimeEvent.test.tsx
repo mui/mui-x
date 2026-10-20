@@ -41,6 +41,35 @@ describe('<CalendarGrid.TimeEvent />', () => {
     }),
   );
 
+  it('should use a precomputed position', () => {
+    renderEvent(
+      <CalendarGrid.TimeEvent
+        eventId="fake-id"
+        occurrenceKey="fake-key"
+        dataTimezone={undefined}
+        start={eventStart}
+        end={eventEnd}
+        elementPosition={{
+          position: 0.25,
+          duration: 0.5,
+          startingBeforeEdge: true,
+          endingAfterEdge: false,
+        }}
+        renderDragPreview={() => null}
+        data-testid="event"
+      >
+        <CalendarGrid.TimeEventResizeHandler side="start" data-testid="start-handle" />
+        <CalendarGrid.TimeEventResizeHandler side="end" data-testid="end-handle" />
+      </CalendarGrid.TimeEvent>,
+    );
+
+    const event = screen.getByTestId('event');
+    expect(event.style.getPropertyValue('--y-position')).to.equal('25%');
+    expect(event.style.getPropertyValue('--height')).to.equal('50%');
+    expect(screen.queryByTestId('start-handle')).to.equal(null);
+    expect(screen.queryByTestId('end-handle')).not.to.equal(null);
+  });
+
   it('should leave the accessible name to the consumer', () => {
     renderEvent(
       <CalendarGrid.TimeEvent

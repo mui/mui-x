@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "9.15.0",
+  "version": "9.16.0",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Date and Time Picker components.",
   "license": "MIT",
@@ -41,7 +41,7 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-internals": "workspace:^",
+    "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:",

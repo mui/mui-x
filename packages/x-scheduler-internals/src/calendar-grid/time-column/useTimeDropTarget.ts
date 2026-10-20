@@ -83,13 +83,15 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           cursorOffsetMs - data.initialCursorPositionInEventMs,
         );
 
-        // Clamp the event to stay within the time grid bounds
-        if (adapter.isBefore(newStartDate, start)) {
-          newStartDate = start;
-        }
-        const maxStartDate = adapter.addMilliseconds(end, -eventDurationMs);
-        if (adapter.isAfter(newStartDate, maxStartDate)) {
-          newStartDate = maxStartDate;
+        // Clamp the event to stay within the time grid bounds, unless it already crosses midnight
+        if (adapter.isSameDay(data.start, data.end)) {
+          if (adapter.isBefore(newStartDate, start)) {
+            newStartDate = start;
+          }
+          const maxStartDate = adapter.addMilliseconds(end, -eventDurationMs);
+          if (adapter.isAfter(newStartDate, maxStartDate)) {
+            newStartDate = maxStartDate;
+          }
         }
 
         const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);

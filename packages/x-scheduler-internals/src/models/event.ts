@@ -497,3 +497,12 @@ export interface SchedulerEventCreationConfig {
    */
   canHaveMultipleResources?: boolean;
 }
+
+export interface SchedulerEventDeletionConfig {
+  /**
+   * Whether a confirmation dialog is shown before deleting an event.
+   * Recurring events handled by the recurring scope dialog are not asked twice.
+   * @default true
+   */
+  confirmation: boolean;
+}

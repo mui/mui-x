@@ -64,6 +64,15 @@ export const schedulerOtherSelectors = {
     );
   },
   isRecurringScopeDialogOpen: (state: State) => state.pendingRecurringEventOperation != null,
+  isDeleteConfirmationDialogOpen: (state: State) => state.pendingDeleteConfirmation != null,
+  /**
+   * Whether any confirmation dialog stacked above the armed toolbar is open (the recurring scope
+   * dialog or the delete confirmation dialog). Both own their dismissal and scrolling, so callers
+   * use this to stand down their own outside-pointer/scroll-blocking handlers while either is open.
+   */
+  isConfirmationDialogOpen: (state: State) =>
+    schedulerOtherSelectors.isRecurringScopeDialogOpen(state) ||
+    schedulerOtherSelectors.isDeleteConfirmationDialogOpen(state),
   /**
    * The default event color used when no color is specified on the event or its resource.
    */

@@ -20,6 +20,7 @@ const allParameters: Record<keyof EventCalendarParameters<any, any>, unknown> = 
   displayTimezone: 'displayTimezone',
   eventColor: 'eventColor',
   eventCreation: 'eventCreation',
+  eventDeletion: 'eventDeletion',
   eventModelStructure: 'eventModelStructure',
   events: 'events',
   onCollapsedResourcesChange: 'onCollapsedResourcesChange',

@@ -235,13 +235,13 @@ describe('<DataGrid /> - Column headers', () => {
         </div>,
       );
 
-      expect(screen.queryByRole('tooltip')).to.equal(null);
+      expect(screen.queryByRole('menu')).to.equal(null);
 
       await user.keyboard('{Tab}');
       expect(screen.getAllByRole('columnheader')[0]).toHaveFocus();
 
       await user.keyboard('{Control>}{Enter}');
-      expect(screen.queryByRole('tooltip')).to.not.equal(null);
+      expect(screen.queryByRole('menu')).to.not.equal(null);
     });
   });
 

@@ -82,7 +82,7 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
       {
         ...rootProps.slotProps?.baseButton,
         id: buttonId,
-        'aria-haspopup': 'true',
+        'aria-haspopup': 'dialog',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
         className: resolvedClassName,

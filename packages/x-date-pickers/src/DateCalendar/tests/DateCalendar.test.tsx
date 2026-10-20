@@ -3,6 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -100,6 +101,63 @@ describe('<DateCalendar />', () => {
 
     expect(cells.length).to.equal(35);
     expect(disabledDays.length).to.equal(31);
+  });
+
+  describe('prop: onYearChange', () => {
+    it('should be called with the start of the new year when navigating from December to January', async () => {
+      const onYearChange = vi.fn();
+      const { user } = render(
+        <DateCalendar defaultValue={adapterToUse.date('2019-12-15')} onYearChange={onYearChange} />,
+      );
+
+      await user.click(screen.getByTitle('Next month'));
+
+      expect(onYearChange.mock.calls.length).to.equal(1);
+      expect(onYearChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2020, 0, 1));
+    });
+
+    it('should be called when selecting a year in the year view', async () => {
+      const onYearChange = vi.fn();
+      const { user } = render(
+        <DateCalendar
+          value={adapterToUse.date('2019-04-29')}
+          onYearChange={onYearChange}
+          views={['year', 'day']}
+          openTo="year"
+        />,
+      );
+
+      await user.click(screen.getByText('2022', { selector: 'button' }));
+
+      expect(onYearChange.mock.calls.length).to.equal(1);
+      expect(onYearChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2022, 0, 1));
+    });
+
+    it('should not be called again when the controlled value moves to the selected year', async () => {
+      const onYearChange = vi.fn();
+
+      function ControlledDateCalendar() {
+        const [value, setValue] = React.useState<PickerValidDate | null>(
+          adapterToUse.date('2019-04-29'),
+        );
+
+        return (
+          <DateCalendar
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            onYearChange={onYearChange}
+            views={['year', 'day']}
+            openTo="year"
+          />
+        );
+      }
+
+      const { user } = render(<ControlledDateCalendar />);
+
+      await user.click(screen.getByText('2022', { selector: 'button' }));
+
+      expect(onYearChange.mock.calls.length).to.equal(1);
+    });
   });
 
   describe('grid semantics', () => {
@@ -487,6 +545,25 @@ describe('<DateCalendar />', () => {
   });
 
   describe('view: month', () => {
+    it('should call onMonthChange once when selecting a month', async () => {
+      const onMonthChange = vi.fn();
+
+      const { user } = render(
+        <DateCalendar
+          value={adapterToUse.date('2019-01-01')}
+          onMonthChange={onMonthChange}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      await user.click(april);
+
+      expect(onMonthChange.mock.calls.length).to.equal(1);
+      expect(onMonthChange.mock.lastCall?.[0]).toEqualDateTime(new Date(2019, 3, 1));
+    });
+
     it('should select the closest enabled date in the month if the current date is disabled', async () => {
       const onChange = vi.fn();
 

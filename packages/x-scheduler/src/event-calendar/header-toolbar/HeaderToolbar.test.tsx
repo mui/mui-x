@@ -29,8 +29,8 @@ describe('<ViewSwitcher />', () => {
     fireEvent.click(viewSwitcherButton);
 
     // Menu should contain all default views
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
     expect(menuItems).toHaveLength(4);
     expect(menuItems[0]).to.have.text('Day');
@@ -38,8 +38,13 @@ describe('<ViewSwitcher />', () => {
     expect(menuItems[2]).to.have.text('Month');
     expect(menuItems[3]).to.have.text('Agenda');
 
-    // The current view should be selected
-    expect(menuItems[1]).to.have.attribute('aria-selected', 'true');
+    // Only the current view is checked
+    expect(menuItems.map((item) => item.getAttribute('aria-checked'))).to.deep.equal([
+      'false',
+      'true',
+      'false',
+      'false',
+    ]);
   });
 
   it('should expose aria-expanded reflecting the menu open state', async () => {
@@ -70,8 +75,8 @@ describe('<ViewSwitcher />', () => {
     // Open the menu
     fireEvent.click(viewSwitcherButton);
 
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
     expect(menuItems).toHaveLength(4);
     expect(menuItems[0]).to.have.text('Agenda');
@@ -80,7 +85,7 @@ describe('<ViewSwitcher />', () => {
     expect(menuItems[3]).to.have.text('Month');
   });
 
-  it('should show the selected view in the button and mark it as selected in the menu', async () => {
+  it('should show the selected view in the button and mark it as checked in the menu', async () => {
     render(
       <EventCalendarProvider
         {...standaloneDefaults}
@@ -97,11 +102,11 @@ describe('<ViewSwitcher />', () => {
     // Open the menu
     fireEvent.click(viewSwitcherButton);
 
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
-    // The 'day' view (3rd item) should be selected
-    expect(menuItems[2]).to.have.attribute('aria-selected', 'true');
+    // The 'day' view (3rd item) should be checked
+    expect(menuItems[2]).to.have.attribute('aria-checked', 'true');
   });
 
   it('should render all views in the menu for a custom set of views (with exactly 3 views)', async () => {
@@ -114,8 +119,8 @@ describe('<ViewSwitcher />', () => {
     const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     fireEvent.click(viewSwitcherButton);
 
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
     expect(menuItems).toHaveLength(3);
     expect(menuItems[0]).to.have.text('Agenda');
@@ -133,8 +138,8 @@ describe('<ViewSwitcher />', () => {
     const viewSwitcherButton = screen.getByRole('button', { name: 'Week' });
     fireEvent.click(viewSwitcherButton);
 
-    const menu = screen.getByRole('listbox');
-    const menuItems = within(menu).getAllByRole('menuitem');
+    const menu = screen.getByRole('menu');
+    const menuItems = within(menu).getAllByRole('menuitemradio');
 
     expect(menuItems).toHaveLength(2);
     expect(menuItems[0]).to.have.text('Agenda');

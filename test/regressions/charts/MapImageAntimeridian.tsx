@@ -87,10 +87,8 @@ export default function MapImageAntimeridian() {
         </div>
       ))}
       <WrapMappingTable />
-      {ready.size === CASES.length && (
-        // Visible (1×1) so Playwright's `waitForSelector` (state: 'visible') resolves.
-        <div data-testid="map-images-ready" style={{ width: 1, height: 1 }} />
-      )}
+      {/* `MapImagePlot` reprojects each raster asynchronously, hold the screenshot until all are done. */}
+      {ready.size < CASES.length && <div data-screenshot-pending />}
     </div>
   );
 }

@@ -56,3 +56,10 @@ export function formatHourAndMinutes(
 
   return adapter.formatByString(date, timeFormat);
 }
+
+/**
+ * @example "Sunday, July 13th, 2025"
+ */
+export function formatFullDate(date: TemporalSupportedObject, adapter: Adapter): string {
+  return adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
+}

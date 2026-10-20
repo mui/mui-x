@@ -9,6 +9,7 @@ import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-intern
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 import { useDisarmOnEscape } from '../armed-occurrence';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
 // `Paper` (elevation 3) supplies the `background.paper` fill and `shadows[3]` box shadow.
 const EventToolbarRoot = styled(Paper, {
@@ -67,10 +68,8 @@ export function EventToolbar(props: EventToolbarProps) {
     );
   };
 
-  // Recurring events open the scope dialog (which closes the surface on submit);
-  // single events delete immediately and close.
   const handleDelete = () => {
-    store.deleteOccurrence(occurrence, stopEditing);
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchor, stopEditing);
   };
 
   return (

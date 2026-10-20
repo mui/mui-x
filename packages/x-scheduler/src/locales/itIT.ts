@@ -20,6 +20,9 @@ const itITDialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Elimina evento',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Annulla',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -74,7 +77,6 @@ const itITDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Tutti gli eventi',
-  cancel: 'Annulla',
   confirm: 'Conferma',
   onlyThis: 'Solo questo evento',
   radioGroupAriaLabel: 'Ambito di modifica eventi ricorrenti',
@@ -138,6 +140,7 @@ const itITCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'Tutto il giorno',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} altri..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} successivo`,
   previousTimeSpan: (timeSpan) => `${timeSpan} precedente`,

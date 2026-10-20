@@ -48,7 +48,7 @@ const SidePanelDrawerRoot = styled(Drawer, {
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: (theme.vars || theme).palette.background.paper,
-    borderRight: '1px solid',
+    borderInlineEnd: '1px solid',
     borderColor: (theme.vars || theme).palette.divider,
     overflowY: 'auto',
     overscrollBehavior: 'contain',

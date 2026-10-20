@@ -64,6 +64,28 @@ describe('<AgendaView />', () => {
     });
   });
 
+  it('should mark only the day header of today with aria-current="date"', () => {
+    const today = adapter.now('default');
+    const event = EventBuilder.new()
+      .title('Today event')
+      .singleDay(new Date().toISOString())
+      .build();
+
+    render(<EventCalendar events={[event]} visibleDate={today} view="agenda" />);
+
+    // The side panel's mini calendar marks today too.
+    const currentElements = Array.from(document.querySelectorAll('[aria-current]')).filter(
+      (element) => !element.closest(`.${eventCalendarClasses.miniCalendar}`),
+    );
+    expect(currentElements.length).to.equal(1);
+    expect(currentElements[0]).to.have.attribute('aria-current', 'date');
+    expect(currentElements[0]).to.have.class(eventCalendarClasses.agendaViewDayHeaderCell);
+    expect(currentElements[0]).to.have.attribute(
+      'aria-label',
+      `${adapter.format(today, 'weekday')} ${adapter.format(today, 'dayOfMonth')}`,
+    );
+  });
+
   it('should name each event with its title, time range and date', () => {
     const event = EventBuilder.new().title('My Event').build();
 
@@ -75,6 +97,21 @@ describe('<AgendaView />', () => {
       name: 'My Event, 12:00 AM to 1:00 AM, Thursday, July 3rd, 2025',
     });
     expect(eventButton).not.to.have.attribute('aria-labelledby');
+  });
+
+  it('should label all-day events with the `allDay` locale text', () => {
+    const event = EventBuilder.new().title('Conference').fullDay('2025-07-03').build();
+
+    render(
+      <EventCalendar
+        events={[event]}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        view="agenda"
+        localeText={{ allDay: 'Ganztägig' }}
+      />,
+    );
+
+    expect(screen.getByText('Ganztägig')).toBeVisible();
   });
 
   describe('multi-resource events', () => {

@@ -63,7 +63,6 @@ const ChartsPanelTrigger = forwardRef<HTMLButtonElement, ChartsPanelTriggerProps
         ...rootProps.slotProps?.baseButton,
         id: buttonId,
         // TODO: Hook up the panel/trigger IDs to the charts configuration panel
-        'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
         onClick: handleClick,

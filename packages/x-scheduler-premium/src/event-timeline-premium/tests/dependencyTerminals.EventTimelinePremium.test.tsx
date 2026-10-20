@@ -1714,14 +1714,14 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
       expect(getTerminal('Event B')).to.equal(null);
     });
 
-    it('should not render a terminal on a read-only event', async () => {
+    it('should render the terminals of a read-only event', async () => {
       await renderTimeline({ events: [eventA, readOnlyEvent], dependencies: [] });
 
       expect(getTerminal('Event A')).not.to.equal(null);
-      expect(getTerminal('Read-only event')).to.equal(null);
+      expect(getTerminal('Read-only event')).not.to.equal(null);
     });
 
-    it('should not render terminals on the events of a resource with read-only events', async () => {
+    it('should render the terminals on the events of a resource with read-only events', async () => {
       const readOnlyResource = ResourceBuilder.new()
         .id('r1')
         .title('Resource 1')
@@ -1733,14 +1733,38 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         dependencies: [],
       });
 
-      expect(getTerminal('Event A')).to.equal(null);
-      expect(getTerminal('Event B')).to.equal(null);
+      expect(getTerminal('Event A')).not.to.equal(null);
+      expect(getTerminal('Event B')).not.to.equal(null);
     });
 
-    it('should reject the drop on a read-only event and surface an error', async () => {
+    it('should create a dependency to a read-only event that does not need to move', async () => {
       const handleDependenciesChange = vi.fn();
-      const { store } = await renderTimeline({
+      await renderTimeline({
         events: [eventA, readOnlyEvent],
+        dependencies: [],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      simulateTerminalDrag('Event A', getEventElement('Read-only event'));
+
+      expect(handleDependenciesChange.mock.calls.length).to.equal(1);
+      expect(handleDependenciesChange.mock.lastCall![0][0]).to.deep.include({
+        source: 'event-a',
+        target: 'event-ro',
+      });
+    });
+
+    it('should reject the drop when the read-only event would need to move, and surface an error', async () => {
+      const handleDependenciesChange = vi.fn();
+      const earlyReadOnlyEvent = EventBuilder.new()
+        .id('event-ro')
+        .title('Read-only event')
+        .singleDay('2025-07-03T09:30:00Z')
+        .readOnly()
+        .resource(resource1)
+        .build();
+      const { store } = await renderTimeline({
+        events: [eventA, earlyReadOnlyEvent],
         dependencies: [],
         onDependenciesChange: handleDependenciesChange,
       });
@@ -1749,7 +1773,9 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
 
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       expect(store.state.errors).to.have.length(1);
-      expect(store.state.errors[0].error.message).to.contain('read-only');
+      expect(store.state.errors[0].error.message).to.equal(
+        'This dependency would move a read-only event, so it was not created.',
+      );
     });
 
     it('should reject addDependency when the component is read-only', async () => {
@@ -1770,19 +1796,31 @@ describe('<EventTimelinePremium /> dependency terminals', () => {
         });
       });
 
-      expect(result).to.deep.equal({
-        status: 'rejected',
-        reason: 'readOnlyEvent',
-        eventId: 'event-a',
-      });
+      expect(result).to.deep.equal({ status: 'rejected', reason: 'readOnly' });
       expect(handleDependenciesChange.mock.calls.length).to.equal(0);
     });
 
-    it('should ignore deleteDependency when an event of the dependency is read-only', async () => {
+    it('should delete a dependency of a read-only event', async () => {
       const handleDependenciesChange = vi.fn();
       const { store } = await renderTimeline({
         events: [eventA, readOnlyEvent],
         dependencies: [buildDependency('dep-1', 'event-a', 'event-ro')],
+        onDependenciesChange: handleDependenciesChange,
+      });
+
+      act(() => {
+        store.deleteDependency('dep-1');
+      });
+
+      expect(handleDependenciesChange.mock.lastCall![0]).to.deep.equal([]);
+    });
+
+    it('should ignore deleteDependency when the component is read-only', async () => {
+      const handleDependenciesChange = vi.fn();
+      const { store } = await renderTimeline({
+        events: [eventA, eventB],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-b')],
+        readOnly: true,
         onDependenciesChange: handleDependenciesChange,
       });
 

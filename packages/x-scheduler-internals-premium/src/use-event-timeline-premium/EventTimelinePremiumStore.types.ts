@@ -12,6 +12,7 @@ import type {
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
   SchedulerDependencyCreation,
+  SchedulerDependencyEditor,
 } from '../models/dependency';
 import type { SchedulerLazyLoadingParameters } from '../models/lazyLoading';
 
@@ -41,6 +42,10 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
    * The pending create-dependency drag gesture, or `null` when none is in progress.
    */
   dependencyCreation: SchedulerDependencyCreation | null;
+  /**
+   * The dependency open in the dependency dialog, or `null` when the dialog is closed.
+   */
+  dependencyEditor: SchedulerDependencyEditor | null;
   /**
    * `false` until the first parameters→state mapping has applied, then `true`.
    * Gates the lazy-loading plugin's first fetch so it doesn't run against the

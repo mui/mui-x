@@ -163,6 +163,13 @@ StandaloneWeekView.propTypes /* remove-proptypes */ = {
     PropTypes.bool,
   ]),
   /**
+   * Configures how events are deleted.
+   * @default { confirmation: true }
+   */
+  eventDeletion: PropTypes.shape({
+    confirmation: PropTypes.bool,
+  }),
+  /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.
@@ -288,8 +295,9 @@ StandaloneWeekView.propTypes /* remove-proptypes */ = {
   /**
    * Configuration applied to the view, keyed by the view name.
    * For the `week` view, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
-   * scrolls to on mount.
+   * limit the hours displayed in the time grid, `initialScrollTime` is the hour the grid
+   * scrolls to on mount, and `timeGridEvents` sets which timed events are rendered in the
+   * time grid.
    * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
    */
   viewConfig: PropTypes.shape({
@@ -297,6 +305,7 @@ StandaloneWeekView.propTypes /* remove-proptypes */ = {
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
+      timeGridEvents: PropTypes.oneOf(['same-day-only', 'shorter-than-one-day']),
     }),
   }),
   /**

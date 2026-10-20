@@ -129,7 +129,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
     const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
     await user.click(showHideAllCheckbox);
     expect(getColumnHeadersTextContent()).to.deep.equal([]);
-    await user.click(document.querySelector('[role="tooltip"] [name="id"]')!);
+    await user.click(document.querySelector('[role="dialog"] [name="id"]')!);
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
     const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;

@@ -849,6 +849,27 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // Collapse the first parent row
     await user.click(within(cell).getByRole('button'));
   });
+
+  // See https://github.com/mui/mui-x/issues/10251
+  it('should support switching from data source tree data to client-side rows', async () => {
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    setProps({
+      treeData: false,
+      dataSource: undefined,
+      columns: [{ field: 'name' }],
+      rows: [
+        { id: 1, name: 'A' },
+        { id: 2, name: 'B' },
+      ],
+    });
+
+    await waitFor(() => {
+      expect(apiRef.current!.getAllRowIds()).to.deep.equal([1, 2]);
+    });
+  });
+
   // https://github.com/mui/mui-x/issues/23009
   describe('nested row updates', () => {
     const NESTED_DATA: Record<string, any[]> = {

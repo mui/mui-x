@@ -2,7 +2,6 @@ import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -241,18 +240,21 @@ export function groupRetainedDependenciesBySource(
 }
 
 /**
- * Whether the dependency cannot be created or deleted because one of its endpoint
- * events is read-only. The single definition shared by the store guard and the
- * `isModelReadOnly` selector.
+ * The dependency with the same source, target and type, other than `ignoredId`.
  */
-export function isDependencyReadOnly(
-  state: Parameters<typeof schedulerEventSelectors.isReadOnly>[0],
-  dependency: { source: SchedulerEventId; target: SchedulerEventId },
-): boolean {
-  return (
-    schedulerEventSelectors.isReadOnly(state, dependency.source) ||
-    schedulerEventSelectors.isReadOnly(state, dependency.target)
-  );
+export function findDuplicateDependency(
+  dependencyModelLookup: Map<SchedulerDependencyId, SchedulerDependency>,
+  dependency: Pick<SchedulerDependency, 'source' | 'target' | 'type'>,
+  ignoredId?: SchedulerDependencyId,
+): SchedulerDependency | undefined {
+  return groupRetainedDependenciesBySource(dependencyModelLookup)
+    .get(dependency.source)
+    ?.find(
+      (entry) =>
+        entry.id !== ignoredId &&
+        entry.target === dependency.target &&
+        entry.type === dependency.type,
+    );
 }
 
 /**
@@ -271,6 +273,18 @@ export function classifyDependencyEvent(
     return 'recurringEvent';
   }
   return 'ok';
+}
+
+/**
+ * The retained (deduplicated) dependencies the timeline renders.
+ */
+export function getActiveDependencies(
+  dependencyModelLookup: Map<SchedulerDependencyId, SchedulerDependency>,
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>,
+): SchedulerDependency[] {
+  return Array.from(dependencyModelLookup.values()).filter((dependency) =>
+    isDependencyActive(processedEventLookup, dependency),
+  );
 }
 
 /**

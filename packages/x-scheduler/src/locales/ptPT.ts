@@ -20,6 +20,9 @@ const ptPTDialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Eliminar evento',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Cancelar',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -72,7 +75,6 @@ const ptPTDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Todos os eventos',
-  cancel: 'Cancelar',
   confirm: 'Confirmar',
   onlyThis: 'Apenas este evento',
   radioGroupAriaLabel: 'Âmbito de edição de eventos recorrentes',
@@ -136,6 +138,7 @@ const ptPTCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'Todo o dia',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} mais…`,
   nextTimeSpan: (timeSpan) => `${timeSpan} seguinte`,
   previousTimeSpan: (timeSpan) => `${timeSpan} anterior`,

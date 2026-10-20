@@ -54,7 +54,7 @@ const DayHeaderCell = styled('header', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   padding: theme.spacing(2),
   gap: theme.spacing(0.5),
   '&[data-current]': {
@@ -254,6 +254,7 @@ export const AgendaView = React.memo(
                 id={`${schedulerId}-DayHeaderCell-${date.key}`}
                 aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
                 data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
+                aria-current={adapter.isSameDay(date.value, now) ? 'date' : undefined}
               >
                 <DayNumberCell
                   className={classes.agendaViewDayNumberCell}

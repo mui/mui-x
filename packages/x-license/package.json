@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "9.15.0",
+  "version": "9.16.0",
   "author": "MUI Team",
   "description": "MUI X License verification.",
   "license": "SEE LICENSE IN LICENSE",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-internals": "workspace:^",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-telemetry": "workspace:^"
   },
   "peerDependencies": {

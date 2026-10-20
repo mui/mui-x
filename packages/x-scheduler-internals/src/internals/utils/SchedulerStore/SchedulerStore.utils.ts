@@ -21,6 +21,29 @@ import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/Sche
 import { dateToEventString } from '../date-utils';
 
 /**
+ * Resolves `shouldEventRequireResource` and warns when it is enabled without any resource.
+ */
+export function getShouldEventRequireResource(
+  parameters: SchedulerParameters<any, any>,
+  defaultValue: boolean,
+): boolean {
+  const shouldEventRequireResource = parameters.shouldEventRequireResource ?? defaultValue;
+  if (
+    shouldEventRequireResource &&
+    (parameters.resources == null || parameters.resources.length === 0)
+  ) {
+    warnOnce(
+      [
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+      ].join('\n'),
+    );
+  }
+  return shouldEventRequireResource;
+}
+
+/**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
  */
 export function shouldUpdateOccurrencePlaceholder(
@@ -55,8 +78,6 @@ export function shouldUpdateOccurrencePlaceholder(
 
   return false;
 }
-
-export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
 
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   id: true,

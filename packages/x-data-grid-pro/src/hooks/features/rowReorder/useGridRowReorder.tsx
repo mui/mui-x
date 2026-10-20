@@ -34,10 +34,10 @@ import type { DataGridProProcessedProps } from '../../../models/dataGridProProps
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 import type { ReorderValidationContext } from './models';
 
+import { addClasses, removeClasses } from '../../../utils/classListUtils';
 import { findCellElement } from './utils';
 import {
   EXPAND_DELAY,
-  addClasses,
   animateRowMove,
   commitRowReorder,
   evaluateRowDropTarget,
@@ -45,7 +45,6 @@ import {
   hasLeftPendingExpansion,
   isRowReorderAllowed,
   checkRowReorderValid,
-  removeClasses,
   setRowReorderDropTarget,
   shouldExpandGroupOnHover,
   toggleHoveredGroupExpansion,
