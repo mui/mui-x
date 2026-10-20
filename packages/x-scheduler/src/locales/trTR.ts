@@ -162,6 +162,7 @@ const trTRCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'Tüm gün',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} tane daha`,
   nextTimeSpan: (timeSpan) => `Sonraki ${timeSpanNames[timeSpan] ?? timeSpan}`,
   previousTimeSpan: (timeSpan) => `Önceki ${timeSpanNames[timeSpan] ?? timeSpan}`,
