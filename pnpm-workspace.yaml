@@ -127,3 +127,6 @@ overrides:
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
   caniuse-lite: ^1.0.30001815
+
+lockfile:
+  includeResolutionSettings: true
