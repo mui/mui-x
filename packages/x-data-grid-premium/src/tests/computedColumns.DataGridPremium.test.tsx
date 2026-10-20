@@ -27,6 +27,7 @@ import type {
   GridApi,
   GridComputedColumnDefinition,
   GridComputedColumnsModel,
+  GridSortCellParams,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, afterEach } from 'vitest';
@@ -1252,6 +1253,16 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValuesOf('ratio')).to.deep.equal(['2', '1', '#DIV/0!']);
     });
 
+    it('should keep the errors last in the `sortComparator` of the column', async () => {
+      await render(<Test rows={rowsWithError} computedColumns={[ratio]} />);
+      // The grid sorts with `getSortComparator`: this is for the code that reads `sortComparator` directly.
+      const sortComparator = getColumn('ratio').sortComparator!;
+      const params = {} as GridSortCellParams;
+      expect(
+        ['#DIV/0!', 2, 1].sort((value1, value2) => sortComparator(value1, value2, params, params)),
+      ).to.deep.equal([1, 2, '#DIV/0!']);
+    });
+
     it('should filter with the operators of the type', async () => {
       await render(
         <Test
@@ -1303,6 +1314,169 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
       act(() => apiRef.current!.setQuickFilterValues(['2']));
       expect(getColumnValuesOf('item')).to.deep.equal(['Apple']);
+    });
+
+    describe('grouping column', () => {
+      // `avgPrice` divides by zero for Webcam.
+      const groupedProps: Partial<DataGridPremiumProps> = {
+        rows: [
+          { id: 1, product: 'Keyboard', category: 'Input', revenue: 100, units: 10 },
+          { id: 2, product: 'Mouse', category: 'Input', revenue: 200, units: 20 },
+          { id: 3, product: 'Monitor', category: 'Display', revenue: 90, units: 3 },
+          { id: 4, product: 'Dock', category: 'Display', revenue: 60, units: 2 },
+          { id: 5, product: 'Webcam', category: 'Input', revenue: 50, units: 0 },
+          { id: 6, product: 'Cable', category: 'Display', revenue: 40, units: 8 },
+          { id: 7, product: 'Adapter', category: 'Input', revenue: 25, units: 5 },
+          { id: 8, product: 'Headset', category: 'Input', revenue: 80, units: 4 },
+        ],
+        columns: [
+          { field: 'product' },
+          { field: 'category' },
+          { field: 'revenue', type: 'number' },
+          { field: 'units', type: 'number' },
+        ],
+        computedColumns: [
+          {
+            field: 'avgPrice',
+            headerName: 'Avg price',
+            formula: '=revenue / units',
+            type: 'number',
+          },
+        ],
+      };
+      const groupedByAvgPrice: DataGridPremiumProps['initialState'] = {
+        rowGrouping: { model: ['avgPrice'] },
+      };
+      const ascendingGroups = ['5 (2)', '10 (2)', '20 (1)', '30 (2)', '#DIV/0! (1)'];
+      const descendingGroups = ['30 (2)', '20 (1)', '10 (2)', '5 (2)', '#DIV/0! (1)'];
+      const isErrorCode = (value: unknown) =>
+        typeof value === 'string' && value.startsWith('#') && value.endsWith('!');
+      const receivedCodes = (spy: { mock: { calls: unknown[][] } }) =>
+        spy.mock.calls.some((args) => args.slice(0, 2).some(isErrorCode));
+
+      it('should keep the groups of errors last in both directions', async () => {
+        await render(<Test {...groupedProps} initialState={groupedByAvgPrice} />);
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+        expect(getColumnValues(0)).to.deep.equal(ascendingGroups);
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+        expect(getColumnValues(0)).to.deep.equal(descendingGroups);
+      });
+
+      it('should keep the groups of errors last in both directions with a `sortComparator` override', async () => {
+        const sortComparator = vi.fn((value1: number, value2: number) => value1 - value2);
+        await render(
+          <Test
+            {...groupedProps}
+            initialState={groupedByAvgPrice}
+            computedColDef={{ sortComparator }}
+          />,
+        );
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+        expect(getColumnValues(0)).to.deep.equal(ascendingGroups);
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+        expect(getColumnValues(0)).to.deep.equal(descendingGroups);
+        expect(sortComparator.mock.calls.length).to.be.greaterThan(0);
+        expect(receivedCodes(sortComparator)).to.equal(false);
+      });
+
+      it('should keep the groups of errors last in both directions with a `getSortComparator` override', async () => {
+        const comparator = vi.fn((value1: number, value2: number) => value1 - value2);
+        await render(
+          <Test
+            {...groupedProps}
+            initialState={groupedByAvgPrice}
+            computedColDef={{
+              getSortComparator: (direction) =>
+                direction === 'asc' ? comparator : (value1, value2) => -comparator(value1, value2),
+            }}
+          />,
+        );
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+        expect(getColumnValues(0)).to.deep.equal(ascendingGroups);
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+        expect(getColumnValues(0)).to.deep.equal(descendingGroups);
+        expect(comparator.mock.calls.length).to.be.greaterThan(0);
+        expect(receivedCodes(comparator)).to.equal(false);
+      });
+
+      it('should keep the groups of errors last in both directions in the `multiple` grouping column mode', async () => {
+        await render(
+          <Test
+            {...groupedProps}
+            initialState={groupedByAvgPrice}
+            rowGroupingColumnMode="multiple"
+          />,
+        );
+        act(() => apiRef.current!.sortColumn('__row_group_by_columns_group_avgPrice__', 'asc'));
+        expect(getColumnValues(0)).to.deep.equal(ascendingGroups);
+        act(() => apiRef.current!.sortColumn('__row_group_by_columns_group_avgPrice__', 'desc'));
+        expect(getColumnValues(0)).to.deep.equal(descendingGroups);
+      });
+
+      it('should keep the errors last in both directions when the column is the `leafField`', async () => {
+        await render(
+          <Test
+            {...groupedProps}
+            initialState={{ rowGrouping: { model: ['category'] } }}
+            groupingColDef={{ leafField: 'avgPrice' }}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+        expect(getColumnValues(0)).to.deep.equal([
+          'Input (5)',
+          '5',
+          '10',
+          '10',
+          '20',
+          '#DIV/0!',
+          'Display (3)',
+          '5',
+          '30',
+          '30',
+        ]);
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+        expect(getColumnValues(0)).to.deep.equal([
+          'Input (5)',
+          '20',
+          '10',
+          '10',
+          '5',
+          '#DIV/0!',
+          'Display (3)',
+          '30',
+          '30',
+          '5',
+        ]);
+      });
+
+      it('should sort with the `sortComparator` of `groupingColDef`', async () => {
+        await render(
+          <Test
+            {...groupedProps}
+            initialState={groupedByAvgPrice}
+            groupingColDef={{
+              sortComparator: (value1, value2) => String(value1).localeCompare(String(value2)),
+            }}
+          />,
+        );
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+        expect(getColumnValues(0)).to.deep.equal([
+          '#DIV/0! (1)',
+          '10 (2)',
+          '20 (1)',
+          '30 (2)',
+          '5 (2)',
+        ]);
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+        expect(getColumnValues(0)).to.deep.equal([
+          '5 (2)',
+          '30 (2)',
+          '20 (1)',
+          '10 (2)',
+          '#DIV/0! (1)',
+        ]);
+      });
     });
   });
 

@@ -286,6 +286,8 @@ export function createComputedBaseColDef(
       }
       return typeValueFormatter ? typeValueFormatter(value as never, row, column, apiRef) : value;
     },
+    // The grid sorts with `getSortComparator`; `sortComparator` is for the code that reads it directly.
+    sortComparator: createErrorsLastComparator(typeColDef.sortComparator!, 1, 1),
     getSortComparator: createGetSortComparator(typeColDef.sortComparator!),
     filterOperators: createFilterOperators(definition.type, typeColDef.filterOperators),
     getApplyQuickFilterFn: createGetApplyQuickFilterFn(
@@ -358,7 +360,7 @@ function guardOverrides(
     getApplyQuickFilterFn,
   } = overrides;
   if (typeof sortComparator === 'function') {
-    // The grouping column sorts with `sortComparator` directly.
+    // For the code that reads `sortComparator` directly, as on the base column.
     guarded.sortComparator = createErrorsLastComparator(sortComparator, 1, 1);
   }
   if (typeof getSortComparator === 'function') {
