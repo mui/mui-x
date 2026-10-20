@@ -44,6 +44,9 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
+In the day and week views, all-day events are rendered in the day grid above the time grid.
+See the `timeGridEvents` option of the [Week view](/x/react-scheduler/event-calendar/views/#week-view) to choose where timed events that cross midnight are rendered.
+
 ### Timezone
 
 Use the `timezone` property to specify the timezone for an event's dates:
