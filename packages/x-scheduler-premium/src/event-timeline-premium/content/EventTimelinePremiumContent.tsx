@@ -130,7 +130,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   fontSize: theme.typography.body2.fontSize,
   alignItems: 'flex-end',
   height: '100%',
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   // `clip` instead of `hidden` so vertical overflow stays visible; the legacy
   // overflow rule forces `visible` to `auto` when paired with `hidden`, which
   // would clip the pseudo-element below.
@@ -148,8 +148,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   '&::after': {
     content: '""',
     position: 'absolute',
-    left: 0,
-    right: 0,
+    insetInline: 0,
     bottom: -4,
     height: 4,
     backgroundColor: (theme.vars || theme).palette.background.default,
@@ -197,8 +196,7 @@ const EventTimelinePremiumViewport = styled('div', {
   top: 0,
   // The viewport spans the scrollport exactly, so both 0-insets resolve to the same
   // offset and it stays pinned in LTR and RTL alike.
-  left: 0,
-  right: 0,
+  insetInline: 0,
   overflow: 'hidden',
 });
 
@@ -264,10 +262,11 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   // Extend below the row container by the filler height so the line reaches
   // the very bottom of the viewport when the rows don't fill it.
   bottom: 'calc(-1 * var(--filler-height, 0px))',
-  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
+  insetInlineStart:
+    'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
   zIndex: 2,
-  borderLeft: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+  borderInlineStart: `2px solid ${(theme.vars || theme).palette.primary.main}`,
   pointerEvents: 'none',
 }));
 
@@ -279,7 +278,8 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   // `bottom: -4` so the circle sits centered on the header/body boundary line.
   bottom: -4,
   // 3px = half the circle's width (4px) minus half the line's width (1px), to center the circle on the line.
-  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
+  insetInlineStart:
+    'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
   width: 8,
   height: 8,
   borderRadius: '50%',
@@ -322,7 +322,7 @@ const ScrollbarVertical = styled(Scrollbar, {
     width: 'var(--size)',
   },
   top: 'var(--header-height, 0px)',
-  right: 0,
+  insetInlineEnd: 0,
 });
 
 const ScrollbarHorizontal = styled(Scrollbar, {
@@ -339,7 +339,7 @@ const ScrollbarHorizontal = styled(Scrollbar, {
     height: 'var(--size)',
   },
   bottom: 0,
-  left: 'var(--title-column-width)',
+  insetInlineStart: 'var(--title-column-width)',
 });
 
 const ScrollbarTitleHorizontal = styled(Scrollbar, {
@@ -356,22 +356,22 @@ const ScrollbarTitleHorizontal = styled(Scrollbar, {
     height: 'var(--size)',
   },
   bottom: 0,
-  left: 0,
+  insetInlineStart: 0,
 });
 
-// When the title scrollbar is not rendered (no overflow) but the events
-// horizontal scrollbar is, this filler sits in the bottom-left strip to
-// extend the title column's right border down to the very bottom.
+// When the title scrollbar is not rendered (no overflow) but the events horizontal
+// scrollbar is, this filler sits under the title column, in the scrollbar strip, to
+// extend the title column's inline-end border down to the very bottom.
 const TitleScrollbarFiller = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'TitleScrollbarFiller',
 })(({ theme }) => ({
   position: 'absolute',
   bottom: 0,
-  left: 0,
+  insetInlineStart: 0,
   width: 'var(--title-column-width)',
   height: SCROLLBAR_SIZE_CSS,
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   backgroundColor: (theme.vars || theme).palette.background.default,
   zIndex: 6,
   pointerEvents: 'none',
@@ -395,7 +395,7 @@ const EventTimelinePremiumFillerRow = styled('div', {
   position: 'relative',
   '& > div': {
     width: 'var(--title-column-width)',
-    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
     position: 'absolute',
     height: '100%',
     zIndex: 3,

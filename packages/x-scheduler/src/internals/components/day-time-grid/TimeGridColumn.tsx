@@ -44,8 +44,7 @@ const DayTimeGridColumnInteractiveLayer = styled('div', {
   position: 'absolute',
   top: 0,
   bottom: 0,
-  left: 0,
-  right: 0,
+  insetInline: 0,
 });
 
 const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator, {
@@ -55,8 +54,8 @@ const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator
   position: 'absolute',
   zIndex: 2,
   top: 'var(--y-position)',
-  left: 0,
-  right: -1,
+  insetInlineStart: 0,
+  insetInlineEnd: -1,
   height: 0,
   borderTop: `2px solid ${(theme.vars || theme).palette.primary.main}`,
 }));
@@ -67,7 +66,7 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 })(({ theme }) => ({
   position: 'absolute',
   zIndex: 1,
-  left: -5,
+  insetInlineStart: -5,
   top: -5,
   width: 8,
   height: 8,
