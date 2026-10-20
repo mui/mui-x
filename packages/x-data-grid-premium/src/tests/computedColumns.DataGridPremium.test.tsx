@@ -344,6 +344,10 @@ describe('<DataGridPremium /> - Computed columns', () => {
       formula: '=shippedAt',
       type: 'date',
     };
+    // Mouse has no date: the null checks tell it apart from the error of Monitor.
+    const rowsWithEmptyDate = sampleProps.rows!.map((row) =>
+      row.id === 2 ? { ...row, shippedAt: null } : row,
+    );
     const dateFormat = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
     const formatDate = (value: Date) => dateFormat.format(value);
     const formattedDates = [
@@ -570,6 +574,68 @@ describe('<DataGridPremium /> - Computed columns', () => {
         'Cable',
         'Dock',
       ]);
+    });
+
+    it('should not pass the errors to an `isEmpty` override', async () => {
+      const applyIsEmpty = vi.fn(
+        (value: Date | null) => value == null || Number.isNaN(value.getTime()),
+      );
+      const filterOperators = getGridDateOperators().map((operator) =>
+        operator.value === 'isEmpty'
+          ? { ...operator, getApplyFilterFn: () => applyIsEmpty }
+          : operator,
+      );
+      await render(
+        <Test
+          {...sampleProps}
+          rows={rowsWithEmptyDate}
+          computedColumns={[shipped]}
+          computedColDef={{ filterOperators }}
+        />,
+      );
+      act(() =>
+        apiRef.current!.setFilterModel({ items: [{ field: 'shipped', operator: 'isEmpty' }] }),
+      );
+      expect(getVisibleValuesOf('product')).to.deep.equal(['Mouse']);
+      expect(applyIsEmpty.mock.calls.length).to.be.greaterThan(0);
+      expect(receivedCodes(applyIsEmpty, 1)).to.equal(false);
+    });
+
+    it('should not pass the errors to an `isNotEmpty` override', async () => {
+      const applyIsNotEmpty = vi.fn(
+        (value: Date | null) => value != null && !Number.isNaN(value.getTime()),
+      );
+      const filterOperators = getGridDateOperators().map((operator) =>
+        operator.value === 'isNotEmpty'
+          ? { ...operator, getApplyFilterFn: () => applyIsNotEmpty }
+          : operator,
+      );
+      await render(
+        <Test
+          {...sampleProps}
+          rows={rowsWithEmptyDate}
+          computedColumns={[shipped]}
+          computedColDef={{ filterOperators }}
+        />,
+      );
+      act(() =>
+        apiRef.current!.setFilterModel({ items: [{ field: 'shipped', operator: 'isNotEmpty' }] }),
+      );
+      expect(getVisibleValuesOf('product')).to.deep.equal(['Keyboard', 'Monitor', 'Cable', 'Dock']);
+      expect(applyIsNotEmpty.mock.calls.length).to.be.greaterThan(0);
+      expect(receivedCodes(applyIsNotEmpty, 1)).to.equal(false);
+    });
+
+    it('should count the errors as values for the `isEmpty` and `isNotEmpty` operators of a date column', async () => {
+      await render(<Test {...sampleProps} rows={rowsWithEmptyDate} computedColumns={[shipped]} />);
+      act(() =>
+        apiRef.current!.setFilterModel({ items: [{ field: 'shipped', operator: 'isEmpty' }] }),
+      );
+      expect(getVisibleValuesOf('product')).to.deep.equal(['Mouse']);
+      act(() =>
+        apiRef.current!.setFilterModel({ items: [{ field: 'shipped', operator: 'isNotEmpty' }] }),
+      );
+      expect(getVisibleValuesOf('product')).to.deep.equal(['Keyboard', 'Monitor', 'Cable', 'Dock']);
     });
 
     it('should match the error codes without passing them to a `getApplyQuickFilterFn` override', async () => {

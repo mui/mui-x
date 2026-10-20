@@ -71,8 +71,6 @@ export type GridComputedErrorRowPredicate = (row: GridValidRowModel) => boolean;
 
 const IS_ERROR_ROW_BY_VALUE: GridComputedErrorRowPredicate = () => true;
 
-const NULL_CHECK_OPERATORS: ReadonlySet<string> = new Set(['isEmpty', 'isNotEmpty']);
-
 function createNumberFormatter(definition: GridComputedColumnDefinition) {
   if (definition.type !== 'number' || definition.numberFormat === undefined) {
     return null;
@@ -162,9 +160,10 @@ function guardValueFormatter(
 
 /**
  * The operators of the non-text types expect values of their type — the date
- * operators call `getTime()` — so the error codes never reach them. The two
- * null checks expect nothing: an error is a value the cell shows, so it is not
- * empty, as in the text columns, which filter on the code like on any other text.
+ * operators call `getTime()` — so the error codes never reach them, not even
+ * the null checks. An error is a value the cell shows, so it is not empty, as
+ * in the text columns, which filter on the code like on any other text: only
+ * `isNotEmpty` matches it.
  */
 function createFilterOperators(
   type: GridComputedColumnType,
@@ -174,9 +173,7 @@ function createFilterOperators(
     return filterOperators as GridFilterOperator[] | undefined;
   }
   return filterOperators.map((operator) => {
-    if (NULL_CHECK_OPERATORS.has(operator.value)) {
-      return operator;
-    }
+    const matchesErrors = operator.value === 'isNotEmpty';
     return {
       ...operator,
       getApplyFilterFn: (filterItem, column) => {
@@ -185,7 +182,7 @@ function createFilterOperators(
           return applyFilterFn;
         }
         return (value, row, colDef, apiRef) =>
-          isComputedErrorValue(value) ? false : applyFilterFn(value, row, colDef, apiRef);
+          isComputedErrorValue(value) ? matchesErrors : applyFilterFn(value, row, colDef, apiRef);
       },
     };
   }) as GridFilterOperator[];
