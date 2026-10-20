@@ -80,12 +80,9 @@ export class SchedulerSchedulingPlugin<
 
   declare private readonly applyCascade: (updated: SchedulerEventUpdatedProperties[]) => void;
 
-  // The batch `applyCascade` is applying: those moves are already the engine's output.
-  // Matched by reference, so an update triggered from `onEventsChange` still cascades.
-  private appliedCascade: SchedulerEventUpdatedProperties[] | null = null;
-
   /**
-   * @param applyCascade Applies event updates through the store's `updateEvents`.
+   * @param applyCascade Applies event updates through the store's `updateEvents`, without
+   * running `handleEventsUpdate` on them: they are already the engine's output.
    */
   public constructor(
     store: SchedulerStore<TEvent, any, State, Parameters>,
@@ -161,9 +158,6 @@ export class SchedulerSchedulingPlugin<
    * dependencies were already removed — a known v1 limitation, there is no rollback.
    */
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
-    if (parameters.updated !== undefined && parameters.updated === this.appliedCascade) {
-      return undefined;
-    }
     const { deleted, updated } = parameters;
     const deletedSet = new Set(deleted);
 
@@ -343,12 +337,7 @@ export class SchedulerSchedulingPlugin<
 
     this.updateDependencies(nextList);
     if (result.updated.length > 0) {
-      this.appliedCascade = result.updated;
-      try {
-        this.applyCascade(result.updated);
-      } finally {
-        this.appliedCascade = null;
-      }
+      this.applyCascade(result.updated);
     }
     return null;
   }

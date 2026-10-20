@@ -560,8 +560,13 @@ export class SchedulerStore<
    * are skipped entirely when the whole batch amounts to no real change — no deletion, no
    * creation, and every `updated` entry stripped down to `{ id }` — not just when the batch is
    * empty to begin with.
+   * `skipScheduling` applies the batch without running the scheduling plugin on it, for the
+   * plugin's own cascade.
    */
-  protected updateEvents(parameters: UpdateEventsParameters) {
+  protected updateEvents(
+    parameters: UpdateEventsParameters,
+    { skipScheduling = false }: { skipScheduling?: boolean } = {},
+  ) {
     const { deleted: deletedParam, updated: updatedParam = [], created = [] } = parameters;
 
     const eventDetails = createChangeEventDetails('none');
@@ -611,10 +616,12 @@ export class SchedulerStore<
       }
     }
 
-    const contributions = this.schedulingPlugin?.handleEventsUpdate({
-      ...parameters,
-      updated: Array.from(updated.values()),
-    });
+    const contributions = skipScheduling
+      ? undefined
+      : this.schedulingPlugin?.handleEventsUpdate({
+          ...parameters,
+          updated: Array.from(updated.values()),
+        });
     if (contributions && 'rejected' in contributions) {
       return {
         deleted: [],

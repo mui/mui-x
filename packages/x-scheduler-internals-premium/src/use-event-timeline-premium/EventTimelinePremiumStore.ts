@@ -226,7 +226,7 @@ export class EventTimelinePremiumStore<
 
     this.scheduling = this.disposables.use(
       new SchedulerSchedulingPlugin(this, (updated) => {
-        this.updateEvents({ updated });
+        this.updateEvents({ updated }, { skipScheduling: true });
       }),
     );
     this.schedulingPlugin = this.scheduling;
