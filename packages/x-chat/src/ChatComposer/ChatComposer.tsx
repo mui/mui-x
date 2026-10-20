@@ -227,6 +227,7 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
       sx,
       children,
       features,
+      attachmentConfig: attachmentConfigProp,
       variant: variantProp,
       disabled = false,
       ...other
@@ -236,7 +237,7 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
     const isCompact = variant === 'compact';
     const classes = useChatComposerUtilityClasses(classesProp);
     const attachmentConfig =
-      typeof features?.attachments === 'object' ? features.attachments : undefined;
+      typeof features?.attachments === 'object' ? features.attachments : attachmentConfigProp;
 
     const defaultContent = isCompact ? (
       <CompactComposerContent features={features} />
