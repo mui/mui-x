@@ -22,10 +22,10 @@ import type { GridScrollParams } from '../models/params/gridScrollParams';
 import type { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
-import { createRootSelector, createSelector } from '../utils/createSelector';
+import { createSelector } from '../utils/createSelector';
 import { gridRowsMetaSelector } from '../hooks/features/rows/gridRowsMetaSelector';
 import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
-import type { GridStateCommunity } from '../models/gridStateCommunity';
+import { gridColumnReorderDragColDefensiveSelector } from '../hooks/features/columnHeaders/gridColumnReorderDragColSelector';
 
 const CLIFF = 1;
 const SLOP = 1.5;
@@ -99,19 +99,12 @@ const offsetSelector = createSelector(
   },
 );
 
-// The `columnReorder` state is only initialized by the Pro package,
-// so it is read defensively here.
-const gridColumnReorderDragColSelector = createRootSelector(
-  (state: GridStateCommunity) =>
-    (state as GridStateCommunity & { columnReorder?: { dragCol: string } }).columnReorder?.dragCol,
-);
-
 // The drag direction is derived from the reorder state instead of the drag events.
 // An event handler subscribed during render can fire for a render pass that never mounts.
 // A `setState` call from such a handler triggers a React warning.
 // See https://github.com/mui/mui-x/issues/23469.
 const gridDragDirectionSelector = createSelector(
-  gridColumnReorderDragColSelector,
+  gridColumnReorderDragColDefensiveSelector,
   gridIsRowDragActiveSelector,
   (dragCol, isRowDragActive): 'horizontal' | 'vertical' | 'none' => {
     if (dragCol) {

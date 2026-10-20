@@ -178,6 +178,7 @@ export const schedulerEventSelectors = {
   idList: (state: State) => state.eventIdList,
   modelList: (state: State) => state.eventModelList,
   modelLookup: (state: State) => state.eventModelLookup,
+  processedEventLookup: (state: State) => state.processedEventLookup,
   canDragEventsFromTheOutside: (state: State) =>
     state.canDragEventsFromTheOutside && !state.readOnly,
   canDropEventsToTheOutside: (state: State) => state.canDropEventsToTheOutside && !state.readOnly,

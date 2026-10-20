@@ -19,6 +19,8 @@ import type {
   SchedulerSelection,
   TemporalSupportedObject,
   SchedulerEventSide,
+  SchedulerEventDeletionConfig,
+  RecurringEventScope,
 } from '../../../models';
 import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -228,6 +230,14 @@ export interface SchedulerState<TEvent extends object = any> {
    * Plugin that provides recurring-events support. `null` when not attached.
    */
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
+  /**
+   * Configures how events are deleted, normalized from the `eventDeletion` parameter.
+   */
+  eventDeletion: SchedulerEventDeletionConfig;
+  /**
+   * The event for which the delete confirmation dialog is open, if any. `null` when the dialog is closed.
+   */
+  pendingDeleteConfirmation: { eventId: SchedulerEventId; onSubmit?: () => void } | null;
 }
 
 /**
@@ -420,6 +430,12 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default enUS (English)
    */
   dateLocale?: DateLocale;
+
+  /**
+   * Configures how events are deleted.
+   * @default { confirmation: true }
+   */
+  eventDeletion?: Partial<SchedulerEventDeletionConfig>;
 }
 
 /**
@@ -457,7 +473,21 @@ export type DeleteRecurringEventParameters = {
    */
   eventId: SchedulerEventId;
   /**
-   * Callback fired when the user submits the recurring scope dialog.
+   * Callback fired when the user submits the recurring scope dialog, with the scope they picked.
+   */
+  onSubmit?: (scope: RecurringEventScope) => void;
+};
+
+/**
+ * Parameters for requesting an event deletion.
+ */
+export type RequestEventDeletionParameters = {
+  /**
+   * The id of the event to delete.
+   */
+  eventId: SchedulerEventId;
+  /**
+   * Callback fired after the deletion is submitted.
    */
   onSubmit?: () => void;
 };

@@ -29,7 +29,7 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
     fontWeight: theme.typography.fontWeightMedium,
     whiteSpace: 'nowrap',
     '&:not(:last-child)': {
-      borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+      borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
     },
     '&[data-level]:not([data-level="0"])': {
       color: (theme.vars || theme).palette.text.secondary,
@@ -37,7 +37,7 @@ const StyledTimelineGridHeader = styled(TimelineGrid.Header, {
     },
     '&[data-unit="hour"]': {
       padding: theme.spacing(1, 0),
-      borderRight: 'none',
+      borderInlineEnd: 'none',
     },
     '&[data-unit="day"][data-unit-leaf]': {
       padding: theme.spacing(0.5),

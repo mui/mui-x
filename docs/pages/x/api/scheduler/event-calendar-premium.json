@@ -59,6 +59,10 @@
         "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
+    "eventDeletion": {
+      "type": { "name": "shape", "description": "{ confirmation?: bool }" },
+      "default": "{ confirmation: true }"
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -112,7 +116,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ day?: { endTime?: number, initialScrollTime?: number, startTime?: number }, week?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
+        "description": "{ day?: { endTime?: number, initialScrollTime?: number, startTime?: number, timeGridEvents?: 'same-day-only'<br>&#124;&nbsp;'shorter-than-one-day' }, week?: { endTime?: number, initialScrollTime?: number, startTime?: number, timeGridEvents?: 'same-day-only'<br>&#124;&nbsp;'shorter-than-one-day' } }"
       }
     },
     "views": {
@@ -352,7 +356,7 @@
     {
       "key": "dayTimeGridAllDayEventsHeaderCell",
       "className": "MuiEventCalendar-dayTimeGridAllDayEventsHeaderCell",
-      "description": "Styles applied to the day time grid all day events header cell element.",
+      "description": "Styles applied to the day time grid all day events header cell (visually hidden row label).",
       "isGlobal": false
     },
     {
@@ -938,12 +942,6 @@
       "isGlobal": false
     },
     {
-      "key": "headerToolbarLeftElement",
-      "className": "MuiEventCalendar-headerToolbarLeftElement",
-      "description": "Styles applied to the header toolbar left side element.",
-      "isGlobal": false
-    },
-    {
       "key": "headerToolbarNextButton",
       "className": "MuiEventCalendar-headerToolbarNextButton",
       "description": "Styles applied to the header toolbar next button element.",
@@ -959,6 +957,12 @@
       "key": "headerToolbarSidePanelToggle",
       "className": "MuiEventCalendar-headerToolbarSidePanelToggle",
       "description": "Styles applied to the header toolbar side panel toggle button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarStart",
+      "className": "MuiEventCalendar-headerToolbarStart",
+      "description": "Styles applied to the header toolbar start side element.",
       "isGlobal": false
     },
     {

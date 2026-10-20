@@ -33,11 +33,11 @@ The Scheduler uses WAI-ARIA grid and tree roles to expose its structure to assis
 
 The day-time grid is exposed as a `role="grid"` with three logical rows:
 
-|     Row | `aria-rowindex` | Content                                                                                                                                                                                             |
-| ------: | :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|  Header | `1`             | Day column headers — `role="columnheader"` with an `aria-label` containing the full weekday name and date (for example, `"Monday 26"`)                                                              |
-| All-day | `2`             | All-day event cells — `role="gridcell"` with `aria-labelledby` pointing to the column header. The visible "All day" label is `aria-hidden="true"` and referenced via `aria-labelledby` on each cell |
-|   Timed | `3`             | Per-column time cells                                                                                                                                                                               |
+|     Row | `aria-rowindex` | Content                                                                                                                                                                                                                                  |
+| ------: | :-------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  Header | `1`             | Day column headers — `role="columnheader"` with an `aria-label` containing the full weekday name and date (for example, `"Monday 26"`)                                                                                                   |
+| All-day | `2`             | All-day event cells — `role="gridcell"` with `aria-labelledby` pointing to the column header. The row label (the `dayGridLabel` locale text) is visually hidden, `aria-hidden="true"`, and referenced via `aria-labelledby` on each cell |
+|   Timed | `3`             | Per-column time cells                                                                                                                                                                                                                    |
 
 The grid also exposes `aria-colcount` for the number of visible days and `aria-colindex` on every cell.
 Today's column header carries `aria-current="date"`.
@@ -134,11 +134,11 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ### Menus and popovers
 
-|                          Keys | Description                                                                                               |
-| ----------------------------: | :-------------------------------------------------------------------------------------------------------- |
-| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, or event context menu               |
-|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                         |
-|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below) |
+|                          Keys | Description                                                                                                             |
+| ----------------------------: | :---------------------------------------------------------------------------------------------------------------------- |
+| <kbd class="key">Escape</kbd> | Closes the View Switcher menu, Preferences menu, More Events popover, event context menu, or delete confirmation dialog |
+|  <kbd class="key">Enter</kbd> | Activates (opens) a focused event                                                                                       |
+|  <kbd class="key">Space</kbd> | Opens the [event context menu](#event-context-menu) for a focused event (mouse/trackpad only — see below)               |
 
 ## Live region announcements
 
@@ -161,6 +161,7 @@ The dialog is labeled by its event title via `aria-labelledby`.
 - When the dialog shows the General and Recurrence tabs, the General tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab; without tabs the panel claims no tab semantics. The panel and its attributes stay owned by the dialog when the tab content is replaced through the [`eventDialogGeneralTab` slot](/x/react-scheduler/components/event-dialog/).
 - The Recurrence tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab.
 - The recurring scope confirmation dialog radio group has an `aria-label` (default: `"Editing recurring events scope"`).
+- The delete confirmation dialog, unlike the Event Dialog itself, is modal. It is labeled by its title via `aria-labelledby` and described by its message via `aria-describedby`. On Cancel, Escape, or a backdrop click, nothing is deleted and focus returns to the control that opened it (the toolbar's Delete button, the dialog's own Delete event button, or the event itself from the context menu). Once a deletion is confirmed, focus moves to the grid cell that owned the event, or — in the agenda view, which has no such cell — to the next event, or the previous one if none follows.
 
 ## More Events popover
 
@@ -191,7 +192,7 @@ Right-clicking an event, or pressing <kbd class="key">Space</kbd> while it is fo
 
 - The menu exposes `role="menu"` (via MUI's `Menu`) with a localized `aria-label` (default: `"Event actions"`).
 - **Edit** opens the event dialog directly, the same as clicking the event on a mouse/trackpad.
-- **Delete** removes the event immediately. For a recurring event it opens the recurring scope confirmation dialog instead, the same as the Delete action in the event dialog and the armed-event toolbar.
+- **Delete** opens a confirmation dialog before removing the event, unless `eventDeletion={{ confirmation: false }}` is set. For a recurring event it opens the recurring scope confirmation dialog instead, the same as the Delete action in the event dialog and the armed-event toolbar.
 - For a read-only event, **Edit** is replaced by **Show details** — it opens the same read-only view a click would, and **Delete** is omitted, matching every other surface's mutation gate (the dialog swaps to its read-only content, and the armed toolbar never appears for one).
 
 The menu is suppressed on a coarse pointer (touch): activating an event there arms its toolbar instead of opening the dialog directly — which already exposes Edit and Delete — so right-click and <kbd class="key">Space</kbd> fall through to that same behavior rather than opening a redundant menu. This check is on pointer type alone; it doesn't depend on which view or layout is rendering the event.
@@ -212,6 +213,8 @@ The following keys are specifically relevant to accessibility:
   colorPickerLabel: 'Event color',
   selectColorAriaLabel: (color) => `Select ${color} as event color`,
   radioGroupAriaLabel: 'Editing recurring events scope',
+  deleteConfirmationTitle: 'Delete this event?',
+  deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
 
   // Event context menu
   eventContextMenuAriaLabel: 'Event actions',
