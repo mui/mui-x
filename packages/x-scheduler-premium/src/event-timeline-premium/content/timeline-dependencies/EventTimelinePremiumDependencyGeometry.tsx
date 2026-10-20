@@ -9,6 +9,7 @@ import type {
   SchedulerEventOccurrence,
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumDependencySelectors,
@@ -157,6 +158,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
     store,
     eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey,
   );
+  const processedEventLookup = useStore(store, schedulerEventSelectors.processedEventLookup);
   const rowsMeta = virtualizerStore.use(Dimensions.selectors.rowsMeta);
   const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
 
@@ -182,6 +184,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
         positionByOccurrenceKey,
         eventsWidth,
         laneMetrics: getEventsCellLaneMetrics(theme),
+        processedEventLookup,
         endpointIds,
       }),
     // The config selector is memoized, so the object identity only changes with its content.
@@ -193,6 +196,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
       config,
       eventsWidth,
       theme,
+      processedEventLookup,
       endpointIds,
     ],
   );

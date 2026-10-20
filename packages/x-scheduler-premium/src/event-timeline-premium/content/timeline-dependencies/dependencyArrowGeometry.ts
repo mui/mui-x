@@ -6,13 +6,14 @@ import type {
 import { getDependencyEdges } from '@mui/x-scheduler-internals-premium/internals';
 import type {
   DependencyAnchorResolver,
-  DependencyArrowAnchor,
+  DependencyArrowEndpoint,
   DependencyArrowObstacle,
   DependencyArrowPoint,
 } from './dependencyAnchorResolver';
 import {
   DEPENDENCY_ARROW_CORNER_RADIUS,
   buildDependencyArrowRoutes,
+  buildOffRangeDependencyArrowRoute,
   buildRoundedOrthogonalPath,
   countRouteCollisions,
 } from './dependencyArrowRouting';
@@ -26,8 +27,8 @@ import {
 
 export interface DependencyArrow {
   /**
-   * Unique key of the arrow: a dependency renders one arrow per pair of row
-   * appearances of its events.
+   * Unique key of the arrow: a dependency renders one arrow per pair of rows of its
+   * events.
    */
   key: string;
   id: SchedulerDependencyId;
@@ -58,12 +59,14 @@ export interface DependencyArrow {
   readonly hitHead: { x: number; width: number } | null;
   /**
    * The point where the arrowhead is drawn, in the same coordinate space as `d`: the
-   * target edge anchor, except when the route clamps at the timeline edge.
+   * target edge anchor, except when the route clamps at the timeline edge or the target
+   * is outside the visible range.
    */
   endPoint: DependencyArrowPoint;
   /**
    * The edge of the target event the arrow enters, and so the side of `endPoint` the
-   * arrow comes from.
+   * arrow comes from. For a target outside the visible range, the edge the arrow would
+   * enter coming from inside the timeline.
    */
   targetEdge: SchedulerEventSide;
   /**
@@ -80,7 +83,8 @@ export interface DependencyArrow {
 
 /**
  * Computes the arrow of each renderable dependency, connecting the edges of its two
- * events that its type constrains.
+ * events that its type constrains. When only one event is in the visible range, the
+ * other is reached through the timeline edge on its side.
  */
 export function computeDependencyArrows(
   resolver: DependencyAnchorResolver,
@@ -94,8 +98,8 @@ export function computeDependencyArrows(
 
   const buildArrow = (
     dependency: SchedulerDependency,
-    sourceAnchor: DependencyArrowAnchor,
-    targetAnchor: DependencyArrowAnchor,
+    sourceAnchor: DependencyArrowEndpoint,
+    targetAnchor: DependencyArrowEndpoint,
   ): DependencyArrow | null => {
     if (
       !resolver.hasRowPosition(sourceAnchor.rowIndex) ||
@@ -110,14 +114,6 @@ export function computeDependencyArrows(
     const source = resolver.getEdgePoint(sourceAnchor, edges.source);
     const target = resolver.getEdgePoint(targetAnchor, edges.target);
 
-    const routes = buildDependencyArrowRoutes(
-      source,
-      target,
-      dependency.type,
-      resolver.detourOffset,
-      eventsWidth,
-    );
-
     // The event boxes the route may cross, used to pick the route and to cut the
     // hit-area around them. The endpoint events stay out: the end trims already
     // handle their edges. Gathered on demand — a single-candidate route only needs
@@ -129,8 +125,8 @@ export function computeDependencyArrows(
         for (let rowIndex = minRowIndex; rowIndex <= maxRowIndex; rowIndex += 1) {
           for (const obstacle of resolver.getRowObstacles(rowIndex)) {
             if (
-              obstacle.occurrenceKey !== sourceAnchor.occurrence.key &&
-              obstacle.occurrenceKey !== targetAnchor.occurrence.key
+              obstacle.occurrenceKey !== sourceAnchor.occurrence?.key &&
+              obstacle.occurrenceKey !== targetAnchor.occurrence?.key
             ) {
               gathered.push(obstacle);
             }
@@ -141,19 +137,50 @@ export function computeDependencyArrows(
       return obstacles;
     };
 
-    // With several candidates, keep the one crossing the fewest events (first wins on
-    // a tie). Best-effort avoidance, not full pathfinding.
-    let points = routes[0];
-    if (routes.length > 1) {
-      const routeObstacles = getObstacles();
-      let bestCollisions = countRouteCollisions(points, routeObstacles);
-      for (let index = 1; index < routes.length && bestCollisions > 0; index += 1) {
-        const collisions = countRouteCollisions(routes[index], routeObstacles);
-        if (collisions < bestCollisions) {
-          bestCollisions = collisions;
-          points = routes[index];
+    const pickRoute = (): DependencyArrowPoint[] | null => {
+      if (sourceAnchor.occurrence === null || targetAnchor.occurrence === null) {
+        return buildOffRangeDependencyArrowRoute(
+          source,
+          target,
+          edges,
+          targetAnchor.occurrence === null ? 'target' : 'source',
+          resolver.detourOffset,
+          eventsWidth,
+        );
+      }
+      const routes = buildDependencyArrowRoutes(
+        source,
+        target,
+        dependency.type,
+        resolver.detourOffset,
+        eventsWidth,
+      );
+      // With several candidates, keep the one crossing the fewest events (first wins on
+      // a tie). Best-effort avoidance, not full pathfinding.
+      let route = routes[0];
+      if (routes.length > 1) {
+        const routeObstacles = getObstacles();
+        let bestCollisions = countRouteCollisions(route, routeObstacles);
+        for (let index = 1; index < routes.length && bestCollisions > 0; index += 1) {
+          const collisions = countRouteCollisions(routes[index], routeObstacles);
+          if (collisions < bestCollisions) {
+            bestCollisions = collisions;
+            route = routes[index];
+          }
         }
       }
+      return route;
+    };
+
+    const points = pickRoute();
+    if (points === null) {
+      return null;
+    }
+    // The arrowhead of a target outside the range points out of the timeline: after the
+    // range, it comes from the left like into a start edge.
+    let targetEdge: SchedulerEventSide = edges.target;
+    if (targetAnchor.occurrence === null) {
+      targetEdge = targetAnchor.side === 'after' ? 'start' : 'end';
     }
 
     let minX = Infinity;
@@ -199,16 +226,16 @@ export function computeDependencyArrows(
           // right under the arrowhead.
           hitHead = getArrowHeadHitArea(
             endPoint,
-            edges.target === 'start' ? -1 : 1,
+            targetEdge === 'start' ? -1 : 1,
             resolver
               .getRowObstacles(targetAnchor.rowIndex)
-              .filter((obstacle) => obstacle.occurrenceKey !== targetAnchor.occurrence.key),
+              .filter((obstacle) => obstacle.occurrenceKey !== targetAnchor.occurrence?.key),
           );
         }
         return hitHead;
       },
       endPoint,
-      targetEdge: edges.target,
+      targetEdge,
       minXFraction: minX / eventsWidth,
       maxXFraction: maxX / eventsWidth,
       minRowIndex,
@@ -218,12 +245,26 @@ export function computeDependencyArrows(
 
   const arrows: DependencyArrow[] = [];
   for (const dependency of dependencies) {
-    const sourceAnchors = resolver.getAppearances(dependency.source);
-    const targetAnchors = resolver.getAppearances(dependency.target);
+    const sourceAppearances = resolver.getAppearances(dependency.source);
+    const targetAppearances = resolver.getAppearances(dependency.target);
 
-    // An endpoint without an anchor is not rendered in the timeline: its event has no
-    // resource, is outside the collection range, or its row is hidden. The dependency
-    // stays in the data, it just has no arrow.
+    // With neither event in the visible range, nothing would explain the arrow.
+    if (sourceAppearances.length === 0 && targetAppearances.length === 0) {
+      continue;
+    }
+
+    const sourceAnchors: readonly DependencyArrowEndpoint[] =
+      sourceAppearances.length > 0
+        ? sourceAppearances
+        : resolver.getOffRangeAnchors(dependency.source);
+    const targetAnchors: readonly DependencyArrowEndpoint[] =
+      targetAppearances.length > 0
+        ? targetAppearances
+        : resolver.getOffRangeAnchors(dependency.target);
+
+    // An endpoint without an anchor is not rendered in the timeline: its event is not
+    // loaded, has no resource, its row is hidden, or the hour window hides it between two
+    // visible days. The dependency stays in the data, it just has no arrow.
     if (sourceAnchors.length === 0 || targetAnchors.length === 0) {
       continue;
     }

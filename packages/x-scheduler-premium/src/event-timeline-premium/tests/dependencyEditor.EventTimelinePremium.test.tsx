@@ -41,6 +41,19 @@ const eventC = EventBuilder.new()
   .singleDay('2025-07-03T13:00:00Z')
   .resource(resource1)
   .build();
+// Far outside the visible range, so arrows to them point out of the timeline.
+const earlierEvent = EventBuilder.new()
+  .id('event-earlier')
+  .title('Event earlier')
+  .singleDay('2000-07-03T11:00:00Z')
+  .resource(resource2)
+  .build();
+const laterEvent = EventBuilder.new()
+  .id('event-later')
+  .title('Event later')
+  .singleDay('2050-07-03T11:00:00Z')
+  .resource(resource2)
+  .build();
 
 function getHitArea(dependencyId: string) {
   return document.querySelector(`[data-dependency-hit="${dependencyId}"]`)!;
@@ -213,6 +226,24 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       ]);
     });
 
+    it('should open on double click on an arrow to an event outside the visible range', async () => {
+      await renderTimeline({
+        events: [eventA, laterEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-later')],
+      });
+
+      const dialog = openDialog('dep-1');
+
+      expect(
+        within(dialog)
+          .getAllByRole('term')
+          .map((term) => [term.textContent, term.nextElementSibling?.textContent]),
+      ).to.deep.equal([
+        ['From', 'Event A'],
+        ['To', 'Event later'],
+      ]);
+    });
+
     // `fireEvent.doubleClick` keeps the same target for both clicks, so it can't reproduce this.
     it.skipIf(isJSDOM)(
       'should open the editor and not delete on a double click on the unselected arrowhead',
@@ -231,6 +262,38 @@ describe('<EventTimelinePremium /> dependency editor', () => {
         });
 
         expect(screen.getByRole('dialog')).not.to.equal(null);
+        expect(handleDependenciesChange.mock.calls.length).to.equal(0);
+      },
+    );
+
+    it.skipIf(isJSDOM).each([
+      ['after', laterEvent],
+      ['before', earlierEvent],
+    ] as const)(
+      'should open the editor on a double click on the arrowhead of an arrow to an event %s the visible range',
+      async (_, outsideEvent) => {
+        const { userEvent } = await import('vitest/browser');
+        const handleDependenciesChange = vi.fn();
+        await renderTimeline({
+          events: [eventA, outsideEvent],
+          dependencies: [buildDependency('dep-1', 'event-a', outsideEvent.id as string)],
+          onDependenciesChange: handleDependenciesChange,
+        });
+
+        // eslint-disable-next-line testing-library/no-unnecessary-act
+        await act(async () => {
+          await userEvent.dblClick(getHeadHitArea('dep-1'));
+        });
+
+        const dialog = screen.getByRole('dialog');
+        expect(
+          within(dialog)
+            .getAllByRole('term')
+            .map((term) => [term.textContent, term.nextElementSibling?.textContent]),
+        ).to.deep.equal([
+          ['From', 'Event A'],
+          ['To', outsideEvent.title],
+        ]);
         expect(handleDependenciesChange.mock.calls.length).to.equal(0);
       },
     );
@@ -755,6 +818,25 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       fireEvent.click(screen.getByRole('menuitem', { name: 'Edit dependency' }));
 
       expect(within(screen.getByRole('dialog')).getByText('Edit dependency')).not.to.equal(null);
+    });
+
+    it('should open the dialog from Edit dependency on an arrow to an event outside the visible range', async () => {
+      await renderTimeline({
+        events: [eventA, laterEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-later')],
+      });
+
+      fireEvent.contextMenu(getHitArea('dep-1'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit dependency' }));
+
+      expect(
+        within(screen.getByRole('dialog'))
+          .getAllByRole('term')
+          .map((term) => [term.textContent, term.nextElementSibling?.textContent]),
+      ).to.deep.equal([
+        ['From', 'Event A'],
+        ['To', 'Event later'],
+      ]);
     });
 
     it('should use the colors of the row of the opened arrow for a multi-resource event', async () => {

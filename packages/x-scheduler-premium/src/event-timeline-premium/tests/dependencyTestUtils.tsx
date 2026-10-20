@@ -225,6 +225,17 @@ export function getArrowPaths() {
   return Array.from(document.querySelectorAll<SVGPathElement>('[data-dependency-id]'));
 }
 
+/**
+ * The numbers of an arrow's path, in order: x and y pairs, with the control points of
+ * the softened corners.
+ */
+export function getPathCoordinates(path: SVGPathElement) {
+  return path
+    .getAttribute('d')!
+    .match(/-?[\d.]+/g)!
+    .map(parseFloat);
+}
+
 export function getEventElement(title: string) {
   // Strict single match: an event unexpectedly rendering twice (several occurrences
   // or several resources) must fail loudly, not silently resolve to the first one.
