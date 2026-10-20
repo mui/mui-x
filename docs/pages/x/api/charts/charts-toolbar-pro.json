@@ -32,6 +32,8 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartsToolbarPro",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarPro.tsx",
   "inheritance": null,
