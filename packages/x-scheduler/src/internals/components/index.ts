@@ -7,6 +7,7 @@ export * from './error-container';
 export * from './event-skeleton';
 export * from './SharedComponentsStyledContext';
 export * from './SchedulerSlotsContext';
+export * from './SchedulerDirectionProvider';
 
 export { EventCalendarProvider } from './EventCalendarProvider';
 export { getArrowEdgeStyles } from './event/arrowClips';

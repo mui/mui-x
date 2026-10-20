@@ -13,6 +13,7 @@ import type { EventCalendarProps } from './EventCalendar.types';
 import { EventDialogProvider } from '../internals/components/event-dialog';
 import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import { SchedulerSlotsProvider } from '../internals/components/SchedulerSlotsContext';
+import { SchedulerDirectionProvider } from '../internals/components/SchedulerDirectionProvider';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarStyledContext } from './EventCalendarStyledContext';
 import { EventEditingStyledContext } from '../internals/components/event-editing/EventEditingStyledContext';
@@ -63,9 +64,11 @@ const EventCalendar = React.forwardRef(function EventCalendar<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventDialogProvider>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-              </EventDialogProvider>
+              <SchedulerDirectionProvider>
+                <EventDialogProvider>
+                  <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+                </EventDialogProvider>
+              </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
