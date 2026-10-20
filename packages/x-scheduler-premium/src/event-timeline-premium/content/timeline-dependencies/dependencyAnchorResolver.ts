@@ -109,7 +109,8 @@ export interface DependencyAnchorResolver {
   getAppearances: (eventId: SchedulerEventId) => readonly DependencyArrowAnchor[];
   /**
    * The anchors of an event outside the visible range, one per row of its resources.
-   * Empty when the event is not loaded, is in the range, or none of its rows is shown.
+   * Empty when the event is not loaded, is in the range (including hidden by the hour
+   * window between two visible days), or none of its rows is shown.
    */
   getOffRangeAnchors: (eventId: SchedulerEventId) => readonly DependencyArrowOffRangeAnchor[];
   /**
@@ -214,7 +215,7 @@ export function createDependencyAnchorResolver(
     });
     let side: DependencyArrowOffRangeAnchor['side'];
     if (position.duration > 0) {
-      // On screen, but not rendered in any row.
+      // In the range, but in no rendered row.
       return [];
     }
     if (position.position === 0) {
@@ -282,6 +283,8 @@ export function createDependencyAnchorResolver(
   const laneStep = laneMetrics.laneMinHeight + laneMetrics.laneGap;
   const getLaneTop = (rowIndex: number, lane: number): number =>
     rowPositions[rowIndex] + laneMetrics.topPadding + (lane - 1) * laneStep;
+  const getLaneCenter = (rowIndex: number, lane: number): number =>
+    getLaneTop(rowIndex, lane) + laneMetrics.laneMinHeight / 2;
 
   const getEdgePoint = (
     anchor: DependencyArrowEndpoint,
@@ -290,16 +293,14 @@ export function createDependencyAnchorResolver(
     if (anchor.occurrence === null) {
       return {
         x: anchor.side === 'before' ? 0 : eventsWidth,
-        y: getLaneTop(anchor.rowIndex, 1) + laneMetrics.laneMinHeight / 2,
+        y: getLaneCenter(anchor.rowIndex, 1),
       };
     }
     const position = getPosition(anchor.occurrence);
     const xFraction = edge === 'start' ? position.position : position.position + position.duration;
     return {
       x: xFraction * eventsWidth,
-      y:
-        getLaneTop(anchor.rowIndex, getLaneLookup(anchor.rowIndex)[anchor.occurrence.key]) +
-        laneMetrics.laneMinHeight / 2,
+      y: getLaneCenter(anchor.rowIndex, getLaneLookup(anchor.rowIndex)[anchor.occurrence.key]),
     };
   };
 

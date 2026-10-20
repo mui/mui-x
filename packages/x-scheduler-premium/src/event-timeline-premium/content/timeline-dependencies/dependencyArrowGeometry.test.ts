@@ -811,6 +811,63 @@ describe('dependencyArrowGeometry', () => {
         expect(arrows).to.deep.equal([]);
       });
 
+      it('should turn on the source edge when it sits on the opposite timeline edge', () => {
+        // Started before the range: its start edge sits on the left edge, and the
+        // successor is reached through the right one.
+        const ongoing = EventBuilder.new()
+          .id('event-ongoing')
+          .span('2024-01-14T22:00:00Z', '2024-01-15T10:00:00Z')
+          .toProcessed();
+
+        const arrows = computeArrows(
+          'event-ongoing',
+          'event-after',
+          'StartToStart',
+          [ongoing, eventAfter],
+          [{ resource: resource1, occurrences: getOccurrences([ongoing]) }, resources[1]],
+        );
+
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d).to.equal(
+          `M 0 31 L 0 ${ROW_1_CENTER - 4} Q 0 ${ROW_1_CENTER} 4 ${ROW_1_CENTER} L ${EVENTS_WIDTH} ${ROW_1_CENTER}`,
+        );
+      });
+
+      it('should turn on the target edge when it sits on the opposite timeline edge', () => {
+        // Ends after the range: its end edge sits on the right edge, and the predecessor
+        // comes from the left one.
+        const ongoing = EventBuilder.new()
+          .id('event-ongoing')
+          .span('2024-01-15T14:00:00Z', '2024-01-16T02:00:00Z')
+          .toProcessed();
+
+        const arrows = computeArrows(
+          'event-before',
+          'event-ongoing',
+          'FinishToFinish',
+          [eventBefore, ongoing],
+          [{ resource: resource1, occurrences: getOccurrences([ongoing]) }, resources[1]],
+        );
+
+        expect(arrows).to.have.length(1);
+        expect(arrows[0].d).to.equal(
+          `M 0 ${ROW_1_CENTER} L ${EVENTS_WIDTH - 4} ${ROW_1_CENTER} Q ${EVENTS_WIDTH} ${ROW_1_CENTER} ${EVENTS_WIDTH} ${ROW_1_CENTER - 4} L ${EVENTS_WIDTH} 31`,
+        );
+      });
+
+      it('should skip an event in the range that is in no rendered row', () => {
+        // In the lookup, but its row does not render it (e.g. while it is replaced).
+        const ongoing = EventBuilder.new()
+          .id('event-ongoing')
+          .span('2024-01-14T22:00:00Z', '2024-01-15T10:00:00Z')
+          .resource(resource2)
+          .toProcessed();
+
+        const arrows = computeArrows('event-ongoing', 'event-a', undefined, [eventA, ongoing]);
+
+        expect(arrows).to.deep.equal([]);
+      });
+
       it('should render an arrow to every row of a multi-resource event after the range', () => {
         const multiResourceEvent = EventBuilder.new()
           .id('event-after')

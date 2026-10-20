@@ -59,7 +59,8 @@ export interface DependencyArrow {
   readonly hitHead: { x: number; width: number } | null;
   /**
    * The point where the arrowhead is drawn, in the same coordinate space as `d`: the
-   * target edge anchor, except when the route clamps at the timeline edge.
+   * target edge anchor, except when the route clamps at the timeline edge or the target
+   * is outside the visible range.
    */
   endPoint: DependencyArrowPoint;
   /**
@@ -82,8 +83,8 @@ export interface DependencyArrow {
 
 /**
  * Computes the arrow of each renderable dependency, connecting the edges of its two
- * events that its type constrains. When the other event is on screen, an event outside
- * the visible range is reached through the timeline edge on its side.
+ * events that its type constrains. When only one event is in the visible range, the
+ * other is reached through the timeline edge on its side.
  */
 export function computeDependencyArrows(
   resolver: DependencyAnchorResolver,
@@ -136,30 +137,17 @@ export function computeDependencyArrows(
       return obstacles;
     };
 
-    let route: DependencyArrowPoint[] | null;
-    let targetEdge: SchedulerEventSide = edges.target;
-    if (targetAnchor.occurrence === null) {
-      route = buildOffRangeDependencyArrowRoute(
-        source,
-        edges.source === 'end' ? 1 : -1,
-        target,
-        true,
-        resolver.detourOffset,
-        eventsWidth,
-      );
-      // The arrowhead points out of the timeline: after the range, it comes from the
-      // left like into a start edge.
-      targetEdge = targetAnchor.side === 'after' ? 'start' : 'end';
-    } else if (sourceAnchor.occurrence === null) {
-      route = buildOffRangeDependencyArrowRoute(
-        target,
-        edges.target === 'end' ? 1 : -1,
-        source,
-        false,
-        resolver.detourOffset,
-        eventsWidth,
-      );
-    } else {
+    const pickRoute = (): DependencyArrowPoint[] | null => {
+      if (sourceAnchor.occurrence === null || targetAnchor.occurrence === null) {
+        return buildOffRangeDependencyArrowRoute(
+          source,
+          target,
+          edges,
+          targetAnchor.occurrence === null ? 'target' : 'source',
+          resolver.detourOffset,
+          eventsWidth,
+        );
+      }
       const routes = buildDependencyArrowRoutes(
         source,
         target,
@@ -169,7 +157,7 @@ export function computeDependencyArrows(
       );
       // With several candidates, keep the one crossing the fewest events (first wins on
       // a tie). Best-effort avoidance, not full pathfinding.
-      route = routes[0];
+      let route = routes[0];
       if (routes.length > 1) {
         const routeObstacles = getObstacles();
         let bestCollisions = countRouteCollisions(route, routeObstacles);
@@ -181,12 +169,19 @@ export function computeDependencyArrows(
           }
         }
       }
-    }
+      return route;
+    };
 
-    if (route === null) {
+    const points = pickRoute();
+    if (points === null) {
       return null;
     }
-    const points = route;
+    // The arrowhead of a target outside the range points out of the timeline: after the
+    // range, it comes from the left like into a start edge.
+    let targetEdge: SchedulerEventSide = edges.target;
+    if (targetAnchor.occurrence === null) {
+      targetEdge = targetAnchor.side === 'after' ? 'start' : 'end';
+    }
 
     let minX = Infinity;
     let maxX = -Infinity;
@@ -253,7 +248,7 @@ export function computeDependencyArrows(
     const sourceAppearances = resolver.getAppearances(dependency.source);
     const targetAppearances = resolver.getAppearances(dependency.target);
 
-    // With neither event on screen, nothing would explain the arrow.
+    // With neither event in the visible range, nothing would explain the arrow.
     if (sourceAppearances.length === 0 && targetAppearances.length === 0) {
       continue;
     }
@@ -267,9 +262,9 @@ export function computeDependencyArrows(
         ? targetAppearances
         : resolver.getOffRangeAnchors(dependency.target);
 
-    // An endpoint without an anchor is not rendered in the timeline: its event has no
-    // resource, is hidden by the hour window between two visible days, or its row is hidden. The
-    // dependency stays in the data, it just has no arrow.
+    // An endpoint without an anchor is not rendered in the timeline: its event is not
+    // loaded, has no resource, its row is hidden, or the hour window hides it between two
+    // visible days. The dependency stays in the data, it just has no arrow.
     if (sourceAnchors.length === 0 || targetAnchors.length === 0) {
       continue;
     }

@@ -820,6 +820,25 @@ describe('<EventTimelinePremium /> dependency editor', () => {
       expect(within(screen.getByRole('dialog')).getByText('Edit dependency')).not.to.equal(null);
     });
 
+    it('should open the dialog from Edit dependency on an arrow to an event outside the visible range', async () => {
+      await renderTimeline({
+        events: [eventA, laterEvent],
+        dependencies: [buildDependency('dep-1', 'event-a', 'event-later')],
+      });
+
+      fireEvent.contextMenu(getHitArea('dep-1'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit dependency' }));
+
+      expect(
+        within(screen.getByRole('dialog'))
+          .getAllByRole('term')
+          .map((term) => [term.textContent, term.nextElementSibling?.textContent]),
+      ).to.deep.equal([
+        ['From', 'Event A'],
+        ['To', 'Event later'],
+      ]);
+    });
+
     it('should use the colors of the row of the opened arrow for a multi-resource event', async () => {
       const multiResourceEvent = EventBuilder.new()
         .id('event-m')
