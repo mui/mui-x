@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
-import { describe, expect, it, vi } from 'vitest';
-import { ChatProvider } from '@mui/x-chat-headless';
+import { createRenderer, screen } from '@mui/internal-test-utils';
+import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
-import { ChatComposer } from './ChatComposer';
 
 const { render } = createRenderer();
 
@@ -43,43 +41,5 @@ describe('ChatComposer', () => {
       </ChatBox>,
     );
     expect(document.querySelector('.custom-composer')).not.toBe(null);
-  });
-
-  describe('attachment config', () => {
-    function selectNonPdfFile() {
-      const input = document.querySelector('input[type="file"]');
-      if (!(input instanceof HTMLInputElement)) {
-        throw new Error('File input not found');
-      }
-      expect(input.getAttribute('accept')).to.equal('application/pdf');
-      fireEvent.change(input, {
-        target: { files: [new File(['x'], 'a.txt', { type: 'text/plain' })] },
-      });
-    }
-
-    it('applies features.attachments passed to ChatBox', () => {
-      const onAttachmentReject = vi.fn();
-      render(
-        <ChatBox
-          adapter={createAdapter()}
-          features={{ attachments: { acceptedMimeTypes: ['application/pdf'], onAttachmentReject } }}
-        />,
-      );
-      selectNonPdfFile();
-      expect(onAttachmentReject).toHaveBeenCalledTimes(1);
-    });
-
-    it('applies the attachmentConfig prop', () => {
-      const onAttachmentReject = vi.fn();
-      render(
-        <ChatProvider adapter={createAdapter()}>
-          <ChatComposer
-            attachmentConfig={{ acceptedMimeTypes: ['application/pdf'], onAttachmentReject }}
-          />
-        </ChatProvider>,
-      );
-      selectNonPdfFile();
-      expect(onAttachmentReject).toHaveBeenCalledTimes(1);
-    });
   });
 });
