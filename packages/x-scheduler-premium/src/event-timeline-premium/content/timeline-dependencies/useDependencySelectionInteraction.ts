@@ -8,8 +8,7 @@ import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-intern
 
 /**
  * Targets whose keystrokes must never reach the arrows: form controls (native or
- * ARIA), editable regions, and anything inside a dialog — the event dialog opens on
- * top of the timeline while an arrow can still be selected underneath.
+ * ARIA), editable regions, and anything inside a dialog or a menu.
  */
 const GUARDED_KEY_TARGETS = [
   'input',
@@ -21,14 +20,20 @@ const GUARDED_KEY_TARGETS = [
   '[contenteditable]:not([contenteditable="false"])',
   'dialog',
   '[role="dialog"]',
+  '[role="menu"]',
 ].join(', ');
 
 /**
- * The dialog subset of the guard also applies to presses: a press inside the open
- * event dialog belongs to the dialog, it must neither deselect the arrow underneath
- * nor swallow the control's click.
+ * A press inside an open dialog or menu must not deselect the arrow nor lose its click.
  */
-const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"]';
+const GUARDED_PRESS_TARGETS = 'dialog, [role="dialog"], [role="menu"]';
+
+/**
+ * Whether a press lands in a Select's options popup, portaled outside its dialog.
+ */
+function isOptionsPopupPress(target: Element): boolean {
+  return target.closest('[role="presentation"]')?.querySelector('[role="listbox"]') != null;
+}
 
 function isGuardedKeyTarget(event: KeyboardEvent): boolean {
   // At the document level `event.target` is retargeted to the shadow host, which
@@ -100,11 +105,12 @@ export function useDependencySelectionInteraction(elementRef: React.RefObject<El
         // surface — another timeline's arrows are ordinary click-aways, or one Delete
         // would delete a link in each timeline holding a selection.
         const interactionHit = target.closest(
-          '[data-dependency-hit], [data-dependency-delete-button]',
+          '[data-dependency-hit], [data-dependency-hit-head], [data-dependency-delete-button]',
         );
         if (
           (interactionHit !== null && elementRef.current?.contains(interactionHit)) ||
-          target.closest(GUARDED_PRESS_TARGETS) !== null
+          target.closest(GUARDED_PRESS_TARGETS) !== null ||
+          isOptionsPopupPress(target)
         ) {
           return;
         }

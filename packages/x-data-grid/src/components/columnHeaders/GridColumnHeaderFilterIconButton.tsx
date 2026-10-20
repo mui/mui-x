@@ -93,7 +93,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
-      aria-haspopup="menu"
+      aria-haspopup="dialog"
       aria-expanded={isOpen}
       aria-controls={isOpen ? panelId : undefined}
       {...rootProps.slotProps?.baseIconButton}
