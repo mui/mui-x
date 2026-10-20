@@ -172,4 +172,25 @@ describe('<DigitalClock />', () => {
     const options = screen.getAllByRole('option');
     expect(options[0]).to.have.class('bar');
   });
+  // https://github.com/mui/mui-x/issues/15758
+  it('should not scroll back to the selected item when it re-renders', () => {
+    const view = render(
+      <DigitalClock
+        value={adapterToUse.date('2018-01-01T12:30:00')}
+        focusedView="hours"
+        onFocusedViewChange={() => {}}
+      />,
+    );
+
+    const setScrollTop = vi.fn();
+    Object.defineProperty(screen.getByRole('listbox').parentElement!, 'scrollTop', {
+      configurable: true,
+      get: () => 0,
+      set: setScrollTop,
+    });
+
+    view.setProps({ focusedView: null });
+
+    expect(setScrollTop).not.toHaveBeenCalled();
+  });
 });
