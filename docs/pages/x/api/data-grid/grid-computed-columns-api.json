@@ -5,7 +5,7 @@
     {
       "name": "addComputedColumn",
       "description": "Adds a computed column.",
-      "type": "(definition: GridComputedColumnDefinition, options?: { columnIndex?: number }) => void"
+      "type": "(definition: GridComputedColumnDefinition, options?: { columnIndex?: number; undoable?: boolean }) => void"
     },
     {
       "name": "hideComputedColumnEditor",
@@ -15,12 +15,12 @@
     {
       "name": "removeComputedColumn",
       "description": "Removes a computed column.",
-      "type": "(field: string) => void"
+      "type": "(field: string, options?: { undoable?: boolean }) => void"
     },
     {
       "name": "setComputedColumns",
       "description": "Sets the computed columns model.",
-      "type": "(model: GridComputedColumnsModel | ((prev: GridComputedColumnsModel) => GridComputedColumnsModel)) => void"
+      "type": "(model: GridComputedColumnsModel | ((prev: GridComputedColumnsModel) => GridComputedColumnsModel), options?: { undoable?: boolean }) => void"
     },
     {
       "name": "showComputedColumnEditor",
@@ -30,7 +30,7 @@
     {
       "name": "updateComputedColumn",
       "description": "Updates the definition of a computed column.",
-      "type": "(field: string, changes: Partial<Omit<GridComputedColumnDefinition, 'field'>>) => void"
+      "type": "(field: string, changes: Partial<Omit<GridComputedColumnDefinition, 'field'>>, options?: { undoable?: boolean }) => void"
     },
     {
       "name": "validateComputedColumn",

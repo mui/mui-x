@@ -18,7 +18,6 @@ import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 import type {
   GridComputedColumnsApi,
   GridComputedColumnsModel,
-  GridComputedColumnsModelPrivateApi,
 } from './gridComputedColumnsInterfaces';
 import {
   gridComputedColumnDefinitionSelector,
@@ -77,7 +76,6 @@ export const computedColumnsStateInitializer: GridStateInitializer<
     pendingColumnDimensions: new Map(),
     previousModel: null,
     historyEcho: null,
-    isApplyingUserChange: false,
     userModel: null,
   };
 
@@ -121,12 +119,9 @@ export const useGridComputedColumns = (
    * API METHODS
    */
   const setComputedColumns = React.useCallback<GridComputedColumnsApi['setComputedColumns']>(
-    (model) => {
+    (model, options) => {
       const cache = apiRef.current.caches.computedColumns;
-      // The flag marks the first call only: a model change the parent makes from code while
-      // the change runs (an API call from `onComputedColumnsChange()`) is not the user's.
-      let isUserChange = cache.isApplyingUserChange;
-      cache.isApplyingUserChange = false;
+      let isUserChange = options?.undoable === true;
 
       const currentModel = gridComputedColumnsSelector(apiRef);
       const newModel = removeDuplicateFields(
@@ -136,10 +131,11 @@ export const useGridComputedColumns = (
         return;
       }
 
-      // Only a change made from the grid UI is an undo step. A controlled parent echoes it
-      // through here later, without the flag: the echo is recognized by its model. A model
-      // equal to the current one (an inline prop re-created by a render of the parent before
-      // the echo) is neither the change nor a new one.
+      // Only an undoable change (made from the grid UI, or passed with `undoable`) is an undo
+      // step. A controlled parent echoes it through here later, without the option: the echo
+      // is recognized by its model. A model equal to the current one (an inline prop
+      // re-created by a render of the parent before the echo) is neither the change nor a
+      // new one.
       if (isUserChange) {
         cache.userModel = newModel;
       } else if (cache.userModel !== null) {
@@ -211,13 +207,15 @@ export const useGridComputedColumns = (
       // Dimensions a rejected `restoreState()` left for this field are not this insertion's.
       pendingColumnDimensions.delete(definition.field);
 
-      apiRef.current.setComputedColumns((prev) => [...prev, definition]);
+      apiRef.current.setComputedColumns((prev) => [...prev, definition], {
+        undoable: options?.undoable,
+      });
     },
     [apiRef],
   );
 
   const updateComputedColumn = React.useCallback<GridComputedColumnsApi['updateComputedColumn']>(
-    (field, changes) => {
+    (field, changes, options) => {
       apiRef.current.setComputedColumns((prev) => {
         if (!prev.some((definition) => definition.field === field)) {
           return prev;
@@ -237,13 +235,13 @@ export const useGridComputedColumns = (
           }
           return next;
         });
-      });
+      }, options);
     },
     [apiRef],
   );
 
   const removeComputedColumn = React.useCallback<GridComputedColumnsApi['removeComputedColumn']>(
-    (field) => {
+    (field, options) => {
       apiRef.current.caches.computedColumns.pendingColumnIndexes.delete(field);
       apiRef.current.caches.computedColumns.pendingColumnDimensions.delete(field);
       apiRef.current.setComputedColumns((prev) => {
@@ -251,7 +249,7 @@ export const useGridComputedColumns = (
           return prev;
         }
         return prev.filter((definition) => definition.field !== field);
-      });
+      }, options);
     },
     [apiRef],
   );
@@ -343,27 +341,6 @@ export const useGridComputedColumns = (
   };
 
   useGridApiMethod(apiRef, computedColumnsApi, 'public');
-
-  const applyUserComputedColumnsChange = React.useCallback<
-    GridComputedColumnsModelPrivateApi['applyUserComputedColumnsChange']
-  >(
-    (change) => {
-      const cache = apiRef.current.caches.computedColumns;
-      cache.isApplyingUserChange = true;
-      try {
-        change();
-      } finally {
-        cache.isApplyingUserChange = false;
-      }
-    },
-    [apiRef],
-  );
-
-  const computedColumnsPrivateApi: GridComputedColumnsModelPrivateApi = {
-    applyUserComputedColumnsChange,
-  };
-
-  useGridApiMethod(apiRef, computedColumnsPrivateApi, 'private');
 
   /**
    * PRE-PROCESSING

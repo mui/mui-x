@@ -856,17 +856,22 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
       }
     }
     const { field } = definition;
-    apiRef.current.applyUserComputedColumnsChange(() => {
-      if (isEditing) {
-        apiRef.current.updateComputedColumn(storedDefinition.field, {
+    if (isEditing) {
+      apiRef.current.updateComputedColumn(
+        storedDefinition.field,
+        {
           // `updateComputedColumn` merges: a format removed by the editor is cleared explicitly.
           numberFormat: undefined,
           ...definition,
-        });
-      } else {
-        apiRef.current.addComputedColumn(definition, { columnIndex: session.columnIndex });
-      }
-    });
+        },
+        { undoable: true },
+      );
+    } else {
+      apiRef.current.addComputedColumn(definition, {
+        columnIndex: session.columnIndex,
+        undoable: true,
+      });
+    }
     onDone({ type: 'applied', field });
   }, [
     apiRef,
@@ -890,9 +895,7 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
       return;
     }
     if (isEditing) {
-      apiRef.current.applyUserComputedColumnsChange(() =>
-        apiRef.current.removeComputedColumn(storedDefinition.field),
-      );
+      apiRef.current.removeComputedColumn(storedDefinition.field, { undoable: true });
     }
     onDone({ type: 'deleted' });
   }, [apiRef, isEditing, onDone, readOnly, storedDefinition]);

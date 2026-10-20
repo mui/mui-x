@@ -76,16 +76,16 @@ function captureColumns(
 
 /**
  * Create the default handler for `computedColumnsChange` events.
- * Every change made from the panel, the column menu or the cells is one step; changes made
- * from code (API, the controlled prop, `restoreState()`) are not, and they invalidate the
- * steps they conflict with, like `updateRows()` does for cell edits. Undo and redo put the
- * whole model back, then restore the position, width and visibility of the columns the step
- * brings back.
+ * Every change made from the panel, the column menu or the cells is one step, and so is an
+ * API call passed `undoable: true`; the other changes made from code (API, the controlled
+ * prop, `restoreState()`) are not, and they invalidate the steps they conflict with, like
+ * `updateRows()` does for cell edits. Undo and redo put the whole model back, then restore
+ * the position, width and visibility of the columns the step brings back.
  *
  * The handler keeps no state of its own: `store()` runs after the state update, so the
  * previous model of a step is the one `setComputedColumns()` stashed in
- * `caches.computedColumns.previousModel` right before it, the model of the change made from
- * the UI waits in `caches.computedColumns.userModel`, and the echo an undo/redo expects from
+ * `caches.computedColumns.previousModel` right before it, the model of an undoable change
+ * waits in `caches.computedColumns.userModel`, and the echo an undo/redo expects from
  * a controlled parent waits in `caches.computedColumns.historyEcho`. The history hook may
  * therefore re-create the handler at any time (a handler built before the grid mounted, an
  * inline `historyEventHandlers` map) and stop recording for a while (`historyStackSize` set
@@ -199,8 +199,8 @@ export const createComputedColumnsHistoryHandler = (
         cache.historyEcho = null;
       }
 
-      // Set by `setComputedColumns()` for a change made from the UI (or its controlled echo)
-      // only, so a change from code records nothing. `validate()` drops the steps it
+      // Set by `setComputedColumns()` for an undoable change (or its controlled echo) only,
+      // so any other change from code records nothing. `validate()` drops the steps it
       // conflicts with.
       if (cache.userModel === null) {
         return null;

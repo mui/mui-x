@@ -554,6 +554,66 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(getModel()).to.deep.equal([total, tax]);
     });
 
+    it('records a removal passed `undoable: true` as one step and restores the column on undo', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      await act(async () => api().setColumnIndex('total', 1));
+      await act(async () => api().setColumnWidth('total', 180));
+
+      await act(async () => api().removeComputedColumn('total', { undoable: true }));
+      expect(getFields()).to.deep.equal(['item', 'price', 'quantity']);
+      expect(getStackSize()).to.equal(1);
+      expect(getToolbarButton('Undo').disabled).to.equal(false);
+
+      expect(await undo()).to.equal(true);
+      expect(getModel()).to.deep.equal([total]);
+      expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity']);
+      expect(api().getColumn('total')!.width).to.equal(180);
+    });
+
+    it('records the changes passed `undoable: true` through each API method as one step', async () => {
+      await render(<Test />);
+      await act(async () => api().addComputedColumn(total, { columnIndex: 1, undoable: true }));
+      await act(async () =>
+        api().updateComputedColumn('total', { formula: '=price + quantity' }, { undoable: true }),
+      );
+      await act(async () => api().setComputedColumns((prev) => [...prev, tax], { undoable: true }));
+      expect(getStackSize()).to.equal(3);
+
+      await undo();
+      expect(getModel()).to.deep.equal([{ ...total, formula: '=price + quantity' }]);
+      await undo();
+      expect(getModel()).to.deep.equal([total]);
+      await undo();
+      expect(getModel()).to.deep.equal([]);
+      expect(canUndo()).to.equal(false);
+
+      await redo();
+      expect(getFields()).to.deep.equal(['item', 'total', 'price', 'quantity']);
+      await redo();
+      await redo();
+      expect(getModel()).to.deep.equal([{ ...total, formula: '=price + quantity' }, tax]);
+    });
+
+    it('does not take an API call made from `onComputedColumnsChange` for part of an undoable change', async () => {
+      let added = false;
+      await render(
+        <Test
+          onComputedColumnsChange={(model) => {
+            if (!added && model.some((definition) => definition.field === 'total')) {
+              added = true;
+              apiRef.current!.addComputedColumn(tax);
+            }
+          }}
+        />,
+      );
+      await act(async () => api().addComputedColumn(total, { undoable: true }));
+      expect(getModel()).to.deep.equal([total, tax]);
+      await waitForValidation();
+      expect(canUndo()).to.equal(false);
+      expect(await undo()).to.equal(false);
+      expect(getModel()).to.deep.equal([total, tax]);
+    });
+
     it('undoes cell edits and computed column changes in the order they were made', async () => {
       const { user } = await render(
         <Test
@@ -610,6 +670,19 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(getToolbarButton('Undo').disabled).to.equal(true);
       expect(await undo()).to.equal(false);
       expect(getModel()).to.deep.equal([{ ...total, headerName: 'Amount', editable: false }, tax]);
+    });
+
+    it('records an API change of a locked column passed `undoable: true`', async () => {
+      // The lock only applies to the UI.
+      const locked = { ...total, editable: false };
+      await render(<Test initialState={{ computedColumns: { model: [locked] } }} />);
+      await act(async () =>
+        api().updateComputedColumn('total', { formula: '=price * 2' }, { undoable: true }),
+      );
+      expect(canUndo()).to.equal(true);
+
+      await undo();
+      expect(getModel()).to.deep.equal([locked]);
     });
 
     it('does not revert a code change of a locked column on Ctrl+Z', async () => {
@@ -814,6 +887,21 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       await undo();
       expect(getModel()).to.deep.equal([]);
       expect(canUndo()).to.equal(false);
+    });
+
+    it('records an API change passed `undoable: true` once and ignores the echo', async () => {
+      const onChange = vi.fn();
+      await render(<Controlled copy onChange={onChange} initialModel={[total, tax]} />);
+
+      await act(async () => api().removeComputedColumn('tax', { undoable: true }));
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(getModel()).to.deep.equal([total]);
+      expect(api().state.history.stack).to.have.length(1);
+
+      await undo();
+      expect(getModel()).to.deep.equal([total, tax]);
+      expect(canUndo()).to.equal(false);
+      expect(canRedo()).to.equal(true);
     });
 
     it('recognizes the echo of a parent that copies the model', async () => {
@@ -1176,6 +1264,19 @@ describe('<DataGridPremium /> - Computed columns history', () => {
 
       await undo();
       expect(getFields()).to.deep.equal(['item', 'price', 'quantity', 'total']);
+      expect(canUndo()).to.equal(false);
+    });
+
+    it('records a deletion from the editor as one step', async () => {
+      await render(<Test initialState={{ computedColumns: { model: [total, tax] } }} />);
+      await openEditor('total');
+      fireEvent.click(getButton('Delete column'));
+      await microtasks();
+      expect(getModel()).to.deep.equal([tax]);
+      expect(canUndo()).to.equal(true);
+
+      await undo();
+      expect(getModel()).to.deep.equal([total, tax]);
       expect(canUndo()).to.equal(false);
     });
 

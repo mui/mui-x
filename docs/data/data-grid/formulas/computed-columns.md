@@ -290,6 +290,8 @@ The `apiRef` exposes the following methods:
 - `showComputedColumnEditor(field, { sampleRowId, columnIndex })` opens the panel on the editor of the given column, or on a new column when `field` is omitted, using `sampleRowId` as the preview row. `hideComputedColumnEditor()` closes the panel.
 - `validateComputedColumn(definition)` returns the validation result of a definition without applying it—see [Validation](#validation).
 
+The four methods that change the model accept `{ undoable: true }` to make the change an undo step—see [Undo and redo](#undo-and-redo).
+
 {{"demo": "ComputedColumnsApi.js", "bg": "inline", "defaultCodeOpen": false}}
 
 The `computedColumnsChange` event is published on every model change, and the `gridComputedColumnsSelector` returns the current model—see [Selectors](#selectors).
@@ -363,6 +365,13 @@ Undoing a removal restores the column with its previous position, width, and vis
 Changes made from code—the `apiRef` methods, `apiRef.current.restoreState()`, or a new value of the controlled `computedColumns` prop—are not steps, the same way `updateRows()` is not a step for cell edits.
 They drop the undo and redo steps that no longer match the model.
 For example, after a user edits the `total` column in the panel, a call to `apiRef.current.updateComputedColumn('total', { formula: '=price * quantity * 1.2' })` disables Undo, so the user cannot revert your change by undoing their own edit.
+
+To make a change from your own UI an undo step, as the built-in UI does, pass `undoable: true` to the `apiRef` method—`setComputedColumns()`, `addComputedColumn()`, `updateComputedColumn()`, and `removeComputedColumn()` all accept it:
+
+```tsx
+// A custom "Remove Total" button
+apiRef.current.removeComputedColumn('total', { undoable: true });
+```
 
 To leave computed columns out of the history, provide your own map through the `historyEventHandlers` prop without the `computedColumnsChange` handler; the default handler is exported as `createComputedColumnsHistoryHandler()` so you can combine it with your own handlers.
 

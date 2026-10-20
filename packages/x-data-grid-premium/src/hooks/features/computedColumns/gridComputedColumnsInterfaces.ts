@@ -158,15 +158,11 @@ export interface GridComputedColumnsInternalCache {
    */
   historyEcho: { model: GridComputedColumnsModel; columns: GridComputedColumnSnapshot[] } | null;
   /**
-   * `true` while `applyUserComputedColumnsChange()` runs a change made from the grid UI
-   * (the panel, the column menu, the cells), until `setComputedColumns()` takes it.
-   */
-  isApplyingUserChange: boolean;
-  /**
-   * The model of the last change made from the grid UI, until `setComputedColumns()` applies
-   * it: the history handler records a change as a step only when it is this one. With a
-   * controlled model, it waits for the parent to echo it; any other model (the parent
-   * rejected or rewrote the change, or a change from code) drops it.
+   * The model of the last undoable change (made from the grid UI, or passed with `undoable`)
+   * until `setComputedColumns()` applies it: the history handler records a change as a step
+   * only when it is this one. With a controlled model, it waits for the parent to echo it;
+   * any other model (the parent rejected or rewrote the change, or a change that is not
+   * undoable) drops it.
    */
   userModel: GridComputedColumnsModel | null;
 }
@@ -178,35 +174,44 @@ export interface GridComputedColumnsApi {
   /**
    * Sets the computed columns model.
    * @param {GridComputedColumnsModel | ((prev: GridComputedColumnsModel) => GridComputedColumnsModel)} model The new model, or a function returning it from the current one.
+   * @param {object} options The options of the change.
+   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`.
    */
   setComputedColumns: (
     model:
       GridComputedColumnsModel | ((prev: GridComputedColumnsModel) => GridComputedColumnsModel),
+    options?: { undoable?: boolean },
   ) => void;
   /**
    * Adds a computed column.
    * @param {GridComputedColumnDefinition} definition The definition of the computed column.
    * @param {object} options The options of the insertion.
    * @param {number} options.columnIndex The index to insert the column at. The column is appended by default.
+   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`.
    */
   addComputedColumn: (
     definition: GridComputedColumnDefinition,
-    options?: { columnIndex?: number },
+    options?: { columnIndex?: number; undoable?: boolean },
   ) => void;
   /**
    * Updates the definition of a computed column.
    * @param {string} field The field of the computed column to update.
    * @param {Partial<Omit<GridComputedColumnDefinition, 'field'>>} changes The properties to update.
+   * @param {object} options The options of the change.
+   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`.
    */
   updateComputedColumn: (
     field: string,
     changes: Partial<Omit<GridComputedColumnDefinition, 'field'>>,
+    options?: { undoable?: boolean },
   ) => void;
   /**
    * Removes a computed column.
    * @param {string} field The field of the computed column to remove.
+   * @param {object} options The options of the change.
+   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`.
    */
-  removeComputedColumn: (field: string) => void;
+  removeComputedColumn: (field: string, options?: { undoable?: boolean }) => void;
   /**
    * Opens the computed column editor in the sidebar.
    * @param {string | null} field The field of the computed column to edit. Omit it, or pass `null`, to create a new computed column.
@@ -254,18 +259,4 @@ export interface GridComputedColumnsPrivateApi {
    * @returns {GridComputedColumnValidationIssue[]} The issues of the stored definition.
    */
   getComputedColumnIssues: (field: string) => GridComputedColumnValidationIssue[];
-}
-
-/**
- * Registered by the bundled half of the feature, with the model.
- */
-export interface GridComputedColumnsModelPrivateApi {
-  /**
-   * Runs a change of the model made from the grid UI (the panel, the column menu, the
-   * cells). Only these changes are undo steps: a change made from code is not, as for
-   * `updateRows()` and cell edits.
-   * @param {() => void} change The callback that changes the model through one API call:
-   * only its first `setComputedColumns()` is the user's change.
-   */
-  applyUserComputedColumnsChange: (change: () => void) => void;
 }

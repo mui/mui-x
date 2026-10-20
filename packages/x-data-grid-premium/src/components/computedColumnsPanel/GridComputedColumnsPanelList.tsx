@@ -306,9 +306,7 @@ function GridComputedColumnsPanelList(props: GridComputedColumnsPanelListProps) 
       const index = model.findIndex((definition) => definition.field === field);
       const next = model[index + 1] ?? model[index - 1];
       setPendingFocusField(next === undefined ? null : next.field);
-      apiRef.current.applyUserComputedColumnsChange(() =>
-        apiRef.current.removeComputedColumn(field),
-      );
+      apiRef.current.removeComputedColumn(field, { undoable: true });
     },
     [apiRef, model],
   );

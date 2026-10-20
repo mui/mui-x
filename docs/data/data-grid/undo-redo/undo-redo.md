@@ -99,6 +99,7 @@ When [computed columns](/x/react-data-grid/computed-columns/) are available (con
 
 Undoing the removal of a computed column restores it with its previous position, width, and visibility.
 Model changes made from code — the `apiRef` methods, `apiRef.current.restoreState()`, or a new value of the controlled `computedColumns` prop — are not tracked, the same way `updateRows()` is not tracked for cell edits, and they invalidate the steps that no longer match the model.
+To track a change made from your own UI, pass `undoable: true` to the `apiRef` method.
 To leave computed columns out of the history, provide your own map through the `historyEventHandlers` prop without the `computedColumnsChange` handler.
 
 :::warning

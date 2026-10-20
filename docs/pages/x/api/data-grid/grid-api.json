@@ -9,7 +9,7 @@
   "properties": {
     "addComputedColumn": {
       "type": {
-        "description": "(definition: GridComputedColumnDefinition, options?: { columnIndex?: number }) =&gt; void"
+        "description": "(definition: GridComputedColumnDefinition, options?: { columnIndex?: number; undoable?: boolean }) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true
@@ -292,7 +292,7 @@
     },
     "publishEvent": { "type": { "description": "GridEventPublisher" }, "required": true },
     "removeComputedColumn": {
-      "type": { "description": "(field: string) =&gt; void" },
+      "type": { "description": "(field: string, options?: { undoable?: boolean }) =&gt; void" },
       "required": true,
       "isPremiumPlan": true
     },
@@ -402,7 +402,7 @@
     },
     "setComputedColumns": {
       "type": {
-        "description": "(model: GridComputedColumnsModel | ((prev: GridComputedColumnsModel) =&gt; GridComputedColumnsModel)) =&gt; void"
+        "description": "(model: GridComputedColumnsModel | ((prev: GridComputedColumnsModel) =&gt; GridComputedColumnsModel), options?: { undoable?: boolean }) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true
@@ -628,7 +628,7 @@
     },
     "updateComputedColumn": {
       "type": {
-        "description": "(field: string, changes: Partial&lt;Omit&lt;GridComputedColumnDefinition, 'field'&gt;&gt;) =&gt; void"
+        "description": "(field: string, changes: Partial&lt;Omit&lt;GridComputedColumnDefinition, 'field'&gt;&gt;, options?: { undoable?: boolean }) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true

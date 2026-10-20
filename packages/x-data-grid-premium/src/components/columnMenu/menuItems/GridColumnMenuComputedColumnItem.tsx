@@ -11,7 +11,7 @@ import { gridComputedColumnsSelector } from '../../../hooks/features/computedCol
 import { isComputedColumnEditable } from '../../../hooks/features/computedColumns/gridComputedColumnsUtils';
 import { isGroupingColumn } from '../../../hooks/features/rowGrouping/gridRowGroupingUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
 /**
  * The computed columns entries of the column menu: "Add computed column" on
@@ -23,7 +23,7 @@ import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApi
 function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const rootProps = useGridRootProps();
-  const apiRef = useGridPrivateApiContext();
+  const apiRef = useGridApiContext();
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const model = useGridSelector(apiRef, gridComputedColumnsSelector);
   const definition = colDef.computed
@@ -55,9 +55,7 @@ function GridColumnMenuComputedColumnItem(props: GridColumnMenuItemProps) {
 
   const removeComputedColumn = (event: React.MouseEvent<HTMLElement>) => {
     onClick(event);
-    apiRef.current.applyUserComputedColumnsChange(() =>
-      apiRef.current.removeComputedColumn(colDef.field),
-    );
+    apiRef.current.removeComputedColumn(colDef.field, { undoable: true });
   };
 
   return (

@@ -35,7 +35,6 @@ import type {
 import type { GridHistoryApi } from '../hooks/features/history/gridHistoryInterfaces';
 import type {
   GridComputedColumnsApi,
-  GridComputedColumnsModelPrivateApi,
   GridComputedColumnsPrivateApi,
 } from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
 
@@ -76,7 +75,6 @@ export interface GridPrivateApiPremium
     Partial<GridFormulaPrivateApi>,
     // Registered by the formula feature as well: validation needs the engine.
     Partial<GridComputedColumnsPrivateApi>,
-    GridComputedColumnsModelPrivateApi,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
     GridPivotingPrivateApi,
