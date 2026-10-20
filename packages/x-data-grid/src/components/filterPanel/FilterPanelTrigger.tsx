@@ -89,7 +89,7 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
       {
         ...rootProps.slotProps?.baseButton,
         id: buttonId,
-        'aria-haspopup': 'true',
+        'aria-haspopup': 'dialog',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
         onClick: handleClick,

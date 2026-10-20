@@ -277,10 +277,10 @@ export const EventItem = React.forwardRef(function EventItem(
           data-variant={variant}
           data-palette={color}
           data-editing={isEditing || undefined}
-          // Lets the agenda's delete-focus fallback (see `getFocusFallback`) tell the deleted
-          // event's own other rows (a multi-day or recurring event spans several) apart from an
-          // unrelated event's.
+          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
           data-event-id={occurrence.id}
+          // Read by the agenda's delete-focus fallback (`captureFocusFallback`).
+          data-occurrence-timestamp={occurrence.dataTimezone.start.timestamp}
           aria-label={accessibleName}
           {...(startsBeforeDay ? { 'data-starting-before-edge': '' } : {})}
           {...(endsAfterDay ? { 'data-ending-after-edge': '' } : {})}

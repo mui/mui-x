@@ -369,11 +369,7 @@ export function EventDialogResourceAndColorSection() {
               return items;
             })}
           </Select>
-          {error && (
-            <FormHelperText id={errorId} role="alert">
-              {error}
-            </FormHelperText>
-          )}
+          {error && <FormHelperText id={errorId}>{error}</FormHelperText>}
         </FormControl>
       )}
       <ResourceMenuColorToggleGroup
