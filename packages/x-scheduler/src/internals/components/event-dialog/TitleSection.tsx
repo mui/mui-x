@@ -53,7 +53,6 @@ export default function TitleSection() {
             readOnly: title.readOnly,
             'aria-label': localeText.eventTitleAriaLabel,
           },
-          formHelperText: { role: 'alert' },
         }}
         error={!!title.error}
         helperText={title.error}
