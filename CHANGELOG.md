@@ -29,6 +29,7 @@ The following team members contributed to this release:
 - [DataGrid] Fix the "is any of" prompt filter text in translated locales (#23833) @LukasTy
 - [DataGrid] Keep keyboard focus after a click on the empty row space (#23862) @michelengelen
 - [DataGrid] Extract column reorder utils (#23834) @noraleonte
+- [DataGrid] Fix popover aria roles (#23878) @noraleonte
 - [l10n] Improve Romanian (ro-RO) locale (#23816) @vicuts
 - [l10n] Improve Turkish (tr-TR) locale (#23912) @aozmekik
 
@@ -69,6 +70,7 @@ Same changes as in `@mui/x-date-pickers@9.16.0`.
 #### `@mui/x-charts@9.16.0`
 
 - [charts] Fix `PropsFromSlot` resolving to `any` for `JSXElementConstructor` slots (#23856) @cpruijsen
+- [charts] Fix aria role on popper (#23939) @noraleonte
 
 #### `@mui/x-charts-pro@9.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -111,6 +113,9 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.14`, plus:
 
 - [scheduler-premium] Document `weekStartsOn` and export `EventTimelinePremiumPreferences` (#23811) @rita-codes
 - [scheduler-premium] Include the community models and theme augmentation in the Premium package (#23813) @rita-codes
+- [scheduler-premium] Dependencies - Edit the type and lag from the arrow, cascade on create and edit (#23726) @rita-codes
+- [scheduler-premium] Fix agenda focus skipping surviving occurrences after deleting a recurring event (#23903) @mustafajw07 
+
 
 ### Chat
 
