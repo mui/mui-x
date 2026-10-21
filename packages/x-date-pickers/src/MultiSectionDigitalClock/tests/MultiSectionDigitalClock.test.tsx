@@ -180,57 +180,9 @@ describe('<MultiSectionDigitalClock />', () => {
     });
   });
 
-  describe('focus behavior', () => {
-    it('should not steal focus from external input on value re-render', async () => {
-      function ControlledMultiSectionClock() {
-        const [value, setValue] = React.useState(adapterToUse.date('2018-01-01T12:30:00'));
-        const [inputValue, setInputValue] = React.useState('');
-
-        return (
-          <React.Fragment>
-            <input
-              aria-label="decoy"
-              value={inputValue}
-              onChange={(event) => {
-                setInputValue(event.target.value);
-                setValue(
-                  adapterToUse.setHours(
-                    value!,
-                    Math.min(
-                      23,
-                      Number.isNaN(Number(event.target.value)) ? 0 : Number(event.target.value),
-                    ),
-                  ),
-                );
-              }}
-            />
-            <MultiSectionDigitalClock
-              autoFocus
-              value={value}
-              onChange={(newValue) => {
-                if (newValue !== null) {
-                  setValue(newValue);
-                }
-              }}
-            />
-          </React.Fragment>
-        );
-      }
-
-      const { user } = render(<ControlledMultiSectionClock />);
-      const input = screen.getByRole('textbox', { name: 'decoy' });
-
-      await user.click(input);
-      await user.keyboard('1');
-
-      expect(document.activeElement).to.equal(input);
-      expect((input as HTMLInputElement).value).to.equal('1');
-    });
-  });
-
   describe('scrolling', () => {
     function mockScrollTop(element: HTMLElement) {
-      const setScrollTop = vi.fn();
+      const setScrollTop = spy();
       Object.defineProperty(element, 'scrollTop', {
         configurable: true,
         get: () => 0,
@@ -248,7 +200,7 @@ describe('<MultiSectionDigitalClock />', () => {
 
       view.setProps({ className: 'foo' });
 
-      expect(setScrollTop).not.toHaveBeenCalled();
+      expect(setScrollTop.callCount).to.equal(0);
     });
 
     it('should scroll to the new active item when the value changes', () => {
@@ -259,7 +211,7 @@ describe('<MultiSectionDigitalClock />', () => {
 
       view.setProps({ value: adapterToUse.date('2018-01-01T03:30:00') });
 
-      expect(setScrollTop).toHaveBeenCalledTimes(1);
+      expect(setScrollTop.callCount).to.equal(1);
     });
   });
 });

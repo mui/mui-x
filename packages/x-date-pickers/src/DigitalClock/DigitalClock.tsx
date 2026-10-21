@@ -117,7 +117,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
   const listRef = React.useRef<HTMLUListElement>(null);
-  const lastActiveRef = React.useRef<HTMLElement | null>(null);
   const lastScrollRef = React.useRef<{ item: HTMLElement; offsetTop: number } | null>(null);
 
   const props = useThemeProps({

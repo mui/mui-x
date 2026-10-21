@@ -139,9 +139,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
   ) {
     const containerRef = React.useRef<HTMLUListElement>(null);
     const handleRef = useForkRef(ref, containerRef);
-    const previousActive = React.useRef<HTMLElement | null>(null);
     const lastScrollRef = React.useRef<{ item: HTMLElement; offsetTop: number } | null>(null);
-    const shouldRefocusOnNextRender = React.useRef(false);
 
     const props = useThemeProps({
       props: inProps,
@@ -182,6 +180,9 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       );
       if (active && autoFocus && activeItem) {
         activeItem.focus();
+      }
+      if (!activeItem) {
+        return;
       }
 
       const offsetTop = activeItem.offsetTop;

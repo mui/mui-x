@@ -7,9 +7,8 @@ import {
   digitalClockHandler,
   formatFullTimeValue,
 } from 'test/utils/pickers';
-import { screen, waitFor } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi, describe, it, expect } from 'vitest';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();
@@ -184,7 +183,7 @@ describe('<DigitalClock />', () => {
       />,
     );
 
-    const setScrollTop = vi.fn();
+    const setScrollTop = spy();
     Object.defineProperty(screen.getByRole('listbox').parentElement!, 'scrollTop', {
       configurable: true,
       get: () => 0,
@@ -193,13 +192,13 @@ describe('<DigitalClock />', () => {
 
     view.setProps({ focusedView: null });
 
-    expect(setScrollTop).not.toHaveBeenCalled();
+    expect(setScrollTop.callCount).to.equal(0);
   });
 
   it('should scroll to the new active item when the value changes', () => {
     const view = render(<DigitalClock value={adapterToUse.date('2018-01-01T12:30:00')} />);
 
-    const setScrollTop = vi.fn();
+    const setScrollTop = spy();
     Object.defineProperty(screen.getByRole('listbox').parentElement!, 'scrollTop', {
       configurable: true,
       get: () => 0,
@@ -208,7 +207,7 @@ describe('<DigitalClock />', () => {
 
     view.setProps({ value: adapterToUse.date('2018-01-01T15:00:00') });
 
-    expect(setScrollTop).toHaveBeenCalledTimes(1);
+    expect(setScrollTop.callCount).to.equal(1);
   });
 
   // Needs layout: the position of the selected item is only known once the clock is visible
