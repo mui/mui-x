@@ -2225,6 +2225,67 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getRects()).to.have.length(0);
     });
 
+    it.skipIf(isJSDOM)(
+      'keeps the outlines on their cells and under the pinned columns',
+      async () => {
+        await render(
+          <Test
+            disableVirtualization={false}
+            rows={Array.from({ length: 100 }, (_, id) => ({ id, item: `Item ${id}`, price: id }))}
+            columns={[
+              { field: 'item', width: 300 },
+              { field: 'price', type: 'number', width: 300 },
+              { field: 'quantity', type: 'number', width: 300 },
+            ]}
+            initialState={{
+              computedColumns: { model: [total] },
+              pinnedColumns: { right: ['total'] },
+            }}
+          />,
+        );
+        await openEditor('total', { sampleRowId: 60 });
+        await act(async () => apiRef.current!.scrollToIndexes({ rowIndex: 60 }));
+        await waitFor(() => {
+          expect(
+            apiRef.current!.state.virtualization.renderContext.firstRowIndex,
+          ).to.be.greaterThan(0);
+        });
+
+        const priceCell = getCell(60, 1).getBoundingClientRect();
+        let outline: DOMRect;
+        await waitFor(() => {
+          outline = Array.from(
+            document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight'),
+            (node) => node.getBoundingClientRect(),
+          ).find((rect) => Math.abs(rect.left - priceCell.left) < 2)!;
+          expect(Math.abs(outline.top - priceCell.top)).to.be.lessThan(2);
+        });
+        expect(Math.abs(outline!.height - priceCell.height)).to.be.lessThan(2);
+
+        // The hit testing follows the paint order once the outlines take the pointer.
+        const style = document.createElement('style');
+        style.textContent =
+          '.MuiDataGrid-formulaReferenceOverlay, .MuiDataGrid-formulaReferenceHighlight { pointer-events: auto !important; }';
+        document.head.appendChild(style);
+        try {
+          const pinnedCell = getCell(60, 3).getBoundingClientRect();
+          expect(pinnedCell.left).to.be.lessThan(priceCell.right);
+          const y = priceCell.top + priceCell.height / 2;
+          expect(
+            document
+              .elementFromPoint(pinnedCell.left + 10, y)!
+              .closest(`.${gridClasses['cell--pinnedRight']}`),
+          ).not.to.equal(null);
+          expect(
+            document
+              .elementFromPoint(priceCell.left + 10, y)!
+              .classList.contains('MuiDataGrid-formulaReferenceHighlight'),
+          ).to.equal(true);
+        } finally {
+          style.remove();
+        }
+      },
+    );
   });
 
   describe('reference pane', () => {
