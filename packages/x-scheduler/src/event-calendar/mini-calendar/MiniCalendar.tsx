@@ -57,7 +57,7 @@ const MiniCalendarMonthLabel = styled('span', {
 })(({ theme }) => ({
   ...theme.typography.subtitle2,
   fontWeight: theme.typography.fontWeightMedium,
-  paddingLeft: theme.spacing(1.25),
+  paddingInlineStart: theme.spacing(1.25),
 }));
 
 const MiniCalendarWeekdayHeader = styled('div', {
