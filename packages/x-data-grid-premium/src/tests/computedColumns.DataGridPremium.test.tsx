@@ -1479,6 +1479,38 @@ describe('<DataGridPremium /> - Computed columns', () => {
         expect(getColumnValues(0)).to.deep.equal(descendingGroups);
       });
 
+      it('should keep the groups of errors last in both directions when the column is not the first grouping criteria', async () => {
+        await render(
+          <Test
+            {...groupedProps}
+            initialState={{ rowGrouping: { model: ['category', 'avgPrice'] } }}
+            defaultGroupingExpansionDepth={1}
+          />,
+        );
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+        expect(getColumnValues(0)).to.deep.equal([
+          'Display (3)',
+          '5 (1)',
+          '30 (2)',
+          'Input (5)',
+          '5 (1)',
+          '10 (2)',
+          '20 (1)',
+          '#DIV/0! (1)',
+        ]);
+        act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+        expect(getColumnValues(0)).to.deep.equal([
+          'Input (5)',
+          '20 (1)',
+          '10 (2)',
+          '5 (1)',
+          '#DIV/0! (1)',
+          'Display (3)',
+          '30 (2)',
+          '5 (1)',
+        ]);
+      });
+
       it('should keep the errors last in both directions when the column is the `leafField`', async () => {
         await render(
           <Test
@@ -1542,6 +1574,131 @@ describe('<DataGridPremium /> - Computed columns', () => {
           '10 (2)',
           '#DIV/0! (1)',
         ]);
+      });
+
+      it('should sort with the `sortComparator` of `groupingColDef` in the `multiple` grouping column mode', async () => {
+        await render(
+          <Test
+            {...groupedProps}
+            initialState={groupedByAvgPrice}
+            rowGroupingColumnMode="multiple"
+            groupingColDef={{
+              sortComparator: (value1, value2) => String(value1).localeCompare(String(value2)),
+            }}
+          />,
+        );
+        act(() => apiRef.current!.sortColumn('__row_group_by_columns_group_avgPrice__', 'asc'));
+        expect(getColumnValues(0)).to.deep.equal([
+          '#DIV/0! (1)',
+          '10 (2)',
+          '20 (1)',
+          '30 (2)',
+          '5 (2)',
+        ]);
+        act(() => apiRef.current!.sortColumn('__row_group_by_columns_group_avgPrice__', 'desc'));
+        expect(getColumnValues(0)).to.deep.equal([
+          '5 (2)',
+          '30 (2)',
+          '20 (1)',
+          '10 (2)',
+          '#DIV/0! (1)',
+        ]);
+      });
+
+      it('should not pass the groups of the other grouping criteria to their column in the `multiple` grouping column mode', async () => {
+        // Assumes strings: the `avgPrice` grouping column has no value for the groups of `category`
+        const sortComparator = vi.fn((value1: string, value2: string) =>
+          value1.localeCompare(value2),
+        );
+        await render(
+          <Test
+            {...groupedProps}
+            columns={groupedProps.columns!.map((column) =>
+              column.field === 'category' ? { ...column, sortComparator } : column,
+            )}
+            initialState={{ rowGrouping: { model: ['avgPrice', 'category'] } }}
+            rowGroupingColumnMode="multiple"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+        act(() => apiRef.current!.sortColumn('__row_group_by_columns_group_avgPrice__', 'desc'));
+        expect(getColumnValues(0).filter(Boolean)).to.deep.equal(descendingGroups);
+        expect(sortComparator.mock.calls.length).to.equal(0);
+      });
+
+      describe('unbalanced rows', () => {
+        // Stand and Hub have no category.
+        const unbalancedRows = [
+          ...groupedProps.rows!,
+          { id: 9, product: 'Stand', category: null, revenue: 30, units: 3 },
+          { id: 10, product: 'Hub', category: null, revenue: 45, units: 3 },
+        ];
+
+        it('should sort the groups by index of the grouping criteria in the model', async () => {
+          await render(
+            <Test
+              {...groupedProps}
+              rows={unbalancedRows}
+              initialState={{ rowGrouping: { model: ['category', 'avgPrice'] } }}
+            />,
+          );
+          act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+          expect(getColumnValues(0)).to.deep.equal([
+            'Display (3)',
+            'Input (5)',
+            '10 (1)',
+            '15 (1)',
+          ]);
+          act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+          expect(getColumnValues(0)).to.deep.equal([
+            '15 (1)',
+            '10 (1)',
+            'Input (5)',
+            'Display (3)',
+          ]);
+        });
+
+        it('should sort the leaves by index of the grouping criteria in the model when the column is the `leafField`', async () => {
+          await render(
+            <Test
+              {...groupedProps}
+              rows={unbalancedRows}
+              initialState={{ rowGrouping: { model: ['category'] } }}
+              groupingColDef={{ leafField: 'avgPrice' }}
+              defaultGroupingExpansionDepth={-1}
+            />,
+          );
+          act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+          expect(getColumnValues(0)).to.deep.equal([
+            '10',
+            '15',
+            'Input (5)',
+            '5',
+            '10',
+            '10',
+            '20',
+            '#DIV/0!',
+            'Display (3)',
+            '5',
+            '30',
+            '30',
+          ]);
+          act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+          expect(getColumnValues(0)).to.deep.equal([
+            'Input (5)',
+            '20',
+            '10',
+            '10',
+            '5',
+            '#DIV/0!',
+            'Display (3)',
+            '30',
+            '30',
+            '5',
+            '15',
+            '10',
+          ]);
+        });
       });
     });
   });

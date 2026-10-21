@@ -83,14 +83,21 @@ const groupingFieldIndexComparator: GridComparatorFn = (v1, v2, cellParams1, cel
 };
 
 /**
- * Returns the comparator of a column for a sort direction, negated for the "desc" direction like the grid does when the column has no `getSortComparator`.
+ * Only the computed columns sort their groups and leaves with their `getSortComparator`, which keeps their errors last in both directions.
+ * Their grouping value is their cell value, while the `getSortComparator` of another column may not expect the value of its `groupingValueGetter`.
+ */
+const sortsWithGetSortComparator = (colDef: GridColDef | undefined): boolean =>
+  colDef?.computed === true && !!colDef.getSortComparator;
+
+/**
+ * Returns the comparator of a column for a sort direction: the `getSortComparator` of a computed column, or else its `sortComparator`, negated for the "desc" direction like the grid does.
  */
 const getColDefSortComparator = (
   colDef: GridColDef,
   sortDirection: GridSortDirection,
 ): GridComparatorFn | undefined => {
-  if (colDef.getSortComparator) {
-    return colDef.getSortComparator(sortDirection);
+  if (sortsWithGetSortComparator(colDef)) {
+    return colDef.getSortComparator!(sortDirection);
   }
 
   const modifier = sortDirection === 'desc' ? -1 : 1;
@@ -116,8 +123,8 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => {
   };
 
   // The grid uses `getSortComparator` before `sortComparator`,
-  // so the leaves are sorted with the one of the leaf column when it has one
-  if (leafColDef.getSortComparator) {
+  // so the leaves of a computed column are sorted with the one of the leaf column
+  if (sortsWithGetSortComparator(leafColDef)) {
     properties.getSortComparator = (sortDirection) => {
       const modifier = sortDirection === 'desc' ? -1 : 1;
       const leafComparator = leafColDef.getSortComparator!(sortDirection);
@@ -216,11 +223,11 @@ function getGroupingCriteriaProperties(
   };
 
   // The grid uses `getSortComparator` before `sortComparator`,
-  // so the groups of a grouping criteria are sorted with the one of its column when it has one
+  // so the groups of a computed grouping criteria are sorted with the one of its column
   const hasGetSortComparator =
     rowGroupingColumnMode === 'single'
-      ? rowGroupingModel.some((field) => columnsLookup[field]?.getSortComparator)
-      : !!groupedByColDef.getSortComparator;
+      ? rowGroupingModel.some((field) => sortsWithGetSortComparator(columnsLookup[field]))
+      : sortsWithGetSortComparator(groupedByColDef);
   if (hasGetSortComparator) {
     properties.getSortComparator = (sortDirection) => {
       const modifier = sortDirection === 'desc' ? -1 : 1;

@@ -20,6 +20,7 @@ import {
 import type {
   DataGridPremiumProps,
   GridApi,
+  GridGroupNode,
   GridRowsProp,
   GridSortDirection,
 } from '@mui/x-data-grid-premium';
@@ -869,99 +870,49 @@ describe('<DataGridPremium /> - Row grouping', () => {
         ]);
       });
 
-      it('should sort the groups of a grouping criteria with the `getSortComparator` of its column', async () => {
+      it('should not pass the grouping values to the `getSortComparator` of the column', async () => {
+        // Written for the dates of the cells, not for the years of `groupingValueGetter`
+        const getSortComparator =
+          (sortDirection: GridSortDirection) => (value1: Date, value2: Date) =>
+            (sortDirection === 'desc' ? -1 : 1) * (value1.getTime() - value2.getTime());
         render(
           <Test
             rows={[
-              { id: 0, category1: 'Cat A', category2: 'Other' },
-              { id: 1, category1: 'Cat A', category2: 'Cat 1' },
-              { id: 2, category1: 'Cat B', category2: 'Cat 2' },
-              { id: 3, category1: 'Cat B', category2: 'Other' },
-              { id: 4, category1: 'Cat B', category2: 'Cat 1' },
+              { id: 0, date: new Date(2020, 1, 1) },
+              { id: 1, date: new Date(2021, 1, 1) },
+              { id: 2, date: new Date(2019, 1, 1) },
             ]}
             columns={[
-              { field: 'category1' },
               {
-                field: 'category2',
-                // "Other" stays last in both directions
-                getSortComparator: (sortDirection) => (value1: string, value2: string) => {
-                  if (value1 === 'Other' || value2 === 'Other') {
-                    return Number(value1 === 'Other') - Number(value2 === 'Other');
-                  }
-                  return (sortDirection === 'desc' ? -1 : 1) * value1.localeCompare(value2);
-                },
+                field: 'date',
+                type: 'date',
+                groupingValueGetter: (value: Date) => value.getFullYear(),
+                getSortComparator,
               },
             ]}
-            initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+            initialState={{ rowGrouping: { model: ['date'] } }}
             sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
-            defaultGroupingExpansionDepth={-1}
           />,
         );
         await microtasks();
 
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat B (3)',
-          'Cat 2 (1)',
-          '',
-          'Cat 1 (1)',
-          '',
-          'Other (1)',
-          '',
-          'Cat A (2)',
-          'Cat 1 (1)',
-          '',
-          'Other (1)',
-          '',
-        ]);
+        expect(
+          apiRef
+            .current!.getSortedRowIds()
+            .map((id) => apiRef.current!.getRowNode(id) as GridGroupNode)
+            .filter((node) => node.type === 'group' && node.depth === 0)
+            .map((node) => node.groupingKey),
+        ).to.deep.equal([2021, 2020, 2019]);
       });
 
-      it('should sort unbalanced grouped by index of the grouping criteria in the model when sorting by a grouping criteria with a `getSortComparator`', async () => {
+      it('should sort the leaves with the `sortComparator` of the leaf column', async () => {
+        // Reversed, to tell it apart from the `sortComparator` of the type
+        const getSortComparator = vi.fn(() => (value1: number, value2: number) => value2 - value1);
         render(
           <Test
-            rows={unbalancedRows}
-            columns={[
-              { field: 'id', type: 'number' },
-              {
-                field: 'category1',
-                getSortComparator: (sortDirection) => (value1: string, value2: string) =>
-                  (sortDirection === 'desc' ? -1 : 1) * value1.localeCompare(value2),
-              },
-            ]}
+            columns={[{ field: 'id', type: 'number', getSortComparator }, { field: 'category1' }]}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
-            defaultGroupingExpansionDepth={-1}
-            groupingColDef={{ mainGroupingCriteria: 'category1', leafField: 'id' }}
-          />,
-        );
-        await microtasks();
-
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat B (2)',
-          '2',
-          '3',
-          'Cat A (2)',
-          '0',
-          '1',
-          '4',
-          '5',
-        ]);
-      });
-
-      it('should sort unbalanced grouped by index of the grouping criteria in the model when sorting by leaves with a `getSortComparator`', async () => {
-        render(
-          <Test
-            rows={unbalancedRows}
-            columns={[
-              {
-                field: 'id',
-                type: 'number',
-                getSortComparator: (sortDirection) => (value1: number, value2: number) =>
-                  (sortDirection === 'desc' ? -1 : 1) * (value1 - value2),
-              },
-              { field: 'category1' },
-            ]}
-            initialState={{ rowGrouping: { model: ['category1'] } }}
-            sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
+            sortModel={[{ field: '__row_group_by_columns_group__', sort: 'asc' }]}
             defaultGroupingExpansionDepth={-1}
             groupingColDef={{ leafField: 'id' }}
           />,
@@ -969,80 +920,19 @@ describe('<DataGridPremium /> - Row grouping', () => {
         await microtasks();
 
         expect(getColumnValues(0)).to.deep.equal([
-          'Cat A (2)',
-          '1',
+          'Cat A (3)',
           '0',
+          '1',
+          '2',
           'Cat B (2)',
           '3',
-          '2',
-          '5',
           '4',
         ]);
+        expect(getSortComparator.mock.calls.length).to.equal(0);
       });
     });
 
     describe('prop: rowGroupingColumnMode = "multiple"', () => {
-      it('should only pass the groups of its grouping criteria to the `getSortComparator` of the column', async () => {
-        // Assumes strings: the other grouping columns have no value for these groups
-        const getSortComparator = (sortDirection: GridSortDirection) => (v1: string, v2: string) =>
-          (sortDirection === 'desc' ? -1 : 1) * v1.localeCompare(v2);
-        render(
-          <Test
-            columns={[
-              { field: 'id', type: 'number' },
-              { field: 'category1', getSortComparator },
-              { field: 'category2', getSortComparator },
-            ]}
-            initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="multiple"
-            sortModel={[{ field: '__row_group_by_columns_group_category1__', sort: 'desc' }]}
-            defaultGroupingExpansionDepth={-1}
-          />,
-        );
-        await microtasks();
-
-        expect(getColumnValues(0)).to.deep.equal([
-          'Cat B (2)',
-          '',
-          '',
-          '',
-          '',
-          'Cat A (3)',
-          '',
-          '',
-          '',
-          '',
-          '',
-        ]);
-      });
-
-      it('should sort with the `sortComparator` of `groupingColDef` instead of the `getSortComparator` of the column', async () => {
-        render(
-          <Test
-            columns={[
-              { field: 'id', type: 'number' },
-              {
-                field: 'category1',
-                getSortComparator: (sortDirection) => (value1: string, value2: string) =>
-                  (sortDirection === 'desc' ? -1 : 1) * value1.localeCompare(value2),
-              },
-            ]}
-            initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="multiple"
-            groupingColDef={{
-              // Reversed
-              sortComparator: (value1, value2) =>
-                String(value2 ?? '').localeCompare(String(value1 ?? '')),
-            }}
-            sortModel={[{ field: '__row_group_by_columns_group_category1__', sort: 'asc' }]}
-            defaultGroupingExpansionDepth={-1}
-          />,
-        );
-        await microtasks();
-
-        expect(getColumnValues(0)).to.deep.equal(['Cat B (2)', '', '', 'Cat A (3)', '', '', '']);
-      });
-
       it('should use the column grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
