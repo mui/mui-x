@@ -192,6 +192,8 @@ function Timeline() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
+A property declared with a `getter` but no `setter` is read-only: the Event Timeline displays it but never writes it back to your model. When `start` or `end` is read-only, events can't be dragged or created, and only the other edge can be resized. Saving an occurrence of a recurring event with the "Only this event" or "This and following events" scope is refused with an error, since it needs to write a new date.
+
 ## Custom event content
 
 Use the `timelineEventContent` slot to replace the text rendered inside an event block.
