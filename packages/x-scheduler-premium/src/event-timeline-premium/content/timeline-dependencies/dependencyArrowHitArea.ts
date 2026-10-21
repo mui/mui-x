@@ -144,6 +144,34 @@ export function clipRouteAroundObstacles(
 }
 
 /**
+ * Horizontal extent of the arrowhead's hit-area, on the side the arrow comes from.
+ * It stops at the first event box in the way (such as a back-to-back predecessor),
+ * so that event's resize handle keeps the pointer. `null` when nothing is left.
+ */
+export function getArrowHeadHitArea(
+  tip: DependencyArrowPoint,
+  direction: -1 | 1,
+  obstacles: readonly DependencyArrowObstacle[],
+): { x: number; width: number } | null {
+  const halfHeight = DEPENDENCY_ARROW_HIT_STROKE_WIDTH / 2;
+  let width = DEPENDENCY_ARROW_HIT_TRIM_END;
+  for (const obstacle of obstacles) {
+    if (obstacle.y2 <= tip.y - halfHeight || obstacle.y1 >= tip.y + halfHeight) {
+      continue;
+    }
+    const nearEdge = direction < 0 ? tip.x - obstacle.x2 : obstacle.x1 - tip.x;
+    const farEdge = direction < 0 ? tip.x - obstacle.x1 : obstacle.x2 - tip.x;
+    if (farEdge > 0) {
+      width = Math.min(width, Math.max(0, nearEdge));
+    }
+  }
+  if (width <= 0) {
+    return null;
+  }
+  return { x: direction < 0 ? tip.x - width : tip.x, width };
+}
+
+/**
  * Shortens a route at both ends (first and last segment only).
  */
 export function trimRouteEnds(

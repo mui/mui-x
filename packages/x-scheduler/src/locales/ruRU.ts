@@ -177,6 +177,7 @@ const ruRUCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'Весь день',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `Ещё ${hiddenEventsCount}…`,
   nextTimeSpan: (timeSpan) => {
     const labels = {

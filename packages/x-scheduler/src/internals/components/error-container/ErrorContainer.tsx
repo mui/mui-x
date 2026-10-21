@@ -24,7 +24,7 @@ const ErrorContainerRoot = styled('div', {
   alignItems: 'flex-end',
   gap: 16,
   bottom: 16,
-  right: 16,
+  insetInlineEnd: 16,
 });
 
 const ErrorAlert = styled(Alert, {

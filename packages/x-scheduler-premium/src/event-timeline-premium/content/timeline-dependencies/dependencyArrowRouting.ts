@@ -161,6 +161,53 @@ function routeSameEdges(
 }
 
 /**
+ * Builds the route between an event on screen and the timeline edge standing in for an
+ * event outside the visible range: off the event edge, vertical right next to it, then
+ * along the row of the other event up to the timeline edge.
+ * `offRange` is the endpoint standing in for the event outside the range.
+ * An event edge close to the timeline edge gets a shorter turn, and an event edge on
+ * the opposite timeline edge turns right there. `null` when the event edge sits on the
+ * timeline edge the route leads to: the route would only be a knot on that edge.
+ */
+export function buildOffRangeDependencyArrowRoute(
+  source: DependencyArrowPoint,
+  target: DependencyArrowPoint,
+  edges: ReturnType<typeof getDependencyEdges>,
+  offRange: 'source' | 'target',
+  detourOffset: number,
+  eventsWidth: number,
+): DependencyArrowPoint[] | null {
+  const isTimelineEdgeTarget = offRange === 'target';
+  const anchor = isTimelineEdgeTarget ? source : target;
+  const timelineEdge = isTimelineEdgeTarget ? target : source;
+  // The side the route takes off the event edge: `1` to the right.
+  const direction = (isTimelineEdgeTarget ? edges.source : edges.target) === 'end' ? 1 : -1;
+  // Entering the event, the last segment must fit the arrowhead.
+  const stub = isTimelineEdgeTarget ? DEPENDENCY_ARROW_STUB : DEPENDENCY_ARROW_TARGET_CLEARANCE;
+  const room = direction === 1 ? eventsWidth - anchor.x : anchor.x;
+  if (room <= 0 && Math.sign(timelineEdge.x - anchor.x) !== -direction) {
+    return null;
+  }
+  const turnX = anchor.x + direction * Math.max(0, Math.min(stub, room / 2));
+  const takeOff = turnX === anchor.x ? [anchor] : [anchor, { x: turnX, y: anchor.y }];
+
+  // Computed from the event to the timeline edge, reversed below when the edge is the
+  // source.
+  let points: DependencyArrowPoint[];
+  if (anchor.y !== timelineEdge.y) {
+    points = [...takeOff, { x: turnX, y: timelineEdge.y }, timelineEdge];
+  } else if (Math.sign(timelineEdge.x - anchor.x) === direction) {
+    points = [anchor, timelineEdge];
+  } else {
+    // Same row, but the event edge faces away from the timeline edge: detour below the
+    // event, like the S route.
+    const detourY = anchor.y + detourOffset;
+    points = [...takeOff, { x: turnX, y: detourY }, { x: timelineEdge.x, y: detourY }];
+  }
+  return isTimelineEdgeTarget ? points : points.reverse();
+}
+
+/**
  * How much a route segment must overlap an event to count as crossing it — anchors
  * touching their own event's edge must not count.
  */

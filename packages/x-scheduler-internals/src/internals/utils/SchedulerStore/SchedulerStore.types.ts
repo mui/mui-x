@@ -20,6 +20,7 @@ import type {
   TemporalSupportedObject,
   SchedulerEventSide,
   SchedulerEventDeletionConfig,
+  RecurringEventScope,
 } from '../../../models';
 import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
@@ -472,9 +473,9 @@ export type DeleteRecurringEventParameters = {
    */
   eventId: SchedulerEventId;
   /**
-   * Callback fired when the user submits the recurring scope dialog.
+   * Callback fired when the user submits the recurring scope dialog, with the scope they picked.
    */
-  onSubmit?: () => void;
+  onSubmit?: (scope: RecurringEventScope) => void;
 };
 
 /**
