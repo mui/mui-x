@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { isCoarsePointer } from '@mui/x-scheduler-internals/internals';
+import { isCoarsePointer, isEventOccurrence } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { getFocusFallback } from '../../utils/focus-utils';
+import { captureFocusFallback, resolveFocusFallback } from '../../utils/focus-utils';
 import { useEventEditingTriggerProps } from '../event-editing';
 import { EventContextMenu } from './EventContextMenu';
 import type {
@@ -56,7 +56,10 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
       options: OpenEventContextMenuOptions = {},
     ) => {
       // Read while the anchor is still mounted.
-      const focusFallback = getFocusFallback(anchorEl, occurrence.id);
+      const occurrenceTimestamp = isEventOccurrence(occurrence)
+        ? occurrence.dataTimezone.start.timestamp
+        : 0;
+      const snapshot = captureFocusFallback(anchorEl, occurrence.id, occurrenceTimestamp);
       setState({
         open: true,
         occurrence,
@@ -64,7 +67,9 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
         anchorPosition: options.anchorPosition ?? null,
         onEditingCanceled: options.onEditingCanceled,
         stableAnchor: options.stableAnchor,
-        getFocusFallback: options.getFocusFallback ?? (() => focusFallback),
+        getFocusFallback:
+          options.getFocusFallback ??
+          (() => (snapshot ? resolveFocusFallback(snapshot, null) : null)),
       });
     },
   );
