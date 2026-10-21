@@ -4,6 +4,7 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { isCoarsePointer } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { getFocusFallback } from '../../utils/focus-utils';
 import { useEventEditingTriggerProps } from '../event-editing';
 import { EventContextMenu } from './EventContextMenu';
 import type {
@@ -37,11 +38,6 @@ interface EventContextMenuState {
   getFocusFallback?: () => HTMLElement | null;
 }
 
-/** The grid column or cell around an event, which outlives it. */
-function getClosestFocusableAncestor(element: HTMLElement): HTMLElement | null {
-  return element.parentElement?.closest<HTMLElement>('[tabindex]') ?? null;
-}
-
 const INITIAL_STATE: EventContextMenuState = {
   open: false,
   occurrence: null,
@@ -60,7 +56,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
       options: OpenEventContextMenuOptions = {},
     ) => {
       // Read while the anchor is still mounted.
-      const ancestor = getClosestFocusableAncestor(anchorEl);
+      const focusFallback = getFocusFallback(anchorEl, occurrence.id);
       setState({
         open: true,
         occurrence,
@@ -68,7 +64,7 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
         anchorPosition: options.anchorPosition ?? null,
         onEditingCanceled: options.onEditingCanceled,
         stableAnchor: options.stableAnchor,
-        getFocusFallback: options.getFocusFallback ?? (() => ancestor),
+        getFocusFallback: options.getFocusFallback ?? (() => focusFallback),
       });
     },
   );

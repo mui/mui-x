@@ -330,21 +330,31 @@ describe('EventContextMenu', () => {
     });
   });
 
-  it('should close the menu when its event is removed in the agenda view', async () => {
+  it('should close the menu and focus the next event when its event is removed in the agenda view', async () => {
     const event = EventBuilder.new()
       .id('event-1')
       .title('Morning Meeting')
       .singleDay('2025-07-03T10:00:00Z', 60)
       .build();
-    const { setProps } = render(<StandaloneAgendaView events={[event]} resources={[]} />);
+    const nextEvent = EventBuilder.new()
+      .id('event-2')
+      .title('Lunch')
+      .singleDay('2025-07-03T12:00:00Z', 60)
+      .build();
+    const { setProps } = render(
+      <StandaloneAgendaView events={[event, nextEvent]} resources={[]} />,
+    );
 
     fireEvent.contextMenu(getEvent());
     expect(screen.getByRole('menu')).not.to.equal(null);
 
-    setProps({ events: [] });
+    setProps({ events: [nextEvent] });
 
     await waitFor(() => {
       expect(screen.queryByRole('menu')).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(getEvent(/Lunch/i));
     });
   });
 
