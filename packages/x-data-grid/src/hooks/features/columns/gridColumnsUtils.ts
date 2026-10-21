@@ -399,7 +399,6 @@ export const createColumnsState = ({
     });
 
     const mergedProps = {
-      ...(!isPartialUpdate ? getColTypeDef(newColumn.type) : {}),
       hasBeenResized,
       field,
     };
@@ -407,11 +406,16 @@ export const createColumnsState = ({
     let key: keyof GridColDef;
     for (key in newColumn) {
       if (newColumn[key] !== undefined && key !== 'field') {
-        mergedProps[key] = newColumn[key] as any;
+        Object.assign(mergedProps, { [key]: newColumn[key] as any });
       }
     }
 
-    columnsState.lookup[field] = resolveProps(existingState, mergedProps);
+    const defaultProps = { ...existingState };
+    if (newColumn.width !== undefined && newColumn.flex === undefined) {
+      delete defaultProps.flex;
+    }
+
+    columnsState.lookup[field] = resolveProps(defaultProps, mergedProps);
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
