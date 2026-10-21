@@ -1,3 +1,4 @@
+import { screen, act } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
@@ -7,9 +8,12 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  getMonthViewCell,
+  mockElementBounds,
+  simulateDragAndDrop,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { describe, it, expect } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 
 // The tip of the chevron sits on the left edge (`0px 50%`) or on the right edge (`100% 50%`).
 const LEFT_TIP = '0px 50%';
@@ -80,6 +84,50 @@ describe.skipIf(isJSDOM)('<StandaloneMonthView /> - RTL', () => {
         getInlineStart(event.getBoundingClientRect()),
         1,
       );
+    });
+  });
+});
+
+describe('<StandaloneMonthView /> - RTL drag and drop', () => {
+  const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
+
+  describe.each([
+    // The pointer is on the inline-end day (July 3) in LTR and on the inline-start day (July 1) in RTL.
+    ['ltr', 8],
+    ['rtl', 10],
+  ] as const)('%s', (direction, expectedStartDay) => {
+    it('should move a multi-day event by the distance from the grabbed day', async () => {
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .title('Multi Day Conference')
+        .span('2025-07-01T00:00:00Z', '2025-07-03T23:59:59Z', { allDay: true })
+        .draggable(true)
+        .build();
+
+      render(
+        <ThemeProvider theme={createTheme({ direction })}>
+          <div dir={direction}>
+            <StandaloneMonthView
+              events={[event]}
+              resources={[]}
+              onEventsChange={handleEventsChange}
+            />
+          </div>
+        </ThemeProvider>,
+      );
+
+      const eventElement = screen.getByRole('button', { name: /Multi Day Conference/i });
+      mockElementBounds(eventElement, { left: 0, width: 300 });
+      const targetCell = getMonthViewCell(10); // July 10
+
+      await act(async () => {
+        simulateDragAndDrop({ source: eventElement, target: targetCell, sourceClientX: 250 });
+      });
+
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(expectedStartDay);
+      expect(new Date(updatedEvents[0].end).getUTCDate()).to.equal(expectedStartDay + 2);
     });
   });
 });
