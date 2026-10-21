@@ -118,6 +118,11 @@ export default function ComputedColumnsControlled() {
           columns={columns}
           computedColumns={computedColumns}
           onComputedColumnsChange={setComputedColumns}
+          initialState={{
+            pinnedColumns: {
+              right: initialComputedColumns.map((column) => column.field),
+            },
+          }}
           showToolbar
           rowSelection={false}
           disablePivoting

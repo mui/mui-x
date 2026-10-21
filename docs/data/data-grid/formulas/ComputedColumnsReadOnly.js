@@ -53,7 +53,10 @@ export default function ComputedColumnsReadOnly() {
         featureDependencies={{ formula: formulaFeature }}
         rows={rows}
         columns={columns}
-        initialState={{ computedColumns: { model: computedColumns } }}
+        initialState={{
+          computedColumns: { model: computedColumns },
+          pinnedColumns: { right: computedColumns.map((column) => column.field) },
+        }}
         showToolbar
         rowSelection={false}
         disablePivoting
