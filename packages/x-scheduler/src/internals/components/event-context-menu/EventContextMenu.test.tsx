@@ -358,6 +358,39 @@ describe('EventContextMenu', () => {
     });
   });
 
+  it('should focus the next remaining event when the next one is removed along with the menu event in the agenda view', async () => {
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .build();
+    const nextEvent = EventBuilder.new()
+      .id('event-2')
+      .title('Lunch')
+      .singleDay('2025-07-03T12:00:00Z', 60)
+      .build();
+    const lastEvent = EventBuilder.new()
+      .id('event-3')
+      .title('Review')
+      .singleDay('2025-07-03T14:00:00Z', 60)
+      .build();
+    const { setProps } = render(
+      <StandaloneAgendaView events={[event, nextEvent, lastEvent]} resources={[]} />,
+    );
+
+    fireEvent.contextMenu(getEvent());
+    expect(screen.getByRole('menu')).not.to.equal(null);
+
+    setProps({ events: [lastEvent] });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(getEvent(/Review/i));
+    });
+  });
+
   describe('read-only events', () => {
     function renderReadOnlyEvent(onEventsChange = vi.fn()) {
       const event = EventBuilder.new()

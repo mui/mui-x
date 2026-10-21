@@ -67,9 +67,21 @@ export function EventContextMenuProvider(props: EventContextMenuProviderProps) {
         anchorPosition: options.anchorPosition ?? null,
         onEditingCanceled: options.onEditingCanceled,
         stableAnchor: options.stableAnchor,
+        // Other events can be removed in the same update, so only the ones still mounted are kept.
         getFocusFallback:
           options.getFocusFallback ??
-          (() => (snapshot ? resolveFocusFallback(snapshot, null) : null)),
+          (() =>
+            snapshot
+              ? resolveFocusFallback(
+                  {
+                    ...snapshot,
+                    candidates: snapshot.candidates.filter(
+                      (candidate) => candidate.element.isConnected,
+                    ),
+                  },
+                  null,
+                )
+              : null),
       });
     },
   );
