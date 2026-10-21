@@ -148,15 +148,15 @@ const koKRGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
   columnHeaderFiltersLabel: '필터 표시',
   columnHeaderSortIconLabel: '정렬',
-  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
-  //   if (direction === 'asc') {
-  //     return `Sort ${columnName} in ascending order`;
-  //   }
-  //   if (direction === 'desc') {
-  //     return `Sort ${columnName} in descending order`;
-  //   }
-  //   return `Remove sorting from ${columnName}`;
-  // },
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `${columnName} 오름차순 정렬`;
+    }
+    if (direction === 'desc') {
+      return `${columnName} 내림차순 정렬`;
+    }
+    return `${columnName} 정렬 해제`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) => `${count}행 선택중`,

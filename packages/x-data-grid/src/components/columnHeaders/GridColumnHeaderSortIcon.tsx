@@ -23,6 +23,7 @@ GridColumnHeaderSortIconRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   className: PropTypes.string,
   color: PropTypes.oneOf(['default', 'inherit', 'primary']),
+  columnName: PropTypes.string.isRequired,
   /**
    * The component used for the root node. Either a string to use an HTML element or a component.
    */

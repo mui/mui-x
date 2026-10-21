@@ -150,15 +150,15 @@ const itITGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
   columnHeaderFiltersLabel: 'Mostra i filtri',
   columnHeaderSortIconLabel: 'Ordina',
-  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
-  //   if (direction === 'asc') {
-  //     return `Sort ${columnName} in ascending order`;
-  //   }
-  //   if (direction === 'desc') {
-  //     return `Sort ${columnName} in descending order`;
-  //   }
-  //   return `Remove sorting from ${columnName}`;
-  // },
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `Ordina ${columnName} in ordine crescente`;
+    }
+    if (direction === 'desc') {
+      return `Ordina ${columnName} in ordine decrescente`;
+    }
+    return `Rimuovi l'ordinamento da ${columnName}`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) =>

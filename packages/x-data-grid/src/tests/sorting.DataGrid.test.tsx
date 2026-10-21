@@ -11,6 +11,7 @@ import type {
 } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import { vi, describe, it, expect } from 'vitest';
+import { koKR } from '@mui/x-data-grid/locales';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -66,6 +67,53 @@ describe('<DataGrid /> - Sorting', () => {
     await user.click(brandSort);
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     expect(brandSort).to.have.attribute('aria-label', 'Sort Brand in ascending order');
+  });
+
+  it.each(['columns prop', 'updateColumns'])(
+    'should update the sort label after a header rename via %s',
+    (method) => {
+      let apiRef: RefObject<GridApi | null>;
+      function TestCase(props: Partial<DataGridProps>) {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} apiRef={apiRef} {...props} />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<TestCase columns={[{ field: 'brand', headerName: 'Brand' }]} />);
+      const columns = [{ field: 'brand', headerName: 'Maker' }];
+      if (method === 'columns prop') {
+        setProps({ columns });
+      } else {
+        act(() => apiRef.current!.updateColumns(columns));
+      }
+
+      expect(getColumnHeaderCell(0)).to.have.text('Maker');
+      expect(
+        screen.getByLabelText('Sort Maker in ascending order', { selector: 'button' }),
+      ).not.to.equal(null);
+    },
+  );
+
+  it('should use the built-in translation for each sorting action', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand', headerName: '브랜드' }]}
+          localeText={koKR.components.MuiDataGrid.defaultProps.localeText}
+        />
+      </div>,
+    );
+
+    const button = screen.getByLabelText('브랜드 오름차순 정렬', { selector: 'button' });
+    await user.hover(getColumnHeaderCell(0));
+    await user.click(button);
+    expect(button).to.have.attribute('aria-label', '브랜드 내림차순 정렬');
+    await user.click(button);
+    expect(button).to.have.attribute('aria-label', '브랜드 정렬 해제');
   });
 
   it('should support localized sort button labels without changing the tooltip', async () => {

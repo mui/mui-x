@@ -15,6 +15,7 @@ import { getNextGridSortDirection } from '../hooks/features/sorting/gridSortingU
 
 export type GridColumnSortButtonProps = GridSlotProps['baseIconButton'] & {
   field: string;
+  columnName: string;
   direction: GridSortDirection;
   index?: number;
   sortingOrder: readonly GridSortDirection[];
@@ -68,7 +69,7 @@ function getIcon(
 }
 
 function GridColumnSortButton(props: GridColumnSortButtonProps) {
-  const { direction, index, sortingOrder, disabled, className, ...other } = props;
+  const { columnName, direction, index, sortingOrder, disabled, className, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -80,8 +81,6 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
     return null;
   }
 
-  const column = apiRef.current.getColumn(props.field);
-  const columnName = column?.headerName ?? props.field;
   const nextDirection = getNextGridSortDirection(sortingOrder, direction);
 
   const iconButton = (

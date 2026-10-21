@@ -148,15 +148,15 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
   columnHeaderFiltersLabel: 'フィルター表示',
   columnHeaderSortIconLabel: 'ソート',
-  // columnHeaderSortIconAriaLabel: (columnName, direction) => {
-  //   if (direction === 'asc') {
-  //     return `Sort ${columnName} in ascending order`;
-  //   }
-  //   if (direction === 'desc') {
-  //     return `Sort ${columnName} in descending order`;
-  //   }
-  //   return `Remove sorting from ${columnName}`;
-  // },
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `${columnName}を昇順で並べ替え`;
+    }
+    if (direction === 'desc') {
+      return `${columnName}を降順で並べ替え`;
+    }
+    return `${columnName}の並べ替えを解除`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) => `${count}行を選択中`,
