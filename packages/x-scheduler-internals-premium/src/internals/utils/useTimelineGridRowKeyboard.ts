@@ -71,22 +71,23 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
       return false;
     }
 
-    const typeIndex = columnTypes.indexOf(columnType);
-    // A repeated key can still fire on this row before the next one mounts, so start from the
+    // A repeated key can still fire on this cell before the next one mounts, so start from the
     // focused cell.
+    const currentColumnType = focusedCell?.columnType ?? columnType;
+    const typeIndex = columnTypes.indexOf(currentColumnType);
     const rowIndex = focusedCell?.rowIndex ?? index;
 
     if (event.key === 'ArrowUp') {
       event.preventDefault();
       if (rowIndex > 0) {
-        moveFocusToRow({ columnType, rowIndex: rowIndex - 1 });
+        moveFocusToRow({ columnType: currentColumnType, rowIndex: rowIndex - 1 });
       }
       return true;
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       if (rowIndex < totalRowCount - 1) {
-        moveFocusToRow({ columnType, rowIndex: rowIndex + 1 });
+        moveFocusToRow({ columnType: currentColumnType, rowIndex: rowIndex + 1 });
       }
       return true;
     }

@@ -291,6 +291,38 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> arrow-key row navigation', ()
     });
   });
 
+  it('should keep the column of the cell the focus is moving to on the next ArrowDown', async () => {
+    await renderTimeline();
+
+    const lastMountedIndex = resources.findLastIndex((resource) => getTitleCell(resource.id));
+    const lastMountedCell = getTitleCell(resources[lastMountedIndex].id)!;
+    act(() => {
+      lastMountedCell.focus({ preventScroll: true });
+    });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowDown' });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowRight' });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowDown' });
+
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(getEventsCell(resources[lastMountedIndex + 2].id));
+    });
+  });
+
+  it('should move ArrowLeft from the column the focus is moving to', async () => {
+    await renderTimeline();
+
+    const lastMountedIndex = resources.findLastIndex((resource) => getTitleCell(resource.id));
+    const lastMountedCell = getTitleCell(resources[lastMountedIndex].id)!;
+    act(() => {
+      lastMountedCell.focus({ preventScroll: true });
+    });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowDown' });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowRight' });
+    fireEvent.keyDown(lastMountedCell, { key: 'ArrowLeft' });
+
+    await expectFocusedInView(resources[lastMountedIndex + 1].id, 0);
+  });
+
   it('should make the events of a row reached with the arrow keys tabbable', async () => {
     const events = resources.map((resource) =>
       EventBuilder.new().resource(resource).singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR).build(),
