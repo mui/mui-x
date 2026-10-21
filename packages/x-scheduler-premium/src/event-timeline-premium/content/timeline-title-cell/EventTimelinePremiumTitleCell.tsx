@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import ChevronLeftRounded from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
 import { useStore } from '@base-ui/utils/store';
@@ -143,6 +145,9 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
     EventTimelinePremiumSlotProps
   >();
 
+  const isRtl = useRtl();
+  const CollapsedIcon = isRtl ? ChevronLeftRounded : ChevronRightRounded;
+
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
   const resource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
@@ -222,7 +227,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
         {hasVisibleChildren ? (
           <ResourceCollapseChevron aria-hidden>
-            {isCollapsed ? <ChevronRightRounded /> : <ExpandMoreRounded />}
+            {isCollapsed ? <CollapsedIcon /> : <ExpandMoreRounded />}
           </ResourceCollapseChevron>
         ) : (
           <ResourceCollapseSpacer aria-hidden />
