@@ -378,6 +378,67 @@ describe('eventCalendarEventSelectors', () => {
       );
     });
 
+    it("should keep every day of the month that has events when hiding the empty days in 'month' mode", () => {
+      const occupiedDays = [
+        '2025-07-01Z',
+        '2025-07-03Z',
+        '2025-07-05Z',
+        '2025-07-07Z',
+        '2025-07-09Z',
+        '2025-07-11Z',
+        '2025-07-13Z',
+        '2025-07-15Z',
+        '2025-07-17Z',
+        '2025-07-19Z',
+        '2025-07-21Z',
+        '2025-07-23Z',
+        '2025-07-25Z',
+        '2025-07-27Z',
+        '2025-07-29Z',
+      ];
+      const state = getEventCalendarStateFromParameters({
+        events: [...occupiedDays, '2025-08-02Z'].map((day) =>
+          EventBuilder.new().fullDay(day).build(),
+        ),
+        visibleDate: adapter.date('2025-07-15', 'default'),
+        viewConfig: { agenda: { dayCount: 'month' } },
+        defaultPreferences: { showWeekends: true, showEmptyDaysInAgenda: false },
+      });
+
+      const days = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(days.map((day) => day.key)).to.deep.equal(
+        occupiedDays.map((day) => processDate(adapter.date(day, 'default'), adapter).key),
+      );
+    });
+
+    it('should stop at dayCount days that have events when hiding the empty days', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [
+          EventBuilder.new().fullDay('2025-07-02Z').build(),
+          EventBuilder.new().fullDay('2025-07-08Z').build(),
+          EventBuilder.new().fullDay('2025-07-10Z').build(),
+          EventBuilder.new().fullDay('2025-07-15Z').build(),
+          EventBuilder.new().fullDay('2025-07-20Z').build(),
+          EventBuilder.new().fullDay('2025-07-25Z').build(),
+          EventBuilder.new().fullDay('2025-07-28Z').build(),
+        ],
+        visibleDate: adapter.date('2025-07-01', 'default'),
+        viewConfig: { agenda: { dayCount: 5 } },
+        defaultPreferences: { showWeekends: true, showEmptyDaysInAgenda: false },
+      });
+
+      const days = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(days.map((day) => day.key)).to.deep.equal([
+        processDate(adapter.date('2025-07-02Z', 'default'), adapter).key,
+        processDate(adapter.date('2025-07-08Z', 'default'), adapter).key,
+        processDate(adapter.date('2025-07-10Z', 'default'), adapter).key,
+        processDate(adapter.date('2025-07-15Z', 'default'), adapter).key,
+        processDate(adapter.date('2025-07-20Z', 'default'), adapter).key,
+      ]);
+    });
+
     it('should not throw when a short dayCount only covers hidden weekend days', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
