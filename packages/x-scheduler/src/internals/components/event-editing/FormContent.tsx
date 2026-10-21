@@ -521,7 +521,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           // A vetoed save keeps the dialog open; the rejection sits on the range field and
           // editing the dates clears it.
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
-          warnUnvalidatedField(rejectedField, 'The scheduling plugin rejected the save');
+          warnUnvalidatedField(rejectedField, 'The save was rejected');
           formStore.setError(rejectedField, result.rejection.message);
           ReactDOM.flushSync(() => setTabValue('general'));
           focusFirstInvalid(form);
