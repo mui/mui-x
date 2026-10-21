@@ -1,3 +1,4 @@
+import { act } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
@@ -7,6 +8,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
+  getMonthViewCell,
 } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
@@ -81,5 +83,28 @@ describe.skipIf(isJSDOM)('<StandaloneMonthView /> - RTL', () => {
         1,
       );
     });
+  });
+});
+
+describe('<StandaloneMonthView /> - RTL keyboard navigation', () => {
+  const { renderSettled } = createSchedulerRenderer({
+    clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
+  });
+
+  it('should move the focus to the next day on ArrowLeft', async () => {
+    const { user } = await renderSettled(
+      <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
+        <div dir="rtl">
+          <StandaloneMonthView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+        </div>
+      </ThemeProvider>,
+    );
+
+    act(() => {
+      getMonthViewCell(9).focus();
+    });
+    await user.keyboard('{ArrowLeft}');
+
+    expect(getMonthViewCell(10)).toHaveFocus();
   });
 });

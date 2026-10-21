@@ -114,6 +114,8 @@ The Week, Day, and Month views implement a `role="grid"` with full arrow key nav
 
 **Month view** exposes the header row and one day-grid row per week. Arrow keys move between the header and each week row, and between individual weeks.
 
+In right-to-left layouts, <kbd class="key">Arrow Left</kbd> and <kbd class="key">Arrow Right</kbd> are swapped, so the focus follows the visual direction.
+
 |                               Keys | Description                                                                                                                                                                                                                |
 | ---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |  <kbd class="key">Arrow Left</kbd> | Moves focus to the previous column in the same row                                                                                                                                                                         |
