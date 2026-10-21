@@ -1853,9 +1853,6 @@ importers:
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.5.0(@types/react@19.3.0)(react@19.3.0)
-      reselect:
-        specifier: 'catalog:'
-        version: 5.3.0
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
