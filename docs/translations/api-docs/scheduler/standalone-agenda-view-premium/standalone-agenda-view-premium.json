@@ -82,7 +82,7 @@
     },
     "view": { "description": "The view currently displayed in the calendar." },
     "viewConfig": {
-      "description": "Configuration applied to the view, keyed by the view name. The <code>agenda</code> view does not support any configuration keys yet."
+      "description": "Configuration applied to the view, keyed by the view name. For the <code>agenda</code> view, <code>dayCount</code> is how many days are displayed (and how far the navigation moves), or <code>&#39;month&#39;</code> to display the month of the visible date and navigate one month at a time."
     },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {

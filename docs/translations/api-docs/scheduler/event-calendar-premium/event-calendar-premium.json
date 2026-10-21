@@ -95,7 +95,7 @@
     },
     "view": { "description": "The view currently displayed in the calendar." },
     "viewConfig": {
-      "description": "Configuration applied to each view, keyed by the view name. For the <code>day</code> and <code>week</code> views, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid, and <code>initialScrollTime</code> is the hour the grid scrolls to on mount."
+      "description": "Configuration applied to each view, keyed by the view name. For the <code>day</code> and <code>week</code> views, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid, <code>initialScrollTime</code> is the hour the grid scrolls to on mount, and <code>timeGridEvents</code> sets which timed events are rendered in the time grid. For the <code>agenda</code> view, <code>dayCount</code> is how many days are displayed (and how far the navigation moves), or <code>&#39;month&#39;</code> to display the month of the visible date and navigate one month at a time."
     },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
@@ -248,7 +248,7 @@
     },
     "dayTimeGridAllDayEventsHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the day time grid all day events header cell element"
+      "nodeName": "the day time grid all day events header cell (visually hidden row label)"
     },
     "dayTimeGridAllDayEventsRow": {
       "description": "Styles applied to {{nodeName}}.",
@@ -638,10 +638,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar label element"
     },
-    "headerToolbarLeftElement": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header toolbar left side element"
-    },
     "headerToolbarNextButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar next button element"
@@ -653,6 +649,10 @@
     "headerToolbarSidePanelToggle": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar side panel toggle button element"
+    },
+    "headerToolbarStart": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar start side element"
     },
     "headerToolbarTodayButton": {
       "description": "Styles applied to {{nodeName}}.",
