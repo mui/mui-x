@@ -32,7 +32,7 @@ export interface ChatComposerFeatures {
   attachments?: boolean | ChatAttachmentsConfig;
 }
 
-export interface ChatComposerProps extends ComposerRootProps {
+export interface ChatComposerProps extends Omit<ComposerRootProps, 'attachmentConfig'> {
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatComposerClasses>;
@@ -281,16 +281,6 @@ ChatComposer.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Configuration for attachment validation constraints.
-   * When provided, file attachments are validated against these rules.
-   */
-  attachmentConfig: PropTypes.shape({
-    acceptedMimeTypes: PropTypes.arrayOf(PropTypes.string),
-    maxFileCount: PropTypes.number,
-    maxFileSize: PropTypes.number,
-    onAttachmentReject: PropTypes.func,
-  }),
   classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,

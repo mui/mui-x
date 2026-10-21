@@ -363,8 +363,21 @@ export function computeAutoSchedulingCascade(
 
     const shifted = computeShift(eventId);
     if (shifted !== null) {
+      // Report only the edge(s) that actually differ from `base` (captured before `newDates`
+      // below moves it): `keepsEnd` / `keptStartBound` can leave one edge untouched, and
+      // reporting it anyway would turn a resize into a move `updateEvents` refuses wholesale.
+      const base = newDates.get(eventId) ?? resolveCurrentDates(eventId)!;
+      const startChanged = shifted.startTimestamp !== base.startTimestamp;
+      const endChanged = shifted.endTimestamp !== base.endTimestamp;
       newDates.set(eventId, shifted);
-      cascaded.push({ id: eventId, ...toEntryDates(eventId, shifted) });
+      if (startChanged || endChanged) {
+        const dates = toEntryDates(eventId, shifted);
+        cascaded.push({
+          id: eventId,
+          ...(startChanged ? { start: dates.start } : {}),
+          ...(endChanged ? { end: dates.end } : {}),
+        });
+      }
     }
 
     for (const dependency of activeDependenciesBySource.get(eventId) ?? []) {
