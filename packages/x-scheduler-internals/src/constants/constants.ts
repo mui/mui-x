@@ -27,7 +27,6 @@ export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTE * 60 * 1000;
  */
 export const AGENDA_MAX_HORIZON_DAYS = 180;
 
-// TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 export const DEFAULT_EVENT_CREATION_CONFIG: SchedulerEventCreationConfig = {

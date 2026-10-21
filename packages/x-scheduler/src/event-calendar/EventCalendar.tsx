@@ -356,9 +356,14 @@ EventCalendar.propTypes /* remove-proptypes */ = {
    * limit the hours displayed in the time grid, `initialScrollTime` is the hour the grid
    * scrolls to on mount, and `timeGridEvents` sets which timed events are rendered in the
    * time grid.
-   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
+   * For the `agenda` view, `dayCount` is how many days are displayed (and how far the
+   * navigation moves), or `'month'` to display the month of the visible date and navigate one month at a time.
+   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 }, agenda: { dayCount: 'month' } }
    */
   viewConfig: PropTypes.shape({
+    agenda: PropTypes.shape({
+      dayCount: PropTypes.oneOfType([PropTypes.oneOf(['month']), PropTypes.number]),
+    }),
     day: PropTypes.shape({
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,
