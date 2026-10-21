@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
@@ -44,8 +44,7 @@ const DayTimeGridColumnInteractiveLayer = styled('div', {
   position: 'absolute',
   top: 0,
   bottom: 0,
-  left: 0,
-  right: 0,
+  insetInline: 0,
 });
 
 const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator, {
@@ -55,8 +54,8 @@ const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator
   position: 'absolute',
   zIndex: 2,
   top: 'var(--y-position)',
-  left: 0,
-  right: -1,
+  insetInlineStart: 0,
+  insetInlineEnd: -1,
   height: 0,
   borderTop: `2px solid ${(theme.vars || theme).palette.primary.main}`,
 }));
@@ -67,7 +66,7 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 })(({ theme }) => ({
   position: 'absolute',
   zIndex: 1,
-  left: -5,
+  insetInlineStart: -5,
   top: -5,
   width: 8,
   height: 8,
@@ -92,6 +91,10 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         : adapter.setHours(adapter.startOfDay(day.value), endTime),
     [adapter, day, endTime],
   );
+  const column = React.useMemo(
+    () => ({ start, end, dayStartMinute: startTime * 60, dayEndMinute: endTime * 60 }),
+    [start, end, startTime, endTime],
+  );
 
   // Only place occurrences that overlap the visible `[start, end)` window. Occurrences entirely
   // before `startTime` or after `endTime` would otherwise be clamped to a zero-height sliver pinned
@@ -114,18 +117,17 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   return (
     <DayTimeGridColumn
       className={classes.dayTimeGridColumn}
-      start={start}
-      end={end}
-      dayStartMinute={startTime * 60}
-      dayEndMinute={endTime * 60}
+      start={column.start}
+      end={column.end}
+      dayStartMinute={column.dayStartMinute}
+      dayEndMinute={column.dayEndMinute}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
       data-weekend={isWeekend(adapter, day.value) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
-        start={start}
-        end={end}
+        column={column}
         showCurrentTimeIndicator={showCurrentTimeIndicator}
         index={index}
         occurrences={occurrences}
@@ -136,20 +138,20 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 }
 
 function ColumnInteractiveLayer({
-  start,
-  end,
+  column,
   showCurrentTimeIndicator,
   index,
   occurrences,
   maxIndex,
 }: {
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
+  column: TimelineAxis;
   showCurrentTimeIndicator: boolean;
   index: number;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
   maxIndex: number;
 }) {
+  const { start, end } = column;
+
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { startEditing } = useEventEditingContext();
@@ -185,10 +187,12 @@ function ColumnInteractiveLayer({
       {!isLoading &&
         occurrences.map((occurrence) => (
           <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
-            <TimeGridEvent occurrence={occurrence} variant="regular" />
+            <TimeGridEvent occurrence={occurrence} column={column} variant="regular" />
           </EventContextMenuTrigger>
         ))}
-      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
+      {placeholder != null && (
+        <TimeGridEvent occurrence={placeholder} column={column} variant="placeholder" />
+      )}
       {showCurrentTimeIndicator ? (
         <DayTimeGridCurrentTimeIndicator
           className={classes.dayTimeGridCurrentTimeIndicator}
