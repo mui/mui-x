@@ -171,6 +171,18 @@ describe('<DataGridPro /> - Column reorder with pointer events', () => {
       expect(getHeaderByField('brand')).not.to.have.class(gridClasses['columnHeader--moving']);
     });
 
+    it('should disable text selection in the grid during the drag', async () => {
+      render(<Test />);
+      const root = document.querySelector(`.${gridClasses.root}`)!;
+
+      const { handle } = await startTouchDrag('brand');
+      // The finger moves over selectable text, like the column group headers
+      expect(root).to.have.class(gridClasses['root--disableUserSelection']);
+      const point = moveTo(handle, getHeaderByField('year'));
+      fireEvent.pointerUp(handle, pointer('touch', point.x, point.y));
+      expect(root).not.to.have.class(gridClasses['root--disableUserSelection']);
+    });
+
     it('should support custom classes for the preview', async () => {
       render(<Test classes={{ 'columnHeader--dragging': 'my-dragging custom-class' }} />);
 
@@ -332,7 +344,7 @@ describe('<DataGridPro /> - Column reorder with pointer events', () => {
       expect(getDragCol()).to.equal('');
     });
 
-    it('should restore the origin when the column is released over the footer', async () => {
+    it('should keep the position when the column is released over the footer', async () => {
       const onColumnOrderChange = vi.fn();
       render(<Test onColumnOrderChange={onColumnOrderChange} />);
 
@@ -341,8 +353,40 @@ describe('<DataGridPro /> - Column reorder with pointer events', () => {
       const point = moveTo(handle, document.querySelector(`.${gridClasses.footerContainer}`)!);
       fireEvent.pointerUp(handle, pointer('touch', point.x, point.y));
 
-      expect(getOrderedFields()).to.deep.equal(['brand', 'year', 'price']);
-      expect(onColumnOrderChange).toHaveBeenCalledTimes(0);
+      // Unlike HTML drag and drop, a release anywhere in the grid is a drop
+      expect(getOrderedFields()).to.deep.equal(['year', 'price', 'brand']);
+      expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+      expect(getDragCol()).to.equal('');
+    });
+
+    it('should keep the position when the column is released over a column group header', async () => {
+      const onColumnOrderChange = vi.fn();
+      render(
+        <Test
+          columnGroupingModel={[
+            {
+              groupId: 'group',
+              freeReordering: true,
+              children: [{ field: 'year' }, { field: 'price' }],
+            },
+          ]}
+          onColumnOrderChange={onColumnOrderChange}
+        />,
+      );
+
+      const { handle } = await startTouchDrag('brand');
+      moveTo(handle, getHeaderByField('price'));
+      expect(getOrderedFields()).to.deep.equal(['year', 'price', 'brand']);
+      const point = moveTo(
+        handle,
+        document.querySelector(`.${gridClasses['columnHeader--filledGroup']}`)!,
+      );
+      // The group header isn't a target: the order doesn't change while over it
+      expect(getOrderedFields()).to.deep.equal(['year', 'price', 'brand']);
+      fireEvent.pointerUp(handle, pointer('touch', point.x, point.y));
+
+      expect(getOrderedFields()).to.deep.equal(['year', 'price', 'brand']);
+      expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
     });
 
     it('should keep the position when released outside with keepColumnPositionIfDraggedOutside', async () => {
@@ -504,18 +548,76 @@ describe('<DataGridPro /> - Column reorder with pointer events', () => {
           />,
         );
 
-        const orderBefore = getOrderedFields();
+        // The detail panel adds its toggle column in front
+        const movedOrder = ['__detail_panel_toggle__', 'year', 'brand', 'price'];
         const { handle } = await startTouchDrag('brand');
+        moveTo(handle, getHeaderByField('year'));
+        expect(getOrderedFields()).to.deep.equal(movedOrder);
         const nestedHeader = document.querySelector(
           `.${gridClasses.detailPanel} .${gridClasses.columnHeader}`,
         )!;
         const point = moveTo(handle, nestedHeader);
         // The nested header with the same field didn't become a target
-        expect(getOrderedFields()).to.deep.equal(orderBefore);
-        // A release over the nested grid isn't a drop on this grid
+        expect(getOrderedFields()).to.deep.equal(movedOrder);
+        // The detail panel is inside this grid: the release keeps the position
         fireEvent.pointerUp(handle, pointer('touch', point.x, point.y));
-        expect(getOrderedFields()).to.deep.equal(orderBefore);
+        expect(getOrderedFields()).to.deep.equal(movedOrder);
         expect(getDragCol()).to.equal('');
+      });
+
+      it('should only use the headers and cells as targets, not other elements with data-field', async () => {
+        const onColumnOrderChange = vi.fn();
+        // Like the field chips of the pivot panel, which render inside the grid root
+        function ToolbarWithField() {
+          return (
+            <div data-field="price" style={{ height: 40 }}>
+              Not a column
+            </div>
+          );
+        }
+        render(
+          <Test
+            showToolbar
+            slots={{ toolbar: ToolbarWithField }}
+            onColumnOrderChange={onColumnOrderChange}
+          />,
+        );
+
+        const { handle } = await startTouchDrag('brand');
+        const point = moveTo(handle, document.querySelector('[data-field="price"]')!);
+        expect(getOrderedFields()).to.deep.equal(['brand', 'year', 'price']);
+        expect(getDragCol()).to.equal('brand');
+        fireEvent.pointerUp(handle, pointer('touch', point.x, point.y));
+        expect(getOrderedFields()).to.deep.equal(['brand', 'year', 'price']);
+        expect(onColumnOrderChange).toHaveBeenCalledTimes(0);
+        expect(getDragCol()).to.equal('');
+      });
+
+      it('should resolve an element with its own data-field inside a header to that header', async () => {
+        render(
+          <Test
+            columns={[
+              {
+                ...columns[0],
+                renderHeader: () => (
+                  <span>
+                    Brand <span data-field="price">tag</span>
+                  </span>
+                ),
+              },
+              columns[1],
+              columns[2],
+            ]}
+          />,
+        );
+
+        const { handle } = await startTouchDrag('year');
+        const tag = getHeaderByField('brand').querySelector('[data-field="price"]')!;
+        const point = moveTo(handle, tag);
+        // Over the brand header, not the price column the tag names
+        expect(getOrderedFields()).to.deep.equal(['year', 'brand', 'price']);
+        fireEvent.pointerUp(handle, pointer('touch', point.x, point.y));
+        expect(getOrderedFields()).to.deep.equal(['year', 'brand', 'price']);
       });
     });
 
@@ -542,6 +644,32 @@ describe('<DataGridPro /> - Column reorder with pointer events', () => {
         await waitForFrames();
         expect(scroller.scrollLeft).to.be.greaterThan(0);
         fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+      });
+
+      it('should move the column with the auto-scroll and drop it where the scroll ends', async () => {
+        const onColumnOrderChange = vi.fn();
+        render(<Test columns={manyColumns} onColumnOrderChange={onColumnOrderChange} />);
+        const scroller = getScroller();
+        const scrollerRect = scroller.getBoundingClientRect();
+
+        const { handle, start } = await startTouchDrag('col1');
+        // The move alone puts col1 over the header at the edge, col3
+        const x = scrollerRect.right - 10;
+        fireEvent.pointerMove(handle, pointer('touch', x, start.y));
+        expect(getOrderedFields().indexOf('col1')).to.equal(3);
+        // Holding still, the columns scroll under the finger and col1 keeps following it
+        await waitForFrames(300);
+        expect(scroller.scrollLeft).to.be.greaterThan(0);
+        const indexWhileScrolling = getOrderedFields().indexOf('col1');
+        expect(indexWhileScrolling).to.be.greaterThan(3);
+
+        fireEvent.pointerUp(handle, pointer('touch', x, start.y));
+        expect(getOrderedFields().indexOf('col1')).to.equal(indexWhileScrolling);
+        expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+        expect(onColumnOrderChange.mock.calls[0][0]).toMatchObject({
+          oldIndex: 1,
+          targetIndex: indexWhileScrolling,
+        });
       });
 
       it('should scroll at the edge of the scrollable columns, next to the pinned columns', async () => {

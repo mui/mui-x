@@ -257,6 +257,8 @@ export const useGridRowReorderPointer = (
 
     if (session.canAutoScroll) {
       autoScroll(session, root, scroller);
+      // The page can scroll under a still pointer: the preview is in the root, which moves with it
+      session.preview.move(session.clientX, session.clientY);
     }
     // The rows can move under a pointer that holds still: auto-scroll, a group that expanded, new rows
     updateDropTarget(
@@ -309,6 +311,8 @@ export const useGridRowReorderPointer = (
       },
     }));
     addClasses(getGridRowElement(root, rowId), classes.rowBeingDragged);
+    // The finger would select the cell text it moves over
+    root.classList.add(gridClasses['root--disableUserSelection']);
     apiRef.current.setCellFocus(rowId, GRID_REORDER_COL_DEF.field);
 
     updateDropTarget(session, position.elementAtPoint);
