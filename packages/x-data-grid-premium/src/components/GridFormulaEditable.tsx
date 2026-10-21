@@ -108,6 +108,14 @@ const GridFormulaEditorPopper = styled(NotRendered<GridSlotProps['basePopper']>,
   slot: 'FormulaAutocompletePopper',
 })({
   zIndex: vars.zIndex.menu,
+  // The popup follows the editable when a container scrolls it out of view (the
+  // computed columns panel, the grid), so it hides until the editable is back,
+  // instead of floating over the content. `visibility` rather than the `opacity`
+  // of the long text poppers: the focus never sits in the popup, and its hidden
+  // options must not catch clicks.
+  '&[data-popper-reference-hidden]': {
+    visibility: 'hidden',
+  },
 });
 
 const GridFormulaEditorPanel = styled('div')(({ theme }) => ({

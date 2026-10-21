@@ -2224,6 +2224,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await microtasks();
       expect(getRects()).to.have.length(0);
     });
+
   });
 
   describe('reference pane', () => {
@@ -2507,6 +2508,46 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
 
         expect(editable.textContent).to.equal('=price');
         expect(getSidebar().open).to.equal(true);
+      },
+    );
+
+    it.skipIf(isJSDOM)(
+      'hides the suggestions while the formula is scrolled out of the panel',
+      async () => {
+        const { user } = await render(<Test />);
+        await openEditor(null);
+        const editable = getFormulaEditable();
+        await user.click(editable);
+        await user.keyboard('1 + ');
+
+        let body = editable.parentElement!;
+        while (getComputedStyle(body).overflowY !== 'auto') {
+          body = body.parentElement!;
+        }
+        body.scrollTop +=
+          editable.getBoundingClientRect().bottom - body.getBoundingClientRect().top + 1;
+        await waitFor(() => {
+          expect(editable.getBoundingClientRect().bottom).to.be.lessThan(
+            body.getBoundingClientRect().top,
+          );
+        });
+
+        // The insert keeps the focus in the formula, which suggests the inserted field.
+        fireEvent.click(
+          within(
+            getPanel()!.querySelector<HTMLElement>(
+              `.${gridClasses.computedColumnsPanelReference}`,
+            )!,
+          ).getByRole('button', { name: /^price$/ }),
+        );
+        await microtasks();
+        expect(editable.textContent).to.equal('=1 + price');
+        await waitFor(() => {
+          expect(screen.queryByRole('listbox')).to.equal(null);
+        });
+
+        body.scrollTop = 0;
+        expect(await screen.findByRole('option', { name: /price/ })).not.to.equal(null);
       },
     );
   });
