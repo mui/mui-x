@@ -58,6 +58,12 @@ const HIT_TEST_IGNORE_SELECTOR = `.${gridClasses.scrollArea}`;
 // Other elements in the root carry `data-field` too, like the pivot panel chips, hence the classes.
 const TARGET_SELECTOR = `.${gridClasses.columnHeader}[data-field], .${gridClasses.cell}[data-field]`;
 
+// While the grid auto-scrolls, the pointer can be past the edge of the scrollable columns: over a pinned
+// column, which can't be a target, or outside the grid. The columns are then evaluated at the edge instead,
+// this far inside it: the resize separator of a pinned column overhangs the scrollable columns by 5px
+// (`columnSeparatorOffset`) and resolves to the pinned header.
+const EDGE_HIT_TEST_INSET = 12;
+
 // A slow tap on the sort or menu button must stay a tap, not start a drag.
 // Only native controls; a custom header control as `div[role="button"]` isn't covered.
 const INTERACTIVE_CONTROL_SELECTOR = 'button, a, input, select, textarea';
@@ -164,6 +170,20 @@ export const useGridColumnReorderPointer = (
     session.previousPosition = position;
   };
 
+  // The edges of the scrollable columns, between the pinned columns, in client coordinates.
+  // In RTL, the left pinned columns are on the right side and the vertical scrollbar on the left.
+  const getScrollableColumnsBounds = (scrollerRect: DOMRect) => {
+    const dimensions = gridDimensionsSelector(apiRef);
+    const scrollbarSize = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
+    const startInset = isRtl
+      ? dimensions.rightPinnedWidth + scrollbarSize
+      : dimensions.leftPinnedWidth;
+    const endInset = isRtl
+      ? dimensions.leftPinnedWidth
+      : dimensions.rightPinnedWidth + scrollbarSize;
+    return { left: scrollerRect.left + startInset, right: scrollerRect.right - endInset };
+  };
+
   // Returns the scroll delta that was applied, `0` when nothing scrolled
   const autoScroll = (
     session: ColumnDragSession,
@@ -175,18 +195,7 @@ export const useGridColumnReorderPointer = (
       return 0;
     }
 
-    const dimensions = gridDimensionsSelector(apiRef);
-    const scrollbarSize = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
-    // The edges of the scrollable columns, between the pinned columns.
-    // In RTL, the left pinned columns are on the right side and the vertical scrollbar on the left.
-    const startInset = isRtl
-      ? dimensions.rightPinnedWidth + scrollbarSize
-      : dimensions.leftPinnedWidth;
-    const endInset = isRtl
-      ? dimensions.leftPinnedWidth
-      : dimensions.rightPinnedWidth + scrollbarSize;
-    const columnsLeft = rect.left + startInset;
-    const columnsRight = rect.right - endInset;
+    const { left: columnsLeft, right: columnsRight } = getScrollableColumnsBounds(rect);
     // The page doesn't scroll during a touch drag, so a zone off-screen couldn't be reached
     const win = ownerWindow(root);
     const viewport = getVisibleViewportBounds(win);
@@ -230,9 +239,16 @@ export const useGridColumnReorderPointer = (
         session.preview.move(session.clientX, session.clientY);
         // The columns moved under the still pointer: evaluate them as if it had moved toward the edge
         session.previousPosition = { x: session.clientX - Math.sign(delta), y: session.clientY };
+        // Past the edge, there's no target under the pointer: evaluate the column at the edge instead,
+        // so the dragged column keeps following the scroll up to the pinned columns
+        const bounds = getScrollableColumnsBounds(scroller.getBoundingClientRect());
+        const hitX = Math.min(
+          Math.max(session.clientX, bounds.left + EDGE_HIT_TEST_INSET),
+          bounds.right - EDGE_HIT_TEST_INSET,
+        );
         updateTarget(
           session,
-          getElementAtPoint(root, session.clientX, session.clientY, HIT_TEST_IGNORE_SELECTOR),
+          getElementAtPoint(root, hitX, session.clientY, HIT_TEST_IGNORE_SELECTOR),
         );
       }
     }

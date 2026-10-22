@@ -24,6 +24,16 @@ async function waitForFrames(duration = 150) {
   });
 }
 
+// Lets the auto-scroll run until the scroll position settles, at the end of the scrollable columns
+async function waitForScrollEnd(scroller: HTMLElement) {
+  let previous = NaN;
+  for (let i = 0; i < 30 && scroller.scrollLeft !== previous; i += 1) {
+    previous = scroller.scrollLeft;
+    // eslint-disable-next-line no-await-in-loop
+    await waitForFrames(100);
+  }
+}
+
 const pointer = (pointerType: string, clientX: number, clientY: number) => ({
   pointerId: 1,
   pointerType,
@@ -689,6 +699,63 @@ describe('<DataGridPro /> - Column reorder with pointer events', () => {
         expect(scroller.scrollLeft).to.be.lessThan(300);
         fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
       });
+
+      it('should keep moving the column while the finger holds over a right-pinned column', async () => {
+        const onColumnOrderChange = vi.fn();
+        render(
+          <Test
+            columns={manyColumns}
+            initialState={{ pinnedColumns: { right: ['col9'] } }}
+            onColumnOrderChange={onColumnOrderChange}
+          />,
+        );
+        const scroller = getScroller();
+
+        const { handle, start } = await startTouchDrag('col1');
+        // Past the edge zone, on the pinned header: not a target, but the grid scrolls at full speed
+        const x = getHeaderByField('col9').getBoundingClientRect().left + 30;
+        fireEvent.pointerMove(handle, pointer('touch', x, start.y));
+        expect(getOrderedFields().indexOf('col1')).to.equal(1);
+        await waitForScrollEnd(scroller);
+        expect(scroller.scrollLeft).to.be.greaterThan(0);
+        // col1 followed the scroll up to the last scrollable column, next to the pinned one
+        expect(getOrderedFields().indexOf('col1')).to.equal(8);
+
+        fireEvent.pointerUp(handle, pointer('touch', x, start.y));
+        expect(getOrderedFields().indexOf('col1')).to.equal(8);
+        expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+        expect(onColumnOrderChange.mock.calls[0][0]).toMatchObject({ oldIndex: 1, targetIndex: 8 });
+      });
+
+      it('should keep moving the column while the finger holds over a left-pinned column', async () => {
+        const onColumnOrderChange = vi.fn();
+        render(
+          <Test
+            columns={manyColumns}
+            initialState={{ pinnedColumns: { left: ['col0'] } }}
+            onColumnOrderChange={onColumnOrderChange}
+          />,
+        );
+        const scroller = getScroller();
+        await act(async () => {
+          scroller.scrollLeft = 1000;
+        });
+        await waitForFrames(50);
+
+        const { handle, start } = await startTouchDrag('col8');
+        const x = getHeaderByField('col0').getBoundingClientRect().right - 30;
+        fireEvent.pointerMove(handle, pointer('touch', x, start.y));
+        expect(getOrderedFields().indexOf('col8')).to.equal(8);
+        await waitForScrollEnd(scroller);
+        expect(scroller.scrollLeft).to.equal(0);
+        // col8 followed the scroll up to the first scrollable column, next to the pinned one
+        expect(getOrderedFields().indexOf('col8')).to.equal(1);
+
+        fireEvent.pointerUp(handle, pointer('touch', x, start.y));
+        expect(getOrderedFields().indexOf('col8')).to.equal(1);
+        expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+        expect(onColumnOrderChange.mock.calls[0][0]).toMatchObject({ oldIndex: 8, targetIndex: 1 });
+      });
     });
 
     describe('RTL', () => {
@@ -752,6 +819,32 @@ describe('<DataGridPro /> - Column reorder with pointer events', () => {
         // Moving toward the first columns brings `scrollLeft` back toward 0
         expect(scroller.scrollLeft).to.be.greaterThan(-300);
         fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+      });
+
+      it('should keep moving the column while the finger holds over the pinned column on the left', async () => {
+        const onColumnOrderChange = vi.fn();
+        render(
+          <RtlTest
+            columns={manyColumns}
+            initialState={{ pinnedColumns: { right: ['col9'] } }}
+            onColumnOrderChange={onColumnOrderChange}
+          />,
+        );
+        const scroller = getScroller();
+
+        const { handle, start } = await startTouchDrag('col1');
+        // In RTL the right-pinned column renders on the left edge, where the hidden columns scroll in
+        const x = getHeaderByField('col9').getBoundingClientRect().right - 30;
+        fireEvent.pointerMove(handle, pointer('touch', x, start.y));
+        expect(getOrderedFields().indexOf('col1')).to.equal(1);
+        await waitForScrollEnd(scroller);
+        expect(scroller.scrollLeft).to.be.lessThan(0);
+        expect(getOrderedFields().indexOf('col1')).to.equal(8);
+
+        fireEvent.pointerUp(handle, pointer('touch', x, start.y));
+        expect(getOrderedFields().indexOf('col1')).to.equal(8);
+        expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+        expect(onColumnOrderChange.mock.calls[0][0]).toMatchObject({ oldIndex: 1, targetIndex: 8 });
       });
     });
   });
