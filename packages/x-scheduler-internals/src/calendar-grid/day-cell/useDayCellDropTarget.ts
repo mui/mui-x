@@ -46,7 +46,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         // The day under the grab point.
         const grabbedDay =
           data.source === 'CalendarGridDayEvent'
-            ? data.draggedDay
+            ? data.draggedDay.dayNumber
             : toLocalDayNumber(
                 adapter.getTime(data.start) + data.initialCursorPositionInEventMs,
                 adapter.getTimezone(data.start),

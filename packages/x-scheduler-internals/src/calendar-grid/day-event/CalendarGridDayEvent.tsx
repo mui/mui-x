@@ -9,6 +9,9 @@ import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
 import { getAdapterDayNumber, getProcessedDayNumber } from '../../internals/utils/drag-utils';
+import { createPlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import { ISO_CALENDAR_ID } from '../../internals/utils/base-temporal/calendar';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -70,7 +73,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const getDraggedDay = useStableCallback((input: { clientX: number }) => {
     const startDay = getProcessedDayNumber(adapter, start);
     if (!ref.current) {
-      return startDay;
+      return createPlainDate(startDay, ISO_CALENDAR_ID);
     }
 
     // The event covers every date from its start to its end in the row, like its cells.
@@ -83,7 +86,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
 
-    return firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1;
+    return createPlainDate(
+      firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1,
+      ISO_CALENDAR_ID,
+    );
   });
 
   const getOriginalOccurrence = useOriginalOccurrence({
@@ -197,8 +203,8 @@ export namespace CalendarGridDayEvent {
   export interface DragData extends SharedDragData {
     source: 'CalendarGridDayEvent';
     /**
-     * The day number of the grabbed day, in the timezone of `start`.
+     * The grabbed day, in the timezone of `start`.
      */
-    draggedDay: number;
+    draggedDay: PlainDate;
   }
 }
