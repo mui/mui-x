@@ -20,6 +20,7 @@ import {
   getOccurrenceEnd,
 } from '@mui/x-scheduler-internals/internals';
 import {
+  getPlainDateWeekDayCode,
   getWeekDayCode,
   mergePlainDateAndTime,
   NOT_LOCALIZED_WEEK_DAYS,
@@ -280,12 +281,13 @@ export function adjustRRuleForAllMove(
     nextRRule.byDay = realignWeeklyByDay(adapter, normalized, occurrenceStart, newStart);
   } else if (rrule.freq === 'MONTHLY') {
     // BYMONTHDAY → match the new calendar day
+    const newStartPlainDate = buildTemporalPlainDate(adapter, newStart);
     if (rrule.byMonthDay?.length) {
-      nextRRule.byMonthDay = [adapter.getDate(newStart)];
+      nextRRule.byMonthDay = [newStartPlainDate.day];
     }
     // Ordinal BYDAY → recompute ordinal + weekday for newStart
     if (rrule.byDay?.length) {
-      const code = getWeekDayCode(adapter, newStart);
+      const code = getPlainDateWeekDayCode(newStartPlainDate);
       const ord = computeMonthlyOrdinal(adapter, newStart);
       nextRRule.byDay = [`${ord}${code}` as RecurringEventByDayValue];
     }
@@ -347,13 +349,14 @@ export function decideSplitRRule(
   // Freq MONTHLY realignment
   if (originalRule.freq === 'MONTHLY' && changes.start) {
     // A) BYMONTHDAY → set to the new calendar day
+    const newStartPlainDate = buildTemporalPlainDate(adapter, changes.start);
     if (originalRule.byMonthDay?.length) {
-      realignedRule.byMonthDay = [adapter.getDate(changes.start)];
+      realignedRule.byMonthDay = [newStartPlainDate.day];
     }
 
     // B) Ordinal BYDAY → recompute ordinal + weekday for the new date
     if (originalRule.byDay?.length) {
-      const code = getWeekDayCode(adapter, changes.start);
+      const code = getPlainDateWeekDayCode(newStartPlainDate);
       const ord = computeMonthlyOrdinal(adapter, changes.start);
       realignedRule.byDay = [`${ord}${code}` as RecurringEventByDayValue];
     }

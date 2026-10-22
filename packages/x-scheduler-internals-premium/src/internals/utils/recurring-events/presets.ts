@@ -16,10 +16,11 @@ export function computePresets(
   adapter: Adapter,
   date: SchedulerProcessedDate,
 ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> {
+  const plainDate = buildTemporalPlainDate(adapter, date.value);
   return {
     DAILY: { freq: 'DAILY', interval: 1 },
-    WEEKLY: { freq: 'WEEKLY', interval: 1, byDay: [getWeekDayCode(adapter, date.value)] },
-    MONTHLY: { freq: 'MONTHLY', interval: 1, byMonthDay: [adapter.getDate(date.value)] },
+    WEEKLY: { freq: 'WEEKLY', interval: 1, byDay: [getPlainDateWeekDayCode(plainDate)] },
+    MONTHLY: { freq: 'MONTHLY', interval: 1, byMonthDay: [plainDate.day] },
     YEARLY: { freq: 'YEARLY', interval: 1 },
   };
 }
@@ -57,7 +58,7 @@ export function getDefaultPresetKey(
     }
     case 'MONTHLY': {
       // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-      const day = adapter.getDate(occurrenceStart.value);
+      const day = buildTemporalPlainDate(adapter, occurrenceStart.value).day;
       const byMonthDay = rule.byMonthDay ?? [];
       const matchesDefaultByMonthDay =
         byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
@@ -101,9 +102,10 @@ export function getMonthlyReference(
   ord: number;
   date: TemporalSupportedObject;
 } {
+  const plainDate = buildTemporalPlainDate(adapter, date.value);
   return {
-    dayOfMonth: adapter.getDate(date.value),
-    code: getWeekDayCode(adapter, date.value),
+    dayOfMonth: plainDate.day,
+    code: getPlainDateWeekDayCode(plainDate),
     ord: computeMonthlyOrdinal(adapter, date.value),
     date: date.value,
   };
