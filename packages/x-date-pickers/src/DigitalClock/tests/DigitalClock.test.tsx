@@ -7,7 +7,8 @@ import {
   digitalClockHandler,
   formatFullTimeValue,
 } from 'test/utils/pickers';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();
@@ -171,5 +172,60 @@ describe('<DigitalClock />', () => {
 
     const options = screen.getAllByRole('option');
     expect(options[0]).to.have.class('bar');
+  });
+  // https://github.com/mui/mui-x/issues/15758
+  it('should not scroll back to the selected item when it re-renders', () => {
+    const view = render(
+      <DigitalClock
+        value={adapterToUse.date('2018-01-01T12:30:00')}
+        focusedView="hours"
+        onFocusedViewChange={() => {}}
+      />,
+    );
+
+    const setScrollTop = spy();
+    Object.defineProperty(screen.getByRole('listbox').parentElement!, 'scrollTop', {
+      configurable: true,
+      get: () => 0,
+      set: setScrollTop,
+    });
+
+    view.setProps({ focusedView: null });
+
+    expect(setScrollTop.callCount).to.equal(0);
+  });
+
+  it('should scroll to the new active item when the value changes', () => {
+    const view = render(<DigitalClock value={adapterToUse.date('2018-01-01T12:30:00')} />);
+
+    const setScrollTop = spy();
+    Object.defineProperty(screen.getByRole('listbox').parentElement!, 'scrollTop', {
+      configurable: true,
+      get: () => 0,
+      set: setScrollTop,
+    });
+
+    view.setProps({ value: adapterToUse.date('2018-01-01T15:00:00') });
+
+    expect(setScrollTop.callCount).to.equal(1);
+  });
+
+  // Needs layout: the position of the selected item is only known once the clock is visible
+  it.skipIf(isJSDOM)('should scroll to the selected item when it was mounted hidden', async () => {
+    function HiddenClock({ hidden }: { hidden: boolean }) {
+      return (
+        <div style={{ display: hidden ? 'none' : 'block' }}>
+          <DigitalClock value={adapterToUse.date('2018-01-01T12:30:00')} />
+        </div>
+      );
+    }
+
+    const view = render(<HiddenClock hidden />);
+    view.setProps({ hidden: false });
+
+    // The clock scrolls smoothly once it has been rendered
+    await waitFor(() => {
+      expect(screen.getByRole('listbox').parentElement!.scrollTop).to.be.greaterThan(0);
+    });
   });
 });
