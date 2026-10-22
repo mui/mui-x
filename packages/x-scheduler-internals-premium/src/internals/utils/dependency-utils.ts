@@ -6,6 +6,7 @@ import type {
   SchedulerEventSide,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
+import { localToEpochMs, MS_PER_DAY, toLocalMs } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerDependency,
   SchedulerDependenciesState,
@@ -15,7 +16,6 @@ import type {
   SchedulerDependencyLagUnit,
   SchedulerDependencyType,
 } from '../../models';
-import { addDaysOnWallClock } from './wall-clock';
 
 export interface SchedulerDependencyEdges {
   /**
@@ -47,6 +47,19 @@ export function getDependencyEdges(type: SchedulerDependencyType): SchedulerDepe
  */
 export function isDependencyType(type: unknown): type is SchedulerDependencyType {
   return typeof type === 'string' && Object.hasOwn(DEPENDENCY_EDGES, type);
+}
+
+// The range of `Date`, minus a margin for the offsets read around a wall-clock time.
+const MAX_LOCAL_MS = 8.64e15 - 2 * MS_PER_DAY;
+
+/**
+ * Adds days to an instant on the wall clock of `timezone`, keeping its time of day. The times a
+ * DST transition skips or repeats resolve like `localToEpochMs()`. Returns `NaN` past the range
+ * of `Date`. On wall-clock milliseconds rather than plain dates, as the cascade adds many lags.
+ */
+function addDaysOnWallClock(epochMs: number, dayCount: number, timezone: TemporalTimezone) {
+  const localMs = toLocalMs(epochMs, timezone) + dayCount * MS_PER_DAY;
+  return Math.abs(localMs) > MAX_LOCAL_MS ? NaN : localToEpochMs(localMs, timezone);
 }
 
 // Minutes and hours are elapsed time. Days and weeks keep the time of day on the wall clock.

@@ -12,6 +12,9 @@ import {
   dateToEventString,
   getEndOfDayMs,
   getStartOfDayMs,
+  localToEpochMs,
+  MS_PER_DAY,
+  toLocalDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
@@ -22,7 +25,6 @@ import {
   getEffectiveDependencyLag,
   isDependencyActive,
 } from './dependency-utils';
-import { getDayEndMs, getDayStartMs, toLocalDayNumber } from './wall-clock';
 
 export interface ComputeAutoSchedulingCascadeParameters {
   adapter: Adapter;
@@ -132,18 +134,26 @@ function getDependencyBound(
   return Math.abs(timestamp) <= MAX_TIMESTAMP ? timestamp : null;
 }
 
+// The cascade shifts the all-day events with day numbers rather than plain dates: it can move
+// hundreds of events, and creating plain dates would make it noticeably slower.
+
 /**
  * The `side` of an all-day event on the day `dayNumber`: the first instant of the day for its
- * start, or the last instant for its end.
+ * start, or the last instant before the next day for its end. A day whose midnight a DST
+ * transition skips starts at the end of the gap.
  */
 function getAllDayEdgeMs(dayNumber: number, side: SchedulerEventSide, timezone: TemporalTimezone) {
-  return side === 'start' ? getDayStartMs(dayNumber, timezone) : getDayEndMs(dayNumber, timezone);
+  return side === 'start'
+    ? localToEpochMs(dayNumber * MS_PER_DAY, timezone)
+    : localToEpochMs((dayNumber + 1) * MS_PER_DAY, timezone) - 1;
 }
 
 // Whether `timezone` skips the day, like December 30th, 2011 in Pacific/Apia. An all-day edge
 // shifted onto it would end before it starts.
 function isSkippedDay(dayNumber: number, timezone: TemporalTimezone): boolean {
-  return getDayEndMs(dayNumber, timezone) < getDayStartMs(dayNumber, timezone);
+  return (
+    getAllDayEdgeMs(dayNumber, 'end', timezone) < getAllDayEdgeMs(dayNumber, 'start', timezone)
+  );
 }
 
 // Minimal whole-day shift bringing the `side` of an all-day event, on the day `edgeDay`, to `bound`.
@@ -567,7 +577,7 @@ export function computeAutoSchedulingCascade(
       const endDay = toLocalDayNumber(base.endTimestamp, timezone);
       if (keptStartBound !== null) {
         const dayCount = minimalDayShift(endDay, 'end', keptStartBound, timezone);
-        return { ...base, endTimestamp: getDayEndMs(endDay + dayCount, timezone) };
+        return { ...base, endTimestamp: getAllDayEdgeMs(endDay + dayCount, 'end', timezone) };
       }
       let dayCount = Math.max(
         required.start === null ? 0 : minimalDayShift(startDay, 'start', required.start, timezone),
@@ -576,18 +586,18 @@ export function computeAutoSchedulingCascade(
       // A kept end does not move, so only the shifted end can land on a skipped day.
       while (
         isSkippedDay(startDay + dayCount, timezone) ||
-        (!keepsEnd(getDayStartMs(startDay + dayCount, timezone)) &&
+        (!keepsEnd(getAllDayEdgeMs(startDay + dayCount, 'start', timezone)) &&
           isSkippedDay(endDay + dayCount, timezone))
       ) {
         dayCount += 1;
       }
-      const newStartTimestamp = getDayStartMs(startDay + dayCount, timezone);
+      const newStartTimestamp = getAllDayEdgeMs(startDay + dayCount, 'start', timezone);
       return {
         ...base,
         startTimestamp: newStartTimestamp,
         endTimestamp: keepsEnd(newStartTimestamp)
           ? base.endTimestamp
-          : getDayEndMs(endDay + dayCount, timezone),
+          : getAllDayEdgeMs(endDay + dayCount, 'end', timezone),
       };
     }
 
