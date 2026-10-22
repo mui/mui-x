@@ -16,10 +16,12 @@ import {
   checkIsoDate,
   getMonthCodes,
   getMonthOfCode,
+  getOrdinalMonthCodes,
   ISO_CALENDAR_ID,
   readCalendarAnnotation,
   resolveIsoFields,
   type CalendarDate,
+  type CalendarFields,
   type CalendarImplementation,
 } from './calendar';
 import { mergeDateFields } from './mergeDateFields';
@@ -326,16 +328,19 @@ function addYearsAndMonths(
     month -= monthsInYear;
     year += 1;
   }
+  const day = date.day;
   const daysInMonth = calendar.getDaysInMonth(year, month);
-  if (date.day > daysInMonth && overflow === 'reject') {
+  if (day > daysInMonth && overflow === 'reject') {
     throw new Error(
-      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved the day ${date.day} to a month of ${daysInMonth} days. ` +
+      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved the day ${day} to a month of ${daysInMonth} days. ` +
         "The `overflow: 'reject'` option forbids moving the date to the last day of the month. " +
         "Pass `overflow: 'constrain'` to use the last day of the month.",
     );
   }
-  return calendar.toDayNumber(year, month, Math.min(date.day, daysInMonth));
+  return calendar.toDayNumber(year, month, Math.min(day, daysInMonth));
 }
+
+const ISO_MONTH_CODES = /* @__PURE__ */ getOrdinalMonthCodes(12);
 
 /**
  * A date without a time or timezone, in the ISO calendar or another calendar system.
@@ -349,10 +354,8 @@ export class PlainDate implements BaseTemporal.PlainDate {
   declare public readonly dayNumber: number;
 
   /**
-   * The fields of the date outside the ISO calendar, read from its calendar once. The fields of an
-   * ISO date are computed from `dayNumber` when they are read, as most dates are only compared and
-   * moved: a date is cheaper to create this way. Like the getters of Temporal, the fields are not
-   * own properties.
+   * The fields of the date outside the ISO calendar, read from its calendar once, when the date is
+   * created.
    */
   declare private readonly calendarDate: CalendarDate | undefined;
 
@@ -362,30 +365,38 @@ export class PlainDate implements BaseTemporal.PlainDate {
     isoDay: number,
     calendar: string = ISO_CALENDAR_ID,
     validation?: typeof UNVALIDATED,
-    // Passed by `createPlainDate()`, which knows it already.
-    knownDayNumber?: number,
+    // The day number of an unvalidated date, passed by `createPlainDate()`.
+    unvalidatedDayNumber: number = 0,
   ) {
-    const implementation = getCalendar(calendar);
+    let implementation: CalendarImplementation;
     let dayNumber: number;
-    if (knownDayNumber === undefined) {
+    if (validation === UNVALIDATED) {
+      implementation = getCalendar(calendar);
+      dayNumber = unvalidatedDayNumber;
+    } else {
       const year = toInteger(isoYear, 'year');
       const month = toInteger(isoMonth, 'month');
       const day = toInteger(isoDay, 'day');
-      if (validation !== UNVALIDATED) {
-        checkIsoDate(year, month, day);
-      }
+      implementation = getCalendar(calendar);
+      checkIsoDate(year, month, day);
       dayNumber = toDayNumber(year, month, day);
-      if (validation !== UNVALIDATED) {
-        checkCalendarRange(implementation, dayNumber);
-      }
-    } else {
-      dayNumber = knownDayNumber;
+      checkCalendarRange(implementation, dayNumber);
     }
     this.calendarId = implementation.id;
     this.dayNumber = dayNumber;
     this.calendarDate =
       implementation.id === ISO_CALENDAR_ID ? undefined : implementation.getDate(dayNumber);
     Object.freeze(this);
+  }
+
+  /**
+   * The fields of the date. They're computed when they're read, from `calendarDate`, or from
+   * `dayNumber` in the ISO calendar: most dates are only compared and moved, so a date is cheaper
+   * to create this way. Like the getters of Temporal, `era` to `dayOfWeek` and the ISO fields
+   * aren't own properties.
+   */
+  private get fields(): CalendarFields {
+    return this.calendarDate ?? fromDayNumber(this.dayNumber);
   }
 
   public get era(): string | undefined {
@@ -397,21 +408,21 @@ export class PlainDate implements BaseTemporal.PlainDate {
   }
 
   public get year(): number {
-    return this.calendarDate === undefined ? this.isoYear : this.calendarDate.year;
+    return this.fields.year;
   }
 
   public get month(): number {
-    return this.calendarDate === undefined ? this.isoMonth : this.calendarDate.month;
+    return this.fields.month;
   }
 
   public get monthCode(): string {
     return this.calendarDate === undefined
-      ? getCalendar(ISO_CALENDAR_ID).monthCodes[this.isoMonth - 1]
+      ? ISO_MONTH_CODES[this.isoMonth - 1]
       : this.calendarDate.monthCode;
   }
 
   public get day(): number {
-    return this.calendarDate === undefined ? this.isoDay : this.calendarDate.day;
+    return this.fields.day;
   }
 
   public get dayOfWeek(): number {
@@ -435,7 +446,8 @@ export class PlainDate implements BaseTemporal.PlainDate {
   }
 
   public get daysInMonth(): number {
-    return getCalendar(this.calendarId).getDaysInMonth(this.year, this.month);
+    const fields = this.fields;
+    return getCalendar(this.calendarId).getDaysInMonth(fields.year, fields.month);
   }
 
   public get monthsInYear(): number {
@@ -533,11 +545,14 @@ export class PlainDate implements BaseTemporal.PlainDate {
    * Returns the same date in another calendar.
    */
   public withCalendar(calendar: string): PlainDate {
-    return new PlainDate(this.isoYear, this.isoMonth, this.isoDay, calendar);
+    const implementation = getCalendar(calendar);
+    checkCalendarRange(implementation, this.dayNumber);
+    return createPlainDate(this.dayNumber, implementation.id);
   }
 
   public toString(): string {
-    return `${formatIsoDate(this.isoYear, this.isoMonth, this.isoDay)}${formatCalendarAnnotation(this.calendarId)}`;
+    const isoDate = fromDayNumber(this.dayNumber);
+    return `${formatIsoDate(isoDate.year, isoDate.month, isoDate.day)}${formatCalendarAnnotation(this.calendarId)}`;
   }
 
   public toJSON(): string {
