@@ -1,12 +1,13 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
+import type { PlainDate } from './base-temporal/PlainDate';
 import {
   createPlainDate,
   getStartOfWeek as getStartOfWeekDayNumber,
-  PlainDate,
 } from './base-temporal/PlainDate';
 import { ISO_CALENDAR_ID } from './base-temporal/calendar';
+import { fromDayNumber, toDayNumber } from './base-temporal/iso';
 import { buildTemporalPlainDate, createAdapterDate } from './plain-date-utils/adapter';
 import { toEpochMs } from './plain-date-utils/timeZone';
 
@@ -179,9 +180,11 @@ export function getEndOfWeek(
 ): TemporalSupportedObject {
   const timezone = adapter.getTimezone(date);
   // The last instant before the next week starts.
-  const nextWeekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn).add({
-    days: 7,
-  });
+  // `createPlainDate()` doesn't check the range, so a week can end on the last supported day.
+  const nextWeekStartPlainDate = createPlainDate(
+    getWeekStartPlainDate(adapter, date, weekStartsOn).dayNumber + 7,
+    ISO_CALENDAR_ID,
+  );
   return createAdapterDate(adapter, toEpochMs(nextWeekStartPlainDate, 0, timezone) - 1, timezone);
 }
 
@@ -204,10 +207,8 @@ export function getWeekNumber(
   }
   const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
   // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.
-  const year = weekStartPlainDate.add({ days: 3 }).year;
-  const firstWeekStart = getStartOfWeekDayNumber(
-    PlainDate.from({ year, month: 1, day: 4 }).dayNumber,
-    weekStartsOn,
-  );
+  // The ISO helpers don't check the range, so the last week of 9999 gets a number.
+  const { year } = fromDayNumber(weekStartPlainDate.dayNumber + 3);
+  const firstWeekStart = getStartOfWeekDayNumber(toDayNumber(year, 1, 4), weekStartsOn);
   return (weekStartPlainDate.dayNumber - firstWeekStart) / 7 + 1;
 }

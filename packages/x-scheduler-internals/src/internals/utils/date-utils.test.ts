@@ -149,6 +149,13 @@ describe('date-utils', () => {
       const end = getEndOfWeek(adapter, wednesday, 1);
       expect(adapter.isSameDay(adapter.addDays(start, 6), end)).to.equal(true);
     });
+
+    it('returns the end of a week ending on the last supported day', () => {
+      // 9999-12-31 is a Friday.
+      const lastDay = adapter.date('9999-12-31T12:00:00.000Z', 'UTC');
+      const result = getEndOfWeek(adapter, lastDay, 6);
+      expect(adapter.getTime(result)).to.equal(Date.UTC(9999, 11, 31, 23, 59, 59, 999));
+    });
   });
 
   describe('getWeekNumber', () => {
@@ -184,6 +191,12 @@ describe('date-utils', () => {
       // Sun-week 2: week starts Sun Jan 5 2025; midpoint Wed Jan 8 is in 2025 => week 2.
       const result = getWeekNumber(adapter, wednesday, 0);
       expect(result).to.equal(2);
+    });
+
+    it('returns week 1 of 10000 for the last week of 9999 with weekStartsOn=3 (Wed)', () => {
+      // The week starts on Wed 9999-12-29, so its 4th day is in 10000.
+      const lastDay = adapter.date('9999-12-31T12:00:00.000Z', 'UTC');
+      expect(getWeekNumber(adapter, lastDay, 3)).to.equal(1);
     });
   });
 
