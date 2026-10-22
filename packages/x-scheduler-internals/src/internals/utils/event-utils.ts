@@ -11,7 +11,7 @@ import type {
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from './plain-date-utils/adapter';
-import { getEndOfDayMs, getStartOfDayMs } from './plain-date-utils/timeZone';
+import { toLocalDayNumber } from './plain-date-utils/timeZone';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
@@ -108,24 +108,27 @@ export function generateOccurrenceFromEvent({
 export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
   days: SchedulerProcessedDate[],
-  adapter: Adapter,
+  // The day numbers of `days`, which the callers that loop over many occurrences read once.
+  dayNumbers: readonly number[] = days.map((day) =>
+    toLocalDayNumber(day.timestamp, event.displayTimezone.timezone),
+  ),
 ) {
-  const { start, end } = event.displayTimezone;
-  const eventStartStartOfDayMs = getStartOfDayMs(start.timestamp, adapter.getTimezone(start.value));
-  const eventEndEndOfDayMs = getEndOfDayMs(end.timestamp, adapter.getTimezone(end.value));
+  const { start, end, timezone } = event.displayTimezone;
+  const startDayNumber = toLocalDayNumber(start.timestamp, timezone);
+  const endDayNumber = toLocalDayNumber(end.timestamp, timezone);
 
   const dayKeys: string[] = [];
-  for (const day of days) {
+  for (let index = 0; index < days.length; index += 1) {
     // If the day is before the event start, skip to the next day
-    if (day.timestamp < eventStartStartOfDayMs) {
+    if (dayNumbers[index] < startDayNumber) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (day.timestamp > eventEndEndOfDayMs) {
+    if (dayNumbers[index] > endDayNumber) {
       break;
     }
-    dayKeys.push(day.key);
+    dayKeys.push(days[index].key);
   }
   return dayKeys;
 }

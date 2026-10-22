@@ -17,9 +17,16 @@ export function useAdapter(dateLocale?: DateLocale) {
 }
 
 /**
+ * Checks if the given day number is a weekend (Saturday or Sunday).
+ */
+export function isWeekendDay(dayNumber: number): boolean {
+  // ISO weekdays 6 and 7 are Saturday and Sunday.
+  return getIsoDayOfWeek(dayNumber) >= 6;
+}
+
+/**
  * Checks if the given date is a weekend (Saturday or Sunday), in its own timezone.
  */
 export function isWeekend(adapter: TemporalAdapter, value: TemporalSupportedObject): boolean {
-  // ISO weekdays 6 and 7 are Saturday and Sunday.
-  return getIsoDayOfWeek(getAdapterDayNumber(adapter, value)) >= 6;
+  return isWeekendDay(getAdapterDayNumber(adapter, value));
 }

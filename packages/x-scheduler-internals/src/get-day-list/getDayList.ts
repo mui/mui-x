@@ -1,11 +1,11 @@
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import { getIsoDayOfWeek } from '../internals/utils/base-temporal/iso';
 import {
   createProcessedDate,
   getAdapterDayNumber,
 } from '../internals/utils/plain-date-utils/adapter';
 import { getDayStartMs, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+import { isWeekendDay } from '../use-adapter/useAdapter';
 
 export function getDayList(parameters: GetDaytListParameters): GetDaytListReturnValue {
   const { adapter, start, end, excludeWeekends } = parameters;
@@ -22,11 +22,28 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
     }
   }
 
-  const timezone = adapter.getTimezone(start);
+  return getDayListFromDayNumbers(
+    adapter,
+    firstDay,
+    lastDay,
+    adapter.getTimezone(start),
+    excludeWeekends,
+  );
+}
+
+/**
+ * Returns the days from the day number `firstDay` to `lastDay`, both included, in `timezone`.
+ */
+export function getDayListFromDayNumbers(
+  adapter: TemporalAdapter,
+  firstDay: number,
+  lastDay: number,
+  timezone: TemporalTimezone,
+  excludeWeekends: boolean | undefined,
+): GetDaytListReturnValue {
   const days: SchedulerProcessedDate[] = [];
   for (let dayNumber = firstDay; dayNumber <= lastDay; dayNumber += 1) {
-    // ISO weekdays 6 and 7 are Saturday and Sunday.
-    if (excludeWeekends && getIsoDayOfWeek(dayNumber) >= 6) {
+    if (excludeWeekends && isWeekendDay(dayNumber)) {
       continue;
     }
     const dayStartMs = getDayStartMs(dayNumber, timezone);

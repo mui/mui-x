@@ -36,7 +36,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
       expect(result).toEqual([formattedDays[1], formattedDays[2], formattedDays[3]]);
     });
 
@@ -46,7 +46,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
       expect(result).toHaveLength(0);
     });
 
@@ -56,7 +56,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
       expect(result).toHaveLength(0);
     });
 
@@ -66,7 +66,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
       expect(result).toEqual([formattedDays[0], formattedDays[1], formattedDays[2]]);
     });
 
@@ -76,7 +76,7 @@ describe('event-utils', () => {
         .allDay(true)
         .toOccurrence();
 
-      const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter);
+      const result = getDaysTheOccurrenceIsVisibleOn(event, days);
       expect(result).toEqual([formattedDays[2], formattedDays[3], formattedDays[4]]);
     });
   });

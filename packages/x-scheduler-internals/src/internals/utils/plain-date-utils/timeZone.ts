@@ -245,19 +245,18 @@ export function getSkippedDays(
   timezone: TemporalTimezone,
 ): Set<number> {
   const skippedDays = new Set<number>();
-  const getStartMs = (dayNumber: number) => getDayStartMs(dayNumber, timezone);
 
   // A skipped day makes the days of a period last a day longer than the time elapsed between their
   // starts, when DST transitions change it by hours. The periods are a month long, as a timezone
   // never skipped and repeated a day within a month, which would cancel out.
-  let periodStartMs = getStartMs(from.dayNumber);
+  let periodStartMs = getDayStartMs(from.dayNumber, timezone);
   for (let start = from.dayNumber; start < to.dayNumber; start += 31) {
     const end = Math.min(start + 31, to.dayNumber);
-    const periodEndMs = getStartMs(end);
+    const periodEndMs = getDayStartMs(end, timezone);
     if ((end - start) * MS_PER_DAY - (periodEndMs - periodStartMs) >= MS_PER_DAY / 2) {
       for (let dayNumber = start; dayNumber < end; dayNumber += 1) {
         // The start of a skipped day resolves to an instant of the next day.
-        if (toLocalMs(getStartMs(dayNumber), timezone) >= (dayNumber + 1) * MS_PER_DAY) {
+        if (toLocalDayNumber(getDayStartMs(dayNumber, timezone), timezone) > dayNumber) {
           skippedDays.add(dayNumber);
         }
       }

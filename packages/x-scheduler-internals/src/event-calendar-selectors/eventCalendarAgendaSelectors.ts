@@ -10,12 +10,12 @@ import { eventCalendarViewSelectors } from './eventCalendarViewSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
-import { getDayList } from '../get-day-list';
+import { getDayList, getDayListFromDayNumbers } from '../get-day-list';
 import {
   createAdapterDate,
   getAdapterDayNumber,
 } from '../internals/utils/plain-date-utils/adapter';
-import { getDayEndMs, getDayStartMs } from '../internals/utils/plain-date-utils/timeZone';
+import { getDayStartMs } from '../internals/utils/plain-date-utils/timeZone';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -45,10 +45,10 @@ const baseVisibleDays = createSelectorMemoized(
 );
 
 /**
- * The last day the agenda scans for events when hiding the empty days.
+ * The day number of the last day the agenda scans for events when hiding the empty days.
  * In month mode the agenda stays inside the month, so the scan stops at its last day.
  */
-const horizonEnd = createSelectorMemoized(
+const horizonEndDay = createSelectorMemoized(
   (state: State) => state.adapter,
   schedulerOtherSelectors.visibleDate,
   eventCalendarViewSelectors.agendaDayCount,
@@ -56,15 +56,12 @@ const horizonEnd = createSelectorMemoized(
   (adapter, visibleDate, dayCount, range) => {
     const rangeEndDay = getAdapterDayNumber(adapter, range.end);
     // A day count beyond the default horizon still scans at least the displayed days
-    const horizonDay =
-      dayCount === 'month'
-        ? rangeEndDay
-        : Math.max(
-            rangeEndDay,
-            getAdapterDayNumber(adapter, visibleDate) + AGENDA_MAX_HORIZON_DAYS - 1,
-          );
-    const timezone = adapter.getTimezone(range.end);
-    return createAdapterDate(adapter, getDayStartMs(horizonDay, timezone), timezone);
+    return dayCount === 'month'
+      ? rangeEndDay
+      : Math.max(
+          rangeEndDay,
+          getAdapterDayNumber(adapter, visibleDate) + AGENDA_MAX_HORIZON_DAYS - 1,
+        );
   },
 );
 
@@ -73,7 +70,7 @@ const visibleDays = createSelectorMemoized(
   eventCalendarViewSelectors.agendaDayCount,
   baseRange,
   baseVisibleDays,
-  horizonEnd,
+  horizonEndDay,
   schedulerOtherSelectors.displayTimezone,
   eventCalendarPreferenceSelectors.showWeekends,
   eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
@@ -85,7 +82,7 @@ const visibleDays = createSelectorMemoized(
     dayCount,
     range,
     baseDays,
-    horizon,
+    horizonDay,
     displayTimezone,
     showWeekends,
     showEmptyDaysInAgenda,
@@ -122,7 +119,6 @@ const visibleDays = createSelectorMemoized(
     // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
     // The scanned span is tracked apart from the day list, which skips the hidden weekends.
     const timezone = adapter.getTimezone(range.end);
-    const horizonDay = getAdapterDayNumber(adapter, horizon);
     let scannedUntilDay = getAdapterDayNumber(adapter, range.end);
     while (daysWithEvents.length < amount && scannedUntilDay < horizonDay) {
       // Extend forward by one more chunk, without passing the horizon
@@ -132,13 +128,13 @@ const visibleDays = createSelectorMemoized(
         horizonDay,
       );
 
-      // A skipped day starts on the next day but ends before it, so the chunk stays within its bounds.
-      const more = getDayList({
+      const more = getDayListFromDayNumbers(
         adapter,
-        start: createAdapterDate(adapter, getDayStartMs(nextStartDay, timezone), timezone),
-        end: createAdapterDate(adapter, getDayEndMs(scannedUntilDay, timezone), timezone),
-        excludeWeekends: !showWeekends,
-      });
+        nextStartDay,
+        scannedUntilDay,
+        timezone,
+        !showWeekends,
+      );
 
       accumulatedDays = accumulatedDays.concat(more);
 
@@ -171,15 +167,22 @@ export const eventCalendarAgendaSelectors = {
     (state: State) => state.adapter,
     baseRange,
     baseVisibleDays,
-    horizonEnd,
+    horizonEndDay,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-    (adapter, range, baseDays, horizon, showEmptyDaysInAgenda): EventCalendarFetchRange => {
+    (adapter, range, baseDays, horizonDay, showEmptyDaysInAgenda): EventCalendarFetchRange => {
       // The day list is empty when a short `dayCount` only covers hidden weekend days,
       // so fall back to the bounds of the range.
       const firstDay = baseDays.length > 0 ? baseDays[0].value : adapter.startOfDay(range.start);
       const lastDay =
         baseDays.length > 0 ? baseDays[baseDays.length - 1].value : adapter.startOfDay(range.end);
-      return { start: firstDay, end: showEmptyDaysInAgenda ? lastDay : horizon };
+      if (showEmptyDaysInAgenda) {
+        return { start: firstDay, end: lastDay };
+      }
+      const timezone = adapter.getTimezone(range.end);
+      return {
+        start: firstDay,
+        end: createAdapterDate(adapter, getDayStartMs(horizonDay, timezone), timezone),
+      };
     },
   ),
 };
