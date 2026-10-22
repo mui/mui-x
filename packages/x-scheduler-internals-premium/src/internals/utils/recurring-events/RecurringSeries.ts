@@ -26,9 +26,9 @@ import {
 
 /**
  * The Gregorian calendar repeats every 400 years, days of the week included.
- * A monthly or yearly rule that matches no month or year during that cycle never matches.
+ * A monthly or yearly rule that matches no month during that cycle never matches.
  */
-const YEARS_PER_GREGORIAN_CYCLE = 400;
+const MONTHS_PER_GREGORIAN_CYCLE = 12 * 400;
 
 /**
  * The days the timezone skips are looked up by periods of this many days.
@@ -79,15 +79,16 @@ function getNthWeekdayOfMonth(
   dayOfWeek: number,
   ordinal: number,
 ): PlainDate | null {
-  const { daysInMonth } = monthStart;
   let day: number;
   if (ordinal > 0) {
     day = 1 + ((dayOfWeek - monthStart.dayOfWeek + 7) % 7) + 7 * (ordinal - 1);
   } else {
-    const lastDayOfWeek = ((monthStart.dayOfWeek + daysInMonth - 2) % 7) + 1;
-    day = daysInMonth - ((lastDayOfWeek - dayOfWeek + 7) % 7) + 7 * (ordinal + 1);
+    const lastDayOfWeek = ((monthStart.dayOfWeek + monthStart.daysInMonth - 2) % 7) + 1;
+    day = monthStart.daysInMonth - ((lastDayOfWeek - dayOfWeek + 7) % 7) + 7 * (ordinal + 1);
   }
-  return day >= 1 && day <= daysInMonth ? toPlainDate(monthStart.dayNumber + day - 1) : null;
+  return day >= 1 && day <= monthStart.daysInMonth
+    ? toPlainDate(monthStart.dayNumber + day - 1)
+    : null;
 }
 
 /**
@@ -129,39 +130,39 @@ function getLaterDate(one: PlainDate, two: PlainDate): PlainDate {
 /**
  * Steps through the days the frequency, interval and BY* parts of a rule match, from the first
  * occurrence. Expects a rule validated by `parseRRule()`.
+ *
+ * A yearly rule has no BY* part, so it matches the day of DTSTART every 12 × INTERVAL months.
  */
 class RuleDays {
+  /**
+   * The step between two periods of the rule, in days, weeks, or months for monthly and yearly
+   * rules.
+   */
   declare public readonly interval: number;
 
   /**
-   * How many months or years to try before concluding that the rule never matches again.
+   * How many months to try before concluding that the rule never matches again.
    */
   declare private readonly maxSearchSteps: number;
 
   // Weekly-specific: ISO days of the week, sorted from Monday.
   private weekDays: number[] = [];
 
-  // Monthly-specific: byDay (e.g., "2nd Tuesday") or byMonthDay (e.g., "the 15th")
+  // Monthly and yearly: byDay (e.g., "2nd Tuesday") or the day of the month (e.g., "the 15th")
   private monthlyByDay: { ord: number; dayOfWeek: number } | null = null;
 
   private monthlyTargetDay: number = 0;
-
-  // Yearly-specific: target month and day
-  private yearlyTargetMonth: number = 0;
-
-  private yearlyTargetDay: number = 0;
 
   constructor(
     public readonly rule: SchedulerProcessedEventRecurrenceRule,
     private readonly seriesStart: PlainDate,
   ) {
-    this.interval = rule.interval ?? 1;
-    this.maxSearchSteps = getMaxSearchSteps(
-      rule.freq === 'MONTHLY' ? 12 * YEARS_PER_GREGORIAN_CYCLE : YEARS_PER_GREGORIAN_CYCLE,
-      this.interval,
-    );
+    this.interval = (rule.freq === 'YEARLY' ? 12 : 1) * (rule.interval ?? 1);
+    this.maxSearchSteps = getMaxSearchSteps(MONTHS_PER_GREGORIAN_CYCLE, this.interval);
 
     switch (rule.freq) {
+      case 'DAILY':
+        break;
       case 'WEEKLY': {
         this.weekDays = (
           parsesByDayForWeeklyFrequency(rule.byDay)?.map(getDayOfWeekFromCode) ?? [
@@ -170,7 +171,7 @@ class RuleDays {
         ).toSorted((a, b) => a - b);
         break;
       }
-      case 'MONTHLY': {
+      default: {
         if (rule.byDay?.length) {
           const { ord, code } = parsesByDayForMonthlyFrequency(rule.byDay);
           this.monthlyByDay = { ord, dayOfWeek: getDayOfWeekFromCode(code) };
@@ -180,13 +181,6 @@ class RuleDays {
         }
         break;
       }
-      case 'YEARLY': {
-        this.yearlyTargetMonth = seriesStart.month;
-        this.yearlyTargetDay = seriesStart.day;
-        break;
-      }
-      default:
-        break;
     }
   }
 
@@ -216,13 +210,10 @@ class RuleDays {
         const nextWeek = addDays(startingWeek, 7 * interval);
         return nextWeek === null ? null : this.findFirstInWeek(nextWeek, seriesStart);
       }
-      case 'MONTHLY': {
+      default: {
         const monthsDiff = (date.year - seriesStart.year) * 12 + date.month - seriesStart.month;
         const startingMonth = addMonths(getStartOfMonth(seriesStart), skip(monthsDiff));
         return startingMonth === null ? null : this.findFirstInMonth(startingMonth, minDate);
-      }
-      default: {
-        return this.findFirstInYear(seriesStart.year + skip(date.year - seriesStart.year), minDate);
       }
     }
   }
@@ -245,12 +236,9 @@ class RuleDays {
             : dayOfWeek - day.dayOfWeek,
         );
       }
-      case 'MONTHLY': {
+      default: {
         const nextMonth = addMonths(getStartOfMonth(day), this.interval);
         return nextMonth === null ? null : this.findFirstInMonth(nextMonth, this.seriesStart);
-      }
-      default: {
-        return this.findFirstInYear(day.year + this.interval, this.seriesStart);
       }
     }
   }
@@ -281,27 +269,6 @@ class RuleDays {
         return candidate;
       }
       month = addMonths(month, this.interval);
-    }
-    return null;
-  }
-
-  private findFirstInYear(startYear: number, minDate: PlainDate): PlainDate | null {
-    for (
-      let i = 0;
-      i < this.maxSearchSteps && startYear + i * this.interval <= LAST_SUPPORTED_YEAR;
-      i += 1
-    ) {
-      const monthStart = PlainDate.from({
-        year: startYear + i * this.interval,
-        month: this.yearlyTargetMonth,
-        day: 1,
-      });
-      if (this.yearlyTargetDay <= monthStart.daysInMonth) {
-        const candidate = toPlainDate(monthStart.dayNumber + this.yearlyTargetDay - 1);
-        if (PlainDate.compare(candidate, minDate) >= 0) {
-          return candidate;
-        }
-      }
     }
     return null;
   }
