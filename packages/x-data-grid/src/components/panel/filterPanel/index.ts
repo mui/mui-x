@@ -1,4 +1,8 @@
 export * from './GridFilterForm';
+export {
+  GridFilterFormColumnInput,
+  type GridFilterFormColumnInputProps,
+} from './GridFilterFormColumnInput';
 // `GridFilterFormBase` is an internal component: only its public-facing prop types are re-exported.
 export type { FilterColumnsArgs, GridFilterFormProps } from './GridFilterFormBase';
 export { GridFilterInputValue, type GridTypeFilterInputValueProps } from './GridFilterInputValue';
