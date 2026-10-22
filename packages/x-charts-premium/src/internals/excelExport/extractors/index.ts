@@ -40,6 +40,8 @@ export const CHART_EXCEL_EXTRACTORS = {
   ohlc: ohlcExtractor,
   mapShape: mapShapeExtractor,
   sankey: sankeyExtractor,
+  // TODO: add a treemap extractor
+  treemap: () => [],
 } satisfies { [T in ChartSeriesType]: ChartExcelExtractor<T> };
 
 export type { ChartExcelExtractor, ChartExcelExtractorParams, AxisGetter } from './types';
