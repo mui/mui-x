@@ -90,10 +90,13 @@ export function getWeeklyDays(
   const timezone = adapter.getTimezone(weekStart);
   return Array.from({ length: 7 }, (_, i) => {
     const dayPlainDate = weekStartPlainDate.add({ days: i });
-    return {
-      code: NOT_LOCALIZED_WEEK_DAYS[dayPlainDate.dayOfWeek - 1],
-      date: createStartOfPlainDate(adapter, dayPlainDate, timezone),
-    };
+    let date = createStartOfPlainDate(adapter, dayPlainDate, timezone);
+    // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, resolves to the next day,
+    // so the same weekday of the previous week is used to keep the date on the weekday of its code.
+    if (!buildTemporalPlainDate(adapter, date).equals(dayPlainDate)) {
+      date = createStartOfPlainDate(adapter, dayPlainDate.add({ days: -7 }), timezone);
+    }
+    return { code: NOT_LOCALIZED_WEEK_DAYS[dayPlainDate.dayOfWeek - 1], date };
   });
 }
 

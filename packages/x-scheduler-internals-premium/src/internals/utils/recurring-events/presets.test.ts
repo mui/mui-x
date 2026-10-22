@@ -39,6 +39,23 @@ describe('recurring-events/presets', () => {
       expect(days[0].code).to.equal('SU');
       expect(days[6].code).to.equal('SA');
     });
+
+    it('keeps each date on the weekday of its code when the timezone skips a day', () => {
+      // December 30th, 2011 (Friday) doesn't exist in Pacific/Apia.
+      const visibleDate = adapter.date('2011-12-28T12:00:00', 'Pacific/Apia');
+      const days = getWeeklyDays(adapter, visibleDate, 1);
+
+      expect(days.map((d) => d.code)).to.deep.equal(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
+      expect(days.map((d) => adapter.format(d.date, 'weekday'))).to.deep.equal([
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ]);
+    });
   });
 
   describe('getMonthlyReference', () => {
