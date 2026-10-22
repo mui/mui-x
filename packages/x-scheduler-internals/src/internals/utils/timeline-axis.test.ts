@@ -50,6 +50,17 @@ describe('timeline-axis', () => {
       const date = timelineAxisOffsetToDate(adapter, trimmedAxis, -60 * MINUTE);
       expect(date).toEqualDateTime(adapter.date('2025-01-04T19:00:00.000Z', 'UTC'));
     });
+
+    it('should map the end of an axis ending on the last supported day', () => {
+      const lastDay = adapter.date('9999-12-31T00:00:00.000Z', 'UTC');
+      const axis = { ...fullAxis, start: lastDay, end: adapter.endOfDay(lastDay) };
+      const date = timelineAxisOffsetToDate(
+        adapter,
+        axis,
+        getTimelineAxisDurationMs(adapter, axis),
+      );
+      expect(adapter.getTime(date)).to.equal(Date.UTC(10000, 0, 1));
+    });
   });
 
   describe('dateToTimelineAxisOffsetMs', () => {

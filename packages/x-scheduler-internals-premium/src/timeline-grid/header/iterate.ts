@@ -5,15 +5,15 @@ import type {
 } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
+  addMonthsToDayNumber,
   createAdapterDate,
-  createPlainDate,
   FULL_DAY_MINUTES,
   getStartOfDayMs,
   getTimelineAxisOffsetMs,
   getWeekStartPlainDate,
-  ISO_CALENDAR_ID,
   localToEpochMs,
   MS_PER_DAY,
+  plainDateFromDayNumber,
   toLocalMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate, TimelineAxis } from '@mui/x-scheduler-internals/internals';
@@ -30,18 +30,7 @@ type ToAdapterDate = (localMs: number) => TemporalSupportedObject;
  * The date of a wall-clock time.
  */
 function toPlainDate(localMs: number): PlainDate {
-  return createPlainDate(Math.floor(localMs / MS_PER_DAY), ISO_CALENDAR_ID);
-}
-
-/**
- * The machine-readable local date-time of a wall-clock time, like `2026-03-08T00:00`.
- */
-function getDateTime(localMs: number): string {
-  const plainDate = toPlainDate(localMs);
-  const minutesInDay = Math.floor((localMs - plainDate.dayNumber * MS_PER_DAY) / MINUTE_MS);
-  const hours = String(Math.floor(minutesInDay / 60)).padStart(2, '0');
-  const minutes = String(minutesInDay % 60).padStart(2, '0');
-  return `${plainDate.toString()}T${hours}:${minutes}`;
+  return plainDateFromDayNumber(Math.floor(localMs / MS_PER_DAY));
 }
 
 /**
@@ -116,8 +105,8 @@ export function iterate(
     const spanStart = Math.max(cursor, rangeStartLocalMs);
     cells.push({
       date: cursorDate,
-      // Read from the wall clock: a date skipped by a transition keeps its own date-time.
-      dateTime: getDateTime(cursor),
+      // Read from the wall clock: a date skipped by a transition keeps its own date.
+      plainDate: toPlainDate(cursor),
       start: cursor < rangeStartLocalMs ? rangeStart : cursorDate,
       end: nextCursorDate,
       spanInTicks: appliedHourWindow
@@ -196,6 +185,7 @@ function iterateHourCells(
   const cells: IteratedCell[] = [];
   for (let dayIndex = 0; dayIndex < dayCount; dayIndex += 1) {
     const dayStartLocalMs = (firstDay + dayIndex) * MS_PER_DAY;
+    const plainDate = plainDateFromDayNumber(firstDay + dayIndex);
     // On a spring-forward day the skipped hour has no instant, so `date` moves forward to
     // the next existing one. `wallClockHour` is what the column stands for and is what
     // labels must be built from.
@@ -205,7 +195,7 @@ function iterateHourCells(
       const end = toAdapterDate(dayStartLocalMs + (hour + 1) * HOUR_MS);
       cells.push({
         date,
-        dateTime: getDateTime(dayStartLocalMs + hour * HOUR_MS),
+        plainDate,
         start: date,
         end,
         spanInTicks: 1,
@@ -231,18 +221,17 @@ function startOf(
   timezone: TemporalTimezone,
 ): number {
   const localMs = toLocalMs(adapter.getTime(date), timezone);
-  const plainDate = toPlainDate(localMs);
   switch (unit) {
     case 'hour':
       return Math.floor(localMs / HOUR_MS) * HOUR_MS;
     case 'day':
-      return plainDate.dayNumber * MS_PER_DAY;
+      return Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
     case 'week':
       return getWeekStartPlainDate(adapter, date, weekStartsOn).dayNumber * MS_PER_DAY;
     case 'month':
-      return plainDate.with({ day: 1 }).dayNumber * MS_PER_DAY;
+      return toPlainDate(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
     case 'year':
-      return plainDate.with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
+      return toPlainDate(localMs).with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +
@@ -257,8 +246,6 @@ function startOf(
  * target month.
  */
 function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): number {
-  const plainDate = toPlainDate(localMs);
-  const msInDay = localMs - plainDate.dayNumber * MS_PER_DAY;
   switch (unit) {
     case 'hour':
       return localMs + amount * HOUR_MS;
@@ -267,9 +254,9 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
     case 'week':
       return localMs + amount * 7 * MS_PER_DAY;
     case 'month':
-      return plainDate.add({ months: amount }).dayNumber * MS_PER_DAY + msInDay;
+      return addMonths(localMs, amount);
     case 'year':
-      return plainDate.add({ years: amount }).dayNumber * MS_PER_DAY + msInDay;
+      return addMonths(localMs, amount * 12);
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +
@@ -277,6 +264,15 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
           `Use one of: 'hour', 'day', 'week', 'month', 'year'.`,
       );
   }
+}
+
+/**
+ * Adds months to a wall-clock time. Unlike `PlainDate.add()`, it doesn't throw past the last
+ * supported day, which the exclusive end of a range ending in December 9999 reaches.
+ */
+function addMonths(localMs: number, months: number): number {
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  return addMonthsToDayNumber(dayNumber, months) * MS_PER_DAY + (localMs - dayNumber * MS_PER_DAY);
 }
 
 /**

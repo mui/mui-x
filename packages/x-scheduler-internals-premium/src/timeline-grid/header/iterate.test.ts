@@ -269,11 +269,11 @@ describe('iterate()', () => {
       expect(new Set(dayCells.map((cell) => cell.key)).size).to.equal(4);
       expect(hourCells.length).to.equal(4 * 24);
       expect(new Set(hourCells.map((cell) => cell.key)).size).to.equal(4 * 24);
-      expect(dayCells.map((cell) => cell.dateTime)).to.deep.equal([
-        '2011-12-29T00:00',
-        '2011-12-30T00:00',
-        '2011-12-31T00:00',
-        '2012-01-01T00:00',
+      expect(dayCells.map((cell) => cell.plainDate.toString())).to.deep.equal([
+        '2011-12-29',
+        '2011-12-30',
+        '2011-12-31',
+        '2012-01-01',
       ]);
     });
   });
@@ -344,6 +344,18 @@ describe('iterate()', () => {
 
       expect(cells.length).to.equal(1);
       expect(cells[0].spanInTicks).to.equal(1);
+    });
+
+    it('should walk months and years up to the last supported day', () => {
+      const start = adapter.date('9998-01-01T00:00:00Z', 'default');
+      const end = adapter.date('9999-12-31T23:59:59.999Z', 'default');
+
+      const monthCells = iterate(adapter, 'month', 'day', start, end);
+      const yearCells = iterate(adapter, 'year', 'year', start, end);
+
+      expect(monthCells.length).to.equal(24);
+      expect(monthCells[23].spanInTicks).to.equal(31);
+      expect(yearCells.map((cell) => cell.plainDate.year)).to.deep.equal([9998, 9999]);
     });
   });
 

@@ -1,5 +1,6 @@
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import { buildTemporalPlainDate, createAdapterDate } from './plain-date-utils/adapter';
+import { addDaysToPlainDate } from './plain-date-utils/plainDate';
 import { toEpochMs, toLocalDayNumber, toPlainDateTime } from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
@@ -105,7 +106,7 @@ export function timelineAxisOffsetToDate(
   const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
 
   const timezone = adapter.getTimezone(axis.start);
-  const plainDate = buildTemporalPlainDate(adapter, axis.start).add({ days: dayIndex });
+  const plainDate = addDaysToPlainDate(buildTemporalPlainDate(adapter, axis.start), dayIndex);
   return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
 }
 

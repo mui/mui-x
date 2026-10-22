@@ -3,11 +3,12 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
+import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
+import type { IteratedCell } from '../../models';
 import { iterate } from './iterate';
 
 export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
@@ -80,16 +81,18 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
             data-unit={level.unit}
             data-index={cell.index}
             data-unit-leaf={level.unit === timeResolution ? '' : undefined}
-            data-weekend={level.unit === 'day' && isWeekend(adapter, cell.date) ? '' : undefined}
+            data-weekend={
+              level.unit === 'day' && isWeekendPlainDate(cell.plainDate) ? '' : undefined
+            }
             style={{ '--span': cell.spanInTicks } as React.CSSProperties}
           >
-            <time className={classNames?.label} dateTime={cell.dateTime}>
+            <time className={classNames?.label} dateTime={getCellDateTime(cell)}>
               {level.renderCell
                 ? level.renderCell({
                     adapter,
                     ampm,
                     date: cell.date,
-                    dateTime: cell.dateTime,
+                    plainDate: cell.plainDate,
                     start: cell.start,
                     end: cell.end,
                     index: cell.index,
@@ -136,6 +139,15 @@ export namespace TimelineGridHeader {
       lastTickIndex: number;
     };
   }
+}
+
+/**
+ * Machine-readable local date-time of a cell, like `2026-03-08T00:00`. It's built from the
+ * wall clock rather than from `date`, which moves the hour or the date skipped by a DST
+ * transition to the next existing one. Only hour cells start after midnight.
+ */
+function getCellDateTime(cell: IteratedCell) {
+  return `${cell.plainDate.toString()}T${String(cell.wallClockHour ?? 0).padStart(2, '0')}:00`;
 }
 
 /**
