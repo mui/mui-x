@@ -244,7 +244,8 @@ export function startColumnReorder(
 
 /**
  * Ends a column drag: restores the column to its origin index when it was dropped outside the grid
- * and the position isn't kept, otherwise publishes `columnOrderChange`. Then clears the dragged column.
+ * and the position isn't kept, otherwise publishes `columnOrderChange` if the column moved.
+ * Then clears the dragged column.
  * @param {RefObject<GridPrivateApiPro>} apiRef The grid API.
  * @param {object} params The drag.
  * @param {string} params.dragField The dragged column.
@@ -258,7 +259,7 @@ export function finishColumnReorder(
   const { dragField, originIndex, restoreOrigin } = params;
   if (restoreOrigin) {
     apiRef.current.setColumnIndex(dragField, originIndex);
-  } else {
+  } else if (apiRef.current.getColumnIndex(dragField, false) !== originIndex) {
     const draggedColumn = apiRef.current.getColumn(dragField);
     if (draggedColumn) {
       // Emit the columnOrderChange event only once when the reordering stops.
