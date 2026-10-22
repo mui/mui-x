@@ -999,6 +999,12 @@
       "class": null
     },
     {
+      "name": "filterFormColumnInput",
+      "description": "Column input component rendered in each filter form of the filter panel.",
+      "default": "GridFilterFormColumnInput",
+      "class": "MuiDataGridPremium-filterFormColumnInput"
+    },
+    {
       "name": "columnsPanel",
       "description": "GridColumns panel component rendered when clicking the columns button.",
       "default": "GridColumnsPanel",
@@ -2318,12 +2324,6 @@
       "key": "filterForm",
       "className": "MuiDataGridPremium-filterForm",
       "description": "Styles applied to the root of the filter form component.",
-      "isGlobal": false
-    },
-    {
-      "key": "filterFormColumnInput",
-      "className": "MuiDataGridPremium-filterFormColumnInput",
-      "description": "Styles applied to the column input of the filter form component.",
       "isGlobal": false
     },
     {

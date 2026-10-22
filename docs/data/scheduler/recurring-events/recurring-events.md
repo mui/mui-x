@@ -52,7 +52,7 @@ The RRULE string is composed of semicolon-separated `KEY=VALUE` pairs.
 The two fundamental properties are:
 
 - `FREQ`: the base frequency of the rule: `DAILY`, `WEEKLY`, `MONTHLY`, or `YEARLY`.
-- `INTERVAL` _(optional, defaults to `1`)_: at which intervals the recurrence repeats.
+- `INTERVAL` _(optional, defaults to `1`)_: at which intervals the recurrence repeats, as a positive integer.
   For example, within a `DAILY` rule, a value of `8` means every eight days.
 
 ### Daily frequency
@@ -83,7 +83,7 @@ rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE,FR';
 
 Use either the `BYMONTHDAY` or the `BYDAY` property (both can't be defined together):
 
-- Use the `BYMONTHDAY` property with a single day number to define the day of the month on which the event should be applied:
+- Use the `BYMONTHDAY` property with a single day number, from 1 to 31, to define the day of the month on which the event should be applied:
 
   ```ts
   // Every month on the 15th

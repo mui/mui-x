@@ -52,7 +52,17 @@ export function getRecurringOccurrenceKey(
   day: TemporalSupportedObject,
   adapter: Adapter,
 ): string {
-  return `${eventId}::${getDateKey(day, adapter)}`;
+  return getRecurringOccurrenceKeyFromDateKey(eventId, getDateKey(day, adapter));
+}
+
+/**
+ * The render key of a recurring occurrence, from the `getDateKey()` of its day.
+ */
+export function getRecurringOccurrenceKeyFromDateKey(
+  eventId: SchedulerEventId,
+  dateKey: string,
+): string {
+  return `${eventId}::${dateKey}`;
 }
 
 export function generateOccurrenceFromEvent({
