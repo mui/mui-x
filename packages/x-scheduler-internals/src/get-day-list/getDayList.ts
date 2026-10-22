@@ -1,6 +1,7 @@
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import { createPlainDate } from '../internals/utils/base-temporal/PlainDate';
 import {
   buildTemporalPlainDate,
   createProcessedDate,
@@ -43,11 +44,13 @@ export function getDayListFromPlainDates(
   excludeWeekends: boolean | undefined,
 ): GetDaytListReturnValue {
   const days: SchedulerProcessedDate[] = [];
+  // Walks day numbers, as `add()` would throw after the last supported day.
   for (
-    let plainDate = firstPlainDate;
-    plainDate.dayNumber <= lastPlainDate.dayNumber;
-    plainDate = plainDate.add({ days: 1 })
+    let dayNumber = firstPlainDate.dayNumber;
+    dayNumber <= lastPlainDate.dayNumber;
+    dayNumber += 1
   ) {
+    const plainDate = createPlainDate(dayNumber, firstPlainDate.calendarId);
     if (excludeWeekends && isWeekendPlainDate(plainDate)) {
       continue;
     }

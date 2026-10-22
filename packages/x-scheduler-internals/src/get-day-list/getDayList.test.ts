@@ -28,6 +28,13 @@ describe('getDayList', () => {
     expect(days).to.deep.equal(expectedDays);
   });
 
+  it('should return the last supported day', () => {
+    const date = adapter.date('9999-12-31T12:00:00', 'default');
+    const days = getDayList({ adapter, start: date, end: date });
+
+    expect(days).to.deep.equal([processDate(adapter.startOfDay(date), adapter)]);
+  });
+
   it('should return consecutive days', () => {
     const days = getDayList({
       adapter,
