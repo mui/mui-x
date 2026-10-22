@@ -58,6 +58,10 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       const columnTop = column.getBoundingClientRect().y;
       const getDateAtClientY = (clientY: number) => {
         const positionY = Math.max(0, Math.min(1, (clientY - columnTop) / column.offsetHeight));
+        // The axis maps its full duration to the next day's window start.
+        if (positionY === 1) {
+          return end;
+        }
         return timelineAxisOffsetToDate(adapter, axis, Math.round(axisDurationMs * positionY));
       };
       const elementTop = Math.max(elementRef.current.getBoundingClientRect().y, columnTop);

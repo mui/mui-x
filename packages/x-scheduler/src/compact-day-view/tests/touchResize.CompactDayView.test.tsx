@@ -123,6 +123,32 @@ describe('CompactDayView - touch resize', () => {
     expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2026-03-08T20:00:00.000Z'); // 16:00 EDT
   });
 
+  it('should resize to the end of a trimmed hour range at the bottom edge of the column', async () => {
+    const onEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .resizable(true)
+      .build();
+    render(
+      <StandaloneCompactDayView
+        events={[event]}
+        resources={[]}
+        viewConfig={{ day: { startTime: 8, endTime: 20 } }}
+        onEventsChange={onEventsChange}
+      />,
+    );
+    mockElementBounds(getTimeGridColumn(), { top: 0, height: 720, width: 200 });
+    const endHandle = getResizeHandle(armEvent(), 'end');
+
+    await act(async () => {
+      simulatePointerResize({ handle: endHandle, to: { clientY: 720 } });
+    });
+
+    expect(onEventsChange.mock.calls[0][0][0].end).to.equal('2025-07-03T20:00:00.000Z');
+  });
+
   it('should resize the start of an armed event to an earlier time', async () => {
     const { onEventsChange } = renderResizableEvent();
     const eventElement = armEvent();
