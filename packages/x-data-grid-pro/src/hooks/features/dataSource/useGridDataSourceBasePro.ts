@@ -26,6 +26,7 @@ import {
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
   getTreeNodeDescendants,
+  asReplaceUpdates,
 } from '@mui/x-data-grid/internals';
 import type { GridDataSourceBaseOptions, GridStrategyProcessor } from '@mui/x-data-grid/internals';
 import { errorOnce } from '@mui/x-internals/warning';
@@ -140,7 +141,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (rowsToDelete.length > 0) {
         apiRef.current.updateNestedRows(rowsToDelete, groupPath);
       }
-      apiRef.current.updateNestedRows(rows, groupPath);
+      // Fetched rows are full snapshots: merging would keep fields the server no longer returns.
+      apiRef.current.updateNestedRows(asReplaceUpdates(rows), groupPath);
     },
     [apiRef],
   );
@@ -393,7 +395,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
             rowsToDelete.push({ ...rowsLookup[parentRowId], _action: 'delete' });
           });
         }
-        apiRef.current.updateRows(response.rows.concat(rowsToDelete));
+        apiRef.current.updateRows([...asReplaceUpdates(response.rows), ...rowsToDelete]);
       }
 
       apiRef.current.unstable_applyPipeProcessors(
