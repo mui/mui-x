@@ -7,7 +7,8 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 function AutocompleteColumnInput(props) {
   const { columns, value, onChange, disabled, className } = props;
   const apiRef = useGridApiContext();
-  const selectedColumn = columns.find((column) => column.field === value) ?? null;
+  const selectedColumn =
+    columns.find((column) => column.field === value) ?? columns[0];
 
   return (
     <Autocomplete
@@ -20,11 +21,7 @@ function AutocompleteColumnInput(props) {
       value={selectedColumn}
       getOptionLabel={(column) => column.headerName || column.field}
       isOptionEqualToValue={(option, selected) => option.field === selected.field}
-      onChange={(event, column) => {
-        if (column) {
-          onChange(column.field);
-        }
-      }}
+      onChange={(event, column) => onChange(column.field)}
       renderInput={(params) => (
         <TextField
           {...params}
