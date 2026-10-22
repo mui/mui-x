@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { TemporalSupportedObject } from '../../models';
+import type { SchedulerProcessedDate } from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -11,10 +11,11 @@ import { processDate } from '../../process-date';
 import {
   getAdapterDayNumber,
   isInternalDragOrResizePlaceholder,
+  toLocalDayNumber,
 } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
-  day: TemporalSupportedObject,
+  day: SchedulerProcessedDate,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
   maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
@@ -25,10 +26,7 @@ export function useCalendarGridPlaceholderInDay(
   const findAvailableIndex = React.useCallback(
     (excludeKey?: string): number => {
       let positionIndex = 1;
-      const dayNumber = getAdapterDayNumber(adapter, day);
-      const targetDay = row.days.find(
-        (rowDay) => getAdapterDayNumber(adapter, rowDay.value) === dayNumber,
-      );
+      const targetDay = row.days.find((rowDay) => rowDay.key === day.key);
       if (targetDay) {
         const usedIndexes = new Set(
           targetDay.withPosition
@@ -44,7 +42,7 @@ export function useCalendarGridPlaceholderInDay(
       }
       return positionIndex;
     },
-    [adapter, day, maxEvents, row.days],
+    [day, maxEvents, row.days],
   );
 
   const rawPlaceholder = useStore(
@@ -68,7 +66,9 @@ export function useCalendarGridPlaceholderInDay(
     const endInRow =
       adapter.getTime(rawPlaceholder.end) > adapter.getTime(rowEnd) ? rowEnd : rawPlaceholder.end;
     // The placeholder covers every date up to its end, like the occurrences.
-    const daySpan = getAdapterDayNumber(adapter, endInRow) - getAdapterDayNumber(adapter, day) + 1;
+    const timezone = adapter.getTimezone(day.value);
+    const daySpan =
+      getAdapterDayNumber(adapter, endInRow) - toLocalDayNumber(day.timestamp, timezone) + 1;
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
@@ -78,14 +78,21 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
-      const startProcessed = processDate(day, adapter);
-      const endProcessed = processDate(endInRow, adapter);
-      const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
         title: '',
         allDay: true,
-        displayTimezone: { start: startProcessed, end: endProcessed, timezone },
+        displayTimezone: {
+          // The processed day without the occurrences a row day carries.
+          start: {
+            value: day.value,
+            key: day.key,
+            timestamp: day.timestamp,
+            minutesInDay: day.minutesInDay,
+          },
+          end: processDate(endInRow, adapter),
+          timezone,
+        },
         position: {
           index: findAvailableIndex(),
           daySpan,
@@ -96,12 +103,15 @@ export function useCalendarGridPlaceholderInDay(
     if (rawPlaceholder.type === 'external-drag') {
       const startProcessed = processDate(rawPlaceholder.start, adapter);
       const endProcessed = processDate(rawPlaceholder.end, adapter);
-      const timezone = adapter.getTimezone(rawPlaceholder.start);
 
       return {
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
-        displayTimezone: { start: startProcessed, end: endProcessed, timezone },
+        displayTimezone: {
+          start: startProcessed,
+          end: endProcessed,
+          timezone: adapter.getTimezone(rawPlaceholder.start),
+        },
         position: {
           index: findAvailableIndex(),
           daySpan,

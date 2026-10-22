@@ -2,6 +2,7 @@ import { adapter, DEFAULT_EVENT_CALENDAR_STATE, EventBuilder } from 'test/utils/
 import { describe, it, expect } from 'vitest';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
+import { processDate } from '../process-date';
 
 describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   describe('placeholderInDayCell', () => {
@@ -70,12 +71,13 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
 
   describe('isCreatingInDayCell', () => {
     const day = adapter.date('2024-01-15', 'default');
+    const processedDay = processDate(day, adapter);
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
-      expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
-        false,
-      );
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+      ).to.equal(false);
     });
 
     it('should return false when surfaceType is not "day-grid"', () => {
@@ -89,9 +91,9 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           resourceId: null,
         },
       };
-      expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
-        false,
-      );
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+      ).to.equal(false);
     });
 
     it('should return false when the placeholder type is not "creation"', () => {
@@ -109,9 +111,9 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
         },
       };
-      expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
-        false,
-      );
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+      ).to.equal(false);
     });
 
     it('should return true when creating on the same day', () => {
@@ -125,9 +127,9 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           resourceId: null,
         },
       };
-      expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
-        true,
-      );
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+      ).to.equal(true);
     });
 
     it('should return false when day does not match placeholder.start day', () => {
@@ -142,9 +144,9 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           resourceId: null,
         },
       };
-      expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
-        false,
-      );
+      expect(
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
+      ).to.equal(false);
     });
   });
 

@@ -1,6 +1,6 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
-import type { TemporalSupportedObject } from '../models';
-import { getAdapterDayNumber } from '../internals/utils/drag-utils';
+import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import { getAdapterDayNumber, toLocalDayNumber } from '../internals/utils/drag-utils';
 
 // These selectors run for every cell while dragging, so they compare timestamps and day numbers
 // instead of calling the adapter's comparison methods.
@@ -8,7 +8,7 @@ import { getAdapterDayNumber } from '../internals/utils/drag-utils';
 export const eventCalendarOccurrencePlaceholderSelectors = {
   placeholderInDayCell: (
     state: State,
-    day: TemporalSupportedObject,
+    day: SchedulerProcessedDate,
     rowStart: TemporalSupportedObject,
   ) => {
     const placeholder = state.occurrencePlaceholder;
@@ -17,7 +17,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     }
 
     const { adapter } = state;
-    const dayNumber = getAdapterDayNumber(adapter, day);
+    const dayNumber = toLocalDayNumber(day.timestamp, adapter.getTimezone(day.value));
     if (dayNumber === getAdapterDayNumber(adapter, placeholder.start)) {
       return placeholder;
     }
@@ -58,13 +58,13 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     return placeholder;
   },
-  isCreatingInDayCell: (state: State, day: TemporalSupportedObject) => {
+  isCreatingInDayCell: (state: State, day: SchedulerProcessedDate) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
     }
     return (
-      getAdapterDayNumber(state.adapter, day) ===
+      toLocalDayNumber(day.timestamp, state.adapter.getTimezone(day.value)) ===
       getAdapterDayNumber(state.adapter, placeholder.start)
     );
   },

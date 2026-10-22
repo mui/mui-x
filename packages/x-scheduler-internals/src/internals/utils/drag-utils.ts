@@ -22,10 +22,17 @@ export function isInternalDragOrResizePlaceholder(
 // repeated one resolves to its first instant, whatever the timezone of the system (RFC 5545).
 
 /**
+ * The day number of the date of an instant in `timezone`.
+ */
+export function toLocalDayNumber(epochMs: number, timezone: TemporalTimezone): number {
+  return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+}
+
+/**
  * The day number of a date, in its timezone.
  */
 export function getAdapterDayNumber(adapter: Adapter, date: TemporalSupportedObject): number {
-  return Math.floor(toLocalMs(adapter.getTime(date), adapter.getTimezone(date)) / MS_PER_DAY);
+  return toLocalDayNumber(adapter.getTime(date), adapter.getTimezone(date));
 }
 
 /**
