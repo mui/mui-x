@@ -1,9 +1,15 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import { getAdapterDayNumber, getProcessedDayNumber } from '../internals/utils/drag-utils';
+import type { Adapter } from '../use-adapter/useAdapter.types';
+import { getProcessedDayNumber } from '../internals/utils/drag-utils';
+import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
-// These selectors run for every cell while dragging, so they compare timestamps and day numbers
-// instead of calling the adapter's comparison methods.
+// These selectors run for every cell while dragging, so they compare timestamps and day numbers,
+// which are cheaper than the adapter's comparison methods and than plain dates.
+
+function getDayNumber(adapter: Adapter, date: TemporalSupportedObject): number {
+  return toLocalDayNumber(adapter.getTime(date), adapter.getTimezone(date));
+}
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
   placeholderInDayCell: (
@@ -18,12 +24,12 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     const { adapter } = state;
     const dayNumber = getProcessedDayNumber(adapter, day);
-    if (dayNumber === getAdapterDayNumber(adapter, placeholder.start)) {
+    if (dayNumber === getDayNumber(adapter, placeholder.start)) {
       return placeholder;
     }
 
     // A placeholder starting in a previous row also renders from the first day of this one.
-    if (dayNumber === getAdapterDayNumber(adapter, rowStart)) {
+    if (dayNumber === getDayNumber(adapter, rowStart)) {
       // Inclusive, in either order, like the adapter's `isWithinRange()`.
       const rowStartTimestamp = adapter.getTime(rowStart);
       const startTimestamp = adapter.getTime(placeholder.start);
@@ -64,8 +70,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
       return false;
     }
     return (
-      getProcessedDayNumber(state.adapter, day) ===
-      getAdapterDayNumber(state.adapter, placeholder.start)
+      getProcessedDayNumber(state.adapter, day) === getDayNumber(state.adapter, placeholder.start)
     );
   },
   isCreatingInTimeRange: (
@@ -79,9 +84,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     }
 
     const { adapter } = state;
-    if (
-      getAdapterDayNumber(adapter, placeholder.start) !== getAdapterDayNumber(adapter, dayStart)
-    ) {
+    if (getDayNumber(adapter, placeholder.start) !== getDayNumber(adapter, dayStart)) {
       return false;
     }
 

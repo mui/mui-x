@@ -9,10 +9,10 @@ import { useAdapterContext } from '../../use-adapter-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import {
-  getAdapterDayNumber,
   getProcessedDayNumber,
   isInternalDragOrResizePlaceholder,
 } from '../../internals/utils/drag-utils';
+import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
 
 export function useCalendarGridPlaceholderInDay(
   day: SchedulerProcessedDate,
@@ -67,7 +67,7 @@ export function useCalendarGridPlaceholderInDay(
       adapter.getTime(rawPlaceholder.end) > adapter.getTime(rowEnd) ? rowEnd : rawPlaceholder.end;
     // The placeholder covers every date up to its end, like the occurrences.
     const daySpan =
-      getAdapterDayNumber(adapter, endInRow) - getProcessedDayNumber(adapter, day) + 1;
+      buildTemporalPlainDate(adapter, endInRow).dayNumber - getProcessedDayNumber(adapter, day) + 1;
 
     const sharedProperties = {
       key: 'occurrence-placeholder',

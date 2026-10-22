@@ -8,7 +8,8 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
-import { getAdapterDayNumber, getProcessedDayNumber } from '../../internals/utils/drag-utils';
+import { getProcessedDayNumber } from '../../internals/utils/drag-utils';
+import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
 import { createPlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import { ISO_CALENDAR_ID } from '../../internals/utils/base-temporal/calendar';
@@ -77,10 +78,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     }
 
     // The event covers every date from its start to its end in the row, like its cells.
-    const firstDay = Math.max(startDay, getAdapterDayNumber(adapter, rowStart));
+    const firstDay = Math.max(startDay, buildTemporalPlainDate(adapter, rowStart).dayNumber);
     const lastDay = Math.min(
       getProcessedDayNumber(adapter, end),
-      getAdapterDayNumber(adapter, rowEnd),
+      buildTemporalPlainDate(adapter, rowEnd).dayNumber,
     );
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();

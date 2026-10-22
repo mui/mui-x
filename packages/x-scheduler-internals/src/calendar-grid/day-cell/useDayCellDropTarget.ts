@@ -4,14 +4,16 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
+import { addDaysOnWallClock, moveToPlainDate } from '../../internals/utils/drag-utils';
 import {
-  addDaysOnWallClock,
-  getAdapterDayNumber,
-  moveToDay,
-  toLocalDayNumber,
-} from '../../internals/utils/drag-utils';
-import { createAdapterDate } from '../../internals/utils/plain-date-utils/adapter';
-import { getEndOfDayMs, getStartOfDayMs } from '../../internals/utils/plain-date-utils/timeZone';
+  buildTemporalPlainDate,
+  createAdapterDate,
+} from '../../internals/utils/plain-date-utils/adapter';
+import {
+  getEndOfDayMs,
+  getStartOfDayMs,
+  toPlainDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([
@@ -37,63 +39,57 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         return undefined;
       }
 
-      // Days are compared and moved with day numbers in the display timezone of the cell.
-      const valueDay = getAdapterDayNumber(adapter, value);
+      // Days are compared and moved with the plain dates of the display timezone of the cell.
+      const valuePlainDate = buildTemporalPlainDate(adapter, value);
       const timezone = adapter.getTimezone(value);
 
       // Move a Day Grid Event within the Day Grid, or a Time Grid Event into it
       if (data.source === 'CalendarGridDayEvent' || data.source === 'CalendarGridTimeEvent') {
         // The day under the grab point.
-        const grabbedDay =
+        const grabbedPlainDate =
           data.source === 'CalendarGridDayEvent'
-            ? data.draggedDay.dayNumber
-            : toLocalDayNumber(
+            ? data.draggedDay
+            : toPlainDateTime(
                 adapter.getTime(data.start) + data.initialCursorPositionInEventMs,
                 adapter.getTimezone(data.start),
-              );
-        const offset = valueDay - grabbedDay;
+              ).date;
+        const dayCount = valuePlainDate.dayNumber - grabbedPlainDate.dayNumber;
         return getDataFromInside(
           data,
-          addDaysOnWallClock(adapter, data.start, offset),
-          addDaysOnWallClock(adapter, data.end, offset),
+          addDaysOnWallClock(adapter, data.start, dayCount),
+          addDaysOnWallClock(adapter, data.end, dayCount),
         );
       }
 
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          const endDay = getAdapterDayNumber(adapter, data.end);
-          if (valueDay > endDay) {
+          const endPlainDate = buildTemporalPlainDate(adapter, data.end);
+          if (valuePlainDate.dayNumber > endPlainDate.dayNumber) {
             return undefined;
           }
 
           // The new start keeps its time of day, unless it moves to the day of the end.
-          const newStart =
-            valueDay === endDay
-              ? createAdapterDate(
-                  adapter,
-                  getStartOfDayMs(adapter.getTime(value), timezone),
-                  timezone,
-                )
-              : moveToDay(adapter, data.start, valueDay);
+          const newStart = valuePlainDate.equals(endPlainDate)
+            ? createAdapterDate(
+                adapter,
+                getStartOfDayMs(adapter.getTime(value), timezone),
+                timezone,
+              )
+            : moveToPlainDate(adapter, data.start, valuePlainDate);
           return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
-          const startDay = getAdapterDayNumber(adapter, data.start);
-          if (valueDay < startDay) {
+          const startPlainDate = buildTemporalPlainDate(adapter, data.start);
+          if (valuePlainDate.dayNumber < startPlainDate.dayNumber) {
             return undefined;
           }
 
           // The new end keeps its time of day, unless it moves to the day of the start.
-          const newEnd =
-            valueDay === startDay
-              ? createAdapterDate(
-                  adapter,
-                  getEndOfDayMs(adapter.getTime(value), timezone),
-                  timezone,
-                )
-              : moveToDay(adapter, data.end, valueDay);
+          const newEnd = valuePlainDate.equals(startPlainDate)
+            ? createAdapterDate(adapter, getEndOfDayMs(adapter.getTime(value), timezone), timezone)
+            : moveToPlainDate(adapter, data.end, valuePlainDate);
 
           return getDataFromInside(data, data.start, newEnd);
         }

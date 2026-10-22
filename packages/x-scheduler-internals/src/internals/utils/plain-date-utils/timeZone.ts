@@ -126,7 +126,7 @@ function getAdapterOffsetMs(timezone: TemporalTimezone, epochMs: number): number
  * The wall-clock time of an instant in `timezone`, in milliseconds since 1970-01-01T00:00 of the
  * wall clock.
  */
-export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
+function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
   return epochMs + getAdapterOffsetMs(timezone, epochMs);
 }
 
@@ -179,6 +179,14 @@ export function localToEpochMs(localMs: number, timezone: TemporalTimezone): num
  */
 export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTimezone): number {
   return localToEpochMs(date.dayNumber * MS_PER_DAY + msInDay, timezone);
+}
+
+/**
+ * The day number of the date of an instant in `timezone`. For the loops that compare many dates, a
+ * day number is cheaper than `toPlainDateTime().date`.
+ */
+export function toLocalDayNumber(epochMs: number, timezone: TemporalTimezone): number {
+  return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
 }
 
 /**

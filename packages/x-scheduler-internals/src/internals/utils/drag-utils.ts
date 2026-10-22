@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderInternalDragOrResize,
@@ -6,9 +5,9 @@ import type {
   TemporalSupportedObject,
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { MS_PER_DAY } from './base-temporal/iso';
+import type { PlainDate } from './base-temporal/PlainDate';
 import { createAdapterDate } from './plain-date-utils/adapter';
-import { localToEpochMs, toLocalMs } from './plain-date-utils/timeZone';
+import { toEpochMs, toLocalDayNumber, toPlainDateTime } from './plain-date-utils/timeZone';
 
 const INTERNAL_DRAG_OR_RESIZE_PLACEHOLDER_TYPES = new Set(['internal-drag', 'internal-resize']);
 
@@ -18,28 +17,26 @@ export function isInternalDragOrResizePlaceholder(
   return placeholder !== null && INTERNAL_DRAG_OR_RESIZE_PLACEHOLDER_TYPES.has(placeholder.type);
 }
 
-// Day helpers for the drag and drop of the day grid, on the wall clock of the timezone of each
-// date. The wall-clock times a DST transition skips or repeats resolve like `localToEpochMs()`.
-
 /**
- * The day number of the date of an instant in `timezone`.
- */
-export function toLocalDayNumber(epochMs: number, timezone: TemporalTimezone): number {
-  return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
-}
-
-/**
- * The day number of a date, in its timezone.
- */
-export function getAdapterDayNumber(adapter: Adapter, date: TemporalSupportedObject): number {
-  return toLocalDayNumber(adapter.getTime(date), adapter.getTimezone(date));
-}
-
-/**
- * The day number of a processed date, in its timezone.
+ * The day number of a processed date, in its timezone. The placeholders compare it with the day of
+ * every cell, so it's a day number rather than a plain date.
  */
 export function getProcessedDayNumber(adapter: Adapter, date: SchedulerProcessedDate): number {
   return toLocalDayNumber(date.timestamp, adapter.getTimezone(date.value));
+}
+
+/**
+ * Moves a date to `plainDate`, keeping its time of day on the wall clock of its timezone. The times
+ * a DST transition skips or repeats resolve like `toEpochMs()`.
+ */
+export function moveToPlainDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  plainDate: PlainDate,
+): TemporalSupportedObject {
+  const timezone = adapter.getTimezone(date);
+  const { msInDay } = toPlainDateTime(adapter.getTime(date), timezone);
+  return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
 }
 
 /**
@@ -54,17 +51,10 @@ export function addDaysOnWallClock(
     return date;
   }
   const timezone = adapter.getTimezone(date);
-  const localMs = toLocalMs(adapter.getTime(date), timezone) + dayCount * MS_PER_DAY;
-  return createAdapterDate(adapter, localToEpochMs(localMs, timezone), timezone);
-}
-
-/**
- * Moves a date to the day `dayNumber` of its timezone, keeping its time of day on the wall clock.
- */
-export function moveToDay(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  dayNumber: number,
-): TemporalSupportedObject {
-  return addDaysOnWallClock(adapter, date, dayNumber - getAdapterDayNumber(adapter, date));
+  const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
+  return createAdapterDate(
+    adapter,
+    toEpochMs(plainDateTime.date.add({ days: dayCount }), plainDateTime.msInDay, timezone),
+    timezone,
+  );
 }
