@@ -126,7 +126,7 @@ function getAdapterOffsetMs(timezone: TemporalTimezone, epochMs: number): number
  * The wall-clock time of an instant in `timezone`, in milliseconds since 1970-01-01T00:00 of the
  * wall clock.
  */
-function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
+export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
   return epochMs + getAdapterOffsetMs(timezone, epochMs);
 }
 

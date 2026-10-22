@@ -8,7 +8,10 @@ import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occ
 import { useAdapterContext } from '../../use-adapter-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
-import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
+import {
+  getAdapterDayNumber,
+  isInternalDragOrResizePlaceholder,
+} from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
   day: TemporalSupportedObject,
@@ -22,7 +25,10 @@ export function useCalendarGridPlaceholderInDay(
   const findAvailableIndex = React.useCallback(
     (excludeKey?: string): number => {
       let positionIndex = 1;
-      const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
+      const dayNumber = getAdapterDayNumber(adapter, day);
+      const targetDay = row.days.find(
+        (rowDay) => getAdapterDayNumber(adapter, rowDay.value) === dayNumber,
+      );
       if (targetDay) {
         const usedIndexes = new Set(
           targetDay.withPosition
@@ -59,8 +65,10 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     // The placeholder can run past the week row: the next rows render their own piece.
-    const endInRow = adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end;
-    const daySpan = adapter.differenceInDays(endInRow, day) + 1;
+    const endInRow =
+      adapter.getTime(rawPlaceholder.end) > adapter.getTime(rowEnd) ? rowEnd : rawPlaceholder.end;
+    // The placeholder covers every date up to its end, like the occurrences.
+    const daySpan = getAdapterDayNumber(adapter, endInRow) - getAdapterDayNumber(adapter, day) + 1;
 
     const sharedProperties = {
       key: 'occurrence-placeholder',

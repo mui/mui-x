@@ -8,6 +8,7 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
+import { createStartOfDay, getAdapterDayNumber } from '../../internals/utils/drag-utils';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -71,15 +72,23 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       return start.value;
     }
 
-    const eventStartInRow = adapter.isBefore(start.value, rowStart) ? rowStart : start.value;
-    const eventEndInRow = adapter.isAfter(end.value, rowEnd) ? rowEnd : end.value;
-    const eventDayLengthInRow = adapter.differenceInDays(eventEndInRow, eventStartInRow) + 1;
+    // The event covers every date from its start to its end in the row, like its cells.
+    const firstDay = Math.max(
+      getAdapterDayNumber(adapter, start.value),
+      getAdapterDayNumber(adapter, rowStart),
+    );
+    const lastDay = Math.min(
+      getAdapterDayNumber(adapter, end.value),
+      getAdapterDayNumber(adapter, rowEnd),
+    );
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
 
-    return adapter.startOfDay(
-      adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1),
+    return createStartOfDay(
+      adapter,
+      firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1,
+      adapter.getTimezone(start.value),
     );
   });
 

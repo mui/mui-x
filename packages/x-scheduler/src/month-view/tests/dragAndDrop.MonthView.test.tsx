@@ -6,7 +6,9 @@ import {
   simulateDragAndDrop,
   mockElementBounds,
   getResizeHandle,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import { vi, describe, it, expect } from 'vitest';
 
@@ -132,4 +134,80 @@ describe('MonthView - Drag and Drop', () => {
     // End should remain on July 5
     expect(new Date(updatedEvents[0].end).getUTCDate()).to.equal(5);
   });
+
+  it('should move a timed multi-day event by the day under the pointer', async () => {
+    const handleEventsChange = vi.fn();
+    // Monday 10:00 to Wednesday 09:00: the event covers the 3 cells of these dates.
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Trip')
+      .span('2025-07-07T10:00:00Z', '2025-07-09T09:00:00Z')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneMonthView
+        events={[event]}
+        resources={[]}
+        displayTimezone="UTC"
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    const eventElement = screen.getAllByRole('button', { name: /Trip/i })[0];
+    mockElementBounds(eventElement, { left: 0, width: 300 });
+
+    // Grab the Wednesday part and drop it on Thursday: the event moves by one day.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getMonthViewCell(10),
+        sourceClientX: 250,
+      });
+    });
+
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(updatedEvents[0].start).to.equal('2025-07-08T10:00:00.000Z');
+    expect(updatedEvents[0].end).to.equal('2025-07-10T09:00:00.000Z');
+  });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
+    'should move an event onto a repeated hour at its first instant, whatever the timezone of the system',
+    async () => {
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: 02:30 comes twice.
+      setSystemTimezone('America/New_York');
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Backup')
+        .span('2026-10-24T00:30:00Z', '2026-10-24T00:45:00Z') // 02:30 CEST
+        .draggable(true)
+        .build();
+
+      render(
+        <StandaloneMonthView
+          events={[event]}
+          resources={[]}
+          displayTimezone="Europe/Paris"
+          visibleDate={new Date('2026-10-15T12:00:00Z')}
+          onEventsChange={handleEventsChange}
+        />,
+      );
+
+      const eventElement = screen.getAllByRole('button', { name: /Backup/i })[0];
+      mockElementBounds(eventElement, { left: 0, width: 100 });
+
+      await act(async () => {
+        simulateDragAndDrop({
+          source: eventElement,
+          target: getMonthViewCell(25),
+          sourceClientX: 50,
+        });
+      });
+
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(updatedEvents[0].start).to.equal('2026-10-25T00:30:00.000Z'); // the first 02:30
+    },
+  );
 });

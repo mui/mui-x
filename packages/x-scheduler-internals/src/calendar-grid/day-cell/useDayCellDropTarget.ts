@@ -4,7 +4,14 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { mergeDateAndTime } from '../../internals/utils/date-utils';
+import { MS_PER_DAY } from '../../internals/utils/base-temporal/iso';
+import {
+  addDaysOnWallClock,
+  createEndOfDay,
+  createStartOfDay,
+  getAdapterDayNumber,
+} from '../../internals/utils/drag-utils';
+import { toLocalMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([
@@ -30,58 +37,74 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         return undefined;
       }
 
+      // Days are compared and moved with day numbers in the display timezone of the cell.
+      const valueDay = getAdapterDayNumber(adapter, value);
+      const timezone = adapter.getTimezone(value);
+
       // Move a Day Grid Event within the Day Grid
       if (data.source === 'CalendarGridDayEvent') {
-        const offset = adapter.differenceInDays(value, data.draggedDay);
+        const offset = valueDay - getAdapterDayNumber(adapter, data.draggedDay);
         return getDataFromInside(
           data,
-          offset === 0 ? data.start : adapter.addDays(data.start, offset),
-          offset === 0 ? data.end : adapter.addDays(data.end, offset),
+          addDaysOnWallClock(adapter, data.start, offset),
+          addDaysOnWallClock(adapter, data.end, offset),
         );
       }
 
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          if (adapter.isAfter(value, adapter.endOfDay(data.end))) {
+          const endDay = getAdapterDayNumber(adapter, data.end);
+          if (valueDay > endDay) {
             return undefined;
           }
 
-          let newStart: TemporalSupportedObject;
-          if (adapter.isSameDay(value, data.end)) {
-            newStart = adapter.startOfDay(data.end);
-          } else {
-            newStart = mergeDateAndTime(adapter, value, data.start);
-          }
+          // The new start keeps its time of day, unless it moves to the day of the end.
+          const newStart =
+            valueDay === endDay
+              ? createStartOfDay(adapter, endDay, timezone)
+              : addDaysOnWallClock(
+                  adapter,
+                  data.start,
+                  valueDay - getAdapterDayNumber(adapter, data.start),
+                );
           return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
-          if (adapter.isBefore(value, adapter.startOfDay(data.start))) {
+          const startDay = getAdapterDayNumber(adapter, data.start);
+          if (valueDay < startDay) {
             return undefined;
           }
 
-          let draggedDay: TemporalSupportedObject;
-          if (adapter.isSameDay(value, data.start)) {
-            draggedDay = adapter.endOfDay(data.start);
-          } else {
-            draggedDay = mergeDateAndTime(adapter, value, data.end);
-          }
+          // The new end keeps its time of day, unless it moves to the day of the start.
+          const newEnd =
+            valueDay === startDay
+              ? createEndOfDay(adapter, startDay, timezone)
+              : addDaysOnWallClock(
+                  adapter,
+                  data.end,
+                  valueDay - getAdapterDayNumber(adapter, data.end),
+                );
 
-          return getDataFromInside(data, data.start, draggedDay);
+          return getDataFromInside(data, data.start, newEnd);
         }
       }
 
       // Move a Time Grid Event into the Day Grid
       if (data.source === 'CalendarGridTimeEvent') {
-        const cursorDate = adapter.startOfDay(
-          adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs),
+        // The day under the grab point.
+        const cursorDay = Math.floor(
+          toLocalMs(
+            adapter.getTime(data.start) + data.initialCursorPositionInEventMs,
+            adapter.getTimezone(data.start),
+          ) / MS_PER_DAY,
         );
-        const offset = adapter.differenceInDays(value, cursorDate);
+        const offset = valueDay - cursorDay;
         return getDataFromInside(
           data,
-          offset === 0 ? data.start : adapter.addDays(data.start, offset),
-          offset === 0 ? data.end : adapter.addDays(data.end, offset),
+          addDaysOnWallClock(adapter, data.start, offset),
+          addDaysOnWallClock(adapter, data.end, offset),
         );
       }
 
