@@ -1142,6 +1142,63 @@ describe('computeAutoSchedulingCascade', () => {
     );
   });
 
+  it('should push an all-day successor past a DST transition at midnight to the next whole day', () => {
+    // America/Havana springs forward at midnight on 2026-03-08: that day starts at 01:00.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('America/Havana')
+      .span('2026-03-08T02:00:00', '2026-03-08T03:00:00')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('America/Havana')
+      .span('2026-03-08T01:00:00', '2026-03-08T23:59:59.999', { allDay: true })
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b')],
+      [{ id: 'a', end: adapter.date('2026-03-09T00:30:00', 'America/Havana') }],
+    );
+
+    expect(result).to.have.length(1);
+    // March 9th starts at midnight, before the bound, so the successor moves to March 10th.
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(adapter.date('2026-03-10T00:00:00', 'America/Havana')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(adapter.date('2026-03-10T23:59:59.999', 'America/Havana')),
+    );
+  });
+
+  it('should push an all-day successor over a day a DST transition skips', () => {
+    // Pacific/Apia skips December 30th, 2011, going from the 29th to the 31st.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('Pacific/Apia')
+      .span('2011-12-29T09:00:00', '2011-12-29T10:00:00')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('Pacific/Apia')
+      .span('2011-12-29T00:00:00', '2011-12-29T23:59:59.999', { allDay: true })
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b')],
+      [{ id: 'a', end: adapter.date('2011-12-31T00:00:00', 'Pacific/Apia') }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(adapter.date('2011-12-31T00:00:00', 'Pacific/Apia')),
+    );
+    expect(adapter.getTime(result[0].end!)).to.equal(
+      adapter.getTime(adapter.date('2011-12-31T23:59:59.999', 'Pacific/Apia')),
+    );
+  });
+
   it('should push a successor once through duplicate parallel edges', () => {
     const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
     const eventB = EventBuilder.new()
