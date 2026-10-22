@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { adapter, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
 import { computeAutoSchedulingCascade, getDependencyViolation } from './auto-scheduling';
@@ -28,10 +28,10 @@ function dependency(
   return { id: `dep-${dependencyCount}`, source, target, type: 'FinishToStart', ...overrides };
 }
 
-function allDayEvent(id: SchedulerEventId, day: string) {
+function allDayEvent(id: SchedulerEventId, day: string, timezone: TemporalTimezone = 'UTC') {
   return EventBuilder.new()
     .id(id)
-    .withDataTimezone('UTC')
+    .withDataTimezone(timezone)
     .span(`${day}T00:00:00`, `${day}T23:59:59.999`, { allDay: true })
     .toProcessed();
 }
@@ -75,16 +75,17 @@ function expectDates(
   entry: { start?: TemporalSupportedObject; end?: TemporalSupportedObject },
   start: string | null,
   end: string | null,
+  timezone: TemporalTimezone = 'default',
 ) {
   if (start === null) {
     expect('start' in entry).to.equal(false);
   } else {
-    expect(adapter.getTime(entry.start!)).to.equal(adapter.getTime(date(start)));
+    expect(adapter.getTime(entry.start!)).to.equal(adapter.getTime(adapter.date(start, timezone)));
   }
   if (end === null) {
     expect('end' in entry).to.equal(false);
   } else {
-    expect(adapter.getTime(entry.end!)).to.equal(adapter.getTime(date(end)));
+    expect(adapter.getTime(entry.end!)).to.equal(adapter.getTime(adapter.date(end, timezone)));
   }
 }
 
@@ -1163,12 +1164,7 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     // March 9th starts at midnight, before the bound, so the successor moves to March 10th.
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(adapter.date('2026-03-10T00:00:00', 'America/Havana')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(adapter.date('2026-03-10T23:59:59.999', 'America/Havana')),
-    );
+    expectDates(result[0], '2026-03-10T00:00:00', '2026-03-10T23:59:59.999', 'America/Havana');
   });
 
   it('should push an all-day successor over a day a DST transition skips', () => {
@@ -1178,11 +1174,7 @@ describe('computeAutoSchedulingCascade', () => {
       .withDataTimezone('Pacific/Apia')
       .span('2011-12-29T09:00:00', '2011-12-29T10:00:00')
       .toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .withDataTimezone('Pacific/Apia')
-      .span('2011-12-29T00:00:00', '2011-12-29T23:59:59.999', { allDay: true })
-      .toProcessed();
+    const successor = allDayEvent('b', '2011-12-29', 'Pacific/Apia');
 
     const result = runCascade(
       [predecessor, successor],
@@ -1191,27 +1183,14 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(adapter.date('2011-12-31T00:00:00', 'Pacific/Apia')),
-    );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(adapter.date('2011-12-31T23:59:59.999', 'Pacific/Apia')),
-    );
+    expectDates(result[0], '2011-12-31T00:00:00', '2011-12-31T23:59:59.999', 'Pacific/Apia');
   });
 
   it('should keep the end of a start-resized all-day event when only the shifted end lands on a skipped day', () => {
     // Pacific/Apia skips December 30th, 2011. Shifting the whole event by two days would put
     // its end there, but the resize keeps the end.
-    const predecessor = EventBuilder.new()
-      .id('a')
-      .withDataTimezone('Pacific/Apia')
-      .span('2011-12-27T00:00:00', '2011-12-27T23:59:59.999', { allDay: true })
-      .toProcessed();
-    const successor = EventBuilder.new()
-      .id('b')
-      .withDataTimezone('Pacific/Apia')
-      .span('2011-12-28T00:00:00', '2011-12-28T23:59:59.999', { allDay: true })
-      .toProcessed();
+    const predecessor = allDayEvent('a', '2011-12-27', 'Pacific/Apia');
+    const successor = allDayEvent('b', '2011-12-28', 'Pacific/Apia');
 
     const result = runCascade(
       [predecessor, successor],
@@ -1227,10 +1206,7 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(adapter.date('2011-12-27T00:00:00', 'Pacific/Apia')),
-    );
-    expect('end' in result[0]).to.equal(false);
+    expectDates(result[0], '2011-12-27T00:00:00', null, 'Pacific/Apia');
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
@@ -3217,28 +3193,26 @@ describe('getDependencyViolation', () => {
     ['FinishToFinish', 1.5 * HOUR],
     ['StartToFinish', 0.5 * HOUR],
   ] as const)('should return how far a broken %s dependency moves its target', (type, expected) => {
-    expect(getDependencyViolation(adapter, lookup, dependency('a', 'b', { type }))).to.equal(
-      expected,
-    );
+    expect(getDependencyViolation(lookup, dependency('a', 'b', { type }))).to.equal(expected);
   });
 
   it('should return 0 when the dependency holds', () => {
-    expect(getDependencyViolation(adapter, lookup, dependency('b', 'a'))).to.equal(0);
+    expect(getDependencyViolation(lookup, dependency('b', 'a'))).to.equal(0);
   });
 
   it('should return 0 when an endpoint is unknown', () => {
-    expect(getDependencyViolation(adapter, lookup, dependency('a', 'ghost'))).to.equal(0);
+    expect(getDependencyViolation(lookup, dependency('a', 'ghost'))).to.equal(0);
   });
 
   it('should return 0 for an unsupported type', () => {
     const unsupported = dependency('a', 'b', { type: 'Unknown' as SchedulerDependency['type'] });
 
-    expect(getDependencyViolation(adapter, lookup, unsupported)).to.equal(0);
+    expect(getDependencyViolation(lookup, unsupported)).to.equal(0);
   });
 
   it('should return 0 for a dependency from an event to itself', () => {
     expect(
-      getDependencyViolation(adapter, lookup, dependency('a', 'a', { type: 'StartToFinish' })),
+      getDependencyViolation(lookup, dependency('a', 'a', { type: 'StartToFinish' })),
     ).to.equal(0);
   });
 
@@ -3254,7 +3228,6 @@ describe('getDependencyViolation', () => {
     // two days, from the 3rd to the 5th.
     expect(
       getDependencyViolation(
-        adapter,
         buildLookup([predecessor, successor]),
         dependency('a', 'b', { lag: 36, lagUnit: 'hour' }),
       ),
@@ -3262,8 +3235,6 @@ describe('getDependencyViolation', () => {
   });
 
   it('should return 0 when the lag runs past the supported date range', () => {
-    expect(
-      getDependencyViolation(adapter, lookup, dependency('a', 'b', { lag: 100000000 })),
-    ).to.equal(0);
+    expect(getDependencyViolation(lookup, dependency('a', 'b', { lag: 100000000 }))).to.equal(0);
   });
 });

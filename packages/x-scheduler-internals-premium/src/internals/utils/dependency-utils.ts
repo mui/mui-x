@@ -49,22 +49,14 @@ export function isDependencyType(type: unknown): type is SchedulerDependencyType
   return typeof type === 'string' && Object.hasOwn(DEPENDENCY_EDGES, type);
 }
 
-// The range of `Date`.
-const MAX_TIMESTAMP = 8.64e15;
-
-function addElapsedMs(epochMs: number, ms: number) {
-  const timestamp = epochMs + ms;
-  return Math.abs(timestamp) > MAX_TIMESTAMP ? NaN : timestamp;
-}
-
 // Minutes and hours are elapsed time. Days and weeks keep the time of day on the wall clock.
 const DEPENDENCY_LAG_ADDERS: Record<
   SchedulerDependencyLagUnit,
   (epochMs: number, amount: number, timezone: TemporalTimezone) => number
 > = {
-  minute: (epochMs, amount) => addElapsedMs(epochMs, amount * 60_000),
-  hour: (epochMs, amount) => addElapsedMs(epochMs, amount * 3_600_000),
-  day: (epochMs, amount, timezone) => addDaysOnWallClock(epochMs, amount, timezone),
+  minute: (epochMs, amount) => epochMs + amount * 60_000,
+  hour: (epochMs, amount) => epochMs + amount * 3_600_000,
+  day: addDaysOnWallClock,
   week: (epochMs, amount, timezone) => addDaysOnWallClock(epochMs, amount * 7, timezone),
 };
 
@@ -143,7 +135,7 @@ export function getEffectiveDependencyLag(
 
 /**
  * Adds a dependency lag to an instant, in `timezone`.
- * Returns `NaN` when the lag runs past the range of `Date`.
+ * Past the range of `Date`, returns an instant outside of it, or `NaN` for a lag in days or weeks.
  */
 export function addDependencyLag(
   epochMs: number,
