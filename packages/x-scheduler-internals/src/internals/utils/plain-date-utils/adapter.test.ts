@@ -3,13 +3,14 @@ import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapte
 import { adapter, adapterFr, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { processDate } from '../../../process-date';
-import { getDateKey } from '../date-utils';
 import {
   buildTemporalPlainDate,
   createAdapterDate,
   createAdapterDateFromWallTime,
   createProcessedDate,
-  getPlainDateKey,
+  getAdapterDayNumber,
+  getDateKey,
+  getDayKey,
 } from './adapter';
 import { PlainDate } from '../base-temporal/PlainDate';
 
@@ -22,13 +23,14 @@ describe('base-temporal adapter bridge', () => {
     );
     const plainDate = buildTemporalPlainDate(adapter, value);
     expect(plainDate.toString()).to.equal('2025-03-02');
+    expect(getAdapterDayNumber(adapter, value)).to.equal(plainDate.dayNumber);
   });
 
   it('should return the key getDateKey() returns for the same day', () => {
     for (const currentAdapter of [adapter, adapterFr]) {
       const value = currentAdapter.date('2025-07-04T15:00:00', 'Asia/Tokyo');
       const plainDate = buildTemporalPlainDate(currentAdapter, value);
-      expect(getPlainDateKey(currentAdapter, plainDate)).to.equal(
+      expect(getDayKey(currentAdapter, plainDate.dayNumber)).to.equal(
         getDateKey(value, currentAdapter),
       );
     }
@@ -40,7 +42,7 @@ describe('base-temporal adapter bridge', () => {
     setSystemTimezone('Pacific/Apia');
     const systemAdapter = new TemporalAdapterDateFns();
     expect(
-      getPlainDateKey(systemAdapter, PlainDate.from({ year: 2011, month: 12, day: 30 })),
+      getDayKey(systemAdapter, PlainDate.from({ year: 2011, month: 12, day: 30 }).dayNumber),
     ).to.equal('12/30/2011');
   });
 

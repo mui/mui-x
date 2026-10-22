@@ -5,8 +5,18 @@ import type {
   SchedulerProcessedDate,
 } from '../models';
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
+import type { Adapter } from '../use-adapter';
 import { useAdapterContext } from '../use-adapter-context';
 import { sortEventOccurrences } from '../sort-event-occurrences';
+import { differenceInDays } from '../internals/utils/plain-date-utils/timeZone';
+
+/**
+ * The number of full days an occurrence spans in the display timezone.
+ */
+function getDayCount(adapter: Adapter, occurrence: SchedulerEventOccurrence) {
+  const { start, end } = occurrence.displayTimezone;
+  return differenceInDays(end.timestamp, start.timestamp, adapter.getTimezone(end.value));
+}
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -58,15 +68,7 @@ export function useEventOccurrencesWithDayGridPosition(
               if (aIsActive !== bIsActive) {
                 return aIsActive - bIsActive;
               }
-              const aSpan = adapter.differenceInDays(
-                a.displayTimezone.end.value,
-                a.displayTimezone.start.value,
-              );
-              const bSpan = adapter.differenceInDays(
-                b.displayTimezone.end.value,
-                b.displayTimezone.start.value,
-              );
-              return bSpan - aSpan;
+              return getDayCount(adapter, b) - getDayCount(adapter, a);
             });
 
       // 3. Assign position to each occurrence
@@ -117,7 +119,11 @@ export function useEventOccurrencesWithDayGridPosition(
             position = {
               index: smallestAvailableIndex,
               daySpan: Math.min(
-                adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1,
+                differenceInDays(
+                  occurrence.displayTimezone.end.timestamp,
+                  day.timestamp,
+                  adapter.getTimezone(occurrence.displayTimezone.end.value),
+                ) + 1,
                 dayListSize - dayIndex,
               ),
             };

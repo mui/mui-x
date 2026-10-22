@@ -7,6 +7,8 @@ import {
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
 import { useAdapterContext } from '../use-adapter-context';
+import { createAdapterDate } from '../internals/utils/plain-date-utils/adapter';
+import { getEndOfDayMs, getStartOfDayMs } from '../internals/utils/plain-date-utils/timeZone';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
@@ -82,8 +84,20 @@ export function innerGetEventOccurrencesGroupedByDay(
     return occurrenceMap;
   }
 
-  const start = adapter.startOfDay(days[0].value);
-  const end = adapter.endOfDay(days[days.length - 1].value);
+  const firstDay = days[0];
+  const lastDay = days[days.length - 1];
+  const startTimezone = adapter.getTimezone(firstDay.value);
+  const endTimezone = adapter.getTimezone(lastDay.value);
+  const start = createAdapterDate(
+    adapter,
+    getStartOfDayMs(firstDay.timestamp, startTimezone),
+    startTimezone,
+  );
+  const end = createAdapterDate(
+    adapter,
+    getEndOfDayMs(lastDay.timestamp, endTimezone),
+    endTimezone,
+  );
   const occurrences = getOccurrencesFromEvents({
     adapter,
     start,

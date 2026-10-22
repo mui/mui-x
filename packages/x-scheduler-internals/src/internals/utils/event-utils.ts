@@ -10,7 +10,8 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { getDateKey } from './date-utils';
+import { getDateKey } from './plain-date-utils/adapter';
+import { getEndOfDayMs, getStartOfDayMs } from './plain-date-utils/timeZone';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
 /**
@@ -109,18 +110,19 @@ export function getDaysTheOccurrenceIsVisibleOn(
   days: SchedulerProcessedDate[],
   adapter: Adapter,
 ) {
-  const eventStartStartOfDay = adapter.startOfDay(event.displayTimezone.start.value);
-  const eventEndEndOfDay = adapter.endOfDay(event.displayTimezone.end.value);
+  const { start, end } = event.displayTimezone;
+  const eventStartStartOfDayMs = getStartOfDayMs(start.timestamp, adapter.getTimezone(start.value));
+  const eventEndEndOfDayMs = getEndOfDayMs(end.timestamp, adapter.getTimezone(end.value));
 
   const dayKeys: string[] = [];
   for (const day of days) {
     // If the day is before the event start, skip to the next day
-    if (adapter.isBefore(day.value, eventStartStartOfDay)) {
+    if (day.timestamp < eventStartStartOfDayMs) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (adapter.isAfter(day.value, eventEndEndOfDay)) {
+    if (day.timestamp > eventEndEndOfDayMs) {
       break;
     }
     dayKeys.push(day.key);

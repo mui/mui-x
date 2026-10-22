@@ -1,5 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import { adapter, adapterFr } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { mergeDateAndTime, getStartOfWeek, getEndOfWeek, getWeekNumber } from './date-utils';
 import { normalizeAllDayBounds } from './plain-date-utils/adapter';
@@ -73,9 +72,25 @@ describe('date-utils', () => {
   });
 
   describe('getStartOfWeek', () => {
-    it('delegates to adapter.startOfWeek when weekStartsOn is undefined', () => {
-      const result = getStartOfWeek(adapter, wednesday, undefined);
-      expect(adapter.isSameDay(result, adapter.startOfWeek(wednesday))).to.equal(true);
+    it('uses the first day of the week of the locale when weekStartsOn is undefined', () => {
+      // Weeks start on Sunday in English and on Monday in French.
+      for (const currentAdapter of [adapter, adapterFr]) {
+        const result = getStartOfWeek(currentAdapter, wednesday, undefined);
+        expect(currentAdapter.isEqual(result, currentAdapter.startOfWeek(wednesday))).to.equal(
+          true,
+        );
+      }
+    });
+
+    it('reads the week in the timezone of the date', () => {
+      // Sunday 03:00 in UTC is Saturday 22:00 in New York.
+      const date = adapter.setTimezone(
+        adapter.date('2025-01-12T03:00:00Z', 'default'),
+        'America/New_York',
+      );
+      const result = getStartOfWeek(adapter, date, 0);
+      expect(adapter.getTimezone(result)).to.equal('America/New_York');
+      expect(adapter.toJsDate(result).toISOString()).to.equal('2025-01-05T05:00:00.000Z');
     });
 
     it('returns Sunday (2025-01-05) when weekStartsOn is 0', () => {
@@ -101,9 +116,11 @@ describe('date-utils', () => {
   });
 
   describe('getEndOfWeek', () => {
-    it('delegates to adapter.endOfWeek when weekStartsOn is undefined', () => {
-      const result = getEndOfWeek(adapter, wednesday, undefined);
-      expect(adapter.isSameDay(result, adapter.endOfWeek(wednesday))).to.equal(true);
+    it('uses the first day of the week of the locale when weekStartsOn is undefined', () => {
+      for (const currentAdapter of [adapter, adapterFr]) {
+        const result = getEndOfWeek(currentAdapter, wednesday, undefined);
+        expect(currentAdapter.isEqual(result, currentAdapter.endOfWeek(wednesday))).to.equal(true);
+      }
     });
 
     it('returns Saturday (2025-01-11) when weekStartsOn is 0 (Sun–Sat week)', () => {
@@ -177,15 +194,6 @@ describe('date-utils', () => {
 
     it('getStartOfWeek throws in dev when weekStartsOn is a float', () => {
       expect(() => getStartOfWeek(adapter, wednesday, 1.5 as any)).to.throw(/weekStartsOn/);
-    });
-
-    it('getSundayDayNumber throws in dev when adapter.getDayOfWeek returns out-of-range value', () => {
-      const badAdapter = {
-        ...adapter,
-        getDayOfWeek: () => 0,
-      } as unknown as TemporalAdapter;
-      // Use an object not previously seen so the WeakMap has no cache for it
-      expect(() => getStartOfWeek(badAdapter, wednesday, 1)).to.throw(/getDayOfWeek/);
     });
   });
 });

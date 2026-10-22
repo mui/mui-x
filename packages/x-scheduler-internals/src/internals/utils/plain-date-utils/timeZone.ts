@@ -126,7 +126,7 @@ function getAdapterOffsetMs(timezone: TemporalTimezone, epochMs: number): number
  * The wall-clock time of an instant in `timezone`, in milliseconds since 1970-01-01T00:00 of the
  * wall clock.
  */
-function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
+export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
   return epochMs + getAdapterOffsetMs(timezone, epochMs);
 }
 
@@ -182,21 +182,57 @@ export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTi
 }
 
 /**
- * The first instant of the day of an instant in `timezone`. A day whose midnight a DST transition
- * skips starts at the end of the gap.
+ * The day number of the date of an instant in `timezone`.
  */
-export function getStartOfDayMs(epochMs: number, timezone: TemporalTimezone): number {
-  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+export function toLocalDayNumber(epochMs: number, timezone: TemporalTimezone): number {
+  return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+}
+
+/**
+ * The first instant of a day in `timezone`. A day whose midnight a DST transition skips starts at
+ * the end of the gap. A day the timezone skips, like December 30th, 2011 in Pacific/Apia, resolves
+ * to an instant of the next day.
+ */
+export function getDayStartMs(dayNumber: number, timezone: TemporalTimezone): number {
   return localToEpochMs(dayNumber * MS_PER_DAY, timezone);
 }
 
 /**
- * The last instant of the day of an instant in `timezone`, just before the next day starts.
+ * The last instant of a day in `timezone`, just before the next day starts.
  * When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
  */
+export function getDayEndMs(dayNumber: number, timezone: TemporalTimezone): number {
+  return getDayStartMs(dayNumber + 1, timezone) - 1;
+}
+
+/**
+ * The first instant of the day of an instant in `timezone`, like `getDayStartMs()`.
+ */
+export function getStartOfDayMs(epochMs: number, timezone: TemporalTimezone): number {
+  return getDayStartMs(toLocalDayNumber(epochMs, timezone), timezone);
+}
+
+/**
+ * The last instant of the day of an instant in `timezone`, like `getDayEndMs()`.
+ */
 export function getEndOfDayMs(epochMs: number, timezone: TemporalTimezone): number {
-  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
-  return localToEpochMs((dayNumber + 1) * MS_PER_DAY, timezone) - 1;
+  return getDayEndMs(toLocalDayNumber(epochMs, timezone), timezone);
+}
+
+/**
+ * The number of full days from `earlierMs` to `laterMs` on the wall clock of `timezone`, like the
+ * adapter's `differenceInDays()`: the days between the two dates, minus one when the time of
+ * `laterMs` is before the time of `earlierMs`. Negative when `laterMs` is before `earlierMs`.
+ */
+export function differenceInDays(
+  laterMs: number,
+  earlierMs: number,
+  timezone: TemporalTimezone,
+): number {
+  // A wall-clock day always lasts 24 hours, whatever the DST transitions.
+  return (
+    Math.trunc((toLocalMs(laterMs, timezone) - toLocalMs(earlierMs, timezone)) / MS_PER_DAY) || 0
+  );
 }
 
 /**
@@ -209,7 +245,7 @@ export function getSkippedDays(
   timezone: TemporalTimezone,
 ): Set<number> {
   const skippedDays = new Set<number>();
-  const getStartMs = (dayNumber: number) => localToEpochMs(dayNumber * MS_PER_DAY, timezone);
+  const getStartMs = (dayNumber: number) => getDayStartMs(dayNumber, timezone);
 
   // A skipped day makes the days of a period last a day longer than the time elapsed between their
   // starts, when DST transitions change it by hours. The periods are a month long, as a timezone

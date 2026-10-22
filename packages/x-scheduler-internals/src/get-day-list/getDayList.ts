@@ -1,16 +1,19 @@
 import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import { isWeekend } from '../use-adapter/useAdapter';
-import { processDate } from '../process-date';
+import { getIsoDayOfWeek } from '../internals/utils/base-temporal/iso';
+import {
+  createProcessedDate,
+  getAdapterDayNumber,
+} from '../internals/utils/plain-date-utils/adapter';
+import { getDayStartMs, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
 export function getDayList(parameters: GetDaytListParameters): GetDaytListReturnValue {
-  const { adapter, start: rawStart, end: rawEnd, excludeWeekends } = parameters;
-
-  const start = adapter.startOfDay(rawStart);
-  const end = adapter.endOfDay(rawEnd);
+  const { adapter, start, end, excludeWeekends } = parameters;
+  const firstDay = getAdapterDayNumber(adapter, start);
+  const lastDay = getAdapterDayNumber(adapter, end);
 
   if (process.env.NODE_ENV !== 'production') {
-    if (adapter.isBefore(adapter.startOfDay(end), adapter.startOfDay(start))) {
+    if (lastDay < firstDay) {
       // TODO: fix mui/no-guarded-throw
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
@@ -19,28 +22,21 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
     }
   }
 
-  let current = start;
-  let currentDayNumber = adapter.getDayOfWeek(current);
-  const days: TemporalSupportedObject[] = [];
-
-  while (adapter.isBefore(current, end)) {
-    if (!excludeWeekends || !isWeekend(adapter, current)) {
-      days.push(current);
+  const timezone = adapter.getTimezone(start);
+  const days: SchedulerProcessedDate[] = [];
+  for (let dayNumber = firstDay; dayNumber <= lastDay; dayNumber += 1) {
+    // ISO weekdays 6 and 7 are Saturday and Sunday.
+    if (excludeWeekends && getIsoDayOfWeek(dayNumber) >= 6) {
+      continue;
     }
-
-    const prevDayNumber = currentDayNumber;
-    current = adapter.addDays(current, 1);
-    currentDayNumber = adapter.getDayOfWeek(current);
-
-    // If there is a TZ change at midnight, adding 1 day may only increase the date by 23 hours to 11pm
-    // To fix, bump the date into the next day (add 12 hours) and then revert to the start of the day
-    // See https://github.com/moment/moment/issues/4743#issuecomment-811306874 for context.
-    if (prevDayNumber === currentDayNumber) {
-      current = adapter.startOfDay(adapter.addHours(current, 12));
+    const dayStartMs = getDayStartMs(dayNumber, timezone);
+    // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, has no instant.
+    if (toLocalDayNumber(dayStartMs, timezone) === dayNumber) {
+      days.push(createProcessedDate(adapter, dayStartMs, timezone));
     }
   }
 
-  return days.map((day) => processDate(day, adapter));
+  return days;
 }
 
 export interface GetDaytListParameters {

@@ -8,8 +8,8 @@ import type {
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   createProcessedDate,
+  getDayKey,
   getEndOfDayMs,
-  getPlainDateKey,
   getRecurringOccurrenceKeyFromDateKey,
   getStartOfDayMs,
   toEpochMs,
@@ -62,7 +62,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
     const dataEnd = createProcessedDate(adapter, endMs, dataTimezone);
     return {
       ...event,
-      key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(adapter, day)),
+      key: getRecurringOccurrenceKeyFromDateKey(event.id, getDayKey(adapter, day.dayNumber)),
       dataTimezone: {
         ...event.dataTimezone,
         start: dataStart,

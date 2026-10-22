@@ -11,6 +11,11 @@ import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-g
 import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
+import {
+  createAdapterDate,
+  getAdapterDayNumber,
+} from '../internals/utils/plain-date-utils/adapter';
+import { getDayStartMs } from '../internals/utils/plain-date-utils/timeZone';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -49,15 +54,17 @@ const horizonEnd = createSelectorMemoized(
   eventCalendarViewSelectors.agendaDayCount,
   baseRange,
   (adapter, visibleDate, dayCount, range) => {
-    const rangeEnd = adapter.startOfDay(range.end);
-    if (dayCount === 'month') {
-      return rangeEnd;
-    }
-    const maxHorizon = adapter.startOfDay(
-      adapter.addDays(visibleDate, AGENDA_MAX_HORIZON_DAYS - 1),
-    );
+    const rangeEndDay = getAdapterDayNumber(adapter, range.end);
     // A day count beyond the default horizon still scans at least the displayed days
-    return adapter.isBefore(maxHorizon, rangeEnd) ? rangeEnd : maxHorizon;
+    const horizonDay =
+      dayCount === 'month'
+        ? rangeEndDay
+        : Math.max(
+            rangeEndDay,
+            getAdapterDayNumber(adapter, visibleDate) + AGENDA_MAX_HORIZON_DAYS - 1,
+          );
+    const timezone = adapter.getTimezone(range.end);
+    return createAdapterDate(adapter, getDayStartMs(horizonDay, timezone), timezone);
   },
 );
 
@@ -114,17 +121,21 @@ const visibleDays = createSelectorMemoized(
 
     // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
     // The scanned span is tracked apart from the day list, which skips the hidden weekends.
-    let scannedUntil = adapter.startOfDay(range.end);
-    while (daysWithEvents.length < amount && adapter.isBefore(scannedUntil, horizon)) {
+    const timezone = adapter.getTimezone(range.end);
+    const horizonDay = getAdapterDayNumber(adapter, horizon);
+    let scannedUntilDay = getAdapterDayNumber(adapter, range.end);
+    while (daysWithEvents.length < amount && scannedUntilDay < horizonDay) {
       // Extend forward by one more chunk, without passing the horizon
-      const nextStart = adapter.addDays(scannedUntil, 1);
-      const nextEnd = adapter.addDays(nextStart, Math.max(amount, AGENDA_VIEW_DAYS_AMOUNT) - 1);
-      scannedUntil = adapter.isBefore(nextEnd, horizon) ? nextEnd : horizon;
+      const nextStartDay = scannedUntilDay + 1;
+      scannedUntilDay = Math.min(
+        nextStartDay + Math.max(amount, AGENDA_VIEW_DAYS_AMOUNT) - 1,
+        horizonDay,
+      );
 
       const more = getDayList({
         adapter,
-        start: nextStart,
-        end: scannedUntil,
+        start: createAdapterDate(adapter, getDayStartMs(nextStartDay, timezone), timezone),
+        end: createAdapterDate(adapter, getDayStartMs(scannedUntilDay, timezone), timezone),
         excludeWeekends: !showWeekends,
       });
 

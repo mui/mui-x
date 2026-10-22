@@ -9,6 +9,7 @@ export type { PlainDateTime } from './timeZone';
 export {
   buildTemporalPlainDate,
   createProcessedDate,
-  getPlainDateKey,
+  getDateKey,
+  getDayKey,
   normalizeAllDayBounds,
 } from './adapter';

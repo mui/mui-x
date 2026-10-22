@@ -3,6 +3,8 @@ import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapte
 import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import type { TemporalSupportedObject } from '../models';
 import type { DateLocale } from './useAdapter.types';
+import { getIsoDayOfWeek } from '../internals/utils/base-temporal/iso';
+import { getAdapterDayNumber } from '../internals/utils/plain-date-utils/adapter';
 
 const DEFAULT_ADAPTER = new TemporalAdapterDateFns();
 
@@ -15,13 +17,9 @@ export function useAdapter(dateLocale?: DateLocale) {
 }
 
 /**
- * Checks if the given date is a weekend (Saturday or Sunday).
- * TODO: move to adapter.
+ * Checks if the given date is a weekend (Saturday or Sunday), in its own timezone.
  */
 export function isWeekend(adapter: TemporalAdapter, value: TemporalSupportedObject): boolean {
-  const sunday = adapter.format(adapter.date('2025-08-09', 'default'), 'weekday');
-  const saturday = adapter.format(adapter.date('2025-08-10', 'default'), 'weekday');
-  const formattedValue = adapter.format(value, 'weekday');
-
-  return formattedValue === sunday || formattedValue === saturday;
+  // ISO weekdays 6 and 7 are Saturday and Sunday.
+  return getIsoDayOfWeek(getAdapterDayNumber(adapter, value)) >= 6;
 }
