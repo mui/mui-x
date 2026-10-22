@@ -1,4 +1,5 @@
-import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
+import { adapter, adapterFr, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import type {
   SchedulerEventUpdatedProperties,
   RecurringEventByDayValue,
@@ -14,7 +15,7 @@ import {
   applyRecurringUpdateOnlyThis,
   decideSplitRRule,
 } from './updateRecurringEvent';
-import { getRemainingOccurrences } from './internal-utils';
+import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 describe('recurring-events/updateRecurringEvent', () => {
   const defaultEvent = EventBuilder.new()
@@ -31,7 +32,9 @@ describe('recurring-events/updateRecurringEvent', () => {
       changes: Partial<SchedulerEventUpdatedProperties> = {},
       originalSeriesStart: TemporalSupportedObject = seriesStart,
       split: TemporalSupportedObject = splitStart,
-    ) => decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes);
+    ) =>
+      decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes) as
+        SchedulerProcessedEventRecurrenceRule | undefined;
 
     it('should return changes.rrule as is when user explicitly changed recurrence', () => {
       const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
@@ -67,17 +70,8 @@ describe('recurring-events/updateRecurringEvent', () => {
           count: 42,
         };
 
-        const dayBeforeSplit = adapter.addDays(adapter.startOfDay(splitStart), -1);
-        const remaining = getRemainingOccurrences(
-          adapter,
-          original,
-          seriesStart,
-          dayBeforeSplit,
-          original.count as number,
-        );
-
         const res = call(original, { title: 'New Event Title' });
-        expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, count: remaining });
+        expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, count: 37 });
       });
 
       it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {
@@ -192,6 +186,16 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       expect(updatedEvents.created).to.have.length(1);
       expect(updatedEvents.created![0].extractedFromId).to.equal(defaultEvent.id);
+    });
+
+    it('should keep a new RRULE string as is for the new series', () => {
+      const occurrenceStart = adapter.date('2025-01-07T09:00:00Z', 'default');
+      const updatedEvents = applyRecurringUpdateFollowing(adapter, defaultEvent, occurrenceStart, {
+        id: defaultEvent.id,
+        rrule: 'FREQ=WEEKLY;BYDAY=TU',
+      });
+
+      expect(updatedEvents.created![0].rrule).to.equal('FREQ=WEEKLY;BYDAY=TU');
     });
 
     it('should truncate the original series at the day before the edited occurrence and appends the new series', () => {
@@ -480,6 +484,25 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.deleted).to.deep.equal([original.id]);
       expect(updatedEvents.created).to.have.length(1);
     });
+
+    it('should not count a day the timezone skips toward the COUNT of the new series', () => {
+      // Pacific/Apia skipped December 30th, 2011: the series runs on December 28th, 29th and 31st,
+      // and on January 1st and 2nd.
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('Pacific/Apia')
+        .singleDay('2011-12-28T09:00:00')
+        .rrule({ freq: 'DAILY', count: 5 })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2012-01-01T09:00:00', 'Pacific/Apia');
+
+      const result = applyRecurringUpdateFollowing(adapter, event, occurrenceStart, {
+        id: event.id,
+        title: 'New title',
+      });
+
+      expect(result.created![0].rrule).to.deep.equal({ freq: 'DAILY', count: 2 });
+      expect(result.updated![0].rrule).to.have.property('until');
+    });
   });
 
   describe('adjustRRuleForAllMove', () => {
@@ -507,8 +530,8 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
 
     it('should return BYDAY in canonical RFC 5545 order (MO first) regardless of adapter locale', () => {
-      // In a Sunday-first locale (US, mondayWeekDayNumber=2) the loop starts at TU,
-      // so MO ends up last in the output. The result must be locale-independent.
+      // Weeks start on Sunday in the US locale and on Monday in the French one: the order of the
+      // result must not depend on it.
       const rrule = {
         freq: 'WEEKLY' as const,
         byDay: ['MO', 'WE', 'SU'] as RecurringEventByDayValue[],
@@ -955,5 +978,43 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.deleted).to.deep.equal([original.id]);
       expect(updatedEvents.created).to.have.length(1);
     });
+  });
+
+  // TZDate resolves DST transitions with the timezone of the system, the plain dates don't.
+  describe.each(['UTC', 'America/New_York'])('system timezone: %s', (systemTimezone) => {
+    // Europe/Paris falls back from 03:00 CEST to 02:00 CET on October 26th, 2025.
+    it.skipIf(!isJSDOM && systemTimezone !== 'UTC').each([
+      ['an hour', '2025-10-26T03:30:00'],
+      ['30 minutes', '2025-10-26T03:00:00'],
+    ])(
+      'should keep the times of an occurrence in a repeated hour lasting %s when only its title changes',
+      (_duration, end) => {
+        if (isJSDOM) {
+          setSystemTimezone(systemTimezone);
+        }
+        const event = EventBuilder.new(adapter)
+          .withDataTimezone('Europe/Paris')
+          .withDisplayTimezone('Europe/Paris')
+          .span('2025-10-26T02:30:00', end)
+          .rrule({ freq: 'DAILY', count: 3 })
+          .toProcessed();
+        const [occurrence] = getRecurringEventOccurrencesForVisibleDays(
+          event,
+          adapter.date('2025-10-26T00:00:00Z', 'default'),
+          adapter.date('2025-10-26T12:00:00Z', 'default'),
+          adapter,
+          'Europe/Paris',
+        );
+        const changes: SchedulerEventUpdatedProperties = { id: event.id, title: 'New title' };
+        const occurrenceStart = occurrence.dataTimezone.start.value;
+
+        for (const { created } of [
+          applyRecurringUpdateOnlyThis(adapter, event, occurrenceStart, changes),
+          applyRecurringUpdateFollowing(adapter, event, occurrenceStart, changes),
+        ]) {
+          expect([created![0].start, created![0].end]).to.deep.equal(['2025-10-26T02:30:00', end]);
+        }
+      },
+    );
   });
 });
