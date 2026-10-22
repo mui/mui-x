@@ -65,35 +65,21 @@ function formatHourLabel(adapter: TemporalAdapter, hour: number, ampm: boolean) 
   return adapter.formatByString(adapter.setHours(getDstFreeTemplateDay(adapter), hour), pattern);
 }
 
-// The ranges of the presets are read and moved on the plain dates of their timezone. A day whose
-// midnight a DST transition skips starts at the end of the gap, and a wall-clock time that a
-// transition repeats resolves to its first instant, like the wall times of the recurring events.
+// The presets read and move their ranges on the plain dates of their timezone, resolved like
+// `toEpochMs()`. The bounds of `dayAndWeek` come from `getStartOfWeek()` and `getEndOfWeek()`.
 
 /**
- * The first instant of the day `getPlainDate()` returns for the day of `date`.
+ * The first instant of the day `getPlainDate()` returns for the day of `date`, `offsetMs` added.
  */
-function getStartOfPlainDate(
-  adapter: TemporalAdapter,
-  date: TemporalSupportedObject,
-  getPlainDate: (plainDate: PlainDate) => PlainDate = (plainDate) => plainDate,
-) {
-  const timezone = adapter.getTimezone(date);
-  const plainDate = getPlainDate(buildTemporalPlainDate(adapter, date));
-  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
-}
-
-/**
- * The last instant of the day `getPlainDate()` returns for the day of `date`, just before the next
- * day starts.
- */
-function getEndOfPlainDate(
+function createDateFromPlainDate(
   adapter: TemporalAdapter,
   date: TemporalSupportedObject,
   getPlainDate: (plainDate: PlainDate) => PlainDate,
+  offsetMs = 0,
 ) {
   const timezone = adapter.getTimezone(date);
-  const nextPlainDate = getPlainDate(buildTemporalPlainDate(adapter, date)).add({ days: 1 });
-  return createAdapterDate(adapter, toEpochMs(nextPlainDate, 0, timezone) - 1, timezone);
+  const plainDate = getPlainDate(buildTemporalPlainDate(adapter, date));
+  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone) + offsetMs, timezone);
 }
 
 /**
@@ -111,6 +97,29 @@ function addToDate(
     toEpochMs(plainDateTime.date.add(duration), plainDateTime.msInDay, timezone),
     timezone,
   );
+}
+
+/**
+ * The range and the navigation of a preset made of `unitCount` periods, like days or months. The
+ * range starts on the first day of the period of the visible date, `getPeriodStart()`, and ends on
+ * the last instant before the period that follows it.
+ */
+function createPlainDateRange(
+  getPeriodStart: (plainDate: PlainDate) => PlainDate,
+  toDuration: (amount: number) => PlainDateDuration,
+): Pick<PresetDefinition, 'getStartDate' | 'getEndDate' | 'navigate'> {
+  return {
+    getStartDate: (adapter, visibleDate) =>
+      createDateFromPlainDate(adapter, visibleDate, getPeriodStart),
+    getEndDate: (adapter, start, unitCount) =>
+      createDateFromPlainDate(
+        adapter,
+        start,
+        (plainDate) => getPeriodStart(plainDate).add(toDuration(unitCount)),
+        -1,
+      ),
+    navigate: (adapter, date, amount) => addToDate(adapter, date, toDuration(amount)),
+  };
 }
 
 /**
@@ -146,14 +155,14 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,
-    getStartDate: (adapter, visibleDate) => getStartOfPlainDate(adapter, visibleDate),
-    getEndDate: (adapter, start, unitCount) =>
-      getEndOfPlainDate(adapter, start, (plainDate) => plainDate.add({ days: unitCount - 1 })),
+    ...createPlainDateRange(
+      (plainDate) => plainDate,
+      (days) => ({ days }),
+    ),
     // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
     // the CSS tick count to `days × 24`: the hour row is a wall-clock grid, so it emits
     // the same cell count on every day, DST transitions included.
     getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
-    navigate: (adapter, date, amount) => addToDate(adapter, date, { days: amount }),
   },
   dayAndMonth: {
     timeResolution: 'day',
@@ -171,10 +180,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       },
     ],
     unitCount: 8 * 7, // 8 weeks
-    getStartDate: (adapter, visibleDate) => getStartOfPlainDate(adapter, visibleDate),
-    getEndDate: (adapter, start, unitCount) =>
-      getEndOfPlainDate(adapter, start, (plainDate) => plainDate.add({ days: unitCount - 1 })),
-    navigate: (adapter, date, amount) => addToDate(adapter, date, { days: amount }),
+    ...createPlainDateRange(
+      (plainDate) => plainDate,
+      (days) => ({ days }),
+    ),
   },
   dayAndWeek: {
     timeResolution: 'day',
@@ -203,31 +212,21 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       { unit: 'month', formatDate: formatMonth3Letters },
     ],
     unitCount: 3 * 12, // 3 years
-    getStartDate: (adapter, visibleDate) =>
-      getStartOfPlainDate(adapter, visibleDate, (plainDate) => plainDate.with({ day: 1 })),
-    // The last day of the month `unitCount - 1` months after the first.
-    getEndDate: (adapter, start, unitCount) =>
-      getEndOfPlainDate(adapter, start, (plainDate) =>
-        plainDate.with({ day: 1 }).add({ months: unitCount }).add({ days: -1 }),
-      ),
+    ...createPlainDateRange(
+      (plainDate) => plainDate.with({ day: 1 }),
+      (months) => ({ months }),
+    ),
     getCssUnitCount: getDayCount,
-    navigate: (adapter, date, amount) => addToDate(adapter, date, { months: amount }),
   },
   year: {
     timeResolution: 'year',
     tickWidth: 200,
     headers: [{ unit: 'year', formatDate: formatYear }],
     unitCount: 30, // 30 years
-    getStartDate: (adapter, visibleDate) =>
-      getStartOfPlainDate(adapter, visibleDate, (plainDate) =>
-        plainDate.with({ month: 1, day: 1 }),
-      ),
-    // The last day of the year `unitCount - 1` years after the first.
-    getEndDate: (adapter, start, unitCount) =>
-      getEndOfPlainDate(adapter, start, (plainDate) =>
-        plainDate.with({ month: 1, day: 1 }).add({ years: unitCount }).add({ days: -1 }),
-      ),
-    navigate: (adapter, date, amount) => addToDate(adapter, date, { years: amount }),
+    ...createPlainDateRange(
+      (plainDate) => plainDate.with({ month: 1, day: 1 }),
+      (years) => ({ years }),
+    ),
   },
 };
 
