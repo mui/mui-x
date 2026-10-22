@@ -1,7 +1,6 @@
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
-import { MS_PER_DAY } from './base-temporal/iso';
-import { createAdapterDate, getAdapterDayNumber } from './plain-date-utils/adapter';
-import { localToEpochMs, toLocalDayNumber, toLocalMs } from './plain-date-utils/timeZone';
+import { buildTemporalPlainDate, createAdapterDate } from './plain-date-utils/adapter';
+import { toEpochMs, toLocalDayNumber, toPlainDateTime } from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
 export const FULL_DAY_MINUTES = 24 * 60;
@@ -66,12 +65,15 @@ export function getTimelineAxisDayMs(
  * rather than from timestamp differences so DST transitions earlier in the day cannot shift it.
  */
 export function getWallClockMsInDay(adapter: TemporalAdapter, date: TemporalSupportedObject) {
-  const localMs = toLocalMs(adapter.getTime(date), adapter.getTimezone(date));
-  return localMs - Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
+  return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).msInDay;
 }
 
 function getTotalDays(adapter: TemporalAdapter, axis: TimelineAxis) {
-  return getAdapterDayNumber(adapter, axis.end) - getAdapterDayNumber(adapter, axis.start) + 1;
+  return (
+    buildTemporalPlainDate(adapter, axis.end).dayNumber -
+    buildTemporalPlainDate(adapter, axis.start).dayNumber +
+    1
+  );
 }
 
 /**
@@ -103,12 +105,8 @@ export function timelineAxisOffsetToDate(
   const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
 
   const timezone = adapter.getTimezone(axis.start);
-  const dayNumber = getAdapterDayNumber(adapter, axis.start) + dayIndex;
-  return createAdapterDate(
-    adapter,
-    localToEpochMs(dayNumber * MS_PER_DAY + msInDay, timezone),
-    timezone,
-  );
+  const plainDate = buildTemporalPlainDate(adapter, axis.start).add({ days: dayIndex });
+  return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
 }
 
 /**
@@ -124,10 +122,11 @@ export function dateToTimelineAxisOffsetMs(
   date: TemporalSupportedObject,
   msInDay: number = getWallClockMsInDay(adapter, date),
 ): number {
-  // Both days are read in the timezone of the date.
+  // Both days are read in the timezone of the date. Day numbers, as this runs for every event.
+  const timezone = adapter.getTimezone(date);
   const dayIndex =
-    getAdapterDayNumber(adapter, date) -
-    toLocalDayNumber(adapter.getTime(axis.start), adapter.getTimezone(date));
+    toLocalDayNumber(adapter.getTime(date), timezone) -
+    toLocalDayNumber(adapter.getTime(axis.start), timezone);
   return getTimelineAxisOffsetMs(axis, dayIndex, msInDay);
 }
 

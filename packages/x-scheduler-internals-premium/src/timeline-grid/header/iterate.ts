@@ -5,21 +5,18 @@ import type {
 } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
-  addMonthsToDayNumber,
   createAdapterDate,
-  formatIsoDate,
+  createPlainDate,
   FULL_DAY_MINUTES,
-  fromDayNumber,
   getStartOfDayMs,
-  getStartOfMonthDayNumber,
   getTimelineAxisOffsetMs,
-  getWeekStartDayNumber,
+  getWeekStartPlainDate,
+  ISO_CALENDAR_ID,
   localToEpochMs,
   MS_PER_DAY,
-  toDayNumber,
   toLocalMs,
 } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
+import type { PlainDate, TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
 
 const MINUTE_MS = 60_000;
@@ -30,15 +27,21 @@ type HourWindow = Pick<TimelineAxis, 'dayStartMinute' | 'dayEndMinute'>;
 type ToAdapterDate = (localMs: number) => TemporalSupportedObject;
 
 /**
+ * The date of a wall-clock time.
+ */
+function toPlainDate(localMs: number): PlainDate {
+  return createPlainDate(Math.floor(localMs / MS_PER_DAY), ISO_CALENDAR_ID);
+}
+
+/**
  * The machine-readable local date-time of a wall-clock time, like `2026-03-08T00:00`.
  */
 function getDateTime(localMs: number): string {
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
-  const { year, month, day } = fromDayNumber(dayNumber);
-  const minutesInDay = Math.floor((localMs - dayNumber * MS_PER_DAY) / MINUTE_MS);
+  const plainDate = toPlainDate(localMs);
+  const minutesInDay = Math.floor((localMs - plainDate.dayNumber * MS_PER_DAY) / MINUTE_MS);
   const hours = String(Math.floor(minutesInDay / 60)).padStart(2, '0');
   const minutes = String(minutesInDay % 60).padStart(2, '0');
-  return `${formatIsoDate(year, month, day)}T${hours}:${minutes}`;
+  return `${plainDate.toString()}T${hours}:${minutes}`;
 }
 
 /**
@@ -227,18 +230,18 @@ function startOf(
   timezone: TemporalTimezone,
 ): number {
   const localMs = toLocalMs(adapter.getTime(date), timezone);
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  const plainDate = toPlainDate(localMs);
   switch (unit) {
     case 'hour':
       return Math.floor(localMs / HOUR_MS) * HOUR_MS;
     case 'day':
-      return dayNumber * MS_PER_DAY;
+      return plainDate.dayNumber * MS_PER_DAY;
     case 'week':
-      return getWeekStartDayNumber(adapter, date, weekStartsOn) * MS_PER_DAY;
+      return getWeekStartPlainDate(adapter, date, weekStartsOn).dayNumber * MS_PER_DAY;
     case 'month':
-      return getStartOfMonthDayNumber(dayNumber) * MS_PER_DAY;
+      return plainDate.with({ day: 1 }).dayNumber * MS_PER_DAY;
     case 'year':
-      return toDayNumber(fromDayNumber(dayNumber).year, 1, 1) * MS_PER_DAY;
+      return plainDate.with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +
@@ -253,8 +256,8 @@ function startOf(
  * target month.
  */
 function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): number {
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
-  const msInDay = localMs - dayNumber * MS_PER_DAY;
+  const plainDate = toPlainDate(localMs);
+  const msInDay = localMs - plainDate.dayNumber * MS_PER_DAY;
   switch (unit) {
     case 'hour':
       return localMs + amount * HOUR_MS;
@@ -263,9 +266,9 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
     case 'week':
       return localMs + amount * 7 * MS_PER_DAY;
     case 'month':
-      return addMonthsToDayNumber(dayNumber, amount) * MS_PER_DAY + msInDay;
+      return plainDate.add({ months: amount }).dayNumber * MS_PER_DAY + msInDay;
     case 'year':
-      return addMonthsToDayNumber(dayNumber, amount * 12) * MS_PER_DAY + msInDay;
+      return plainDate.add({ years: amount }).dayNumber * MS_PER_DAY + msInDay;
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +
@@ -292,14 +295,16 @@ function countVisibleHours(later: number, earlier: number, hourWindow: HourWindo
  * The number of whole months from `earlier` to `later`, two wall-clock times.
  */
 function differenceInMonths(later: number, earlier: number): number {
-  const laterDate = fromDayNumber(Math.floor(later / MS_PER_DAY));
-  const earlierDate = fromDayNumber(Math.floor(earlier / MS_PER_DAY));
-  const months = (laterDate.year - earlierDate.year) * 12 + (laterDate.month - earlierDate.month);
+  const laterPlainDate = toPlainDate(later);
+  const earlierPlainDate = toPlainDate(earlier);
+  const months =
+    (laterPlainDate.year - earlierPlainDate.year) * 12 +
+    (laterPlainDate.month - earlierPlainDate.month);
   // A month is whole once the day and the time of `earlier` are reached in it.
   const getTimeInMonth = (localMs: number, day: number) =>
     (day - 1) * MS_PER_DAY + (localMs - Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY);
   const comparison =
-    getTimeInMonth(later, laterDate.day) - getTimeInMonth(earlier, earlierDate.day);
+    getTimeInMonth(later, laterPlainDate.day) - getTimeInMonth(earlier, earlierPlainDate.day);
   if (months > 0 && comparison < 0) {
     return months - 1;
   }
