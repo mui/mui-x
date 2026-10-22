@@ -503,6 +503,24 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(result.created![0].rrule).to.deep.equal({ freq: 'DAILY', count: 2 });
       expect(result.updated![0].rrule).to.have.property('until');
     });
+
+    it('should truncate the original series to the last day that exists before the occurrence', () => {
+      // Pacific/Apia skipped December 30th, 2011.
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('Pacific/Apia')
+        .singleDay('2011-12-28T09:00:00')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2011-12-31T09:00:00', 'Pacific/Apia');
+
+      const result = applyRecurringUpdateFollowing(adapter, event, occurrenceStart, {
+        id: event.id,
+        title: 'New title',
+      });
+      const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
+
+      expect(adapter.toJsDate(until).toISOString()).to.equal('2011-12-29T10:00:00.000Z'); // midnight, December 29th
+    });
   });
 
   describe('adjustRRuleForAllMove', () => {

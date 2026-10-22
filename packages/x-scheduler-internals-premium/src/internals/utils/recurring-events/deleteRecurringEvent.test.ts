@@ -183,5 +183,20 @@ describe('recurring-events/deleteRecurringEvent', () => {
 
       expect(adapter.getDate(until)).to.equal(2);
     });
+
+    it('should truncate the series to the last day that exists before the occurrence', () => {
+      // Pacific/Apia skipped December 30th, 2011.
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('Pacific/Apia')
+        .singleDay('2011-12-28T09:00:00')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2011-12-31T09:00:00', 'Pacific/Apia');
+
+      const result = applyRecurringDeleteFollowing(adapter, event, occurrenceStart);
+      const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
+
+      expect(adapter.toJsDate(until).toISOString()).to.equal('2011-12-29T10:00:00.000Z'); // midnight, December 29th
+    });
   });
 });

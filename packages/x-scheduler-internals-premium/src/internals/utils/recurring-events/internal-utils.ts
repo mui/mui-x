@@ -27,6 +27,19 @@ export function createStartOfPlainDate(
 }
 
 /**
+ * Creates the adapter value of the first instant of the last day before a plain date that exists
+ * in `timezone`. A day the timezone skips, like December 30th, 2011 in Pacific/Apia, is passed over.
+ */
+export function createStartOfPreviousDay(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  const previousDay = toPlainDateTime(toEpochMs(plainDate, 0, timezone) - 1, timezone).date;
+  return createStartOfPlainDate(adapter, previousDay, timezone);
+}
+
+/**
  * Creates the adapter value of a plain date at the wall-clock time of `time`, in `timezone`.
  * A time that a DST transition skips moves forward by the length of the gap, and a repeated one
  * resolves to its first instant, whatever the timezone of the system (RFC 5545).

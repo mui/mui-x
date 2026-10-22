@@ -21,6 +21,7 @@ import {
 } from '@mui/x-scheduler-internals/internals';
 import {
   createStartOfPlainDate,
+  createStartOfPreviousDay,
   getWeekDayCode,
   mergePlainDateAndTime,
   NOT_LOCALIZED_WEEK_DAYS,
@@ -76,9 +77,9 @@ export function applyRecurringUpdateFollowing(
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrencePlainDate = buildTemporalPlainDate(adapter, occurrenceStart);
-  const untilDate = createStartOfPlainDate(
+  const untilDate = createStartOfPreviousDay(
     adapter,
-    occurrencePlainDate.add({ days: -1 }),
+    occurrencePlainDate,
     adapter.getTimezone(occurrenceStart),
   );
 
