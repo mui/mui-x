@@ -32,22 +32,18 @@ export function createStartOfPreviousDay(
 }
 
 /**
- * Creates the adapter value of a plain date at the wall-clock time of `time`, in `timezone`.
+ * Moves a date to `plainDate`, keeping its time of day on the wall clock of its timezone.
  * A time that a DST transition skips moves forward by the length of the gap, and a repeated one
  * resolves to its first instant, whatever the timezone of the system (RFC 5545).
  */
-export function mergePlainDateAndTime(
+export function moveToPlainDate(
   adapter: Adapter,
+  date: TemporalSupportedObject,
   plainDate: PlainDate,
-  time: TemporalSupportedObject,
-  timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  const timePlainDateTime = toPlainDateTime(adapter.getTime(time), adapter.getTimezone(time));
-  return createAdapterDate(
-    adapter,
-    toEpochMs(plainDate, timePlainDateTime.msInDay, timezone),
-    timezone,
-  );
+  const timezone = adapter.getTimezone(date);
+  const { msInDay } = toPlainDateTime(adapter.getTime(date), timezone);
+  return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
 }
 
 /**

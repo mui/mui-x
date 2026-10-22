@@ -7,7 +7,12 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
-import { buildTemporalPlainDate, getStartOfWeek } from '@mui/x-scheduler-internals/internals';
+import {
+  buildTemporalPlainDate,
+  createPlainDate,
+  getStartOfWeek,
+  ISO_CALENDAR_ID,
+} from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 import { getPlainDateWeekDayCode, getWeekDayCode } from './internal-utils';
@@ -88,7 +93,9 @@ export function getWeeklyDays(
     getStartOfWeek(adapter, visibleDate, weekStartsOn),
   );
   return Array.from({ length: 7 }, (_, i) => {
-    const plainDate = weekStartPlainDate.add({ days: i });
+    // Unlike `add()`, `createPlainDate()` doesn't check the supported range, which the last week of
+    // 9999 passes.
+    const plainDate = createPlainDate(weekStartPlainDate.dayNumber + i, ISO_CALENDAR_ID);
     return { code: getPlainDateWeekDayCode(plainDate), plainDate };
   });
 }
@@ -106,7 +113,7 @@ export function getMonthlyReference(
   return {
     dayOfMonth: plainDate.day,
     code: getPlainDateWeekDayCode(plainDate),
-    ord: computeMonthlyOrdinal(adapter, date.value),
+    ord: computeMonthlyOrdinal(plainDate),
     date: date.value,
   };
 }

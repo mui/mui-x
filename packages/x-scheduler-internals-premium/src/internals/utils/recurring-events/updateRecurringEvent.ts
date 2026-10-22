@@ -11,7 +11,7 @@ import type {
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
+import type { PlainDate, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
   buildTemporalPlainDate,
   extractStandaloneEvent,
@@ -22,7 +22,7 @@ import {
 import {
   getPlainDateWeekDayCode,
   getWeekDayCode,
-  mergePlainDateAndTime,
+  moveToPlainDate,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
@@ -174,7 +174,6 @@ export function applyRecurringUpdateAll(
   // 2) Is the edited occurrence the first of the series (DTSTART)?
   const { start: seriesStart, end: seriesEnd } = originalEvent.dataTimezone;
   const seriesStartPlainDate = buildTemporalPlainDate(adapter, seriesStart.value);
-  const timezone = adapter.getTimezone(seriesStart.value);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
   // 3) Decide new start/end: editing the first occurrence can move DTSTART to another date.
@@ -183,18 +182,13 @@ export function applyRecurringUpdateAll(
     eventUpdatedProperties.start =
       touchedStartDate && editedIsDtstart
         ? changes.start
-        : mergePlainDateAndTime(adapter, seriesStartPlainDate, changes.start, timezone);
+        : moveToPlainDate(adapter, changes.start, seriesStartPlainDate);
   }
   if (changes.end != null) {
     eventUpdatedProperties.end =
       touchedEndDate && editedIsDtstart
         ? changes.end
-        : mergePlainDateAndTime(
-            adapter,
-            buildTemporalPlainDate(adapter, seriesEnd.value),
-            changes.end,
-            timezone,
-          );
+        : moveToPlainDate(adapter, changes.end, buildTemporalPlainDate(adapter, seriesEnd.value));
   }
 
   // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not
@@ -280,20 +274,30 @@ export function adjustRRuleForAllMove(
     ];
     nextRRule.byDay = realignWeeklyByDay(adapter, normalized, occurrenceStart, newStart);
   } else if (rrule.freq === 'MONTHLY') {
-    // BYMONTHDAY → match the new calendar day
-    const newStartPlainDate = buildTemporalPlainDate(adapter, newStart);
-    if (rrule.byMonthDay?.length) {
-      nextRRule.byMonthDay = [newStartPlainDate.day];
-    }
-    // Ordinal BYDAY → recompute ordinal + weekday for newStart
-    if (rrule.byDay?.length) {
-      const code = getPlainDateWeekDayCode(newStartPlainDate);
-      const ord = computeMonthlyOrdinal(adapter, newStart);
-      nextRRule.byDay = [`${ord}${code}` as RecurringEventByDayValue];
-    }
+    return realignMonthlyRule(rrule, buildTemporalPlainDate(adapter, newStart));
   }
 
   return nextRRule;
+}
+
+/**
+ * Realigns a MONTHLY rule on a new start: BYMONTHDAY moves to its day of the month, and an ordinal
+ * BYDAY to its weekday and its ordinal (e.g. 2TU → 3WE).
+ */
+function realignMonthlyRule(
+  rule: SchedulerProcessedEventRecurrenceRule,
+  newStartPlainDate: PlainDate,
+): SchedulerProcessedEventRecurrenceRule {
+  const realignedRule: SchedulerProcessedEventRecurrenceRule = { ...rule };
+  if (rule.byMonthDay?.length) {
+    realignedRule.byMonthDay = [newStartPlainDate.day];
+  }
+  if (rule.byDay?.length) {
+    const ord = computeMonthlyOrdinal(newStartPlainDate);
+    const code = getPlainDateWeekDayCode(newStartPlainDate);
+    realignedRule.byDay = [`${ord}${code}` as RecurringEventByDayValue];
+  }
+  return realignedRule;
 }
 
 /**
@@ -335,7 +339,7 @@ export function decideSplitRRule(
   }
 
   // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
-  const realignedRule: SchedulerProcessedEventRecurrenceRule = { ...originalRule };
+  let realignedRule: SchedulerProcessedEventRecurrenceRule = { ...originalRule };
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
   if (originalRule.freq === 'WEEKLY' && originalRule.byDay?.length && changes.start) {
@@ -348,18 +352,10 @@ export function decideSplitRRule(
   }
   // Freq MONTHLY realignment
   if (originalRule.freq === 'MONTHLY' && changes.start) {
-    // A) BYMONTHDAY → set to the new calendar day
-    const newStartPlainDate = buildTemporalPlainDate(adapter, changes.start);
-    if (originalRule.byMonthDay?.length) {
-      realignedRule.byMonthDay = [newStartPlainDate.day];
-    }
-
-    // B) Ordinal BYDAY → recompute ordinal + weekday for the new date
-    if (originalRule.byDay?.length) {
-      const code = getPlainDateWeekDayCode(newStartPlainDate);
-      const ord = computeMonthlyOrdinal(adapter, changes.start);
-      realignedRule.byDay = [`${ord}${code}` as RecurringEventByDayValue];
-    }
+    realignedRule = realignMonthlyRule(
+      realignedRule,
+      buildTemporalPlainDate(adapter, changes.start),
+    );
   }
 
   // Recalculate COUNT: original minus prior occurrences.
