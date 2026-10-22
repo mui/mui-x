@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventByDayValue,
@@ -6,9 +6,9 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
+import { createAdapterDate } from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import {
-  getAdapterCache,
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
   parsesByDayForMonthlyFrequency,
   parsesByDayForWeeklyFrequency,
@@ -19,11 +19,11 @@ import {
 const UNTIL_UTC_REGEX = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/;
 
 /**
- * Reads a UTC `UNTIL` without going through the host timezone, whose daylight saving gap
- * would shift some times. Returns `null` for a malformed value or a date that does not
+ * Reads a UTC `UNTIL` as an instant without going through the host timezone, whose daylight
+ * saving gap would shift some times. Returns `null` for a malformed value or a date that does not
  * exist: the date setters roll them over (February 31st becomes March 3rd).
  */
-function parseUntilUtc(adapter: Adapter, value: string): TemporalSupportedObject | null {
+function parseUntilUtc(value: string): number | null {
   const match = UNTIL_UTC_REGEX.exec(value);
   if (!match) {
     return null;
@@ -40,7 +40,7 @@ function parseUntilUtc(adapter: Adapter, value: string): TemporalSupportedObject
     date.getUTCHours() === hours &&
     date.getUTCMinutes() === minutes &&
     date.getUTCSeconds() === seconds;
-  return exists ? adapter.date(date.toISOString(), 'default') : null;
+  return exists ? date.getTime() : null;
 }
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -295,7 +295,7 @@ function readRuleString(
 
   if (rruleObject.UNTIL) {
     // The trailing `Z` makes the value a UTC instant (RFC 5545).
-    const parsed = parseUntilUtc(adapter, rruleObject.UNTIL);
+    const parsed = parseUntilUtc(rruleObject.UNTIL);
 
     if (parsed === null) {
       throw new Error(
@@ -305,7 +305,7 @@ function readRuleString(
       );
     }
 
-    rrule.until = adapter.setTimezone(parsed, timezone);
+    rrule.until = createAdapterDate(adapter, parsed, timezone);
   }
 
   return rrule;
@@ -341,8 +341,9 @@ export function serializeRRule(
   }
 
   if (rule.until) {
-    const utcDate = adapter.setTimezone(rule.until, 'UTC');
-    const untilIso = adapter.formatByString(utcDate, getAdapterCache(adapter).untilFormat);
+    // RFC 5545 writes UNTIL as a UTC date-time like `20250105T093000Z`.
+    const isoString = new Date(adapter.getTime(rule.until)).toISOString();
+    const untilIso = `${isoString.slice(0, 19).replace(/[-:]/g, '')}Z`;
 
     parts.push(`UNTIL=${untilIso}`);
   }

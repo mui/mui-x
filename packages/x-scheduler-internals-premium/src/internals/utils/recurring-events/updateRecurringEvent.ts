@@ -18,10 +18,11 @@ import {
   dateToEventString,
   getDateKey,
   getOccurrenceEnd,
-  mergeDateAndTime,
 } from '@mui/x-scheduler-internals/internals';
 import {
+  createStartOfPlainDate,
   getWeekDayCode,
+  mergePlainDateAndTime,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
@@ -74,8 +75,12 @@ export function applyRecurringUpdateFollowing(
   const newStart = changes.start ?? occurrenceStart;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
-  const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
-  const untilDate = adapter.addDays(occurrenceDayStart, -1);
+  const occurrencePlainDate = buildTemporalPlainDate(adapter, occurrenceStart);
+  const untilDate = createStartOfPlainDate(
+    adapter,
+    occurrencePlainDate.add({ days: -1 }),
+    adapter.getTimezone(occurrenceStart),
+  );
 
   const originalRule = originalEvent.dataTimezone.rrule!;
   const { count, until, ...baseRule } = originalRule;
@@ -133,7 +138,6 @@ export function applyRecurringUpdateFollowing(
   };
 
   // 3) Drop the original series when no occurrence remains before the edit, otherwise truncate it.
-  const occurrencePlainDate = buildTemporalPlainDate(adapter, occurrenceStart);
   if (!RecurringSeries.fromEvent(adapter, originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
     return { created: [newEvent], deleted: [originalEvent.id] };
   }
@@ -166,15 +170,22 @@ export function applyRecurringUpdateAll(
 
   // 1) Detect if caller changed the date part of start or end (vs only time)
   const occurrenceEnd = getOccurrenceEnd({ adapter, occurrenceStart, event: originalEvent });
+  const occurrencePlainDate = buildTemporalPlainDate(adapter, occurrenceStart);
   const touchedStartDate =
-    changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
-  const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
+    changes.start != null &&
+    !buildTemporalPlainDate(adapter, changes.start).equals(occurrencePlainDate);
+  const touchedEndDate =
+    changes.end != null &&
+    !buildTemporalPlainDate(adapter, changes.end).equals(
+      buildTemporalPlainDate(adapter, occurrenceEnd),
+    );
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const editedIsDtstart = adapter.isSameDay(
-    occurrenceStart,
-    originalEvent.dataTimezone.start.value,
-  );
+  const { start: seriesStart, end: seriesEnd } = originalEvent.dataTimezone;
+  const seriesStartPlainDate = buildTemporalPlainDate(adapter, seriesStart.value);
+  const seriesEndPlainDate = buildTemporalPlainDate(adapter, seriesEnd.value);
+  const timezone = adapter.getTimezone(seriesStart.value);
+  const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
   // 3) Decide new start/end
   if (changes.start != null) {
@@ -185,18 +196,20 @@ export function applyRecurringUpdateAll(
         eventUpdatedProperties.start = changes.start;
       } else {
         // Not first: keep original DTSTART date, merge only time
-        eventUpdatedProperties.start = mergeDateAndTime(
+        eventUpdatedProperties.start = mergePlainDateAndTime(
           adapter,
-          originalEvent.dataTimezone.start.value,
+          seriesStartPlainDate,
           changes.start,
+          timezone,
         );
       }
     } else {
       // Same day -> merge time into original date
-      eventUpdatedProperties.start = mergeDateAndTime(
+      eventUpdatedProperties.start = mergePlainDateAndTime(
         adapter,
-        originalEvent.dataTimezone.start.value,
+        seriesStartPlainDate,
         changes.start,
+        timezone,
       );
     }
   }
@@ -206,17 +219,19 @@ export function applyRecurringUpdateAll(
       if (editedIsDtstart) {
         eventUpdatedProperties.end = changes.end;
       } else {
-        eventUpdatedProperties.end = mergeDateAndTime(
+        eventUpdatedProperties.end = mergePlainDateAndTime(
           adapter,
-          originalEvent.dataTimezone.end.value,
+          seriesEndPlainDate,
           changes.end,
+          timezone,
         );
       }
     } else {
-      eventUpdatedProperties.end = mergeDateAndTime(
+      eventUpdatedProperties.end = mergePlainDateAndTime(
         adapter,
-        originalEvent.dataTimezone.end.value,
+        seriesEndPlainDate,
         changes.end,
+        timezone,
       );
     }
   }
@@ -274,7 +289,11 @@ export function applyRecurringUpdateOnlyThis(
 
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),
-    adapter.startOfDay(occurrenceStart),
+    createStartOfPlainDate(
+      adapter,
+      buildTemporalPlainDate(adapter, occurrenceStart),
+      adapter.getTimezone(occurrenceStart),
+    ),
   ];
   const created = [extractStandaloneEvent(originalEvent, stringifiedChanges)];
 
@@ -315,7 +334,7 @@ export function adjustRRuleForAllMove(
   } else if (rrule.freq === 'MONTHLY') {
     // BYMONTHDAY → match the new calendar day
     if (rrule.byMonthDay?.length) {
-      nextRRule.byMonthDay = [adapter.getDate(newStart)];
+      nextRRule.byMonthDay = [buildTemporalPlainDate(adapter, newStart).day];
     }
     // Ordinal BYDAY → recompute ordinal + weekday for newStart
     if (rrule.byDay?.length) {
@@ -374,7 +393,7 @@ export function decideSplitRRule(
     realignedRule.byDay = realignWeeklyByDay(
       adapter,
       originalRule.byDay as RecurringEventWeekDayCode[],
-      adapter.startOfDay(splitStart),
+      splitStart,
       changes.start,
     );
   }
@@ -382,7 +401,7 @@ export function decideSplitRRule(
   if (originalRule.freq === 'MONTHLY' && changes.start) {
     // A) BYMONTHDAY → set to the new calendar day
     if (originalRule.byMonthDay?.length) {
-      realignedRule.byMonthDay = [adapter.getDate(changes.start)];
+      realignedRule.byMonthDay = [buildTemporalPlainDate(adapter, changes.start).day];
     }
 
     // B) Ordinal BYDAY → recompute ordinal + weekday for the new date

@@ -628,6 +628,38 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(adapter.getDate(adapter.setTimezone(newStart, 'Asia/Tokyo'))).to.equal(10);
     });
 
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should move the series to the first instant of a repeated time, whatever the timezone of the system',
+      () => {
+        // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: 02:30 comes twice.
+        setSystemTimezone('America/New_York');
+        const original = EventBuilder.new(adapter)
+          .span('2026-10-25T08:00:00Z', '2026-10-25T09:00:00Z') // 09:00 CET
+          .withDataTimezone('Europe/Paris')
+          .rrule({ freq: 'DAILY' })
+          .toProcessed();
+        const inParis = (value: string) =>
+          adapter.setTimezone(adapter.date(value, 'default'), 'Europe/Paris');
+
+        // Move a later occurrence to 02:30: the series keeps its first day at 02:30.
+        const updated = applyRecurringUpdateAll(
+          adapter,
+          original,
+          inParis('2026-10-27T08:00:00Z'),
+          {
+            id: original.id,
+            start: inParis('2026-10-27T01:30:00Z'), // 02:30 CET
+            end: inParis('2026-10-27T01:45:00Z'),
+          },
+        );
+
+        expect(adapter.toJsDate(updated.updated![0].start!).toISOString()).to.equal(
+          '2026-10-25T00:30:00.000Z', // the first 02:30, CEST
+        );
+      },
+    );
+
     it('should use the rrule provided in changes when present', () => {
       const occurrenceStart = defaultEvent.dataTimezone.start.value;
       const changes: SchedulerEventUpdatedProperties = {

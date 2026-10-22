@@ -1,5 +1,12 @@
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  buildTemporalPlainDate,
+  createAdapterDate,
+  toEpochMs,
+  toPlainDateTime,
+} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
@@ -7,33 +14,35 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 
-const adapterCache = new WeakMap<
-  Adapter,
-  {
-    /**
-     * Date format string for UNTIL serialization (RFC5545 format: YYYYMMDDTHHmmssZ)
-     */
-    untilFormat: string;
-  }
->();
+/**
+ * Creates the adapter value of the first instant of a plain date in `timezone`. A day whose
+ * midnight a DST transition skips starts at the end of the gap.
+ */
+export function createStartOfPlainDate(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
+}
 
 /**
- * Returns cached adapter data.
+ * Creates the adapter value of a plain date at the wall-clock time of `time`, in `timezone`.
+ * A time that a DST transition skips moves forward by the length of the gap, and a repeated one
+ * resolves to its first instant, whatever the timezone of the system (RFC 5545).
  */
-export function getAdapterCache(adapter: Adapter) {
-  let cache = adapterCache.get(adapter);
-  if (!cache) {
-    const f = adapter.formats;
-    const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
-    const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
-    const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
-    const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
-    const untilFormat = `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
-
-    cache = { untilFormat };
-    adapterCache.set(adapter, cache);
-  }
-  return cache;
+export function mergePlainDateAndTime(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  time: TemporalSupportedObject,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  const timePlainDateTime = toPlainDateTime(adapter.getTime(time), adapter.getTimezone(time));
+  return createAdapterDate(
+    adapter,
+    toEpochMs(plainDate, timePlainDateTime.msInDay, timezone),
+    timezone,
+  );
 }
 
 /**

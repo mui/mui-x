@@ -7,9 +7,9 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
-import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
+import { buildTemporalPlainDate, getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
-import { getWeekDayCode } from './internal-utils';
+import { createStartOfPlainDate, getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS } from './internal-utils';
 
 export function computePresets(
   adapter: Adapter,
@@ -18,7 +18,11 @@ export function computePresets(
   return {
     DAILY: { freq: 'DAILY', interval: 1 },
     WEEKLY: { freq: 'WEEKLY', interval: 1, byDay: [getWeekDayCode(adapter, date.value)] },
-    MONTHLY: { freq: 'MONTHLY', interval: 1, byMonthDay: [adapter.getDate(date.value)] },
+    MONTHLY: {
+      freq: 'MONTHLY',
+      interval: 1,
+      byMonthDay: [buildTemporalPlainDate(adapter, date.value).day],
+    },
     YEARLY: { freq: 'YEARLY', interval: 1 },
   };
 }
@@ -56,7 +60,7 @@ export function getDefaultPresetKey(
     }
     case 'MONTHLY': {
       // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-      const day = adapter.getDate(occurrenceStart.value);
+      const day = buildTemporalPlainDate(adapter, occurrenceStart.value).day;
       const byMonthDay = rule.byMonthDay ?? [];
       const matchesDefaultByMonthDay =
         byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
@@ -81,10 +85,15 @@ export function getWeeklyDays(
   visibleDate: TemporalSupportedObject,
   weekStartsOn?: WeekStartsOn,
 ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] {
-  const start = getStartOfWeek(adapter, visibleDate, weekStartsOn);
+  const weekStart = getStartOfWeek(adapter, visibleDate, weekStartsOn);
+  const weekStartPlainDate = buildTemporalPlainDate(adapter, weekStart);
+  const timezone = adapter.getTimezone(weekStart);
   return Array.from({ length: 7 }, (_, i) => {
-    const date = adapter.addDays(start, i);
-    return { code: getWeekDayCode(adapter, date), date };
+    const dayPlainDate = weekStartPlainDate.add({ days: i });
+    return {
+      code: NOT_LOCALIZED_WEEK_DAYS[dayPlainDate.dayOfWeek - 1],
+      date: createStartOfPlainDate(adapter, dayPlainDate, timezone),
+    };
   });
 }
 
@@ -98,7 +107,7 @@ export function getMonthlyReference(
   date: TemporalSupportedObject;
 } {
   return {
-    dayOfMonth: adapter.getDate(date.value),
+    dayOfMonth: buildTemporalPlainDate(adapter, date.value).day,
     code: getWeekDayCode(adapter, date.value),
     ord: computeMonthlyOrdinal(adapter, date.value),
     date: date.value,

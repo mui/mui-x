@@ -6,6 +6,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { createStartOfPlainDate } from './internal-utils';
 import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
@@ -50,7 +51,11 @@ export function applyRecurringDeleteOnlyThis(
 ): UpdateEventsParameters {
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),
-    adapter.startOfDay(occurrenceStart),
+    createStartOfPlainDate(
+      adapter,
+      buildTemporalPlainDate(adapter, occurrenceStart),
+      adapter.getTimezone(occurrenceStart),
+    ),
   ];
 
   if (!RecurringSeries.fromEvent(adapter, originalEvent, exDates).hasOccurrence()) {
@@ -78,7 +83,11 @@ export function applyRecurringDeleteFollowing(
     return { deleted: [originalEvent.id] };
   }
 
-  const untilDate = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
+  const untilDate = createStartOfPlainDate(
+    adapter,
+    occurrencePlainDate.add({ days: -1 }),
+    adapter.getTimezone(occurrenceStart),
+  );
   const { count, until, ...baseRule } = originalEvent.dataTimezone.rrule!;
   return {
     updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
