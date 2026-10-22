@@ -3,7 +3,14 @@ import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../m
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { PlainDate } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
-import { getEndOfDayMs, getStartOfDayMs, localToEpochMs, toPlainDateTime } from './timeZone';
+import {
+  getEndOfDayMs,
+  getStartOfDayMs,
+  localToEpochMs,
+  toEpochMs,
+  toPlainDateTime,
+} from './timeZone';
+import { addDaysToPlainDate } from './plainDate';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.
@@ -24,6 +31,32 @@ export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): stri
  */
 export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
   return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).date;
+}
+
+/**
+ * Creates the adapter value of the first instant of a plain date in `timezone`, the reverse of
+ * `buildTemporalPlainDate()`. A day whose midnight a DST transition skips starts at the end of the
+ * gap.
+ */
+export function createStartOfPlainDate(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
+}
+
+/**
+ * Creates the adapter value of the last instant of a plain date in `timezone`, just before the next
+ * day starts. When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
+ */
+export function createEndOfPlainDate(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  const nextPlainDate = addDaysToPlainDate(plainDate, 1);
+  return createAdapterDate(adapter, toEpochMs(nextPlainDate, 0, timezone) - 1, timezone);
 }
 
 const epochValues = new WeakMap<Adapter, TemporalSupportedObject>();

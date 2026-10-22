@@ -13,10 +13,9 @@ import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList, getDayListFromPlainDates } from '../get-day-list';
 import {
   buildTemporalPlainDate,
-  createAdapterDate,
+  createStartOfPlainDate,
 } from '../internals/utils/plain-date-utils/adapter';
-import { toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
-import { createPlainDate } from '../internals/utils/base-temporal/PlainDate';
+import { addDaysToPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -60,11 +59,9 @@ const horizonEndPlainDate = createSelectorMemoized(
       return rangeEndPlainDate;
     }
     // A day count beyond the default horizon still scans at least the displayed days
-    // `createPlainDate()` doesn't check the range, so the horizon can pass the last supported day.
-    const visiblePlainDate = buildTemporalPlainDate(adapter, visibleDate);
-    const horizonPlainDate = createPlainDate(
-      visiblePlainDate.dayNumber + AGENDA_MAX_HORIZON_DAYS - 1,
-      visiblePlainDate.calendarId,
+    const horizonPlainDate = addDaysToPlainDate(
+      buildTemporalPlainDate(adapter, visibleDate),
+      AGENDA_MAX_HORIZON_DAYS - 1,
     );
     return horizonPlainDate.dayNumber > rangeEndPlainDate.dayNumber
       ? horizonPlainDate
@@ -132,24 +129,23 @@ const visibleDays = createSelectorMemoized(
       scannedUntilPlainDate.dayNumber < horizonPlainDate.dayNumber
     ) {
       // Extend forward by one more chunk, without passing the horizon
-      const nextStartPlainDate = createPlainDate(
-        scannedUntilPlainDate.dayNumber + 1,
-        scannedUntilPlainDate.calendarId,
+      const nextStartPlainDate = addDaysToPlainDate(scannedUntilPlainDate, 1);
+      const chunkEndPlainDate = addDaysToPlainDate(
+        nextStartPlainDate,
+        Math.max(amount, AGENDA_VIEW_DAYS_AMOUNT) - 1,
       );
-      const chunkEndDayNumber =
-        nextStartPlainDate.dayNumber + Math.max(amount, AGENDA_VIEW_DAYS_AMOUNT) - 1;
       scannedUntilPlainDate =
-        chunkEndDayNumber < horizonPlainDate.dayNumber
-          ? createPlainDate(chunkEndDayNumber, nextStartPlainDate.calendarId)
+        chunkEndPlainDate.dayNumber < horizonPlainDate.dayNumber
+          ? chunkEndPlainDate
           : horizonPlainDate;
 
-      const more = getDayListFromPlainDates(
+      const more = getDayListFromPlainDates({
         adapter,
-        nextStartPlainDate,
-        scannedUntilPlainDate,
+        firstPlainDate: nextStartPlainDate,
+        lastPlainDate: scannedUntilPlainDate,
         timezone,
-        !showWeekends,
-      );
+        excludeWeekends: !showWeekends,
+      });
 
       accumulatedDays = accumulatedDays.concat(more);
 
@@ -202,7 +198,7 @@ export const eventCalendarAgendaSelectors = {
       const timezone = adapter.getTimezone(range.end);
       return {
         start: firstDay,
-        end: createAdapterDate(adapter, toEpochMs(horizonPlainDate, 0, timezone), timezone),
+        end: createStartOfPlainDate(adapter, horizonPlainDate, timezone),
       };
     },
   ),

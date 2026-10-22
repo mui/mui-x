@@ -13,3 +13,4 @@ export {
   getPlainDateKey,
   normalizeAllDayBounds,
 } from './adapter';
+export { addDaysToPlainDate, isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';

@@ -109,9 +109,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
   event: SchedulerEventOccurrence,
   days: SchedulerProcessedDate[],
   // The day numbers of `days`, which the callers that loop over many occurrences read once.
-  dayNumbers: readonly number[] = days.map((day) =>
-    toLocalDayNumber(day.timestamp, event.displayTimezone.timezone),
-  ),
+  dayNumbers: readonly number[],
 ) {
   const { start, end, timezone } = event.displayTimezone;
   const startDayNumber = toLocalDayNumber(start.timestamp, timezone);

@@ -3,8 +3,8 @@ import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapte
 import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import type { TemporalSupportedObject } from '../models';
 import type { DateLocale } from './useAdapter.types';
-import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
+import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 
 const DEFAULT_ADAPTER = new TemporalAdapterDateFns();
 
@@ -14,14 +14,6 @@ export function useAdapter(dateLocale?: DateLocale) {
     () => (dateLocale ? new TemporalAdapterDateFns({ locale: dateLocale }) : DEFAULT_ADAPTER),
     [dateLocale],
   );
-}
-
-/**
- * Checks if the given plain date is a weekend (Saturday or Sunday).
- */
-export function isWeekendPlainDate(plainDate: PlainDate): boolean {
-  // ISO weekdays 6 and 7 are Saturday and Sunday.
-  return plainDate.dayOfWeek >= 6;
 }
 
 /**
