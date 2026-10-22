@@ -332,4 +332,16 @@ describe('<DataGrid /> - Column headers', () => {
     expect(tooltip!.getAttribute('data-title')).to.equal('Sort');
     expect(sortButton.getAttribute('title')).to.equal(null);
   });
+
+  it('should not pass the `field` prop to the sort button element', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} />
+      </div>,
+    );
+
+    const sortButton = screen.getByRole('grid').querySelector('.MuiDataGrid-sortButton')!;
+    expect(sortButton).not.to.equal(null);
+    expect(sortButton.getAttribute('field')).to.equal(null);
+  });
 });
