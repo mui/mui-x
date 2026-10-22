@@ -1,4 +1,5 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS, getPresetPxPerDay } from './preset-utils';
 import type { EventTimelinePremiumPreset } from '../../models';
@@ -18,6 +19,25 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
       );
       expect(count).to.equal(4 * 24);
     });
+  });
+
+  describe('navigate', () => {
+    it.skipIf(!isJSDOM)(
+      'should keep the time of day of the visible date, whatever the timezone of the system',
+      () => {
+        setSystemTimezone('Europe/Paris');
+        const visibleDate = adapter.date('2026-10-24T02:00:00', 'Europe/London');
+        // London leaves summer time on October 25th, 2026, when 02:00 becomes 01:00 again.
+        const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.navigate(
+          adapter,
+          visibleDate,
+          1,
+        );
+        expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
+          '2026-10-25T02:00:00.000Z',
+        );
+      },
+    );
   });
 });
 

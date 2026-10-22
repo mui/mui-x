@@ -1,6 +1,14 @@
 import * as React from 'react';
 import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
-import { getEndOfWeek, getStartOfWeek } from '@mui/x-scheduler-internals/internals';
+import {
+  buildTemporalPlainDate,
+  createAdapterDate,
+  getEndOfWeek,
+  getStartOfWeek,
+  toEpochMs,
+  toPlainDateTime,
+} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate, PlainDateDuration } from '@mui/x-scheduler-internals/internals';
 import type {
   TemporalSupportedObject,
   EventTimelinePremiumPreset,
@@ -57,6 +65,69 @@ function formatHourLabel(adapter: TemporalAdapter, hour: number, ampm: boolean) 
   return adapter.formatByString(adapter.setHours(getDstFreeTemplateDay(adapter), hour), pattern);
 }
 
+// The ranges of the presets are read and moved on the plain dates of their timezone. A day whose
+// midnight a DST transition skips starts at the end of the gap, and a wall-clock time that a
+// transition repeats resolves to its first instant, like the wall times of the recurring events.
+
+/**
+ * The first instant of the day `getPlainDate()` returns for the day of `date`.
+ */
+function getStartOfPlainDate(
+  adapter: TemporalAdapter,
+  date: TemporalSupportedObject,
+  getPlainDate: (plainDate: PlainDate) => PlainDate = (plainDate) => plainDate,
+) {
+  const timezone = adapter.getTimezone(date);
+  const plainDate = getPlainDate(buildTemporalPlainDate(adapter, date));
+  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
+}
+
+/**
+ * The last instant of the day `getPlainDate()` returns for the day of `date`, just before the next
+ * day starts.
+ */
+function getEndOfPlainDate(
+  adapter: TemporalAdapter,
+  date: TemporalSupportedObject,
+  getPlainDate: (plainDate: PlainDate) => PlainDate,
+) {
+  const timezone = adapter.getTimezone(date);
+  const nextPlainDate = getPlainDate(buildTemporalPlainDate(adapter, date)).add({ days: 1 });
+  return createAdapterDate(adapter, toEpochMs(nextPlainDate, 0, timezone) - 1, timezone);
+}
+
+/**
+ * Moves a date by a duration of the calendar, keeping its time of day on the wall clock.
+ */
+function addToDate(
+  adapter: TemporalAdapter,
+  date: TemporalSupportedObject,
+  duration: PlainDateDuration,
+) {
+  const timezone = adapter.getTimezone(date);
+  const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
+  return createAdapterDate(
+    adapter,
+    toEpochMs(plainDateTime.date.add(duration), plainDateTime.msInDay, timezone),
+    timezone,
+  );
+}
+
+/**
+ * The number of days from the day of `start` to the day of `end`, both included.
+ */
+function getDayCount(
+  adapter: TemporalAdapter,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
+) {
+  return (
+    buildTemporalPlainDate(adapter, end).dayNumber -
+    buildTemporalPlainDate(adapter, start).dayNumber +
+    1
+  );
+}
+
 export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
   Record<EventTimelinePremiumPreset, PresetDefinition>
 > = {
@@ -75,14 +146,14 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,
-    getStartDate: (adapter, visibleDate) => adapter.startOfDay(visibleDate),
+    getStartDate: (adapter, visibleDate) => getStartOfPlainDate(adapter, visibleDate),
     getEndDate: (adapter, start, unitCount) =>
-      adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
+      getEndOfPlainDate(adapter, start, (plainDate) => plainDate.add({ days: unitCount - 1 })),
     // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
     // the CSS tick count to `days × 24`: the hour row is a wall-clock grid, so it emits
     // the same cell count on every day, DST transitions included.
     getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
-    navigate: (adapter, date, amount) => adapter.addDays(date, amount),
+    navigate: (adapter, date, amount) => addToDate(adapter, date, { days: amount }),
   },
   dayAndMonth: {
     timeResolution: 'day',
@@ -100,10 +171,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       },
     ],
     unitCount: 8 * 7, // 8 weeks
-    getStartDate: (adapter, visibleDate) => adapter.startOfDay(visibleDate),
+    getStartDate: (adapter, visibleDate) => getStartOfPlainDate(adapter, visibleDate),
     getEndDate: (adapter, start, unitCount) =>
-      adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
-    navigate: (adapter, date, amount) => adapter.addDays(date, amount),
+      getEndOfPlainDate(adapter, start, (plainDate) => plainDate.add({ days: unitCount - 1 })),
+    navigate: (adapter, date, amount) => addToDate(adapter, date, { days: amount }),
   },
   dayAndWeek: {
     timeResolution: 'day',
@@ -120,9 +191,9 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     getStartDate: (adapter, visibleDate, weekStartsOn) =>
       getStartOfWeek(adapter, visibleDate, weekStartsOn),
     getEndDate: (adapter, start, unitCount, weekStartsOn) =>
-      getEndOfWeek(adapter, adapter.addWeeks(start, unitCount - 1), weekStartsOn),
-    getCssUnitCount: (adapter, start, end) => adapter.differenceInDays(end, start) + 1,
-    navigate: (adapter, date, amount) => adapter.addWeeks(date, amount),
+      getEndOfWeek(adapter, addToDate(adapter, start, { weeks: unitCount - 1 }), weekStartsOn),
+    getCssUnitCount: getDayCount,
+    navigate: (adapter, date, amount) => addToDate(adapter, date, { weeks: amount }),
   },
   monthAndYear: {
     timeResolution: 'day',
@@ -132,21 +203,31 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       { unit: 'month', formatDate: formatMonth3Letters },
     ],
     unitCount: 3 * 12, // 3 years
-    getStartDate: (adapter, visibleDate) => adapter.startOfMonth(visibleDate),
+    getStartDate: (adapter, visibleDate) =>
+      getStartOfPlainDate(adapter, visibleDate, (plainDate) => plainDate.with({ day: 1 })),
+    // The last day of the month `unitCount - 1` months after the first.
     getEndDate: (adapter, start, unitCount) =>
-      adapter.endOfMonth(adapter.addMonths(start, unitCount - 1)),
-    getCssUnitCount: (adapter, start, end) => adapter.differenceInDays(end, start) + 1,
-    navigate: (adapter, date, amount) => adapter.addMonths(date, amount),
+      getEndOfPlainDate(adapter, start, (plainDate) =>
+        plainDate.with({ day: 1 }).add({ months: unitCount }).add({ days: -1 }),
+      ),
+    getCssUnitCount: getDayCount,
+    navigate: (adapter, date, amount) => addToDate(adapter, date, { months: amount }),
   },
   year: {
     timeResolution: 'year',
     tickWidth: 200,
     headers: [{ unit: 'year', formatDate: formatYear }],
     unitCount: 30, // 30 years
-    getStartDate: (adapter, visibleDate) => adapter.startOfYear(visibleDate),
+    getStartDate: (adapter, visibleDate) =>
+      getStartOfPlainDate(adapter, visibleDate, (plainDate) =>
+        plainDate.with({ month: 1, day: 1 }),
+      ),
+    // The last day of the year `unitCount - 1` years after the first.
     getEndDate: (adapter, start, unitCount) =>
-      adapter.endOfYear(adapter.addYears(start, unitCount - 1)),
-    navigate: (adapter, date, amount) => adapter.addYears(date, amount),
+      getEndOfPlainDate(adapter, start, (plainDate) =>
+        plainDate.with({ month: 1, day: 1 }).add({ years: unitCount }).add({ days: -1 }),
+      ),
+    navigate: (adapter, date, amount) => addToDate(adapter, date, { years: amount }),
   },
 };
 
