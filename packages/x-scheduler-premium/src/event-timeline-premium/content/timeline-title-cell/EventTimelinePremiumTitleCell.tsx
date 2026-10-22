@@ -34,13 +34,13 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
 })(({ theme }) => ({
   flex: '0 0 auto',
   width: 'var(--title-column-width)',
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   padding: theme.spacing(2),
   // Indent each level so a child's toggle center lines up under its parent's
   // legend dot center: half the toggle + the gap + half the dot.
-  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ((${TOGGLE_SIZE}px + ${DOT_SIZE}px) / 2 + ${theme.spacing(1)}))`,
+  paddingInlineStart: `calc(${theme.spacing(2)} + var(--resource-depth) * ((${TOGGLE_SIZE}px + ${DOT_SIZE}px) / 2 + ${theme.spacing(1)}))`,
   alignContent: 'start',
   fontSize: theme.typography.body2.fontSize,
   display: 'flex',

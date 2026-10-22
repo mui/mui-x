@@ -46,12 +46,6 @@ interface SchedulerProcessedEventBase {
      * */
     timezone: TemporalTimezone;
     /**
-     * Recurrence projected to the display timezone so the UI reflects
-     * what the user actually experiences (e.g. displayed weekdays).
-     * Must be converted back to the dataTimezone representation when persisted.
-     */
-    rrule?: SchedulerProcessedEventRecurrenceRule;
-    /**
      * Exception dates projected to the display timezone for UI purposes.
      * Must be converted back to the dataTimezone representation when persisted.
      */
@@ -110,7 +104,8 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
      * */
     timezone: TemporalTimezone;
     /**
-     * The recurrence rule for the event.
+     * The recurrence rule for the event, expressed in the event's timezone (RFC 5545 evaluates
+     * it as local time in the DTSTART timezone). The event dialog reads and writes it there.
      * If not defined, the event will have only one occurrence.
      */
     rrule?: SchedulerProcessedEventRecurrenceRule;
@@ -501,4 +496,13 @@ export interface SchedulerEventCreationConfig {
    * data with no resource at all defaults to multiple.
    */
   canHaveMultipleResources?: boolean;
+}
+
+export interface SchedulerEventDeletionConfig {
+  /**
+   * Whether a confirmation dialog is shown before deleting an event.
+   * Recurring events handled by the recurring scope dialog are not asked twice.
+   * @default true
+   */
+  confirmation: boolean;
 }

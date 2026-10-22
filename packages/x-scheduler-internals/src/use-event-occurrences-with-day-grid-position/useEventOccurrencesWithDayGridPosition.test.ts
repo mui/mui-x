@@ -5,6 +5,7 @@ import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWit
 import { processDate } from '../process-date';
 import type { SchedulerProcessedEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
+import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const days = [
@@ -18,7 +19,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days,
-        events,
+        eventRangeIndex: createEventRangeIndex(events, adapter, false),
         visibleResources: {},
         displayTimezone: 'default',
         recurringEventsPlugin: null,

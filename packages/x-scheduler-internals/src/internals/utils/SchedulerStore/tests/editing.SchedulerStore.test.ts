@@ -1,17 +1,18 @@
 import {
   adapter,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   premiumStoreClasses,
   ResourceBuilder,
   storeClasses,
 } from 'test/utils/scheduler';
-import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEvent, SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { vi, describe, it, expect } from 'vitest';
-import { schedulerOtherSelectors } from '../../../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../../scheduler-selectors';
 import { processDate } from '../../../../process-date';
 import { getOccurrenceKey, getRecurringOccurrenceKey } from '../../event-utils';
 
@@ -22,16 +23,23 @@ const DEFAULT_PARAMS = {
 
 const RRULE = { freq: 'DAILY' } as any;
 
+// Mirrors `datesNotWritableReason` in `SchedulerStore.ts` (not exported): `toWarnDev` matches by
+// `includes`, so asserting only the first line of a warning never pins this text. Every fixture
+// in this file locks `start` only.
+const DATES_NOT_WRITABLE_REASON =
+  '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.';
+
 // A minimal edited occurrence of a recurring series (only the fields `repointEditingOccurrence` reads).
 function armRecurringOccurrence(store: any) {
+  const start = processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter);
+  const end = processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter);
   const editedOccurrence = {
     id: 'standup',
     key: 'standup::2025-07-07',
-    displayTimezone: {
-      start: processDate(adapter.date('2025-07-07T09:00:00Z', 'default'), adapter),
-      end: processDate(adapter.date('2025-07-07T10:00:00Z', 'default'), adapter),
-      rrule: RRULE,
-    },
+    displayTimezone: { start, end },
+    // Present on every real occurrence: without it the repoint skips the data-timezone
+    // identity branch these tests are about.
+    dataTimezone: { timezone: 'default', start, end, rrule: RRULE },
   } as any;
   store.startEditing(editedOccurrence, 'armed');
 }
@@ -48,22 +56,25 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         armRecurringOccurrence(store);
 
-        (store as any).repointEditingOccurrence(
-          'detached-event',
-          newStart,
-          newEnd,
-          false,
-          'default',
-        );
+        (store as any).repointEditingOccurrence({
+          eventId: 'detached-event',
+          start: newStart,
+          end: newEnd,
+          isRecurring: false,
+          dataStart: newStart,
+          dataEnd: newEnd,
+        });
 
-        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
+        const occurrence = schedulerOtherSelectors.editingOccurrence(
+          store.state,
+        ) as SchedulerEventOccurrence;
         expect(occurrence.id).to.equal('detached-event');
         // A detached one-off keys by the plain event id (no `::day` suffix)...
         expect(occurrence.key).to.equal(getOccurrenceKey('detached-event'));
         expect(occurrence.key).to.not.contain('::');
         // ...and drops its recurrence rule, so the toolbar's Delete removes it directly instead of
         // reopening the recurring scope dialog.
-        expect(occurrence.displayTimezone.rrule).to.equal(undefined);
+        expect(occurrence.dataTimezone.rrule).to.equal(undefined);
         expect(occurrence.displayTimezone.start.value).toEqualDateTime(newStart);
         expect(occurrence.displayTimezone.end.value).toEqualDateTime(newEnd);
       });
@@ -72,15 +83,18 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
         armRecurringOccurrence(store);
 
-        (store as any).repointEditingOccurrence(
-          'following-event',
-          newStart,
-          newEnd,
-          true,
-          'default',
-        );
+        (store as any).repointEditingOccurrence({
+          eventId: 'following-event',
+          start: newStart,
+          end: newEnd,
+          isRecurring: true,
+          dataStart: newStart,
+          dataEnd: newEnd,
+        });
 
-        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
+        const occurrence = schedulerOtherSelectors.editingOccurrence(
+          store.state,
+        ) as SchedulerEventOccurrence;
         expect(occurrence.id).to.equal('following-event');
         // The new series still keys per-occurrence (event id + day)...
         expect(occurrence.key).to.equal(
@@ -88,7 +102,7 @@ storeClasses.forEach((storeClass) => {
         );
         expect(occurrence.key).to.contain('::');
         // ...and stays recurring, so its Delete keeps offering the scope dialog.
-        expect(occurrence.displayTimezone.rrule).to.equal(RRULE);
+        expect(occurrence.dataTimezone.rrule).to.equal(RRULE);
         expect(occurrence.displayTimezone.start.value).toEqualDateTime(newStart);
         expect(occurrence.displayTimezone.end.value).toEqualDateTime(newEnd);
       });
@@ -101,13 +115,14 @@ storeClasses.forEach((storeClass) => {
         const displayStart = adapter.date('2025-07-08T23:00:00', 'America/New_York');
         const displayEnd = adapter.addHours(displayStart, 1);
 
-        (store as any).repointEditingOccurrence(
-          'following-event',
-          displayStart,
-          displayEnd,
-          true,
-          'UTC',
-        );
+        (store as any).repointEditingOccurrence({
+          eventId: 'following-event',
+          start: displayStart,
+          end: displayEnd,
+          isRecurring: true,
+          dataStart: adapter.setTimezone(displayStart, 'UTC'),
+          dataEnd: adapter.setTimezone(displayEnd, 'UTC'),
+        });
 
         const occurrence = schedulerOtherSelectors.editingOccurrence(store.state)!;
         // Rendered keys expand in the data timezone, so the repointed key must match the data-tz day...
@@ -127,13 +142,14 @@ storeClasses.forEach((storeClass) => {
       it('should be a no-op when nothing is being edited', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
 
-        (store as any).repointEditingOccurrence(
-          'detached-event',
-          newStart,
-          newEnd,
-          false,
-          'default',
-        );
+        (store as any).repointEditingOccurrence({
+          eventId: 'detached-event',
+          start: newStart,
+          end: newEnd,
+          isRecurring: false,
+          dataStart: newStart,
+          dataEnd: newEnd,
+        });
 
         expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
       });
@@ -287,7 +303,8 @@ storeClasses.forEach((storeClass) => {
   });
 });
 
-// A recurring scope change must only re-point the surface when the armed occurrence is the resized one.
+// A recurring scope change re-points the surface only when the armed occurrence is the changed one,
+// and drops it when an in-place change moves that occurrence off its day or edits the rule.
 premiumStoreClasses.forEach((storeClass) => {
   describe(`Editing recurring scope - ${storeClass.name}`, () => {
     const RECURRING_EVENT = EventBuilder.new()
@@ -308,12 +325,36 @@ premiumStoreClasses.forEach((storeClass) => {
       );
     }
 
+    // Shared by the "all" scope and "refused because a date has no setter" describes below —
+    // both need a store whose `start` has no setter, differing only in whether a test supplies
+    // its own event (a split-scope refusal needs one with an explicit `rrule.byDay`/exDates
+    // shape, the rest just reuse `RECURRING_EVENT`).
+    function createStoreWithReadOnlyStart(
+      onEventsChange: (...args: any[]) => void,
+      event: SchedulerEvent = RECURRING_EVENT,
+    ) {
+      return new storeClass.Value(
+        {
+          ...DEFAULT_PARAMS,
+          events: [event],
+          eventModelStructure: { start: { getter: (evt) => evt.start } },
+          onEventsChange,
+        },
+        adapter,
+      );
+    }
+
     function armOccurrence(store: any, occurrenceStart: ReturnType<typeof adapter.date>) {
       store.startEditing(
         {
           id: 'standup',
           key: getRecurringOccurrenceKey('standup', occurrenceStart, adapter),
           displayTimezone: {
+            start: processDate(occurrenceStart, adapter),
+            end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
+          },
+          dataTimezone: {
+            timezone: 'default',
             start: processDate(occurrenceStart, adapter),
             end: processDate(adapter.addHours(occurrenceStart, 1), adapter),
             rrule: RRULE,
@@ -363,6 +404,336 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(occurrence.key).to.not.equal(armedKey);
       expect(occurrence.displayTimezone.start.value).toEqualDateTime(resizedStart);
       expect(occurrence.displayTimezone.end.value).toEqualDateTime(resizedEnd);
+    });
+
+    it('should keep the data-timezone identity in sync when the armed occurrence is resized', () => {
+      const store = createStore();
+      armOccurrence(store, dayA);
+
+      const resizedStart = adapter.addMinutes(dayA, 30);
+      const resizedEnd = adapter.addMinutes(dayA, 90);
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: { id: 'standup', start: resizedStart, end: resizedEnd },
+      });
+      store.selectRecurringEventScope('this-and-following');
+
+      // A later edit or delete of the still-armed occurrence targets this identity:
+      // left stale, it would anchor the operation on the pre-resize occurrence.
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.dataTimezone.start.value).toEqualDateTime(resizedStart);
+      expect(occurrence.dataTimezone.end.value).toEqualDateTime(resizedEnd);
+    });
+
+    it("should disarm when a scope 'all' change moves the armed occurrence to another day", () => {
+      const store = createStore();
+      armOccurrence(store, dayB);
+
+      // The pattern decides where the series lands after an in-place day move, so
+      // re-keying onto the changed day could anchor the toolbar on a sibling — and a
+      // follow-up Delete would exDate the wrong day.
+      const movedStart = adapter.addHours(dayB, 25);
+      const movedEnd = adapter.addHours(movedStart, 1);
+      store.updateRecurringEvent({
+        occurrenceStart: dayB,
+        changes: { id: 'standup', start: movedStart, end: movedEnd },
+      });
+      store.selectRecurringEventScope('all');
+
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+    });
+
+    it("should keep the armed occurrence on a same-day scope 'all' time change", () => {
+      const store = createStore();
+      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter);
+      armOccurrence(store, dayB);
+
+      const movedStart = adapter.addHours(dayB, 1);
+      const movedEnd = adapter.addHours(movedStart, 1);
+      store.updateRecurringEvent({
+        occurrenceStart: dayB,
+        changes: { id: 'standup', start: movedStart, end: movedEnd },
+      });
+      store.selectRecurringEventScope('all');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.key).to.equal(armedKey);
+      expect(occurrence.dataTimezone.start.value).toEqualDateTime(movedStart);
+      expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
+    });
+
+    it("should keep the armed occurrence on an end-only same-day scope 'all' change", () => {
+      const store = createStore();
+      const armedKey = getRecurringOccurrenceKey('standup', dayB, adapter);
+      armOccurrence(store, dayB);
+
+      // A resize handle or the dialog can submit a single bound; the untouched start
+      // keeps the occurrence's own data-timezone identity.
+      const extendedEnd = adapter.addHours(dayB, 3);
+      store.updateRecurringEvent({
+        occurrenceStart: dayB,
+        changes: { id: 'standup', end: extendedEnd },
+      });
+      store.selectRecurringEventScope('all');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.key).to.equal(armedKey);
+      expect(occurrence.dataTimezone.start.value).toEqualDateTime(dayB);
+      expect(occurrence.dataTimezone.end.value).toEqualDateTime(extendedEnd);
+    });
+
+    it("should disarm when an end-only scope 'all' change pushes the armed occurrence past its day", () => {
+      const store = createStore();
+      armOccurrence(store, dayB);
+
+      store.updateRecurringEvent({
+        occurrenceStart: dayB,
+        changes: { id: 'standup', end: adapter.addHours(dayB, 25) },
+      });
+      store.selectRecurringEventScope('all');
+
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+    });
+
+    // A store whose host feeds every change back into the controlled `events` prop.
+    function createControlledStore(events: any[], overrides?: { eventModelStructure?: object }) {
+      let store: any;
+      const parameters = {
+        ...DEFAULT_PARAMS,
+        ...overrides,
+        events,
+        onEventsChange: (nextEvents: any[]) =>
+          store.updateStateFromParameters({ ...parameters, events: nextEvents }, adapter),
+      };
+      store = new storeClass.Value(parameters, adapter);
+      return store;
+    }
+
+    it("should open the editor on the split series' rewritten rule", () => {
+      const countedEvent = EventBuilder.new()
+        .id('standup')
+        .startAt('2025-07-07T09:00:00Z')
+        .endAt('2025-07-07T10:00:00Z')
+        .recurrent('DAILY', { count: 10 })
+        .build();
+      const store = createControlledStore([countedEvent]);
+      const fourth = adapter.addDays(dayA, 3);
+      armOccurrence(store, fourth);
+
+      store.updateRecurringEvent({
+        occurrenceStart: fourth,
+        changes: {
+          id: 'standup',
+          start: adapter.addMinutes(fourth, 30),
+          end: adapter.addMinutes(fourth, 90),
+        },
+      });
+      store.selectRecurringEventScope('this-and-following');
+      // Edit from the still-armed toolbar.
+      store.setEditingMode('edit');
+
+      // Seven occurrences remain from the fourth: the editor must seed that count, not the
+      // original series' ten the armed snapshot was taken with.
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.id).to.not.equal('standup');
+      expect(occurrence.dataTimezone.rrule.count).to.equal(7);
+    });
+
+    it("should open the editor on the split series' realigned BYDAY", () => {
+      const weeklyEvent = EventBuilder.new()
+        .id('standup')
+        .startAt('2025-07-07T09:00:00Z')
+        .endAt('2025-07-07T10:00:00Z')
+        .recurrent('WEEKLY')
+        .build();
+      const store = createControlledStore([weeklyEvent]);
+      const secondMonday = adapter.addDays(dayA, 7);
+      armOccurrence(store, secondMonday);
+
+      // Move the second Monday to Tuesday with "this and following".
+      const movedStart = adapter.addDays(secondMonday, 1);
+      store.updateRecurringEvent({
+        occurrenceStart: secondMonday,
+        changes: { id: 'standup', start: movedStart, end: adapter.addHours(movedStart, 1) },
+      });
+      store.selectRecurringEventScope('this-and-following');
+      store.setEditingMode('edit');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      expect(occurrence.dataTimezone.rrule.byDay).to.deep.equal(['TU']);
+    });
+
+    it("should disarm when a scope 'all' change removes the recurrence", () => {
+      const store = createStore();
+      armOccurrence(store, dayA);
+
+      // "Does not repeat" sends an explicit `rrule: undefined`.
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: { id: 'standup', rrule: undefined },
+      });
+      store.selectRecurringEventScope('all');
+
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+    });
+
+    describe('viewed from another timezone', () => {
+      // A 23:00 UTC daily series viewed from Tokyo renders at 08:00 the next Tokyo day.
+      const lateBuilder = EventBuilder.new()
+        .id('late')
+        .withDataTimezone('UTC')
+        .span('2025-07-07T23:00:00', '2025-07-07T23:30:00')
+        .recurrent('DAILY')
+        .withDisplayTimezone('Asia/Tokyo');
+
+      function armTokyoOccurrence() {
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            events: [lateBuilder.build()],
+            displayTimezone: 'Asia/Tokyo',
+            onEventsChange: () => {},
+          },
+          adapter,
+        );
+        const base = lateBuilder.toOccurrence('2025-07-08T23:00:00Z') as any;
+        const armed = {
+          ...base,
+          key: getRecurringOccurrenceKey('late', base.dataTimezone.start.value, adapter),
+        };
+        store.startEditing(armed, 'armed');
+        return { store, armed };
+      }
+
+      function moveArmedWithScopeAll(
+        store: any,
+        armed: any,
+        startInTokyo: string,
+        endInTokyo: string,
+      ) {
+        store.updateRecurringEvent({
+          occurrenceStart: armed.dataTimezone.start.value,
+          changes: {
+            id: 'late',
+            start: adapter.date(startInTokyo, 'Asia/Tokyo'),
+            end: adapter.date(endInTokyo, 'Asia/Tokyo'),
+          },
+        });
+        store.selectRecurringEventScope('all');
+      }
+
+      it('should keep the armed occurrence when it stays on its day in both timezones', () => {
+        const { store, armed } = armTokyoOccurrence();
+
+        // 07:00 Tokyo July 9th is 22:00 UTC July 8th: same day on both sides.
+        moveArmedWithScopeAll(store, armed, '2025-07-09T07:00:00', '2025-07-09T07:30:00');
+
+        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+        expect(occurrence.key).to.equal(armed.key);
+      });
+
+      it('should disarm when the occurrence changes day in the data timezone only', () => {
+        const { store, armed } = armTokyoOccurrence();
+
+        // 10:00 Tokyo July 9th is still the displayed Tokyo day, but 01:00 UTC July 9th
+        // leaves the occurrence's own July 8th: a display-day comparison would keep it.
+        moveArmedWithScopeAll(store, armed, '2025-07-09T10:00:00', '2025-07-09T10:30:00');
+
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+      });
+
+      it('should keep the armed occurrence when it changes day in the display timezone only', () => {
+        const { store, armed } = armTokyoOccurrence();
+
+        // 19:00 Tokyo July 8th is 10:00 UTC July 8th: the displayed day moved from July 9th
+        // to July 8th, but the pattern only sees the data day, where nothing moved.
+        moveArmedWithScopeAll(store, armed, '2025-07-08T19:00:00', '2025-07-08T19:30:00');
+
+        const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+        expect(occurrence.key).to.equal(armed.key);
+        expect(
+          adapter.formatByString(occurrence.displayTimezone.start.value, 'yyyy-MM-dd HH:mm'),
+        ).to.equal('2025-07-08 19:00');
+      });
+    });
+
+    it("should disarm when a scope 'all' change edits the recurrence rule", () => {
+      const store = createStore();
+      armOccurrence(store, dayA);
+
+      // A new rule re-expands the series in place: the armed day may no longer be an
+      // occurrence, so the surface is dropped instead of re-keyed.
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: { id: 'standup', rrule: { freq: 'WEEKLY' } as any },
+      });
+      store.selectRecurringEventScope('all');
+
+      expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(null);
+    });
+
+    it('should re-point a rename-only scope change onto the detached event', () => {
+      const store = createStore();
+      const armedKey = getRecurringOccurrenceKey('standup', dayA, adapter);
+      armOccurrence(store, dayA);
+
+      // A rename carries no start/end in the changes.
+      store.updateRecurringEvent({
+        occurrenceStart: dayA,
+        changes: { id: 'standup', title: 'Renamed standup' },
+      });
+      store.selectRecurringEventScope('only-this');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      // The occurrence moved onto the detached one-off event, keeping its own times.
+      expect(occurrence.id).to.not.equal('standup');
+      expect(occurrence.key).to.not.equal(armedKey);
+      expect(occurrence.dataTimezone.rrule).to.equal(undefined);
+      expect(occurrence.displayTimezone.start.value).toEqualDateTime(dayA);
+      expect(occurrence.displayTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
+      expect(occurrence.dataTimezone.start.timestamp).to.equal(adapter.getTime(dayA));
+      expect(occurrence.dataTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
+    });
+
+    it('should keep the data-timezone identity on a rename-only scope change from another timezone', () => {
+      // A UTC all-day weekly series whose display bounds normalize to the previous
+      // New York day; the second occurrence is armed so 'this-and-following' splits.
+      const weeklyBuilder = utcJuly4AllDayBuilder()
+        .id('weekly-tz')
+        .recurrent('WEEKLY')
+        .withDisplayTimezone('America/New_York');
+      const store = new storeClass.Value(
+        { ...DEFAULT_PARAMS, events: [weeklyBuilder.build()], onEventsChange: () => {} },
+        adapter,
+      );
+      const base = weeklyBuilder.toOccurrence('2025-07-11T00:00:00Z') as any;
+      // `toOccurrence` generates a random render key; the repoint matches on the
+      // expansion key, which derives from the data-timezone day.
+      const armed = {
+        ...base,
+        key: getRecurringOccurrenceKey('weekly-tz', base.dataTimezone.start.value, adapter),
+      };
+      store.startEditing(armed, 'armed');
+
+      store.updateRecurringEvent({
+        occurrenceStart: armed.dataTimezone.start.value,
+        changes: { id: 'weekly-tz', title: 'Renamed weekly' },
+      });
+      store.selectRecurringEventScope('this-and-following');
+
+      const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+      // The split series expands keyed off the data-timezone day (July 11th); the
+      // display bounds sit on July 10th and cannot stand in for the identity.
+      expect(occurrence.id).to.not.equal('weekly-tz');
+      expect(occurrence.key).to.equal(
+        getRecurringOccurrenceKey(occurrence.id, armed.dataTimezone.start.value, adapter),
+      );
+      expect(occurrence.dataTimezone.start.timestamp).to.equal(
+        adapter.getTime(adapter.date('2025-07-11T00:00:00', 'UTC')),
+      );
+      expect(occurrence.dataTimezone.timezone).to.equal('UTC');
+      // A 'this-and-following' split stays recurring.
+      expect(occurrence.dataTimezone.rrule).to.not.equal(undefined);
     });
 
     it('should keep a cross-timezone deleted occurrence excluded after the events round-trip through strings', () => {
@@ -416,6 +787,281 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(days).to.include('2025-02-28');
       expect(days).to.not.include('2025-03-01');
+    });
+
+    // The "all" scope has its own writability handling in `selectRecurringEventScope`, before
+    // `updateEvents` — not covered by the generic `dates declared without a setter` suite, which
+    // never combines a recurring "all" scope with an unwritable date.
+    describe('scope "all" with an unwritable date', () => {
+      // Regression guard: without the "all"-scope handling, `updateRecurringEvent` would realign
+      // the rule's pattern off a `start` that was never actually applied, since it can't be
+      // written back — silently corrupting the series instead of refusing the edit.
+      it('should refuse an "all" edit that moves the day when start lacks a setter', () => {
+        const onEventsChange = vi.fn();
+        const store = createStoreWithReadOnlyStart(onEventsChange);
+        const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+
+        const movedStart = adapter.addHours(dayB, 25);
+        const movedEnd = adapter.addHours(movedStart, 1);
+        store.updateRecurringEvent({
+          occurrenceStart: dayB,
+          changes: { id: 'standup', start: movedStart, end: movedEnd },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('all');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not moved because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(seriesAfter.dataTimezone.start.value).toEqualDateTime(
+          seriesBefore.dataTimezone.start.value,
+        );
+        expect(seriesAfter.dataTimezone.rrule).to.deep.equal(seriesBefore.dataTimezone.rrule);
+        // No surface of its own for this rejection either — pushed as a toast.
+        expect(store.state.errors.length).to.equal(1);
+      });
+
+      // A resize-style "all" edit — only `end` is submitted, the day (`start`) isn't part of the
+      // change at all (as the real editing dialog gates per-bound) — still applies: a single
+      // submitted bound is a resize, not a move.
+      it('should apply an "all" edit that only resizes the time when start lacks a setter', () => {
+        const onEventsChange = vi.fn();
+        const store = createStoreWithReadOnlyStart(onEventsChange);
+
+        expect(() => {
+          store.updateRecurringEvent({
+            occurrenceStart: dayA,
+            changes: { id: 'standup', end: adapter.addMinutes(dayA, 90) },
+          });
+          store.selectRecurringEventScope('all');
+        }).not.toWarnDev();
+
+        // `onEventsChange` isn't fed back into `events`, so the applied change is read off the
+        // emitted model, not off `store.state` (which the "all"-scope tests above check through
+        // the armed occurrence — not applicable here since nothing is armed).
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updated = onEventsChange.mock.lastCall?.[0].find(
+          (candidate: any) => candidate.id === 'standup',
+        );
+        expect(
+          adapter.isEqual(adapter.date(updated.end, 'default'), adapter.addMinutes(dayA, 90)),
+        ).to.equal(true);
+        // `start` was stripped out of the change entirely (not merely resubmitted unchanged), so
+        // the model keeps its original string as-is instead of being reformatted.
+        expect(updated.start).to.equal(RECURRING_EVENT.start);
+      });
+
+      // The tests above use the shared, daily `RECURRING_EVENT`, where every occurrence falls on
+      // the same weekday as DTSTART — moving one to a new day never touches `byDay`, so it can't
+      // expose a pattern realignment bug. This series is weekly instead, and the edit targets its
+      // *second* occurrence: on the first, the occurrence start equals DTSTART, so a reference
+      // bug (falling back to the series' own bounds instead of the occurrence's) would be
+      // invisible too — both mutations survive the tests above unnoticed.
+      describe('on a weekly rule, at a non-first occurrence', () => {
+        const weeklyStandupEvent = EventBuilder.new()
+          .id('standup')
+          .startAt('2025-07-07T09:00:00Z') // a Monday
+          .endAt('2025-07-07T10:00:00Z')
+          .recurrent('WEEKLY')
+          .build();
+        const secondMonday = adapter.addDays(dayA, 7);
+        const readOnlyStartStructure = {
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+        };
+
+        it('should not realign BYDAY when a non-first occurrence\'s unwritable start is "moved"', () => {
+          const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
+
+          expect(() => {
+            store.updateRecurringEvent({
+              occurrenceStart: secondMonday,
+              changes: { id: 'standup', start: adapter.addDays(secondMonday, -1) },
+            });
+            store.selectRecurringEventScope('all');
+          }).toWarnDev([
+            "MUI X Scheduler: An event's `start` date was not updated.\n" +
+              '`eventModelStructure.start` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+          ]);
+
+          const series = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+          expect(series.dataTimezone.rrule!.byDay).to.deep.equal(['MO']);
+        });
+
+        it('should keep the armed occurrence on its day when its unwritable start is "moved"', () => {
+          const store = createControlledStore([weeklyStandupEvent], readOnlyStartStructure);
+          const armedKey = getRecurringOccurrenceKey('standup', secondMonday, adapter);
+          armOccurrence(store, secondMonday);
+
+          expect(() => {
+            store.updateRecurringEvent({
+              occurrenceStart: secondMonday,
+              changes: { id: 'standup', start: adapter.addDays(secondMonday, -1) },
+            });
+            store.selectRecurringEventScope('all');
+          }).toWarnDev([
+            "MUI X Scheduler: An event's `start` date was not updated.\n" +
+              '`eventModelStructure.start` declares a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+          ]);
+
+          const occurrence = schedulerOtherSelectors.editingOccurrence(store.state) as any;
+          expect(occurrence?.key).to.equal(armedKey);
+          expect(occurrence?.dataTimezone.start.value).toEqualDateTime(secondMonday);
+        });
+      });
+    });
+
+    // `selectRecurringEventScope` feeds the plugin's split straight into `updateEvents`, bypassing
+    // `updateEvent()` / `createEvent()` entirely — this is the direct caller the generic guard in
+    // `updateEvents` is meant to cover, not just the public methods. The whole call is refused,
+    // not only the creation: `only-this` / `this-and-following` also update or delete the
+    // original series in the same call, and applying that half while dropping the detached
+    // occurrence would corrupt the series instead of leaving it untouched.
+    describe('refused because a date has no setter', () => {
+      it('should refuse an "only-this" split and leave the series untouched', () => {
+        const onEventsChange = vi.fn();
+        // Seeded with an exDate unrelated to `dayA` so the before/after comparison below has
+        // teeth: an exDate wrongly added for the refused split would still show up as a diff.
+        const preExcludedDay = '2025-07-09T09:00:00Z';
+        const eventWithExDate = EventBuilder.new()
+          .id('standup')
+          .title(RECURRING_EVENT.title)
+          .startAt('2025-07-07T09:00:00Z')
+          .endAt('2025-07-07T10:00:00Z')
+          .recurrent('DAILY')
+          .exDates([preExcludedDay])
+          .build();
+        const store = createStoreWithReadOnlyStart(onEventsChange, eventWithExDate);
+        const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        // Refused as a whole: no detached event, and no exDate excluding the edited occurrence.
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+        const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(seriesAfter.dataTimezone.exDates).to.deep.equal(seriesBefore.dataTimezone.exDates);
+        // The dialog has no surface of its own for this rejection, so it's pushed as a toast
+        // instead of the save silently doing nothing.
+        expect(store.state.errors.length).to.equal(1);
+      });
+
+      // A title edit never touches a date, but "only-this" still detaches the occurrence into
+      // its own event — refused the same way as a date move, but the message shown to the user
+      // must not claim a date was edited when it wasn't.
+      it('should refuse an "only-this" split over a title-only edit with a message that does not blame a date', () => {
+        const store = createStoreWithReadOnlyStart(vi.fn());
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: { id: 'standup', title: 'Renamed' },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(store.state.errors).to.have.length(1);
+        expect(store.state.errors[0].error.message).to.equal(
+          "This can't be saved as a new event, so the change was not applied.",
+        );
+      });
+
+      it('should refuse a "this-and-following" split and leave the series untouched', () => {
+        const onEventsChange = vi.fn();
+        const store = createStoreWithReadOnlyStart(onEventsChange);
+        const seriesBefore = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayB,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayB, 30),
+            end: adapter.addMinutes(dayB, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('this-and-following');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+        const seriesAfter = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(seriesAfter.dataTimezone.rrule).to.deep.equal(seriesBefore.dataTimezone.rrule);
+      });
+
+      // "this-and-following" on the very first occurrence has no remaining series to truncate, so
+      // the plugin's split is `{ created: [...], deleted: [originalEvent.id] }` — the whole series
+      // would be lost, not just the detached occurrence, if the refusal weren't atomic.
+      it('should refuse a "this-and-following" split on the first occurrence and keep the series', () => {
+        const onEventsChange = vi.fn();
+        const store = createStoreWithReadOnlyStart(onEventsChange);
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('this-and-following');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(onEventsChange.mock.calls.length).to.equal(0);
+        expect(store.state.eventIdList).to.deep.equal(['standup']);
+      });
+
+      // `createdIds` comes back empty on a refusal, so the fallback that would otherwise call
+      // `setEditingOccurrenceTimes` with the (never applied) new times must not run either.
+      it('should leave the editing surface untouched after a refused split', () => {
+        const store = createStoreWithReadOnlyStart(vi.fn());
+        armOccurrence(store, dayA);
+        const editingOccurrenceBefore = schedulerOtherSelectors.editingOccurrence(store.state);
+
+        store.updateRecurringEvent({
+          occurrenceStart: dayA,
+          changes: {
+            id: 'standup',
+            start: adapter.addMinutes(dayA, 30),
+            end: adapter.addMinutes(dayA, 90),
+          },
+        });
+
+        expect(() => {
+          store.selectRecurringEventScope('only-this');
+        }).toWarnDev([
+          `MUI X Scheduler: An event was not created because a date could not be written back.\n${DATES_NOT_WRITABLE_REASON}`,
+        ]);
+
+        expect(schedulerOtherSelectors.editingOccurrence(store.state)).to.equal(
+          editingOccurrenceBefore,
+        );
+      });
     });
   });
 });

@@ -526,11 +526,13 @@ export function useGridColumns(
       }
       const lookup = gridColumnLookupSelector(apiRef);
       if (orderedFields.some((field) => lookup[field]?.type === 'multiSelect')) {
-        warnOnce([
-          'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
-          'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
-          'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select-keyboard-interactions',
-        ]);
+        warnOnce(
+          [
+            'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
+            'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
+            'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select-keyboard-interactions',
+          ].join('\n'),
+        );
       }
     },
     [apiRef, props.signature],

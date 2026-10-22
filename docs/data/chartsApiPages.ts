@@ -169,9 +169,19 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsText',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-excel-export-trigger',
+    title: 'ChartsToolbarExcelExportTrigger',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/charts-toolbar-image-export-trigger',
     title: 'ChartsToolbarImageExportTrigger',
     plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-premium',
+    title: 'ChartsToolbarPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/charts-toolbar-print-export-trigger',

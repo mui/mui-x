@@ -845,6 +845,10 @@ const pages: MuiPage[] = [
                         title: 'ChartImageExportOptions',
                       },
                       {
+                        pathname: '/x/api/charts/chart-excel-export-options',
+                        title: 'ChartExcelExportOptions',
+                      },
+                      {
                         pathname: '/x/api/charts/chart-print-export-options',
                         title: 'ChartPrintExportOptions',
                       },

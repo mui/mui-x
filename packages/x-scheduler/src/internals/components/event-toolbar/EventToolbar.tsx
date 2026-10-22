@@ -5,12 +5,11 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import EditRounded from '@mui/icons-material/EditRounded';
 import DeleteRounded from '@mui/icons-material/DeleteRounded';
-import { useStore } from '@base-ui/utils/store';
 import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventEditingContext, useEventEditingStyledContext } from '../event-editing';
 import { useDisarmOnEscape } from '../armed-occurrence';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
 // `Paper` (elevation 3) supplies the `background.paper` fill and `shadows[3]` box shadow.
 const EventToolbarRoot = styled(Paper, {
@@ -55,11 +54,6 @@ export function EventToolbar(props: EventToolbarProps) {
   const { stopEditing, anchor, stableAnchorRef } = useEventEditingContext();
   const { classes, localeText } = useEventEditingStyledContext();
 
-  const areRecurringEventsAvailable = useStore(
-    store,
-    schedulerOtherSelectors.areRecurringEventsAvailable,
-  );
-
   // Rendered only while armed (desktop anchored surface + mobile dock), so Escape here disarms both.
   useDisarmOnEscape({ active: true, onDisarm: stopEditing });
 
@@ -74,20 +68,8 @@ export function EventToolbar(props: EventToolbarProps) {
     );
   };
 
-  // Mirrors `FormContent`'s delete: recurring events open the scope dialog (which closes the surface
-  // on submit); single events delete immediately and close.
   const handleDelete = () => {
-    if (areRecurringEventsAvailable && occurrence.displayTimezone.rrule) {
-      store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        eventId: occurrence.id,
-        onSubmit: stopEditing,
-      });
-      return;
-    }
-
-    store.deleteEvent(occurrence.id);
-    stopEditing();
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchor, stopEditing);
   };
 
   return (

@@ -5,4 +5,5 @@
   onEventsChange={setEvents}
   defaultPreset="dayAndMonth"
   slots={{ timelineEventContent: EventContent }}
+  getEventAriaLabel={getEventAriaLabel}
 />

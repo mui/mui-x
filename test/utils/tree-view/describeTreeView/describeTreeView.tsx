@@ -101,12 +101,22 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
     const isItemExpanded = (id: string) => getItemRoot(id).getAttribute('aria-expanded') === 'true';
 
-    const isItemSelected = (id: string) => getItemRoot(id).getAttribute('aria-checked') === 'true';
+    const isItemSelected = (id: string) => {
+      const item = getItemRoot(id);
+      return (
+        item.getAttribute('aria-checked') === 'true' ||
+        item.getAttribute('aria-selected') === 'true'
+      );
+    };
 
     const getSelectedTreeItems = () =>
       result
         .queryAllByRole('treeitem')
-        .filter((item) => item.getAttribute('aria-checked') === 'true')
+        .filter(
+          (item) =>
+            item.getAttribute('aria-checked') === 'true' ||
+            item.getAttribute('aria-selected') === 'true',
+        )
         .map((item) => item.dataset.testid!);
 
     return {

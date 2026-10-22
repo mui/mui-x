@@ -183,6 +183,13 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
     PropTypes.bool,
   ]),
   /**
+   * Configures how events are deleted.
+   * @default { confirmation: true }
+   */
+  eventDeletion: PropTypes.shape({
+    confirmation: PropTypes.bool,
+  }),
+  /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.
@@ -307,9 +314,15 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
   /**
    * Configuration applied to the view, keyed by the view name.
-   * The `agenda` view does not support any configuration keys yet.
+   * For the `agenda` view, `dayCount` is how many days are displayed (and how far the
+   * navigation moves), or `'month'` to display the month of the visible date and navigate one month at a time.
+   * @example { agenda: { dayCount: 'month' } }
    */
-  viewConfig: PropTypes.object,
+  viewConfig: PropTypes.shape({
+    agenda: PropTypes.shape({
+      dayCount: PropTypes.oneOfType([PropTypes.oneOf(['month']), PropTypes.number]),
+    }),
+  }),
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

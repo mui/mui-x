@@ -5,6 +5,8 @@ export type {
   EventCalendarPreferences,
   EventCalendarViewConfig,
   EventCalendarTimeGridViewConfig,
+  EventCalendarAgendaViewConfig,
+  EventCalendarTimeGridEvents,
   SchedulerEvent,
   SchedulerResource,
   SchedulerEventColor,

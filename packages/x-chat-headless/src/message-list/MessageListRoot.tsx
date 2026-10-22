@@ -448,7 +448,9 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
   // itself additionally carries `aria-busy` (see MessageRoot).
   const localeText = useChatLocaleText();
   const [statusAnnouncement, setStatusAnnouncement] = React.useState('');
-  const prevIsStreamingRef = React.useRef(isStreaming);
+  // Start from "not streaming" so a list that mounts mid-response (e.g. after an
+  // empty state is swapped out) still announces the start of that response.
+  const prevIsStreamingRef = React.useRef(false);
   React.useEffect(() => {
     if (prevIsStreamingRef.current === isStreaming) {
       return;

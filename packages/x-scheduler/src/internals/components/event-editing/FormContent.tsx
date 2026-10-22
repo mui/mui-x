@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useStore } from '@base-ui/utils/store';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -31,8 +32,10 @@ import {
 import {
   getCustomEventProperties,
   getEventResourceIds,
+  getOccurrenceDataTimezone,
   getResourceSelectionMode,
   isBuiltInEventProperty,
+  isEventOccurrence,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -45,6 +48,9 @@ import {
   validateRange,
   hasProp,
   BUILT_IN_FORM_KEYS,
+  getResentRangeBounds,
+  getEventTimezoneBound,
+  getRecurrenceRuleBound,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
 import TitleSection from '../event-dialog/TitleSection';
@@ -55,8 +61,10 @@ import {
 } from '../event-dialog/form/EventDialogFormContext';
 import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
+import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
-const FormActions = styled(DialogActions, {
+export const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
@@ -64,7 +72,7 @@ const FormActions = styled(DialogActions, {
   gap: theme.spacing(2),
 }));
 
-const DialogContent = styled(MuiDialogContent, {
+export const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
@@ -81,7 +89,7 @@ const DialogContent = styled(MuiDialogContent, {
   maxHeight: '100%',
 });
 
-const EventDialogForm = styled('form', {
+export const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
   slot: 'Form',
 })({
@@ -115,7 +123,6 @@ interface ResolutionSettings {
   displayTimezone: TemporalTimezone;
   shouldEventRequireResource: boolean;
   showRecurrence: boolean;
-  recurrencePresets: ReturnType<typeof schedulerRecurringEventSelectors.presets>;
 }
 
 interface FormContentProps {
@@ -127,6 +134,8 @@ interface FormContentProps {
    * @default true
    */
   isDraggable?: boolean;
+  /** The element the surface is anchored to, where focus goes back to after a delete. */
+  anchor?: HTMLElement | null;
 }
 
 export function FormContent(props: FormContentProps) {
@@ -151,7 +160,8 @@ export function FormContent(props: FormContentProps) {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
-    const base = occurrence.displayTimezone.rrule;
+    // The rule is read and written in the event's timezone, not the display one.
+    const base = getOccurrenceDataTimezone(occurrence)?.rrule;
     // The occurrence only carries the built-in event properties — custom fields
     // come from the raw model. When creating an event there is no model yet.
     const model = schedulerEventSelectors.modelLookup(store.state).get(occurrence.id);
@@ -166,11 +176,13 @@ export function FormContent(props: FormContentProps) {
     if (process.env.NODE_ENV !== 'production') {
       for (const key of Object.keys(customProperties)) {
         if (BUILT_IN_FORM_KEYS.has(key)) {
-          warnOnce([
-            `MUI X Scheduler: The event model contains a custom property "${key}" that collides with a built-in form key.`,
-            'The form seeds that key from the event dates and resource, so the custom property cannot be read or written through the form.',
-            'Rename the property in the event model to avoid the collision.',
-          ]);
+          warnOnce(
+            [
+              `MUI X Scheduler: The event model contains a custom property "${key}" that collides with a built-in form key.`,
+              'The form seeds that key from the event dates and resource, so the custom property cannot be read or written through the form.',
+              'Rename the property in the event model to avoid the collision.',
+            ].join('\n'),
+          );
         }
       }
     }
@@ -188,8 +200,8 @@ export function FormContent(props: FormContentProps) {
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
-        occurrence.displayTimezone.rrule,
-        occurrence.displayTimezone.start,
+        base,
+        getEventTimezoneBound(adapter, occurrence, 'start'),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -215,7 +227,7 @@ export function FormContent(props: FormContentProps) {
 }
 
 function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
-  const { onClose, dragHandlerRef, isDraggable } = props;
+  const { onClose, dragHandlerRef, isDraggable, anchor } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -251,11 +263,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // built-in section, leaving the stored error with no visible field.
   const warnUnvalidatedField = (field: string, problem: string) => {
     if (process.env.NODE_ENV !== 'production' && !formStore.hasValidator(field)) {
-      warnOnce([
-        `MUI X Scheduler: ${problem} but no field of the event dialog validates the "${field}" field.`,
-        'Saving is still blocked, but the end user may have no visible field to fix it.',
-        'Render the missing section in the General tab, or register a validator for the field.',
-      ]);
+      warnOnce(
+        [
+          `MUI X Scheduler: ${problem} but no field of the event dialog validates the "${field}" field.`,
+          'Saving is still blocked, but the end user may have no visible field to fix it.',
+          'Render the missing section in the General tab, or register a validator for the field.',
+        ].join('\n'),
+      );
     }
   };
 
@@ -311,6 +325,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
 
     if (formStore.state.isSubmitting) {
       return;
@@ -320,11 +335,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // Checked on submit rather than on mount: the registry is only complete once
       // every section has run its effects, whatever the composition.
       if (shouldEventRequireResource && !formStore.hasValidator('resourceIds')) {
-        warnOnce([
-          'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
-          'Saving without a resource is still blocked, but the end user has no visible field to fix it.',
-          'Render the resource section in the General tab, or register a validator for the "resourceIds" field.',
-        ]);
+        warnOnce(
+          [
+            'MUI X Scheduler: `shouldEventRequireResource` is enabled but no field of the event dialog validates the resource.',
+            'Saving without a resource is still blocked, but the end user has no visible field to fix it.',
+            'Render the resource section in the General tab, or register a validator for the "resourceIds" field.',
+          ].join('\n'),
+        );
       }
     }
 
@@ -339,11 +356,13 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           setTabValue('general');
         }
         if (process.env.NODE_ENV !== 'production') {
-          warnOnce([
-            'MUI X Scheduler: A form field validator threw or rejected during the submit.',
-            'The submit was aborted and no error was stored on the form.',
-            'Handle failures inside the validator and return the error message instead.',
-          ]);
+          warnOnce(
+            [
+              'MUI X Scheduler: A form field validator threw or rejected during the submit.',
+              'The submit was aborted and no error was stored on the form.',
+              'Handle failures inside the validator and return the error message instead.',
+            ].join('\n'),
+          );
         }
         return;
       }
@@ -360,33 +379,71 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         displayTimezone: schedulerOtherSelectors.displayTimezone(store.state),
         shouldEventRequireResource: schedulerOtherSelectors.shouldEventRequireResource(store.state),
         showRecurrence: schedulerOtherSelectors.areRecurringEventsAvailable(store.state),
-        recurrencePresets: schedulerRecurringEventSelectors.presets(
-          store.state,
-          occurrence.displayTimezone.start,
-        ),
       };
 
       const values = formStore.state.values;
       const { start, end } = computeRange(current.adapter, values, current.displayTimezone);
 
-      if (!runSubmitChecks(values, start, end, current) || !isValid) {
+      const dirtyValues = formStore.getDirtyValues();
+      // Only the custom fields the user actually edited enter the changes payload,
+      // so untouched fields keep resolving against the live model on the recurring paths.
+      // A custom field named after a built-in event property (`id`, `readOnly`, ...)
+      // must not rewrite it; the hook already warns about these keys in dev.
+      const editedCustomValues = Object.fromEntries(
+        Object.entries(dirtyValues).filter(
+          ([key]) => !BUILT_IN_FORM_KEYS.has(key) && !isBuiltInEventProperty(key),
+        ),
+      );
+
+      // The form edits the range as display-timezone day/time strings, so resending
+      // it untouched can move the event: the same day re-read in another timezone
+      // is a different day. Only the keys the submitted range reads count — a time
+      // left over from toggling all-day off and back on must not re-arm the resend.
+      const displayTimezoneMoved = current.displayTimezone !== occurrence.displayTimezone.timezone;
+      const { startResent, endResent } = getResentRangeBounds(
+        dirtyValues,
+        values.allDay,
+        displayTimezoneMoved,
+      );
+      // With a `dataSource`, a resize updates the snapshot before the stored model: resend a
+      // bound that differs while the model still holds what it did at the resize, or the update
+      // rebuilds it from the stale model. A bound the host moved since is kept. Compared as data
+      // instants, since the display bounds of an all-day event are normalized to whole days.
+      const liveEvent = schedulerEventSelectors.processedEvent(store.state, occurrence.id);
+      const modelBounds = schedulerOtherSelectors.editingModelBounds(store.state, occurrence.key);
+      const boundPending = (bound: 'start' | 'end') =>
+        liveEvent != null &&
+        liveEvent.dataTimezone.rrule == null &&
+        !displayTimezoneMoved &&
+        isEventOccurrence(occurrence) &&
+        modelBounds?.[bound] === liveEvent.dataTimezone[bound].timestamp &&
+        occurrence.dataTimezone[bound].timestamp !== liveEvent.dataTimezone[bound].timestamp;
+      // Read directly instead of subscribing: the placeholder changes on every
+      // creation keystroke and would re-render the whole dialog.
+      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
+      const isCreation = rawPlaceholder?.type === 'creation';
+      const submitStart = isCreation || startResent || boundPending('start');
+      const submitEnd = isCreation || endResent || boundPending('end');
+
+      // The checks run on the range the save writes. An untouched bound keeps its stored
+      // instant, which its re-read from the form can miss: a time in a repeated DST hour. On a
+      // non-recurring event the store keeps the live model's bound, which the host may have
+      // moved since the snapshot; the recurring update defaults it to the occurrence's own.
+      const untouchedBound = (bound: 'start' | 'end') =>
+        liveEvent != null && liveEvent.dataTimezone.rrule == null
+          ? liveEvent.displayTimezone[bound].value
+          : occurrence.displayTimezone[bound].value;
+      const submittedStart = submitStart ? start : untouchedBound('start');
+      const submittedEnd = submitEnd ? end : untouchedBound('end');
+      if (!runSubmitChecks(values, submittedStart, submittedEnd, current) || !isValid) {
         // Show the tab owning a failing field; General wins when both tabs fail.
         const failingKeys = Object.keys(formStore.state.errors);
         const onlyRecurrenceFails =
           failingKeys.length > 0 && failingKeys.every((key) => RECURRENCE_FORM_KEYS.has(key));
-        setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general');
+        // Rendered synchronously so the failing field is on screen to take the focus.
+        ReactDOM.flushSync(() => setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general'));
+        focusFirstInvalid(form);
         return;
-      }
-
-      // Only the custom fields the user actually edited enter the changes payload,
-      // so untouched fields keep resolving against the live model on the recurring paths.
-      const editedCustomValues = formStore.getDirtyValues(BUILT_IN_FORM_KEYS);
-      // A custom field named after a built-in event property (`id`, `readOnly`, ...)
-      // must not rewrite it; the hook already warns about these keys in dev.
-      for (const key of Object.keys(editedCustomValues)) {
-        if (isBuiltInEventProperty(key)) {
-          delete editedCustomValues[key];
-        }
       }
 
       const metaChanges = {
@@ -398,44 +455,54 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         color: values.color === null ? undefined : values.color,
       };
 
+      // A preset is built on the start the event ends up with, in the event's timezone; the
+      // Recurrence tab derives its labels and drafts from the same start.
+      const ruleStart = getRecurrenceRuleBound(
+        current.adapter,
+        occurrence,
+        values,
+        startResent,
+        current.displayTimezone,
+        'start',
+      );
+      const recurrencePresets = current.showRecurrence
+        ? schedulerRecurringEventSelectors.presets(store.state, ruleStart)
+        : null;
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
-      if (!current.showRecurrence || !current.recurrencePresets) {
-        rruleToSubmit = undefined;
-      } else if (values.recurrenceSelection === null) {
+      if (recurrencePresets == null || values.recurrenceSelection === null) {
         rruleToSubmit = undefined;
       } else if (values.recurrenceSelection === 'custom') {
         rruleToSubmit = values.rruleDraft;
       } else {
-        rruleToSubmit = current.recurrencePresets[values.recurrenceSelection];
+        rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
-      // Read directly instead of subscribing: the placeholder changes on every
-      // creation keystroke and would re-render the whole dialog.
-      const rawPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
-      if (rawPlaceholder?.type === 'creation') {
-        store.createEvent({
-          ...metaChanges,
-          start,
-          end,
-          rrule: rruleToSubmit,
-        });
-      } else if (current.showRecurrence && occurrence.displayTimezone.rrule) {
+      if (isCreation) {
+        store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
+      } else if (
+        current.showRecurrence &&
+        isEventOccurrence(occurrence) &&
+        occurrence.dataTimezone.rrule
+      ) {
         const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
           store.state,
-          occurrence.displayTimezone.rrule,
+          occurrence.dataTimezone.rrule,
           rruleToSubmit,
         );
 
+        // Per-bound on the recurring path: the plugin defaults a missing bound to the
+        // occurrence's own, so an untouched start (re-read in the display timezone) cannot reach the
+        // pattern math (where it would move DTSTART and realign BYDAY).
         const changes: SchedulerEventUpdatedProperties = {
           ...metaChanges,
           id: occurrence.id,
-          start,
-          end,
+          ...(submitStart ? { start } : {}),
+          ...(submitEnd ? { end } : {}),
           ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
         };
 
         await store.updateRecurringEvent({
-          occurrenceStart: occurrence.displayTimezone.start.value,
+          occurrenceStart: occurrence.dataTimezone.start.value,
           changes,
           onSubmit: onClose,
         });
@@ -446,17 +513,18 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const result = store.updateEvent({
           ...metaChanges,
           id: occurrence.id,
-          start,
-          end,
+          ...(submitStart ? { start } : {}),
+          ...(submitEnd ? { end } : {}),
           rrule: rruleToSubmit,
         });
         if (!result.applied) {
           // A vetoed save keeps the dialog open; the rejection sits on the range field and
           // editing the dates clears it.
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
-          warnUnvalidatedField(rejectedField, 'The scheduling plugin rejected the save');
+          warnUnvalidatedField(rejectedField, 'The save was rejected');
           formStore.setError(rejectedField, result.rejection.message);
-          setTabValue('general');
+          ReactDOM.flushSync(() => setTabValue('general'));
+          focusFirstInvalid(form);
           return;
         }
       }
@@ -470,19 +538,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    if (showRecurrence && occurrence.displayTimezone.rrule) {
-      store.deleteRecurringEvent({
-        occurrenceStart: occurrence.displayTimezone.start.value,
-        eventId: occurrence.id,
-        onSubmit: onClose,
-      });
-
-      // don't close the dialog
-      return;
-    }
-
-    store.deleteEvent(occurrence.id);
-    onClose();
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchor, onClose);
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -510,7 +566,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const hasTabs = Boolean(showRecurrence && RecurrenceTabRenderer);
 
   return (
-    <DialogContent className={classes.eventDialogContent}>
+    <EventDialogContentRoot className={classes.eventDialogContent}>
       <EventDialogForm
         onSubmit={handleSubmit}
         onInvalidCapture={handleFormInvalid}
@@ -548,7 +604,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         <Divider className={classes.eventDialogFormDivider} />
         <FormActionButtons onDelete={handleDelete} />
       </EventDialogForm>
-    </DialogContent>
+    </EventDialogContentRoot>
   );
 }
 
@@ -559,7 +615,7 @@ function FormActionButtons(props: { onDelete: () => void }) {
   const isSubmitting = useStore(formStore, eventDialogFormSelectors.isSubmitting);
 
   return (
-    <FormActions className={classes.eventDialogFormActions}>
+    <EventDialogFormActions className={classes.eventDialogFormActions}>
       <Button
         className={classes.eventDialogDeleteButton}
         color="error"
@@ -579,6 +635,6 @@ function FormActionButtons(props: { onDelete: () => void }) {
       >
         {localeText.saveChanges}
       </Button>
-    </FormActions>
+    </EventDialogFormActions>
   );
 }

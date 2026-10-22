@@ -317,15 +317,15 @@ const koKRGrid: Partial<GridLocaleText> = {
     `${column} (${aggregation})`,
   promptChangeAggregationDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation}) 집계`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `${column} is any of: ${value}`;
+  // promptChangeFilterLabel: (column: string, operator: string, value: string, operatorValue?: string) => {
+  //   if (operatorValue === 'isAnyOf') {
+  //     return `${column} ${operator}: ${value}`;
   //   }
   //   return `${column} ${operator} ${value}`;
   // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `Filter where ${column} is any of: ${value}`;
+  // promptChangeFilterDescription: (column: string, operator: string, value: string, operatorValue?: string) => {
+  //   if (operatorValue === 'isAnyOf') {
+  //     return `Filter where ${column} ${operator}: ${value}`;
   //   }
   //   return `Filter where ${column} ${operator} ${value}`;
   // },

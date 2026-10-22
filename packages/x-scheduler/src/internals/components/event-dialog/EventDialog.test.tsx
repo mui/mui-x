@@ -5,13 +5,15 @@ import {
   createMatchMedia,
   createSchedulerRenderer,
   EventBuilder,
+  utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
-import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
-import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
+import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -88,6 +90,272 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     // Pin the other side of the "hide the resource select when there are no resources"
     // condition: with resources configured, the select must still render.
     expect(screen.getByRole('combobox', { name: 'Resource' })).not.to.equal(null);
+  });
+
+  describe('events viewed from another display timezone', () => {
+    function renderEditDialog(builder: EventBuilder, displayTimezone: TemporalTimezone) {
+      const onEventsChange = vi.fn();
+      const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[event]}
+          displayTimezone={displayTimezone}
+          onEventsChange={onEventsChange}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+        </EventCalendarProvider>,
+      );
+
+      function getUpdatedEvent(): SchedulerEvent {
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        return onEventsChange.mock.calls[0][0].find(
+          (updated: SchedulerEvent) => updated.id === event.id,
+        )!;
+      }
+
+      return { user, event, getUpdatedEvent };
+    }
+
+    // The builder mutates in place, so each test builds its own instance.
+    const independenceDay = () => utcJuly4AllDayBuilder().title('Independence day');
+
+    it('should keep the dates of an all-day event untouched when only the title is edited', async () => {
+      // New York is behind UTC: the dialog shows this event as July 3rd → 4th.
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.title).to.equal('Independence day (renamed)');
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the dates of a multi-day all-day event untouched when only the title is edited', async () => {
+      // Tokyo is ahead of UTC: the dialog shows this two-day event as July 4th → 6th.
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Conference')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T00:00:00', '2025-07-05T23:59:59.999', { allDay: true }),
+        'Asia/Tokyo',
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the dates of an all-day event untouched when its snapshot sits on a raw drop instant', async () => {
+      // An all-day drop keeps the instant it landed on (10:15 in Tokyo) in the armed snapshot,
+      // while the event displays from the start of the day. That difference is not a pending
+      // resize, so a rename must not resend the bounds.
+      const displayTimezone = 'Asia/Tokyo';
+      const builder = EventBuilder.new()
+        .title('Offsite')
+        .withDataTimezone('UTC')
+        .span('2025-07-04T01:15:00', '2025-07-04T02:15:00', { allDay: true });
+      const onEventsChange = vi.fn();
+      const event: SchedulerEvent = builder.withDisplayTimezone(displayTimezone).build();
+      const occurrence = builder.toOccurrence();
+      const rawStart = adapter.setTimezone(occurrence.dataTimezone.start.value, displayTimezone);
+      const rawEnd = adapter.setTimezone(occurrence.dataTimezone.end.value, displayTimezone);
+      const snapshot = {
+        ...occurrence,
+        displayTimezone: {
+          ...occurrence.displayTimezone,
+          start: processDate(rawStart, adapter),
+          end: processDate(rawEnd, adapter),
+        },
+      };
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[event]}
+          displayTimezone={displayTimezone}
+          onEventsChange={onEventsChange}
+        >
+          <EventDialogContent open {...defaultProps} occurrence={snapshot} />
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = onEventsChange.mock.calls[0][0].find(
+        (item: SchedulerEvent) => item.id === event.id,
+      )!;
+      expect(updated.title).to.equal('Offsite (renamed)');
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the dates of a timed event untouched when only the title is edited', async () => {
+      // Seconds the `HH:mm` form fields cannot carry: a resend of the displayed range would
+      // drop them, so byte-identity proves the range was left out of the payload.
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        EventBuilder.new()
+          .title('Standup')
+          .withDataTimezone('UTC')
+          .span('2025-07-04T09:00:30', '2025-07-04T09:30:30'),
+        'America/New_York',
+      );
+
+      await user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should interpret an edited day in the display timezone', async () => {
+      const { user, getUpdatedEvent } = renderEditDialog(independenceDay(), 'America/New_York');
+
+      const startDateInput = screen.getByLabelText(/start date/i);
+      await user.clear(startDateInput);
+      await user.type(startDateInput, '2025-07-05');
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-07-05');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      // The picked day means the day the user was looking at (New York's July 5th),
+      // matching how the grid renders all-day events in the display timezone.
+      const updated = getUpdatedEvent();
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-05T04:00:00', 'UTC')),
+      );
+      // Wall-time serialization has second resolution; the read-time normalization
+      // restores the inclusive end-of-day.
+      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+      );
+    });
+
+    it('should ignore a time edit orphaned by toggling all-day back on', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      // The time typed while all-day was off stays dirty after the toggle reverts,
+      // but an all-day range does not read it — the dates must not move.
+      const allDaySwitch = screen.getByRole('switch', { name: /all day/i });
+      await user.click(allDaySwitch);
+      const startTimeInput = screen.getByLabelText(/start time/i);
+      await user.clear(startTimeInput);
+      await user.type(startTimeInput, '09:00');
+      await user.click(allDaySwitch);
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.start).to.equal(event.start);
+      expect(updated.end).to.equal(event.end);
+    });
+
+    it('should keep the untouched end byte-identical when only the start date is edited', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      // The mirror of the end-only case: the two bounds are gated independently, so a
+      // mis-wired spread would only show up from this direction.
+      const startDateInput = screen.getByLabelText(/start date/i);
+      await user.clear(startDateInput);
+      await user.type(startDateInput, '2025-07-02');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      expect(updated.end).to.equal(event.end);
+      // The picked day means the day the user was looking at (New York July 2nd).
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-02T04:00:00', 'UTC')),
+      );
+    });
+
+    it('should submit only the edited bound of the displayed range', async () => {
+      const { user, event, getUpdatedEvent } = renderEditDialog(
+        independenceDay(),
+        'America/New_York',
+      );
+
+      const endDateInput = screen.getByLabelText(/end date/i);
+      await user.clear(endDateInput);
+      await user.type(endDateInput, '2025-07-05');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      const updated = getUpdatedEvent();
+      // The untouched start keeps its stored value: re-anchoring it to the display
+      // timezone would move the event for anyone reading it from another one.
+      expect(updated.start).to.equal(event.start);
+      // The edited end applies as the day the user was looking at (New York July 5th).
+      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-06T03:59:59', 'UTC')),
+      );
+      // The built-in form keys never leak onto the event model as custom fields.
+      expect(updated).to.not.have.property('startDate');
+      expect(updated).to.not.have.property('endDate');
+    });
+
+    it('should convert an all-day event to timed with the entered display times', async () => {
+      const { user, getUpdatedEvent } = renderEditDialog(independenceDay(), 'America/New_York');
+
+      await user.click(screen.getByRole('switch', { name: /all day/i }));
+      const startTimeInput = screen.getByLabelText(/start time/i);
+      await user.clear(startTimeInput);
+      await user.type(startTimeInput, '09:00');
+      const endTimeInput = screen.getByLabelText(/end time/i);
+      await user.clear(endTimeInput);
+      await user.type(endTimeInput, '10:00');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      // The typed times mean the times the user was looking at: the seeded New York
+      // days (July 3rd → 4th) at 09:00 and 10:00 New York time.
+      const updated = getUpdatedEvent();
+      expect(Boolean(updated.allDay)).to.equal(false);
+      expect(adapter.getTime(adapter.date(String(updated.start), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-03T13:00:00', 'UTC')),
+      );
+      expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
+        adapter.getTime(adapter.date('2025-07-04T14:00:00', 'UTC')),
+      );
+    });
+  });
+
+  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event, with confirmation off', async () => {
+    // `EventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
+    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
+    // component's own direct wiring to the store. See the `Deletion` suite below for the
+    // confirmation dialog itself, exercised through the full `EventDialogProvider`.
+    const onEventsChange = vi.fn();
+    const onClose = vi.fn();
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        onEventsChange={onEventsChange}
+        eventDeletion={{ confirmation: false }}
+      >
+        <EventDialogContent open {...defaultProps} onClose={onClose} />
+      </EventCalendarProvider>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Delete event' }));
+
+    // Without the recurring plugin the delete applies immediately and the dialog closes.
+    expect(onEventsChange.mock.calls.length).to.equal(1);
+    expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+    expect(onClose.mock.calls.length).to.equal(1);
   });
 
   it('should not render the resource select when there are no resources, but should keep the color picker', () => {
@@ -194,6 +462,161 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     await user.click(screen.getByText(DEFAULT_EVENT.title));
     expect(await screen.findByLabelText(/event title/i)).to.have.value(DEFAULT_EVENT.title);
+  });
+
+  describe('Deletion', () => {
+    function renderDialogProvider(providerProps: Record<string, unknown> = {}) {
+      return render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+          {...providerProps}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    // `renderDialogProvider`'s fixed `events` array never actually removes the event from the DOM
+    // on delete (the store warns if nothing feeds `onEventsChange` back into it), which can't
+    // exercise what happens to focus once an occurrence really unmounts. This one is controlled.
+    function renderStatefulDialogProvider(providerProps: Record<string, unknown> = {}) {
+      function StatefulProvider() {
+        const [events, setEvents] = React.useState<SchedulerEvent[]>([DEFAULT_EVENT]);
+        return (
+          <EventCalendarProvider
+            events={events}
+            onEventsChange={setEvents}
+            resources={resources}
+            visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+            {...providerProps}
+          >
+            <EventDialogProvider>
+              <MonthView />
+            </EventDialogProvider>
+          </EventCalendarProvider>
+        );
+      }
+
+      return render(<StatefulProvider />);
+    }
+
+    it('should open the delete confirmation dialog instead of deleting immediately when the dialog Delete event is clicked', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+
+      expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should delete the event and close the dialog once Delete event is confirmed', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+      // The event dialog's own delete button shares the same accessible name, so the confirm
+      // click is scoped to the confirmation dialog.
+      const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+      await user.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
+      await waitFor(() => {
+        expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+      });
+    });
+
+    it('should keep the event and the dialog open when Cancel is clicked in the confirmation dialog', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      });
+      expect(screen.getByLabelText(/event title/i)).to.have.value(DEFAULT_EVENT.title);
+    });
+
+    it('should move focus to the owning grid cell after a confirmed Delete', async () => {
+      const { user } = renderStatefulDialogProvider();
+      const cell = screen.getByText(DEFAULT_EVENT.title).closest<HTMLElement>('[role="gridcell"]')!;
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+      const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+      await user.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+      // Confirms the event actually unmounts here, so the assertion below exercises the real
+      // focus-loss scenario, not a no-op.
+      await waitFor(() => {
+        expect(screen.queryByText(DEFAULT_EVENT.title)).to.equal(null);
+      });
+      // The fallback focus is deferred past the dialog's own focus trap releasing.
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should move focus to the owning grid cell after a delete with no confirmation', async () => {
+      const { user } = renderStatefulDialogProvider({ eventDeletion: { confirmation: false } });
+      const cell = screen.getByText(DEFAULT_EVENT.title).closest<HTMLElement>('[role="gridcell"]')!;
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+
+      await waitFor(() => {
+        expect(screen.queryByText(DEFAULT_EVENT.title)).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should return focus to the dialog Delete event button after Cancel', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      const deleteButton = await screen.findByRole('button', { name: 'Delete event' });
+      await user.click(deleteButton);
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      // The dialog closes through an exit transition, so it lingers in the DOM for a tick —
+      // asserting before it's gone would only catch focus still sitting inside it.
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      });
+      // Nothing was deleted, so MUI's own restore-on-close returns focus to the dialog's Delete
+      // event button — the element that had it when the confirmation dialog opened.
+      expect(document.activeElement).to.equal(deleteButton);
+    });
+
+    it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({
+        onEventsChange,
+        eventDeletion: { confirmation: false },
+      });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+    });
   });
 
   it('should not render the recurrence tab when no slot is provided', () => {
@@ -318,6 +741,101 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
+  });
+
+  describe('read-only date and time', () => {
+    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: TemporalTimezone) {
+      if (displayTimezone) {
+        builder.withDisplayTimezone(displayTimezone);
+      }
+      const event: SchedulerEvent = builder.readOnly().build();
+
+      render(
+        <EventCalendarProvider events={[event]} displayTimezone={displayTimezone}>
+          <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+        </EventCalendarProvider>,
+      );
+
+      const label = document.querySelector<HTMLElement>(
+        `.${eventCalendarClasses.eventDialogDateTimeLabel}`,
+      )!;
+      const times = Array.from(label.querySelectorAll('time')).map((time) =>
+        time.getAttribute('datetime'),
+      );
+      return { text: label.textContent, times };
+    }
+
+    it('should show the date and the time range of a single-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 7:30 AM - 8:15 AM');
+      expect(times).to.deep.equal(['2025-05-26T07:30:00', '2025-05-26T08:15:00']);
+    });
+
+    it('should show the end date of a multi-day timed event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-03T13:30:00Z', '2025-05-05T14:15:00Z'),
+      );
+
+      expect(text).to.equal('Saturday, May 3rd, 2025, 1:30 PM - Monday, May 5th, 2025, 2:15 PM');
+      expect(times).to.deep.equal(['2025-05-03T13:30:00', '2025-05-05T14:15:00']);
+    });
+
+    it('should show a timed event ending at midnight as a multi-day event, like the grid', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T22:00:00Z', '2025-05-27T00:00:00Z'),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 10:00 PM - Tuesday, May 27th, 2025, 12:00 AM');
+    });
+
+    it('should show the dates and times in the display timezone', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 4:30 PM - 5:15 PM');
+      expect(times).to.deep.equal(['2025-05-26T16:30:00', '2025-05-26T17:15:00']);
+    });
+
+    it('should show both dates when the event crosses midnight only in the display timezone', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T14:30:00Z', '2025-05-26T15:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 11:30 PM - Tuesday, May 27th, 2025, 12:15 AM');
+    });
+
+    it('should show a single date when the event crosses midnight only in its own timezone', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T23:30:00Z', '2025-05-27T00:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Tuesday, May 27th, 2025, 8:30 AM - 9:15 AM');
+    });
+
+    it('should show the date of a single-day all-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, All Day');
+      expect(times).to.deep.equal(['2025-05-26']);
+    });
+
+    it('should show the date range of a multi-day all-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-03T00:00:00Z', '2025-05-05T23:59:59Z', { allDay: true }),
+      );
+
+      expect(text).to.equal('Saturday, May 3rd, 2025 - Monday, May 5th, 2025, All Day');
+      expect(times).to.deep.equal(['2025-05-03', '2025-05-05']);
+    });
   });
 
   describe('eventDialogGeneralTab slot', () => {
@@ -938,8 +1456,17 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.clear(endDateInput);
       await user.type(endDateInput, '2025-05-20');
       await user.click(screen.getByRole('button', { name: 'Save' }));
-      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+      expect(screen.getByLabelText(/end date/i)).toHaveAccessibleDescription(
+        'End date cannot be before start date.',
+      );
     }
+
+    it('should focus the field with the range error on save', async () => {
+      const { user } = renderWithSlot({}, { onEventsChange: () => {} });
+      await submitInvertedRange(user);
+
+      expect(document.activeElement).to.equal(screen.getByLabelText(/end date/i));
+    });
 
     it('should clear the range error when the range is fixed through the start date', async () => {
       const { user } = renderWithSlot({}, { onEventsChange: () => {} });
@@ -949,7 +1476,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const startDateInput = screen.getByLabelText(/start date/i);
       await user.clear(startDateInput);
       await user.type(startDateInput, '2025-05-19');
-      expect(screen.queryByRole('alert')).to.equal(null);
+      expect(screen.queryByText('End date cannot be before start date.')).to.equal(null);
     });
 
     it('should clear the range error when the all-day switch is toggled', async () => {
@@ -957,7 +1484,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await submitInvertedRange(user);
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
-      expect(screen.queryByRole('alert')).to.equal(null);
+      expect(screen.queryByText('End date cannot be before start date.')).to.equal(null);
     });
 
     it('should block the submit of an unparseable date from a custom field', async () => {
@@ -1043,11 +1570,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // The native `required` on the section's input already blocks a UI submit,
       // so exercise the programmatic path that reaches the form contract.
       fireEvent.submit(screen.getByRole('button', { name: 'Save' }).closest('form')!);
-      await screen.findAllByRole('alert');
+      await screen.findByText('Enter a valid date.');
 
       expect(onEventsChange.mock.calls.length).to.equal(0);
-      const alerts = screen.getAllByRole('alert').map((alert) => alert.textContent);
-      expect(alerts).to.deep.equal(['Enter a valid date.']);
+      // On the start date only.
+      expect(screen.getAllByText(/^Enter a valid/)).to.have.length(1);
+      expect(screen.getByLabelText(/start date/i)).toHaveAccessibleDescription(
+        'Enter a valid date.',
+      );
     });
 
     it('should ignore the time fields of an all-day event when validating', async () => {
@@ -1172,7 +1702,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       expect(onEventsChange.mock.calls.length).to.equal(0);
       // Effects register in tree order, so the earlier sibling's validator wins.
-      expect(screen.getByRole('alert')).to.have.text('Must stay within the project period');
+      expect(screen.getByLabelText(/end date/i)).toHaveAccessibleDescription(
+        'Must stay within the project period',
+      );
     });
 
     it('should mark the date and time inputs required', () => {
@@ -1395,6 +1927,42 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
             defaultValue: 'Acme',
             validate: () => deferred.promise,
           });
+          const startTime = useEventDialogFormField('startTime');
+          return (
+            <button type="button" onClick={() => startTime.setValue('07:45')}>
+              Shift start
+            </button>
+          );
+        }
+        const { user, setProps } = renderWithSlot(
+          { eventDialogGeneralTab: AsyncValidatedSection },
+          { onEventsChange, displayTimezone: 'UTC' },
+        );
+
+        // The start was seeded as 07:30 UTC and edited to 07:45; while the validation
+        // is pending, the display timezone changes, so the edited wall time must
+        // serialize as a New York time.
+        await user.click(screen.getByRole('button', { name: 'Shift start' }));
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+        setProps({ displayTimezone: 'America/New_York' });
+        await act(async () => deferred.resolve(null));
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        const updated = onEventsChange.mock.calls[0][0][0];
+        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:45:00.000Z');
+        // The untouched end was validated as a New York time too: persisting its stored
+        // 08:15Z would invert the range, so it follows the start into the new timezone.
+        expect(new Date(updated.end).toISOString()).to.equal('2025-05-26T12:15:00.000Z');
+      });
+
+      it('should keep an untouched range byte-identical when the display timezone changes while the async validation is pending', async () => {
+        const onEventsChange = vi.fn();
+        const deferred = createDeferred();
+        function AsyncValidatedSection() {
+          useEventDialogFormField('client', {
+            defaultValue: 'Acme',
+            validate: () => deferred.promise,
+          });
           return null;
         }
         const { user, setProps } = renderWithSlot(
@@ -1402,15 +1970,16 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           { onEventsChange, displayTimezone: 'UTC' },
         );
 
-        // The wall-time fields were seeded as 07:30–08:15 UTC; while the validation
-        // is pending, the same wall times start displaying as New York times.
+        // No range field was edited: the flip while the validation is pending must not
+        // re-anchor the stored dates to the new display timezone.
         await user.click(screen.getByRole('button', { name: 'Save' }));
         setProps({ displayTimezone: 'America/New_York' });
         await act(async () => deferred.resolve(null));
 
         expect(onEventsChange.mock.calls.length).to.equal(1);
         const updated = onEventsChange.mock.calls[0][0][0];
-        expect(new Date(updated.start).toISOString()).to.equal('2025-05-26T11:30:00.000Z');
+        expect(updated.start).to.equal(DEFAULT_EVENT.start);
+        expect(updated.end).to.equal(DEFAULT_EVENT.end);
       });
 
       it('should enforce a resource requirement enabled while the async validation was pending', async () => {

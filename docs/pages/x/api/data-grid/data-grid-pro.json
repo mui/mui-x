@@ -164,6 +164,7 @@
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "headerFilterHeight": { "type": { "name": "number" } },
     "headerFilters": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
     "hideFooter": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterPagination": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterRowCount": { "type": { "name": "bool" }, "default": "false" },

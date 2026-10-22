@@ -39,6 +39,7 @@ describe('TimelineGrid keyboard navigation', () => {
     resources: resourcesProp = resources,
     children,
     titleContent,
+    scrollRowIntoView,
   }: {
     onStoreMount?: (store: AnyEventCalendarStore) => void;
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
@@ -47,6 +48,7 @@ describe('TimelineGrid keyboard navigation', () => {
     resources?: typeof resources;
     children?: React.ReactNode;
     titleContent?: React.ReactNode;
+    scrollRowIntoView?: (rowIndex: number) => void;
   } = {}) {
     return (
       <EventTimelinePremiumProvider
@@ -56,7 +58,7 @@ describe('TimelineGrid keyboard navigation', () => {
         eventCreation={eventCreation}
         onEventEditingStart={onEventEditingStart}
       >
-        <TimelineGrid.Root columnTypes={columnTypes}>
+        <TimelineGrid.Root columnTypes={columnTypes} scrollRowIntoView={scrollRowIntoView}>
           <TimelineGrid.Row data-testid="header-row" aria-rowindex={1}>
             <TimelineGrid.Cell>title header</TimelineGrid.Cell>
             <TimelineGrid.Cell>events header</TimelineGrid.Cell>
@@ -79,6 +81,7 @@ describe('TimelineGrid keyboard navigation', () => {
                     <TimelineGrid.Event
                       eventId={`event-${resourceId}`}
                       occurrenceKey={`occ-${resourceId}`}
+                      dataTimezone={undefined}
                       start={processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter)}
                       end={processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter)}
                       renderDragPreview={() => null}
@@ -163,6 +166,100 @@ describe('TimelineGrid keyboard navigation', () => {
       await user.keyboard('{ArrowDown}');
 
       expect(lastCell).toHaveFocus();
+    });
+
+    it('should scroll the target row into view', async () => {
+      const scrollRowIntoView = vi.fn();
+      const { user } = render(<Grid scrollRowIntoView={scrollRowIntoView} />);
+
+      const cells = getEventsCells();
+      act(() => {
+        cells[0].focus();
+      });
+      await user.keyboard('{ArrowDown}');
+      expect(cells[1]).toHaveFocus();
+      await user.keyboard('{ArrowUp}');
+      expect(cells[0]).toHaveFocus();
+
+      expect(scrollRowIntoView.mock.calls).to.deep.equal([[1], [0]]);
+    });
+
+    it('should not scroll when the focus stays on the first or last row', async () => {
+      const scrollRowIntoView = vi.fn();
+      const { user } = render(<Grid scrollRowIntoView={scrollRowIntoView} />);
+
+      const cells = getEventsCells();
+      act(() => {
+        cells[0].focus();
+      });
+      await user.keyboard('{ArrowUp}');
+      act(() => {
+        cells[cells.length - 1].focus();
+      });
+      await user.keyboard('{ArrowDown}');
+
+      expect(scrollRowIntoView.mock.calls).to.have.length(0);
+    });
+
+    it('should scroll the row the focus moves to when the focused row is removed', () => {
+      const scrollRowIntoView = vi.fn();
+      const { setProps } = render(
+        <Grid resources={resources} scrollRowIntoView={scrollRowIntoView} />,
+      );
+
+      act(() => {
+        getEventsCells()[2].focus();
+      });
+      setProps({ resources: resources.slice(0, 2) });
+
+      expect(scrollRowIntoView.mock.calls).to.deep.equal([[1]]);
+      expect(getEventsCells()[1]).toHaveFocus();
+    });
+
+    it('should move from the focused row after the rows above it are removed', async () => {
+      const { setProps, user } = render(<Grid resources={resources} />);
+
+      act(() => {
+        getEventsCells()[2].focus();
+      });
+      setProps({ resources: resources.slice(1) });
+      expect(getEventsCells()[1]).toHaveFocus();
+
+      await user.keyboard('{ArrowUp}');
+      expect(getEventsCells()[0]).toHaveFocus();
+    });
+
+    it('should move from the focused row after a row is added above it', async () => {
+      const { setProps, user } = render(<Grid resources={resources.slice(1)} />);
+
+      act(() => {
+        getEventsCells()[1].focus();
+      });
+      setProps({ resources });
+      expect(getEventsCells()[2]).toHaveFocus();
+
+      await user.keyboard('{ArrowUp}');
+      expect(getEventsCells()[1]).toHaveFocus();
+    });
+
+    it('should not move the focus back to the grid when a row it left is removed', async () => {
+      const scrollRowIntoView = vi.fn();
+      const { setProps } = render(
+        <Grid resources={resources} scrollRowIntoView={scrollRowIntoView} />,
+      );
+
+      const cells = getEventsCells();
+      act(() => {
+        cells[2].focus();
+      });
+      // The blur is handled once the focus settles.
+      await act(async () => {
+        cells[2].blur();
+      });
+      setProps({ resources: resources.slice(0, 2) });
+
+      expect(document.activeElement).to.equal(document.body);
+      expect(scrollRowIntoView.mock.calls).to.have.length(0);
     });
   });
 
@@ -471,10 +568,11 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
 
       // Remove the first resource (the row we originally focused before navigating away).
-      // The cleanup of that row must not clobber focusedCell, since it no longer matches.
+      // The cleanup of that row must not clear focusedCell, which moves with the focused row
+      // to index 0.
       setProps({ resources: resources.slice(1) });
 
-      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
+      expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 0 });
     });
   });
 

@@ -1,6 +1,7 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import {
+  createEventRangeIndex,
   getOccurrencesFromEvents,
   getTimelineAxisDurationMs,
 } from '@mui/x-scheduler-internals/internals';
@@ -9,7 +10,7 @@ import type {
   SchedulerDependency,
   SchedulerDependencyType,
 } from '@mui/x-scheduler-internals-premium/models';
-import { createDependencyAnchorResolver } from '../content/timeline-dependency-arrows/dependencyAnchorResolver';
+import { createDependencyAnchorResolver } from '../content/timeline-dependencies/dependencyAnchorResolver';
 
 // Shared by the dependency tests, the anchor resolver and the arrow geometry ones included. Lives in `tests/` so
 // the declaration build (which excludes that folder) never follows its `test/utils`
@@ -48,11 +49,15 @@ export function getOccurrences(events: SchedulerProcessedEvent[]) {
     adapter,
     start: collectionStart,
     end: collectionEnd,
-    events,
+    eventRangeIndex: createEventRangeIndex(events, adapter, false),
     displayTimezone: 'default',
     visibleResources: {},
     recurringEventsPlugin: null,
   });
+}
+
+export function buildEventLookup(...events: SchedulerProcessedEvent[]) {
+  return new Map(events.map((event) => [event.id, event]));
 }
 
 export function buildDependency(
@@ -73,6 +78,7 @@ export function buildResolver(parameters: {
   eventsWidth?: number;
   positionByOccurrenceKey?: ResolverParameters['positionByOccurrenceKey'];
   endpointIds?: ResolverParameters['endpointIds'];
+  processedEventLookup?: ResolverParameters['processedEventLookup'];
 }) {
   return createDependencyAnchorResolver({
     adapter,
@@ -83,6 +89,7 @@ export function buildResolver(parameters: {
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,
+    processedEventLookup: parameters.processedEventLookup ?? new Map(),
     endpointIds: parameters.endpointIds,
   });
 }
