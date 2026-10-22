@@ -19,13 +19,13 @@ import { vi, describe, it, expect } from 'vitest';
 const LEFT_TIP = '0px 50%';
 const RIGHT_TIP = '100% 50%';
 
-// Reads the computed styles, so this only runs in the browser.
-describe.skipIf(isJSDOM)('<StandaloneMonthView /> - RTL', () => {
-  const { renderSettled } = createSchedulerRenderer({
+describe('<StandaloneMonthView /> - RTL', () => {
+  const { render, renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  describe.each([
+  // Reads the computed styles, so this only runs in the browser.
+  describe.skipIf(isJSDOM).each([
     ['ltr', { endTip: RIGHT_TIP, startTip: LEFT_TIP }],
     ['rtl', { endTip: LEFT_TIP, startTip: RIGHT_TIP }],
   ] as const)('%s', (direction, { endTip, startTip }) => {
@@ -86,16 +86,12 @@ describe.skipIf(isJSDOM)('<StandaloneMonthView /> - RTL', () => {
       );
     });
   });
-});
-
-describe('<StandaloneMonthView /> - RTL drag and drop', () => {
-  const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-07-03Z') });
 
   describe.each([
     // The pointer is on the inline-end day (July 3) in LTR and on the inline-start day (July 1) in RTL.
     ['ltr', 8],
     ['rtl', 10],
-  ] as const)('%s', (direction, expectedStartDay) => {
+  ] as const)('drag and drop in %s', (direction, expectedStartDay) => {
     it('should move a multi-day event by the distance from the grabbed day', async () => {
       const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
