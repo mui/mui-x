@@ -13,6 +13,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
+  buildTemporalPlainDate,
   extractStandaloneEvent,
   dateToEventString,
   getDateKey,
@@ -20,13 +21,12 @@ import {
   mergeDateAndTime,
 } from '@mui/x-scheduler-internals/internals';
 import {
-  getRemainingOccurrences,
   getWeekDayCode,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
-import { hasOccurrenceBefore, hasRemainingOccurrence } from './seriesOccurrence';
+import { RecurringSeries } from './RecurringSeries';
 
 export function updateRecurringEvent(
   adapter: Adapter,
@@ -109,8 +109,10 @@ export function applyRecurringUpdateFollowing(
     });
   }
 
-  let newEventRRule: SchedulerEventRecurrenceRule | undefined;
-  if (newRRule != null) {
+  let newEventRRule: SchedulerEventRecurrenceRule | string | undefined;
+  if (typeof newRRule === 'string') {
+    newEventRRule = newRRule;
+  } else if (newRRule != null) {
     if (newRRule.until != null) {
       newEventRRule = {
         ...newRRule,
@@ -131,7 +133,8 @@ export function applyRecurringUpdateFollowing(
   };
 
   // 3) Drop the original series when no occurrence remains before the edit, otherwise truncate it.
-  if (!hasOccurrenceBefore(adapter, originalEvent, occurrenceStart)) {
+  const occurrencePlainDate = buildTemporalPlainDate(adapter, occurrenceStart);
+  if (!RecurringSeries.fromEvent(adapter, originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
     return { created: [newEvent], deleted: [originalEvent.id] };
   }
 
@@ -275,7 +278,7 @@ export function applyRecurringUpdateOnlyThis(
   ];
   const created = [extractStandaloneEvent(originalEvent, stringifiedChanges)];
 
-  if (!hasRemainingOccurrence(adapter, originalEvent, exDates)) {
+  if (!RecurringSeries.fromEvent(adapter, originalEvent, exDates).hasOccurrence()) {
     return { created, deleted: [originalEvent.id] };
   }
 
@@ -348,14 +351,14 @@ export function decideSplitRRule(
   originalSeriesStart: TemporalSupportedObject,
   splitStart: TemporalSupportedObject,
   changes: Partial<SchedulerEventUpdatedProperties>,
-): SchedulerProcessedEventRecurrenceRule | undefined {
+): SchedulerProcessedEventRecurrenceRule | string | undefined {
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
   const changesRRule = changes.rrule;
 
   // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
   if (hasRRuleProp && changesRRule) {
-    return changesRRule as SchedulerProcessedEventRecurrenceRule;
+    return changesRRule;
   }
 
   // Case B — user explicitly removed recurrence → one-off
@@ -392,14 +395,9 @@ export function decideSplitRRule(
 
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
-    const dayBefore = adapter.addDays(adapter.startOfDay(splitStart), -1);
-    const remaining = getRemainingOccurrences(
-      adapter,
-      originalRule,
-      originalSeriesStart,
-      dayBefore,
-      originalRule.count,
-    );
+    const series = new RecurringSeries(adapter, { rule: originalRule, start: originalSeriesStart });
+    const splitPlainDate = buildTemporalPlainDate(adapter, splitStart);
+    const remaining = originalRule.count - series.countOccurrencesBefore(splitPlainDate);
     // If no occurrences remain, the split segment is non-recurring.
     if (remaining <= 0) {
       return undefined;

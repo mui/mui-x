@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
 import { GridColumnSortButton } from '../GridColumnSortButton';
 import type { GridColumnSortButtonProps } from '../GridColumnSortButton';
@@ -12,11 +13,26 @@ export interface GridColumnHeaderSortIconProps extends Omit<
 }
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const { columnName = props.field, ...other } = props;
+  const { field, columnName = field, onClick, ...other } = props;
+  const apiRef = useGridApiContext();
+
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      apiRef.current.setColumnHeaderFocus(field, event);
+      onClick?.(event);
+    },
+    [apiRef, field, onClick],
+  );
 
   return (
     <GridIconButtonContainer>
-      <GridColumnSortButton {...other} columnName={columnName} tabIndex={-1} />
+      <GridColumnSortButton
+        {...other}
+        field={field}
+        columnName={columnName}
+        tabIndex={-1}
+        onClick={handleClick}
+      />
     </GridIconButtonContainer>
   );
 }

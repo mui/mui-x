@@ -4,6 +4,7 @@ import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHead
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
 import type { GridColumnsPanelProps } from '../components/panel/GridColumnsPanel';
 import type { GridFilterPanelProps } from '../components/panel/filterPanel/GridFilterPanelBase';
+import type { GridFilterFormColumnInputProps } from '../components/panel/filterPanel/GridFilterFormColumnInput';
 import type { GridFooterContainerProps } from '../components/containers/GridFooterContainer';
 import type { GridOverlayProps } from '../components/containers/GridOverlay';
 import type { GridPanelProps } from '../components/panel/GridPanel';
@@ -88,6 +89,7 @@ export interface ColumnsPanelPropsOverrides {}
 export interface DetailPanelsPropsOverrides {}
 export interface ColumnsManagementPropsOverrides {}
 export interface FilterPanelPropsOverrides {}
+export interface FilterFormColumnInputPropsOverrides {}
 export interface FooterPropsOverrides {}
 export interface FooterRowCountOverrides {}
 export interface PaginationPropsOverrides {}
@@ -142,6 +144,7 @@ interface ElementSlotProps {
   columnsManagement: GridColumnsManagementProps & ColumnsManagementPropsOverrides;
   detailPanels: GridDetailPanelsProps & DetailPanelsPropsOverrides;
   filterPanel: GridFilterPanelProps & FilterPanelPropsOverrides;
+  filterFormColumnInput: GridFilterFormColumnInputProps & FilterFormColumnInputPropsOverrides;
   footer: GridFooterContainerProps & FooterPropsOverrides;
   footerRowCount: GridRowCountProps & FooterRowCountOverrides;
   loadingOverlay: GridLoadingOverlayProps & LoadingOverlayPropsOverrides;

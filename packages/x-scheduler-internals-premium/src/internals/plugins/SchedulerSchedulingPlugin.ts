@@ -80,12 +80,9 @@ export class SchedulerSchedulingPlugin<
 
   declare private readonly applyCascade: (updated: SchedulerEventUpdatedProperties[]) => void;
 
-  // The batch `applyCascade` is applying: those moves are already the engine's output.
-  // Matched by reference, so an update triggered from `onEventsChange` still cascades.
-  private appliedCascade: SchedulerEventUpdatedProperties[] | null = null;
-
   /**
-   * @param applyCascade Applies event updates through the store's `updateEvents`.
+   * @param applyCascade Applies event updates through the store's `updateEvents`, without
+   * running `handleEventsUpdate` on them: they are already the engine's output.
    */
   public constructor(
     store: SchedulerStore<TEvent, any, State, Parameters>,
@@ -136,7 +133,7 @@ export class SchedulerSchedulingPlugin<
    * Emits `onDependenciesChange` with `remaining` only if it actually dropped entries from
    * `current`, so unaffected updates don't trigger a no-op emission.
    */
-  private updateDependenciesIfChanged(
+  private commitDependenciesIfChanged(
     current: readonly SchedulerDependency[],
     remaining: SchedulerDependency[],
   ) {
@@ -146,23 +143,24 @@ export class SchedulerSchedulingPlugin<
   }
 
   /**
-   * Removes the dependencies referencing deleted events and computes the
-   * auto-scheduling cascade for the updated ones, all in the same update. A batch
-   * whose cascade would need to move a read-only event is vetoed instead: nothing is
-   * applied, and the rejection is returned for the caller to surface.
+   * Computes the dependency cleanup for the deleted events and the auto-scheduling cascade for
+   * the updated ones, all in the same update. A batch whose cascade would need to move a
+   * read-only event is vetoed instead: nothing is applied, and the rejection is returned for the
+   * caller to surface.
    *
-   * With a `dataSource`, event deletions are persisted asynchronously after this hook has
-   * already emitted `onDependenciesChange`. If that persistence fails, the event survives but
-   * its dependencies were already removed — a known v1 limitation, there is no rollback.
+   * Neither is applied here: `updateEvents` can still refuse the merged batch afterward for a
+   * reason this hook can't predict (e.g. a date `eventModelStructure` can't write back), so the
+   * dependency cleanup is returned as `commit`, called only once the caller has confirmed the
+   * batch goes ahead — a vetoed batch must not have emitted it.
+   *
+   * With a `dataSource`, event deletions are persisted asynchronously after `commit` has already
+   * emitted `onDependenciesChange`. If that persistence fails, the event survives but its
+   * dependencies were already removed — a known v1 limitation, there is no rollback.
    */
   public handleEventsUpdate = (parameters: UpdateEventsParameters) => {
-    if (parameters.updated !== undefined && parameters.updated === this.appliedCascade) {
-      return undefined;
-    }
     const { deleted, updated } = parameters;
     const deletedSet = new Set(deleted);
 
-    // Cascade first: a vetoed batch must not have emitted the dependency cleanup.
     let cascaded: SchedulerEventUpdatedProperties[] = [];
     if (updated && updated.length > 0 && this.store.state.dependencyModelList.length > 0) {
       const result = computeAutoSchedulingCascade({
@@ -190,15 +188,19 @@ export class SchedulerSchedulingPlugin<
       cascaded = result.updated;
     }
 
+    let commit: (() => void) | undefined;
     if (deletedSet.size > 0) {
       const current = this.store.state.dependencyModelList;
       const remaining = current.filter(
         (dependency) => !deletedSet.has(dependency.source) && !deletedSet.has(dependency.target),
       );
-      this.updateDependenciesIfChanged(current, remaining);
+      commit = () => this.commitDependenciesIfChanged(current, remaining);
     }
 
-    return cascaded.length > 0 ? { updated: cascaded } : undefined;
+    if (cascaded.length === 0 && !commit) {
+      return undefined;
+    }
+    return { updated: cascaded.length > 0 ? cascaded : undefined, commit };
   };
 
   /**
@@ -335,12 +337,7 @@ export class SchedulerSchedulingPlugin<
 
     this.updateDependencies(nextList);
     if (result.updated.length > 0) {
-      this.appliedCascade = result.updated;
-      try {
-        this.applyCascade(result.updated);
-      } finally {
-        this.appliedCascade = null;
-      }
+      this.applyCascade(result.updated);
     }
     return null;
   }
@@ -390,7 +387,7 @@ export class SchedulerSchedulingPlugin<
     }
     const current = this.store.state.dependencyModelList;
     const remaining = current.filter((entry) => entry.id !== dependencyId);
-    this.updateDependenciesIfChanged(current, remaining);
+    this.commitDependenciesIfChanged(current, remaining);
     return true;
   };
 
