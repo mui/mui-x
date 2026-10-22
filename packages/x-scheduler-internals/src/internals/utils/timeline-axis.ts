@@ -106,6 +106,11 @@ export function timelineAxisOffsetToDate(
   const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
 
   const timezone = adapter.getTimezone(axis.start);
+  // A column without a size gives a non-finite offset, which maps to an invalid date, like the
+  // adapter's methods.
+  if (!Number.isFinite(offsetMs)) {
+    return createAdapterDate(adapter, NaN, timezone);
+  }
   const plainDate = addDaysToPlainDate(buildTemporalPlainDate(adapter, axis.start), dayIndex);
   return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
 }

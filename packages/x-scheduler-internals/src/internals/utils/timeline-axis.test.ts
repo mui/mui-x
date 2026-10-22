@@ -51,6 +51,13 @@ describe('timeline-axis', () => {
       expect(date).toEqualDateTime(adapter.date('2025-01-04T19:00:00.000Z', 'UTC'));
     });
 
+    it('should return an invalid date for a non-finite offset', () => {
+      expect(adapter.isValid(timelineAxisOffsetToDate(adapter, fullAxis, NaN))).to.equal(false);
+      expect(adapter.isValid(timelineAxisOffsetToDate(adapter, fullAxis, Infinity))).to.equal(
+        false,
+      );
+    });
+
     it('should map the end of an axis ending on the last supported day', () => {
       const lastDay = adapter.date('9999-12-31T00:00:00.000Z', 'UTC');
       const axis = { ...fullAxis, start: lastDay, end: adapter.endOfDay(lastDay) };
