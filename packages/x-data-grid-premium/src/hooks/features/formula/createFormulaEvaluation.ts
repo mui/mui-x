@@ -27,10 +27,12 @@ import type {
   FormulaAstNode,
   FormulaBoundDependencies,
   FormulaCellRef,
+  FormulaColumnIntervalDependency,
   FormulaErrorValue,
   FormulaPositionContext,
   FormulaScalar,
   FormulaStaticDependencies,
+  FormulaWholeColumnDependency,
 } from './engine';
 import type {
   GridFormulaCellKey,
@@ -47,7 +49,7 @@ import {
   EMPTY_POSITION_CONTEXT,
 } from './gridFormulaPositionContext';
 import type { GridFormulaPositionSnapshot } from './gridFormulaPositionContext';
-import { resolveComputedCellValue } from './gridComputedColumnsRuntime';
+import { evictComputedResultsForRow, resolveComputedCellValue } from './gridComputedColumnsRuntime';
 
 /**
  * Above this many materialized range cells per formula, a dev-mode warning
@@ -74,6 +76,21 @@ export interface FormulaPassContext {
    * @returns {GridFormulaPositionSnapshot} The current position inputs.
    */
   getPositionSnapshot: () => GridFormulaPositionSnapshot;
+  /**
+   * The formula fields each computed column reads, built by `getComputedFormulaFields`
+   * on first need.
+   */
+  computedFormulaFields?: Map<string, string[]>;
+  /**
+   * The rows whose computed cells the row scan of a rows-diff pass read, before the
+   * evaluation: their memoized results may hold the placeholder of a record the scan
+   * rebuilt.
+   */
+  rowsReadByScan?: Set<string>;
+  /**
+   * The records locked by a cycle before a full pass reset the cache.
+   */
+  previousCyclicKeys?: Set<GridFormulaCellKey>;
 }
 
 /**
@@ -298,6 +315,7 @@ function deleteRecord(ctx: FormulaPassContext, key: GridFormulaCellKey) {
   }
   detachRecordEdges(ctx.cache, key, existing);
   ctx.cache.records.delete(key);
+  ctx.cache.cyclicKeys.delete(key);
 }
 
 function addDependentsToDirty(
@@ -405,9 +423,96 @@ function getStaticDependencies(ast: FormulaAstNode): FormulaStaticDependencies {
 }
 
 /**
+ * The formula fields each computed column reads through its dependency closure,
+ * for the computed columns that read at least one.
+ *
+ * The closure only changes with the formulas or the set of the computed columns,
+ * which re-create their getters, and the formula fields only change with the
+ * columns: both run a full pass, which binds every record again. So a record
+ * bound by an earlier pass never holds the edges of a stale closure.
+ */
+function getComputedFormulaFields(ctx: FormulaPassContext): Map<string, string[]> {
+  if (ctx.computedFormulaFields === undefined) {
+    const computedFormulaFields = new Map<string, string[]>();
+    const { dependencyClosure } = ctx.cache.computedColumns;
+    if (dependencyClosure.size > 0) {
+      const formulaFields = new Set(ctx.formulaFields);
+      for (const [field, closure] of dependencyClosure) {
+        const fields = Array.from(closure).filter((dependency) => formulaFields.has(dependency));
+        if (fields.length > 0) {
+          computedFormulaFields.set(field, fields);
+        }
+      }
+    }
+    ctx.computedFormulaFields = computedFormulaFields;
+  }
+  return ctx.computedFormulaFields;
+}
+
+/**
+ * A computed cell is not a record, but it only reads the cells of its own row: a formula
+ * that reads it depends on the formula cells of that row the computed column reads. Without
+ * these edges the pass can evaluate the formula before them, never dirties it when they
+ * change, and misses the cycles through the computed column. A range over a computed
+ * column covers the same rows of those formula fields.
+ * The dependencies on the computed cells stay: their tracked raw values dirty the formula
+ * when a raw input of the computed column changes.
+ */
+function expandComputedDependencies(
+  ctx: FormulaPassContext,
+  dependencies: FormulaBoundDependencies,
+): FormulaBoundDependencies {
+  const computedFormulaFields = getComputedFormulaFields(ctx);
+  if (computedFormulaFields.size === 0) {
+    return dependencies;
+  }
+  let cells: Set<GridFormulaCellKey> | null = null;
+  for (const key of dependencies.cells) {
+    const { id, field } = parseFormulaCellKey(key);
+    const formulaFields = computedFormulaFields.get(field);
+    if (formulaFields !== undefined) {
+      cells ??= new Set(dependencies.cells);
+      for (const formulaField of formulaFields) {
+        cells.add(createFormulaCellKey(id, formulaField));
+      }
+    }
+  }
+  let columnIntervals: FormulaColumnIntervalDependency[] | null = null;
+  for (const interval of dependencies.columnIntervals) {
+    const formulaFields = computedFormulaFields.get(interval.field);
+    if (formulaFields !== undefined) {
+      columnIntervals ??= [...dependencies.columnIntervals];
+      for (const formulaField of formulaFields) {
+        columnIntervals.push({ ...interval, field: formulaField });
+      }
+    }
+  }
+  let wholeColumns: FormulaWholeColumnDependency[] | null = null;
+  for (const wholeColumn of dependencies.wholeColumns) {
+    const formulaFields = computedFormulaFields.get(wholeColumn.field);
+    if (formulaFields !== undefined) {
+      wholeColumns ??= [...dependencies.wholeColumns];
+      for (const formulaField of formulaFields) {
+        wholeColumns.push({ field: formulaField, whole: true });
+      }
+    }
+  }
+  if (cells === null && columnIntervals === null && wholeColumns === null) {
+    return dependencies;
+  }
+  return {
+    ...dependencies,
+    cells: cells ?? dependencies.cells,
+    columnIntervals: columnIntervals ?? dependencies.columnIntervals,
+    wholeColumns: wholeColumns ?? dependencies.wholeColumns,
+  };
+}
+
+/**
  * Re-resolves a record's dependencies. Stable refs bind context-free;
  * positional selectors, `RANGE_REF` and `COLUMN_VALUES` resolve against the
- * pass's position context.
+ * pass's position context. The reads of computed cells are extended to the
+ * formula cells they read.
  */
 function bindRecordDependencies(
   ctx: FormulaPassContext,
@@ -424,7 +529,7 @@ function bindRecordDependencies(
   if (process.env.NODE_ENV !== 'production' && record.usesPositionContext) {
     warnOnLargeRangeDependencies(dependencies, getPassPositionContext(ctx));
   }
-  return dependencies;
+  return expandComputedDependencies(ctx, dependencies);
 }
 
 function buildRecord(
@@ -573,13 +678,40 @@ function finalizeRecordResult(
   key: GridFormulaCellKey,
   record: GridFormulaCellRecord,
   next: GridFormulaResult,
+  locked: boolean,
   changedKeys: Set<GridFormulaCellKey>,
 ) {
+  const { cache } = ctx;
+  const lockChanged = (ctx.previousCyclicKeys ?? cache.cyclicKeys).has(key) !== locked;
+  if (locked) {
+    cache.cyclicKeys.add(key);
+  } else {
+    cache.cyclicKeys.delete(key);
+  }
+  const isReadByComputedColumns = cache.computedColumns.referencedFields.has(record.field);
   const previous = ctx.previousLookup[String(record.id)]?.[record.field];
-  if (previous !== undefined && areResultsEqual(previous, next)) {
+  // A cell read by a computed column that enters or leaves a cycle lock changes even with
+  // an equal `#CYCLE!`: the computed cells of its row are locked with it.
+  const unchanged =
+    !(isReadByComputedColumns && lockChanged) &&
+    previous !== undefined &&
+    areResultsEqual(previous, next)
+      ? previous
+      : null;
+  if (
+    isReadByComputedColumns &&
+    (unchanged === null ||
+      (record.result === PENDING_RESULT && ctx.rowsReadByScan?.has(String(record.id))))
+  ) {
+    // The pass evaluates a computed cell after the formula cells it reads, so the results
+    // memoized for the row saw the previous result of this cell, or the placeholder of a
+    // record the row scan rebuilt: they are stale when that differs from the new result.
+    evictComputedResultsForRow(cache, ctx.rowsLookup[record.id]);
+  }
+  if (unchanged !== null) {
     // Reuse the previous result object so unchanged cells keep their
     // reference and never re-render.
-    record.result = previous;
+    record.result = unchanged;
     return;
   }
   record.result = next;
@@ -710,6 +842,7 @@ function runEvaluation(
       key,
       record,
       evaluateRecordResult(ctx, record, resolver),
+      false,
       changedKeys,
     );
   }
@@ -727,6 +860,7 @@ function runEvaluation(
         code: '#CYCLE!',
         message: 'The formula is part of a circular reference.',
       },
+      true,
       changedKeys,
     );
   }
@@ -740,6 +874,7 @@ function runEvaluation(
  */
 export function computeFullFormulaPass(ctx: FormulaPassContext): FormulaPassResult {
   const { cache, rowsLookup, formulaFields, apiRef } = ctx;
+  ctx.previousCyclicKeys = cache.cyclicKeys;
   resetFormulaEvaluationCache(cache);
 
   const dirty = new Set<GridFormulaCellKey>();
@@ -818,7 +953,12 @@ export function computeRowsDiffFormulaPass(ctx: FormulaPassContext): FormulaPass
     const tracked = cache.trackedValues.get(rowKey);
     if (tracked !== undefined) {
       for (const [field, lastValue] of tracked) {
-        const current = readRawCellValue(apiRef, row, ctx.columnsLookup[field]);
+        const colDef = ctx.columnsLookup[field];
+        if (colDef?.computed) {
+          ctx.rowsReadByScan ??= new Set();
+          ctx.rowsReadByScan.add(rowKey);
+        }
+        const current = readRawCellValue(apiRef, row, colDef);
         if (!Object.is(current, lastValue)) {
           tracked.set(field, current);
           addDependentsToDirty(cache, createFormulaCellKey(id, field), dirty);

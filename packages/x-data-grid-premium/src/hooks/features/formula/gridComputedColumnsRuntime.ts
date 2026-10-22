@@ -114,6 +114,33 @@ export function coerceComputedResult(
 }
 
 /**
+ * Whether a formula cell of the row the column reads is locked by a cycle. Like the
+ * formulas that read the column, the column is then on the cycle or downstream of it,
+ * whichever branch its formula takes: the dependencies are static.
+ */
+function isLockedByCycle(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  cache: GridFormulaInternalCache,
+  row: GridValidRowModel,
+  field: string,
+) {
+  if (cache.cyclicKeys.size === 0) {
+    return false;
+  }
+  const closure = cache.computedColumns.dependencyClosure.get(field);
+  if (closure === undefined) {
+    return false;
+  }
+  const id = gridRowIdSelector(apiRef, row);
+  for (const dependency of closure) {
+    if (cache.cyclicKeys.has(createFormulaCellKey(id, dependency))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Evaluates one computed cell. The result is memoized by row identity, so each
  * (row, column) pair walks its AST once until the row or the definitions change.
  */
@@ -144,6 +171,11 @@ export function evaluateComputedCell(
     return rowResults.get(field) ?? CYCLE_RESULT;
   }
 
+  if (isLockedByCycle(apiRef, cache, row, field)) {
+    rowResults.set(field, CYCLE_RESULT);
+    return CYCLE_RESULT;
+  }
+
   rowResults.set(field, undefined);
   let result: GridFormulaResult | undefined;
   try {
@@ -162,8 +194,10 @@ export function evaluateComputedCell(
           if (colDef.computed) {
             return toResolvedValue(evaluateComputedCell(apiRef, row, ref.field));
           }
-          // The records hold the freshest cell-formula results, including the ones
-          // of the pass in progress — the state lookup is only written after a pass.
+          // The records hold the freshest cell-formula results — the state lookup is
+          // only written after a pass. A pass evaluates the formula cells a computed
+          // cell reads before the formulas that read it, and drops the results of the
+          // row each time one of them is evaluated.
           const formulaRecord = cache.records.get(createFormulaCellKey(id, ref.field));
           if (formulaRecord !== undefined) {
             return toResolvedValue(formulaRecord.result);
@@ -448,6 +482,21 @@ export function haveComputedColDefOverridesChanged(
 
 export function resetComputedResults(cache: GridFormulaInternalCache) {
   cache.computedColumns.results = new WeakMap();
+}
+
+/**
+ * Drops the memoized results of a row while a cell-formula pass evaluates one of its
+ * formula cells that a computed column reads.
+ * @param {GridFormulaInternalCache} cache The internal cache of the formula feature.
+ * @param {GridValidRowModel | undefined} row The row of the evaluated formula cell.
+ */
+export function evictComputedResultsForRow(
+  cache: GridFormulaInternalCache,
+  row: GridValidRowModel | undefined,
+) {
+  if (row !== undefined) {
+    cache.computedColumns.results.delete(row);
+  }
 }
 
 /**

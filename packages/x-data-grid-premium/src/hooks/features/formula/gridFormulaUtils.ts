@@ -64,6 +64,7 @@ export function createFormulaInternalCache(
     dependentsByRowId: new Map(),
     recordsByField: new Map(),
     positionDependentKeys: new Set(),
+    cyclicKeys: new Set(),
     rangeDependentsByField: new Map(),
     positionContext: null,
     positionContextRowIds: null,
@@ -107,6 +108,7 @@ export function resetFormulaEvaluationCache(cache: GridFormulaInternalCache) {
   cache.dependentsByRowId = new Map();
   cache.recordsByField = new Map();
   cache.positionDependentKeys = new Set();
+  cache.cyclicKeys = new Set();
   cache.rangeDependentsByField = new Map();
   // The version counter survives: it must keep increasing across resets.
   cache.positionContext = null;

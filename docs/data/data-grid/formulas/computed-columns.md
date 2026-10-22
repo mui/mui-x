@@ -350,7 +350,7 @@ Every feature reads the evaluated value of a computed cell through the column de
 - **Sorting and filtering** use the value and the operators of the result type. Errors sort last and never match a typed filter.
 - **Export** to CSV and Excel, print, and clipboard copy write the evaluated value; Excel export writes the value even with `escapeFormulas: false`.
 - **Aggregation** functions apply to the computed values, from the column menu or the `aggregationModel`, and a computed column can be **grouped** by, or used for **row spanning**, like any column.
-- **Cell formulas** can reference a computed column by field (`=total * 1.2`), and a computed column can reference a column that contains cell formulas: the formula results are the values it reads.
+- **Cell formulas** can reference a computed column by field (`=total * 1.2`), and a computed column can reference a column that contains cell formulas: the formula results are the values it reads. Chains through both kinds of formulas are evaluated in dependency order. A cycle that goes through a cell formula shows `#CYCLE!` in the cells on it and in the cells that read them—every reference counts, even in a branch of `IF` that is not taken. The header shows no error badge, because the cycle depends on the data of the row.
 - **Pivoting** does not include computed columns: while pivot mode is active they are not added to the grid, the toolbar trigger and the column menu items are hidden, `showComputedColumnEditor()` is ignored, and the model is kept for when pivoting is turned off.
 - **Editing**: a computed cell never enters edit mode. Double-clicking it or pressing <kbd class="key">Enter</kbd> opens the editor of the column instead, read-only for a [locked column](#prevent-changes).
 
@@ -383,7 +383,6 @@ The undo and redo shortcuts typed in the text fields of the panel keep their nat
 - A computed column formula can only reference the fields of the same row. Cell references, ranges, and `COLUMN_VALUES` make the column invalid (`#REF!`).
 - Computed values are read-only: there are no per-cell overrides, and an existing column with data cannot be turned into a computed column—add a computed column next to it instead.
 - Sorting and filtering by a computed column are not re-applied when its formula or the `formulaFunctions` prop changes; aggregation, row grouping, and row spanning are. This is the same rule as for cell formulas.
-- A cell formula that reads a computed column which in turn reads a cell formula is refreshed on the next update of its row, not immediately.
 - Excel export writes the evaluated values of computed columns, not live formulas.
 - In a `string` column, a result equal to an error code, such as `"#REF!"`, is treated as an error by sorting and by the quick filter; the cell itself renders it as text.
 - Validation messages are localized when a definition is validated: after a change of `localeText` at runtime, the issues listed in the panel and in the badge tooltip keep the previous language until the columns are next updated.

@@ -1285,6 +1285,307 @@ describe('<DataGridPremium /> - Computed columns', () => {
       });
     });
 
+    describe('chains with cell formulas', () => {
+      const double: GridComputedColumnDefinition = {
+        field: 'double',
+        headerName: 'Double',
+        formula: '=net * 2',
+        type: 'number',
+      };
+
+      const formulaColumn = (field: string): DataGridPremiumProps['columns'][number] => ({
+        field,
+        type: 'number',
+        allowFormulas: true,
+      });
+
+      const getValues = (id: number, fields: string[]) =>
+        fields.map((field) => apiRef.current!.getCellValue(id, field));
+
+      [
+        ['net', 'out'],
+        ['out', 'net'],
+      ].forEach((order) => {
+        it(`should evaluate a cell formula that reads a computed column after the formula cells the column reads (columns ${order.join(', ')})`, async () => {
+          await render(
+            <Test
+              columns={[{ field: 'price', type: 'number' }, ...order.map(formulaColumn)]}
+              rows={[{ id: 0, price: 2, net: '=price + 1', out: '=double + 1' }]}
+              computedColumns={[double]}
+            />,
+          );
+          expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([3, 6, 7]);
+
+          act(() => apiRef.current!.updateRows([{ id: 0, price: 4 }]));
+          expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([5, 10, 11]);
+        });
+      });
+
+      [
+        ['cell1', 'cell2', 'cell3'],
+        ['cell3', 'cell2', 'cell1'],
+      ].forEach((order) => {
+        it(`should evaluate a chain alternating cell formulas and computed columns (columns ${order.join(', ')})`, async () => {
+          const fields = ['cell1', 'computed1', 'cell2', 'computed2', 'cell3'];
+          await render(
+            <Test
+              columns={[{ field: 'price', type: 'number' }, ...order.map(formulaColumn)]}
+              rows={[
+                {
+                  id: 0,
+                  price: 2,
+                  cell1: '=price + 1',
+                  cell2: '=computed1 + 1',
+                  cell3: '=computed2 + 1',
+                },
+              ]}
+              computedColumns={[
+                { field: 'computed1', headerName: 'C1', formula: '=cell1 * 2', type: 'number' },
+                { field: 'computed2', headerName: 'C2', formula: '=cell2 * 2', type: 'number' },
+              ]}
+            />,
+          );
+          expect(getValues(0, fields)).to.deep.equal([3, 6, 7, 14, 15]);
+
+          act(() => apiRef.current!.updateRows([{ id: 0, price: 4 }]));
+          expect(getValues(0, fields)).to.deep.equal([5, 10, 11, 22, 23]);
+        });
+      });
+
+      [
+        ['total', 'net'],
+        ['net', 'total'],
+      ].forEach((order) => {
+        it(`should evaluate a range over a computed column after the formula cells the column reads (columns ${order.join(', ')})`, async () => {
+          await render(
+            <Test
+              columns={[{ field: 'price', type: 'number' }, ...order.map(formulaColumn)]}
+              rows={[
+                { id: 0, price: 2, net: '=price + 1', total: '=SUM(COLUMN_VALUES("double"))' },
+                { id: 1, price: 4, net: '=price + 1' },
+              ]}
+              computedColumns={[double]}
+            />,
+          );
+          expect(getColumnValuesOf('double')).to.deep.equal(['6', '10']);
+          expect(apiRef.current!.getCellValue(0, 'total')).to.equal(16);
+
+          // Another row: the range dirties the total through the formula cell of that row.
+          act(() => apiRef.current!.updateRows([{ id: 1, price: 6 }]));
+          expect(getColumnValuesOf('double')).to.deep.equal(['6', '14']);
+          expect(apiRef.current!.getCellValue(0, 'total')).to.equal(20);
+        });
+      });
+
+      it('should show `#CYCLE!` in a cell formula and a computed column that read each other', async () => {
+        await render(
+          <Test
+            columns={[{ field: 'price', type: 'number' }, formulaColumn('net')]}
+            rows={[
+              { id: 0, price: 2, net: '=double + 1' },
+              { id: 1, price: 3, net: 4 },
+            ]}
+            computedColumns={[double]}
+          />,
+        );
+        // The cycle depends on the data: the row without a formula is not on it.
+        expect(getValues(0, ['net', 'double'])).to.deep.equal(['#CYCLE!', '#CYCLE!']);
+        expect(getValues(1, ['net', 'double'])).to.deep.equal([4, 8]);
+
+        act(() => apiRef.current!.updateRows([{ id: 0, net: 5 }]));
+        expect(getValues(0, ['net', 'double'])).to.deep.equal([5, 10]);
+      });
+
+      it('should show `#CYCLE!` through a branch of the computed formula that is not taken', async () => {
+        await render(
+          <Test
+            columns={[
+              { field: 'price', type: 'number' },
+              formulaColumn('net'),
+              formulaColumn('out'),
+            ]}
+            rows={[{ id: 0, price: 2, net: '=double + 1', out: '=double + 1' }]}
+            computedColumns={[{ ...double, formula: '=IF(price > 100, net, 0)' }]}
+          />,
+        );
+        // The dependencies are static, as for the cell formulas: `=IF(FALSE, B1, 0)`
+        // in A1 with `=A1` in B1 is a cycle too. `out` is downstream of it.
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([
+          '#CYCLE!',
+          '#CYCLE!',
+          '#CYCLE!',
+        ]);
+      });
+
+      it('should re-evaluate a cell formula when the computed column it reads changes with a raw input', async () => {
+        await render(
+          <Test
+            columns={[
+              { field: 'price', type: 'number' },
+              { field: 'bonus', type: 'number' },
+              formulaColumn('net'),
+              formulaColumn('out'),
+            ]}
+            rows={[{ id: 0, price: 2, bonus: 0, net: '=price + 1', out: '=double + 1' }]}
+            computedColumns={[{ ...double, formula: '=net + bonus' }]}
+          />,
+        );
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([3, 3, 4]);
+
+        act(() => apiRef.current!.updateRows([{ id: 0, price: 4 }]));
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([5, 5, 6]);
+
+        // `double` reads 3 again, the value it had before the previous update: the
+        // value the last pass read must have been recorded, not the one of the row scan.
+        act(() => apiRef.current!.updateRows([{ id: 0, bonus: -2 }]));
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([5, 3, 4]);
+      });
+
+      it('should follow the cells a computed column reads when its formula changes', async () => {
+        await render(
+          <Test
+            columns={[
+              { field: 'price', type: 'number' },
+              formulaColumn('net'),
+              formulaColumn('out'),
+            ]}
+            rows={[{ id: 0, price: 2, net: '=price + 1', out: '=double + 1' }]}
+            initialState={{ computedColumns: { model: [double] } }}
+          />,
+        );
+        act(() => apiRef.current!.updateComputedColumn('double', { formula: '=price * 2' }));
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([3, 4, 5]);
+
+        act(() => apiRef.current!.updateRows([{ id: 0, net: '=price + 10' }]));
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([12, 4, 5]);
+        act(() => apiRef.current!.updateRows([{ id: 0, price: 4 }]));
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([14, 8, 9]);
+
+        act(() => apiRef.current!.updateComputedColumn('double', { formula: '=net * 2' }));
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([14, 28, 29]);
+        act(() => apiRef.current!.updateRows([{ id: 0, price: 1 }]));
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([11, 22, 23]);
+      });
+
+      it('should not keep a computed result read from a formula cell the update rebuilt', async () => {
+        await render(
+          <Test
+            columns={[
+              { field: 'price', type: 'number' },
+              formulaColumn('net'),
+              formulaColumn('out'),
+            ]}
+            rows={[{ id: 0, price: 2, net: '=price + 1', out: '=double + 1' }]}
+            computedColumns={[double]}
+          />,
+        );
+        // A new formula with the same result: `double` is read while `net` is not
+        // evaluated yet, to find out whether `out` must be.
+        act(() => apiRef.current!.updateRows([{ id: 0, net: '=1 + price' }]));
+        expect(getValues(0, ['net', 'double', 'out'])).to.deep.equal([3, 6, 7]);
+        expect(getColumnValuesOf('double')).to.deep.equal(['6']);
+      });
+
+      it('should not re-evaluate the computed cells when the formula cells they read keep their result', async () => {
+        const apply = vi.fn((args: any[]) => args[0]);
+        const formulaFunctions = {
+          ...GRID_FORMULA_FUNCTIONS,
+          PROBE: { name: 'PROBE', minArgs: 1, maxArgs: 1, apply },
+        } as any;
+        await render(
+          <Test
+            columns={[{ field: 'price', type: 'number' }, formulaColumn('net')]}
+            rows={[
+              { id: 0, price: 2, net: '=price + 1' },
+              { id: 1, price: 4, net: '=price + 1' },
+            ]}
+            formulaFunctions={formulaFunctions}
+            computedColumns={[{ ...double, formula: '=PROBE(net) * 2' }]}
+          />,
+        );
+        expect(getColumnValuesOf('double')).to.deep.equal(['6', '10']);
+        const applications = apply.mock.calls.length;
+
+        // A new column evaluates every cell formula again, with the same results.
+        act(() => apiRef.current!.updateColumns([{ field: 'extra' }]));
+        expect(getColumnValuesOf('double')).to.deep.equal(['6', '10']);
+        expect(apply.mock.calls.length).to.equal(applications);
+      });
+
+      describe('cycle locks with the same error', () => {
+        // Returns the error of a cycle, so that a cell can leave a cycle with the same result.
+        const formulaFunctions = {
+          ...GRID_FORMULA_FUNCTIONS,
+          CYCLE_ERROR: {
+            name: 'CYCLE_ERROR',
+            minArgs: 0,
+            maxArgs: 0,
+            apply: () => ({
+              kind: 'error',
+              code: '#CYCLE!',
+              message: 'The formula is part of a circular reference.',
+            }),
+          },
+        } as any;
+        const getColumns = (yAllowsFormulas: boolean): DataGridPremiumProps['columns'] => [
+          { field: 'price', type: 'number' },
+          formulaColumn('net'),
+          { field: 'y', allowFormulas: yAllowsFormulas },
+        ];
+        const lockedY = '=REF(COLUMN("net"), ROW(0))';
+        const rows = [
+          { id: 0, price: 1, net: '=CYCLE_ERROR() + REF(COLUMN("y"), ROW(1))' },
+          { id: 1, price: 1, y: lockedY },
+        ];
+        const safe: GridComputedColumnDefinition = {
+          field: 'safe',
+          headerName: 'Safe',
+          formula: '=IFERROR(net, 7)',
+          type: 'number',
+        };
+
+        it('should render a computed cell again when an update locks or unlocks a formula cell it reads', async () => {
+          await render(
+            <Test
+              columns={getColumns(true)}
+              rows={rows}
+              formulaFunctions={formulaFunctions}
+              computedColumns={[safe]}
+            />,
+          );
+          // `net` and `y` read each other: the computed cell reading `net` is locked with it.
+          expect(getValues(0, ['net', 'safe'])).to.deep.equal(['#CYCLE!', '#CYCLE!']);
+
+          // Out of the cycle, `net` keeps the same error, but the computed cell can catch it.
+          act(() => apiRef.current!.updateRows([{ id: 1, y: 5 }]));
+          expect(getValues(0, ['net', 'safe'])).to.deep.equal(['#CYCLE!', 7]);
+          expect(getColumnValuesOf('safe')).to.deep.equal(['7', '']);
+
+          act(() => apiRef.current!.updateRows([{ id: 1, y: lockedY }]));
+          expect(getValues(0, ['net', 'safe'])).to.deep.equal(['#CYCLE!', '#CYCLE!']);
+          expect(getColumnValuesOf('safe')).to.deep.equal(['#CYCLE!', '']);
+        });
+
+        it('should render a computed cell again when a full evaluation unlocks a formula cell it reads', async () => {
+          const { setProps } = await render(
+            <Test
+              columns={getColumns(true)}
+              rows={rows}
+              formulaFunctions={formulaFunctions}
+              computedColumns={[safe]}
+            />,
+          );
+          expect(getValues(0, ['net', 'safe'])).to.deep.equal(['#CYCLE!', '#CYCLE!']);
+
+          // `y` holds a raw value now: a full evaluation, with `net` out of the cycle.
+          setProps({ columns: getColumns(false) });
+          await microtasks();
+          expect(getValues(0, ['net', 'safe'])).to.deep.equal(['#CYCLE!', 7]);
+          expect(getColumnValuesOf('safe')).to.deep.equal(['7', '']);
+        });
+      });
+    });
+
     it('should not re-evaluate the cell formulas when a column is resized', async () => {
       await render(
         <Test

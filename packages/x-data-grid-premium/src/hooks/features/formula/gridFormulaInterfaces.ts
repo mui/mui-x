@@ -260,6 +260,11 @@ export interface GridFormulaInternalCache {
    */
   positionDependentKeys: Set<GridFormulaCellKey>;
   /**
+   * Keys of the records locked by a cycle (on it or downstream of it): their
+   * result is `#CYCLE!`. A computed cell that reads one of them is `#CYCLE!` too.
+   */
+  cyclicKeys: Set<GridFormulaCellKey>;
+  /**
    * Reverse range-dependency tier: for each field, the formula cells whose
    * `RANGE_REF`/`COLUMN_VALUES` dependencies read it, as interval records.
    * A change to cell `(id, field)` dirties the dependents whose interval
