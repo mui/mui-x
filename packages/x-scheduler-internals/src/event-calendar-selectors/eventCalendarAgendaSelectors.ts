@@ -16,6 +16,7 @@ import {
   createAdapterDate,
 } from '../internals/utils/plain-date-utils/adapter';
 import { toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
+import { createPlainDate } from '../internals/utils/base-temporal/PlainDate';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -59,9 +60,12 @@ const horizonEndPlainDate = createSelectorMemoized(
       return rangeEndPlainDate;
     }
     // A day count beyond the default horizon still scans at least the displayed days
-    const horizonPlainDate = buildTemporalPlainDate(adapter, visibleDate).add({
-      days: AGENDA_MAX_HORIZON_DAYS - 1,
-    });
+    // `createPlainDate()` doesn't check the range, so the horizon can pass the last supported day.
+    const visiblePlainDate = buildTemporalPlainDate(adapter, visibleDate);
+    const horizonPlainDate = createPlainDate(
+      visiblePlainDate.dayNumber + AGENDA_MAX_HORIZON_DAYS - 1,
+      visiblePlainDate.calendarId,
+    );
     return horizonPlainDate.dayNumber > rangeEndPlainDate.dayNumber
       ? horizonPlainDate
       : rangeEndPlainDate;
@@ -128,13 +132,15 @@ const visibleDays = createSelectorMemoized(
       scannedUntilPlainDate.dayNumber < horizonPlainDate.dayNumber
     ) {
       // Extend forward by one more chunk, without passing the horizon
-      const nextStartPlainDate = scannedUntilPlainDate.add({ days: 1 });
-      const chunkEndPlainDate = nextStartPlainDate.add({
-        days: Math.max(amount, AGENDA_VIEW_DAYS_AMOUNT) - 1,
-      });
+      const nextStartPlainDate = createPlainDate(
+        scannedUntilPlainDate.dayNumber + 1,
+        scannedUntilPlainDate.calendarId,
+      );
+      const chunkEndDayNumber =
+        nextStartPlainDate.dayNumber + Math.max(amount, AGENDA_VIEW_DAYS_AMOUNT) - 1;
       scannedUntilPlainDate =
-        chunkEndPlainDate.dayNumber < horizonPlainDate.dayNumber
-          ? chunkEndPlainDate
+        chunkEndDayNumber < horizonPlainDate.dayNumber
+          ? createPlainDate(chunkEndDayNumber, nextStartPlainDate.calendarId)
           : horizonPlainDate;
 
       const more = getDayListFromPlainDates(
