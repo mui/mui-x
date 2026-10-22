@@ -223,6 +223,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    */
   filterPanel: React.JSXElementConstructor<GridSlotProps['filterPanel']>;
   /**
+   * Column input component rendered in each filter form of the filter panel.
+   * @default GridFilterFormColumnInput
+   */
+  filterFormColumnInput: React.JSXElementConstructor<GridSlotProps['filterFormColumnInput']>;
+  /**
    * GridColumns panel component rendered when clicking the columns button.
    * @default GridColumnsPanel
    */
