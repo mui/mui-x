@@ -1,21 +1,13 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import {
-  createPlainDate,
-  ISO_CALENDAR_ID,
-  MS_PER_DAY,
-  toLocalMs,
-} from '@mui/x-scheduler-internals/internals';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
-import type { IteratedCell } from '../../models';
 import { iterate } from './iterate';
 
 export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
@@ -91,12 +83,13 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
             data-weekend={level.unit === 'day' && isWeekend(adapter, cell.date) ? '' : undefined}
             style={{ '--span': cell.spanInTicks } as React.CSSProperties}
           >
-            <time className={classNames?.label} dateTime={getCellDateTime(adapter, cell)}>
+            <time className={classNames?.label} dateTime={cell.dateTime}>
               {level.renderCell
                 ? level.renderCell({
                     adapter,
                     ampm,
                     date: cell.date,
+                    dateTime: cell.dateTime,
                     start: cell.start,
                     end: cell.end,
                     index: cell.index,
@@ -143,21 +136,6 @@ export namespace TimelineGridHeader {
       lastTickIndex: number;
     };
   }
-}
-
-/**
- * Machine-readable local date-time of a cell. Hour cells are built from `wallClockHour`
- * rather than from `date`: the hour skipped by a spring-forward transition has no instant,
- * so its `date` moves to the next hour and would repeat that cell's value.
- */
-function getCellDateTime(adapter: TemporalAdapter, cell: IteratedCell) {
-  const localMs = toLocalMs(adapter.getTime(cell.date), adapter.getTimezone(cell.date));
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
-  const minutesInDay = Math.floor((localMs - dayNumber * MS_PER_DAY) / 60_000);
-  const hours = cell.wallClockHour ?? Math.floor(minutesInDay / 60);
-  const minutes = cell.wallClockHour === undefined ? minutesInDay % 60 : 0;
-  const day = createPlainDate(dayNumber, ISO_CALENDAR_ID).toString();
-  return `${day}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 }
 
 /**

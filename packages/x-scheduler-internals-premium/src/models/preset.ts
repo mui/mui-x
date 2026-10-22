@@ -20,6 +20,11 @@ export interface IteratedCell {
    * visible range, so use `start` / `end` for layout math and `date` for labels.
    */
   date: TemporalSupportedObject;
+  /**
+   * Machine-readable local date-time of `date`, like `2026-03-08T00:00`. Hour cells use their
+   * `wallClockHour`, which the hour skipped by a spring-forward transition keeps.
+   */
+  dateTime: string;
   /** Clamped start, always within the visible range. */
   start: TemporalSupportedObject;
   /** Clamped end (exclusive), always within the visible range. */

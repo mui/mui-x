@@ -39,11 +39,10 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const axis = React.useMemo(
-    () => ({ start, end, dayStartMinute, dayEndMinute }),
-    [start, end, dayStartMinute, dayEndMinute],
-  );
-  const axisDurationMs = getTimelineAxisDurationMs(adapter, axis);
+  const { axis, axisDurationMs } = React.useMemo(() => {
+    const columnAxis = { start, end, dayStartMinute, dayEndMinute };
+    return { axis: columnAxis, axisDurationMs: getTimelineAxisDurationMs(adapter, columnAxis) };
+  }, [adapter, start, end, dayStartMinute, dayEndMinute]);
 
   const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
     useStableCallback(({ input, elementRef }) => {

@@ -55,7 +55,9 @@ export function isEndMinuteOutsideAxisWindow(axis: TimelineAxis, minutesInDay: n
  * minutes (a full day is always 1440 minutes) so the axis matches the rendered grid,
  * whose tick count is pinned per day and does not stretch on DST transitions.
  */
-export function getTimelineAxisDayMs(axis: TimelineAxis): number {
+export function getTimelineAxisDayMs(
+  axis: Pick<TimelineAxis, 'dayStartMinute' | 'dayEndMinute'>,
+): number {
   return Math.max(1, axis.dayEndMinute - axis.dayStartMinute) * MINUTE_MS;
 }
 
@@ -122,16 +124,25 @@ export function dateToTimelineAxisOffsetMs(
   date: TemporalSupportedObject,
   msInDay: number = getWallClockMsInDay(adapter, date),
 ): number {
-  const dayMs = getTimelineAxisDayMs(axis);
   // Both days are read in the timezone of the date.
-  const timezone = adapter.getTimezone(date);
   const dayIndex =
-    toLocalDayNumber(adapter.getTime(date), timezone) -
-    toLocalDayNumber(adapter.getTime(axis.start), timezone);
+    getAdapterDayNumber(adapter, date) -
+    toLocalDayNumber(adapter.getTime(axis.start), adapter.getTimezone(date));
+  return getTimelineAxisOffsetMs(axis, dayIndex, msInDay);
+}
+
+/**
+ * The axis offset of a wall-clock time on the `dayIndex`-th day of the axis, clamped to the
+ * displayed window of that day.
+ */
+export function getTimelineAxisOffsetMs(
+  axis: Pick<TimelineAxis, 'dayStartMinute' | 'dayEndMinute'>,
+  dayIndex: number,
+  msInDay: number,
+): number {
   const clampedMsInDay = Math.min(
     Math.max(msInDay, axis.dayStartMinute * MINUTE_MS),
     axis.dayEndMinute * MINUTE_MS,
   );
-
-  return dayIndex * dayMs + (clampedMsInDay - axis.dayStartMinute * MINUTE_MS);
+  return dayIndex * getTimelineAxisDayMs(axis) + (clampedMsInDay - axis.dayStartMinute * MINUTE_MS);
 }

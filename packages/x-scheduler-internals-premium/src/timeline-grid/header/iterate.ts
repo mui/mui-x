@@ -7,9 +7,12 @@ import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
   addMonthsToDayNumber,
   createAdapterDate,
+  formatIsoDate,
   FULL_DAY_MINUTES,
   fromDayNumber,
+  getStartOfDayMs,
   getStartOfMonthDayNumber,
+  getTimelineAxisOffsetMs,
   getWeekStartDayNumber,
   localToEpochMs,
   MS_PER_DAY,
@@ -24,12 +27,18 @@ const HOUR_MS = 60 * MINUTE_MS;
 
 type HourWindow = Pick<TimelineAxis, 'dayStartMinute' | 'dayEndMinute'>;
 
-function toAdapterDateInTimezone(
-  adapter: TemporalAdapter,
-  localMs: number,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  return createAdapterDate(adapter, localToEpochMs(localMs, timezone), timezone);
+type ToAdapterDate = (localMs: number) => TemporalSupportedObject;
+
+/**
+ * The machine-readable local date-time of a wall-clock time, like `2026-03-08T00:00`.
+ */
+function getDateTime(localMs: number): string {
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  const { year, month, day } = fromDayNumber(dayNumber);
+  const minutesInDay = Math.floor((localMs - dayNumber * MS_PER_DAY) / MINUTE_MS);
+  const hours = String(Math.floor(minutesInDay / 60)).padStart(2, '0');
+  const minutes = String(minutesInDay % 60).padStart(2, '0');
+  return `${formatIsoDate(year, month, day)}T${hours}:${minutes}`;
 }
 
 /**
@@ -56,7 +65,8 @@ export function iterate(
   }
 
   const timezone = adapter.getTimezone(rangeStart);
-  const toAdapterDate = (localMs: number) => toAdapterDateInTimezone(adapter, localMs, timezone);
+  const toAdapterDate: ToAdapterDate = (localMs) =>
+    createAdapterDate(adapter, localToEpochMs(localMs, timezone), timezone);
   const rangeStartLocalMs = getRangeStartLocalMs(adapter, rangeStart, timezone);
 
   // `rangeEnd` is inclusive (e.g. `endOfDay` = 23:59:59.999). Floor it to the
@@ -78,13 +88,7 @@ export function iterate(
 
   // `appliedHourWindow` is only set when the ticks are hours, so this is the hour row.
   if (unit === 'hour' && appliedHourWindow) {
-    return iterateHourCells(
-      adapter,
-      timezone,
-      rangeStartLocalMs,
-      rangeEndExclusive,
-      appliedHourWindow,
-    );
+    return iterateHourCells(toAdapterDate, rangeStartLocalMs, rangeEndExclusive, appliedHourWindow);
   }
 
   const cells: IteratedCell[] = [];
@@ -105,15 +109,13 @@ export function iterate(
     // First and last cells can extend past the visible range (e.g. a year cell
     // aligned to Jan 1 when the range starts mid-year). Clamp them so
     // `spanInTicks` reflects only the portion within `[rangeStart, rangeEndExclusive)`.
-    const isClampedStart = cursor < rangeStartLocalMs;
-    const clampedStart = isClampedStart ? rangeStart : cursorDate;
-    const clampedEnd = isLastCell ? rangeEndExclusiveDate : nextCursorDate;
     const spanEnd = Math.min(nextCursor, rangeEndExclusive);
     const spanStart = Math.max(cursor, rangeStartLocalMs);
     cells.push({
       date: cursorDate,
-      start: clampedStart,
-      end: clampedEnd,
+      dateTime: getDateTime(toLocalMs(adapter.getTime(cursorDate), timezone)),
+      start: cursor < rangeStartLocalMs ? rangeStart : cursorDate,
+      end: nextCursorDate,
       spanInTicks: appliedHourWindow
         ? countVisibleHours(spanEnd, spanStart, appliedHourWindow)
         : differenceInUnits(spanEnd, spanStart, tickUnit),
@@ -142,8 +144,9 @@ function getRangeStartLocalMs(
 ): number {
   const time = adapter.getTime(rangeStart);
   const localMs = toLocalMs(time, timezone);
-  const dayStartLocalMs = Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
-  return localToEpochMs(dayStartLocalMs, timezone) === time ? dayStartLocalMs : localMs;
+  return getStartOfDayMs(time, timezone) === time
+    ? Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY
+    : localMs;
 }
 
 /**
@@ -168,13 +171,11 @@ function throwTooManyCells(unit: PresetHeaderUnit, tickUnit: PresetHeaderUnit): 
  * shrinking over the fixed grid.
  */
 function iterateHourCells(
-  adapter: TemporalAdapter,
-  timezone: TemporalTimezone,
+  toAdapterDate: ToAdapterDate,
   rangeStartLocalMs: number,
   rangeEndExclusive: number,
   hourWindow: HourWindow,
 ): IteratedCell[] {
-  const toAdapterDate = (localMs: number) => toAdapterDateInTimezone(adapter, localMs, timezone);
   const startHour = Math.ceil(hourWindow.dayStartMinute / 60);
   const endHour = Math.ceil(hourWindow.dayEndMinute / 60);
 
@@ -200,6 +201,7 @@ function iterateHourCells(
       const end = toAdapterDate(dayStartLocalMs + (hour + 1) * HOUR_MS);
       cells.push({
         date,
+        dateTime: getDateTime(dayStartLocalMs + hour * HOUR_MS),
         start: date,
         end,
         spanInTicks: 1,
@@ -279,15 +281,9 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
  * (no hour-by-hour walk), consistent with the pinned tick count of the grid.
  */
 function countVisibleHours(later: number, earlier: number, hourWindow: HourWindow): number {
-  const windowStartMs = hourWindow.dayStartMinute * MINUTE_MS;
-  const windowEndMs = hourWindow.dayEndMinute * MINUTE_MS;
   const toAxisMs = (localMs: number) => {
     const dayNumber = Math.floor(localMs / MS_PER_DAY);
-    const msInDay = Math.min(
-      Math.max(localMs - dayNumber * MS_PER_DAY, windowStartMs),
-      windowEndMs,
-    );
-    return dayNumber * (windowEndMs - windowStartMs) + msInDay - windowStartMs;
+    return getTimelineAxisOffsetMs(hourWindow, dayNumber, localMs - dayNumber * MS_PER_DAY);
   };
   return Math.round((toAxisMs(later) - toAxisMs(earlier)) / HOUR_MS);
 }
