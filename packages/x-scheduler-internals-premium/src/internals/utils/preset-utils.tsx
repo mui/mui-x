@@ -1,12 +1,11 @@
 import * as React from 'react';
 import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import {
+  addToAdapterDate,
   buildTemporalPlainDate,
   createAdapterDate,
-  getEndOfWeek,
   getStartOfWeek,
   toEpochMs,
-  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate, PlainDateDuration } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -66,7 +65,7 @@ function formatHourLabel(adapter: TemporalAdapter, hour: number, ampm: boolean) 
 }
 
 // The presets read and move their ranges on the plain dates of their timezone, resolved like
-// `toEpochMs()`. The bounds of `dayAndWeek` come from `getStartOfWeek()` and `getEndOfWeek()`.
+// `toEpochMs()`. The first week of `dayAndWeek` comes from `getStartOfWeek()`.
 
 /**
  * The first instant of the day `getPlainDate()` returns for the day of `date`, `offsetMs` added.
@@ -83,42 +82,27 @@ function createDateFromPlainDate(
 }
 
 /**
- * Moves a date by a duration of the calendar, keeping its time of day on the wall clock.
- */
-function addToDate(
-  adapter: TemporalAdapter,
-  date: TemporalSupportedObject,
-  duration: PlainDateDuration,
-) {
-  const timezone = adapter.getTimezone(date);
-  const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
-  return createAdapterDate(
-    adapter,
-    toEpochMs(plainDateTime.date.add(duration), plainDateTime.msInDay, timezone),
-    timezone,
-  );
-}
-
-/**
- * The range and the navigation of a preset made of `unitCount` periods, like days or months. The
- * range starts on the first day of the period of the visible date, `getPeriodStart()`, and ends on
- * the last instant before the period that follows it.
+ * The range and the navigation of a preset made of `unitCount` periods of a `unit`, like days or
+ * months. The range starts on the first day of the period of the visible date, `getPeriodStart()`,
+ * and ends on the last instant before the period that follows the last one.
  */
 function createPlainDateRange(
-  getPeriodStart: (plainDate: PlainDate) => PlainDate,
-  toDuration: (amount: number) => PlainDateDuration,
+  unit: keyof PlainDateDuration,
+  getPeriodStart: (plainDate: PlainDate) => PlainDate = (plainDate) => plainDate,
 ): Pick<PresetDefinition, 'getStartDate' | 'getEndDate' | 'navigate'> {
+  const toDuration = (amount: number) => ({ [unit]: amount }) as PlainDateDuration;
   return {
     getStartDate: (adapter, visibleDate) =>
       createDateFromPlainDate(adapter, visibleDate, getPeriodStart),
+    // `start` is the start of the first period, as `getStartDate()` returns it.
     getEndDate: (adapter, start, unitCount) =>
       createDateFromPlainDate(
         adapter,
         start,
-        (plainDate) => getPeriodStart(plainDate).add(toDuration(unitCount)),
+        (plainDate) => plainDate.add(toDuration(unitCount)),
         -1,
       ),
-    navigate: (adapter, date, amount) => addToDate(adapter, date, toDuration(amount)),
+    navigate: (adapter, date, amount) => addToAdapterDate(adapter, date, toDuration(amount)),
   };
 }
 
@@ -155,10 +139,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,
-    ...createPlainDateRange(
-      (plainDate) => plainDate,
-      (days) => ({ days }),
-    ),
+    ...createPlainDateRange('days'),
     // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
     // the CSS tick count to `days × 24`: the hour row is a wall-clock grid, so it emits
     // the same cell count on every day, DST transitions included.
@@ -180,10 +161,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       },
     ],
     unitCount: 8 * 7, // 8 weeks
-    ...createPlainDateRange(
-      (plainDate) => plainDate,
-      (days) => ({ days }),
-    ),
+    ...createPlainDateRange('days'),
   },
   dayAndWeek: {
     timeResolution: 'day',
@@ -197,12 +175,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       { unit: 'day', formatDate: formatWeekday1Letter },
     ],
     unitCount: 16, // 16 weeks
+    ...createPlainDateRange('weeks'),
     getStartDate: (adapter, visibleDate, weekStartsOn) =>
       getStartOfWeek(adapter, visibleDate, weekStartsOn),
-    getEndDate: (adapter, start, unitCount, weekStartsOn) =>
-      getEndOfWeek(adapter, addToDate(adapter, start, { weeks: unitCount - 1 }), weekStartsOn),
     getCssUnitCount: getDayCount,
-    navigate: (adapter, date, amount) => addToDate(adapter, date, { weeks: amount }),
   },
   monthAndYear: {
     timeResolution: 'day',
@@ -212,10 +188,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       { unit: 'month', formatDate: formatMonth3Letters },
     ],
     unitCount: 3 * 12, // 3 years
-    ...createPlainDateRange(
-      (plainDate) => plainDate.with({ day: 1 }),
-      (months) => ({ months }),
-    ),
+    ...createPlainDateRange('months', (plainDate) => plainDate.with({ day: 1 })),
     getCssUnitCount: getDayCount,
   },
   year: {
@@ -223,10 +196,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     tickWidth: 200,
     headers: [{ unit: 'year', formatDate: formatYear }],
     unitCount: 30, // 30 years
-    ...createPlainDateRange(
-      (plainDate) => plainDate.with({ month: 1, day: 1 }),
-      (years) => ({ years }),
-    ),
+    ...createPlainDateRange('years', (plainDate) => plainDate.with({ month: 1, day: 1 })),
   },
 };
 

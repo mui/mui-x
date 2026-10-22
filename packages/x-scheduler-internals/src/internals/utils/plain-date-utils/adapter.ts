@@ -3,8 +3,15 @@ import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../m
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import { getDateKey } from '../date-utils';
 import { PlainDate } from '../base-temporal/PlainDate';
+import type { PlainDateDuration } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
-import { getEndOfDayMs, getStartOfDayMs, localToEpochMs, toPlainDateTime } from './timeZone';
+import {
+  getEndOfDayMs,
+  getStartOfDayMs,
+  localToEpochMs,
+  toEpochMs,
+  toPlainDateTime,
+} from './timeZone';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.
@@ -133,4 +140,23 @@ export function createProcessedDate(
     timestamp: epochMs,
     minutesInDay: Math.floor(msInDay / 60_000),
   };
+}
+
+/**
+ * Moves an adapter value by a duration of the calendar, keeping its time of day on the wall clock of
+ * its timezone. A time that a DST transition skips moves forward by the length of the gap, and a
+ * repeated one resolves to its first instant, like `toEpochMs()`.
+ */
+export function addToAdapterDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  duration: PlainDateDuration,
+): TemporalSupportedObject {
+  const timezone = adapter.getTimezone(date);
+  const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
+  return createAdapterDate(
+    adapter,
+    toEpochMs(plainDateTime.date.add(duration), plainDateTime.msInDay, timezone),
+    timezone,
+  );
 }
