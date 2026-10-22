@@ -59,7 +59,7 @@ describe.each([
 
   test('push a chain of 300 tasks', { timeout: 0 }, async ({ bench }) => {
     await bench('cascade', () => {
-      benchmarkResult.value = computeAutoSchedulingCascade(parameters as any);
+      benchmarkResult.value = computeAutoSchedulingCascade(parameters);
     }).run();
   });
 });

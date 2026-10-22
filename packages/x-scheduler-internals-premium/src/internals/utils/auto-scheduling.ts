@@ -63,8 +63,8 @@ export interface ComputeAutoSchedulingCascadeParameters {
  * its wall-clock times are read in.
  */
 interface ResolvedDates {
-  startTimestamp: number;
-  endTimestamp: number;
+  start: number;
+  end: number;
   timezone: TemporalTimezone;
   allDay: boolean;
 }
@@ -86,18 +86,17 @@ export interface AutoSchedulingCascadeResult {
  * `normalizeAllDayBounds()`.
  */
 function resolveDates(
-  startTimestamp: number,
-  endTimestamp: number,
+  start: number,
+  end: number,
   timezone: TemporalTimezone,
   allDay: boolean,
-  endTimezone: TemporalTimezone = timezone,
 ): ResolvedDates {
   if (!allDay) {
-    return { startTimestamp, endTimestamp, timezone, allDay };
+    return { start, end, timezone, allDay };
   }
   return {
-    startTimestamp: getStartOfDayMs(startTimestamp, timezone),
-    endTimestamp: getEndOfDayMs(endTimestamp, endTimezone),
+    start: getStartOfDayMs(start, timezone),
+    end: getEndOfDayMs(end, timezone),
     timezone,
     allDay,
   };
@@ -111,10 +110,6 @@ function resolveProcessedEventDates(processedEvent: SchedulerProcessedEvent): Re
 // The range of `Date`.
 const MAX_TIMESTAMP = 8.64e15;
 
-function getEdge(dates: ResolvedDates, side: SchedulerEventSide): number {
-  return side === 'start' ? dates.startTimestamp : dates.endTimestamp;
-}
-
 /**
  * The earliest instant `dependency` allows for the successor's bounded edge, or `null` when
  * the lag runs past the supported date range. The lag is added in the successor's timezone.
@@ -126,7 +121,7 @@ function getDependencyBound(
 ): number | null {
   const edges = getDependencyEdges(dependency.type);
   const timestamp = addDependencyLag(
-    getEdge(sourceDates, edges.source),
+    sourceDates[edges.source],
     getEffectiveDependencyLag(dependency, targetDates.allDay),
     targetDates.timezone,
   );
@@ -151,9 +146,8 @@ function getAllDayEdgeMs(dayNumber: number, side: SchedulerEventSide, timezone: 
 // Whether `timezone` skips the day, like December 30th, 2011 in Pacific/Apia. An all-day edge
 // shifted onto it would end before it starts.
 function isSkippedDay(dayNumber: number, timezone: TemporalTimezone): boolean {
-  return (
-    getAllDayEdgeMs(dayNumber, 'end', timezone) < getAllDayEdgeMs(dayNumber, 'start', timezone)
-  );
+  // Its first instant belongs to the next day.
+  return toLocalDayNumber(getAllDayEdgeMs(dayNumber, 'start', timezone), timezone) > dayNumber;
 }
 
 // Minimal whole-day shift bringing the `side` of an all-day event, on the day `edgeDay`, to `bound`.
@@ -198,10 +192,10 @@ export function getDependencyViolation(
   const targetSide = getDependencyEdges(dependency.type).target;
   if (targetDates.allDay) {
     const { timezone } = targetDates;
-    const edgeDay = toLocalDayNumber(getEdge(targetDates, targetSide), timezone);
+    const edgeDay = toLocalDayNumber(targetDates[targetSide], timezone);
     return minimalDayShift(edgeDay, targetSide, bound, timezone);
   }
-  return Math.max(0, bound - getEdge(targetDates, targetSide));
+  return Math.max(0, bound - targetDates[targetSide]);
 }
 
 /**
@@ -302,42 +296,35 @@ export function computeAutoSchedulingCascade(
     const allDay = entry.allDay ?? processedEvent.allDay ?? false;
     // Mirrors the store: entries are serialized in the data timezone
     // (`dateToEventString`) and the model is then read in the (new) timezone.
-    const resolveEntryDate = (
+    const resolveEntryTimestamp = (
       value: TemporalSupportedObject | undefined,
       modelString: string,
-      currentValue: TemporalSupportedObject,
+      currentTimestamp: number,
     ) => {
       if (nextTimezone === dataTimezone) {
-        return value == null ? currentValue : adapter.setTimezone(value, dataTimezone);
+        return value == null ? currentTimestamp : adapter.getTime(value);
       }
       const nextString =
         value == null ? modelString : dateToEventString(adapter, value, modelString, dataTimezone);
-      return resolveEventDate(nextString, nextTimezone, adapter, entry.id);
+      return adapter.getTime(resolveEventDate(nextString, nextTimezone, adapter, entry.id));
     };
-    const start = resolveEntryDate(
-      entry.start,
-      model.start,
-      processedEvent.dataTimezone.start.value,
-    );
-    const end = resolveEntryDate(entry.end, model.end, processedEvent.dataTimezone.end.value);
     const dates = resolveDates(
-      adapter.getTime(start),
-      adapter.getTime(end),
-      adapter.getTimezone(start),
+      resolveEntryTimestamp(entry.start, model.start, processedEvent.dataTimezone.start.timestamp),
+      resolveEntryTimestamp(entry.end, model.end, processedEvent.dataTimezone.end.timestamp),
+      nextTimezone,
       allDay,
-      adapter.getTimezone(end),
     );
-    const { startTimestamp, endTimestamp } = dates;
+    const { start: startTimestamp, end: endTimestamp } = dates;
     newDates.set(entry.id, dates);
 
     const current = resolveCurrentDates(entry.id)!;
-    const startMoved = startTimestamp !== current.startTimestamp;
+    const startMoved = startTimestamp !== current.start;
     if (startMoved) {
       repositionedSeeds.add(entry.id);
-      if (endTimestamp === current.endTimestamp) {
+      if (endTimestamp === current.end) {
         startResizedSeeds.add(entry.id);
       }
-    } else if (endTimestamp !== current.endTimestamp) {
+    } else if (endTimestamp !== current.end) {
       endResizedSeeds.add(entry.id);
     }
   }
@@ -418,8 +405,8 @@ export function computeAutoSchedulingCascade(
       // below moves it): `keepsEnd` / `keptStartBound` can leave one edge untouched, and
       // reporting it anyway would turn a resize into a move `updateEvents` refuses wholesale.
       const base = newDates.get(eventId) ?? resolveCurrentDates(eventId)!;
-      const startChanged = shifted.startTimestamp !== base.startTimestamp;
-      const endChanged = shifted.endTimestamp !== base.endTimestamp;
+      const startChanged = shifted.start !== base.start;
+      const endChanged = shifted.end !== base.end;
       newDates.set(eventId, shifted);
       if (startChanged || endChanged) {
         const dates = toEntryDates(eventId, shifted);
@@ -462,8 +449,8 @@ export function computeAutoSchedulingCascade(
   // entry in the old timezone and the model is then read in the new one, so the entry
   // carries the instant whose old-zone wall time is the intended new-zone wall time.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
-    const start = createAdapterDate(adapter, dates.startTimestamp, dates.timezone);
-    const end = createAdapterDate(adapter, dates.endTimestamp, dates.timezone);
+    const start = createAdapterDate(adapter, dates.start, dates.timezone);
+    const end = createAdapterDate(adapter, dates.end, dates.timezone);
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
       return { start, end };
@@ -554,8 +541,8 @@ export function computeAutoSchedulingCascade(
     }
     const required = collectBounds(eventId, base);
 
-    const startViolated = required.start !== null && base.startTimestamp < required.start;
-    const endViolated = required.end !== null && base.endTimestamp < required.end;
+    const startViolated = required.start !== null && base.start < required.start;
+    const endViolated = required.end !== null && base.end < required.end;
     if (!startViolated && !endViolated) {
       return null;
     }
@@ -569,15 +556,15 @@ export function computeAutoSchedulingCascade(
     // leaves the end as the only violated edge, so its bound is always set here.
     const keptStartBound = endResizedSeeds.has(eventId) && !startViolated ? required.end : null;
     const keepsEnd = (newStartTimestamp: number) =>
-      startResizedSeeds.has(eventId) && newStartTimestamp < base.endTimestamp && !endViolated;
+      startResizedSeeds.has(eventId) && newStartTimestamp < base.end && !endViolated;
 
     if (base.allDay) {
       const { timezone } = base;
-      const startDay = toLocalDayNumber(base.startTimestamp, timezone);
-      const endDay = toLocalDayNumber(base.endTimestamp, timezone);
+      const startDay = toLocalDayNumber(base.start, timezone);
+      const endDay = toLocalDayNumber(base.end, timezone);
       if (keptStartBound !== null) {
         const dayCount = minimalDayShift(endDay, 'end', keptStartBound, timezone);
-        return { ...base, endTimestamp: getAllDayEdgeMs(endDay + dayCount, 'end', timezone) };
+        return { ...base, end: getAllDayEdgeMs(endDay + dayCount, 'end', timezone) };
       }
       let dayCount = Math.max(
         required.start === null ? 0 : minimalDayShift(startDay, 'start', required.start, timezone),
@@ -594,17 +581,17 @@ export function computeAutoSchedulingCascade(
       const newStartTimestamp = getAllDayEdgeMs(startDay + dayCount, 'start', timezone);
       return {
         ...base,
-        startTimestamp: newStartTimestamp,
-        endTimestamp: keepsEnd(newStartTimestamp)
-          ? base.endTimestamp
+        start: newStartTimestamp,
+        end: keepsEnd(newStartTimestamp)
+          ? base.end
           : getAllDayEdgeMs(endDay + dayCount, 'end', timezone),
       };
     }
 
     if (keptStartBound !== null) {
-      return { ...base, endTimestamp: roundUpToSecond(keptStartBound) };
+      return { ...base, end: roundUpToSecond(keptStartBound) };
     }
-    const duration = base.endTimestamp - base.startTimestamp;
+    const duration = base.end - base.start;
     let candidate = required.start;
     if (required.end !== null) {
       // Rounded first: the end is written at second resolution too.
@@ -614,8 +601,8 @@ export function computeAutoSchedulingCascade(
     const newStartTimestamp = roundUpToSecond(candidate!);
     return {
       ...base,
-      startTimestamp: newStartTimestamp,
-      endTimestamp: keepsEnd(newStartTimestamp) ? base.endTimestamp : newStartTimestamp + duration,
+      start: newStartTimestamp,
+      end: keepsEnd(newStartTimestamp) ? base.end : newStartTimestamp + duration,
     };
   }
 
