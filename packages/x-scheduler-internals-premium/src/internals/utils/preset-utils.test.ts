@@ -21,6 +21,41 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
     });
   });
 
+  describe('getStartDate', () => {
+    it.skipIf(!isJSDOM)(
+      'should start the range at the first instant of the day, whatever the timezone of the system',
+      () => {
+        setSystemTimezone('Australia/Lord_Howe');
+        // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+        const visibleDate = adapter.date('2026-04-05T12:00:00', 'America/Santiago');
+        const start = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.getStartDate(
+          adapter,
+          visibleDate,
+          1,
+        );
+        expect(adapter.toJsDate(start).toISOString()).to.equal('2026-04-05T04:00:00.000Z');
+      },
+    );
+  });
+
+  describe('getEndDate', () => {
+    it.skipIf(!isJSDOM)(
+      'should end the range just before the next day starts when its last hour is repeated',
+      () => {
+        setSystemTimezone('UTC');
+        // Santiago repeats the 23:00 hour of April 4th, 2026.
+        const start = adapter.date('2026-04-01T00:00:00', 'America/Santiago');
+        const end = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.getEndDate(
+          adapter,
+          start,
+          4,
+          1,
+        );
+        expect(adapter.toJsDate(end).toISOString()).to.equal('2026-04-05T03:59:59.999Z');
+      },
+    );
+  });
+
   describe('navigate', () => {
     it.skipIf(!isJSDOM)(
       'should keep the time of day of the visible date, whatever the timezone of the system',
