@@ -126,7 +126,7 @@ function getAdapterOffsetMs(timezone: TemporalTimezone, epochMs: number): number
  * The wall-clock time of an instant in `timezone`, in milliseconds since 1970-01-01T00:00 of the
  * wall clock.
  */
-export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
+function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
   return epochMs + getAdapterOffsetMs(timezone, epochMs);
 }
 
@@ -182,41 +182,29 @@ export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTi
 }
 
 /**
- * The day number of the date of an instant in `timezone`.
+ * The day number of the date of an instant in `timezone`. For the loops that compare many dates, a
+ * day number is cheaper than `toPlainDateTime().date`.
  */
 export function toLocalDayNumber(epochMs: number, timezone: TemporalTimezone): number {
   return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
 }
 
 /**
- * The first instant of a day in `timezone`. A day whose midnight a DST transition skips starts at
- * the end of the gap. A day the timezone skips, like December 30th, 2011 in Pacific/Apia, resolves
- * to an instant of the next day.
+ * The first instant of the day of an instant in `timezone`. A day whose midnight a DST transition
+ * skips starts at the end of the gap.
  */
-export function getDayStartMs(dayNumber: number, timezone: TemporalTimezone): number {
+export function getStartOfDayMs(epochMs: number, timezone: TemporalTimezone): number {
+  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
   return localToEpochMs(dayNumber * MS_PER_DAY, timezone);
 }
 
 /**
- * The last instant of a day in `timezone`, just before the next day starts.
+ * The last instant of the day of an instant in `timezone`, just before the next day starts.
  * When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
  */
-export function getDayEndMs(dayNumber: number, timezone: TemporalTimezone): number {
-  return getDayStartMs(dayNumber + 1, timezone) - 1;
-}
-
-/**
- * The first instant of the day of an instant in `timezone`, like `getDayStartMs()`.
- */
-export function getStartOfDayMs(epochMs: number, timezone: TemporalTimezone): number {
-  return getDayStartMs(toLocalDayNumber(epochMs, timezone), timezone);
-}
-
-/**
- * The last instant of the day of an instant in `timezone`, like `getDayEndMs()`.
- */
 export function getEndOfDayMs(epochMs: number, timezone: TemporalTimezone): number {
-  return getDayEndMs(toLocalDayNumber(epochMs, timezone), timezone);
+  const dayNumber = Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+  return localToEpochMs((dayNumber + 1) * MS_PER_DAY, timezone) - 1;
 }
 
 /**
@@ -245,18 +233,19 @@ export function getSkippedDays(
   timezone: TemporalTimezone,
 ): Set<number> {
   const skippedDays = new Set<number>();
+  const getStartMs = (dayNumber: number) => localToEpochMs(dayNumber * MS_PER_DAY, timezone);
 
   // A skipped day makes the days of a period last a day longer than the time elapsed between their
   // starts, when DST transitions change it by hours. The periods are a month long, as a timezone
   // never skipped and repeated a day within a month, which would cancel out.
-  let periodStartMs = getDayStartMs(from.dayNumber, timezone);
+  let periodStartMs = getStartMs(from.dayNumber);
   for (let start = from.dayNumber; start < to.dayNumber; start += 31) {
     const end = Math.min(start + 31, to.dayNumber);
-    const periodEndMs = getDayStartMs(end, timezone);
+    const periodEndMs = getStartMs(end);
     if ((end - start) * MS_PER_DAY - (periodEndMs - periodStartMs) >= MS_PER_DAY / 2) {
       for (let dayNumber = start; dayNumber < end; dayNumber += 1) {
         // The start of a skipped day resolves to an instant of the next day.
-        if (toLocalDayNumber(getDayStartMs(dayNumber, timezone), timezone) > dayNumber) {
+        if (toLocalMs(getStartMs(dayNumber), timezone) >= (dayNumber + 1) * MS_PER_DAY) {
           skippedDays.add(dayNumber);
         }
       }

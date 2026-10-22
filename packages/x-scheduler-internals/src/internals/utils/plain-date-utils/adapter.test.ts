@@ -8,9 +8,8 @@ import {
   createAdapterDate,
   createAdapterDateFromWallTime,
   createProcessedDate,
-  getAdapterDayNumber,
   getDateKey,
-  getDayKey,
+  getPlainDateKey,
 } from './adapter';
 import { PlainDate } from '../base-temporal/PlainDate';
 
@@ -23,14 +22,61 @@ describe('base-temporal adapter bridge', () => {
     );
     const plainDate = buildTemporalPlainDate(adapter, value);
     expect(plainDate.toString()).to.equal('2025-03-02');
-    expect(getAdapterDayNumber(adapter, value)).to.equal(plainDate.dayNumber);
   });
+
+  // The instants around DST transitions, the transitions at midnight and the day Apia skipped.
+  const INSTANTS = [
+    '2026-03-08T04:30:00Z',
+    '2026-03-08T05:30:00Z',
+    '2026-04-05T03:30:00Z',
+    '2026-04-05T15:30:00Z',
+    '2026-10-25T00:30:00Z',
+    '2026-10-25T01:30:00Z',
+    '2011-12-30T09:59:59Z',
+    '2011-12-30T10:00:00Z',
+  ];
+
+  it('should build the date the adapter reads, whatever the timezone of the value', () => {
+    for (const timezone of [
+      'UTC',
+      'America/New_York',
+      'America/Havana',
+      'America/St_Johns',
+      'America/Santiago',
+      'Europe/Paris',
+      'Asia/Kolkata',
+      'Australia/Lord_Howe',
+      'Pacific/Apia',
+    ]) {
+      for (const instant of INSTANTS) {
+        const value = adapter.setTimezone(adapter.date(instant, 'default'), timezone);
+        expect(
+          buildTemporalPlainDate(adapter, value).toString(),
+          `${instant} in ${timezone}`,
+        ).to.equal(adapter.formatByString(value, 'yyyy-MM-dd'));
+      }
+    }
+  });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
+    'should build the date the adapter reads in the timezone of the system',
+    () => {
+      setSystemTimezone('Australia/Lord_Howe');
+      for (const instant of INSTANTS) {
+        const value = adapter.date(instant, 'default');
+        expect(buildTemporalPlainDate(adapter, value).toString(), instant).to.equal(
+          adapter.formatByString(value, 'yyyy-MM-dd'),
+        );
+      }
+    },
+  );
 
   it('should return the key getDateKey() returns for the same day', () => {
     for (const currentAdapter of [adapter, adapterFr]) {
       const value = currentAdapter.date('2025-07-04T15:00:00', 'Asia/Tokyo');
       const plainDate = buildTemporalPlainDate(currentAdapter, value);
-      expect(getDayKey(currentAdapter, plainDate.dayNumber)).to.equal(
+      expect(getPlainDateKey(currentAdapter, plainDate)).to.equal(
         getDateKey(value, currentAdapter),
       );
     }
@@ -42,7 +88,7 @@ describe('base-temporal adapter bridge', () => {
     setSystemTimezone('Pacific/Apia');
     const systemAdapter = new TemporalAdapterDateFns();
     expect(
-      getDayKey(systemAdapter, PlainDate.from({ year: 2011, month: 12, day: 30 }).dayNumber),
+      getPlainDateKey(systemAdapter, PlainDate.from({ year: 2011, month: 12, day: 30 })),
     ).to.equal('12/30/2011');
   });
 

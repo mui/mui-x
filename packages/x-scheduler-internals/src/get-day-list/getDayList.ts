@@ -1,19 +1,20 @@
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 import {
+  buildTemporalPlainDate,
   createProcessedDate,
-  getAdapterDayNumber,
 } from '../internals/utils/plain-date-utils/adapter';
-import { getDayStartMs, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
-import { isWeekendDay } from '../use-adapter/useAdapter';
+import { toEpochMs, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+import { isWeekendPlainDate } from '../use-adapter/useAdapter';
 
 export function getDayList(parameters: GetDaytListParameters): GetDaytListReturnValue {
   const { adapter, start, end, excludeWeekends } = parameters;
-  const firstDay = getAdapterDayNumber(adapter, start);
-  const lastDay = getAdapterDayNumber(adapter, end);
+  const firstPlainDate = buildTemporalPlainDate(adapter, start);
+  const lastPlainDate = buildTemporalPlainDate(adapter, end);
 
   if (process.env.NODE_ENV !== 'production') {
-    if (lastDay < firstDay) {
+    if (lastPlainDate.dayNumber < firstPlainDate.dayNumber) {
       // TODO: fix mui/no-guarded-throw
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
@@ -22,33 +23,38 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
     }
   }
 
-  return getDayListFromDayNumbers(
+  return getDayListFromPlainDates(
     adapter,
-    firstDay,
-    lastDay,
+    firstPlainDate,
+    lastPlainDate,
     adapter.getTimezone(start),
     excludeWeekends,
   );
 }
 
 /**
- * Returns the days from the day number `firstDay` to `lastDay`, both included, in `timezone`.
+ * Returns the days from `firstPlainDate` to `lastPlainDate`, both included, in `timezone`.
  */
-export function getDayListFromDayNumbers(
+export function getDayListFromPlainDates(
   adapter: TemporalAdapter,
-  firstDay: number,
-  lastDay: number,
+  firstPlainDate: PlainDate,
+  lastPlainDate: PlainDate,
   timezone: TemporalTimezone,
   excludeWeekends: boolean | undefined,
 ): GetDaytListReturnValue {
   const days: SchedulerProcessedDate[] = [];
-  for (let dayNumber = firstDay; dayNumber <= lastDay; dayNumber += 1) {
-    if (excludeWeekends && isWeekendDay(dayNumber)) {
+  for (
+    let plainDate = firstPlainDate;
+    plainDate.dayNumber <= lastPlainDate.dayNumber;
+    plainDate = plainDate.add({ days: 1 })
+  ) {
+    if (excludeWeekends && isWeekendPlainDate(plainDate)) {
       continue;
     }
-    const dayStartMs = getDayStartMs(dayNumber, timezone);
-    // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, has no instant.
-    if (toLocalDayNumber(dayStartMs, timezone) === dayNumber) {
+    const dayStartMs = toEpochMs(plainDate, 0, timezone);
+    // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, has no instant: its
+    // start belongs to the next day.
+    if (toLocalDayNumber(dayStartMs, timezone) === plainDate.dayNumber) {
       days.push(createProcessedDate(adapter, dayStartMs, timezone));
     }
   }

@@ -10,6 +10,6 @@ export {
   buildTemporalPlainDate,
   createProcessedDate,
   getDateKey,
-  getDayKey,
+  getPlainDateKey,
   normalizeAllDayBounds,
 } from './adapter';

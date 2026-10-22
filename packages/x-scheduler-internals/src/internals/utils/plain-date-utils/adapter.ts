@@ -1,15 +1,9 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
-import { PlainDate } from '../base-temporal/PlainDate';
+import type { PlainDate } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
-import {
-  getEndOfDayMs,
-  getStartOfDayMs,
-  localToEpochMs,
-  toLocalDayNumber,
-  toLocalMs,
-} from './timeZone';
+import { getEndOfDayMs, getStartOfDayMs, localToEpochMs, toPlainDateTime } from './timeZone';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.
@@ -24,21 +18,12 @@ export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): stri
 }
 
 /**
- * The day number of an adapter value, in the timezone the value is labeled with.
- */
-export function getAdapterDayNumber(adapter: Adapter, date: TemporalSupportedObject): number {
-  return toLocalDayNumber(adapter.getTime(date), adapter.getTimezone(date));
-}
-
-/**
  * Builds the plain date of an adapter value, in the timezone the value is labeled with.
+ * Read from the offsets of the timezone, which is faster than the getters of the adapter and
+ * returns the same date.
  */
 export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
-  return PlainDate.from({
-    year: adapter.getYear(date),
-    month: adapter.getMonth(date) + 1,
-    day: adapter.getDate(date),
-  });
+  return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).date;
 }
 
 const epochValues = new WeakMap<Adapter, TemporalSupportedObject>();
@@ -116,24 +101,24 @@ const MAX_CACHED_KEYS_PER_ADAPTER = 10_000;
 const dateKeysCache = new WeakMap<Adapter, Map<number, string>>();
 
 /**
- * Returns the `getDateKey()` of any adapter value on a day.
+ * Returns the `getDateKey()` of any adapter value on `date`.
  * The key only depends on the date and the adapter's locale, so it's formatted once per day.
  */
-export function getDayKey(adapter: Adapter, dayNumber: number): string {
+export function getPlainDateKey(adapter: Adapter, date: PlainDate): string {
   let keys = dateKeysCache.get(adapter);
   if (keys === undefined) {
     keys = new Map();
     dateKeysCache.set(adapter, keys);
   }
-  let key = keys.get(dayNumber);
+  let key = keys.get(date.dayNumber);
   if (key === undefined) {
     if (keys.size >= MAX_CACHED_KEYS_PER_ADAPTER) {
       keys.clear();
     }
     // Labeled in UTC: a system timezone can skip the local midnight of a day, such as
     // December 30th, 2011 in Pacific/Apia.
-    key = getDateKey(createAdapterDate(adapter, dayNumber * MS_PER_DAY, 'UTC'), adapter);
-    keys.set(dayNumber, key);
+    key = getDateKey(createAdapterDate(adapter, date.dayNumber * MS_PER_DAY, 'UTC'), adapter);
+    keys.set(date.dayNumber, key);
   }
   return key;
 }
@@ -147,13 +132,11 @@ export function createProcessedDate(
   epochMs: number,
   timezone: TemporalTimezone,
 ): SchedulerProcessedDate {
-  // Day numbers instead of a `PlainDate`, so that the community package doesn't bundle `PlainDate`.
-  const localMs = toLocalMs(epochMs, timezone);
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  const plainDateTime = toPlainDateTime(epochMs, timezone);
   return {
     value: createAdapterDate(adapter, epochMs, timezone),
-    key: getDayKey(adapter, dayNumber),
+    key: getPlainDateKey(adapter, plainDateTime.date),
     timestamp: epochMs,
-    minutesInDay: Math.floor((localMs - dayNumber * MS_PER_DAY) / 60_000),
+    minutesInDay: Math.floor(plainDateTime.msInDay / 60_000),
   };
 }

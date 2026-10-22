@@ -1,10 +1,14 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { getStartOfWeek as getStartOfWeekDayNumber } from './base-temporal/PlainDate';
-import { fromDayNumber, getIsoDayOfWeek, toDayNumber } from './base-temporal/iso';
-import { createAdapterDate, getAdapterDayNumber } from './plain-date-utils/adapter';
-import { getDayEndMs, getDayStartMs } from './plain-date-utils/timeZone';
+import {
+  createPlainDate,
+  getStartOfWeek as getStartOfWeekDayNumber,
+  PlainDate,
+} from './base-temporal/PlainDate';
+import { ISO_CALENDAR_ID } from './base-temporal/calendar';
+import { buildTemporalPlainDate, createAdapterDate } from './plain-date-utils/adapter';
+import { toEpochMs } from './plain-date-utils/timeZone';
 
 /**
  * Builds an adapter-agnostic format string that produces an ISO 8601 date.
@@ -105,7 +109,8 @@ export function getOccurrenceEnd({
  * The JS weekday (0=Sun … 6=Sat) of a date, read in its own timezone.
  */
 export function getJsDayOfWeek(adapter: Adapter, date: TemporalSupportedObject): number {
-  return getIsoDayOfWeek(getAdapterDayNumber(adapter, date)) % 7;
+  // ISO weekdays go from 1 (Monday) to 7 (Sunday).
+  return buildTemporalPlainDate(adapter, date).dayOfWeek % 7;
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
@@ -125,21 +130,24 @@ function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
 }
 
 /**
- * The day number of the first day of the week of `date`, read in its own timezone.
+ * The first day of the week of `date`, read in its own timezone.
  */
-function getWeekStartDayNumber(
+function getWeekStartPlainDate(
   adapter: Adapter,
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,
-): number {
-  const dayNumber = getAdapterDayNumber(adapter, date);
+): PlainDate {
+  const plainDate = buildTemporalPlainDate(adapter, date);
   if (weekStartsOn === undefined) {
     // The adapter numbers the days of the week from 1, starting on the first day of the locale.
-    return dayNumber - adapter.getDayOfWeek(date) + 1;
+    return plainDate.add({ days: 1 - adapter.getDayOfWeek(date) });
   }
   checkWeekStartsOn(weekStartsOn);
   // `weekStartsOn` and ISO weekdays agree, except for Sunday (0 and 7), which both accept.
-  return getStartOfWeekDayNumber(dayNumber, weekStartsOn);
+  return createPlainDate(
+    getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn),
+    ISO_CALENDAR_ID,
+  );
 }
 
 /**
@@ -154,8 +162,8 @@ export function getStartOfWeek(
   weekStartsOn: WeekStartsOn | undefined,
 ): TemporalSupportedObject {
   const timezone = adapter.getTimezone(date);
-  const weekStart = getWeekStartDayNumber(adapter, date, weekStartsOn);
-  return createAdapterDate(adapter, getDayStartMs(weekStart, timezone), timezone);
+  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
+  return createAdapterDate(adapter, toEpochMs(weekStartPlainDate, 0, timezone), timezone);
 }
 
 /**
@@ -170,8 +178,11 @@ export function getEndOfWeek(
   weekStartsOn: WeekStartsOn | undefined,
 ): TemporalSupportedObject {
   const timezone = adapter.getTimezone(date);
-  const weekStart = getWeekStartDayNumber(adapter, date, weekStartsOn);
-  return createAdapterDate(adapter, getDayEndMs(weekStart + 6, timezone), timezone);
+  // The last instant before the next week starts.
+  const nextWeekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn).add({
+    days: 7,
+  });
+  return createAdapterDate(adapter, toEpochMs(nextWeekStartPlainDate, 0, timezone) - 1, timezone);
 }
 
 /**
@@ -191,9 +202,12 @@ export function getWeekNumber(
   if (weekStartsOn === undefined) {
     return adapter.getWeekNumber(date);
   }
-  const weekStart = getWeekStartDayNumber(adapter, date, weekStartsOn);
+  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
   // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.
-  const { year } = fromDayNumber(weekStart + 3);
-  const firstWeekStart = getStartOfWeekDayNumber(toDayNumber(year, 1, 4), weekStartsOn);
-  return (weekStart - firstWeekStart) / 7 + 1;
+  const year = weekStartPlainDate.add({ days: 3 }).year;
+  const firstWeekStart = getStartOfWeekDayNumber(
+    PlainDate.from({ year, month: 1, day: 4 }).dayNumber,
+    weekStartsOn,
+  );
+  return (weekStartPlainDate.dayNumber - firstWeekStart) / 7 + 1;
 }
