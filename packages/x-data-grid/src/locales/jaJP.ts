@@ -150,12 +150,12 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnHeaderSortIconLabel: 'ソート',
   columnHeaderSortIconAriaLabel: (columnName, direction) => {
     if (direction === 'asc') {
-      return `${columnName}を昇順で並べ替え`;
+      return `${columnName}を昇順でソート`;
     }
     if (direction === 'desc') {
-      return `${columnName}を降順で並べ替え`;
+      return `${columnName}を降順でソート`;
     }
-    return `${columnName}の並べ替えを解除`;
+    return `${columnName}のソートを解除`;
   },
 
   // Rows selected footer text

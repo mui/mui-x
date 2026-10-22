@@ -152,12 +152,12 @@ const itITGrid: Partial<GridLocaleText> = {
   columnHeaderSortIconLabel: 'Ordina',
   columnHeaderSortIconAriaLabel: (columnName, direction) => {
     if (direction === 'asc') {
-      return `Ordina ${columnName} in ordine crescente`;
+      return `Ordina la colonna ${columnName} in ordine crescente`;
     }
     if (direction === 'desc') {
-      return `Ordina ${columnName} in ordine decrescente`;
+      return `Ordina la colonna ${columnName} in ordine decrescente`;
     }
-    return `Rimuovi l'ordinamento da ${columnName}`;
+    return `Rimuovi l'ordinamento della colonna ${columnName}`;
   },
 
   // Rows selected footer text

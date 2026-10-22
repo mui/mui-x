@@ -152,12 +152,12 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnHeaderSortIconLabel: 'Trier',
   columnHeaderSortIconAriaLabel: (columnName, direction) => {
     if (direction === 'asc') {
-      return `Trier ${columnName} par ordre croissant`;
+      return `Trier la colonne ${columnName} par ordre croissant`;
     }
     if (direction === 'desc') {
-      return `Trier ${columnName} par ordre décroissant`;
+      return `Trier la colonne ${columnName} par ordre décroissant`;
     }
-    return `Supprimer le tri de ${columnName}`;
+    return `Supprimer le tri de la colonne ${columnName}`;
   },
 
   // Rows selected footer text

@@ -1,7 +1,12 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import { DataGrid, useGridApiRef, gridStringOrNumberComparator } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  useGridApiRef,
+  gridStringOrNumberComparator,
+  GridColumnHeaderSortIcon,
+} from '@mui/x-data-grid';
 import type {
   DataGridProps,
   GridSortModel,
@@ -152,6 +157,33 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnHeaderCell(0)).to.have.attribute('aria-sort', 'descending');
     expect(button).to.have.attribute('aria-label', 'Sort brand in ascending order');
     await user.click(button);
+    expect(button).to.have.attribute('aria-label', 'Sort brand in descending order');
+  });
+
+  it('should use the field when a custom sort icon omits the column name', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand', headerName: 'Brand' }]}
+          slots={{
+            columnHeaderSortIcon: ({ field, direction, sortingOrder, onClick }) => (
+              <GridColumnHeaderSortIcon
+                field={field}
+                direction={direction}
+                sortingOrder={sortingOrder}
+                onClick={onClick}
+              />
+            ),
+          }}
+        />
+      </div>,
+    );
+
+    const button = screen.getByLabelText('Sort brand in ascending order', { selector: 'button' });
+    await user.hover(getColumnHeaderCell(0));
+    await user.click(button);
+    expect(getColumnHeaderCell(0)).to.have.attribute('aria-sort', 'ascending');
     expect(button).to.have.attribute('aria-label', 'Sort brand in descending order');
   });
 

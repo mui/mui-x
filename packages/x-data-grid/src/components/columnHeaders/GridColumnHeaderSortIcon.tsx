@@ -4,12 +4,19 @@ import { GridIconButtonContainer } from './GridIconButtonContainer';
 import { GridColumnSortButton } from '../GridColumnSortButton';
 import type { GridColumnSortButtonProps } from '../GridColumnSortButton';
 
-export interface GridColumnHeaderSortIconProps extends GridColumnSortButtonProps {}
+export interface GridColumnHeaderSortIconProps extends Omit<
+  GridColumnSortButtonProps,
+  'columnName'
+> {
+  columnName?: string;
+}
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
+  const { columnName = props.field, ...other } = props;
+
   return (
     <GridIconButtonContainer>
-      <GridColumnSortButton {...props} tabIndex={-1} />
+      <GridColumnSortButton {...other} columnName={columnName} tabIndex={-1} />
     </GridIconButtonContainer>
   );
 }
@@ -23,7 +30,7 @@ GridColumnHeaderSortIconRaw.propTypes /* remove-proptypes */ = {
   // ----------------------------------------------------------------------
   className: PropTypes.string,
   color: PropTypes.oneOf(['default', 'inherit', 'primary']),
-  columnName: PropTypes.string.isRequired,
+  columnName: PropTypes.string,
   /**
    * The component used for the root node. Either a string to use an HTML element or a component.
    */

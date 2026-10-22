@@ -152,12 +152,12 @@ const esESGrid: Partial<GridLocaleText> = {
   columnHeaderSortIconLabel: 'Ordenar',
   columnHeaderSortIconAriaLabel: (columnName, direction) => {
     if (direction === 'asc') {
-      return `Ordenar ${columnName} de forma ascendente`;
+      return `Ordenar la columna ${columnName} de forma ascendente`;
     }
     if (direction === 'desc') {
-      return `Ordenar ${columnName} de forma descendente`;
+      return `Ordenar la columna ${columnName} de forma descendente`;
     }
-    return `Quitar la ordenación de ${columnName}`;
+    return `Quitar la ordenación de la columna ${columnName}`;
   },
 
   // Rows selected footer text

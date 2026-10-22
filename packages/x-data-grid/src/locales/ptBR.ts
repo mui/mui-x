@@ -153,12 +153,12 @@ const ptBRGrid: Partial<GridLocaleText> = {
   columnHeaderSortIconLabel: 'Ordenar',
   columnHeaderSortIconAriaLabel: (columnName, direction) => {
     if (direction === 'asc') {
-      return `Ordenar ${columnName} em ordem crescente`;
+      return `Ordenar a coluna ${columnName} em ordem crescente`;
     }
     if (direction === 'desc') {
-      return `Ordenar ${columnName} em ordem decrescente`;
+      return `Ordenar a coluna ${columnName} em ordem decrescente`;
     }
-    return `Remover ordenação de ${columnName}`;
+    return `Remover a ordenação da coluna ${columnName}`;
   },
 
   // Rows selected footer text
