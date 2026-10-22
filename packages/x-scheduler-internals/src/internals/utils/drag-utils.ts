@@ -2,6 +2,7 @@ import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderInternalDragOrResize,
+  SchedulerProcessedDate,
   TemporalSupportedObject,
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
@@ -18,8 +19,7 @@ export function isInternalDragOrResizePlaceholder(
 }
 
 // Day helpers for the drag and drop of the day grid, on the wall clock of the timezone of each
-// date. A wall-clock time a DST transition skips moves forward by the length of the gap, and a
-// repeated one resolves to its first instant, whatever the timezone of the system (RFC 5545).
+// date. The wall-clock times a DST transition skips or repeats resolve like `localToEpochMs()`.
 
 /**
  * The day number of the date of an instant in `timezone`.
@@ -36,29 +36,10 @@ export function getAdapterDayNumber(adapter: Adapter, date: TemporalSupportedObj
 }
 
 /**
- * The first instant of a day in `timezone`, as an adapter value.
+ * The day number of a processed date, in its timezone.
  */
-export function createStartOfDay(
-  adapter: Adapter,
-  dayNumber: number,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  return createAdapterDate(adapter, localToEpochMs(dayNumber * MS_PER_DAY, timezone), timezone);
-}
-
-/**
- * The last instant of a day in `timezone`, as an adapter value.
- */
-export function createEndOfDay(
-  adapter: Adapter,
-  dayNumber: number,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  return createAdapterDate(
-    adapter,
-    localToEpochMs((dayNumber + 1) * MS_PER_DAY, timezone) - 1,
-    timezone,
-  );
+export function getProcessedDayNumber(adapter: Adapter, date: SchedulerProcessedDate): number {
+  return toLocalDayNumber(date.timestamp, adapter.getTimezone(date.value));
 }
 
 /**
@@ -75,4 +56,15 @@ export function addDaysOnWallClock(
   const timezone = adapter.getTimezone(date);
   const localMs = toLocalMs(adapter.getTime(date), timezone) + dayCount * MS_PER_DAY;
   return createAdapterDate(adapter, localToEpochMs(localMs, timezone), timezone);
+}
+
+/**
+ * Moves a date to the day `dayNumber` of its timezone, keeping its time of day on the wall clock.
+ */
+export function moveToDay(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  dayNumber: number,
+): TemporalSupportedObject {
+  return addDaysOnWallClock(adapter, date, dayNumber - getAdapterDayNumber(adapter, date));
 }

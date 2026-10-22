@@ -4,14 +4,14 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { MS_PER_DAY } from '../../internals/utils/base-temporal/iso';
 import {
   addDaysOnWallClock,
-  createEndOfDay,
-  createStartOfDay,
   getAdapterDayNumber,
+  moveToDay,
+  toLocalDayNumber,
 } from '../../internals/utils/drag-utils';
-import { toLocalMs } from '../../internals/utils/plain-date-utils/timeZone';
+import { createAdapterDate } from '../../internals/utils/plain-date-utils/adapter';
+import { getEndOfDayMs, getStartOfDayMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([
@@ -41,9 +41,17 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       const valueDay = getAdapterDayNumber(adapter, value);
       const timezone = adapter.getTimezone(value);
 
-      // Move a Day Grid Event within the Day Grid
-      if (data.source === 'CalendarGridDayEvent') {
-        const offset = valueDay - getAdapterDayNumber(adapter, data.draggedDay);
+      // Move a Day Grid Event within the Day Grid, or a Time Grid Event into it
+      if (data.source === 'CalendarGridDayEvent' || data.source === 'CalendarGridTimeEvent') {
+        // The day under the grab point.
+        const grabbedDay =
+          data.source === 'CalendarGridDayEvent'
+            ? data.draggedDay
+            : toLocalDayNumber(
+                adapter.getTime(data.start) + data.initialCursorPositionInEventMs,
+                adapter.getTimezone(data.start),
+              );
+        const offset = valueDay - grabbedDay;
         return getDataFromInside(
           data,
           addDaysOnWallClock(adapter, data.start, offset),
@@ -62,12 +70,12 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           // The new start keeps its time of day, unless it moves to the day of the end.
           const newStart =
             valueDay === endDay
-              ? createStartOfDay(adapter, endDay, timezone)
-              : addDaysOnWallClock(
+              ? createAdapterDate(
                   adapter,
-                  data.start,
-                  valueDay - getAdapterDayNumber(adapter, data.start),
-                );
+                  getStartOfDayMs(adapter.getTime(value), timezone),
+                  timezone,
+                )
+              : moveToDay(adapter, data.start, valueDay);
           return getDataFromInside(data, newStart, data.end);
         }
 
@@ -80,32 +88,15 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           // The new end keeps its time of day, unless it moves to the day of the start.
           const newEnd =
             valueDay === startDay
-              ? createEndOfDay(adapter, startDay, timezone)
-              : addDaysOnWallClock(
+              ? createAdapterDate(
                   adapter,
-                  data.end,
-                  valueDay - getAdapterDayNumber(adapter, data.end),
-                );
+                  getEndOfDayMs(adapter.getTime(value), timezone),
+                  timezone,
+                )
+              : moveToDay(adapter, data.end, valueDay);
 
           return getDataFromInside(data, data.start, newEnd);
         }
-      }
-
-      // Move a Time Grid Event into the Day Grid
-      if (data.source === 'CalendarGridTimeEvent') {
-        // The day under the grab point.
-        const cursorDay = Math.floor(
-          toLocalMs(
-            adapter.getTime(data.start) + data.initialCursorPositionInEventMs,
-            adapter.getTimezone(data.start),
-          ) / MS_PER_DAY,
-        );
-        const offset = valueDay - cursorDay;
-        return getDataFromInside(
-          data,
-          addDaysOnWallClock(adapter, data.start, offset),
-          addDaysOnWallClock(adapter, data.end, offset),
-        );
       }
 
       // Move an Standalone Event into the Time Grid

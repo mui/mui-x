@@ -1,6 +1,6 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import { getAdapterDayNumber, toLocalDayNumber } from '../internals/utils/drag-utils';
+import { getAdapterDayNumber, getProcessedDayNumber } from '../internals/utils/drag-utils';
 
 // These selectors run for every cell while dragging, so they compare timestamps and day numbers
 // instead of calling the adapter's comparison methods.
@@ -17,7 +17,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     }
 
     const { adapter } = state;
-    const dayNumber = toLocalDayNumber(day.timestamp, adapter.getTimezone(day.value));
+    const dayNumber = getProcessedDayNumber(adapter, day);
     if (dayNumber === getAdapterDayNumber(adapter, placeholder.start)) {
       return placeholder;
     }
@@ -64,7 +64,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
       return false;
     }
     return (
-      toLocalDayNumber(day.timestamp, state.adapter.getTimezone(day.value)) ===
+      getProcessedDayNumber(state.adapter, day) ===
       getAdapterDayNumber(state.adapter, placeholder.start)
     );
   },

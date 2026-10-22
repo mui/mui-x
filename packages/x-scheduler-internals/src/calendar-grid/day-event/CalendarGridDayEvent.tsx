@@ -8,7 +8,7 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
-import { createStartOfDay, getAdapterDayNumber } from '../../internals/utils/drag-utils';
+import { getAdapterDayNumber, getProcessedDayNumber } from '../../internals/utils/drag-utils';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -68,28 +68,22 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Feature hooks
   const getDraggedDay = useStableCallback((input: { clientX: number }) => {
+    const startDay = getProcessedDayNumber(adapter, start);
     if (!ref.current) {
-      return start.value;
+      return startDay;
     }
 
     // The event covers every date from its start to its end in the row, like its cells.
-    const firstDay = Math.max(
-      getAdapterDayNumber(adapter, start.value),
-      getAdapterDayNumber(adapter, rowStart),
-    );
+    const firstDay = Math.max(startDay, getAdapterDayNumber(adapter, rowStart));
     const lastDay = Math.min(
-      getAdapterDayNumber(adapter, end.value),
+      getProcessedDayNumber(adapter, end),
       getAdapterDayNumber(adapter, rowEnd),
     );
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
 
-    return createStartOfDay(
-      adapter,
-      firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1,
-      adapter.getTimezone(start.value),
-    );
+    return firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1;
   });
 
   const getOriginalOccurrence = useOriginalOccurrence({
@@ -202,6 +196,9 @@ export namespace CalendarGridDayEvent {
 
   export interface DragData extends SharedDragData {
     source: 'CalendarGridDayEvent';
-    draggedDay: TemporalSupportedObject;
+    /**
+     * The day number of the grabbed day, in the timezone of `start`.
+     */
+    draggedDay: number;
   }
 }
