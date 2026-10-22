@@ -255,6 +255,21 @@ describe('iterate()', () => {
       expect(hourTickCells.map((cell) => cell.spanInTicks)).to.deep.equal([24, 24, 24]);
       expect(hourCells.length).to.equal(3 * 24);
     });
+
+    it('should give unique keys to the cells of a date skipped by a transition', () => {
+      // Pacific/Apia skipped December 30th, 2011 entirely: its wall-clock slot stays on the
+      // axis but resolves to the same instants as December 31st.
+      const start = adapter.startOfDay(adapter.date('2011-12-29T12:00:00', 'Pacific/Apia'));
+      const end = adapter.endOfDay(adapter.date('2012-01-01T12:00:00', 'Pacific/Apia'));
+
+      const dayCells = iterate(adapter, 'day', 'day', start, end);
+      const hourCells = iterate(adapter, 'hour', 'hour', start, end);
+
+      expect(dayCells.length).to.equal(4);
+      expect(new Set(dayCells.map((cell) => cell.key)).size).to.equal(4);
+      expect(hourCells.length).to.equal(4 * 24);
+      expect(new Set(hourCells.map((cell) => cell.key)).size).to.equal(4 * 24);
+    });
   });
 
   describe('boundary clamping', () => {

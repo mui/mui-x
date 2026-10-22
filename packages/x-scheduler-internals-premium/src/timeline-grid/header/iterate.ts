@@ -117,7 +117,9 @@ export function iterate(
       spanInTicks: appliedHourWindow
         ? countVisibleHours(spanEnd, spanStart, appliedHourWindow)
         : differenceInUnits(spanEnd, spanStart, tickUnit),
-      key: String(adapter.getTime(cursorDate)),
+      // A date skipped by a transition resolves to the same instants as the next one, so
+      // the key is built from the wall-clock time.
+      key: String(cursor),
       index,
     });
     cursor = nextCursor;
@@ -189,7 +191,6 @@ function iterateHourCells(
   const cells: IteratedCell[] = [];
   for (let dayIndex = 0; dayIndex < dayCount; dayIndex += 1) {
     const dayStartLocalMs = (firstDay + dayIndex) * MS_PER_DAY;
-    const dayKey = String(localToEpochMs(dayStartLocalMs, timezone));
     // On a spring-forward day the skipped hour has no instant, so `date` moves forward to
     // the next existing one. `wallClockHour` is what the column stands for and is what
     // labels must be built from.
@@ -202,7 +203,7 @@ function iterateHourCells(
         start: date,
         end,
         spanInTicks: 1,
-        key: `${dayKey}:${hour}`,
+        key: `${dayStartLocalMs}:${hour}`,
         index: cells.length,
         wallClockHour: hour,
       });
