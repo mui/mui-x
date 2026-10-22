@@ -7,7 +7,12 @@ import type {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
 } from '@mui/x-scheduler-internals/models';
-import { dateToEventString, normalizeAllDayBounds } from '@mui/x-scheduler-internals/internals';
+import {
+  createAdapterDate,
+  dateToEventString,
+  getEndOfDayMs,
+  getStartOfDayMs,
+} from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerDependency } from '../../models';
@@ -17,6 +22,7 @@ import {
   getEffectiveDependencyLag,
   isDependencyActive,
 } from './dependency-utils';
+import { getDayEndMs, getDayStartMs, toLocalDayNumber } from './wall-clock';
 
 export interface ComputeAutoSchedulingCascadeParameters {
   adapter: Adapter;
@@ -50,17 +56,15 @@ export interface ComputeAutoSchedulingCascadeParameters {
   enforcedDependencies?: readonly SchedulerDependency[];
 }
 
+/**
+ * The dates of an event as the engine works on them: instants, with the timezone its days and
+ * its wall-clock times are read in.
+ */
 interface ResolvedDates {
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
   startTimestamp: number;
   endTimestamp: number;
+  timezone: TemporalTimezone;
   allDay: boolean;
-}
-
-interface Bound {
-  date: TemporalSupportedObject;
-  timestamp: number;
 }
 
 export interface AutoSchedulingCascadeResult {
@@ -75,50 +79,80 @@ export interface AutoSchedulingCascadeResult {
   blocked: SchedulerEventId[];
 }
 
+/**
+ * Reads the dates of adapter values. An all-day event spans whole days, like
+ * `normalizeAllDayBounds()`.
+ */
+function resolveDates(
+  adapter: Adapter,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
+  allDay: boolean,
+): ResolvedDates {
+  const timezone = adapter.getTimezone(start);
+  const startTimestamp = adapter.getTime(start);
+  const endTimestamp = adapter.getTime(end);
+  if (!allDay) {
+    return { startTimestamp, endTimestamp, timezone, allDay };
+  }
+  return {
+    startTimestamp: getStartOfDayMs(startTimestamp, timezone),
+    endTimestamp: getEndOfDayMs(endTimestamp, adapter.getTimezone(end)),
+    timezone,
+    allDay,
+  };
+}
+
 function resolveProcessedEventDates(
   adapter: Adapter,
   processedEvent: SchedulerProcessedEvent,
 ): ResolvedDates {
-  const { start, end } = normalizeAllDayBounds(
+  return resolveDates(
     adapter,
     processedEvent.dataTimezone.start.value,
     processedEvent.dataTimezone.end.value,
-    processedEvent.allDay,
+    processedEvent.allDay ?? false,
   );
-  return {
-    start,
-    end,
-    startTimestamp: adapter.getTime(start),
-    endTimestamp: adapter.getTime(end),
-    allDay: processedEvent.allDay ?? false,
-  };
+}
+
+function getEdge(dates: ResolvedDates, side: SchedulerEventSide): number {
+  return side === 'start' ? dates.startTimestamp : dates.endTimestamp;
 }
 
 /**
- * The earliest date `dependency` allows for the successor's bounded edge, or `null` when
- * the lag runs past the supported date range.
+ * The earliest instant `dependency` allows for the successor's bounded edge, or `null` when
+ * the lag runs past the supported date range. The lag is added in the successor's timezone.
  */
 function getDependencyBound(
-  adapter: Adapter,
   dependency: SchedulerDependency,
   sourceDates: ResolvedDates,
   targetDates: ResolvedDates,
-): Bound | null {
+): number | null {
   const edges = getDependencyEdges(dependency.type);
-  const date = addDependencyLag(
-    adapter,
-    adapter.setTimezone(sourceDates[edges.source], adapter.getTimezone(targetDates.start)),
+  const timestamp = addDependencyLag(
+    getEdge(sourceDates, edges.source),
     getEffectiveDependencyLag(dependency, targetDates.allDay),
+    targetDates.timezone,
   );
-  const timestamp = adapter.getTime(date);
-  return Number.isFinite(timestamp) ? { date, timestamp } : null;
+  return Number.isFinite(timestamp) ? timestamp : null;
 }
 
-// Minimal whole-day shift bringing `edge` to `bound`; the full-day count floors, so a
-// DST day may need one more.
-function minimalDayShift(adapter: Adapter, edge: TemporalSupportedObject, bound: Bound): number {
-  let dayCount = Math.max(0, adapter.differenceInDays(bound.date, edge));
-  while (adapter.getTime(adapter.addDays(edge, dayCount)) < bound.timestamp) {
+/**
+ * The `side` of an all-day event moved by whole days: the first instant of its first day, or
+ * the last instant of its last day.
+ */
+function shiftAllDayEdge(dates: ResolvedDates, side: SchedulerEventSide, dayCount: number) {
+  const dayNumber = toLocalDayNumber(getEdge(dates, side), dates.timezone) + dayCount;
+  return side === 'start'
+    ? getDayStartMs(dayNumber, dates.timezone)
+    : getDayEndMs(dayNumber, dates.timezone);
+}
+
+// Minimal whole-day shift bringing the `side` of an all-day event to `bound`.
+function minimalDayShift(dates: ResolvedDates, side: SchedulerEventSide, bound: number): number {
+  const edgeDay = toLocalDayNumber(getEdge(dates, side), dates.timezone);
+  let dayCount = Math.max(0, toLocalDayNumber(bound, dates.timezone) - edgeDay - 1);
+  while (shiftAllDayEdge(dates, side, dayCount) < bound) {
     dayCount += 1;
   }
   return dayCount;
@@ -146,7 +180,6 @@ export function getDependencyViolation(
     processedEventLookup.get(dependency.target)!,
   );
   const bound = getDependencyBound(
-    adapter,
     dependency,
     resolveProcessedEventDates(adapter, processedEventLookup.get(dependency.source)!),
     targetDates,
@@ -154,11 +187,11 @@ export function getDependencyViolation(
   if (bound === null) {
     return 0;
   }
-  const targetEdge = targetDates[getDependencyEdges(dependency.type).target];
+  const targetSide = getDependencyEdges(dependency.type).target;
   if (targetDates.allDay) {
-    return minimalDayShift(adapter, targetEdge, bound);
+    return minimalDayShift(targetDates, targetSide, bound);
   }
-  return Math.max(0, bound.timestamp - adapter.getTime(targetEdge));
+  return Math.max(0, bound - getEdge(targetDates, targetSide));
 }
 
 /**
@@ -269,15 +302,14 @@ export function computeAutoSchedulingCascade(
         value == null ? modelString : dateToEventString(adapter, value, modelString, dataTimezone);
       return resolveEventDate(nextString, nextTimezone, adapter, entry.id);
     };
-    const { start, end } = normalizeAllDayBounds(
+    const dates = resolveDates(
       adapter,
       resolveEntryDate(entry.start, model.start, processedEvent.dataTimezone.start.value),
       resolveEntryDate(entry.end, model.end, processedEvent.dataTimezone.end.value),
       allDay,
     );
-    const startTimestamp = adapter.getTime(start);
-    const endTimestamp = adapter.getTime(end);
-    newDates.set(entry.id, { start, end, startTimestamp, endTimestamp, allDay });
+    const { startTimestamp, endTimestamp } = dates;
+    newDates.set(entry.id, dates);
 
     const current = resolveCurrentDates(entry.id)!;
     const startMoved = startTimestamp !== current.startTimestamp;
@@ -411,9 +443,11 @@ export function computeAutoSchedulingCascade(
   // entry in the old timezone and the model is then read in the new one, so the entry
   // carries the instant whose old-zone wall time is the intended new-zone wall time.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
+    const start = createAdapterDate(adapter, dates.startTimestamp, dates.timezone);
+    const end = createAdapterDate(adapter, dates.endTimestamp, dates.timezone);
     const timezoneChange = timezoneChanges.get(eventId);
     if (timezoneChange === undefined) {
-      return { start: dates.start, end: dates.end };
+      return { start, end };
     }
     const { model, dataTimezone, nextTimezone } = timezoneChange;
     const encode = (value: TemporalSupportedObject, modelString: string) =>
@@ -423,7 +457,7 @@ export function computeAutoSchedulingCascade(
         adapter,
         eventId,
       );
-    return { start: encode(dates.start, model.start), end: encode(dates.end, model.end) };
+    return { start: encode(start, model.start), end: encode(end, model.end) };
   }
 
   function resolveCurrentDates(eventId: SchedulerEventId): ResolvedDates | null {
@@ -445,11 +479,11 @@ export function computeAutoSchedulingCascade(
   function collectBounds(
     eventId: SchedulerEventId,
     base: ResolvedDates,
-  ): Record<SchedulerEventSide, Bound | null> {
+  ): Record<SchedulerEventSide, number | null> {
     const constrainedByAll = repositionedSeeds.has(eventId);
     const constrainedOnEnd = endResizedSeeds.has(eventId);
     const current = resolveCurrentDates(eventId);
-    const required: Record<SchedulerEventSide, Bound | null> = { start: null, end: null };
+    const required: Record<SchedulerEventSide, number | null> = { start: null, end: null };
     for (const dependency of activeDependenciesByTarget.get(eventId) ?? []) {
       const sourceId = dependency.source;
       if (sourceId === eventId || deleted.has(sourceId) || becomesRecurring.has(sourceId)) {
@@ -457,28 +491,24 @@ export function computeAutoSchedulingCascade(
       }
       const edges = getDependencyEdges(dependency.type);
       const currentDates = resolveCurrentDates(sourceId);
-      let bound: Bound | null = null;
+      let bound: number | null = null;
       if (
         constrainedByAll ||
         (constrainedOnEnd && edges.target === 'end') ||
         enforcedIds.has(dependency.id)
       ) {
         const sourceDates = newDates.get(sourceId) ?? currentDates;
-        bound =
-          sourceDates === null ? null : getDependencyBound(adapter, dependency, sourceDates, base);
+        bound = sourceDates === null ? null : getDependencyBound(dependency, sourceDates, base);
       } else {
         const sourceDates =
           (processed.has(sourceId) ? newDates.get(sourceId) : undefined) ?? currentDates;
         if (sourceDates !== null) {
-          const nextBound = getDependencyBound(adapter, dependency, sourceDates, base);
+          const nextBound = getDependencyBound(dependency, sourceDates, base);
           const previousBound =
             currentDates === null || current === null
               ? null
-              : getDependencyBound(adapter, dependency, currentDates, current);
-          if (
-            nextBound !== null &&
-            (previousBound === null || nextBound.timestamp > previousBound.timestamp)
-          ) {
+              : getDependencyBound(dependency, currentDates, current);
+          if (nextBound !== null && (previousBound === null || nextBound > previousBound)) {
             bound = nextBound;
           }
         }
@@ -498,8 +528,8 @@ export function computeAutoSchedulingCascade(
     }
     const required = collectBounds(eventId, base);
 
-    const startViolated = required.start !== null && base.startTimestamp < required.start.timestamp;
-    const endViolated = required.end !== null && base.endTimestamp < required.end.timestamp;
+    const startViolated = required.start !== null && base.startTimestamp < required.start;
+    const endViolated = required.end !== null && base.endTimestamp < required.end;
     if (!startViolated && !endViolated) {
       return null;
     }
@@ -517,67 +547,51 @@ export function computeAutoSchedulingCascade(
 
     if (base.allDay) {
       if (keptStartBound !== null) {
-        const newEnd = adapter.addDays(
-          base.end,
-          minimalDayShift(adapter, base.end, keptStartBound),
-        );
-        return { ...base, end: newEnd, endTimestamp: adapter.getTime(newEnd) };
+        const dayCount = minimalDayShift(base, 'end', keptStartBound);
+        return { ...base, endTimestamp: shiftAllDayEdge(base, 'end', dayCount) };
       }
       const dayCount = Math.max(
-        required.start === null ? 0 : minimalDayShift(adapter, base.start, required.start),
-        required.end === null ? 0 : minimalDayShift(adapter, base.end, required.end),
+        required.start === null ? 0 : minimalDayShift(base, 'start', required.start),
+        required.end === null ? 0 : minimalDayShift(base, 'end', required.end),
       );
-      const newStart = adapter.addDays(base.start, dayCount);
-      const newStartTimestamp = adapter.getTime(newStart);
-      const newEnd = keepsEnd(newStartTimestamp) ? base.end : adapter.addDays(base.end, dayCount);
+      const newStartTimestamp = shiftAllDayEdge(base, 'start', dayCount);
       return {
-        start: newStart,
-        end: newEnd,
+        ...base,
         startTimestamp: newStartTimestamp,
-        endTimestamp: adapter.getTime(newEnd),
-        allDay: true,
+        endTimestamp: keepsEnd(newStartTimestamp)
+          ? base.endTimestamp
+          : shiftAllDayEdge(base, 'end', dayCount),
       };
     }
 
     if (keptStartBound !== null) {
-      const newEnd = roundUpToSecond(keptStartBound.date);
-      return { ...base, end: newEnd, endTimestamp: adapter.getTime(newEnd) };
+      return { ...base, endTimestamp: roundUpToSecond(keptStartBound) };
     }
     const duration = base.endTimestamp - base.startTimestamp;
     let candidate = required.start;
     if (required.end !== null) {
       // Rounded first: the end is written at second resolution too.
-      const endBound = roundUpToSecond(required.end.date);
-      candidate = later(candidate, toBound(adapter.addMilliseconds(endBound, -duration)));
+      candidate = later(candidate, roundUpToSecond(required.end) - duration);
     }
     // A violated edge always leaves a candidate.
-    const newStart = roundUpToSecond(candidate!.date);
-    const newStartTimestamp = adapter.getTime(newStart);
-    const newEnd = keepsEnd(newStartTimestamp)
-      ? base.end
-      : adapter.addMilliseconds(newStart, duration);
+    const newStartTimestamp = roundUpToSecond(candidate!);
     return {
-      start: newStart,
-      end: newEnd,
+      ...base,
       startTimestamp: newStartTimestamp,
-      endTimestamp: adapter.getTime(newEnd),
-      allDay: false,
+      endTimestamp: keepsEnd(newStartTimestamp) ? base.endTimestamp : newStartTimestamp + duration,
     };
   }
 
-  function toBound(date: TemporalSupportedObject): Bound {
-    return { date, timestamp: adapter.getTime(date) };
-  }
-
-  function later(current: Bound | null, bound: Bound): Bound {
-    return current === null || bound.timestamp > current.timestamp ? bound : current;
+  function later(current: number | null, bound: number): number {
+    return current === null || bound > current ? bound : current;
   }
 
   // Wall-time serialization is second-resolution: a fractional bound (inherited from the
   // inclusive 23:59:59.999 of an all-day predecessor, or from milliseconds in the data)
   // would write the successor early, so land on the next whole second.
-  function roundUpToSecond(date: TemporalSupportedObject): TemporalSupportedObject {
-    const milliseconds = adapter.getMilliseconds(date);
-    return milliseconds === 0 ? date : adapter.addMilliseconds(date, 1000 - milliseconds);
+  function roundUpToSecond(timestamp: number): number {
+    // Offsets are whole seconds, so the milliseconds are the same on every wall clock.
+    const milliseconds = ((timestamp % 1000) + 1000) % 1000;
+    return milliseconds === 0 ? timestamp : timestamp + 1000 - milliseconds;
   }
 }

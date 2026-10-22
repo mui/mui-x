@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerDependency } from '../../models';
@@ -533,6 +534,35 @@ describe('computeAutoSchedulingCascade', () => {
       adapter.getTime(newYorkDate('2025-03-09T01:30:00')),
     );
   });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
+    'should resolve a day lag landing in a repeated hour to its first instant, whatever the timezone of the system',
+    () => {
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
+      setSystemTimezone('America/New_York');
+      const predecessor = EventBuilder.new()
+        .id('a')
+        .withDataTimezone('Europe/Paris')
+        .span('2026-10-24T01:00:00', '2026-10-24T02:30:00')
+        .toProcessed();
+      const successor = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('Europe/Paris')
+        .span('2026-10-24T03:00:00', '2026-10-24T04:00:00')
+        .toProcessed();
+
+      const result = runCascade(
+        [predecessor, successor],
+        [dependency('a', 'b', { lag: 1, lagUnit: 'day' })],
+        [{ id: 'a', end: adapter.date('2026-10-24T02:30:01', 'Europe/Paris') }],
+      );
+
+      expect(result).to.have.length(1);
+      // 02:30:01 CEST, the first 02:30:01 of October 25th.
+      expect(adapter.toJsDate(result[0].start!).toISOString()).to.equal('2026-10-25T00:30:01.000Z');
+    },
+  );
 
   it('should push a violated all-day successor by the minimal whole number of days', () => {
     const predecessor = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();

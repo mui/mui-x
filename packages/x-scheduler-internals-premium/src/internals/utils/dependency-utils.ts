@@ -1,7 +1,6 @@
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerEventId,
   SchedulerEventSide,
@@ -16,6 +15,7 @@ import type {
   SchedulerDependencyLagUnit,
   SchedulerDependencyType,
 } from '../../models';
+import { addDaysOnWallClock } from './wall-clock';
 
 export interface SchedulerDependencyEdges {
   /**
@@ -49,14 +49,23 @@ export function isDependencyType(type: unknown): type is SchedulerDependencyType
   return typeof type === 'string' && Object.hasOwn(DEPENDENCY_EDGES, type);
 }
 
+// The range of `Date`.
+const MAX_TIMESTAMP = 8.64e15;
+
+function addElapsedMs(epochMs: number, ms: number) {
+  const timestamp = epochMs + ms;
+  return Math.abs(timestamp) > MAX_TIMESTAMP ? NaN : timestamp;
+}
+
+// Minutes and hours are elapsed time. Days and weeks keep the time of day on the wall clock.
 const DEPENDENCY_LAG_ADDERS: Record<
   SchedulerDependencyLagUnit,
-  (adapter: Adapter, date: TemporalSupportedObject, amount: number) => TemporalSupportedObject
+  (epochMs: number, amount: number, timezone: TemporalTimezone) => number
 > = {
-  minute: (adapter, date, amount) => adapter.addMinutes(date, amount),
-  hour: (adapter, date, amount) => adapter.addHours(date, amount),
-  day: (adapter, date, amount) => adapter.addDays(date, amount),
-  week: (adapter, date, amount) => adapter.addWeeks(date, amount),
+  minute: (epochMs, amount) => addElapsedMs(epochMs, amount * 60_000),
+  hour: (epochMs, amount) => addElapsedMs(epochMs, amount * 3_600_000),
+  day: (epochMs, amount, timezone) => addDaysOnWallClock(epochMs, amount, timezone),
+  week: (epochMs, amount, timezone) => addDaysOnWallClock(epochMs, amount * 7, timezone),
 };
 
 function isDependencyLagUnit(unit: unknown): unit is SchedulerDependencyLagUnit {
@@ -133,17 +142,18 @@ export function getEffectiveDependencyLag(
 }
 
 /**
- * Adds a dependency lag to a date, in the timezone of the date.
+ * Adds a dependency lag to an instant, in `timezone`.
+ * Returns `NaN` when the lag runs past the range of `Date`.
  */
 export function addDependencyLag(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
+  epochMs: number,
   lag: SchedulerResolvedDependencyLag | null,
-): TemporalSupportedObject {
+  timezone: TemporalTimezone,
+): number {
   if (lag === null) {
-    return date;
+    return epochMs;
   }
-  return DEPENDENCY_LAG_ADDERS[lag.unit](adapter, date, lag.amount);
+  return DEPENDENCY_LAG_ADDERS[lag.unit](epochMs, lag.amount, timezone);
 }
 
 /**
