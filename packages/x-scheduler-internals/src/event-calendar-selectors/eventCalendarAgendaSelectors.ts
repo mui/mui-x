@@ -15,7 +15,7 @@ import {
   createAdapterDate,
   getAdapterDayNumber,
 } from '../internals/utils/plain-date-utils/adapter';
-import { getDayStartMs } from '../internals/utils/plain-date-utils/timeZone';
+import { getDayEndMs, getDayStartMs } from '../internals/utils/plain-date-utils/timeZone';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -132,10 +132,11 @@ const visibleDays = createSelectorMemoized(
         horizonDay,
       );
 
+      // A skipped day starts on the next day but ends before it, so the chunk stays within its bounds.
       const more = getDayList({
         adapter,
         start: createAdapterDate(adapter, getDayStartMs(nextStartDay, timezone), timezone),
-        end: createAdapterDate(adapter, getDayStartMs(scannedUntilDay, timezone), timezone),
+        end: createAdapterDate(adapter, getDayEndMs(scannedUntilDay, timezone), timezone),
         excludeWeekends: !showWeekends,
       });
 
