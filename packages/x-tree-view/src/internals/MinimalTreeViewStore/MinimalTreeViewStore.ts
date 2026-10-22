@@ -39,7 +39,7 @@ export class MinimalTreeViewStore<
 > extends Store<State> {
   private initialParameters: Parameters | null = null;
 
-  private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
+  declare private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
   // Owns the store's teardown. Declared first so the resources below register
   // against it during field initialization; disposed by `useDisposable` on
@@ -51,9 +51,9 @@ export class MinimalTreeViewStore<
     manager.removeAllListeners(),
   );
 
-  public instanceName: string;
+  declare public instanceName: string;
 
-  public parameters: Parameters;
+  declare public parameters: Parameters;
 
   public timeoutManager = this.disposables.adopt(new TimeoutManager(), (manager) =>
     manager.clearAll(),
@@ -61,15 +61,15 @@ export class MinimalTreeViewStore<
 
   public itemPluginManager = new TreeViewItemPluginManager<this>();
 
-  public items: TreeViewItemsPlugin<R>;
+  declare public items: TreeViewItemsPlugin<R>;
 
-  public focus: TreeViewFocusPlugin;
+  declare public focus: TreeViewFocusPlugin;
 
-  public expansion: TreeViewExpansionPlugin;
+  declare public expansion: TreeViewExpansionPlugin;
 
-  public selection: TreeViewSelectionPlugin<Multiple>;
+  declare public selection: TreeViewSelectionPlugin<Multiple>;
 
-  public keyboardNavigation: TreeViewKeyboardNavigationPlugin;
+  declare public keyboardNavigation: TreeViewKeyboardNavigationPlugin;
 
   public constructor(
     parameters: Parameters,

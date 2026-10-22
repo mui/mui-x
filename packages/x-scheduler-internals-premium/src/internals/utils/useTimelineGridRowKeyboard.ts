@@ -22,8 +22,14 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   handleFocus: (event: React.FocusEvent<HTMLDivElement>) => void;
 } {
   const { columnType } = params;
-  const { focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount } =
-    useTimelineGridRootContext();
+  const {
+    focusedCell,
+    setFocusedCell,
+    moveFocusToRow,
+    clearFocusedCellIfMatches,
+    columnTypes,
+    totalRowCount,
+  } = useTimelineGridRootContext();
 
   const bodyRowContext = useTimelineGridBodyRowContext();
   const index = bodyRowContext.index;
@@ -65,33 +71,37 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
       return false;
     }
 
-    const typeIndex = columnTypes.indexOf(columnType);
+    // A repeated key can still fire on this cell before the next one mounts, so start from the
+    // focused cell.
+    const currentColumnType = focusedCell?.columnType ?? columnType;
+    const typeIndex = columnTypes.indexOf(currentColumnType);
+    const rowIndex = focusedCell?.rowIndex ?? index;
 
     if (event.key === 'ArrowUp') {
       event.preventDefault();
-      if (index > 0) {
-        setFocusedCell({ columnType, rowIndex: index - 1 });
+      if (rowIndex > 0) {
+        moveFocusToRow({ columnType: currentColumnType, rowIndex: rowIndex - 1 });
       }
       return true;
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      if (index < totalRowCount - 1) {
-        setFocusedCell({ columnType, rowIndex: index + 1 });
+      if (rowIndex < totalRowCount - 1) {
+        moveFocusToRow({ columnType: currentColumnType, rowIndex: rowIndex + 1 });
       }
       return true;
     }
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
       if (typeIndex > 0) {
-        setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex: index });
+        setFocusedCell({ columnType: columnTypes[typeIndex - 1], rowIndex });
       }
       return true;
     }
     if (event.key === 'ArrowRight') {
       event.preventDefault();
       if (typeIndex < columnTypes.length - 1) {
-        setFocusedCell({ columnType: columnTypes[typeIndex + 1], rowIndex: index });
+        setFocusedCell({ columnType: columnTypes[typeIndex + 1], rowIndex });
       }
       return true;
     }

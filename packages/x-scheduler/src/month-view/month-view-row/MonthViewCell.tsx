@@ -156,8 +156,7 @@ const MonthViewPlaceholderEventContainer = styled('div', {
 })(({ theme }) => ({
   position: 'absolute',
   top: 0,
-  left: 0,
-  right: 0,
+  insetInline: 0,
   display: 'grid',
   gridTemplateColumns: '1fr',
   gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
@@ -232,6 +231,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       aria-colindex={colIndex}
       aria-labelledby={ariaLabelledBy}
       data-current={isToday || undefined}
+      aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
       data-weekend={isWeekend(adapter, day.value) || undefined}
       lockSurfaceType

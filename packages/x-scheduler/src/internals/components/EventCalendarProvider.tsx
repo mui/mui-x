@@ -6,6 +6,7 @@ import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-s
 import type { EventCalendarLocaleText } from '../../models/translations';
 import type { SchedulerSlotsAndSlotProps } from '../../models/slots';
 import { SchedulerSlotsProvider } from './SchedulerSlotsContext';
+import { SchedulerDirectionProvider } from './SchedulerDirectionProvider';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { EventEditingStyledContext } from './event-editing/EventEditingStyledContext';
@@ -81,7 +82,9 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
         <EventEditingStyledContext.Provider value={editingStyledValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <StandaloneViewRoot>{children}</StandaloneViewRoot>
+              <SchedulerDirectionProvider>
+                <StandaloneViewRoot>{children}</StandaloneViewRoot>
+              </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>

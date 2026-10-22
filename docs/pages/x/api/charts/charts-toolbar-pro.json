@@ -1,5 +1,13 @@
 {
   "props": {
+    "exportMenuItems": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: object, params.onClose: Function) => React.ReactNode",
+        "describedArgs": ["params", "params.onClose"],
+        "returned": "React.ReactNode"
+      }
+    },
     "rangeButtons": {
       "type": {
         "name": "arrayOf",
@@ -24,6 +32,8 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartsToolbarPro",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarPro.tsx",
   "inheritance": null,

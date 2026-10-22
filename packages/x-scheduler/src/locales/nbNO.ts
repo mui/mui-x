@@ -20,6 +20,9 @@ const nbNODialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Slett hendelse',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Avbryt',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -73,7 +76,6 @@ const nbNODialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Alle hendelser',
-  cancel: 'Avbryt',
   confirm: 'Bekreft',
   onlyThis: 'Bare denne hendelsen',
   radioGroupAriaLabel: 'Rediger omfang for gjentakende hendelser',
@@ -137,11 +139,15 @@ const nbNOCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'Hele dagen',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} til..`,
   nextTimeSpan: (timeSpan) => `Neste ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Forrige ${timeSpan}`,
   weekAbbreviation: 'U',
   weekNumberAriaLabel: (weekNumber) => `Uke ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Slutter ${endDate}`,

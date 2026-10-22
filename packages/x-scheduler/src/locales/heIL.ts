@@ -78,6 +78,9 @@ const heILDialog: SchedulerDialogTranslations = {
   deleteEventButtonAriaLabel: 'מחיקת האירוע',
   eventActionsToolbarAriaLabel: 'פעולות באירוע',
   deleteEvent: 'מחיקת האירוע',
+  deleteConfirmationTitle: 'למחוק את האירוע הזה?',
+  deleteConfirmationMessage: 'פעולה זו אינה הפיכה. האם ברצונך להמשיך?',
+  cancel: 'ביטול',
   editEvent: 'עריכת האירוע',
   showEventDetails: 'הצגת פרטים',
   eventContextMenuAriaLabel: 'פעולות באירוע',
@@ -130,7 +133,6 @@ const heILDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'כל האירועים בסדרה',
-  cancel: 'ביטול',
   confirm: 'אישור',
   onlyThis: 'האירוע הזה בלבד',
   radioGroupAriaLabel: 'בחירת האירועים בסדרה שעליהם יחול השינוי',
@@ -194,6 +196,7 @@ const heILCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'כל היום',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (count) => (count === 1 ? 'אירוע נוסף' : `עוד ${count} אירועים`),
   nextTimeSpan: (view) =>
     ({
@@ -211,6 +214,9 @@ const heILCalendar: SchedulerCalendarTranslations = {
     })[view],
   weekAbbreviation: 'שב׳',
   weekNumberAriaLabel: (weekNumber) => `שבוע ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `מסתיים ב־${localizeDate(endDate)}`,

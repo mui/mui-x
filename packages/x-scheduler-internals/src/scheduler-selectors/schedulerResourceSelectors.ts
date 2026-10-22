@@ -212,4 +212,12 @@ export const schedulerResourceSelectors = {
 
     return resolveResourceProperty(state, resourceId, (r) => r.eventColor, state.eventColor);
   },
+  /**
+   * Whether events landing on `resourceId` are read-only, resolved through the resource
+   * hierarchy and falling back to the scheduler's `readOnly`. Unlike an event's own `isReadOnly`,
+   * there is no event to check for its own override — for a destination that doesn't have one
+   * yet, such as a paste target.
+   */
+  isResourceReadOnly: (state: State, resourceId: SchedulerResourceId | null | undefined) =>
+    resolveResourceProperty(state, resourceId, (r) => r.areEventsReadOnly, state.readOnly ?? false),
 };

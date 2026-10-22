@@ -5,6 +5,11 @@ import type { SchedulerProcessedDate } from './event';
 export type CalendarView = 'day' | 'week' | 'month' | 'agenda';
 
 /**
+ * Which timed events are rendered in the time grid of the `day` and `week` views.
+ */
+export type EventCalendarTimeGridEvents = 'shorter-than-one-day' | 'same-day-only';
+
+/**
  * Definition provided by each view.
  * This is used to determine how the components outside of the view should behave based on the current view.
  */
@@ -13,6 +18,16 @@ export interface EventCalendarViewDefinition {
     parameters: SiblingVisibleDateGetterParameters,
   ) => TemporalSupportedObject;
   visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDate[];
+  /**
+   * The range to fetch from the data source.
+   * Defaults to the span of the visible days.
+   */
+  fetchRangeSelector?: (state: EventCalendarState) => EventCalendarFetchRange;
+}
+
+export interface EventCalendarFetchRange {
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
 }
 
 interface SiblingVisibleDateGetterParameters {
@@ -48,6 +63,28 @@ export interface EventCalendarTimeGridViewConfig {
    * @default 7 when it is a displayed hour, otherwise `startTime`
    */
   initialScrollTime?: number;
+  /**
+   * Which timed events are rendered in the time grid, the others go to the day grid above it.
+   * - `'shorter-than-one-day'`: timed events shorter than one day, split across the days they cover.
+   * - `'same-day-only'`: timed events that start and end on the same day.
+   * @default 'shorter-than-one-day'
+   */
+  timeGridEvents?: EventCalendarTimeGridEvents;
+}
+
+/**
+ * Per-view user configuration for the `agenda` view.
+ */
+export interface EventCalendarAgendaViewConfig {
+  /**
+   * How many days the agenda displays, which is also how far the navigation moves.
+   * Use `'month'` to display the month of the visible date and navigate one month at a time;
+   * when the empty days are hidden, only the days of that month are shown.
+   * Must be a positive whole number or `'month'`; otherwise the default applies and a
+   * warning is logged in development.
+   * @default 12
+   */
+  dayCount?: number | 'month';
 }
 
 /**
@@ -62,4 +99,8 @@ export interface EventCalendarViewConfig {
    * Configuration applied to the `week` view.
    */
   week?: EventCalendarTimeGridViewConfig;
+  /**
+   * Configuration applied to the `agenda` view.
+   */
+  agenda?: EventCalendarAgendaViewConfig;
 }

@@ -16,7 +16,6 @@ import {
 } from '../docs/constants';
 import { resolvePrettierConfigPath } from '../docs/scripts/utils';
 
-// @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';
@@ -75,7 +74,7 @@ function git(args: any) {
   });
 }
 
-function plugin(existingTranslations: Translations): babel.PluginObj {
+function plugin(existingTranslations: Translations): babel.PluginObject {
   return {
     visitor: {
       VariableDeclarator: {

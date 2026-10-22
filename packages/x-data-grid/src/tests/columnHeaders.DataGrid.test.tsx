@@ -235,13 +235,13 @@ describe('<DataGrid /> - Column headers', () => {
         </div>,
       );
 
-      expect(screen.queryByRole('tooltip')).to.equal(null);
+      expect(screen.queryByRole('menu')).to.equal(null);
 
       await user.keyboard('{Tab}');
       expect(screen.getAllByRole('columnheader')[0]).toHaveFocus();
 
       await user.keyboard('{Control>}{Enter}');
-      expect(screen.queryByRole('tooltip')).to.not.equal(null);
+      expect(screen.queryByRole('menu')).to.not.equal(null);
     });
   });
 
@@ -275,6 +275,28 @@ describe('<DataGrid /> - Column headers', () => {
     expect(screen.queryByRole('menuitem', { name: /asc/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitem', { name: /desc/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitem', { name: /unsort/i })).to.equal(null);
+  });
+
+  it('should focus the column header when clicking the sort icon', async () => {
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand' }, { field: 'id' }]}
+          initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
+        />
+      </div>,
+    );
+    const sortButton = within(getColumnHeaderCell(0)).getByRole('button', { name: 'Sort' });
+
+    await user.click(sortButton);
+    await user.click(sortButton);
+
+    expect(getColumnHeaderCell(0)).not.to.have.class('MuiDataGrid-columnHeader--sorted');
+    expect(getColumnHeaderCell(0)).toHaveFocus();
+
+    await user.keyboard('{ArrowRight}');
+    expect(getColumnHeaderCell(1)).toHaveFocus();
   });
 
   it('should use baseTooltip slot for sort icon', () => {

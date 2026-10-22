@@ -20,6 +20,9 @@ const deDEDialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Ereignis löschen',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Abbrechen',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -74,7 +77,6 @@ const deDEDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Alle Ereignisse',
-  cancel: 'Abbrechen',
   confirm: 'Bestätigen',
   onlyThis: 'Nur dieses Ereignis',
   radioGroupAriaLabel: 'Bearbeitungsbereich für wiederkehrende Ereignisse',
@@ -138,11 +140,15 @@ const deDECalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'Ganztägig',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} weitere..`,
   nextTimeSpan: (timeSpan) => `Nächste(r) ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Vorherige(r) ${timeSpan}`,
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Woche ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Endet am ${endDate}`,
