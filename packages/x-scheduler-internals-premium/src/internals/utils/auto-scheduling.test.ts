@@ -1199,6 +1199,68 @@ describe('computeAutoSchedulingCascade', () => {
     );
   });
 
+  it('should keep the end of a start-resized all-day event when only the shifted end lands on a skipped day', () => {
+    // Pacific/Apia skips December 30th, 2011. Shifting the whole event by two days would put
+    // its end there, but the resize keeps the end.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('Pacific/Apia')
+      .span('2011-12-27T00:00:00', '2011-12-27T23:59:59.999', { allDay: true })
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('Pacific/Apia')
+      .span('2011-12-28T00:00:00', '2011-12-28T23:59:59.999', { allDay: true })
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b', { type: 'StartToStart' })],
+      [
+        {
+          id: 'b',
+          start: adapter.date('2011-12-25T00:00:00', 'Pacific/Apia'),
+          end: adapter.date('2011-12-28T23:59:59.999', 'Pacific/Apia'),
+          allDay: true,
+        },
+      ],
+    );
+
+    expect(result).to.have.length(1);
+    expect(adapter.getTime(result[0].start!)).to.equal(
+      adapter.getTime(adapter.date('2011-12-27T00:00:00', 'Pacific/Apia')),
+    );
+    expect('end' in result[0]).to.equal(false);
+  });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
+    'should not skip the days the timezone of the system skips in another data timezone',
+    () => {
+      // Pacific/Apia skips December 30th, 2011, which UTC keeps.
+      setSystemTimezone('Pacific/Apia');
+      const predecessor = EventBuilder.new()
+        .id('a')
+        .withDataTimezone('UTC')
+        .span('2011-12-29T09:00:00', '2011-12-29T10:00:00')
+        .toProcessed();
+      const successor = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('UTC')
+        .span('2011-12-29T12:00:00', '2011-12-29T13:00:00')
+        .toProcessed();
+
+      const result = runCascade(
+        [predecessor, successor],
+        [dependency('a', 'b', { lag: 1, lagUnit: 'day' })],
+        [{ id: 'a', end: utcDate('2011-12-29T14:00:00') }],
+      );
+
+      expect(result).to.have.length(1);
+      expect(adapter.toJsDate(result[0].start!).toISOString()).to.equal('2011-12-30T14:00:00.000Z');
+    },
+  );
+
   it('should push a successor once through duplicate parallel edges', () => {
     const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
     const eventB = EventBuilder.new()

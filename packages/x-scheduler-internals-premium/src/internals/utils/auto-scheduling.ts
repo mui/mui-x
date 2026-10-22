@@ -148,13 +148,15 @@ function shiftAllDayEdge(dates: ResolvedDates, side: SchedulerEventSide, dayCoun
     : getDayEndMs(dayNumber, dates.timezone);
 }
 
-// Whether shifting an all-day event by `dayCount` days puts one of its edges on a day a DST
+// Whether shifting the `side` of an all-day event by `dayCount` days puts it on a day a DST
 // transition skips, like December 30th, 2011 in Pacific/Apia. The end would land before the start.
-function landsOnSkippedDay(dates: ResolvedDates, dayCount: number): boolean {
-  return (['start', 'end'] as const).some((side) => {
-    const dayNumber = toLocalDayNumber(getEdge(dates, side), dates.timezone) + dayCount;
-    return getDayEndMs(dayNumber, dates.timezone) < getDayStartMs(dayNumber, dates.timezone);
-  });
+function landsOnSkippedDay(
+  dates: ResolvedDates,
+  side: SchedulerEventSide,
+  dayCount: number,
+): boolean {
+  const dayNumber = toLocalDayNumber(getEdge(dates, side), dates.timezone) + dayCount;
+  return getDayEndMs(dayNumber, dates.timezone) < getDayStartMs(dayNumber, dates.timezone);
 }
 
 // Minimal whole-day shift bringing the `side` of an all-day event to `bound`.
@@ -563,7 +565,12 @@ export function computeAutoSchedulingCascade(
         required.start === null ? 0 : minimalDayShift(base, 'start', required.start),
         required.end === null ? 0 : minimalDayShift(base, 'end', required.end),
       );
-      while (landsOnSkippedDay(base, dayCount)) {
+      // A kept end does not move, so only the shifted end can land on a skipped day.
+      while (
+        landsOnSkippedDay(base, 'start', dayCount) ||
+        (!keepsEnd(shiftAllDayEdge(base, 'start', dayCount)) &&
+          landsOnSkippedDay(base, 'end', dayCount))
+      ) {
         dayCount += 1;
       }
       const newStartTimestamp = shiftAllDayEdge(base, 'start', dayCount);
