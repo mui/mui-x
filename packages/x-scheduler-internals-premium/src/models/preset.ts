@@ -21,8 +21,8 @@ export interface IteratedCell {
    */
   date: TemporalSupportedObject;
   /**
-   * Machine-readable local date-time of `date`, like `2026-03-08T00:00`. Hour cells use their
-   * `wallClockHour`, which the hour skipped by a spring-forward transition keeps.
+   * Machine-readable local date-time of the cell's wall-clock start, like `2026-03-08T00:00`.
+   * Unlike `date`, it keeps the hour or the date skipped by a DST transition.
    */
   dateTime: string;
   /** Clamped start, always within the visible range. */

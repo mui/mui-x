@@ -269,6 +269,12 @@ describe('iterate()', () => {
       expect(new Set(dayCells.map((cell) => cell.key)).size).to.equal(4);
       expect(hourCells.length).to.equal(4 * 24);
       expect(new Set(hourCells.map((cell) => cell.key)).size).to.equal(4 * 24);
+      expect(dayCells.map((cell) => cell.dateTime)).to.deep.equal([
+        '2011-12-29T00:00',
+        '2011-12-30T00:00',
+        '2011-12-31T00:00',
+        '2012-01-01T00:00',
+      ]);
     });
   });
 

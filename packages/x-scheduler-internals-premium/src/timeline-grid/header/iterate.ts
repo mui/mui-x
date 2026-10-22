@@ -116,7 +116,8 @@ export function iterate(
     const spanStart = Math.max(cursor, rangeStartLocalMs);
     cells.push({
       date: cursorDate,
-      dateTime: getDateTime(toLocalMs(adapter.getTime(cursorDate), timezone)),
+      // Read from the wall clock: a date skipped by a transition keeps its own date-time.
+      dateTime: getDateTime(cursor),
       start: cursor < rangeStartLocalMs ? rangeStart : cursorDate,
       end: nextCursorDate,
       spanInTicks: appliedHourWindow
