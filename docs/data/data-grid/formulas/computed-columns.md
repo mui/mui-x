@@ -347,7 +347,7 @@ Errors are values of the column: sorting places them after every other value in 
 
 Every feature reads the evaluated value of a computed cell through the column definition, so computed columns work with the rest of the grid like a column of their type:
 
-- **Sorting and filtering** use the value and the operators of the result type. Errors sort last and never match a typed filter.
+- **Sorting and filtering** use the value and the operators of the result type. Errors sort last and never match a typed filter. Both are applied again when the values of the column change: after a change of its formula or type, an undo or redo of that change, or a new `formulaFunctions` prop.
 - **Export** to CSV and Excel, print, and clipboard copy write the evaluated value; Excel export writes the value even with `escapeFormulas: false`.
 - **Aggregation** functions apply to the computed values, from the column menu or the `aggregationModel`, and a computed column can be **grouped** by, or used for **row spanning**, like any column.
 - **Cell formulas** can reference a computed column by field (`=total * 1.2`), and a computed column can reference a column that contains cell formulas: the formula results are the values it reads. Chains through both kinds of formulas are evaluated in dependency order. A cycle that goes through a cell formula shows `#CYCLE!` in the cells on it and in the cells that read them—every reference counts, even in a branch of `IF` that is not taken. The header shows no error badge, because the cycle depends on the data of the row.
@@ -382,7 +382,6 @@ The undo and redo shortcuts typed in the text fields of the panel keep their nat
 - Computed columns are not supported with the [server-side data source](/x/react-data-grid/server-side-data/) or while [pivoting](/x/react-data-grid/pivoting/) is active: the definitions are kept, but the columns are not added to the grid.
 - A computed column formula can only reference the fields of the same row. Cell references, ranges, and `COLUMN_VALUES` make the column invalid (`#REF!`).
 - Computed values are read-only: there are no per-cell overrides, and an existing column with data cannot be turned into a computed column—add a computed column next to it instead.
-- Sorting and filtering by a computed column are not re-applied when its formula or the `formulaFunctions` prop changes; aggregation, row grouping, and row spanning are. This is the same rule as for cell formulas.
 - Excel export writes the evaluated values of computed columns, not live formulas.
 - In a `string` column, a result equal to an error code, such as `"#REF!"`, is treated as an error by sorting and by the quick filter; the cell itself renders it as text.
 - Validation messages are localized when a definition is validated: after a change of `localeText` at runtime, the issues listed in the panel and in the badge tooltip keep the previous language until the columns are next updated.

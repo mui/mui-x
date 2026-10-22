@@ -27,7 +27,9 @@ import type {
   GridApi,
   GridComputedColumnDefinition,
   GridComputedColumnsModel,
+  GridFilterItem,
   GridSortCellParams,
+  GridSortModel,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, afterEach } from 'vitest';
@@ -1681,6 +1683,368 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
       act(() => apiRef.current!.setQuickFilterValues(['2']));
       expect(getColumnValuesOf('item')).to.deep.equal(['Apple']);
+    });
+
+    describe('after a change of the computed values', () => {
+      const fruitRows = [
+        { id: 0, item: 'Apple', price: 2 },
+        { id: 1, item: 'Banana', price: 4 },
+        { id: 2, item: 'Cherry', price: 3 },
+      ];
+      const fruitColumns = [{ field: 'item' }, { field: 'price', type: 'number' as const }];
+      const double: GridComputedColumnDefinition = {
+        field: 'double',
+        headerName: 'Double',
+        formula: '=price',
+        type: 'number',
+      };
+      const sortedByDouble = {
+        sorting: { sortModel: [{ field: 'double', sort: 'asc' as const }] },
+      };
+      const filteredByDouble = {
+        filter: { filterModel: { items: [{ field: 'double', operator: '>', value: 0 }] } },
+      };
+      const scaledFunctions = (factor: number) => ({
+        ...GRID_FORMULA_FUNCTIONS,
+        SCALE: {
+          name: 'SCALE',
+          minArgs: 1,
+          maxArgs: 1,
+          apply: (args: unknown[]) => (args[0] as number) * factor,
+        },
+      });
+
+      const countViewEvents = () => {
+        const counts = { sortedRowsSet: 0, filteredRowsSet: 0 };
+        apiRef.current!.subscribeEvent('sortedRowsSet', () => {
+          counts.sortedRowsSet += 1;
+        });
+        apiRef.current!.subscribeEvent('filteredRowsSet', () => {
+          counts.filteredRowsSet += 1;
+        });
+        return counts;
+      };
+
+      it('should sort again when the formula changes', async () => {
+        await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{ computedColumns: { model: [double] }, ...sortedByDouble }}
+          />,
+        );
+        expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Cherry', 'Banana']);
+        act(() =>
+          apiRef.current!.updateComputedColumn(
+            'double',
+            { formula: '=-price' },
+            { undoable: true },
+          ),
+        );
+        expect(getColumnValuesOf('double')).to.deep.equal(['-4', '-3', '-2']);
+        expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry', 'Apple']);
+      });
+
+      it('should filter again when the formula changes', async () => {
+        await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{ computedColumns: { model: [double] }, ...filteredByDouble }}
+          />,
+        );
+        expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Banana', 'Cherry']);
+        act(() =>
+          apiRef.current!.updateComputedColumn(
+            'double',
+            { formula: '=-price' },
+            { undoable: true },
+          ),
+        );
+        expect(apiRef.current!.getCellValue(0, 'double')).to.equal(-2);
+        expect(getColumnValuesOf('item')).to.deep.equal([]);
+      });
+
+      it('should sort again when a function used by the formula changes', async () => {
+        const { setProps } = await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            computedColumns={[{ ...double, formula: '=SCALE(price)' }]}
+            formulaFunctions={scaledFunctions(1)}
+            initialState={sortedByDouble}
+          />,
+        );
+        expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Cherry', 'Banana']);
+        setProps({ formulaFunctions: scaledFunctions(-1) });
+        await microtasks();
+        expect(getColumnValuesOf('double')).to.deep.equal(['-4', '-3', '-2']);
+        expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry', 'Apple']);
+      });
+
+      it('should filter again when a function used by the formula changes', async () => {
+        const { setProps } = await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            computedColumns={[{ ...double, formula: '=SCALE(price)' }]}
+            formulaFunctions={scaledFunctions(1)}
+            initialState={filteredByDouble}
+          />,
+        );
+        expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Banana', 'Cherry']);
+        setProps({ formulaFunctions: scaledFunctions(-1) });
+        await microtasks();
+        expect(apiRef.current!.getCellValue(0, 'double')).to.equal(-2);
+        expect(getColumnValuesOf('item')).to.deep.equal([]);
+      });
+
+      it('should apply the quick filter again when the formula changes', async () => {
+        await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{
+              computedColumns: {
+                model: [
+                  { field: 'code', headerName: 'Code', formula: '="x" & price', type: 'string' },
+                ],
+              },
+              filter: { filterModel: { items: [], quickFilterValues: ['x4'] } },
+            }}
+          />,
+        );
+        expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
+        act(() => apiRef.current!.updateComputedColumn('code', { formula: '="x" & (price + 1)' }));
+        expect(getColumnValuesOf('item')).to.deep.equal(['Cherry']);
+      });
+
+      it('should sort again by a cell formula that reads the computed column', async () => {
+        await render(
+          <Test
+            rows={fruitRows.map((row) => ({ ...row, out: '=double + 1' }))}
+            columns={[...fruitColumns, { field: 'out', type: 'number', allowFormulas: true }]}
+            initialState={{
+              computedColumns: { model: [double] },
+              sorting: { sortModel: [{ field: 'out', sort: 'asc' }] },
+            }}
+          />,
+        );
+        expect(getColumnValuesOf('out')).to.deep.equal(['3', '4', '5']);
+        act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' }));
+        expect(getColumnValuesOf('out')).to.deep.equal(['-3', '-2', '-1']);
+        expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry', 'Apple']);
+      });
+
+      it('should sort again when the formula change is undone and redone', async () => {
+        await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{ computedColumns: { model: [double] }, ...sortedByDouble }}
+          />,
+        );
+        act(() =>
+          apiRef.current!.updateComputedColumn(
+            'double',
+            { formula: '=-price' },
+            { undoable: true },
+          ),
+        );
+        expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry', 'Apple']);
+        await act(async () => {
+          await apiRef.current!.history.undo();
+        });
+        expect(getColumnValuesOf('double')).to.deep.equal(['2', '3', '4']);
+        expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Cherry', 'Banana']);
+        await act(async () => {
+          await apiRef.current!.history.redo();
+        });
+        expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry', 'Apple']);
+      });
+
+      it('should sort and filter once per change, and only when their model reads a changed value', async () => {
+        const unscaled = scaledFunctions(1);
+        const doubled = scaledFunctions(2);
+        const { setProps } = await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            computedColumns={[{ ...double, formula: '=SCALE(price)' }]}
+            formulaFunctions={unscaled}
+            initialState={{ ...sortedByDouble, ...filteredByDouble }}
+          />,
+        );
+        let counts = countViewEvents();
+        setProps({
+          computedColumns: [{ ...double, formula: '=SCALE(price) + 1' }],
+          formulaFunctions: unscaled,
+        });
+        await microtasks();
+        expect(counts).to.deep.equal({ sortedRowsSet: 1, filteredRowsSet: 1 });
+
+        counts = countViewEvents();
+        setProps({
+          computedColumns: [{ ...double, formula: '=SCALE(price) + 1' }],
+          formulaFunctions: doubled,
+        });
+        await microtasks();
+        expect(counts).to.deep.equal({ sortedRowsSet: 1, filteredRowsSet: 1 });
+
+        act(() => {
+          apiRef.current!.setSortModel([{ field: 'price', sort: 'desc' }]);
+          apiRef.current!.setFilterModel({ items: [] });
+        });
+        counts = countViewEvents();
+        setProps({
+          computedColumns: [{ ...double, formula: '=-SCALE(price)' }],
+          formulaFunctions: doubled,
+        });
+        await microtasks();
+        expect(counts).to.deep.equal({ sortedRowsSet: 0, filteredRowsSet: 0 });
+        expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry', 'Apple']);
+      });
+
+      it('should not sort again when only the `computedColDef` changes', async () => {
+        const { setProps } = await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{ computedColumns: { model: [double] }, ...sortedByDouble }}
+          />,
+        );
+        const counts = countViewEvents();
+        setProps({ computedColDef: { headerName: 'Renamed' } });
+        await microtasks();
+        expect(getColumn('double').headerName).to.equal('Renamed');
+        expect(counts).to.deep.equal({ sortedRowsSet: 0, filteredRowsSet: 0 });
+      });
+
+      it('should leave the sorting and the filtering to the rebuild of the groups', async () => {
+        await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{
+              computedColumns: {
+                model: [
+                  {
+                    field: 'size',
+                    headerName: 'Size',
+                    formula: '=IF(price > 2, "big", "small")',
+                    type: 'string',
+                  },
+                ],
+              },
+              rowGrouping: { model: ['size'] },
+              sorting: { sortModel: [{ field: 'size', sort: 'asc' }] },
+              filter: {
+                filterModel: { items: [{ field: 'size', operator: 'contains', value: 'i' }] },
+              },
+            }}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+        const counts = countViewEvents();
+        const treeRebuilds = vi.fn();
+        apiRef.current!.subscribeEvent('activeStrategyProcessorChange', (name) => {
+          if (name === 'rowTreeCreation') {
+            treeRebuilds();
+          }
+        });
+        act(() =>
+          apiRef.current!.updateComputedColumn('size', {
+            formula: '=IF(price > 3, "big", "small")',
+          }),
+        );
+        expect(getColumnValues(0)).to.deep.equal(['big (1)', '']);
+        // Each rebuild sorts and filters the new tree: nothing on top of that.
+        const rebuilds = treeRebuilds.mock.calls.length;
+        expect(rebuilds).to.be.greaterThan(0);
+        expect(counts).to.deep.equal({ sortedRowsSet: rebuilds, filteredRowsSet: rebuilds });
+      });
+
+      it('should sort again by a grouping column whose leaf field is computed', async () => {
+        await render(
+          <Test
+            rows={fruitRows.map((row) => ({ ...row, category: 'Fruit' }))}
+            columns={[...fruitColumns, { field: 'category' }]}
+            groupingColDef={{ leafField: 'double' }}
+            defaultGroupingExpansionDepth={-1}
+            initialState={{
+              computedColumns: { model: [double] },
+              rowGrouping: { model: ['category'] },
+              sorting: {
+                sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'asc' }],
+              },
+            }}
+          />,
+        );
+        expect(getColumnValuesOf('item')).to.deep.equal(['', 'Apple', 'Cherry', 'Banana']);
+        act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' }));
+        expect(getColumnValuesOf('item')).to.deep.equal(['', 'Banana', 'Cherry', 'Apple']);
+      });
+
+      it('should leave the sorting and the filtering to the server', async () => {
+        await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            sortingMode="server"
+            filterMode="server"
+            initialState={{
+              computedColumns: { model: [double] },
+              ...sortedByDouble,
+              ...filteredByDouble,
+            }}
+          />,
+        );
+        const counts = countViewEvents();
+        act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' }));
+        expect(apiRef.current!.getCellValue(0, 'double')).to.equal(-2);
+        expect(counts).to.deep.equal({ sortedRowsSet: 0, filteredRowsSet: 0 });
+      });
+
+      it('should skip the filter and sort items without a field', async () => {
+        await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{ computedColumns: { model: [double] } }}
+          />,
+        );
+        // Outside of the types, but the core prunes these items only after the columns change.
+        act(() => {
+          apiRef.current!.setFilterModel({
+            items: [{ id: 1, operator: 'contains', value: 'x' } as GridFilterItem],
+          });
+          apiRef.current!.setSortModel([{ sort: 'asc' } as GridSortModel[number]]);
+        });
+        expect(() =>
+          act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' })),
+        ).not.to.throw();
+        expect(getColumnValuesOf('double')).to.deep.equal(['-2', '-4', '-3']);
+      });
+
+      it('should aggregate the rows filtered with the new values', async () => {
+        await render(
+          <Test
+            rows={fruitRows}
+            columns={fruitColumns}
+            initialState={{
+              computedColumns: { model: [double] },
+              filter: { filterModel: { items: [{ field: 'double', operator: '>', value: 2 }] } },
+              aggregation: { model: { double: 'sum' } },
+            }}
+          />,
+        );
+        expect(getColumnValuesOf('double')).to.deep.equal(['4', '3', '7']);
+        // Like after a change of the filter model, the aggregation follows the filtering.
+        await act(async () =>
+          apiRef.current!.updateComputedColumn('double', { formula: '=price * 2' }),
+        );
+        expect(getColumnValuesOf('double')).to.deep.equal(['4', '8', '6', '18']);
+      });
     });
 
     describe('grouping column', () => {

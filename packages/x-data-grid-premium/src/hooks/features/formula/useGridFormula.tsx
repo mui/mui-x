@@ -7,9 +7,11 @@ import {
   GridCellModes,
   gridClasses,
   gridColumnLookupSelector,
+  gridFilterModelSelector,
   gridResizingColumnFieldSelector,
   gridRowIdSelector,
   gridRowsLookupSelector,
+  gridSortModelSelector,
   useGridApiMethod,
   useGridEvent,
 } from '@mui/x-data-grid-pro';
@@ -52,6 +54,7 @@ import {
   gridFormulaLookupSelector,
 } from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
+import { isGroupingColumn } from '../rowGrouping/gridRowGroupingUtils';
 import { GRID_FORMULA_EDITOR_SURFACE_CLASS } from '../../../components/GridFormulaEditor';
 import { GridComputedColumnsPanel } from '../../../components/computedColumnsPanel';
 import { GridSidebarValue } from '../sidebar/gridSidebarInterfaces';
@@ -123,6 +126,72 @@ export const formulaStateInitializer: GridStateInitializer<
   return { ...state, formula: { lookup, activeEdit: null } };
 };
 
+/**
+ * Whether the pass changed the values of a grouped field. The row tree is built before
+ * the formula pass of the same cascade, so it was grouped by the previous values.
+ */
+function isRowGroupingAffected(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  changedCells: GridCellCoordinates[] | null,
+  computedColumnsChanged: boolean,
+) {
+  if (apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) !== RowGroupingStrategy.Default) {
+    return false;
+  }
+  const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
+  if (groupedFields.length === 0) {
+    return false;
+  }
+  // A grouped computed column changes with the cells its formula reads.
+  const { dependencyClosure, records } = apiRef.current.caches.formula!.computedColumns;
+  const isGroupedFieldAffected = (field: string) =>
+    groupedFields.some(
+      (groupedField) =>
+        groupedField === field || dependencyClosure.get(groupedField)?.has(field) === true,
+    );
+  return (
+    (computedColumnsChanged && groupedFields.some((field) => records.has(field))) ||
+    (changedCells !== null && changedCells.some((cell) => isGroupedFieldAffected(cell.field)))
+  );
+}
+
+const NO_VIEW_REFRESH = { refilter: false, resort: false };
+
+/**
+ * Which of the filtering and the sorting read the computed values that changed outside a rows
+ * update (a definition, the function registry): the values of every computed column, and the
+ * cell formulas the pass re-evaluated. A grouping column filters and sorts by a criterion or a
+ * leaf field, which can be computed. The quick filter reads every column.
+ */
+function getViewRefresh(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  changedCells: GridCellCoordinates[] | null,
+  filterMode: DataGridPremiumProcessedProps['filterMode'],
+  sortingMode: DataGridPremiumProcessedProps['sortingMode'],
+) {
+  const { records } = apiRef.current.caches.formula!.computedColumns;
+  const changedFields = new Set<string>();
+  if (changedCells !== null) {
+    for (const cell of changedCells) {
+      changedFields.add(cell.field);
+    }
+  }
+  // A model set after the mount can hold an item without a field: the core prunes it after
+  // this handler.
+  const isAffected = (field: string) =>
+    !!field && (records.has(field) || changedFields.has(field) || isGroupingColumn(field));
+  const filterModel = gridFilterModelSelector(apiRef);
+  return {
+    refilter:
+      filterMode === 'client' &&
+      ((filterModel.quickFilterValues?.length ?? 0) > 0 ||
+        filterModel.items.some((item) => isAffected(item.field))),
+    resort:
+      sortingMode === 'client' &&
+      gridSortModelSelector(apiRef).some((item) => isAffected(item.field)),
+  };
+}
+
 export const useGridFormula = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -133,6 +202,8 @@ export const useGridFormula = (
     | 'formulaA1Notation'
     | 'disableComputedColumns'
     | 'computedColDef'
+    | 'filterMode'
+    | 'sortingMode'
   >,
 ) => {
   const a1NotationActive = !!props.formulaA1Notation && !props.disableFormulas && !props.dataSource;
@@ -235,6 +306,10 @@ export const useGridFormula = (
    * Row grouping builds its tree before the formula pass in the same
    * cascade, so a pass that changed cells of a grouped field re-triggers the
    * tree build; the rebuild's own cascade is suppressed from re-triggering.
+   * Filtering and sorting re-run in the rows cascades only: after a change of
+   * the computed values (`computedColumnsChanged`), they are re-applied when
+   * their model reads a changed value. Once: the events they publish refresh
+   * the position-dependent formulas without reporting a computed change.
    */
   const triggerDependentFeatures = React.useCallback(
     (
@@ -247,46 +322,44 @@ export const useGridFormula = (
       if ((changedCells === null || changedCells.length === 0) && !computedColumnsChanged) {
         return;
       }
-      if (options.aggregation) {
+      const cache = apiRef.current.caches.formula!;
+      if (
+        !cache.suppressRegroupTrigger &&
+        isRowGroupingAffected(apiRef, changedCells, computedColumnsChanged)
+      ) {
+        if (options.aggregation) {
+          apiRef.current.applyAggregation();
+        }
+        if (options.rowSpanning) {
+          apiRef.current.resetRowSpanningState();
+        }
+        // The rebuilt tree publishes `rowsSet`: filtering and sorting re-run in its cascade.
+        cache.suppressRegroupTrigger = true;
+        try {
+          apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
+        } finally {
+          cache.suppressRegroupTrigger = false;
+        }
+        return;
+      }
+      const { refilter, resort } = computedColumnsChanged
+        ? getViewRefresh(apiRef, changedCells, props.filterMode, props.sortingMode)
+        : NO_VIEW_REFRESH;
+      // `filteredRowsSet` applies the aggregation, and both events reset the row spanning.
+      if (options.aggregation && !refilter) {
         apiRef.current.applyAggregation();
       }
-      if (options.rowSpanning) {
+      if (options.rowSpanning && !refilter && !resort) {
         apiRef.current.resetRowSpanningState();
       }
-      const cache = apiRef.current.caches.formula!;
-      if (cache.suppressRegroupTrigger) {
-        return;
+      if (refilter) {
+        apiRef.current.unstable_applyFilters();
       }
-      if (
-        apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) !== RowGroupingStrategy.Default
-      ) {
-        return;
-      }
-      const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
-      if (groupedFields.length === 0) {
-        return;
-      }
-      // A grouped computed column changes with the cells its formula reads.
-      const { dependencyClosure, records } = cache.computedColumns;
-      const isGroupedFieldAffected = (field: string) =>
-        groupedFields.some(
-          (groupedField) =>
-            groupedField === field || dependencyClosure.get(groupedField)?.has(field) === true,
-        );
-      const isGroupingAffected =
-        (computedColumnsChanged && groupedFields.some((field) => records.has(field))) ||
-        (changedCells !== null && changedCells.some((cell) => isGroupedFieldAffected(cell.field)));
-      if (!isGroupingAffected) {
-        return;
-      }
-      cache.suppressRegroupTrigger = true;
-      try {
-        apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
-      } finally {
-        cache.suppressRegroupTrigger = false;
+      if (resort) {
+        apiRef.current.applySorting();
       }
     },
-    [apiRef],
+    [apiRef, props.filterMode, props.sortingMode],
   );
 
   /**
