@@ -224,6 +224,22 @@ describe('iterate()', () => {
         expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([18]);
       });
     });
+
+    it('should keep the day cells on midnight and one tick wide after a transition at midnight', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+      // The dayAndMonth shape: 8 weeks of day ticks.
+      const start = adapter.startOfDay(adapter.date('2026-03-01T12:00:00', 'America/Havana'));
+      const end = adapter.endOfDay(adapter.addDays(start, 8 * 7 - 1));
+
+      const cells = iterate(adapter, 'day', 'day', start, end);
+
+      expect(cells.length).to.equal(56);
+      expect(cells.every((cell) => cell.spanInTicks === 1)).to.equal(true);
+      // March 8th, the 8th cell, starts at 01:00.
+      expect(cells.every((cell) => adapter.getHours(cell.date) === 0 || cell.index === 7)).to.equal(
+        true,
+      );
+    });
   });
 
   describe('boundary clamping', () => {

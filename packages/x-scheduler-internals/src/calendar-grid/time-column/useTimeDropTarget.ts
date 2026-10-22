@@ -8,6 +8,11 @@ import type { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnCont
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import {
+  FULL_DAY_MINUTES,
+  getTimelineAxisDurationMs,
+  timelineAxisOffsetToDate,
+} from '../../internals/utils/timeline-axis';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
@@ -19,7 +24,13 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
-  const { start, end, addPropertiesToDroppedEvent } = parameters;
+  const {
+    start,
+    end,
+    dayStartMinute = 0,
+    dayEndMinute = FULL_DAY_MINUTES,
+    addPropertiesToDroppedEvent,
+  } = parameters;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -28,9 +39,11 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const collectionStartTimestamp = adapter.getTime(start);
-  const collectionEndTimestamp = adapter.getTime(end);
-  const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
+  const axis = React.useMemo(
+    () => ({ start, end, dayStartMinute, dayEndMinute }),
+    [start, end, dayStartMinute, dayEndMinute],
+  );
+  const axisDurationMs = getTimelineAxisDurationMs(adapter, axis);
 
   const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
     useStableCallback(({ input, elementRef }) => {
@@ -38,12 +51,21 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         return 0;
       }
 
-      const clientY = input.clientY;
-      const elementPosition = elementRef.current.getBoundingClientRect();
-      const positionY = (clientY - elementPosition.y) / ref.current.offsetHeight;
-      const clampedPositionY = Math.max(0, Math.min(1, positionY));
+      // The column renders a wall-clock axis, which keeps every hour on DST days. Reading the
+      // dates under the element top and under the cursor on that axis keeps the offset in sync
+      // with the rendered grid. The offset is the time elapsed between them.
+      const column = ref.current;
+      const columnTop = column.getBoundingClientRect().y;
+      const getDateAtClientY = (clientY: number) => {
+        const positionY = Math.max(0, Math.min(1, (clientY - columnTop) / column.offsetHeight));
+        return timelineAxisOffsetToDate(adapter, axis, Math.round(axisDurationMs * positionY));
+      };
+      const elementTop = Math.max(elementRef.current.getBoundingClientRect().y, columnTop);
+      const cursorY = Math.max(input.clientY, elementTop);
 
-      return Math.round(collectionDurationMs * clampedPositionY);
+      return (
+        adapter.getTime(getDateAtClientY(cursorY)) - adapter.getTime(getDateAtClientY(elementTop))
+      );
     });
 
   const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
@@ -193,6 +215,16 @@ export namespace useTimeDropTarget {
      * The data and time at which the column ends.
      */
     end: TemporalSupportedObject;
+    /**
+     * The first displayed minute of the day, as an offset from midnight.
+     * @default 0
+     */
+    dayStartMinute?: number;
+    /**
+     * The end of the displayed window of the day, as an exclusive offset from midnight.
+     * @default 1440
+     */
+    dayEndMinute?: number;
     /**
      * Add properties to the event dropped in the column before storing it in the store.
      */

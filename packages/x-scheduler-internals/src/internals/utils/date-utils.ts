@@ -133,7 +133,7 @@ function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
 /**
  * The first day of the week of `date`, read in its own timezone.
  */
-function getWeekStartPlainDate(
+export function getWeekStartPlainDate(
   adapter: Adapter,
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,

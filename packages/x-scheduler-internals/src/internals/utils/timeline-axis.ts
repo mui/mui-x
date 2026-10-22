@@ -1,7 +1,9 @@
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import { MS_PER_DAY } from './base-temporal/iso';
+import { createAdapterDate, getAdapterDayNumber } from './plain-date-utils/adapter';
+import { localToEpochMs, toLocalDayNumber, toLocalMs } from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
-const HOUR_MS = 60 * MINUTE_MS;
 export const FULL_DAY_MINUTES = 24 * 60;
 
 /**
@@ -58,20 +60,16 @@ export function getTimelineAxisDayMs(axis: TimelineAxis): number {
 }
 
 /**
- * Wall-clock time of day in milliseconds. Built from calendar components rather than
- * timestamp differences so DST transitions earlier in the day cannot shift it.
+ * Wall-clock time of day in milliseconds. Read on the wall clock of the timezone of the date
+ * rather than from timestamp differences so DST transitions earlier in the day cannot shift it.
  */
 export function getWallClockMsInDay(adapter: TemporalAdapter, date: TemporalSupportedObject) {
-  return (
-    adapter.getHours(date) * HOUR_MS +
-    adapter.getMinutes(date) * MINUTE_MS +
-    adapter.getSeconds(date) * 1000 +
-    adapter.getMilliseconds(date)
-  );
+  const localMs = toLocalMs(adapter.getTime(date), adapter.getTimezone(date));
+  return localMs - Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
 }
 
 function getTotalDays(adapter: TemporalAdapter, axis: TimelineAxis) {
-  return adapter.differenceInDays(adapter.startOfDay(axis.end), adapter.startOfDay(axis.start)) + 1;
+  return getAdapterDayNumber(adapter, axis.end) - getAdapterDayNumber(adapter, axis.start) + 1;
 }
 
 /**
@@ -86,11 +84,12 @@ export function getTimelineAxisDurationMs(adapter: TemporalAdapter, axis: Timeli
  * Maps an axis offset (in axis milliseconds from the collection start) to a date.
  * Offsets are not clamped: values outside the axis extend it day by day, following the
  * same piecewise scale.
- * The date is built from wall-clock components so it round-trips with
+ * The date is built from its wall-clock time so it round-trips with
  * `dateToTimelineAxisOffsetMs` for every wall-clock time that exists on that day.
  * The axis keeps a slot for the hour skipped by a spring-forward transition, so offsets
- * landing in it resolve to the next existing hour and do not round-trip. The Event
- * Calendar's time grid behaves the same way.
+ * landing in it move forward by the length of the gap and do not round-trip. An offset
+ * landing in the hour repeated by a fall-back transition resolves to its first instant,
+ * whatever the timezone of the system (RFC 5545).
  */
 export function timelineAxisOffsetToDate(
   adapter: TemporalAdapter,
@@ -101,17 +100,13 @@ export function timelineAxisOffsetToDate(
   const dayIndex = Math.floor(offsetMs / dayMs);
   const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
 
-  const dayStart = adapter.startOfDay(adapter.addDays(axis.start, dayIndex));
-  const minutesInDay = Math.floor(msInDay / MINUTE_MS);
-  const subMinuteMs = msInDay - minutesInDay * MINUTE_MS;
-
-  let date = adapter.setHours(dayStart, Math.floor(minutesInDay / 60));
-  date = adapter.setMinutes(date, minutesInDay % 60);
-  if (subMinuteMs > 0) {
-    date = adapter.setSeconds(date, Math.floor(subMinuteMs / 1000));
-    date = adapter.setMilliseconds(date, subMinuteMs % 1000);
-  }
-  return date;
+  const timezone = adapter.getTimezone(axis.start);
+  const dayNumber = getAdapterDayNumber(adapter, axis.start) + dayIndex;
+  return createAdapterDate(
+    adapter,
+    localToEpochMs(dayNumber * MS_PER_DAY + msInDay, timezone),
+    timezone,
+  );
 }
 
 /**
@@ -128,10 +123,11 @@ export function dateToTimelineAxisOffsetMs(
   msInDay: number = getWallClockMsInDay(adapter, date),
 ): number {
   const dayMs = getTimelineAxisDayMs(axis);
-  const dayIndex = adapter.differenceInDays(
-    adapter.startOfDay(date),
-    adapter.startOfDay(axis.start),
-  );
+  // Both days are read in the timezone of the date.
+  const timezone = adapter.getTimezone(date);
+  const dayIndex =
+    toLocalDayNumber(adapter.getTime(date), timezone) -
+    toLocalDayNumber(adapter.getTime(axis.start), timezone);
   const clampedMsInDay = Math.min(
     Math.max(msInDay, axis.dayStartMinute * MINUTE_MS),
     axis.dayEndMinute * MINUTE_MS,

@@ -1,4 +1,5 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import {
   getTimelineAxisDurationMs,
@@ -130,6 +131,24 @@ describe('timeline-axis', () => {
       expect(adapter.getHours(date)).to.equal(3);
       expect(dateToTimelineAxisOffsetMs(adapter, axis, date)).to.equal(180 * MINUTE);
     });
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should resolve an offset inside the hour repeated by a fall-back transition to its first instant, whatever the timezone of the system',
+      () => {
+        // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
+        setSystemTimezone('America/New_York');
+        const parisStart = adapter.date('2026-10-25T00:00:00', 'Europe/Paris');
+        const axis = {
+          start: parisStart,
+          end: adapter.endOfDay(parisStart),
+          dayStartMinute: 0,
+          dayEndMinute: 1440,
+        };
+        const date = timelineAxisOffsetToDate(adapter, axis, 150 * MINUTE);
+        expect(adapter.toJsDate(date).toISOString()).to.equal('2026-10-25T00:30:00.000Z'); // 02:30 CEST
+      },
+    );
   });
 
   describe('isStartMinuteOutsideAxisWindow', () => {

@@ -55,6 +55,8 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   } = useTimeDropTarget({
     start,
     end,
+    dayStartMinute,
+    dayEndMinute,
     addPropertiesToDroppedEvent,
   });
 
