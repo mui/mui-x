@@ -5,6 +5,7 @@ import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { addDaysOnWallClock, moveToPlainDate } from '../../internals/utils/drag-utils';
+import { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import {
   buildTemporalPlainDate,
   createAdapterDate,
@@ -39,7 +40,12 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         return undefined;
       }
 
-      // Days are compared and moved with the plain dates of the display timezone of the cell.
+      // Move an Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
+        return getDataFromOutside(data, value);
+      }
+
+      // Days are compared as plain dates, and each date moves on the wall clock of its timezone.
       const valuePlainDate = buildTemporalPlainDate(adapter, value);
       const timezone = adapter.getTimezone(value);
 
@@ -64,40 +70,47 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          const endPlainDate = buildTemporalPlainDate(adapter, data.end);
-          if (valuePlainDate.dayNumber > endPlainDate.dayNumber) {
+          const order = PlainDate.compare(
+            valuePlainDate,
+            buildTemporalPlainDate(adapter, data.end),
+          );
+          if (order > 0) {
             return undefined;
           }
 
           // The new start keeps its time of day, unless it moves to the day of the end.
-          const newStart = valuePlainDate.equals(endPlainDate)
-            ? createAdapterDate(
-                adapter,
-                getStartOfDayMs(adapter.getTime(value), timezone),
-                timezone,
-              )
-            : moveToPlainDate(adapter, data.start, valuePlainDate);
+          const newStart =
+            order === 0
+              ? createAdapterDate(
+                  adapter,
+                  getStartOfDayMs(adapter.getTime(value), timezone),
+                  timezone,
+                )
+              : moveToPlainDate(adapter, data.start, valuePlainDate);
           return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
-          const startPlainDate = buildTemporalPlainDate(adapter, data.start);
-          if (valuePlainDate.dayNumber < startPlainDate.dayNumber) {
+          const order = PlainDate.compare(
+            valuePlainDate,
+            buildTemporalPlainDate(adapter, data.start),
+          );
+          if (order < 0) {
             return undefined;
           }
 
           // The new end keeps its time of day, unless it moves to the day of the start.
-          const newEnd = valuePlainDate.equals(startPlainDate)
-            ? createAdapterDate(adapter, getEndOfDayMs(adapter.getTime(value), timezone), timezone)
-            : moveToPlainDate(adapter, data.end, valuePlainDate);
+          const newEnd =
+            order === 0
+              ? createAdapterDate(
+                  adapter,
+                  getEndOfDayMs(adapter.getTime(value), timezone),
+                  timezone,
+                )
+              : moveToPlainDate(adapter, data.end, valuePlainDate);
 
           return getDataFromInside(data, data.start, newEnd);
         }
-      }
-
-      // Move an Standalone Event into the Time Grid
-      if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, value);
       }
 
       return undefined;

@@ -1,13 +1,14 @@
 import type {
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderInternalDragOrResize,
-  SchedulerProcessedDate,
   TemporalSupportedObject,
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
+import { createPlainDate } from './base-temporal/PlainDate';
 import type { PlainDate } from './base-temporal/PlainDate';
+import { ISO_CALENDAR_ID } from './base-temporal/calendar';
 import { createAdapterDate } from './plain-date-utils/adapter';
-import { toEpochMs, toLocalDayNumber, toPlainDateTime } from './plain-date-utils/timeZone';
+import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
 
 const INTERNAL_DRAG_OR_RESIZE_PLACEHOLDER_TYPES = new Set(['internal-drag', 'internal-resize']);
 
@@ -15,14 +16,6 @@ export function isInternalDragOrResizePlaceholder(
   placeholder: SchedulerOccurrencePlaceholder | null,
 ): placeholder is SchedulerOccurrencePlaceholderInternalDragOrResize {
   return placeholder !== null && INTERNAL_DRAG_OR_RESIZE_PLACEHOLDER_TYPES.has(placeholder.type);
-}
-
-/**
- * The day number of a processed date, in its timezone. The placeholders compare it with the day of
- * every cell, so it's a day number rather than a plain date.
- */
-export function getProcessedDayNumber(adapter: Adapter, date: SchedulerProcessedDate): number {
-  return toLocalDayNumber(date.timestamp, adapter.getTimezone(date.value));
 }
 
 /**
@@ -52,9 +45,12 @@ export function addDaysOnWallClock(
   }
   const timezone = adapter.getTimezone(date);
   const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
+  // Unlike `add()`, `createPlainDate()` doesn't check the supported range: the grid shows the days
+  // after December 31st, 9999.
+  const plainDate = createPlainDate(plainDateTime.date.dayNumber + dayCount, ISO_CALENDAR_ID);
   return createAdapterDate(
     adapter,
-    toEpochMs(plainDateTime.date.add({ days: dayCount }), plainDateTime.msInDay, timezone),
+    toEpochMs(plainDate, plainDateTime.msInDay, timezone),
     timezone,
   );
 }
