@@ -51,6 +51,38 @@ describe('<DataGridPro /> - Columns reorder', () => {
     columns: [{ field: 'id' }, { field: 'brand' }],
   };
 
+  describe('drag cleanup', () => {
+    const { render: renderWithFakeTimers, clock } = createRenderer({ clock: 'fake' });
+
+    it('should tolerate a pending style cleanup after the dragged column is removed', () => {
+      const onColumnOrderChange = spy();
+
+      function Test(props: { columns?: typeof baselineProps.columns }) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro {...baselineProps} onColumnOrderChange={onColumnOrderChange} {...props} />
+          </div>
+        );
+      }
+
+      const { setProps } = renderWithFakeTimers(<Test />);
+      const removedDragCol = getColumnHeaderCell(0).firstChild!;
+      fireEvent.dragStart(removedDragCol);
+      setProps({ columns: [{ field: 'brand' }] });
+      expect(removedDragCol.isConnected).to.equal(false);
+
+      const dragCol = getColumnHeaderCell(0).firstChild!;
+      fireEvent.dragStart(dragCol);
+      fireEvent(dragCol, createDragEndEvent(dragCol));
+
+      clock.runToLast();
+
+      expect(dragCol).not.to.have.class(gridClasses['columnHeader--dragging']);
+      expect(onColumnOrderChange.callCount).to.equal(1);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
+    });
+  });
+
   it('resizing after columns reorder should respect the new columns order', async () => {
     let apiRef: RefObject<GridApi>;
 

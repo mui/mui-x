@@ -107,7 +107,7 @@ export const useGridColumnReorder = (
       apiRef.current.forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(classes.columnHeaderDragging);
+        dragColNode.current?.classList.remove(classes.columnHeaderDragging);
       });
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
