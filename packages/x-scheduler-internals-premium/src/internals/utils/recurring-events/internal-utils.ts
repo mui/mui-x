@@ -3,6 +3,7 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   buildTemporalPlainDate,
   createAdapterDate,
+  getStartOfDayMs,
   toEpochMs,
   toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
@@ -15,18 +16,6 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 
 /**
- * Creates the adapter value of the first instant of a plain date in `timezone`. A day whose
- * midnight a DST transition skips starts at the end of the gap.
- */
-export function createStartOfPlainDate(
-  adapter: Adapter,
-  plainDate: PlainDate,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
-}
-
-/**
  * Creates the adapter value of the first instant of the last day before a plain date that exists
  * in `timezone`. A day the timezone skips, like December 30th, 2011 in Pacific/Apia, is passed over.
  */
@@ -35,8 +24,11 @@ export function createStartOfPreviousDay(
   plainDate: PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  const previousDay = toPlainDateTime(toEpochMs(plainDate, 0, timezone) - 1, timezone).date;
-  return createStartOfPlainDate(adapter, previousDay, timezone);
+  return createAdapterDate(
+    adapter,
+    getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone),
+    timezone,
+  );
 }
 
 /**
@@ -79,14 +71,20 @@ export const NOT_LOCALIZED_WEEK_DAYS_INDEXES = new Map<RecurringEventWeekDayCode
 );
 
 /**
+ * Returns the week day code (MO..SU) of a plain date.
+ */
+export function getPlainDateWeekDayCode(plainDate: PlainDate): RecurringEventWeekDayCode {
+  return NOT_LOCALIZED_WEEK_DAYS[plainDate.dayOfWeek - 1];
+}
+
+/**
  * Returns the week day code (MO..SU) for a given date, read in the timezone it is labeled with.
  */
 export function getWeekDayCode(
   adapter: Adapter,
   date: TemporalSupportedObject,
 ): RecurringEventWeekDayCode {
-  const plainDate = buildTemporalPlainDate(adapter, date);
-  return NOT_LOCALIZED_WEEK_DAYS[plainDate.dayOfWeek - 1];
+  return getPlainDateWeekDayCode(buildTemporalPlainDate(adapter, date));
 }
 
 /**

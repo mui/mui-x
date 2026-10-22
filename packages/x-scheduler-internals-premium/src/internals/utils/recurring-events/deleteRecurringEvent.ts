@@ -5,8 +5,12 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
-import { createStartOfPlainDate, createStartOfPreviousDay } from './internal-utils';
+import {
+  buildTemporalPlainDate,
+  createAdapterDate,
+  getStartOfDayMs,
+} from '@mui/x-scheduler-internals/internals';
+import { createStartOfPreviousDay } from './internal-utils';
 import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
@@ -49,12 +53,13 @@ export function applyRecurringDeleteOnlyThis(
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
+  const timezone = adapter.getTimezone(occurrenceStart);
   const exDates = [
     ...(originalEvent.dataTimezone.exDates ?? []),
-    createStartOfPlainDate(
+    createAdapterDate(
       adapter,
-      buildTemporalPlainDate(adapter, occurrenceStart),
-      adapter.getTimezone(occurrenceStart),
+      getStartOfDayMs(adapter.getTime(occurrenceStart), timezone),
+      timezone,
     ),
   ];
 

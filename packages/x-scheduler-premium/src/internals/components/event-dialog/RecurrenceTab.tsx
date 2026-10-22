@@ -31,6 +31,7 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
+import { createAdapterDate, toEpochMs } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
   useEventEditingStyledContext,
@@ -409,11 +410,15 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const weeklyDayItems = React.useMemo(
     () =>
-      weeklyDays.map(({ code, date }) => ({
-        value: code,
-        ariaLabel: adapter.format(date, 'weekday'),
-        label: adapter.format(date, 'weekday3Letters'),
-      })),
+      weeklyDays.map(({ code, plainDate }) => {
+        // In UTC, which skips no day, the date falls on the weekday of the plain date.
+        const date = createAdapterDate(adapter, toEpochMs(plainDate, 0, 'UTC'), 'UTC');
+        return {
+          value: code,
+          ariaLabel: adapter.format(date, 'weekday'),
+          label: adapter.format(date, 'weekday3Letters'),
+        };
+      }),
     [adapter, weeklyDays],
   );
 

@@ -11,6 +11,7 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
+import type { PlainDate } from '../utils/base-temporal/PlainDate';
 import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
 
 /** Contract implemented by the premium recurring-events plugin. */
@@ -108,7 +109,7 @@ export interface SchedulerRecurringEventsPluginInterface {
   getWeeklyDays(
     adapter: Adapter,
     visibleDate: TemporalSupportedObject,
-  ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[];
+  ): { code: RecurringEventWeekDayCode; plainDate: PlainDate }[];
 
   /**
    * Returns month reference for the given occurrence: dayOfMonth, weekday code and ordinal.

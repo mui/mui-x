@@ -8,8 +8,9 @@ import type {
   WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
 import { buildTemporalPlainDate, getStartOfWeek } from '@mui/x-scheduler-internals/internals';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
-import { createStartOfPlainDate, getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS } from './internal-utils';
+import { getPlainDateWeekDayCode, getWeekDayCode } from './internal-utils';
 
 export function computePresets(
   adapter: Adapter,
@@ -18,11 +19,7 @@ export function computePresets(
   return {
     DAILY: { freq: 'DAILY', interval: 1 },
     WEEKLY: { freq: 'WEEKLY', interval: 1, byDay: [getWeekDayCode(adapter, date.value)] },
-    MONTHLY: {
-      freq: 'MONTHLY',
-      interval: 1,
-      byMonthDay: [buildTemporalPlainDate(adapter, date.value).day],
-    },
+    MONTHLY: { freq: 'MONTHLY', interval: 1, byMonthDay: [adapter.getDate(date.value)] },
     YEARLY: { freq: 'YEARLY', interval: 1 },
   };
 }
@@ -60,7 +57,7 @@ export function getDefaultPresetKey(
     }
     case 'MONTHLY': {
       // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-      const day = buildTemporalPlainDate(adapter, occurrenceStart.value).day;
+      const day = adapter.getDate(occurrenceStart.value);
       const byMonthDay = rule.byMonthDay ?? [];
       const matchesDefaultByMonthDay =
         byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
@@ -84,19 +81,14 @@ export function getWeeklyDays(
   adapter: Adapter,
   visibleDate: TemporalSupportedObject,
   weekStartsOn?: WeekStartsOn,
-): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] {
-  const weekStart = getStartOfWeek(adapter, visibleDate, weekStartsOn);
-  const weekStartPlainDate = buildTemporalPlainDate(adapter, weekStart);
-  const timezone = adapter.getTimezone(weekStart);
+): { code: RecurringEventWeekDayCode; plainDate: PlainDate }[] {
+  const weekStartPlainDate = buildTemporalPlainDate(
+    adapter,
+    getStartOfWeek(adapter, visibleDate, weekStartsOn),
+  );
   return Array.from({ length: 7 }, (_, i) => {
-    const dayPlainDate = weekStartPlainDate.add({ days: i });
-    let date = createStartOfPlainDate(adapter, dayPlainDate, timezone);
-    // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, resolves to the next day,
-    // so the same weekday of the previous week is used to keep the date on the weekday of its code.
-    if (!buildTemporalPlainDate(adapter, date).equals(dayPlainDate)) {
-      date = createStartOfPlainDate(adapter, dayPlainDate.add({ days: -7 }), timezone);
-    }
-    return { code: NOT_LOCALIZED_WEEK_DAYS[dayPlainDate.dayOfWeek - 1], date };
+    const plainDate = weekStartPlainDate.add({ days: i });
+    return { code: getPlainDateWeekDayCode(plainDate), plainDate };
   });
 }
 
@@ -110,7 +102,7 @@ export function getMonthlyReference(
   date: TemporalSupportedObject;
 } {
   return {
-    dayOfMonth: buildTemporalPlainDate(adapter, date.value).day,
+    dayOfMonth: adapter.getDate(date.value),
     code: getWeekDayCode(adapter, date.value),
     ord: computeMonthlyOrdinal(adapter, date.value),
     date: date.value,
