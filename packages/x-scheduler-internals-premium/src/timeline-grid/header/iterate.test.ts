@@ -240,6 +240,21 @@ describe('iterate()', () => {
         true,
       );
     });
+
+    it('should keep the first day cell whole when the range starts on a transition at midnight', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026, so the
+      // range starts at 01:00.
+      const start = adapter.startOfDay(adapter.date('2026-03-08T12:00:00', 'America/Havana'));
+      const end = adapter.endOfDay(adapter.addDays(start, 2));
+
+      const dayTickCells = iterate(adapter, 'day', 'day', start, end);
+      const hourTickCells = iterate(adapter, 'day', 'hour', start, end);
+      const hourCells = iterate(adapter, 'hour', 'hour', start, end);
+
+      expect(dayTickCells.map((cell) => cell.spanInTicks)).to.deep.equal([1, 1, 1]);
+      expect(hourTickCells.map((cell) => cell.spanInTicks)).to.deep.equal([24, 24, 24]);
+      expect(hourCells.length).to.equal(3 * 24);
+    });
   });
 
   describe('boundary clamping', () => {

@@ -7,7 +7,6 @@ import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
   addMonthsToDayNumber,
   createAdapterDate,
-  dateToTimelineAxisOffsetMs,
   FULL_DAY_MINUTES,
   fromDayNumber,
   getStartOfMonthDayNumber,
@@ -20,7 +19,8 @@ import {
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
 
-const HOUR_MS = 3_600_000;
+const MINUTE_MS = 60_000;
+const HOUR_MS = 60 * MINUTE_MS;
 
 type HourWindow = Pick<TimelineAxis, 'dayStartMinute' | 'dayEndMinute'>;
 
@@ -57,7 +57,7 @@ export function iterate(
 
   const timezone = adapter.getTimezone(rangeStart);
   const toAdapterDate = (localMs: number) => toAdapterDateInTimezone(adapter, localMs, timezone);
-  const rangeStartLocalMs = toLocalMs(adapter.getTime(rangeStart), timezone);
+  const rangeStartLocalMs = getRangeStartLocalMs(adapter, rangeStart, timezone);
 
   // `rangeEnd` is inclusive (e.g. `endOfDay` = 23:59:59.999). Floor it to the
   // tick boundary and add one tick to get an exclusive end the loop can compare
@@ -108,17 +108,15 @@ export function iterate(
     const isClampedStart = cursor < rangeStartLocalMs;
     const clampedStart = isClampedStart ? rangeStart : cursorDate;
     const clampedEnd = isLastCell ? rangeEndExclusiveDate : nextCursorDate;
+    const spanEnd = Math.min(nextCursor, rangeEndExclusive);
+    const spanStart = Math.max(cursor, rangeStartLocalMs);
     cells.push({
       date: cursorDate,
       start: clampedStart,
       end: clampedEnd,
       spanInTicks: appliedHourWindow
-        ? countVisibleHours(adapter, clampedEnd, clampedStart, rangeStart, appliedHourWindow)
-        : differenceInUnits(
-            Math.min(nextCursor, rangeEndExclusive),
-            Math.max(cursor, rangeStartLocalMs),
-            tickUnit,
-          ),
+        ? countVisibleHours(spanEnd, spanStart, appliedHourWindow)
+        : differenceInUnits(spanEnd, spanStart, tickUnit),
       key: String(adapter.getTime(cursorDate)),
       index,
     });
@@ -128,6 +126,22 @@ export function iterate(
   }
 
   return cells;
+}
+
+/**
+ * The wall-clock time of `rangeStart`. A range starting on the first instant of a day
+ * whose midnight is skipped by a DST transition (e.g. `startOfDay` of March 8th, 2026 in
+ * America/Havana, at 01:00) starts at the midnight of that day, so its first day stays whole.
+ */
+function getRangeStartLocalMs(
+  adapter: TemporalAdapter,
+  rangeStart: TemporalSupportedObject,
+  timezone: TemporalTimezone,
+): number {
+  const time = adapter.getTime(rangeStart);
+  const localMs = toLocalMs(time, timezone);
+  const dayStartLocalMs = Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
+  return localToEpochMs(dayStartLocalMs, timezone) === time ? dayStartLocalMs : localMs;
 }
 
 /**
@@ -259,23 +273,22 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
 }
 
 /**
- * Counts the hour ticks within `[earlier, later)` that fall inside the visible hour
- * window: the axis distance between the two bounds, in hours. Closed form (no
- * hour-by-hour walk), consistent with the pinned tick count of the grid.
+ * Counts the hour ticks within `[earlier, later)`, two wall-clock times, that fall inside
+ * the visible hour window: the axis distance between the two bounds, in hours. Closed form
+ * (no hour-by-hour walk), consistent with the pinned tick count of the grid.
  */
-function countVisibleHours(
-  adapter: TemporalAdapter,
-  later: TemporalSupportedObject,
-  earlier: TemporalSupportedObject,
-  rangeStart: TemporalSupportedObject,
-  hourWindow: HourWindow,
-): number {
-  const axis = { start: rangeStart, end: later, ...hourWindow };
-  return Math.round(
-    (dateToTimelineAxisOffsetMs(adapter, axis, later) -
-      dateToTimelineAxisOffsetMs(adapter, axis, earlier)) /
-      HOUR_MS,
-  );
+function countVisibleHours(later: number, earlier: number, hourWindow: HourWindow): number {
+  const windowStartMs = hourWindow.dayStartMinute * MINUTE_MS;
+  const windowEndMs = hourWindow.dayEndMinute * MINUTE_MS;
+  const toAxisMs = (localMs: number) => {
+    const dayNumber = Math.floor(localMs / MS_PER_DAY);
+    const msInDay = Math.min(
+      Math.max(localMs - dayNumber * MS_PER_DAY, windowStartMs),
+      windowEndMs,
+    );
+    return dayNumber * (windowEndMs - windowStartMs) + msInDay - windowStartMs;
+  };
+  return Math.round((toAxisMs(later) - toAxisMs(earlier)) / HOUR_MS);
 }
 
 /**
