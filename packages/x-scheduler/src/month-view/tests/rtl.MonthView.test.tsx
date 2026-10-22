@@ -17,13 +17,13 @@ import { describe, it, expect } from 'vitest';
 const LEFT_TIP = '0px 50%';
 const RIGHT_TIP = '100% 50%';
 
-// Reads the computed styles, so this only runs in the browser.
-describe.skipIf(isJSDOM)('<StandaloneMonthView /> - RTL', () => {
+describe('<StandaloneMonthView /> - RTL', () => {
   const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  describe.each([
+  // Reads the computed styles, so this only runs in the browser.
+  describe.skipIf(isJSDOM).each([
     ['ltr', { endTip: RIGHT_TIP, startTip: LEFT_TIP }],
     ['rtl', { endTip: LEFT_TIP, startTip: RIGHT_TIP }],
   ] as const)('%s', (direction, { endTip, startTip }) => {
@@ -84,27 +84,23 @@ describe.skipIf(isJSDOM)('<StandaloneMonthView /> - RTL', () => {
       );
     });
   });
-});
 
-describe('<StandaloneMonthView /> - RTL keyboard navigation', () => {
-  const { renderSettled } = createSchedulerRenderer({
-    clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
-  });
+  describe('keyboard navigation', () => {
+    it('should move the focus to the next day on ArrowLeft', async () => {
+      const { user } = await renderSettled(
+        <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
+          <div dir="rtl">
+            <StandaloneMonthView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+          </div>
+        </ThemeProvider>,
+      );
 
-  it('should move the focus to the next day on ArrowLeft', async () => {
-    const { user } = await renderSettled(
-      <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
-        <div dir="rtl">
-          <StandaloneMonthView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
-        </div>
-      </ThemeProvider>,
-    );
+      act(() => {
+        getMonthViewCell(9).focus();
+      });
+      await user.keyboard('{ArrowLeft}');
 
-    act(() => {
-      getMonthViewCell(9).focus();
+      expect(getMonthViewCell(10)).toHaveFocus();
     });
-    await user.keyboard('{ArrowLeft}');
-
-    expect(getMonthViewCell(10)).toHaveFocus();
   });
 });
