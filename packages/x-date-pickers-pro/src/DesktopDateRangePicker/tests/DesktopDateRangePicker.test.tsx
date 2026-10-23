@@ -5,13 +5,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import type { PickerValidDate } from '@mui/x-date-pickers/models';
+import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import {
   createPickerRenderer,
   adapterToUse,
   AdapterClassToUse,
   openPicker,
   getFieldSectionsContainer,
+  expectFieldValue,
 } from 'test/utils/pickers';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -575,6 +578,160 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onChange.mock.calls.length).to.equal(0);
       expect(onAccept.mock.calls.length).to.equal(0);
       expect(onClose.mock.calls.length).to.equal(1);
+    });
+
+    describe('clear a partially typed value', () => {
+      function CustomActionBar() {
+        const { clearValue } = usePickerActionsContext();
+        return <button onClick={clearValue}>Custom Clear</button>;
+      }
+
+      describe.each([
+        {
+          fieldType: 'single-input',
+          field: SingleInputDateRangeField,
+          emptyFieldValues: ['MM/DD/YYYY – MM/DD/YYYY'],
+        },
+        {
+          fieldType: 'multi-input',
+          field: MultiInputDateRangeField,
+          emptyFieldValues: ['MM/DD/YYYY', 'MM/DD/YYYY'],
+        },
+      ] as const)('$fieldType field', ({ fieldType, field, emptyFieldValues }) => {
+        describe.each([
+          { trigger: 'the "Clear" action', buttonName: 'Clear', slots: {} },
+          {
+            trigger: 'usePickerActionsContext().clearValue',
+            buttonName: 'Custom Clear',
+            slots: { actionBar: CustomActionBar },
+          },
+        ] as const)('with $trigger', ({ buttonName, slots }) => {
+          it.each(['start', 'end'] as const)(
+            'should clear the partial text typed in the %s date',
+            async (position) => {
+              const { user } = render(
+                <DesktopDateRangePicker
+                  slots={{ field, ...slots }}
+                  slotProps={{ actionBar: { actions: ['clear'] } }}
+                />,
+              );
+
+              const monthSection = screen.getAllByRole('spinbutton', { name: 'Month' })[
+                position === 'start' ? 0 : 1
+              ];
+              await user.click(monthSection);
+              await user.keyboard('12');
+              expect(monthSection).to.have.text('12');
+
+              // On the multi-input field, the start field is active and the partial text is in the end field when `position` is 'end'.
+              await openPicker(user, { type: 'date-range', initialFocus: 'start', fieldType });
+              await user.click(screen.getByRole('button', { name: buttonName }));
+
+              emptyFieldValues.forEach((emptyFieldValue, index) => {
+                expectFieldValue(getFieldSectionsContainer(index), emptyFieldValue);
+              });
+            },
+          );
+        });
+
+        it.each(['start', 'end'] as const)(
+          'should clear the partial text typed in the %s date when the other date has a value',
+          async (position) => {
+            const onChange = vi.fn();
+            const onAccept = vi.fn();
+            const date = adapterToUse.date('2018-01-06');
+            const { user } = render(
+              <DesktopDateRangePicker
+                defaultValue={position === 'start' ? [null, date] : [date, null]}
+                onChange={onChange}
+                onAccept={onAccept}
+                slots={{ field }}
+                slotProps={{ actionBar: { actions: ['clear'] } }}
+              />,
+            );
+
+            const monthSection = screen.getAllByRole('spinbutton', { name: 'Month' })[
+              position === 'start' ? 0 : 1
+            ];
+            await user.click(monthSection);
+            await user.keyboard('12');
+            expect(monthSection).to.have.text('12');
+
+            await openPicker(user, { type: 'date-range', initialFocus: 'start', fieldType });
+            onChange.mockClear();
+            onAccept.mockClear();
+            await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+            expect(onChange.mock.calls.length).to.equal(1);
+            expect(onChange.mock.lastCall?.[0]).to.deep.equal([null, null]);
+            expect(onAccept.mock.calls.length).to.equal(1);
+            expect(onAccept.mock.lastCall?.[0]).to.deep.equal([null, null]);
+            emptyFieldValues.forEach((emptyFieldValue, index) => {
+              expectFieldValue(getFieldSectionsContainer(index), emptyFieldValue);
+            });
+          },
+        );
+
+        it.each(['start', 'end'] as const)(
+          'should clear the partial text typed in the %s date when the controlled value updates in a later render',
+          async (position) => {
+            const onChange = vi.fn();
+            const date = adapterToUse.date('2018-01-06');
+            const { user, setProps } = render(
+              <DesktopDateRangePicker
+                value={position === 'start' ? [null, date] : [date, null]}
+                onChange={onChange}
+                slots={{ field }}
+                slotProps={{ actionBar: { actions: ['clear'] } }}
+              />,
+            );
+
+            const monthSection = screen.getAllByRole('spinbutton', { name: 'Month' })[
+              position === 'start' ? 0 : 1
+            ];
+            await user.click(monthSection);
+            await user.keyboard('12');
+            expect(monthSection).to.have.text('12');
+
+            await openPicker(user, { type: 'date-range', initialFocus: 'start', fieldType });
+            await user.click(screen.getByRole('button', { name: 'Clear' }));
+            expect(onChange.mock.lastCall?.[0]).to.deep.equal([null, null]);
+
+            setProps({ value: onChange.mock.lastCall?.[0] });
+
+            emptyFieldValues.forEach((emptyFieldValue, index) => {
+              expectFieldValue(getFieldSectionsContainer(index), emptyFieldValue);
+            });
+          },
+        );
+      });
+
+      it('should not clear the partial text when another value replaces the cleared value (multi-input field)', async () => {
+        const { user, setProps } = render(
+          <DesktopDateRangePicker
+            value={[adapterToUse.date('2018-01-06'), null]}
+            slots={{ field: MultiInputDateRangeField }}
+            slotProps={{ actionBar: { actions: ['clear'] } }}
+          />,
+        );
+
+        const endMonthSection = screen.getAllByRole('spinbutton', { name: 'Month' })[1];
+        await user.click(endMonthSection);
+        await user.keyboard('12');
+
+        await openPicker(user, {
+          type: 'date-range',
+          initialFocus: 'start',
+          fieldType: 'multi-input',
+        });
+        await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+        // The owner ignores the clear, then empties the start date later.
+        setProps({ value: [adapterToUse.date('2018-01-07'), null] });
+        setProps({ value: [null, null] });
+
+        expectFieldValue(getFieldSectionsContainer(1), '12/DD/YYYY');
+      });
     });
 
     it.todo(
