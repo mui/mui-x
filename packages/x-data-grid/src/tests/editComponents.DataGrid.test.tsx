@@ -1,7 +1,12 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef, DataGrid, renderEditLongTextCell } from '@mui/x-data-grid';
+import {
+  useGridApiRef,
+  DataGrid,
+  GridCellEditStopReasons,
+  renderEditLongTextCell,
+} from '@mui/x-data-grid';
 import type { GridApi, DataGridProps } from '@mui/x-data-grid';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { getCell, openLongTextEditPopup, spyApi } from 'test/utils/helperFn';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
@@ -138,6 +143,35 @@ describe('<DataGrid /> - Edit components', () => {
       const popup = screen.getByRole('dialog');
       expect(popup).not.to.equal(null);
       expect(popup).to.have.attribute('aria-label', 'bio');
+    });
+  });
+  describe('column type: singleSelect', () => {
+    beforeEach(() => {
+      defaultData.rows = [{ id: 0, brand: 'Nike' }];
+      defaultData.columns = [
+        { field: 'brand', type: 'singleSelect', valueOptions: ['Nike', 'Adidas'], editable: true },
+      ];
+    });
+
+    it('should close the menu on a backdrop click when the cell stays in edit mode', async () => {
+      const { user } = render(
+        <TestCase
+          onCellEditStop={(params, event) => {
+            if (params.reason === GridCellEditStopReasons.cellFocusOut) {
+              event.defaultMuiPrevented = true;
+            }
+          }}
+        />,
+      );
+
+      await user.dblClick(getCell(0, 0));
+      expect(screen.queryByRole('listbox')).not.to.equal(null);
+
+      await user.click(document.querySelector('.MuiBackdrop-root')!);
+      await waitFor(() => {
+        expect(screen.queryByRole('listbox')).to.equal(null);
+      });
+      expect(apiRef.current!.getCellMode(0, 'brand')).to.equal('edit');
     });
   });
 });
