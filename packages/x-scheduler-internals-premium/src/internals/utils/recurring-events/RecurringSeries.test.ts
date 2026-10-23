@@ -114,6 +114,14 @@ describe('recurring-events/RecurringSeries', () => {
       expect(
         getOccurrenceDays({ freq: 'MONTHLY', interval: 5 }, '9999-10-15T09:00:00', ...lastYear),
       ).to.deep.equal(['9999-10-15']);
+      // The month after the first one is too far to compute.
+      expect(
+        getOccurrenceDays(
+          { freq: 'MONTHLY', interval: Number.MAX_VALUE },
+          '9999-10-15T09:00:00',
+          ...lastYear,
+        ),
+      ).to.deep.equal(['9999-10-15']);
     });
 
     it('should end the series when its next day of the week or month is in the year 10000', () => {
