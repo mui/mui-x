@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +21,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
 ) {
   // Context hooks
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
+  const isRtl = useRtl();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -69,8 +71,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         open={open}
         onClose={handleClose}
         container={containerRef.current}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        // Aligned with the inline end of the button.
+        anchorOrigin={{ vertical: 'bottom', horizontal: isRtl ? 'left' : 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: isRtl ? 'left' : 'right' }}
         slotProps={{
           list: { 'aria-label': localeText.preferencesMenu },
           paper: { sx: { minWidth: 220 } },
