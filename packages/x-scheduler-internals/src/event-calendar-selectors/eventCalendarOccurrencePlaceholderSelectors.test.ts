@@ -26,6 +26,7 @@ function getStateInUTCOnApiaSystem() {
   const state: EventCalendarState = {
     ...DEFAULT_EVENT_CALENDAR_STATE,
     adapter: systemAdapter,
+    displayTimezone: 'UTC',
     occurrencePlaceholder: {
       type: 'creation',
       surfaceType: 'day-grid',

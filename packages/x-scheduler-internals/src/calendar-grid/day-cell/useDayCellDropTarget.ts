@@ -57,7 +57,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
             ? data.draggedDay
             : toPlainDateTime(
                 adapter.getTime(data.start) + data.initialCursorPositionInEventMs,
-                adapter.getTimezone(data.start),
+                timezone,
               ).date;
         const dayCount = valuePlainDate.dayNumber - grabbedPlainDate.dayNumber;
         return getDataFromInside(

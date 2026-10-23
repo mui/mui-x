@@ -9,6 +9,7 @@ import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
 import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
+import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { createPlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import { ISO_CALENDAR_ID } from '../../internals/utils/base-temporal/calendar';
@@ -20,7 +21,10 @@ import type {
 } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
-import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
+import {
+  schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
+} from '../../scheduler-selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
@@ -71,7 +75,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Feature hooks
   const getDraggedDay = useStableCallback((input: { clientX: number }) => {
-    const startDay = buildTemporalPlainDate(adapter, start.value).dayNumber;
+    const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
+    const startDay = toLocalDayNumber(start.timestamp, displayTimezone);
     if (!ref.current) {
       return createPlainDate(startDay, ISO_CALENDAR_ID);
     }
@@ -79,7 +84,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     // The event covers every date from its start to its end in the row, like its cells.
     const firstDay = Math.max(startDay, buildTemporalPlainDate(adapter, rowStart).dayNumber);
     const lastDay = Math.min(
-      buildTemporalPlainDate(adapter, end.value).dayNumber,
+      toLocalDayNumber(end.timestamp, displayTimezone),
       buildTemporalPlainDate(adapter, rowEnd).dayNumber,
     );
     const clientX = input.clientX;

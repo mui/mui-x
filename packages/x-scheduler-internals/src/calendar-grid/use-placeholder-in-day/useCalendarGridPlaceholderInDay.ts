@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { SchedulerProcessedDate } from '../../models';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
@@ -10,6 +10,7 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calenda
 import { processDate } from '../../process-date';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
+import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 
 export function useCalendarGridPlaceholderInDay(
   day: SchedulerProcessedDate,
@@ -53,6 +54,7 @@ export function useCalendarGridPlaceholderInDay(
     ? rawPlaceholder.eventId
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
@@ -65,7 +67,7 @@ export function useCalendarGridPlaceholderInDay(
     // The placeholder covers every date up to its end, like the occurrences.
     const daySpan =
       buildTemporalPlainDate(adapter, endInRow).dayNumber -
-      buildTemporalPlainDate(adapter, day.value).dayNumber +
+      toLocalDayNumber(day.timestamp, displayTimezone) +
       1;
 
     const sharedProperties = {
@@ -127,5 +129,14 @@ export function useCalendarGridPlaceholderInDay(
         daySpan,
       },
     };
-  }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, rowEnd, findAvailableIndex]);
+  }, [
+    adapter,
+    day,
+    displayTimezone,
+    originalEvent,
+    originalEventId,
+    rawPlaceholder,
+    rowEnd,
+    findAvailableIndex,
+  ]);
 }

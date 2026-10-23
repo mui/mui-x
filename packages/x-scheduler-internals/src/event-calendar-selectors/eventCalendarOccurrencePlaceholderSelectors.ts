@@ -10,8 +10,8 @@ function getDayNumber(adapter: Adapter, date: TemporalSupportedObject): number {
   return toLocalDayNumber(adapter.getTime(date), adapter.getTimezone(date));
 }
 
-function getProcessedDayNumber(adapter: Adapter, date: SchedulerProcessedDate): number {
-  return toLocalDayNumber(date.timestamp, adapter.getTimezone(date.value));
+function getProcessedDayNumber(state: State, date: SchedulerProcessedDate): number {
+  return toLocalDayNumber(date.timestamp, state.displayTimezone);
 }
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
@@ -26,7 +26,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     }
 
     const { adapter } = state;
-    const dayNumber = getProcessedDayNumber(adapter, day);
+    const dayNumber = getProcessedDayNumber(state, day);
     if (dayNumber === getDayNumber(adapter, placeholder.start)) {
       return placeholder;
     }
@@ -72,9 +72,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
     }
-    return (
-      getProcessedDayNumber(state.adapter, day) === getDayNumber(state.adapter, placeholder.start)
-    );
+    return getProcessedDayNumber(state, day) === getDayNumber(state.adapter, placeholder.start);
   },
   isCreatingInTimeRange: (
     state: State,
