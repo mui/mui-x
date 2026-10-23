@@ -118,8 +118,9 @@ function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
     <React.Fragment>
       <DependencyDialogAnchor
         ref={setAnchor}
+        data-dependency-dialog-anchor=""
         style={{
-          left: `calc(var(--title-column-width) + ${editor.anchor.x}px)`,
+          insetInlineStart: `calc(var(--title-column-width) + ${editor.anchor.x}px)`,
           top: editor.anchor.y - offsetTop,
         }}
       />

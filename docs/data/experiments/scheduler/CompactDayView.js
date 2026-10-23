@@ -1,18 +1,18 @@
 import * as React from 'react';
 
-import { StandaloneCompactWeekViewPremium } from '@mui/x-scheduler-premium/compact-week-view-premium';
+import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
+} from 'docs/data/scheduler/datasets/personal-agenda';
 
-export default function CompactWeekView() {
+export default function CompactDayView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>
-      <StandaloneCompactWeekViewPremium
+      <StandaloneCompactDayViewPremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}

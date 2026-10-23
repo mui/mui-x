@@ -71,9 +71,9 @@ export function DayGridCell(props: DayGridCellProps) {
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
-    day.value,
+    day,
   );
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
