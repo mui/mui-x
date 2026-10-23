@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { screen, within, act, ErrorBoundary, reactMajor } from '@mui/internal-test-utils';
+import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
@@ -319,6 +320,36 @@ describe('TimelineGrid keyboard navigation', () => {
       await user.keyboard('{ArrowRight}');
 
       expect(getEventsCells()[0]).toHaveFocus();
+    });
+
+    it('should move focus from title to events on ArrowLeft in RTL', async () => {
+      const { user } = render(
+        <DirectionProvider direction="rtl">
+          <Grid />
+        </DirectionProvider>,
+      );
+
+      act(() => {
+        getTitleCells()[0].focus();
+      });
+      await user.keyboard('{ArrowLeft}');
+
+      expect(getEventsCells()[0]).toHaveFocus();
+    });
+
+    it('should move focus from events to title on ArrowRight in RTL', async () => {
+      const { user } = render(
+        <DirectionProvider direction="rtl">
+          <Grid />
+        </DirectionProvider>,
+      );
+
+      act(() => {
+        getEventsCells()[0].focus();
+      });
+      await user.keyboard('{ArrowRight}');
+
+      expect(getTitleCells()[0]).toHaveFocus();
     });
 
     it('should leave the arrow keys to interactive content nested in a cell', async () => {
