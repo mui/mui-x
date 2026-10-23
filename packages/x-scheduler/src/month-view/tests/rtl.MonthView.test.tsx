@@ -126,4 +126,23 @@ describe('<StandaloneMonthView /> - RTL', () => {
       expect(new Date(updatedEvents[0].end).getUTCDate()).to.equal(expectedStartDay + 2);
     });
   });
+
+  describe('keyboard navigation', () => {
+    it('should move the focus to the next day on ArrowLeft', async () => {
+      const { user } = await renderSettled(
+        <ThemeProvider theme={createTheme({ direction: 'rtl' })}>
+          <div dir="rtl">
+            <StandaloneMonthView events={[]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
+          </div>
+        </ThemeProvider>,
+      );
+
+      act(() => {
+        getMonthViewCell(9).focus();
+      });
+      await user.keyboard('{ArrowLeft}');
+
+      expect(getMonthViewCell(10)).toHaveFocus();
+    });
+  });
 });
