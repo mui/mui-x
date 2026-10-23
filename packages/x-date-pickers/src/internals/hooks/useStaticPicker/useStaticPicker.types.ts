@@ -38,6 +38,10 @@ export interface UseStaticPickerProps<
 >
   extends BasePickerProps<PickerValue, TView, TError, TExternalProps>, StaticOnlyPickerProps {
   /**
+   * If `true`, the picker uses compact dimensions.
+   */
+  compact?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */

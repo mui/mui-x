@@ -70,4 +70,8 @@ export interface PickerOwnerState {
    * Is always equal to "portrait" if the component you are accessing the ownerState from is not wrapped with a Picker.
    */
   pickerOrientation: PickerOrientation;
+  /**
+   * `true` if the Picker or the calendar component uses compact dimensions (the `compact` prop is `true`).
+   */
+  isPickerCompact: boolean;
 }

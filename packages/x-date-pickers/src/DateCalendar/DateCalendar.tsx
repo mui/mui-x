@@ -24,7 +24,7 @@ import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import type { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { VIEW_HEIGHT, VIEW_HEIGHT_COMPACT } from '../internals/constants/dimensions';
 import type { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
@@ -69,6 +69,12 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   display: 'flex',
   flexDirection: 'column',
   height: VIEW_HEIGHT,
+  variants: [
+    {
+      props: { isPickerCompact: true },
+      style: { height: VIEW_HEIGHT_COMPACT },
+    },
+  ],
 });
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
@@ -96,7 +102,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
-  const { ownerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const id = useId();
   const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
 
@@ -139,8 +145,12 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
+    compact: compactProp,
     ...other
   } = props;
+
+  const compact = compactProp ?? pickerOwnerState.isPickerCompact;
+  const ownerState: PickerOwnerState = { ...pickerOwnerState, isPickerCompact: compact };
 
   const { value, handleValueChange, timezone } = useControlledValue({
     name: 'DateCalendar',
@@ -216,6 +226,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       reduceAnimations,
       timezone,
       labelId: gridLabelId,
+      compact,
     },
     ownerState,
   });
@@ -308,6 +319,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     gridLabelId,
     slots,
     slotProps,
+    compact,
   };
 
   const prevOpenViewRef = React.useRef(view);
@@ -420,6 +432,11 @@ DateCalendar.propTypes /* remove-proptypes */ = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the picker uses compact dimensions following the Material Design spec.
+   * @default false
+   */
+  compact: PropTypes.bool,
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {PickerValidDate} date The date of the day of week provided by the adapter.
