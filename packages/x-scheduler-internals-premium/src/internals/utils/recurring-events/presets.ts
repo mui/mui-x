@@ -85,12 +85,11 @@ export function getDefaultPresetKey(
 
 export function getWeeklyDays(
   adapter: Adapter,
-  visibleDate: TemporalSupportedObject,
+  visiblePlainDate: PlainDate,
   weekStartsOn?: WeekStartsOn,
 ): { code: RecurringEventWeekDayCode; date: PlainDate }[] {
-  // The start of the week is computed on a date in UTC, which skips no day: in a timezone that
-  // skips it, it would resolve to the next day.
-  const visiblePlainDate = buildTemporalPlainDate(adapter, visibleDate);
+  // The adapter knows the first day of the week of the locale. It finds it on a date in UTC, which
+  // skips no day.
   const weekStartPlainDate = buildTemporalPlainDate(
     adapter,
     getStartOfWeek(

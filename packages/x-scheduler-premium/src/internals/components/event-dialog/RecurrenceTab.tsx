@@ -214,7 +214,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   // Selector hooks
   const inputsDisabled = recurrenceSelection === null || rruleReadOnly;
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
@@ -262,8 +262,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     });
   }, [formStore, store, ruleStart]);
   const weeklyDays = React.useMemo(
-    () => getWeeklyDays(adapter, visibleDate, weekStartsOn),
-    [adapter, visibleDate, weekStartsOn],
+    () => getWeeklyDays(adapter, visiblePlainDate, weekStartsOn),
+    [adapter, visiblePlainDate, weekStartsOn],
   );
 
   const handleRecurrenceSelectionChange = (

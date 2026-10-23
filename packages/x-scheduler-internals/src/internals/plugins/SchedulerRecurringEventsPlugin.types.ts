@@ -104,11 +104,11 @@ export interface SchedulerRecurringEventsPluginInterface {
 
   /**
    * Returns the 7 week days with their code and date,
-   * starting at the start of the week containing the given visible date.
+   * starting at the start of the week containing `visiblePlainDate`.
    */
   getWeeklyDays(
     adapter: Adapter,
-    visibleDate: TemporalSupportedObject,
+    visiblePlainDate: PlainDate,
   ): { code: RecurringEventWeekDayCode; date: PlainDate }[];
 
   /**
