@@ -16,6 +16,7 @@ import {
   EventEditingStyledContext,
   SharedComponentsStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  SchedulerDirectionProvider,
 } from '@mui/x-scheduler/internals';
 
 // A release day: every dependency has a business reason, and each type and arrow
@@ -213,8 +214,10 @@ export default function TimelineDependencyArrows() {
         <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
           <EventEditingStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <EventTimelinePremiumContent />
-              <ErrorContainer />
+              <SchedulerDirectionProvider>
+                <EventTimelinePremiumContent />
+                <ErrorContainer />
+              </SchedulerDirectionProvider>
             </SharedComponentsStyledContext.Provider>
           </EventEditingStyledContext.Provider>
         </EventTimelinePremiumStyledContext.Provider>
