@@ -25,4 +25,5 @@ export const defaultProps = {
   disableLine: false,
   disableTicks: false,
   tickSize: 6,
-};
+  tickLabelMinGap: 4,
+} as const;
