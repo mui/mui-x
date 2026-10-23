@@ -9,6 +9,11 @@ import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/
 import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
+import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
+import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
+import { createPlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import { ISO_CALENDAR_ID } from '../../internals/utils/base-temporal/calendar';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -17,7 +22,10 @@ import type {
 } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
-import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
+import {
+  schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
+} from '../../scheduler-selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
@@ -69,13 +77,18 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Feature hooks
   const getDraggedDay = useStableCallback((input: { clientX: number }) => {
+    const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
+    const startDay = toLocalDayNumber(start.timestamp, displayTimezone);
     if (!ref.current) {
-      return start.value;
+      return createPlainDate(startDay, ISO_CALENDAR_ID);
     }
 
-    const eventStartInRow = adapter.isBefore(start.value, rowStart) ? rowStart : start.value;
-    const eventEndInRow = adapter.isAfter(end.value, rowEnd) ? rowEnd : end.value;
-    const eventDayLengthInRow = adapter.differenceInDays(eventEndInRow, eventStartInRow) + 1;
+    // The event covers every date from its start to its end in the row, like its cells.
+    const firstDay = Math.max(startDay, buildTemporalPlainDate(adapter, rowStart).dayNumber);
+    const lastDay = Math.min(
+      toLocalDayNumber(end.timestamp, displayTimezone),
+      buildTemporalPlainDate(adapter, rowEnd).dayNumber,
+    );
     const elementPosition = ref.current.getBoundingClientRect();
     // Measured from the inline start, where the first day of the event is.
     const offsetFromStart = isRtl
@@ -83,8 +96,9 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       : input.clientX - elementPosition.left;
     const positionX = offsetFromStart / ref.current.offsetWidth;
 
-    return adapter.startOfDay(
-      adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1),
+    return createPlainDate(
+      firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1,
+      ISO_CALENDAR_ID,
     );
   });
 
@@ -198,6 +212,9 @@ export namespace CalendarGridDayEvent {
 
   export interface DragData extends SharedDragData {
     source: 'CalendarGridDayEvent';
-    draggedDay: TemporalSupportedObject;
+    /**
+     * The grabbed day, in the timezone of `start`.
+     */
+    draggedDay: PlainDate;
   }
 }
