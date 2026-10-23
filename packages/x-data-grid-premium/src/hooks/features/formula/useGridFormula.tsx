@@ -163,6 +163,25 @@ function isRowGroupingAffected(
 const NO_VIEW_REFRESH = { refilter: false, resort: false };
 
 /**
+ * Applies the filtering or the sorting again, and returns whether it was applied. It runs inside
+ * the hydration of the columns when a hydration published `columnsChange`, where a throw would
+ * leave the pipe processing of the grid locked. After a type change, the core can fail to filter
+ * or sort with a model made for the previous type: an operator that is gone (`>` on a `string`
+ * column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef` comparator
+ * or operator written for one type. The core throws before it sets the state, so nothing changes:
+ * the view keeps its rows and order, and the error comes at the next filtering or sorting, like
+ * after the type change of a regular column.
+ */
+function tryToApplyView(apply: () => void) {
+  try {
+    apply();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Which of the filtering and the sorting read the computed values that changed outside a rows
  * update (a definition, the function registry): the values of every computed column, and the
  * cell formulas the pass re-evaluated. A grouping column filters and sorts by a criterion or a
@@ -336,7 +355,8 @@ export const useGridFormula = (
    * Filtering and sorting re-run in the rows cascades only: after a change of
    * the computed values (`computedColumnsChanged`), they are re-applied when
    * their model reads a changed value. Once: the events they publish refresh
-   * the position-dependent formulas without reporting a computed change.
+   * the position-dependent formulas without reporting a computed change. A
+   * model the core can't apply leaves the view as it was (`tryToApplyView`).
    */
   const triggerDependentFeatures = React.useCallback(
     (
@@ -373,17 +393,13 @@ export const useGridFormula = (
         ? getViewRefresh(apiRef, changedCells, props.filterMode, props.sortingMode)
         : NO_VIEW_REFRESH;
       // `filteredRowsSet` applies the aggregation, and both events reset the row spanning.
-      if (options.aggregation && !refilter) {
+      const refiltered = refilter && tryToApplyView(() => apiRef.current.unstable_applyFilters());
+      if (options.aggregation && !refiltered) {
         apiRef.current.applyAggregation();
       }
-      if (options.rowSpanning && !refilter && !resort) {
+      const resorted = resort && tryToApplyView(() => apiRef.current.applySorting());
+      if (options.rowSpanning && !refiltered && !resorted) {
         apiRef.current.resetRowSpanningState();
-      }
-      if (refilter) {
-        apiRef.current.unstable_applyFilters();
-      }
-      if (resort) {
-        apiRef.current.applySorting();
       }
     },
     [apiRef, props.filterMode, props.sortingMode],

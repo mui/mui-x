@@ -400,6 +400,29 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       ]);
     });
 
+    it('applies a type change of a column filtered with an operator the new type does not have', async () => {
+      const { user } = await render(
+        <Test
+          initialState={{
+            computedColumns: { model: [total] },
+            filter: { filterModel: { items: [{ field: 'total', operator: '>', value: 0 }] } },
+          }}
+        />,
+      );
+      await openEditor('total');
+
+      typeFormula('=item & "!"');
+      await selectType(user, 'Text');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+
+      expect(getModel()).to.deep.equal([{ ...total, formula: '=item & "!"', type: 'string' }]);
+      // The columns are still hydrated: the update did not throw inside the hydration.
+      act(() => apiRef.current!.setFilterModel({ items: [] }));
+      act(() => apiRef.current!.addComputedColumn(define('half', '=price / 2')));
+      expect(getFields()).to.include('half');
+    });
+
     it('deletes the column from the editor', async () => {
       await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
       await openEditor('total');

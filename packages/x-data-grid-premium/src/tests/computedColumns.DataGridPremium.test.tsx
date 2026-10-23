@@ -2045,6 +2045,289 @@ describe('<DataGridPremium /> - Computed columns', () => {
         );
         expect(getColumnValuesOf('double')).to.deep.equal(['4', '8', '6', '18']);
       });
+
+      describe('when the filtering or the sorting fails with the new type', () => {
+        const toText = { type: 'string' as const, formula: '=price & "!"' };
+        const half: GridComputedColumnDefinition = {
+          field: 'half',
+          headerName: 'Half',
+          formula: '=price / 2',
+          type: 'number',
+        };
+        // A throw inside the hydration of the columns leaves its pipe processing locked: the
+        // column added next would never be hydrated.
+        const expectColumnsToBeHydratedAgain = () => {
+          act(() => apiRef.current!.setFilterModel({ items: [] }));
+          act(() => apiRef.current!.addComputedColumn(half));
+          expect(getFields()).to.include('half');
+        };
+
+        it('should not throw from the type change and keep hydrating the columns', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              initialState={{ computedColumns: { model: [double] }, ...filteredByDouble }}
+            />,
+          );
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', toText, { undoable: true })),
+          ).not.to.throw();
+          expect(getColumn('double').type).to.equal('string');
+          expect(getColumnValuesOf('double')).to.deep.equal(['2!', '4!', '3!']);
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should report the operator at the next filtering, like for a regular column', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              initialState={{ computedColumns: { model: [double] }, ...filteredByDouble }}
+            />,
+          );
+          act(() => apiRef.current!.updateComputedColumn('double', toText));
+          expect(() => act(() => apiRef.current!.updateRows([{ id: 0, price: 5 }]))).to.throw(
+            'No filter operator ">" found for column "double"',
+          );
+          act(() =>
+            apiRef.current!.setFilterModel({
+              items: [{ field: 'double', operator: 'contains', value: '4' }],
+            }),
+          );
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
+        });
+
+        it('should keep the rows when only some of the items can be applied', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              initialState={{
+                computedColumns: {
+                  model: [
+                    double,
+                    {
+                      field: 'triple',
+                      headerName: 'Triple',
+                      formula: '=price * 3',
+                      type: 'number',
+                    },
+                  ],
+                },
+                filter: {
+                  filterModel: {
+                    items: [
+                      { id: 1, field: 'double', operator: '>', value: 0 },
+                      { id: 2, field: 'triple', operator: '>', value: 0 },
+                    ],
+                  },
+                },
+              }}
+            />,
+          );
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', toText)),
+          ).not.to.throw();
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should keep the rows while an item of a regular column can not be applied', async () => {
+          const { setProps } = await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              initialState={{
+                computedColumns: { model: [double] },
+                filter: {
+                  filterModel: {
+                    items: [
+                      { id: 1, field: 'double', operator: '>', value: 0 },
+                      { id: 2, field: 'price', operator: '>', value: 0 },
+                    ],
+                  },
+                },
+              }}
+            />,
+          );
+          // The core keeps the item of a column whose type changes until the next filtering.
+          setProps({ columns: [{ field: 'item' }, { field: 'price', type: 'string' }] });
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' })),
+          ).not.to.throw();
+          expect(getColumnValuesOf('double')).to.deep.equal(['-2', '-4', '-3']);
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should keep the rows while the column of an item has no operators', async () => {
+          const { setProps } = await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              initialState={{ computedColumns: { model: [double] }, ...filteredByDouble }}
+            />,
+          );
+          // The core throws when it filters by a column without operators.
+          setProps({ computedColDef: { filterOperators: [] } });
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' })),
+          ).not.to.throw();
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should keep the rows of the quick filter while an item can not be applied', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              initialState={{
+                computedColumns: { model: [double] },
+                filter: {
+                  filterModel: {
+                    ...filteredByDouble.filter.filterModel,
+                    quickFilterValues: ['a'],
+                  },
+                },
+              }}
+            />,
+          );
+          expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Banana']);
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', toText)),
+          ).not.to.throw();
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should keep the rows when the values of an item do not fit the new type', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              initialState={{
+                computedColumns: { model: [double] },
+                filter: {
+                  // The input of the number operator stores numbers, which the text one trims.
+                  filterModel: { items: [{ field: 'double', operator: 'isAnyOf', value: [2, 4] }] },
+                },
+              }}
+            />,
+          );
+          expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Banana']);
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', toText)),
+          ).not.to.throw();
+          expect(getColumnValuesOf('double')).to.deep.equal(['2!', '4!']);
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should keep the order when the comparator does not fit the new type', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              computedColDef={{ sortComparator: (a: string, b: string) => a.localeCompare(b) }}
+              initialState={{
+                computedColumns: { model: [{ ...double, ...toText }] },
+                ...sortedByDouble,
+              }}
+            />,
+          );
+          expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Cherry', 'Banana']);
+          expect(() =>
+            act(() =>
+              apiRef.current!.updateComputedColumn('double', {
+                type: 'number',
+                formula: '=-price',
+              }),
+            ),
+          ).not.to.throw();
+          expect(getColumnValuesOf('double')).to.deep.equal(['-2', '-3', '-4']);
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should aggregate the rows kept by a filtering that can not be applied', async () => {
+          const { setProps } = await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              formulaFunctions={scaledFunctions(1)}
+              initialState={{
+                computedColumns: {
+                  model: [double, { ...half, formula: '=SCALE(price) / 2' }],
+                },
+                filter: {
+                  filterModel: { items: [{ field: 'double', operator: 'isAnyOf', value: [2, 4] }] },
+                },
+                aggregation: { model: { half: 'sum' } },
+              }}
+            />,
+          );
+          act(() => apiRef.current!.updateComputedColumn('double', toText));
+          expect(getColumnValuesOf('half')).to.deep.equal(['1', '2', '3']);
+          // The getters of the columns stay the same: only the explicit aggregation follows.
+          await act(async () => setProps({ formulaFunctions: scaledFunctions(-1) }));
+          expect(getColumnValuesOf('half')).to.deep.equal(['-1', '-2', '-3']);
+        });
+
+        it('should not throw from the undo and the redo of a type change', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              initialState={{
+                computedColumns: { model: [{ ...double, ...toText }] },
+                filter: {
+                  filterModel: { items: [{ field: 'double', operator: 'contains', value: '4' }] },
+                },
+              }}
+            />,
+          );
+          act(() =>
+            apiRef.current!.updateComputedColumn(
+              'double',
+              { type: 'number', formula: '=price' },
+              { undoable: true },
+            ),
+          );
+          expect(getColumn('double').type).to.equal('number');
+          await act(async () => {
+            await apiRef.current!.history.undo();
+          });
+          // The operator exists again: the rows are filtered with the values of the text type.
+          expect(getColumn('double').type).to.equal('string');
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
+          await act(async () => {
+            await apiRef.current!.history.redo();
+          });
+          expect(getColumn('double').type).to.equal('number');
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should not throw when the grouping column of a computed criterion is filtered', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              defaultGroupingExpansionDepth={-1}
+              initialState={{
+                computedColumns: { model: [double] },
+                rowGrouping: { model: ['double'] },
+                filter: {
+                  filterModel: {
+                    items: [
+                      { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, operator: '>', value: 0 },
+                    ],
+                  },
+                },
+              }}
+            />,
+          );
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', toText)),
+          ).not.to.throw();
+          expectColumnsToBeHydratedAgain();
+        });
+      });
     });
 
     describe('grouping column', () => {
