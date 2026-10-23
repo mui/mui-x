@@ -1,7 +1,7 @@
 import type { Theme } from '@mui/material/styles';
 import { unstable_enhanceDensity as enhanceProDensity } from '@mui/x-charts-pro/density';
 import type { ChartsDensityComponents, DensityEnhancedTheme } from '@mui/x-charts-pro/density';
-import { addRootOverride, getDensitySizing } from '@mui/x-internals/densityTheme';
+import { addStyleOverride, getDensitySizing } from '@mui/x-internals/densityTheme';
 
 // The palette option renders inside the data grid's charts panel and styles
 // itself under the grid's theme name; that key is not typed in this package.
@@ -22,14 +22,12 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const { iconSize } = getDensitySizing(theme);
   const components: ChartsPremiumDensityComponents = enhanced.components;
 
-  addRootOverride(components, 'MuiDataGrid', { gap: spacing('xSmall') }, 'paletteOptionRoot');
+  addStyleOverride(components, 'MuiDataGrid', 'paletteOptionRoot', { gap: spacing('xSmall') });
   // The palette swatch sits where a menu icon would, so it takes the glyph size.
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { width: iconSize, height: iconSize },
-    'paletteOptionIcon',
-  );
+  addStyleOverride(components, 'MuiDataGrid', 'paletteOptionIcon', {
+    width: iconSize,
+    height: iconSize,
+  });
 
   return enhanced;
 }

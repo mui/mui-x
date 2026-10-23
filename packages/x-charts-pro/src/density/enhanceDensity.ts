@@ -1,7 +1,7 @@
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import { unstable_enhanceDensity as enhanceCommunityDensity } from '@mui/x-charts/density';
 import type { ChartsDensityComponents, DensityEnhancedTheme } from '@mui/x-charts/density';
-import { addRootOverride } from '@mui/x-internals/densityTheme';
+import { addStyleOverride } from '@mui/x-internals/densityTheme';
 
 // The heatmap tooltip resolves theme overrides by name, but the charts theme
 // augmentation does not list it, so its key is typed loosely here.
@@ -21,17 +21,12 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const { spacing } = theme;
   const components: ChartsProDensityComponents = enhanced.components;
 
-  addRootOverride(components, 'MuiChartsToolbar', { marginInline: spacing('xxSmall') }, 'divider');
+  addStyleOverride(components, 'MuiChartsToolbar', 'divider', { marginInline: spacing('xxSmall') });
   // Mirrors the community tooltip caption.
-  addRootOverride(
-    components,
-    'MuiChartsHeatmapTooltip',
-    {
-      padding: `${spacing('xxSmall')} ${spacing('small')}`,
-      '& span': { marginRight: spacing('small') },
-    },
-    'axesValue',
-  );
+  addStyleOverride(components, 'MuiChartsHeatmapTooltip', 'axesValue', {
+    padding: `${spacing('xxSmall')} ${spacing('small')}`,
+    '& span': { marginRight: spacing('small') },
+  });
 
   return enhanced;
 }

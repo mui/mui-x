@@ -4,7 +4,7 @@ import { unstable_enhanceDensity as enhanceCommunityDensity } from '@mui/x-data-
 import type { DensityEnhancedTheme } from '@mui/x-data-grid/density';
 import { gridClasses } from '@mui/x-data-grid';
 import { getDensityScale, getDensitySizing, gridDensityHeight } from '@mui/x-data-grid/internals';
-import { addDefaultProps, addRootOverride } from '@mui/x-internals/densityTheme';
+import { addDefaultProps, addStyleOverride } from '@mui/x-internals/densityTheme';
 import type { DataGridProProps } from '../models/dataGridProProps';
 
 // `MuiDataGrid.defaultProps` is typed by whichever tier's theme augmentation a
@@ -44,7 +44,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // `editMultiSelectCell` have class keys but no entry in the root resolver's
   // override list, so their `styleOverrides` keys are dropped; they nest under
   // the root slot instead (all four render inside the root, not in a portal).
-  addRootOverride(components, 'MuiDataGrid', {
+  addStyleOverride(components, 'MuiDataGrid', 'root', {
     [`& .${gridClasses['columnHeader--filter']}`]: {
       paddingBlock: spacing('xxSmall'),
       paddingRight: spacing('xSmall'),
@@ -61,22 +61,17 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
       paddingInline: spacing('xSmall'),
     },
   });
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { marginRight: spacing('xxSmall'), marginBottom: spacing('-xxSmall') },
-    'columnHeaderFilterInput',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { marginRight: spacing('xxSmall') },
-    'columnHeaderFilterOperatorLabel',
-  );
+  addStyleOverride(components, 'MuiDataGrid', 'columnHeaderFilterInput', {
+    marginRight: spacing('xxSmall'),
+    marginBottom: spacing('-xxSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'columnHeaderFilterOperatorLabel', {
+    marginRight: spacing('xxSmall'),
+  });
 
   // Row reorder: master zeroes the handle cell's inset after the shared cell
   // rule, restated here.
-  addRootOverride(components, 'MuiDataGrid', { paddingInline: 0 }, 'rowReorderCellContainer');
+  addStyleOverride(components, 'MuiDataGrid', 'rowReorderCellContainer', { paddingInline: 0 });
 
   // Tree data / grouping toggles: a small icon button (`flex: 0 0 28px` in
   // master) and its gap to the label.
@@ -84,26 +79,19 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     flexBasis: `calc(${touchTarget} - ${spacing('xxSmall')})`,
     marginRight: spacing('medium'),
   };
-  addRootOverride(components, 'MuiDataGrid', toggle, 'treeDataGroupingCellToggle');
-  addRootOverride(components, 'MuiDataGrid', toggle, 'groupingCriteriaCellToggle');
+  addStyleOverride(components, 'MuiDataGrid', 'treeDataGroupingCellToggle', toggle);
+  addStyleOverride(components, 'MuiDataGrid', 'groupingCriteriaCellToggle', toggle);
 
   // Multi-select popover list and the edit autocomplete's inner block inset.
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { padding: spacing('xSmall'), gap: spacing('xxSmall') },
-    'multiSelectCellPopperContent',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    {
-      [`& .${inputBaseClasses.root}.${inputBaseClasses.sizeSmall}`]: {
-        paddingBlock: spacing('xxSmall'),
-      },
-      ...glyph,
+  addStyleOverride(components, 'MuiDataGrid', 'multiSelectCellPopperContent', {
+    padding: spacing('xSmall'),
+    gap: spacing('xxSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'editMultiSelectCellPopperContent', {
+    [`& .${inputBaseClasses.root}.${inputBaseClasses.sizeSmall}`]: {
+      paddingBlock: spacing('xxSmall'),
     },
-    'editMultiSelectCellPopperContent',
-  );
+    ...glyph,
+  });
   return enhanced;
 }

@@ -21,18 +21,15 @@ export type ThemeComponentSlot<
  * user's layer between the two emissions. **Mutates `components` in place** —
  * pass a `components` object the caller owns.
  */
-export function addRootOverride<
+export function addStyleOverride<
   Components extends ThemeComponentsLike,
   Name extends Extract<keyof Components, string>,
-  Slot extends ThemeComponentSlot<Components, Name> = Extract<
-    ThemeComponentSlot<Components, Name>,
-    'root'
-  >,
+  Slot extends ThemeComponentSlot<Components, Name>,
 >(
   components: Components,
   name: Name,
+  slot: Slot,
   overrides: NonNullable<StyleOverridesOf<Components, Name>[Slot]>,
-  slot: Slot = 'root' as Slot,
 ): void {
   const component = components[name] as Record<string, any> | undefined;
   const existing = component?.styleOverrides?.[slot];

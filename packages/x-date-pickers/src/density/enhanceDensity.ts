@@ -2,7 +2,7 @@ import type { Theme } from '@mui/material/styles';
 import { inputLabelClasses } from '@mui/material/InputLabel';
 import { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import { iconButtonClasses } from '@mui/material/IconButton';
-import { addRootOverride, getDensityScale, getDensitySizing } from '@mui/x-internals/densityTheme';
+import { addStyleOverride, getDensityScale, getDensitySizing } from '@mui/x-internals/densityTheme';
 
 /** A theme whose `components` object the enhancer chain owns and can write into. */
 export type DensityEnhancedTheme<T extends Theme> = T & {
@@ -27,24 +27,23 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // master constants, so all of them move together or the grid tears.
   const dayGutter = `calc(${spacing('xxSmall')} / 2)`;
   const dayRow = `calc(${touchTarget} + ${spacing('xxSmall')})`;
-  addRootOverride(components, 'MuiPickerDay', {
+  addStyleOverride(components, 'MuiPickerDay', 'root', {
     '--PickerDay-size': touchTarget,
     '--PickerDay-horizontalMargin': dayGutter,
   });
   const dayLabel = { width: touchTarget, height: dayRow, marginInline: dayGutter };
-  addRootOverride(components, 'MuiDayCalendar', dayLabel, 'weekDayLabel');
-  addRootOverride(components, 'MuiDayCalendar', dayLabel, 'weekNumberLabel');
-  addRootOverride(
-    components,
-    'MuiDayCalendar',
-    { width: touchTarget, height: touchTarget, marginInline: dayGutter },
-    'weekNumber',
-  );
-  addRootOverride(components, 'MuiDayCalendar', { marginBlock: dayGutter }, 'weekContainer');
+  addStyleOverride(components, 'MuiDayCalendar', 'weekDayLabel', dayLabel);
+  addStyleOverride(components, 'MuiDayCalendar', 'weekNumberLabel', dayLabel);
+  addStyleOverride(components, 'MuiDayCalendar', 'weekNumber', {
+    width: touchTarget,
+    height: touchTarget,
+    marginInline: dayGutter,
+  });
+  addStyleOverride(components, 'MuiDayCalendar', 'weekContainer', { marginBlock: dayGutter });
   // Six week rows, the same product master computes from its day constants.
   const weeksHeight = { minHeight: `calc(${dayRow} * 6)` };
-  addRootOverride(components, 'MuiDayCalendar', weeksHeight, 'slideTransition');
-  addRootOverride(components, 'MuiDayCalendar', weeksHeight, 'loadingContainer');
+  addStyleOverride(components, 'MuiDayCalendar', 'slideTransition', weeksHeight);
+  addStyleOverride(components, 'MuiDayCalendar', 'loadingContainer', weeksHeight);
 
   // The calendar view is the header block plus seven rows (weekday labels and
   // six weeks), the sum master hardcodes as its view height (336 = 56 + 7 * 40).
@@ -52,14 +51,14 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // `maxHeight`, so a shorter calendar leaves that row at the clock height.
   const headerBlock = `${spacing('small')} + ${touchTarget} + ${spacing('xxSmall')}`;
   const viewWidth = `max(320px, calc(${dayRow} * 7 + 2 * ${spacing('large')}))`;
-  addRootOverride(components, 'MuiDateCalendar', {
+  addStyleOverride(components, 'MuiDateCalendar', 'root', {
     height: `calc(${headerBlock} + ${dayRow} * 7)`,
     maxHeight: 'none',
     width: viewWidth,
   });
 
   // Calendar header: the bar is as high as its arrow buttons.
-  addRootOverride(components, 'MuiPickersCalendarHeader', {
+  addStyleOverride(components, 'MuiPickersCalendarHeader', 'root', {
     minHeight: touchTarget,
     maxHeight: touchTarget,
     marginTop: spacing('small'),
@@ -67,13 +66,10 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     paddingLeft: spacing('large'),
     paddingRight: spacing('small'),
   });
-  addRootOverride(
-    components,
-    'MuiPickersCalendarHeader',
-    { marginRight: spacing('xSmall') },
-    'label',
-  );
-  addRootOverride(components, 'MuiPickersArrowSwitcher', { width: spacing('large') }, 'spacer');
+  addStyleOverride(components, 'MuiPickersCalendarHeader', 'label', {
+    marginRight: spacing('xSmall'),
+  });
+  addStyleOverride(components, 'MuiPickersArrowSwitcher', 'spacer', { width: spacing('large') });
 
   // Month and year grids: pill buttons twice as wide as they are high.
   const pill = {
@@ -81,16 +77,16 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     width: `calc(${touchTarget} * 2)`,
     borderRadius: `calc(${touchTarget} / 2)`,
   };
-  addRootOverride(components, 'MuiMonthCalendar', {
+  addStyleOverride(components, 'MuiMonthCalendar', 'root', {
     width: viewWidth,
     rowGap: spacing('medium'),
     paddingBlock: spacing('xSmall'),
     variants: [{ props: { monthsPerRow: 3 }, style: { columnGap: spacing('large') } }],
   });
-  addRootOverride(components, 'MuiMonthCalendar', pill, 'button');
+  addStyleOverride(components, 'MuiMonthCalendar', 'button', pill);
   // The four-per-row variant resets the block padding after the base rule, so
   // the block inset is scoped to the three-per-row layout.
-  addRootOverride(components, 'MuiYearCalendar', {
+  addStyleOverride(components, 'MuiYearCalendar', 'root', {
     width: viewWidth,
     rowGap: spacing('small'),
     // The year list fills the calendar view below the header (280 = 7 * 40).
@@ -105,7 +101,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     // The fillers that complete the last row have a slot but no class key.
     '& > div:empty': { height: pill.height, width: pill.width },
   });
-  addRootOverride(components, 'MuiYearCalendar', pill, 'button');
+  addStyleOverride(components, 'MuiYearCalendar', 'button', pill);
 
   // Clock lists: their items are MenuItems, so they ride material's actionable
   // row (`touchTarget` high, no block padding) with the list's own inline inset.
@@ -118,27 +114,20 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     marginBlock: dayGutter,
     marginInline: spacing('xxSmall'),
   };
-  addRootOverride(
-    components,
-    'MuiDigitalClock',
-    { ...clockItem, paddingInline: spacing('medium') },
-    'item',
-  );
-  addRootOverride(
-    components,
-    'MuiMultiSectionDigitalClockSection',
-    {
-      ...clockItem,
-      paddingInline: spacing('xSmall'),
-      '&:first-of-type': { marginTop: spacing('xxSmall') },
-    },
-    'item',
-  );
-  addRootOverride(components, 'MuiClock', { margin: spacing('medium') });
+  addStyleOverride(components, 'MuiDigitalClock', 'item', {
+    ...clockItem,
+    paddingInline: spacing('medium'),
+  });
+  addStyleOverride(components, 'MuiMultiSectionDigitalClockSection', 'item', {
+    ...clockItem,
+    paddingInline: spacing('xSmall'),
+    '&:first-of-type': { marginTop: spacing('xxSmall') },
+  });
+  addStyleOverride(components, 'MuiClock', 'root', { margin: spacing('medium') });
 
   // Toolbars. The landscape padding resets the portrait one after the base
   // rule, so it is restated in the same variant.
-  addRootOverride(components, 'MuiPickersToolbar', {
+  addStyleOverride(components, 'MuiPickersToolbar', 'root', {
     padding: `${spacing('medium')} ${spacing('large')}`,
     variants: [
       { props: { pickerOrientation: 'landscape' }, style: { padding: spacing('medium') } },
@@ -147,17 +136,12 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // The toolbar values are Buttons holding headline text. Material's enhancer
   // gives every medium Button a `touchTarget` height, which clips the headline
   // and drops it below the separators, so the height is released again.
-  addRootOverride(components, 'MuiPickersToolbarButton', { height: 'auto' });
-  addRootOverride(
-    components,
-    'MuiDatePickerToolbar',
-    {
-      variants: [
-        { props: { pickerOrientation: 'landscape' }, style: { marginRight: spacing('medium') } },
-      ],
-    },
-    'title',
-  );
+  addStyleOverride(components, 'MuiPickersToolbarButton', 'root', { height: 'auto' });
+  addStyleOverride(components, 'MuiDatePickerToolbar', 'title', {
+    variants: [
+      { props: { pickerOrientation: 'landscape' }, style: { marginRight: spacing('medium') } },
+    ],
+  });
   const toolbarSeparator = { marginLeft: dayGutter, marginRight: spacing('xxSmall') };
   // The landscape am/pm block resets the inline margins after the base rule.
   const ampmSelection = {
@@ -169,9 +153,9 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
       },
     ],
   };
-  addRootOverride(components, 'MuiTimePickerToolbar', toolbarSeparator, 'separator');
-  addRootOverride(components, 'MuiTimePickerToolbar', ampmSelection, 'ampmSelection');
-  addRootOverride(components, 'MuiDateTimePickerToolbar', {
+  addStyleOverride(components, 'MuiTimePickerToolbar', 'separator', toolbarSeparator);
+  addStyleOverride(components, 'MuiTimePickerToolbar', 'ampmSelection', ampmSelection);
+  addStyleOverride(components, 'MuiDateTimePickerToolbar', 'root', {
     paddingInline: spacing('medium'),
     variants: [
       {
@@ -180,26 +164,18 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
       },
     ],
   });
-  addRootOverride(
-    components,
-    'MuiDateTimePickerToolbar',
-    {
-      variants: [
-        {
-          props: { toolbarVariant: 'desktop', pickerOrientation: 'portrait' },
-          style: { gap: spacing('xSmall'), marginRight: spacing('xxSmall') },
-        },
-      ],
-    },
-    'timeContainer',
-  );
-  addRootOverride(
-    components,
-    'MuiDateTimePickerToolbar',
-    { variants: [{ props: { toolbarVariant: 'mobile' }, style: toolbarSeparator }] },
-    'separator',
-  );
-  addRootOverride(components, 'MuiDateTimePickerToolbar', ampmSelection, 'ampmSelection');
+  addStyleOverride(components, 'MuiDateTimePickerToolbar', 'timeContainer', {
+    variants: [
+      {
+        props: { toolbarVariant: 'desktop', pickerOrientation: 'portrait' },
+        style: { gap: spacing('xSmall'), marginRight: spacing('xxSmall') },
+      },
+    ],
+  });
+  addStyleOverride(components, 'MuiDateTimePickerToolbar', 'separator', {
+    variants: [{ props: { toolbarVariant: 'mobile' }, style: toolbarSeparator }],
+  });
+  addStyleOverride(components, 'MuiDateTimePickerToolbar', 'ampmSelection', ampmSelection);
 
   // Fields. Material's enhancer places every form control label through
   // `--_restY` / `--_shrinkY` / `--_inlinePad`, read with no fallback, and only
@@ -215,7 +191,7 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   // field size; in master a medium button is exactly as high as a small field,
   // so the small field sizes its adornment buttons to material's small box.
   const smallBox = `calc(${touchTarget} - ${spacing('xxSmall')})`;
-  addRootOverride(components, 'MuiPickersInputBase', {
+  addStyleOverride(components, 'MuiPickersInputBase', 'root', {
     variants: [
       {
         props: { inputSize: 'small' },
@@ -228,37 +204,27 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
       },
     ],
   });
-  addRootOverride(
-    components,
-    'MuiPickersInputBase',
-    {
-      paddingBlock: padBlock,
-      variants: [{ props: { inputSize: 'small' }, style: { paddingBlock: padBlockSmall } }],
-    },
-    'sectionsContainer',
-  );
+  addStyleOverride(components, 'MuiPickersInputBase', 'sectionsContainer', {
+    paddingBlock: padBlock,
+    variants: [{ props: { inputSize: 'small' }, style: { paddingBlock: padBlockSmall } }],
+  });
 
-  addRootOverride(components, 'MuiPickersOutlinedInput', {
+  addStyleOverride(components, 'MuiPickersOutlinedInput', 'root', {
     paddingInline: spacing('small'),
     [label]: { '--_restY': padBlock, '--_inlinePad': inlinePad },
     variants: [
       { props: { inputSize: 'small' }, style: { [label]: { '--_restY': padBlockSmall } } },
     ],
   });
-  addRootOverride(
-    components,
-    'MuiPickersOutlinedInput',
-    {
-      paddingBlock: padBlock,
-      variants: [{ props: { inputSize: 'small' }, style: { paddingBlock: padBlockSmall } }],
-    },
-    'sectionsContainer',
-  );
+  addStyleOverride(components, 'MuiPickersOutlinedInput', 'sectionsContainer', {
+    paddingBlock: padBlock,
+    variants: [{ props: { inputSize: 'small' }, style: { paddingBlock: padBlockSmall } }],
+  });
 
   // Filled: the label takes `medium` above the value.
   const filledPadTop = `calc(${spacing('medium')} + (${touchTarget} - 1lh) / 2)`;
   const filledPadTopSmall = `calc(${spacing('medium')} + (${touchTarget} - 1lh) / 4)`;
-  addRootOverride(components, 'MuiPickersFilledInput', {
+  addStyleOverride(components, 'MuiPickersFilledInput', 'root', {
     [label]: {
       '--_restY': `calc((${filledPadTop} + ${padBlock}) / 2)`,
       '--_shrinkY': '6px',
@@ -278,32 +244,27 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
       { props: { hasEndAdornment: true }, style: { paddingRight: spacing('small') } },
     ],
   });
-  addRootOverride(
-    components,
-    'MuiPickersFilledInput',
-    {
-      paddingTop: filledPadTop,
-      paddingBottom: padBlock,
-      paddingInline: spacing('small'),
-      variants: [
-        {
-          props: { inputSize: 'small' },
-          style: { paddingTop: filledPadTopSmall, paddingBottom: padBlockSmall },
-        },
-        { props: { hasStartAdornment: true }, style: { paddingLeft: 0 } },
-        { props: { hasEndAdornment: true }, style: { paddingRight: 0 } },
-        { props: { hiddenLabel: true }, style: { paddingBlock: padBlock } },
-        {
-          props: { hiddenLabel: true, inputSize: 'small' },
-          style: { paddingBlock: padBlockSmall },
-        },
-      ],
-    },
-    'sectionsContainer',
-  );
+  addStyleOverride(components, 'MuiPickersFilledInput', 'sectionsContainer', {
+    paddingTop: filledPadTop,
+    paddingBottom: padBlock,
+    paddingInline: spacing('small'),
+    variants: [
+      {
+        props: { inputSize: 'small' },
+        style: { paddingTop: filledPadTopSmall, paddingBottom: padBlockSmall },
+      },
+      { props: { hasStartAdornment: true }, style: { paddingLeft: 0 } },
+      { props: { hasEndAdornment: true }, style: { paddingRight: 0 } },
+      { props: { hiddenLabel: true }, style: { paddingBlock: padBlock } },
+      {
+        props: { hiddenLabel: true, inputSize: 'small' },
+        style: { paddingBlock: padBlockSmall },
+      },
+    ],
+  });
 
   // Standard: the label sits in the margin above the underline.
-  addRootOverride(components, 'MuiPickersInput', {
+  addStyleOverride(components, 'MuiPickersInput', 'root', {
     'label + &': { marginTop: spacing('small') },
     [label]: { '--_restY': `calc(${spacing('small')} + ${padBlock})` },
     variants: [

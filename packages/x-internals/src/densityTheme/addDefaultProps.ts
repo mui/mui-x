@@ -1,5 +1,5 @@
 import deepmerge from '@mui/utils/deepmerge';
-import type { ThemeComponentsLike } from './addRootOverride';
+import type { ThemeComponentsLike } from './addStyleOverride';
 
 // Copied from `@mui/material`'s `enhanceDensity`, which keeps it private (9.6.0).
 type DefaultPropsOf<Components extends ThemeComponentsLike, Name extends keyof Components> =
@@ -10,7 +10,7 @@ type DefaultPropsOf<Components extends ThemeComponentsLike, Name extends keyof C
 /**
  * Attach theme `defaultProps`, the consuming theme's own defaults winning — for
  * values CSS cannot reach (those that feed component JS). **Mutates
- * `components` in place** — same contract as `addRootOverride`.
+ * `components` in place** — same contract as `addStyleOverride`.
  */
 export function addDefaultProps<
   Components extends ThemeComponentsLike,

@@ -1,7 +1,7 @@
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import {
   addDefaultProps,
-  addRootOverride,
+  addStyleOverride,
   getDensityScale,
   getDensitySizing,
 } from '@mui/x-internals/densityTheme';
@@ -56,28 +56,23 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
     paddingLeft: `calc(${spacing('xSmall')} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth, 0))`,
     gap: spacing('xSmall'),
   };
-  addRootOverride(components, 'MuiTreeItem', row, 'content');
-  addRootOverride(
-    components,
-    'MuiTreeItem',
-    { width: iconSize, '& svg': { fontSize: iconSize } },
-    'iconContainer',
-  );
+  addStyleOverride(components, 'MuiTreeItem', 'content', row);
+  addStyleOverride(components, 'MuiTreeItem', 'iconContainer', {
+    width: iconSize,
+    '& svg': { fontSize: iconSize },
+  });
   // The item checkbox is a material Checkbox that master sizes to its glyph
   // (no padding). Material's enhancer gives every Checkbox a `touchTarget`
   // box, which the row then squeezes, so the box follows the glyph again.
-  addRootOverride(components, 'MuiTreeItem', { width: iconSize, height: iconSize }, 'checkbox');
+  addStyleOverride(components, 'MuiTreeItem', 'checkbox', { width: iconSize, height: iconSize });
   // The editable label and its inline input share a 2px inset so the text
   // does not move on edit; it is half the smallest step.
   const editInset = `calc(${spacing('xxSmall')} / 2)`;
-  addRootOverride(
-    components,
-    'MuiTreeItem',
-    { variants: [{ props: { editable: true }, style: { paddingLeft: editInset } }] },
-    'label',
-  );
-  addRootOverride(components, 'MuiTreeItem', { paddingInline: editInset }, 'labelInput');
-  addRootOverride(components, 'MuiTreeItemLoader', {
+  addStyleOverride(components, 'MuiTreeItem', 'label', {
+    variants: [{ props: { editable: true }, style: { paddingLeft: editInset } }],
+  });
+  addStyleOverride(components, 'MuiTreeItem', 'labelInput', { paddingInline: editInset });
+  addStyleOverride(components, 'MuiTreeItemLoader', 'root', {
     ...row,
     [`& .${treeItemLoaderClasses.iconContainer}`]: { width: iconSize },
   });

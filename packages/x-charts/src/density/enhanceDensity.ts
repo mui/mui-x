@@ -1,6 +1,6 @@
 import type { CSSInterpolation, Theme } from '@mui/material/styles';
 import type {} from '../themeAugmentation';
-import { addRootOverride, getDensityScale, getDensitySizing } from '@mui/x-internals/densityTheme';
+import { addStyleOverride, getDensityScale, getDensitySizing } from '@mui/x-internals/densityTheme';
 import { labelMarkClasses } from '../ChartsLabel/labelMarkClasses';
 import { legendClasses } from '../ChartsLegend/chartsLegendClasses';
 import { piecewiseColorLegendClasses } from '../ChartsLegend/piecewiseColorLegendClasses';
@@ -39,13 +39,13 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   const { touchTarget, iconSize } = getDensitySizing(theme);
   const halfStep = `calc(${spacing('xxSmall')} / 2)`;
 
-  addRootOverride(components, 'MuiChartsAxisHighlightValue', {
+  addStyleOverride(components, 'MuiChartsAxisHighlightValue', 'root', {
     padding: `${spacing('xxSmall')} ${spacing('xSmall')}`,
   });
 
   // Legend and tooltip marks are glyphs, so they step off `iconSize` (master's
   // 14 / 16x8 / 13 / 15 at the default 16).
-  addRootOverride(components, 'MuiChartsLabelMark', {
+  addStyleOverride(components, 'MuiChartsLabelMark', 'root', {
     width: `calc(${iconSize} - 2px)`,
     height: `calc(${iconSize} - 2px)`,
     [`&.${labelMarkClasses.line}`]: { width: iconSize, height: `calc(${iconSize} / 2)` },
@@ -60,16 +60,16 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   });
 
   const legendBox = { marginBlock: spacing('xSmall'), marginInline: spacing('xSmall') };
-  addRootOverride(components, 'MuiChartsLegend', {
+  addStyleOverride(components, 'MuiChartsLegend', 'root', {
     ...legendBox,
     gap: spacing('medium'),
     [`& .${legendClasses.series}`]: { gap: spacing('xSmall') },
   });
-  addRootOverride(components, 'MuiContinuousColorLegend', {
+  addStyleOverride(components, 'MuiContinuousColorLegend', 'root', {
     ...legendBox,
     gap: spacing('xxSmall'),
   });
-  addRootOverride(components, 'MuiPiecewiseColorLegend', {
+  addStyleOverride(components, 'MuiPiecewiseColorLegend', 'root', {
     ...legendBox,
     gap: spacing('xxSmall'),
     [`.${piecewiseColorLegendClasses.item}`]: { gap: spacing('xxSmall') },
@@ -80,44 +80,29 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   });
 
   // Tooltip table: the mark column holds a mark plus a gutter.
-  addRootOverride(
-    components,
-    'MuiChartsTooltip',
-    {
-      [`& .${chartsTooltipClasses.markContainer}`]: {
-        width: `calc(${iconSize} + ${spacing('xxSmall')} + ${spacing('small')})`,
-      },
-      '& caption': {
-        padding: `${spacing('xxSmall')} ${spacing('small')}`,
-        '& span': { marginRight: spacing('small') },
-      },
+  addStyleOverride(components, 'MuiChartsTooltip', 'table', {
+    [`& .${chartsTooltipClasses.markContainer}`]: {
+      width: `calc(${iconSize} + ${spacing('xxSmall')} + ${spacing('small')})`,
     },
-    'table',
-  );
-  addRootOverride(
-    components,
-    'MuiChartsTooltip',
-    {
-      'tr:first-of-type& td': { paddingTop: spacing('xxSmall') },
-      'tr:last-of-type& td': { paddingBottom: spacing('xxSmall') },
+    '& caption': {
+      padding: `${spacing('xxSmall')} ${spacing('small')}`,
+      '& span': { marginRight: spacing('small') },
     },
-    'row',
-  );
+  });
+  addStyleOverride(components, 'MuiChartsTooltip', 'row', {
+    'tr:first-of-type& td': { paddingTop: spacing('xxSmall') },
+    'tr:last-of-type& td': { paddingBottom: spacing('xxSmall') },
+  });
   // Same selector order as master, so the first and last cell insets still win.
-  addRootOverride(
-    components,
-    'MuiChartsTooltip',
-    {
-      [`&.${chartsTooltipClasses.cell}`]: { paddingInline: spacing('xSmall') },
-      [`&.${chartsTooltipClasses.valueCell}`]: { paddingInline: spacing('small') },
-      'td:first-of-type&, th:first-of-type&': { paddingLeft: spacing('small') },
-      'td:last-of-type&, th:last-of-type&': { paddingRight: spacing('small') },
-    },
-    'cell',
-  );
+  addStyleOverride(components, 'MuiChartsTooltip', 'cell', {
+    [`&.${chartsTooltipClasses.cell}`]: { paddingInline: spacing('xSmall') },
+    [`&.${chartsTooltipClasses.valueCell}`]: { paddingInline: spacing('small') },
+    'td:first-of-type&, th:first-of-type&': { paddingLeft: spacing('small') },
+    'td:last-of-type&, th:last-of-type&': { paddingRight: spacing('small') },
+  });
 
   // Toolbar: a bar as high as its IconButtons plus its own block padding.
-  addRootOverride(components, 'MuiChartsToolbar', {
+  addStyleOverride(components, 'MuiChartsToolbar', 'root', {
     gap: halfStep,
     padding: spacing('xxSmall'),
     marginBottom: spacing('small'),

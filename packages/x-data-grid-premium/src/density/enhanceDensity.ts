@@ -4,7 +4,7 @@ import { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import { unstable_enhanceDensity as enhanceProDensity } from '@mui/x-data-grid-pro/density';
 import type { DensityEnhancedTheme } from '@mui/x-data-grid-pro/density';
 import { getDensitySizing } from '@mui/x-data-grid/internals';
-import { addRootOverride } from '@mui/x-internals/densityTheme';
+import { addStyleOverride } from '@mui/x-internals/densityTheme';
 
 /**
  * Make the Data Grid Premium density-aware: the Pro enhancer first (which runs
@@ -34,156 +34,101 @@ export function enhanceDensity<T extends Theme>(theme: T): DensityEnhancedTheme<
   };
 
   // Pivot panel (sidebar).
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    {
-      height: bar,
-      gap: spacing('xSmall'),
-      padding: `0 ${spacing('xSmall')}`,
-      ...glyph,
-    },
-    'pivotPanelHeader',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { padding: `0 ${spacing('xSmall')} ${spacing('xSmall')}`, ...searchField },
-    'pivotPanelSearchContainer',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { margin: `${spacing('xxSmall')} ${spacing('xSmall')}` },
-    'pivotPanelSection',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { marginRight: spacing('small'), gap: spacing('xSmall') },
-    'pivotPanelSectionTitle',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { paddingBlock: spacing('xxSmall') },
-    'pivotPanelFieldList',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { minHeight: touchTarget, paddingInline: spacing('xSmall') },
-    'pivotPanelPlaceholder',
-  );
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelHeader', {
+    height: bar,
+    gap: spacing('xSmall'),
+    padding: `0 ${spacing('xSmall')}`,
+    ...glyph,
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelSearchContainer', {
+    padding: `0 ${spacing('xSmall')} ${spacing('xSmall')}`,
+    ...searchField,
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelSection', {
+    margin: `${spacing('xxSmall')} ${spacing('xSmall')}`,
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelSectionTitle', {
+    marginRight: spacing('small'),
+    gap: spacing('xSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelFieldList', {
+    paddingBlock: spacing('xxSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelPlaceholder', {
+    minHeight: touchTarget,
+    paddingInline: spacing('xSmall'),
+  });
   // Field row: the interactive box high; `marginInlineStart` pulls the row off
   // the sidebar edge so the hover drag handle gets room.
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    {
-      height: touchTarget,
-      padding: `0 ${spacing('xSmall')} 0 ${spacing('medium')}`,
-      gap: spacing('xxSmall'),
-      marginInlineStart: spacing('xSmall'),
-      ...glyph,
-    },
-    'pivotPanelField',
-  );
-  addRootOverride(components, 'MuiDataGrid', { width: iconSize }, 'pivotPanelFieldDragIcon');
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { marginLeft: spacing('-xSmall') },
-    'pivotPanelFieldCheckbox',
-  );
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelField', {
+    height: touchTarget,
+    padding: `0 ${spacing('xSmall')} 0 ${spacing('medium')}`,
+    gap: spacing('xxSmall'),
+    marginInlineStart: spacing('xSmall'),
+    ...glyph,
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelFieldDragIcon', { width: iconSize });
+  addStyleOverride(components, 'MuiDataGrid', 'pivotPanelFieldCheckbox', {
+    marginLeft: spacing('-xSmall'),
+  });
 
   // AI assistant panel.
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { height: bar, padding: `0 ${spacing('xSmall')} 0 ${spacing('medium')}`, ...glyph },
-    'aiAssistantPanelHeader',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { marginTop: spacing('xxSmall') },
-    'aiAssistantPanelTitle',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { marginTop: spacing('-xxSmall') },
-    'aiAssistantPanelConversationTitle',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { gap: spacing('xSmall'), padding: spacing('xSmall') },
-    'aiAssistantPanelFooter',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { gap: spacing('xSmall') },
-    'aiAssistantPanelSuggestions',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { gap: spacing('xSmall'), padding: spacing('xSmall'), margin: spacing('-xSmall') },
-    'aiAssistantPanelSuggestionsList',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { gap: spacing('xSmall'), paddingLeft: spacing('xxSmall') },
-    'aiAssistantPanelSuggestionsLabel',
-  );
+  addStyleOverride(components, 'MuiDataGrid', 'aiAssistantPanelHeader', {
+    height: bar,
+    padding: `0 ${spacing('xSmall')} 0 ${spacing('medium')}`,
+    ...glyph,
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'aiAssistantPanelTitle', {
+    marginTop: spacing('xxSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'aiAssistantPanelConversationTitle', {
+    marginTop: spacing('-xxSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'aiAssistantPanelFooter', {
+    gap: spacing('xSmall'),
+    padding: spacing('xSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'aiAssistantPanelSuggestions', {
+    gap: spacing('xSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'aiAssistantPanelSuggestionsList', {
+    gap: spacing('xSmall'),
+    padding: spacing('xSmall'),
+    margin: spacing('-xSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'aiAssistantPanelSuggestionsLabel', {
+    gap: spacing('xSmall'),
+    paddingLeft: spacing('xxSmall'),
+  });
   // Prompt entries in the conversation.
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { padding: `${spacing('xSmall')} ${spacing('small')}`, ...glyph },
-    'prompt',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    {
-      width: `calc(${touchTarget} + ${spacing('xxSmall')})`,
-      height: `calc(${touchTarget} + ${spacing('xxSmall')})`,
-      marginRight: spacing('small'),
-    },
-    'promptIconContainer',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { gap: spacing('xxSmall'), marginTop: spacing('xSmall') },
-    'promptChangeList',
-  );
-  addRootOverride(components, 'MuiDataGrid', { gap: spacing('xxSmall') }, 'promptChangesToggle');
+  addStyleOverride(components, 'MuiDataGrid', 'prompt', {
+    padding: `${spacing('xSmall')} ${spacing('small')}`,
+    ...glyph,
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'promptIconContainer', {
+    width: `calc(${touchTarget} + ${spacing('xxSmall')})`,
+    height: `calc(${touchTarget} + ${spacing('xxSmall')})`,
+    marginRight: spacing('small'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'promptChangeList', {
+    gap: spacing('xxSmall'),
+    marginTop: spacing('xSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'promptChangesToggle', { gap: spacing('xxSmall') });
 
   // Actionable rows (collapsible trigger, formula bar): the interactive box
   // high, inline inset only.
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { height: touchTarget, paddingInline: spacing('small') },
-    'collapsibleTrigger',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { minHeight: touchTarget, paddingInline: spacing('xSmall'), gap: spacing('xSmall') },
-    'formulaBar',
-  );
-  addRootOverride(
-    components,
-    'MuiDataGrid',
-    { marginInlineEnd: spacing('xSmall') },
-    'formulaColumnHeaderLetter',
-  );
+  addStyleOverride(components, 'MuiDataGrid', 'collapsibleTrigger', {
+    height: touchTarget,
+    paddingInline: spacing('small'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'formulaBar', {
+    minHeight: touchTarget,
+    paddingInline: spacing('xSmall'),
+    gap: spacing('xSmall'),
+  });
+  addStyleOverride(components, 'MuiDataGrid', 'formulaColumnHeaderLetter', {
+    marginInlineEnd: spacing('xSmall'),
+  });
   return enhanced;
 }
