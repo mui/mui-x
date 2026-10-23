@@ -8,7 +8,6 @@ This library is structured into multiple entrypoints to allow for modular usage:
 
 - `@mui/x-internal-gestures/core`: The core gesture detection library
 - `@mui/x-internal-gestures/testing`: Utilities for simulating gestures in tests
-- `@mui/x-internal-gestures/matchers`: Vitest matchers for testing gestures
 
 ### [Core](./src/core/README.md)
 
@@ -17,10 +16,6 @@ The core library for detecting and handling user gestures in web applications. I
 ### [Testing](./src/testing/README.md))
 
 Utilities for simulating user gestures in browser testing environments. This works alongside `core` to make it easy to test gesture interactions.
-
-### [Matchers](./src/matchers/README.md))
-
-Vitest matchers for testing gestures, making it easier to ensure gesture implementations behave as expected.
 
 ## Supported Gestures
 
