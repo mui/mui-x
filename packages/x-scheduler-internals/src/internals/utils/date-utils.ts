@@ -1,15 +1,13 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import type { PlainDate } from './base-temporal/PlainDate';
-import { getStartOfWeek as getStartOfWeekDayNumber } from './base-temporal/PlainDate';
-import { toDayNumber } from './base-temporal/iso';
+import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
 import {
   buildTemporalPlainDate,
   createEndOfPlainDate,
   createStartOfPlainDate,
 } from './plain-date-utils/adapter';
-import { addDaysToPlainDate, plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
 
 /**
  * Builds an adapter-agnostic format string that produces an ISO 8601 date.
@@ -141,7 +139,7 @@ function getWeekStartPlainDate(
   const plainDate = buildTemporalPlainDate(adapter, date);
   if (weekStartsOn === undefined) {
     // The adapter numbers the days of the week from 1, starting on the first day of the locale.
-    return addDaysToPlainDate(plainDate, 1 - adapter.getDayOfWeek(date));
+    return plainDate.add({ days: 1 - adapter.getDayOfWeek(date) });
   }
   checkWeekStartsOn(weekStartsOn);
   // `weekStartsOn` and ISO weekdays agree, except for Sunday (0 and 7), which both accept.
@@ -174,10 +172,7 @@ export function getEndOfWeek(
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,
 ): TemporalSupportedObject {
-  const weekEndPlainDate = addDaysToPlainDate(
-    getWeekStartPlainDate(adapter, date, weekStartsOn),
-    6,
-  );
+  const weekEndPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn).add({ days: 6 });
   return createEndOfPlainDate(adapter, weekEndPlainDate, adapter.getTimezone(date));
 }
 
@@ -200,8 +195,10 @@ export function getWeekNumber(
   }
   const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
   // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.
-  // `toDayNumber()` doesn't check the range, so the last week of 9999 gets a number.
-  const year = addDaysToPlainDate(weekStartPlainDate, 3).year;
-  const firstWeekStart = getStartOfWeekDayNumber(toDayNumber(year, 1, 4), weekStartsOn);
+  const year = weekStartPlainDate.add({ days: 3 }).year;
+  const firstWeekStart = getStartOfWeekDayNumber(
+    PlainDate.from({ year, month: 1, day: 4 }).dayNumber,
+    weekStartsOn,
+  );
   return (weekStartPlainDate.dayNumber - firstWeekStart) / 7 + 1;
 }

@@ -6,10 +6,7 @@ import {
   createProcessedDate,
 } from '../internals/utils/plain-date-utils/adapter';
 import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
-import {
-  addDaysToPlainDate,
-  isWeekendPlainDate,
-} from '../internals/utils/plain-date-utils/plainDate';
+import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 
 export function getDayList(parameters: GetDaytListParameters): GetDaytListReturnValue {
   const { adapter, start, end, excludeWeekends } = parameters;
@@ -47,16 +44,12 @@ export function getDayListFromPlainDates(parameters: {
 }): GetDaytListReturnValue {
   const { adapter, firstPlainDate, lastPlainDate, timezone, excludeWeekends } = parameters;
   // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, has no instant.
-  const skippedDays = getSkippedDays(
-    firstPlainDate,
-    addDaysToPlainDate(lastPlainDate, 1),
-    timezone,
-  );
+  const skippedDays = getSkippedDays(firstPlainDate, lastPlainDate.add({ days: 1 }), timezone);
   const days: SchedulerProcessedDate[] = [];
   for (
     let plainDate = firstPlainDate;
     plainDate.dayNumber <= lastPlainDate.dayNumber;
-    plainDate = addDaysToPlainDate(plainDate, 1)
+    plainDate = plainDate.add({ days: 1 })
   ) {
     if (
       !skippedDays.has(plainDate.dayNumber) &&

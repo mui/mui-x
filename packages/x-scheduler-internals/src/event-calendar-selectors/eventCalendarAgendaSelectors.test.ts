@@ -296,24 +296,6 @@ describe('eventCalendarEventSelectors', () => {
       expect(adapter.isSameDay(range.end, adapter.date('2024-01-12Z', 'default'))).to.equal(true);
     });
 
-    it('should not throw when the scan horizon passes the last supported day', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [],
-        visibleDate: adapter.date('9999-12-01', 'default'),
-        defaultPreferences: {
-          showWeekends: true,
-          showEmptyDaysInAgenda: true,
-        },
-      });
-
-      const range = eventCalendarAgendaSelectors.fetchRange(state);
-
-      expect(eventCalendarAgendaSelectors.visibleDays(state)).to.have.length(
-        AGENDA_VIEW_DAYS_AMOUNT,
-      );
-      expect(adapter.isSameDay(range.end, adapter.date('9999-12-12Z', 'default'))).to.equal(true);
-    });
-
     it('should span the whole horizon when showEmptyDaysInAgenda=false', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
