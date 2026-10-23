@@ -595,7 +595,9 @@ export const useGridCellEditing = (
   useGridApiMethod(apiRef, editingApi, 'public');
   useGridApiMethod(apiRef, editingPrivateApi, 'private');
 
-  React.useEffect(() => {
+  // Apply the controlled model before the browser inserts the typed character.
+  // With a passive effect, the edit state is created too late, and the editor ignores the first key.
+  useEnhancedEffect(() => {
     if (cellModesModelProp) {
       updateCellModesModel(cellModesModelProp);
     }
