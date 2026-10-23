@@ -176,19 +176,17 @@ export function applyRecurringUpdateAll(
   const seriesStartPlainDate = buildTemporalPlainDate(adapter, seriesStart.value);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
-  // 3) Decide new start/end: editing the first occurrence can move DTSTART to another date.
-  // Otherwise, only the time changes, merged into the original date.
+  // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
+  // can move DTSTART to another date. Otherwise, only the time changes, merged into the original date.
   if (changes.start != null) {
-    eventUpdatedProperties.start =
-      touchedStartDate && editedIsDtstart
-        ? changes.start
-        : moveToPlainDate(adapter, changes.start, seriesStartPlainDate);
+    eventUpdatedProperties.start = editedIsDtstart
+      ? changes.start
+      : moveToPlainDate(adapter, changes.start, seriesStartPlainDate);
   }
   if (changes.end != null) {
-    eventUpdatedProperties.end =
-      touchedEndDate && editedIsDtstart
-        ? changes.end
-        : moveToPlainDate(adapter, changes.end, buildTemporalPlainDate(adapter, seriesEnd.value));
+    eventUpdatedProperties.end = editedIsDtstart
+      ? changes.end
+      : moveToPlainDate(adapter, changes.end, buildTemporalPlainDate(adapter, seriesEnd.value));
   }
 
   // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not

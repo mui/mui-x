@@ -660,6 +660,35 @@ describe('recurring-events/updateRecurringEvent', () => {
       },
     );
 
+    it('should keep the instants of a repeated time when editing the first occurrence', () => {
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: 02:00 to 03:00 comes twice.
+      const original = EventBuilder.new(adapter)
+        .span('2026-10-25T00:30:00Z', '2026-10-25T01:15:00Z') // the first 02:30, the second 02:15
+        .withDataTimezone('Europe/Paris')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const inParis = (value: string) =>
+        adapter.setTimezone(adapter.date(value, 'default'), 'Europe/Paris');
+
+      const updated = applyRecurringUpdateAll(
+        adapter,
+        original,
+        original.dataTimezone.start.value,
+        {
+          id: original.id,
+          start: inParis('2026-10-25T01:05:00Z'), // the second 02:05
+          end: inParis('2026-10-25T01:20:00Z'), // the second 02:20
+        },
+      );
+
+      expect(adapter.toJsDate(updated.updated![0].start!).toISOString()).to.equal(
+        '2026-10-25T01:05:00.000Z',
+      );
+      expect(adapter.toJsDate(updated.updated![0].end!).toISOString()).to.equal(
+        '2026-10-25T01:20:00.000Z',
+      );
+    });
+
     it('should use the rrule provided in changes when present', () => {
       const occurrenceStart = defaultEvent.dataTimezone.start.value;
       const changes: SchedulerEventUpdatedProperties = {
