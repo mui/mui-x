@@ -175,6 +175,17 @@ To pass props directly to the `InputComponent` and not its wrapper, you can use 
 
 {{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
 
+### Customize the column input
+
+Use the `filterFormColumnInput` slot to replace the column selector of each filter form.
+The slot gets the list of `columns` that the user can select and the selected field as `value`.
+Call `onChange` with the new field to update the filter item.
+The grid then keeps or resets the operator and value, the same as with the default selector.
+
+The demo below uses an Autocomplete to make it easier to find a column in a long list.
+
+{{"demo": "CustomFilterColumnInput.js", "bg": "inline"}}
+
 ### Customize the filter panel position
 
 The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.

@@ -5,7 +5,8 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { hasOccurrenceBefore, hasRemainingOccurrence } from './seriesOccurrence';
+import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { RecurringSeries } from './RecurringSeries';
 
 export function deleteRecurringEvent(
   adapter: Adapter,
@@ -52,7 +53,7 @@ export function applyRecurringDeleteOnlyThis(
     adapter.startOfDay(occurrenceStart),
   ];
 
-  if (!hasRemainingOccurrence(adapter, originalEvent, exDates)) {
+  if (!RecurringSeries.fromEvent(adapter, originalEvent, exDates).hasOccurrence()) {
     return { deleted: [originalEvent.id] };
   }
 
@@ -72,7 +73,8 @@ export function applyRecurringDeleteFollowing(
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
-  if (!hasOccurrenceBefore(adapter, originalEvent, occurrenceStart)) {
+  const occurrencePlainDate = buildTemporalPlainDate(adapter, occurrenceStart);
+  if (!RecurringSeries.fromEvent(adapter, originalEvent).hasOccurrenceBefore(occurrencePlainDate)) {
     return { deleted: [originalEvent.id] };
   }
 

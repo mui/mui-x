@@ -4,6 +4,7 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
@@ -38,6 +39,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
+  const isRtl = useDirection() === 'rtl';
   const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
@@ -100,6 +102,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       columnCount: cellsRefs.current.length,
       rowTypes,
       rowsPerType,
+      isRtl,
     });
     if (target) {
       event.preventDefault();

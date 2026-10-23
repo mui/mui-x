@@ -27,18 +27,51 @@ export function getEdgeScrollDelta(position: number, start: number, end: number)
   return 0;
 }
 
+// A long press starts the drag in place, maybe inside an edge scroll zone.
+// Auto-scroll waits until the pointer moves this far, so picking up an item at an edge doesn't scroll.
+const AUTO_SCROLL_ACTIVATION_DISTANCE = 10;
+
 /**
- * Returns the vertical bounds of the part of the page on screen, in client coordinates.
+ * Returns whether the pointer moved far enough from where the drag started for auto-scroll to begin.
+ * @param {number} startX The horizontal position where the drag started.
+ * @param {number} startY The vertical position where the drag started.
+ * @param {number} clientX The current horizontal position.
+ * @param {number} clientY The current vertical position.
+ * @returns {boolean} `true` once the pointer left the activation distance.
+ */
+export function hasReachedAutoScrollDistance(
+  startX: number,
+  startY: number,
+  clientX: number,
+  clientY: number,
+): boolean {
+  return Math.hypot(clientX - startX, clientY - startY) > AUTO_SCROLL_ACTIVATION_DISTANCE;
+}
+
+export interface VisibleViewportBounds {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+
+/**
+ * Returns the bounds of the part of the page on screen, in client coordinates.
  * With pinch zoom, the visual viewport is smaller than the layout viewport that client coordinates refer to.
  * @param {Window} win The window of the dragged element.
- * @returns {{ top: number; bottom: number }} The top and bottom edges on screen.
+ * @returns {VisibleViewportBounds} The edges on screen.
  */
-export function getVisibleViewportBounds(win: Window): { top: number; bottom: number } {
+export function getVisibleViewportBounds(win: Window): VisibleViewportBounds {
   const viewport = win.visualViewport;
   if (viewport) {
-    return { top: viewport.offsetTop, bottom: viewport.offsetTop + viewport.height };
+    return {
+      top: viewport.offsetTop,
+      bottom: viewport.offsetTop + viewport.height,
+      left: viewport.offsetLeft,
+      right: viewport.offsetLeft + viewport.width,
+    };
   }
-  return { top: 0, bottom: win.innerHeight };
+  return { top: 0, bottom: win.innerHeight, left: 0, right: win.innerWidth };
 }
 
 export interface DragPreview {

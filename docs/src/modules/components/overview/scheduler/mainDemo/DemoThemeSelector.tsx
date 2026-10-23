@@ -59,14 +59,15 @@ export function SchedulerDemoThemeProvider({
   selectedTheme,
 }: SchedulerDemoThemeProviderProps) {
   const brandingTheme = useTheme();
+  const { direction } = brandingTheme;
   const mode = brandingTheme.palette.mode;
   const demoThemes = React.useMemo(
     () => ({
-      default: createTheme(darkThemeManagement, { palette: { mode } }),
-      softEdges: getSoftEdgesTheme(mode),
-      neutralVibes: getNeutralVibesTheme(mode),
+      default: createTheme(darkThemeManagement, { direction, palette: { mode } }),
+      softEdges: getSoftEdgesTheme(mode, direction),
+      neutralVibes: getNeutralVibesTheme(mode, direction),
     }),
-    [mode],
+    [mode, direction],
   );
 
   return <ThemeProvider theme={demoThemes[selectedTheme]}>{children}</ThemeProvider>;

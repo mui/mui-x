@@ -45,7 +45,7 @@ const DependencyTerminalsLayer = styled('div', {
 })({
   position: 'absolute',
   top: 0,
-  left: 'var(--title-column-width)',
+  insetInlineStart: 'var(--title-column-width)',
   pointerEvents: 'none',
   // Same layer as the arrows and interactions overlays; last in the DOM, so the
   // terminals win the ties and paint above the arrows and their click hit-areas
@@ -71,8 +71,8 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
   // out, dropping the hover and hiding the terminal mid-approach. Trade-off: while
   // revealed it covers the first pixels of a back-to-back neighbor, whose resize grab
   // must aim above or below the circle.
-  // `--terminal-anchor` hangs the circle off its anchor: to the right for the end
-  // edge, to the left for the start edge.
+  // `--terminal-anchor` hangs the circle off its anchor: toward the inline end for the
+  // end edge, toward the inline start for the start edge.
   '--terminal-anchor': '0',
   transform: 'translate(var(--terminal-anchor), -50%)',
   transition: 'transform 120ms ease-out',
@@ -91,8 +91,8 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
     position: 'absolute',
     top: -DEPENDENCY_TERMINAL_HALO,
     bottom: -DEPENDENCY_TERMINAL_HALO,
-    left: 0,
-    right: -DEPENDENCY_TERMINAL_HALO,
+    insetInlineStart: 0,
+    insetInlineEnd: -DEPENDENCY_TERMINAL_HALO,
   },
   '&[data-visible]': {
     opacity: 1,
@@ -114,10 +114,11 @@ const EventTimelinePremiumDependencyTerminal = styled(TimelineGrid.EventDependen
     pointerEvents: 'none',
   },
   '&[data-side="start"]': {
-    '--terminal-anchor': '-100%',
+    // `translate` is physical, so the inline start is on the right in RTL.
+    '--terminal-anchor': theme.direction === 'rtl' ? '100%' : '-100%',
     '&::before': {
-      left: -DEPENDENCY_TERMINAL_HALO,
-      right: 0,
+      insetInlineStart: -DEPENDENCY_TERMINAL_HALO,
+      insetInlineEnd: 0,
     },
   },
   variants: getPaletteVariants(theme),
@@ -133,7 +134,7 @@ interface DependencyTerminalProps {
   resourceId: SchedulerResourceId;
   side: SchedulerEventSide;
   color: string;
-  left: number;
+  inlineStart: number;
   top: number;
   gestureRole: TerminalGestureRole;
   muted: boolean;
@@ -142,7 +143,8 @@ interface DependencyTerminalProps {
 // Primitive props only, so the memo holds: a creation transition re-renders the
 // layer, and only the gesture's terminals (whose role changed) re-render with it.
 const DependencyTerminal = React.memo(function DependencyTerminal(props: DependencyTerminalProps) {
-  const { eventId, occurrenceKey, resourceId, side, color, left, top, gestureRole, muted } = props;
+  const { eventId, occurrenceKey, resourceId, side, color, inlineStart, top, gestureRole, muted } =
+    props;
   return (
     <EventTimelinePremiumDependencyTerminal
       eventId={eventId}
@@ -153,7 +155,7 @@ const DependencyTerminal = React.memo(function DependencyTerminal(props: Depende
       data-visible={gestureRole === null ? undefined : ''}
       data-dependency-drop-target={gestureRole === 'drop' ? '' : undefined}
       data-dependency-muted={muted ? '' : undefined}
-      style={{ left, top }}
+      style={{ insetInlineStart: inlineStart, top }}
     />
   );
 });
@@ -408,7 +410,7 @@ function DependencyTerminalsLayerImpl() {
             // Clamped at the collection edges: the outside circle would overflow the
             // events area and be clipped by the viewport, so it slides back over the
             // event to stay reachable.
-            left={
+            inlineStart={
               side === 'start'
                 ? Math.max(point.x, DEPENDENCY_TERMINAL_SIZE)
                 : Math.min(point.x, eventsWidth - DEPENDENCY_TERMINAL_SIZE)
