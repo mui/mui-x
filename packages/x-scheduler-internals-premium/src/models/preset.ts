@@ -19,6 +19,8 @@ export interface IteratedCell {
    * Aligned start of the cell at its unit boundary (e.g. first day of month for a
    * `month` row). Always `<= start`; for a partial first cell it sits before the
    * visible range, so use `start` / `end` for layout math and `date` for labels.
+   * The date skipped by a DST transition normalizes to the next one, so build date labels
+   * from `plainDate`.
    */
   date: TemporalSupportedObject;
   /**

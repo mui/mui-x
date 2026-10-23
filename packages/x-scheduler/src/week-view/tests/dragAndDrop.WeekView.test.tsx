@@ -450,6 +450,51 @@ describe('WeekView - Drag and Drop', () => {
     expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-04T07:00:00.000Z');
   });
 
+  it('should keep the time elapsed between the event start and the cursor when moving an event across a DST transition', async () => {
+    // America/New_York springs forward from 02:00 to 03:00 on March 8th, 2026: the column keeps
+    // 24 hour rows, so the event, from 01:00 EST to 05:00 EDT, spans 4 rows for 3 hours.
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Night shift')
+      .span('2026-03-08T06:00:00Z', '2026-03-08T09:00:00Z')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView
+        events={[event]}
+        resources={[]}
+        displayTimezone="America/New_York"
+        visibleDate={new Date('2026-03-08T12:00:00Z')}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllTimeGridColumnBounds();
+    const eventElement = screen.getByRole('button', { name: /Night shift/i });
+    mockElementBounds(eventElement, {
+      top: clientYForTime(0, 24, 1),
+      height: clientYForTime(0, 24, 4),
+    });
+
+    // Grabbed on the 04:00 row, 2 hours after the event start, and dropped on the 10:00 row of
+    // the same day, the first column of the week.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getTimeGridColumns()[0],
+        sourceClientY: clientYForTime(0, 24, 4),
+        targetClientY: clientYForTime(0, 24, 10),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2026-03-08T12:00:00.000Z'); // 08:00 EDT
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2026-03-08T15:00:00.000Z'); // 11:00 EDT
+  });
+
   it('should move an all-day event to a different day in the day grid', async () => {
     const handleEventsChange = vi.fn();
     const event = EventBuilder.new()
