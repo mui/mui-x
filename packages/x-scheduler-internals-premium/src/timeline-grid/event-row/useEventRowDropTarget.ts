@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
@@ -30,6 +31,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
+  const isRtl = useDirection() === 'rtl';
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -49,7 +51,11 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
       const clientX = input.clientX;
       const elementPosition = elementRef.current.getBoundingClientRect();
-      const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
+      // The time axis starts at the inline-start edge, which is the right edge in RTL.
+      const offsetFromStart = isRtl
+        ? elementPosition.right - clientX
+        : clientX - elementPosition.left;
+      const positionX = offsetFromStart / ref.current.offsetWidth;
 
       // A cursor on (or past) either edge must not map beyond the axis: the offset
       // would resolve into the day before or after the collection.
@@ -138,7 +144,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
         // The new event starts at the cursor: cap the offset to the last slot of the
-        // axis so a drop on the exact right edge does not create the event on the day
+        // axis so a drop on the exact end edge does not create the event on the day
         // after the collection, where it would not be rendered at all.
         const lastStartOffsetMs = collectionDurationMs - EVENT_DRAG_PRECISION_MS;
         return getDataFromOutside(
