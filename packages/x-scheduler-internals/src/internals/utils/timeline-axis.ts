@@ -1,6 +1,15 @@
-import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
+import type {
+  TemporalAdapter,
+  TemporalSupportedObject,
+  TemporalTimezone,
+} from '@base-ui/react/internals/temporal';
 import { buildTemporalPlainDate, createAdapterDate } from './plain-date-utils/adapter';
-import { toEpochMs, toLocalDayNumber, toPlainDateTime } from './plain-date-utils/timeZone';
+import {
+  toEpochMs,
+  toLocalDayNumber,
+  toLocalMs,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
 export const FULL_DAY_MINUTES = 24 * 60;
@@ -112,6 +121,28 @@ export function timelineAxisOffsetToDate(
   }
   const plainDate = buildTemporalPlainDate(adapter, axis.start).add({ days: dayIndex });
   return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
+}
+
+/**
+ * Resolves the wall-clock time of an instant read on the axis to its occurrence at or after
+ * `fromMs`, the start of the element it belongs to.
+ * The axis resolves a wall-clock time that a fall-back transition repeats to its first instant,
+ * while an element starting in the second occurrence renders over both. Instants that are already
+ * at or after `fromMs`, or whose wall-clock time doesn't occur again, are returned unchanged.
+ */
+export function resolveRepeatedTimeFrom(
+  epochMs: number,
+  fromMs: number,
+  timezone: TemporalTimezone,
+): number {
+  if (epochMs >= fromMs) {
+    return epochMs;
+  }
+  // The same wall-clock time, in the offset of `fromMs`.
+  const shiftedMs = fromMs + toLocalMs(epochMs, timezone) - toLocalMs(fromMs, timezone);
+  return shiftedMs > epochMs && toLocalMs(shiftedMs, timezone) === toLocalMs(epochMs, timezone)
+    ? shiftedMs
+    : epochMs;
 }
 
 /**

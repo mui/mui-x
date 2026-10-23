@@ -11,9 +11,9 @@ import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../cons
 import {
   FULL_DAY_MINUTES,
   getTimelineAxisDurationMs,
+  resolveRepeatedTimeFrom,
   timelineAxisOffsetToDate,
 } from '../../internals/utils/timeline-axis';
-import { toLocalMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
@@ -67,21 +67,15 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       const elementTop = Math.max(elementRef.current.getBoundingClientRect().y, columnTop);
       const cursorY = Math.max(input.clientY, elementTop);
 
-      const cursorTimestamp = adapter.getTime(getDateAtClientY(cursorY));
-      const topTimestamp = adapter.getTime(getDateAtClientY(elementTop));
-      // On a fall-back day, the axis resolves the top of an element starting in the second
-      // occurrence of the repeated hour to the first one, the same wall-clock time an hour earlier.
-      // Once the cursor is past the actual start of the element, measure from that start instead.
+      let cursorTimestamp = adapter.getTime(getDateAtClientY(cursorY));
+      let topTimestamp = adapter.getTime(getDateAtClientY(elementTop));
+      // On a fall-back day, the axis reads the top of an element starting in the second occurrence
+      // of the repeated hour, and the cursor inside that hour, as their first occurrence.
       if (elementStart != null) {
         const timezone = adapter.getTimezone(start);
         const startTimestamp = Math.max(adapter.getTime(elementStart), adapter.getTime(start));
-        if (
-          startTimestamp > topTimestamp &&
-          cursorTimestamp >= startTimestamp &&
-          toLocalMs(startTimestamp, timezone) === toLocalMs(topTimestamp, timezone)
-        ) {
-          return cursorTimestamp - startTimestamp;
-        }
+        cursorTimestamp = resolveRepeatedTimeFrom(cursorTimestamp, startTimestamp, timezone);
+        topTimestamp = resolveRepeatedTimeFrom(topTimestamp, startTimestamp, timezone);
       }
       return cursorTimestamp - topTimestamp;
     });

@@ -478,6 +478,56 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(10);
   });
 
+  it('should drop an event starting in the hour repeated by a DST transition where the cursor is', async () => {
+    // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: the event starts at the
+    // second 02:30, CET, which renders at the same position as the first one.
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .title('Night shift')
+      .span('2026-10-25T01:30:00Z', '2026-10-25T02:30:00Z')
+      .resource(engineering)
+      .draggable(true)
+      .build();
+
+    await renderSettled(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        displayTimezone="Europe/Paris"
+        visibleDate={adapter.date('2026-10-25T12:00:00', 'Europe/Paris')}
+        preset="dayAndHour"
+        presets={['dayAndHour']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+    // 4 days of 1440 minutes: 1px per axis minute.
+    const axisWidth = 4 * 1440;
+    mockAllEventRowBounds(axisWidth);
+    const eventElement = screen
+      .getByText('Night shift')
+      .closest('.MuiEventTimeline-event') as HTMLElement;
+    const left =
+      (parseFloat(eventElement.style.getPropertyValue('--x-position')) / 100) * axisWidth;
+    // 02:30 on the first day of the axis.
+    expect(left).to.be.closeTo(150, 0.001);
+    mockElementBounds(eventElement, { left, width: 60, height: 30 });
+
+    // Grabbed 10 minutes after its start and dropped 10 minutes after 10:00 on the same day.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(engineering.id),
+        sourceClientX: left + 10,
+        targetClientX: 610,
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2026-10-25T09:00:00.000Z'); // 10:00 CET
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2026-10-25T10:00:00.000Z'); // 11:00 CET
+  });
+
   describe('trimmed hour window (presetConfig)', () => {
     // dayAndHour trimmed to 8:00 → 20:00: 4 days × 720 visible minutes = 2880 axis
     // minutes. Rows are mocked at 2880px so 1px = 1 axis minute.

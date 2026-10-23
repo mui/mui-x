@@ -3,6 +3,13 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
+import {
+  buildTemporalPlainDate,
+  createAdapterDate,
+  toEpochMs,
+} from '@mui/x-scheduler-internals/internals';
+import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
@@ -74,21 +81,34 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   backgroundColor: (theme.vars || theme).palette.primary.main,
 }));
 
+const HOUR_MS = 3_600_000;
+
+/**
+ * The first instant of an hour of the day of `date`, on the wall clock of its timezone, like the
+ * offsets of the time axis of the column. `adapter.setHours()` resolves an hour that a DST
+ * transition repeats depending on the timezone of the system.
+ */
+function createHourOfDay(adapter: Adapter, date: TemporalSupportedObject, hour: number) {
+  const timezone = adapter.getTimezone(date);
+  return createAdapterDate(
+    adapter,
+    toEpochMs(buildTemporalPlainDate(adapter, date), hour * HOUR_MS, timezone),
+    timezone,
+  );
+}
+
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
   const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
-  // `setHours(startOfDay, 0)` is equivalent to `startOfDay`, so no special-casing is needed here.
   const start = React.useMemo(
-    () => adapter.setHours(adapter.startOfDay(day.value), startTime),
+    () => createHourOfDay(adapter, day.value, startTime),
     [adapter, day, startTime],
   );
   const end = React.useMemo(
     () =>
-      endTime === 24
-        ? adapter.endOfDay(day.value)
-        : adapter.setHours(adapter.startOfDay(day.value), endTime),
+      endTime === 24 ? adapter.endOfDay(day.value) : createHourOfDay(adapter, day.value, endTime),
     [adapter, day, endTime],
   );
   const column = React.useMemo(
