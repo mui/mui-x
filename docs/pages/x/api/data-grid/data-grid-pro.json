@@ -2150,6 +2150,12 @@
       "isGlobal": false
     },
     {
+      "key": "pivotPanelField--dragging",
+      "className": "MuiDataGridPro-pivotPanelField--dragging",
+      "description": "Styles applied to the drag preview of a pivot panel field, while it's dragged with touch or pen.",
+      "isGlobal": false
+    },
+    {
       "key": "pivotPanelField--sorted",
       "className": "MuiDataGridPro-pivotPanelField--sorted",
       "description": "Styles applied to the pivot panel field when sorted.",

@@ -12,7 +12,10 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../../collapsible';
 import { ResizablePanel, ResizablePanelHandle } from '../../resizablePanel';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridChartsPanelDataField } from './GridChartsPanelDataField';
+import {
+  CHARTS_PANEL_DATA_FIELD_DRAGGING_CLASS,
+  GridChartsPanelDataField,
+} from './GridChartsPanelDataField';
 import {
   gridChartableColumnsSelector,
   gridChartsDimensionsSelector,
@@ -20,6 +23,7 @@ import {
   gridChartsValuesSelector,
 } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
+import { usePanelFieldPointerDrag } from '../../../hooks/utils/usePanelFieldPointerDrag';
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
 import { getBlockedSections } from '../../../hooks/features/chartsIntegration/utils';
 import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
@@ -146,7 +150,19 @@ const GridChartsPanelDataPlaceholder = styled('div', {
   font: vars.typography.font.body,
 });
 
-const INITIAL_DRAG_STATE = { active: false, field: null, dropSection: null, initialSection: null };
+const INITIAL_DRAG_STATE = {
+  active: false,
+  field: null,
+  dropSection: null,
+  initialSection: null,
+  targetField: null,
+  targetPosition: null,
+};
+
+// The zones a field can be dropped on: the available fields, and the sections of the chart
+const ZONE_SELECTOR = `.${getDataGridUtilityClass('chartsPanelDataAvailableFields')}, .${getDataGridUtilityClass('chartsPanelDataSection')}`;
+const FIELD_SELECTOR = `.${getDataGridUtilityClass('chartsPanelDataField')}`;
+const SCROLL_AREA_SELECTOR = `.${getDataGridUtilityClass('chartsPanelDataAvailableFields')}, .${getDataGridUtilityClass('chartsPanelDataScrollArea')}`;
 
 export interface FieldTransferObject {
   field: string;
@@ -252,6 +268,9 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
     field: string | null;
     dropSection: FieldTransferObject['section'];
     initialSection: FieldTransferObject['section'];
+    // The drop indicator of a touch or pen drag. Mouse drags keep it in the field, from HTML drag and drop events.
+    targetField: string | null;
+    targetPosition: DropPosition;
   }>(INITIAL_DRAG_STATE);
 
   const disabledSections = React.useMemo(() => {
@@ -262,12 +281,53 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   }, [blockedSectionsLookup, drag.field]);
 
   const handleDragStart = (field: string, section: FieldTransferObject['section']) => {
-    setDrag({ active: true, field, initialSection: section, dropSection: null });
+    setDrag({ ...INITIAL_DRAG_STATE, active: true, field, initialSection: section });
   };
 
   const handleDragEnd = () => {
     setDrag(INITIAL_DRAG_STATE);
   };
+
+  // Touch and pen drags. They apply the same rules as the HTML drag and drop handlers below:
+  // a drop on a field inserts above or below it, a drop on a zone appends to its section.
+  const pointerDrag = usePanelFieldPointerDrag<FieldTransferObject['section']>({
+    apiRef,
+    zoneSelector: ZONE_SELECTOR,
+    fieldSelector: FIELD_SELECTOR,
+    scrollAreaSelector: SCROLL_AREA_SELECTOR,
+    previewClassName: CHARTS_PANEL_DATA_FIELD_DRAGGING_CLASS,
+    onDragStart: (data) => handleDragStart(data.field, data.section),
+    onDropTargetChange: (target) => {
+      setDrag((v) => ({
+        ...v,
+        // Outside of the zones, the section the field comes from is highlighted, like on `dragleave`
+        dropSection: target ? target.section : v.initialSection,
+        targetField: target?.field ?? null,
+        targetPosition: target?.position ?? null,
+      }));
+    },
+    onDrop: (data, target) => {
+      if (target.field !== null) {
+        apiRef.current.chartsIntegration.updateDataReference(
+          data.field,
+          data.section,
+          target.section,
+          target.field,
+          target.position || undefined,
+        );
+      } else if (target.section !== data.section) {
+        apiRef.current.chartsIntegration.updateDataReference(
+          data.field,
+          data.section,
+          target.section,
+        );
+      }
+    },
+    onDragEnd: handleDragEnd,
+  });
+
+  const getPointerDropPosition = (field: string) =>
+    drag.targetField === field ? drag.targetPosition : null;
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     setDrag(INITIAL_DRAG_STATE);
@@ -333,6 +393,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
       className={classes.root}
       data-dragging={drag.active}
       onDragLeave={handleDragLeave}
+      ref={pointerDrag.panelRef}
     >
       <GridChartsPanelDataAvailableFields
         ownerState={rootProps}
@@ -361,6 +422,8 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                 valuesLabel={valuesLabel}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
+                onPointerDown={pointerDrag.onPointerDown}
+                pointerDropPosition={getPointerDropPosition(field)}
               >
                 {apiRef.current.chartsIntegration.getColumnName(field)}
               </GridChartsPanelDataField>
@@ -428,6 +491,8 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                       disabled={disabledSections.has('dimensions')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
+                      onPointerDown={pointerDrag.onPointerDown}
+                      pointerDropPosition={getPointerDropPosition(dimension.field)}
                     >
                       {apiRef.current.chartsIntegration.getColumnName(dimension.field)}
                     </GridChartsPanelDataField>
@@ -488,6 +553,8 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                       disabled={disabledSections.has('values')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
+                      onPointerDown={pointerDrag.onPointerDown}
+                      pointerDropPosition={getPointerDropPosition(value.field)}
                     >
                       {apiRef.current.chartsIntegration.getColumnName(value.field)}
                     </GridChartsPanelDataField>
