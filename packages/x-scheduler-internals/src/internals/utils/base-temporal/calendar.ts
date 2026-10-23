@@ -334,8 +334,10 @@ export function resolveIsoFields(
   return toDayNumber(year!, month, day);
 }
 
+const ISO_CALENDAR = /* @__PURE__ */ createIsoCalendar(ISO_CALENDAR_ID, false);
+
 const registry = new Map<string, CalendarImplementation>([
-  [ISO_CALENDAR_ID, /* @__PURE__ */ createIsoCalendar(ISO_CALENDAR_ID, false)],
+  [ISO_CALENDAR_ID, ISO_CALENDAR],
   ['gregory', /* @__PURE__ */ createIsoCalendar('gregory', true)],
 ]);
 
@@ -365,6 +367,10 @@ export function canonicalizeCalendarId(id: string) {
  * Returns the implementation of a registered calendar.
  */
 export function getCalendar(id: unknown): CalendarImplementation {
+  // Most values are in the ISO calendar, which `registerCalendar()` can't replace.
+  if (id === ISO_CALENDAR_ID) {
+    return ISO_CALENDAR;
+  }
   if (typeof id !== 'string') {
     throw new TypeError(
       `Base UI Plus: A temporal value received ${String(id)} as its calendar, which isn't a string. ` +
