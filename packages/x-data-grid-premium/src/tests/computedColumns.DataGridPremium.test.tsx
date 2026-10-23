@@ -2642,6 +2642,163 @@ describe('<DataGridPremium /> - Computed columns', () => {
         // is what the replacement publishes on its own.
         expect(counters.columnsChange).to.equal(2);
       });
+
+      describe('computed `leafField`', () => {
+        const half: GridComputedColumnDefinition = {
+          field: 'half',
+          headerName: 'Half',
+          formula: '=price / 2',
+          type: 'number',
+        };
+        const leafRows = [
+          { id: 1, cat: 'Fruit', origin: 'Spain', price: 2 },
+          { id: 2, cat: 'Fruit', origin: 'Spain', price: 3 },
+        ];
+        const leafColumns: DataGridPremiumProps['columns'] = [
+          { field: 'cat' },
+          { field: 'origin' },
+          { field: 'price', type: 'number' },
+        ];
+        const getGroupingColumn = () => getColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD);
+
+        const renderWithLeaf = (
+          probe: ReturnType<typeof createProbe>,
+          props: Partial<DataGridPremiumProps> = {},
+        ) =>
+          renderGrouped(probe, {
+            rows: leafRows,
+            columns: leafColumns,
+            groupingColDef: { leafField: 'double' },
+            initialState: {
+              computedColumns: { model: [double, half] },
+              rowGrouping: { model: ['cat'] },
+            },
+            ...props,
+          });
+
+        it('should rename the grouping column with a name-only edit', async () => {
+          const probe = createProbe();
+          const { counters } = await renderWithLeaf(probe);
+          expect(getGroupingHeader()).to.equal('Double');
+          expect(getColumnValues(0)).to.deep.equal(['Fruit (2)', '4', '6']);
+
+          act(() => apiRef.current!.updateComputedColumn('double', { headerName: 'Renamed' }));
+          expect(getGroupingHeader()).to.equal('Renamed');
+          expect(getColumnValues(0)).to.deep.equal(['Fruit (2)', '4', '6']);
+          // Exactly one extra hydration, no re-evaluation.
+          expect(counters.columnsChange).to.equal(2);
+          expect(counters.formulaEvaluated).to.equal(0);
+          expect(probe.apply.mock.calls.length).to.equal(counters.apply);
+        });
+
+        it('should filter the leaves with the operators of the new type', async () => {
+          const probe = createProbe();
+          await renderWithLeaf(probe);
+          expect(getGroupingColumn().filterOperators![0].value).to.equal('=');
+
+          act(() =>
+            apiRef.current!.updateComputedColumn('double', {
+              type: 'string',
+              formula: '=price & "!"',
+            }),
+          );
+          expect(getGroupingColumn().filterOperators![0].value).to.equal('contains');
+          expect(getColumnValues(0)).to.deep.equal(['Fruit (2)', '2!', '3!']);
+        });
+
+        it('should sort the leaves with the comparator of the new type, errors last', async () => {
+          const probe = createProbe();
+          await renderWithLeaf(probe, {
+            rows: [...leafRows, { id: 3, cat: 'Fruit', origin: 'Spain', price: 0 }],
+          });
+          act(() =>
+            apiRef.current!.updateComputedColumn('double', {
+              type: 'string',
+              formula: '=IF(price = 0, 1 / 0, IF(price = 2, "b", "a"))',
+            }),
+          );
+          act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'asc'));
+          expect(getColumnValues(0)).to.deep.equal(['Fruit (3)', 'a', 'b', '#DIV/0!']);
+          act(() => apiRef.current!.sortColumn(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'desc'));
+          expect(getColumnValues(0)).to.deep.equal(['Fruit (3)', 'b', 'a', '#DIV/0!']);
+        });
+
+        it('should stop copying from a removed computed column', async () => {
+          const probe = createProbe();
+          const { counters } = await renderWithLeaf(probe);
+
+          act(() => apiRef.current!.removeComputedColumn('double'));
+          // The grouping column of a `leafField` that does not exist.
+          expect(getGroupingHeader()).to.equal('cat');
+          expect(getGroupingColumn().filterOperators![0].value).to.equal('contains');
+          expect(getColumnValues(0)).to.deep.equal(['Fruit (2)', '', '']);
+          expect(counters.columnsChange).to.equal(2);
+        });
+
+        it('should follow a change of `computedColDef`', async () => {
+          const probe = createProbe();
+          const { setProps } = await renderWithLeaf(probe);
+
+          setProps({ computedColDef: { headerName: 'From computedColDef' } });
+          await microtasks();
+          expect(getGroupingHeader()).to.equal('From computedColDef');
+        });
+
+        it('should only rebuild the grouping column whose leaf field changed in the `multiple` grouping column mode', async () => {
+          const probe = createProbe();
+          const groupingColDef = vi.fn(({ fields }: { fields: string[] }) =>
+            fields[0] === 'origin' ? { leafField: 'double' } : undefined,
+          );
+          const { counters } = await renderWithLeaf(probe, {
+            rowGroupingColumnMode: 'multiple',
+            groupingColDef,
+            initialState: {
+              computedColumns: { model: [double, half] },
+              rowGrouping: { model: ['cat', 'origin'] },
+            },
+          });
+          expect(getColumnHeadersTextContent().slice(0, 2)).to.deep.equal(['cat', 'Double']);
+
+          act(() => apiRef.current!.updateComputedColumn('double', { headerName: 'Renamed' }));
+          expect(getColumnHeadersTextContent().slice(0, 2)).to.deep.equal(['cat', 'Renamed']);
+          expect(counters.columnsChange).to.equal(2);
+
+          // Neither a criterion nor a leaf: the hydration of the edit is enough.
+          act(() => apiRef.current!.updateComputedColumn('half', { headerName: 'Halved' }));
+          expect(getColumnHeadersTextContent().slice(0, 2)).to.deep.equal(['cat', 'Renamed']);
+          expect(counters.columnsChange).to.equal(3);
+        });
+
+        it('should not hydrate again for a computed column that is neither a criterion nor a leaf', async () => {
+          const probe = createProbe();
+          const groupingColDef = vi.fn(() => ({ leafField: 'double' }));
+          const { counters } = await renderWithLeaf(probe, { groupingColDef });
+
+          act(() => apiRef.current!.updateComputedColumn('half', { headerName: 'Halved' }));
+          expect(getGroupingHeader()).to.equal('Double');
+          expect(counters.columnsChange).to.equal(1);
+
+          // No computed column was rebuilt: `groupingColDef` is not called.
+          const calls = groupingColDef.mock.calls.length;
+          act(() => apiRef.current!.setColumnIndex('price', 2));
+          expect(counters.columnsChange).to.equal(2);
+          expect(groupingColDef.mock.calls.length).to.equal(calls);
+        });
+
+        it('should not hydrate again for a leaf field when the row grouping is disabled', async () => {
+          const probe = createProbe();
+          const groupingColDef = vi.fn(() => ({ leafField: 'double' }));
+          const { counters } = await renderWithLeaf(probe, {
+            disableRowGrouping: true,
+            groupingColDef,
+          });
+          const calls = groupingColDef.mock.calls.length;
+
+          act(() => apiRef.current!.updateComputedColumn('double', { headerName: 'Renamed' }));
+          expect(counters.columnsChange).to.equal(1);
+          expect(groupingColDef.mock.calls.length).to.equal(calls);
+        });
+      });
     });
 
     it('should span the rows of a computed column', async () => {

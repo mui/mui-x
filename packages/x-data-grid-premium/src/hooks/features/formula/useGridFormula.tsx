@@ -15,7 +15,12 @@ import {
   useGridApiMethod,
   useGridEvent,
 } from '@mui/x-data-grid-pro';
-import type { GridCellCoordinates, GridEventListener, GridRowId } from '@mui/x-data-grid-pro';
+import type {
+  GridCellCoordinates,
+  GridEventListener,
+  GridGroupingColDefOverride,
+  GridRowId,
+} from '@mui/x-data-grid-pro';
 import {
   createColumnsState,
   gridPivotActiveSelector,
@@ -54,7 +59,7 @@ import {
   gridFormulaLookupSelector,
 } from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
-import { isGroupingColumn } from '../rowGrouping/gridRowGroupingUtils';
+import { getColDefOverrides, isGroupingColumn } from '../rowGrouping/gridRowGroupingUtils';
 import { GRID_FORMULA_EDITOR_SURFACE_CLASS } from '../../../components/GridFormulaEditor';
 import { GridComputedColumnsPanel } from '../../../components/computedColumnsPanel';
 import { GridSidebarValue } from '../sidebar/gridSidebarInterfaces';
@@ -192,6 +197,25 @@ function getViewRefresh(
   };
 }
 
+/**
+ * The leaf fields of the row grouping columns, resolved from `groupingColDef` like the
+ * grouping columns resolve them: one column for all the criteria in the `single` mode,
+ * one column per criterion in the `multiple` mode.
+ */
+function getGroupingLeafFields(
+  groupingColDef: DataGridPremiumProcessedProps['groupingColDef'],
+  rowGroupingColumnMode: DataGridPremiumProcessedProps['rowGroupingColumnMode'],
+  groupedFields: string[],
+): string[] {
+  let overrides: Array<GridGroupingColDefOverride | null | undefined> = [];
+  if (rowGroupingColumnMode === 'single') {
+    overrides = [getColDefOverrides(groupingColDef, groupedFields, RowGroupingStrategy.Default)];
+  } else if (rowGroupingColumnMode === 'multiple') {
+    overrides = groupedFields.map((criterion) => getColDefOverrides(groupingColDef, [criterion]));
+  }
+  return overrides.flatMap((override) => (override?.leafField ? [override.leafField] : []));
+}
+
 export const useGridFormula = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -204,6 +228,9 @@ export const useGridFormula = (
     | 'computedColDef'
     | 'filterMode'
     | 'sortingMode'
+    | 'disableRowGrouping'
+    | 'groupingColDef'
+    | 'rowGroupingColumnMode'
   >,
 ) => {
   const a1NotationActive = !!props.formulaA1Notation && !props.disableFormulas && !props.dataSource;
@@ -547,30 +574,47 @@ export const useGridFormula = (
   /**
    * The row grouping columns are built from the columns state of the previous pass,
    * before the computed columns are injected into the current one. A record rebuilt
-   * by the injection (name, format — the getters are kept) leaves the grouping column
-   * of a grouped computed field with the previous `headerName` and `valueFormatter`:
-   * hydrate once more so it is built from the current record. The second pass finds
+   * by the injection (name, format, type), or removed, leaves the grouping columns that
+   * copy from it with its previous header, formatter, operators and comparators: the column
+   * of a grouped computed field, and the one whose `leafField` is a computed column.
+   * Hydrate once more so they are built from the current record. The second pass finds
    * the identities recorded here, so it never requests a third one. Synchronous on
    * purpose: `requestPipeProcessorsApplication` is a no-op while the hydration that
    * published this event is still running.
    */
   const syncGroupingColumns = React.useCallback(() => {
     const { records, hydratedColDefs } = apiRef.current.caches.formula!.computedColumns;
-    const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
-    let groupingColumnsStale = false;
+    const changedFields: string[] = [];
     for (const [field, record] of records) {
       if (hydratedColDefs.get(field) !== record.colDef) {
         hydratedColDefs.set(field, record.colDef);
-        if (groupedFields.includes(field)) {
-          groupingColumnsStale = true;
-        }
+        changedFields.push(field);
       }
     }
     for (const field of Array.from(hydratedColDefs.keys())) {
       if (!records.has(field)) {
         hydratedColDefs.delete(field);
+        // A grouping column still copies from the removed column.
+        changedFields.push(field);
       }
     }
+    if (changedFields.length === 0) {
+      return;
+    }
+    const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
+    if (groupedFields.length === 0) {
+      return;
+    }
+    // The leaf fields are only resolved when no grouped field was rebuilt: a
+    // `groupingColDef` function runs only when a computed column was.
+    const groupingColumnsStale =
+      changedFields.some((field) => groupedFields.includes(field)) ||
+      (!props.disableRowGrouping &&
+        getGroupingLeafFields(
+          props.groupingColDef,
+          props.rowGroupingColumnMode,
+          groupedFields,
+        ).some((field) => changedFields.includes(field)));
     if (!groupingColumnsStale) {
       return;
     }
@@ -582,7 +626,7 @@ export const useGridFormula = (
     });
     apiRef.current.setState((state) => ({ ...state, columns: columnsState }));
     apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
-  }, [apiRef]);
+  }, [apiRef, props.disableRowGrouping, props.groupingColDef, props.rowGroupingColumnMode]);
 
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     const cache = apiRef.current.caches.formula!;
