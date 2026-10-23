@@ -33,7 +33,11 @@ import type { FormulaSourceSpan } from '../../hooks/features/formula/engine';
 import { previewFormulaResult } from '../../hooks/features/formula/gridFormulaPreview';
 import { gridFormulaActiveEditSelector } from '../../hooks/features/formula/gridFormulaSelectors';
 import { coerceComputedResult } from '../../hooks/features/formula/gridComputedColumnsRuntime';
-import { createComputedBaseColDef } from '../../hooks/features/formula/createComputedColDef';
+import {
+  applyComputedColDefOverrides,
+  createComputedBaseColDef,
+  resolveComputedColDefOverrides,
+} from '../../hooks/features/formula/createComputedColDef';
 import type {
   GridFormulaActiveEdit,
   GridFormulaResult,
@@ -297,6 +301,9 @@ const NOOP_GETTERS = {
   groupingValueGetter: () => undefined,
   rowSpanValueGetter: () => undefined,
 };
+
+// The preview shows an error result before formatting: the formatter only receives values.
+const IS_NEVER_ERROR_ROW = () => false;
 
 type EditorFormatDraft = Pick<EditorDraft, 'formatStyle' | 'currency' | 'decimals' | 'grouping'>;
 
@@ -681,20 +688,39 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
   }, [rawPreview, typeTouched]);
 
   // The same formatter the cell will use (number format, date/boolean
-  // formatting). A format still being typed (an incomplete currency code)
-  // would make `Intl.NumberFormat` throw: it is left out until it is valid.
+  // formatting, the `computedColDef` formatter). A format still being typed (an
+  // incomplete currency code) would make `Intl.NumberFormat` throw: it is left
+  // out until it is valid.
   const previewFormatValid = !currencyInvalid && !decimalsInvalid;
-  const previewColDef = React.useMemo<GridColDef>(() => {
+  const { computedColDef } = rootProps;
+  // Apply keeps the lock of the stored column, which a `computedColDef` function can read.
+  const liveEditable = liveDefinition?.editable;
+  const previewColDefs = React.useMemo<GridColDef[]>(() => {
+    // The field of the draft, empty until a new column has a name: the placeholder
+    // owner field of the formula preview never reaches `computedColDef`.
     const { numberFormat, ...definition } = draftDefinition;
-    return createComputedBaseColDef(
-      {
-        ...definition,
-        field: ownerField,
-        ...(previewFormatValid && numberFormat !== undefined ? { numberFormat } : {}),
-      },
-      NOOP_GETTERS as never,
+    const previewDefinition: GridComputedColumnDefinition = {
+      ...definition,
+      ...(previewFormatValid && numberFormat !== undefined ? { numberFormat } : {}),
+      ...(liveEditable !== undefined ? { editable: liveEditable } : {}),
+    };
+    const baseColDef = createComputedBaseColDef(previewDefinition, NOOP_GETTERS as never);
+    // The overrides are resolved for the draft, so that a `computedColDef` function
+    // follows the draft type. One that throws on a draft leaves the base formatting.
+    let overrides: Partial<GridColDef> | null;
+    try {
+      overrides = resolveComputedColDefOverrides(previewDefinition, computedColDef);
+    } catch {
+      overrides = null;
+    }
+    const colDef = applyComputedColDefOverrides(
+      baseColDef,
+      previewDefinition,
+      overrides,
+      IS_NEVER_ERROR_ROW,
     );
-  }, [draftDefinition, ownerField, previewFormatValid]);
+    return colDef === baseColDef ? [baseColDef] : [colDef, baseColDef];
+  }, [draftDefinition, previewFormatValid, liveEditable, computedColDef]);
 
   const preview = React.useMemo(() => {
     if (rawPreview === null || previewRowId === null) {
@@ -704,18 +730,25 @@ function GridComputedColumnsPanelEditor(props: GridComputedColumnsPanelEditorPro
     if (result.type === 'error') {
       return { text: result.code, error: true };
     }
-    if (result.value === null) {
-      return { text: '', error: false };
-    }
     const row = apiRef.current.getRow(previewRowId) ?? {};
-    let formatted: unknown;
-    try {
-      formatted = previewColDef.valueFormatter!(result.value as never, row, previewColDef, apiRef);
-    } catch {
-      formatted = result.value;
+    // An empty result is formatted too, as in the cells. A `computedColDef` formatter
+    // written for another type than the draft's falls back to the base formatting,
+    // and that one to the value.
+    let formatted: unknown = result.value;
+    for (const colDef of previewColDefs) {
+      try {
+        formatted = colDef.valueFormatter
+          ? colDef.valueFormatter(result.value as never, row, colDef, apiRef)
+          : result.value;
+        break;
+      } catch {
+        // The next formatter of the chain.
+      }
     }
-    return { text: formatted == null ? '' : String(formatted), error: false };
-  }, [apiRef, rawPreview, previewRowId, draftDefinition.type, previewColDef]);
+    // Like the cell, which renders the value when the formatter returns nothing.
+    const shown = formatted ?? result.value;
+    return { text: shown == null ? '' : String(shown), error: false };
+  }, [apiRef, rawPreview, previewRowId, draftDefinition.type, previewColDefs]);
 
   // The parse error's span, shifted from the normalized source to the text the
   // editable displays (leading whitespace, a missing `=`); shown with the

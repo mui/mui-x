@@ -589,6 +589,312 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getCell(1, 3).textContent).to.equal('€50.00');
     });
 
+    it('previews an empty boolean result like the cell', async () => {
+      await render(
+        <Test
+          rows={[{ id: 0, item: 'Apple', price: 2, quantity: 3, active: null }]}
+          columns={[...baselineProps.columns, { field: 'active', type: 'boolean' }]}
+          initialState={{
+            computedColumns: { model: [define('flag', '=active', { type: 'boolean' })] },
+          }}
+        />,
+      );
+      expect(apiRef.current!.getCellParams(0, 'flag').formattedValue).to.equal('no');
+
+      await openEditor('flag', { sampleRowId: 0 });
+      await waitFor(() => {
+        expect(getPreviewText()).to.equal('no');
+      });
+    });
+
+    describe('with computedColDef', () => {
+      const usd = (value: number) => `USD ${value.toFixed(2)}`;
+      const quoted = (value: string) => `«${value}»`;
+
+      it('previews with the valueFormatter of computedColDef, like the cells', async () => {
+        await render(
+          <Test
+            initialState={{ computedColumns: { model: [define('double', '=price * 2')] } }}
+            computedColDef={{ valueFormatter: usd }}
+          />,
+        );
+        expect(getCell(0, 3).textContent).to.equal('USD 4.00');
+
+        await openEditor('double', { sampleRowId: 0 });
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('USD 4.00');
+        });
+
+        typeFormula('=price * 3');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('USD 6.00');
+        });
+        fireEvent.click(getButton('Apply'));
+        await microtasks();
+        expect(getCell(0, 3).textContent).to.equal('USD 6.00');
+      });
+
+      it('resolves a computedColDef function for the draft', async () => {
+        const computedColDef = (definition: GridComputedColumnDefinition) =>
+          definition.type === 'number' ? { valueFormatter: usd } : { valueFormatter: quoted };
+        await render(<Test computedColDef={computedColDef} />);
+        await openEditor(null, { sampleRowId: 0 });
+
+        typeFormula('=price * 2');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('USD 4.00');
+        });
+
+        // The result type follows the preview: the draft becomes a text column.
+        typeFormula('=item & "!"');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('«Apple!»');
+        });
+        expect(getTypeSelect().textContent).to.equal('Text');
+      });
+
+      it('passes the lock of the stored column to a computedColDef function', async () => {
+        const computedColDef = (definition: GridComputedColumnDefinition) =>
+          definition.editable === false
+            ? { valueFormatter: (value: number) => `locked ${value}` }
+            : {};
+        await render(
+          <Test
+            initialState={{
+              computedColumns: { model: [define('double', '=price * 2', { editable: false })] },
+            }}
+            computedColDef={computedColDef}
+          />,
+        );
+        expect(getCell(0, 3).textContent).to.equal('locked 4');
+
+        await openEditor('double', { sampleRowId: 0 });
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('locked 4');
+        });
+      });
+
+      it('falls back to the base formatting when computedColDef or its formatter throws', async () => {
+        const computedColDef = (definition: GridComputedColumnDefinition) => {
+          if (definition.type === 'boolean') {
+            throw new Error('No overrides for boolean columns');
+          }
+          // Written for numbers only: throws on the text of a string column.
+          return { valueFormatter: (value: number) => value.toFixed(2) };
+        };
+        await render(<Test computedColDef={computedColDef} />);
+        await openEditor(null, { sampleRowId: 0 });
+
+        typeFormula('=price * 2');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('4.00');
+        });
+
+        typeFormula('=item & "!"');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('Apple!');
+        });
+
+        typeFormula('=price > 1');
+        await waitFor(() => {
+          expect(getTypeSelect().textContent).to.equal('Boolean');
+        });
+        // The base formatting of a boolean value, as without `computedColDef`.
+        expect(getPreviewText()).to.equal('yes');
+      });
+
+      it('never formats an error result, and formats a text that reads like an error code', async () => {
+        const valueFormatter = vi.fn(quoted);
+        await render(<Test computedColDef={{ valueFormatter }} />);
+        await openEditor(null, { sampleRowId: 0 });
+
+        typeFormula('=item & "!"');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('«Apple!»');
+        });
+
+        typeFormula('=price / 0');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('#DIV/0!');
+        });
+        expect(valueFormatter.mock.calls.map(([value]) => value)).not.to.include('#DIV/0!');
+
+        // A text result is formatted like the cell of a row whose result is not an error.
+        typeFormula('="#REF!"');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('«#REF!»');
+        });
+        typeName('Code');
+        fireEvent.click(getButton('Add column'));
+        await microtasks();
+        expect(getCell(0, 3).textContent).to.equal('«#REF!»');
+      });
+
+      it('prefers the computedColDef formatter over the number format, like the cells', async () => {
+        await render(
+          <Test
+            initialState={{
+              computedColumns: {
+                model: [
+                  define('double', '=price * 2', {
+                    numberFormat: { style: 'currency', currency: 'EUR' },
+                  }),
+                ],
+              },
+            }}
+            computedColDef={{ valueFormatter: usd }}
+          />,
+        );
+        await openEditor('double', { sampleRowId: 0 });
+
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('USD 4.00');
+        });
+        expect(apiRef.current!.getCellParams(0, 'double').formattedValue).to.equal('USD 4.00');
+      });
+
+      it('follows a change of the computedColDef prop', async () => {
+        const { setProps } = await render(<Test computedColDef={{ valueFormatter: usd }} />);
+        await openEditor(null, { sampleRowId: 0 });
+        typeFormula('=price * 2');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('USD 4.00');
+        });
+
+        setProps({ computedColDef: { valueFormatter: (value: number) => `${value} units` } });
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('4 units');
+        });
+      });
+
+      it('resolves a computedColDef function for the draft type of a stored column', async () => {
+        const computedColDef = (definition: GridComputedColumnDefinition) =>
+          definition.type === 'number' ? { valueFormatter: usd } : { valueFormatter: quoted };
+        const { user } = await render(
+          <Test
+            initialState={{ computedColumns: { model: [define('double', '=price * 2')] } }}
+            computedColDef={computedColDef}
+          />,
+        );
+        await openEditor('double', { sampleRowId: 0 });
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('USD 4.00');
+        });
+
+        typeFormula('=item & "!"');
+        await selectType(user, 'Text');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('«Apple!»');
+        });
+        fireEvent.click(getButton('Apply'));
+        await microtasks();
+        expect(getCell(0, 3).textContent).to.equal('«Apple!»');
+      });
+
+      it('uses the base formatter of the draft type when the computedColDef formatter throws', async () => {
+        // Written for numbers only: `toFixed` is not a function of a boolean.
+        await render(
+          <Test computedColDef={{ valueFormatter: (value: number) => value.toFixed(2) }} />,
+        );
+        await openEditor(null, { sampleRowId: 0 });
+
+        typeFormula('=price > 1');
+        await waitFor(() => {
+          expect(getTypeSelect().textContent).to.equal('Boolean');
+        });
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('yes');
+        });
+      });
+
+      it('passes the field of the draft to a computedColDef function, empty until the column has a name', async () => {
+        const fields: string[] = [];
+        const computedColDef = (definition: GridComputedColumnDefinition) => {
+          fields.push(definition.field);
+          return {
+            valueFormatter: (value: number) => `${definition.field || 'unnamed'}: ${value}`,
+          };
+        };
+        await render(<Test computedColDef={computedColDef} />);
+        await openEditor(null, { sampleRowId: 0 });
+
+        typeFormula('=price * 2');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('unnamed: 4');
+        });
+        typeName('Total');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('total: 4');
+        });
+        fireEvent.click(getButton('Add column'));
+        await microtasks();
+
+        expect(getCell(0, 3).textContent).to.equal('total: 4');
+        expect(fields).not.to.include('__computed_draft__');
+      });
+
+      it('formats an empty result, like the cells', async () => {
+        await render(
+          <Test
+            rows={[{ id: 0, item: 'Apple', price: null, quantity: 3 }]}
+            initialState={{ computedColumns: { model: [define('cost', '=price')] } }}
+            computedColDef={{
+              valueFormatter: (value: number | null) => (value == null ? 'n/a' : usd(value)),
+            }}
+          />,
+        );
+        expect(getCell(0, 3).textContent).to.equal('n/a');
+
+        await openEditor('cost', { sampleRowId: 0 });
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('n/a');
+        });
+      });
+
+      it('previews the value when the computedColDef formatter returns nothing, like the cells', async () => {
+        const valueFormatter = (value: number) => (value > 5 ? `big ${value}` : undefined);
+        await render(
+          <Test
+            initialState={{ computedColumns: { model: [define('double', '=price * 2')] } }}
+            computedColDef={{ valueFormatter }}
+          />,
+        );
+        expect(getCell(0, 3).textContent).to.equal('4');
+
+        await openEditor('double', { sampleRowId: 0 });
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('4');
+        });
+        typeFormula('=price * 3');
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('big 6');
+        });
+      });
+
+      it('previews the raw value when computedColDef unsets the valueFormatter, like the cells', async () => {
+        await render(
+          <Test
+            initialState={{
+              computedColumns: {
+                model: [
+                  define('double', '=price * 2', {
+                    numberFormat: { style: 'currency', currency: 'EUR' },
+                  }),
+                ],
+              },
+            }}
+            computedColDef={{ valueFormatter: undefined }}
+          />,
+        );
+        expect(getCell(0, 3).textContent).to.equal('4');
+
+        await openEditor('double', { sampleRowId: 0 });
+        await waitFor(() => {
+          expect(getPreviewText()).to.equal('4');
+        });
+      });
+    });
+
     it('disables Apply while the currency code is invalid', async () => {
       const { user } = await render(<Test />);
       await openEditor(null);
