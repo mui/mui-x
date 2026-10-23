@@ -2,6 +2,7 @@ import {
   compareOrder,
   formatIsoDate,
   fromDayNumber,
+  getDaysInMonth as getIsoDaysInMonth,
   getIsoDayOfWeek,
   isValidIsoDate,
   readOverflow,
@@ -21,7 +22,6 @@ import {
   readCalendarAnnotation,
   resolveIsoFields,
   type CalendarDate,
-  type CalendarFields,
   type CalendarImplementation,
 } from './calendar';
 import { mergeDateFields } from './mergeDateFields';
@@ -293,6 +293,8 @@ function readDuration(duration: PlainDateDuration): Required<PlainDateDuration> 
   return units;
 }
 
+const ISO_MONTH_CODES = /* @__PURE__ */ getOrdinalMonthCodes(12);
+
 /**
  * Returns the day number of `date` moved by years and months in `calendar`, like Temporal: the
  * years keep the month code, the months count the months of each year, and the day is regulated
@@ -305,12 +307,14 @@ function addYearsAndMonths(
   months: number,
   overflow: 'constrain' | 'reject',
 ): number {
+  const fields = date.calendarDate ?? fromDayNumber(date.dayNumber);
+  const monthCode = date.calendarDate?.monthCode ?? ISO_MONTH_CODES[fields.month - 1];
   // Bounds the loops below: longer durations leave the supported days anyway.
-  let year = date.year + Math.max(-MAX_YEARS, Math.min(years, MAX_YEARS));
-  const monthOfCode = getMonthOfCode(calendar, year, date.monthCode, overflow);
+  let year = fields.year + Math.max(-MAX_YEARS, Math.min(years, MAX_YEARS));
+  const monthOfCode = getMonthOfCode(calendar, year, monthCode, overflow);
   if (monthOfCode === undefined) {
     throw new Error(
-      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved a date of the month ${date.monthCode} to the year ${year}, which doesn't have this month. ` +
+      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved a date of the month ${monthCode} to the year ${year}, which doesn't have this month. ` +
         "The `overflow: 'reject'` option forbids moving the date to another month. " +
         "Pass `overflow: 'constrain'` to use the month that replaces it.",
     );
@@ -328,19 +332,16 @@ function addYearsAndMonths(
     month -= monthsInYear;
     year += 1;
   }
-  const day = date.day;
   const daysInMonth = calendar.getDaysInMonth(year, month);
-  if (day > daysInMonth && overflow === 'reject') {
+  if (fields.day > daysInMonth && overflow === 'reject') {
     throw new Error(
-      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved the day ${day} to a month of ${daysInMonth} days. ` +
+      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved the day ${fields.day} to a month of ${daysInMonth} days. ` +
         "The `overflow: 'reject'` option forbids moving the date to the last day of the month. " +
         "Pass `overflow: 'constrain'` to use the last day of the month.",
     );
   }
-  return calendar.toDayNumber(year, month, Math.min(day, daysInMonth));
+  return calendar.toDayNumber(year, month, Math.min(fields.day, daysInMonth));
 }
-
-const ISO_MONTH_CODES = /* @__PURE__ */ getOrdinalMonthCodes(12);
 
 /**
  * A date without a time or timezone, in the ISO calendar or another calendar system.
@@ -355,9 +356,11 @@ export class PlainDate implements BaseTemporal.PlainDate {
 
   /**
    * The fields of the date outside the ISO calendar, read from its calendar once, when the date is
-   * created.
+   * created. Omitted from the public type. A date in the ISO calendar computes its fields from its
+   * day number when they're read: most dates are only compared and moved, so a date is cheaper to
+   * create this way.
    */
-  declare private readonly calendarDate: CalendarDate | undefined;
+  declare public readonly calendarDate: CalendarDate | undefined;
 
   constructor(
     isoYear: number,
@@ -385,18 +388,10 @@ export class PlainDate implements BaseTemporal.PlainDate {
     this.calendarId = implementation.id;
     this.dayNumber = dayNumber;
     this.calendarDate =
-      implementation.id === ISO_CALENDAR_ID ? undefined : implementation.getDate(dayNumber);
+      implementation.id === ISO_CALENDAR_ID
+        ? undefined
+        : Object.freeze(implementation.getDate(dayNumber));
     Object.freeze(this);
-  }
-
-  /**
-   * The fields of the date. They're computed when they're read, from `calendarDate`, or from
-   * `dayNumber` in the ISO calendar: most dates are only compared and moved, so a date is cheaper
-   * to create this way. Like the getters of Temporal, `era` to `dayOfWeek` and the ISO fields
-   * aren't own properties.
-   */
-  private get fields(): CalendarFields {
-    return this.calendarDate ?? fromDayNumber(this.dayNumber);
   }
 
   public get era(): string | undefined {
@@ -408,50 +403,43 @@ export class PlainDate implements BaseTemporal.PlainDate {
   }
 
   public get year(): number {
-    return this.fields.year;
+    const calendarDate = this.calendarDate;
+    return calendarDate === undefined ? fromDayNumber(this.dayNumber).year : calendarDate.year;
   }
 
   public get month(): number {
-    return this.fields.month;
+    const calendarDate = this.calendarDate;
+    return calendarDate === undefined ? fromDayNumber(this.dayNumber).month : calendarDate.month;
   }
 
   public get monthCode(): string {
     return this.calendarDate === undefined
-      ? ISO_MONTH_CODES[this.isoMonth - 1]
+      ? ISO_MONTH_CODES[fromDayNumber(this.dayNumber).month - 1]
       : this.calendarDate.monthCode;
   }
 
   public get day(): number {
-    return this.fields.day;
+    const calendarDate = this.calendarDate;
+    return calendarDate === undefined ? fromDayNumber(this.dayNumber).day : calendarDate.day;
   }
 
   public get dayOfWeek(): number {
     return getIsoDayOfWeek(this.dayNumber);
   }
 
-  /**
-   * The ISO fields of the date, which the calendar fields above can't replace. Omitted from the
-   * public type.
-   */
-  public get isoYear(): number {
-    return fromDayNumber(this.dayNumber).year;
-  }
-
-  public get isoMonth(): number {
-    return fromDayNumber(this.dayNumber).month;
-  }
-
-  public get isoDay(): number {
-    return fromDayNumber(this.dayNumber).day;
-  }
-
   public get daysInMonth(): number {
-    const fields = this.fields;
-    return getCalendar(this.calendarId).getDaysInMonth(fields.year, fields.month);
+    const calendarDate = this.calendarDate;
+    if (calendarDate === undefined) {
+      const isoDate = fromDayNumber(this.dayNumber);
+      return getIsoDaysInMonth(isoDate.year, isoDate.month);
+    }
+    return getCalendar(this.calendarId).getDaysInMonth(calendarDate.year, calendarDate.month);
   }
 
   public get monthsInYear(): number {
-    return getMonthCodes(getCalendar(this.calendarId), this.year).length;
+    return this.calendarDate === undefined
+      ? ISO_MONTH_CODES.length
+      : getMonthCodes(getCalendar(this.calendarId), this.calendarDate.year).length;
   }
 
   /**
