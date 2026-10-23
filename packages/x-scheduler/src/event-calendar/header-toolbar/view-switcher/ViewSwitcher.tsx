@@ -78,7 +78,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         onClose={handleMenuClose}
         slotProps={{
           list: {
-            'aria-labelledby': `${schedulerId}-view-switcher-button`,
+            'aria-label': localeText.viewSwitcherAriaLabel,
           },
         }}
       >

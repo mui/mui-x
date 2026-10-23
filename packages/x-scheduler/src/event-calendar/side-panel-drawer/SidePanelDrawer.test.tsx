@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { within, waitFor } from '@mui/internal-test-utils';
+import { act, within, waitFor } from '@mui/internal-test-utils';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
@@ -85,19 +85,63 @@ describe('<SidePanelDrawer />', () => {
     const { user } = renderCompact(<EventCalendar events={[]} />);
     await openDrawer(user);
 
-    const drawer = getDrawer()!;
-    const options = within(drawer).getAllByRole('option');
-    expect(options.map((option) => option.textContent)).to.deep.equal([
-      'Day',
-      'Week',
-      'Month',
-      'Agenda',
+    // Same semantics and name as the toolbar's view switcher menu.
+    const viewList = within(getDrawer()!).getByRole('menu', { name: 'Views' });
+    const items = within(viewList).getAllByRole('menuitemradio');
+    expect(items.map((item) => item.textContent)).to.deep.equal(['Day', 'Week', 'Month', 'Agenda']);
+    expect(items.map((item) => item.getAttribute('aria-checked'))).to.deep.equal([
+      'false',
+      'true',
+      'false',
+      'false',
     ]);
 
-    await user.click(within(drawer).getByRole('option', { name: 'Month' }));
+    await user.click(within(viewList).getByRole('menuitemradio', { name: 'Month' }));
 
-    expect(within(getDrawer()!).getByRole('option', { name: 'Month' })).to.have.attribute(
-      'aria-selected',
+    expect(within(getDrawer()!).getByRole('menuitemradio', { name: 'Month' })).to.have.attribute(
+      'aria-checked',
+      'true',
+    );
+  });
+
+  it('should not expose the view list as a listbox', async () => {
+    const { user } = renderCompact(<EventCalendar events={[]} />);
+    await openDrawer(user);
+
+    const drawer = getDrawer()!;
+    // A listbox implies arrow keys that change the selection, which the list doesn't do.
+    expect(within(drawer).queryByRole('listbox')).to.equal(null);
+    expect(within(drawer).queryAllByRole('option')).to.have.length(0);
+  });
+
+  it('should take the view list accessible name from the localeText', async () => {
+    const { user } = renderCompact(
+      <EventCalendar events={[]} localeText={{ viewSwitcherAriaLabel: 'Calendar views' }} />,
+    );
+    await openDrawer(user);
+
+    const viewList = getDrawer()!.querySelector(`.${eventCalendarClasses.sidePanelDrawerViewList}`);
+    expect(viewList).toHaveAccessibleName('Calendar views');
+  });
+
+  it('should move between the views with the arrow keys and pick one with Enter', async () => {
+    const { user } = renderCompact(<EventCalendar events={[]} />);
+    await openDrawer(user);
+
+    const viewList = within(getDrawer()!).getByRole('menu', { name: 'Views' });
+    act(() => {
+      within(viewList).getByRole('menuitemradio', { name: 'Week' }).focus();
+    });
+
+    await user.keyboard('{ArrowUp}');
+    expect(within(viewList).getByRole('menuitemradio', { name: 'Day' })).toHaveFocus();
+
+    await user.keyboard('{ArrowDown}{ArrowDown}');
+    expect(within(viewList).getByRole('menuitemradio', { name: 'Month' })).toHaveFocus();
+
+    await user.keyboard('{Enter}');
+    expect(within(getDrawer()!).getByRole('menuitemradio', { name: 'Month' })).to.have.attribute(
+      'aria-checked',
       'true',
     );
   });

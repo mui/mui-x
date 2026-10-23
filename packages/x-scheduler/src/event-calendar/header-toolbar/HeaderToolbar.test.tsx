@@ -62,6 +62,27 @@ describe('<ViewSwitcher />', () => {
     expect(viewSwitcherButton).to.have.attribute('aria-expanded', 'true');
   });
 
+  it('should give the menu a fixed accessible name instead of the current view', async () => {
+    render(
+      <EventCalendarProvider {...standaloneDefaults}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Week' }));
+
+    // The checked item already announces the current view, so the menu must not repeat it.
+    expect(screen.getByRole('menu')).toHaveAccessibleName('Views');
+  });
+
+  it('should take the menu accessible name from the localeText', async () => {
+    render(<EventCalendar events={[]} localeText={{ viewSwitcherAriaLabel: 'Calendar views' }} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Week' }));
+
+    expect(screen.getByRole('menu')).toHaveAccessibleName('Calendar views');
+  });
+
   it('should render all views in the menu for a custom set of views (with more than 3 views)', async () => {
     render(
       <EventCalendarProvider {...standaloneDefaults} views={['agenda', 'week', 'day', 'month']}>

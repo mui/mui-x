@@ -179,14 +179,17 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
       </SidePanelDrawerHeader>
 
       {showViewSwitcher && (
-        <SidePanelDrawerViewList className={classes.sidePanelDrawerViewList} role="listbox">
+        <SidePanelDrawerViewList
+          className={classes.sidePanelDrawerViewList}
+          aria-label={localeText.viewSwitcherAriaLabel}
+        >
           {views.map((viewItem) => (
             <MenuItem
               key={viewItem}
               className={classes.sidePanelDrawerViewItem}
-              role="option"
+              role="menuitemradio"
               selected={view === viewItem}
-              aria-selected={view === viewItem}
+              aria-checked={view === viewItem}
               onClick={(event) => store.setView(viewItem, event.nativeEvent)}
             >
               <ListItemIcon>{VIEW_ICONS[viewItem]}</ListItemIcon>
