@@ -628,6 +628,136 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(adapter.getDate(adapter.setTimezone(newStart, 'Asia/Tokyo'))).to.equal(10);
     });
 
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should move the series to the first instant of a repeated time, whatever the timezone of the system',
+      () => {
+        // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: 02:30 comes twice.
+        setSystemTimezone('America/New_York');
+        const original = EventBuilder.new(adapter)
+          .span('2026-10-25T08:00:00Z', '2026-10-25T09:00:00Z') // 09:00 CET
+          .withDataTimezone('Europe/Paris')
+          .rrule({ freq: 'DAILY' })
+          .toProcessed();
+        const inParis = (value: string) =>
+          adapter.setTimezone(adapter.date(value, 'default'), 'Europe/Paris');
+
+        // Move a later occurrence to 02:30: the series keeps its first day at 02:30.
+        const updated = applyRecurringUpdateAll(
+          adapter,
+          original,
+          inParis('2026-10-27T08:00:00Z'),
+          {
+            id: original.id,
+            start: inParis('2026-10-27T01:30:00Z'), // 02:30 CET
+            end: inParis('2026-10-27T01:45:00Z'),
+          },
+        );
+
+        expect(adapter.toJsDate(updated.updated![0].start!).toISOString()).to.equal(
+          '2026-10-25T00:30:00.000Z', // the first 02:30, CEST
+        );
+      },
+    );
+
+    it('should keep the instants of a repeated time when editing the first occurrence', () => {
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: 02:00 to 03:00 comes twice.
+      const original = EventBuilder.new(adapter)
+        .span('2026-10-25T00:30:00Z', '2026-10-25T01:15:00Z') // the first 02:30, the second 02:15
+        .withDataTimezone('Europe/Paris')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const inParis = (value: string) =>
+        adapter.setTimezone(adapter.date(value, 'default'), 'Europe/Paris');
+
+      const updated = applyRecurringUpdateAll(
+        adapter,
+        original,
+        original.dataTimezone.start.value,
+        {
+          id: original.id,
+          start: inParis('2026-10-25T01:05:00Z'), // the second 02:05
+          end: inParis('2026-10-25T01:20:00Z'), // the second 02:20
+        },
+      );
+
+      expect(adapter.toJsDate(updated.updated![0].start!).toISOString()).to.equal(
+        '2026-10-25T01:05:00.000Z',
+      );
+      expect(adapter.toJsDate(updated.updated![0].end!).toISOString()).to.equal(
+        '2026-10-25T01:20:00.000Z',
+      );
+    });
+
+    it('should resolve a series in a repeated time to its first instants when resizing a later occurrence', () => {
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: 02:00 to 03:00 comes twice.
+      const original = EventBuilder.new(adapter)
+        .span('2026-10-25T01:10:00Z', '2026-10-25T01:30:00Z') // the second 02:10 to 02:30
+        .withDataTimezone('Europe/Paris')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const inParis = (value: string) =>
+        adapter.setTimezone(adapter.date(value, 'default'), 'Europe/Paris');
+
+      const resizeEnd = applyRecurringUpdateAll(
+        adapter,
+        original,
+        inParis('2026-10-27T01:10:00Z'),
+        {
+          id: original.id,
+          end: inParis('2026-10-27T01:40:00Z'), // 02:40 CET
+        },
+      );
+      // The wall-clock times 02:10 and 02:40 of October 25th resolve to their first instants, CEST.
+      expect(adapter.toJsDate(resizeEnd.updated![0].start!).toISOString()).to.equal(
+        '2026-10-25T00:10:00.000Z',
+      );
+      expect(adapter.toJsDate(resizeEnd.updated![0].end!).toISOString()).to.equal(
+        '2026-10-25T00:40:00.000Z',
+      );
+
+      const resizeStart = applyRecurringUpdateAll(
+        adapter,
+        original,
+        inParis('2026-10-27T01:10:00Z'),
+        {
+          id: original.id,
+          start: inParis('2026-10-27T01:20:00Z'), // 02:20 CET
+        },
+      );
+      expect(adapter.toJsDate(resizeStart.updated![0].start!).toISOString()).to.equal(
+        '2026-10-25T00:20:00.000Z', // the first 02:20, CEST
+      );
+      expect(adapter.toJsDate(resizeStart.updated![0].end!).toISOString()).to.equal(
+        '2026-10-25T00:30:00.000Z',
+      );
+    });
+
+    it('should keep the days of an all-day series when moving a later occurrence to a day a DST transition lengthens', () => {
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: that day lasts 25 hours.
+      const original = EventBuilder.new(adapter)
+        .span('2026-09-30T22:00:00Z', '2026-10-01T21:59:59.999Z', { allDay: true }) // October 1st
+        .withDataTimezone('Europe/Paris')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const inParis = (value: string) =>
+        adapter.setTimezone(adapter.date(value, 'default'), 'Europe/Paris');
+
+      // Drag the occurrence of October 24th to October 25th.
+      const updated = applyRecurringUpdateAll(adapter, original, inParis('2026-10-23T22:00:00Z'), {
+        id: original.id,
+        start: inParis('2026-10-24T22:00:00Z'),
+        end: inParis('2026-10-25T22:59:59.999Z'),
+      });
+
+      expect(adapter.toJsDate(updated.updated![0].start!).toISOString()).to.equal(
+        '2026-09-30T22:00:00.000Z',
+      );
+      expect(adapter.toJsDate(updated.updated![0].end!).toISOString()).to.equal(
+        '2026-10-01T21:59:59.999Z',
+      );
+    });
+
     it('should use the rrule provided in changes when present', () => {
       const occurrenceStart = defaultEvent.dataTimezone.start.value;
       const changes: SchedulerEventUpdatedProperties = {

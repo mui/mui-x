@@ -143,7 +143,14 @@ describe('recurring-events/rRuleString', () => {
     });
 
     it('should throw when UNTIL is a date that does not exist', () => {
-      for (const until of ['20250231T000000Z', '20250101T240000Z']) {
+      for (const until of [
+        '20250231T000000Z',
+        '20251301T000000Z',
+        '20250001T000000Z',
+        '20250100T000000Z',
+        '20250101T240000Z',
+        '20250101T006000Z',
+      ]) {
         expect(() => parseRRule(adapter, `FREQ=DAILY;UNTIL=${until}`, 'default')).to.throw(
           `MUI X Scheduler: Invalid UNTIL date "${until}".`,
         );
