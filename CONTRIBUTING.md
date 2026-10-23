@@ -21,7 +21,6 @@ Run `pnpm docs:dev` and open <http://localhost:3001/experiments/> to browse the 
 Add experiment pages to `docs/pages/experiments/<product>/` and demo files to `docs/data/experiments/<product>/`.
 Set the page's `getLayout` to render `ExperimentLayout` from `docs/src/modules/components/ExperimentLayout` for the Material UI theme and CSS baseline.
 This keeps the sidebar mounted when navigating between experiments.
-Pass `fullScreen` to `ExperimentLayout` for a layout that fills the viewport.
 The theme follows the documentation site's light/dark mode and text direction preferences.
 The sidebar lists all experiment pages by product and remembers its visibility for the browser session.
 Restart the docs server after adding or renaming an experiment to refresh the sidebar.

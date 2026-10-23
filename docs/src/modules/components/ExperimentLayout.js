@@ -1,5 +1,6 @@
 import * as React from 'react';
 import NextLink from 'next/link';
+import NextHead from 'next/head';
 import { useRouter } from 'next/router';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -17,6 +18,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { ThemeOptionsContext } from '@mui/internal-core-docs/ThemeContext';
+import experimentTitles from 'docs/data/experiments/titles.json';
 
 const sidebarWidth = 260;
 const storageKey = 'mui-x-experiments-sidebar';
@@ -35,15 +37,18 @@ experimentPages.forEach((experiment) => {
 
   groups[group] ??= [];
   groups[group].push({
-    name: name === 'index' ? 'Overview' : formatName(name),
+    name: experimentTitles[experiment] || (name === 'index' ? 'Overview' : formatName(name)),
     href: `/experiments/${experiment.replace(/\/index$/, '')}`,
   });
 });
 
 // eslint-disable-next-line react/prop-types
-export function ExperimentLayout({ children, fullScreen = false }) {
+export function ExperimentLayout({ children }) {
   const { paletteMode, direction } = React.useContext(ThemeOptionsContext);
   const router = useRouter();
+  const activeExperiment = Object.values(groups)
+    .flat()
+    .find((experiment) => experiment.href === router.pathname);
   const theme = React.useMemo(
     () =>
       createTheme({
@@ -82,6 +87,11 @@ export function ExperimentLayout({ children, fullScreen = false }) {
 
   return (
     <ThemeProvider theme={theme}>
+      <NextHead>
+        <title>
+          {activeExperiment ? `${activeExperiment.name} - MUI X experiments` : 'MUI X experiments'}
+        </title>
+      </NextHead>
       <CssBaseline />
       <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
         <Drawer
@@ -176,13 +186,7 @@ export function ExperimentLayout({ children, fullScreen = false }) {
             <ChevronRightIcon />
           </IconButton>
         )}
-        <Box
-          component="main"
-          sx={[
-            { flex: 1, minWidth: 0, p: '20px' },
-            fullScreen && { display: 'flex', height: '100dvh', overflow: 'hidden' },
-          ]}
-        >
+        <Box component="main" sx={{ flex: 1, minWidth: 0, p: '20px' }}>
           {children}
         </Box>
       </Box>

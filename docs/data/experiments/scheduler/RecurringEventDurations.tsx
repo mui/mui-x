@@ -16,6 +16,7 @@ export default function RecurringEventDurations() {
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
+        viewConfig={{ week: { initialScrollTime: 0 } }}
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
       />

@@ -6,9 +6,6 @@ import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 export default function Experiments() {
   return (
     <Box sx={{ pt: '30vh', textAlign: 'center' }}>
-      <Typography component="h1" variant="h3" gutterBottom>
-        MUI X experiments
-      </Typography>
       <Typography>Choose an experiment from the sidebar.</Typography>
     </Box>
   );
