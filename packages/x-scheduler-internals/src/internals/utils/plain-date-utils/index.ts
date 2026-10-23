@@ -9,6 +9,8 @@ export type { PlainDateTime } from './timeZone';
 export {
   buildTemporalPlainDate,
   createProcessedDate,
+  getDateKey,
   getPlainDateKey,
   normalizeAllDayBounds,
 } from './adapter';
+export { isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';
