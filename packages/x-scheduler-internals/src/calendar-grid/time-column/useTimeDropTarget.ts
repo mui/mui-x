@@ -13,6 +13,7 @@ import {
   getTimelineAxisDurationMs,
   timelineAxisOffsetToDate,
 } from '../../internals/utils/timeline-axis';
+import { toLocalMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
@@ -67,19 +68,22 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       const cursorY = Math.max(input.clientY, elementTop);
 
       const cursorTimestamp = adapter.getTime(getDateAtClientY(cursorY));
-      // On a fall-back day, the element top renders both occurrences of the repeated hour and
-      // the axis resolves it to the first one. Once the cursor is past the actual start of the
-      // element, measure from that start instead.
+      const topTimestamp = adapter.getTime(getDateAtClientY(elementTop));
+      // On a fall-back day, the axis resolves the top of an element starting in the second
+      // occurrence of the repeated hour to the first one, the same wall-clock time an hour earlier.
+      // Once the cursor is past the actual start of the element, measure from that start instead.
       if (elementStart != null) {
-        const elementStartTimestamp = Math.max(
-          adapter.getTime(elementStart),
-          adapter.getTime(start),
-        );
-        if (cursorTimestamp >= elementStartTimestamp) {
-          return cursorTimestamp - elementStartTimestamp;
+        const timezone = adapter.getTimezone(start);
+        const startTimestamp = Math.max(adapter.getTime(elementStart), adapter.getTime(start));
+        if (
+          startTimestamp > topTimestamp &&
+          cursorTimestamp >= startTimestamp &&
+          toLocalMs(startTimestamp, timezone) === toLocalMs(topTimestamp, timezone)
+        ) {
+          return cursorTimestamp - startTimestamp;
         }
       }
-      return cursorTimestamp - adapter.getTime(getDateAtClientY(elementTop));
+      return cursorTimestamp - topTimestamp;
     });
 
   const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
