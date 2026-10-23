@@ -283,7 +283,7 @@ export default function MyApp(
 ) {
   const { Component } = props;
   const { pathname } = useRouter();
-  const isExperimentPage = pathname === '/experiments' || pathname.startsWith('/experiments/');
+  const isExperimentPage = pathname === '/x/experiments' || pathname.startsWith('/x/experiments/');
   const pageProps = React.useMemo(() => {
     const {
       userLanguage = 'en',

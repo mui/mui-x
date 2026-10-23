@@ -17,8 +17,8 @@ There are, however, a few differences:
 
 ## Experiments
 
-Run `pnpm docs:dev` and open <http://localhost:3001/experiments/>.
+Run `pnpm docs:dev` and open <http://localhost:3001/x/experiments/>.
 
-Add pages to `docs/pages/experiments/<product>/` and demo components to `docs/data/experiments/<product>/`.
+Add pages to `docs/pages/x/experiments/<product>/` and demo components to `docs/data/experiments/<product>/`.
 The app adds the sidebar automatically.
 Restart the docs server after adding or renaming a page to update the sidebar.

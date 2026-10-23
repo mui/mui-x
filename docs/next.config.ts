@@ -54,7 +54,7 @@ const chatPkg = loadPkg('./packages/x-chat');
 const pickersAdaptersDeps = getPickerAdapterDeps();
 
 const experimentPages = fs
-  .readdirSync(path.join(currentDirectory, 'pages/experiments'), {
+  .readdirSync(path.join(currentDirectory, 'pages/x/experiments'), {
     recursive: true,
     encoding: 'utf8',
   })

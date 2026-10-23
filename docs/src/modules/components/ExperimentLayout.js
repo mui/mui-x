@@ -38,7 +38,7 @@ experimentPages.forEach((experiment) => {
   groups[group] ??= [];
   groups[group].push({
     name: experimentTitles[experiment] || (name === 'index' ? 'Overview' : formatName(name)),
-    href: `/experiments/${experiment.replace(/\/index$/, '')}`,
+    href: `/x/experiments/${experiment.replace(/\/index$/, '')}`,
   });
 });
 
@@ -108,7 +108,7 @@ export function ExperimentLayout({ children }) {
           <Box component="nav" aria-label="Experiments">
             <Link
               component={NextLink}
-              href="/experiments/"
+              href="/x/experiments/"
               color="inherit"
               underline="none"
               sx={{ display: 'block', fontWeight: 600, mb: 2 }}
