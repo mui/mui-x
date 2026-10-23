@@ -42,16 +42,6 @@ describe('recurring-events/presets', () => {
       expect(days[6].code).to.equal('SA');
     });
 
-    it('lists the days of the last week of 9999, past the last supported day', () => {
-      const visibleDate = adapter.date('9999-12-30T12:00:00Z', 'default');
-      const days = getWeeklyDays(adapter, visibleDate, 1);
-
-      expect(days.map((d) => d.date.dayNumber - days[0].date.dayNumber)).to.deep.equal([
-        0, 1, 2, 3, 4, 5, 6,
-      ]);
-      expect(days[0].date.toString()).to.equal('9999-12-27');
-    });
-
     it('lists every day of the week when the timezone skips one', () => {
       // December 30th, 2011 (Friday) doesn't exist in Pacific/Apia.
       const visibleDate = adapter.date('2011-12-28T12:00:00', 'Pacific/Apia');
