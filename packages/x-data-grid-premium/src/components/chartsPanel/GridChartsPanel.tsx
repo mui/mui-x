@@ -57,7 +57,7 @@ const GridChartsPanelTitle = styled('div', {
 const GridChartsPanelChartSelection = styled('button', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelChartSelection',
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(0.25),
@@ -70,10 +70,17 @@ const GridChartsPanelChartSelection = styled('button', {
   background: 'none',
   outline: 'none',
   marginRight: 'auto',
-  '&:hover, &:focus-visible': {
+  '&:hover': {
     backgroundColor: vars.colors.interactive.hover,
   },
-});
+  ...(theme.focusVisible
+    ? { '&:focus-visible': theme.focusVisible }
+    : {
+        '&:focus-visible': {
+          backgroundColor: vars.colors.interactive.hover,
+        },
+      }),
+}));
 
 function GridChartsPanelChartSelector(props: {
   activeChartId: string;

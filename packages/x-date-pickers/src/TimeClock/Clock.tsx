@@ -9,6 +9,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
+import { outsetFocusRing } from '@mui/x-internals/focusVisible';
 import { ClockPointer } from './ClockPointer';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -107,11 +108,17 @@ const ClockClock = styled('div', {
 const ClockWrapper = styled('div', {
   name: 'MuiClock',
   slot: 'Wrapper',
-})({
+})(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  borderRadius: '50%',
   '&:focus': {
     outline: 'none',
   },
-});
+  ...(theme.focusVisible && {
+    '&:focus-visible': { ...outsetFocusRing, ...theme.focusVisible },
+  }),
+}));
 
 const ClockSquareMask = styled('div', {
   name: 'MuiClock',
