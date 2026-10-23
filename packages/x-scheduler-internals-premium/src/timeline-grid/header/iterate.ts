@@ -5,7 +5,6 @@ import type {
 } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
-  addMonthsToDayNumber,
   createAdapterDate,
   FULL_DAY_MINUTES,
   getStartOfDayMs,
@@ -267,12 +266,13 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
 }
 
 /**
- * Adds months to a wall-clock time. Unlike `PlainDate.add()`, it doesn't throw past the last
- * supported day, which the exclusive end of a range ending in December 9999 reaches.
+ * Adds months to a wall-clock time, keeping its time of day.
  */
 function addMonths(localMs: number, months: number): number {
-  const dayNumber = Math.floor(localMs / MS_PER_DAY);
-  return addMonthsToDayNumber(dayNumber, months) * MS_PER_DAY + (localMs - dayNumber * MS_PER_DAY);
+  const plainDate = toPlainDate(localMs);
+  return (
+    plainDate.add({ months }).dayNumber * MS_PER_DAY + (localMs - plainDate.dayNumber * MS_PER_DAY)
+  );
 }
 
 /**
