@@ -271,6 +271,28 @@ describe('<DataGridPro /> - Columns reorder', () => {
     ]);
   });
 
+  it('should not call onColumnOrderChange when the column is dropped at its original position', () => {
+    const onColumnOrderChange = vi.fn();
+    function Test() {
+      const data = useBasicDemoData(1, 3);
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro {...data} onColumnOrderChange={onColumnOrderChange} />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    const dragCol = getColumnHeaderCell(0).firstChild!;
+    fireEvent.dragStart(dragCol);
+    const dragEndEvent = createDragEndEvent(dragCol);
+    fireEvent(dragCol, dragEndEvent);
+
+    expect(onColumnOrderChange.mock.calls.length).to.equal(0);
+  });
+
   describe('column - disableReorder', () => {
     it('should not allow to start dragging a column with disableReorder=true', () => {
       const rows = [{ id: 0, brand: 'Nike' }];
