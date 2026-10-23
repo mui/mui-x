@@ -1,12 +1,68 @@
-import { adapter, DEFAULT_EVENT_CALENDAR_STATE, EventBuilder } from 'test/utils/scheduler';
+import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
+import {
+  adapter,
+  DEFAULT_EVENT_CALENDAR_STATE,
+  EventBuilder,
+  setSystemTimezone,
+} from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
 import { processDate } from '../process-date';
+import {
+  createAdapterDate,
+  createProcessedDate,
+} from '../internals/utils/plain-date-utils/adapter';
+
+// A UTC creation placeholder on December 30th, 2011, on a Pacific/Apia system, which skipped that
+// date: the adapter's `isSameDay()` counts it as the same day as December 31st.
+// The values are built from timestamps, as the adapter also parses the dates of that day wrong.
+// Browsers cannot change their timezone through process.env.TZ.
+function getStateInUTCOnApiaSystem() {
+  setSystemTimezone('Pacific/Apia');
+  // A new adapter, as adapters cache data computed in the current system timezone.
+  const systemAdapter = new TemporalAdapterDateFns();
+  const state: EventCalendarState = {
+    ...DEFAULT_EVENT_CALENDAR_STATE,
+    adapter: systemAdapter,
+    occurrencePlaceholder: {
+      type: 'creation',
+      surfaceType: 'day-grid',
+      start: createAdapterDate(systemAdapter, Date.UTC(2011, 11, 30), 'UTC'),
+      end: createAdapterDate(systemAdapter, Date.UTC(2011, 11, 30, 23, 59, 59), 'UTC'),
+      resourceId: null,
+    },
+  };
+  const december30 = createProcessedDate(systemAdapter, Date.UTC(2011, 11, 30), 'UTC');
+  const december31 = createProcessedDate(systemAdapter, Date.UTC(2011, 11, 31), 'UTC');
+  return { state, december30, december31 };
+}
 
 describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   describe('placeholderInDayCell', () => {
-    // TODO
+    it.skipIf(!isJSDOM)(
+      'should only match the day of the placeholder on a system that skips a date',
+      () => {
+        const { state, december30, december31 } = getStateInUTCOnApiaSystem();
+        // The row starts before the placeholder, so only its start can match.
+        const rowStart = createAdapterDate(state.adapter, Date.UTC(2011, 11, 25), 'UTC');
+        expect(
+          eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+            state,
+            december30,
+            rowStart,
+          ),
+        ).to.equal(state.occurrencePlaceholder);
+        expect(
+          eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
+            state,
+            december31,
+            rowStart,
+          ),
+        ).to.equal(null);
+      },
+    );
   });
 
   describe('placeholderInTimeRange', () => {
@@ -148,6 +204,19 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, processedDay),
       ).to.equal(false);
     });
+
+    it.skipIf(!isJSDOM)(
+      'should only match the day of the placeholder on a system that skips a date',
+      () => {
+        const { state, december30, december31 } = getStateInUTCOnApiaSystem();
+        expect(
+          eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, december30),
+        ).to.equal(true);
+        expect(
+          eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, december31),
+        ).to.equal(false);
+      },
+    );
   });
 
   describe('isCreatingInTimeRange', () => {
