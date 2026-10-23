@@ -1,8 +1,16 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import type { GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import type {
+  DataGridProps,
+  GridCellModesModel,
+  GridColDef,
+  GridRowModesModel,
+  GridRowsProp,
+} from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
+import { isJSDOM } from 'test/utils/skipIf';
+import { typeWithBrowserTiming } from 'test/utils/typeWithBrowserTiming';
 import { describe, it, expect } from 'vitest';
 
 describe('<DataGrid /> - Cell editable state', () => {
@@ -98,5 +106,58 @@ describe('<DataGrid /> - Cell editable state', () => {
     // Toggle colDef.editable to false → class should be removed immediately
     await user.click(screen.getByRole('button', { name: 'toggle-coldef' }));
     expectCellNotEditable(0, 1);
+  });
+});
+
+// `user.keyboard` renders all pending updates between `keydown` and the text insertion.
+// A real browser does not, so these tests use `typeWithBrowserTiming`.
+describe.skipIf(isJSDOM)('<DataGrid /> - Start editing with a printable key', () => {
+  const { render } = createRenderer();
+
+  const rows: GridRowsProp = [{ id: 1, name: 'Nike' }];
+  const columns: GridColDef[] = [{ field: 'name', editable: true }];
+
+  function ControlledGrid(props: Pick<DataGridProps, 'editMode'>) {
+    const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
+    const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          cellModesModel={cellModesModel}
+          onCellModesModelChange={setCellModesModel}
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={setRowModesModel}
+          {...props}
+        />
+      </div>
+    );
+  }
+
+  function UncontrolledGrid(props: Pick<DataGridProps, 'editMode'>) {
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} {...props} />
+      </div>
+    );
+  }
+
+  (['cell', 'row'] as const).forEach((editMode) => {
+    [
+      { name: 'controlled', Grid: ControlledGrid },
+      { name: 'uncontrolled', Grid: UncontrolledGrid },
+    ].forEach(({ name, Grid }) => {
+      it(`types the first character once with the ${name} ${editMode} modes model`, async () => {
+        const { user } = render(<Grid editMode={editMode} />);
+        const cell = getCell(0, 0);
+        await user.click(cell);
+
+        await typeWithBrowserTiming(cell, 'x');
+
+        expect(cell).to.have.class(gridClasses['cell--editing']);
+        expect(cell.querySelector('input')!.value).to.equal('x');
+      });
+    });
   });
 });
