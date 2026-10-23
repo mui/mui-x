@@ -213,6 +213,46 @@ describe('MonthView - Drag and Drop', () => {
 
   // Browsers cannot change their timezone through process.env.TZ.
   it.skipIf(!isJSDOM)(
+    'should resize an event end onto a repeated hour at its first instant, whatever the timezone of the system',
+    async () => {
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: 02:45 comes twice.
+      setSystemTimezone('America/New_York');
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Backup')
+        .span('2026-10-23T10:00:00Z', '2026-10-24T00:45:00Z') // 12:00 CEST to 02:45 CEST
+        .resizable(true)
+        .build();
+
+      render(
+        <StandaloneMonthView
+          events={[event]}
+          resources={[]}
+          displayTimezone="Europe/Paris"
+          visibleDate={new Date('2026-10-15T12:00:00Z')}
+          onEventsChange={handleEventsChange}
+        />,
+      );
+
+      const eventElement = screen.getAllByRole('button', { name: /Backup/i })[0];
+      mockElementBounds(eventElement, { left: 0, width: 200 });
+
+      await act(async () => {
+        simulateDragAndDrop({
+          source: getResizeHandle(eventElement, 'end'),
+          target: getMonthViewCell(25),
+        });
+      });
+
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(updatedEvents[0].start).to.equal('2026-10-23T10:00:00Z');
+      expect(updatedEvents[0].end).to.equal('2026-10-25T00:45:00.000Z'); // the first 02:45
+    },
+  );
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
     'should move an event onto a day whose midnight a DST transition skips',
     async () => {
       // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026: the day starts at 01:00.

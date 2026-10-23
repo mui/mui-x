@@ -7,6 +7,7 @@ import type {
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { useAdapterContext } from '../use-adapter-context';
 import { sortEventOccurrences } from '../sort-event-occurrences';
+import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -29,6 +30,8 @@ export function useEventOccurrencesWithDayGridPosition(
     } = {};
 
     const processedDays = days.map((day, dayIndex) => {
+      // The days after a DST transition at midnight can start at 01:00, so the spans count dates.
+      const dayNumber = buildTemporalPlainDate(adapter, day.value).dayNumber;
       const usedIndexes = new Set<number>();
       usedIndexesByDay.push(usedIndexes);
 
@@ -117,7 +120,9 @@ export function useEventOccurrencesWithDayGridPosition(
             position = {
               index: smallestAvailableIndex,
               daySpan: Math.min(
-                adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1,
+                buildTemporalPlainDate(adapter, occurrence.displayTimezone.end.value).dayNumber -
+                  dayNumber +
+                  1,
                 dayListSize - dayIndex,
               ),
             };
