@@ -355,10 +355,10 @@ export class PlainDate implements BaseTemporal.PlainDate {
   declare public readonly dayNumber: number;
 
   /**
-   * The fields of the date outside the ISO calendar, read from its calendar once, when the date is
-   * created. Omitted from the public type. A date in the ISO calendar computes its fields from its
-   * day number when they're read: most dates are only compared and moved, so a date is cheaper to
-   * create this way.
+   * The calendar fields of a date in another calendar than ISO, read from its calendar once, when
+   * the date is created, and `undefined` in the ISO calendar. Omitted from the public type. A date
+   * in the ISO calendar computes its fields from its day number when they're read: most dates are
+   * only compared and moved, so a date is cheaper to create this way.
    */
   declare public readonly calendarDate: CalendarDate | undefined;
 
@@ -557,7 +557,12 @@ export class PlainDate implements BaseTemporal.PlainDate {
  * show around them.
  */
 export function createPlainDate(dayNumber: number, calendar: string): PlainDate {
-  return new PlainDate(0, 0, 0, calendar, UNVALIDATED, dayNumber);
+  // Like the fields of a date, a day number that isn't finite throws. A fraction rounds down, to
+  // the day it's in.
+  const validDayNumber = Number.isInteger(dayNumber)
+    ? dayNumber
+    : toInteger(Math.floor(dayNumber), 'day number');
+  return new PlainDate(0, 0, 0, calendar, UNVALIDATED, validDayNumber);
 }
 
 /**
