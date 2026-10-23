@@ -3,5 +3,7 @@ export * from './defaults';
 export * from './cell';
 export * from './sheetName';
 export * from './getChartExcelTables';
+export * from './getGridChartsExcelTables';
 export * from './buildChartExcelWorkbook';
+export * from './downloadWorkbook';
 export * from './extractors';

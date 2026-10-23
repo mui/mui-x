@@ -231,6 +231,7 @@
   { "name": "ChartsToolbarImageExportTrigger", "kind": "Variable" },
   { "name": "ChartsToolbarImageExportTriggerProps", "kind": "TypeAlias" },
   { "name": "ChartsToolbarPremium", "kind": "Function" },
+  { "name": "ChartsToolbarPremiumDataGridExportOptions", "kind": "Interface" },
   { "name": "ChartsToolbarPremiumExcelExportOptions", "kind": "Interface" },
   { "name": "ChartsToolbarPremiumProps", "kind": "Interface" },
   { "name": "ChartsToolbarPrintExportOptions", "kind": "Interface" },
