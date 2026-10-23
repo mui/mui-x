@@ -1,0 +1,8 @@
+<DataGridPremium
+  apiRef={apiRef}
+  rows={initialRows}
+  columns={columns}
+  disableRowSelectionOnClick
+  onBeforeClipboardPasteStart={handleBeforeClipboardPasteStart}
+  onClipboardPasteEnd={handleClipboardPasteEnd}
+/>
