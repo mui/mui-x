@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type {
@@ -13,6 +14,7 @@ import {
   EventEditingStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
   SharedComponentsStyledContext,
+  SchedulerDirectionProvider,
 } from '@mui/x-scheduler/internals';
 import { DEFAULT_TESTING_VISIBLE_DATE, mockElementBounds } from 'test/utils/scheduler';
 import { buildDependency, resource1, resource2 } from './dependencyGeometryTestUtils';
@@ -152,7 +154,17 @@ interface RenderTimelineParameters {
   presetConfig?: PresetConfig;
   readOnly?: boolean;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
+  /**
+   * Sets the theme direction and the `dir` attribute, like a consumer does.
+   * @default 'ltr'
+   */
+  direction?: 'ltr' | 'rtl';
 }
+
+const themeByDirection = {
+  ltr: createTheme({ direction: 'ltr' }),
+  rtl: createTheme({ direction: 'rtl' }),
+};
 
 /**
  * The rendered root, so `view.setProps` reaches the timeline: the host element it
@@ -166,33 +178,39 @@ function TimelineHost({
   readOnly,
   onDependenciesChange,
   onStoreReady,
+  direction = 'ltr',
 }: RenderTimelineParameters & {
   onStoreReady: (store: EventTimelinePremiumStore<any, any>) => void;
 }) {
   return (
     // Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
     // root provides to the content (the row-height CSS resolves against them).
-    <div
-      className="test-timeline-host"
-      style={{
-        width: 1200,
-        height: 600,
-        display: 'flex',
-        flexDirection: 'column',
-        fontSize: '0.875rem',
-      }}
-    >
-      <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
-      <TestTimeline
-        events={events}
-        resources={resources}
-        dependencies={dependencies}
-        presetConfig={presetConfig}
-        readOnly={readOnly}
-        onDependenciesChange={onDependenciesChange}
-        onStoreReady={onStoreReady}
-      />
-    </div>
+    <ThemeProvider theme={themeByDirection[direction]}>
+      <SchedulerDirectionProvider>
+        <div
+          className="test-timeline-host"
+          dir={direction}
+          style={{
+            width: 1200,
+            height: 600,
+            display: 'flex',
+            flexDirection: 'column',
+            fontSize: '0.875rem',
+          }}
+        >
+          <style>{'.test-timeline-host, .test-timeline-host * { box-sizing: border-box; }'}</style>
+          <TestTimeline
+            events={events}
+            resources={resources}
+            dependencies={dependencies}
+            presetConfig={presetConfig}
+            readOnly={readOnly}
+            onDependenciesChange={onDependenciesChange}
+            onStoreReady={onStoreReady}
+          />
+        </div>
+      </SchedulerDirectionProvider>
+    </ThemeProvider>
   );
 }
 

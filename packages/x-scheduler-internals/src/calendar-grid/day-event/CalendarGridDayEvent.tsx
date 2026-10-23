@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useButton } from '@base-ui/react/internals/use-button';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps, NonNativeButtonProps } from '@base-ui/react/internals/types';
@@ -66,6 +67,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
   const { hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
+  const isRtl = useDirection() === 'rtl';
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -87,9 +89,12 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       toLocalDayNumber(end.timestamp, displayTimezone),
       buildTemporalPlainDate(adapter, rowEnd).dayNumber,
     );
-    const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
-    const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
+    // Measured from the inline start, where the first day of the event is.
+    const offsetFromStart = isRtl
+      ? elementPosition.right - input.clientX
+      : input.clientX - elementPosition.left;
+    const positionX = offsetFromStart / ref.current.offsetWidth;
 
     return createPlainDate(
       firstDay + Math.ceil(positionX * (lastDay - firstDay + 1)) - 1,

@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -159,6 +160,9 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const { className, ...other } = props;
 
     const adapter = useAdapterContext();
+    const isRtl = useRtl();
+    const PreviousIcon = isRtl ? ChevronRightIcon : ChevronLeftIcon;
+    const NextIcon = isRtl ? ChevronLeftIcon : ChevronRightIcon;
     const store = useEventCalendarStoreContext();
     const { classes, localeText } = useEventCalendarStyledContext();
 
@@ -227,7 +231,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               aria-label={localeText.miniCalendarGoToPreviousMonth}
               onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, -1))}
             >
-              <ChevronLeftIcon fontSize="small" />
+              <PreviousIcon fontSize="small" />
             </IconButton>
             <IconButton
               className={classes.miniCalendarNextButton}
@@ -235,7 +239,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               aria-label={localeText.miniCalendarGoToNextMonth}
               onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, 1))}
             >
-              <ChevronRightIcon fontSize="small" />
+              <NextIcon fontSize="small" />
             </IconButton>
           </MiniCalendarNavigation>
         </MiniCalendarHeader>
