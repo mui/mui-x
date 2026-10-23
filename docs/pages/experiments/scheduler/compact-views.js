@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import CompactDayView from 'docs/data/experiments/scheduler/CompactDayView';
 import CompactThreeDayView from 'docs/data/experiments/scheduler/CompactThreeDayView';
 import CompactWeekView from 'docs/data/experiments/scheduler/CompactWeekView';
-import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 
 export default function CompactViewsExperiment() {
   return (
@@ -28,5 +27,3 @@ export default function CompactViewsExperiment() {
     </Stack>
   );
 }
-
-CompactViewsExperiment.getLayout = (page) => <ExperimentLayout>{page}</ExperimentLayout>;

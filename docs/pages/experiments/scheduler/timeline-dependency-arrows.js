@@ -2,7 +2,6 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import TimelineDependencyArrows from 'docs/data/experiments/scheduler/TimelineDependencyArrows';
-import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 
 export default function TimelineDependencyArrowsExperiment() {
   return (
@@ -26,7 +25,3 @@ export default function TimelineDependencyArrowsExperiment() {
     </Stack>
   );
 }
-
-TimelineDependencyArrowsExperiment.getLayout = (page) => (
-  <ExperimentLayout>{page}</ExperimentLayout>
-);

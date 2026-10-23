@@ -16,6 +16,7 @@ import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import xPages from 'docs/data/pages'; // DO NOT REMOVE
 import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
+import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { DEFAULT_DOCS_CONFIG, DocsConfig } from '@mui/internal-core-docs/DocsProvider';
@@ -266,10 +267,23 @@ function useThemeWrapper() {
   return router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
 }
 
+function ExperimentPage({
+  component: Component,
+  ...pageProps
+}: { component: AppProps['Component'] } & Record<string, unknown>) {
+  return (
+    <ExperimentLayout>
+      <Component {...pageProps} />
+    </ExperimentLayout>
+  );
+}
+
 export default function MyApp(
   props: AppProps<{ userLanguage: string; translations: Translations; versions: VersionEntry[] }>,
 ) {
   const { Component } = props;
+  const { pathname } = useRouter();
+  const isExperimentPage = pathname === '/experiments' || pathname.startsWith('/experiments/');
   const pageProps = React.useMemo(() => {
     const {
       userLanguage = 'en',
@@ -292,8 +306,8 @@ export default function MyApp(
   return (
     <DocsApp
       {...props}
-      Component={Component}
-      pageProps={pageProps}
+      Component={isExperimentPage ? ExperimentPage : Component}
+      pageProps={isExperimentPage ? { ...pageProps, component: Component } : pageProps}
       docsConfig={DOCS_CONFIG}
       activePage={activePage}
       activePageParents={activePageParents}

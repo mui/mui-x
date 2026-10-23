@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import MonthViewOverflowContinuation from 'docs/data/experiments/scheduler/MonthViewOverflowContinuation';
 import MonthViewOverflowPersist from 'docs/data/experiments/scheduler/MonthViewOverflowPersist';
 import MonthViewOverflowButtonOverlap from 'docs/data/experiments/scheduler/MonthViewOverflowButtonOverlap';
-import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 
 export default function MonthViewMultiDayOverflowExperiment() {
   return (
@@ -33,7 +32,3 @@ export default function MonthViewMultiDayOverflowExperiment() {
     </Stack>
   );
 }
-
-MonthViewMultiDayOverflowExperiment.getLayout = (page) => (
-  <ExperimentLayout>{page}</ExperimentLayout>
-);

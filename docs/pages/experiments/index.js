@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 
 export default function Experiments() {
   return (
@@ -10,5 +9,3 @@ export default function Experiments() {
     </Box>
   );
 }
-
-Experiments.getLayout = (page) => <ExperimentLayout>{page}</ExperimentLayout>;

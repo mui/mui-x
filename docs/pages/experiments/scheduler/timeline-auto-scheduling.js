@@ -2,7 +2,6 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import TimelineAutoScheduling from 'docs/data/experiments/scheduler/TimelineAutoScheduling';
-import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 
 export default function TimelineAutoSchedulingExperiment() {
   return (
@@ -25,5 +24,3 @@ export default function TimelineAutoSchedulingExperiment() {
     </Stack>
   );
 }
-
-TimelineAutoSchedulingExperiment.getLayout = (page) => <ExperimentLayout>{page}</ExperimentLayout>;
