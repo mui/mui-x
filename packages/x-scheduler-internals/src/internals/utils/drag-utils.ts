@@ -4,9 +4,7 @@ import type {
   TemporalSupportedObject,
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { createPlainDate } from './base-temporal/PlainDate';
 import type { PlainDate } from './base-temporal/PlainDate';
-import { ISO_CALENDAR_ID } from './base-temporal/calendar';
 import { createAdapterDate } from './plain-date-utils/adapter';
 import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
 
@@ -45,12 +43,9 @@ export function addDaysOnWallClock(
   }
   const timezone = adapter.getTimezone(date);
   const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
-  // Unlike `add()`, `createPlainDate()` doesn't check the supported range: the grid shows the days
-  // after December 31st, 9999.
-  const plainDate = createPlainDate(plainDateTime.date.dayNumber + dayCount, ISO_CALENDAR_ID);
   return createAdapterDate(
     adapter,
-    toEpochMs(plainDate, plainDateTime.msInDay, timezone),
+    toEpochMs(plainDateTime.date.add({ days: dayCount }), plainDateTime.msInDay, timezone),
     timezone,
   );
 }
