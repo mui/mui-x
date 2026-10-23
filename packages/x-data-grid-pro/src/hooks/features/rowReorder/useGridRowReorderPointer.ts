@@ -20,6 +20,7 @@ import {
   getVisibleViewportBounds,
   gridDimensionsSelector,
   gridEditRowsStateSelector,
+  hasReachedAutoScrollDistance,
   usePointerDrag,
 } from '@mui/x-data-grid/internals';
 import type {
@@ -32,10 +33,10 @@ import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { isElementInGrid, useGridPointerDragRouting } from '../../utils/useGridPointerDragRouting';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
+import { addClasses, removeClasses } from '../../../utils/classListUtils';
 import { findCellElement } from './utils';
 import {
   EXPAND_DELAY,
-  addClasses,
   animateRowMove,
   checkRowReorderValid,
   commitRowReorder,
@@ -44,7 +45,6 @@ import {
   getRowIdFromElement,
   hasLeftPendingExpansion,
   isRowReorderAllowed,
-  removeClasses,
   setRowReorderDropTarget,
   shouldExpandGroupOnHover,
   toggleHoveredGroupExpansion,
@@ -89,10 +89,6 @@ interface RowDragSession {
 // The scroll areas of HTML drag and drop show while a row is dragged.
 // They cover the edges of the rows, so hit-testing skips them.
 const HIT_TEST_IGNORE_SELECTOR = `.${gridClasses.scrollArea}`;
-
-// A long press starts the drag in place, maybe inside an edge scroll zone.
-// Auto-scroll waits until the pointer moves this far, so picking up a row at an edge doesn't scroll.
-const AUTO_SCROLL_ACTIVATION_DISTANCE = 10;
 
 /**
  * Row reordering with pointer events, for touch and pen input.
@@ -261,6 +257,8 @@ export const useGridRowReorderPointer = (
 
     if (session.canAutoScroll) {
       autoScroll(session, root, scroller);
+      // The page can scroll under a still pointer: the preview is in the root, which moves with it
+      session.preview.move(session.clientX, session.clientY);
     }
     // The rows can move under a pointer that holds still: auto-scroll, a group that expanded, new rows
     updateDropTarget(
@@ -313,6 +311,8 @@ export const useGridRowReorderPointer = (
       },
     }));
     addClasses(getGridRowElement(root, rowId), classes.rowBeingDragged);
+    // The finger would select the cell text it moves over
+    root.classList.add(gridClasses['root--disableUserSelection']);
     apiRef.current.setCellFocus(rowId, GRID_REORDER_COL_DEF.field);
 
     updateDropTarget(session, position.elementAtPoint);
@@ -329,8 +329,12 @@ export const useGridRowReorderPointer = (
     session.clientY = position.clientY;
     if (
       !session.canAutoScroll &&
-      Math.hypot(session.clientX - session.startClientX, session.clientY - session.startClientY) >
-        AUTO_SCROLL_ACTIVATION_DISTANCE
+      hasReachedAutoScrollDistance(
+        session.startClientX,
+        session.startClientY,
+        session.clientX,
+        session.clientY,
+      )
     ) {
       session.canAutoScroll = true;
     }

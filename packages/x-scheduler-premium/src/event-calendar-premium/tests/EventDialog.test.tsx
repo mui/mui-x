@@ -213,6 +213,7 @@ describe('<EventDialogContent open />', () => {
     // The failing field lives in the General tab, so the dialog switches back to it.
     expect(generalPanel).not.to.have.attribute('hidden');
     expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    expect(document.activeElement).to.equal(screen.getByRole('combobox', { name: /resource/i }));
   });
 
   it('should return to the General tab when only a custom validator fails', async () => {
@@ -593,6 +594,9 @@ describe('<EventDialogContent open />', () => {
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
+    // `TestEventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
+    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
+    // component's own direct wiring to the store.
     const onEventsChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
@@ -600,6 +604,7 @@ describe('<EventDialogContent open />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
         storeClass={PremiumTestStore}
+        eventDeletion={{ confirmation: false }}
       >
         <TestEventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
@@ -617,6 +622,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
         onEventsChange={() => {}}
+        eventDeletion={{ confirmation: false }}
       >
         <StoreSpy
           Context={SchedulerStoreContext}
@@ -3782,6 +3788,7 @@ describe('<EventDialogContent open />', () => {
           expect(screen.getByRole('tabpanel', { name: /recurrence/i })).not.to.have.attribute(
             'hidden',
           );
+          expect(document.activeElement).to.equal(dateInput);
         });
 
         it('should keep the Recurrence tab visible when a recurrence control is natively invalid', async () => {

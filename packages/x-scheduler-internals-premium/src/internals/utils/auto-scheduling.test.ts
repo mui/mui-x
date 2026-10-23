@@ -4,7 +4,7 @@ import type { SchedulerEventId, SchedulerProcessedEvent } from '@mui/x-scheduler
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerDependency } from '../../models';
 import { groupByEventId } from './dependency-utils';
-import { computeAutoSchedulingCascade } from './auto-scheduling';
+import { computeAutoSchedulingCascade, getDependencyViolation } from './auto-scheduling';
 
 const date = (value: string): TemporalSupportedObject => adapter.date(value, 'default');
 // `Z` strings resolve to the machine timezone, so the all-day fixtures use wall-time
@@ -38,6 +38,7 @@ function allDayEvent(id: SchedulerEventId, day: string) {
 interface CascadeOverrides {
   isEventReadOnly?: (eventId: SchedulerEventId) => boolean;
   deleted?: ReadonlySet<SchedulerEventId>;
+  enforcedDependencies?: SchedulerDependency[];
 }
 
 function runCascadeResult(
@@ -54,6 +55,7 @@ function runCascadeResult(
     isEventReadOnly: overrides.isEventReadOnly ?? (() => false),
     updated,
     deleted: overrides.deleted ?? new Set(),
+    enforcedDependencies: overrides.enforcedDependencies,
   });
 }
 
@@ -66,13 +68,23 @@ function runCascade(
   return runCascadeResult(events, dependencies, updated, overrides).updated;
 }
 
+// `null` asserts the bound is absent from the entry altogether — the edge a resize-style
+// clamp kept, which the cascade must not report alongside the edge that actually moved.
 function expectDates(
   entry: { start?: TemporalSupportedObject; end?: TemporalSupportedObject },
-  start: string,
-  end: string,
+  start: string | null,
+  end: string | null,
 ) {
-  expect(adapter.getTime(entry.start!)).to.equal(adapter.getTime(date(start)));
-  expect(adapter.getTime(entry.end!)).to.equal(adapter.getTime(date(end)));
+  if (start === null) {
+    expect('start' in entry).to.equal(false);
+  } else {
+    expect(adapter.getTime(entry.start!)).to.equal(adapter.getTime(date(start)));
+  }
+  if (end === null) {
+    expect('end' in entry).to.equal(false);
+  } else {
+    expect(adapter.getTime(entry.end!)).to.equal(adapter.getTime(date(end)));
+  }
 }
 
 describe('computeAutoSchedulingCascade', () => {
@@ -290,7 +302,9 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z');
+    // `end` stays kept, not merely unchanged in value: reporting it back would read as a move
+    // of both bounds instead of a resize of `start` alone.
+    expectDates(result[0], '2025-07-03T10:00:00Z', null);
   });
 
   it('should keep the end of a start-resized event clamped against its predecessor', () => {
@@ -300,7 +314,7 @@ describe('computeAutoSchedulingCascade', () => {
       .span('2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z')
       .toProcessed();
 
-    // A start resize resends the unchanged end (drag-and-drop and the dialog both do).
+    // Same as above, but the caller's own entry happens to carry the unchanged `end` too.
     const result = runCascade(
       [eventA, eventB],
       [dependency('a', 'b')],
@@ -308,7 +322,8 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z');
+    // `end` was resubmitted unchanged, so the clamp's own kept value is dropped too.
+    expectDates(result[0], '2025-07-03T10:00:00Z', null);
   });
 
   it('should keep the duration of a start-resized event whose end would not survive the clamp', () => {
@@ -357,9 +372,8 @@ describe('computeAutoSchedulingCascade', () => {
     expect(adapter.getTime(result[0].start!)).to.equal(
       adapter.getTime(utcDate('2025-07-05T00:00:00')),
     );
-    expect(adapter.getTime(result[0].end!)).to.equal(
-      adapter.getTime(utcDate('2025-07-12T23:59:59.999')),
-    );
+    // Kept, not just unchanged: absent from the entry, not merely equal to its old value.
+    expect('end' in result[0]).to.equal(false);
   });
 
   it('should not report blocked events on an unobstructed cascade', () => {
@@ -1377,7 +1391,7 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T12:00:00Z');
+    expectDates(result[0], '2025-07-03T10:00:00Z', null);
   });
 
   it('should clamp a dropped successor against the shortened end of its predecessor', () => {
@@ -1566,7 +1580,7 @@ describe('computeAutoSchedulingCascade', () => {
         [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
       );
     }).toWarnDev([
-      'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
+      'MUI X Scheduler: The dependencies provided via props contain a cycle through a rescheduled event.',
     ]);
 
     expect(result).to.have.length(1);
@@ -1651,7 +1665,7 @@ describe('computeAutoSchedulingCascade', () => {
         [{ id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') }],
       );
     }).toWarnDev([
-      'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
+      'MUI X Scheduler: The dependencies provided via props contain a cycle through a rescheduled event.',
     ]);
 
     expect(result!).to.have.length(1);
@@ -1860,7 +1874,7 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expectDates(result[0], '2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z');
+    expectDates(result[0], '2025-07-03T11:00:00Z', null);
   });
 
   it('should move a start-resized event entirely when its FF predecessor advances', () => {
@@ -2454,7 +2468,7 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expectDates(result[0], '2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z');
+    expectDates(result[0], '2025-07-03T11:00:00Z', null);
   });
 
   it('should move a start-resized event by the later of its SS and FF bounds', () => {
@@ -2621,7 +2635,7 @@ describe('computeAutoSchedulingCascade', () => {
     // The resize keeps the start it did not touch; the end snaps to the bound.
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expectDates(result[0], '2025-07-03T09:00:00Z', '2025-07-03T12:00:00Z');
+    expectDates(result[0], null, '2025-07-03T12:00:00Z');
   });
 
   it('should not clamp an end-resized event that stays past its FF bound', () => {
@@ -2674,9 +2688,8 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expect(adapter.getTime(result[0].start!)).to.equal(
-      adapter.getTime(utcDate('2025-07-03T00:00:00')),
-    );
+    // Kept, not just unchanged: absent from the entry, not merely equal to its old value.
+    expect('start' in result[0]).to.equal(false);
     expect(adapter.getTime(result[0].end!)).to.equal(
       adapter.getTime(utcDate('2025-07-05T23:59:59.999')),
     );
@@ -2724,7 +2737,7 @@ describe('computeAutoSchedulingCascade', () => {
 
     expect(result).to.have.length(1);
     expect(result[0].id).to.equal('b');
-    expectDates(result[0], '2025-07-03T09:00:00Z', '2025-07-03T14:00:00Z');
+    expectDates(result[0], null, '2025-07-03T14:00:00Z');
   });
 
   it('should not push an SS successor when only the end of an end-resized event advanced', () => {
@@ -2753,7 +2766,7 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result.map((entry) => entry.id)).to.deep.equal(['b']);
-    expectDates(result[0], '2025-07-03T09:00:00Z', '2025-07-03T14:00:00Z');
+    expectDates(result[0], null, '2025-07-03T14:00:00Z');
   });
 
   it('should move an end-resized event as a whole when its start is violated too', () => {
@@ -2831,7 +2844,7 @@ describe('computeAutoSchedulingCascade', () => {
         [{ id: 'a', start: date('2025-07-03T14:00:00Z'), end: date('2025-07-03T15:00:00Z') }],
       );
     }).toWarnDev([
-      'MUI X Scheduler: The dependencies provided via props contain a cycle through an updated event.',
+      'MUI X Scheduler: The dependencies provided via props contain a cycle through a rescheduled event.',
     ]);
   });
 
@@ -2922,6 +2935,186 @@ describe('computeAutoSchedulingCascade', () => {
     );
 
     expect(result).to.have.length(1);
-    expectDates(result[0], '2025-07-03T09:00:00Z', '2025-07-04T00:00:00Z');
+    expectDates(result[0], null, '2025-07-04T00:00:00Z');
+  });
+
+  it('should push a target by a valid predecessor when another one has a lag past the date range', () => {
+    const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventX = EventBuilder.new().id('x').singleDay('2025-07-03T09:00:00Z').toProcessed();
+    const eventB = EventBuilder.new().id('b').singleDay('2025-07-03T12:00:00Z').toProcessed();
+
+    // The unbounded dependency comes first, so it would be the first bound collected.
+    const result = runCascade(
+      [eventA, eventX, eventB],
+      [dependency('a', 'b', { lag: 100000000 }), dependency('x', 'b')],
+      [{ id: 'b', start: date('2025-07-03T08:00:00Z'), end: date('2025-07-03T09:00:00Z') }],
+    );
+
+    expect(result).to.have.length(1);
+    expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z');
+  });
+
+  describe('enforced dependencies', () => {
+    it('should push the target of an enforced dependency and cascade behind it', () => {
+      const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+      const eventB = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').toProcessed();
+      const eventC = EventBuilder.new().id('c').singleDay('2025-07-03T10:30:00Z').toProcessed();
+      const enforced = dependency('a', 'b');
+
+      const result = runCascade([eventA, eventB, eventC], [enforced, dependency('b', 'c')], [], {
+        enforcedDependencies: [enforced],
+      });
+
+      expect(result.map((entry) => entry.id)).to.deep.equal(['b', 'c']);
+      expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z');
+      expectDates(result[1], '2025-07-03T11:00:00Z', '2025-07-03T12:00:00Z');
+    });
+
+    it('should not move a target whose slack absorbs the lag', () => {
+      const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+      const eventB = EventBuilder.new().id('b').singleDay('2025-07-03T11:00:00Z').toProcessed();
+      const enforced = dependency('a', 'b', { lag: 30, lagUnit: 'minute' });
+
+      const result = runCascade([eventA, eventB], [enforced], [], {
+        enforcedDependencies: [enforced],
+      });
+
+      expect(result).to.deep.equal([]);
+    });
+
+    it('should apply the lag of an enforced dependency', () => {
+      const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+      const eventB = EventBuilder.new().id('b').singleDay('2025-07-03T10:00:00Z').toProcessed();
+      const enforced = dependency('a', 'b', { lag: 2, lagUnit: 'hour' });
+
+      const result = runCascade([eventA, eventB], [enforced], [], {
+        enforcedDependencies: [enforced],
+      });
+
+      expect(result).to.have.length(1);
+      expectDates(result[0], '2025-07-03T12:00:00Z', '2025-07-03T13:00:00Z');
+    });
+
+    it('should leave a pre-existing violation on another dependency of the target as-is', () => {
+      const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+      const eventX = EventBuilder.new().id('x').singleDay('2025-07-03T11:00:00Z').toProcessed();
+      const eventB = EventBuilder.new().id('b').singleDay('2025-07-03T09:00:00Z').toProcessed();
+      const enforced = dependency('a', 'b');
+
+      const result = runCascade([eventA, eventX, eventB], [enforced, dependency('x', 'b')], [], {
+        enforcedDependencies: [enforced],
+      });
+
+      expect(result).to.have.length(1);
+      expectDates(result[0], '2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z');
+    });
+
+    it('should report a read-only target that would need to move as blocked', () => {
+      const eventA = EventBuilder.new().id('a').singleDay('2025-07-03T09:00:00Z').toProcessed();
+      const eventB = EventBuilder.new().id('b').singleDay('2025-07-03T09:00:00Z').toProcessed();
+      const enforced = dependency('a', 'b');
+
+      const result = runCascadeResult([eventA, eventB], [enforced], [], {
+        enforcedDependencies: [enforced],
+        isEventReadOnly: (eventId) => eventId === 'b',
+      });
+
+      expect(result).to.deep.equal({ updated: [], blocked: ['b'] });
+    });
+
+    it.each([
+      ['FinishToStart', '2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z'],
+      ['StartToStart', '2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z'],
+      ['FinishToFinish', '2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z'],
+      ['StartToFinish', '2025-07-03T08:00:00Z', '2025-07-03T09:00:00Z'],
+    ] as const)('should enforce a %s dependency', (type, start, end) => {
+      // a: 09:00-10:00, b: 07:30-08:30 (violated for every type).
+      const eventA = EventBuilder.new()
+        .id('a')
+        .span('2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z')
+        .toProcessed();
+      const eventB = EventBuilder.new()
+        .id('b')
+        .span('2025-07-03T07:30:00Z', '2025-07-03T08:30:00Z')
+        .toProcessed();
+      const enforced = dependency('a', 'b', { type });
+
+      const result = runCascade([eventA, eventB], [enforced], [], {
+        enforcedDependencies: [enforced],
+      });
+
+      expect(result).to.have.length(1);
+      expectDates(result[0], start, end);
+    });
+  });
+});
+
+describe('getDependencyViolation', () => {
+  // a: 09:00-10:00, b: 07:30-08:30.
+  const eventA = EventBuilder.new()
+    .id('a')
+    .span('2025-07-03T09:00:00Z', '2025-07-03T10:00:00Z')
+    .toProcessed();
+  const eventB = EventBuilder.new()
+    .id('b')
+    .span('2025-07-03T07:30:00Z', '2025-07-03T08:30:00Z')
+    .toProcessed();
+  const lookup = buildLookup([eventA, eventB]);
+  const HOUR = 60 * 60 * 1000;
+
+  it.each([
+    ['FinishToStart', 2.5 * HOUR],
+    ['StartToStart', 1.5 * HOUR],
+    ['FinishToFinish', 1.5 * HOUR],
+    ['StartToFinish', 0.5 * HOUR],
+  ] as const)('should return how far a broken %s dependency moves its target', (type, expected) => {
+    expect(getDependencyViolation(adapter, lookup, dependency('a', 'b', { type }))).to.equal(
+      expected,
+    );
+  });
+
+  it('should return 0 when the dependency holds', () => {
+    expect(getDependencyViolation(adapter, lookup, dependency('b', 'a'))).to.equal(0);
+  });
+
+  it('should return 0 when an endpoint is unknown', () => {
+    expect(getDependencyViolation(adapter, lookup, dependency('a', 'ghost'))).to.equal(0);
+  });
+
+  it('should return 0 for an unsupported type', () => {
+    const unsupported = dependency('a', 'b', { type: 'Unknown' as SchedulerDependency['type'] });
+
+    expect(getDependencyViolation(adapter, lookup, unsupported)).to.equal(0);
+  });
+
+  it('should return 0 for a dependency from an event to itself', () => {
+    expect(
+      getDependencyViolation(adapter, lookup, dependency('a', 'a', { type: 'StartToFinish' })),
+    ).to.equal(0);
+  });
+
+  it('should round the lag down to whole days for an all-day target', () => {
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('UTC')
+      .span('2025-07-03T09:00:00', '2025-07-03T10:00:00')
+      .toProcessed();
+    const successor = allDayEvent('b', '2025-07-03');
+
+    // 36 hours wait one whole day: the bound is 2025-07-04T10:00, so the start moves
+    // two days, from the 3rd to the 5th.
+    expect(
+      getDependencyViolation(
+        adapter,
+        buildLookup([predecessor, successor]),
+        dependency('a', 'b', { lag: 36, lagUnit: 'hour' }),
+      ),
+    ).to.equal(2);
+  });
+
+  it('should return 0 when the lag runs past the supported date range', () => {
+    expect(
+      getDependencyViolation(adapter, lookup, dependency('a', 'b', { lag: 100000000 })),
+    ).to.equal(0);
   });
 });

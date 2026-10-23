@@ -478,7 +478,8 @@ function DefaultComposer({ features }: { features?: ChatBoxFeatures }) {
 
   // Forward `slots.composerRoot` as ChatComposer's own root slot override.
   const composerRootProps = {
-    attachmentConfig,
+    // `undefined` keeps the `MuiChatComposer` theme default `features`.
+    features: attachmentConfig ? { attachments: attachmentConfig } : undefined,
     ...(slotProps.composerRoot ?? {}),
     slots: { root: composerRootSlotOverride, ...((slotProps.composerRoot as any)?.slots ?? {}) },
   } as any;

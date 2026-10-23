@@ -1,13 +1,8 @@
 import { adapter } from 'test/utils/scheduler';
 import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import { describe, it, expect } from 'vitest';
-import {
-  mergeDateAndTime,
-  normalizeAllDayBounds,
-  getStartOfWeek,
-  getEndOfWeek,
-  getWeekNumber,
-} from './date-utils';
+import { mergeDateAndTime, getStartOfWeek, getEndOfWeek, getWeekNumber } from './date-utils';
+import { normalizeAllDayBounds } from './plain-date-utils/adapter';
 
 const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
 
@@ -59,6 +54,21 @@ describe('date-utils', () => {
       expect(adapter.getHours(result.start)).to.equal(0);
       expect(adapter.getDate(result.end)).to.equal(10);
       expect(adapter.getHours(result.end)).to.equal(23);
+    });
+  });
+
+  describe('normalizeAllDayBounds across DST transitions', () => {
+    it('should end the day on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
+      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
+      const day = adapter.date('2024-04-06T12:00:00', 'America/Santiago');
+      const result = normalizeAllDayBounds(adapter, day, day, true);
+      expect(new Date(adapter.getTime(result.start)).toISOString()).to.equal(
+        '2024-04-06T03:00:00.000Z',
+      );
+      expect(new Date(adapter.getTime(result.end)).toISOString()).to.equal(
+        '2024-04-07T03:59:59.999Z',
+      );
+      expect(adapter.getTimezone(result.end)).to.equal('America/Santiago');
     });
   });
 

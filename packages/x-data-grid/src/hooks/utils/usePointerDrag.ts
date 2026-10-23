@@ -352,6 +352,13 @@ export function usePointerDrag<TData>(
         }
       };
 
+      // A pointer that moves over selectable text would select it, also outside the capture element.
+      const handleSelectStart = (selectEvent: Event) => {
+        if (session.status === 'dragging') {
+          selectEvent.preventDefault();
+        }
+      };
+
       // Pointer events bubble to the document before and after the capture, so listening there
       // covers both, even when the pointer leaves the capture element before the drag starts.
       doc.addEventListener('pointermove', handlePointerMove);
@@ -362,8 +369,10 @@ export function usePointerDrag<TData>(
       doc.addEventListener('keydown', handleKeyDown, true);
       doc.addEventListener('touchmove', handleTouchMove, { passive: false });
       doc.addEventListener('contextmenu', handleContextMenu);
+      doc.addEventListener('selectstart', handleSelectStart);
 
       session.cleanup = () => {
+        doc.removeEventListener('selectstart', handleSelectStart);
         doc.removeEventListener('pointermove', handlePointerMove);
         doc.removeEventListener('pointerup', handlePointerUp);
         doc.removeEventListener('pointercancel', handlePointerCancel);

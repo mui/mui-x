@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { screen, fireEvent, waitFor } from '@mui/internal-test-utils';
 import {
   adapter,
+  createMatchMedia,
   createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   StoreSpy,
   utcJuly4AllDayBuilder,
@@ -16,7 +18,8 @@ import {
   EventContextMenuProvider,
   EventContextMenuTrigger,
 } from '@mui/x-scheduler/internals';
-import { describe, it, expect } from 'vitest';
+import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import type { MockInstance } from 'vitest';
 import { RecurringScopeDialog } from '../../internals/components/recurring-scope-dialog/RecurringScopeDialog';
 
@@ -127,5 +130,40 @@ describe('EventContextMenu - recurring events (Premium)', () => {
     );
     // The recurring branch defers to the scope dialog instead of deleting right away.
     expect(screen.getByText(/Apply this change to:/i)).not.to.equal(null);
+  });
+
+  describe('focus', () => {
+    const originalMatchMedia = window.matchMedia;
+    beforeEach(() => {
+      window.matchMedia = createMatchMedia(false);
+    });
+    afterEach(() => {
+      window.matchMedia = originalMatchMedia;
+    });
+
+    it('should leave focus in the scope dialog once the menu has closed', async () => {
+      const weeklyEvent = EventBuilder.new(adapter)
+        .title('Weekly sync')
+        .singleDay('2025-07-03T09:00:00Z', 30)
+        .recurrent('WEEKLY')
+        .build();
+      render(
+        <EventCalendarPremium
+          events={[weeklyEvent]}
+          resources={[]}
+          defaultView="day"
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+        />,
+      );
+
+      fireEvent.contextMenu(screen.getByRole('button', { name: /^Weekly sync,/ }));
+      fireEvent.click(screen.getByRole('menuitem', { name: /delete/i }));
+      const dialog = await screen.findByRole('dialog');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
+      expect(dialog.contains(document.activeElement)).to.equal(true);
+    });
   });
 });
