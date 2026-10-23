@@ -73,6 +73,40 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         );
       },
     );
+
+    it.skipIf(!isJSDOM)(
+      'should move the visible date to the first instant of a time a DST transition repeats',
+      () => {
+        setSystemTimezone('UTC');
+        const visibleDate = adapter.date('2026-10-24T02:30:00', 'Europe/Paris');
+        // Paris leaves summer time on October 25th, 2026, when 03:00 becomes 02:00 again.
+        const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.navigate(
+          adapter,
+          visibleDate,
+          1,
+        );
+        expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
+          '2026-10-25T00:30:00.000Z',
+        );
+      },
+    );
+
+    it.skipIf(!isJSDOM)(
+      'should move the visible date forward by the length of the gap when a DST transition skips its time',
+      () => {
+        setSystemTimezone('Europe/London');
+        const visibleDate = adapter.date('2026-03-28T02:30:00', 'Europe/Paris');
+        // Paris enters summer time on March 29th, 2026, when 02:00 becomes 03:00.
+        const nextVisibleDate = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.navigate(
+          adapter,
+          visibleDate,
+          1,
+        );
+        expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal(
+          '2026-03-29T01:30:00.000Z',
+        );
+      },
+    );
   });
 });
 
