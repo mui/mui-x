@@ -54,6 +54,22 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
         expect(adapter.toJsDate(end).toISOString()).to.equal('2026-04-05T03:59:59.999Z');
       },
     );
+
+    it.skipIf(!isJSDOM)(
+      'should end a week on its last day when the timezone of the system skips a day of it',
+      () => {
+        // Apia skipped December 30th, 2011, when it moved across the date line.
+        setSystemTimezone('Pacific/Apia');
+        const start = adapter.date('2011-12-24T00:00:00', 'America/New_York');
+        const end = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndWeek.getEndDate(
+          adapter,
+          start,
+          1,
+          6,
+        );
+        expect(adapter.toJsDate(end).toISOString()).to.equal('2011-12-31T04:59:59.999Z');
+      },
+    );
   });
 
   describe('navigate', () => {
