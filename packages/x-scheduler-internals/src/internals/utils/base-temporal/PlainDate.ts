@@ -314,7 +314,7 @@ function addYearsAndMonths(
   const monthOfCode = getMonthOfCode(calendar, year, monthCode, overflow);
   if (monthOfCode === undefined) {
     throw new Error(
-      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved a date of the month ${monthCode} to the year ${year}, which doesn't have this month. ` +
+      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved a date of the month ${date.monthCode} to the year ${year}, which doesn't have this month. ` +
         "The `overflow: 'reject'` option forbids moving the date to another month. " +
         "Pass `overflow: 'constrain'` to use the month that replaces it.",
     );
@@ -335,7 +335,7 @@ function addYearsAndMonths(
   const daysInMonth = calendar.getDaysInMonth(year, month);
   if (fields.day > daysInMonth && overflow === 'reject') {
     throw new Error(
-      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved the day ${fields.day} to a month of ${daysInMonth} days. ` +
+      `Base UI Plus: \`BaseTemporal.PlainDate.prototype.add()\` moved the day ${date.day} to a month of ${daysInMonth} days. ` +
         "The `overflow: 'reject'` option forbids moving the date to the last day of the month. " +
         "Pass `overflow: 'constrain'` to use the last day of the month.",
     );
@@ -525,7 +525,7 @@ export class PlainDate implements BaseTemporal.PlainDate {
    * Returns whether `other` represents the same date in the same calendar.
    */
   public equals(other: PlainDateItem): boolean {
-    const date = PlainDate.from(other);
+    const date = other instanceof PlainDate ? other : PlainDate.from(other);
     return date.dayNumber === this.dayNumber && date.calendarId === this.calendarId;
   }
 
