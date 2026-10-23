@@ -10,7 +10,6 @@ import {
   toEpochMs,
   toPlainDateTime,
 } from './timeZone';
-import { addDaysToPlainDate } from './plainDate';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.
@@ -55,7 +54,7 @@ export function createEndOfPlainDate(
   plainDate: PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  const nextPlainDate = addDaysToPlainDate(plainDate, 1);
+  const nextPlainDate = plainDate.add({ days: 1 });
   return createAdapterDate(adapter, toEpochMs(nextPlainDate, 0, timezone) - 1, timezone);
 }
 
