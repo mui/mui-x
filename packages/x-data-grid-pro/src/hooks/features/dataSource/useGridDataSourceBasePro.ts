@@ -26,7 +26,6 @@ import {
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
   getTreeNodeDescendants,
-  asReplaceUpdates,
 } from '@mui/x-data-grid/internals';
 import type { GridDataSourceBaseOptions, GridStrategyProcessor } from '@mui/x-data-grid/internals';
 import { errorOnce } from '@mui/x-internals/warning';
@@ -45,6 +44,18 @@ import { gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 export const INITIAL_STATE = {
   loading: {},
   errors: {},
+};
+
+// Fetched rows are full snapshots: replace them so fields the server no longer returns are dropped.
+// A row returned as the stored object itself is merged instead, so it gets a new reference and repaints.
+const getFetchedRowsUpdates = (
+  apiRef: RefObject<GridPrivateApiPro>,
+  rows: GridGetRowsResponsePro['rows'],
+): Array<GridRowModelUpdate | GridRowModelReplace> => {
+  const rowsLookup = gridRowsLookupSelector(apiRef);
+  return rows.map((row) =>
+    rowsLookup[gridRowIdSelector(apiRef, row)] === row ? row : { _action: 'replace', row },
+  );
 };
 
 export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
@@ -141,8 +152,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (rowsToDelete.length > 0) {
         apiRef.current.updateNestedRows(rowsToDelete, groupPath);
       }
-      // Fetched rows are full snapshots: merging would keep fields the server no longer returns.
-      apiRef.current.updateNestedRows(asReplaceUpdates(rows), groupPath);
+      apiRef.current.updateNestedRows(getFetchedRowsUpdates(apiRef, rows), groupPath);
     },
     [apiRef],
   );
@@ -395,7 +405,10 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
             rowsToDelete.push({ ...rowsLookup[parentRowId], _action: 'delete' });
           });
         }
-        apiRef.current.updateRows([...asReplaceUpdates(response.rows), ...rowsToDelete]);
+        apiRef.current.updateRows([
+          ...getFetchedRowsUpdates(apiRef, response.rows),
+          ...rowsToDelete,
+        ]);
       }
 
       apiRef.current.unstable_applyPipeProcessors(
