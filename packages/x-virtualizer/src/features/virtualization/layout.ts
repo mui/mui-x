@@ -104,7 +104,12 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       (context, scrollLayout) => ({
         ref: context.containerRef,
         ...(scrollLayout.external
-          ? { style: { position: 'relative' as const, ...externalContainerStyle(scrollLayout) } }
+          ? {
+              style: {
+                position: 'relative',
+                ...externalContainerStyle(scrollLayout),
+              } as React.CSSProperties,
+            }
           : undefined),
       }),
     ),

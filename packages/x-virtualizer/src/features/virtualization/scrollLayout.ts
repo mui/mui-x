@@ -41,7 +41,11 @@ export function useScrollLayout(
   api: Pick<Scrolling.API, 'registerHorizontalScroller'>,
   { containerRef, scrollerRef }: VirtualizationLayoutParams,
 ) {
-  const mergedRef = useForkRef(containerRef, scrollerRef);
+  // Keep React's private ref-cleanup return types out of the emitted declarations.
+  const mergedRef: ((node: HTMLDivElement | null) => void | (() => void)) | null = useForkRef(
+    containerRef,
+    scrollerRef,
+  );
   const headerScrollerRef = useRefCallback(api.registerHorizontalScroller);
   const footerScrollerRef = useRefCallback(api.registerHorizontalScroller);
   const horizontalScrollbarRef = useRefCallback(api.registerHorizontalScroller);
