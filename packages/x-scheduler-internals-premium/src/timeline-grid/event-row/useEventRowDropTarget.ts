@@ -8,7 +8,8 @@ import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-inter
 import {
   useDropTarget,
   dateToTimelineAxisOffsetMs,
-  resolveRepeatedTimeFrom,
+  getWallClockMsInDay,
+  isStartMinuteOutsideAxisWindow,
   timelineAxisOffsetToDate,
 } from '@mui/x-scheduler-internals/internals';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
@@ -90,21 +91,20 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // hours, the rendered edge is its window-clamped anchor: carry the hidden
         // remainder over to the new anchor so an unmoved drag maps back to the exact
         // original dates instead of silently snapping the start to the window edge.
-        // The axis reads a start in the second occurrence of an hour repeated by a fall-back
-        // transition as the first one, which isn't a hidden remainder.
-        const startTimestamp = adapter.getTime(data.start);
-        const startAnchorTimestamp = resolveRepeatedTimeFrom(
-          adapter.getTime(
-            timelineAxisOffsetToDate(
-              adapter,
-              config,
-              dateToTimelineAxisOffsetMs(adapter, config, data.start),
-            ),
-          ),
-          startTimestamp,
-          adapter.getTimezone(config.start),
+        // A visible start has no remainder, even in the second occurrence of an hour repeated by a
+        // fall-back transition, which the axis reads as the first one.
+        const startMsInDay = getWallClockMsInDay(adapter, data.start);
+        const startAnchor = timelineAxisOffsetToDate(
+          adapter,
+          config,
+          dateToTimelineAxisOffsetMs(adapter, config, data.start, startMsInDay),
         );
-        const hiddenRemainderMs = startTimestamp - startAnchorTimestamp;
+        const hiddenRemainderMs = isStartMinuteOutsideAxisWindow(
+          config,
+          Math.floor(startMsInDay / 60_000),
+        )
+          ? adapter.getTime(data.start) - adapter.getTime(startAnchor)
+          : 0;
 
         const newAnchorDate = axisOffsetToDate(
           cursorOffsetMs - data.initialCursorPositionInEventMs,

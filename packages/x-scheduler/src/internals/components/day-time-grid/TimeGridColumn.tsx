@@ -5,11 +5,9 @@ import { useStore } from '@base-ui/utils/store';
 import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import {
   buildTemporalPlainDate,
-  createAdapterDate,
-  toEpochMs,
+  createAdapterDateOnPlainDate,
+  createEndOfPlainDate,
 } from '@mui/x-scheduler-internals/internals';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
@@ -83,34 +81,25 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 
 const HOUR_MS = 3_600_000;
 
-/**
- * The first instant of an hour of the day of `date`, on the wall clock of its timezone, like the
- * offsets of the time axis of the column. `adapter.setHours()` resolves an hour that a DST
- * transition repeats depending on the timezone of the system.
- */
-function createHourOfDay(adapter: Adapter, date: TemporalSupportedObject, hour: number) {
-  const timezone = adapter.getTimezone(date);
-  return createAdapterDate(
-    adapter,
-    toEpochMs(buildTemporalPlainDate(adapter, date), hour * HOUR_MS, timezone),
-    timezone,
-  );
-}
-
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
   const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
-  const start = React.useMemo(
-    () => createHourOfDay(adapter, day.value, startTime),
-    [adapter, day, startTime],
-  );
-  const end = React.useMemo(
-    () =>
-      endTime === 24 ? adapter.endOfDay(day.value) : createHourOfDay(adapter, day.value, endTime),
-    [adapter, day, endTime],
-  );
+  // Built on the wall clock like the axis of the column, as `adapter.setHours()` and
+  // `adapter.endOfDay()` resolve the hours a DST transition repeats depending on the timezone of
+  // the system.
+  const { start, end } = React.useMemo(() => {
+    const timezone = adapter.getTimezone(day.value);
+    const plainDate = buildTemporalPlainDate(adapter, day.value);
+    return {
+      start: createAdapterDateOnPlainDate(adapter, plainDate, startTime * HOUR_MS, timezone),
+      end:
+        endTime === 24
+          ? createEndOfPlainDate(adapter, plainDate, timezone)
+          : createAdapterDateOnPlainDate(adapter, plainDate, endTime * HOUR_MS, timezone),
+    };
+  }, [adapter, day.value, startTime, endTime]);
   const column = React.useMemo(
     () => ({ start, end, dayStartMinute: startTime * 60, dayEndMinute: endTime * 60 }),
     [start, end, startTime, endTime],

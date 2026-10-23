@@ -3,13 +3,12 @@ import type {
   TemporalSupportedObject,
   TemporalTimezone,
 } from '@base-ui/react/internals/temporal';
-import { buildTemporalPlainDate, createAdapterDate } from './plain-date-utils/adapter';
 import {
-  toEpochMs,
-  toLocalDayNumber,
-  toLocalMs,
-  toPlainDateTime,
-} from './plain-date-utils/timeZone';
+  buildTemporalPlainDate,
+  createAdapterDate,
+  createAdapterDateOnPlainDate,
+} from './plain-date-utils/adapter';
+import { toLocalDayNumber, toLocalMs, toPlainDateTime } from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
 export const FULL_DAY_MINUTES = 24 * 60;
@@ -120,15 +119,15 @@ export function timelineAxisOffsetToDate(
     return createAdapterDate(adapter, NaN, timezone);
   }
   const plainDate = buildTemporalPlainDate(adapter, axis.start).add({ days: dayIndex });
-  return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
+  return createAdapterDateOnPlainDate(adapter, plainDate, msInDay, timezone);
 }
 
 /**
- * Resolves the wall-clock time of an instant read on the axis to its occurrence at or after
- * `fromMs`, the start of the element it belongs to.
+ * Moves an instant read on the axis before `fromMs`, the start of the element it belongs to, to
+ * the same wall-clock time in the offset of `fromMs`, when that's a later instant showing it.
  * The axis resolves a wall-clock time that a fall-back transition repeats to its first instant,
- * while an element starting in the second occurrence renders over both. Instants that are already
- * at or after `fromMs`, or whose wall-clock time doesn't occur again, are returned unchanged.
+ * while an element starting in the second occurrence renders over both, so this reads the times
+ * over that element in the second occurrence. Other instants are returned unchanged.
  */
 export function resolveRepeatedTimeFrom(
   epochMs: number,
@@ -138,11 +137,10 @@ export function resolveRepeatedTimeFrom(
   if (epochMs >= fromMs) {
     return epochMs;
   }
+  const localMs = toLocalMs(epochMs, timezone);
   // The same wall-clock time, in the offset of `fromMs`.
-  const shiftedMs = fromMs + toLocalMs(epochMs, timezone) - toLocalMs(fromMs, timezone);
-  return shiftedMs > epochMs && toLocalMs(shiftedMs, timezone) === toLocalMs(epochMs, timezone)
-    ? shiftedMs
-    : epochMs;
+  const shiftedMs = fromMs + localMs - toLocalMs(fromMs, timezone);
+  return shiftedMs > epochMs && toLocalMs(shiftedMs, timezone) === localMs ? shiftedMs : epochMs;
 }
 
 /**
