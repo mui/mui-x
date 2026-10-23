@@ -36,11 +36,6 @@ const MONTHS_PER_GREGORIAN_CYCLE = 12 * 400;
 const SKIPPED_DAYS_PERIOD = 31;
 
 /**
- * The last year of the days BaseTemporal supports, which end on December 31st, 9999.
- */
-const LAST_SUPPORTED_YEAR = 9999;
-
-/**
  * Returns how many steps of `interval` periods visit every period of a cycle of `cycleLength`
  * periods, plus one so that a match skipped in the first period because it is before the minimum
  * date is found again.
@@ -79,16 +74,16 @@ function getNthWeekdayOfMonth(
   dayOfWeek: number,
   ordinal: number,
 ): PlainDate | null {
+  // Read once, as a date computes its ISO fields when they're read.
+  const daysInMonth = monthStart.daysInMonth;
   let day: number;
   if (ordinal > 0) {
     day = 1 + ((dayOfWeek - monthStart.dayOfWeek + 7) % 7) + 7 * (ordinal - 1);
   } else {
-    const lastDayOfWeek = ((monthStart.dayOfWeek + monthStart.daysInMonth - 2) % 7) + 1;
-    day = monthStart.daysInMonth - ((lastDayOfWeek - dayOfWeek + 7) % 7) + 7 * (ordinal + 1);
+    const lastDayOfWeek = ((monthStart.dayOfWeek + daysInMonth - 2) % 7) + 1;
+    day = daysInMonth - ((lastDayOfWeek - dayOfWeek + 7) % 7) + 7 * (ordinal + 1);
   }
-  return day >= 1 && day <= monthStart.daysInMonth
-    ? toPlainDate(monthStart.dayNumber + day - 1)
-    : null;
+  return day >= 1 && day <= daysInMonth ? toPlainDate(monthStart.dayNumber + day - 1) : null;
 }
 
 /**
@@ -113,10 +108,9 @@ function addDays(date: PlainDate, days: number): PlainDate | null {
  * after the last year BaseTemporal supports.
  */
 function addMonths(monthStart: PlainDate, months: number): PlainDate | null {
-  const year = monthStart.year + Math.floor((monthStart.month - 1 + months) / 12);
-  return year > LAST_SUPPORTED_YEAR
-    ? null
-    : toPlainDate(addMonthsToDayNumber(monthStart.dayNumber, months));
+  const dayNumber = addMonthsToDayNumber(monthStart.dayNumber, months);
+  // `<=` also rejects the NaN of a month count too large to compute.
+  return dayNumber <= LAST_SUPPORTED_DAY ? toPlainDate(dayNumber) : null;
 }
 
 function getStartOfMonth(date: PlainDate): PlainDate {
