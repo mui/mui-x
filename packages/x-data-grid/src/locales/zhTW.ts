@@ -148,6 +148,15 @@ const zhTWGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => `${count} 個篩選器`,
   columnHeaderFiltersLabel: '顯示篩選器',
   columnHeaderSortIconLabel: '排序',
+  columnHeaderSortIconAriaLabel: (columnName, direction) => {
+    if (direction === 'asc') {
+      return `依${columnName}遞增排序`;
+    }
+    if (direction === 'desc') {
+      return `依${columnName}遞減排序`;
+    }
+    return `取消${columnName}的排序`;
+  },
 
   // Rows selected footer text
   footerRowSelected: (count) => `已選取 ${count.toLocaleString()} 個`,
