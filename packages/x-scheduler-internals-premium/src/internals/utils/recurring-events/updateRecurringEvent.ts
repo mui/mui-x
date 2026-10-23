@@ -188,10 +188,32 @@ export function applyRecurringUpdateAll(
     if (changes.start != null) {
       eventUpdatedProperties.start = newStart;
     }
-    const durationMs =
-      adapter.getTime(changes.end ?? occurrenceEnd) -
-      adapter.getTime(changes.start ?? occurrenceStart);
-    const newEnd = adapter.addMilliseconds(newStart, durationMs);
+    let newEnd: TemporalSupportedObject;
+    if (changes.allDay ?? originalEvent.allDay) {
+      // An all-day series keeps the number of days of the edited occurrence, whose length in hours
+      // changes with the DST transitions it spans.
+      const seriesEnd = originalEvent.dataTimezone.end;
+      const startDayNumber =
+        changes.start == null
+          ? occurrencePlainDate.dayNumber
+          : buildTemporalPlainDate(adapter, changes.start).dayNumber;
+      const endDayNumber =
+        changes.end == null
+          ? occurrencePlainDate.dayNumber +
+            buildTemporalPlainDate(adapter, seriesEnd.value).dayNumber -
+            seriesStartPlainDate.dayNumber
+          : buildTemporalPlainDate(adapter, changes.end).dayNumber;
+      newEnd = moveToPlainDate(
+        adapter,
+        changes.end ?? seriesEnd.value,
+        seriesStartPlainDate.add({ days: endDayNumber - startDayNumber }),
+      );
+    } else {
+      const durationMs =
+        adapter.getTime(changes.end ?? occurrenceEnd) -
+        adapter.getTime(changes.start ?? occurrenceStart);
+      newEnd = adapter.addMilliseconds(newStart, durationMs);
+    }
     // A start-only change leaves out an end that doesn't move, so it stays a resize.
     if (
       changes.end != null ||

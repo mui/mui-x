@@ -730,6 +730,31 @@ describe('recurring-events/updateRecurringEvent', () => {
       );
     });
 
+    it('should keep the days of an all-day series when moving a later occurrence to a day a DST transition lengthens', () => {
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: that day lasts 25 hours.
+      const original = EventBuilder.new(adapter)
+        .span('2026-09-30T22:00:00Z', '2026-10-01T21:59:59.999Z', { allDay: true }) // October 1st
+        .withDataTimezone('Europe/Paris')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const inParis = (value: string) =>
+        adapter.setTimezone(adapter.date(value, 'default'), 'Europe/Paris');
+
+      // Drag the occurrence of October 24th to October 25th.
+      const updated = applyRecurringUpdateAll(adapter, original, inParis('2026-10-23T22:00:00Z'), {
+        id: original.id,
+        start: inParis('2026-10-24T22:00:00Z'),
+        end: inParis('2026-10-25T22:59:59.999Z'),
+      });
+
+      expect(adapter.toJsDate(updated.updated![0].start!).toISOString()).to.equal(
+        '2026-09-30T22:00:00.000Z',
+      );
+      expect(adapter.toJsDate(updated.updated![0].end!).toISOString()).to.equal(
+        '2026-10-01T21:59:59.999Z',
+      );
+    });
+
     it('should use the rrule provided in changes when present', () => {
       const occurrenceStart = defaultEvent.dataTimezone.start.value;
       const changes: SchedulerEventUpdatedProperties = {
