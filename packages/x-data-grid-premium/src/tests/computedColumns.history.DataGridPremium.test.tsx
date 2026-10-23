@@ -14,6 +14,7 @@ import {
   GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type {
   DataGridPremiumProps,
   GridApi,
@@ -24,6 +25,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 
 const define = (
   field: string,
@@ -987,6 +989,158 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       await undo();
       expect(getModel()).to.deep.equal([total]);
       expect(api().getColumn('total')!.width).to.equal(150);
+    });
+
+    describe('undo and redo the parent has not echoed yet', () => {
+      // Applies the last model it was handed only when `echo()` is called.
+      let echo: () => void = () => {};
+      let setParentModel: (model: GridComputedColumnsModel) => void = () => {};
+      function Withholding({ initialModel }: { initialModel: GridComputedColumnsModel }) {
+        const [model, setModel] = React.useState(initialModel);
+        setParentModel = setModel;
+        return (
+          <Test
+            computedColumns={model}
+            onComputedColumnsChange={(nextModel) => {
+              echo = () => setModel(nextModel);
+            }}
+          />
+        );
+      }
+      const getPrivateApi = () =>
+        unwrapPrivateAPI<GridPrivateApiPremium, GridApi>(api()) ??
+        (api() as unknown as GridPrivateApiPremium);
+      // A diagnostic of internals: an undo/redo waiting for the echo listens to `columnsChange`.
+      const getColumnsChangeListeners = () =>
+        Array.from(getPrivateApi().eventManager.events.columnsChange.regular.keys());
+
+      it('keeps at most one listener for the echo through a series of undo and redo', async () => {
+        await render(<Withholding initialModel={[total]} />);
+        await userEdit('total', { formula: '=price * 3' });
+        await act(async () => echo());
+        expect(canUndo()).to.equal(true);
+        const listenerCount = getColumnsChangeListeners().length;
+
+        // The parent stops applying the models: each undo waits for its echo, and each redo
+        // asks for the model the grid still holds.
+        for (let i = 0; i < 5; i += 1) {
+          // eslint-disable-next-line no-await-in-loop
+          expect(await undo()).to.equal(true);
+          // eslint-disable-next-line no-await-in-loop
+          expect(await redo()).to.equal(true);
+        }
+        expect(getColumnsChangeListeners()).to.have.length(listenerCount);
+
+        expect(await undo()).to.equal(true);
+        expect(getColumnsChangeListeners()).to.have.length(listenerCount + 1);
+        await act(async () => echo());
+        expect(getModel()).to.deep.equal([total]);
+        expect(getColumnsChangeListeners()).to.have.length(listenerCount);
+      });
+
+      it('keeps one listener when a second undo comes before the first echo, and restores its columns', async () => {
+        await render(<Withholding initialModel={[total, tax]} />);
+        await act(async () => api().setColumnIndex('tax', 1));
+        await act(async () => api().setColumnWidth('tax', 180));
+        await act(async () => api().setColumnVisibility('tax', false));
+        await userRemove('tax');
+        await act(async () => echo());
+        await userRemove('total');
+        await act(async () => echo());
+        expect(getModel()).to.deep.equal([]);
+        const listenerCount = getColumnsChangeListeners().length;
+
+        await undo();
+        await undo();
+        expect(getColumnsChangeListeners()).to.have.length(listenerCount + 1);
+
+        // The parent applies the model of the second undo, which brings `tax` back.
+        await act(async () => echo());
+        expect(getModel()).to.deep.equal([total, tax]);
+        expect(getFields().indexOf('tax')).to.equal(1);
+        expect(api().getColumn('tax')!.width).to.equal(180);
+        expect(gridColumnVisibilityModelSelector(typedApiRef()).tax).to.equal(false);
+        expect(getColumnsChangeListeners()).to.have.length(listenerCount);
+      });
+
+      it('drops the pending echo when the parent applies another model', async () => {
+        await render(<Withholding initialModel={[total]} />);
+        await act(async () => api().setColumnWidth('total', 180));
+        await userRemove('total');
+        await act(async () => echo());
+        const listenerCount = getColumnsChangeListeners().length;
+        await undo();
+        expect(getColumnsChangeListeners()).to.have.length(listenerCount + 1);
+
+        // Not the echo: a change of its own, which does not restore the width of the undo.
+        await act(async () => setParentModel([total, tax]));
+        expect(getModel()).to.deep.equal([total, tax]);
+        expect(getColumnsChangeListeners()).to.have.length(listenerCount);
+        expect(api().getColumn('total')!.width).not.to.equal(180);
+      });
+
+      it('removes the listener of a pending echo when the grid unmounts', async () => {
+        const { unmount } = await render(<Withholding initialModel={[total]} />);
+        await userRemove('total');
+        await act(async () => echo());
+        const privateApi = getPrivateApi();
+        const listenersBefore = new Set(getColumnsChangeListeners());
+        await undo();
+        const added = getColumnsChangeListeners().filter(
+          (listener) => !listenersBefore.has(listener),
+        );
+        expect(added).to.have.length(1);
+
+        unmount();
+        expect(privateApi.eventManager.events.columnsChange.regular.has(added[0])).to.equal(false);
+      });
+
+      // `<Activity>` exists from React 19.2.
+      if ('Activity' in React) {
+        describe('Activity', () => {
+          let setHidden: (hidden: boolean) => void = () => {};
+          function HiddenParent({ initialModel }: { initialModel: GridComputedColumnsModel }) {
+            const [hidden, setHiddenState] = React.useState(false);
+            setHidden = setHiddenState;
+            return (
+              <React.Activity mode={hidden ? 'hidden' : 'visible'}>
+                <Withholding initialModel={initialModel} />
+              </React.Activity>
+            );
+          }
+
+          it('restores the columns of an echo that lands after the grid is hidden and shown again', async () => {
+            await render(<HiddenParent initialModel={[total]} />);
+            await act(async () => api().setColumnWidth('total', 180));
+            await userRemove('total');
+            await act(async () => echo());
+            const listenerCount = getColumnsChangeListeners().length;
+            await undo();
+
+            await act(async () => setHidden(true));
+            await act(async () => setHidden(false));
+            expect(getColumnsChangeListeners()).to.have.length(listenerCount + 1);
+            await act(async () => echo());
+            expect(getModel()).to.deep.equal([total]);
+            expect(api().getColumn('total')!.width).to.equal(180);
+            expect(getColumnsChangeListeners()).to.have.length(listenerCount);
+          });
+
+          it('restores the columns of an echo applied while the grid is hidden', async () => {
+            await render(<HiddenParent initialModel={[total]} />);
+            await act(async () => api().setColumnWidth('total', 180));
+            await userRemove('total');
+            await act(async () => echo());
+            await undo();
+
+            await act(async () => setHidden(true));
+            await act(async () => echo());
+            await act(async () => setHidden(false));
+            expect(getModel()).to.deep.equal([total]);
+            expect(api().getColumn('total')!.width).to.equal(180);
+          });
+        });
+      }
     });
   });
 

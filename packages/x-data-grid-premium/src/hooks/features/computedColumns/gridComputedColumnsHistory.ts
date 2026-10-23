@@ -10,6 +10,7 @@ import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/grid
 import type { GridHistoryEventHandler } from '../history/gridHistoryInterfaces';
 import type {
   GridComputedColumnSnapshot,
+  GridComputedColumnsInternalCache,
   GridComputedColumnsModel,
 } from './gridComputedColumnsInterfaces';
 import { gridComputedColumnsSelector } from './gridComputedColumnsSelectors';
@@ -41,6 +42,15 @@ const getFields = (model: GridComputedColumnsModel): Set<string> =>
 const getPrivateApi = (apiRef: RefObject<GridApiPremium>): GridPrivateApiPremium =>
   unwrapPrivateAPI<GridPrivateApiPremium, GridApiPremium>(apiRef.current) ??
   (apiRef.current as unknown as GridPrivateApiPremium);
+
+/**
+ * Drops the echo an undo/redo expects from a controlled parent, with the `columnsChange`
+ * listener waiting for it.
+ */
+const clearHistoryEcho = (cache: GridComputedColumnsInternalCache) => {
+  cache.historyEcho?.unsubscribe();
+  cache.historyEcho = null;
+};
 
 /**
  * Snapshots the computed columns of `from` that `to` does not define, as they stand in
@@ -89,7 +99,10 @@ function captureColumns(
  * a controlled parent waits in `caches.computedColumns.historyEcho`. The history hook may
  * therefore re-create the handler at any time (a handler built before the grid mounted, an
  * inline `historyEventHandlers` map) and stop recording for a while (`historyStackSize` set
- * to 0) without losing the baseline of the next step.
+ * to 0) without losing the baseline of the next step. At most one echo is pending, with the
+ * `columnsChange` listener that restores its columns once it lands: a later undo/redo and a
+ * recorded change dispose it, and `useGridComputedColumns` unsubscribes the listener while
+ * the effects of the grid are unmounted.
  */
 export const createComputedColumnsHistoryHandler = (
   apiRef: RefObject<GridApiPremium>,
@@ -155,26 +168,26 @@ export const createComputedColumnsHistoryHandler = (
       // parent is expected to apply the model it is handed, as for every controlled model
       // of the grid. A parent that drops it leaves the step resolved, and `canUndo()` and
       // `canRedo()` optimistic, until the next real change.
-      const echo = { model, columns };
-      cache.historyEcho = echo;
-      const unsubscribe = apiRef.current.subscribeEvent('columnsChange', () => {
-        if (cache.historyEcho !== echo) {
-          // A later undo/redo asked for another model before the parent echoed this one,
-          // or the parent published another model and `store()` recorded it.
-          unsubscribe();
-          return;
-        }
+      // Only the last operation waits for its echo: the listener of an earlier one is
+      // removed here, so a listener never runs once its echo is no longer the one pending.
+      clearHistoryEcho(cache);
+      const listener = () => {
         const currentModel = gridComputedColumnsSelector(apiRef);
         if (currentModel !== model && !isDeepEqual(currentModel, model)) {
           return;
         }
-        unsubscribe();
-        cache.historyEcho = null;
+        clearHistoryEcho(cache);
         restoreColumns(columns);
-      });
+      };
+      cache.historyEcho = {
+        model,
+        columns,
+        listener,
+        unsubscribe: apiRef.current.subscribeEvent('columnsChange', listener),
+      };
       return;
     }
-    cache.historyEcho = null;
+    clearHistoryEcho(cache);
     restoreColumns(columns);
   };
 
@@ -196,7 +209,7 @@ export const createComputedColumnsHistoryHandler = (
         if (model === expectedModel || isDeepEqual(model, expectedModel)) {
           return null;
         }
-        cache.historyEcho = null;
+        clearHistoryEcho(cache);
       }
 
       // Set by `setComputedColumns()` for an undoable change (or its controlled echo) only,

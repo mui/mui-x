@@ -154,9 +154,19 @@ export interface GridComputedColumnsInternalCache {
   /**
    * The model an undo or redo asked a controlled parent to echo, with the columns to
    * restore once the echo is hydrated. The echoed `computedColumnsChange` is the
-   * operation itself, not a new step.
+   * operation itself, not a new step. At most one echo is pending: replacing or clearing
+   * it removes its listener.
    */
-  historyEcho: { model: GridComputedColumnsModel; columns: GridComputedColumnSnapshot[] } | null;
+  historyEcho: {
+    model: GridComputedColumnsModel;
+    columns: GridComputedColumnSnapshot[];
+    /**
+     * Restores the columns once the state holds the echoed model. Subscribed to
+     * `columnsChange` while the effects of the grid are mounted.
+     */
+    listener: () => void;
+    unsubscribe: () => void;
+  } | null;
   /**
    * The model of the last undoable change (made from the grid UI, or passed with `undoable`)
    * until `setComputedColumns()` applies it: the history handler records a change as a step

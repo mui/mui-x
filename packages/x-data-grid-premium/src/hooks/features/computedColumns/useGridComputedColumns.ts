@@ -436,6 +436,21 @@ export const useGridComputedColumns = (
   /**
    * EFFECTS
    */
+  // An undo/redo waiting for the echo of a controlled parent listens to `columnsChange` while
+  // the effects of the grid are mounted, like its other subscriptions: the unmount removes the
+  // listener, and an `<Activity>` shown again subscribes it back. Before the prop sync, which
+  // may apply the echo.
+  React.useEffect(() => {
+    const cache = apiRef.current.caches.computedColumns;
+    const echo = cache.historyEcho;
+    if (echo !== null) {
+      echo.unsubscribe = apiRef.current.subscribeEvent('columnsChange', echo.listener);
+    }
+    return () => {
+      cache.historyEcho?.unsubscribe();
+    };
+  }, [apiRef]);
+
   React.useEffect(() => {
     if (props.computedColumns !== undefined) {
       apiRef.current.setComputedColumns(props.computedColumns);
