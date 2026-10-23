@@ -172,21 +172,26 @@ export function applyRecurringUpdateAll(
     );
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const { start: seriesStart, end: seriesEnd } = originalEvent.dataTimezone;
+  const seriesStart = originalEvent.dataTimezone.start;
   const seriesStartPlainDate = buildTemporalPlainDate(adapter, seriesStart.value);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
   // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
-  // can move DTSTART to another date. Otherwise, only the time changes, merged into the original date.
-  if (changes.start != null) {
-    eventUpdatedProperties.start = editedIsDtstart
-      ? changes.start
-      : moveToPlainDate(adapter, changes.start, seriesStartPlainDate);
-  }
-  if (changes.end != null) {
-    eventUpdatedProperties.end = editedIsDtstart
-      ? changes.end
-      : moveToPlainDate(adapter, changes.end, buildTemporalPlainDate(adapter, seriesEnd.value));
+  // can move DTSTART to another date. Otherwise, only the time of the start changes, merged into the
+  // original date, and the end follows with the duration of the edited occurrence, like the
+  // occurrences of the series.
+  if (!editedIsDtstart && (changes.start != null || changes.end != null)) {
+    const newStart =
+      changes.start == null
+        ? seriesStart.value
+        : moveToPlainDate(adapter, changes.start, seriesStartPlainDate);
+    if (changes.start != null) {
+      eventUpdatedProperties.start = newStart;
+    }
+    const durationMs =
+      adapter.getTime(changes.end ?? occurrenceEnd) -
+      adapter.getTime(changes.start ?? occurrenceStart);
+    eventUpdatedProperties.end = adapter.addMilliseconds(newStart, durationMs);
   }
 
   // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not
