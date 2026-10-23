@@ -8,6 +8,7 @@ import { Keyboard } from './features/keyboard';
 import { Rowspan } from './features/rowspan';
 import { Virtualization } from './features/virtualization';
 import { DEFAULT_PARAMS } from './constants';
+import { Scrolling, type ScrollContainer, type ScrollViewportInsets } from './features/scrolling';
 import type { Layout } from './features/virtualization/layout';
 import type { HeightEntry, RowSpacing } from './models/dimensions';
 import type { ColspanParams } from './features/colspan';
@@ -32,10 +33,21 @@ import {
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
 export type VirtualScrollerCompat<L extends Layout = Layout> = Virtualization.State<L>['getters'];
 
-export type BaseState<L extends Layout = Layout> = Virtualization.State<L> & Dimensions.State;
+export type { ScrollContainer, ScrollViewportInsets } from './features/scrolling';
+
+export type BaseState<L extends Layout = Layout> = Virtualization.State<L> &
+  Dimensions.State &
+  Scrolling.State;
 
 export type VirtualizerParams<L extends Layout = Layout> = {
   layout: L;
+
+  /** The scroll owner. Window scrolling uses the container's owner document. @default 'self' */
+  scrollContainer?: ScrollContainer;
+  /** Axes delegated to an external scroll container. Self always owns both axes. @default 'vertical' */
+  scrollContainerAxes?: 'vertical' | 'both';
+  /** Fixed overlays covering the scroll viewport, in pixels. Ordinary surrounding content is measured automatically. */
+  scrollViewportInsets?: ScrollViewportInsets;
 
   dimensions: DimensionsParams;
   virtualization: VirtualizationParams;
@@ -132,7 +144,7 @@ export type ParamsWithDefaults = RequiredFields<
   >;
 };
 
-const FEATURES = [Dimensions, Virtualization, Colspan, Rowspan, Keyboard] as const;
+const FEATURES = [Scrolling, Dimensions, Virtualization, Colspan, Rowspan, Keyboard] as const;
 
 export const useVirtualizer = <L extends Layout = Layout>(params: VirtualizerParams<L>) => {
   const paramsWithDefault = mergeDefaults<ParamsWithDefaults>(params, DEFAULT_PARAMS);
@@ -142,7 +154,8 @@ export const useVirtualizer = <L extends Layout = Layout>(params: VirtualizerPar
       FEATURES.map((f) => f.initialize(paramsWithDefault)).reduce(
         (state, partial) => Object.assign(state, partial),
         {},
-      ) as Dimensions.State &
+      ) as Scrolling.State &
+        Dimensions.State &
         Virtualization.State<L> &
         Colspan.State &
         Rowspan.State &
@@ -150,7 +163,12 @@ export const useVirtualizer = <L extends Layout = Layout>(params: VirtualizerPar
     );
   }).current;
 
-  const api = {} as Dimensions.API & Virtualization.API & Colspan.API & Rowspan.API & Keyboard.API;
+  const api = {} as Scrolling.API &
+    Dimensions.API &
+    Virtualization.API &
+    Colspan.API &
+    Rowspan.API &
+    Keyboard.API;
   for (const feature of FEATURES) {
     Object.assign(api, feature.use(store, paramsWithDefault, api));
   }

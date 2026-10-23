@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { platform } from '@base-ui/utils/platform';
 import { Store, createSelectorMemoized } from '@base-ui/utils/store';
@@ -9,10 +8,20 @@ import { Dimensions } from '../../features/dimensions';
 import { Virtualization, type VirtualizationLayoutParams } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import useRefCallback from '../../utils/useRefCallback';
+import type { Scrolling } from '../scrolling';
+import {
+  useScrollLayout,
+  scrollLayoutGeometry,
+  externalContainerStyle,
+  scrollBandSelectors,
+  pinnedBandSelectors,
+  horizontalScrollbarProps,
+  remainingRowHeight,
+} from './scrollLayout';
 
 /* eslint-disable react-hooks/rules-of-hooks */
 
-type RequiredAPI = Dimensions.API;
+type RequiredAPI = Dimensions.API & Pick<Scrolling.API, 'registerHorizontalScroller'>;
 
 type BaseElements = {
   scroller: React.RefObject<HTMLElement | null>;
@@ -66,8 +75,6 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
     api: RequiredAPI,
     layoutParams: VirtualizationLayoutParams,
   ) {
-    const { scrollerRef, containerRef } = layoutParams;
-
     const scrollbarVerticalRef = useScrollbarRefCallback(
       this.refs.scroller,
       this.refSetter('scrollbarVertical'),
@@ -82,28 +89,40 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
     );
 
     store.state.virtualization.context = {
-      scrollerRef,
-      containerRef,
+      ...useScrollLayout(api, layoutParams),
       scrollbarVerticalRef,
       scrollbarHorizontalRef,
     };
   }
 
   static selectors = {
-    containerProps: createSelectorMemoized(Virtualization.selectors.context, (context) => ({
-      ref: context.containerRef,
-    })),
+    ...scrollBandSelectors,
+    ...pinnedBandSelectors,
+    containerProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      scrollLayoutGeometry,
+      (context, scrollLayout) => ({
+        ref: context.containerRef,
+        ...(scrollLayout.external
+          ? { style: { position: 'relative' as const, ...externalContainerStyle(scrollLayout) } }
+          : undefined),
+      }),
+    ),
 
     scrollerProps: createSelectorMemoized(
       Virtualization.selectors.context,
       Dimensions.selectors.autoHeight,
       Dimensions.selectors.needsHorizontalScrollbar,
-      (context, autoHeight, needsHorizontalScrollbar) => ({
-        ref: context.scrollerRef,
+      scrollLayoutGeometry,
+      (context, autoHeight, needsHorizontalScrollbar, scrollLayout) => ({
+        ref: scrollLayout.split ? undefined : context.scrollerRef,
         style: {
           // TODO: fall back to overflow: 'auto' if no overflowX or overflowY is set?
           overflowX: !needsHorizontalScrollbar ? ('hidden' as const) : undefined,
           overflowY: autoHeight ? ('hidden' as const) : undefined,
+          ...(scrollLayout.external
+            ? ({ overflowX: 'visible', overflowY: 'visible', height: 'auto' } as const)
+            : undefined),
           // TODO: should include display: 'flex', flexDirection: 'column' since the Content has flexBasis and flexShrink?
         },
         role: 'presentation',
@@ -118,7 +137,18 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       Dimensions.selectors.dimensions,
       Dimensions.selectors.needsVerticalScrollbar,
       Dimensions.selectors.needsHorizontalScrollbar,
-      (layoutMode, dimensions, needsVerticalScrollbar, needsHorizontalScrollbar) => {
+      scrollLayoutGeometry,
+      (layoutMode, dimensions, needsVerticalScrollbar, needsHorizontalScrollbar, scrollLayout) => {
+        if (scrollLayout.external) {
+          return {
+            style: {
+              position: 'relative',
+              width: scrollLayout.split ? '100%' : scrollLayout.width,
+              height: scrollLayout.height,
+            } as React.CSSProperties,
+            role: 'presentation',
+          };
+        }
         let style: React.CSSProperties | undefined;
         if (layoutMode === 'controlled') {
           const {
@@ -165,13 +195,62 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       },
     ),
 
-    viewportProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
-      style: {
-        width: dimensions.viewportOuterSize.width,
-        height: dimensions.viewportOuterSize.height,
+    viewportProps: createSelectorMemoized(
+      Dimensions.selectors.dimensions,
+      Virtualization.selectors.layoutMode,
+      scrollLayoutGeometry,
+      (state: BaseState) =>
+        state.scrolling.external && state.virtualization.layoutMode === 'controlled'
+          ? state.scrolling.renderPosition.top
+          : 0,
+      (state: BaseState) =>
+        state.scrolling.external && state.virtualization.layoutMode === 'controlled'
+          ? state.scrolling.viewportTop + state.scrolling.viewportSize.height
+          : 0,
+      (dimensions, mode, scrollLayout, top, bottom) => {
+        let style: React.CSSProperties;
+        if (!scrollLayout.external) {
+          style = {
+            width: dimensions.viewportOuterSize.width,
+            height: dimensions.viewportOuterSize.height,
+          };
+        } else if (mode !== 'controlled') {
+          style = { display: 'contents' };
+        } else {
+          const viewportTop = Math.min(top, dimensions.contentSize.height);
+          style = {
+            position: 'absolute',
+            top: viewportTop,
+            width: '100%',
+            // The intersection can start inside a pinned band. Preserve its bottom
+            // edge when clamping the viewport's top at the end of the data rows.
+            height: Math.max(
+              0,
+              Math.min(scrollLayout.height, bottom) - viewportTop - scrollLayout.lane,
+            ),
+            overflow: 'clip',
+          };
+        }
+        return { style, role: 'presentation' };
       },
-      role: 'presentation',
-    })),
+    ),
+
+    bodyProps: createSelectorMemoized(
+      scrollLayoutGeometry,
+      Virtualization.selectors.layoutMode,
+      (scrollLayout, mode) => ({
+        style: scrollLayout.external
+          ? ({
+              position: 'relative',
+              height:
+                mode === 'controlled'
+                  ? scrollLayout.dimensions.viewportInnerSize.height
+                  : scrollLayout.dimensions.contentSize.height,
+              overflow: mode === 'controlled' ? 'clip' : undefined,
+            } as React.CSSProperties)
+          : { display: 'contents' as const },
+      }),
+    ),
 
     contentProps: createSelectorMemoized(
       Dimensions.selectors.contentHeight,
@@ -192,21 +271,35 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       Virtualization.selectors.layoutMode,
       Virtualization.selectors.offsetTop,
       Virtualization.selectors.scrollPosition,
-      (layoutMode, offsetTop, scrollPosition) => ({
-        style: {
-          transform:
-            layoutMode === 'uncontrolled'
-              ? `translate3d(0, ${offsetTop}px, 0)`
-              : `translate3d(${-scrollPosition.current.left}px, ${offsetTop - scrollPosition.current.top}px, 0)`,
-        },
-      }),
+      scrollLayoutGeometry,
+      (state: BaseState) =>
+        state.scrolling.external && state.virtualization.layoutMode === 'controlled'
+          ? state.scrolling.renderPosition.top
+          : 0,
+      (layoutMode, offsetTop, scrollPosition, scrollLayout, renderTop) => {
+        let top = offsetTop;
+        let left = 0;
+        if (scrollLayout.external) {
+          top -=
+            layoutMode === 'controlled' ? renderTop : scrollLayout.dimensions.topContainerHeight;
+        } else if (layoutMode !== 'uncontrolled') {
+          top -= scrollPosition.current.top;
+          left = -scrollPosition.current.left;
+        }
+        return {
+          style: {
+            transform: `translate3d(${scrollLayout.external || layoutMode === 'uncontrolled' ? '0' : `${left}px`}, ${top}px, 0)`,
+          },
+        };
+      },
     ),
 
     containerVerticalProps: createSelectorMemoized(
       Virtualization.selectors.layoutMode,
       Virtualization.selectors.scrollPosition,
-      (layoutMode, scrollPosition) =>
-        layoutMode === 'uncontrolled'
+      scrollLayoutGeometry,
+      (layoutMode, scrollPosition, scrollLayout) =>
+        scrollLayout.external || layoutMode === 'uncontrolled'
           ? undefined
           : {
               style: {
@@ -218,10 +311,15 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
     scrollbarHorizontalProps: createSelectorMemoized(
       Virtualization.selectors.context,
       Virtualization.selectors.scrollPosition,
-      (context, scrollPosition) => ({
-        ref: context.scrollbarHorizontalRef,
-        scrollPosition,
-      }),
+      horizontalScrollbarProps,
+      scrollLayoutGeometry,
+      (context, scrollPosition, externalProps, scrollLayout) =>
+        scrollLayout.external
+          ? { ...externalProps, scrollPosition }
+          : {
+              ref: context.scrollbarHorizontalRef,
+              scrollPosition,
+            },
     ),
 
     scrollbarVerticalProps: createSelectorMemoized(
@@ -250,29 +348,32 @@ export class LayoutList extends Layout<ListElements> {
   use(
     store: Store<BaseState>,
     _params: ParamsWithDefaults,
-    _api: RequiredAPI,
+    api: RequiredAPI,
     layoutParams: VirtualizationLayoutParams,
   ) {
-    const { scrollerRef, containerRef } = layoutParams;
-
-    const mergedRef = useForkRef(scrollerRef, containerRef);
-
-    store.state.virtualization.context = {
-      mergedRef,
-    };
+    store.state.virtualization.context = useScrollLayout(api, layoutParams);
   }
 
   static selectors = {
+    ...scrollBandSelectors,
+    ...pinnedBandSelectors,
+    scrollbarHorizontalProps: horizontalScrollbarProps,
+    spacerBottomProps: createSelectorMemoized(remainingRowHeight, (height) => ({
+      style: { height },
+    })),
     containerProps: createSelectorMemoized(
       Virtualization.selectors.context,
       Dimensions.selectors.autoHeight,
       Dimensions.selectors.needsHorizontalScrollbar,
-      (context, autoHeight, needsHorizontalScrollbar) => ({
-        ref: context.mergedRef,
+      scrollLayoutGeometry,
+      (context, autoHeight, needsHorizontalScrollbar, scrollLayout) => ({
+        ref: scrollLayout.split ? context.containerRef : context.mergedRef,
         style: {
           overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
           overflowY: autoHeight ? 'hidden' : undefined,
           position: 'relative',
+          ...externalContainerStyle(scrollLayout),
+          ...(scrollLayout.external ? { height: scrollLayout.height } : undefined),
         } as React.CSSProperties,
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
@@ -281,24 +382,34 @@ export class LayoutList extends Layout<ListElements> {
       }),
     ),
 
-    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => ({
-      style: {
-        position: 'absolute',
-        display: 'inline-block',
-        width: '100%',
-        height: contentHeight,
-        top: 0,
-        left: 0,
-        zIndex: -1,
-      } as React.CSSProperties,
-      role: 'presentation',
-    })),
+    contentProps: createSelectorMemoized(
+      Dimensions.selectors.contentHeight,
+      scrollLayoutGeometry,
+      (contentHeight, scrollLayout) => ({
+        style: {
+          position: 'absolute',
+          display: 'inline-block',
+          width: '100%',
+          height: scrollLayout.external ? scrollLayout.height : contentHeight,
+          top: 0,
+          left: 0,
+          zIndex: -1,
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
 
-    positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
-      style: {
-        height: offsetTop,
-      } as React.CSSProperties,
-    })),
+    positionerProps: createSelectorMemoized(
+      Virtualization.selectors.offsetTop,
+      scrollLayoutGeometry,
+      (offsetTop, scrollLayout) => ({
+        style: {
+          height: scrollLayout.external
+            ? Math.max(0, offsetTop - scrollLayout.dimensions.topContainerHeight)
+            : offsetTop,
+        } as React.CSSProperties,
+      }),
+    ),
   };
 }
 
@@ -325,7 +436,7 @@ export class LayoutList extends Layout<ListElements> {
  * also turns the pad into painted content that invalidates on every change).
  */
 function padTopFor(offsetTop: number, anchorTop: number) {
-  // Clamped: row positions can change without a context update (e.g. a row-height
+  // Clamped: row positions can change without a context update (e.scrollLayout. a row-height
   // change), and a negative padding would be dropped while the counter-translation kept
   // applying, displacing the rows. At zero the box is unanchored until the next update.
   return Math.max(0, offsetTop - anchorTop);
@@ -371,25 +482,26 @@ export class LayoutListSticky extends Layout<ListElements> {
   use(
     store: Store<BaseState>,
     _params: ParamsWithDefaults,
-    _api: RequiredAPI,
+    api: RequiredAPI,
     layoutParams: VirtualizationLayoutParams,
   ) {
-    const { scrollerRef, containerRef } = layoutParams;
-
-    const mergedRef = useForkRef(scrollerRef, containerRef);
-
-    store.state.virtualization.context = {
-      mergedRef,
-    };
+    store.state.virtualization.context = useScrollLayout(api, layoutParams);
   }
 
   static selectors = {
+    ...scrollBandSelectors,
+    ...pinnedBandSelectors,
+    scrollbarHorizontalProps: horizontalScrollbarProps,
+    spacerBottomProps: createSelectorMemoized(remainingRowHeight, (height) => ({
+      style: { height },
+    })),
     containerProps: createSelectorMemoized(
       Virtualization.selectors.context,
       Dimensions.selectors.autoHeight,
       Dimensions.selectors.needsHorizontalScrollbar,
-      (context, autoHeight, needsHorizontalScrollbar) => ({
-        ref: context.mergedRef,
+      scrollLayoutGeometry,
+      (context, autoHeight, needsHorizontalScrollbar, scrollLayout) => ({
+        ref: scrollLayout.split ? context.containerRef : context.mergedRef,
         style: {
           overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
           overflowY: autoHeight ? 'hidden' : undefined,
@@ -397,6 +509,7 @@ export class LayoutListSticky extends Layout<ListElements> {
           // The positioner height changes on each render context update; native scroll
           // anchoring would fight those updates by adjusting the scroll position.
           overflowAnchor: 'none',
+          ...externalContainerStyle(scrollLayout),
         } as React.CSSProperties,
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
@@ -405,15 +518,19 @@ export class LayoutListSticky extends Layout<ListElements> {
       }),
     ),
 
-    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => ({
-      style: {
-        // In-flow (not absolutely positioned): the sticky window is clamped to its
-        // containing block, which must span the full content height.
-        position: 'relative',
-        height: contentHeight,
-      } as React.CSSProperties,
-      role: 'presentation',
-    })),
+    contentProps: createSelectorMemoized(
+      Dimensions.selectors.contentHeight,
+      scrollLayoutGeometry,
+      (contentHeight, scrollLayout) => ({
+        style: {
+          // In-flow (not absolutely positioned): the sticky window is clamped to its
+          // containing block, which must span the full content height.
+          position: 'relative',
+          height: scrollLayout.external ? scrollLayout.height : contentHeight,
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
 
     positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
       style: {
@@ -426,8 +543,11 @@ export class LayoutListSticky extends Layout<ListElements> {
       Dimensions.selectors.rowPositions,
       Dimensions.selectors.contentHeight,
       Dimensions.selectors.dimensions,
-      (renderContext, rowPositions, contentHeight, dimensions) => {
-        const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
+      scrollLayoutGeometry,
+      (renderContext, rowPositions, contentHeight, dimensions, scrollLayout) => {
+        const firstPosition =
+          rowPositions[renderContext.firstRowIndex] ??
+          (renderContext.firstRowIndex ? contentHeight : 0);
         // `lastRowIndex` is exclusive: when it points past the last row, the window
         // extends to the end of the content.
         const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
@@ -438,8 +558,14 @@ export class LayoutListSticky extends Layout<ListElements> {
         return {
           style: {
             position: 'sticky',
-            top: stickyOffset,
-            bottom: stickyOffset,
+            top:
+              stickyOffset +
+              (scrollLayout.external ? scrollLayout.insets.top + dimensions.topContainerHeight : 0),
+            bottom:
+              stickyOffset +
+              (scrollLayout.external
+                ? scrollLayout.insets.bottom + dimensions.bottomContainerHeight + scrollLayout.lane
+                : 0),
             // Explicit height: the windowContent child's box includes the anchor pad,
             // so an auto height would balloon the sticky box and derail the clamping
             // math above. The windowContent overflows this box; the pad region is
@@ -546,7 +672,8 @@ const horizontalGeometry = createSelectorMemoized(
   Virtualization.selectors.renderContext,
   Dimensions.selectors.dimensions,
   Dimensions.selectors.columnPositions,
-  (renderContext, dimensions, columnPositions, _columns: ColumnWithWidth[]) => {
+  scrollLayoutGeometry,
+  (renderContext, dimensions, columnPositions, scrollLayout, _columns: ColumnWithWidth[]) => {
     const { leftPinnedWidth, rightPinnedWidth, columnsTotalWidth, viewportInnerSize } = dimensions;
     const firstPosition = columnPositions[renderContext.firstColumnIndex] ?? 0;
     // `lastColumnIndex` is exclusive: past the last column, the window extends to the
@@ -565,7 +692,15 @@ const horizontalGeometry = createSelectorMemoized(
       0,
       -(renderedWidth - (viewportInnerSize.width + verticalScrollbarLane)),
     );
-    return { offsetLeft, renderedWidth, stickyLeft, stickyRight };
+    return {
+      offsetLeft,
+      renderedWidth,
+      stickyLeft:
+        stickyLeft + (scrollLayout.external && !scrollLayout.split ? scrollLayout.insets.left : 0),
+      stickyRight:
+        stickyRight +
+        (scrollLayout.external && !scrollLayout.split ? scrollLayout.insets.right : 0),
+    };
   },
 );
 
@@ -586,9 +721,12 @@ const verticalGeometry = createSelectorMemoized(
   Dimensions.selectors.contentHeight,
   Dimensions.selectors.dimensions,
   Virtualization.selectors.anchorTop,
-  (renderContext, rowPositions, contentHeight, dimensions, anchorTop) => {
+  scrollLayoutGeometry,
+  (renderContext, rowPositions, contentHeight, dimensions, anchorTop, scrollLayout) => {
     const { viewportInnerSize, topContainerHeight, bottomContainerHeight } = dimensions;
-    const firstPosition = rowPositions[renderContext.firstRowIndex] ?? 0;
+    const firstPosition =
+      rowPositions[renderContext.firstRowIndex] ??
+      (renderContext.firstRowIndex ? contentHeight : 0);
     // `lastRowIndex` is exclusive: when it points past the last row, the window extends
     // to the end of the content.
     const lastPosition = rowPositions[renderContext.lastRowIndex] ?? contentHeight;
@@ -609,7 +747,13 @@ const verticalGeometry = createSelectorMemoized(
         (viewportInnerSize.height + bottomContainerHeight + horizontalScrollbarLane)
       ),
     );
-    return { offsetTop, padTop, renderedHeight, stickyTop, stickyBottom };
+    return {
+      offsetTop,
+      padTop,
+      renderedHeight,
+      stickyTop: stickyTop + scrollLayout.insets.top,
+      stickyBottom: stickyBottom + scrollLayout.insets.bottom,
+    };
   },
 );
 
@@ -637,8 +781,6 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
     api: RequiredAPI,
     layoutParams: VirtualizationLayoutParams,
   ) {
-    const { scrollerRef, containerRef } = layoutParams;
-
     const scrollbarVerticalRef = useScrollbarRefCallback(
       this.refs.scroller,
       this.refSetter('scrollbarVertical'),
@@ -653,27 +795,37 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
     );
 
     store.state.virtualization.context = {
-      scrollerRef,
-      containerRef,
+      ...useScrollLayout(api, layoutParams),
       scrollbarVerticalRef,
       scrollbarHorizontalRef,
     };
   }
 
   static selectors = {
-    containerProps: createSelectorMemoized(Virtualization.selectors.context, (context) => ({
-      ref: context.containerRef,
-      style: {
-        position: 'relative',
-      } as React.CSSProperties,
-      role: 'presentation',
+    ...scrollBandSelectors,
+    scrollCanvasProps: createSelectorMemoized(scrollBandSelectors.scrollCanvasProps, (props) => ({
+      ...props,
+      style: { ...props.style, display: 'flex', flexWrap: 'nowrap' } as React.CSSProperties,
     })),
+    containerProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      scrollLayoutGeometry,
+      (context, scrollLayout) => ({
+        ref: context.containerRef,
+        style: {
+          position: 'relative',
+          ...externalContainerStyle(scrollLayout),
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
 
     scrollerProps: createSelectorMemoized(
       Virtualization.selectors.context,
       Dimensions.selectors.autoHeight,
-      (context, autoHeight) => ({
-        ref: context.scrollerRef,
+      scrollLayoutGeometry,
+      (context, autoHeight, scrollLayout) => ({
+        ref: scrollLayout.split ? undefined : context.scrollerRef,
         style: {
           width: '100%',
           height: '100%',
@@ -684,6 +836,7 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
           // The spacer heights change on each render context update; native scroll
           // anchoring would fight those updates by adjusting the scroll position.
           overflowAnchor: 'none',
+          ...(scrollLayout.external ? { overflow: 'visible', height: 'auto' } : undefined),
           // The scrollbar lanes reserved inside the scrollable area (see
           // `contentProps`) are part of the scrollport, and the rendered window —
           // wider than the viewport by its column buffer — paints into them beneath
@@ -700,45 +853,56 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
       }),
     ),
 
-    contentProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
-      style: {
-        // The full columns width: the flex children (spacers + inner boxes) don't
-        // stretch their containing blocks, so the content sets the scrollable width.
-        // Floored at the inner viewport width.
-        width: Math.max(dimensions.columnsTotalWidth, dimensions.viewportInnerSize.width),
-        // Before the viewport is measured `viewportInnerSize` is empty, so the floor in
-        // `width` above is zero and it collapses to `columnsTotalWidth`. When the columns
-        // are narrower than the scroller that leaves white space beside the rows on the
-        // first paint. Floor the content at the scroller width until measured; once
-        // `isReady`, `width` already floors at `viewportInnerSize.width`, and a lingering
-        // `minWidth` on top of that would re-create a horizontal scroll dead zone.
-        ...(dimensions.isReady ? null : { minWidth: '100%' }),
-        position: 'relative',
-        // Reserve the virtual scrollbar lanes in the scrollable area, so the last
-        // row/column can scroll out from under the overlaid scrollbar widgets. Each lane
-        // is reserved whenever its own axis scrolls — the bottom lane (horizontal
-        // scrollbar) off `hasScrollX`, the right lane (vertical scrollbar) off `hasScrollY`
-        // — otherwise the lane itself would create overflow. Gating both on
-        // `hasScrollX && hasScrollY` is wrong: `hasScrollY` already folds in the horizontal
-        // lane (`content.height + scrollbarSize > container.height` whenever `hasScrollX`),
-        // so for a content-sized scroller the two states feed each other with no stable
-        // fixpoint and the layout oscillates under classic scrollbars.
-        // `content-box` so the lanes add to the columns width.
-        boxSizing: 'content-box',
-        paddingBottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
-        paddingRight: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
-        // Inset for sticky pinned-right cells: they stick against the scrollport, which
-        // spans under the overlaid vertical scrollbar (native scrollbars hidden), so
-        // this lifts them to the visible inner edge. Consumed as `right: var(--pinned-right)`.
-        '--pinned-right': `${dimensions.hasScrollY ? dimensions.scrollbarSize : 0}px`,
-      } as React.CSSProperties,
-      role: 'presentation',
-    })),
+    contentProps: createSelectorMemoized(
+      Dimensions.selectors.dimensions,
+      scrollLayoutGeometry,
+      (dimensions, scrollLayout) => ({
+        style: {
+          // The full columns width: the flex children (spacers + inner boxes) don't
+          // stretch their containing blocks, so the content sets the scrollable width.
+          // Floored at the inner viewport width.
+          width: Math.max(dimensions.columnsTotalWidth, dimensions.viewportInnerSize.width),
+          // Before the viewport is measured `viewportInnerSize` is empty, so the floor in
+          // `width` above is zero and it collapses to `columnsTotalWidth`. When the columns
+          // are narrower than the scroller that leaves white space beside the rows on the
+          // first paint. Floor the content at the scroller width until measured; once
+          // `isReady`, `width` already floors at `viewportInnerSize.width`, and a lingering
+          // `minWidth` on top of that would re-create a horizontal scroll dead zone.
+          ...(dimensions.isReady ? null : { minWidth: '100%' }),
+          position: 'relative',
+          // Reserve the virtual scrollbar lanes in the scrollable area, so the last
+          // row/column can scroll out from under the overlaid scrollbar widgets. Each lane
+          // is reserved whenever its own axis scrolls — the bottom lane (horizontal
+          // scrollbar) off `hasScrollX`, the right lane (vertical scrollbar) off `hasScrollY`
+          // — otherwise the lane itself would create overflow. Gating both on
+          // `hasScrollX && hasScrollY` is wrong: `hasScrollY` already folds in the horizontal
+          // lane (`content.height + scrollbarSize > container.height` whenever `hasScrollX`),
+          // so for a content-sized scroller the two states feed each other with no stable
+          // fixpoint and the layout oscillates under classic scrollbars.
+          // `content-box` so the lanes add to the columns width.
+          boxSizing: 'content-box',
+          paddingBottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
+          paddingRight: dimensions.hasScrollY ? dimensions.scrollbarSize : 0,
+          // Inset for sticky pinned-right cells: they stick against the scrollport, which
+          // spans under the overlaid vertical scrollbar (native scrollbars hidden), so
+          // this lifts them to the visible inner edge. Consumed as `right: var(--pinned-right)`.
+          '--pinned-right': `${dimensions.hasScrollY ? dimensions.scrollbarSize : 0}px`,
+          ...(scrollLayout.external
+            ? {
+                width: scrollLayout.split ? '100%' : scrollLayout.width,
+                height: scrollLayout.height,
+                boxSizing: 'border-box',
+              }
+            : undefined),
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
 
-    topContainerProps: createSelectorMemoized(() => ({
+    topContainerProps: createSelectorMemoized(scrollLayoutGeometry, (scrollLayout) => ({
       style: {
         position: 'sticky',
-        top: 0,
+        top: scrollLayout.insets.top,
         // Full-width flex row (nowrap): its content box is the innerContainer's sticky
         // containing block, so the innerContainer clamps across the full scroll range.
         display: 'flex',
@@ -748,17 +912,22 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
       role: 'presentation',
     })),
 
-    bottomContainerProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
-      style: {
-        position: 'sticky',
-        // Lifted above the horizontal scrollbar lane.
-        bottom: dimensions.hasScrollX ? dimensions.scrollbarSize : 0,
-        display: 'flex',
-        flexWrap: 'nowrap',
-        zIndex: 2,
-      } as React.CSSProperties,
-      role: 'presentation',
-    })),
+    bottomContainerProps: createSelectorMemoized(
+      Dimensions.selectors.dimensions,
+      scrollLayoutGeometry,
+      (dimensions, scrollLayout) => ({
+        style: {
+          position: 'sticky',
+          // Lifted above the horizontal scrollbar lane.
+          bottom:
+            scrollLayout.insets.bottom + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0),
+          display: 'flex',
+          flexWrap: 'nowrap',
+          zIndex: 2,
+        } as React.CSSProperties,
+        role: 'presentation',
+      }),
+    ),
 
     scrollbarVerticalProps: createSelectorMemoized(Virtualization.selectors.context, (context) => ({
       ref: context.scrollbarVerticalRef,
@@ -766,9 +935,14 @@ export class LayoutGridSticky extends Layout<DataGridElements> {
 
     scrollbarHorizontalProps: createSelectorMemoized(
       Virtualization.selectors.context,
-      (context) => ({
-        ref: context.scrollbarHorizontalRef,
-      }),
+      horizontalScrollbarProps,
+      scrollLayoutGeometry,
+      (context, externalProps, scrollLayout) =>
+        scrollLayout.external
+          ? externalProps
+          : {
+              ref: context.scrollbarHorizontalRef,
+            },
     ),
 
     // Horizontal offset spacer: gives the sticky sibling leftward slack to clamp into
