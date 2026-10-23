@@ -278,8 +278,11 @@ export default defineConfig(
     },
   },
   {
-    // A copy of BaseTemporal from Base UI Plus, which keeps its code style.
-    files: [`packages/x-scheduler-internals/src/internals/utils/base-temporal/*${EXTENSION_TS}`],
+    // A copy of BaseTemporal from the Base UI version, which keeps its code style.
+    files: [
+      `packages/x-scheduler-internals/src/internals/utils/base-temporal/*${EXTENSION_TS}`,
+      `packages/x-scheduler-internals/src/internals/utils/internals/temporal-utils/*${EXTENSION_TS}`,
+    ],
     rules: {
       'import/consistent-type-specifier-style': 'off',
       'jsdoc/no-bad-blocks': 'off',
