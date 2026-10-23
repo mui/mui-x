@@ -58,6 +58,15 @@ describe('recurring-events/presets', () => {
         '2012-01-01',
       ]);
     });
+
+    it('starts on the first day of the week when the timezone skips it', () => {
+      // December 30th, 2011 (Friday) doesn't exist in Pacific/Apia.
+      const visibleDate = adapter.date('2011-12-31T12:00:00', 'Pacific/Apia');
+      const days = getWeeklyDays(adapter, visibleDate, 5);
+
+      expect(days.map((d) => d.code)).to.deep.equal(['FR', 'SA', 'SU', 'MO', 'TU', 'WE', 'TH']);
+      expect(days[0].date.toString()).to.equal('2011-12-30');
+    });
   });
 
   describe('getMonthlyReference', () => {

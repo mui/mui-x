@@ -191,7 +191,14 @@ export function applyRecurringUpdateAll(
     const durationMs =
       adapter.getTime(changes.end ?? occurrenceEnd) -
       adapter.getTime(changes.start ?? occurrenceStart);
-    eventUpdatedProperties.end = adapter.addMilliseconds(newStart, durationMs);
+    const newEnd = adapter.addMilliseconds(newStart, durationMs);
+    // A start-only change leaves out an end that doesn't move, so it stays a resize.
+    if (
+      changes.end != null ||
+      adapter.getTime(newEnd) !== originalEvent.dataTimezone.end.timestamp
+    ) {
+      eventUpdatedProperties.end = newEnd;
+    }
   }
 
   // 4) RRULE adjustment: only if day changed, the event is recurring, and the user did not
