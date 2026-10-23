@@ -38,7 +38,7 @@ function useKeyboard(
       const renderContext = Virtualization.selectors.renderContext(store.state);
       const viewportPageSize = renderContext.lastRowIndex - renderContext.firstRowIndex;
 
-      return Math.min(viewportPageSize - 1, params.rows.length);
+      return Math.max(0, Math.min(viewportPageSize - 1, params.rows.length));
     }
 
     const maximumPageSizeWithoutScrollBar = Math.floor(

@@ -17,6 +17,7 @@ import { Dimensions, observeRootNode } from '../dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import type { Layout } from './layout';
 import { nextAnchorTop } from './anchor';
+import type { Scrolling } from '../scrolling';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -123,7 +124,7 @@ const selectors = (() => {
       (layoutMode, dimensions, rowPositions, firstRowIndex) => {
         return (
           (layoutMode === 'uncontrolled' ? dimensions.topContainerHeight : 0) +
-          (rowPositions[firstRowIndex] ?? 0)
+          (rowPositions[firstRowIndex] ?? (firstRowIndex ? dimensions.contentSize.height : 0))
         );
       },
     ),
@@ -217,7 +218,7 @@ type AbstractAPI = {
   getHiddenCellsOrigin: () => Record<RowId, Record<number, number>>;
 };
 
-type RequiredAPI = Dimensions.API & AbstractAPI;
+type RequiredAPI = Dimensions.API & Scrolling.API & AbstractAPI;
 
 export type VirtualizationLayoutParams = {
   containerRef: (node: HTMLDivElement | null) => void;
@@ -237,8 +238,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     pinnedRows = PinnedRows.EMPTY,
     pinnedColumns = PinnedColumns.EMPTY,
 
-    onWheel,
-    onTouchMove,
     onRenderContextChange,
     onScrollChange,
 
@@ -369,8 +368,8 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   // caller that knows the scroll stopped: a scroll event carrying no movement is not a
   // reliable signal, since writing `scrollTop` also echoes one back.
   const triggerUpdateRenderContext = useEventCallback((isSettlePass: boolean = false) => {
-    const scroller = layout.refs.scroller.current;
-    if (!scroller) {
+    const external = store.state.scrolling.external;
+    if (!store.state.scrolling.ready) {
       return undefined;
     }
 
@@ -383,12 +382,15 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     );
 
     // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce
-    const newScroll = {
-      top: clamp(scroller.scrollTop, 0, maxScrollTop),
-      left: isRtl
-        ? clamp(scroller.scrollLeft, -Math.abs(maxScrollLeft), 0)
-        : clamp(scroller.scrollLeft, 0, maxScrollLeft),
-    };
+    const position = external ? store.state.scrolling.position : api.getScrollPosition();
+    const newScroll = external
+      ? position
+      : {
+          top: clamp(position.top, 0, maxScrollTop),
+          left: isRtl
+            ? clamp(position.left, -Math.abs(maxScrollLeft), 0)
+            : clamp(position.left, 0, maxScrollLeft),
+        };
 
     const dx = newScroll.left - scrollPosition.current.left;
     const dy = newScroll.top - scrollPosition.current.top;
@@ -445,7 +447,9 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         didChangeDirection ||
         // The controlled layout renders no buffer, so a scroll below the threshold can
         // already reach past the rendered rows or columns.
-        (layoutMode === 'controlled' &&
+        // External grids can also move behind a clipping ancestor without changing
+        // their position relative to the selected owner.
+        ((layoutMode === 'controlled' || external) &&
           isLowOnRenderedBuffer(store, params, scrollPosition.current, scrollCache));
     }
 
@@ -521,7 +525,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
           // scroll duration. In sticky mode all rows share the window's single column
           // offset (the flex spacer), so a row carrying an independent column range
           // would be misaligned from the window; freezing is disabled.
-          frozenContext.current = layoutMode === 'sticky' ? undefined : renderContext;
+          frozenContext.current = layoutMode === 'sticky' || external ? undefined : renderContext;
           break;
       }
     }
@@ -567,6 +571,9 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       (enabledForRows || enabledForColumns)
     ) {
       return;
+    }
+    if (store.state.scrolling.external) {
+      scrollPosition.current = store.state.scrolling.position;
     }
     // Rows may have been measured or replaced since the buffers were last derived.
     updateScrollCacheBuffer(scrollCache.direction);
@@ -679,7 +686,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }
       if (
-        focusedVirtualCell.rowIndex > lastRowToRender &&
+        focusedVirtualCell.rowIndex >= lastRowToRender &&
         focusedVirtualCell.rowIndex < rowModels.length
       ) {
         rowIndexes.push(focusedVirtualCell.rowIndex);
@@ -812,11 +819,14 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     forceUpdateRenderContextCallback();
   }, [enabledForColumns, enabledForRows, forceUpdateRenderContextCallback]);
 
+  const previousScrollReset = React.useRef(scrollReset);
+  const { scrollToPosition } = api;
   useEnhancedEffect(() => {
-    if (layout.refs.scroller.current) {
-      layout.refs.scroller.current.scrollLeft = 0;
+    if (!store.state.scrolling.external || previousScrollReset.current !== scrollReset) {
+      scrollToPosition({ left: 0 });
     }
-  }, [layout.refs.scroller, scrollReset]);
+    previousScrollReset.current = scrollReset;
+  }, [store, scrollToPosition, scrollReset]);
 
   useRunOnce(renderContext !== EMPTY_RENDER_CONTEXT, () => {
     onScrollChange?.(scrollPosition.current, renderContext);
@@ -824,16 +834,18 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     isRenderContextReady.current = true;
 
     if (initialState?.scroll && layout.refs.scroller.current) {
-      const scroller = layout.refs.scroller.current;
       const { top, left } = initialState.scroll;
+      const external = store.state.scrolling.external;
 
+      // Even zero is an explicit position for an external owner: the grid may
+      // start below or beside other content. Restore each axis as it becomes ready.
       const isScrollRestored = {
-        top: !(top > 0),
-        left: !(left > 0),
+        top: !external && !(top > 0),
+        left: !external && !(left > 0),
       };
 
-      if (!isScrollRestored.left && columnsTotalWidth) {
-        scroller.scrollLeft = left;
+      if (!external && !isScrollRestored.left && columnsTotalWidth) {
+        api.scrollToPosition({ left });
         isScrollRestored.left = true;
         ignoreNextScrollEvent.current = true;
       }
@@ -842,8 +854,8 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       // there's nowhere to scroll). We still set the scrollTop to the initial value at this point in case
       // there already are rows rendered in the DOM, but we only confirm `isScrollRestored.top = true` in the
       // asynchronous callback below.
-      if (!isScrollRestored.top && contentHeight) {
-        scroller.scrollTop = top;
+      if (!external && !isScrollRestored.top && contentHeight) {
+        api.scrollToPosition({ top });
         ignoreNextScrollEvent.current = true;
       }
 
@@ -853,14 +865,14 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
           contentHeightCurrent: number,
         ) => {
           if (!isScrollRestored.left && columnsTotalWidthCurrent) {
-            scroller.scrollLeft = left;
+            api.scrollToPosition({ left });
             isScrollRestored.left = true;
-            ignoreNextScrollEvent.current = true;
+            ignoreNextScrollEvent.current = !external;
           }
-          if (!isScrollRestored.top && contentHeightCurrent) {
-            scroller.scrollTop = top;
+          if (!isScrollRestored.top && (contentHeightCurrent || (external && top <= 0))) {
+            api.scrollToPosition({ top });
             isScrollRestored.top = true;
-            ignoreNextScrollEvent.current = true;
+            ignoreNextScrollEvent.current = !external;
           }
           if (isScrollRestored.left && isScrollRestored.top) {
             scrollRestoreCallback.current = null;
@@ -873,10 +885,10 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
   useEnhancedEffect(() => {
-    if (layout.refs.scroller) {
+    if (store.state.scrolling.ready) {
       scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
     }
-  }, [layout.refs.scroller, columnsTotalWidth, contentHeight]);
+  });
 
   const isFirstSizing = React.useRef(true);
 
@@ -908,14 +920,8 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
   const scrollerRef = useRefCallback((node: HTMLDivElement) => {
     layout.refs.scroller.current = node;
-    const opts: AddEventListenerOptions = { passive: true };
-    node.addEventListener('scroll', handleScroll, opts);
-    node.addEventListener('wheel', onWheel as any, opts);
-    node.addEventListener('touchmove', onTouchMove as any, opts);
+    api.refreshScrollContainer();
     return () => {
-      node.removeEventListener('scroll', handleScroll, opts);
-      node.removeEventListener('wheel', onWheel as any, opts);
-      node.removeEventListener('touchmove', onTouchMove as any, opts);
       layout.refs.scroller.current = null;
     };
   });
@@ -935,6 +941,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   };
 
   return {
+    handleScroll,
     getters,
     setPanels,
     forceUpdateRenderContext,
@@ -974,6 +981,7 @@ function inputsSelector(
     columnsTotalWidth: dimensions.columnsTotalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
     viewportInnerHeight: dimensions.viewportInnerSize.height,
+    viewportOuterHeight: dimensions.viewportOuterSize.height,
     lastRowHeight: lastRowId !== undefined ? api.rowsMeta.getRowHeight(lastRowId) : 0,
     lastColumnWidth: lastColumn?.computedWidth ?? 0,
     rowsMeta: Dimensions.selectors.rowsMeta(store.state),
@@ -985,6 +993,10 @@ function inputsSelector(
     hiddenCellsOriginMap,
     virtualizeColumnsWithAutoRowHeight: params.virtualizeColumnsWithAutoRowHeight,
     layoutMode,
+    external: store.state.scrolling.external,
+    scrollReady: store.state.scrolling.ready,
+    renderPosition: store.state.scrolling.renderPosition,
+    columnViewportWidth: store.state.scrolling.columnViewportWidth,
   };
 }
 
@@ -1000,7 +1012,21 @@ function computeRenderContext(
     lastColumnIndex: inputs.columns.length,
   };
 
-  const { top, left } = scrollPosition;
+  if (
+    inputs.external &&
+    (!inputs.scrollReady || inputs.viewportOuterHeight <= 0 || inputs.viewportInnerWidth <= 0)
+  ) {
+    const edge = scrollPosition.top > 0 ? inputs.rows.length : 0;
+    const columnEdge = inputs.pinnedColumns?.left.length ?? 0;
+    return {
+      firstRowIndex: edge,
+      lastRowIndex: edge,
+      firstColumnIndex: columnEdge,
+      lastColumnIndex: columnEdge,
+    };
+  }
+
+  const { top, left } = inputs.external ? inputs.renderPosition : scrollPosition;
   const realLeft = Math.abs(left) + inputs.leftPinnedWidth;
 
   if (inputs.enabledForRows) {
@@ -1069,10 +1095,13 @@ function computeRenderContext(
       });
       // In controlled mode, the horizontal window is clipped to the viewport and
       // the pinned-right section overlays it, so it can be excluded from the bounds.
-      const rightBound =
+      let rightBound =
         inputs.layoutMode === 'controlled'
           ? realLeft + inputs.viewportInnerWidth - inputs.rightPinnedWidth
           : realLeft + inputs.viewportInnerWidth;
+      if (inputs.external) {
+        rightBound = realLeft + inputs.columnViewportWidth;
+      }
       lastColumnIndex = binarySearch(rightBound, inputs.columnPositions);
     }
 
@@ -1081,6 +1110,13 @@ function computeRenderContext(
   }
 
   const actualRenderContext = deriveRenderContext(inputs, renderContext, scrollCache);
+
+  // Headers and pinned rows can remain visible even when the data viewport is empty.
+  if (inputs.external && inputs.viewportInnerHeight <= 0) {
+    const edge = scrollPosition.top > 0 ? inputs.rows.length : 0;
+    actualRenderContext.firstRowIndex = edge;
+    actualRenderContext.lastRowIndex = edge;
+  }
 
   return actualRenderContext;
 }
@@ -1482,7 +1518,9 @@ function isLowOnRenderedBuffer(
   const rowPositions = Dimensions.selectors.rowPositions(store.state);
   const contentHeight = Dimensions.selectors.contentHeight(store.state);
 
-  const visibleTop = scrollPosition.top;
+  const scrolling = store.state.scrolling;
+  const position = scrolling.external ? scrolling.renderPosition : scrollPosition;
+  const visibleTop = position.top;
   const visibleBottom = visibleTop + dimensions.viewportInnerSize.height;
   const renderedTop = rowPositions[context.firstRowIndex] ?? 0;
   const renderedBottom = rowPositions[context.lastRowIndex] ?? contentHeight;
@@ -1501,12 +1539,14 @@ function isLowOnRenderedBuffer(
   const pinnedLeftCount = params.pinnedColumns?.left.length ?? 0;
   const pinnedRightCount = params.pinnedColumns?.right.length ?? 0;
 
-  const visibleLeft = Math.abs(scrollPosition.left) + dimensions.leftPinnedWidth;
+  const visibleLeft = Math.abs(position.left) + dimensions.leftPinnedWidth;
   // In controlled mode, the pinned-right section overlays the horizontal window.
   const visibleRight =
     visibleLeft +
-    dimensions.viewportInnerSize.width -
-    (store.state.virtualization.layoutMode === 'controlled' ? dimensions.rightPinnedWidth : 0);
+    (scrolling.external
+      ? scrolling.columnViewportWidth
+      : dimensions.viewportInnerSize.width -
+        (store.state.virtualization.layoutMode === 'controlled' ? dimensions.rightPinnedWidth : 0));
   const renderedLeft = columnPositions[context.firstColumnIndex] ?? 0;
   const renderedRight = columnPositions[context.lastColumnIndex] ?? dimensions.columnsTotalWidth;
 
