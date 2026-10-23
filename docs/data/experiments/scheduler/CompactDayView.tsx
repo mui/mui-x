@@ -1,14 +1,14 @@
 import * as React from 'react';
-
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { StandaloneCompactDayViewPremium } from '@mui/x-scheduler-premium/compact-day-view-premium';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
+} from 'docs/data/scheduler/datasets/personal-agenda';
 
 export default function CompactDayView() {
-  const [events, setEvents] = React.useState(initialEvents);
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>

@@ -1,24 +1,22 @@
 import * as React from 'react';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+
 import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   EventTimelinePremiumContent,
   EventTimelinePremiumStyledContext,
 } from '@mui/x-scheduler-premium/internals';
-import {
-  useEventTimelinePremium,
-  EventTimelinePremiumStoreParameters,
-} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
+import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   ErrorContainer,
   EventEditingStyledContext,
   SharedComponentsStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  SchedulerDirectionProvider,
 } from '@mui/x-scheduler/internals';
 
-const resources: SchedulerResource[] = [
+const resources = [
   { id: 'build', title: 'Build' },
   { id: 'release', title: 'Release' },
   { id: 'ops', title: 'Ops' },
@@ -27,7 +25,7 @@ const resources: SchedulerResource[] = [
 // The dataset covers the cascade behaviors: a chain with slack between its links, a
 // diamond reconverging on one successor, a read-only successor, and an all-day pair.
 // Early hours so everything is inside the initial viewport without scrolling.
-const initialEvents: SchedulerEvent[] = [
+const initialEvents = [
   // Chain with slack: plan → build → deploy.
   {
     id: 'plan',
@@ -114,7 +112,7 @@ const initialEvents: SchedulerEvent[] = [
   },
 ];
 
-const initialDependencies: SchedulerDependency[] = [
+const initialDependencies = [
   { id: 'd1', source: 'plan', target: 'build', type: 'FinishToStart' },
   { id: 'd2', source: 'build', target: 'deploy', type: 'FinishToStart' },
   { id: 'd3', source: 'design', target: 'front', type: 'FinishToStart' },
@@ -134,17 +132,12 @@ const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
 
 export default function TimelineAutoScheduling() {
   const [events, setEvents] = React.useState(initialEvents);
-  const [dependencies, setDependencies] = React.useState<
-    readonly SchedulerDependency[] | undefined
-  >(initialDependencies);
+  const [dependencies, setDependencies] = React.useState(initialDependencies);
 
   // `dependencies` has no public API yet (#22854), so instead of `<EventTimelinePremium />`
   // this experiment feeds the internal store parameters to the same hook the component
   // uses and renders its content inside the same providers.
-  const parameters: EventTimelinePremiumStoreParameters<
-    SchedulerEvent,
-    SchedulerResource
-  > = {
+  const parameters = {
     events,
     onEventsChange: setEvents,
     resources,
@@ -158,7 +151,7 @@ export default function TimelineAutoScheduling() {
   const store = useEventTimelinePremium(parameters);
   // The context is typed on the base state and the store generic is invariant: the
   // premium store needs the cast.
-  const storeContextValue = store as any;
+  const storeContextValue = store;
 
   return (
     /* Mimics the layout, font-size and box-sizing reset the `EventTimelinePremium`
@@ -184,8 +177,10 @@ export default function TimelineAutoScheduling() {
         <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
           <EventEditingStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <EventTimelinePremiumContent />
-              <ErrorContainer />
+              <SchedulerDirectionProvider>
+                <EventTimelinePremiumContent />
+                <ErrorContainer />
+              </SchedulerDirectionProvider>
             </SharedComponentsStyledContext.Provider>
           </EventEditingStyledContext.Provider>
         </EventTimelinePremiumStyledContext.Provider>

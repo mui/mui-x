@@ -1,9 +1,11 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
 import { processDate } from '../process-date';
-import type { SchedulerProcessedEvent } from '../models';
+import type { SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
+import { getDayList } from '../get-day-list';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 
@@ -14,17 +16,22 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     processDate(adapter.date('2024-01-17Z', 'default'), adapter),
   ];
 
-  function testHook(events: SchedulerProcessedEvent[], maxEvents?: number) {
+  function testHook(
+    events: SchedulerProcessedEvent[],
+    maxEvents?: number,
+    hookDays: SchedulerProcessedDate[] = days,
+    displayTimezone: TemporalTimezone = 'default',
+  ) {
     const { result } = renderHook(() => {
       const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
-        days,
+        days: hookDays,
         eventRangeIndex: createEventRangeIndex(events, adapter, false),
         visibleResources: {},
-        displayTimezone: 'default',
+        displayTimezone,
         recurringEventsPlugin: null,
       });
-      return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
+      return useEventOccurrencesWithDayGridPosition({ days: hookDays, occurrencesMap, maxEvents });
     });
 
     return result.current;
@@ -174,5 +181,29 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       daySpan: 1,
       isInvisible: true,
     });
+  });
+
+  it('should span every date an event covers when the days start at 01:00 after a DST transition', () => {
+    // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026: the days of the list
+    // start at 01:00.
+    const havanaDays = getDayList({
+      adapter,
+      start: adapter.date('2026-03-08T12:00:00', 'America/Havana'),
+      end: adapter.date('2026-03-10T12:00:00', 'America/Havana'),
+    });
+    const result = testHook(
+      [
+        EventBuilder.new()
+          .id('A')
+          .span('2026-03-09T16:00:00Z', '2026-03-10T04:30:00Z') // March 9th 12:00 to March 10th 00:30
+          .withDisplayTimezone('America/Havana')
+          .toProcessed(),
+      ],
+      undefined,
+      havanaDays,
+      'America/Havana',
+    );
+
+    expect(result.days[1].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 2 });
   });
 });

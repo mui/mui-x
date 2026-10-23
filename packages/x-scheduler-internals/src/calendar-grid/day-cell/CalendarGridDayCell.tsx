@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
@@ -39,6 +40,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     rowTypes,
     rowsPerType,
   } = useCalendarGridRootContext();
+  const isRtl = useDirection() === 'rtl';
   const { rowIndex } = useCalendarGridDayRowContext();
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
@@ -74,6 +76,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
       columnCount: cellsRefs.current.length,
       rowTypes,
       rowsPerType,
+      isRtl,
     });
     if (target) {
       event.preventDefault();

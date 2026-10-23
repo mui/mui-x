@@ -1,23 +1,22 @@
 import * as React from 'react';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
-import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
+import { StandaloneCompactThreeDayViewPremium } from '@mui/x-scheduler-premium/compact-three-day-view-premium';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/recurring-event-durations';
+} from 'docs/data/scheduler/datasets/personal-agenda';
 
-export default function RecurringEventDurations() {
+export default function CompactThreeDayView() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
-    <div style={{ height: '700px', width: '100%' }}>
-      <EventCalendarPremium
+    <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>
+      <StandaloneCompactThreeDayViewPremium
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );
