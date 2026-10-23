@@ -82,13 +82,17 @@ export default function EventCalendarPremiumExperiment() {
   const [datasetIndex, setDatasetIndex] = React.useState(0);
 
   return (
-    <ExperimentLayout fullScreen>
+    <React.Fragment>
       <SchedulerContent key={datasetIndex} dataset={datasets[datasetIndex]} />
       <DatasetSwitcher
         datasets={datasets}
         selectedIndex={datasetIndex}
         onSelectDataset={setDatasetIndex}
       />
-    </ExperimentLayout>
+    </React.Fragment>
   );
 }
+
+EventCalendarPremiumExperiment.getLayout = (page) => (
+  <ExperimentLayout fullScreen>{page}</ExperimentLayout>
+);

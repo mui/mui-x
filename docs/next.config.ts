@@ -26,6 +26,7 @@ declare global {
     TREE_VIEW_VERSION?: string;
     SCHEDULER_VERSION?: string;
     CHAT_VERSION?: string;
+    EXPERIMENT_PAGES?: string;
   }
 }
 
@@ -51,6 +52,16 @@ const schedulerPkg = loadPkg('./packages/x-scheduler');
 const chatPkg = loadPkg('./packages/x-chat');
 
 const pickersAdaptersDeps = getPickerAdapterDeps();
+
+const experimentPages = fs
+  .readdirSync(path.join(currentDirectory, 'pages/experiments'), {
+    recursive: true,
+    encoding: 'utf8',
+  })
+  .map((file) => file.replaceAll(path.sep, '/'))
+  .filter((file) => /\.(js|tsx)$/.test(file) && !/^index\.(js|tsx)$/.test(file))
+  .map((file) => file.replace(/\.(js|tsx)$/, ''))
+  .sort();
 
 // Generated once and shared by both the webpack and turbopack pipelines.
 const releaseInfo = generateReleaseInfo();
@@ -135,6 +146,7 @@ export default withDeploymentConfig({
     TREE_VIEW_VERSION: treeViewPkg.version,
     SCHEDULER_VERSION: schedulerPkg.version,
     CHAT_VERSION: chatPkg.version,
+    EXPERIMENT_PAGES: JSON.stringify(experimentPages),
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
     MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',

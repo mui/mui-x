@@ -1,46 +1,17 @@
 import * as React from 'react';
-import * as fs from 'fs';
-import * as path from 'path';
-import NextLink from 'next/link';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 
-export default function Experiments({ experiments }) {
+export default function Experiments() {
   return (
-    <ExperimentLayout>
-      <Container sx={{ py: 4 }}>
-        <Typography component="h1" variant="h3" gutterBottom>
-          MUI X experiments
-        </Typography>
-        <Typography>
-          Experiments are committed to Git in <code>docs/pages/experiments</code> and are available
-          locally and in deployed documentation.
-        </Typography>
-        <List>
-          {experiments.map((experiment) => (
-            <ListItem key={experiment}>
-              <Link component={NextLink} href={`/experiments/${experiment}`}>
-                {experiment}
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-      </Container>
-    </ExperimentLayout>
+    <Box sx={{ pt: '30vh', textAlign: 'center' }}>
+      <Typography component="h1" variant="h3" gutterBottom>
+        MUI X experiments
+      </Typography>
+      <Typography>Choose an experiment from the sidebar.</Typography>
+    </Box>
   );
 }
 
-export async function getStaticProps() {
-  const experiments = fs
-    .readdirSync(path.join(process.cwd(), 'pages/experiments'), { recursive: true })
-    .map((file) => file.replaceAll(path.sep, '/'))
-    .filter((file) => /\.(js|tsx)$/.test(file) && file !== 'index.js')
-    .map((file) => file.replace(/\.(js|tsx)$/, '').replace(/\/index$/, ''))
-    .sort();
-
-  return { props: { experiments } };
-}
+Experiments.getLayout = (page) => <ExperimentLayout>{page}</ExperimentLayout>;
