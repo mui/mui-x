@@ -22,4 +22,4 @@ Add experiment pages to `docs/pages/experiments/<product>/` and demo files to `d
 Use `ExperimentLayout` from `docs/src/modules/components/ExperimentLayout` for the Material UI theme and CSS baseline.
 Pass `fullScreen` for a layout that fills the viewport.
 The theme follows the documentation site's light/dark mode and text direction preferences.
-Experiments are available locally and in preview deployments, and excluded from production exports.
+Experiments are available locally and in deployed documentation, including production.

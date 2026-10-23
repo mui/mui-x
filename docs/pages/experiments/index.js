@@ -18,7 +18,7 @@ export default function Experiments({ experiments }) {
         </Typography>
         <Typography>
           Experiments are committed to Git in <code>docs/pages/experiments</code> and are available
-          during development and in preview deployments.
+          locally and in deployed documentation.
         </Typography>
         <List>
           {experiments.map((experiment) => (
@@ -35,11 +35,6 @@ export default function Experiments({ experiments }) {
 }
 
 export async function getStaticProps() {
-  // Next.js copies prerendered pages even when exportPathMap excludes them.
-  if (process.env.DEPLOY_ENV === 'production') {
-    return { notFound: true };
-  }
-
   const experiments = fs
     .readdirSync(path.join(process.cwd(), 'pages/experiments'), { recursive: true })
     .map((file) => file.replaceAll(path.sep, '/'))

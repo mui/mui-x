@@ -240,14 +240,6 @@ export default withDeploymentConfig({
 
     function traverse(pages2: typeof pages) {
       pages2.forEach((page) => {
-        // The experiments pages are only meant for experiments, they shouldn't leak to production.
-        if (
-          (page.pathname === '/experiments' || page.pathname.startsWith('/experiments/')) &&
-          process.env.DEPLOY_ENV === 'production'
-        ) {
-          return;
-        }
-
         if (!page.children) {
           map[page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')] = {
             page: page.pathname,
