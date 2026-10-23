@@ -133,3 +133,16 @@ You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-sche
 
 To create your own translation or customize the English text, copy this file to your project, make any needed changes, and import the locale from there.
 These translations follow [Material UI's localization strategy](/material-ui/guides/localization/).
+
+## RTL support
+
+Right-to-left languages such as Arabic, Persian, or Hebrew are supported.
+Follow the [right-to-left guide](/material-ui/customization/right-to-left/) to set them up.
+
+Set `dir="rtl"` on the `<html>` or `<body>` element, not on a wrapper around the Event Calendar.
+The Event Calendar renders its dialogs and popovers in a portal at the end of `<body>`, so a `dir` attribute on a wrapper element doesn't apply to them.
+
+The demo below uses the Hebrew translations (`heIL`) and the Hebrew date locale.
+The documentation page is left-to-right, so this demo sets `dir="rtl"` on its container instead, and its dialogs and popovers stay left-to-right.
+
+{{"demo": "RTLCalendar.js", "bg": "inline"}}

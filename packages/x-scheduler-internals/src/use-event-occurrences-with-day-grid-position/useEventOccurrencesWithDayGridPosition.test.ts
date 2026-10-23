@@ -205,4 +205,26 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       isInvisible: true,
     });
   });
+
+  it('should span every date an event covers after a DST transition at midnight', () => {
+    // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+    const havanaDays = getDayList({
+      adapter,
+      start: adapter.date('2026-03-08T12:00:00', 'America/Havana'),
+      end: adapter.date('2026-03-10T12:00:00', 'America/Havana'),
+    });
+    const result = testHook(
+      [
+        EventBuilder.new()
+          .id('A')
+          .span('2026-03-09T16:00:00Z', '2026-03-10T04:30:00Z') // March 9th 12:00 to March 10th 00:30
+          .withDisplayTimezone('America/Havana')
+          .toProcessed(),
+      ],
+      undefined,
+      { dayList: havanaDays, displayTimezone: 'America/Havana' },
+    );
+
+    expect(result.days[1].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 2 });
+  });
 });
