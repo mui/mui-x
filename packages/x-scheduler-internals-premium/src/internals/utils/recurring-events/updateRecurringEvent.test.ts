@@ -689,7 +689,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       );
     });
 
-    it('should keep the duration of the edited occurrence when resizing a later one on a series in a repeated time', () => {
+    it('should resolve a series in a repeated time to its first instants when resizing a later occurrence', () => {
       // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: 02:00 to 03:00 comes twice.
       const original = EventBuilder.new(adapter)
         .span('2026-10-25T01:10:00Z', '2026-10-25T01:30:00Z') // the second 02:10 to 02:30
@@ -708,9 +708,12 @@ describe('recurring-events/updateRecurringEvent', () => {
           end: inParis('2026-10-27T01:40:00Z'), // 02:40 CET
         },
       );
-      expect(resizeEnd.updated![0].start).to.equal(undefined);
+      // The wall-clock times 02:10 and 02:40 of October 25th resolve to their first instants, CEST.
+      expect(adapter.toJsDate(resizeEnd.updated![0].start!).toISOString()).to.equal(
+        '2026-10-25T00:10:00.000Z',
+      );
       expect(adapter.toJsDate(resizeEnd.updated![0].end!).toISOString()).to.equal(
-        '2026-10-25T01:40:00.000Z',
+        '2026-10-25T00:40:00.000Z',
       );
 
       const resizeStart = applyRecurringUpdateAll(

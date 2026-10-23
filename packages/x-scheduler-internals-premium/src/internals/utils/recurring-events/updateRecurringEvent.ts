@@ -177,48 +177,25 @@ export function applyRecurringUpdateAll(
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
   // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
-  // can move DTSTART to another date. Otherwise, only the time of the start changes, merged into the
-  // original date, and the end follows with the duration of the edited occurrence, like the
-  // occurrences of the series.
+  // can move DTSTART to another date. Otherwise, the series keeps its dates and takes the times of
+  // the edited occurrence, where a time a DST transition repeats resolves to its first instant.
+  // Only the bounds that move are written, so that a resize stays a resize.
   if (!editedIsDtstart && (changes.start != null || changes.end != null)) {
-    const newStart =
-      changes.start == null
-        ? seriesStart.value
-        : moveToPlainDate(adapter, changes.start, seriesStartPlainDate);
-    if (changes.start != null) {
+    const seriesEnd = originalEvent.dataTimezone.end;
+    const newStart = moveToPlainDate(
+      adapter,
+      changes.start ?? seriesStart.value,
+      seriesStartPlainDate,
+    );
+    const newEnd = moveToPlainDate(
+      adapter,
+      changes.end ?? seriesEnd.value,
+      buildTemporalPlainDate(adapter, seriesEnd.value),
+    );
+    if (changes.start != null || adapter.getTime(newStart) !== seriesStart.timestamp) {
       eventUpdatedProperties.start = newStart;
     }
-    let newEnd: TemporalSupportedObject;
-    if (changes.allDay ?? originalEvent.allDay) {
-      // An all-day series keeps the number of days of the edited occurrence, whose length in hours
-      // changes with the DST transitions it spans.
-      const seriesEnd = originalEvent.dataTimezone.end;
-      const startDayNumber =
-        changes.start == null
-          ? occurrencePlainDate.dayNumber
-          : buildTemporalPlainDate(adapter, changes.start).dayNumber;
-      const endDayNumber =
-        changes.end == null
-          ? occurrencePlainDate.dayNumber +
-            buildTemporalPlainDate(adapter, seriesEnd.value).dayNumber -
-            seriesStartPlainDate.dayNumber
-          : buildTemporalPlainDate(adapter, changes.end).dayNumber;
-      newEnd = moveToPlainDate(
-        adapter,
-        changes.end ?? seriesEnd.value,
-        seriesStartPlainDate.add({ days: endDayNumber - startDayNumber }),
-      );
-    } else {
-      const durationMs =
-        adapter.getTime(changes.end ?? occurrenceEnd) -
-        adapter.getTime(changes.start ?? occurrenceStart);
-      newEnd = adapter.addMilliseconds(newStart, durationMs);
-    }
-    // A start-only change leaves out an end that doesn't move, so it stays a resize.
-    if (
-      changes.end != null ||
-      adapter.getTime(newEnd) !== originalEvent.dataTimezone.end.timestamp
-    ) {
+    if (changes.end != null || adapter.getTime(newEnd) !== seriesEnd.timestamp) {
       eventUpdatedProperties.end = newEnd;
     }
   }
