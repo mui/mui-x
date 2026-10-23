@@ -85,7 +85,8 @@ describe('<DataGrid /> - IME fast edit layout', () => {
         const scroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
         const cell = await focusCell(user, 0, 1);
         const range = document.createRange();
-        range.selectNodeContents(cell.firstChild!);
+        // The text is the last child. With the flag, the editor comes before it.
+        range.selectNodeContents(cell.lastChild!);
         const textRect = range.getBoundingClientRect();
         const cellRect = cell.getBoundingClientRect();
         const result = {
@@ -127,6 +128,17 @@ describe('<DataGrid /> - IME fast edit layout', () => {
       // The wrapper stays inside the cell, so it does not extend the scrollable area.
       expect(rect.left).to.be.at.least(cellRect.left);
       expect(rect.right).to.be.at.most(cellRect.right);
+    });
+
+    it.skipIf(isJSDOM)('keeps the hidden input inside the cell', async () => {
+      // A browser scrolls to the focused element, for example when a dialog gives the focus back.
+      // An input below the cell makes the grid scroll to the next row.
+      const { user } = render(<TestCase rtl={rtl} />);
+      const cell = await focusCell(user, 1, 1);
+      const inputRect = getInput(cell)!.getBoundingClientRect();
+      const cellRect = cell.getBoundingClientRect();
+      expect(inputRect.top).to.be.at.least(cellRect.top);
+      expect(inputRect.bottom).to.be.at.most(cellRect.bottom);
     });
 
     it.skipIf(isJSDOM)('keeps the focus outline', async () => {

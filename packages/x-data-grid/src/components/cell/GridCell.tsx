@@ -630,8 +630,9 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
     // Keep the same children structure in all cells.
     // Then the view content does not remount when the cell gets the focus.
+    // The editor comes before the view content. Thus its static position is the top of the cell,
+    // and a scroll to the editor (for example on focus restore) does not scroll past the row.
     children = [
-      <React.Fragment key="view">{children}</React.Fragment>,
       editorState === null ? null : (
         <div
           key="editor"
@@ -646,6 +647,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
           {editor}
         </div>
       ),
+      <React.Fragment key="view">{children}</React.Fragment>,
     ];
   }
 

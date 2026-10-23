@@ -170,7 +170,8 @@ describe('<DataGridPro /> - IME fast edit layout', () => {
           const measureCell = async (row: number, col: number) => {
             const cell = await focusCell(user, row, col);
             const range = document.createRange();
-            range.selectNodeContents(cell.firstChild!);
+            // The text is the last child. With the flag, the editor comes before it.
+            range.selectNodeContents(cell.lastChild!);
             const textRect = range.getBoundingClientRect();
             const cellRect = cell.getBoundingClientRect();
             const scrollerRect = scroller.getBoundingClientRect();
