@@ -797,6 +797,41 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
   });
 
+  it('should repaint rows when `getRows()` returns the stored row objects mutated in place', async () => {
+    const rows = [{ id: 1, name: 'A', value: 1, descendantCount: 0 }];
+    const dataSource: GridDataSource = {
+      getRows: async () => ({ rows, rowCount: rows.length }),
+      getGroupKey: (row) => row.name,
+      getChildrenCount: (row) => row.descendantCount,
+    };
+
+    function TestComponent() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }, { field: 'value' }]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            treeData
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    render(<TestComponent />);
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('1'));
+
+    rows[0].value = 2;
+    await act(async () => {
+      await apiRef.current!.dataSource.fetchRows();
+    });
+
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('2'));
+  });
+
   it('should lazily fetch nested data when using `defaultGroupingExpansionDepth`', async () => {
     render(<TestDataSource defaultGroupingExpansionDepth={1} />);
 
