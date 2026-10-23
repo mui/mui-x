@@ -45,7 +45,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   }, [adapter, start, end, dayStartMinute, dayEndMinute]);
 
   const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
-    useStableCallback(({ input, elementRef }) => {
+    useStableCallback(({ input, elementRef, elementStart }) => {
       if (!ref.current || !elementRef.current) {
         return 0;
       }
@@ -66,9 +66,20 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       const elementTop = Math.max(elementRef.current.getBoundingClientRect().y, columnTop);
       const cursorY = Math.max(input.clientY, elementTop);
 
-      return (
-        adapter.getTime(getDateAtClientY(cursorY)) - adapter.getTime(getDateAtClientY(elementTop))
-      );
+      const cursorTimestamp = adapter.getTime(getDateAtClientY(cursorY));
+      // On a fall-back day, the element top renders both occurrences of the repeated hour and
+      // the axis resolves it to the first one. Once the cursor is past the actual start of the
+      // element, measure from that start instead.
+      if (elementStart != null) {
+        const elementStartTimestamp = Math.max(
+          adapter.getTime(elementStart),
+          adapter.getTime(start),
+        );
+        if (cursorTimestamp >= elementStartTimestamp) {
+          return cursorTimestamp - elementStartTimestamp;
+        }
+      }
+      return cursorTimestamp - adapter.getTime(getDateAtClientY(elementTop));
     });
 
   const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(

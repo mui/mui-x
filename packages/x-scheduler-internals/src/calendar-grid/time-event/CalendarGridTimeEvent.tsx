@@ -71,7 +71,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
       // No `input` (pointer-based resize) — skip the layout-reading cursor measurement.
       const initialCursorPositionInEventMs = input
         ? Math.max(adapter.getTime(columnStart) - start.timestamp, 0) +
-          getCursorPositionInElementMs({ input, elementRef: ref })
+          getCursorPositionInElementMs({ input, elementRef: ref, elementStart: start.value })
         : 0;
 
       return {
