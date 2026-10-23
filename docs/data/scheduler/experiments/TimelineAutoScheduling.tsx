@@ -16,6 +16,7 @@ import {
   EventEditingStyledContext,
   SharedComponentsStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+  SchedulerDirectionProvider,
 } from '@mui/x-scheduler/internals';
 
 const resources: SchedulerResource[] = [
@@ -184,8 +185,10 @@ export default function TimelineAutoScheduling() {
         <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
           <EventEditingStyledContext.Provider value={styledContextValue}>
             <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <EventTimelinePremiumContent />
-              <ErrorContainer />
+              <SchedulerDirectionProvider>
+                <EventTimelinePremiumContent />
+                <ErrorContainer />
+              </SchedulerDirectionProvider>
             </SharedComponentsStyledContext.Provider>
           </EventEditingStyledContext.Provider>
         </EventTimelinePremiumStyledContext.Provider>

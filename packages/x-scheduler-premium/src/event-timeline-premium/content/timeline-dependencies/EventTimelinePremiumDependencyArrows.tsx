@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled, useTheme } from '@mui/material/styles';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useStore } from '@base-ui/utils/store';
 import { useDependencyDragCursor } from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
@@ -28,7 +29,9 @@ const DependencyArrowsSvg = styled('svg', {
 })(({ theme }) => ({
   position: 'absolute',
   top: 0,
-  left: 'var(--title-column-width)',
+  insetInlineStart: 'var(--title-column-width)',
+  // The geometry is measured from the inline start, so RTL mirrors the overlay.
+  transform: theme.direction === 'rtl' ? 'scaleX(-1)' : undefined,
   pointerEvents: 'none',
   // Same layer as the current time indicator and as the terminals overlay — the
   // terminals, later in the DOM, win the tie and paint above the arrows. Below the
@@ -78,6 +81,7 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
   const theme = useTheme();
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
+  const isRtl = useDirection() === 'rtl';
 
   const svgRef = React.useRef<SVGSVGElement>(null);
   const dragLineRef = React.useRef<SVGPathElement>(null);
@@ -126,11 +130,12 @@ function DependencyArrowsLayer({ creation }: { creation: SchedulerDependencyCrea
       // into the viewBox's absolute row-space. Reading it here is a plain
       // event-handler layout read, not a render-phase reflow.
       const rect = svg.getBoundingClientRect();
-      const x = clientX - rect.left;
+      // The paths are measured from the inline start, which is the right edge in RTL.
+      const x = isRtl ? rect.right - clientX : clientX - rect.left;
       const y = clientY - rect.top + offsetTop;
       line.setAttribute('d', `M ${sourceX} ${sourceY} L ${x} ${y}`);
     },
-    [sourceX, sourceY, offsetTop],
+    [sourceX, sourceY, offsetTop, isRtl],
   );
   useDependencyDragCursor(creation !== null, followCursorMove);
   // Redraw from the last tracked cursor when the line just un-snapped (or the
