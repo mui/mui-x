@@ -30,7 +30,7 @@ const TOUCH_DIRECTION_THRESHOLD = 8;
 export function useTitleScrollSync(params: UseTitleScrollSyncParameters): void {
   const { enabled, containerRef, gridRef, scrollbarRef, titleCellClassName } = params;
 
-  // Mirror the scrollbar's scrollLeft onto a CSS variable read by every
+  // Mirror the scrollbar's scroll offset onto a CSS variable read by every
   // title cell. Direct DOM mutation avoids re-rendering each row on scroll.
   React.useEffect(() => {
     const container = containerRef.current;
@@ -46,7 +46,8 @@ export function useTitleScrollSync(params: UseTitleScrollSyncParameters): void {
       return undefined;
     }
     const onScroll = () => {
-      container.style.setProperty('--title-scroll-left', String(scrollbar.scrollLeft));
+      // In RTL, `scrollLeft` goes from 0 down to negative values.
+      container.style.setProperty('--title-scroll-left', String(Math.abs(scrollbar.scrollLeft)));
     };
     onScroll();
     scrollbar.addEventListener('scroll', onScroll, { passive: true });

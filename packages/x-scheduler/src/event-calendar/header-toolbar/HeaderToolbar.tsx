@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import MenuOpen from '@mui/icons-material/MenuOpen';
@@ -100,6 +101,9 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const store = useEventCalendarStoreContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const adapter = useAdapterContext();
+  const isRtl = useRtl();
+  const PreviousIcon = isRtl ? ChevronRight : ChevronLeft;
+  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
@@ -143,7 +147,12 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
           }
         >
-          {isSidePanelOpen ? <MenuOpen /> : <Menu />}
+          {isSidePanelOpen ? (
+            // Mirrored in RTL so the arrow points toward the side panel, on the inline start.
+            <MenuOpen sx={isRtl ? { transform: 'scaleX(-1)' } : undefined} />
+          ) : (
+            <Menu />
+          )}
         </IconButton>
         <HeaderToolbarLabel
           data-expanded-only
@@ -169,14 +178,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             onClick={store.goToPreviousVisibleDate}
             aria-label={localeText.previousTimeSpan(view)}
           >
-            <ChevronLeft />
+            <PreviousIcon />
           </IconButton>
           <IconButton
             className={classes.headerToolbarNextButton}
             onClick={store.goToNextVisibleDate}
             aria-label={localeText.nextTimeSpan(view)}
           >
-            <ChevronRight />
+            <NextIcon />
           </IconButton>
         </HeaderToolbarDateNavigator>
         {/* Compact: today as an icon button replacing the expanded text button. */}
