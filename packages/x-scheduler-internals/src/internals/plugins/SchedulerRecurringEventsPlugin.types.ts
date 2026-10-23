@@ -109,7 +109,7 @@ export interface SchedulerRecurringEventsPluginInterface {
   getWeeklyDays(
     adapter: Adapter,
     visibleDate: TemporalSupportedObject,
-  ): { code: RecurringEventWeekDayCode; plainDate: PlainDate }[];
+  ): { code: RecurringEventWeekDayCode; date: PlainDate }[];
 
   /**
    * Returns month reference for the given occurrence: dayOfMonth, weekday code and ordinal.

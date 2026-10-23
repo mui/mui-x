@@ -87,7 +87,7 @@ export function getWeeklyDays(
   adapter: Adapter,
   visibleDate: TemporalSupportedObject,
   weekStartsOn?: WeekStartsOn,
-): { code: RecurringEventWeekDayCode; plainDate: PlainDate }[] {
+): { code: RecurringEventWeekDayCode; date: PlainDate }[] {
   const weekStartPlainDate = buildTemporalPlainDate(
     adapter,
     getStartOfWeek(adapter, visibleDate, weekStartsOn),
@@ -96,7 +96,7 @@ export function getWeeklyDays(
     // Unlike `add()`, `createPlainDate()` doesn't check the supported range, which the last week of
     // 9999 passes.
     const plainDate = createPlainDate(weekStartPlainDate.dayNumber + i, ISO_CALENDAR_ID);
-    return { code: getPlainDateWeekDayCode(plainDate), plainDate };
+    return { code: getPlainDateWeekDayCode(plainDate), date: plainDate };
   });
 }
 

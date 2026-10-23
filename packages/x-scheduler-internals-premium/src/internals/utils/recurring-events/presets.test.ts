@@ -12,7 +12,7 @@ describe('recurring-events/presets', () => {
       expect(days).to.have.length(7);
       const codes = days.map((d) => d.code);
       expect(codes).to.deep.equal(['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']);
-      expect(days.map((d) => d.plainDate.toString())).to.deep.equal([
+      expect(days.map((d) => d.date.toString())).to.deep.equal([
         '2025-07-06',
         '2025-07-07',
         '2025-07-08',
@@ -46,10 +46,10 @@ describe('recurring-events/presets', () => {
       const visibleDate = adapter.date('9999-12-30T12:00:00Z', 'default');
       const days = getWeeklyDays(adapter, visibleDate, 1);
 
-      expect(days.map((d) => d.plainDate.dayNumber - days[0].plainDate.dayNumber)).to.deep.equal([
+      expect(days.map((d) => d.date.dayNumber - days[0].date.dayNumber)).to.deep.equal([
         0, 1, 2, 3, 4, 5, 6,
       ]);
-      expect(days[0].plainDate.toString()).to.equal('9999-12-27');
+      expect(days[0].date.toString()).to.equal('9999-12-27');
     });
 
     it('lists every day of the week when the timezone skips one', () => {
@@ -58,7 +58,7 @@ describe('recurring-events/presets', () => {
       const days = getWeeklyDays(adapter, visibleDate, 1);
 
       expect(days.map((d) => d.code)).to.deep.equal(['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']);
-      expect(days.map((d) => d.plainDate.toString())).to.deep.equal([
+      expect(days.map((d) => d.date.toString())).to.deep.equal([
         '2011-12-26',
         '2011-12-27',
         '2011-12-28',

@@ -410,7 +410,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const weeklyDayItems = React.useMemo(
     () =>
-      weeklyDays.map(({ code, plainDate }) => {
+      weeklyDays.map(({ code, date: plainDate }) => {
         // In UTC, which skips no day, the date falls on the weekday of the plain date.
         const date = createAdapterDate(adapter, toEpochMs(plainDate, 0, 'UTC'), 'UTC');
         return {
