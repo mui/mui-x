@@ -69,6 +69,20 @@ describe('getDayList', () => {
     expect(days.map((day) => day.key)).to.deep.equal(['12/29/2011', '12/31/2011']);
   });
 
+  it('should start the days after a DST transition at midnight at midnight', () => {
+    // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+    const start = adapter.date('2026-03-07T00:00:00', 'America/Havana');
+    const days = getDayList({ adapter, start, end: adapter.addDays(start, 3) });
+    expect(days.map((day) => day.key)).to.deep.equal([
+      '03/07/2026',
+      '03/08/2026',
+      '03/09/2026',
+      '03/10/2026',
+    ]);
+    // March 8th has no midnight, so it starts at 01:00.
+    expect(days.map((day) => day.minutesInDay)).to.deep.equal([0, 60, 0, 0]);
+  });
+
   // Browsers cannot change their timezone through process.env.TZ.
   it.skipIf(!isJSDOM)('should return the same days whatever the timezone of the system', () => {
     // America/Santiago falls back from 00:00 to 23:00 on April 5th, 2026, the day
