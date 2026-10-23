@@ -20,5 +20,5 @@ There are, however, a few differences:
 Run `pnpm docs:dev` and open <http://localhost:3001/experiments/>.
 
 Add pages to `docs/pages/experiments/<product>/` and demo components to `docs/data/experiments/<product>/`.
-The app adds the Material UI theme and sidebar automatically.
+The app adds the sidebar automatically.
 Restart the docs server after adding or renaming a page to update the sidebar.
