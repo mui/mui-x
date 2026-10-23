@@ -117,9 +117,9 @@ import { DataGrid, GridCellEditStartReasons } from '@mui/x-data-grid';
 />;
 ```
 
-With the `compositionStart` reason, the `event` argument is a `compositionstart` event, not a keyboard event.
-The TypeScript type of the argument does not include composition events.
-Do not read keyboard properties, such as `event.key`, for this reason.
+With the `compositionStart` reason, the `event` argument is a `React.CompositionEvent`, not a keyboard event.
+The type of the argument includes `React.CompositionEvent`.
+Check the reason before you read keyboard or mouse properties, such as `event.key` or `event.shiftKey`.
 
 :::warning
 This feature is experimental. It has these limits:

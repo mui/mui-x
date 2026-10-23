@@ -535,7 +535,10 @@ export interface GridEventLookup
    */
   cellEditStart: {
     params: GridCellEditStartParams;
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
+      | React.CompositionEvent<HTMLElement>;
   };
   /**
    * Fired when the cell turns back to view mode.
@@ -549,7 +552,10 @@ export interface GridEventLookup
    */
   rowEditStart: {
     params: GridRowEditStartParams;
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLElement>
+      | React.CompositionEvent<HTMLElement>;
   };
   /**
    * Fired when the row turns back to view mode.

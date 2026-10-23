@@ -312,14 +312,7 @@ export const useGridRowEditing = (
         field: params.field,
         reason: GridRowEditStartReasons.compositionStart,
       };
-      // The public event type does not include `React.CompositionEvent`.
-      // A wider type breaks user handlers that read keyboard or mouse properties.
-      // The docs tell users that the `compositionStart` reason sends a composition event.
-      apiRef.current.publishEvent(
-        'rowEditStart',
-        newParams,
-        event as unknown as React.KeyboardEvent<HTMLElement>,
-      );
+      apiRef.current.publishEvent('rowEditStart', newParams, event);
     },
     [apiRef],
   );
