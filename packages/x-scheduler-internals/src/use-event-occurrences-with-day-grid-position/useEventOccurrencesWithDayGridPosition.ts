@@ -7,6 +7,7 @@ import type {
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { useAdapterContext } from '../use-adapter-context';
 import { sortEventOccurrences } from '../sort-event-occurrences';
+import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -114,10 +115,15 @@ export function useEventOccurrencesWithDayGridPosition(
           if (smallestAvailableIndex <= effectiveMax) {
             // Visible: first appearance or resurfacing into a freed row. The renderer
             // derives the continuation arrow from the event range vs the day.
+            // Counts dates rather than full days, as a day whose midnight a DST transition
+            // skips starts at 01:00, after the time an occurrence can end on the next day.
+            const { timezone } = occurrence.displayTimezone;
             position = {
               index: smallestAvailableIndex,
               daySpan: Math.min(
-                adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1,
+                toLocalDayNumber(occurrence.displayTimezone.end.timestamp, timezone) -
+                  toLocalDayNumber(day.timestamp, timezone) +
+                  1,
                 dayListSize - dayIndex,
               ),
             };

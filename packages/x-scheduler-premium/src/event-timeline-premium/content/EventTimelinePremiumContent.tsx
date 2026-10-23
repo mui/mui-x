@@ -838,6 +838,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   useTimelineDragAutoScroll({
     scrollerRef: gridRef,
     pinnedLeftWidth: titleColumnWidth,
+    isRtl,
   });
 
   const { handleKeyDown: handleEventTabKeyDown } = useEventTabNavigation({
@@ -851,6 +852,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     tickCount: config.tickCount,
     tickWidth: config.tickWidth,
     titleColumnWidth,
+    isRtl,
   });
 
   const eventsWidth = config.tickCount * config.tickWidth;
