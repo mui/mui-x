@@ -1,4 +1,5 @@
 import { screen, act } from '@mui/internal-test-utils';
+import { popoverClasses } from '@mui/material/Popover';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
@@ -30,7 +31,7 @@ describe('<StandaloneMonthView /> - RTL', () => {
     ['rtl', { endTip: LEFT_TIP, startTip: RIGHT_TIP }],
   ] as const)('%s', (direction, { endTip, startTip }) => {
     async function renderMonth(events: SchedulerEvent[]) {
-      await renderSettled(
+      return renderSettled(
         <ThemeProvider theme={createTheme({ direction })}>
           <div dir={direction} style={{ width: 1000, height: 800 }}>
             <StandaloneMonthView events={events} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
@@ -40,6 +41,27 @@ describe('<StandaloneMonthView /> - RTL', () => {
     }
 
     const getInlineStart = (rect: DOMRect) => (direction === 'rtl' ? rect.right : rect.left);
+
+    it('should align the "more events" popover with the inline start of its button', async () => {
+      const { user } = await renderMonth(
+        Array.from({ length: 8 }, (_, index) =>
+          EventBuilder.new()
+            .title(`Event ${index}`)
+            .span('2025-07-09T09:00:00Z', '2025-07-09T10:00:00Z')
+            .build(),
+        ),
+      );
+
+      const moreButton = screen.getByRole('button', { name: /more/i });
+      await user.click(moreButton);
+      const popover = await screen.findByRole('presentation');
+      const paper = popover.querySelector<HTMLElement>(`.${popoverClasses.paper}`)!;
+
+      expect(getInlineStart(paper.getBoundingClientRect())).to.be.closeTo(
+        getInlineStart(moreButton.getBoundingClientRect()),
+        1,
+      );
+    });
 
     it('should point the chevrons of a multi-week event to the inline end and start', async () => {
       // Crosses the boundary between the first two weeks of the month.

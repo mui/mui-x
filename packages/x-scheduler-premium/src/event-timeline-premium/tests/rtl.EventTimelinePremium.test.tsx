@@ -66,6 +66,32 @@ describe('<EventTimelinePremium /> - RTL', () => {
     expect(colors[1]).toHaveFocus();
   });
 
+  it.each([
+    ['ltr', 'ChevronRightRoundedIcon'],
+    ['rtl', 'ChevronLeftRoundedIcon'],
+  ] as const)(
+    'should point the chevron of a collapsed resource to the inline end in %s',
+    async (direction, icon) => {
+      const child = ResourceBuilder.new().title('Child').build();
+      const parent = ResourceBuilder.new().title('Parent').children([child]).build();
+
+      await renderSettled(
+        <ThemeProvider theme={createTheme({ direction })}>
+          <div dir={direction} style={{ width: 1200, height: 600 }}>
+            <EventTimelinePremium
+              events={[]}
+              resources={[parent]}
+              defaultCollapsedResources={{ [parent.id]: true }}
+              visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+            />
+          </div>
+        </ThemeProvider>,
+      );
+
+      expect(screen.queryByTestId(icon)).not.to.equal(null);
+    },
+  );
+
   // The virtualizer reads the scroll position and the layout, so this only runs in the browser.
   it.skipIf(isJSDOM)('should virtualize the columns from the RTL scroll position', async () => {
     // On the last day of the `dayAndHour` axis, so it's virtualized out before scrolling.

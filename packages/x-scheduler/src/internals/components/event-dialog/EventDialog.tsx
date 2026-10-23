@@ -45,6 +45,12 @@ export const EventDialogRoot = styled(Dialog, {
     alignItems: 'unset',
   },
   [`& .${dialogClasses.paper}`]: {
+    // `useAnchoredPosition` sets `top` and `left` in viewport coordinates. With the default
+    // `position: relative`, they would offset the paper from the flex start, which is the right
+    // edge in RTL.
+    position: 'absolute',
+    // Otherwise the width would shrink with the space left after `left`.
+    width: 'max-content',
     margin: 0,
     // Never let the anchored dialog grow past the viewport on narrow (mobile) screens.
     maxWidth: '100%',
