@@ -535,6 +535,69 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(getStackSize()).to.equal(0);
     });
 
+    describe('`undoable: false`', () => {
+      // Rejects every change, and keeps the last model it was handed.
+      let requested: GridComputedColumnsModel = [];
+      let setParentModel: (model: GridComputedColumnsModel) => void = () => {};
+      function Rejecting() {
+        const [model, setModel] = React.useState<GridComputedColumnsModel>([total]);
+        setParentModel = setModel;
+        return (
+          <Test
+            computedColumns={model}
+            onComputedColumnsChange={(nextModel) => {
+              requested = nextModel;
+            }}
+          />
+        );
+      }
+
+      it('does not record a model passed `undoable: false` that equals a change the parent rejected', async () => {
+        await render(<Rejecting />);
+        await userEdit('total', { formula: '=price * 3' });
+        expect(getModel()).to.deep.equal([total]);
+
+        // Later, the app sets the same model on its own, and the parent applies it.
+        const appModel = requested.map((definition) => ({ ...definition }));
+        await act(async () => api().setComputedColumns(appModel, { undoable: false }));
+        await act(async () => setParentModel(appModel));
+        expect(getModel()).to.deep.equal([{ ...total, formula: '=price * 3' }]);
+        expect(getStackSize()).to.equal(0);
+        expect(canUndo()).to.equal(false);
+      });
+
+      it('does not record a column added with `undoable: false` that equals a change the parent rejected', async () => {
+        await render(<Rejecting />);
+        await userAdd(tax);
+        expect(getModel()).to.deep.equal([total]);
+
+        await act(async () => api().addComputedColumn(tax, { undoable: false }));
+        await act(async () => setParentModel(requested));
+        expect(getModel()).to.deep.equal([total, tax]);
+        expect(getStackSize()).to.equal(0);
+        expect(canUndo()).to.equal(false);
+      });
+
+      it('keeps a change made from the UI through a call passed `undoable: false` that changes nothing', async () => {
+        await render(<Rejecting />);
+        await userEdit('total', { formula: '=price * 3' });
+        const userModel = requested;
+
+        await act(async () =>
+          api().updateComputedColumn(
+            'total',
+            { headerName: total.headerName },
+            { undoable: false },
+          ),
+        );
+        // The parent applies the change of the user later.
+        await act(async () => setParentModel(userModel));
+        expect(getModel()).to.deep.equal([{ ...total, formula: '=price * 3' }]);
+        expect(getStackSize()).to.equal(1);
+        expect(canUndo()).to.equal(true);
+      });
+    });
+
     it('does not take an API call made from `onComputedColumnsChange` for a change of the user', async () => {
       let added = false;
       await render(

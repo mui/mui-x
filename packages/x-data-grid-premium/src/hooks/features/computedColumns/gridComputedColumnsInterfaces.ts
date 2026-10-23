@@ -185,7 +185,7 @@ export interface GridComputedColumnsApi {
    * Sets the computed columns model.
    * @param {GridComputedColumnsModel | ((prev: GridComputedColumnsModel) => GridComputedColumnsModel)} model The new model, or a function returning it from the current one.
    * @param {object} options The options of the change.
-   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`.
+   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`. An explicit `false` is never recorded, even when the new model equals a change made from the grid UI that a controlled parent has not applied yet.
    */
   setComputedColumns: (
     model:
@@ -197,7 +197,7 @@ export interface GridComputedColumnsApi {
    * @param {GridComputedColumnDefinition} definition The definition of the computed column.
    * @param {object} options The options of the insertion.
    * @param {number} options.columnIndex The index to insert the column at. The column is appended by default.
-   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`.
+   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`. An explicit `false` is never recorded, even when the new model equals a change made from the grid UI that a controlled parent has not applied yet.
    */
   addComputedColumn: (
     definition: GridComputedColumnDefinition,
@@ -208,7 +208,7 @@ export interface GridComputedColumnsApi {
    * @param {string} field The field of the computed column to update.
    * @param {Partial<Omit<GridComputedColumnDefinition, 'field'>>} changes The properties to update.
    * @param {object} options The options of the change.
-   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`.
+   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`. An explicit `false` is never recorded, even when the new model equals a change made from the grid UI that a controlled parent has not applied yet.
    */
   updateComputedColumn: (
     field: string,
@@ -219,7 +219,7 @@ export interface GridComputedColumnsApi {
    * Removes a computed column.
    * @param {string} field The field of the computed column to remove.
    * @param {object} options The options of the change.
-   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`.
+   * @param {boolean} options.undoable Whether the change is an undo step, as a change made from the grid UI. Defaults to `false`. An explicit `false` is never recorded, even when the new model equals a change made from the grid UI that a controlled parent has not applied yet.
    */
   removeComputedColumn: (field: string, options?: { undoable?: boolean }) => void;
   /**

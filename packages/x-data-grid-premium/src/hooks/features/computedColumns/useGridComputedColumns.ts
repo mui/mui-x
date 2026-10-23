@@ -121,7 +121,8 @@ export const useGridComputedColumns = (
   const setComputedColumns = React.useCallback<GridComputedColumnsApi['setComputedColumns']>(
     (model, options) => {
       const cache = apiRef.current.caches.computedColumns;
-      let isUserChange = options?.undoable === true;
+      const undoable = options?.undoable;
+      let isUserChange = undoable === true;
 
       const currentModel = gridComputedColumnsSelector(apiRef);
       const newModel = removeDuplicateFields(
@@ -135,9 +136,15 @@ export const useGridComputedColumns = (
       // step. A controlled parent echoes it through here later, without the option: the echo
       // is recognized by its model. A model equal to the current one (an inline prop
       // re-created by a render of the parent before the echo) is neither the change nor a
-      // new one.
+      // new one. An explicit `undoable: false` is never a step, even with the model of an
+      // undoable change still waiting for the echo: that change is dropped, unless the call
+      // changes nothing.
       if (isUserChange) {
         cache.userModel = newModel;
+      } else if (undoable === false) {
+        if (!isDeepEqual(newModel, currentModel)) {
+          cache.userModel = null;
+        }
       } else if (cache.userModel !== null) {
         if (newModel === cache.userModel || isDeepEqual(newModel, cache.userModel)) {
           isUserChange = true;
