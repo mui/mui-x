@@ -344,6 +344,17 @@ Every user-facing string is customizable via the `localeText` prop:
 />
 ```
 
+`ChatProvider` and `ChatRoot` from `@mui/x-chat/headless` accept the same prop, so the headless API localizes the same way:
+
+```tsx
+<ChatProvider adapter={adapter} localeText={{ composerSendButtonLabel: 'Enviar' }}>
+  <CustomChatLayout />
+</ChatProvider>
+```
+
+Every chat component and hook rendered below the provider reads the configured locale.
+Nesting a provider merges the new keys over the ones inherited from the closest parent provider.
+
 ### Full locale example (French)
 
 ```tsx
