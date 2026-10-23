@@ -10,6 +10,93 @@ import Typography from '@mui/material/Typography';
 
 const entries = [
   {
+    title: 'MUI X v9.7',
+    description: 'Scheduler reaches stable after its Beta release in v9.6.',
+    date: new Date(Date.UTC(2026, 6, 9)),
+    highlightList: [
+      {
+        title: 'Scheduler – Stable release',
+        url: '/x/react-scheduler/',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v9.6',
+    description: 'A roundup of all new features since v9.3.0.',
+    date: new Date(Date.UTC(2026, 5, 18)),
+    url: 'https://github.com/mui/mui-x/releases/tag/v9.6.0',
+    highlightList: [
+      {
+        title: 'Data Grid – multiSelect column type [Pro]',
+        url: '/x/react-data-grid/column-definition/#multi-select',
+      },
+      {
+        title: 'Charts – Bubble charts',
+        url: '/x/react-charts/bubble/',
+      },
+      {
+        title: 'Charts – SVG progressive scatter renderer',
+        url: '/x/react-charts/scatter/#progressive-renderer',
+      },
+      {
+        title: 'Charts – Radial bar radius and tick label controls [Premium]',
+        url: '/x/react-charts/radial-axes/',
+      },
+      {
+        title: 'Scheduler [Beta]',
+        url: '/x/react-scheduler/',
+      },
+      {
+        title: 'Scheduler – Event Timeline virtualization [Premium]',
+        url: '/x/react-scheduler/event-timeline/virtualization/',
+      },
+    ],
+  },
+  {
+    title: 'MUI X v9.3',
+    description: 'A roundup of all new features since v9.0.0.',
+    date: new Date(Date.UTC(2026, 4, 21)),
+    url: 'https://github.com/mui/mui-x/releases/tag/v9.3.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Swedish locale improvements',
+        url: '/x/react-data-grid/localization/',
+      },
+      {
+        title: 'Date and Time Pickers – Pointer Events date range drag editing [Pro]',
+        url: '/x/react-date-pickers/date-range-calendar/',
+      },
+      {
+        title: 'Charts – WebGL renderer for scatter, candlestick, and heatmap [Premium]',
+        url: '/x/react-charts/performance/#webgl-renderer',
+      },
+      {
+        title: 'Charts – WebGL bar renderer [Premium]',
+        url: '/x/react-charts/bars/#webgl-renderer',
+      },
+      {
+        title: 'Charts – Radial line charts [Premium]',
+        url: '/x/react-charts/radial-lines/',
+      },
+      {
+        title: 'Charts – Radial bar charts [Premium]',
+        url: '/x/react-charts/radial-bars/',
+      },
+      {
+        title: 'Charts – Radial grid and axes [Premium]',
+        url: '/x/react-charts/radial-axes/',
+      },
+      {
+        title: 'Scheduler – Event Timeline lazy loading [Premium]',
+        url: '/x/react-scheduler/event-timeline/lazy-loading/',
+      },
+      {
+        title: 'Scheduler – Norwegian Bokmål locale',
+        url: '/x/react-scheduler/event-calendar/localization/',
+      },
+    ],
+  },
+  {
     title: 'MUI X v9',
     description:
       'A new major with accessibility-first charts, Data Grid AI assistant, candlestick and range bar charts, and new Scheduler and Chat packages.',
