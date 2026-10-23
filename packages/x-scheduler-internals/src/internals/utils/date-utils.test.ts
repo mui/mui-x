@@ -156,6 +156,13 @@ describe('date-utils', () => {
       const result = getEndOfWeek(adapter, lastDay, 6);
       expect(adapter.getTime(result)).to.equal(Date.UTC(9999, 11, 31, 23, 59, 59, 999));
     });
+
+    it('should end the week on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
+      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on Saturday April 6th, 2024.
+      const date = adapter.date('2024-04-03T12:00:00', 'America/Santiago');
+      const result = getEndOfWeek(adapter, date, 0);
+      expect(adapter.toJsDate(result).toISOString()).to.equal('2024-04-07T03:59:59.999Z');
+    });
   });
 
   describe('getWeekNumber', () => {
@@ -197,6 +204,12 @@ describe('date-utils', () => {
       // The week starts on Wed 9999-12-29, so its 4th day is in 10000.
       const lastDay = adapter.date('9999-12-31T12:00:00.000Z', 'UTC');
       expect(getWeekNumber(adapter, lastDay, 3)).to.equal(1);
+    });
+
+    it('should count the weeks from a first week starting on a day the timezone skips', () => {
+      // Pacific/Apia skipped Friday December 30th, 2011, the first day of the first week of 2012.
+      const date = adapter.date('2012-11-23T12:00:00', 'Pacific/Apia');
+      expect(getWeekNumber(adapter, date, 5)).to.equal(48);
     });
   });
 

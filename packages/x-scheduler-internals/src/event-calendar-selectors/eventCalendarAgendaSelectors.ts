@@ -10,11 +10,9 @@ import { eventCalendarViewSelectors } from './eventCalendarViewSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
-import { getDayList, getDayListFromPlainDates } from '../get-day-list';
-import {
-  buildTemporalPlainDate,
-  createStartOfPlainDate,
-} from '../internals/utils/plain-date-utils/adapter';
+import { getDayListFromPlainDates } from '../get-day-list';
+import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import { createStartOfPlainDate } from '../internals/utils/plain-date-utils/adapter';
 import { addDaysToPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 
 /**
@@ -22,24 +20,28 @@ import { addDaysToPlainDate } from '../internals/utils/plain-date-utils/plainDat
  * or the month of the visible date when `dayCount` is `'month'`.
  */
 const baseRange = createSelectorMemoized(
-  (state: State) => state.adapter,
-  schedulerOtherSelectors.visibleDate,
+  schedulerOtherSelectors.visiblePlainDate,
   eventCalendarViewSelectors.agendaDayCount,
-  (adapter, visibleDate, dayCount): EventCalendarFetchRange =>
+  (visiblePlainDate, dayCount): { start: PlainDate; end: PlainDate } =>
     dayCount === 'month'
-      ? { start: adapter.startOfMonth(visibleDate), end: adapter.endOfMonth(visibleDate) }
-      : { start: visibleDate, end: adapter.addDays(visibleDate, dayCount - 1) },
+      ? {
+          start: visiblePlainDate.with({ day: 1 }),
+          end: visiblePlainDate.with({ day: visiblePlainDate.daysInMonth }),
+        }
+      : { start: visiblePlainDate, end: addDaysToPlainDate(visiblePlainDate, dayCount - 1) },
 );
 
 const baseVisibleDays = createSelectorMemoized(
   (state: State) => state.adapter,
   baseRange,
+  schedulerOtherSelectors.displayTimezone,
   eventCalendarPreferenceSelectors.showWeekends,
-  (adapter, range, showWeekends) =>
-    getDayList({
+  (adapter, range, displayTimezone, showWeekends) =>
+    getDayListFromPlainDates({
       adapter,
-      start: range.start,
-      end: range.end,
+      firstPlainDate: range.start,
+      lastPlainDate: range.end,
+      timezone: displayTimezone,
       excludeWeekends: !showWeekends,
     }),
 );
@@ -49,23 +51,15 @@ const baseVisibleDays = createSelectorMemoized(
  * In month mode the agenda stays inside the month, so the scan stops at its last day.
  */
 const horizonEndPlainDate = createSelectorMemoized(
-  (state: State) => state.adapter,
-  schedulerOtherSelectors.visibleDate,
   eventCalendarViewSelectors.agendaDayCount,
   baseRange,
-  (adapter, visibleDate, dayCount, range) => {
-    const rangeEndPlainDate = buildTemporalPlainDate(adapter, range.end);
+  (dayCount, range) => {
     if (dayCount === 'month') {
-      return rangeEndPlainDate;
+      return range.end;
     }
     // A day count beyond the default horizon still scans at least the displayed days
-    const horizonPlainDate = addDaysToPlainDate(
-      buildTemporalPlainDate(adapter, visibleDate),
-      AGENDA_MAX_HORIZON_DAYS - 1,
-    );
-    return horizonPlainDate.dayNumber > rangeEndPlainDate.dayNumber
-      ? horizonPlainDate
-      : rangeEndPlainDate;
+    const horizonPlainDate = addDaysToPlainDate(range.start, AGENDA_MAX_HORIZON_DAYS - 1);
+    return horizonPlainDate.dayNumber > range.end.dayNumber ? horizonPlainDate : range.end;
   },
 );
 
@@ -122,8 +116,7 @@ const visibleDays = createSelectorMemoized(
 
     // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
     // The scanned span is tracked apart from the day list, which skips the hidden weekends.
-    const timezone = adapter.getTimezone(range.end);
-    let scannedUntilPlainDate = buildTemporalPlainDate(adapter, range.end);
+    let scannedUntilPlainDate = range.end;
     while (
       daysWithEvents.length < amount &&
       scannedUntilPlainDate.dayNumber < horizonPlainDate.dayNumber
@@ -143,7 +136,7 @@ const visibleDays = createSelectorMemoized(
         adapter,
         firstPlainDate: nextStartPlainDate,
         lastPlainDate: scannedUntilPlainDate,
-        timezone,
+        timezone: displayTimezone,
         excludeWeekends: !showWeekends,
       });
 
@@ -179,26 +172,32 @@ export const eventCalendarAgendaSelectors = {
     baseRange,
     baseVisibleDays,
     horizonEndPlainDate,
+    schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
     (
       adapter,
       range,
       baseDays,
       horizonPlainDate,
+      displayTimezone,
       showEmptyDaysInAgenda,
     ): EventCalendarFetchRange => {
       // The day list is empty when a short `dayCount` only covers hidden weekend days,
       // so fall back to the bounds of the range.
-      const firstDay = baseDays.length > 0 ? baseDays[0].value : adapter.startOfDay(range.start);
+      const firstDay =
+        baseDays.length > 0
+          ? baseDays[0].value
+          : createStartOfPlainDate(adapter, range.start, displayTimezone);
       const lastDay =
-        baseDays.length > 0 ? baseDays[baseDays.length - 1].value : adapter.startOfDay(range.end);
+        baseDays.length > 0
+          ? baseDays[baseDays.length - 1].value
+          : createStartOfPlainDate(adapter, range.end, displayTimezone);
       if (showEmptyDaysInAgenda) {
         return { start: firstDay, end: lastDay };
       }
-      const timezone = adapter.getTimezone(range.end);
       return {
         start: firstDay,
-        end: createStartOfPlainDate(adapter, horizonPlainDate, timezone),
+        end: createStartOfPlainDate(adapter, horizonPlainDate, displayTimezone),
       };
     },
   ),
