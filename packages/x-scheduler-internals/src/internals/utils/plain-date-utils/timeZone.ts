@@ -182,6 +182,14 @@ export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTi
 }
 
 /**
+ * The day number of the date of an instant in `timezone`. For the loops that compare many dates, a
+ * day number is cheaper than `toPlainDateTime().date`.
+ */
+export function toLocalDayNumber(epochMs: number, timezone: TemporalTimezone): number {
+  return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);
+}
+
+/**
  * The first instant of the day of an instant in `timezone`. A day whose midnight a DST transition
  * skips starts at the end of the gap.
  */
