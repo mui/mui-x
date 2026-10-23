@@ -8,33 +8,33 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
-import { DatasetSwitcher } from '../../../../src/modules/components/DatasetSwitcher';
-import { ExperimentLayout } from '../../../../src/modules/components/ExperimentLayout';
+import { DatasetSwitcher } from 'docs/src/modules/components/DatasetSwitcher';
+import { ExperimentLayout } from 'docs/src/modules/components/ExperimentLayout';
 import {
   initialEvents as companyRoadmapEvents,
   defaultVisibleDate as companyRoadmapDate,
   resources as companyRoadmapResources,
-} from '../../../../data/scheduler/datasets/company-roadmap';
+} from 'docs/data/scheduler/datasets/company-roadmap';
 import {
   initialEvents as allDayEvents,
   defaultVisibleDate as allDayDate,
   resources as allDayResources,
-} from '../../../../data/scheduler/datasets/all-day-events';
+} from 'docs/data/scheduler/datasets/all-day-events';
 import {
   initialEvents as apartmentBookingsEvents,
   defaultVisibleDate as apartmentBookingsDate,
   resources as apartmentBookingsResources,
-} from '../../../../data/scheduler/datasets/apartment-bookings';
+} from 'docs/data/scheduler/datasets/apartment-bookings';
 import {
   initialEvents as carRentalEvents,
   defaultVisibleDate as carRentalDate,
   resources as carRentalResources,
-} from '../../../../data/scheduler/datasets/car-rental';
+} from 'docs/data/scheduler/datasets/car-rental';
 import {
   initialEventsWithResources as timelinePaletteEvents,
   defaultVisibleDate as timelinePaletteDate,
   resourcesWithColors as timelinePaletteResources,
-} from '../../../../data/scheduler/datasets/timeline-palette-demo';
+} from 'docs/data/scheduler/datasets/timeline-palette-demo';
 
 const datasets = [
   {
@@ -138,7 +138,7 @@ export default function EventTimelinePremiumExperiment() {
   const [datasetIndex, setDatasetIndex] = React.useState(0);
 
   return (
-    <ExperimentLayout>
+    <ExperimentLayout fullScreen>
       <SchedulerContent key={datasetIndex} dataset={datasets[datasetIndex]} />
       <DatasetSwitcher
         datasets={datasets}

@@ -14,3 +14,12 @@ There are, however, a few differences:
 - The local documentation site opens on a different port: 3001 instead of 3000.
 - You would need to sign a contributor license agreement (CLA) if the PR changes code located in the following folders: `x-data-grid-pro`, `x-data-grid-premium`, `x-date-pickers-pro`
 - Testing see [/test/README.md](test/README.md) for details.
+
+## Experiments
+
+Run `pnpm docs:dev` and open <http://localhost:3001/experiments/> to browse the experiments.
+Add experiment pages to `docs/pages/experiments/<product>/` and demo files to `docs/data/experiments/<product>/`.
+Use `ExperimentLayout` from `docs/src/modules/components/ExperimentLayout` for the Material UI theme and CSS baseline.
+Pass `fullScreen` for a layout that fills the viewport.
+The theme follows the documentation site's light/dark mode and text direction preferences.
+Experiments are available locally and in preview deployments, and excluded from production exports.
