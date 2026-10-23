@@ -6,6 +6,12 @@
   ],
   "properties": {
     "type": { "type": { "description": "'heatmap'" }, "required": true, "isProPlan": true },
+    "colorGetter": {
+      "type": {
+        "description": "(value: number | null, context: { xIndex: number; yIndex: number }) =&gt; string"
+      },
+      "isProPlan": true
+    },
     "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
     "dataKey": { "type": { "description": "string" }, "isProPlan": true },
     "highlightScope": {

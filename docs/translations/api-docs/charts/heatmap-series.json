@@ -2,6 +2,9 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "type": { "description": "" },
+    "colorGetter": {
+      "description": "Function that returns the color of a cell, based on its value and position.<br />Takes precedence over the z-axis <code>colorMap</code>.<br />The legend keeps displaying the z-axis color scale, so consider hiding it when the<br />returned colors no longer match that scale."
+    },
     "data": {
       "description": "Data associated to each cell in the heatmap.<br />Each entry is a tuple [xIndex, yIndex, value]."
     },
