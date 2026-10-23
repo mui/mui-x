@@ -5,9 +5,16 @@ import type {
   SchedulerProcessedDate,
 } from '../models';
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { useAdapterContext } from '../use-adapter-context';
 import { sortEventOccurrences } from '../sort-event-occurrences';
-import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+import { differenceInDays, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+
+/**
+ * The number of full days an occurrence spans in the display timezone.
+ */
+function getDayCount(occurrence: SchedulerEventOccurrence) {
+  const { start, end, timezone } = occurrence.displayTimezone;
+  return differenceInDays(end.timestamp, start.timestamp, timezone);
+}
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -16,10 +23,19 @@ export function useEventOccurrencesWithDayGridPosition(
   parameters: useEventOccurrencesWithDayGridPosition.Parameters,
 ): useEventOccurrencesWithDayGridPosition.ReturnValue {
   const { days, occurrencesMap, shouldAddPosition, maxEvents } = parameters;
-  const adapter = useAdapterContext();
 
   return React.useMemo(() => {
     const dayListSize = days.length;
+    // The sort below compares the spans of the occurrences on every day they cover.
+    const dayCounts = new Map<string, number>();
+    const getCachedDayCount = (occurrence: SchedulerEventOccurrence) => {
+      let dayCount = dayCounts.get(occurrence.key);
+      if (dayCount === undefined) {
+        dayCount = getDayCount(occurrence);
+        dayCounts.set(occurrence.key, dayCount);
+      }
+      return dayCount;
+    };
     const usedIndexesByDay: Set<number>[] = [];
     const activeSegments: {
       [occurrenceKey: string]: {
@@ -59,15 +75,7 @@ export function useEventOccurrencesWithDayGridPosition(
               if (aIsActive !== bIsActive) {
                 return aIsActive - bIsActive;
               }
-              const aSpan = adapter.differenceInDays(
-                a.displayTimezone.end.value,
-                a.displayTimezone.start.value,
-              );
-              const bSpan = adapter.differenceInDays(
-                b.displayTimezone.end.value,
-                b.displayTimezone.start.value,
-              );
-              return bSpan - aSpan;
+              return getCachedDayCount(b) - getCachedDayCount(a);
             });
 
       // 3. Assign position to each occurrence
@@ -153,7 +161,7 @@ export function useEventOccurrencesWithDayGridPosition(
       days: processedDays,
       maxIndex: usedIndexesFlat.length === 0 ? 1 : Math.max(...usedIndexesFlat),
     };
-  }, [adapter, days, maxEvents, occurrencesMap, shouldAddPosition]);
+  }, [days, maxEvents, occurrencesMap, shouldAddPosition]);
 }
 
 export namespace useEventOccurrencesWithDayGridPosition {

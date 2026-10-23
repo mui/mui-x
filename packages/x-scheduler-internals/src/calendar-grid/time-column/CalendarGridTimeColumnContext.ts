@@ -32,14 +32,17 @@ export interface CalendarGridTimeColumnContext {
    * @param {Object} parameters The parameters of the method.
    * @param {{ clientY: number }} parameters.input The input object provided by the drag and drop library for the current event.
    * @param {React.RefObject<HTMLElement | null>} parameters.elementRef The ref of the element on which the event has been triggered.
+   * @param {TemporalSupportedObject} parameters.elementStart The start date of the element, when known. Disambiguates an element starting in the hour repeated by a DST transition.
    * @returns {number} The cursor position in milliseconds.
    */
   getCursorPositionInElementMs: ({
     input,
     elementRef,
+    elementStart,
   }: {
     input: { clientY: number };
     elementRef: React.RefObject<HTMLElement | null>;
+    elementStart?: TemporalSupportedObject;
   }) => number;
   /**
    * Maps a pointer position to a precision-rounded date within this column (vertical axis), used by the pointer-based resize.

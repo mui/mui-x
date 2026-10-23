@@ -1,4 +1,5 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import {
   getTimelineAxisDurationMs,
@@ -48,6 +49,13 @@ describe('timeline-axis', () => {
     it('should extend the piecewise axis into the previous day for a negative offset', () => {
       const date = timelineAxisOffsetToDate(adapter, trimmedAxis, -60 * MINUTE);
       expect(date).toEqualDateTime(adapter.date('2025-01-04T19:00:00.000Z', 'UTC'));
+    });
+
+    it('should return an invalid date for a non-finite offset', () => {
+      expect(adapter.isValid(timelineAxisOffsetToDate(adapter, fullAxis, NaN))).to.equal(false);
+      expect(adapter.isValid(timelineAxisOffsetToDate(adapter, fullAxis, Infinity))).to.equal(
+        false,
+      );
     });
   });
 
@@ -130,6 +138,24 @@ describe('timeline-axis', () => {
       expect(adapter.getHours(date)).to.equal(3);
       expect(dateToTimelineAxisOffsetMs(adapter, axis, date)).to.equal(180 * MINUTE);
     });
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should resolve an offset inside the hour repeated by a fall-back transition to its first instant, whatever the timezone of the system',
+      () => {
+        // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
+        setSystemTimezone('America/New_York');
+        const parisStart = adapter.date('2026-10-25T00:00:00', 'Europe/Paris');
+        const axis = {
+          start: parisStart,
+          end: adapter.endOfDay(parisStart),
+          dayStartMinute: 0,
+          dayEndMinute: 1440,
+        };
+        const date = timelineAxisOffsetToDate(adapter, axis, 150 * MINUTE);
+        expect(adapter.toJsDate(date).toISOString()).to.equal('2026-10-25T00:30:00.000Z'); // 02:30 CEST
+      },
+    );
   });
 
   describe('isStartMinuteOutsideAxisWindow', () => {

@@ -7,6 +7,12 @@ import {
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
 import { useAdapterContext } from '../use-adapter-context';
+import {
+  createEndOfPlainDate,
+  createStartOfPlainDate,
+} from '../internals/utils/plain-date-utils/adapter';
+import { plainDateFromDayNumber } from '../internals/utils/plain-date-utils/plainDate';
+import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
@@ -82,12 +88,15 @@ export function innerGetEventOccurrencesGroupedByDay(
     return occurrenceMap;
   }
 
-  const start = adapter.startOfDay(days[0].value);
-  const end = adapter.endOfDay(days[days.length - 1].value);
+  const dayNumbers = days.map((day) => toLocalDayNumber(day.timestamp, displayTimezone));
   const occurrences = getOccurrencesFromEvents({
     adapter,
-    start,
-    end,
+    start: createStartOfPlainDate(adapter, plainDateFromDayNumber(dayNumbers[0]), displayTimezone),
+    end: createEndOfPlainDate(
+      adapter,
+      plainDateFromDayNumber(dayNumbers[dayNumbers.length - 1]),
+      displayTimezone,
+    ),
     eventRangeIndex,
     visibleResources,
     displayTimezone,
@@ -95,7 +104,7 @@ export function innerGetEventOccurrencesGroupedByDay(
   });
 
   for (const occurrence of occurrences) {
-    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, dayNumbers);
     for (const dayKey of eventDays) {
       occurrenceMap.get(dayKey)!.push(occurrence);
     }
