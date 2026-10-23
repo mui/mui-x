@@ -483,9 +483,13 @@ export const useGridFormula = (
 
   // Arm the A1 paste origin: the first cell of the batch sets it, the rest
   // offset their relative references from it (Excel fill).
-  const handleClipboardPasteStart = React.useCallback(() => {
-    apiRef.current.caches.formula!.pasteOrigin = null;
-  }, [apiRef]);
+  const handleClipboardPasteStart = React.useCallback<GridEventListener<'clipboardPasteStart'>>(
+    (params) => {
+      apiRef.current.caches.formula!.pasteOrigin = null;
+      apiRef.current.caches.formula!.pasteStartCell = params.startCell ?? null;
+    },
+    [apiRef],
+  );
 
   // The formula editor floats in a surface portaled into the ROW, so the grid's
   // DOM-containment checks (`handleDocumentClick` compares the mouseup target

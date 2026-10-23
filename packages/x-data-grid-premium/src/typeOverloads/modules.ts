@@ -78,7 +78,15 @@ interface GridEventLookupPremium extends GridEventLookupPro {
   /**
    * Fired when the clipboard paste operation starts.
    */
-  clipboardPasteStart: { params: { data: string[][] } };
+  clipboardPasteStart: {
+    params: {
+      data: string[][];
+      /**
+       * The cell where the paste starts, when the paste starts from a cell.
+       */
+      startCell?: GridCellCoordinates;
+    };
+  };
   /**
    * Fired when the clipboard paste operation ends.
    */
@@ -86,6 +94,11 @@ interface GridEventLookupPremium extends GridEventLookupPro {
     params: {
       oldRows: Map<GridRowId, GridValidRowModel>;
       newRows: Map<GridRowId, GridValidRowModel>;
+      /**
+       * The rows that the paste added to the grid.
+       * The paste adds rows only when `clipboardPasteOptions.createRows()` is set.
+       */
+      createdRows: Map<GridRowId, GridValidRowModel>;
     };
   };
   /**

@@ -1374,5 +1374,524 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(apiRef.current!.getRow(0).tags).to.deep.equal(['React', 'TypeScript']);
       });
     });
+
+    describe('clipboardPasteOptions.createRows', () => {
+      const createNewRows = ({ count }: { count: number }) =>
+        Array.from({ length: count }, (_, index) => ({ id: `new-${index}` }));
+
+      const getCellByRowId = (rowId: string | number, field: string) =>
+        document.querySelector<HTMLElement>(
+          `[role="row"][data-id="${rowId}"] [role="gridcell"][data-field="${field}"]`,
+        )!;
+
+      async function pasteIntoCell(
+        user: ReturnType<typeof render>['user'],
+        cell: HTMLElement,
+        text: string,
+      ) {
+        await act(() => cell.focus());
+        await user.click(cell);
+        paste(cell, text);
+      }
+
+      const clipboardData = ['A\t1', 'B\t2', 'C\t3'].join('\n');
+
+      it('should add rows for the pasted data that goes past the last row', async () => {
+        const createRows = vi.fn(createNewRows);
+        const onClipboardPasteEnd = vi.fn();
+        const { user } = render(
+          <Test clipboardPasteOptions={{ createRows }} onClipboardPasteEnd={onClipboardPasteEnd} />,
+        );
+        const originalValues = getColumnValues(1);
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(getColumnValues(1)).to.deep.equal([...originalValues.slice(0, 3), 'A', 'B', 'C']);
+        });
+        expect(getColumnValues(2).slice(3)).to.deep.equal(['1', '2', '3']);
+        expect(createRows.mock.calls).to.have.length(1);
+        expect(createRows.mock.calls[0][0]).to.deep.equal({
+          count: 2,
+          data: [
+            ['B', '2'],
+            ['C', '3'],
+          ],
+        });
+
+        expect(onClipboardPasteEnd.mock.calls).to.have.length(1);
+        const { newRows, createdRows } = onClipboardPasteEnd.mock.calls[0][0];
+        expect(Array.from(newRows.keys())).to.deep.equal([3]);
+        expect(Array.from(createdRows.keys())).to.deep.equal(['new-0', 'new-1']);
+        expect(createdRows.get('new-0')).to.deep.equal({
+          id: 'new-0',
+          currencyPair: 'B',
+          price1M: '2',
+        });
+      });
+
+      it('should not add rows when the pasted data fits in the grid', async () => {
+        const createRows = vi.fn(createNewRows);
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        await pasteIntoCell(user, getCell(1, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(getCell(3, 1)).to.have.text('C');
+        });
+        expect(createRows.mock.calls).to.have.length(0);
+        expect(apiRef.current!.getRowsCount()).to.equal(4);
+      });
+
+      it('should not add rows when the paste targets a cell range', async () => {
+        const createRows = vi.fn(createNewRows);
+        const { user } = render(<Test clipboardPasteOptions={{ createRows }} />);
+
+        const cell = getCell(2, 1);
+        await act(() => cell.focus());
+        await user.click(cell);
+        fireEvent.keyDown(cell, { key: 'Shift' });
+        fireEvent.click(getCell(3, 2), { shiftKey: true });
+        paste(cell, clipboardData);
+
+        await waitFor(() => {
+          expect(getCell(3, 1)).to.have.text('B');
+        });
+        expect(createRows.mock.calls).to.have.length(0);
+        expect(apiRef.current!.getRowsCount()).to.equal(4);
+      });
+
+      it('should paste only into the rows that `createRows()` returns', async () => {
+        const { user } = render(
+          <Test clipboardPasteOptions={{ createRows: () => [{ id: 'new-0' }] }} />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(getColumnValues(1).slice(3)).to.deep.equal(['A', 'B']);
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(5);
+      });
+
+      it('should paste into the existing rows when `createRows()` rejects', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{
+              createRows: () => Promise.reject(new Error('No rows')),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(getCell(3, 1)).to.have.text('A');
+        });
+        expect(apiRef.current!.getRowsCount()).to.equal(4);
+      });
+
+      it('should wait for an async `createRows()`', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{
+              createRows: async (params) => {
+                await sleep(10);
+                return createNewRows(params);
+              },
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(getColumnValues(1).slice(3)).to.deep.equal(['A', 'B', 'C']);
+        });
+      });
+
+      it('should call `processRowUpdate()` with the created row and use the row it returns', async () => {
+        const processRowUpdate = vi.fn<NonNullable<DataGridPremiumProps['processRowUpdate']>>(
+          (newRow, oldRow) => {
+            if (newRow.currencyPair === 'C') {
+              throw new Error('Rejected');
+            }
+            // The server gives the final id to the new rows
+            return oldRow.isNew ? { ...newRow, id: `server-${newRow.id}`, isNew: false } : newRow;
+          },
+        );
+        const { user } = render(
+          <Test
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={() => {}}
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, (_, index) => ({ id: `new-${index}`, isNew: true })),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(getColumnValues(1).slice(3)).to.deep.equal(['A', 'B']);
+        });
+        expect(processRowUpdate.mock.calls).to.have.length(3);
+        const createdRowCall = processRowUpdate.mock.calls.find(([, oldRow]) => oldRow.isNew)!;
+        expect(createdRowCall[1]).to.deep.equal({ id: 'new-0', isNew: true });
+        expect(createdRowCall[2]).to.deep.equal({ rowId: 'new-0' });
+        expect(apiRef.current!.getRow('server-new-0')).to.deep.equal({
+          id: 'server-new-0',
+          isNew: false,
+          currencyPair: 'B',
+          price1M: '2',
+        });
+        expect(apiRef.current!.getRow('new-1')).to.equal(null);
+      });
+
+      it('should respect `isCellEditable` for the created rows', async () => {
+        const { user } = render(
+          <Test
+            isCellEditable={(params) => params.field !== 'price1M' || !params.row.isNew}
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, (_, index) => ({ id: `new-${index}`, isNew: true })),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(getColumnValues(1).slice(3)).to.deep.equal(['A', 'B', 'C']);
+        });
+        expect(getCell(3, 2)).to.have.text('1');
+        expect(apiRef.current!.getRow('new-0').price1M).to.equal(undefined);
+      });
+
+      it('should keep the values of the created rows when the grid is sorted', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows: createNewRows }}
+            initialState={{ sorting: { sortModel: [{ field: 'currencyPair', sort: 'desc' }] } }}
+          />,
+        );
+        const lastRowId = apiRef.current!.getRowIdFromRowIndex(3);
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        expect(apiRef.current!.getRow(lastRowId).currencyPair).to.equal('A');
+        expect(apiRef.current!.getRow('new-0').currencyPair).to.equal('B');
+        expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
+      });
+
+      it('should keep the created rows when the filters hide them', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows: createNewRows }}
+            initialState={{
+              filter: {
+                filterModel: {
+                  items: [{ field: 'price1M', operator: 'doesNotEqual', value: '2' }],
+                },
+              },
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        expect(apiRef.current!.getRow('new-0')).to.deep.equal({
+          id: 'new-0',
+          currencyPair: 'B',
+          price1M: '2',
+        });
+        expect(getColumnValues(1).slice(3)).to.deep.equal(['A', 'C']);
+      });
+
+      it('should add rows only from the last page', async () => {
+        const createRows = vi.fn(createNewRows);
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows }}
+            pagination
+            pageSizeOptions={[2]}
+            initialState={{ pagination: { paginationModel: { page: 0, pageSize: 2 } } }}
+          />,
+        );
+
+        // The paste stops at the end of the page, as the next page has rows
+        await pasteIntoCell(user, getCellByRowId(1, 'currencyPair'), clipboardData);
+        await waitFor(() => {
+          expect(apiRef.current!.getRow(1).currencyPair).to.equal('A');
+        });
+        expect(createRows.mock.calls).to.have.length(0);
+        expect(apiRef.current!.getRow(2).currencyPair).not.to.equal('B');
+
+        await act(() => apiRef.current!.setPage(1));
+
+        await pasteIntoCell(user, getCellByRowId(3, 'currencyPair'), clipboardData);
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        expect(createRows.mock.calls).to.have.length(1);
+        expect(apiRef.current!.getRow(3).currencyPair).to.equal('A');
+        expect(apiRef.current!.getRow('new-0').currencyPair).to.equal('B');
+        expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
+      });
+
+      it('should not add rows twice when a paste starts before the previous paste ends', async () => {
+        const { user } = render(
+          <Test
+            processRowUpdate={async (newRow) => {
+              await sleep(100);
+              return newRow;
+            }}
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, () => ({ id: `new-${Math.random()}` })),
+            }}
+          />,
+        );
+
+        const cell = getCell(3, 1);
+        await pasteIntoCell(user, cell, clipboardData);
+        paste(cell, clipboardData);
+        await act(() => sleep(500));
+
+        // The second paste overwrites the rows that the first paste added
+        expect(getColumnValues(1).slice(3)).to.deep.equal(['A', 'B', 'C']);
+        expect(apiRef.current!.getRowsCount()).to.equal(6);
+      });
+
+      it('should paste into the cell that had the focus when the paste started', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{
+              createRows: async (params) => {
+                await sleep(100);
+                return createNewRows(params);
+              },
+            }}
+          />,
+        );
+        const originalValues = getColumnValues(1);
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+        // Move the focus while `createRows()` runs
+        await user.click(getCell(0, 1));
+        await act(() => sleep(300));
+
+        expect(getColumnValues(1)).to.deep.equal([...originalValues.slice(0, 3), 'A', 'B', 'C']);
+      });
+
+      it('should not add the rows that `processRowUpdate()` deletes', async () => {
+        const onClipboardPasteEnd = vi.fn();
+        const { user } = render(
+          <Test
+            processRowUpdate={(newRow, oldRow) =>
+              oldRow.isNew ? { ...newRow, _action: 'delete' } : newRow
+            }
+            onClipboardPasteEnd={onClipboardPasteEnd}
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, (_, index) => ({ id: `new-${index}`, isNew: true })),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(onClipboardPasteEnd.mock.calls).to.have.length(1);
+        });
+        expect(onClipboardPasteEnd.mock.calls[0][0].createdRows.size).to.equal(0);
+        expect(apiRef.current!.getRowsCount()).to.equal(4);
+        expect(getCell(3, 1)).to.have.text('A');
+      });
+
+      it('should fire `clipboardPasteEnd` after the rows are in the state when `throttleRowsMs` is set', async () => {
+        const rowsInStateOnPasteEnd: unknown[] = [];
+        const { user } = render(
+          <Test
+            throttleRowsMs={100}
+            onClipboardPasteEnd={() => {
+              rowsInStateOnPasteEnd.push(
+                apiRef.current!.getRow(3)?.currencyPair,
+                apiRef.current!.getRow('new-1')?.currencyPair,
+              );
+            }}
+            clipboardPasteOptions={{ createRows: createNewRows }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(rowsInStateOnPasteEnd).to.deep.equal(['A', 'C']);
+        });
+      });
+
+      it('should keep the class of the rows that `createRows()` returns', async () => {
+        class Product {
+          id: string;
+
+          currencyPair?: string;
+
+          constructor(id: string) {
+            this.id = id;
+          }
+
+          get label() {
+            return `Product ${this.currencyPair}`;
+          }
+        }
+
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, (_, index) => new Product(`new-${index}`)),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        const row = apiRef.current!.getRow('new-0');
+        expect(row).to.be.instanceOf(Product);
+        expect(row.label).to.equal('Product B');
+      });
+
+      it('should show the updated rows before the slowest `processRowUpdate()` resolves', async () => {
+        const { user } = render(
+          <Test
+            processRowUpdate={async (newRow) => {
+              await sleep(newRow.id === 2 ? 400 : 10);
+              return newRow;
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(1, 1), ['A', 'B'].join('\n'));
+        await act(() => sleep(150));
+        expect(getCell(1, 1)).to.have.text('A');
+        expect(getCell(2, 1)).not.to.have.text('B');
+
+        await act(() => sleep(400));
+        expect(getCell(2, 1)).to.have.text('B');
+      });
+
+      it('should apply the other rows when one row of the paste fails', async () => {
+        const onClipboardPasteEnd = vi.fn();
+        const { user } = render(
+          <Test
+            // `undefined` is not a valid row
+            processRowUpdate={(newRow) => (newRow.id === 'new-0' ? undefined! : newRow)}
+            onClipboardPasteEnd={onClipboardPasteEnd}
+            clipboardPasteOptions={{ createRows: createNewRows }}
+          />,
+        );
+
+        await expect(async () => {
+          await pasteIntoCell(user, getCell(3, 1), clipboardData);
+          await waitFor(() => {
+            expect(onClipboardPasteEnd.mock.calls).to.have.length(1);
+          });
+        }).toErrorDev('MUI X: The paste skipped the row with id "new-0"');
+
+        expect(getCell(3, 1)).to.have.text('A');
+        expect(apiRef.current!.getRow('new-0')).to.equal(null);
+        expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
+      });
+
+      it('should keep the pasted data of each row when `createRows()` returns a row with a used id', async () => {
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{
+              // The id `0` is used by another row
+              createRows: () => [{ id: 0 }, { id: 'new-1' }],
+            }}
+          />,
+        );
+
+        await expect(async () => {
+          await pasteIntoCell(user, getCell(3, 1), clipboardData);
+          await waitFor(() => {
+            expect(apiRef.current!.getRowsCount()).to.equal(5);
+          });
+        }).toWarnDev('MUI X: The row with id "0" returned by `clipboardPasteOptions.createRows()`');
+
+        // `B` was for the ignored row, so `new-1` gets `C`
+        expect(apiRef.current!.getRow('new-1').currencyPair).to.equal('C');
+      });
+
+      it('should not keep the fields of a class row that `processRowUpdate()` removed', async () => {
+        class Product {
+          id: string;
+
+          isNew = true;
+
+          currencyPair?: string;
+
+          constructor(id: string) {
+            this.id = id;
+          }
+        }
+
+        const { user } = render(
+          <Test
+            processRowUpdate={(newRow) => {
+              const { isNew, ...row } = newRow;
+              return row;
+            }}
+            clipboardPasteOptions={{
+              createRows: ({ count }) =>
+                Array.from({ length: count }, (_, index) => new Product(`new-${index}`)),
+            }}
+          />,
+        );
+
+        await pasteIntoCell(user, getCell(3, 1), clipboardData);
+
+        await waitFor(() => {
+          expect(apiRef.current!.getRowsCount()).to.equal(6);
+        });
+        const row = apiRef.current!.getRow('new-0');
+        expect(row).to.be.instanceOf(Product);
+        expect(Object.keys(row)).not.to.include('isNew');
+      });
+
+      it('should not add rows with row grouping', async () => {
+        const createRows = vi.fn(createNewRows);
+        const { user } = render(
+          <Test
+            clipboardPasteOptions={{ createRows }}
+            initialState={{ rowGrouping: { model: ['price1M'] } }}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        const lastRowId = apiRef.current!.getSortedRowIds().at(-1)!;
+        await expect(async () => {
+          await pasteIntoCell(user, getCellByRowId(lastRowId, 'currencyPair'), clipboardData);
+          await waitFor(() => {
+            expect(apiRef.current!.getRow(lastRowId).currencyPair).to.equal('A');
+          });
+        }).toWarnDev(
+          'MUI X: The paste did not add rows, because `clipboardPasteOptions.createRows()` is not supported with tree data or row grouping.',
+        );
+        expect(createRows.mock.calls).to.have.length(0);
+      });
+    });
   });
 });

@@ -79,15 +79,17 @@ export function convertA1ToCanonicalPaste(
     // first editable formula cell to reach this transform: leading cells skipped
     // for being non-editable or carrying a non-formula value never call this
     // function, so anchoring lazily here would displace the origin and shift
-    // every subsequent relative reference. The focused cell is that top-left
-    // anchor on the common (focused-cell) paste path; fall back to this cell when
-    // there is no focus (e.g. a multi-cell selection paste).
-    const focusedCell = gridFocusCellSelector(apiRef);
+    // every subsequent relative reference. The start cell of the paste is that
+    // top-left anchor on the common (focused-cell) paste path. It comes from the
+    // `clipboardPasteStart` event, because the focus can move while the paste waits
+    // for `createRows()`. Other paths fall back to the focused cell, and then to
+    // this cell when there is no focus (e.g. a multi-cell selection paste).
+    const originCell = cache.pasteStartCell ?? gridFocusCellSelector(apiRef);
     cache.pasteOrigin =
-      focusedCell !== null
+      originCell !== null
         ? {
-            rowPosition: positionContext.getPositionOfRowId(focusedCell.id),
-            columnPosition: positionContext.getPositionOfField(focusedCell.field),
+            rowPosition: positionContext.getPositionOfRowId(originCell.id),
+            columnPosition: positionContext.getPositionOfField(originCell.field),
           }
         : { rowPosition, columnPosition };
   }
