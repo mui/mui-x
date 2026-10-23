@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { TemporalSupportedObject } from '../../models';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
+import type { SchedulerProcessedDate } from '../../models';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
@@ -9,9 +9,11 @@ import { useAdapterContext } from '../../use-adapter-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
+import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
+import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 
 export function useCalendarGridPlaceholderInDay(
-  day: TemporalSupportedObject,
+  day: SchedulerProcessedDate,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
   maxEvents?: number,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
@@ -22,7 +24,7 @@ export function useCalendarGridPlaceholderInDay(
   const findAvailableIndex = React.useCallback(
     (excludeKey?: string): number => {
       let positionIndex = 1;
-      const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
+      const targetDay = row.days.find((rowDay) => rowDay.key === day.key);
       if (targetDay) {
         const usedIndexes = new Set(
           targetDay.withPosition
@@ -38,7 +40,7 @@ export function useCalendarGridPlaceholderInDay(
       }
       return positionIndex;
     },
-    [adapter, day, maxEvents, row.days],
+    [day, maxEvents, row.days],
   );
 
   const rawPlaceholder = useStore(
@@ -52,6 +54,7 @@ export function useCalendarGridPlaceholderInDay(
     ? rawPlaceholder.eventId
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
@@ -59,8 +62,13 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     // The placeholder can run past the week row: the next rows render their own piece.
-    const endInRow = adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end;
-    const daySpan = adapter.differenceInDays(endInRow, day) + 1;
+    const endInRow =
+      adapter.getTime(rawPlaceholder.end) > adapter.getTime(rowEnd) ? rowEnd : rawPlaceholder.end;
+    // The placeholder covers every date up to its end, like the occurrences.
+    const daySpan =
+      buildTemporalPlainDate(adapter, endInRow).dayNumber -
+      toLocalDayNumber(day.timestamp, displayTimezone) +
+      1;
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
@@ -70,14 +78,21 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
-      const startProcessed = processDate(day, adapter);
-      const endProcessed = processDate(endInRow, adapter);
-      const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
         title: '',
         allDay: true,
-        displayTimezone: { start: startProcessed, end: endProcessed, timezone },
+        displayTimezone: {
+          // The processed day without the occurrences a row day carries.
+          start: {
+            value: day.value,
+            key: day.key,
+            timestamp: day.timestamp,
+            minutesInDay: day.minutesInDay,
+          },
+          end: processDate(endInRow, adapter),
+          timezone: adapter.getTimezone(day.value),
+        },
         position: {
           index: findAvailableIndex(),
           daySpan,
@@ -88,12 +103,15 @@ export function useCalendarGridPlaceholderInDay(
     if (rawPlaceholder.type === 'external-drag') {
       const startProcessed = processDate(rawPlaceholder.start, adapter);
       const endProcessed = processDate(rawPlaceholder.end, adapter);
-      const timezone = adapter.getTimezone(rawPlaceholder.start);
 
       return {
         ...sharedProperties,
         title: rawPlaceholder.eventData.title ?? '',
-        displayTimezone: { start: startProcessed, end: endProcessed, timezone },
+        displayTimezone: {
+          start: startProcessed,
+          end: endProcessed,
+          timezone: adapter.getTimezone(rawPlaceholder.start),
+        },
         position: {
           index: findAvailableIndex(),
           daySpan,
@@ -111,5 +129,14 @@ export function useCalendarGridPlaceholderInDay(
         daySpan,
       },
     };
-  }, [adapter, day, originalEvent, originalEventId, rawPlaceholder, rowEnd, findAvailableIndex]);
+  }, [
+    adapter,
+    day,
+    displayTimezone,
+    originalEvent,
+    originalEventId,
+    rawPlaceholder,
+    rowEnd,
+    findAvailableIndex,
+  ]);
 }
