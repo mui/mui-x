@@ -2,7 +2,7 @@ import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import { getDateKey } from '../date-utils';
-import { PlainDate } from '../base-temporal/PlainDate';
+import type { PlainDate } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
 import { getEndOfDayMs, getStartOfDayMs, localToEpochMs, toPlainDateTime } from './timeZone';
 
@@ -11,13 +11,11 @@ import { getEndOfDayMs, getStartOfDayMs, localToEpochMs, toPlainDateTime } from 
 
 /**
  * Builds the plain date of an adapter value, in the timezone the value is labeled with.
+ * Read from the offsets of the timezone, which is faster than the getters of the adapter and
+ * returns the same date.
  */
 export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
-  return PlainDate.from({
-    year: adapter.getYear(date),
-    month: adapter.getMonth(date) + 1,
-    day: adapter.getDate(date),
-  });
+  return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).date;
 }
 
 const epochValues = new WeakMap<Adapter, TemporalSupportedObject>();

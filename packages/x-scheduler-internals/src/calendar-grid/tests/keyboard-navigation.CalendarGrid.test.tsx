@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
@@ -89,6 +90,32 @@ describe('CalendarGrid keyboard navigation', () => {
       await user.keyboard('{ArrowLeft}');
 
       expect(firstCell).toHaveFocus();
+    });
+
+    it('should move focus to the next column on ArrowLeft in RTL', async () => {
+      const { user } = render(
+        <DirectionProvider direction="rtl">
+          <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />
+        </DirectionProvider>,
+      );
+
+      await user.click(screen.getByTestId('day-2'));
+      await user.keyboard('{ArrowLeft}');
+
+      expect(screen.getByTestId('day-3')).toHaveFocus();
+    });
+
+    it('should move focus to the previous column on ArrowRight in RTL', async () => {
+      const { user } = render(
+        <DirectionProvider direction="rtl">
+          <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />
+        </DirectionProvider>,
+      );
+
+      await user.click(screen.getByTestId('header-2'));
+      await user.keyboard('{ArrowRight}');
+
+      expect(screen.getByTestId('header-1')).toHaveFocus();
     });
   });
 
@@ -355,6 +382,19 @@ describe('CalendarGrid keyboard navigation', () => {
         </EventCalendarProvider>
       );
     }
+
+    it('should move focus to the next time column on ArrowLeft in RTL', async () => {
+      const { user } = render(
+        <DirectionProvider direction="rtl">
+          <FullGrid />
+        </DirectionProvider>,
+      );
+
+      await user.click(screen.getByTestId('time-1'));
+      await user.keyboard('{ArrowLeft}');
+
+      expect(screen.getByTestId('time-2')).toHaveFocus();
+    });
 
     it('should navigate from header to day-grid to time-grid with ArrowDown', async () => {
       const { user } = render(<FullGrid />);

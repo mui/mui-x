@@ -613,6 +613,67 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
       expect(store!.state.dependencyModelList).to.have.length(1);
     });
+
+    // The clamp on a start resize keeps `b`'s end, so its contribution carries `start` only.
+    // Merging it into the caller's entry must not add an `end` key: that would turn the resize
+    // into a two-bound move, which `b`'s unwritable `end` refuses wholesale.
+    it('should apply a clamped start resize when the untouched end is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { end: { getter: (event: any) => event.end } };
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      const result = store.updateEvent({ id: 'b', start: date('2025-07-03T09:30:00Z') });
+
+      expect(result.applied).to.equal(true);
+      const { changes } = result as Extract<typeof result, { applied: true }>;
+      expect(adapter.getTime(changes.start!)).to.equal(
+        adapter.getTime(date('2025-07-03T10:00:00Z')),
+      );
+      expect('end' in changes).to.equal(false);
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+      const emittedB = newEvents.find((event) => event.id === 'b')!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T11:00:00Z')));
+    });
+
+    // Mirror of the above: the clamp on an end resize keeps `b`'s start, so its contribution
+    // carries `end` only, and `b`'s unwritable `start` must not be pulled into the merged entry.
+    it('should apply a clamped end resize when the untouched start is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { start: { getter: (event: any) => event.start } };
+      const longPredecessor = EventBuilder.new()
+        .id('a')
+        .span('2025-07-03T09:00:00Z', '2025-07-03T12:00:00Z')
+        .build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [longPredecessor, eventB],
+          dependencies: [{ id: 'dep-1', source: 'a', target: 'b', type: 'FinishToFinish' }],
+          eventModelStructure,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      const result = store.updateEvent({ id: 'b', end: date('2025-07-03T11:30:00Z') });
+
+      expect(result.applied).to.equal(true);
+      const { changes } = result as Extract<typeof result, { applied: true }>;
+      expect(adapter.getTime(changes.end!)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+      expect('start' in changes).to.equal(false);
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      const newEvents: SchedulerEvent[] = onEventsChange.mock.lastCall![0];
+      const emittedB = newEvents.find((event) => event.id === 'b')!;
+      expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
+      expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
+    });
   });
 
   describe('method: pasteEvent', () => {

@@ -101,7 +101,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
       elementRef: dropTargetRef,
     });
     // The new event starts at the cursor: cap the offset to the last slot of the axis
-    // so a click on the exact right edge does not create the event on the day after
+    // so a click on the exact end edge does not create the event on the day after
     // the collection, where it would not be rendered at all.
     const lastStartOffsetMs = config.durationMs - EVENT_CREATION_PRECISION_MINUTE * 60_000;
     const anchor = timelineAxisOffsetToDate(adapter, config, Math.min(offsetMs, lastStartOffsetMs));
