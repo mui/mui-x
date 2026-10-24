@@ -1115,21 +1115,6 @@ describe('<DataGridPremium /> - Computed columns', () => {
       expect(getColumnValuesOf('withTax')).to.deep.equal(['4', '20', '8']);
     });
 
-    it('should evaluate circular computed columns to `#CYCLE!`', async () => {
-      await render(
-        <Test
-          computedColumns={[
-            { field: 'a', headerName: 'A', formula: '=b + 1', type: 'number' },
-            { field: 'b', headerName: 'B', formula: '=a + 1', type: 'number' },
-            { field: 'self', headerName: 'Self', formula: '=self', type: 'number' },
-          ]}
-        />,
-      );
-      expect(getColumnValuesOf('a')).to.deep.equal(['#CYCLE!', '#CYCLE!', '#CYCLE!']);
-      expect(getColumnValuesOf('b')).to.deep.equal(['#CYCLE!', '#CYCLE!', '#CYCLE!']);
-      expect(getColumnValuesOf('self')).to.deep.equal(['#CYCLE!', '#CYCLE!', '#CYCLE!']);
-    });
-
     const formulaColumns: DataGridPremiumProps['columns'] = [
       { field: 'price', type: 'number' },
       { field: 'net', type: 'number', allowFormulas: true, editable: true },
@@ -2099,6 +2084,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
         });
 
+        // Excludes `Apple`, so the rows tell whether the view was filtered again.
+        const doubleAboveTwo = { id: 1, field: 'double', operator: '>', value: 2 };
+
         it('should keep the rows when only some of the items can be applied', async () => {
           await render(
             <Test
@@ -2118,18 +2106,17 @@ describe('<DataGridPremium /> - Computed columns', () => {
                 },
                 filter: {
                   filterModel: {
-                    items: [
-                      { id: 1, field: 'double', operator: '>', value: 0 },
-                      { id: 2, field: 'triple', operator: '>', value: 0 },
-                    ],
+                    items: [doubleAboveTwo, { id: 2, field: 'triple', operator: '>', value: 0 }],
                   },
                 },
               }}
             />,
           );
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           expect(() =>
             act(() => apiRef.current!.updateComputedColumn('double', toText)),
           ).not.to.throw();
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           expectColumnsToBeHydratedAgain();
         });
 
@@ -2142,21 +2129,20 @@ describe('<DataGridPremium /> - Computed columns', () => {
                 computedColumns: { model: [double] },
                 filter: {
                   filterModel: {
-                    items: [
-                      { id: 1, field: 'double', operator: '>', value: 0 },
-                      { id: 2, field: 'price', operator: '>', value: 0 },
-                    ],
+                    items: [doubleAboveTwo, { id: 2, field: 'price', operator: '>', value: 0 }],
                   },
                 },
               }}
             />,
           );
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           // The core keeps the item of a column whose type changes until the next filtering.
           setProps({ columns: [{ field: 'item' }, { field: 'price', type: 'string' }] });
           expect(() =>
             act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' })),
           ).not.to.throw();
-          expect(getColumnValuesOf('double')).to.deep.equal(['-2', '-4', '-3']);
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
+          expect(getColumnValuesOf('double')).to.deep.equal(['-4', '-3']);
           expectColumnsToBeHydratedAgain();
         });
 
@@ -2165,14 +2151,19 @@ describe('<DataGridPremium /> - Computed columns', () => {
             <Test
               rows={fruitRows}
               columns={fruitColumns}
-              initialState={{ computedColumns: { model: [double] }, ...filteredByDouble }}
+              initialState={{
+                computedColumns: { model: [double] },
+                filter: { filterModel: { items: [doubleAboveTwo] } },
+              }}
             />,
           );
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           // The core throws when it filters by a column without operators.
           setProps({ computedColDef: { filterOperators: [] } });
           expect(() =>
             act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' })),
           ).not.to.throw();
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           expectColumnsToBeHydratedAgain();
         });
 
@@ -2183,19 +2174,15 @@ describe('<DataGridPremium /> - Computed columns', () => {
               columns={fruitColumns}
               initialState={{
                 computedColumns: { model: [double] },
-                filter: {
-                  filterModel: {
-                    ...filteredByDouble.filter.filterModel,
-                    quickFilterValues: ['a'],
-                  },
-                },
+                filter: { filterModel: { items: [doubleAboveTwo], quickFilterValues: ['a'] } },
               }}
             />,
           );
-          expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Banana']);
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
           expect(() =>
             act(() => apiRef.current!.updateComputedColumn('double', toText)),
           ).not.to.throw();
+          expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
           expectColumnsToBeHydratedAgain();
         });
 

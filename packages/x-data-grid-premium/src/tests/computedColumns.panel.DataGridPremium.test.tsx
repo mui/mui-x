@@ -2769,16 +2769,17 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
           ).to.be.greaterThan(0);
         });
 
-        const priceCell = getCell(60, 1).getBoundingClientRect();
-        let outline: DOMRect;
+        // Both rectangles are read in the same attempt.
         await waitFor(() => {
-          outline = Array.from(
+          const priceCell = getCell(60, 1).getBoundingClientRect();
+          const outline = Array.from(
             document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight'),
             (node) => node.getBoundingClientRect(),
-          ).find((rect) => Math.abs(rect.left - priceCell.left) < 2)!;
-          expect(Math.abs(outline.top - priceCell.top)).to.be.lessThan(2);
+          ).find((rect) => Math.abs(rect.left - priceCell.left) < 2);
+          expect(outline).not.to.equal(undefined);
+          expect(Math.abs(outline!.top - priceCell.top)).to.be.lessThan(2);
+          expect(Math.abs(outline!.height - priceCell.height)).to.be.lessThan(2);
         });
-        expect(Math.abs(outline!.height - priceCell.height)).to.be.lessThan(2);
 
         // The hit testing follows the paint order once the outlines take the pointer.
         const style = document.createElement('style');
@@ -2786,6 +2787,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
           '.MuiDataGrid-formulaReferenceOverlay, .MuiDataGrid-formulaReferenceHighlight { pointer-events: auto !important; }';
         document.head.appendChild(style);
         try {
+          const priceCell = getCell(60, 1).getBoundingClientRect();
           const pinnedCell = getCell(60, 3).getBoundingClientRect();
           expect(pinnedCell.left).to.be.lessThan(priceCell.right);
           const y = priceCell.top + priceCell.height / 2;

@@ -138,8 +138,9 @@ describe('gridComputedColumnsRuntime', () => {
     const elapsed = performance.now() - start;
 
     expect(getValue(rows[0])).to.equal(expectedFirstValue);
+    // An evaluation per comparison, instead of one per row, fails this count.
     expect(getEvaluations()).to.equal(ROW_COUNT);
-    // Catastrophic-regression bound only: it catches an evaluation per comparison.
+    // Catastrophic-regression bound only: it catches a slowdown the count doesn't see.
     expect(elapsed).to.be.lessThan(5_000);
   };
 
