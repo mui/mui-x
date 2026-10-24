@@ -26,6 +26,7 @@ import {
   getActiveColumnHeader,
   grid,
   includeRowSelection,
+  excludeRowSelection,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -974,6 +975,65 @@ describe('<DataGrid /> - Row selection', () => {
       expect(() => screen.getByText('3 rows selected')).not.to.throw();
       // The callback should not be called when the selection changes
       expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+    });
+
+    // Context: https://github.com/mui/mui-x/issues/23960
+    it('should remove the id of a removed row from an `exclude` model without an update loop', () => {
+      const data = getBasicGridData(4, 2);
+      const onRowSelectionModelChange = vi.fn();
+
+      function ControlledGrid(props: Pick<DataGridProps, 'rows'>) {
+        const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>(
+          excludeRowSelection([1]),
+        );
+        return (
+          <TestDataGridSelection
+            columns={data.columns}
+            rows={props.rows}
+            // An inline `getRowId` processes the rows again on each render
+            getRowId={(row) => row.id}
+            checkboxSelection
+            rowSelectionModel={rowSelectionModel}
+            onRowSelectionModelChange={(model) => {
+              onRowSelectionModelChange(model);
+              setRowSelectionModel(model);
+            }}
+          />
+        );
+      }
+
+      const { setProps } = render(<ControlledGrid rows={data.rows} />);
+      setProps({ rows: data.rows.filter((row) => row.id !== 1) });
+
+      expect(onRowSelectionModelChange.mock.calls.length).to.be.greaterThan(0);
+      onRowSelectionModelChange.mock.calls.forEach(([model]) => {
+        expect(model).to.deep.equal(excludeRowSelection([]));
+      });
+      expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
+
+      // Another render processes the rows again, but the model has no stale id left to remove.
+      onRowSelectionModelChange.mockClear();
+      setProps({ rows: data.rows.filter((row) => row.id !== 1) });
+      expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+    });
+
+    it('should keep the id of a filtered row in an `exclude` model', () => {
+      const onRowSelectionModelChange = vi.fn();
+
+      const { setProps } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          rowSelectionModel={excludeRowSelection([1])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      setProps({ filterModel: { items: [{ field: 'id', operator: '!=', value: 1 }] } });
+      expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+
+      setProps({ filterModel: { items: [] } });
+      expect(onRowSelectionModelChange.mock.calls).to.have.length(0);
+      expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
     });
   });
 
