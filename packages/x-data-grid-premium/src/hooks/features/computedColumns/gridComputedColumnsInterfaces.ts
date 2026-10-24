@@ -1,4 +1,4 @@
-import type { GridColumnDimensions, GridRowId } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridColumnDimensions, GridRowId } from '@mui/x-data-grid-pro';
 
 /**
  * The result type of a computed column. Drives the column `type` of the generated column.
@@ -44,6 +44,36 @@ export interface GridComputedColumnDefinition {
 }
 
 export type GridComputedColumnsModel = GridComputedColumnDefinition[];
+
+type GridComputedColumnOwnProperty =
+  // Set by the grid on every computed column.
+  | 'field'
+  | 'type'
+  | 'computed'
+  | 'editable'
+  | 'allowFormulas'
+  | 'valueGetter'
+  | 'valueSetter'
+  | 'groupingValueGetter'
+  | 'rowSpanValueGetter'
+  // Only called for editable cells (unlike `valueParser`, which also parses the filter values).
+  | 'renderEditCell'
+  | 'preProcessEditCellProps'
+  | 'pastedValueParser';
+
+/**
+ * The column definition properties that `computedColDef` can set on a computed column.
+ * The properties that make it a computed column are set by the grid, and its cells are
+ * never edited or pasted into: both are typed `never`.
+ */
+export type GridComputedColDefOverrides =
+  // A plain `Omit` keeps the keys every column type has: a computed column is never an
+  // `actions` or a `singleSelect` one, so `getActions` or `valueOptions` would do nothing.
+  Omit<Partial<GridColDef>, GridComputedColumnOwnProperty> & {
+    // `never` rather than only omitted: the omitted keys of an object returned by a
+    // function or held by a variable are not reported.
+    [Property in GridComputedColumnOwnProperty]?: never;
+  };
 
 export interface GridComputedColumnsState {
   model: GridComputedColumnsModel;

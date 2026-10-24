@@ -46,6 +46,7 @@ import type {
 import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 import type { GridFormulaFunctionDefinition } from '../hooks/features/formula/gridFormulaInterfaces';
 import type {
+  GridComputedColDefOverrides,
   GridComputedColumnDefinition,
   GridComputedColumnsModel,
 } from '../hooks/features/computedColumns/gridComputedColumnsInterfaces';
@@ -268,7 +269,8 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * Keep the reference stable between renders when it holds functions, arrays, or objects: the overrides are compared property by property, so a new one re-creates the computed columns on every render, and loops when the parent re-renders on grid state.
    */
   computedColDef?:
-    Partial<GridColDef> | ((definition: GridComputedColumnDefinition) => Partial<GridColDef>);
+    | GridComputedColDefOverrides
+    | ((definition: GridComputedColumnDefinition) => GridComputedColDefOverrides);
   /**
    * Set the row grouping model of the grid.
    */

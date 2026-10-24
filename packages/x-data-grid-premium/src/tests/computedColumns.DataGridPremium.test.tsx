@@ -267,6 +267,7 @@ describe('<DataGridPremium /> - Computed columns', () => {
         originalRender(
           <Test
             computedColumns={[total]}
+            // @ts-expect-error `GridComputedColDefOverrides` leaves `editable` out: JavaScript only
             computedColDef={(definition) => ({
               width: 222,
               editable: true,
@@ -3113,7 +3114,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
           computedColumns={[total]}
           computedColDef={{
             // Both receive `row[field]`, which a synthetic column never has.
+            // @ts-expect-error `GridComputedColDefOverrides` leaves the getters out: JavaScript only
             groupingValueGetter: () => 'one bucket',
+            // @ts-expect-error `GridComputedColDefOverrides` leaves the getters out: JavaScript only
             rowSpanValueGetter: () => 'one span',
           }}
           initialState={{ rowGrouping: { model: ['total'] } }}

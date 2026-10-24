@@ -405,7 +405,8 @@ export function resolveComputedColDefOverrides(
   definition: GridComputedColumnDefinition,
   computedColDef: DataGridPremiumProcessedProps['computedColDef'],
 ): Partial<GridColDef> | null {
-  const overrides =
+  // Typed wide: JavaScript code can pass the properties `GridComputedColDefOverrides` leaves out.
+  const overrides: Partial<GridColDef> | undefined =
     typeof computedColDef === 'function' ? computedColDef(definition) : computedColDef;
   if (process.env.NODE_ENV !== 'production' && overrides?.editable !== undefined) {
     warnOnce(

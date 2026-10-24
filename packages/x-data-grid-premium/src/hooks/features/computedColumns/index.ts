@@ -2,6 +2,7 @@ export type {
   GridComputedColumnType,
   GridComputedColumnDefinition,
   GridComputedColumnsModel,
+  GridComputedColDefOverrides,
   GridComputedColumnsState,
   GridComputedColumnsInitialState,
   GridComputedColumnValidationCode,

@@ -117,7 +117,7 @@ To customize them, pass a partial column definition—or a function returning on
 ```tsx
 const computedColDef = (
   definition: GridComputedColumnDefinition,
-): Partial<GridColDef> => ({
+): GridComputedColDefOverrides => ({
   width: definition.type === 'number' ? 120 : 180,
   headerAlign: 'center',
 });
@@ -134,7 +134,8 @@ Keep the `computedColDef` reference stable between two renders when it holds fun
 Like a new `columns` array, a new one re-creates the computed columns on every render, and loops when the parent re-renders on grid state, for example with an `onStateChange` that stores the state.
 :::
 
-The `field`, `type`, `editable`, `allowFormulas`, `valueGetter`, `valueSetter`, `groupingValueGetter`, and `rowSpanValueGetter` properties are owned by the feature and cannot be overridden; `cellClassName` and `headerClassName` are merged with the classes of the feature.
+The `field`, `type`, `computed`, `editable`, `allowFormulas`, `valueGetter`, `valueSetter`, `groupingValueGetter`, and `rowSpanValueGetter` properties are owned by the feature and cannot be overridden, and the cell editing ones—`renderEditCell`, `preProcessEditCellProps`, and `pastedValueParser`—are never called, since the cells are never edited.
+The `GridComputedColDefOverrides` type of the prop leaves them all out; `cellClassName` and `headerClassName` are merged with the classes of the feature.
 The functions you pass—such as `valueFormatter`, `renderCell`, `sortComparator`, `getSortComparator`, `filterOperators`, and `getApplyQuickFilterFn`—only receive values of the column type: error codes are handled by the grid (sorted last, shown with the error cell, skipped by the filters).
 The _is empty_ and _is not empty_ operators don't receive them either: an error counts as a value, so it is not empty.
 In `string` columns, the filters receive the error codes like any other text.

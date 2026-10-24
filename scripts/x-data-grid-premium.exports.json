@@ -297,6 +297,7 @@
   { "name": "GridColumnVisibilityModel", "kind": "TypeAlias" },
   { "name": "gridColumnVisibilityModelSelector", "kind": "Variable" },
   { "name": "GridComparatorFn", "kind": "TypeAlias" },
+  { "name": "GridComputedColDefOverrides", "kind": "TypeAlias" },
   { "name": "GridComputedColumnDefinition", "kind": "Interface" },
   { "name": "gridComputedColumnDefinitionSelector", "kind": "Variable" },
   { "name": "GridComputedColumnIcon", "kind": "Variable" },
