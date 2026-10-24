@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 import type {
   DataGridPremiumProps,
@@ -182,7 +182,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
   });
 
   it('should keep the ids of the pivot panel when pivoting is turned on and off', async () => {
-    const { user } = render(
+    render(
       <Test
         initialState={{
           pivoting: {
@@ -196,13 +196,13 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    await user.click(screen.getByRole('button', { name: 'Pivot' }));
-    const pivotSwitch = (await screen.findByRole('switch', { name: 'Pivot' })) as HTMLInputElement;
-    await user.click(pivotSwitch);
-    await waitFor(() => expect(pivotSwitch.checked).to.equal(true));
+    fireEvent.click(screen.getByRole('button', { name: 'Pivot' }));
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
+    fireEvent.click(pivotSwitch);
+    expect(pivotSwitch.checked).to.equal(true);
     // Turning pivoting off restores the state exported when it was turned on.
-    await user.click(pivotSwitch);
-    await waitFor(() => expect(pivotSwitch.checked).to.equal(false));
+    fireEvent.click(pivotSwitch);
+    expect(pivotSwitch.checked).to.equal(false);
 
     const pivotButton = screen.getByRole('button', { name: 'Pivot' });
     const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;

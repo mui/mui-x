@@ -120,14 +120,12 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   });
 
   it('does not accept a suggestion when Enter confirms an IME composition', async () => {
-    const { user } = await render(<Test />);
-    await user.dblClick(getCell(0, 3));
+    await render(<Test />);
+    fireEvent.doubleClick(getCell(0, 3));
     const editable = getCellEditable(0, 3);
 
     typeFormula(editable, '=SU');
-    await waitFor(() => {
-      expect(getListbox()).not.to.equal(null);
-    });
+    expect(getListbox()).not.to.equal(null);
 
     fireEvent.compositionStart(editable);
     fireEvent.keyDown(editable, { key: 'Enter', keyCode: 229, isComposing: true });
@@ -202,20 +200,16 @@ describe('<DataGridPremium /> - Formula autocomplete', () => {
   });
 
   it('closes the signature help on the first Escape and cancels the edit on the second', async () => {
-    const { user } = await render(<Test />);
-    await user.dblClick(getCell(0, 3));
+    await render(<Test />);
+    fireEvent.doubleClick(getCell(0, 3));
     const editable = getCellEditable(0, 3);
 
     typeFormula(editable, '=ROUND(');
-    await waitFor(() => {
-      expect(document.body.textContent).to.contain('ROUND(value, [digits])');
-    });
+    expect(document.body.textContent).to.contain('ROUND(value, [digits])');
     expect(getListbox()).to.equal(null);
 
     fireEvent.keyDown(editable, { key: 'Escape' });
-    await waitFor(() => {
-      expect(document.body.textContent).not.to.contain('ROUND(value, [digits])');
-    });
+    expect(document.body.textContent).not.to.contain('ROUND(value, [digits])');
     // The edit is still active after the first Escape closed the signature help.
     expect(getCellEditable(0, 3)).not.to.equal(null);
     expect(apiRef.current!.getCellMode(0, 'total')).to.equal('edit');

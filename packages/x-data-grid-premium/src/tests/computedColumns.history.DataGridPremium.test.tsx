@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, act, screen, waitFor, within } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, screen, within } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import {
   DataGridPremium,
@@ -24,7 +24,7 @@ import type {
   GridHistoryEventHandler,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 
 const define = (
@@ -105,6 +105,17 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       result = await api().history.redo();
     });
     return result;
+  };
+  // Freezes the clock of the history validation, debounced by 0 ms after a validation event. A
+  // test that calls it doesn't use `waitFor` or the `user` of the renderer: both would hang.
+  const fakeValidationTimers = () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'], shouldClearNativeTimers: true });
+  };
+  // Runs the history validation that is pending.
+  const runValidation = async () => {
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
   };
   const getPanel = () => document.querySelector<HTMLElement>(PANEL_SELECTOR);
   const getNameInput = () => screen.getByRole('textbox', { name: 'Name' }) as HTMLInputElement;
@@ -350,13 +361,10 @@ describe('<DataGridPremium /> - Computed columns history', () => {
     // Like `updateRows()` for cell edits: a change made from code is not a step, and the
     // steps it conflicts with are dropped.
     const getStackSize = () => api().state.history.stack.length;
-    const waitForValidation = async () => {
-      await act(async () => {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 10);
-        });
-      });
-    };
+
+    beforeEach(() => {
+      fakeValidationTimers();
+    });
 
     it('does not record the changes made through the API', async () => {
       await render(<Test showToolbar />);
@@ -378,15 +386,14 @@ describe('<DataGridPremium /> - Computed columns history', () => {
 
       // A change that leaves the model equal conflicts with nothing.
       await act(async () => api().updateComputedColumn('total', {}));
-      await waitForValidation();
+      await runValidation();
       expect(canUndo()).to.equal(true);
 
       await act(async () =>
         api().updateComputedColumn('total', { formula: '=price * quantity * 1.2' }),
       );
-      await waitFor(() => {
-        expect(canUndo()).to.equal(false);
-      });
+      await runValidation();
+      expect(canUndo()).to.equal(false);
       expect(getToolbarButton('Undo').disabled).to.equal(true);
       expect(await undo()).to.equal(false);
       expect(getModel()[0].formula).to.equal('=price * quantity * 1.2');
@@ -411,9 +418,8 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(canRedo()).to.equal(true);
 
       await act(async () => api().addComputedColumn(tax));
-      await waitFor(() => {
-        expect(canRedo()).to.equal(false);
-      });
+      await runValidation();
+      expect(canRedo()).to.equal(false);
       // Not a step of its own either.
       expect(canUndo()).to.equal(false);
       expect(getStackSize()).to.equal(0);
@@ -437,9 +443,8 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(getStackSize()).to.equal(1);
 
       await act(async () => setModel([total]));
-      await waitFor(() => {
-        expect(canUndo()).to.equal(false);
-      });
+      await runValidation();
+      expect(canUndo()).to.equal(false);
       expect(getToolbarButton('Undo').disabled).to.equal(true);
       expect(getStackSize()).to.equal(0);
       expect(getModel()).to.deep.equal([total]);
@@ -451,9 +456,8 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(canUndo()).to.equal(true);
 
       await act(async () => api().restoreState({ computedColumns: { model: [tax] } }));
-      await waitFor(() => {
-        expect(canUndo()).to.equal(false);
-      });
+      await runValidation();
+      expect(canUndo()).to.equal(false);
       expect(getModel()).to.deep.equal([tax]);
       expect(getStackSize()).to.equal(0);
     });
@@ -489,7 +493,7 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       await undo();
       // The undo waits for the echo too; a validation in between does not drop the step.
       await act(async () => bumpParent());
-      await waitForValidation();
+      await runValidation();
       await act(async () => echo());
       expect(getModel()).to.deep.equal([]);
       expect(getStackSize()).to.equal(1);
@@ -592,6 +596,7 @@ describe('<DataGridPremium /> - Computed columns history', () => {
         );
         // The parent applies the change of the user later.
         await act(async () => setParentModel(userModel));
+        await runValidation();
         expect(getModel()).to.deep.equal([{ ...total, formula: '=price * 3' }]);
         expect(getStackSize()).to.equal(1);
         expect(canUndo()).to.equal(true);
@@ -613,7 +618,7 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       );
       await userAdd(total);
       expect(getModel()).to.deep.equal([total, tax]);
-      await waitForValidation();
+      await runValidation();
       expect(canUndo()).to.equal(false);
       expect(await undo()).to.equal(false);
       expect(getModel()).to.deep.equal([total, tax]);
@@ -673,14 +678,14 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       );
       await act(async () => api().addComputedColumn(total, { undoable: true }));
       expect(getModel()).to.deep.equal([total, tax]);
-      await waitForValidation();
+      await runValidation();
       expect(canUndo()).to.equal(false);
       expect(await undo()).to.equal(false);
       expect(getModel()).to.deep.equal([total, tax]);
     });
 
     it('undoes cell edits and computed column changes in the order they were made', async () => {
-      const { user } = await render(
+      await render(
         <Test
           columns={[
             { field: 'item' },
@@ -692,12 +697,12 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       await userAdd(total);
       expect(getColumnValuesOf('total')).to.deep.equal(['6', '50', '8']);
 
-      await user.dblClick(getCell(0, 1));
-      fireEvent.change(getCell(0, 1).querySelector('input')!, { target: { value: '5' } });
-      await user.keyboard('{Enter}');
-      await waitFor(() => {
-        expect(getColumnValuesOf('total')).to.deep.equal(['15', '50', '8']);
-      });
+      fireEvent.doubleClick(getCell(0, 1));
+      const input = getCell(0, 1).querySelector('input')!;
+      fireEvent.change(input, { target: { value: '5' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      await microtasks();
+      expect(getColumnValuesOf('total')).to.deep.equal(['15', '50', '8']);
 
       await userEdit('total', { formula: '=price + quantity' });
       expect(getColumnValuesOf('total')).to.deep.equal(['8', '15', '6']);
@@ -722,6 +727,7 @@ describe('<DataGridPremium /> - Computed columns history', () => {
   describe('editable: false', () => {
     // Locking is a change made from code: like any other, it drops the steps it conflicts with.
     it('drops the undo step of a user edit when the column is locked from code', async () => {
+      fakeValidationTimers();
       await render(
         <Test showToolbar initialState={{ computedColumns: { model: [total, tax] } }} />,
       );
@@ -729,9 +735,8 @@ describe('<DataGridPremium /> - Computed columns history', () => {
       expect(canUndo()).to.equal(true);
 
       await act(async () => api().updateComputedColumn('total', { editable: false }));
-      await waitFor(() => {
-        expect(canUndo()).to.equal(false);
-      });
+      await runValidation();
+      expect(canUndo()).to.equal(false);
       expect(getToolbarButton('Undo').disabled).to.equal(true);
       expect(await undo()).to.equal(false);
       expect(getModel()).to.deep.equal([{ ...total, headerName: 'Amount', editable: false }, tax]);

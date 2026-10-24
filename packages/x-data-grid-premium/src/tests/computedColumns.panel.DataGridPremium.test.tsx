@@ -21,6 +21,7 @@ import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
+import { setCaretOffset } from '../components/formulaEditorCaret';
 
 const define = (
   field: string,
@@ -135,14 +136,16 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     fireEvent.keyDown(element, { key, keyCode: 229, isComposing: true });
   };
 
-  const selectType = async (user: any, label: string) => {
-    await user.click(getTypeSelect());
-    await user.click(within(screen.getByRole('listbox')).getByText(label));
+  // Picks an option of a select without the timers of `user` (fake timers stay usable).
+  const selectOption = (selectName: string, optionName: string) => {
+    fireEvent.mouseDown(screen.getByRole('combobox', { name: selectName }));
+    fireEvent.click(within(screen.getByRole('listbox')).getByRole('option', { name: optionName }));
   };
 
-  // Freezes the clock of the debounced preview. A test that calls it doesn't use `waitFor` or the
-  // `user` of the renderer afterwards: both would hang on the frozen clock. The fake
-  // `clearTimeout` also cancels a timer scheduled before.
+  // Freezes `setTimeout`: the debounced preview (and the exit transition of a menu) runs only when
+  // the clock is advanced. A test that calls it doesn't use `waitFor` or the `user` of the
+  // renderer: both would hang on the frozen clock. The fake `clearTimeout` also cancels a timer
+  // scheduled before.
   const fakePreviewTimers = () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'], shouldClearNativeTimers: true });
   };
@@ -281,6 +284,10 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
   });
 
   describe('editor', () => {
+    beforeEach(() => {
+      fakePreviewTimers();
+    });
+
     it('opens a new-column editor from showComputedColumnEditor(null) and appends the column', async () => {
       await render(<Test />);
       await openEditor(null);
@@ -417,7 +424,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('applies a type change of a column filtered with an operator the new type does not have', async () => {
-      const { user } = await render(
+      await render(
         <Test
           initialState={{
             computedColumns: { model: [total] },
@@ -428,7 +435,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await openEditor('total');
 
       typeFormula('=item & "!"');
-      await selectType(user, 'Text');
+      selectOption('Result type', 'Text');
       fireEvent.click(getButton('Apply'));
       await microtasks();
 
@@ -539,19 +546,15 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getPreviewText()).to.equal('');
 
       typeFormula('=price * quantity');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('50');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('50');
 
       typeFormula('=price / 0');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('#DIV/0!');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#DIV/0!');
 
       typeFormula('=');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('');
-      });
+      expect(getPreviewText()).to.equal('');
     });
 
     it('previews the error of a computed column the way the cell will', async () => {
@@ -564,23 +567,20 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await openEditor(null, { sampleRowId: 0 });
 
       typeFormula('=IFERROR(ratio, 0)');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('0');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('0');
 
       typeFormula('=ratio * 2');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('#DIV/0!');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#DIV/0!');
     });
 
     it('previews with the number format of the draft', async () => {
-      const { user } = await render(<Test />);
+      await render(<Test />);
       await openEditor(null, { sampleRowId: 1 });
       typeFormula('=price * quantity');
 
-      await user.click(screen.getByRole('combobox', { name: 'Format' }));
-      await user.click(within(screen.getByRole('listbox')).getByText('Currency'));
+      selectOption('Format', 'Currency');
       fireEvent.change(screen.getByRole('textbox', { name: 'Currency code' }), {
         target: { value: 'eur' },
       });
@@ -588,9 +588,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         target: { value: '2' },
       });
 
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('€50.00');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('€50.00');
 
       typeName('Total');
       fireEvent.click(getButton('Add column'));
@@ -618,9 +617,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(apiRef.current!.getCellParams(0, 'flag').formattedValue).to.equal('no');
 
       await openEditor('flag', { sampleRowId: 0 });
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('no');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('no');
     });
 
     describe('with computedColDef', () => {
@@ -637,14 +635,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         expect(getCell(0, 3).textContent).to.equal('USD 4.00');
 
         await openEditor('double', { sampleRowId: 0 });
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('USD 4.00');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('USD 4.00');
 
         typeFormula('=price * 3');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('USD 6.00');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('USD 6.00');
         fireEvent.click(getButton('Apply'));
         await microtasks();
         expect(getCell(0, 3).textContent).to.equal('USD 6.00');
@@ -657,15 +653,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         await openEditor(null, { sampleRowId: 0 });
 
         typeFormula('=price * 2');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('USD 4.00');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('USD 4.00');
 
         // The result type follows the preview: the draft becomes a text column.
         typeFormula('=item & "!"');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('«Apple!»');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('«Apple!»');
         expect(getTypeSelect().textContent).to.equal('Text');
       });
 
@@ -685,9 +679,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         expect(getCell(0, 3).textContent).to.equal('locked 4');
 
         await openEditor('double', { sampleRowId: 0 });
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('locked 4');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('locked 4');
       });
 
       it('falls back to the base formatting when computedColDef or its formatter throws', async () => {
@@ -702,19 +695,16 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         await openEditor(null, { sampleRowId: 0 });
 
         typeFormula('=price * 2');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('4.00');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('4.00');
 
         typeFormula('=item & "!"');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('Apple!');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('Apple!');
 
         typeFormula('=price > 1');
-        await waitFor(() => {
-          expect(getTypeSelect().textContent).to.equal('Boolean');
-        });
+        await advancePreview();
+        expect(getTypeSelect().textContent).to.equal('Boolean');
         // The base formatting of a boolean value, as without `computedColDef`.
         expect(getPreviewText()).to.equal('yes');
       });
@@ -725,21 +715,18 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         await openEditor(null, { sampleRowId: 0 });
 
         typeFormula('=item & "!"');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('«Apple!»');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('«Apple!»');
 
         typeFormula('=price / 0');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('#DIV/0!');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('#DIV/0!');
         expect(valueFormatter.mock.calls.map(([value]) => value)).not.to.include('#DIV/0!');
 
         // A text result is formatted like the cell of a row whose result is not an error.
         typeFormula('="#REF!"');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('«#REF!»');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('«#REF!»');
         typeName('Code');
         fireEvent.click(getButton('Add column'));
         await microtasks();
@@ -763,9 +750,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         );
         await openEditor('double', { sampleRowId: 0 });
 
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('USD 4.00');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('USD 4.00');
         expect(apiRef.current!.getCellParams(0, 'double').formattedValue).to.equal('USD 4.00');
       });
 
@@ -773,35 +759,30 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         const { setProps } = await render(<Test computedColDef={{ valueFormatter: usd }} />);
         await openEditor(null, { sampleRowId: 0 });
         typeFormula('=price * 2');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('USD 4.00');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('USD 4.00');
 
         setProps({ computedColDef: { valueFormatter: (value: number) => `${value} units` } });
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('4 units');
-        });
+        expect(getPreviewText()).to.equal('4 units');
       });
 
       it('resolves a computedColDef function for the draft type of a stored column', async () => {
         const computedColDef = (definition: GridComputedColumnDefinition) =>
           definition.type === 'number' ? { valueFormatter: usd } : { valueFormatter: quoted };
-        const { user } = await render(
+        await render(
           <Test
             initialState={{ computedColumns: { model: [define('double', '=price * 2')] } }}
             computedColDef={computedColDef}
           />,
         );
         await openEditor('double', { sampleRowId: 0 });
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('USD 4.00');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('USD 4.00');
 
         typeFormula('=item & "!"');
-        await selectType(user, 'Text');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('«Apple!»');
-        });
+        selectOption('Result type', 'Text');
+        await advancePreview();
+        expect(getPreviewText()).to.equal('«Apple!»');
         fireEvent.click(getButton('Apply'));
         await microtasks();
         expect(getCell(0, 3).textContent).to.equal('«Apple!»');
@@ -815,12 +796,9 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         await openEditor(null, { sampleRowId: 0 });
 
         typeFormula('=price > 1');
-        await waitFor(() => {
-          expect(getTypeSelect().textContent).to.equal('Boolean');
-        });
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('yes');
-        });
+        await advancePreview();
+        expect(getTypeSelect().textContent).to.equal('Boolean');
+        expect(getPreviewText()).to.equal('yes');
       });
 
       it('passes the field of the draft to a computedColDef function, empty until the column has a name', async () => {
@@ -835,13 +813,10 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         await openEditor(null, { sampleRowId: 0 });
 
         typeFormula('=price * 2');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('unnamed: 4');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('unnamed: 4');
         typeName('Total');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('total: 4');
-        });
+        expect(getPreviewText()).to.equal('total: 4');
         fireEvent.click(getButton('Add column'));
         await microtasks();
 
@@ -862,9 +837,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         expect(getCell(0, 3).textContent).to.equal('n/a');
 
         await openEditor('cost', { sampleRowId: 0 });
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('n/a');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('n/a');
       });
 
       it('previews the value when the computedColDef formatter returns nothing, like the cells', async () => {
@@ -878,13 +852,11 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         expect(getCell(0, 3).textContent).to.equal('4');
 
         await openEditor('double', { sampleRowId: 0 });
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('4');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('4');
         typeFormula('=price * 3');
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('big 6');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('big 6');
       });
 
       it('previews the raw value when computedColDef unsets the valueFormatter, like the cells', async () => {
@@ -905,21 +877,19 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         expect(getCell(0, 3).textContent).to.equal('4');
 
         await openEditor('double', { sampleRowId: 0 });
-        await waitFor(() => {
-          expect(getPreviewText()).to.equal('4');
-        });
+        await advancePreview();
+        expect(getPreviewText()).to.equal('4');
       });
     });
 
     it('disables Apply while the currency code is invalid', async () => {
-      const { user } = await render(<Test />);
+      await render(<Test />);
       await openEditor(null);
       typeName('Total');
       typeFormula('=price * quantity');
       expect(getButton('Add column')).to.have.property('disabled', false);
 
-      await user.click(screen.getByRole('combobox', { name: 'Format' }));
-      await user.click(within(screen.getByRole('listbox')).getByText('Currency'));
+      selectOption('Format', 'Currency');
       fireEvent.change(screen.getByRole('textbox', { name: 'Currency code' }), {
         target: { value: 'E' },
       });
@@ -939,24 +909,21 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('selects the result type from the preview until the user picks one', async () => {
-      const { user } = await render(<Test />);
+      await render(<Test />);
       await openEditor(null);
       expect(getTypeSelect().textContent).to.equal('Number');
 
       typeFormula('=item & "!"');
-      await waitFor(() => {
-        expect(getTypeSelect().textContent).to.equal('Text');
-      });
+      await advancePreview();
+      expect(getTypeSelect().textContent).to.equal('Text');
       typeFormula('=price > 5');
-      await waitFor(() => {
-        expect(getTypeSelect().textContent).to.equal('Boolean');
-      });
+      await advancePreview();
+      expect(getTypeSelect().textContent).to.equal('Boolean');
 
-      await selectType(user, 'Number');
+      selectOption('Result type', 'Number');
       typeFormula('=item');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('#VALUE!');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#VALUE!');
       expect(getTypeSelect().textContent).to.equal('Number');
     });
 
@@ -970,14 +937,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       );
       await openEditor('flag');
       typeFormula('=price');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('#VALUE!');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('#VALUE!');
       expect(getTypeSelect().textContent).to.equal('Boolean');
     });
 
     it('seeds the format row from the stored format and clears it when reset', async () => {
-      const { user } = await render(
+      await render(
         <Test
           initialState={{
             computedColumns: {
@@ -1006,9 +972,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       });
 
       await openEditor('total');
-      await user.click(screen.getByRole('combobox', { name: 'Format' }));
-      await user.click(within(screen.getByRole('listbox')).getByText('Number'));
-      await user.click(screen.getByRole('switch', { name: 'Thousands separator' }));
+      selectOption('Format', 'Number');
+      fireEvent.click(screen.getByRole('switch', { name: 'Thousands separator' }));
       fireEvent.click(getButton('Apply'));
       await microtasks();
       expect(getModel()[0].numberFormat).to.deep.equal({ notation: 'compact' });
@@ -1021,7 +986,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('removes the number format property when the format is back to the default', async () => {
-      const { user } = await render(
+      await render(
         <Test
           initialState={{
             computedColumns: {
@@ -1031,8 +996,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         />,
       );
       await openEditor('total');
-      await user.click(screen.getByRole('combobox', { name: 'Format' }));
-      await user.click(within(screen.getByRole('listbox')).getByText('Number'));
+      selectOption('Format', 'Number');
       fireEvent.click(getButton('Apply'));
       await microtasks();
       expect(getModel()[0]).not.to.have.property('numberFormat');
@@ -1130,6 +1094,10 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
   });
 
   describe('cell gestures', () => {
+    beforeEach(() => {
+      fakePreviewTimers();
+    });
+
     it('opens the editor on double-click with the row as preview row', async () => {
       await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
       fireEvent.doubleClick(getCell(2, 3));
@@ -1138,9 +1106,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(within(getPanel()!).getByText('Edit computed column')).not.to.equal(null);
       expect(getNameInput().value).to.equal('Total');
       expect(getPanel()!.querySelector(PREVIEW_SELECTOR)!.textContent).to.include('Row 3');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('8');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('8');
     });
 
     it('opens the editor on Enter and ignores printable keys', async () => {
@@ -1385,6 +1352,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     };
 
     it('shows "View computed column" without "Remove" in the column menu, and opens the read-only editor', async () => {
+      fakePreviewTimers();
       await render(<Test initialState={{ computedColumns: { model: [locked] } }} />);
       await act(async () => apiRef.current!.showColumnMenu('total'));
 
@@ -1397,13 +1365,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expectReadOnlyEditor();
       // The read-only formula cannot take the focus: the name does.
       expect(document.activeElement).to.equal(getNameInput());
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
     });
 
     it('treats an absent flag and `editable: true` as editable', async () => {
       const unlocked = { ...tax, editable: true };
+      fakePreviewTimers();
       await render(<Test initialState={{ computedColumns: { model: [total, unlocked] } }} />);
       const expectEditableMenu = async (field: string) => {
         await act(async () => apiRef.current!.showColumnMenu(field));
@@ -1413,10 +1381,11 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         );
         expect(screen.queryByRole('menuitem', { name: 'View computed column' })).to.equal(null);
         await act(async () => apiRef.current!.hideColumnMenu());
-        // In a browser, the closing menu stays in the DOM until its transition ends.
-        await waitFor(() => {
-          expect(screen.queryByRole('menu')).to.equal(null);
+        // The closing menu stays in the DOM until the timer of its exit transition fires.
+        await act(async () => {
+          await vi.runOnlyPendingTimersAsync();
         });
+        expect(screen.queryByRole('menu')).to.equal(null);
       };
       await expectEditableMenu('total');
       await expectEditableMenu('tax');
@@ -2057,20 +2026,22 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
   });
 
   describe('preview row', () => {
+    beforeEach(() => {
+      fakePreviewTimers();
+    });
+
     it('follows the focused cell and keeps the last row when focus leaves the cells', async () => {
       await render(<Test />);
       await openEditor(null);
       typeFormula('=price * quantity');
       expect(getPreviewRowLabel()).to.equal('Row 1');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
 
       await focusCell(2, 'price');
       expect(getPreviewRowLabel()).to.equal('Row 3');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('8');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('8');
 
       await act(async () => getNameInput().focus());
       expect(getPreviewRowLabel()).to.equal('Row 3');
@@ -2094,9 +2065,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       setProps({ rows: baselineProps.rows });
       await microtasks();
       expect(getPreviewRowLabel()).to.equal('Row 1');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
     });
 
     it('acquires a preview row again after the grid was emptied', async () => {
@@ -2104,9 +2074,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         <Test initialState={{ computedColumns: { model: [total] } }} />,
       );
       await openEditor('total', { sampleRowId: 1 });
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('50');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('50');
 
       setProps({ rows: [] });
       await microtasks();
@@ -2116,23 +2085,20 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       setProps({ rows: baselineProps.rows });
       await microtasks();
       expect(getPreviewRowLabel()).to.equal('Row 1');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
     });
 
     it('falls back to the first data row when the preview row is removed', async () => {
       await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
       await openEditor('total', { sampleRowId: 0 });
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, _action: 'delete' }]));
       expect(getPreviewRowLabel()).to.equal('Row 1');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('50');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('50');
     });
   });
 
@@ -2398,12 +2364,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('keeps the fraction bounds when only the thousands separator is toggled', async () => {
-      const { user } = await renderWithFormat({
+      await renderWithFormat({
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
       });
       await openEditor('total');
-      await user.click(screen.getByRole('switch', { name: 'Thousands separator' }));
+      fireEvent.click(screen.getByRole('switch', { name: 'Thousands separator' }));
       await apply();
       expect(getModel()[0].numberFormat).to.deep.equal({
         minimumFractionDigits: 0,
@@ -2413,13 +2379,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('keeps the fraction bounds when only the style changes', async () => {
-      const { user } = await renderWithFormat({
+      await renderWithFormat({
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
       });
       await openEditor('total');
-      await user.click(screen.getByRole('combobox', { name: 'Format' }));
-      await user.click(within(screen.getByRole('listbox')).getByText('Percent'));
+      selectOption('Format', 'Percent');
       await apply();
       expect(getModel()[0].numberFormat).to.deep.equal({
         style: 'percent',
@@ -2456,11 +2421,14 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await microtasks();
     };
 
-    // The clock of the preview is frozen (after the `user` clicks, which need real timers): the
-    // debounced preview can't run between the last formula change and the Apply. Where the
-    // inferred type differs, the type shown right before the Apply proves it.
-    it('infers a text result when Enter comes before the debounced preview', async () => {
+    // The clock of the preview is frozen: the debounced preview can't run between the last formula
+    // change and the Apply. Where the inferred type differs, the type shown right before the Apply
+    // proves it.
+    beforeEach(() => {
       fakePreviewTimers();
+    });
+
+    it('infers a text result when Enter comes before the debounced preview', async () => {
       await render(<Test />);
       await openEditor(null);
       typeName('Greeting');
@@ -2472,7 +2440,6 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('infers boolean and date results', async () => {
-      fakePreviewTimers();
       await render(<Test {...dateProps} />);
       await openEditor(null);
       typeName('Flag');
@@ -2492,7 +2459,6 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('follows a type flip made right before Enter and drops the format with it', async () => {
-      fakePreviewTimers();
       await render(<Test />);
       await openEditor(null);
       typeName('Flip');
@@ -2519,7 +2485,6 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('infers the type from Ctrl+Enter and from the button', async () => {
-      fakePreviewTimers();
       await render(<Test />);
       await openEditor(null);
       typeName('First');
@@ -2540,18 +2505,16 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('keeps the type the user picked', async () => {
-      const { user } = await render(<Test />);
+      await render(<Test />);
       await openEditor(null);
       typeName('Picked');
-      await selectType(user, 'Boolean');
-      fakePreviewTimers();
+      selectOption('Result type', 'Boolean');
       typeFormula('=item');
       await pressEnterInFormula();
       expect(getModel()[0].type).to.equal('boolean');
     });
 
     it('keeps the default type without a preview row or with an error result', async () => {
-      fakePreviewTimers();
       await render(<Test rows={[]} />);
       await openEditor(null);
       typeName('Greeting');
@@ -2568,13 +2531,11 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     });
 
     it('shows a hidden invalid format instead of applying it with the inferred type', async () => {
-      const { user } = await render(<Test />);
+      await render(<Test />);
       await openEditor(null);
       typeName('Amount');
       typeFormula('=price');
-      await user.click(screen.getByRole('combobox', { name: 'Format' }));
-      await user.click(within(screen.getByRole('listbox')).getByText('Currency'));
-      fakePreviewTimers();
+      selectOption('Format', 'Currency');
       fireEvent.change(screen.getByRole('textbox', { name: 'Currency code' }), {
         target: { value: 'U' },
       });
@@ -2734,9 +2695,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await openEditor(null);
       typeFormula('=price * quantity');
       const getRects = () => document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight');
-      await waitFor(() => {
-        expect(getRects()).to.have.length(2);
-      });
+      await microtasks();
+      expect(getRects()).to.have.length(2);
 
       fireEvent.click(getButton('Cancel'));
       await microtasks();
@@ -2763,23 +2723,22 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         );
         await openEditor('total', { sampleRowId: 60 });
         await act(async () => apiRef.current!.scrollToIndexes({ rowIndex: 60 }));
+        // Real layout: the browser fires the scroll event, then the rows move.
         await waitFor(() => {
           expect(
             apiRef.current!.state.virtualization.renderContext.firstRowIndex,
           ).to.be.greaterThan(0);
         });
 
-        // Both rectangles are read in the same attempt.
-        await waitFor(() => {
-          const priceCell = getCell(60, 1).getBoundingClientRect();
-          const outline = Array.from(
-            document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight'),
-            (node) => node.getBoundingClientRect(),
-          ).find((rect) => Math.abs(rect.left - priceCell.left) < 2);
-          expect(outline).not.to.equal(undefined);
-          expect(Math.abs(outline!.top - priceCell.top)).to.be.lessThan(2);
-          expect(Math.abs(outline!.height - priceCell.height)).to.be.lessThan(2);
-        });
+        // The outlines move in the render that moves the rows.
+        const priceCell = getCell(60, 1).getBoundingClientRect();
+        const outline = Array.from(
+          document.querySelectorAll('.MuiDataGrid-formulaReferenceHighlight'),
+          (node) => node.getBoundingClientRect(),
+        ).find((rect) => Math.abs(rect.left - priceCell.left) < 2);
+        expect(outline).not.to.equal(undefined);
+        expect(Math.abs(outline!.top - priceCell.top)).to.be.lessThan(2);
+        expect(Math.abs(outline!.height - priceCell.height)).to.be.lessThan(2);
 
         // The hit testing follows the paint order once the outlines take the pointer.
         const style = document.createElement('style');
@@ -2787,7 +2746,6 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
           '.MuiDataGrid-formulaReferenceOverlay, .MuiDataGrid-formulaReferenceHighlight { pointer-events: auto !important; }';
         document.head.appendChild(style);
         try {
-          const priceCell = getCell(60, 1).getBoundingClientRect();
           const pinnedCell = getCell(60, 3).getBoundingClientRect();
           expect(pinnedCell.left).to.be.lessThan(priceCell.right);
           const y = priceCell.top + priceCell.height / 2;
@@ -2940,9 +2898,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       const { user } = await render(<Test />);
       await openEditor(null);
       const editable = getFormulaEditable();
-      await user.click(editable);
-      await user.keyboard('1 * 2');
-      await user.keyboard('{ArrowLeft}{ArrowLeft}{ArrowLeft}');
+      await act(async () => editable.focus());
+      editable.textContent = '=1 * 2';
+      // The caret before `* 2`.
+      setCaretOffset(editable, 3);
+      fireEvent.input(editable);
+      // The pointer sequence of `user` starts with a mousedown, which must not take the caret away.
       await user.click(within(getReferencePane()).getByRole('button', { name: /^price$/ }));
 
       expect(editable.textContent).to.equal('=1 price* 2');
@@ -2995,14 +2956,10 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
           .filter((node) => !node.contains(gridRoot))
           .map((node) => node.textContent)
           .join('');
-      await waitFor(() => {
-        expect(getPopupText()).to.contain('ROUND(value, [digits])');
-      });
+      expect(getPopupText()).to.contain('ROUND(value, [digits])');
 
       fireEvent.keyDown(editable, { key: 'Escape' });
-      await waitFor(() => {
-        expect(getPopupText()).not.to.contain('ROUND(value, [digits])');
-      });
+      expect(getPopupText()).not.to.contain('ROUND(value, [digits])');
       expect(getSidebar().open).to.equal(true);
       expect(getNameInput().value).to.equal('Renamed');
       expect(getFormulaEditable().textContent).to.equal('=ROUND(');
@@ -3081,11 +3038,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         const { user } = await render(<Test />);
         await openEditor(null);
         const editable = getFormulaEditable();
-        await user.click(editable);
+        await act(async () => editable.focus());
+        placeCaretAtEnd();
+        // `user` types key by key (keydown, beforeinput, input) and clicks the option with a
+        // mousedown first, which must keep the focus in the formula.
         await user.keyboard('pr');
-
-        const option = await screen.findByRole('option', { name: /price/ });
-        await user.click(option);
+        await user.click(screen.getByRole('option', { name: /price/ }));
 
         expect(editable.textContent).to.equal('=price');
         expect(getSidebar().open).to.equal(true);
@@ -3095,11 +3053,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
     it.skipIf(isJSDOM)(
       'hides the suggestions while the formula is scrolled out of the panel',
       async () => {
-        const { user } = await render(<Test />);
+        await render(<Test />);
         await openEditor(null);
         const editable = getFormulaEditable();
-        await user.click(editable);
-        await user.keyboard('1 + ');
+        await act(async () => editable.focus());
+        editable.textContent = '=1 + ';
+        placeCaretAtEnd();
+        fireEvent.input(editable);
 
         let body = editable.parentElement!;
         while (getComputedStyle(body).overflowY !== 'auto') {
@@ -3107,11 +3067,9 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         }
         body.scrollTop +=
           editable.getBoundingClientRect().bottom - body.getBoundingClientRect().top + 1;
-        await waitFor(() => {
-          expect(editable.getBoundingClientRect().bottom).to.be.lessThan(
-            body.getBoundingClientRect().top,
-          );
-        });
+        expect(editable.getBoundingClientRect().bottom).to.be.lessThan(
+          body.getBoundingClientRect().top,
+        );
 
         // The insert keeps the focus in the formula, which suggests the inserted field.
         fireEvent.click(
@@ -3123,11 +3081,11 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         );
         await microtasks();
         expect(editable.textContent).to.equal('=1 + price');
-        await waitFor(() => {
-          expect(screen.queryByRole('listbox')).to.equal(null);
-        });
+        // popper.js hides the list of a formula scrolled out of the panel.
+        expect(screen.queryByRole('listbox')).to.equal(null);
 
         body.scrollTop = 0;
+        // Real layout: the browser fires the scroll event, then popper.js shows the list again.
         expect(await screen.findByRole('option', { name: /price/ })).not.to.equal(null);
       },
     );

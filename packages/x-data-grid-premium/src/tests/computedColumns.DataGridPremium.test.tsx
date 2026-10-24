@@ -88,6 +88,14 @@ describe('<DataGridPremium /> - Computed columns', () => {
   const getColumn = (field: string) => apiRef.current!.getColumn(field)!;
   const getFields = () => gridColumnFieldsSelector(apiRef as RefObject<GridApi>);
   const getColumnValuesOf = (field: string) => getColumnValues(getFields().indexOf(field));
+  // Clicks a cell without the timers of `user`. The grid focuses the cell it saw on mouse down when
+  // the mouse goes up; `focus()` stands in for the focus move of a native mouse down.
+  const clickCell = async (cell: HTMLElement) => {
+    fireEvent.mouseDown(cell);
+    await act(async () => cell.focus());
+    fireEvent.mouseUp(cell);
+    fireEvent.click(cell);
+  };
 
   describe('column', () => {
     it('should add a read-only column after the columns of the `columns` prop', async () => {
@@ -449,7 +457,7 @@ describe('<DataGridPremium /> - Computed columns', () => {
 
       it('should export and copy the values formatted by a `valueFormatter` override and the error codes', async () => {
         const valueFormatter = vi.fn(formatDate);
-        const { user } = await render(
+        await render(
           <Test
             {...sampleProps}
             computedColumns={[shipped]}
@@ -471,10 +479,10 @@ describe('<DataGridPremium /> - Computed columns', () => {
 
         writeText = vi.spyOn(navigator.clipboard, 'writeText');
         const shippedIndex = getVisibleIndex('shipped');
-        await user.click(getCell(0, shippedIndex));
+        await clickCell(getCell(0, shippedIndex));
         fireEvent.keyDown(getCell(0, shippedIndex), { key: 'c', keyCode: 67, ctrlKey: true });
         expect(writeText.mock.lastCall?.[0]).to.equal('Jan 12, 2026');
-        await user.click(getCell(2, shippedIndex));
+        await clickCell(getCell(2, shippedIndex));
         fireEvent.keyDown(getCell(2, shippedIndex), { key: 'c', keyCode: 67, ctrlKey: true });
         expect(writeText.mock.lastCall?.[0]).to.equal('#VALUE!');
 
@@ -2673,12 +2681,10 @@ describe('<DataGridPremium /> - Computed columns', () => {
     });
 
     it('should copy the computed value', async () => {
-      const { user } = await render(
-        <Test computedColumns={[total]} cellSelection disableRowSelectionOnClick />,
-      );
+      await render(<Test computedColumns={[total]} cellSelection disableRowSelectionOnClick />);
       writeText = vi.spyOn(navigator.clipboard, 'writeText');
       const cell = getCell(1, getFields().indexOf('total'));
-      await user.click(cell);
+      await clickCell(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       expect(writeText.mock.lastCall?.[0]).to.equal('50');
     });
