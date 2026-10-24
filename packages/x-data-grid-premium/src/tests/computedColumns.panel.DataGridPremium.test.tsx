@@ -19,7 +19,7 @@ import type {
 } from '@mui/x-data-grid-premium';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi, describe, it, expect } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 
 const define = (
@@ -55,6 +55,8 @@ const baselineProps: DataGridPremiumProps = {
 const PANEL_SELECTOR = `.${gridClasses.computedColumnsPanel}`;
 const PREVIEW_SELECTOR = `.${gridClasses.computedColumnsPanelPreview}`;
 const VALIDATION_SELECTOR = `.${gridClasses.computedColumnsPanelValidation}`;
+// The debounce of the preview in the editor.
+const PREVIEW_DEBOUNCE_MS = 150;
 
 describe('<DataGridPremium /> - Computed columns panel', () => {
   const { render: originalRender } = createRenderer();
@@ -136,6 +138,20 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
   const selectType = async (user: any, label: string) => {
     await user.click(getTypeSelect());
     await user.click(within(screen.getByRole('listbox')).getByText(label));
+  };
+
+  // Freezes the clock of the debounced preview. A test that calls it doesn't use `waitFor` or the
+  // `user` of the renderer afterwards: both would hang on the frozen clock. The fake
+  // `clearTimeout` also cancels a timer scheduled before.
+  const fakePreviewTimers = () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'], shouldClearNativeTimers: true });
+  };
+
+  // Runs the debounced preview that is pending.
+  const advancePreview = async () => {
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(PREVIEW_DEBOUNCE_MS);
+    });
   };
 
   describe('column menu', () => {
@@ -2121,14 +2137,9 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
   });
 
   describe('preview invalidation', () => {
-    // Longer than the debounce of the preview: a re-evaluation that was scheduled has run.
-    const flushPreviewDebounce = async () => {
-      await act(async () => {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 300);
-        });
-      });
-    };
+    beforeEach(() => {
+      fakePreviewTimers();
+    });
 
     const createProbe = () => {
       const apply = vi.fn((args: any[]) => args[0]);
@@ -2145,46 +2156,40 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await render(<Test />);
       await openEditor(null);
       typeFormula('=price * quantity');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
 
       await act(async () => apiRef.current!.updateRows([{ id: 0, quantity: 7 }]));
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('14');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('14');
     });
 
     it('follows a `rows` prop replaced with the same row id', async () => {
       const { setProps } = await render(<Test />);
       await openEditor(null);
       typeFormula('=price * quantity');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
 
       setProps({
         rows: baselineProps.rows!.map((row) => (row.id === 0 ? { ...row, quantity: 7 } : row)),
       });
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('14');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('14');
     });
 
     it('follows a referenced computed column whose formula changes through the API', async () => {
       await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
       await openEditor(null);
       typeFormula('=total + 1');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('7');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('7');
 
       await act(async () =>
         apiRef.current!.updateComputedColumn('total', { formula: '=price + quantity' }),
       );
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
     });
 
     it('follows a referenced formula cell re-evaluated without a change of the preview row', async () => {
@@ -2199,18 +2204,16 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       );
       await openEditor(null, { sampleRowId: 1 });
       typeFormula('=net * 2');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('12');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('12');
 
       // Row 1 is not updated: its formula cell changes through its dependency on row 0,
       // and no stored computed column references `net`.
       const previewRow = apiRef.current!.getRow(1);
       await act(async () => apiRef.current!.updateRows([{ id: 0, price: 4 }]));
       expect(apiRef.current!.getRow(1)).to.equal(previewRow);
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('20');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('20');
     });
 
     it('follows a function of the registry that is replaced', async () => {
@@ -2226,23 +2229,20 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       const { setProps } = await render(<Test formulaFunctions={boost(2) as any} />);
       await openEditor(null);
       typeFormula('=BOOST(price)');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('4');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('4');
 
       setProps({ formulaFunctions: boost(3) });
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('6');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('6');
     });
 
     it('follows a referenced column whose `valueGetter` is replaced before any computed column exists', async () => {
       const { setProps } = await render(<Test />);
       await openEditor(null);
       typeFormula('=price * 2');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('4');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('4');
 
       setProps({
         columns: [
@@ -2251,9 +2251,8 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
           { field: 'quantity', type: 'number' },
         ],
       });
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('40');
-      });
+      await advancePreview();
+      expect(getPreviewText()).to.equal('40');
     });
 
     it('does not evaluate again when an equivalent inline `formulaFunctions` map is passed', async () => {
@@ -2261,14 +2260,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       const { setProps } = await render(<Test formulaFunctions={probe.functions()} />);
       await openEditor(null);
       typeFormula('=PROBE(price)');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('2');
-      });
-      await flushPreviewDebounce();
+      await advancePreview();
+      expect(getPreviewText()).to.equal('2');
       const calls = probe.apply.mock.calls.length;
 
       setProps({ formulaFunctions: probe.functions() });
-      await flushPreviewDebounce();
+      // Right after the change, an evaluation it scheduled would not have run yet.
+      await advancePreview();
       expect(probe.apply.mock.calls.length).to.equal(calls);
     });
 
@@ -2277,14 +2275,12 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await render(<Test formulaFunctions={probe.functions()} />);
       await openEditor(null);
       typeFormula('=PROBE(price)');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('2');
-      });
-      await flushPreviewDebounce();
+      await advancePreview();
+      expect(getPreviewText()).to.equal('2');
       const calls = probe.apply.mock.calls.length;
 
       await act(async () => apiRef.current!.updateRows([{ id: 1, price: 11 }]));
-      await flushPreviewDebounce();
+      await advancePreview();
       expect(probe.apply.mock.calls.length).to.equal(calls);
     });
 
@@ -2302,15 +2298,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       );
       await openEditor(null, { sampleRowId: 0 });
       typeFormula('=PROBE(net)');
-      await waitFor(() => {
-        expect(getPreviewText()).to.equal('3');
-      });
-      await flushPreviewDebounce();
+      await advancePreview();
+      expect(getPreviewText()).to.equal('3');
       const calls = probe.apply.mock.calls.length;
 
       await act(async () => apiRef.current!.updateRows([{ id: 1, price: 11 }]));
       expect(getCell(1, 1).textContent).to.equal('12');
-      await flushPreviewDebounce();
+      await advancePreview();
       expect(probe.apply.mock.calls.length).to.equal(calls);
     });
   });
@@ -2462,22 +2456,28 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await microtasks();
     };
 
-    // No test below waits for the debounced preview between the last formula change and the Apply.
+    // The clock of the preview is frozen (after the `user` clicks, which need real timers): the
+    // debounced preview can't run between the last formula change and the Apply. Where the
+    // inferred type differs, the type shown right before the Apply proves it.
     it('infers a text result when Enter comes before the debounced preview', async () => {
+      fakePreviewTimers();
       await render(<Test />);
       await openEditor(null);
       typeName('Greeting');
       typeFormula('="hello"');
+      expect(getTypeSelect().textContent).to.equal('Number');
       await pressEnterInFormula();
       expect(getModel()[0].type).to.equal('string');
       expect(apiRef.current!.getCellValue(0, 'greeting')).to.equal('hello');
     });
 
     it('infers boolean and date results', async () => {
+      fakePreviewTimers();
       await render(<Test {...dateProps} />);
       await openEditor(null);
       typeName('Flag');
       typeFormula('=price > 1');
+      expect(getTypeSelect().textContent).to.equal('Number');
       await pressEnterInFormula();
       expect(getModel()[0].type).to.equal('boolean');
       expect(apiRef.current!.getCellValue(0, 'flag')).to.equal(true);
@@ -2485,20 +2485,22 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await openEditor(null);
       typeName('When');
       typeFormula('=day');
+      expect(getTypeSelect().textContent).to.equal('Number');
       await pressEnterInFormula();
       expect(getModel()[1].type).to.equal('date');
       expect(apiRef.current!.getCellValue(0, 'when')).to.deep.equal(new Date(2024, 0, 15));
     });
 
     it('follows a type flip made right before Enter and drops the format with it', async () => {
+      fakePreviewTimers();
       await render(<Test />);
       await openEditor(null);
       typeName('Flip');
       typeFormula('=item & "!"');
-      await waitFor(() => {
-        expect(getTypeSelect().textContent).to.equal('Text');
-      });
+      await advancePreview();
+      expect(getTypeSelect().textContent).to.equal('Text');
       typeFormula('=price * 2');
+      expect(getTypeSelect().textContent).to.equal('Text');
       await pressEnterInFormula();
       expect(getModel()[0].type).to.equal('number');
       expect(apiRef.current!.getCellValue(1, 'flip')).to.equal(20);
@@ -2510,16 +2512,19 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
         target: { value: '2' },
       });
       typeFormula('=item');
+      expect(getTypeSelect().textContent).to.equal('Number');
       await pressEnterInFormula();
       expect(getModel()[1].type).to.equal('string');
       expect(getModel()[1]).not.to.have.property('numberFormat');
     });
 
     it('infers the type from Ctrl+Enter and from the button', async () => {
+      fakePreviewTimers();
       await render(<Test />);
       await openEditor(null);
       typeName('First');
       typeFormula('=item');
+      expect(getTypeSelect().textContent).to.equal('Number');
       await act(async () => getNameInput().focus());
       fireEvent.keyDown(getNameInput(), { key: 'Enter', ctrlKey: true });
       await microtasks();
@@ -2528,6 +2533,7 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await openEditor(null);
       typeName('Second');
       typeFormula('=item');
+      expect(getTypeSelect().textContent).to.equal('Number');
       fireEvent.click(getButton('Add column'));
       await microtasks();
       expect(getModel()[1].type).to.equal('string');
@@ -2538,12 +2544,14 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       await openEditor(null);
       typeName('Picked');
       await selectType(user, 'Boolean');
+      fakePreviewTimers();
       typeFormula('=item');
       await pressEnterInFormula();
       expect(getModel()[0].type).to.equal('boolean');
     });
 
     it('keeps the default type without a preview row or with an error result', async () => {
+      fakePreviewTimers();
       await render(<Test rows={[]} />);
       await openEditor(null);
       typeName('Greeting');
@@ -2566,16 +2574,17 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       typeFormula('=price');
       await user.click(screen.getByRole('combobox', { name: 'Format' }));
       await user.click(within(screen.getByRole('listbox')).getByText('Currency'));
+      fakePreviewTimers();
       fireEvent.change(screen.getByRole('textbox', { name: 'Currency code' }), {
         target: { value: 'U' },
       });
       typeFormula('=item');
-      await waitFor(() => {
-        expect(getTypeSelect().textContent).to.equal('Text');
-      });
+      await advancePreview();
+      expect(getTypeSelect().textContent).to.equal('Text');
       expect(getButton('Add column')).to.have.property('disabled', false);
 
       typeFormula('=price * 2');
+      expect(getTypeSelect().textContent).to.equal('Text');
       await pressEnterInFormula();
       expect(getModel()).to.deep.equal([]);
       expect(getSidebar().open).to.equal(true);
