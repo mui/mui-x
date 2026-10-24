@@ -1167,6 +1167,27 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2026-03-10T00:00:00', '2026-03-10T23:59:59.999', 'America/Havana');
   });
 
+  it('should end an all-day successor pushed onto a day ending with a repeated hour at its later last instant', () => {
+    // America/Santiago falls back from 00:00 to 23:00 on April 5th, 2026, so 23:00 to 24:00 on
+    // April 4th happens twice.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('America/Santiago')
+      .span('2026-04-02T09:00:00', '2026-04-02T10:00:00')
+      .toProcessed();
+    const successor = allDayEvent('b', '2026-04-03', 'America/Santiago');
+
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b')],
+      [{ id: 'a', end: adapter.date('2026-04-03T12:00:00', 'America/Santiago') }],
+    );
+
+    expect(result).to.have.length(1);
+    expect(adapter.toJsDate(result[0].start!).toISOString()).to.equal('2026-04-04T03:00:00.000Z');
+    expect(adapter.toJsDate(result[0].end!).toISOString()).to.equal('2026-04-05T03:59:59.999Z');
+  });
+
   it('should push an all-day successor over a day a DST transition skips', () => {
     // Pacific/Apia skips December 30th, 2011, going from the 29th to the 31st.
     const predecessor = EventBuilder.new()
@@ -2178,6 +2199,35 @@ describe('computeAutoSchedulingCascade', () => {
       60 * 60 * 1000,
     );
   });
+
+  it.each([
+    { lagUnit: 'day' as const, predecessorEnd: '2025-03-08T02:30:00' },
+    { lagUnit: 'week' as const, predecessorEnd: '2025-03-02T02:30:00' },
+  ])(
+    'should move a lag in $lagUnit landing in a spring-forward gap forward by the length of the gap',
+    ({ lagUnit, predecessorEnd }) => {
+      // America/New_York springs forward on 2025-03-09: 02:30 does not exist that night.
+      const predecessor = EventBuilder.new()
+        .id('a')
+        .withDataTimezone('America/New_York')
+        .span('2025-02-20T01:00:00', '2025-02-20T02:00:00')
+        .toProcessed();
+      const successor = EventBuilder.new()
+        .id('b')
+        .withDataTimezone('America/New_York')
+        .span('2025-03-01T09:00:00', '2025-03-01T10:00:00')
+        .toProcessed();
+
+      const result = runCascade(
+        [predecessor, successor],
+        [dependency('a', 'b', { lag: 1, lagUnit })],
+        [{ id: 'a', end: newYorkDate(predecessorEnd) }],
+      );
+
+      expect(result).to.have.length(1);
+      expectDates(result[0], '2025-03-09T03:30:00', '2025-03-09T04:30:00', 'America/New_York');
+    },
+  );
 
   it('should push a successor when the lagged bound advances although the predecessor moves earlier', () => {
     // America/New_York falls back on 2025-11-02: 01:00–02:00 happens twice.

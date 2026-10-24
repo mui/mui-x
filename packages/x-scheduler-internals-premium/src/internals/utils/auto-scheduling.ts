@@ -449,7 +449,7 @@ export function computeAutoSchedulingCascade(
 
   return { updated: cascaded, blocked };
 
-  // Inverse of `resolveEntryDate` for a seed changing timezone: the store serializes the
+  // Inverse of `resolveEntryTimestamp` for a seed changing timezone: the store serializes the
   // entry in the old timezone and the model is then read in the new one, so the entry
   // carries the instant whose old-zone wall time is the intended new-zone wall time.
   function toEntryDates(eventId: SchedulerEventId, dates: ResolvedDates) {
