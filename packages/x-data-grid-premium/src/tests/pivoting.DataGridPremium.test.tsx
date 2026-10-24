@@ -181,6 +181,36 @@ describe('<DataGridPremium /> - Pivoting', () => {
     expect(getRowValues(5)).to.deep.equal(['US_TREASURY_10Y (1)', '750']);
   });
 
+  it('should keep the ids of the pivot panel when pivoting is turned on and off', async () => {
+    const { user } = render(
+      <Test
+        initialState={{
+          pivoting: {
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Pivot' }));
+    const pivotSwitch = (await screen.findByRole('switch', { name: 'Pivot' })) as HTMLInputElement;
+    await user.click(pivotSwitch);
+    await waitFor(() => expect(pivotSwitch.checked).to.equal(true));
+    // Turning pivoting off restores the state exported when it was turned on.
+    await user.click(pivotSwitch);
+    await waitFor(() => expect(pivotSwitch.checked).to.equal(false));
+
+    const pivotButton = screen.getByRole('button', { name: 'Pivot' });
+    const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+    expect(sidebar.id).not.to.equal('');
+    expect(pivotButton.getAttribute('aria-controls')).to.equal(sidebar.id);
+    expect(sidebar.getAttribute('aria-labelledby')).to.equal(pivotButton.id);
+  });
+
   it('should pivot the data with 2 pivot values', async () => {
     const { user } = render(
       <Test

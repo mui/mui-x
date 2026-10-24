@@ -7,14 +7,22 @@ import {
   GridCellModes,
   gridClasses,
   gridColumnLookupSelector,
+  gridFilterModelSelector,
   gridResizingColumnFieldSelector,
   gridRowIdSelector,
   gridRowsLookupSelector,
+  gridSortModelSelector,
   useGridApiMethod,
   useGridEvent,
 } from '@mui/x-data-grid-pro';
-import type { GridCellCoordinates, GridEventListener } from '@mui/x-data-grid-pro';
+import type {
+  GridCellCoordinates,
+  GridEventListener,
+  GridGroupingColDefOverride,
+  GridRowId,
+} from '@mui/x-data-grid-pro';
 import {
+  createColumnsState,
   gridPivotActiveSelector,
   GridStrategyGroup,
   RowGroupingStrategy,
@@ -51,31 +59,51 @@ import {
   gridFormulaLookupSelector,
 } from './gridFormulaSelectors';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
+import { getColDefOverrides, isGroupingColumn } from '../rowGrouping/gridRowGroupingUtils';
 import { GRID_FORMULA_EDITOR_SURFACE_CLASS } from '../../../components/GridFormulaEditor';
+import { GridComputedColumnsPanel } from '../../../components/computedColumnsPanel';
+import { GridSidebarValue } from '../sidebar/gridSidebarInterfaces';
 import { isFormulaFocusSafeTarget } from './gridFormulaBarElements';
 import {
   areColumnsSignaturesEqual,
   areFormulaFieldsEqual,
   areFormulaFunctionRecordsEqual,
   computeColumnsSignature,
-  createFormulaInternalCache,
+  haveComputedInputsChanged,
+  ensureFormulaInternalCache,
   getEffectiveFormulaFunctions,
   getFormulaFields,
   resetFormulaEvaluationCache,
 } from './gridFormulaUtils';
 import { getFilledFormulaSource } from './gridFormulaFill';
 import { createFormulaExcelExportLayout, getCellExcelFormula } from './gridFormulaExcelExport';
+import {
+  bumpComputedColumnsRevision,
+  evictComputedResultsForRows,
+  haveComputedColDefOverridesChanged,
+  resetComputedResults,
+} from './gridComputedColumnsRuntime';
+import {
+  createComputedColumnValidationScope,
+  validateComputedColumnDefinition,
+} from './gridComputedColumnsValidation';
+import type { GridComputedColumnsPrivateApi } from '../computedColumns/gridComputedColumnsInterfaces';
 
 export const formulaStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'disableFormulas' | 'dataSource'>,
   GridPrivateApiPremium
 > = (state, props, apiRef) => {
-  const cache = createFormulaInternalCache(getEffectiveFormulaFunctions(props));
-  apiRef.current.caches.formula = cache;
+  // Already created when the computed columns were injected during the columns state initialization.
+  const cache = ensureFormulaInternalCache(apiRef, props);
 
   const premiumState = state as Partial<GridStatePremium>;
   const columnsLookup = premiumState.columns?.lookup ?? {};
   cache.lastColumnsSignature = computeColumnsSignature(columnsLookup);
+  // The pass that registers the pipe processors after the mount builds the grouping
+  // columns from these records: the first `columnsChange` must not hydrate a third time.
+  for (const [field, record] of cache.computedColumns.records) {
+    cache.computedColumns.hydratedColDefs.set(field, record.colDef);
+  }
   const pivotActive = premiumState.pivoting?.active ?? false;
   const enabled = !props.disableFormulas && !props.dataSource && !pivotActive;
   const formulaFields = enabled ? getFormulaFields(columnsLookup) : [];
@@ -96,13 +124,138 @@ export const formulaStateInitializer: GridStateInitializer<
     }).lookup;
   }
 
+  // The initial row tree build may have read computed cells before the pass above:
+  // cell-formula dependencies were raw `=` sources back then.
+  resetComputedResults(cache);
+
   return { ...state, formula: { lookup, activeEdit: null } };
 };
 
+/**
+ * Whether the pass changed the values of a grouped field. The row tree is built before
+ * the formula pass of the same cascade, so it was grouped by the previous values.
+ */
+function isRowGroupingAffected(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  changedCells: GridCellCoordinates[] | null,
+  computedColumnsChanged: boolean,
+) {
+  if (apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) !== RowGroupingStrategy.Default) {
+    return false;
+  }
+  const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
+  if (groupedFields.length === 0) {
+    return false;
+  }
+  // A grouped computed column changes with the cells its formula reads.
+  const { dependencyClosure, records } = apiRef.current.caches.formula!.computedColumns;
+  const isGroupedFieldAffected = (field: string) =>
+    groupedFields.some(
+      (groupedField) =>
+        groupedField === field || dependencyClosure.get(groupedField)?.has(field) === true,
+    );
+  return (
+    (computedColumnsChanged && groupedFields.some((field) => records.has(field))) ||
+    (changedCells !== null && changedCells.some((cell) => isGroupedFieldAffected(cell.field)))
+  );
+}
+
+const NO_VIEW_REFRESH = { refilter: false, resort: false };
+
+/**
+ * Applies the filtering or the sorting again, and returns whether it was applied. It runs inside
+ * the hydration of the columns when a hydration published `columnsChange`, where a throw would
+ * leave the pipe processing of the grid locked. After a type change, the core can fail to filter
+ * or sort with a model made for the previous type: an operator that is gone (`>` on a `string`
+ * column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef` comparator
+ * or operator written for one type. The core throws before it sets the state, so nothing changes:
+ * the view keeps its rows and order, and the error comes at the next filtering or sorting, like
+ * after the type change of a regular column.
+ */
+function tryToApplyView(apply: () => void) {
+  try {
+    apply();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Which of the filtering and the sorting read the computed values that changed outside a rows
+ * update (a definition, the function registry): the values of every computed column, and the
+ * cell formulas the pass re-evaluated. A grouping column filters and sorts by a criterion or a
+ * leaf field, which can be computed. The quick filter reads every column.
+ */
+function getViewRefresh(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  changedCells: GridCellCoordinates[] | null,
+  filterMode: DataGridPremiumProcessedProps['filterMode'],
+  sortingMode: DataGridPremiumProcessedProps['sortingMode'],
+) {
+  const { records } = apiRef.current.caches.formula!.computedColumns;
+  const changedFields = new Set<string>();
+  if (changedCells !== null) {
+    for (const cell of changedCells) {
+      changedFields.add(cell.field);
+    }
+  }
+  // A model set after the mount can hold an item without a field: the core prunes it after
+  // this handler.
+  const isAffected = (field: string) =>
+    !!field && (records.has(field) || changedFields.has(field) || isGroupingColumn(field));
+  const filterModel = gridFilterModelSelector(apiRef);
+  return {
+    refilter:
+      filterMode === 'client' &&
+      ((filterModel.quickFilterValues?.length ?? 0) > 0 ||
+        filterModel.items.some((item) => isAffected(item.field))),
+    resort:
+      sortingMode === 'client' &&
+      gridSortModelSelector(apiRef).some((item) => isAffected(item.field)),
+  };
+}
+
+/**
+ * The leaf fields of the row grouping columns, resolved from `groupingColDef` like the
+ * grouping columns resolve them: one column for all the criteria in the `single` mode,
+ * one column per criterion in the `multiple` mode.
+ */
+function getGroupingLeafFields(
+  groupingColDef: DataGridPremiumProcessedProps['groupingColDef'],
+  rowGroupingColumnMode: DataGridPremiumProcessedProps['rowGroupingColumnMode'],
+  groupedFields: string[],
+): string[] {
+  let overrides: Array<GridGroupingColDefOverride | null | undefined> = [];
+  if (rowGroupingColumnMode === 'single') {
+    overrides = [getColDefOverrides(groupingColDef, groupedFields, RowGroupingStrategy.Default)];
+  } else if (rowGroupingColumnMode === 'multiple') {
+    overrides = groupedFields.map((criterion) => getColDefOverrides(groupingColDef, [criterion]));
+  }
+  return overrides.flatMap((override) => (override?.leafField ? [override.leafField] : []));
+}
+
 export const useGridFormula = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'disableFormulas' | 'formulaFunctions' | 'dataSource'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    | 'disableFormulas'
+    | 'formulaFunctions'
+    | 'dataSource'
+    | 'formulaA1Notation'
+    | 'disableComputedColumns'
+    | 'computedColDef'
+    | 'filterMode'
+    | 'sortingMode'
+    | 'disableRowGrouping'
+    | 'groupingColDef'
+    | 'rowGroupingColumnMode'
+  >,
 ) => {
+  const a1NotationActive = !!props.formulaA1Notation && !props.disableFormulas && !props.dataSource;
+  const computedColumnsEnabled =
+    !props.disableFormulas && !props.disableComputedColumns && !props.dataSource;
+
   const computeEffectiveFormulaFields = React.useCallback(() => {
     if (props.disableFormulas || props.dataSource || gridPivotActiveSelector(apiRef)) {
       return [];
@@ -199,45 +352,57 @@ export const useGridFormula = (
    * Row grouping builds its tree before the formula pass in the same
    * cascade, so a pass that changed cells of a grouped field re-triggers the
    * tree build; the rebuild's own cascade is suppressed from re-triggering.
+   * Filtering and sorting re-run in the rows cascades only: after a change of
+   * the computed values (`computedColumnsChanged`), they are re-applied when
+   * their model reads a changed value. Once: the events they publish refresh
+   * the position-dependent formulas without reporting a computed change. A
+   * model the core can't apply leaves the view as it was (`tryToApplyView`).
    */
   const triggerDependentFeatures = React.useCallback(
     (
       changedCells: GridCellCoordinates[] | null,
-      options: { aggregation: boolean; rowSpanning: boolean },
+      options: { aggregation: boolean; rowSpanning: boolean; computedColumnsChanged?: boolean },
     ) => {
-      if (changedCells === null || changedCells.length === 0) {
+      // The values of the computed columns changed as a whole (formula, referenced
+      // `valueGetter`, function registry), whether or not a formula cell followed.
+      const computedColumnsChanged = options.computedColumnsChanged === true;
+      if ((changedCells === null || changedCells.length === 0) && !computedColumnsChanged) {
         return;
-      }
-      if (options.aggregation) {
-        apiRef.current.applyAggregation();
-      }
-      if (options.rowSpanning) {
-        apiRef.current.resetRowSpanningState();
       }
       const cache = apiRef.current.caches.formula!;
-      if (cache.suppressRegroupTrigger) {
-        return;
-      }
       if (
-        apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) !== RowGroupingStrategy.Default
+        !cache.suppressRegroupTrigger &&
+        isRowGroupingAffected(apiRef, changedCells, computedColumnsChanged)
       ) {
+        if (options.aggregation) {
+          apiRef.current.applyAggregation();
+        }
+        if (options.rowSpanning) {
+          apiRef.current.resetRowSpanningState();
+        }
+        // The rebuilt tree publishes `rowsSet`: filtering and sorting re-run in its cascade.
+        cache.suppressRegroupTrigger = true;
+        try {
+          apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
+        } finally {
+          cache.suppressRegroupTrigger = false;
+        }
         return;
       }
-      const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
-      if (groupedFields.length === 0) {
-        return;
+      const { refilter, resort } = computedColumnsChanged
+        ? getViewRefresh(apiRef, changedCells, props.filterMode, props.sortingMode)
+        : NO_VIEW_REFRESH;
+      // `filteredRowsSet` applies the aggregation, and both events reset the row spanning.
+      const refiltered = refilter && tryToApplyView(() => apiRef.current.unstable_applyFilters());
+      if (options.aggregation && !refiltered) {
+        apiRef.current.applyAggregation();
       }
-      if (!changedCells.some((cell) => groupedFields.includes(cell.field))) {
-        return;
-      }
-      cache.suppressRegroupTrigger = true;
-      try {
-        apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
-      } finally {
-        cache.suppressRegroupTrigger = false;
+      const resorted = resort && tryToApplyView(() => apiRef.current.applySorting());
+      if (options.rowSpanning && !refiltered && !resorted) {
+        apiRef.current.resetRowSpanningState();
       }
     },
-    [apiRef],
+    [apiRef, props.filterMode, props.sortingMode],
   );
 
   /**
@@ -356,6 +521,39 @@ export const useGridFormula = (
 
   useGridApiMethod(apiRef, formulaPrivateApi, 'private');
 
+  const validateComputedColumnDefinitionMethod = React.useCallback<
+    GridComputedColumnsPrivateApi['validateComputedColumnDefinition']
+  >(
+    (definition, options) =>
+      validateComputedColumnDefinition(
+        definition,
+        createComputedColumnValidationScope(
+          apiRef,
+          apiRef.current.caches.formula!,
+          gridColumnLookupSelector(apiRef),
+          a1NotationActive,
+          // The editor validates every keystroke: a draft is not interned.
+          { intern: false },
+        ),
+        options,
+      ),
+    [apiRef, a1NotationActive],
+  );
+
+  const getComputedColumnIssues = React.useCallback<
+    GridComputedColumnsPrivateApi['getComputedColumnIssues']
+  >(
+    (field) => apiRef.current.caches.formula!.computedColumns.records.get(field)?.issues ?? [],
+    [apiRef],
+  );
+
+  const computedColumnsPrivateApi: GridComputedColumnsPrivateApi = {
+    validateComputedColumnDefinition: validateComputedColumnDefinitionMethod,
+    getComputedColumnIssues,
+  };
+
+  useGridApiMethod(apiRef, computedColumnsPrivateApi, 'private');
+
   /**
    * EVENTS
    */
@@ -389,6 +587,63 @@ export const useGridFormula = (
     triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: true });
   }, [runPass, triggerDependentFeatures]);
 
+  /**
+   * The row grouping columns are built from the columns state of the previous pass,
+   * before the computed columns are injected into the current one. A record rebuilt
+   * by the injection (name, format, type), or removed, leaves the grouping columns that
+   * copy from it with its previous header, formatter, operators and comparators: the column
+   * of a grouped computed field, and the one whose `leafField` is a computed column.
+   * Hydrate once more so they are built from the current record. The second pass finds
+   * the identities recorded here, so it never requests a third one. Synchronous on
+   * purpose: `requestPipeProcessorsApplication` is a no-op while the hydration that
+   * published this event is still running.
+   */
+  const syncGroupingColumns = React.useCallback(() => {
+    const { records, hydratedColDefs } = apiRef.current.caches.formula!.computedColumns;
+    const changedFields: string[] = [];
+    for (const [field, record] of records) {
+      if (hydratedColDefs.get(field) !== record.colDef) {
+        hydratedColDefs.set(field, record.colDef);
+        changedFields.push(field);
+      }
+    }
+    for (const field of Array.from(hydratedColDefs.keys())) {
+      if (!records.has(field)) {
+        hydratedColDefs.delete(field);
+        // A grouping column still copies from the removed column.
+        changedFields.push(field);
+      }
+    }
+    if (changedFields.length === 0) {
+      return;
+    }
+    const groupedFields = gridRowGroupingSanitizedModelSelector(apiRef);
+    if (groupedFields.length === 0) {
+      return;
+    }
+    // The leaf fields are only resolved when no grouped field was rebuilt: a
+    // `groupingColDef` function runs only when a computed column was.
+    const groupingColumnsStale =
+      changedFields.some((field) => groupedFields.includes(field)) ||
+      (!props.disableRowGrouping &&
+        getGroupingLeafFields(
+          props.groupingColDef,
+          props.rowGroupingColumnMode,
+          groupedFields,
+        ).some((field) => changedFields.includes(field)));
+    if (!groupingColumnsStale) {
+      return;
+    }
+    const columnsState = createColumnsState({
+      apiRef,
+      columnsToUpsert: [],
+      initialState: undefined,
+      keepOnlyColumnsToUpsert: false,
+    });
+    apiRef.current.setState((state) => ({ ...state, columns: columnsState }));
+    apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
+  }, [apiRef, props.disableRowGrouping, props.groupingColDef, props.rowGroupingColumnMode]);
+
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     const cache = apiRef.current.caches.formula!;
     const fieldsChanged = !areFormulaFieldsEqual(
@@ -409,15 +664,102 @@ export const useGridFormula = (
       // funnel through this event. The rebind pass compares the visible
       // field order itself and exits cheaply when nothing moved.
       triggerDependentFeatures(runPass('rebind'), { aggregation: true, rowSpanning: false });
-      return;
+    } else {
+      const previousSignature = cache.lastColumnsSignature;
+      cache.lastColumnsSignature = columnsSignature;
+      // The computed columns read the referenced columns through their `valueGetter`,
+      // and their own getters change with their formula: only a change of those
+      // inputs drops the memoized results (an unrelated column re-created with an
+      // inline getter on every parent render does not).
+      const computedColumnsChanged =
+        signatureChanged &&
+        cache.computedColumns.records.size > 0 &&
+        haveComputedInputsChanged(columnsSignature, previousSignature, cache.computedColumns);
+      if (computedColumnsChanged) {
+        resetComputedResults(cache);
+      }
+      if (signatureChanged) {
+        // Not only the computed cells read the revision: the preview of a draft
+        // (the first computed column included) reads the same getters.
+        bumpComputedColumnsRevision(apiRef);
+      }
+      if (fieldsChanged) {
+        apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      }
+      // Row spanning resets on `columnsChange` after this handler.
+      triggerDependentFeatures(runPass('full'), {
+        aggregation: true,
+        rowSpanning: false,
+        computedColumnsChanged,
+      });
     }
-    cache.lastColumnsSignature = columnsSignature;
-    if (fieldsChanged) {
-      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
-    }
-    // Row spanning resets on `columnsChange` after this handler.
-    triggerDependentFeatures(runPass('full'), { aggregation: true, rowSpanning: false });
-  }, [apiRef, computeEffectiveFormulaFields, runPass, triggerDependentFeatures]);
+    // Last: the nested `columnsChange` of the extra hydration finds the signature
+    // bookkeeping above done, so it takes the cheap branch.
+    syncGroupingColumns();
+  }, [
+    apiRef,
+    computeEffectiveFormulaFields,
+    runPass,
+    syncGroupingColumns,
+    triggerDependentFeatures,
+  ]);
+
+  const handleFormulaEvaluated = React.useCallback<GridEventListener<'formulaEvaluated'>>(
+    ({ changedCells }) => {
+      // The row object of a re-evaluated formula cell did not change, so the
+      // computed results memoized for that row are stale.
+      const { referencedFields } = apiRef.current.caches.formula!.computedColumns;
+      if (referencedFields.size === 0) {
+        return;
+      }
+      const rowIds = new Set<GridRowId>();
+      for (const cell of changedCells) {
+        if (referencedFields.has(cell.field)) {
+          rowIds.add(cell.id);
+        }
+      }
+      if (rowIds.size === 0) {
+        return;
+      }
+      evictComputedResultsForRows(apiRef, rowIds);
+      bumpComputedColumnsRevision(apiRef);
+    },
+    [apiRef],
+  );
+
+  // A computed cell is read-only: the editing gestures open the column editor
+  // with the row of the cell as preview row instead.
+  const handleComputedCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
+    (params) => {
+      if (!params.colDef.computed) {
+        return;
+      }
+      apiRef.current.showComputedColumnEditor(params.field, { sampleRowId: params.id });
+    },
+    [apiRef],
+  );
+
+  const handleComputedCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
+    (params, event) => {
+      if (
+        !params.colDef.computed ||
+        params.cellMode !== GridCellModes.View ||
+        event.key !== 'Enter' ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey ||
+        event.shiftKey ||
+        event.which === 229
+      ) {
+        return;
+      }
+      // The editor focuses its formula editable right away — without this the
+      // keypress that follows would land in it as a newline.
+      event.preventDefault();
+      apiRef.current.showComputedColumnEditor(params.field, { sampleRowId: params.id });
+    },
+    [apiRef],
+  );
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params, event) => {
@@ -561,11 +903,25 @@ export const useGridFormula = (
   );
   useGridRegisterPipeProcessor(apiRef, 'canUpdateFocus', canUpdateFocus);
 
+  const addComputedColumnsPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
+    (initialValue, value) => {
+      if (computedColumnsEnabled && value === GridSidebarValue.ComputedColumns) {
+        return <GridComputedColumnsPanel />;
+      }
+      return initialValue;
+    },
+    [computedColumnsEnabled],
+  );
+  useGridRegisterPipeProcessor(apiRef, 'sidebar', addComputedColumnsPanel);
+
   useGridEvent(apiRef, 'rowsSet', handleRowsSet);
   useGridEvent(apiRef, 'sortedRowsSet', handleSortedRowsSet);
   useGridEvent(apiRef, 'filteredRowsSet', handleFilteredRowsSet);
   useGridEvent(apiRef, 'columnVisibilityModelChange', handleColumnVisibilityModelChange);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
+  useGridEvent(apiRef, 'formulaEvaluated', handleFormulaEvaluated);
+  useGridEvent(apiRef, 'cellDoubleClick', handleComputedCellDoubleClick);
+  useGridEvent(apiRef, 'cellKeyDown', handleComputedCellKeyDown);
   useGridEvent(apiRef, 'cellEditStart', handleCellEditStart);
   useGridEvent(apiRef, 'cellEditStop', handleCellEditStop);
   useGridEvent(apiRef, 'cellModesModelChange', pruneEditorSession);
@@ -592,8 +948,44 @@ export const useGridFormula = (
       return;
     }
     cache.registry = createFormulaFunctionRegistry(Object.values(effectiveFormulaFunctions));
-    apiRef.current.reevaluateFormulas!();
-  }, [apiRef, effectiveFormulaFunctions]);
+    const computedColumnsChanged = cache.computedColumns.records.size > 0;
+    if (computedColumnsChanged) {
+      // The validity of the computed columns depends on the registry (unknown functions),
+      // and the definitions are validated when the columns are hydrated.
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+      resetComputedResults(cache);
+    }
+    // The revision also stands for the registry: the computed column editor reads it
+    // for its preview and its function list, with or without a stored computed column.
+    bumpComputedColumnsRevision(apiRef);
+    triggerDependentFeatures(runPass('full'), {
+      aggregation: true,
+      rowSpanning: true,
+      computedColumnsChanged,
+    });
+  }, [apiRef, effectiveFormulaFunctions, runPass, triggerDependentFeatures]);
+
+  // After the effects that hydrate the columns for another prop (the model, `formulaFunctions`):
+  // their pass already applies the current `computedColDef`, read lazily by the processor.
+  React.useEffect(() => {
+    const cache = apiRef.current.caches.formula!;
+    // While the computed columns are off, the hydration that removes them is pending, and the
+    // records are created from the current prop when they come back.
+    if (
+      !computedColumnsEnabled ||
+      gridPivotActiveSelector(apiRef) ||
+      cache.computedColumns.computedColDef === props.computedColDef
+    ) {
+      return;
+    }
+    if (haveComputedColDefOverridesChanged(cache, props.computedColDef)) {
+      // The overrides don't change the values: the results are kept.
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
+    } else {
+      // Same overrides for every record: the next hydration doesn't need to resolve them again.
+      cache.computedColumns.computedColDef = props.computedColDef;
+    }
+  }, [apiRef, computedColumnsEnabled, props.computedColDef]);
 
   const isFirstEnablementEffect = React.useRef(true);
   React.useEffect(() => {
