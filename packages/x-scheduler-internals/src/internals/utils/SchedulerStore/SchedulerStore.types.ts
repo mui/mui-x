@@ -232,8 +232,9 @@ export interface SchedulerState<TEvent extends object = any> {
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
   /**
    * Configures how events are deleted, normalized from the `eventDeletion` parameter.
+   * `false` when event deletion is disabled.
    */
-  eventDeletion: SchedulerEventDeletionConfig;
+  eventDeletion: SchedulerEventDeletionConfig | false;
   /**
    * The event for which the delete confirmation dialog is open, if any. `null` when the dialog is closed.
    */
@@ -433,9 +434,12 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
 
   /**
    * Configures how events are deleted.
-   * @default { confirmation: true }
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
    */
-  eventDeletion?: Partial<SchedulerEventDeletionConfig>;
+  eventDeletion?: Partial<SchedulerEventDeletionConfig> | boolean;
 }
 
 /**

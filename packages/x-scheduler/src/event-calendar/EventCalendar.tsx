@@ -218,11 +218,17 @@ EventCalendar.propTypes /* remove-proptypes */ = {
   ]),
   /**
    * Configures how events are deleted.
-   * @default { confirmation: true }
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
    */
-  eventDeletion: PropTypes.shape({
-    confirmation: PropTypes.bool,
-  }),
+  eventDeletion: PropTypes.oneOfType([
+    PropTypes.shape({
+      confirmation: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
   /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.

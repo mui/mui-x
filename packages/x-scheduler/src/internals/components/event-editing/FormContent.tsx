@@ -608,25 +608,29 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   );
 }
 
-// Subscribes to isSubmitting on its own so a submit only re-renders the buttons.
+// Subscribes to isSubmitting and the deletion config on its own so a change only re-renders the buttons.
 function FormActionButtons(props: { onDelete: () => void }) {
   const { classes, localeText } = useEventEditingStyledContext();
+  const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
   const isSubmitting = useStore(formStore, eventDialogFormSelectors.isSubmitting);
+  const deletionConfig = useStore(store, schedulerEventSelectors.deletionConfig);
 
   return (
     <EventDialogFormActions className={classes.eventDialogFormActions}>
-      <Button
-        className={classes.eventDialogDeleteButton}
-        color="error"
-        type="button"
-        onClick={props.onDelete}
-        // A delete during a pending recurring submit would get its scope
-        // operation overwritten by the resolving update.
-        disabled={isSubmitting}
-      >
-        {localeText.deleteEvent}
-      </Button>
+      {deletionConfig !== false && (
+        <Button
+          className={classes.eventDialogDeleteButton}
+          color="error"
+          type="button"
+          onClick={props.onDelete}
+          // A delete during a pending recurring submit would get its scope
+          // operation overwritten by the resolving update.
+          disabled={isSubmitting}
+        >
+          {localeText.deleteEvent}
+        </Button>
+      )}
       <Button
         className={classes.eventDialogSaveButton}
         variant="contained"
