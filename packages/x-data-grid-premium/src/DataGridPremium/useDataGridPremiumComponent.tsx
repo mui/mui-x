@@ -40,6 +40,7 @@ import {
   rowsMetaStateInitializer,
   rowSelectionStateInitializer,
   useGridColumnReorder,
+  useGridColumnReorderPointer,
   columnReorderStateInitializer,
   useGridColumnResize,
   columnResizeStateInitializer,
@@ -294,6 +295,7 @@ export const useDataGridPremiumComponent = (
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
+  useGridColumnReorderPointer(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
   useGridRowReorder(apiRef, props);

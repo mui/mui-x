@@ -21,6 +21,7 @@ export {
   useGridColumnReorder,
   columnReorderStateInitializer,
 } from '../hooks/features/columnReorder/useGridColumnReorder';
+export { useGridColumnReorderPointer } from '../hooks/features/columnReorder/useGridColumnReorderPointer';
 export { useGridDataSourceTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridDataSourceTreeDataPreProcessors';
 export {
   useGridDetailPanel,

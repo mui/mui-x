@@ -2,6 +2,7 @@ import * as React from 'react';
 import { screen, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { createMatchMedia, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
+import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -25,7 +26,7 @@ describe('EventContextMenu', () => {
       .singleDay('2025-07-03T10:00:00Z', 60)
       .build();
 
-    render(
+    const { setProps } = render(
       <StandaloneDayView
         events={[event]}
         resources={[]}
@@ -34,7 +35,7 @@ describe('EventContextMenu', () => {
       />,
     );
 
-    return { onEventsChange };
+    return { onEventsChange, setProps };
   }
 
   function getEvent(name: RegExp | string = /Morning Meeting/i): HTMLElement {
@@ -288,6 +289,106 @@ describe('EventContextMenu', () => {
     // Nothing was deleted, so MUI's own restore-on-close returns focus to the event — the element
     // that had it when the confirmation dialog opened.
     expect(document.activeElement).to.equal(eventElement);
+  });
+
+  it('should close the menu and keep focus in the grid when its event is removed while it is open', async () => {
+    const { setProps } = renderEvent();
+    const event = getEvent();
+    const column = event.closest<HTMLElement>('[role="gridcell"]')!;
+    event.focus();
+
+    fireEvent.keyDown(event, { key: ' ' });
+    fireEvent.keyUp(event, { key: ' ' });
+    expect(screen.getByRole('menu')).not.to.equal(null);
+
+    setProps({ events: [] });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(column);
+    });
+  });
+
+  it('should close the menu opened with a right-click and keep focus in the grid when its event is removed', async () => {
+    const { setProps } = renderEvent();
+    const event = getEvent();
+    const column = event.closest<HTMLElement>('[role="gridcell"]')!;
+    event.focus();
+
+    fireEvent.contextMenu(event);
+    expect(screen.getByRole('menu')).not.to.equal(null);
+
+    setProps({ events: [] });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(column);
+    });
+  });
+
+  it('should close the menu and focus the next event when its event is removed in the agenda view', async () => {
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .build();
+    const nextEvent = EventBuilder.new()
+      .id('event-2')
+      .title('Lunch')
+      .singleDay('2025-07-03T12:00:00Z', 60)
+      .build();
+    const { setProps } = render(
+      <StandaloneAgendaView events={[event, nextEvent]} resources={[]} />,
+    );
+
+    fireEvent.contextMenu(getEvent());
+    expect(screen.getByRole('menu')).not.to.equal(null);
+
+    setProps({ events: [nextEvent] });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(getEvent(/Lunch/i));
+    });
+  });
+
+  it('should focus the next remaining event when the next one is removed along with the menu event in the agenda view', async () => {
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .build();
+    const nextEvent = EventBuilder.new()
+      .id('event-2')
+      .title('Lunch')
+      .singleDay('2025-07-03T12:00:00Z', 60)
+      .build();
+    const lastEvent = EventBuilder.new()
+      .id('event-3')
+      .title('Review')
+      .singleDay('2025-07-03T14:00:00Z', 60)
+      .build();
+    const { setProps } = render(
+      <StandaloneAgendaView events={[event, nextEvent, lastEvent]} resources={[]} />,
+    );
+
+    fireEvent.contextMenu(getEvent());
+    expect(screen.getByRole('menu')).not.to.equal(null);
+
+    setProps({ events: [lastEvent] });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+    await waitFor(() => {
+      expect(document.activeElement).to.equal(getEvent(/Review/i));
+    });
   });
 
   describe('read-only events', () => {

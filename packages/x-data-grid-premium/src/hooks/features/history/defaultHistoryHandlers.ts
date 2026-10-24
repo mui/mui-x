@@ -9,9 +9,9 @@ import type {
   GridCellEditStopParams,
   GridRowEditStopParams,
   GridEvents,
-  GridRowModelReplace,
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
+import { asReplaceUpdates } from '@mui/x-data-grid-pro/internals';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridPremiumFeatureDependencies } from '../../../models/gridFeatureDependencies';
@@ -291,17 +291,6 @@ export const createRowEditHistoryHandler = (
 };
 
 /**
- * Restores the captured rows as they are, instead of merging them into whatever is
- * stored now. Both sides of the history entry hold complete rows — the ones the grid
- * had before the paste and the ones `processRowUpdate()` returned — so there is nothing
- * to merge them into. A merge would build a copy of each row, dropping the identity and
- * the `#private` state that the paste itself preserved, and it could never undo a field
- * the paste added.
- */
-const asReplaceUpdates = (rows: GridValidRowModel[]): GridRowModelReplace[] =>
-  rows.map((row) => ({ _action: 'replace', row }));
-
-/**
  * Create the default handler for clipboardPasteEnd events.
  */
 export const createClipboardPasteHistoryHandler = (
@@ -374,7 +363,8 @@ export const createClipboardPasteHistoryHandler = (
           }
         }
 
-        // Restore all rows to their original state
+        // Restore all rows to their original state.
+        // Replace instead of merge: keeps row identity and `#private` state, and removes fields the paste added.
         apiRef.current.updateRows(asReplaceUpdates(oldRowsValues));
 
         if (differentFieldIndex >= 0) {
