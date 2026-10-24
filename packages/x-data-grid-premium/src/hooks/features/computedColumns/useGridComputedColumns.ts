@@ -14,6 +14,7 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { GridSidebarValue } from '../sidebar/gridSidebarInterfaces';
+import { gridSidebarStateSelector } from '../sidebar/gridSidebarSelector';
 import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 import type {
   GridComputedColumnsApi,
@@ -72,6 +73,7 @@ export const computedColumnsStateInitializer: GridStateInitializer<
 > = (state, props, apiRef) => {
   apiRef.current.caches.computedColumns = {
     editorRequest: null,
+    panelId: `mui-x-computed-columns-panel-${apiRef.current.instanceId.id}`,
     pendingColumnIndexes: new Map(),
     pendingColumnDimensions: new Map(),
     previousModel: null,
@@ -294,12 +296,22 @@ export const useGridComputedColumns = (
         return;
       }
 
-      apiRef.current.caches.computedColumns.editorRequest = {
+      const cache = apiRef.current.caches.computedColumns;
+      cache.editorRequest = {
         field: field ?? null,
         sampleRowId: options?.sampleRowId,
         columnIndex: options?.columnIndex,
       };
-      apiRef.current.showSidebar(GridSidebarValue.ComputedColumns);
+      // The panel's own id, for the `aria-controls` of the toolbar trigger, unless the open
+      // panel already has one (a custom trigger's), which a panel shown again keeps. No label
+      // id: closing the panel focuses the column header or the cell that opened it.
+      const sidebar = gridSidebarStateSelector(apiRef);
+      const keepsSidebarId =
+        sidebar.value === GridSidebarValue.ComputedColumns && sidebar.sidebarId !== undefined;
+      apiRef.current.showSidebar(
+        GridSidebarValue.ComputedColumns,
+        keepsSidebarId ? undefined : cache.panelId,
+      );
     },
     [apiRef, isAvailable],
   );

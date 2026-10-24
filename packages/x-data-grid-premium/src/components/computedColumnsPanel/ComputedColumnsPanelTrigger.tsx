@@ -6,9 +6,12 @@ import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import type { RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import type { GridSlotProps } from '@mui/x-data-grid-pro';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridComputedColumnsPanelOpenSelector } from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
+import {
+  gridComputedColumnsPanelIdSelector,
+  gridComputedColumnsPanelOpenSelector,
+} from '../../hooks/features/computedColumns/gridComputedColumnsSelectors';
 import { gridPivotActiveSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridSidebarValue } from '../../hooks/features/sidebar';
 
@@ -51,9 +54,11 @@ const ComputedColumnsPanelTrigger = forwardRef<HTMLButtonElement, ComputedColumn
     const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
     const buttonId = useId();
-    const panelId = useId();
-    const apiRef = useGridApiContext();
+    const apiRef = useGridPrivateApiContext();
     const open = useGridSelector(apiRef, gridComputedColumnsPanelOpenSelector);
+    // The id of the open panel, whatever opened it: left out rather than dangling when
+    // the panel was opened without one.
+    const panelId = useGridSelector(apiRef, gridComputedColumnsPanelIdSelector);
     const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
@@ -70,9 +75,14 @@ const ComputedColumnsPanelTrigger = forwardRef<HTMLButtonElement, ComputedColumn
       if (open) {
         apiRef.current.hideComputedColumnEditor();
       } else {
-        // No editor request: the panel opens on the list. The trigger's id is the
-        // sidebar's label and the element focused again when the panel closes.
-        apiRef.current.showSidebar(GridSidebarValue.ComputedColumns, panelId, buttonId);
+        // No editor request: the panel opens on the list, with the id the other entry
+        // points of the feature give it. The trigger's id is the sidebar's label and the
+        // element focused again when the panel closes.
+        apiRef.current.showSidebar(
+          GridSidebarValue.ComputedColumns,
+          apiRef.current.caches.computedColumns.panelId,
+          buttonId,
+        );
       }
       onClick?.(event);
     };
@@ -84,7 +94,7 @@ const ComputedColumnsPanelTrigger = forwardRef<HTMLButtonElement, ComputedColumn
         ...rootProps.slotProps?.baseButton,
         id: buttonId,
         'aria-expanded': open ? 'true' : undefined,
-        'aria-controls': open ? panelId : undefined,
+        'aria-controls': panelId,
         onClick: handleClick,
         className: resolvedClassName,
         ...other,

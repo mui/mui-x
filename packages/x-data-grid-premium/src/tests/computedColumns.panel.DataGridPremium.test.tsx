@@ -1675,6 +1675,13 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
 
   describe('toolbar trigger', () => {
     const getTrigger = () => screen.queryByRole('button', { name: 'Computed columns' });
+    const expectControlsSidebar = (trigger: HTMLElement) => {
+      const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+      expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+      expect(sidebar.id).not.to.equal('');
+      expect(trigger.getAttribute('aria-controls')).to.equal(sidebar.id);
+      expect(document.getElementById(sidebar.id)).to.equal(sidebar);
+    };
 
     it('toggles the panel and reports aria-expanded/aria-controls', async () => {
       await render(<Test showToolbar />);
@@ -1713,6 +1720,179 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(sidebar.id).to.equal(trigger.getAttribute('aria-controls'));
       expect(document.getElementById(trigger.getAttribute('aria-controls')!)).to.equal(sidebar);
       expect(sidebar.getAttribute('aria-labelledby')).to.equal(trigger.id);
+    });
+
+    it('points at the panel opened through the API before the trigger is used', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      expect(getNameInput().value).to.equal('Total');
+      expectControlsSidebar(getTrigger()!);
+    });
+
+    it('points at the panel opened from the column menu or a cell', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      await act(async () => apiRef.current!.showColumnMenu('total'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Edit computed column' }));
+      await microtasks();
+      expect(getNameInput().value).to.equal('Total');
+      expectControlsSidebar(getTrigger()!);
+
+      fireEvent.click(getButton('Close computed columns panel'));
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+
+      fireEvent.doubleClick(getCell(1, 3));
+      await microtasks();
+      expect(getNameInput().value).to.equal('Total');
+      expectControlsSidebar(getTrigger()!);
+    });
+
+    it('points at the panel reopened through the API after the trigger closed it', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      const trigger = getTrigger()!;
+      fireEvent.click(trigger);
+      await microtasks();
+      expectControlsSidebar(trigger);
+      fireEvent.click(trigger);
+      await microtasks();
+      expect(getSidebar().open).to.equal(false);
+
+      await openEditor('total');
+      expectControlsSidebar(trigger);
+      // Not labelled by the trigger: closing the panel focuses what opened it this time.
+      expect(getSidebar().labelId).to.equal(undefined);
+    });
+
+    it('points at the panel that replaced the pivot panel', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      const pivotTrigger = screen.getByRole('button', { name: 'Pivot' });
+      fireEvent.click(pivotTrigger);
+      await microtasks();
+      expect(getSidebar().value).to.equal(GridSidebarValue.Pivot);
+      // The open sidebar has an id, but it is not the computed columns panel.
+      expect(getTrigger()!.getAttribute('aria-controls')).to.equal(null);
+
+      await openEditor('total');
+      expect(getSidebar().value).to.equal(GridSidebarValue.ComputedColumns);
+      expectControlsSidebar(getTrigger()!);
+      expect(pivotTrigger.getAttribute('aria-expanded')).to.equal(null);
+      expect(pivotTrigger.getAttribute('aria-controls')).to.equal(null);
+    });
+
+    it('keeps the ids of a custom trigger when the panel is shown again', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      await act(async () =>
+        apiRef.current!.showSidebar(
+          GridSidebarValue.ComputedColumns,
+          'custom-panel',
+          'custom-trigger',
+        ),
+      );
+      await openEditor('total');
+      expect(getSidebar().sidebarId).to.equal('custom-panel');
+      expect(getSidebar().labelId).to.equal('custom-trigger');
+      expectControlsSidebar(getTrigger()!);
+    });
+
+    it('leaves aria-controls out when the panel was opened without an id', async () => {
+      await render(<Test showToolbar />);
+      await act(async () => apiRef.current!.showSidebar(GridSidebarValue.ComputedColumns));
+      const trigger = getTrigger()!;
+      expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+      expect(trigger.getAttribute('aria-controls')).to.equal(null);
+    });
+
+    it('gives each grid its own panel id', async () => {
+      let otherApiRef: RefObject<GridApi | null> = { current: null };
+      function Other() {
+        otherApiRef = useGridApiRef();
+        return (
+          <div style={{ width: 900, height: 500 }}>
+            <DataGridPremium {...baselineProps} apiRef={otherApiRef} showToolbar />
+          </div>
+        );
+      }
+      await render(
+        <React.Fragment>
+          <Test showToolbar />
+          <Other />
+        </React.Fragment>,
+      );
+      await openEditor(null);
+      await act(async () => otherApiRef.current!.showComputedColumnEditor(null));
+      const [trigger, otherTrigger] = screen.getAllByRole('button', { name: 'Computed columns' });
+      const [sidebar, otherSidebar] = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${gridClasses.sidebar}`),
+      );
+      expect(sidebar.id).not.to.equal(otherSidebar.id);
+      expect(trigger.getAttribute('aria-controls')).to.equal(sidebar.id);
+      expect(otherTrigger.getAttribute('aria-controls')).to.equal(otherSidebar.id);
+    });
+
+    it('exports the sidebar without the ids of its elements', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      await openEditor('total');
+      expect(getSidebar().sidebarId).not.to.equal(undefined);
+      expect(apiRef.current!.exportState().sidebar).to.deep.equal({
+        open: true,
+        value: GridSidebarValue.ComputedColumns,
+      });
+
+      fireEvent.click(getButton('Close computed columns panel'));
+      await microtasks();
+      fireEvent.click(getTrigger()!);
+      await microtasks();
+      expect(getSidebar().labelId).to.equal(getTrigger()!.id);
+      expect(apiRef.current!.exportState().sidebar).to.deep.equal({
+        open: true,
+        value: GridSidebarValue.ComputedColumns,
+      });
+    });
+
+    it('drops the ids of a panel restored closed', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      fireEvent.click(getTrigger()!);
+      await microtasks();
+      await act(async () =>
+        apiRef.current!.restoreState({
+          sidebar: { open: false, value: GridSidebarValue.ComputedColumns },
+        }),
+      );
+      expect(getSidebar().sidebarId).to.equal(undefined);
+      expect(getSidebar().labelId).to.equal(undefined);
+
+      // Opened from the API, the panel is not labelled by the trigger, which it would focus on close.
+      await openEditor('total');
+      expectControlsSidebar(getTrigger()!);
+      expect(getSidebar().labelId).to.equal(undefined);
+    });
+
+    it('keeps the ids of the open panel when the grid restores its own state', async () => {
+      await render(<Test showToolbar initialState={{ computedColumns: { model: [total] } }} />);
+      const trigger = getTrigger()!;
+      fireEvent.click(trigger);
+      await microtasks();
+      const sidebar = document.querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!;
+
+      await act(async () => apiRef.current!.restoreState(apiRef.current!.exportState()));
+      expectControlsSidebar(trigger);
+      expect(sidebar.getAttribute('aria-labelledby')).to.equal(trigger.id);
+
+      // Turning pivoting off restores the state exported when it was turned on.
+      expect(() => {
+        act(() => apiRef.current!.setPivotActive(true));
+      }).toWarnDev([
+        'MUI X Data Grid: Computed columns are not supported while pivoting is active.',
+      ]);
+      await microtasks();
+      await act(async () => apiRef.current!.setPivotActive(false));
+      expect(getSidebar().value).to.equal(GridSidebarValue.ComputedColumns);
+      expectControlsSidebar(getTrigger()!);
+      expect(
+        document
+          .querySelector<HTMLElement>(`.${gridClasses.sidebar}`)!
+          .getAttribute('aria-labelledby'),
+      ).to.equal(getTrigger()!.id);
     });
 
     it('is hidden while pivoting is active and the editor cannot be opened', async () => {

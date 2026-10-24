@@ -89,9 +89,12 @@ export const useGridSidebar = (
         return prevState;
       }
 
+      // The ids are those of the elements of this render: restored in another grid, or after a
+      // reload, they would point at elements that are not its own.
+      const { sidebarId, labelId, ...sidebar } = sidebarToExport;
       return {
         ...prevState,
-        sidebar: sidebarToExport,
+        sidebar,
       };
     },
     [apiRef, props.initialState?.sidebar],
@@ -101,10 +104,19 @@ export const useGridSidebar = (
     (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePremium>) => {
       const sidebar = context.stateToRestore.sidebar;
       if (sidebar != null) {
-        apiRef.current.setState((state) => ({
-          ...state,
-          sidebar,
-        }));
+        apiRef.current.setState((state) => {
+          // The exported state has no ids. Restoring the panel that is shown (the grid restores
+          // its own snapshot when pivoting is turned off and after printing) keeps the ids of its
+          // elements, like a panel shown again.
+          const keepIds =
+            sidebar.open && sidebar.value !== undefined && sidebar.value === state.sidebar.value;
+          return {
+            ...state,
+            sidebar: keepIds
+              ? { sidebarId: state.sidebar.sidebarId, labelId: state.sidebar.labelId, ...sidebar }
+              : sidebar,
+          };
+        });
       }
 
       return params;

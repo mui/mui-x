@@ -62,3 +62,14 @@ export const gridComputedColumnsPanelOpenSelector = createSelector(
   gridSidebarStateSelector,
   (sidebarState) => sidebarState.open && sidebarState.value === GridSidebarValue.ComputedColumns,
 );
+
+/**
+ * Get the id of the sidebar element while it shows the computed columns panel.
+ * `undefined` when the panel is closed, or was opened without an id.
+ * @ignore - do not document.
+ */
+export const gridComputedColumnsPanelIdSelector = createSelector(
+  gridSidebarStateSelector,
+  gridComputedColumnsPanelOpenSelector,
+  (sidebarState, open) => (open ? sidebarState.sidebarId : undefined),
+);

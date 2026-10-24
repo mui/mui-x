@@ -130,6 +130,13 @@ export interface GridComputedColumnSnapshot {
 export interface GridComputedColumnsInternalCache {
   editorRequest: GridComputedColumnEditorRequest | null;
   /**
+   * The id the computed columns panel gets when it opens without one, so that the
+   * `aria-controls` of the toolbar trigger resolves however the panel was opened (the
+   * trigger, a column menu, a cell gesture, `showComputedColumnEditor()`). Unique per grid:
+   * built from the instance id of the grid.
+   */
+  panelId: string;
+  /**
    * The index requested through `addComputedColumn()` for columns that are not
    * part of the columns state yet. Consumed by the formula feature when it
    * inserts the column — with a controlled model, that only happens once the
