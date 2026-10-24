@@ -135,19 +135,23 @@ function getDependencyBound(
 /**
  * The `side` of an all-day event on the day `dayNumber`: the first instant of the day for its
  * start, or the last instant before the next day for its end. A day whose midnight a DST
- * transition skips starts at the end of the gap.
+ * transition skips starts at the end of the gap. Both edges of a day the timezone skips, like
+ * December 30th, 2011 in Pacific/Apia, are on the next day, as with the `addDays()` of the
+ * adapter.
  */
-function getAllDayEdgeMs(dayNumber: number, side: SchedulerEventSide, timezone: TemporalTimezone) {
-  return side === 'start'
-    ? localToEpochMs(dayNumber * MS_PER_DAY, timezone)
-    : localToEpochMs((dayNumber + 1) * MS_PER_DAY, timezone) - 1;
-}
-
-// Whether `timezone` skips the day, like December 30th, 2011 in Pacific/Apia. An all-day edge
-// shifted onto it would end before it starts.
-function isSkippedDay(dayNumber: number, timezone: TemporalTimezone): boolean {
-  // Its first instant belongs to the next day.
-  return toLocalDayNumber(getAllDayEdgeMs(dayNumber, 'start', timezone), timezone) > dayNumber;
+function getAllDayEdgeMs(
+  dayNumber: number,
+  side: SchedulerEventSide,
+  timezone: TemporalTimezone,
+): number {
+  if (side === 'start') {
+    return localToEpochMs(dayNumber * MS_PER_DAY, timezone);
+  }
+  const endMs = localToEpochMs((dayNumber + 1) * MS_PER_DAY, timezone) - 1;
+  // The instant before the next day is on the previous day when the timezone skips this one.
+  return toLocalDayNumber(endMs, timezone) < dayNumber
+    ? getAllDayEdgeMs(dayNumber + 1, 'end', timezone)
+    : endMs;
 }
 
 // Minimal whole-day shift bringing the `side` of an all-day event, on the day `edgeDay`, to `bound`.
@@ -566,18 +570,10 @@ export function computeAutoSchedulingCascade(
         const dayCount = minimalDayShift(endDay, 'end', keptStartBound, timezone);
         return { ...base, end: getAllDayEdgeMs(endDay + dayCount, 'end', timezone) };
       }
-      let dayCount = Math.max(
+      const dayCount = Math.max(
         required.start === null ? 0 : minimalDayShift(startDay, 'start', required.start, timezone),
         required.end === null ? 0 : minimalDayShift(endDay, 'end', required.end, timezone),
       );
-      // A kept end does not move, so only the shifted end can land on a skipped day.
-      while (
-        isSkippedDay(startDay + dayCount, timezone) ||
-        (!keepsEnd(getAllDayEdgeMs(startDay + dayCount, 'start', timezone)) &&
-          isSkippedDay(endDay + dayCount, timezone))
-      ) {
-        dayCount += 1;
-      }
       const newStartTimestamp = getAllDayEdgeMs(startDay + dayCount, 'start', timezone);
       return {
         ...base,

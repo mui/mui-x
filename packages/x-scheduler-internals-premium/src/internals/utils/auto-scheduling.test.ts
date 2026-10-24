@@ -1186,6 +1186,57 @@ describe('computeAutoSchedulingCascade', () => {
     expectDates(result[0], '2011-12-31T00:00:00', '2011-12-31T23:59:59.999', 'Pacific/Apia');
   });
 
+  it('should push only the end of an all-day successor past a day a DST transition skips', () => {
+    // Pacific/Apia skips December 30th, 2011, going from the 29th to the 31st.
+    const predecessor = EventBuilder.new()
+      .id('a')
+      .withDataTimezone('Pacific/Apia')
+      .span('2011-12-27T09:00:00', '2011-12-27T10:00:00')
+      .toProcessed();
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('Pacific/Apia')
+      .span('2011-12-28T00:00:00', '2011-12-29T23:59:59.999', { allDay: true })
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b')],
+      [{ id: 'a', end: adapter.date('2011-12-28T12:00:00', 'Pacific/Apia') }],
+    );
+
+    expect(result).to.have.length(1);
+    // Shifted by one day, the event would end on the skipped day: it ends on the 31st instead.
+    expectDates(result[0], '2011-12-29T00:00:00', '2011-12-31T23:59:59.999', 'Pacific/Apia');
+  });
+
+  it('should not count a day the timezone skips when shifting an all-day successor', () => {
+    // Pacific/Apia skips December 30th, 2011, going from the 29th to the 31st.
+    const predecessor = allDayEvent('a', '2011-12-26', 'Pacific/Apia');
+    const successor = EventBuilder.new()
+      .id('b')
+      .withDataTimezone('Pacific/Apia')
+      .span('2011-12-27T00:00:00', '2011-12-29T23:59:59.999', { allDay: true })
+      .toProcessed();
+
+    const result = runCascade(
+      [predecessor, successor],
+      [dependency('a', 'b', { type: 'FinishToFinish' })],
+      [
+        {
+          id: 'a',
+          start: adapter.date('2011-12-31T00:00:00', 'Pacific/Apia'),
+          end: adapter.date('2011-12-31T23:59:59.999', 'Pacific/Apia'),
+          allDay: true,
+        },
+      ],
+    );
+
+    expect(result).to.have.length(1);
+    // Moving the end from the 29th to the 31st takes one day.
+    expectDates(result[0], '2011-12-28T00:00:00', '2011-12-31T23:59:59.999', 'Pacific/Apia');
+  });
+
   it('should keep the end of a start-resized all-day event when only the shifted end lands on a skipped day', () => {
     // Pacific/Apia skips December 30th, 2011. Shifting the whole event by two days would put
     // its end there, but the resize keeps the end.
