@@ -26,6 +26,7 @@ export {
   PlainDate,
 } from './base-temporal/PlainDate';
 export { ISO_CALENDAR_ID } from './base-temporal/calendar';
+export { MS_PER_DAY } from './base-temporal/iso';
 export * from './extractStandaloneEvent';
 export * from './useInitializeApiRef';
 export * from './useEventCreation';
