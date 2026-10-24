@@ -222,7 +222,6 @@ Setting it to `false` exports grid formulas as live formulas, but also lets such
 - The formula editor does not support in-editor undo—the grid-level undo and redo of committed values work as usual.
 - The `valueGetter` of a column with `allowFormulas` is ignored for its formula cells (a development-mode warning points this out); it applies normally to plain cells in the column.
 - Clipboard copy places evaluated values on the clipboard—use the [fill handle](#fill-handle) to replicate formulas inside the grid.
-- A formula belongs to one cell. To evaluate the same formula for every row, use a [computed column](/x/react-data-grid/computed-columns/) rather than filling a column with formulas.
 
 ## API
 

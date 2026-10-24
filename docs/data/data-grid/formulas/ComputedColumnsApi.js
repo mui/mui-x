@@ -44,18 +44,25 @@ export default function ComputedColumnsApi() {
 
   const addMargin = () => {
     // Insert the column right after the `cost` column.
-    apiRef.current?.addComputedColumn(marginColumn, { columnIndex: 3 });
+    apiRef.current?.addComputedColumn(marginColumn, {
+      columnIndex: 3,
+      undoable: true,
+    });
   };
 
   const addTotal = () => {
-    apiRef.current?.addComputedColumn(totalColumn);
+    apiRef.current?.addComputedColumn(totalColumn, { undoable: true });
   };
 
   const roundMargin = () => {
-    apiRef.current?.updateComputedColumn('margin', {
-      formula: '=ROUND((price - cost) / price, 1)',
-      headerName: 'Margin (rounded)',
-    });
+    apiRef.current?.updateComputedColumn(
+      'margin',
+      {
+        formula: '=ROUND((price - cost) / price, 1)',
+        headerName: 'Margin (rounded)',
+      },
+      { undoable: true },
+    );
   };
 
   const editTotal = () => {
@@ -63,7 +70,7 @@ export default function ComputedColumnsApi() {
   };
 
   const removeAll = () => {
-    apiRef.current?.setComputedColumns([]);
+    apiRef.current?.setComputedColumns([], { undoable: true });
   };
 
   return (

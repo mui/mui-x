@@ -97,10 +97,7 @@ When [computed columns](/x/react-data-grid/computed-columns/) are available (con
 
 - `computedColumnsChange` - Tracks changes made to the computed columns model: adding, editing, or removing a computed column from the panel, the column menu, or the cells
 
-Undoing the removal of a computed column restores it with its previous position, width, and visibility.
-Model changes made from code — the `apiRef` methods, `apiRef.current.restoreState()`, or a new value of the controlled `computedColumns` prop — are not tracked, the same way `updateRows()` is not tracked for cell edits, and they invalidate the steps that no longer match the model.
-To track a change made from your own UI, pass `undoable: true` to the `apiRef` method.
-To leave computed columns out of the history, provide your own map through the `historyEventHandlers` prop without the `computedColumnsChange` handler.
+Changes made from code are not tracked unless you pass `undoable: true` to an `apiRef` method—see [Computed columns—Undo and redo](/x/react-data-grid/computed-columns/#undo-and-redo).
 
 :::warning
 Default handlers invalidate the stack if the data is not visible to the user anymore due to filtering, grouping, page change, etc.
