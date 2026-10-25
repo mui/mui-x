@@ -146,9 +146,35 @@ export const useCalendarState = (
     [referenceDateProp, timezone],
   );
 
+  const isDateDisabled = useIsDateDisabled({
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    timezone,
+  });
+
+  const findClosestEnabledDateInMonth = (date: PickerValidDate) => {
+    const startOfMonth = adapter.startOfMonth(date);
+    const endOfMonth = adapter.endOfMonth(date);
+    return findClosestEnabledDate({
+      adapter,
+      date,
+      minDate: adapter.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+      maxDate: adapter.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+      disablePast,
+      disableFuture,
+      isDateDisabled,
+      timezone,
+    });
+  };
+
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
-    focusedDay: referenceDate,
+    focusedDay: isDateDisabled(referenceDate)
+      ? findClosestEnabledDateInMonth(referenceDate)
+      : referenceDate,
     // Keep the time from the reference date when computing the current month anchor.
     // Using startOfMonth would reset the time to 00:00 which breaks expectations
     // that month selections preserve the referenceDate time when no value is provided.
@@ -160,15 +186,6 @@ export const useCalendarState = (
   // A day cell can focus itself before `setVisibleDate` sees the new `calendarState`.
   // This ref stops that focus from firing `onMonthChange` and `onYearChange` a second time.
   const focusedDayRef = React.useRef(calendarState.focusedDay);
-
-  const isDateDisabled = useIsDateDisabled({
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    timezone,
-  });
 
   // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
@@ -202,18 +219,7 @@ export const useCalendarState = (
 
       // If the date is disabled, we try to find a non-disabled date inside the same month.
       if (isDateDisabled(focusedDay)) {
-        const startOfMonth = adapter.startOfMonth(target);
-        const endOfMonth = adapter.endOfMonth(target);
-        focusedDay = findClosestEnabledDate({
-          adapter,
-          date: focusedDay,
-          minDate: adapter.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-          maxDate: adapter.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
-          disablePast,
-          disableFuture,
-          isDateDisabled,
-          timezone,
-        });
+        focusedDay = findClosestEnabledDateInMonth(focusedDay);
       }
     }
 

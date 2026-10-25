@@ -118,6 +118,22 @@ describe('<DateCalendar /> keyboard interactions', () => {
           expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
         });
       });
+
+      it('should focus the closest enabled day when tabbing into the grid and `referenceDate` is disabled', async () => {
+        const { user } = render(
+          <DateCalendar
+            referenceDate={adapterToUse.date('2020-01-10')}
+            shouldDisableDate={(date) =>
+              disabledDates.some((disabled) => adapterToUse.isSameDay(date, disabled))
+            }
+          />,
+        );
+
+        await act(async () => screen.getByRole('button', { name: 'Next month' }).focus());
+        await user.keyboard('{Tab}');
+
+        expect(document.activeElement).toHaveAccessibleName('11');
+      });
     });
 
     describe('navigate months', () => {
