@@ -146,6 +146,21 @@ export const useCalendarState = (
     [referenceDateProp, timezone],
   );
 
+  const [calendarState, dispatch] = React.useReducer(reducerFn, {
+    isMonthSwitchingAnimating: false,
+    focusedDay: referenceDate,
+    // Keep the time from the reference date when computing the current month anchor.
+    // Using startOfMonth would reset the time to 00:00 which breaks expectations
+    // that month selections preserve the referenceDate time when no value is provided.
+    // See tests: "should use `referenceDate` when no value defined".
+    currentMonth: adapter.setDate(referenceDate, 1),
+    slideDirection: 'left',
+  });
+
+  // A day cell can focus itself before `setVisibleDate` sees the new `calendarState`.
+  // This ref stops that focus from firing `onMonthChange` and `onYearChange` a second time.
+  const focusedDayRef = React.useRef(calendarState.focusedDay);
+
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
     minDate,
@@ -169,23 +184,6 @@ export const useCalendarState = (
       timezone,
     });
   };
-
-  const [calendarState, dispatch] = React.useReducer(reducerFn, {
-    isMonthSwitchingAnimating: false,
-    focusedDay: isDateDisabled(referenceDate)
-      ? findClosestEnabledDateInMonth(referenceDate)
-      : referenceDate,
-    // Keep the time from the reference date when computing the current month anchor.
-    // Using startOfMonth would reset the time to 00:00 which breaks expectations
-    // that month selections preserve the referenceDate time when no value is provided.
-    // See tests: "should use `referenceDate` when no value defined".
-    currentMonth: adapter.setDate(referenceDate, 1),
-    slideDirection: 'left',
-  });
-
-  // A day cell can focus itself before `setVisibleDate` sees the new `calendarState`.
-  // This ref stops that focus from firing `onMonthChange` and `onYearChange` a second time.
-  const focusedDayRef = React.useRef(calendarState.focusedDay);
 
   // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
@@ -252,9 +250,14 @@ export const useCalendarState = (
     dispatch({ type: 'finishMonthSwitchingAnimation' });
   }, []);
 
+  const focusedDay =
+    calendarState.focusedDay != null && isDateDisabled(calendarState.focusedDay)
+      ? findClosestEnabledDateInMonth(calendarState.focusedDay)
+      : calendarState.focusedDay;
+
   return {
     referenceDate,
-    calendarState,
+    calendarState: { ...calendarState, focusedDay },
     setVisibleDate,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,

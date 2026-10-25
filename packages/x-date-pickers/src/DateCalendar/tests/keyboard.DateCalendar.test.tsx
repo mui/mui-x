@@ -1,5 +1,6 @@
 import { act, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import type { PickerValidDate } from '@mui/x-date-pickers/models';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { vi, describe, it, expect } from 'vitest';
 
@@ -128,6 +129,22 @@ describe('<DateCalendar /> keyboard interactions', () => {
             }
           />,
         );
+
+        await act(async () => screen.getByRole('button', { name: 'Next month' }).focus());
+        await user.keyboard('{Tab}');
+
+        expect(document.activeElement).toHaveAccessibleName('11');
+      });
+
+      it('should focus the closest enabled day when tabbing into the grid and the focused day becomes disabled', async () => {
+        const { user, setProps } = render(
+          <DateCalendar referenceDate={adapterToUse.date('2020-01-10')} />,
+        );
+
+        setProps({
+          shouldDisableDate: (date: PickerValidDate) =>
+            disabledDates.some((disabled) => adapterToUse.isSameDay(date, disabled)),
+        });
 
         await act(async () => screen.getByRole('button', { name: 'Next month' }).focus());
         await user.keyboard('{Tab}');
