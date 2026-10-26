@@ -317,8 +317,8 @@ describe('Core - EventCalendarStore', () => {
         store.setOccurrencePlaceholder({
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.date('2024-01-15T10:00:00', 'default'),
-          end: adapter.date('2024-01-15T11:00:00', 'default'),
+          start: adapter.getTime(adapter.date('2024-01-15T10:00:00', 'default')),
+          end: adapter.getTime(adapter.date('2024-01-15T11:00:00', 'default')),
           resourceId: null,
         });
 

@@ -47,7 +47,6 @@ export function getShouldEventRequireResource(
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
  */
 export function shouldUpdateOccurrencePlaceholder(
-  adapter: Adapter,
   previous: SchedulerOccurrencePlaceholder | null,
   next: SchedulerOccurrencePlaceholder | null,
 ): boolean {
@@ -60,11 +59,7 @@ export function shouldUpdateOccurrencePlaceholder(
 
   // Compare keys present in `next`.
   for (const key in untypedNext) {
-    if (key === 'start' || key === 'end') {
-      if (!adapter.isEqual(untypedNext[key], untypedPrevious[key])) {
-        return true;
-      }
-    } else if (!Object.is(untypedNext[key], untypedPrevious[key])) {
+    if (!Object.is(untypedNext[key], untypedPrevious[key])) {
       return true;
     }
   }

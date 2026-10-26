@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
-import { useAdapterContext } from '../../use-adapter-context';
 import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selectors';
 import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
 import { applyInternalDragOrResizeOccurrencePlaceholder } from './useDropTarget';
@@ -14,7 +13,6 @@ import type {
   SchedulerEventOccurrence,
   SchedulerEventSide,
   SchedulerResourceId,
-  TemporalSupportedObject,
 } from '../../models';
 
 /**
@@ -37,7 +35,6 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
   } = parameters;
 
   const store = useSchedulerStoreContext();
-  const adapter = useAdapterContext();
 
   // Refs, not effect-local state: a mid-gesture effect re-run must re-attach the listeners without
   // dropping the active pointer or discarding the resize.
@@ -80,7 +77,6 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       }
 
       const { start, end } = clampResizedEventEdge({
-        adapter,
         side,
         start: session.start,
         end: session.end,
@@ -194,7 +190,6 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
     surfaceType,
     precisionMinute,
     store,
-    adapter,
     getDateAtPointer,
     getResizeSession,
     addPropertiesToResizedEvent,
@@ -220,8 +215,14 @@ export namespace useEventPointerResizeHandler {
    * A resize gesture targeting an existing event. The resize is committed on pointer-up.
    */
   export interface ResizeSession {
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
+    /**
+     * The start of the event, as a timestamp in milliseconds.
+     */
+    start: number;
+    /**
+     * The end of the event, as a timestamp in milliseconds.
+     */
+    end: number;
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
@@ -246,12 +247,9 @@ export namespace useEventPointerResizeHandler {
      */
     surfaceType: EventSurfaceType;
     /**
-     * Maps a pointer position to a precision-rounded date on the surface. Should be stable.
+     * Maps a pointer position to a precision-rounded timestamp on the surface. Should be stable.
      */
-    getDateAtPointer: (input: {
-      clientX: number;
-      clientY: number;
-    }) => TemporalSupportedObject | null;
+    getDateAtPointer: (input: { clientX: number; clientY: number }) => number | null;
     /**
      * Resolves the session to start on pointer-down, or `null` to ignore the gesture. Should be stable.
      */

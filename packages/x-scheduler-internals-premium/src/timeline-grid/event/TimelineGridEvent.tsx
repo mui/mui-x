@@ -9,7 +9,6 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerResourceId,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import {
   useDraggableEvent,
@@ -109,8 +108,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         eventId,
         occurrenceKey,
         originalOccurrence: getOriginalOccurrence(),
-        start: start.value,
-        end: end.value,
+        start: start.timestamp,
+        end: end.timestamp,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
         sourceResourceId: rowResourceId,
       };
@@ -216,8 +215,14 @@ export namespace TimelineGridEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
+    /**
+     * The start of the occurrence, as a timestamp in milliseconds.
+     */
+    start: number;
+    /**
+     * The end of the occurrence, as a timestamp in milliseconds.
+     */
+    end: number;
     /**
      * Cursor offset from the event start, in axis milliseconds.
      */

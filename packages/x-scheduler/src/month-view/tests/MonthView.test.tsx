@@ -841,7 +841,7 @@ describe('<MonthView />', () => {
       await act(async () => {
         store!.setOccurrencePlaceholder({
           ...placeholder,
-          end: adapter.addHours(placeholder.end, -1),
+          end: placeholder.end - 60 * 60_000,
         });
       });
 
@@ -865,8 +865,8 @@ describe('<MonthView />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })

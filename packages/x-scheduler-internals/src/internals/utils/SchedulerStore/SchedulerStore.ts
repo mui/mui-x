@@ -1402,8 +1402,8 @@ export class SchedulerStore<
     newPlaceholder: SchedulerOccurrencePlaceholder | null,
     event?: Event,
   ) => {
-    const { adapter, occurrencePlaceholder: previous } = this.state;
-    if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
+    const { occurrencePlaceholder: previous } = this.state;
+    if (shouldUpdateOccurrencePlaceholder(previous, newPlaceholder)) {
       this.occurrencePlaceholderEvent = newPlaceholder == null ? undefined : event;
       this.set('occurrencePlaceholder', newPlaceholder);
     }

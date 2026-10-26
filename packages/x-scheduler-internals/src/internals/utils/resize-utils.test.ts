@@ -39,69 +39,66 @@ describe('isResizeHandlerEnabled', () => {
 });
 
 describe('clampResizedEventEdge', () => {
-  const start = adapter.date('2024-01-15T10:00:00', 'default');
-  const end = adapter.date('2024-01-15T11:00:00', 'default');
+  const toTimestamp = (value: string) => adapter.getTime(adapter.date(value, 'default'));
+  const start = toTimestamp('2024-01-15T10:00:00');
+  const end = toTimestamp('2024-01-15T11:00:00');
   const precisionMinute = 15;
 
   describe('side: start', () => {
     it('should move the start to the cursor when it keeps the minimum duration', () => {
-      const cursorDate = adapter.date('2024-01-15T10:30:00', 'default');
+      const cursorDate = toTimestamp('2024-01-15T10:30:00');
       const result = clampResizedEventEdge({
-        adapter,
         side: 'start',
         start,
         end,
         cursorDate,
         precisionMinute,
       });
-      expect(result.start).toEqualDateTime(cursorDate);
-      expect(result.end).toEqualDateTime(end);
+      expect(result.start).to.equal(cursorDate);
+      expect(result.end).to.equal(end);
     });
 
     it('should clamp the start so the event keeps at least one precision step', () => {
       // Stop one precision step before `end` so the event can't invert.
-      const cursorDate = adapter.date('2024-01-15T11:30:00', 'default');
+      const cursorDate = toTimestamp('2024-01-15T11:30:00');
       const result = clampResizedEventEdge({
-        adapter,
         side: 'start',
         start,
         end,
         cursorDate,
         precisionMinute,
       });
-      expect(result.start).toEqualDateTime(adapter.date('2024-01-15T10:45:00', 'default'));
-      expect(result.end).toEqualDateTime(end);
+      expect(result.start).to.equal(toTimestamp('2024-01-15T10:45:00'));
+      expect(result.end).to.equal(end);
     });
   });
 
   describe('side: end', () => {
     it('should move the end to the cursor when it keeps the minimum duration', () => {
-      const cursorDate = adapter.date('2024-01-15T10:45:00', 'default');
+      const cursorDate = toTimestamp('2024-01-15T10:45:00');
       const result = clampResizedEventEdge({
-        adapter,
         side: 'end',
         start,
         end,
         cursorDate,
         precisionMinute,
       });
-      expect(result.start).toEqualDateTime(start);
-      expect(result.end).toEqualDateTime(cursorDate);
+      expect(result.start).to.equal(start);
+      expect(result.end).to.equal(cursorDate);
     });
 
     it('should clamp the end so the event keeps at least one precision step', () => {
       // Stop one precision step after `start` so the event can't invert.
-      const cursorDate = adapter.date('2024-01-15T09:30:00', 'default');
+      const cursorDate = toTimestamp('2024-01-15T09:30:00');
       const result = clampResizedEventEdge({
-        adapter,
         side: 'end',
         start,
         end,
         cursorDate,
         precisionMinute,
       });
-      expect(result.start).toEqualDateTime(start);
-      expect(result.end).toEqualDateTime(adapter.date('2024-01-15T10:15:00', 'default'));
+      expect(result.start).to.equal(start);
+      expect(result.end).to.equal(toTimestamp('2024-01-15T10:15:00'));
     });
   });
 });

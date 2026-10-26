@@ -3,12 +3,13 @@ import type {
   TemporalSupportedObject,
   TemporalTimezone,
 } from '@base-ui/react/internals/temporal';
+import { buildTemporalPlainDate, createAdapterDate } from './plain-date-utils/adapter';
 import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-  createAdapterDateOnPlainDate,
-} from './plain-date-utils/adapter';
-import { toLocalDayNumber, toLocalMs, toPlainDateTime } from './plain-date-utils/timeZone';
+  toEpochMs,
+  toLocalDayNumber,
+  toLocalMs,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
 export const FULL_DAY_MINUTES = 24 * 60;
@@ -108,18 +109,31 @@ export function timelineAxisOffsetToDate(
   axis: TimelineAxis,
   offsetMs: number,
 ): TemporalSupportedObject {
-  const dayMs = getTimelineAxisDayMs(axis);
-  const dayIndex = Math.floor(offsetMs / dayMs);
-  const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
+  return createAdapterDate(
+    adapter,
+    timelineAxisOffsetToTimestamp(adapter, axis, offsetMs),
+    adapter.getTimezone(axis.start),
+  );
+}
 
-  const timezone = adapter.getTimezone(axis.start);
+/**
+ * Maps an axis offset to a timestamp, like `timelineAxisOffsetToDate()`.
+ */
+export function timelineAxisOffsetToTimestamp(
+  adapter: TemporalAdapter,
+  axis: TimelineAxis,
+  offsetMs: number,
+): number {
   // A column without a size gives a non-finite offset, which maps to an invalid date, like the
   // adapter's methods.
   if (!Number.isFinite(offsetMs)) {
-    return createAdapterDate(adapter, NaN, timezone);
+    return NaN;
   }
+  const dayMs = getTimelineAxisDayMs(axis);
+  const dayIndex = Math.floor(offsetMs / dayMs);
+  const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
   const plainDate = buildTemporalPlainDate(adapter, axis.start).add({ days: dayIndex });
-  return createAdapterDateOnPlainDate(adapter, plainDate, msInDay, timezone);
+  return toEpochMs(plainDate, msInDay, adapter.getTimezone(axis.start));
 }
 
 /**
@@ -154,13 +168,31 @@ export function dateToTimelineAxisOffsetMs(
   adapter: TemporalAdapter,
   axis: TimelineAxis,
   date: TemporalSupportedObject,
-  msInDay: number = getWallClockMsInDay(adapter, date),
+  msInDay?: number,
 ): number {
-  // Both days are read in the timezone of the date. Day numbers, as this runs for every event.
-  const timezone = adapter.getTimezone(date);
+  return timestampToTimelineAxisOffsetMs(
+    adapter,
+    axis,
+    adapter.getTime(date),
+    adapter.getTimezone(date),
+    msInDay,
+  );
+}
+
+/**
+ * Maps a timestamp to its axis offset like `dateToTimelineAxisOffsetMs()`, reading it in
+ * `timezone`.
+ */
+export function timestampToTimelineAxisOffsetMs(
+  adapter: TemporalAdapter,
+  axis: TimelineAxis,
+  timestamp: number,
+  timezone: TemporalTimezone,
+  msInDay: number = toPlainDateTime(timestamp, timezone).msInDay,
+): number {
+  // Both days are read in `timezone`. Day numbers, as this runs for every event.
   const dayIndex =
-    toLocalDayNumber(adapter.getTime(date), timezone) -
-    toLocalDayNumber(adapter.getTime(axis.start), timezone);
+    toLocalDayNumber(timestamp, timezone) - toLocalDayNumber(adapter.getTime(axis.start), timezone);
   return getTimelineAxisOffsetMs(axis, dayIndex, msInDay);
 }
 

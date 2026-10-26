@@ -42,8 +42,8 @@ export function usePushPlaceholder() {
       type: 'creation',
       surfaceType: surfaceTypeToUse,
       resourceId: getPrimaryResourceId(values.resourceIds),
-      start,
-      end,
+      start: adapter.getTime(start),
+      end: adapter.getTime(end),
       lockSurfaceType: rawPlaceholder.lockSurfaceType,
     });
   };

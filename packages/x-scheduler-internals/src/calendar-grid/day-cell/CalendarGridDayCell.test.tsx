@@ -10,8 +10,11 @@ import {
   createSchedulerRenderer,
   describeConformance,
   SchedulerStoreRunner,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect } from 'vitest';
+import { createAdapterDate } from '../../internals/utils/plain-date-utils/adapter';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
@@ -79,6 +82,42 @@ describe('<CalendarGrid.DayCell />', () => {
       expect(onEventEditingStart.mock.lastCall?.[1].reason).to.equal('creation');
       expect(onEventEditingStart.mock.lastCall?.[1].event.type).to.equal('keydown');
     });
+
+    it.skipIf(!isJSDOM)(
+      'should create the placeholder on the whole day, whatever the timezone of the system',
+      async () => {
+        setSystemTimezone('Australia/Lord_Howe');
+        // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+        const timezone = 'America/Santiago';
+        const value = createAdapterDate(adapter, Date.UTC(2026, 3, 5, 16), timezone);
+        let store: AnyEventCalendarStore | null = null;
+
+        const { user } = render(
+          <EventCalendarProvider events={[]} displayTimezone={timezone}>
+            <CalendarGrid.Root>
+              <CalendarGrid.DayRow start={value} end={value}>
+                <CalendarGrid.DayCell value={value} />
+              </CalendarGrid.DayRow>
+            </CalendarGrid.Root>
+            <SchedulerStoreRunner<AnyEventCalendarStore>
+              context={SchedulerStoreContext as any}
+              onMount={(s) => {
+                store = s;
+              }}
+            />
+          </EventCalendarProvider>,
+        );
+
+        act(() => {
+          screen.getByRole('gridcell').focus();
+        });
+        await user.keyboard('{Enter}');
+
+        const placeholder = store!.state.occurrencePlaceholder!;
+        expect(new Date(placeholder.start).toISOString()).to.equal('2026-04-05T04:00:00.000Z');
+        expect(new Date(placeholder.end).toISOString()).to.equal('2026-04-06T03:59:59.999Z');
+      },
+    );
 
     it('should not create event on Enter when pressed on a child element', async () => {
       let store: AnyEventCalendarStore | null = null;

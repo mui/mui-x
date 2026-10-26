@@ -7,9 +7,9 @@ import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useDirection } from '@base-ui/react/direction-provider';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useAdapterContext } from '../../use-adapter-context';
-import { schedulerNowSelectors } from '../../scheduler-selectors';
-import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
-import { useEventCreation } from '../../internals/utils/useEventCreation';
+import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
+import { toEpochMs, toPlainDateTime } from '../../internals/utils/plain-date-utils/timeZone';
+import { snapToCreationPrecision, useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
@@ -67,27 +67,33 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       input: { clientY: event.clientY },
       elementRef: dropTargetRef,
     });
-    const anchor = adapter.addMilliseconds(start, offsetMs);
-    const startDate = adapter.addMinutes(
-      anchor,
-      -(adapter.getMinutes(anchor) % EVENT_CREATION_PRECISION_MINUTE),
+    const startTimestamp = snapToCreationPrecision(
+      adapter.getTime(start) + offsetMs,
+      schedulerOtherSelectors.displayTimezone(store.state),
     );
     return {
       surfaceType: 'time-grid' as const,
-      start: startDate,
-      end: adapter.addMinutes(startDate, creationConfig.duration),
+      start: startTimestamp,
+      end: startTimestamp + creationConfig.duration * 60_000,
       resourceId: null,
     };
   });
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => {
-    const noon = adapter.setHours(adapter.setMinutes(start, 0), 12);
+    const startTimestamp = adapter.getTime(start);
+    const endTimestamp = adapter.getTime(end);
+    const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
+    const noon = toEpochMs(
+      toPlainDateTime(startTimestamp, displayTimezone).date,
+      12 * 60 * 60_000,
+      displayTimezone,
+    );
     // Keep the default creation anchor inside the visible window when the view limits its hour range.
-    const anchor = adapter.isBefore(noon, start) || !adapter.isBefore(noon, end) ? start : noon;
+    const anchor = noon < startTimestamp || noon >= endTimestamp ? startTimestamp : noon;
     return {
       surfaceType: 'time-grid' as const,
       start: anchor,
-      end: adapter.addMinutes(anchor, creationConfig.duration),
+      end: anchor + creationConfig.duration * 60_000,
       resourceId: null,
     };
   });

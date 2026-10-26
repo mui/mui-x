@@ -5,6 +5,9 @@ import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useDirection } from '@base-ui/react/direction-provider';
 import { useAdapterContext } from '../../use-adapter-context';
+import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
+import { schedulerOtherSelectors } from '../../scheduler-selectors';
+import { getEndOfDayMs, getStartOfDayMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
@@ -33,6 +36,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   } = componentProps;
 
   const adapter = useAdapterContext();
+  const store = useSchedulerStoreContext();
   const {
     id: rootId,
     focusedCell,
@@ -53,13 +57,17 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     focusedCell?.rowIndex === rowIndex &&
     focusedCell?.columnIndex === index;
 
-  const getPlaceholderFields = () => ({
-    surfaceType: 'day-grid' as const,
-    start: adapter.startOfDay(value),
-    end: adapter.endOfDay(value),
-    lockSurfaceType,
-    resourceId: null,
-  });
+  const getPlaceholderFields = () => {
+    const timestamp = adapter.getTime(value);
+    const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
+    return {
+      surfaceType: 'day-grid' as const,
+      start: getStartOfDayMs(timestamp, displayTimezone),
+      end: getEndOfDayMs(timestamp, displayTimezone),
+      lockSurfaceType,
+      resourceId: null,
+    };
+  };
 
   const eventCreationProps = useEventCreation(getPlaceholderFields);
   const triggerKeyboardCreation = useKeyboardEventCreation(getPlaceholderFields);
