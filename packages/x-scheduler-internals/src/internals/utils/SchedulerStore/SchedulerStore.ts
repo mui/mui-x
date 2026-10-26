@@ -844,7 +844,7 @@ export class SchedulerStore<
       if (process.env.NODE_ENV !== 'production') {
         warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
           'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature, to enable recurring events.',
         ]);
       }
       return this.updateEvents({ created: [{ ...calendarEvent, rrule: undefined }] }).created[0];
@@ -963,7 +963,7 @@ export class SchedulerStore<
       if (process.env.NODE_ENV !== 'production') {
         warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
           'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature, to enable recurring events.',
         ]);
       }
       return toUpdateEventResult(
@@ -982,7 +982,7 @@ export class SchedulerStore<
       if (process.env.NODE_ENV !== 'production') {
         warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
           'MUI X Scheduler: Recurring event updates are a premium feature.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature, to enable recurring events.',
         ]);
       }
       return;
@@ -998,7 +998,7 @@ export class SchedulerStore<
       if (process.env.NODE_ENV !== 'production') {
         warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
           'MUI X Scheduler: Recurring event deletions are a premium feature.',
-          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+          'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature, to enable recurring events.',
         ]);
       }
       return;
