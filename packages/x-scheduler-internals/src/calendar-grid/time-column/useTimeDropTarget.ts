@@ -7,12 +7,13 @@ import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
-import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
+import { roundToDragPrecision } from '../../internals/utils/drag-utils';
 import {
   FULL_DAY_MINUTES,
   getTimelineAxisDurationMs,
   resolveRepeatedTimeFrom,
-  timelineAxisOffsetToDate,
+  timelineAxisOffsetToTimestamp,
 } from '../../internals/utils/timeline-axis';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
@@ -24,10 +25,6 @@ const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
   'StandaloneEvent',
 ]);
-
-function roundToDragPrecision(offsetMs: number) {
-  return Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-}
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   const {
@@ -72,9 +69,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         if (positionY === 1) {
           return endMs;
         }
-        return adapter.getTime(
-          timelineAxisOffsetToDate(adapter, axis, Math.round(axisDurationMs * positionY)),
-        );
+        return timelineAxisOffsetToTimestamp(adapter, axis, Math.round(axisDurationMs * positionY));
       };
       const elementTop = Math.max(elementRef.current.getBoundingClientRect().y, columnTop);
       const cursorY = Math.max(input.clientY, elementTop);
@@ -92,34 +87,32 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       return cursorTimestamp - topTimestamp;
     });
 
-  const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
-    (input) => {
+  const getTimestampAtPointer: CalendarGridTimeColumnContext['getTimestampAtPointer'] =
+    useStableCallback((input) => {
       // Bail when the column isn't measurable yet — zero height makes `getCursorPositionInElementMs` return NaN.
       if (!ref.current || ref.current.offsetHeight === 0) {
         return null;
       }
       const offsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
       return startMs + roundToDragPrecision(offsetMs);
-    },
-  );
+    });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input }) => {
+    ({ data, getDataFromInside, getDataFromOutside, input, timezone }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
+      const offsetToTimestamp = (offsetMs: number) => startMs + roundToDragPrecision(offsetMs);
 
       // Move a Time Grid Event within the Time Grid
       if (data.source === 'CalendarGridTimeEvent') {
         const eventDurationMs = data.end - data.start;
 
-        let newStart =
-          startMs + roundToDragPrecision(cursorOffsetMs - data.initialCursorPositionInEventMs);
+        let newStart = offsetToTimestamp(cursorOffsetMs - data.initialCursorPositionInEventMs);
 
         // Clamp the event to stay within the time grid bounds, unless it already crosses midnight
-        const timezone = schedulerOtherSelectors.displayTimezone(store.state);
         if (toLocalDayNumber(data.start, timezone) === toLocalDayNumber(data.end, timezone)) {
           newStart = Math.min(Math.max(newStart, startMs), endMs - eventDurationMs);
         }
@@ -131,8 +124,8 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       if (data.source === 'CalendarGridTimeEventResizeHandler') {
         if (data.side === 'start') {
           // Clamped to the time grid bounds.
-          const cursorDate = Math.max(
-            startMs + roundToDragPrecision(cursorOffsetMs - data.initialCursorPositionInEventMs),
+          const cursorTimestamp = Math.max(
+            offsetToTimestamp(cursorOffsetMs - data.initialCursorPositionInEventMs),
             startMs,
           );
 
@@ -141,7 +134,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
             side: 'start',
             start: data.start,
             end: data.end,
-            cursorDate,
+            cursorTimestamp,
             precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
           });
 
@@ -152,11 +145,10 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           const eventDurationMs = data.end - data.start;
 
           // Clamped to the time grid bounds.
-          const cursorDate = Math.min(
-            startMs +
-              roundToDragPrecision(
-                cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
-              ),
+          const cursorTimestamp = Math.min(
+            offsetToTimestamp(
+              cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
+            ),
             endMs,
           );
 
@@ -165,7 +157,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
             side: 'end',
             start: data.start,
             end: data.end,
-            cursorDate,
+            cursorTimestamp,
             precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
           });
 
@@ -175,7 +167,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
       // Move a Day Grid Event into the Time Grid
       if (data.source === 'CalendarGridDayEvent') {
-        const newStart = startMs + roundToDragPrecision(cursorOffsetMs);
+        const newStart = offsetToTimestamp(cursorOffsetMs);
         const newEnd =
           newStart + schedulerEventSelectors.defaultEventDuration(store.state) * 60_000;
 
@@ -184,7 +176,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, startMs + roundToDragPrecision(cursorOffsetMs));
+        return getDataFromOutside(data, offsetToTimestamp(cursorOffsetMs));
       }
 
       return undefined;
@@ -199,7 +191,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     addPropertiesToDroppedEvent,
   });
 
-  return { getCursorPositionInElementMs, getDateAtPointer, ref };
+  return { getCursorPositionInElementMs, getTimestampAtPointer, ref };
 }
 
 export namespace useTimeDropTarget {
@@ -230,6 +222,6 @@ export namespace useTimeDropTarget {
 
   export interface ReturnValue extends Pick<
     CalendarGridTimeColumnContext,
-    'getCursorPositionInElementMs' | 'getDateAtPointer'
+    'getCursorPositionInElementMs' | 'getTimestampAtPointer'
   > {}
 }

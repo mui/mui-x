@@ -7,30 +7,18 @@ import type {
   SchedulerOccurrencePlaceholderCreation,
 } from '../../models';
 import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
-import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
-import { toPlainDateTime } from './plain-date-utils/timeZone';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 
 interface GetCreationPlaceholderParams {
   event: React.MouseEvent<HTMLDivElement>;
   creationConfig: SchedulerEventCreationConfig;
+  /**
+   * The display timezone, in which the dates of the placeholder are read.
+   */
+  timezone: TemporalTimezone;
 }
 
 export type CreationPlaceholderFields = Omit<SchedulerOccurrencePlaceholderCreation, 'type'>;
-
-/**
- * Moves the timestamp under the pointer back to the creation precision, on the minutes of the wall
- * clock of `timezone`. A surface without a size gives a non-finite timestamp, returned unchanged.
- */
-export function snapToCreationPrecision(timestamp: number, timezone: TemporalTimezone): number {
-  if (!Number.isFinite(timestamp)) {
-    return timestamp;
-  }
-  const minutesInHour = Math.floor(
-    (toPlainDateTime(timestamp, timezone).msInDay % 3_600_000) / 60_000,
-  );
-  return timestamp - (minutesInHour % EVENT_CREATION_PRECISION_MINUTE) * 60_000;
-}
 
 export function useEventCreation(
   getCreationPlaceholder: (params: GetCreationPlaceholderParams) => CreationPlaceholderFields,
@@ -51,7 +39,11 @@ export function useEventCreation(
     store.setOccurrencePlaceholder(
       {
         type: 'creation',
-        ...getCreationPlaceholder({ event, creationConfig }),
+        ...getCreationPlaceholder({
+          event,
+          creationConfig,
+          timezone: schedulerOtherSelectors.displayTimezone(store.state),
+        }),
       },
       event.nativeEvent,
     );

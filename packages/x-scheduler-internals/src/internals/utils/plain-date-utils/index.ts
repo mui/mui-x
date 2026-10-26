@@ -1,8 +1,11 @@
 export {
+  addDaysOnWallClock,
+  floorToWallClockMinutes,
   getEndOfDayMs,
   getSkippedDays,
   getStartOfDayMs,
   localToEpochMs,
+  moveTimestampToPlainDate,
   toEpochMs,
   toLocalDayNumber,
   toLocalMs,
@@ -18,6 +21,7 @@ export {
   createProcessedDate,
   getDateKey,
   getPlainDateKey,
+  moveToPlainDate,
   normalizeAllDayBounds,
 } from './adapter';
 export { isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';

@@ -182,6 +182,52 @@ export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTi
 }
 
 /**
+ * Moves an instant to `plainDate`, keeping its time of day on the wall clock of `timezone`. The
+ * times a DST transition skips or repeats resolve like `toEpochMs()`.
+ */
+export function moveTimestampToPlainDate(
+  epochMs: number,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): number {
+  return toEpochMs(plainDate, toPlainDateTime(epochMs, timezone).msInDay, timezone);
+}
+
+/**
+ * Adds days to an instant on the wall clock of `timezone`, keeping its time of day. The times a
+ * DST transition skips or repeats resolve like `localToEpochMs()`. Returns the instant unchanged
+ * for 0 days, even in the second occurrence of a repeated time.
+ */
+export function addDaysOnWallClock(
+  epochMs: number,
+  dayCount: number,
+  timezone: TemporalTimezone,
+): number {
+  if (dayCount === 0) {
+    return epochMs;
+  }
+  return localToEpochMs(toLocalMs(epochMs, timezone) + dayCount * MS_PER_DAY, timezone);
+}
+
+/**
+ * Moves an instant back by the minutes past the last multiple of `stepMinutes` in its hour, on the
+ * wall clock of `timezone`. Returns a non-finite instant unchanged, like the one of a surface
+ * without a size.
+ */
+export function floorToWallClockMinutes(
+  epochMs: number,
+  stepMinutes: number,
+  timezone: TemporalTimezone,
+): number {
+  if (!Number.isFinite(epochMs)) {
+    return epochMs;
+  }
+  const localMinutes = Math.floor(toLocalMs(epochMs, timezone) / 60_000);
+  const minutesInHour = localMinutes - Math.floor(localMinutes / 60) * 60;
+  return epochMs - (minutesInHour % stepMinutes) * 60_000;
+}
+
+/**
  * The day number of the date of an instant in `timezone`. For the loops that compare many dates, a
  * day number is cheaper than `toPlainDateTime().date`.
  */

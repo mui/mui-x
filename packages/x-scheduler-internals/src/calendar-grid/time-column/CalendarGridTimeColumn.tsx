@@ -7,9 +7,14 @@ import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useDirection } from '@base-ui/react/direction-provider';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useAdapterContext } from '../../use-adapter-context';
-import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
-import { toEpochMs, toPlainDateTime } from '../../internals/utils/plain-date-utils/timeZone';
-import { snapToCreationPrecision, useEventCreation } from '../../internals/utils/useEventCreation';
+import { schedulerNowSelectors } from '../../scheduler-selectors';
+import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
+import {
+  floorToWallClockMinutes,
+  toEpochMs,
+  toPlainDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
+import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
@@ -52,7 +57,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const {
     getCursorPositionInElementMs,
-    getDateAtPointer,
+    getTimestampAtPointer,
     ref: dropTargetRef,
   } = useTimeDropTarget({
     start,
@@ -62,14 +67,15 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     addPropertiesToDroppedEvent,
   });
 
-  const eventCreationProps = useEventCreation(({ event, creationConfig }) => {
+  const eventCreationProps = useEventCreation(({ event, creationConfig, timezone }) => {
     const offsetMs = getCursorPositionInElementMs({
       input: { clientY: event.clientY },
       elementRef: dropTargetRef,
     });
-    const startTimestamp = snapToCreationPrecision(
+    const startTimestamp = floorToWallClockMinutes(
       adapter.getTime(start) + offsetMs,
-      schedulerOtherSelectors.displayTimezone(store.state),
+      EVENT_CREATION_PRECISION_MINUTE,
+      timezone,
     );
     return {
       surfaceType: 'time-grid' as const,
@@ -79,14 +85,13 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     };
   });
 
-  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig }) => {
+  const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig, timezone }) => {
     const startTimestamp = adapter.getTime(start);
     const endTimestamp = adapter.getTime(end);
-    const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
     const noon = toEpochMs(
-      toPlainDateTime(startTimestamp, displayTimezone).date,
+      toPlainDateTime(startTimestamp, timezone).date,
       12 * 60 * 60_000,
-      displayTimezone,
+      timezone,
     );
     // Keep the default creation anchor inside the visible window when the view limits its hour range.
     const anchor = noon < startTimestamp || noon >= endTimestamp ? startTimestamp : noon;
@@ -145,7 +150,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       dayEndMinute,
       hasFocus,
       getCursorPositionInElementMs,
-      getDateAtPointer,
+      getTimestampAtPointer,
     }),
     [
       start,
@@ -154,7 +159,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
       dayEndMinute,
       hasFocus,
       getCursorPositionInElementMs,
-      getDateAtPointer,
+      getTimestampAtPointer,
     ],
   );
 

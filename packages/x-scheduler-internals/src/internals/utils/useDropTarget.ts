@@ -10,6 +10,7 @@ import type {
   SchedulerEventUpdatedProperties,
   TemporalSupportedObject,
   SchedulerResourceId,
+  TemporalTimezone,
 } from '../../models';
 import type {
   EventDropData,
@@ -122,6 +123,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           getDataFromInside,
           getDataFromOutside,
           input: location.current.input,
+          timezone: schedulerOtherSelectors.displayTimezone(store.state),
         });
         if (newPlaceholder) {
           store.setOccurrencePlaceholder(newPlaceholder);
@@ -133,6 +135,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           getDataFromInside,
           getDataFromOutside,
           input: location.current.input,
+          timezone: schedulerOtherSelectors.displayTimezone(store.state),
         });
 
         const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
@@ -217,6 +220,10 @@ export namespace useDropTarget {
     input: { clientX: number; clientY: number };
     getDataFromInside: GetDataFromInside;
     getDataFromOutside: GetDataFromOutside;
+    /**
+     * The display timezone, in which the dates of the drop are read.
+     */
+    timezone: TemporalTimezone;
   }) => SchedulerOccurrencePlaceholder | undefined;
 }
 

@@ -19,7 +19,7 @@ import type {
  * Pointer-based resize for calendar events. Unlike {@link useEventResizeHandler} (native
  * drag-and-drop, needs a long-press on touch), this responds to a plain touch + drag.
  *
- * Surface-agnostic: geometry comes from `getDateAtPointer` and surface semantics from
+ * Surface-agnostic: geometry comes from `getTimestampAtPointer` and surface semantics from
  * `surfaceType`/`getResizeSession`, so one hook drives any surface.
  */
 export function useEventPointerResizeHandler(parameters: useEventPointerResizeHandler.Parameters) {
@@ -28,7 +28,7 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
     side,
     enabled,
     surfaceType,
-    getDateAtPointer,
+    getTimestampAtPointer,
     getResizeSession,
     addPropertiesToResizedEvent,
     precisionMinute = EVENT_DRAG_PRECISION_MINUTE,
@@ -71,8 +71,11 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
       }
       event.preventDefault();
 
-      const cursorDate = getDateAtPointer({ clientX: event.clientX, clientY: event.clientY });
-      if (!cursorDate) {
+      const cursorTimestamp = getTimestampAtPointer({
+        clientX: event.clientX,
+        clientY: event.clientY,
+      });
+      if (cursorTimestamp === null) {
         return;
       }
 
@@ -80,7 +83,7 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
         side,
         start: session.start,
         end: session.end,
-        cursorDate,
+        cursorTimestamp,
         precisionMinute,
       });
 
@@ -190,7 +193,7 @@ export function useEventPointerResizeHandler(parameters: useEventPointerResizeHa
     surfaceType,
     precisionMinute,
     store,
-    getDateAtPointer,
+    getTimestampAtPointer,
     getResizeSession,
     addPropertiesToResizedEvent,
   ]);
@@ -249,7 +252,7 @@ export namespace useEventPointerResizeHandler {
     /**
      * Maps a pointer position to a precision-rounded timestamp on the surface. Should be stable.
      */
-    getDateAtPointer: (input: { clientX: number; clientY: number }) => number | null;
+    getTimestampAtPointer: (input: { clientX: number; clientY: number }) => number | null;
     /**
      * Resolves the session to start on pointer-down, or `null` to ignore the gesture. Should be stable.
      */

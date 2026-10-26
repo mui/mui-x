@@ -5,6 +5,7 @@ import {
 } from '@mui/x-internals/disposable';
 import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -56,7 +57,6 @@ import {
   createEventModel,
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
-  shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString, getOccurrenceEnd } from '../date-utils';
 import {
@@ -1402,8 +1402,7 @@ export class SchedulerStore<
     newPlaceholder: SchedulerOccurrencePlaceholder | null,
     event?: Event,
   ) => {
-    const { occurrencePlaceholder: previous } = this.state;
-    if (shouldUpdateOccurrencePlaceholder(previous, newPlaceholder)) {
+    if (!fastObjectShallowCompare(this.state.occurrencePlaceholder, newPlaceholder)) {
       this.occurrencePlaceholderEvent = newPlaceholder == null ? undefined : event;
       this.set('occurrencePlaceholder', newPlaceholder);
     }

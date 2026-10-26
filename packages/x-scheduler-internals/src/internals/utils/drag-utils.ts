@@ -1,13 +1,8 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type {
   SchedulerOccurrencePlaceholder,
   SchedulerOccurrencePlaceholderInternalDragOrResize,
-  TemporalSupportedObject,
 } from '../../models';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
-import type { PlainDate } from './base-temporal/PlainDate';
-import { createAdapterDate } from './plain-date-utils/adapter';
-import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
+import { EVENT_DRAG_PRECISION_MS } from '../../constants';
 
 const INTERNAL_DRAG_OR_RESIZE_PLACEHOLDER_TYPES = new Set(['internal-drag', 'internal-resize']);
 
@@ -18,45 +13,8 @@ export function isInternalDragOrResizePlaceholder(
 }
 
 /**
- * Moves a timestamp to `plainDate`, keeping its time of day on the wall clock of `timezone`. The
- * times a DST transition skips or repeats resolve like `toEpochMs()`.
+ * Rounds an offset in milliseconds to the precision of the drag and drop.
  */
-export function moveTimestampToPlainDate(
-  timestamp: number,
-  plainDate: PlainDate,
-  timezone: TemporalTimezone,
-): number {
-  return toEpochMs(plainDate, toPlainDateTime(timestamp, timezone).msInDay, timezone);
-}
-
-/**
- * Moves a date to `plainDate` like `moveTimestampToPlainDate()`, in the timezone of the date.
- */
-export function moveToPlainDate(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  plainDate: PlainDate,
-): TemporalSupportedObject {
-  const timezone = adapter.getTimezone(date);
-  return createAdapterDate(
-    adapter,
-    moveTimestampToPlainDate(adapter.getTime(date), plainDate, timezone),
-    timezone,
-  );
-}
-
-/**
- * Moves a timestamp by whole days, keeping its time of day on the wall clock of `timezone`.
- * Returns it unchanged for 0 days.
- */
-export function addDaysOnWallClock(
-  timestamp: number,
-  dayCount: number,
-  timezone: TemporalTimezone,
-): number {
-  if (dayCount === 0) {
-    return timestamp;
-  }
-  const plainDateTime = toPlainDateTime(timestamp, timezone);
-  return toEpochMs(plainDateTime.date.add({ days: dayCount }), plainDateTime.msInDay, timezone);
+export function roundToDragPrecision(offsetMs: number): number {
+  return Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 }

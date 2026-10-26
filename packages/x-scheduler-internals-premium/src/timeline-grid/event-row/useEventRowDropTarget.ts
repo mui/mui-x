@@ -8,12 +8,12 @@ import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-inter
 import {
   useDropTarget,
   clampResizedEventEdge,
+  roundToDragPrecision,
   isStartMinuteOutsideAxisWindow,
   timelineAxisOffsetToTimestamp,
   timestampToTimelineAxisOffsetMs,
   toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
@@ -70,20 +70,15 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input }) => {
+    ({ data, getDataFromInside, getDataFromOutside, input, timezone }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
-      const timezone = schedulerOtherSelectors.displayTimezone(store.state);
 
-      const axisOffsetToTimestamp = (offsetMs: number) => {
-        const roundedOffset =
-          Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-
-        return timelineAxisOffsetToTimestamp(adapter, config, roundedOffset);
-      };
+      const axisOffsetToTimestamp = (offsetMs: number) =>
+        timelineAxisOffsetToTimestamp(adapter, config, roundToDragPrecision(offsetMs));
 
       // Move a Timeline Event within the Timeline
       if (data.source === 'TimelineGridEvent') {
@@ -97,16 +92,16 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // A visible start has no remainder, even in the second occurrence of an hour repeated by a
         // fall-back transition, which the axis reads as the first one.
         const startMsInDay = toPlainDateTime(data.start, timezone).msInDay;
-        const startAnchor = timelineAxisOffsetToTimestamp(
-          adapter,
-          config,
-          timestampToTimelineAxisOffsetMs(adapter, config, data.start, timezone, startMsInDay),
-        );
         const hiddenRemainderMs = isStartMinuteOutsideAxisWindow(
           config,
           Math.floor(startMsInDay / 60_000),
         )
-          ? data.start - startAnchor
+          ? data.start -
+            timelineAxisOffsetToTimestamp(
+              adapter,
+              config,
+              timestampToTimelineAxisOffsetMs(adapter, config, data.start, timezone, startMsInDay),
+            )
           : 0;
 
         const newStart =
@@ -126,7 +121,9 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
             side: 'start',
             start: data.start,
             end: data.end,
-            cursorDate: axisOffsetToTimestamp(cursorOffsetMs - data.initialCursorPositionInEventMs),
+            cursorTimestamp: axisOffsetToTimestamp(
+              cursorOffsetMs - data.initialCursorPositionInEventMs,
+            ),
             precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
           });
 
@@ -145,7 +142,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
             side: 'end',
             start: data.start,
             end: data.end,
-            cursorDate: axisOffsetToTimestamp(
+            cursorTimestamp: axisOffsetToTimestamp(
               cursorOffsetMs - data.initialCursorPositionInEventMs + eventAxisDurationMs,
             ),
             precisionMinute: EVENT_DRAG_PRECISION_MINUTE,

@@ -5,8 +5,7 @@ import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useDirection } from '@base-ui/react/direction-provider';
 import { useAdapterContext } from '../../use-adapter-context';
-import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
-import { schedulerOtherSelectors } from '../../scheduler-selectors';
+import type { TemporalTimezone } from '../../models';
 import { getEndOfDayMs, getStartOfDayMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
@@ -36,7 +35,6 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   } = componentProps;
 
   const adapter = useAdapterContext();
-  const store = useSchedulerStoreContext();
   const {
     id: rootId,
     focusedCell,
@@ -57,13 +55,12 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     focusedCell?.rowIndex === rowIndex &&
     focusedCell?.columnIndex === index;
 
-  const getPlaceholderFields = () => {
+  const getPlaceholderFields = ({ timezone }: { timezone: TemporalTimezone }) => {
     const timestamp = adapter.getTime(value);
-    const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
     return {
       surfaceType: 'day-grid' as const,
-      start: getStartOfDayMs(timestamp, displayTimezone),
-      end: getEndOfDayMs(timestamp, displayTimezone),
+      start: getStartOfDayMs(timestamp, timezone),
+      end: getEndOfDayMs(timestamp, timezone),
       lockSurfaceType,
       resourceId: null,
     };

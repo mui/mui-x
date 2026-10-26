@@ -46,26 +46,26 @@ describe('clampResizedEventEdge', () => {
 
   describe('side: start', () => {
     it('should move the start to the cursor when it keeps the minimum duration', () => {
-      const cursorDate = toTimestamp('2024-01-15T10:30:00');
+      const cursorTimestamp = toTimestamp('2024-01-15T10:30:00');
       const result = clampResizedEventEdge({
         side: 'start',
         start,
         end,
-        cursorDate,
+        cursorTimestamp,
         precisionMinute,
       });
-      expect(result.start).to.equal(cursorDate);
+      expect(result.start).to.equal(cursorTimestamp);
       expect(result.end).to.equal(end);
     });
 
     it('should clamp the start so the event keeps at least one precision step', () => {
       // Stop one precision step before `end` so the event can't invert.
-      const cursorDate = toTimestamp('2024-01-15T11:30:00');
+      const cursorTimestamp = toTimestamp('2024-01-15T11:30:00');
       const result = clampResizedEventEdge({
         side: 'start',
         start,
         end,
-        cursorDate,
+        cursorTimestamp,
         precisionMinute,
       });
       expect(result.start).to.equal(toTimestamp('2024-01-15T10:45:00'));
@@ -75,26 +75,26 @@ describe('clampResizedEventEdge', () => {
 
   describe('side: end', () => {
     it('should move the end to the cursor when it keeps the minimum duration', () => {
-      const cursorDate = toTimestamp('2024-01-15T10:45:00');
+      const cursorTimestamp = toTimestamp('2024-01-15T10:45:00');
       const result = clampResizedEventEdge({
         side: 'end',
         start,
         end,
-        cursorDate,
+        cursorTimestamp,
         precisionMinute,
       });
       expect(result.start).to.equal(start);
-      expect(result.end).to.equal(cursorDate);
+      expect(result.end).to.equal(cursorTimestamp);
     });
 
     it('should clamp the end so the event keeps at least one precision step', () => {
       // Stop one precision step after `start` so the event can't invert.
-      const cursorDate = toTimestamp('2024-01-15T09:30:00');
+      const cursorTimestamp = toTimestamp('2024-01-15T09:30:00');
       const result = clampResizedEventEdge({
         side: 'end',
         start,
         end,
-        cursorDate,
+        cursorTimestamp,
         precisionMinute,
       });
       expect(result.start).to.equal(start);

@@ -34,20 +34,20 @@ export function clampResizedEventEdge(parameters: {
   /**
    * The candidate timestamp under the pointer for the moving edge.
    */
-  cursorDate: number;
+  cursorTimestamp: number;
   /**
    * The minimum duration, in minutes, the event must keep.
    */
   precisionMinute: number;
 }): { start: number; end: number } {
-  const { side, start, end, cursorDate, precisionMinute } = parameters;
+  const { side, start, end, cursorTimestamp, precisionMinute } = parameters;
   const precisionMs = precisionMinute * 60_000;
 
   if (side === 'start') {
     // Keep one precision step between the new start and the fixed end.
-    return { start: Math.min(cursorDate, end - precisionMs), end };
+    return { start: Math.min(cursorTimestamp, end - precisionMs), end };
   }
 
   // Keep one precision step between the fixed start and the new end.
-  return { start, end: Math.max(cursorDate, start + precisionMs) };
+  return { start, end: Math.max(cursorTimestamp, start + precisionMs) };
 }

@@ -49,7 +49,7 @@ export interface CalendarGridTimeColumnContext {
    * @param {{ clientX: number, clientY: number }} input The pointer coordinates.
    * @returns {number | null} The timestamp under the pointer, or `null` when the column isn't measurable yet.
    */
-  getDateAtPointer: (input: { clientX: number; clientY: number }) => number | null;
+  getTimestampAtPointer: (input: { clientX: number; clientY: number }) => number | null;
 }
 
 export const CalendarGridTimeColumnContext = React.createContext<

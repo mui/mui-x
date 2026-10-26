@@ -3,7 +3,7 @@ import type {
   TemporalSupportedObject,
   TemporalTimezone,
 } from '@base-ui/react/internals/temporal';
-import { buildTemporalPlainDate, createAdapterDate } from './plain-date-utils/adapter';
+import { buildTemporalPlainDate } from './plain-date-utils/adapter';
 import {
   toEpochMs,
   toLocalDayNumber,
@@ -69,14 +69,6 @@ export function getTimelineAxisDayMs(
   return Math.max(1, axis.dayEndMinute - axis.dayStartMinute) * MINUTE_MS;
 }
 
-/**
- * Wall-clock time of day in milliseconds. Read on the wall clock of the timezone of the date
- * rather than from timestamp differences so DST transitions earlier in the day cannot shift it.
- */
-export function getWallClockMsInDay(adapter: TemporalAdapter, date: TemporalSupportedObject) {
-  return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).msInDay;
-}
-
 function getTotalDays(adapter: TemporalAdapter, axis: TimelineAxis) {
   return (
     buildTemporalPlainDate(adapter, axis.end).dayNumber -
@@ -94,38 +86,22 @@ export function getTimelineAxisDurationMs(adapter: TemporalAdapter, axis: Timeli
 }
 
 /**
- * Maps an axis offset (in axis milliseconds from the collection start) to a date.
+ * Maps an axis offset (in axis milliseconds from the collection start) to a timestamp.
  * Offsets are not clamped: values outside the axis extend it day by day, following the
  * same piecewise scale.
- * The date is built from its wall-clock time so it round-trips with
- * `dateToTimelineAxisOffsetMs` for every wall-clock time that exists on that day.
+ * The timestamp is built from its wall-clock time so it round-trips with
+ * `dateToTimelineAxisOffsetMs()` for every wall-clock time that exists on that day.
  * The axis keeps a slot for the hour skipped by a spring-forward transition, so offsets
  * landing in it move forward by the length of the gap and do not round-trip. An offset
  * landing in the hour repeated by a fall-back transition resolves to its first instant,
  * whatever the timezone of the system (RFC 5545).
- */
-export function timelineAxisOffsetToDate(
-  adapter: TemporalAdapter,
-  axis: TimelineAxis,
-  offsetMs: number,
-): TemporalSupportedObject {
-  return createAdapterDate(
-    adapter,
-    timelineAxisOffsetToTimestamp(adapter, axis, offsetMs),
-    adapter.getTimezone(axis.start),
-  );
-}
-
-/**
- * Maps an axis offset to a timestamp, like `timelineAxisOffsetToDate()`.
  */
 export function timelineAxisOffsetToTimestamp(
   adapter: TemporalAdapter,
   axis: TimelineAxis,
   offsetMs: number,
 ): number {
-  // A column without a size gives a non-finite offset, which maps to an invalid date, like the
-  // adapter's methods.
+  // A column without a size gives a non-finite offset, which maps to `NaN`.
   if (!Number.isFinite(offsetMs)) {
     return NaN;
   }

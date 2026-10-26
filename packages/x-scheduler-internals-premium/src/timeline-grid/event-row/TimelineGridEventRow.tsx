@@ -6,12 +6,11 @@ import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
-  snapToCreationPrecision,
+  floorToWallClockMinutes,
   useEventCreation,
   useKeyboardEventCreation,
   timelineAxisOffsetToTimestamp,
 } from '@mui/x-scheduler-internals/internals';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-internals/constants';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { TimelineGridEventRowContext } from './TimelineGridEventRowContext';
@@ -97,7 +96,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     addPropertiesToDroppedEvent,
   });
 
-  const eventCreationProps = useEventCreation(({ event, creationConfig }) => {
+  const eventCreationProps = useEventCreation(({ event, creationConfig, timezone }) => {
     const offsetMs = getCursorPositionInElementMs({
       input: { clientX: event.clientX },
       elementRef: dropTargetRef,
@@ -106,9 +105,10 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // so a click on the exact end edge does not create the event on the day after
     // the collection, where it would not be rendered at all.
     const lastStartOffsetMs = config.durationMs - EVENT_CREATION_PRECISION_MINUTE * 60_000;
-    const startTimestamp = snapToCreationPrecision(
+    const startTimestamp = floorToWallClockMinutes(
       timelineAxisOffsetToTimestamp(adapter, config, Math.min(offsetMs, lastStartOffsetMs)),
-      schedulerOtherSelectors.displayTimezone(store.state),
+      EVENT_CREATION_PRECISION_MINUTE,
+      timezone,
     );
     return {
       surfaceType: 'timeline' as const,

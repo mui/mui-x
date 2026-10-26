@@ -1,68 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import type {
-  SchedulerEvent,
-  SchedulerEventUpdatedProperties,
-  SchedulerOccurrencePlaceholder,
-  SchedulerOccurrencePlaceholderCreation,
-} from '../../../models';
-import {
-  getCustomEventProperties,
-  getUpdatedEventModelFromChanges,
-  shouldUpdateOccurrencePlaceholder,
-} from './SchedulerStore.utils';
-
-describe('shouldUpdateOccurrencePlaceholder', () => {
-  const createPlaceholder = (
-    overrides: Partial<Omit<SchedulerOccurrencePlaceholderCreation, 'type'>> = {},
-  ): SchedulerOccurrencePlaceholder => ({
-    type: 'creation',
-    surfaceType: 'time-grid',
-    start: Date.UTC(2025, 6, 3, 9),
-    end: Date.UTC(2025, 6, 3, 10),
-    resourceId: null,
-    ...overrides,
-  });
-
-  it('should return false when both placeholders are null', () => {
-    expect(shouldUpdateOccurrencePlaceholder(null, null)).to.equal(false);
-  });
-
-  it('should return true when switching between null and a placeholder', () => {
-    expect(shouldUpdateOccurrencePlaceholder(null, createPlaceholder())).to.equal(true);
-    expect(shouldUpdateOccurrencePlaceholder(createPlaceholder(), null)).to.equal(true);
-  });
-
-  it('should return false for two distinct placeholders with the same fields', () => {
-    expect(shouldUpdateOccurrencePlaceholder(createPlaceholder(), createPlaceholder())).to.equal(
-      false,
-    );
-  });
-
-  it('should return true when the start changes', () => {
-    const previous = createPlaceholder();
-    const next = createPlaceholder({ start: Date.UTC(2025, 6, 3, 11) });
-    expect(shouldUpdateOccurrencePlaceholder(previous, next)).to.equal(true);
-  });
-
-  it('should return true when a non-date field changes', () => {
-    const previous = createPlaceholder();
-    const next = createPlaceholder({ resourceId: 'resource-1' });
-    expect(shouldUpdateOccurrencePlaceholder(previous, next)).to.equal(true);
-  });
-
-  it('should return true when isHidden is removed in next (drag re-enters the surface)', () => {
-    const previous = createPlaceholder({ isHidden: true });
-    const next = createPlaceholder();
-    expect(shouldUpdateOccurrencePlaceholder(previous, next)).to.equal(true);
-  });
-
-  it('should return true when isHidden is added in next (drag leaves the surface)', () => {
-    const previous = createPlaceholder();
-    const next = createPlaceholder({ isHidden: true });
-    expect(shouldUpdateOccurrencePlaceholder(previous, next)).to.equal(true);
-  });
-});
+import type { SchedulerEvent, SchedulerEventUpdatedProperties } from '../../../models';
+import { getCustomEventProperties, getUpdatedEventModelFromChanges } from './SchedulerStore.utils';
 
 describe('getCustomEventProperties', () => {
   it('should return only the properties that are not part of the built-in event shape', () => {

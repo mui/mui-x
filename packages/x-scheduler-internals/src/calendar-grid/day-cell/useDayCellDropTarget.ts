@@ -4,16 +4,15 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { addDaysOnWallClock, moveTimestampToPlainDate } from '../../internals/utils/drag-utils';
 import { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import {
+  addDaysOnWallClock,
   getEndOfDayMs,
   getStartOfDayMs,
+  moveTimestampToPlainDate,
   toPlainDateTime,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
-import { schedulerOtherSelectors } from '../../scheduler-selectors';
-import { useSchedulerStoreContext } from '../../use-scheduler-store-context';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
@@ -27,14 +26,13 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
   // Context hooks
   const adapter = useAdapterContext();
-  const store = useSchedulerStoreContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside }) => {
+    ({ data, getDataFromInside, getDataFromOutside, timezone }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
@@ -48,7 +46,6 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Days are compared as plain dates, and each date moves on the wall clock of the display
       // timezone.
-      const timezone = schedulerOtherSelectors.displayTimezone(store.state);
       const valuePlainDate = toPlainDateTime(valueTimestamp, timezone).date;
 
       // Move a Day Grid Event within the Day Grid, or a Time Grid Event into it
