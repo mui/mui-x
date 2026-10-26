@@ -2599,6 +2599,37 @@ describe('<DataGridPremium /> - Computed columns', () => {
             'operator bug: too big',
           );
         });
+
+        it('should throw the error of the tree creation to the caller of a rows update', async () => {
+          await render(
+            <Test
+              rows={[
+                { id: 0, item: 'Apple', base: 2, price: '=base' },
+                { id: 1, item: 'Banana', base: 4, price: '=base' },
+              ]}
+              columns={[
+                { field: 'item' },
+                { field: 'base', type: 'number' },
+                {
+                  field: 'price',
+                  type: 'number',
+                  allowFormulas: true,
+                  groupingValueGetter: (value: number) => {
+                    if (value > 100) {
+                      throw new Error('getter bug: too big');
+                    }
+                    return value;
+                  },
+                },
+              ]}
+              initialState={{ rowGrouping: { model: ['price'] } }}
+            />,
+          );
+          // The core doesn't create the tree again after the regroup of the formula cells.
+          expect(() => act(() => apiRef.current!.updateRows([{ id: 0, base: 500 }]))).to.throw(
+            'getter bug: too big',
+          );
+        });
       });
     });
 

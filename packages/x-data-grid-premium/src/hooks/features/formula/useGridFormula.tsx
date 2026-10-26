@@ -216,17 +216,15 @@ function warnViewNotApplied(step: ViewStep, error: unknown) {
  * column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef` comparator
  * or operator written for one type. The core throws before it sets the state, so nothing changes:
  * the view keeps its rows and order, and the error comes at the next filtering or sorting, like
- * after the type change of a regular column. A step that fails logs a warning in development
- * (`warn`), except in the `rowsSet` cascade, where the core filters and sorts again right after
- * and throws to the caller.
+ * after the type change of a regular column. A step that fails logs a warning in development.
  * A regroup (`catchViewFailure`) fails when the filtering or the sorting of the rebuilt tree does,
  * or the tree creation, or another listener of its `rowsSet`: both are then applied again. Until
  * the next filtering that succeeds, the group rows can show stale or missing counts, and until the
  * next sorting that succeeds, they keep the previous order (new group rows missing or misplaced).
  */
-function tryToApplyView(step: ViewStep, apply: () => void, warn: boolean) {
+function tryToApplyView(step: ViewStep, apply: () => void) {
   const failure = catchViewFailure(apply);
-  if (failure && warn) {
+  if (failure) {
     warnViewNotApplied(step, failure.error);
   }
   return failure === null;
@@ -408,7 +406,8 @@ export const useGridFormula = (
    * their model reads a changed value. Once: the events they publish refresh
    * the position-dependent formulas without reporting a computed change. A
    * filtering or a sorting the core can't apply leaves the view as it was,
-   * and a failed regroup is finished with both (`tryToApplyView`).
+   * and a failed regroup is finished with both (`tryToApplyView`), except the
+   * regroup of the `rowsSet` pass, which throws to the caller of the rows update.
    */
   const triggerDependentFeatures = React.useCallback(
     (
@@ -447,6 +446,12 @@ export const useGridFormula = (
         if (!regroupFailure) {
           return;
         }
+        if (options.insideRowsSet) {
+          // The core filters, sorts and runs the other `rowsSet` listeners again after this
+          // handler, but doesn't create the tree again: the caller of the rows update gets the
+          // error, as for a regular column.
+          throw regroupFailure.error;
+        }
       }
       const regroupFailed = regroupFailure !== null;
       let viewRefresh = NO_VIEW_REFRESH;
@@ -459,16 +464,12 @@ export const useGridFormula = (
       }
       const { refilter, resort } = viewRefresh;
       // `filteredRowsSet` applies the aggregation, and both events reset the row spanning.
-      // In the `rowsSet` cascade, the core filters and sorts again after this handler: their
-      // failure throws to the caller of the rows update.
-      const warn = options.insideRowsSet !== true;
       const refiltered =
-        refilter && tryToApplyView('filtering', () => apiRef.current.unstable_applyFilters(), warn);
+        refilter && tryToApplyView('filtering', () => apiRef.current.unstable_applyFilters());
       if ((options.aggregation || regroupFailed) && !refiltered) {
         apiRef.current.applyAggregation();
       }
-      const resorted =
-        resort && tryToApplyView('sorting', () => apiRef.current.applySorting(), warn);
+      const resorted = resort && tryToApplyView('sorting', () => apiRef.current.applySorting());
       // A failed step above reports the error of the regroup too. When both apply, the regroup
       // failed elsewhere: in the tree creation, or in another listener of its `rowsSet`.
       if (regroupFailure && refiltered && resorted) {
