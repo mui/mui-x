@@ -18,12 +18,13 @@ import {
   dateToEventString,
   getDateKey,
   getOccurrenceEnd,
+  moveToPlainDate,
   toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import {
   getPlainDateWeekDayCode,
   getWeekDayCode,
-  moveToPlainDate,
+  moveEndToPlainDate,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
@@ -180,25 +181,20 @@ export function applyRecurringUpdateAll(
 
   // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
   // can move DTSTART to another date. Otherwise, the series keeps its dates and takes the times of
-  // the edited occurrence, where a time a DST transition repeats resolves to its first instant.
-  // Only the bounds that move are written, so that a resize stays a resize.
-  if (!editedIsDtstart && (changes.start != null || changes.end != null)) {
-    const seriesEnd = originalEvent.dataTimezone.end;
-    const newStart = moveToPlainDate(
-      adapter,
-      changes.start ?? seriesStart.value,
-      seriesStartPlainDate,
-    );
-    const newEnd = moveToPlainDate(
-      adapter,
-      changes.end ?? seriesEnd.value,
-      toPlainDateTime(seriesEnd.timestamp, dataTimezone).date,
-    );
-    if (changes.start != null || adapter.getTime(newStart) !== seriesStart.timestamp) {
-      eventUpdatedProperties.start = newStart;
+  // the edited occurrence, where a time a DST transition repeats resolves to its first instant, or
+  // for the end, to its first instant at or after the start. Only the bounds in `changes` are
+  // written, so that the other one keeps its instant.
+  if (!editedIsDtstart) {
+    if (changes.start != null) {
+      eventUpdatedProperties.start = moveToPlainDate(adapter, changes.start, seriesStartPlainDate);
     }
-    if (changes.end != null || adapter.getTime(newEnd) !== seriesEnd.timestamp) {
-      eventUpdatedProperties.end = newEnd;
+    if (changes.end != null) {
+      eventUpdatedProperties.end = moveEndToPlainDate(
+        adapter,
+        changes.end,
+        toPlainDateTime(originalEvent.dataTimezone.end.timestamp, dataTimezone).date,
+        adapter.getTime(eventUpdatedProperties.start ?? seriesStart.value),
+      );
     }
   }
 
