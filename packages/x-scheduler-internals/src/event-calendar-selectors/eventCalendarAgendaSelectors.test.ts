@@ -216,6 +216,23 @@ describe('eventCalendarEventSelectors', () => {
       ]);
     });
 
+    it('should not list a day twice when a scanned chunk ends on a skipped day', () => {
+      // Pacific/Apia skipped December 30th, 2011, the last day of the second chunk.
+      const state = getEventCalendarStateFromParameters({
+        events: [EventBuilder.new().singleDay('2011-12-31T00:00:00Z').build()],
+        visibleDate: adapter.date('2011-12-07T12:00:00', 'Pacific/Apia'),
+        displayTimezone: 'Pacific/Apia',
+        defaultPreferences: {
+          showWeekends: true,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      expect(visibleDays.map((day) => day.key)).to.deep.equal(['12/31/2011']);
+    });
+
     it('should not find an event past the horizon when showEmptyDaysInAgenda=false', () => {
       const state = getEventCalendarStateFromParameters({
         events: [EventBuilder.new().fullDay('2024-06-29Z').build()], // 2024-01-01 + 180 days
