@@ -3,7 +3,7 @@ import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
 import { getDayList } from '../get-day-list';
 import { isWeekend } from '../use-adapter';
-import { getEndOfWeek, getStartOfWeek } from '../internals/utils/date-utils';
+import { getStartOfWeek } from '../internals/utils/date-utils';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 import { eventCalendarAgendaSelectors } from '../event-calendar-selectors';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
@@ -38,7 +38,7 @@ function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   const days = getDayList({
     adapter,
     start: getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), 1),
-    end: getEndOfWeek(adapter, adapter.endOfMonth(visibleDate), 1),
+    end: adapter.addDays(getStartOfWeek(adapter, adapter.endOfMonth(visibleDate), 1), 6),
   });
   let weekendCount = 0;
   for (const day of days) {

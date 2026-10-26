@@ -4,7 +4,7 @@ import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
 import {
   buildTemporalPlainDate,
-  createEndOfPlainDate,
+  createAdapterDate,
   createStartOfPlainDate,
 } from './plain-date-utils/adapter';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
@@ -73,20 +73,6 @@ export function dateToEventString(
   return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
 }
 
-export function mergeDateAndTime(
-  adapter: Adapter,
-  dateParam: TemporalSupportedObject,
-  timeParam: TemporalSupportedObject,
-): TemporalSupportedObject {
-  let mergedDate = dateParam;
-  mergedDate = adapter.setHours(mergedDate, adapter.getHours(timeParam));
-  mergedDate = adapter.setMinutes(mergedDate, adapter.getMinutes(timeParam));
-  mergedDate = adapter.setSeconds(mergedDate, adapter.getSeconds(timeParam));
-  mergedDate = adapter.setMilliseconds(mergedDate, adapter.getMilliseconds(timeParam));
-
-  return mergedDate;
-}
-
 /**
  * Gets the end date of an event occurrence based on its start date.
  * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
@@ -136,14 +122,42 @@ export function getWeekStartPlainDate(
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,
 ): PlainDate {
-  const plainDate = buildTemporalPlainDate(adapter, date);
-  if (weekStartsOn === undefined) {
+  return getPlainDateWeekStart(adapter, buildTemporalPlainDate(adapter, date), weekStartsOn);
+}
+
+const localeFirstDaysOfWeek = new WeakMap<Adapter, number>();
+
+/**
+ * The ISO weekday (1 = Monday … 7 = Sunday) the weeks of the locale of the adapter start on.
+ */
+function getLocaleFirstDayOfWeek(adapter: Adapter): number {
+  let firstDayOfWeek = localeFirstDaysOfWeek.get(adapter);
+  if (firstDayOfWeek === undefined) {
     // The adapter numbers the days of the week from 1, starting on the first day of the locale.
-    return plainDate.add({ days: 1 - adapter.getDayOfWeek(date) });
+    // January 1st, 2024 is a Monday.
+    const monday = createAdapterDate(adapter, Date.UTC(2024, 0, 1, 12), 'UTC');
+    firstDayOfWeek = ((8 - adapter.getDayOfWeek(monday)) % 7) + 1;
+    localeFirstDaysOfWeek.set(adapter, firstDayOfWeek);
   }
-  checkWeekStartsOn(weekStartsOn);
+  return firstDayOfWeek;
+}
+
+/**
+ * The first day of the week of `plainDate`. Without `weekStartsOn`, the week starts on the first
+ * day of the locale of the adapter.
+ */
+export function getPlainDateWeekStart(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  weekStartsOn: WeekStartsOn | undefined,
+): PlainDate {
+  if (weekStartsOn !== undefined) {
+    checkWeekStartsOn(weekStartsOn);
+  }
   // `weekStartsOn` and ISO weekdays agree, except for Sunday (0 and 7), which both accept.
-  return plainDateFromDayNumber(getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn));
+  return plainDateFromDayNumber(
+    getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn ?? getLocaleFirstDayOfWeek(adapter)),
+  );
 }
 
 /**
@@ -159,21 +173,6 @@ export function getStartOfWeek(
 ): TemporalSupportedObject {
   const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
   return createStartOfPlainDate(adapter, weekStartPlainDate, adapter.getTimezone(date));
-}
-
-/**
- * Returns the end of the week for `date` (inclusive last moment of the 7th day),
- * using `weekStartsOn` as the first day of the week.
- *
- * When `weekStartsOn` is `undefined` the first day of the week of the locale is used.
- */
-export function getEndOfWeek(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): TemporalSupportedObject {
-  const weekEndPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn).add({ days: 6 });
-  return createEndOfPlainDate(adapter, weekEndPlainDate, adapter.getTimezone(date));
 }
 
 /**
