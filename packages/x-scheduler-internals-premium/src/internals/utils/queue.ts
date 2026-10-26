@@ -1,6 +1,4 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { TimeoutManager } from '@mui/x-scheduler-internals/internals';
 
 const MAX_CONCURRENT_REQUESTS = 3;
@@ -14,19 +12,20 @@ export enum RequestStatus {
   UNKNOWN,
 }
 
+/**
+ * A range of dates to fetch, as timestamps in milliseconds.
+ */
 export interface DateRange {
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
+  start: number;
+  end: number;
 }
 
 /**
- * Generates a unique key for a date range using timestamps.
+ * Generates a unique key for a date range.
  * Format: "startTimestamp:endTimestamp"
  */
-function getDateRangeKey(adapter: Adapter, range: DateRange): string {
-  const startTimestamp = adapter.getTime(range.start);
-  const endTimestamp = adapter.getTime(range.end);
-  return `${startTimestamp}:${endTimestamp}`;
+function getDateRangeKey(range: DateRange): string {
+  return `${range.start}:${range.end}`;
 }
 
 /**
@@ -47,8 +46,6 @@ export class SchedulerDataManager {
 
   private settledRequests: Set<string> = new Set();
 
-  declare private adapter: Adapter;
-
   declare private maxConcurrentRequests: number;
 
   declare private maxQueuedRequests: number;
@@ -66,22 +63,20 @@ export class SchedulerDataManager {
 
   private pendingDebounceResolve: (() => void) | null = null;
 
-  declare private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
+  declare private fetchFunction: (range: DateRange) => Promise<void>;
 
   public get disposed(): boolean {
     return this.disposables.disposed;
   }
 
   constructor(
-    adapter: Adapter,
-    fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>,
+    fetchFunction: (range: DateRange) => Promise<void>,
     options: {
       maxConcurrentRequests?: number;
       maxQueuedRequests?: number;
       debounceMs?: number;
     } = {},
   ) {
-    this.adapter = adapter;
     this.fetchFunction = fetchFunction;
     this.maxConcurrentRequests = options.maxConcurrentRequests ?? MAX_CONCURRENT_REQUESTS;
     this.maxQueuedRequests = options.maxQueuedRequests ?? MAX_QUEUED_REQUESTS;
@@ -99,7 +94,7 @@ export class SchedulerDataManager {
    */
   private commitRangesToQueue = (ranges: DateRange[]) => {
     ranges.forEach((range) => {
-      const key = getDateRangeKey(this.adapter, range);
+      const key = getDateRangeKey(range);
 
       // Skip if already settled, currently fetching, or already in queue
       if (this.pendingRequests.has(key) || this.queuedRequests.has(key)) {
@@ -141,7 +136,7 @@ export class SchedulerDataManager {
       this.queuedRequests.delete(rangeKey);
       this.pendingRequests.set(rangeKey, range);
 
-      fetchPromises.push(this.fetchFunction(range, this.adapter));
+      fetchPromises.push(this.fetchFunction(range));
     }
 
     await Promise.all(fetchPromises);
@@ -222,7 +217,7 @@ export class SchedulerDataManager {
     if (this.disposed) {
       return;
     }
-    const key = getDateRangeKey(this.adapter, range);
+    const key = getDateRangeKey(range);
     this.pendingRequests.delete(key);
     this.settledRequests.add(key);
     await this.processQueue();
@@ -233,13 +228,13 @@ export class SchedulerDataManager {
   }
 
   public clearPendingRequest = async (range: DateRange) => {
-    const key = getDateRangeKey(this.adapter, range);
+    const key = getDateRangeKey(range);
     this.pendingRequests.delete(key);
     await this.processQueue();
   };
 
   public getRequestStatus = (range: DateRange) => {
-    const key = getDateRangeKey(this.adapter, range);
+    const key = getDateRangeKey(range);
 
     if (this.pendingRequests.has(key)) {
       return RequestStatus.PENDING;

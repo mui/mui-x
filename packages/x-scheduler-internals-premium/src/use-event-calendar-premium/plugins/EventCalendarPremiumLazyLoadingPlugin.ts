@@ -1,6 +1,8 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 import type { EventCalendarFetchRange } from '@mui/x-scheduler-internals/models';
+import { getEndOfDayMs, getStartOfDayMs } from '@mui/x-scheduler-internals/internals';
 import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
+import type { DateRange } from '../../internals/utils/queue';
 import type {
   EventCalendarPremiumState,
   EventCalendarPremiumParameters,
@@ -25,7 +27,7 @@ export class EventCalendarPremiumLazyLoadingPlugin<
             return null;
           }
 
-          return `${state.adapter.getTime(range.start)}:${state.adapter.getTime(range.end)}`;
+          return `${range.start}:${range.end}`;
         },
 
         (previousKey, nextKey) => {
@@ -42,11 +44,11 @@ export class EventCalendarPremiumLazyLoadingPlugin<
 }
 
 /**
- * Returns the range to fetch for the registered view, spanning whole days,
+ * Returns the range to fetch for the registered view, spanning whole days of the display timezone,
  * or `null` when there is nothing to fetch.
  */
-function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarFetchRange | null {
-  const { viewDefinition, adapter } = state;
+function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
+  const { viewDefinition, adapter, displayTimezone } = state;
   if (!viewDefinition) {
     return null;
   }
@@ -63,5 +65,8 @@ function getRangeToFetch(state: EventCalendarPremiumState): EventCalendarFetchRa
     range = { start: days[0].value, end: days[days.length - 1].value };
   }
 
-  return { start: adapter.startOfDay(range.start), end: adapter.endOfDay(range.end) };
+  return {
+    start: getStartOfDayMs(adapter.getTime(range.start), displayTimezone),
+    end: getEndOfDayMs(adapter.getTime(range.end), displayTimezone),
+  };
 }

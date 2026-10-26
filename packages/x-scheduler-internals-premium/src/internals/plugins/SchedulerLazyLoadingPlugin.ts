@@ -1,6 +1,5 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerState,
   SchedulerParameters,
@@ -8,10 +7,15 @@ import type {
   SchedulerEventParameters,
   SchedulerPersistEventsResult,
 } from '@mui/x-scheduler-internals/internals';
-import { buildEventsState } from '@mui/x-scheduler-internals/internals';
+import {
+  buildEventsState,
+  createAdapterDate,
+  getEndOfDayMs,
+} from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import type { SchedulerDataSourceCache } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
+import type { DateRange } from '../utils/queue';
 import type { SchedulerLazyLoadingParameters } from '../../models';
 
 export class SchedulerLazyLoadingPlugin<
@@ -26,8 +30,7 @@ export class SchedulerLazyLoadingPlugin<
 
   private isFetchScheduled = false;
   private pendingIsInstantLoad = false;
-  private pendingComputeRange:
-    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject } | null) | null = null;
+  private pendingComputeRange: (() => DateRange | null) | null = null;
 
   /**
    * The most recent request.
@@ -36,7 +39,7 @@ export class SchedulerLazyLoadingPlugin<
     /**
      * The range the view asked for, before trimming the parts already cached.
      */
-    range: { start: TemporalSupportedObject; end: TemporalSupportedObject };
+    range: DateRange;
     /**
      * Range key of the fetch sent to the data source. Used to skip stale fetches:
      * if a request resolves while a different range has been requested since, its
@@ -52,10 +55,7 @@ export class SchedulerLazyLoadingPlugin<
    * Coalesces multiple calls within the same tick into one microtask. The latest
    * `computeRange` wins; `isInstantLoad=true` is sticky across coalesced calls.
    */
-  protected scheduleFetch = (
-    computeRange: () => { start: TemporalSupportedObject; end: TemporalSupportedObject } | null,
-    isInstantLoad: boolean,
-  ) => {
+  protected scheduleFetch = (computeRange: () => DateRange | null, isInstantLoad: boolean) => {
     if (isInstantLoad) {
       this.pendingIsInstantLoad = true;
     }
@@ -101,7 +101,7 @@ export class SchedulerLazyLoadingPlugin<
         getId: this.store.parameters.eventModelStructure?.id?.getter,
       });
       this.dataManager = this.disposables.use(
-        new SchedulerDataManager(this.store.state.adapter, this.loadEventsFromDataSource),
+        new SchedulerDataManager(this.loadEventsFromDataSource),
       );
 
       this.disposables.defer(this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated));
@@ -118,25 +118,27 @@ export class SchedulerLazyLoadingPlugin<
     this.disposables.dispose();
   }
 
-  public queueDataFetchForRange = async (
-    range: {
-      start: TemporalSupportedObject;
-      end: TemporalSupportedObject;
-    },
-    immediate = false,
-  ) => {
+  /**
+   * Fetches the events of a range. The range ends at the end of the day of `range.end`, in the
+   * display timezone, which is the coverage the cache records.
+   */
+  public queueDataFetchForRange = async (range: DateRange, immediate = false) => {
     try {
       const { dataManager, cache } = this;
       if (dataManager && cache) {
-        const { adapter } = this.store.state;
+        const { displayTimezone } = this.store.state;
+        const requestedRange = {
+          start: range.start,
+          end: getEndOfDayMs(range.end, displayTimezone),
+        };
 
         // Only request the part of the range the cache does not cover yet.
         // A fully covered range still goes through the queue so the cache-hit branch runs.
-        const missingRange = getMissingRange(adapter, cache, range);
-        const rangeToFetch = missingRange ?? range;
+        const missingRange = getMissingRange(cache, requestedRange, displayTimezone);
+        const rangeToFetch = missingRange ?? requestedRange;
         this.latestRequest = {
-          range,
-          fetchKey: `${adapter.getTime(rangeToFetch.start)}:${adapter.getTime(adapter.endOfDay(rangeToFetch.end))}`,
+          range: requestedRange,
+          fetchKey: getFetchKey(rangeToFetch),
         };
 
         // Flip `isLoading` synchronously so the skeleton shows immediately,
@@ -163,10 +165,7 @@ export class SchedulerLazyLoadingPlugin<
   /**
    * Loads events from the data source.
    */
-  private loadEventsFromDataSource = async (range: {
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
-  }) => {
+  private loadEventsFromDataSource = async (range: DateRange) => {
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
     // Capture locally; `dispose` may null these during the await.
@@ -176,10 +175,8 @@ export class SchedulerLazyLoadingPlugin<
     if (!dataSource || !cache || !dataManager) {
       return;
     }
-    const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
-    if (
-      cache.hasCoverage(adapter.getTime(range.start), adapter.getTime(adapter.endOfDay(range.end)))
-    ) {
+    const fetchedRangeKey = getFetchKey(range);
+    if (cache.hasCoverage(range.start, range.end)) {
       try {
         // Like a stale fetch, a stale cache hit leaves the state to the latest request.
         if (this.latestRequest?.fetchKey !== fetchedRangeKey) {
@@ -210,7 +207,10 @@ export class SchedulerLazyLoadingPlugin<
     let isStale = false;
     let requestToRefetch: typeof this.latestRequest = null;
     try {
-      const events = await dataSource.getEvents(range.start, range.end);
+      const events = await dataSource.getEvents(
+        createAdapterDate(adapter, range.start, displayTimezone),
+        createAdapterDate(adapter, range.end, displayTimezone),
+      );
       const latestRequest = this.latestRequest;
 
       // Drop the result if a more recent range has been requested since this
@@ -222,13 +222,9 @@ export class SchedulerLazyLoadingPlugin<
         return;
       }
 
-      cache.setRange(
-        adapter.getTime(range.start),
-        adapter.getTime(adapter.endOfDay(range.end)),
-        events ?? [],
-      );
+      cache.setRange(range.start, range.end, events ?? []);
       // The cached part of a trimmed request can expire while it is pending.
-      if (getMissingRange(adapter, cache, latestRequest.range) !== null) {
+      if (getMissingRange(cache, latestRequest.range, displayTimezone) !== null) {
         requestToRefetch = latestRequest;
       }
       // Build from the full cache so disjoint already-cached ranges stay visible
@@ -348,33 +344,27 @@ export class SchedulerLazyLoadingPlugin<
   };
 }
 
+function getFetchKey(range: DateRange) {
+  return `${range.start}:${range.end}`;
+}
+
 /**
  * Returns the smallest range covering the parts of `range` that are not cached,
  * or `null` when the cache already covers it.
  */
 function getMissingRange<TEvent extends object>(
-  adapter: Adapter,
   cache: SchedulerDataSourceCache<TEvent>,
-  range: { start: TemporalSupportedObject; end: TemporalSupportedObject },
-): { start: TemporalSupportedObject; end: TemporalSupportedObject } | null {
-  const end = adapter.endOfDay(range.end);
-  const startTime = adapter.getTime(range.start);
-  const endTime = adapter.getTime(end);
-  const missing = cache.getMissingRange(startTime, endTime);
+  range: DateRange,
+  timezone: TemporalTimezone,
+): DateRange | null {
+  const missing = cache.getMissingRange(range.start, range.end);
   if (missing === null) {
     return null;
   }
 
-  // Only the trimmed edges are rebuilt, the others keep the value the view provided.
   // The trimmed end is rounded to the end of its day, since that's the coverage the cache records.
   return {
-    start:
-      missing.start === startTime
-        ? range.start
-        : adapter.addMilliseconds(range.start, missing.start - startTime),
-    end:
-      missing.end === endTime
-        ? range.end
-        : adapter.endOfDay(adapter.addMilliseconds(end, missing.end - endTime)),
+    start: missing.start,
+    end: missing.end === range.end ? range.end : getEndOfDayMs(missing.end, timezone),
   };
 }

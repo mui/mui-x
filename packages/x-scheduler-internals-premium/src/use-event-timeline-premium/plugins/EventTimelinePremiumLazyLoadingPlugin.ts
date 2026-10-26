@@ -38,8 +38,9 @@ export class EventTimelinePremiumLazyLoadingPlugin<
           }
 
           this.scheduleFetch(() => {
+            const { adapter } = store.state;
             const config = eventTimelinePremiumPresetSelectors.config(store.state);
-            return { start: config.start, end: config.end };
+            return { start: adapter.getTime(config.start), end: adapter.getTime(config.end) };
           }, previousKey === null);
         },
       ),
