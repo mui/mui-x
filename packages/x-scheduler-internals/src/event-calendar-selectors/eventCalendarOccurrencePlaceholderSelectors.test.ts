@@ -30,8 +30,8 @@ function getStateInUTCOnApiaSystem() {
     occurrencePlaceholder: {
       type: 'creation',
       surfaceType: 'day-grid',
-      start: createAdapterDate(systemAdapter, Date.UTC(2011, 11, 30), 'UTC'),
-      end: createAdapterDate(systemAdapter, Date.UTC(2011, 11, 30, 23, 59, 59), 'UTC'),
+      start: Date.UTC(2011, 11, 30),
+      end: Date.UTC(2011, 11, 30, 23, 59, 59),
       resourceId: null,
     },
   };
@@ -77,8 +77,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.setHours(adapter.addDays(dayStart, -1), 22),
-          end: adapter.setHours(dayStart, 6),
+          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 22)),
+          end: adapter.getTime(adapter.setHours(dayStart, 6)),
           resourceId: null,
         },
       };
@@ -93,8 +93,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.setHours(adapter.addDays(dayStart, -1), 16),
-          end: dayStart,
+          start: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, -1), 16)),
+          end: adapter.getTime(dayStart),
           resourceId: null,
         },
       };
@@ -111,8 +111,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: rangeEnd,
-          end: adapter.setHours(adapter.addDays(dayStart, 1), 4),
+          start: adapter.getTime(rangeEnd),
+          end: adapter.getTime(adapter.setHours(adapter.addDays(dayStart, 1), 4)),
           resourceId: null,
         },
       };
@@ -143,8 +143,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.startOfDay(day),
-          end: adapter.endOfDay(day),
+          start: adapter.getTime(adapter.startOfDay(day)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
         },
       };
@@ -161,8 +161,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
-          start: adapter.startOfDay(day),
-          end: adapter.endOfDay(day),
+          start: adapter.getTime(adapter.startOfDay(day)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
           sourceResourceId: null,
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
@@ -179,8 +179,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.startOfDay(day),
-          end: adapter.endOfDay(day),
+          start: adapter.getTime(adapter.startOfDay(day)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
         },
       };
@@ -196,8 +196,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.startOfDay(otherDay),
-          end: adapter.endOfDay(otherDay),
+          start: adapter.getTime(adapter.startOfDay(otherDay)),
+          end: adapter.getTime(adapter.endOfDay(otherDay)),
           resourceId: null,
         },
       };
@@ -238,8 +238,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'day-grid',
-          start: adapter.setHours(dayStart, 10),
-          end: adapter.setHours(dayStart, 11),
+          start: adapter.getTime(adapter.setHours(dayStart, 10)),
+          end: adapter.getTime(adapter.setHours(dayStart, 11)),
           resourceId: null,
         },
       };
@@ -256,8 +256,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',
-          start: adapter.startOfDay(day),
-          end: adapter.endOfDay(day),
+          start: adapter.getTime(adapter.startOfDay(day)),
+          end: adapter.getTime(adapter.endOfDay(day)),
           resourceId: null,
           sourceResourceId: null,
           originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
@@ -275,8 +275,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.setHours(adapter.startOfDay(nextDay), 9),
-          end: adapter.setHours(adapter.startOfDay(nextDay), 10),
+          start: adapter.getTime(adapter.setHours(adapter.startOfDay(nextDay), 9)),
+          end: adapter.getTime(adapter.setHours(adapter.startOfDay(nextDay), 10)),
           resourceId: null,
         },
       };
@@ -291,8 +291,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.setHours(dayStart, 10), // < dayEnd
-          end: adapter.setHours(dayStart, 11), // > dayStart
+          start: adapter.getTime(adapter.setHours(dayStart, 10)), // < dayEnd
+          end: adapter.getTime(adapter.setHours(dayStart, 11)), // > dayStart
           resourceId: null,
         },
       };
@@ -307,8 +307,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: dayEnd, // start < dayEnd is false
-          end: adapter.addMinutes(dayEnd, 30),
+          start: adapter.getTime(dayEnd), // start < dayEnd is false
+          end: adapter.getTime(adapter.addMinutes(dayEnd, 30)),
           resourceId: null,
         },
       };
@@ -323,8 +323,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         occurrencePlaceholder: {
           type: 'creation',
           surfaceType: 'time-grid',
-          start: adapter.addMinutes(dayStart, -60),
-          end: dayStart, // end > dayStart is false
+          start: adapter.getTime(adapter.addMinutes(dayStart, -60)),
+          end: adapter.getTime(dayStart), // end > dayStart is false
           resourceId: null,
         },
       };

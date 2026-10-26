@@ -14,6 +14,7 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createAdapterDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -936,8 +937,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1020,8 +1021,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               });
@@ -1045,7 +1046,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
       const placeholder = schedulerOccurrencePlaceholderSelectors.value(schedulerStore.state)!;
-      expect(adapter.formatByString(placeholder.start, 'yyyy-MM-dd')).to.equal('2025-05-27');
+      expect(
+        adapter.formatByString(
+          createAdapterDate(adapter, placeholder.start, 'default'),
+          'yyyy-MM-dd',
+        ),
+      ).to.equal('2025-05-27');
     });
 
     it('should open the dialog for an event with a property named hasOwnProperty', () => {

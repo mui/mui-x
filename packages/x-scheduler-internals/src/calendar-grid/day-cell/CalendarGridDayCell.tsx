@@ -5,6 +5,8 @@ import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
 import { useDirection } from '@base-ui/react/direction-provider';
 import { useAdapterContext } from '../../use-adapter-context';
+import type { TemporalTimezone } from '../../models';
+import { getEndOfDayMs, getStartOfDayMs } from '../../internals/utils/plain-date-utils/timeZone';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
@@ -53,13 +55,16 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     focusedCell?.rowIndex === rowIndex &&
     focusedCell?.columnIndex === index;
 
-  const getPlaceholderFields = () => ({
-    surfaceType: 'day-grid' as const,
-    start: adapter.startOfDay(value),
-    end: adapter.endOfDay(value),
-    lockSurfaceType,
-    resourceId: null,
-  });
+  const getPlaceholderFields = ({ timezone }: { timezone: TemporalTimezone }) => {
+    const timestamp = adapter.getTime(value);
+    return {
+      surfaceType: 'day-grid' as const,
+      start: getStartOfDayMs(timestamp, timezone),
+      end: getEndOfDayMs(timestamp, timezone),
+      lockSurfaceType,
+      resourceId: null,
+    };
+  };
 
   const eventCreationProps = useEventCreation(getPlaceholderFields);
   const triggerKeyboardCreation = useKeyboardEventCreation(getPlaceholderFields);

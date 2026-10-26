@@ -7,6 +7,7 @@ import {
   getEndOfDayMs,
   getStartOfDayMs,
   localToEpochMs,
+  moveTimestampToPlainDate,
   toEpochMs,
   toPlainDateTime,
 } from './timeZone';
@@ -200,6 +201,22 @@ export function createProcessedDate(
     adapter,
     createAdapterDate(adapter, epochMs, timezone),
     epochMs,
+    timezone,
+  );
+}
+
+/**
+ * Moves a date to `plainDate` like `moveTimestampToPlainDate()`, in the timezone of the date.
+ */
+export function moveToPlainDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  plainDate: PlainDate,
+): TemporalSupportedObject {
+  const timezone = adapter.getTimezone(date);
+  return createAdapterDate(
+    adapter,
+    moveTimestampToPlainDate(adapter.getTime(date), plainDate, timezone),
     timezone,
   );
 }

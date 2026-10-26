@@ -7,10 +7,12 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   useDropTarget,
-  dateToTimelineAxisOffsetMs,
-  getWallClockMsInDay,
+  clampResizedEventEdge,
+  roundToDragPrecision,
   isStartMinuteOutsideAxisWindow,
-  timelineAxisOffsetToDate,
+  timelineAxisOffsetToTimestamp,
+  timestampToTimelineAxisOffsetMs,
+  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import {
@@ -68,23 +70,19 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input }) => {
+    ({ data, getDataFromInside, getDataFromOutside, input, timezone }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
-      const axisOffsetToDate = (offsetMs: number) => {
-        const roundedOffset =
-          Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-
-        return timelineAxisOffsetToDate(adapter, config, roundedOffset);
-      };
+      const axisOffsetToTimestamp = (offsetMs: number) =>
+        timelineAxisOffsetToTimestamp(adapter, config, roundToDragPrecision(offsetMs));
 
       // Move a Timeline Event within the Timeline
       if (data.source === 'TimelineGridEvent') {
-        const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
+        const eventDurationMs = data.end - data.start;
 
         // `cursorOffsetMs - initialCursorPositionInEventMs` reconstructs the *rendered*
         // start edge plus the drag delta. When the real start hides inside the hidden
@@ -93,61 +91,64 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // original dates instead of silently snapping the start to the window edge.
         // A visible start has no remainder, even in the second occurrence of an hour repeated by a
         // fall-back transition, which the axis reads as the first one.
-        const startMsInDay = getWallClockMsInDay(adapter, data.start);
-        const startAnchor = timelineAxisOffsetToDate(
-          adapter,
-          config,
-          dateToTimelineAxisOffsetMs(adapter, config, data.start, startMsInDay),
-        );
+        const startMsInDay = toPlainDateTime(data.start, timezone).msInDay;
         const hiddenRemainderMs = isStartMinuteOutsideAxisWindow(
           config,
           Math.floor(startMsInDay / 60_000),
         )
-          ? adapter.getTime(data.start) - adapter.getTime(startAnchor)
+          ? data.start -
+            timelineAxisOffsetToTimestamp(
+              adapter,
+              config,
+              timestampToTimelineAxisOffsetMs(adapter, config, data.start, timezone, startMsInDay),
+            )
           : 0;
 
-        const newAnchorDate = axisOffsetToDate(
-          cursorOffsetMs - data.initialCursorPositionInEventMs,
-        );
-        const newStartDate = adapter.addMilliseconds(newAnchorDate, hiddenRemainderMs);
+        const newStart =
+          axisOffsetToTimestamp(cursorOffsetMs - data.initialCursorPositionInEventMs) +
+          hiddenRemainderMs;
 
         // The event keeps its real duration even when it spans hidden hours, so the
         // real start and end both shift by the same amount as their rendered anchors.
-        const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
-
-        return getDataFromInside(data, newStartDate, newEndDate);
+        return getDataFromInside(data, newStart, newStart + eventDurationMs);
       }
 
       // Resize a Timeline Event
       if (data.source === 'TimelineGridEventResizeHandler') {
         if (data.side === 'start') {
-          const cursorDate = axisOffsetToDate(cursorOffsetMs - data.initialCursorPositionInEventMs);
-
           // Ensure the new start date is not after or too close to the end date.
-          const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
-          const newStartDate = adapter.isBefore(cursorDate, maxStartDate)
-            ? cursorDate
-            : maxStartDate;
+          const { start: newStart } = clampResizedEventEdge({
+            side: 'start',
+            start: data.start,
+            end: data.end,
+            cursorTimestamp: axisOffsetToTimestamp(
+              cursorOffsetMs - data.initialCursorPositionInEventMs,
+            ),
+            precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
+          });
 
-          return getDataFromInside(data, newStartDate, data.end);
+          return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
           // The offset from the grab point to the event end must be measured on the axis:
           // the real duration would overshoot when the event spans hidden hours.
           const eventAxisDurationMs =
-            dateToTimelineAxisOffsetMs(adapter, config, data.end) -
-            dateToTimelineAxisOffsetMs(adapter, config, data.start);
-
-          const cursorDate = axisOffsetToDate(
-            cursorOffsetMs - data.initialCursorPositionInEventMs + eventAxisDurationMs,
-          );
+            timestampToTimelineAxisOffsetMs(adapter, config, data.end, timezone) -
+            timestampToTimelineAxisOffsetMs(adapter, config, data.start, timezone);
 
           // Ensure the new end date is not before or too close to the start date.
-          const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
-          const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
+          const { end: newEnd } = clampResizedEventEdge({
+            side: 'end',
+            start: data.start,
+            end: data.end,
+            cursorTimestamp: axisOffsetToTimestamp(
+              cursorOffsetMs - data.initialCursorPositionInEventMs + eventAxisDurationMs,
+            ),
+            precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
+          });
 
-          return getDataFromInside(data, data.start, newEndDate);
+          return getDataFromInside(data, data.start, newEnd);
         }
       }
 
@@ -159,7 +160,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         const lastStartOffsetMs = collectionDurationMs - EVENT_DRAG_PRECISION_MS;
         return getDataFromOutside(
           data,
-          axisOffsetToDate(Math.min(cursorOffsetMs, lastStartOffsetMs)),
+          axisOffsetToTimestamp(Math.min(cursorOffsetMs, lastStartOffsetMs)),
         );
       }
 

@@ -2,7 +2,7 @@ import { describe, test } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
 import { processDate } from '../../process-date';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
-import { getTimelineAxisDurationMs, timelineAxisOffsetToDate } from './timeline-axis';
+import { getTimelineAxisDurationMs, timelineAxisOffsetToTimestamp } from './timeline-axis';
 
 const occurrenceCount = 1_000;
 
@@ -47,8 +47,10 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     await bench('dates on a week axis', () => {
       let total = 0;
       for (let index = 0; index < occurrenceCount; index += 1) {
-        total += adapter.getTime(
-          timelineAxisOffsetToDate(adapter, axis, (durationMs * index) / occurrenceCount),
+        total += timelineAxisOffsetToTimestamp(
+          adapter,
+          axis,
+          (durationMs * index) / occurrenceCount,
         );
       }
       benchmarkResult.value = total;

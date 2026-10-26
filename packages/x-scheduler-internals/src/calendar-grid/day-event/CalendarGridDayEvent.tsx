@@ -14,12 +14,7 @@ import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZon
 import { createPlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import { ISO_CALENDAR_ID } from '../../internals/utils/base-temporal/calendar';
-import type {
-  SchedulerEventId,
-  SchedulerEventOccurrence,
-  SchedulerResourceId,
-  TemporalSupportedObject,
-} from '../../models';
+import type { SchedulerEventId, SchedulerEventOccurrence, SchedulerResourceId } from '../../models';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
@@ -115,8 +110,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       eventId,
       occurrenceKey,
       originalOccurrence: getOriginalOccurrence(),
-      start: start.value,
-      end: end.value,
+      start: start.timestamp,
+      end: end.timestamp,
     }),
   );
 
@@ -205,8 +200,14 @@ export namespace CalendarGridDayEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
+    /**
+     * The start of the occurrence, as a timestamp in milliseconds.
+     */
+    start: number;
+    /**
+     * The end of the occurrence, as a timestamp in milliseconds.
+     */
+    end: number;
     sourceResourceId?: SchedulerResourceId;
   }
 

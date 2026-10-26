@@ -3,12 +3,13 @@ import type {
   TemporalSupportedObject,
   TemporalTimezone,
 } from '@base-ui/react/internals/temporal';
+import { buildTemporalPlainDate } from './plain-date-utils/adapter';
 import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-  createAdapterDateOnPlainDate,
-} from './plain-date-utils/adapter';
-import { toLocalDayNumber, toLocalMs, toPlainDateTime } from './plain-date-utils/timeZone';
+  toEpochMs,
+  toLocalDayNumber,
+  toLocalMs,
+  toPlainDateTime,
+} from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
 export const FULL_DAY_MINUTES = 24 * 60;
@@ -68,14 +69,6 @@ export function getTimelineAxisDayMs(
   return Math.max(1, axis.dayEndMinute - axis.dayStartMinute) * MINUTE_MS;
 }
 
-/**
- * Wall-clock time of day in milliseconds. Read on the wall clock of the timezone of the date
- * rather than from timestamp differences so DST transitions earlier in the day cannot shift it.
- */
-export function getWallClockMsInDay(adapter: TemporalAdapter, date: TemporalSupportedObject) {
-  return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).msInDay;
-}
-
 function getTotalDays(adapter: TemporalAdapter, axis: TimelineAxis) {
   return (
     buildTemporalPlainDate(adapter, axis.end).dayNumber -
@@ -93,33 +86,30 @@ export function getTimelineAxisDurationMs(adapter: TemporalAdapter, axis: Timeli
 }
 
 /**
- * Maps an axis offset (in axis milliseconds from the collection start) to a date.
+ * Maps an axis offset (in axis milliseconds from the collection start) to a timestamp.
  * Offsets are not clamped: values outside the axis extend it day by day, following the
  * same piecewise scale.
- * The date is built from its wall-clock time so it round-trips with
- * `dateToTimelineAxisOffsetMs` for every wall-clock time that exists on that day.
+ * The timestamp is built from its wall-clock time so it round-trips with
+ * `timestampToTimelineAxisOffsetMs()` for every wall-clock time that exists on that day.
  * The axis keeps a slot for the hour skipped by a spring-forward transition, so offsets
  * landing in it move forward by the length of the gap and do not round-trip. An offset
  * landing in the hour repeated by a fall-back transition resolves to its first instant,
  * whatever the timezone of the system (RFC 5545).
  */
-export function timelineAxisOffsetToDate(
+export function timelineAxisOffsetToTimestamp(
   adapter: TemporalAdapter,
   axis: TimelineAxis,
   offsetMs: number,
-): TemporalSupportedObject {
+): number {
+  // A column without a size gives a non-finite offset, which maps to `NaN`.
+  if (!Number.isFinite(offsetMs)) {
+    return NaN;
+  }
   const dayMs = getTimelineAxisDayMs(axis);
   const dayIndex = Math.floor(offsetMs / dayMs);
   const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
-
-  const timezone = adapter.getTimezone(axis.start);
-  // A column without a size gives a non-finite offset, which maps to an invalid date, like the
-  // adapter's methods.
-  if (!Number.isFinite(offsetMs)) {
-    return createAdapterDate(adapter, NaN, timezone);
-  }
   const plainDate = buildTemporalPlainDate(adapter, axis.start).add({ days: dayIndex });
-  return createAdapterDateOnPlainDate(adapter, plainDate, msInDay, timezone);
+  return toEpochMs(plainDate, msInDay, adapter.getTimezone(axis.start));
 }
 
 /**
@@ -144,23 +134,42 @@ export function resolveRepeatedTimeFrom(
 }
 
 /**
- * Maps a date to its axis offset (in axis milliseconds from the collection start).
- * Dates outside the visible window are clamped to their day's window edge; dates outside
- * the collection range produce out-of-range offsets (e.g. negative before the start).
- * `msInDay` can be provided when the caller already knows the wall-clock time of day
- * (e.g. from a `SchedulerProcessedDate`), skipping the adapter reads.
+ * Maps a date to its axis offset like `timestampToTimelineAxisOffsetMs()`, reading it in its own
+ * timezone.
  */
 export function dateToTimelineAxisOffsetMs(
   adapter: TemporalAdapter,
   axis: TimelineAxis,
   date: TemporalSupportedObject,
-  msInDay: number = getWallClockMsInDay(adapter, date),
+  msInDay?: number,
 ): number {
-  // Both days are read in the timezone of the date. Day numbers, as this runs for every event.
-  const timezone = adapter.getTimezone(date);
+  return timestampToTimelineAxisOffsetMs(
+    adapter,
+    axis,
+    adapter.getTime(date),
+    adapter.getTimezone(date),
+    msInDay,
+  );
+}
+
+/**
+ * Maps a timestamp to its axis offset (in axis milliseconds from the collection start), reading it
+ * in `timezone`.
+ * Timestamps outside the visible window are clamped to their day's window edge; timestamps outside
+ * the collection range produce out-of-range offsets (e.g. negative before the start).
+ * `msInDay` can be provided when the caller already knows the wall-clock time of day
+ * (e.g. from a `SchedulerProcessedDate`), skipping its computation.
+ */
+export function timestampToTimelineAxisOffsetMs(
+  adapter: TemporalAdapter,
+  axis: TimelineAxis,
+  timestamp: number,
+  timezone: TemporalTimezone,
+  msInDay: number = toPlainDateTime(timestamp, timezone).msInDay,
+): number {
+  // Both days are read in `timezone`. Day numbers, as this runs for every event.
   const dayIndex =
-    toLocalDayNumber(adapter.getTime(date), timezone) -
-    toLocalDayNumber(adapter.getTime(axis.start), timezone);
+    toLocalDayNumber(timestamp, timezone) - toLocalDayNumber(adapter.getTime(axis.start), timezone);
   return getTimelineAxisOffsetMs(axis, dayIndex, msInDay);
 }
 

@@ -3,8 +3,9 @@ import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import {
   getTimelineAxisDurationMs,
-  timelineAxisOffsetToDate,
+  timelineAxisOffsetToTimestamp,
   dateToTimelineAxisOffsetMs,
+  timestampToTimelineAxisOffsetMs,
   isStartMinuteOutsideAxisWindow,
   isEndMinuteOutsideAxisWindow,
 } from './timeline-axis';
@@ -29,32 +30,36 @@ describe('timeline-axis', () => {
     });
   });
 
-  describe('timelineAxisOffsetToDate', () => {
-    it('should behave like addMilliseconds for the full-day window', () => {
-      const date = timelineAxisOffsetToDate(adapter, fullAxis, 26 * 60 * MINUTE);
-      expect(date).toEqualDateTime(adapter.date('2025-01-06T02:00:00.000Z', 'UTC'));
+  describe('timelineAxisOffsetToTimestamp', () => {
+    it('should add the offset to the start for the full-day window', () => {
+      expect(timelineAxisOffsetToTimestamp(adapter, fullAxis, 26 * 60 * MINUTE)).to.equal(
+        Date.UTC(2025, 0, 6, 2),
+      );
     });
 
     it('should map an offset inside a later day of a trimmed window', () => {
       // 840 axis minutes = 1 full visible day (720) + 120 → Jan 6, 08:00 + 2h.
-      const date = timelineAxisOffsetToDate(adapter, trimmedAxis, 840 * MINUTE);
-      expect(date).toEqualDateTime(adapter.date('2025-01-06T10:00:00.000Z', 'UTC'));
+      expect(timelineAxisOffsetToTimestamp(adapter, trimmedAxis, 840 * MINUTE)).to.equal(
+        Date.UTC(2025, 0, 6, 10),
+      );
     });
 
     it('should map the day seam to the start of the next visible day', () => {
-      const date = timelineAxisOffsetToDate(adapter, trimmedAxis, 720 * MINUTE);
-      expect(date).toEqualDateTime(adapter.date('2025-01-06T08:00:00.000Z', 'UTC'));
+      expect(timelineAxisOffsetToTimestamp(adapter, trimmedAxis, 720 * MINUTE)).to.equal(
+        Date.UTC(2025, 0, 6, 8),
+      );
     });
 
     it('should extend the piecewise axis into the previous day for a negative offset', () => {
-      const date = timelineAxisOffsetToDate(adapter, trimmedAxis, -60 * MINUTE);
-      expect(date).toEqualDateTime(adapter.date('2025-01-04T19:00:00.000Z', 'UTC'));
+      expect(timelineAxisOffsetToTimestamp(adapter, trimmedAxis, -60 * MINUTE)).to.equal(
+        Date.UTC(2025, 0, 4, 19),
+      );
     });
 
-    it('should return an invalid date for a non-finite offset', () => {
-      expect(adapter.isValid(timelineAxisOffsetToDate(adapter, fullAxis, NaN))).to.equal(false);
-      expect(adapter.isValid(timelineAxisOffsetToDate(adapter, fullAxis, Infinity))).to.equal(
-        false,
+    it('should return NaN for a non-finite offset', () => {
+      expect(Number.isNaN(timelineAxisOffsetToTimestamp(adapter, fullAxis, NaN))).to.equal(true);
+      expect(Number.isNaN(timelineAxisOffsetToTimestamp(adapter, fullAxis, Infinity))).to.equal(
+        true,
       );
     });
   });
@@ -80,10 +85,12 @@ describe('timeline-axis', () => {
       expect(dateToTimelineAxisOffsetMs(adapter, trimmedAxis, date)).to.equal(-600 * MINUTE);
     });
 
-    it('should round-trip with timelineAxisOffsetToDate inside the window', () => {
+    it('should round-trip with timelineAxisOffsetToTimestamp inside the window', () => {
       const date = adapter.date('2025-01-07T15:30:00.000Z', 'UTC');
       const offset = dateToTimelineAxisOffsetMs(adapter, trimmedAxis, date);
-      expect(timelineAxisOffsetToDate(adapter, trimmedAxis, offset)).toEqualDateTime(date);
+      expect(timelineAxisOffsetToTimestamp(adapter, trimmedAxis, offset)).to.equal(
+        adapter.getTime(date),
+      );
     });
   });
 
@@ -96,9 +103,8 @@ describe('timeline-axis', () => {
       const axis = { start: dstStart, end: dstEnd, dayStartMinute: 0, dayEndMinute: 720 };
       // 480 axis minutes = the "08:00" column: wall-clock 08:00, not midnight + 480 real
       // minutes (which is 07:00 after the extra hour).
-      const date = timelineAxisOffsetToDate(adapter, axis, 480 * MINUTE);
-      expect(adapter.getHours(date)).to.equal(8);
-      expect(adapter.getDate(date)).to.equal(2);
+      const timestamp = timelineAxisOffsetToTimestamp(adapter, axis, 480 * MINUTE);
+      expect(new Date(timestamp).toISOString()).to.equal('2025-11-02T13:00:00.000Z'); // 08:00 EST
     });
 
     it('should round-trip px↔date across a fall-back transition', () => {
@@ -106,7 +112,7 @@ describe('timeline-axis', () => {
       const date = adapter.date('2025-11-02T10:00:00', 'America/New_York');
       const offset = dateToTimelineAxisOffsetMs(adapter, axis, date);
       expect(offset).to.equal(120 * MINUTE);
-      expect(timelineAxisOffsetToDate(adapter, axis, offset)).toEqualDateTime(date);
+      expect(timelineAxisOffsetToTimestamp(adapter, axis, offset)).to.equal(adapter.getTime(date));
     });
 
     it('should round-trip px↔date across a spring-forward transition', () => {
@@ -121,12 +127,12 @@ describe('timeline-axis', () => {
       const date = adapter.date('2026-03-08T10:00:00', 'America/New_York');
       const offset = dateToTimelineAxisOffsetMs(adapter, axis, date);
       expect(offset).to.equal(120 * MINUTE);
-      expect(timelineAxisOffsetToDate(adapter, axis, offset)).toEqualDateTime(date);
+      expect(timelineAxisOffsetToTimestamp(adapter, axis, offset)).to.equal(adapter.getTime(date));
     });
 
     it('should resolve an offset inside the spring-forward gap to the next existing hour', () => {
       // 02:00 does not exist on Mar 8 2026: the offset resolves to 03:00 and does not
-      // round-trip (known limitation, documented on `timelineAxisOffsetToDate`).
+      // round-trip (known limitation, documented on `timelineAxisOffsetToTimestamp`).
       const springStart = adapter.date('2026-03-08T00:00:00', 'America/New_York');
       const axis = {
         start: springStart,
@@ -134,9 +140,11 @@ describe('timeline-axis', () => {
         dayStartMinute: 0,
         dayEndMinute: 1440,
       };
-      const date = timelineAxisOffsetToDate(adapter, axis, 120 * MINUTE);
-      expect(adapter.getHours(date)).to.equal(3);
-      expect(dateToTimelineAxisOffsetMs(adapter, axis, date)).to.equal(180 * MINUTE);
+      const timestamp = timelineAxisOffsetToTimestamp(adapter, axis, 120 * MINUTE);
+      expect(new Date(timestamp).toISOString()).to.equal('2026-03-08T07:00:00.000Z'); // 03:00 EDT
+      expect(
+        timestampToTimelineAxisOffsetMs(adapter, axis, timestamp, 'America/New_York'),
+      ).to.equal(180 * MINUTE);
     });
 
     // Browsers cannot change their timezone through process.env.TZ.
@@ -152,8 +160,8 @@ describe('timeline-axis', () => {
           dayStartMinute: 0,
           dayEndMinute: 1440,
         };
-        const date = timelineAxisOffsetToDate(adapter, axis, 150 * MINUTE);
-        expect(adapter.toJsDate(date).toISOString()).to.equal('2026-10-25T00:30:00.000Z'); // 02:30 CEST
+        const timestamp = timelineAxisOffsetToTimestamp(adapter, axis, 150 * MINUTE);
+        expect(new Date(timestamp).toISOString()).to.equal('2026-10-25T00:30:00.000Z'); // 02:30 CEST
       },
     );
   });
