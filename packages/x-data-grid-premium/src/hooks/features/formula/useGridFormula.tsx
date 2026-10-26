@@ -161,16 +161,21 @@ function isRowGroupingAffected(
 }
 
 const NO_VIEW_REFRESH = { refilter: false, resort: false };
+const FULL_VIEW_REFRESH = { refilter: true, resort: true };
 
 /**
- * Applies the filtering or the sorting again, and returns whether it was applied. It runs inside
- * the hydration of the columns when a hydration published `columnsChange`, where a throw would
- * leave the pipe processing of the grid locked. After a type change, the core can fail to filter
- * or sort with a model made for the previous type: an operator that is gone (`>` on a `string`
- * column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef` comparator
- * or operator written for one type. The core throws before it sets the state, so nothing changes:
- * the view keeps its rows and order, and the error comes at the next filtering or sorting, like
- * after the type change of a regular column.
+ * Applies the filtering, the sorting or the row tree again, and returns whether it was applied. It
+ * runs inside the hydration of the columns when a hydration published `columnsChange`, where a
+ * throw would leave the pipe processing of the grid locked. After a type change, the core can fail
+ * to filter or sort with a model made for the previous type: an operator that is gone (`>` on a
+ * `string` column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef`
+ * comparator or operator written for one type. The core throws before it sets the state, so
+ * nothing changes: the view keeps its rows and order, and the error comes at the next filtering or
+ * sorting, like after the type change of a regular column. A regroup fails when the filtering or
+ * the sorting of the rebuilt tree does (or another listener of its `rowsSet`): both are applied
+ * again. Until the next filtering that succeeds, the group rows can show stale or missing counts,
+ * and until the next sorting that succeeds, they keep the previous order (new group rows missing
+ * or misplaced).
  */
 function tryToApplyView(apply: () => void) {
   try {
@@ -356,7 +361,8 @@ export const useGridFormula = (
    * the computed values (`computedColumnsChanged`), they are re-applied when
    * their model reads a changed value. Once: the events they publish refresh
    * the position-dependent formulas without reporting a computed change. A
-   * model the core can't apply leaves the view as it was (`tryToApplyView`).
+   * filtering or a sorting the core can't apply leaves the view as it was,
+   * and a failed regroup is finished with both (`tryToApplyView`).
    */
   const triggerDependentFeatures = React.useCallback(
     (
@@ -370,6 +376,7 @@ export const useGridFormula = (
         return;
       }
       const cache = apiRef.current.caches.formula!;
+      let regroupFailed = false;
       if (
         !cache.suppressRegroupTrigger &&
         isRowGroupingAffected(apiRef, changedCells, computedColumnsChanged)
@@ -382,19 +389,26 @@ export const useGridFormula = (
         }
         // The rebuilt tree publishes `rowsSet`: filtering and sorting re-run in its cascade.
         cache.suppressRegroupTrigger = true;
-        try {
-          apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
-        } finally {
-          cache.suppressRegroupTrigger = false;
+        regroupFailed = !tryToApplyView(() =>
+          apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation'),
+        );
+        cache.suppressRegroupTrigger = false;
+        if (!regroupFailed) {
+          return;
         }
-        return;
       }
-      const { refilter, resort } = computedColumnsChanged
-        ? getViewRefresh(apiRef, changedCells, props.filterMode, props.sortingMode)
-        : NO_VIEW_REFRESH;
+      let viewRefresh = NO_VIEW_REFRESH;
+      if (regroupFailed) {
+        // The cascade of the rebuilt tree stopped at a throw: its filtering, its sorting and the
+        // aggregation can still belong to the previous tree.
+        viewRefresh = FULL_VIEW_REFRESH;
+      } else if (computedColumnsChanged) {
+        viewRefresh = getViewRefresh(apiRef, changedCells, props.filterMode, props.sortingMode);
+      }
+      const { refilter, resort } = viewRefresh;
       // `filteredRowsSet` applies the aggregation, and both events reset the row spanning.
       const refiltered = refilter && tryToApplyView(() => apiRef.current.unstable_applyFilters());
-      if (options.aggregation && !refiltered) {
+      if ((options.aggregation || regroupFailed) && !refiltered) {
         apiRef.current.applyAggregation();
       }
       const resorted = resort && tryToApplyView(() => apiRef.current.applySorting());

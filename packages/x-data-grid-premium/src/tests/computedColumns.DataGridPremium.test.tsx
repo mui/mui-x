@@ -2323,6 +2323,169 @@ describe('<DataGridPremium /> - Computed columns', () => {
           ).not.to.throw();
           expectColumnsToBeHydratedAgain();
         });
+
+        // The grid regroups after any computed change while a computed column is grouped: the
+        // filtering and the sorting of the rebuilt tree run inside the hydration of the columns.
+        const label: GridComputedColumnDefinition = {
+          field: 'label',
+          headerName: 'Label',
+          formula: '=item',
+          type: 'string',
+        };
+        const bucket: GridComputedColumnDefinition = {
+          field: 'bucket',
+          headerName: 'Bucket',
+          formula: '=double & ""',
+          type: 'string',
+        };
+        const getGroupingValues = () =>
+          getColumnValuesOf(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD).filter(Boolean);
+        const getLeafValuesOf = (field: string) => getColumnValuesOf(field).filter(Boolean);
+
+        it('should not throw when the grid is grouped by another computed column', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              defaultGroupingExpansionDepth={-1}
+              initialState={{
+                computedColumns: { model: [label, double] },
+                rowGrouping: { model: ['label'] },
+                ...filteredByDouble,
+              }}
+            />,
+          );
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', toText)),
+          ).not.to.throw();
+          expect(getColumn('double').type).to.equal('string');
+          expect(getLeafValuesOf('double')).to.deep.equal(['2!', '4!', '3!']);
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should show the new groups when the grouped column reads the changed one', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              defaultGroupingExpansionDepth={-1}
+              initialState={{
+                computedColumns: { model: [double, bucket] },
+                rowGrouping: { model: ['bucket'] },
+                filter: { filterModel: { items: [doubleAboveTwo] } },
+              }}
+            />,
+          );
+          expect(getGroupingValues()).to.deep.equal(['4 (1)', '3 (1)']);
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', toText)),
+          ).not.to.throw();
+          expect(getGroupingValues()).to.deep.equal(['2!', '4!', '3!']);
+          expect(getLeafValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
+          expect(() => act(() => apiRef.current!.updateRows([{ id: 0, price: 5 }]))).to.throw(
+            'No filter operator ">" found for column "double"',
+          );
+          act(() =>
+            apiRef.current!.setFilterModel({
+              items: [{ field: 'double', operator: 'contains', value: '4' }],
+            }),
+          );
+          expect(getGroupingValues()).to.deep.equal(['4! (1)']);
+          expect(getLeafValuesOf('item')).to.deep.equal(['Banana']);
+        });
+
+        it('should not freeze when the comparator does not fit the new type of a grouped column', async () => {
+          await render(
+            <Test
+              // Two leaves in a group: the comparator only compares the leaves of a group.
+              rows={[
+                { id: 0, item: 'Apple', price: 2 },
+                { id: 1, item: 'Apricot', price: 2 },
+                { id: 2, item: 'Cherry', price: 3 },
+              ]}
+              columns={fruitColumns}
+              defaultGroupingExpansionDepth={-1}
+              computedColDef={{
+                // The group rows pass `null`.
+                sortComparator: (a: number | string | null, b: number | string | null) => {
+                  if (typeof a === 'string' || typeof b === 'string') {
+                    throw new Error('number comparator got text');
+                  }
+                  return (a ?? 0) - (b ?? 0);
+                },
+              }}
+              initialState={{
+                computedColumns: { model: [double, bucket] },
+                rowGrouping: { model: ['bucket'] },
+                ...sortedByDouble,
+              }}
+            />,
+          );
+          expect(() =>
+            act(() => apiRef.current!.updateComputedColumn('double', toText)),
+          ).not.to.throw();
+          act(() => apiRef.current!.setSortModel([]));
+          expect(getGroupingValues()).to.deep.equal(['2! (2)', '3! (1)']);
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should aggregate the new groups when the filtering fails after the regroup', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              defaultGroupingExpansionDepth={-1}
+              initialState={{
+                computedColumns: { model: [double, bucket] },
+                rowGrouping: { model: ['bucket'] },
+                aggregation: { model: { price: 'sum' } },
+                ...filteredByDouble,
+              }}
+            />,
+          );
+          act(() => apiRef.current!.updateComputedColumn('double', toText));
+          expect(getGroupingValues()).to.deep.equal(['2!', '4!', '3!']);
+          // Each group row shows the sum of its leaf, and the footer the sum of every row.
+          expect(getColumnValuesOf('price')).to.deep.equal(['2', '2', '4', '4', '3', '3', '9']);
+        });
+
+        it('should not throw from the undo and the redo of a type change while grouped', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              defaultGroupingExpansionDepth={-1}
+              initialState={{
+                computedColumns: { model: [label, { ...double, ...toText }] },
+                rowGrouping: { model: ['label'] },
+                filter: {
+                  filterModel: { items: [{ field: 'double', operator: 'contains', value: '4' }] },
+                },
+              }}
+            />,
+          );
+          expect(() =>
+            act(() =>
+              apiRef.current!.updateComputedColumn(
+                'double',
+                { type: 'number', formula: '=price' },
+                { undoable: true },
+              ),
+            ),
+          ).not.to.throw();
+          expect(getColumn('double').type).to.equal('number');
+          await act(async () => {
+            await apiRef.current!.history.undo();
+          });
+          // The operator exists again: the rows are filtered with the values of the text type.
+          expect(getColumn('double').type).to.equal('string');
+          expect(getLeafValuesOf('item')).to.deep.equal(['Banana']);
+          await act(async () => {
+            await apiRef.current!.history.redo();
+          });
+          expect(getColumn('double').type).to.equal('number');
+          expectColumnsToBeHydratedAgain();
+        });
       });
     });
 

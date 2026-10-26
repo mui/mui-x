@@ -446,6 +446,35 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
       expect(getFields()).to.include('half');
     });
 
+    it('applies a type change while the grid is grouped by another computed column', async () => {
+      const label = define('label', '=item', { type: 'string' });
+      await render(
+        <Test
+          initialState={{
+            computedColumns: { model: [label, total] },
+            rowGrouping: { model: ['label'] },
+            filter: { filterModel: { items: [{ field: 'total', operator: '>', value: 0 }] } },
+          }}
+        />,
+      );
+      await openEditor('total');
+
+      typeFormula('=item & "!"');
+      selectOption('Result type', 'Text');
+      fireEvent.click(getButton('Apply'));
+      await microtasks();
+
+      expect(getModel()).to.deep.equal([
+        label,
+        { ...total, formula: '=item & "!"', type: 'string' },
+      ]);
+      expect(getSidebar().open).to.equal(false);
+      // The regroup did not throw inside the hydration of the columns.
+      act(() => apiRef.current!.setFilterModel({ items: [] }));
+      act(() => apiRef.current!.addComputedColumn(define('half', '=price / 2')));
+      expect(getFields()).to.include('half');
+    });
+
     it('deletes the column from the editor', async () => {
       await render(<Test initialState={{ computedColumns: { model: [total] } }} />);
       await openEditor('total');
