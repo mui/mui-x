@@ -153,7 +153,8 @@ function ColumnInteractiveLayer({
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { start, end, axis: column } = useCalendarGridTimeColumnContext();
+  const { axis: column } = useCalendarGridTimeColumnContext();
+  const { start, end } = column;
   const { startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
 

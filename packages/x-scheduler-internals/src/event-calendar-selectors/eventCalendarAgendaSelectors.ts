@@ -180,18 +180,18 @@ export const eventCalendarAgendaSelectors = {
     ): EventCalendarFetchRange => {
       // The day list is empty when a short `dayCount` only covers hidden weekend days,
       // so fall back to the bounds of the range.
-      const firstDay =
+      const firstPlainDate =
         baseDays.length > 0
           ? toPlainDateTime(baseDays[0].timestamp, displayTimezone).date
           : range.start;
-      const lastDay =
+      if (!showEmptyDaysInAgenda) {
+        return { start: firstPlainDate, end: horizonPlainDate };
+      }
+      const lastPlainDate =
         baseDays.length > 0
           ? toPlainDateTime(baseDays[baseDays.length - 1].timestamp, displayTimezone).date
           : range.end;
-      if (showEmptyDaysInAgenda) {
-        return { start: firstDay, end: lastDay };
-      }
-      return { start: firstDay, end: horizonPlainDate };
+      return { start: firstPlainDate, end: lastPlainDate };
     },
   ),
 };

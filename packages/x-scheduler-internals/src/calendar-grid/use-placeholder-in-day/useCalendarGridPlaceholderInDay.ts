@@ -18,7 +18,7 @@ export function useCalendarGridPlaceholderInDay(
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
+  const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext().axis;
 
   const findAvailableIndex = React.useCallback(
     (excludeKey?: string): number => {

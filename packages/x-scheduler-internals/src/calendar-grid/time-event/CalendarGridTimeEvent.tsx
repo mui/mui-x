@@ -39,11 +39,11 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
 
   // Context hooks
   const {
-    start: columnStart,
     axis: columnAxis,
     hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
+  const columnStart = columnAxis.start;
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);

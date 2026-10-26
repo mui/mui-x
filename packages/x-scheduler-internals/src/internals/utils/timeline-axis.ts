@@ -31,8 +31,9 @@ export interface TimelineAxisWindow {
 /**
  * A displayed date range with the hour window shown for each day. When the window is
  * trimmed, the axis is piecewise — the hidden hours of each day take no space — so
- * px↔date conversions must go through these helpers. Built from the timeline's preset
- * config (horizontal axis) and the time-grid columns (vertical axis) with `getTimelineAxis()`.
+ * px↔date conversions must go through these helpers. Built by the time-grid columns and the
+ * day-grid rows from their timestamps, and from the timeline's preset config (horizontal axis)
+ * with `getTimelineAxis()`.
  */
 export interface TimelineAxis extends TimelineAxisWindow {
   /**
@@ -50,8 +51,7 @@ export interface TimelineAxis extends TimelineAxisWindow {
 }
 
 /**
- * The range of an axis as adapter values, as the time-grid columns and the timeline's preset
- * config hold it.
+ * The range of an axis as adapter values, as the timeline's preset config holds it.
  */
 export interface TimelineAxisRange extends TimelineAxisWindow {
   start: TemporalSupportedObject;

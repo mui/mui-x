@@ -10,7 +10,10 @@ import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTi
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
-import { toEpochMs, toPlainDateTime } from '../../internals/utils/plain-date-utils/timeZone';
+import {
+  moveTimestampToPlainDate,
+  toPlainDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
   function CalendarGridCurrentTimeIndicator(
@@ -28,11 +31,8 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       ...elementProps
     } = componentProps;
 
-    const {
-      start: columnStart,
-      end: columnEnd,
-      axis: columnAxis,
-    } = useCalendarGridTimeColumnContext();
+    const { axis: columnAxis } = useCalendarGridTimeColumnContext();
+    const { start: columnStart, end: columnEnd } = columnAxis;
     const store = useEventCalendarStoreContext();
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
@@ -40,10 +40,9 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     // The time of day of now, on the wall clock of the day of the column.
     const nowForColumn = React.useMemo(() => {
       const columnPlainDate = toPlainDateTime(columnStart, displayTimezone).date;
-      const nowMsInDay = toPlainDateTime(adapter.getTime(now), displayTimezone).msInDay;
       return createProcessedDate(
         adapter,
-        toEpochMs(columnPlainDate, nowMsInDay, displayTimezone),
+        moveTimestampToPlainDate(adapter.getTime(now), columnPlainDate, displayTimezone),
         displayTimezone,
       );
     }, [adapter, columnStart, displayTimezone, now]);

@@ -12,7 +12,6 @@ import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
 import {
   floorToWallClockMinutes,
   toEpochMs,
-  toLocalDayNumber,
   toPlainDateTime,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
@@ -47,9 +46,8 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const store = useEventCalendarStoreContext();
   const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
   const isRtl = useDirection() === 'rtl';
-  const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
+  const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const isCurrentDay = toLocalDayNumber(start, displayTimezone) === nowDayNumber;
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
 
@@ -141,14 +139,12 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
     () => ({
-      start,
-      end,
       axis,
       hasFocus,
       getCursorPositionInElementMs,
       getTimestampAtPointer,
     }),
-    [start, end, axis, hasFocus, getCursorPositionInElementMs, getTimestampAtPointer],
+    [axis, hasFocus, getCursorPositionInElementMs, getTimestampAtPointer],
   );
 
   const keyboardProps = {

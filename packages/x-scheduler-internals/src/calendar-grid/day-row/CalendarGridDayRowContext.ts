@@ -4,15 +4,7 @@ import type { TimelineAxis } from '../../internals/utils/timeline-axis';
 
 export interface CalendarGridDayRowContext {
   /**
-   * The first instant of the row, as a timestamp read in the display timezone.
-   */
-  start: number;
-  /**
-   * The last instant of the row, as a timestamp read in the display timezone.
-   */
-  end: number;
-  /**
-   * The axis the events of the row are positioned on.
+   * The axis of the row: its first and last instants, read in the display timezone.
    */
   axis: TimelineAxis;
   /**

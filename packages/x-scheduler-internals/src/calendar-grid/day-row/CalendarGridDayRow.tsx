@@ -33,8 +33,6 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
 
   const contextValue: CalendarGridDayRowContext = React.useMemo(
     () => ({
-      start,
-      end,
       // The row spans whole days, so its window is never trimmed.
       axis: {
         start,

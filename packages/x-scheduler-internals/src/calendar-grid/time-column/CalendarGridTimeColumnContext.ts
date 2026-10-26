@@ -4,15 +4,8 @@ import type { TimelineAxis } from '../../internals/utils/timeline-axis';
 
 export interface CalendarGridTimeColumnContext {
   /**
-   * The first instant of the column, as a timestamp read in the display timezone.
-   */
-  start: number;
-  /**
-   * The last instant of the column, as a timestamp read in the display timezone.
-   */
-  end: number;
-  /**
-   * The axis the events of the column are positioned on, with the hour window of the view.
+   * The axis of the column: its first and last instants, read in the display timezone, and the
+   * hour window of the view.
    */
   axis: TimelineAxis;
   /**

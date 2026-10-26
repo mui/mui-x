@@ -14,39 +14,10 @@ export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
   const { start, end, collection, durationMs } = parameters;
-  // Deconstructed so an inline collection object stays memoization-friendly.
-  const {
-    start: collectionStart,
-    end: collectionEnd,
-    timezone,
-    dayStartMinute,
-    dayEndMinute,
-  } = collection;
 
   return React.useMemo(
-    () =>
-      computeElementPositionInCollection({
-        start,
-        end,
-        collection: {
-          start: collectionStart,
-          end: collectionEnd,
-          timezone,
-          dayStartMinute,
-          dayEndMinute,
-        },
-        durationMs,
-      }),
-    [
-      start,
-      end,
-      collectionStart,
-      collectionEnd,
-      timezone,
-      dayStartMinute,
-      dayEndMinute,
-      durationMs,
-    ],
+    () => computeElementPositionInCollection({ start, end, collection, durationMs }),
+    [start, end, collection, durationMs],
   );
 }
 

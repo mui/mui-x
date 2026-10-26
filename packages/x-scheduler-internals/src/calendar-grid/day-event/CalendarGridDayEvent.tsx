@@ -56,7 +56,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { start: rowStart, end: rowEnd, axis: rowAxis } = useCalendarGridDayRowContext();
+  const { axis: rowAxis } = useCalendarGridDayRowContext();
+  const { start: rowStart, end: rowEnd } = rowAxis;
   const { hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
   const isRtl = useDirection() === 'rtl';
 
