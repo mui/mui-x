@@ -13,6 +13,8 @@ export {
   addToAdapterDate,
   buildTemporalPlainDate,
   createAdapterDate,
+  createAdapterDateOnPlainDate,
+  createEndOfPlainDate,
   createProcessedDate,
   getDateKey,
   getPlainDateKey,
