@@ -22,12 +22,12 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import {
-  eventTimelinePremiumDependencySelectors,
-  eventTimelinePremiumPresetSelectors,
-} from '../../event-timeline-premium-selectors';
+  NOOP_USE_EVENT_DROP_TARGET,
+  selectDependenciesFeature,
+} from '../../internals/features/eventTimelinePremiumStoreFeatures';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
-import { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
 
 const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
@@ -79,12 +79,9 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const dependencyDropTarget = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.isCreationTarget,
-    occurrenceKey,
-    rowResourceId,
-  );
+  // The feature is frozen at store construction, so the hook is the same on every render.
+  const useEventDropTarget =
+    useStore(store, selectDependenciesFeature)?.useEventDropTarget ?? NOOP_USE_EVENT_DROP_TARGET;
 
   // Feature hooks
   const getOriginalOccurrence = useOriginalOccurrence({
@@ -156,7 +153,13 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
     tabIndex: rowHasFocus ? 0 : -1,
   });
 
-  useEventDependencyDropTarget({ ref, eventId, occurrenceKey, resourceId: rowResourceId });
+  // eslint-disable-next-line react-compiler/react-compiler
+  const dependencyDropTarget = useEventDropTarget({
+    ref,
+    eventId,
+    occurrenceKey,
+    resourceId: rowResourceId,
+  });
 
   const mergedState = {
     ...state,
