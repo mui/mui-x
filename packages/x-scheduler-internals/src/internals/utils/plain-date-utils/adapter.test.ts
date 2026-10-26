@@ -12,6 +12,8 @@ import {
   getPlainDateKey,
 } from './adapter';
 import { PlainDate } from '../base-temporal/PlainDate';
+import type { TemporalSupportedObject } from '../../../models';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
 
 describe('base-temporal adapter bridge', () => {
   it('should build the plain date of a value in the timezone it is labeled with', () => {
@@ -44,45 +46,49 @@ describe('base-temporal adapter bridge', () => {
     ).to.equal('12/30/2011');
   });
 
-  it('should create the processed date processDate() returns for the same instant', () => {
-    const epochMs = Date.UTC(2025, 10, 2, 5, 30);
-    for (const timezone of ['default', 'UTC', 'America/New_York', 'Asia/Kolkata']) {
-      const value = createAdapterDate(adapter, epochMs, timezone);
-      expect(adapter.getTime(value)).to.equal(epochMs);
-      expect(adapter.getTimezone(value)).to.equal(timezone === 'default' ? 'system' : timezone);
+  // The processed date the adapter reads from a value, which processed dates must match.
+  const readThroughAdapter = (currentAdapter: Adapter, value: TemporalSupportedObject) => ({
+    value,
+    key: getDateKey(value, currentAdapter),
+    timestamp: currentAdapter.getTime(value),
+    minutesInDay: currentAdapter.getHours(value) * 60 + currentAdapter.getMinutes(value),
+  });
 
-      const { value: createdValue, ...created } = createProcessedDate(adapter, epochMs, timezone);
-      const { value: processedValue, ...processed } = processDate(value, adapter);
-      expect(created).to.deep.equal(processed);
-      expect(adapter.getTime(createdValue)).to.equal(adapter.getTime(processedValue));
-    }
+  it.each([
+    { epochMs: Date.UTC(2025, 10, 2, 5, 30), timezone: 'default' },
+    { epochMs: Date.UTC(2025, 10, 2, 5, 30), timezone: 'UTC' },
+    { epochMs: Date.UTC(2025, 10, 2, 5, 30), timezone: 'America/New_York' },
+    { epochMs: Date.UTC(2025, 10, 2, 5, 30), timezone: 'Asia/Kolkata' },
+    // Africa/Monrovia used -00:44:30 until 1972, which TZDate reads as +00:44:30.
+    { epochMs: 0, timezone: 'Africa/Monrovia' },
+  ])('should process a date in $timezone like the adapter reads it', ({ epochMs, timezone }) => {
+    const value = createAdapterDate(adapter, epochMs, timezone);
+    expect(adapter.getTime(value)).to.equal(epochMs);
+    expect(adapter.getTimezone(value)).to.equal(timezone === 'default' ? 'system' : timezone);
+
+    expect(processDate(value, adapter)).to.deep.equal(readThroughAdapter(adapter, value));
+    const created = createProcessedDate(adapter, epochMs, timezone);
+    expect(created).to.deep.equal(readThroughAdapter(adapter, created.value));
   });
 
   // Browsers cannot change their timezone through process.env.TZ.
   it.skipIf(!isJSDOM).each(['America/New_York', 'Australia/Lord_Howe', 'Asia/Kolkata'])(
-    'should create the processed date processDate() returns in the system timezone %s',
+    'should process a date like the adapter reads it in the system timezone %s',
     (systemTimezone) => {
       setSystemTimezone(systemTimezone);
       // A new adapter, as adapters cache data computed in the current system timezone.
       const systemAdapter = new TemporalAdapterDateFns();
       // 01:30 in New York, on the day it falls back, and 16:30 in Lord Howe.
       const epochMs = Date.UTC(2025, 10, 2, 5, 30);
-      const { value, ...created } = createProcessedDate(systemAdapter, epochMs, 'default');
-      const { value: processedValue, ...processed } = processDate(
-        systemAdapter.date(new Date(epochMs).toISOString(), 'default'),
-        systemAdapter,
+      const value = systemAdapter.date(new Date(epochMs).toISOString(), 'default');
+
+      expect(processDate(value, systemAdapter)).to.deep.equal(
+        readThroughAdapter(systemAdapter, value),
       );
-      expect(created).to.deep.equal(processed);
-      expect(systemAdapter.getTime(value)).to.equal(systemAdapter.getTime(processedValue));
+      const created = createProcessedDate(systemAdapter, epochMs, 'default');
+      expect(created).to.deep.equal(readThroughAdapter(systemAdapter, created.value));
     },
   );
-
-  it('should read the processed date through the adapter for offsets between -01:00 and 00:00', () => {
-    // Africa/Monrovia used -00:44:30 until 1972, which TZDate reads as +00:44:30.
-    const { value, ...created } = createProcessedDate(adapter, 0, 'Africa/Monrovia');
-    const { value: processedValue, ...processed } = processDate(value, adapter);
-    expect(created).to.deep.equal(processed);
-  });
 
   describe('createAdapterDateFromWallTime', () => {
     const resolve = (value: string, timezone: string) => {
