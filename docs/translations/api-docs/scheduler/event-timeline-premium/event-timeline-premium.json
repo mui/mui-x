@@ -59,6 +59,9 @@
     "events": {
       "description": "The events currently available in the calendar.<br>Event models are compared by reference to avoid reprocessing unchanged events. Replace an event model with a new object when updating it instead of mutating it in place."
     },
+    "features": {
+      "description": "The optional features of the Event Timeline. They are read once when the component mounts, later changes are ignored."
+    },
     "getEventAriaLabel": {
       "description": "Returns the accessible name of an event block. Use it to announce details rendered through the <code>timelineEventContent</code> slot.",
       "typeDescriptions": {

@@ -351,6 +351,31 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    */
   events: PropTypes.arrayOf(PropTypes.object),
   /**
+   * The optional features of the Event Timeline.
+   * They are read once when the component mounts, later changes are ignored.
+   * @example { recurringEvents: recurringEventsFeature }
+   */
+  features: PropTypes.shape({
+    recurringEvents: PropTypes.shape({
+      optionalRenderers: PropTypes.shape({
+        recurrenceTab: PropTypes.elementType,
+        recurringScopeDialog: PropTypes.elementType,
+      }).isRequired,
+      store: PropTypes.shape({
+        applyDataTimezoneToEventUpdate: PropTypes.func.isRequired,
+        computePresets: PropTypes.func.isRequired,
+        deleteRecurringEvent: PropTypes.func.isRequired,
+        getDefaultPresetKey: PropTypes.func.isRequired,
+        getMonthlyReference: PropTypes.func.isRequired,
+        getOccurrencesForVisibleDays: PropTypes.func.isRequired,
+        getWeeklyDays: PropTypes.func.isRequired,
+        isSameRRule: PropTypes.func.isRequired,
+        parseRRule: PropTypes.func.isRequired,
+        updateRecurringEvent: PropTypes.func.isRequired,
+      }).isRequired,
+    }),
+  }),
+  /**
    * Returns the accessible name of an event block.
    * Use it to announce details rendered through the `timelineEventContent` slot.
    * @param {EventTimelineGetEventAriaLabelParameters} parameters The occurrence, its row resource and the default name.

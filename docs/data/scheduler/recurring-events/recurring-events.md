@@ -39,12 +39,28 @@ It does not support every rule or combination yet.
 For more information about specific rules, see [RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10).
 :::
 
-The `EventCalendarPremium` and `EventTimelinePremium` expand recurring events only for the visible range, keep the original duration, and handle all-day and multi-day spans.
+The `EventCalendarPremium` expands recurring events out of the box, only for the visible range, keeping the original duration and handling all-day and multi-day spans.
+
+The `EventTimelinePremium` expands them once you enable the `recurringEvents` feature.
+Import `recurringEventsFeature` from `@mui/x-scheduler-premium/recurring-events` and pass it to the `features` prop:
+
+```tsx
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
+
+<EventTimelinePremium features={{ recurringEvents: recurringEventsFeature }} />;
+```
+
+Without the feature, the Timeline renders each event that has an `rrule` once, as a single event, without the Recurrence tab in the event dialog, and logs a warning in development.
 
 The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
 See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
+
+The demo below shows the Timeline with the feature enabled:
+
+{{"demo": "RecurringEventsTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Frequency and interval
 
