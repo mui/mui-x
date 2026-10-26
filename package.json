@@ -148,7 +148,7 @@
     "zod": "4.6.5"
   },
   "config": {
-    "valeVersion": "3.24.0"
+    "valeVersion": "3.25.1"
   },
   "packageManager": "pnpm@12.11.2",
   "engines": {
