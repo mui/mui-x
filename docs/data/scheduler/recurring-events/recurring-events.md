@@ -41,7 +41,14 @@ For more information about specific rules, see [RFC 5545 §3.3.10 Recurrence Rul
 
 The `EventCalendarPremium` expands recurring events out of the box, only for the visible range, keeping the original duration and handling all-day and multi-day spans.
 
-The `EventTimelinePremium` expands them once you enable the `recurringEvents` feature.
+The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
+See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
+
+{{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Event Timeline
+
+The `EventTimelinePremium` expands recurring events once you enable the `recurringEvents` feature.
 Import `recurringEventsFeature` from `@mui/x-scheduler-premium/recurring-events` and pass it to the `features` prop:
 
 ```tsx
@@ -52,11 +59,6 @@ import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-event
 ```
 
 Without the feature, the Timeline renders each event that has an `rrule` once, as a single event, without the Recurrence tab in the event dialog, and logs a warning in development.
-
-The rule is evaluated in the event's `timezone`, even when it is edited from the event dialog while the calendar displays another timezone.
-See [Recurring events and timezones](/x/react-scheduler/timezone/#recurring-events-and-timezones) for details.
-
-{{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
 
 The demo below shows the Timeline with the feature enabled:
 
