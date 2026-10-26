@@ -122,6 +122,11 @@ export const schedulerEventSelectors = {
     return eventCreation?.duration ?? DEFAULT_EVENT_CREATION_CONFIG.duration;
   },
   /**
+   * The deletion config, or `false` when deleting from the UI is disabled (`eventDeletion={false}`
+   * or a read-only scheduler). Programmatic deletion through the store ignores it.
+   */
+  deletionConfig: (state: State) => (state.readOnly ? false : state.eventDeletion),
+  /**
    * Whether an occurrence whose own `resource` carries no shape (`null`/`undefined`) should
    * be edited/created as multi-resource. Reads `eventCreation.canHaveMultipleResources`
    * directly off the raw prop — not through `creationConfig` — so it still resolves when

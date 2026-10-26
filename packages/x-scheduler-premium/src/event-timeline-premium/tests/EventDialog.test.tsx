@@ -88,8 +88,8 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'timeline',
-      start,
-      end,
+      start: adapter.getTime(start),
+      end: adapter.getTime(end),
       lockSurfaceType: true,
       resourceId: rowResource.id,
     });

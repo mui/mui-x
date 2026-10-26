@@ -224,6 +224,58 @@ describe('iterate()', () => {
         expect(dayCells.map((cell) => cell.spanInTicks)).to.deep.equal([18]);
       });
     });
+
+    it('should keep the day cells on midnight and one tick wide after a transition at midnight', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+      // The dayAndMonth shape: 8 weeks of day ticks.
+      const start = adapter.startOfDay(adapter.date('2026-03-01T12:00:00', 'America/Havana'));
+      const end = adapter.endOfDay(adapter.addDays(start, 8 * 7 - 1));
+
+      const cells = iterate(adapter, 'day', 'day', start, end);
+
+      expect(cells.length).to.equal(56);
+      expect(cells.every((cell) => cell.spanInTicks === 1)).to.equal(true);
+      // March 8th, the 8th cell, starts at 01:00.
+      expect(cells.every((cell) => adapter.getHours(cell.date) === 0 || cell.index === 7)).to.equal(
+        true,
+      );
+    });
+
+    it('should keep the first day cell whole when the range starts on a transition at midnight', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026, so the
+      // range starts at 01:00.
+      const start = adapter.startOfDay(adapter.date('2026-03-08T12:00:00', 'America/Havana'));
+      const end = adapter.endOfDay(adapter.addDays(start, 2));
+
+      const dayTickCells = iterate(adapter, 'day', 'day', start, end);
+      const hourTickCells = iterate(adapter, 'day', 'hour', start, end);
+      const hourCells = iterate(adapter, 'hour', 'hour', start, end);
+
+      expect(dayTickCells.map((cell) => cell.spanInTicks)).to.deep.equal([1, 1, 1]);
+      expect(hourTickCells.map((cell) => cell.spanInTicks)).to.deep.equal([24, 24, 24]);
+      expect(hourCells.length).to.equal(3 * 24);
+    });
+
+    it('should give unique keys to the cells of a date skipped by a transition', () => {
+      // Pacific/Apia skipped December 30th, 2011 entirely: its wall-clock slot stays on the
+      // axis but resolves to the same instants as December 31st.
+      const start = adapter.startOfDay(adapter.date('2011-12-29T12:00:00', 'Pacific/Apia'));
+      const end = adapter.endOfDay(adapter.date('2012-01-01T12:00:00', 'Pacific/Apia'));
+
+      const dayCells = iterate(adapter, 'day', 'day', start, end);
+      const hourCells = iterate(adapter, 'hour', 'hour', start, end);
+
+      expect(dayCells.length).to.equal(4);
+      expect(new Set(dayCells.map((cell) => cell.key)).size).to.equal(4);
+      expect(hourCells.length).to.equal(4 * 24);
+      expect(new Set(hourCells.map((cell) => cell.key)).size).to.equal(4 * 24);
+      expect(dayCells.map((cell) => cell.plainDate.toString())).to.deep.equal([
+        '2011-12-29',
+        '2011-12-30',
+        '2011-12-31',
+        '2012-01-01',
+      ]);
+    });
   });
 
   describe('boundary clamping', () => {

@@ -171,6 +171,42 @@ describe('MonthView - Drag and Drop', () => {
     expect(updatedEvents[0].end).to.equal('2025-07-10T09:00:00.000Z');
   });
 
+  it('should keep the time of day of an event moved across a DST transition', async () => {
+    // Europe/Paris springs forward from 02:00 to 03:00 on March 29th, 2026.
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Meeting')
+      .span('2026-03-28T09:00:00Z', '2026-03-28T10:00:00Z') // 10:00 to 11:00 CET
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneMonthView
+        events={[event]}
+        resources={[]}
+        displayTimezone="Europe/Paris"
+        visibleDate={new Date('2026-03-15T12:00:00Z')}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    const eventElement = screen.getAllByRole('button', { name: /Meeting/i })[0];
+    mockElementBounds(eventElement, { left: 0, width: 100 });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getMonthViewCell(30),
+        sourceClientX: 50,
+      });
+    });
+
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(updatedEvents[0].start).to.equal('2026-03-30T08:00:00.000Z'); // 10:00 CEST
+    expect(updatedEvents[0].end).to.equal('2026-03-30T09:00:00.000Z'); // 11:00 CEST
+  });
+
   // Browsers cannot change their timezone through process.env.TZ.
   it.skipIf(!isJSDOM)(
     'should move an event onto a repeated hour at its first instant, whatever the timezone of the system',

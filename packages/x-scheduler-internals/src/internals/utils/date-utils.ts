@@ -1,6 +1,13 @@
 import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
+import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
+import {
+  buildTemporalPlainDate,
+  createAdapterDate,
+  createStartOfPlainDate,
+} from './plain-date-utils/adapter';
+import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
 
 /**
  * Builds an adapter-agnostic format string that produces an ISO 8601 date.
@@ -66,29 +73,6 @@ export function dateToEventString(
   return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
 }
 
-export function mergeDateAndTime(
-  adapter: Adapter,
-  dateParam: TemporalSupportedObject,
-  timeParam: TemporalSupportedObject,
-): TemporalSupportedObject {
-  let mergedDate = dateParam;
-  mergedDate = adapter.setHours(mergedDate, adapter.getHours(timeParam));
-  mergedDate = adapter.setMinutes(mergedDate, adapter.getMinutes(timeParam));
-  mergedDate = adapter.setSeconds(mergedDate, adapter.getSeconds(timeParam));
-  mergedDate = adapter.setMilliseconds(mergedDate, adapter.getMilliseconds(timeParam));
-
-  return mergedDate;
-}
-
-/**
- * Returns a string representation of the date.
- * It can be used as key in Maps or passed to the React `key` property when looping through days.
- * It only contains date information, two dates representing the same day but with different time will have the same key.
- */
-export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
-  return adapter.format(day, 'localizedNumericDate');
-}
-
 /**
  * Gets the end date of an event occurrence based on its start date.
  * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
@@ -107,56 +91,14 @@ export function getOccurrenceEnd({
 }
 
 /**
- * Maps a known-Sunday reference date through adapter.getDayOfWeek to anchor
- * the 1..7 adapter day-number to JS weekdays (0=Sun … 6=Sat). Cached per
- * adapter instance.
- */
-const sundayDayNumberCache = new WeakMap<Adapter, number>();
-
-function getSundayDayNumber(adapter: Adapter): number {
-  let cached = sundayDayNumberCache.get(adapter);
-  if (cached === undefined) {
-    // 2025-01-05 is a Sunday; use UTC noon to survive any timezone offset
-    const knownSunday = adapter.date('2025-01-05', 'UTC');
-    cached = adapter.getDayOfWeek(knownSunday);
-    if (process.env.NODE_ENV !== 'production') {
-      if (!Number.isInteger(cached) || cached < 1 || cached > 7) {
-        // eslint-disable-next-line mui/no-guarded-throw
-        throw new Error(
-          `MUI X Scheduler: adapter.getDayOfWeek returned an unexpected value (${cached}).` +
-            ' Expected an integer in the range 1–7.' +
-            ' Check that your adapter implements getDayOfWeek correctly.',
-        );
-      }
-    }
-    sundayDayNumberCache.set(adapter, cached);
-  }
-  return cached;
-}
-
-/**
  * The JS weekday (0=Sun … 6=Sat) of a date, read in its own timezone.
  */
 export function getJsDayOfWeek(adapter: Adapter, date: TemporalSupportedObject): number {
-  return (adapter.getDayOfWeek(date) - getSundayDayNumber(adapter) + 7) % 7;
+  // ISO weekdays go from 1 (Monday) to 7 (Sunday).
+  return buildTemporalPlainDate(adapter, date).dayOfWeek % 7;
 }
 
-/**
- * Returns the start of the week for `date`, using `weekStartsOn` as the first
- * day of the week (0 = Sunday … 6 = Saturday).
- *
- * When `weekStartsOn` is `undefined` the locale default (adapter.startOfWeek)
- * is used unchanged.
- */
-export function getStartOfWeek(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): TemporalSupportedObject {
-  if (weekStartsOn === undefined) {
-    return adapter.startOfWeek(date);
-  }
-
+function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
   if (process.env.NODE_ENV !== 'production') {
     if (
       !Number.isInteger(weekStartsOn) ||
@@ -170,33 +112,67 @@ export function getStartOfWeek(
       );
     }
   }
-
-  // getDayOfWeek(Sunday) = s  =>  getDayOfWeek(Sunday + k) = ((s - 1 + k) % 7) + 1
-  const s = getSundayDayNumber(adapter);
-  const targetDayNumber = ((s - 1 + weekStartsOn) % 7) + 1;
-
-  const currentDayNumber = adapter.getDayOfWeek(date); // 1..7
-  const delta = (currentDayNumber - targetDayNumber + 7) % 7; // days since target weekday
-  return adapter.startOfDay(adapter.addDays(date, -delta));
 }
 
 /**
- * Returns the end of the week for `date` (inclusive last moment of the 7th day),
- * using `weekStartsOn` as the first day of the week.
- *
- * When `weekStartsOn` is `undefined` the locale default (adapter.endOfWeek) is used.
+ * The first day of the week of `date`, read in its own timezone.
  */
-export function getEndOfWeek(
+export function getWeekStartPlainDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  weekStartsOn: WeekStartsOn | undefined,
+): PlainDate {
+  return getPlainDateWeekStart(adapter, buildTemporalPlainDate(adapter, date), weekStartsOn);
+}
+
+const localeFirstDaysOfWeek = new WeakMap<Adapter, number>();
+
+/**
+ * The ISO weekday (1 = Monday … 7 = Sunday) the weeks of the locale of the adapter start on.
+ */
+function getLocaleFirstDayOfWeek(adapter: Adapter): number {
+  let firstDayOfWeek = localeFirstDaysOfWeek.get(adapter);
+  if (firstDayOfWeek === undefined) {
+    // The adapter numbers the days of the week from 1, starting on the first day of the locale.
+    // January 1st, 2024 is a Monday.
+    const monday = createAdapterDate(adapter, Date.UTC(2024, 0, 1, 12), 'UTC');
+    firstDayOfWeek = ((8 - adapter.getDayOfWeek(monday)) % 7) + 1;
+    localeFirstDaysOfWeek.set(adapter, firstDayOfWeek);
+  }
+  return firstDayOfWeek;
+}
+
+/**
+ * The first day of the week of `plainDate`. Without `weekStartsOn`, the week starts on the first
+ * day of the locale of the adapter.
+ */
+export function getPlainDateWeekStart(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  weekStartsOn: WeekStartsOn | undefined,
+): PlainDate {
+  if (weekStartsOn !== undefined) {
+    checkWeekStartsOn(weekStartsOn);
+  }
+  // `weekStartsOn` and ISO weekdays agree, except for Sunday (0 and 7), which both accept.
+  return plainDateFromDayNumber(
+    getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn ?? getLocaleFirstDayOfWeek(adapter)),
+  );
+}
+
+/**
+ * Returns the start of the week for `date`, using `weekStartsOn` as the first
+ * day of the week (0 = Sunday … 6 = Saturday).
+ *
+ * When `weekStartsOn` is `undefined` the first day of the week of the locale is used.
+ */
+export function getStartOfWeek(
   adapter: Adapter,
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,
 ): TemporalSupportedObject {
-  if (weekStartsOn === undefined) {
-    return adapter.endOfWeek(date);
-  }
-
-  const weekStart = getStartOfWeek(adapter, date, weekStartsOn);
-  return adapter.endOfDay(adapter.addDays(weekStart, 6));
+  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
+  return createStartOfPlainDate(adapter, weekStartPlainDate, adapter.getTimezone(date));
 }
 
 /**
@@ -216,9 +192,12 @@ export function getWeekNumber(
   if (weekStartsOn === undefined) {
     return adapter.getWeekNumber(date);
   }
-  const weekStart = getStartOfWeek(adapter, date, weekStartsOn);
-  const midWeek = adapter.addDays(weekStart, 3);
-  const jan4 = adapter.addDays(adapter.startOfYear(midWeek), 3);
-  const week1Start = getStartOfWeek(adapter, jan4, weekStartsOn);
-  return adapter.differenceInDays(weekStart, week1Start) / 7 + 1;
+  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
+  // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.
+  const year = weekStartPlainDate.add({ days: 3 }).year;
+  const firstWeekStart = getStartOfWeekDayNumber(
+    PlainDate.from({ year, month: 1, day: 4 }).dayNumber,
+    weekStartsOn,
+  );
+  return (weekStartPlainDate.dayNumber - firstWeekStart) / 7 + 1;
 }

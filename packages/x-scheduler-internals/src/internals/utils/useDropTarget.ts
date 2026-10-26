@@ -10,6 +10,7 @@ import type {
   SchedulerEventUpdatedProperties,
   TemporalSupportedObject,
   SchedulerResourceId,
+  TemporalTimezone,
 } from '../../models';
 import type {
   EventDropData,
@@ -23,8 +24,8 @@ import {
   schedulerOtherSelectors,
 } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
+import { createAdapterDate } from './plain-date-utils/adapter';
 import type { StandaloneEvent } from '../../standalone-event';
-import { useAdapterContext } from '../../use-adapter-context';
 import { getPrimaryResourceId } from './event-utils';
 
 // Not every drag source exposes `sourceResourceId` (only rows that know which
@@ -49,7 +50,6 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     addPropertiesToDroppedEvent,
   } = parameters;
 
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   React.useEffect(() => {
@@ -90,7 +90,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         surfaceType,
         start,
         // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
-        end: adapter.addMinutes(start, data.eventData.duration ?? eventCreationConfig.duration),
+        end: start + (data.eventData.duration ?? eventCreationConfig.duration) * 60_000,
         eventData: data.eventData,
         onEventDrop: data.onEventDrop,
         resourceId:
@@ -123,6 +123,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           getDataFromInside,
           getDataFromOutside,
           input: location.current.input,
+          timezone: schedulerOtherSelectors.displayTimezone(store.state),
         });
         if (newPlaceholder) {
           store.setOccurrencePlaceholder(newPlaceholder);
@@ -134,6 +135,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           getDataFromInside,
           getDataFromOutside,
           input: location.current.input,
+          timezone: schedulerOtherSelectors.displayTimezone(store.state),
         });
 
         const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
@@ -172,7 +174,6 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     getEventDropData,
     isValidDropTarget,
     addPropertiesToDroppedEvent,
-    adapter,
     store,
   ]);
 }
@@ -195,15 +196,23 @@ export namespace useDropTarget {
     resourceId?: SchedulerResourceId | null;
   }
 
+  /**
+   * Builds the placeholder of an event moved or resized inside the Scheduler.
+   * `newStart` and `newEnd` are timestamps in milliseconds.
+   */
   export type GetDataFromInside = (
     data: Exclude<EventDropData, StandaloneEvent.DragData>,
-    newStart: TemporalSupportedObject,
-    newEnd: TemporalSupportedObject,
+    newStart: number,
+    newEnd: number,
   ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
 
+  /**
+   * Builds the placeholder of an event dragged from outside the Scheduler.
+   * `start` is a timestamp in milliseconds.
+   */
   export type GetDataFromOutside = (
     data: StandaloneEvent.DragData,
-    start: TemporalSupportedObject,
+    start: number,
   ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 
   export type GetEventDropData = (parameters: {
@@ -211,6 +220,10 @@ export namespace useDropTarget {
     input: { clientX: number; clientY: number };
     getDataFromInside: GetDataFromInside;
     getDataFromOutside: GetDataFromOutside;
+    /**
+     * The display timezone, in which the dates of the drop are read.
+     */
+    timezone: TemporalTimezone;
   }) => SchedulerOccurrencePlaceholder | undefined;
 }
 
@@ -227,7 +240,7 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const { eventId, start, end, originalOccurrence } = placeholder;
 
-  const adapter = store.state.adapter;
+  const { adapter, displayTimezone } = store.state;
 
   const additionalChanges = addPropertiesToDroppedEvent?.() ?? {};
 
@@ -241,11 +254,11 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
     additionalChanges.allDay != null &&
     additionalChanges.allDay !== (originalOccurrence.allDay ?? false);
   const changes: SchedulerEventUpdatedProperties = { id: eventId };
-  if (allDayToggled || !adapter.isEqual(originalOccurrence.displayTimezone.start.value, start)) {
-    changes.start = start;
+  if (allDayToggled || originalOccurrence.displayTimezone.start.timestamp !== start) {
+    changes.start = createAdapterDate(adapter, start, displayTimezone);
   }
-  if (allDayToggled || !adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)) {
-    changes.end = end;
+  if (allDayToggled || originalOccurrence.displayTimezone.end.timestamp !== end) {
+    changes.end = createAdapterDate(adapter, end, displayTimezone);
   }
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
@@ -311,7 +324,6 @@ export function applyInternalDragOrResizeOccurrencePlaceholder(
   // the scheduling plugin can clamp the drop, and its dates come in the data timezone.
   // Only the committed bounds: an untouched one keeps its stored value on the occurrence.
   if (schedulerOtherSelectors.isEditedOccurrence(store.state, placeholder.occurrenceKey)) {
-    const { displayTimezone } = store.state;
     const toDisplayTimezone = (date: TemporalSupportedObject | undefined) =>
       date == null ? undefined : adapter.setTimezone(date, displayTimezone);
     store.setEditingOccurrenceTimes({
@@ -326,9 +338,10 @@ function applyExternalDragOccurrencePlaceholder(
   placeholder: SchedulerOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
+  const { adapter, displayTimezone } = store.state;
   const event = {
-    start: placeholder.start,
-    end: placeholder.end,
+    start: createAdapterDate(adapter, placeholder.start, displayTimezone),
+    end: createAdapterDate(adapter, placeholder.end, displayTimezone),
     ...placeholder.eventData,
   };
 

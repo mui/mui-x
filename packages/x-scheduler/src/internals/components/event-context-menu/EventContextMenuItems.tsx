@@ -32,6 +32,9 @@ interface UseEventContextMenuItemsParameters {
  * `ReadonlyContent`, and `getInitialEditingMode` never arms the toolbar for one): the menu still
  * opens, but "Edit event" becomes "Show details" — `startEditing` already resolves to the
  * read-only view, the label just has to say so — and Delete is dropped entirely.
+ *
+ * Delete is also dropped when deletion is disabled (`eventDeletion={false}`), like the toolbar and
+ * the form, while "Edit event" stays.
  */
 export function useEventContextMenuItems(
   params: UseEventContextMenuItemsParameters,
@@ -43,6 +46,7 @@ export function useEventContextMenuItems(
   const { startEditing } = useEventEditingContext();
 
   const isReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
+  const deletionConfig = useStore(store, schedulerEventSelectors.deletionConfig);
 
   const handleEdit = (event: React.MouseEvent) => {
     onRequestClose();
@@ -78,7 +82,7 @@ export function useEventContextMenuItems(
     </MenuItem>,
   ];
 
-  if (!isReadOnly) {
+  if (!isReadOnly && deletionConfig !== false) {
     items.push(
       <MenuItem className={classes.eventContextMenuDeleteItem} key="delete" onClick={handleDelete}>
         <ListItemIcon>

@@ -5,6 +5,7 @@ import {
 } from '@mui/x-internals/disposable';
 import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -25,6 +26,7 @@ import type {
   SchedulerRenderableEventOccurrence,
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
+  SchedulerEventDeletionConfig,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -56,7 +58,6 @@ import {
   createEventModel,
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
-  shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString, getOccurrenceEnd } from '../date-utils';
 import {
@@ -106,6 +107,23 @@ function createEventChangedWhileConfirmingError() {
   return /* minify-error-disabled */ new Error(
     'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
   );
+}
+
+/**
+ * Normalizes the `eventDeletion` parameter: `false` disables deletion, `true`, an object or
+ * `undefined` resolve to a full config. Returns `previous` when its `confirmation` is unchanged,
+ * so `update()` doesn't treat a new inline object as a change and notify every subscriber.
+ */
+function getEventDeletionState(
+  parameter: Partial<SchedulerEventDeletionConfig> | boolean | undefined,
+  previous?: SchedulerEventDeletionConfig | false,
+): SchedulerEventDeletionConfig | false {
+  if (parameter === false) {
+    return false;
+  }
+
+  const confirmation = (typeof parameter === 'object' ? parameter.confirmation : undefined) ?? true;
+  return previous && previous.confirmation === confirmation ? previous : { confirmation };
 }
 
 function toUpdateEventResult(result: {
@@ -239,7 +257,7 @@ export class SchedulerStore<
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
-      eventDeletion: { confirmation: parameters.eventDeletion?.confirmation ?? true },
+      eventDeletion: getEventDeletionState(parameters.eventDeletion),
       pendingDeleteConfirmation: null,
     };
 
@@ -348,11 +366,10 @@ export class SchedulerStore<
     // Kept out of `deriveStateFromParameters`, which has no previous state to compare against:
     // a fresh object on every call would make `update()` treat an unchanged `confirmation` as a
     // change and notify every subscriber.
-    const confirmation = parameters.eventDeletion?.confirmation ?? true;
-    newSchedulerState.eventDeletion =
-      confirmation === this.state.eventDeletion.confirmation
-        ? this.state.eventDeletion
-        : { confirmation };
+    newSchedulerState.eventDeletion = getEventDeletionState(
+      parameters.eventDeletion,
+      this.state.eventDeletion,
+    );
 
     if (
       !hasDataSource(parameters) &&
@@ -1188,7 +1205,10 @@ export class SchedulerStore<
    * Requests deletion of an event, opening the confirmation dialog when configured.
    */
   public requestEventDeletion = ({ eventId, onSubmit }: RequestEventDeletionParameters) => {
-    if (!this.state.eventDeletion.confirmation) {
+    // `eventDeletion={false}` only removes the UI affordances: a programmatic request still
+    // deletes, with nothing to confirm.
+    const { eventDeletion } = this.state;
+    if (eventDeletion === false || !eventDeletion.confirmation) {
       this.deleteEvent(eventId);
       onSubmit?.();
       return;
@@ -1445,8 +1465,7 @@ export class SchedulerStore<
     newPlaceholder: SchedulerOccurrencePlaceholder | null,
     event?: Event,
   ) => {
-    const { adapter, occurrencePlaceholder: previous } = this.state;
-    if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
+    if (!fastObjectShallowCompare(this.state.occurrencePlaceholder, newPlaceholder)) {
       this.occurrencePlaceholderEvent = newPlaceholder == null ? undefined : event;
       this.set('occurrencePlaceholder', newPlaceholder);
     }

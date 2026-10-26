@@ -5,7 +5,6 @@ import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/i
 import type {
   SchedulerProcessedEvent,
   SchedulerEventId,
-  SchedulerOccurrencePlaceholder,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerEventModelStructure,
@@ -41,42 +40,6 @@ export function getShouldEventRequireResource(
     );
   }
   return shouldEventRequireResource;
-}
-
-/**
- * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
- */
-export function shouldUpdateOccurrencePlaceholder(
-  adapter: Adapter,
-  previous: SchedulerOccurrencePlaceholder | null,
-  next: SchedulerOccurrencePlaceholder | null,
-): boolean {
-  if (next == null || previous == null) {
-    return next !== previous;
-  }
-
-  const untypedPrevious = previous as Record<string, any>;
-  const untypedNext = next as Record<string, any>;
-
-  // Compare keys present in `next`.
-  for (const key in untypedNext) {
-    if (key === 'start' || key === 'end') {
-      if (!adapter.isEqual(untypedNext[key], untypedPrevious[key])) {
-        return true;
-      }
-    } else if (!Object.is(untypedNext[key], untypedPrevious[key])) {
-      return true;
-    }
-  }
-
-  // Catch keys present in `previous` but removed from `next` (e.g. `isHidden`).
-  for (const key in untypedPrevious) {
-    if (!(key in untypedNext)) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {

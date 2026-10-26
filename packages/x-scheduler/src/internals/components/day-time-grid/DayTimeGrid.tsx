@@ -22,7 +22,13 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getDisplayedHourRange, getInitialScrollTime } from '@mui/x-scheduler-internals/internals';
+import {
+  createEndOfPlainDate,
+  getDisplayedHourRange,
+  getInitialScrollTime,
+  toLocalDayNumber,
+  toPlainDateTime,
+} from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -371,8 +377,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -390,22 +397,17 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const [hasScroll, setHasScroll] = React.useState(false);
 
-  const { start, end } = React.useMemo(
-    () => ({
+  const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
+    const lastPlainDate = toPlainDateTime(days[days.length - 1].timestamp, displayTimezone).date;
+    return {
       start: days[0].value,
-      end: adapter.endOfDay(days[days.length - 1].value),
-    }),
-    [adapter, days],
-  );
+      end: createEndOfPlainDate(adapter, lastPlainDate, displayTimezone),
+      firstDayNumber: toLocalDayNumber(days[0].timestamp, displayTimezone),
+      lastDayNumber: lastPlainDate.dayNumber,
+    };
+  }, [adapter, days, displayTimezone]);
 
-  const isTodayInView = React.useMemo(
-    () =>
-      adapter.isWithinRange(now, [
-        adapter.startOfDay(days[0].value),
-        adapter.endOfDay(days[days.length - 1].value),
-      ]),
-    [adapter, days, now],
-  );
+  const isTodayInView = nowDayNumber >= firstDayNumber && nowDayNumber <= lastDayNumber;
 
   const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;

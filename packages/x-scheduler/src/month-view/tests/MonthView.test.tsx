@@ -841,7 +841,7 @@ describe('<MonthView />', () => {
       await act(async () => {
         store!.setOccurrencePlaceholder({
           ...placeholder,
-          end: adapter.addHours(placeholder.end, -1),
+          end: placeholder.end - 60 * 60_000,
         });
       });
 
@@ -865,8 +865,8 @@ describe('<MonthView />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1347,6 +1347,23 @@ describe('<MonthView />', () => {
         const cells = within(row).getAllByRole('gridcell');
         expect(cells.length).to.equal(7);
       });
+    });
+
+    it('should end on the week of the last day of the month when the timezone skips that day', () => {
+      // Pacific/Kiritimati skipped Saturday, December 31st, 1994, the last day of its week.
+      render(
+        <EventCalendar
+          events={[]}
+          view="month"
+          visibleDate={new Date('1994-12-15T00:00:00Z')}
+          displayTimezone="Pacific/Kiritimati"
+        />,
+      );
+
+      const cellNumbers = document.querySelectorAll(
+        `.${eventCalendarClasses.monthView} .${eventCalendarClasses.monthViewCellNumber}`,
+      );
+      expect(cellNumbers[cellNumbers.length - 1]).to.have.text('30');
     });
 
     it('should display correct ISO week numbers when weekStartsOn=1 and showWeekNumber=true', () => {

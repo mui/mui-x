@@ -4,15 +4,12 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { addDaysOnWallClock, moveToPlainDate } from '../../internals/utils/drag-utils';
 import { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-} from '../../internals/utils/plain-date-utils/adapter';
-import {
+  addDaysOnWallClock,
   getEndOfDayMs,
   getStartOfDayMs,
+  moveTimestampToPlainDate,
   toPlainDateTime,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
@@ -35,19 +32,21 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
   // Feature hooks
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside }) => {
+    ({ data, getDataFromInside, getDataFromOutside, timezone }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
+      const valueTimestamp = adapter.getTime(value);
+
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, value);
+        return getDataFromOutside(data, valueTimestamp);
       }
 
-      // Days are compared as plain dates, and each date moves on the wall clock of its timezone.
-      const valuePlainDate = buildTemporalPlainDate(adapter, value);
-      const timezone = adapter.getTimezone(value);
+      // Days are compared as plain dates, and each date moves on the wall clock of the display
+      // timezone.
+      const valuePlainDate = toPlainDateTime(valueTimestamp, timezone).date;
 
       // Move a Day Grid Event within the Day Grid, or a Time Grid Event into it
       if (data.source === 'CalendarGridDayEvent' || data.source === 'CalendarGridTimeEvent') {
@@ -55,25 +54,19 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         const grabbedPlainDate =
           data.source === 'CalendarGridDayEvent'
             ? data.draggedDay
-            : toPlainDateTime(
-                adapter.getTime(data.start) + data.initialCursorPositionInEventMs,
-                timezone,
-              ).date;
+            : toPlainDateTime(data.start + data.initialCursorPositionInEventMs, timezone).date;
         const dayCount = valuePlainDate.dayNumber - grabbedPlainDate.dayNumber;
         return getDataFromInside(
           data,
-          addDaysOnWallClock(adapter, data.start, dayCount),
-          addDaysOnWallClock(adapter, data.end, dayCount),
+          addDaysOnWallClock(data.start, dayCount, timezone),
+          addDaysOnWallClock(data.end, dayCount, timezone),
         );
       }
 
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          const order = PlainDate.compare(
-            valuePlainDate,
-            buildTemporalPlainDate(adapter, data.end),
-          );
+          const order = PlainDate.compare(valuePlainDate, toPlainDateTime(data.end, timezone).date);
           if (order > 0) {
             return undefined;
           }
@@ -81,19 +74,15 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           // The new start keeps its time of day, unless it moves to the day of the end.
           const newStart =
             order === 0
-              ? createAdapterDate(
-                  adapter,
-                  getStartOfDayMs(adapter.getTime(value), timezone),
-                  timezone,
-                )
-              : moveToPlainDate(adapter, data.start, valuePlainDate);
+              ? getStartOfDayMs(valueTimestamp, timezone)
+              : moveTimestampToPlainDate(data.start, valuePlainDate, timezone);
           return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
           const order = PlainDate.compare(
             valuePlainDate,
-            buildTemporalPlainDate(adapter, data.start),
+            toPlainDateTime(data.start, timezone).date,
           );
           if (order < 0) {
             return undefined;
@@ -102,12 +91,8 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           // The new end keeps its time of day, unless it moves to the day of the start.
           const newEnd =
             order === 0
-              ? createAdapterDate(
-                  adapter,
-                  getEndOfDayMs(adapter.getTime(value), timezone),
-                  timezone,
-                )
-              : moveToPlainDate(adapter, data.end, valuePlainDate);
+              ? getEndOfDayMs(valueTimestamp, timezone)
+              : moveTimestampToPlainDate(data.end, valuePlainDate, timezone);
 
           return getDataFromInside(data, data.start, newEnd);
         }

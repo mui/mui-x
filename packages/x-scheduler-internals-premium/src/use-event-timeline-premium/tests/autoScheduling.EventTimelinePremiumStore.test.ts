@@ -192,8 +192,8 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
           originalOccurrence: occurrenceB,
           sourceResourceId: null,
           resourceId: null,
-          start: date('2025-07-03T09:30:00Z'),
-          end: date('2025-07-03T11:00:00Z'),
+          start: adapter.getTime(date('2025-07-03T09:30:00Z')),
+          end: adapter.getTime(date('2025-07-03T11:00:00Z')),
         },
       );
 

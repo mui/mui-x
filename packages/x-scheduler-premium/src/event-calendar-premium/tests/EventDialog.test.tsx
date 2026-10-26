@@ -141,8 +141,8 @@ describe('<EventDialogContent open />', () => {
     const placeholder: SchedulerOccurrencePlaceholderCreation = {
       type: 'creation',
       surfaceType: 'time-grid' as const,
-      start,
-      end,
+      start: adapter.getTime(start),
+      end: adapter.getTime(end),
       lockSurfaceType: false,
       resourceId: null,
     };
@@ -1210,8 +1210,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1245,8 +1245,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1651,8 +1651,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1696,8 +1696,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1740,8 +1740,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1783,8 +1783,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: true,
                 resourceId: null,
               })
@@ -1825,8 +1825,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1857,8 +1857,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1927,8 +1927,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -2709,6 +2709,27 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['FR'] });
       });
 
+      it('should label each weekday once when the timezone skips a day of the week', async () => {
+        // Pacific/Apia skips Friday, December 30th, 2011.
+        const { user } = renderCrossTimezoneDialog(
+          EventBuilder.new()
+            .title('Standup')
+            .withDataTimezone('Pacific/Apia')
+            .span('2011-12-28T09:00:00', '2011-12-28T09:30:00'),
+          'Pacific/Apia',
+          { visibleDate: adapter.date('2011-12-28T12:00:00', 'Pacific/Apia') },
+        );
+
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(
+          await screen.findByRole('option', { name: 'Repeats weekly on Wednesday' }),
+        );
+
+        expect(screen.getAllByRole('checkbox', { name: 'Friday' })).to.have.length(1);
+        expect(screen.getAllByRole('checkbox', { name: 'Saturday' })).to.have.length(1);
+      });
+
       it('should re-anchor the weekday of a picked preset when the start is edited afterwards', async () => {
         const { user, event, onEventsChange } = renderCrossTimezoneDialog(
           lateCallBuilder(),
@@ -2926,10 +2947,7 @@ describe('<EventDialogContent open />', () => {
               onMount={(mountedStore) => {
                 store = mountedStore;
                 (mountedStore as any).lazyLoading.queueDataFetchForRange(
-                  {
-                    start: adapter.date('2025-05-26T00:00:00', 'UTC'),
-                    end: adapter.date('2025-05-26T00:00:00', 'UTC'),
-                  },
+                  { start: Date.UTC(2025, 4, 26), end: Date.UTC(2025, 4, 26) },
                   true,
                 );
               }}
