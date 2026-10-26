@@ -163,27 +163,73 @@ function isRowGroupingAffected(
 const NO_VIEW_REFRESH = { refilter: false, resort: false };
 const FULL_VIEW_REFRESH = { refilter: true, resort: true };
 
+type ViewStep = 'filtering' | 'sorting' | 'row grouping';
+
 /**
- * Applies the filtering, the sorting or the row tree again, and returns whether it was applied. It
- * runs inside the hydration of the columns when a hydration published `columnsChange`, where a
- * throw would leave the pipe processing of the grid locked. After a type change, the core can fail
- * to filter or sort with a model made for the previous type: an operator that is gone (`>` on a
- * `string` column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef`
- * comparator or operator written for one type. The core throws before it sets the state, so
- * nothing changes: the view keeps its rows and order, and the error comes at the next filtering or
- * sorting, like after the type change of a regular column. A regroup fails when the filtering or
- * the sorting of the rebuilt tree does (or another listener of its `rowsSet`): both are applied
- * again. Until the next filtering that succeeds, the group rows can show stale or missing counts,
- * and until the next sorting that succeeds, they keep the previous order (new group rows missing
- * or misplaced).
+ * Runs a step of the view and returns what it threw, or `null`. The regroup keeps the error: the
+ * filtering and the sorting applied after it usually fail again and report it more precisely.
  */
-function tryToApplyView(apply: () => void) {
+function catchViewFailure(apply: () => void): { error: unknown } | null {
   try {
     apply();
-    return true;
-  } catch {
-    return false;
+    return null;
+  } catch (error) {
+    return { error };
   }
+}
+
+const VIEW_STEP_CONSEQUENCES: Record<ViewStep, string> = {
+  filtering:
+    'The rows keep their previous filtering, and the next filtering throws the same error until its cause is fixed.',
+  sorting:
+    'The rows keep their previous order, and the next sorting throws the same error until its cause is fixed.',
+  'row grouping':
+    'The rows can stay in their previous groups, and the features that run after the row grouping can be out of date.',
+};
+
+const VIEW_STEP_CAUSES: Record<ViewStep, string> = {
+  filtering:
+    'Check the filter model and the filter operators of the columns (`computedColDef` for the computed ones) against the new values.',
+  sorting:
+    'Check the sort model and the comparators of the columns (`computedColDef` for the computed ones) against the new values.',
+  'row grouping':
+    'Check the `groupingValueGetter` of the grouped columns and the listeners of the `rowsSet` event against the new values.',
+};
+
+function warnViewNotApplied(step: ViewStep, error: unknown) {
+  if (process.env.NODE_ENV !== 'production') {
+    warnOnce(
+      [
+        `MUI X Data Grid: The ${step} could not be applied again after the formula values changed.`,
+        VIEW_STEP_CONSEQUENCES[step],
+        `${VIEW_STEP_CAUSES[step]} Caught error: ${error instanceof Error ? error.message : String(error)}`,
+      ].join('\n'),
+    );
+  }
+}
+
+/**
+ * Applies the filtering or the sorting again, and returns whether it was applied. It runs inside
+ * the hydration of the columns when a hydration published `columnsChange`, where a throw would
+ * leave the pipe processing of the grid locked. After a type change, the core can fail to filter
+ * or sort with a model made for the previous type: an operator that is gone (`>` on a `string`
+ * column), values of the previous type (`isAnyOf` with numbers), or a `computedColDef` comparator
+ * or operator written for one type. The core throws before it sets the state, so nothing changes:
+ * the view keeps its rows and order, and the error comes at the next filtering or sorting, like
+ * after the type change of a regular column. A step that fails logs a warning in development
+ * (`warn`), except in the `rowsSet` cascade, where the core filters and sorts again right after
+ * and throws to the caller.
+ * A regroup (`catchViewFailure`) fails when the filtering or the sorting of the rebuilt tree does,
+ * or the tree creation, or another listener of its `rowsSet`: both are then applied again. Until
+ * the next filtering that succeeds, the group rows can show stale or missing counts, and until the
+ * next sorting that succeeds, they keep the previous order (new group rows missing or misplaced).
+ */
+function tryToApplyView(step: ViewStep, apply: () => void, warn: boolean) {
+  const failure = catchViewFailure(apply);
+  if (failure && warn) {
+    warnViewNotApplied(step, failure.error);
+  }
+  return failure === null;
 }
 
 /**
@@ -367,7 +413,12 @@ export const useGridFormula = (
   const triggerDependentFeatures = React.useCallback(
     (
       changedCells: GridCellCoordinates[] | null,
-      options: { aggregation: boolean; rowSpanning: boolean; computedColumnsChanged?: boolean },
+      options: {
+        aggregation: boolean;
+        rowSpanning: boolean;
+        computedColumnsChanged?: boolean;
+        insideRowsSet?: boolean;
+      },
     ) => {
       // The values of the computed columns changed as a whole (formula, referenced
       // `valueGetter`, function registry), whether or not a formula cell followed.
@@ -376,7 +427,7 @@ export const useGridFormula = (
         return;
       }
       const cache = apiRef.current.caches.formula!;
-      let regroupFailed = false;
+      let regroupFailure: { error: unknown } | null = null;
       if (
         !cache.suppressRegroupTrigger &&
         isRowGroupingAffected(apiRef, changedCells, computedColumnsChanged)
@@ -389,14 +440,15 @@ export const useGridFormula = (
         }
         // The rebuilt tree publishes `rowsSet`: filtering and sorting re-run in its cascade.
         cache.suppressRegroupTrigger = true;
-        regroupFailed = !tryToApplyView(() =>
+        regroupFailure = catchViewFailure(() =>
           apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation'),
         );
         cache.suppressRegroupTrigger = false;
-        if (!regroupFailed) {
+        if (!regroupFailure) {
           return;
         }
       }
+      const regroupFailed = regroupFailure !== null;
       let viewRefresh = NO_VIEW_REFRESH;
       if (regroupFailed) {
         // The cascade of the rebuilt tree stopped at a throw: its filtering, its sorting and the
@@ -407,11 +459,21 @@ export const useGridFormula = (
       }
       const { refilter, resort } = viewRefresh;
       // `filteredRowsSet` applies the aggregation, and both events reset the row spanning.
-      const refiltered = refilter && tryToApplyView(() => apiRef.current.unstable_applyFilters());
+      // In the `rowsSet` cascade, the core filters and sorts again after this handler: their
+      // failure throws to the caller of the rows update.
+      const warn = options.insideRowsSet !== true;
+      const refiltered =
+        refilter && tryToApplyView('filtering', () => apiRef.current.unstable_applyFilters(), warn);
       if ((options.aggregation || regroupFailed) && !refiltered) {
         apiRef.current.applyAggregation();
       }
-      const resorted = resort && tryToApplyView(() => apiRef.current.applySorting());
+      const resorted =
+        resort && tryToApplyView('sorting', () => apiRef.current.applySorting(), warn);
+      // A failed step above reports the error of the regroup too. When both apply, the regroup
+      // failed elsewhere: in the tree creation, or in another listener of its `rowsSet`.
+      if (regroupFailure && refiltered && resorted) {
+        warnViewNotApplied('row grouping', regroupFailure.error);
+      }
       if (options.rowSpanning && !refiltered && !resorted) {
         apiRef.current.resetRowSpanningState();
       }
@@ -576,7 +638,11 @@ export const useGridFormula = (
     // after this one in the same cascade and must read fresh formula values.
     // No aggregation/row-spanning refresh: both recompute later in the
     // cascade, on `filteredRowsSet`/`sortedRowsSet`.
-    triggerDependentFeatures(runPass('diff'), { aggregation: false, rowSpanning: false });
+    triggerDependentFeatures(runPass('diff'), {
+      aggregation: false,
+      rowSpanning: false,
+      insideRowsSet: true,
+    });
   }, [runPass, triggerDependentFeatures]);
 
   const handleSortedRowsSet = React.useCallback<GridEventListener<'sortedRowsSet'>>(() => {

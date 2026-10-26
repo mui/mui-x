@@ -436,7 +436,9 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
 
       typeFormula('=item & "!"');
       selectOption('Result type', 'Text');
-      fireEvent.click(getButton('Apply'));
+      expect(() => fireEvent.click(getButton('Apply'))).toWarnDev(
+        'The filtering could not be applied again',
+      );
       await microtasks();
 
       expect(getModel()).to.deep.equal([{ ...total, formula: '=item & "!"', type: 'string' }]);
@@ -461,7 +463,9 @@ describe('<DataGridPremium /> - Computed columns panel', () => {
 
       typeFormula('=item & "!"');
       selectOption('Result type', 'Text');
-      fireEvent.click(getButton('Apply'));
+      expect(() => fireEvent.click(getButton('Apply'))).toWarnDev(
+        'The filtering could not be applied again',
+      );
       await microtasks();
 
       expect(getModel()).to.deep.equal([

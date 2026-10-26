@@ -2048,6 +2048,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
           formula: '=price / 2',
           type: 'number',
         };
+        // A step that fails warns once, in development.
+        const filteringWarning = 'The filtering could not be applied again';
+        const sortingWarning = 'The sorting could not be applied again';
         // A throw inside the hydration of the columns leaves its pipe processing locked: the
         // column added next would never be hydrated.
         const expectColumnsToBeHydratedAgain = () => {
@@ -2064,9 +2067,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
               initialState={{ computedColumns: { model: [double] }, ...filteredByDouble }}
             />,
           );
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', toText, { undoable: true })),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText, { undoable: true }));
+          }).toWarnDev(filteringWarning);
           expect(getColumn('double').type).to.equal('string');
           expect(getColumnValuesOf('double')).to.deep.equal(['2!', '4!', '3!']);
           expectColumnsToBeHydratedAgain();
@@ -2080,7 +2083,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
               initialState={{ computedColumns: { model: [double] }, ...filteredByDouble }}
             />,
           );
-          act(() => apiRef.current!.updateComputedColumn('double', toText));
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(filteringWarning);
           expect(() => act(() => apiRef.current!.updateRows([{ id: 0, price: 5 }]))).to.throw(
             'No filter operator ">" found for column "double"',
           );
@@ -2121,9 +2126,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
             />,
           );
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', toText)),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(filteringWarning);
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           expectColumnsToBeHydratedAgain();
         });
@@ -2146,9 +2151,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           // The core keeps the item of a column whose type changes until the next filtering.
           setProps({ columns: [{ field: 'item' }, { field: 'price', type: 'string' }] });
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' })),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' }));
+          }).toWarnDev(filteringWarning);
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           expect(getColumnValuesOf('double')).to.deep.equal(['-4', '-3']);
           expectColumnsToBeHydratedAgain();
@@ -2168,9 +2173,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           // The core throws when it filters by a column without operators.
           setProps({ computedColDef: { filterOperators: [] } });
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' })),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' }));
+          }).toWarnDev(filteringWarning);
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           expectColumnsToBeHydratedAgain();
         });
@@ -2187,9 +2192,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
             />,
           );
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', toText)),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(filteringWarning);
           expect(getColumnValuesOf('item')).to.deep.equal(['Banana']);
           expectColumnsToBeHydratedAgain();
         });
@@ -2209,9 +2214,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
             />,
           );
           expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Banana']);
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', toText)),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(filteringWarning);
           expect(getColumnValuesOf('double')).to.deep.equal(['2!', '4!']);
           expectColumnsToBeHydratedAgain();
         });
@@ -2229,16 +2234,48 @@ describe('<DataGridPremium /> - Computed columns', () => {
             />,
           );
           expect(getColumnValuesOf('item')).to.deep.equal(['Apple', 'Cherry', 'Banana']);
-          expect(() =>
+          expect(() => {
             act(() =>
               apiRef.current!.updateComputedColumn('double', {
                 type: 'number',
                 formula: '=-price',
               }),
-            ),
-          ).not.to.throw();
+            );
+          }).toWarnDev(sortingWarning);
           expect(getColumnValuesOf('double')).to.deep.equal(['-2', '-3', '-4']);
           expectColumnsToBeHydratedAgain();
+        });
+
+        it('should warn with the error of a comparator that fails on the new values', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              computedColDef={{
+                sortComparator: (a: number, b: number) => {
+                  if (a < 0 || b < 0) {
+                    throw new Error('comparator bug: negative value');
+                  }
+                  return a - b;
+                },
+              }}
+              initialState={{ computedColumns: { model: [double] }, ...sortedByDouble }}
+            />,
+          );
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=-price' }));
+          }).toWarnDev(
+            [
+              'MUI X Data Grid: The sorting could not be applied again after the formula values changed.',
+              'The rows keep their previous order, and the next sorting throws the same error until its cause is fixed.',
+              'Check the sort model and the comparators of the columns (`computedColDef` for the computed ones) against the new values. Caught error: comparator bug: negative value',
+            ].join('\n'),
+          );
+          // The rows keep their order, and the error comes at the next sorting.
+          expect(getColumnValuesOf('double')).to.deep.equal(['-2', '-3', '-4']);
+          expect(() => act(() => apiRef.current!.updateRows([{ id: 0, price: 5 }]))).to.throw(
+            'comparator bug: negative value',
+          );
         });
 
         it('should aggregate the rows kept by a filtering that can not be applied', async () => {
@@ -2258,7 +2295,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
               }}
             />,
           );
-          act(() => apiRef.current!.updateComputedColumn('double', toText));
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(filteringWarning);
           expect(getColumnValuesOf('half')).to.deep.equal(['1', '2', '3']);
           // The getters of the columns stay the same: only the explicit aggregation follows.
           await act(async () => setProps({ formulaFunctions: scaledFunctions(-1) }));
@@ -2278,13 +2317,15 @@ describe('<DataGridPremium /> - Computed columns', () => {
               }}
             />,
           );
-          act(() =>
-            apiRef.current!.updateComputedColumn(
-              'double',
-              { type: 'number', formula: '=price' },
-              { undoable: true },
-            ),
-          );
+          expect(() => {
+            act(() =>
+              apiRef.current!.updateComputedColumn(
+                'double',
+                { type: 'number', formula: '=price' },
+                { undoable: true },
+              ),
+            );
+          }).toWarnDev(filteringWarning);
           expect(getColumn('double').type).to.equal('number');
           await act(async () => {
             await apiRef.current!.history.undo();
@@ -2355,9 +2396,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
               }}
             />,
           );
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', toText)),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(filteringWarning);
           expect(getColumn('double').type).to.equal('string');
           expect(getLeafValuesOf('double')).to.deep.equal(['2!', '4!', '3!']);
           expectColumnsToBeHydratedAgain();
@@ -2377,9 +2418,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
             />,
           );
           expect(getGroupingValues()).to.deep.equal(['4 (1)', '3 (1)']);
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', toText)),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(filteringWarning);
           expect(getGroupingValues()).to.deep.equal(['2!', '4!', '3!']);
           expect(getLeafValuesOf('item')).to.deep.equal(['Banana', 'Cherry']);
           expect(() => act(() => apiRef.current!.updateRows([{ id: 0, price: 5 }]))).to.throw(
@@ -2421,9 +2462,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
               }}
             />,
           );
-          expect(() =>
-            act(() => apiRef.current!.updateComputedColumn('double', toText)),
-          ).not.to.throw();
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(sortingWarning);
           act(() => apiRef.current!.setSortModel([]));
           expect(getGroupingValues()).to.deep.equal(['2! (2)', '3! (1)']);
           expectColumnsToBeHydratedAgain();
@@ -2443,7 +2484,9 @@ describe('<DataGridPremium /> - Computed columns', () => {
               }}
             />,
           );
-          act(() => apiRef.current!.updateComputedColumn('double', toText));
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', toText));
+          }).toWarnDev(filteringWarning);
           expect(getGroupingValues()).to.deep.equal(['2!', '4!', '3!']);
           // Each group row shows the sum of its leaf, and the footer the sum of every row.
           expect(getColumnValuesOf('price')).to.deep.equal(['2', '2', '4', '4', '3', '3', '9']);
@@ -2464,15 +2507,15 @@ describe('<DataGridPremium /> - Computed columns', () => {
               }}
             />,
           );
-          expect(() =>
+          expect(() => {
             act(() =>
               apiRef.current!.updateComputedColumn(
                 'double',
                 { type: 'number', formula: '=price' },
                 { undoable: true },
               ),
-            ),
-          ).not.to.throw();
+            );
+          }).toWarnDev(filteringWarning);
           expect(getColumn('double').type).to.equal('number');
           await act(async () => {
             await apiRef.current!.history.undo();
@@ -2485,6 +2528,76 @@ describe('<DataGridPremium /> - Computed columns', () => {
           });
           expect(getColumn('double').type).to.equal('number');
           expectColumnsToBeHydratedAgain();
+        });
+
+        it('should warn when the regroup fails in another listener of the rows', async () => {
+          await render(
+            <Test
+              rows={fruitRows}
+              columns={fruitColumns}
+              defaultGroupingExpansionDepth={-1}
+              initialState={{
+                computedColumns: { model: [label, double] },
+                rowGrouping: { model: ['label'] },
+              }}
+            />,
+          );
+          const unsubscribe = apiRef.current!.subscribeEvent('rowsSet', () => {
+            throw new Error('listener bug');
+          });
+          expect(() => {
+            act(() => apiRef.current!.updateComputedColumn('double', { formula: '=price * 3' }));
+          }).toWarnDev(
+            [
+              'MUI X Data Grid: The row grouping could not be applied again after the formula values changed.',
+              'The rows can stay in their previous groups, and the features that run after the row grouping can be out of date.',
+              'Check the `groupingValueGetter` of the grouped columns and the listeners of the `rowsSet` event against the new values. Caught error: listener bug',
+            ].join('\n'),
+          );
+          expect(getLeafValuesOf('double')).to.deep.equal(['6', '12', '9']);
+          unsubscribe();
+          expectColumnsToBeHydratedAgain();
+        });
+
+        it('should leave the error of a rows update to its caller without a warning', async () => {
+          await render(
+            <Test
+              rows={[
+                { id: 0, item: 'Apple', base: 2, price: '=base' },
+                { id: 1, item: 'Banana', base: 4, price: '=base' },
+              ]}
+              columns={[
+                { field: 'item' },
+                { field: 'base', type: 'number' },
+                {
+                  field: 'price',
+                  type: 'number',
+                  allowFormulas: true,
+                  filterOperators: [
+                    {
+                      value: 'small',
+                      getApplyFilterFn: () => (value: number) => {
+                        if (value > 100) {
+                          throw new Error('operator bug: too big');
+                        }
+                        return true;
+                      },
+                    },
+                  ],
+                },
+              ]}
+              initialState={{
+                rowGrouping: { model: ['price'] },
+                filter: {
+                  filterModel: { items: [{ field: 'price', operator: 'small', value: 1 }] },
+                },
+              }}
+            />,
+          );
+          // The regroup of the formula cells fails first, then the core's own filtering throws.
+          expect(() => act(() => apiRef.current!.updateRows([{ id: 0, base: 500 }]))).to.throw(
+            'operator bug: too big',
+          );
         });
       });
     });
