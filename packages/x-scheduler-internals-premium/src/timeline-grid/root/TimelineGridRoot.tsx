@@ -67,7 +67,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
 
   // The feature is frozen at store construction, so the hook is the same on every render.
   const useCreationMonitor =
-    useStore(store, selectDependenciesFeature)?.useCreationMonitor ?? NOOP_USE_CREATION_MONITOR;
+    selectDependenciesFeature(store.state)?.useCreationMonitor ?? NOOP_USE_CREATION_MONITOR;
   // eslint-disable-next-line react-compiler/react-compiler
   useCreationMonitor();
 

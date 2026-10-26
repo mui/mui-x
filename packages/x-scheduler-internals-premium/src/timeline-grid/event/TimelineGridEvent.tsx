@@ -79,9 +79,10 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+
   // The feature is frozen at store construction, so the hook is the same on every render.
   const useEventDropTarget =
-    useStore(store, selectDependenciesFeature)?.useEventDropTarget ?? NOOP_USE_EVENT_DROP_TARGET;
+    selectDependenciesFeature(store.state)?.useEventDropTarget ?? NOOP_USE_EVENT_DROP_TARGET;
 
   // Feature hooks
   const getOriginalOccurrence = useOriginalOccurrence({
