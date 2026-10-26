@@ -1,4 +1,3 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventByDayValue,
@@ -81,17 +80,8 @@ export function applyRecurringUpdateFollowing(
 ): UpdateEventsParameters {
   const newStart = changes.start ?? occurrenceStart;
 
-  const originalRule = originalEvent.dataTimezone.rrule!;
-
   // 1) New event: apply changes, decide RRULE for the new series
-  const newRRule = decideSplitRRule(
-    adapter,
-    originalRule,
-    originalEvent.dataTimezone.start.timestamp,
-    originalEvent.dataTimezone.timezone,
-    occurrenceStart,
-    changes,
-  );
+  const newRRule = decideSplitRRule(adapter, originalEvent, occurrenceStart, changes);
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
   const originalModel = originalEvent.modelInBuiltInFormat;
@@ -331,12 +321,11 @@ function realignMonthlyRule(
  */
 export function decideSplitRRule(
   adapter: Adapter,
-  originalRule: SchedulerProcessedEventRecurrenceRule,
-  originalSeriesStart: number,
-  timezone: TemporalTimezone,
+  originalEvent: SchedulerProcessedEvent,
   splitStart: TemporalSupportedObject,
   changes: Partial<SchedulerEventUpdatedProperties>,
 ): SchedulerProcessedEventRecurrenceRule | string | undefined {
+  const originalRule = originalEvent.dataTimezone.rrule!;
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
   const changesRRule = changes.rrule;
@@ -373,11 +362,8 @@ export function decideSplitRRule(
 
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
-    const series = new RecurringSeries(adapter, {
-      rule: originalRule,
-      start: originalSeriesStart,
-      timezone,
-    });
+    // The excluded occurrences still count toward COUNT.
+    const series = RecurringSeries.fromEvent(adapter, originalEvent);
     const splitPlainDate = buildTemporalPlainDate(adapter, splitStart);
     const remaining = originalRule.count - series.countOccurrencesBefore(splitPlainDate);
     // If no occurrences remain, the split segment is non-recurring.

@@ -176,8 +176,8 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
@@ -202,8 +202,8 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
@@ -227,8 +227,8 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start: adapter.startOfDay(rangeStart),
-        end: adapter.endOfDay(rangeStart),
+        start: adapter.getTime(adapter.startOfDay(rangeStart)),
+        end: adapter.getTime(adapter.endOfDay(rangeStart)),
         eventRangeIndex: createEventRangeIndex(events, true),
         visibleResources: {},
         displayTimezone: 'default',
@@ -250,8 +250,8 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
@@ -266,8 +266,8 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',

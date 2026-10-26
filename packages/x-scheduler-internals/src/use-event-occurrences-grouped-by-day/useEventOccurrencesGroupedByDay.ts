@@ -7,12 +7,8 @@ import {
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
 import { useAdapterContext } from '../use-adapter-context';
-import {
-  createEndOfPlainDate,
-  createStartOfPlainDate,
-} from '../internals/utils/plain-date-utils/adapter';
 import { plainDateFromDayNumber } from '../internals/utils/plain-date-utils/plainDate';
-import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+import { toEpochMs, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
@@ -89,14 +85,12 @@ export function innerGetEventOccurrencesGroupedByDay(
   }
 
   const dayNumbers = days.map((day) => toLocalDayNumber(day.timestamp, displayTimezone));
+  const lastDayNumber = dayNumbers[dayNumbers.length - 1];
   const occurrences = getOccurrencesFromEvents({
     adapter,
-    start: createStartOfPlainDate(adapter, plainDateFromDayNumber(dayNumbers[0]), displayTimezone),
-    end: createEndOfPlainDate(
-      adapter,
-      plainDateFromDayNumber(dayNumbers[dayNumbers.length - 1]),
-      displayTimezone,
-    ),
+    start: toEpochMs(plainDateFromDayNumber(dayNumbers[0]), 0, displayTimezone),
+    // The last instant before the day after the last one starts.
+    end: toEpochMs(plainDateFromDayNumber(lastDayNumber + 1), 0, displayTimezone) - 1,
     eventRangeIndex,
     visibleResources,
     displayTimezone,

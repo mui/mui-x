@@ -7,6 +7,7 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
 import {
   adjustRRuleForAllMove,
   applyRecurringUpdateAll,
@@ -34,9 +35,15 @@ describe('recurring-events/updateRecurringEvent', () => {
     ) =>
       decideSplitRRule(
         adapter,
-        originalRule,
-        adapter.getTime(originalSeriesStart),
-        adapter.getTimezone(originalSeriesStart),
+        {
+          ...defaultEvent,
+          dataTimezone: {
+            ...defaultEvent.dataTimezone,
+            rrule: originalRule,
+            start: processDate(originalSeriesStart, adapter),
+            timezone: adapter.getTimezone(originalSeriesStart),
+          },
+        },
         split,
         changes,
       ) as SchedulerProcessedEventRecurrenceRule | undefined;
