@@ -1,6 +1,12 @@
 import * as React from 'react';
 import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
-import { getEndOfWeek, getStartOfWeek } from '@mui/x-scheduler-internals/internals';
+import {
+  createAdapterDate,
+  getEndOfWeek,
+  getStartOfWeek,
+  MS_PER_DAY,
+} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type {
   TemporalSupportedObject,
   EventTimelinePremiumPreset,
@@ -16,7 +22,14 @@ const formatYear: FormatDate = (adapter, date) => String(adapter.getYear(date));
 
 const formatMonth3Letters: FormatDate = (adapter, date) => adapter.format(date, 'month3Letters');
 
-const formatWeekday1Letter: FormatDate = (adapter, date) => adapter.format(date, 'weekday1Letter');
+/**
+ * The adapter value of the midnight of a date, labeled in UTC, to format date labels from.
+ * The cell `date` of a date skipped by a DST transition, like December 30th, 2011 in
+ * Pacific/Apia, is an instant of the next date.
+ */
+function getLabelDate(adapter: TemporalAdapter, plainDate: PlainDate) {
+  return createAdapterDate(adapter, plainDate.dayNumber * MS_PER_DAY, 'UTC');
+}
 
 function formatWeekDayMonthAndDayOfMonth(adapter: TemporalAdapter, date: TemporalSupportedObject) {
   const f = adapter.formats;
@@ -66,7 +79,8 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     headers: [
       {
         unit: 'day',
-        renderCell: ({ adapter, start }) => formatWeekDayMonthAndDayOfMonth(adapter, start),
+        renderCell: ({ adapter, plainDate }) =>
+          formatWeekDayMonthAndDayOfMonth(adapter, getLabelDate(adapter, plainDate)),
       },
       {
         unit: 'hour',
@@ -91,12 +105,15 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       { unit: 'month', formatDate: formatMonthAndYear },
       {
         unit: 'day',
-        renderCell: ({ adapter, date }) => (
-          <span data-slot="dayCell">
-            <span data-slot="weekday">{adapter.format(date, 'weekday1Letter')}</span>
-            <span data-slot="dayOfMonth">{adapter.format(date, 'dayOfMonth')}</span>
-          </span>
-        ),
+        renderCell: ({ adapter, plainDate }) => {
+          const date = getLabelDate(adapter, plainDate);
+          return (
+            <span data-slot="dayCell">
+              <span data-slot="weekday">{adapter.format(date, 'weekday1Letter')}</span>
+              <span data-slot="dayOfMonth">{adapter.format(date, 'dayOfMonth')}</span>
+            </span>
+          );
+        },
       },
     ],
     unitCount: 8 * 7, // 8 weeks
@@ -114,7 +131,11 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
         renderCell: ({ adapter, start, end }) =>
           `${formatWeekDayMonthAndDayOfMonth(adapter, start)} - ${formatWeekDayMonthAndDayOfMonth(adapter, adapter.addDays(end, -1))}`,
       },
-      { unit: 'day', formatDate: formatWeekday1Letter },
+      {
+        unit: 'day',
+        renderCell: ({ adapter, plainDate }) =>
+          adapter.format(getLabelDate(adapter, plainDate), 'weekday1Letter'),
+      },
     ],
     unitCount: 16, // 16 weeks
     getStartDate: (adapter, visibleDate, weekStartsOn) =>

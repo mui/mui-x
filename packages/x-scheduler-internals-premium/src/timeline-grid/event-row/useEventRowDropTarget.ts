@@ -8,6 +8,8 @@ import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-inter
 import {
   useDropTarget,
   dateToTimelineAxisOffsetMs,
+  getWallClockMsInDay,
+  isStartMinuteOutsideAxisWindow,
   timelineAxisOffsetToDate,
 } from '@mui/x-scheduler-internals/internals';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
@@ -89,12 +91,20 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // hours, the rendered edge is its window-clamped anchor: carry the hidden
         // remainder over to the new anchor so an unmoved drag maps back to the exact
         // original dates instead of silently snapping the start to the window edge.
+        // A visible start has no remainder, even in the second occurrence of an hour repeated by a
+        // fall-back transition, which the axis reads as the first one.
+        const startMsInDay = getWallClockMsInDay(adapter, data.start);
         const startAnchor = timelineAxisOffsetToDate(
           adapter,
           config,
-          dateToTimelineAxisOffsetMs(adapter, config, data.start),
+          dateToTimelineAxisOffsetMs(adapter, config, data.start, startMsInDay),
         );
-        const hiddenRemainderMs = adapter.getTime(data.start) - adapter.getTime(startAnchor);
+        const hiddenRemainderMs = isStartMinuteOutsideAxisWindow(
+          config,
+          Math.floor(startMsInDay / 60_000),
+        )
+          ? adapter.getTime(data.start) - adapter.getTime(startAnchor)
+          : 0;
 
         const newAnchorDate = axisOffsetToDate(
           cursorOffsetMs - data.initialCursorPositionInEventMs,

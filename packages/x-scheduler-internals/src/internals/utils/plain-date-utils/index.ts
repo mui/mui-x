@@ -12,6 +12,8 @@ export type { PlainDateTime } from './timeZone';
 export {
   buildTemporalPlainDate,
   createAdapterDate,
+  createAdapterDateOnPlainDate,
+  createEndOfPlainDate,
   createProcessedDate,
   getDateKey,
   getPlainDateKey,
