@@ -1,4 +1,3 @@
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -10,7 +9,7 @@ import {
   computeElementPositionInCollection,
   getEventResourceIds,
 } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type { EventsCellLaneMetrics } from '../rowGeometry';
 
@@ -57,7 +56,6 @@ export interface DependencyArrowObstacle {
 }
 
 export interface DependencyAnchorResolverParameters {
-  adapter: Adapter;
   /**
    * The visible resources with their occurrences, in row render order.
    */
@@ -69,7 +67,7 @@ export interface DependencyAnchorResolverParameters {
   /**
    * The visible date range and daily hour window the arrows are positioned in.
    */
-  axis: TimelineAxisRange;
+  axis: TimelineAxis;
   durationMs: number;
   /**
    * Positions already computed by the axis filter, when the hour window is trimmed.
@@ -147,7 +145,6 @@ export function createDependencyAnchorResolver(
   parameters: DependencyAnchorResolverParameters,
 ): DependencyAnchorResolver {
   const {
-    adapter,
     resources,
     rowPositions,
     axis,
@@ -207,7 +204,7 @@ export function createDependencyAnchorResolver(
     // Placed on the axis rather than compared with its bounds: the bounds are midnights,
     // so the hours the window hides at the start of the first day and the end of the
     // last day also come before or after what is on screen.
-    const position = computeElementPositionInCollection(adapter, {
+    const position = computeElementPositionInCollection({
       start: event.displayTimezone.start,
       end: event.displayTimezone.end,
       collection: axis,
@@ -269,7 +266,7 @@ export function createDependencyAnchorResolver(
     }
     let position = positionCache.get(occurrence.key);
     if (position == null) {
-      position = computeElementPositionInCollection(adapter, {
+      position = computeElementPositionInCollection({
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
         collection: axis,

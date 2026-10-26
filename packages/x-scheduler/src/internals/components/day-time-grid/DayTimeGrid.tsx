@@ -23,8 +23,8 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  createEndOfPlainDate,
   getDisplayedHourRange,
+  getEndOfDayMs,
   getInitialScrollTime,
   toLocalDayNumber,
   toPlainDateTime,
@@ -400,12 +400,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
     const lastPlainDate = toPlainDateTime(days[days.length - 1].timestamp, displayTimezone).date;
     return {
-      start: days[0].value,
-      end: createEndOfPlainDate(adapter, lastPlainDate, displayTimezone),
+      // `days[0].timestamp` is the first instant of the first day.
+      start: days[0].timestamp,
+      end: getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone),
       firstDayNumber: toLocalDayNumber(days[0].timestamp, displayTimezone),
       lastDayNumber: lastPlainDate.dayNumber,
     };
-  }, [adapter, days, displayTimezone]);
+  }, [days, displayTimezone]);
 
   const isTodayInView = nowDayNumber >= firstDayNumber && nowDayNumber <= lastDayNumber;
 

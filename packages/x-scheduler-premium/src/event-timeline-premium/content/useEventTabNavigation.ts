@@ -5,10 +5,9 @@ import type {
   SchedulerEventOccurrence,
   SchedulerResource,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { getTabbableDescendants } from '@mui/x-internals/domUtils';
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 
 type ResourceWithOccurrences = {
   resource: SchedulerResource;
@@ -25,7 +24,6 @@ type ResourceWithOccurrences = {
  * mounts it. Returns `false` at row boundaries so default Tab moves to the next row.
  */
 export function useEventTabNavigation(params: {
-  adapter: Adapter;
   /**
    * The visible resources with the occurrences that occupy space on the axis, in row
    * render order. Occurrences hidden by the hour window must already be excluded:
@@ -33,7 +31,7 @@ export function useEventTabNavigation(params: {
    */
   resources: readonly ResourceWithOccurrences[];
   scrollerRef: React.RefObject<HTMLDivElement | null>;
-  axis: TimelineAxisRange;
+  axis: TimelineAxis;
   durationMs: number;
   tickCount: number;
   tickWidth: number;
@@ -41,7 +39,6 @@ export function useEventTabNavigation(params: {
   isRtl: boolean;
 }) {
   const {
-    adapter,
     resources,
     scrollerRef,
     axis,
@@ -61,7 +58,7 @@ export function useEventTabNavigation(params: {
   const eventsTotalWidth = tickCount * tickWidth;
 
   const computeFractionRange = useStableCallback((occurrence: SchedulerEventOccurrence) => {
-    const { position, duration } = computeElementPositionInCollection(adapter, {
+    const { position, duration } = computeElementPositionInCollection({
       start: occurrence.displayTimezone.start,
       end: occurrence.displayTimezone.end,
       collection: axis,

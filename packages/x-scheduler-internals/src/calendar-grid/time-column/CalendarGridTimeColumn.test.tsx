@@ -32,10 +32,13 @@ describe('<CalendarGrid.TimeColumn />', () => {
     );
   }
 
-  describeConformance(<CalendarGrid.TimeColumn start={start} end={end} />, () => ({
-    refInstanceof: window.HTMLDivElement,
-    render: (node) => render(<TimeColumnWrapper>{node}</TimeColumnWrapper>),
-  }));
+  describeConformance(
+    <CalendarGrid.TimeColumn start={adapter.getTime(start)} end={adapter.getTime(end)} />,
+    () => ({
+      refInstanceof: window.HTMLDivElement,
+      render: (node) => render(<TimeColumnWrapper>{node}</TimeColumnWrapper>),
+    }),
+  );
 
   describe('pointer interactions', () => {
     it('should start a creation on the previous half hour of the wall clock of the display timezone', () => {
@@ -47,7 +50,10 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       render(
         <TimeColumnWrapper displayTimezone={timezone}>
-          <CalendarGrid.TimeColumn start={columnStart} end={columnEnd} />
+          <CalendarGrid.TimeColumn
+            start={adapter.getTime(columnStart)}
+            end={adapter.getTime(columnEnd)}
+          />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -75,7 +81,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const { user } = render(
         <TimeColumnWrapper>
-          <CalendarGrid.TimeColumn start={start} end={end} />
+          <CalendarGrid.TimeColumn start={adapter.getTime(start)} end={adapter.getTime(end)} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -99,7 +105,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const { user } = render(
         <TimeColumnWrapper eventCreation={false}>
-          <CalendarGrid.TimeColumn start={start} end={end} />
+          <CalendarGrid.TimeColumn start={adapter.getTime(start)} end={adapter.getTime(end)} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {

@@ -7,7 +7,7 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { PaletteName } from '../../../utils/tokens';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 
@@ -40,7 +40,7 @@ export interface UseTimeGridEventReturnValue {
 
 export function useTimeGridEvent(
   occurrence: TimeGridEventProps['occurrence'],
-  column: TimelineAxisRange,
+  column: TimelineAxis,
 ): UseTimeGridEventReturnValue {
   const store = useEventCalendarStoreContext();
 

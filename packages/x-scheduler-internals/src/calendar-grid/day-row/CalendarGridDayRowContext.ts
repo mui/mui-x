@@ -1,16 +1,20 @@
 'use client';
 import * as React from 'react';
-import type { TemporalSupportedObject } from '../../models';
+import type { TimelineAxis } from '../../internals/utils/timeline-axis';
 
 export interface CalendarGridDayRowContext {
   /**
-   * The start date and time of the row
+   * The first instant of the row, as a timestamp read in the display timezone.
    */
-  start: TemporalSupportedObject;
+  start: number;
   /**
-   * The end date and time of the row
+   * The last instant of the row, as a timestamp read in the display timezone.
    */
-  end: TemporalSupportedObject;
+  end: number;
+  /**
+   * The axis the events of the row are positioned on.
+   */
+  axis: TimelineAxis;
   /**
    * The index of this row within its row type.
    * Always 0 for views with a single day row (week/day view).

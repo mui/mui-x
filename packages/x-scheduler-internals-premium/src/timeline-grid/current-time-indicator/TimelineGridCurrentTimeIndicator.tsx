@@ -44,7 +44,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     const { position } = useElementPositionInCollection({
       start: processedNow,
       end: endForCalc,
-      collection: config,
+      collection: config.axis,
       durationMs: config.durationMs,
     });
 

@@ -1,36 +1,9 @@
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import type { SchedulerProcessedDate } from '../models';
 import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
-import {
-  buildTemporalPlainDate,
-  createProcessedDate,
-} from '../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../internals/utils/plain-date-utils/adapter';
 import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
 import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
-
-export function getDayList(parameters: GetDaytListParameters): GetDaytListReturnValue {
-  const { adapter, start, end, excludeWeekends } = parameters;
-  const firstPlainDate = buildTemporalPlainDate(adapter, start);
-  const lastPlainDate = buildTemporalPlainDate(adapter, end);
-
-  if (process.env.NODE_ENV !== 'production') {
-    if (lastPlainDate.dayNumber < firstPlainDate.dayNumber) {
-      // TODO: fix mui/no-guarded-throw
-      // eslint-disable-next-line mui/no-guarded-throw
-      throw new Error(
-        `MUI X Scheduler: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
-      );
-    }
-  }
-
-  return getDayListFromPlainDates({
-    adapter,
-    firstPlainDate,
-    lastPlainDate,
-    timezone: adapter.getTimezone(start),
-    excludeWeekends,
-  });
-}
 
 /**
  * Returns the days from `firstPlainDate` to `lastPlainDate`, both included, in `timezone`.
@@ -60,26 +33,6 @@ export function getDayListFromPlainDates(parameters: {
   }
 
   return days;
-}
-
-export interface GetDaytListParameters {
-  /**
-   * The adapter used to manipulate the date.
-   */
-  adapter: TemporalAdapter;
-  /**
-   * The start of the range to generate the day list from.
-   */
-  start: TemporalSupportedObject;
-  /**
-   * The end of the range to generate the day list from.
-   */
-  end: TemporalSupportedObject;
-  /**
-   * Whether to exclude weekends (Saturday and Sunday) from the returned days.
-   * @default false
-   */
-  excludeWeekends?: boolean;
 }
 
 export type GetDaytListReturnValue = SchedulerProcessedDate[];

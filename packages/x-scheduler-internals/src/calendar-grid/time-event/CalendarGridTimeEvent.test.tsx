@@ -16,7 +16,7 @@ describe('<CalendarGrid.TimeEvent />', () => {
     return render(
       <EventCalendarProvider events={[]}>
         <CalendarGrid.Root>
-          <CalendarGrid.TimeColumn start={eventStart.value} end={eventEnd.value}>
+          <CalendarGrid.TimeColumn start={eventStart.timestamp} end={eventEnd.timestamp}>
             {node}
           </CalendarGrid.TimeColumn>
         </CalendarGrid.Root>

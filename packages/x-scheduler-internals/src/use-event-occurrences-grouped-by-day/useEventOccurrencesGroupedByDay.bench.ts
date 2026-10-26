@@ -1,9 +1,10 @@
 import { describe, test } from 'vitest';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
-import { getDayList } from '../get-day-list';
+import { getDayListFromPlainDates } from '../get-day-list';
 import { isWeekend } from '../use-adapter';
 import { getStartOfWeek } from '../internals/utils/date-utils';
+import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 import { eventCalendarAgendaSelectors } from '../event-calendar-selectors';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
@@ -35,10 +36,17 @@ function createMonthViewScenario(displayTimezone: TemporalTimezone) {
 
 function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   const { visibleDate, displayTimezone, eventRangeIndex } = scenario;
-  const days = getDayList({
+  const days = getDayListFromPlainDates({
     adapter,
-    start: getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), 1),
-    end: adapter.addDays(getStartOfWeek(adapter, adapter.endOfMonth(visibleDate), 1), 6),
+    firstPlainDate: buildTemporalPlainDate(
+      adapter,
+      getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), 1),
+    ),
+    lastPlainDate: buildTemporalPlainDate(
+      adapter,
+      adapter.addDays(getStartOfWeek(adapter, adapter.endOfMonth(visibleDate), 1), 6),
+    ),
+    timezone: displayTimezone,
   });
   let weekendCount = 0;
   for (const day of days) {

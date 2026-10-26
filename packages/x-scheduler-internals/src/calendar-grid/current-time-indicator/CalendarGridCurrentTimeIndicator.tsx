@@ -31,8 +31,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     const {
       start: columnStart,
       end: columnEnd,
-      dayStartMinute,
-      dayEndMinute,
+      axis: columnAxis,
     } = useCalendarGridTimeColumnContext();
     const store = useEventCalendarStoreContext();
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
@@ -40,7 +39,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
 
     // The time of day of now, on the wall clock of the day of the column.
     const nowForColumn = React.useMemo(() => {
-      const columnPlainDate = toPlainDateTime(adapter.getTime(columnStart), displayTimezone).date;
+      const columnPlainDate = toPlainDateTime(columnStart, displayTimezone).date;
       const nowMsInDay = toPlainDateTime(adapter.getTime(now), displayTimezone).msInDay;
       return createProcessedDate(
         adapter,
@@ -53,12 +52,10 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       // Only the position is read, which depends on the start alone.
       start: nowForColumn,
       end: nowForColumn,
-      collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
+      collection: columnAxis,
     });
 
-    const isOutOfRange =
-      nowForColumn.timestamp < adapter.getTime(columnStart) ||
-      nowForColumn.timestamp > adapter.getTime(columnEnd);
+    const isOutOfRange = nowForColumn.timestamp < columnStart || nowForColumn.timestamp > columnEnd;
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

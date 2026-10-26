@@ -1,26 +1,20 @@
 'use client';
 import * as React from 'react';
-import type { TemporalSupportedObject } from '../../models';
+import type { TimelineAxis } from '../../internals/utils/timeline-axis';
 
 export interface CalendarGridTimeColumnContext {
   /**
-   * The start date and time of the column.
+   * The first instant of the column, as a timestamp read in the display timezone.
    */
-  start: TemporalSupportedObject;
+  start: number;
   /**
-   * The end date and time of the column.
+   * The last instant of the column, as a timestamp read in the display timezone.
    */
-  end: TemporalSupportedObject;
+  end: number;
   /**
-   * First displayed minute of the day, as an offset from midnight.
-   * Equal to `0` unless the view limits its visible hour range.
+   * The axis the events of the column are positioned on, with the hour window of the view.
    */
-  dayStartMinute: number;
-  /**
-   * End of the displayed window of the day, as an exclusive offset from midnight (1440 for the full day).
-   * Equal to `1440` unless the view limits its visible hour range.
-   */
-  dayEndMinute: number;
+  axis: TimelineAxis;
   /**
    * Whether this column currently owns focus within the grid.
    * When `true`, interactive children (e.g. events) should use `tabIndex={0}`

@@ -4,6 +4,7 @@ import { processDate } from '../process-date';
 import { eventCalendarAgendaSelectors } from './eventCalendarAgendaSelectors';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import type { EventCalendarState } from '../use-event-calendar';
+import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
 
 describe('eventCalendarEventSelectors', () => {
   describe('baseVisibleDays', () => {
@@ -277,7 +278,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const range = eventCalendarAgendaSelectors.fetchRange(state);
 
-      expect(adapter.isSameDay(range.end, adapter.date('2025-07-11Z', 'default'))).to.equal(true);
+      expect(range.end.toString()).to.equal('2025-07-11');
     });
 
     it('should span the base days when showEmptyDaysInAgenda=true', () => {
@@ -292,8 +293,8 @@ describe('eventCalendarEventSelectors', () => {
 
       const range = eventCalendarAgendaSelectors.fetchRange(state);
 
-      expect(adapter.isSameDay(range.start, adapter.date('2024-01-01Z', 'default'))).to.equal(true);
-      expect(adapter.isSameDay(range.end, adapter.date('2024-01-12Z', 'default'))).to.equal(true);
+      expect(range.start.toString()).to.equal('2024-01-01');
+      expect(range.end.toString()).to.equal('2024-01-12');
     });
 
     it('should span the whole horizon when showEmptyDaysInAgenda=false', () => {
@@ -308,8 +309,8 @@ describe('eventCalendarEventSelectors', () => {
 
       const range = eventCalendarAgendaSelectors.fetchRange(state);
 
-      expect(adapter.isSameDay(range.start, adapter.date('2024-01-01Z', 'default'))).to.equal(true);
-      expect(adapter.isSameDay(range.end, adapter.date('2024-06-28Z', 'default'))).to.equal(true);
+      expect(range.start.toString()).to.equal('2024-01-01');
+      expect(range.end.toString()).to.equal('2024-06-28');
     });
 
     it('should not depend on the events or the loading state when showEmptyDaysInAgenda=false', () => {
@@ -333,8 +334,8 @@ describe('eventCalendarEventSelectors', () => {
       const reference = eventCalendarAgendaSelectors.fetchRange(emptyState);
       for (const state of [stateWithEvents, loadingState]) {
         const range = eventCalendarAgendaSelectors.fetchRange(state);
-        expect(adapter.isEqual(range.start, reference.start)).to.equal(true);
-        expect(adapter.isEqual(range.end, reference.end)).to.equal(true);
+        expect(range.start.equals(reference.start)).to.equal(true);
+        expect(range.end.equals(reference.end)).to.equal(true);
       }
     });
   });
@@ -389,10 +390,8 @@ describe('eventCalendarEventSelectors', () => {
       ]);
 
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
-      expect(fetchRange.start).toEqualDateTime(adapter.date('2025-07-01Z', 'default'));
-      expect(adapter.isSameDay(fetchRange.end, adapter.date('2025-07-31Z', 'default'))).to.equal(
-        true,
-      );
+      expect(fetchRange.start.toString()).to.equal('2025-07-01');
+      expect(fetchRange.end.toString()).to.equal('2025-07-31');
     });
 
     it("should keep every day of the month that has events when hiding the empty days in 'month' mode", () => {
@@ -466,12 +465,8 @@ describe('eventCalendarEventSelectors', () => {
 
       expect(eventCalendarAgendaSelectors.baseVisibleDays(state)).to.have.length(0);
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
-      expect(adapter.isSameDay(fetchRange.start, adapter.date('2025-07-05Z', 'default'))).to.equal(
-        true,
-      );
-      expect(adapter.isSameDay(fetchRange.end, adapter.date('2025-07-06Z', 'default'))).to.equal(
-        true,
-      );
+      expect(fetchRange.start.toString()).to.equal('2025-07-05');
+      expect(fetchRange.end.toString()).to.equal('2025-07-06');
     });
 
     it('should fetch at least the displayed days when dayCount exceeds the scan horizon', () => {
@@ -485,7 +480,9 @@ describe('eventCalendarEventSelectors', () => {
 
       const fetchRange = eventCalendarAgendaSelectors.fetchRange(state);
 
-      expect(adapter.isSameDay(fetchRange.end, adapter.addDays(visibleDate, 199))).to.equal(true);
+      expect(
+        fetchRange.end.equals(buildTemporalPlainDate(adapter, visibleDate).add({ days: 199 })),
+      ).to.equal(true);
     });
   });
 });

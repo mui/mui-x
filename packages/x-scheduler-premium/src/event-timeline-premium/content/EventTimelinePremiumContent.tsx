@@ -842,12 +842,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   });
 
   const { handleKeyDown: handleEventTabKeyDown } = useEventTabNavigation({
-    adapter,
     // The axis-filtered list: a hidden occurrence never mounts, so navigating to it
     // would swallow Tab in an unfocusable retry loop.
     resources: visibleResources,
     scrollerRef: gridRef,
-    axis: config,
+    axis: config.axis,
     durationMs: config.durationMs,
     tickCount: config.tickCount,
     tickWidth: config.tickWidth,
