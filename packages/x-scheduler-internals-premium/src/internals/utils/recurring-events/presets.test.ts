@@ -1,29 +1,32 @@
 import { adapter } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { describe, it, expect } from 'vitest';
+import { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { getMonthlyReference, getWeeklyDays } from './presets';
 
 describe('recurring-events/presets', () => {
   describe('getWeeklyDays', () => {
     it('returns 7 contiguous days starting from the start of the week', () => {
-      const visibleDate = adapter.date('2025-07-09T10:00:00Z', 'default'); // Wednesday
-      const days = getWeeklyDays(adapter, visibleDate);
+      const visiblePlainDate = PlainDate.from('2025-07-09'); // Wednesday
+      const days = getWeeklyDays(adapter, visiblePlainDate);
 
       expect(days).to.have.length(7);
       const codes = days.map((d) => d.code);
       expect(codes).to.deep.equal(['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']);
-
-      const expectedStart = adapter.startOfWeek(visibleDate);
-      for (let i = 0; i < 7; i += 1) {
-        expect(adapter.getTime(days[i].date)).to.equal(
-          adapter.getTime(adapter.addDays(expectedStart, i)),
-        );
-      }
+      expect(days.map((d) => d.date.toString())).to.deep.equal([
+        '2025-07-06',
+        '2025-07-07',
+        '2025-07-08',
+        '2025-07-09',
+        '2025-07-10',
+        '2025-07-11',
+        '2025-07-12',
+      ]);
     });
 
     it('returns days starting on Monday when weekStartsOn=1', () => {
-      const visibleDate = adapter.date('2025-07-09T10:00:00Z', 'default'); // Wednesday
-      const days = getWeeklyDays(adapter, visibleDate, 1);
+      const visiblePlainDate = PlainDate.from('2025-07-09'); // Wednesday
+      const days = getWeeklyDays(adapter, visiblePlainDate, 1);
 
       expect(days).to.have.length(7);
       // Week starting Monday: MO TU WE TH FR SA SU
@@ -32,12 +35,19 @@ describe('recurring-events/presets', () => {
     });
 
     it('returns days starting on Sunday when weekStartsOn=0', () => {
-      const visibleDate = adapter.date('2025-07-09T10:00:00Z', 'default'); // Wednesday
-      const days = getWeeklyDays(adapter, visibleDate, 0);
+      const visiblePlainDate = PlainDate.from('2025-07-09'); // Wednesday
+      const days = getWeeklyDays(adapter, visiblePlainDate, 0);
 
       expect(days).to.have.length(7);
       expect(days[0].code).to.equal('SU');
       expect(days[6].code).to.equal('SA');
+    });
+
+    it('returns days starting on Friday when weekStartsOn=5', () => {
+      const days = getWeeklyDays(adapter, PlainDate.from('2011-12-31'), 5); // Saturday
+
+      expect(days.map((d) => d.code)).to.deep.equal(['FR', 'SA', 'SU', 'MO', 'TU', 'WE', 'TH']);
+      expect(days[0].date.toString()).to.equal('2011-12-30');
     });
   });
 

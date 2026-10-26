@@ -294,10 +294,10 @@ export class SchedulerSchedulingPlugin<
     }
 
     // Relaxing a dependency the dates already break moves nothing, so it is never blocked.
-    const { adapter, processedEventLookup } = this.store.state;
+    const { processedEventLookup } = this.store.state;
     const isStricter =
-      getDependencyViolation(adapter, processedEventLookup, updated) >
-      getDependencyViolation(adapter, processedEventLookup, dependency);
+      getDependencyViolation(processedEventLookup, updated) >
+      getDependencyViolation(processedEventLookup, dependency);
     const rejection = this.commitDependencyChange(
       dependencyModelList.map((entry) => (entry.id === dependencyId ? updated : entry)),
       isStricter ? updated : null,

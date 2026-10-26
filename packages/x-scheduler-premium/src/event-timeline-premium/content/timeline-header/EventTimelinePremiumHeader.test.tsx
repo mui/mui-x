@@ -191,6 +191,19 @@ describe('<EventTimelinePremiumHeader />', () => {
       expect(dayCells[2].dataset.weekend).to.equal(''); // Sat
       expect(dayCells[3].dataset.weekend).to.equal(''); // Sun
     });
+
+    it('should not mark a weekday skipped by a transition as a weekend', async () => {
+      // Pacific/Apia skipped Friday, December 30th, 2011: its instants are those of Saturday.
+      await renderHeader({
+        preset: 'dayAndWeek',
+        visibleDate: adapter.date('2011-12-28T00:00:00', 'Pacific/Apia'),
+      });
+
+      const friday = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      ).find((cell) => cell.querySelector('time')!.getAttribute('datetime') === '2011-12-30T00:00');
+      expect(friday!.dataset.weekend).to.equal(undefined);
+    });
   });
 
   describe('`dayAndMonth` month row clamping', () => {
@@ -321,6 +334,41 @@ describe('<EventTimelinePremiumHeader />', () => {
         expect(cell.querySelector('[data-slot="weekday"]')).not.to.equal(null);
         expect(cell.querySelector('[data-slot="dayOfMonth"]')).not.to.equal(null);
       });
+    });
+  });
+
+  describe('date skipped by a transition', () => {
+    // Pacific/Apia skipped Friday, December 30th, 2011: its instants are those of Saturday.
+    const visibleDate = adapter.date('2011-12-29T00:00:00', 'Pacific/Apia');
+
+    function getDayLabels() {
+      return Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      )
+        .slice(0, 3)
+        .map((cell) => cell.textContent);
+    }
+
+    it('should label the day cells with their own date in `dayAndMonth`', async () => {
+      await renderHeader({ preset: 'dayAndMonth', visibleDate });
+
+      expect(getDayLabels()).to.deep.equal(['T29', 'F30', 'S31']);
+    });
+
+    it('should label the day cells with their own date in `dayAndHour`', async () => {
+      await renderHeader({ preset: 'dayAndHour', visibleDate });
+
+      expect(getDayLabels()).to.deep.equal(['Thu, Dec 29', 'Fri, Dec 30', 'Sat, Dec 31']);
+    });
+
+    it('should label the day cells with their own weekday in `dayAndWeek`', async () => {
+      await renderHeader({ preset: 'dayAndWeek', visibleDate });
+
+      const dayLabels = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      ).map((cell) => cell.textContent);
+      // The week of December 25th, 2011 starts on Sunday.
+      expect(dayLabels.slice(0, 7)).to.deep.equal(['S', 'M', 'T', 'W', 'T', 'F', 'S']);
     });
   });
 });

@@ -328,5 +328,11 @@
   "328": "Base UI Plus: A temporal value received %s as the %s, which isn't a finite number. A temporal value cannot represent a non-finite field. Pass finite numbers for its date and time fields.",
   "329": "Base UI Plus: The options of `BaseTemporal.%s` are %s, which isn't an object. The method can't read the `overflow` option from them. Pass an object such as `{ overflow: 'reject' }`, or no options.",
   "330": "Base UI Plus: The `overflow` option of `BaseTemporal.%s` is %s, which isn't supported. The method can't tell whether to adjust or reject a field above its range. Pass `'constrain'` or `'reject'`.",
-  "331": "Base UI Plus: A `%s` was converted to a primitive value, for example by `<`, `>` or `+`. Comparing or adding temporal values this way gives meaningless results, so it isn't allowed. Use the static `compare()` method or `equals()` to compare them, and `toString()` to get them as a string."
+  "331": "Base UI Plus: A `%s` was converted to a primitive value, for example by `<`, `>` or `+`. Comparing or adding temporal values this way gives meaningless results, so it isn't allowed. Use the static `compare()` method or `equals()` to compare them, and `toString()` to get them as a string.",
+  "332": "Base UI Plus: The date-time string has an unsupported format. Its date and time cannot be read. Use YYYY-MM-DDTHH:mm, such as '2024-05-24T09:30', without an offset or timezone, optionally followed by a calendar annotation such as '[u-ca=hebrew]'.",
+  "333": "Base UI Plus: The time string has an unsupported format. Its clock fields cannot be read. Use HH:mm or HH:mm:ss with up to nine fractional digits.",
+  "334": "Base UI Plus: The time has no clock fields. A clock time cannot be created. Pass a string such as '09:30' or an object such as { hour: 9, minute: 30 }.",
+  "335": "Base UI Plus: The %s of the time is out of range. The clock time cannot be created. Pass an integer between 0 and %s.",
+  "336": "Base UI Plus: The zoned date-time is outside the supported years. Fields cannot display it. Use a date-time between years 0 and 9999.",
+  "337": "Base UI Plus: The zoned date-time could not be created or changed. Its date, clock time, offset or timezone could not be resolved: %s. Pass a valid ISO date-time and timezone, and choose a disambiguation policy for skipped or repeated clock times."
 }

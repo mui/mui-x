@@ -28,6 +28,27 @@ const marketing = ResourceBuilder.new().build();
 
 const resources: SchedulerResource[] = [engineering, design];
 
+/**
+ * Mocks the event bounds from the position the component actually rendered, on rows of
+ * `axisWidth` pixels, so a render↔drag mismatch cannot slip through hard-coded coordinates.
+ */
+function mockEventBoundsFromRender(
+  axisWidth: number,
+  title: string,
+): { element: HTMLElement; left: number } {
+  const element = screen.getByText(title).closest('.MuiEventTimeline-event') as HTMLElement;
+  const xPosition = parseFloat(element.style.getPropertyValue('--x-position'));
+  const width = parseFloat(element.style.getPropertyValue('--width'));
+  expect(Number.isNaN(xPosition), '--x-position must be set on the event').to.equal(false);
+  const left = (xPosition / 100) * axisWidth;
+  mockElementBounds(element, {
+    left,
+    width: (width / 100) * axisWidth,
+    height: 30,
+  });
+  return { element, left };
+}
+
 describe('EventTimelinePremium - Drag and Drop', () => {
   const { renderSettled } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
@@ -478,6 +499,51 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     expect(new Date(updatedEvents[0].end).getUTCHours()).to.equal(10);
   });
 
+  it('should drop an event starting in the hour repeated by a DST transition where the cursor is', async () => {
+    // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: the event starts at the
+    // second 02:30, CET, which renders at the same position as the first one.
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .title('Night shift')
+      .span('2026-10-25T01:30:00Z', '2026-10-25T02:30:00Z')
+      .resource(engineering)
+      .draggable(true)
+      .build();
+
+    await renderSettled(
+      <EventTimelinePremium
+        resources={resources}
+        events={[event]}
+        displayTimezone="Europe/Paris"
+        visibleDate={adapter.date('2026-10-25T12:00:00', 'Europe/Paris')}
+        preset="dayAndHour"
+        presets={['dayAndHour']}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+    // 4 days of 1440 minutes: 1px per axis minute.
+    const axisWidth = 4 * 1440;
+    mockAllEventRowBounds(axisWidth);
+    const { element: eventElement, left } = mockEventBoundsFromRender(axisWidth, 'Night shift');
+    // 02:30 on the first day of the axis.
+    expect(left).to.be.closeTo(150, 0.001);
+
+    // Grabbed 10 minutes after its start and dropped 10 minutes after 10:00 on the same day.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getEventRow(engineering.id),
+        sourceClientX: left + 10,
+        targetClientX: 610,
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2026-10-25T09:00:00.000Z'); // 10:00 CET
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2026-10-25T10:00:00.000Z'); // 11:00 CET
+  });
+
   describe('trimmed hour window (presetConfig)', () => {
     // dayAndHour trimmed to 8:00 → 20:00: 4 days × 720 visible minutes = 2880 axis
     // minutes. Rows are mocked at 2880px so 1px = 1 axis minute.
@@ -502,24 +568,6 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       return view;
     }
 
-    /**
-     * Mocks the event bounds from the position the component actually rendered, so a
-     * render↔drag mismatch cannot slip through hard-coded coordinates.
-     */
-    function mockEventBoundsFromRender(title: string): { element: HTMLElement; left: number } {
-      const element = screen.getByText(title).closest('.MuiEventTimeline-event') as HTMLElement;
-      const xPosition = parseFloat(element.style.getPropertyValue('--x-position'));
-      const width = parseFloat(element.style.getPropertyValue('--width'));
-      expect(Number.isNaN(xPosition), '--x-position must be set on the event').to.equal(false);
-      const left = (xPosition / 100) * AXIS_WIDTH;
-      mockElementBounds(element, {
-        left,
-        width: (width / 100) * AXIS_WIDTH,
-        height: 30,
-      });
-      return { element, left };
-    }
-
     it('should map a drop across the day seam through the compressed axis', async () => {
       const handleEventsChange = vi.fn();
       const event = EventBuilder.new()
@@ -532,7 +580,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       await renderTimeline(event, handleEventsChange);
 
       // 10:00 sits 120 axis minutes after the first visible hour (8:00).
-      const { element: eventElement, left } = mockEventBoundsFromRender('Team Standup');
+      const { element: eventElement, left } = mockEventBoundsFromRender(AXIS_WIDTH, 'Team Standup');
       expect(left).to.be.closeTo(120, 0.001);
 
       const sameRow = getEventRow(engineering.id);
@@ -569,7 +617,10 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       // Rendered from axis minute 600 (18:00) with a 240 axis-minute span
       // (2h before the gap + 2h after it).
-      const { element: eventElement, left } = mockEventBoundsFromRender('Overnight Job');
+      const { element: eventElement, left } = mockEventBoundsFromRender(
+        AXIS_WIDTH,
+        'Overnight Job',
+      );
       expect(left).to.be.closeTo(600, 0.001);
 
       const endHandle = getResizeHandle(eventElement, 'end');
@@ -608,7 +659,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       // The 07:00 start hides inside the hidden hours: the event renders clamped
       // to the window edge (axis minute 0).
-      const { element: eventElement, left } = mockEventBoundsFromRender('Early Shift');
+      const { element: eventElement, left } = mockEventBoundsFromRender(AXIS_WIDTH, 'Early Shift');
       expect(left).to.be.closeTo(0, 0.001);
 
       const sameRow = getEventRow(engineering.id);
@@ -640,7 +691,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       await renderTimeline(event, handleEventsChange);
 
-      const { element: eventElement } = mockEventBoundsFromRender('Early Shift');
+      const { element: eventElement } = mockEventBoundsFromRender(AXIS_WIDTH, 'Early Shift');
       const sameRow = getEventRow(engineering.id);
 
       await act(async () => {
@@ -668,7 +719,10 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       await renderTimeline(event, handleEventsChange);
 
-      const { element: eventElement, left } = mockEventBoundsFromRender('Overnight Job');
+      const { element: eventElement, left } = mockEventBoundsFromRender(
+        AXIS_WIDTH,
+        'Overnight Job',
+      );
       expect(left).to.be.closeTo(600, 0.001);
 
       const sameRow = getEventRow(engineering.id);
@@ -705,7 +759,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
       await renderTimeline(event, handleEventsChange);
 
       // Starts before the collection: rendered from the row start.
-      const { element: eventElement, left } = mockEventBoundsFromRender('Long Job');
+      const { element: eventElement, left } = mockEventBoundsFromRender(AXIS_WIDTH, 'Long Job');
       expect(left).to.be.closeTo(0, 0.001);
 
       const sameRow = getEventRow(engineering.id);
@@ -740,7 +794,10 @@ describe('EventTimelinePremium - Drag and Drop', () => {
 
       await renderTimeline(event, handleEventsChange);
 
-      const { element: eventElement, left } = mockEventBoundsFromRender('Overnight Job');
+      const { element: eventElement, left } = mockEventBoundsFromRender(
+        AXIS_WIDTH,
+        'Overnight Job',
+      );
       expect(left).to.be.closeTo(600, 0.001);
 
       const startHandle = getResizeHandle(eventElement, 'start');

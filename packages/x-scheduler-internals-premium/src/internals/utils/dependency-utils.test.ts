@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
 import type { SchedulerDependency } from '../../models';
 import {
   addDependencyLag,
@@ -159,15 +158,13 @@ describe('dependency-utils', () => {
   });
 
   describe('addDependencyLag', () => {
-    const date = adapter.date('2025-07-03T09:00:00', 'UTC');
-    const expectShifted = (lag: Parameters<typeof addDependencyLag>[2], expected: string) => {
-      expect(adapter.getTime(addDependencyLag(adapter, date, lag))).to.equal(
-        adapter.getTime(adapter.date(expected, 'UTC')),
-      );
+    const timestamp = Date.UTC(2025, 6, 3, 9);
+    const expectShifted = (lag: Parameters<typeof addDependencyLag>[1], expected: string) => {
+      expect(addDependencyLag(timestamp, lag, 'UTC')).to.equal(Date.parse(`${expected}Z`));
     };
 
     it('should return the same date for no lag', () => {
-      expect(addDependencyLag(adapter, date, null)).to.equal(date);
+      expect(addDependencyLag(timestamp, null, 'UTC')).to.equal(timestamp);
     });
 
     it('should add minutes', () => {
