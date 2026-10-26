@@ -136,8 +136,8 @@ const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
       const lastOfMonth = firstOfMonth.with({ day: firstOfMonth.daysInMonth });
       return getDayListFromPlainDates({
         adapter,
-        firstPlainDate: getPlainDateWeekStart(adapter, firstOfMonth, weekStartsOn, timezone),
-        lastPlainDate: getPlainDateWeekStart(adapter, lastOfMonth, weekStartsOn, timezone).add({
+        firstPlainDate: getPlainDateWeekStart(adapter, firstOfMonth, weekStartsOn),
+        lastPlainDate: getPlainDateWeekStart(adapter, lastOfMonth, weekStartsOn).add({
           days: 6,
         }),
         timezone,

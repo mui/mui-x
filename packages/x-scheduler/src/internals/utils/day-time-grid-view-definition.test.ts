@@ -117,5 +117,21 @@ describe('createDayTimeGridViewDefinition', () => {
         adapter.addWeeks(weekStart, -1),
       );
     });
+
+    it('goes to the midnight of the next week when the week starts later than midnight', () => {
+      // America/Santiago enters summer time at the start of Sunday, September 8th, 2024: that week
+      // starts at 01:00, and the next one at midnight.
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        visibleDate: adapter.date('2024-09-10T12:00:00', 'America/Santiago'),
+        displayTimezone: 'America/Santiago',
+        defaultPreferences: { weekStartsOn: 0 },
+      });
+      const nextVisibleDate = createDayTimeGridViewDefinition(7).siblingVisibleDateGetter({
+        state,
+        delta: 1,
+      });
+      expect(adapter.toJsDate(nextVisibleDate).toISOString()).to.equal('2024-09-15T03:00:00.000Z');
+    });
   });
 });

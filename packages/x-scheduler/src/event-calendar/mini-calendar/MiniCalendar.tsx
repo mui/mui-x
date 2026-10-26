@@ -187,12 +187,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     // Generate days for the displayed month (including padding days from adjacent months)
     // Always show 6 weeks (42 days) for consistent height
     const days = React.useMemo(() => {
-      const gridStart = getPlainDateWeekStart(
-        adapter,
-        displayedMonth,
-        weekStartsOn,
-        displayTimezone,
-      );
+      const gridStart = getPlainDateWeekStart(adapter, displayedMonth, weekStartsOn);
       return getDayListFromPlainDates({
         adapter,
         firstPlainDate: gridStart,

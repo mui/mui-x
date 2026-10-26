@@ -2,7 +2,11 @@ import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/i
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
-import { buildTemporalPlainDate, createStartOfPlainDate } from './plain-date-utils/adapter';
+import {
+  buildTemporalPlainDate,
+  createAdapterDate,
+  createStartOfPlainDate,
+} from './plain-date-utils/adapter';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
 
 /**
@@ -118,12 +122,24 @@ export function getWeekStartPlainDate(
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,
 ): PlainDate {
-  return getPlainDateWeekStart(
-    adapter,
-    buildTemporalPlainDate(adapter, date),
-    weekStartsOn,
-    adapter.getTimezone(date),
-  );
+  return getPlainDateWeekStart(adapter, buildTemporalPlainDate(adapter, date), weekStartsOn);
+}
+
+const localeFirstDaysOfWeek = new WeakMap<Adapter, number>();
+
+/**
+ * The ISO weekday (1 = Monday … 7 = Sunday) the weeks of the locale of the adapter start on.
+ */
+function getLocaleFirstDayOfWeek(adapter: Adapter): number {
+  let firstDayOfWeek = localeFirstDaysOfWeek.get(adapter);
+  if (firstDayOfWeek === undefined) {
+    // The adapter numbers the days of the week from 1, starting on the first day of the locale.
+    // January 1st, 2024 is a Monday.
+    const monday = createAdapterDate(adapter, Date.UTC(2024, 0, 1, 12), 'UTC');
+    firstDayOfWeek = ((8 - adapter.getDayOfWeek(monday)) % 7) + 1;
+    localeFirstDaysOfWeek.set(adapter, firstDayOfWeek);
+  }
+  return firstDayOfWeek;
 }
 
 /**
@@ -134,16 +150,14 @@ export function getPlainDateWeekStart(
   adapter: Adapter,
   plainDate: PlainDate,
   weekStartsOn: WeekStartsOn | undefined,
-  timezone: TemporalTimezone,
 ): PlainDate {
-  if (weekStartsOn === undefined) {
-    // The adapter numbers the days of the week from 1, starting on the first day of the locale.
-    const dayOfWeek = adapter.getDayOfWeek(createStartOfPlainDate(adapter, plainDate, timezone));
-    return plainDate.add({ days: 1 - dayOfWeek });
+  if (weekStartsOn !== undefined) {
+    checkWeekStartsOn(weekStartsOn);
   }
-  checkWeekStartsOn(weekStartsOn);
   // `weekStartsOn` and ISO weekdays agree, except for Sunday (0 and 7), which both accept.
-  return plainDateFromDayNumber(getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn));
+  return plainDateFromDayNumber(
+    getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn ?? getLocaleFirstDayOfWeek(adapter)),
+  );
 }
 
 /**

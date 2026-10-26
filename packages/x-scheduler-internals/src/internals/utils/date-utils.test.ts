@@ -1,6 +1,7 @@
 import { adapter, adapterFr } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { getStartOfWeek, getWeekNumber } from './date-utils';
+import { PlainDate } from './base-temporal/PlainDate';
+import { getPlainDateWeekStart, getStartOfWeek, getWeekNumber } from './date-utils';
 import { normalizeAllDayBounds } from './plain-date-utils/adapter';
 
 const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
@@ -96,6 +97,20 @@ describe('date-utils', () => {
       const result = getStartOfWeek(adapter, wednesday, 6);
       expect(adapter.isSameDay(result, adapter.date('2025-01-04T12:00:00.000Z', 'UTC'))).to.equal(
         true,
+      );
+    });
+  });
+
+  describe('getPlainDateWeekStart', () => {
+    it('reads the weekday of the plain date for the first day of the week of the locale', () => {
+      // Pacific/Apia skipped Friday, December 30th, 2011, so the day has no first instant to read
+      // its weekday from. Weeks start on Sunday in English and on Monday in French.
+      const plainDate = PlainDate.from('2011-12-30');
+      expect(getPlainDateWeekStart(adapter, plainDate, undefined).toString()).to.equal(
+        '2011-12-25',
+      );
+      expect(getPlainDateWeekStart(adapterFr, plainDate, undefined).toString()).to.equal(
+        '2011-12-26',
       );
     });
   });

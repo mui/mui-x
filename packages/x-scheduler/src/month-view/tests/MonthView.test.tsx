@@ -1349,6 +1349,23 @@ describe('<MonthView />', () => {
       });
     });
 
+    it('should end on the week of the last day of the month when the timezone skips that day', () => {
+      // Pacific/Kiritimati skipped Saturday, December 31st, 1994, the last day of its week.
+      render(
+        <EventCalendar
+          events={[]}
+          view="month"
+          visibleDate={new Date('1994-12-15T00:00:00Z')}
+          displayTimezone="Pacific/Kiritimati"
+        />,
+      );
+
+      const cellNumbers = document.querySelectorAll(
+        `.${eventCalendarClasses.monthView} .${eventCalendarClasses.monthViewCellNumber}`,
+      );
+      expect(cellNumbers[cellNumbers.length - 1]).to.have.text('30');
+    });
+
     it('should display correct ISO week numbers when weekStartsOn=1 and showWeekNumber=true', () => {
       // May 2025 week 1 starts Mon Apr 28.
       // ISO week containing May 1 (Thu) = week 18.

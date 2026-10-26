@@ -40,7 +40,6 @@ export function createDayTimeGridViewDefinition(
             state.adapter,
             schedulerOtherSelectors.visiblePlainDate(state),
             eventCalendarPreferenceSelectors.weekStartsOn(state),
-            state.displayTimezone,
           ).add({ weeks: delta }),
           state.displayTimezone,
         ),
@@ -51,12 +50,7 @@ export function createDayTimeGridViewDefinition(
         eventCalendarPreferenceSelectors.showWeekends,
         eventCalendarPreferenceSelectors.weekStartsOn,
         (adapter, visiblePlainDate, timezone, showWeekends, weekStartsOn) => {
-          const weekStart = getPlainDateWeekStart(
-            adapter,
-            visiblePlainDate,
-            weekStartsOn,
-            timezone,
-          );
+          const weekStart = getPlainDateWeekStart(adapter, visiblePlainDate, weekStartsOn);
           return getDayListFromPlainDates({
             adapter,
             firstPlainDate: weekStart,

@@ -243,7 +243,6 @@ export const AgendaView = React.memo(
             adapter,
             plainDate,
             weekStartsOn,
-            displayTimezone,
           ).dayNumber;
           weekNumber = getWeekNumber(adapter, date.value, weekStartsOn);
           isFirstDayOfWeek = weekStartDayNumber !== previousWeekStartDayNumber;
