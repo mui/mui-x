@@ -1,7 +1,6 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
-import { getDateKey } from '../date-utils';
 import type { PlainDate, PlainDateDuration } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
 import {
@@ -16,12 +15,47 @@ import {
 // receives and returns the same values as the rest of the Scheduler.
 
 /**
+ * Returns a string representation of the date.
+ * It can be used as key in Maps or passed to the React `key` property when looping through days.
+ * It only contains date information, two dates representing the same day but with different time will have the same key.
+ */
+export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
+  return adapter.format(day, 'localizedNumericDate');
+}
+
+/**
  * Builds the plain date of an adapter value, in the timezone the value is labeled with.
  * Read from the offsets of the timezone, which is faster than the getters of the adapter and
  * returns the same date.
  */
 export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
   return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).date;
+}
+
+/**
+ * Creates the adapter value of the first instant of a plain date in `timezone`, the reverse of
+ * `buildTemporalPlainDate()`. A day whose midnight a DST transition skips starts at the end of the
+ * gap.
+ */
+export function createStartOfPlainDate(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
+}
+
+/**
+ * Creates the adapter value of the last instant of a plain date in `timezone`, just before the next
+ * day starts. When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
+ */
+export function createEndOfPlainDate(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  const nextPlainDate = plainDate.add({ days: 1 });
+  return createAdapterDate(adapter, toEpochMs(nextPlainDate, 0, timezone) - 1, timezone);
 }
 
 const epochValues = new WeakMap<Adapter, TemporalSupportedObject>();
