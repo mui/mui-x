@@ -1,7 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
-import type { PlainDate } from '../base-temporal/PlainDate';
+import type { PlainDate, PlainDateDuration } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
 import {
   getEndOfDayMs,
@@ -200,6 +200,25 @@ export function createProcessedDate(
     adapter,
     createAdapterDate(adapter, epochMs, timezone),
     epochMs,
+    timezone,
+  );
+}
+
+/**
+ * Moves an adapter value by a duration of the calendar, keeping its time of day on the wall clock of
+ * its timezone. A time that a DST transition skips moves forward by the length of the gap, and a
+ * repeated one resolves to its first instant, like `toEpochMs()`.
+ */
+export function addToAdapterDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  duration: PlainDateDuration,
+): TemporalSupportedObject {
+  const timezone = adapter.getTimezone(date);
+  const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
+  return createAdapterDate(
+    adapter,
+    toEpochMs(plainDateTime.date.add(duration), plainDateTime.msInDay, timezone),
     timezone,
   );
 }

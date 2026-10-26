@@ -10,6 +10,7 @@ export {
 } from './timeZone';
 export type { PlainDateTime } from './timeZone';
 export {
+  addToAdapterDate,
   buildTemporalPlainDate,
   createAdapterDate,
   createAdapterDateOnPlainDate,
