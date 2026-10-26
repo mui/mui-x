@@ -49,7 +49,7 @@ export function getOccurrences(events: SchedulerProcessedEvent[]) {
     adapter,
     start: collectionStart,
     end: collectionEnd,
-    eventRangeIndex: createEventRangeIndex(events, adapter, false),
+    eventRangeIndex: createEventRangeIndex(events, false),
     displayTimezone: 'default',
     visibleResources: {},
     recurringEventsPlugin: null,

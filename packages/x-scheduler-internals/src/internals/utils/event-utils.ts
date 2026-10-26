@@ -146,7 +146,9 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     recurringEventsPlugin,
   } = parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
-  const eventsInRange = eventRangeIndex.getEventsForRange(start, end);
+  const startTimestamp = adapter.getTime(start);
+  const endTimestamp = adapter.getTime(end);
+  const eventsInRange = eventRangeIndex.getEventsForRange(startTimestamp, endTimestamp);
 
   for (const event of eventsInRange) {
     // STEP 1: Skip events from resources that are not visible
@@ -170,8 +172,8 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       occurrences.push(
         ...recurringEventsPlugin.getOccurrencesForVisibleDays(
           event,
-          start,
-          end,
+          startTimestamp,
+          endTimestamp,
           adapter,
           displayTimezone,
         ),

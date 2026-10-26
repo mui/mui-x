@@ -32,8 +32,14 @@ describe('recurring-events/updateRecurringEvent', () => {
       originalSeriesStart: TemporalSupportedObject = seriesStart,
       split: TemporalSupportedObject = splitStart,
     ) =>
-      decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes) as
-        SchedulerProcessedEventRecurrenceRule | undefined;
+      decideSplitRRule(
+        adapter,
+        originalRule,
+        adapter.getTime(originalSeriesStart),
+        adapter.getTimezone(originalSeriesStart),
+        split,
+        changes,
+      ) as SchedulerProcessedEventRecurrenceRule | undefined;
 
     it('should return changes.rrule as is when user explicitly changed recurrence', () => {
       const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
@@ -1179,8 +1185,8 @@ describe('recurring-events/updateRecurringEvent', () => {
           .toProcessed();
         const [occurrence] = getRecurringEventOccurrencesForVisibleDays(
           event,
-          adapter.date('2025-10-26T00:00:00Z', 'default'),
-          adapter.date('2025-10-26T12:00:00Z', 'default'),
+          adapter.getTime(adapter.date('2025-10-26T00:00:00Z', 'default')),
+          adapter.getTime(adapter.date('2025-10-26T12:00:00Z', 'default')),
           adapter,
           'Europe/Paris',
         );

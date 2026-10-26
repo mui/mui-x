@@ -28,13 +28,13 @@ export interface SchedulerRecurringEventsPluginInterface {
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**
-   * Expands a recurring event into the occurrences that fall within the visible range,
-   * honoring COUNT/UNTIL boundaries and EXDATE exclusions.
+   * Expands a recurring event into the occurrences that fall within the visible range, from the
+   * instant `start` to the instant `end`, honoring COUNT/UNTIL boundaries and EXDATE exclusions.
    */
   getOccurrencesForVisibleDays(
     event: SchedulerProcessedEvent,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
+    start: number,
+    end: number,
     adapter: Adapter,
     displayTimezone: TemporalTimezone,
   ): SchedulerEventOccurrence[];

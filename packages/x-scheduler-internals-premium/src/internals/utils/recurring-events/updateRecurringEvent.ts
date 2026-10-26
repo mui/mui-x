@@ -1,3 +1,4 @@
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventByDayValue,
@@ -86,7 +87,8 @@ export function applyRecurringUpdateFollowing(
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
-    originalEvent.dataTimezone.start.value,
+    originalEvent.dataTimezone.start.timestamp,
+    originalEvent.dataTimezone.timezone,
     occurrenceStart,
     changes,
   );
@@ -193,7 +195,10 @@ export function applyRecurringUpdateAll(
         adapter,
         changes.end,
         toPlainDateTime(originalEvent.dataTimezone.end.timestamp, dataTimezone).date,
-        adapter.getTime(eventUpdatedProperties.start ?? seriesStart.value),
+        eventUpdatedProperties.start == null
+          ? seriesStart.timestamp
+          : adapter.getTime(eventUpdatedProperties.start),
+        dataTimezone,
       );
     }
   }
@@ -327,7 +332,8 @@ function realignMonthlyRule(
 export function decideSplitRRule(
   adapter: Adapter,
   originalRule: SchedulerProcessedEventRecurrenceRule,
-  originalSeriesStart: TemporalSupportedObject,
+  originalSeriesStart: number,
+  timezone: TemporalTimezone,
   splitStart: TemporalSupportedObject,
   changes: Partial<SchedulerEventUpdatedProperties>,
 ): SchedulerProcessedEventRecurrenceRule | string | undefined {
@@ -367,7 +373,11 @@ export function decideSplitRRule(
 
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
-    const series = new RecurringSeries(adapter, { rule: originalRule, start: originalSeriesStart });
+    const series = new RecurringSeries(adapter, {
+      rule: originalRule,
+      start: originalSeriesStart,
+      timezone,
+    });
     const splitPlainDate = buildTemporalPlainDate(adapter, splitStart);
     const remaining = originalRule.count - series.countOccurrencesBefore(splitPlainDate);
     // If no occurrences remain, the split segment is non-recurring.

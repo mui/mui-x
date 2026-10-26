@@ -24,7 +24,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days: dayList,
-        eventRangeIndex: createEventRangeIndex(events, adapter, false),
+        eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: {},
         displayTimezone,
         recurringEventsPlugin: null,

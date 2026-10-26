@@ -1055,7 +1055,7 @@ describe('dependencyArrowGeometry', () => {
             adapter,
             start: collectionStart,
             end: twoDayAxis.end,
-            eventRangeIndex: createEventRangeIndex(events, adapter, false),
+            eventRangeIndex: createEventRangeIndex(events, false),
             displayTimezone: 'default',
             visibleResources: {},
             recurringEventsPlugin: null,
