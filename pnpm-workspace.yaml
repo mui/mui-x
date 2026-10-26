@@ -108,8 +108,6 @@ trustPolicy: no-downgrade
 # provenance), and the other legacy packages restore provenance.
 trustPolicyIgnoreAfter: 525600
 
-enablePrePostScripts: true
-
 allowBuilds:
   '@mui/x-charts-vendor': true
   '@swc/core': true
