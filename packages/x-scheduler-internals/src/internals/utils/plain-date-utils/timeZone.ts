@@ -208,6 +208,22 @@ export function getEndOfDayMs(epochMs: number, timezone: TemporalTimezone): numb
 }
 
 /**
+ * The number of full days from `earlierMs` to `laterMs` on the wall clock of `timezone`, like the
+ * adapter's `differenceInDays()`: the days between the two dates, minus one when the time of
+ * `laterMs` is before the time of `earlierMs`. Negative when `laterMs` is before `earlierMs`.
+ */
+export function differenceInDays(
+  laterMs: number,
+  earlierMs: number,
+  timezone: TemporalTimezone,
+): number {
+  // A wall-clock day always lasts 24 hours, whatever the DST transitions.
+  return (
+    Math.trunc((toLocalMs(laterMs, timezone) - toLocalMs(earlierMs, timezone)) / MS_PER_DAY) || 0
+  );
+}
+
+/**
  * Returns the day numbers of the days `timezone` skips from `from` (inclusive) to `to` (exclusive),
  * like December 30th, 2011, which Pacific/Apia skipped when it moved across the date line.
  */

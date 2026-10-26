@@ -10,6 +10,8 @@ export {
   buildTemporalPlainDate,
   createAdapterDate,
   createProcessedDate,
+  getDateKey,
   getPlainDateKey,
   normalizeAllDayBounds,
 } from './adapter';
+export { isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';
