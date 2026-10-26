@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import { adapter, DEFAULT_TESTING_VISIBLE_DATE, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import type {
   SchedulerProcessedDate,
   TemporalSupportedObject,
@@ -52,7 +53,7 @@ const DEFAULT_PARAMS = {
 };
 
 // Build a minimal `visibleDaysSelector` returning a `dayCount`-day window starting at the
-// store's current `visibleDate` in the display timezone. The plugin only reads `value` and `key`; `timestamp`
+// store's current `visibleDate` in the display timezone. The plugin only reads `timestamp`; `value`, `key`
 // and `minutesInDay` are filled in to satisfy `SchedulerProcessedDate`.
 const buildViewDefinition = (dayCount = 7): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
@@ -96,6 +97,40 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(dataSource.getEvents.mock.calls.length).to.equal(1);
     expect(store.state.eventIdList).to.have.length(1);
   });
+
+  it.skipIf(!isJSDOM)(
+    'should fetch the days of the view in the display timezone, whatever the timezone of the system',
+    async () => {
+      setSystemTimezone('Australia/Lord_Howe');
+      const dataSource = {
+        getEvents: vi.fn(async () => buildEvents()),
+        persistEvents: noopPersistEvents,
+      };
+      // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+      const store = new EventCalendarPremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          dataSource,
+          displayTimezone: 'America/Santiago',
+          // Midnight on April 5th, 2026 in Santiago.
+          defaultVisibleDate: adapter.date('2026-04-05T04:00:00Z', 'America/Santiago'),
+        },
+        adapter,
+      );
+      store.setViewDefinition(buildViewDefinition(1));
+
+      await flushEffect();
+      await flushDebounce();
+
+      expect(dataSource.getEvents.mock.calls.length).to.equal(1);
+      const [start, end] = dataSource.getEvents.mock.calls[0] as unknown as [
+        TemporalSupportedObject,
+        TemporalSupportedObject,
+      ];
+      expect(adapter.toJsDate(start).toISOString()).to.equal('2026-04-05T04:00:00.000Z');
+      expect(adapter.toJsDate(end).toISOString()).to.equal('2026-04-06T03:59:59.999Z');
+    },
+  );
 
   it('should fire the initial fetch without waiting for the debounce window', async () => {
     const dataSource = {
