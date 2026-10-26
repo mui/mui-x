@@ -269,23 +269,6 @@ Definitions are plain objects, so the model can be stored as JSON.
 
 To turn the feature off at runtime, set `disableComputedColumns`: the columns of the model are removed from the grid and the toolbar button, the column menu items, and the panel are hidden, while the model itself is kept.
 
-## Programmatic API
-
-The `apiRef` exposes the following methods:
-
-- `addComputedColumn(definition, { columnIndex })` adds a column, appended by default or inserted at `columnIndex`.
-- `updateComputedColumn(field, changes)` updates the given properties of an existing column. Pass `undefined` to remove an optional property, such as `numberFormat`.
-- `removeComputedColumn(field)` removes a column.
-- `setComputedColumns(model)` replaces the whole model; it also accepts an updater function.
-- `showComputedColumnEditor(field, { sampleRowId, columnIndex })` opens the panel on the editor of the given column, or on a new column when `field` is omitted, using `sampleRowId` as the preview row. `hideComputedColumnEditor()` closes the panel.
-- `validateComputedColumn(definition)` returns the validation result of a definition without applying it—see [Validation](#validation).
-
-The four methods that change the model accept `{ undoable: true }` to make the change an undo step—see [Undo and redo](#undo-and-redo).
-
-{{"demo": "ComputedColumnsApi.js", "bg": "inline", "defaultCodeOpen": false}}
-
-The `computedColumnsChange` event is published on every model change, and the `gridComputedColumnsSelector` returns the current model—see [Selectors](#selectors).
-
 ## Referencing other computed columns
 
 A computed column can reference other computed columns by field, as the **Total pay** column of the [controlled demo](#controlled-and-persisted-models) does.
