@@ -30,12 +30,13 @@ import type {
   EventTimelinePremiumStoreParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
-import { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
+import type { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
 import {
   EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
-import { buildDependenciesState, isDependencyActive } from '../internals/utils/dependency-utils';
+import { EMPTY_DEPENDENCIES_STATE } from '../internals/features/eventTimelinePremiumStoreFeatures';
+import type { EventTimelinePremiumDependenciesStoreFeature } from '../internals/features/eventTimelinePremiumStoreFeatures';
 
 // Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
 // tickWidth)` must produce a unique px/day — otherwise the order is decided by
@@ -125,9 +126,22 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 // `onDependenciesChange` could only enable a UI whose creations never display: the
 // feature requires the value, and the lone handler gets the symmetric dev warning to
 // the one `updateDependencies` emits for a value without a handler.
-const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameters) => {
-  const enabled = parameters.dependencies !== undefined;
-  if (!enabled && parameters.onDependenciesChange !== undefined) {
+const deriveAreDependenciesEnabled = (
+  dependenciesFeature: EventTimelinePremiumDependenciesStoreFeature | null,
+  parameters: SchedulerDependenciesParameters,
+) => {
+  if (process.env.NODE_ENV !== 'production') {
+    if (dependenciesFeature === null && parameters.dependencies !== undefined) {
+      warnOnce(
+        [
+          'MUI X Scheduler: A `dependencies` value was provided, but the dependencies feature is missing.',
+          'Without it, the dependencies are ignored: no arrows render and events do not move with their predecessors.',
+          'Pass the dependencies feature through the `storeFeatures` parameter.',
+        ].join('\n'),
+      );
+    }
+  }
+  if (parameters.dependencies === undefined && parameters.onDependenciesChange !== undefined) {
     warnOnce(
       [
         'MUI X Scheduler: An `onDependenciesChange` handler was provided without a `dependencies` value.',
@@ -136,8 +150,13 @@ const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameter
       ].join('\n'),
     );
   }
-  return enabled;
+  return dependenciesFeature !== null && parameters.dependencies !== undefined;
 };
+
+const buildDependenciesState = (
+  dependenciesFeature: EventTimelinePremiumDependenciesStoreFeature | null,
+  parameters: SchedulerDependenciesParameters,
+) => dependenciesFeature?.buildState(parameters.dependencies) ?? EMPTY_DEPENDENCIES_STATE;
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
@@ -150,11 +169,13 @@ const mapper: SchedulerParametersToStateMapper<
       parameters,
       DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
     );
+    const dependenciesFeature = parameters.storeFeatures?.dependencies ?? null;
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
-      ...buildDependenciesState(parameters.dependencies),
-      areDependenciesEnabled: deriveAreDependenciesEnabled(parameters),
+      ...buildDependenciesState(dependenciesFeature, parameters),
+      dependenciesFeature,
+      areDependenciesEnabled: deriveAreDependenciesEnabled(dependenciesFeature, parameters),
       dependencyCreation: null,
       dependencyEditor: null,
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
@@ -163,16 +184,18 @@ const mapper: SchedulerParametersToStateMapper<
       hasInitialized: false,
     };
   },
-  updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+  updateStateFromParameters: (newSchedulerState, parameters, updateModel, currentState) => {
     const shouldEventRequireResource = getShouldEventRequireResource(
       parameters,
       DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE,
     );
-    const areDependenciesEnabled = deriveAreDependenciesEnabled(parameters);
+    // The feature is frozen at construction: later `storeFeatures` values are ignored.
+    const { dependenciesFeature } = currentState;
+    const areDependenciesEnabled = deriveAreDependenciesEnabled(dependenciesFeature, parameters);
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
-      ...buildDependenciesState(parameters.dependencies),
+      ...buildDependenciesState(dependenciesFeature, parameters),
       areDependenciesEnabled,
       // Disabling the feature discards its in-flight gesture and dialog: kept in the raw
       // state they would come back on screen if the feature is re-enabled. The selection
@@ -204,7 +227,7 @@ export class EventTimelinePremiumStore<
     TEvent,
     EventTimelinePremiumState,
     EventTimelinePremiumStoreParameters<TEvent, TResource>
-  >;
+  > | null;
 
   public constructor(
     parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
@@ -230,11 +253,15 @@ export class EventTimelinePremiumStore<
       );
     }
 
-    this.scheduling = this.disposables.use(
-      new SchedulerSchedulingPlugin(this, (updated) => {
-        this.updateEvents({ updated }, { skipScheduling: true });
-      }),
-    );
+    const { dependenciesFeature } = this.state;
+    this.scheduling =
+      dependenciesFeature === null
+        ? null
+        : this.disposables.use(
+            dependenciesFeature.createSchedulingPlugin(this, (updated) => {
+              this.updateEvents({ updated }, { skipScheduling: true });
+            }),
+          );
     this.schedulingPlugin = this.scheduling;
     this.lazyLoading = this.disposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
 
@@ -374,10 +401,12 @@ export class EventTimelinePremiumStore<
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`
    * value before making another validated add.
+   * Without the dependencies feature, every add is rejected as `readOnly`.
    */
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,
-  ): SchedulerAddDependencyResult => this.scheduling.addDependency(properties);
+  ): SchedulerAddDependencyResult =>
+    this.scheduling?.addDependency(properties) ?? { status: 'rejected', reason: 'readOnly' };
 
   /**
    * Changes the type or lag of a dependency — see `SchedulerUpdateDependencyResult` for
@@ -386,14 +415,18 @@ export class EventTimelinePremiumStore<
   public updateDependency = (
     dependencyId: SchedulerDependencyId,
     changes: SchedulerDependencyUpdatedProperties,
-  ): SchedulerUpdateDependencyResult => this.scheduling.updateDependency(dependencyId, changes);
+  ): SchedulerUpdateDependencyResult =>
+    this.scheduling?.updateDependency(dependencyId, changes) ?? {
+      status: 'rejected',
+      reason: 'unknownDependency',
+    };
 
   /**
    * Deletes a dependency. Returns `false` when the deletion was refused: the id is
    * unknown, or the scheduler is read-only.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean =>
-    this.scheduling.deleteDependency(dependencyId);
+    this.scheduling?.deleteDependency(dependencyId) ?? false;
 
   /**
    * Sets the pending create-dependency drag gesture. The gesture only holds ids —
@@ -417,9 +450,12 @@ export class EventTimelinePremiumStore<
   };
 
   private isDependencyInactive(dependencyId: SchedulerDependencyId): boolean {
-    const dependency = this.state.dependencyModelLookup.get(dependencyId);
+    const { dependenciesFeature, dependencyModelLookup, processedEventLookup } = this.state;
+    const dependency = dependencyModelLookup.get(dependencyId);
     return (
-      dependency === undefined || !isDependencyActive(this.state.processedEventLookup, dependency)
+      dependenciesFeature === null ||
+      dependency === undefined ||
+      !dependenciesFeature.isDependencyActive(processedEventLookup, dependency)
     );
   }
 

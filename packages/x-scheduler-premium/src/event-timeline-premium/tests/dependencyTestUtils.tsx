@@ -3,7 +3,10 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import {
+  dependenciesStoreFeature,
+  schedulerRecurringEventsPlugin,
+} from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type {
   EventTimelinePremiumStore,
@@ -126,7 +129,10 @@ export function TestTimeline({
     preset: 'dayAndHour',
     presets: ['dayAndHour'],
     presetConfig,
-    storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+    storeFeatures: {
+      recurringEvents: schedulerRecurringEventsPlugin,
+      dependencies: dependenciesStoreFeature,
+    },
   };
   const store = useEventTimelinePremium(parameters);
   React.useEffect(() => {

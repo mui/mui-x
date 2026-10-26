@@ -414,6 +414,7 @@ export class SchedulerStore<
       newSchedulerState,
       parameters,
       updateModel,
+      this.state,
     );
 
     this.update(newState as State);

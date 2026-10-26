@@ -33,6 +33,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         selection: null,
         dependencyCreation: null,
         dependencyEditor: null,
+        dependenciesFeature: null,
         dependencyModelList: [],
         dependencyModelLookup: new Map(),
         eventColor: 'teal',

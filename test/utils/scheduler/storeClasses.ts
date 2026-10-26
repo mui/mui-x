@@ -4,13 +4,16 @@ import {
   EventTimelinePremiumStore,
   type EventTimelinePremiumStoreParameters,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import {
+  dependenciesStoreFeature,
+  schedulerRecurringEventsPlugin,
+} from '@mui/x-scheduler-internals-premium/internals';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 
 /**
- * Timeline store that receives the recurring events feature, like the public component does.
+ * Timeline store that receives the recurring events and dependencies features.
  */
-export class EventTimelinePremiumStoreWithRecurrence<
+export class EventTimelinePremiumStoreWithFeatures<
   TEvent extends object,
   TResource extends object,
 > extends EventTimelinePremiumStore<TEvent, TResource> {
@@ -19,7 +22,13 @@ export class EventTimelinePremiumStoreWithRecurrence<
     adapter: Adapter,
   ) {
     super(
-      { storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin }, ...parameters },
+      {
+        storeFeatures: {
+          recurringEvents: schedulerRecurringEventsPlugin,
+          dependencies: dependenciesStoreFeature,
+        },
+        ...parameters,
+      },
       adapter,
     );
   }
@@ -32,7 +41,7 @@ export class EventTimelinePremiumStoreWithRecurrence<
 export const storeClasses = [
   { name: 'EventCalendarStore', Value: EventCalendarStore },
   { name: 'EventCalendarPremiumStore', Value: EventCalendarPremiumStore },
-  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStoreWithRecurrence },
+  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStoreWithFeatures },
 ];
 
 /**
@@ -40,5 +49,5 @@ export const storeClasses = [
  */
 export const premiumStoreClasses = [
   { name: 'EventCalendarPremiumStore', Value: EventCalendarPremiumStore },
-  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStoreWithRecurrence },
+  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStoreWithFeatures },
 ];

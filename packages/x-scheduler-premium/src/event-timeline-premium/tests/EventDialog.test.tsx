@@ -3,7 +3,7 @@ import {
   adapter,
   createSchedulerRenderer,
   EventBuilder,
-  EventTimelinePremiumStoreWithRecurrence,
+  EventTimelinePremiumStoreWithFeatures,
   ResourceBuilder,
   StoreSpy,
 } from 'test/utils/scheduler';
@@ -81,7 +81,7 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     const start = adapter.date('2025-07-03T09:00:00Z', 'default');
     const end = adapter.date('2025-07-03T09:30:00Z', 'default');
 
-    const store = new EventTimelinePremiumStoreWithRecurrence(
+    const store = new EventTimelinePremiumStoreWithFeatures(
       { events: [], resources, eventCreation, onEventsChange: () => {} },
       adapter,
     );
@@ -210,7 +210,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     const onEventsChange = vi.fn();
     const onClose = vi.fn();
 
-    const store = new EventTimelinePremiumStoreWithRecurrence(
+    const store = new EventTimelinePremiumStoreWithFeatures(
       {
         events: [predecessor, readOnlySuccessor],
         resources,

@@ -15,7 +15,10 @@ import type {
   SchedulerDependencyEditor,
 } from '../models/dependency';
 import type { SchedulerLazyLoadingParameters } from '../models/lazyLoading';
-import type { EventTimelinePremiumStoreFeatures } from '../internals/features/eventTimelinePremiumStoreFeatures';
+import type {
+  EventTimelinePremiumDependenciesStoreFeature,
+  EventTimelinePremiumStoreFeatures,
+} from '../internals/features/eventTimelinePremiumStoreFeatures';
 
 export interface EventTimelinePremiumState extends SchedulerState, SchedulerDependenciesState {
   /**
@@ -35,8 +38,13 @@ export interface EventTimelinePremiumState extends SchedulerState, SchedulerDepe
    */
   presetConfig: EventTimelinePremiumPresetConfig;
   /**
-   * Whether the dependencies feature is enabled, i.e. the internal `dependencies`
-   * parameter is provided.
+   * The dependencies feature received at construction, or `null` without it.
+   * @internal
+   */
+  dependenciesFeature: EventTimelinePremiumDependenciesStoreFeature | null;
+  /**
+   * Whether the dependencies feature is enabled, i.e. the store received it and the
+   * internal `dependencies` parameter is provided.
    */
   areDependenciesEnabled: boolean;
   /**
