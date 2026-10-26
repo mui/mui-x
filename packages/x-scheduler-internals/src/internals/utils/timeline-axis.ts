@@ -90,7 +90,7 @@ export function getTimelineAxisDurationMs(adapter: TemporalAdapter, axis: Timeli
  * Offsets are not clamped: values outside the axis extend it day by day, following the
  * same piecewise scale.
  * The timestamp is built from its wall-clock time so it round-trips with
- * `dateToTimelineAxisOffsetMs()` for every wall-clock time that exists on that day.
+ * `timestampToTimelineAxisOffsetMs()` for every wall-clock time that exists on that day.
  * The axis keeps a slot for the hour skipped by a spring-forward transition, so offsets
  * landing in it move forward by the length of the gap and do not round-trip. An offset
  * landing in the hour repeated by a fall-back transition resolves to its first instant,
@@ -134,11 +134,8 @@ export function resolveRepeatedTimeFrom(
 }
 
 /**
- * Maps a date to its axis offset (in axis milliseconds from the collection start).
- * Dates outside the visible window are clamped to their day's window edge; dates outside
- * the collection range produce out-of-range offsets (e.g. negative before the start).
- * `msInDay` can be provided when the caller already knows the wall-clock time of day
- * (e.g. from a `SchedulerProcessedDate`), skipping the adapter reads.
+ * Maps a date to its axis offset like `timestampToTimelineAxisOffsetMs()`, reading it in its own
+ * timezone.
  */
 export function dateToTimelineAxisOffsetMs(
   adapter: TemporalAdapter,
@@ -156,8 +153,12 @@ export function dateToTimelineAxisOffsetMs(
 }
 
 /**
- * Maps a timestamp to its axis offset like `dateToTimelineAxisOffsetMs()`, reading it in
- * `timezone`.
+ * Maps a timestamp to its axis offset (in axis milliseconds from the collection start), reading it
+ * in `timezone`.
+ * Timestamps outside the visible window are clamped to their day's window edge; timestamps outside
+ * the collection range produce out-of-range offsets (e.g. negative before the start).
+ * `msInDay` can be provided when the caller already knows the wall-clock time of day
+ * (e.g. from a `SchedulerProcessedDate`), skipping its computation.
  */
 export function timestampToTimelineAxisOffsetMs(
   adapter: TemporalAdapter,

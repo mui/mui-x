@@ -6,7 +6,9 @@ import {
   mockElementBounds,
   clientYForTime,
   getResizeHandle,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { vi, describe, it, expect } from 'vitest';
 
@@ -292,6 +294,50 @@ describe('WeekView - Drag and Drop', () => {
     expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T23:00:00.000Z');
     expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-04T07:00:00.000Z');
   });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
+    'should read whether a time event crosses midnight in the display timezone, whatever the timezone of the system',
+    async () => {
+      // Pacific/Apia skips December 30th, 2011, which makes `adapter.isSameDay()` read the two
+      // dates of this event as the same day on an Apia system.
+      setSystemTimezone('Pacific/Apia');
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Night shift')
+        .span('2011-12-30T23:30:00Z', '2011-12-31T00:30:00Z')
+        .draggable(true)
+        .build();
+
+      render(
+        <StandaloneWeekView
+          events={[event]}
+          resources={[]}
+          displayTimezone="UTC"
+          visibleDate={new Date('2011-12-30T12:00:00Z')}
+          onEventsChange={handleEventsChange}
+        />,
+      );
+
+      mockAllTimeGridColumnBounds();
+
+      // Dropped on the 23:45 row of December 30th, the sixth column of the week: the event isn't
+      // clamped to the day.
+      await act(async () => {
+        simulateDragAndDrop({
+          source: screen.getAllByRole('button', { name: /Night shift/i })[0],
+          target: getTimeGridColumns()[5],
+          targetClientY: clientYForTime(0, 24, 23.75),
+        });
+      });
+
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2011-12-30T23:45:00.000Z');
+      expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2011-12-31T00:45:00.000Z');
+    },
+  );
 
   it('should move a part of a time event crossing midnight to the day grid', async () => {
     const handleEventsChange = vi.fn();
