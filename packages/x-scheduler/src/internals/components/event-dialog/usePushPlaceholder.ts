@@ -1,6 +1,5 @@
 'use client';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
@@ -18,7 +17,6 @@ const PLACEHOLDER_KEYS: ReadonlySet<string> = new Set([...RANGE_FORM_KEYS, 'reso
  * none of the written keys affects the placeholder.
  */
 export function usePushPlaceholder() {
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   return function pushPlaceholder(values: EventDialogFormValues, changedKeys: string[]) {
@@ -33,7 +31,7 @@ export function usePushPlaceholder() {
     }
 
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
-    const { start, end, surfaceType } = computeRange(adapter, values, displayTimezone);
+    const { start, end, surfaceType } = computeRange(values, displayTimezone);
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType
       : surfaceType;
@@ -42,8 +40,8 @@ export function usePushPlaceholder() {
       type: 'creation',
       surfaceType: surfaceTypeToUse,
       resourceId: getPrimaryResourceId(values.resourceIds),
-      start: adapter.getTime(start),
-      end: adapter.getTime(end),
+      start,
+      end,
       lockSurfaceType: rawPlaceholder.lockSurfaceType,
     });
   };

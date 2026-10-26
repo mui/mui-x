@@ -8,7 +8,9 @@ import {
   utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
@@ -330,6 +332,75 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(adapter.getTime(adapter.date(String(updated.end), 'UTC'))).to.equal(
         adapter.getTime(adapter.date('2025-07-04T14:00:00', 'UTC')),
       );
+    });
+
+    describe('across DST transitions', () => {
+      async function editAndSave(
+        user: ReturnType<typeof renderEditDialog>['user'],
+        fields: [RegExp, string][],
+      ) {
+        for (const [label, value] of fields) {
+          const input = screen.getByLabelText(label);
+          // eslint-disable-next-line no-await-in-loop
+          await user.clear(input);
+          // eslint-disable-next-line no-await-in-loop
+          await user.type(input, value);
+        }
+        await user.click(screen.getByRole('button', { name: 'Save' }));
+      }
+
+      // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+      it('should end an all-day day on the second occurrence of its repeated last hour', async () => {
+        const { user, getUpdatedEvent } = renderEditDialog(
+          EventBuilder.new()
+            .withDataTimezone('UTC')
+            .span('2026-04-02T12:00:00', '2026-04-03T12:00:00', { allDay: true }),
+          'America/Santiago',
+        );
+
+        await editAndSave(user, [[/end date/i, '2026-04-04']]);
+
+        // 23:59:59 -04, the later 23:59:59 of April 4th in Santiago.
+        expect(getUpdatedEvent().end).to.equal('2026-04-05T03:59:59');
+      });
+
+      it.skipIf(!isJSDOM)(
+        'should read the edited days of an all-day event in the display timezone, whatever the timezone of the system',
+        async () => {
+          setSystemTimezone('Australia/Lord_Howe');
+          const { user, getUpdatedEvent } = renderEditDialog(
+            EventBuilder.new()
+              .withDataTimezone('UTC')
+              .span('2026-04-02T12:00:00', '2026-04-03T12:00:00', { allDay: true }),
+            'America/Santiago',
+          );
+
+          await editAndSave(user, [
+            [/end date/i, '2026-04-05'],
+            [/start date/i, '2026-04-05'],
+          ]);
+
+          // April 5th in Santiago, from 00:00 -04 to 23:59:59 -04.
+          const updated = getUpdatedEvent();
+          expect(updated.start).to.equal('2026-04-05T04:00:00');
+          expect(updated.end).to.equal('2026-04-06T03:59:59');
+        },
+      );
+
+      // Paris leaves summer time on October 25th, 2026, when 03:00 becomes 02:00.
+      it('should resolve a time a DST transition repeats to its first occurrence', async () => {
+        const { user, getUpdatedEvent } = renderEditDialog(
+          EventBuilder.new()
+            .withDataTimezone('UTC')
+            .span('2026-10-25T08:00:00', '2026-10-25T09:00:00'),
+          'Europe/Paris',
+        );
+
+        await editAndSave(user, [[/start time/i, '02:30']]);
+
+        // 02:30 +02:00, before the clocks go back.
+        expect(getUpdatedEvent().start).to.equal('2026-10-25T00:30:00');
+      });
     });
   });
 

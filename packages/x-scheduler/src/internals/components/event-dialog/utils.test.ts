@@ -18,7 +18,7 @@ describe('findInvalidRangeField', () => {
     allDay: false,
   };
   const run = (overrides: Partial<typeof base>) =>
-    findInvalidRangeField(adapter, { ...base, ...overrides }, 'default');
+    findInvalidRangeField({ ...base, ...overrides }, 'default');
 
   describe('date boundaries', () => {
     const validDates = ['2024-02-29', '2000-02-29', '2025-02-28', '2025-01-31', '2025-04-30'];
