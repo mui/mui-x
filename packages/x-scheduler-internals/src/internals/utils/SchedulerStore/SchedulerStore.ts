@@ -841,10 +841,12 @@ export class SchedulerStore<
     calendarEvent: SchedulerEventCreationProperties,
   ): SchedulerEventId | undefined => {
     if (this.state.recurringEventsPlugin == null && calendarEvent.rrule) {
-      warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
-        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-      ]);
+      if (process.env.NODE_ENV !== 'production') {
+        warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
+          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
       return this.updateEvents({ created: [{ ...calendarEvent, rrule: undefined }] }).created[0];
     }
     return this.updateEvents({ created: [calendarEvent] }).created[0];
@@ -958,10 +960,12 @@ export class SchedulerStore<
     }
 
     if (this.state.recurringEventsPlugin == null && calendarEvent.rrule != null) {
-      warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
-        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-      ]);
+      if (process.env.NODE_ENV !== 'production') {
+        warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
+          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
       return toUpdateEventResult(
         this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
       );
@@ -975,10 +979,12 @@ export class SchedulerStore<
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
     if (this.state.recurringEventsPlugin == null) {
-      warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
-        'MUI X Scheduler: Recurring event updates are a premium feature.',
-        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-      ]);
+      if (process.env.NODE_ENV !== 'production') {
+        warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
+          'MUI X Scheduler: Recurring event updates are a premium feature.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
       return;
     }
     this.set('pendingRecurringEventOperation', { kind: 'update', ...params });
@@ -989,10 +995,12 @@ export class SchedulerStore<
    */
   public deleteRecurringEvent = (params: DeleteRecurringEventParameters) => {
     if (this.state.recurringEventsPlugin == null) {
-      warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
-        'MUI X Scheduler: Recurring event deletions are a premium feature.',
-        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-      ]);
+      if (process.env.NODE_ENV !== 'production') {
+        warnRecurringEventsUnavailable(this.state.recurringEventsUnavailableHint, [
+          'MUI X Scheduler: Recurring event deletions are a premium feature.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
       return;
     }
     this.set('pendingRecurringEventOperation', { kind: 'delete', ...params });

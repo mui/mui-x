@@ -36,10 +36,12 @@ export function processEvent(
     : undefined;
 
   if (recurringEventsPlugin == null && model.rrule != null) {
-    warnRecurringEventsUnavailable(recurringEventsUnavailableHint, [
-      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-      'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
-    ]);
+    if (process.env.NODE_ENV !== 'production') {
+      warnRecurringEventsUnavailable(recurringEventsUnavailableHint, [
+        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+      ]);
+    }
   }
 
   const parsedDataRRule =
