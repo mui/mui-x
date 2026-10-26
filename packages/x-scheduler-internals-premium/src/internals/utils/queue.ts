@@ -24,7 +24,7 @@ export interface DateRange {
  * Generates a unique key for a date range.
  * Format: "startTimestamp:endTimestamp"
  */
-function getDateRangeKey(range: DateRange): string {
+export function getDateRangeKey(range: DateRange): string {
   return `${range.start}:${range.end}`;
 }
 

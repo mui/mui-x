@@ -1,7 +1,9 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-import type { EventCalendarFetchRange } from '@mui/x-scheduler-internals/models';
-import { getEndOfDayMs, getStartOfDayMs } from '@mui/x-scheduler-internals/internals';
-import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
+import {
+  SchedulerLazyLoadingPlugin,
+  toWholeDays,
+} from '../../internals/plugins/SchedulerLazyLoadingPlugin';
+import { getDateRangeKey } from '../../internals/utils/queue';
 import type { DateRange } from '../../internals/utils/queue';
 import type {
   EventCalendarPremiumState,
@@ -27,7 +29,7 @@ export class EventCalendarPremiumLazyLoadingPlugin<
             return null;
           }
 
-          return `${range.start}:${range.end}`;
+          return getDateRangeKey(range);
         },
 
         (previousKey, nextKey) => {
@@ -54,19 +56,20 @@ function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
   }
 
   const calendarState = state as EventCalendarState;
-  let range: EventCalendarFetchRange;
   if (viewDefinition.fetchRangeSelector) {
-    range = viewDefinition.fetchRangeSelector(calendarState);
-  } else {
-    const days = viewDefinition.visibleDaysSelector(calendarState);
-    if (days.length === 0) {
-      return null;
-    }
-    range = { start: days[0].value, end: days[days.length - 1].value };
+    const range = viewDefinition.fetchRangeSelector(calendarState);
+    return toWholeDays(
+      { start: adapter.getTime(range.start), end: adapter.getTime(range.end) },
+      displayTimezone,
+    );
   }
 
-  return {
-    start: getStartOfDayMs(adapter.getTime(range.start), displayTimezone),
-    end: getEndOfDayMs(adapter.getTime(range.end), displayTimezone),
-  };
+  const days = viewDefinition.visibleDaysSelector(calendarState);
+  if (days.length === 0) {
+    return null;
+  }
+  return toWholeDays(
+    { start: days[0].timestamp, end: days[days.length - 1].timestamp },
+    displayTimezone,
+  );
 }

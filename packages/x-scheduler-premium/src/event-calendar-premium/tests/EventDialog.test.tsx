@@ -2947,10 +2947,7 @@ describe('<EventDialogContent open />', () => {
               onMount={(mountedStore) => {
                 store = mountedStore;
                 (mountedStore as any).lazyLoading.queueDataFetchForRange(
-                  {
-                    start: adapter.date('2025-05-26T00:00:00', 'UTC'),
-                    end: adapter.date('2025-05-26T00:00:00', 'UTC'),
-                  },
+                  { start: Date.UTC(2025, 4, 26), end: Date.UTC(2025, 4, 26) },
                   true,
                 );
               }}

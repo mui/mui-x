@@ -11,10 +11,10 @@ import {
   buildEventsState,
   createAdapterDate,
   getEndOfDayMs,
+  getStartOfDayMs,
 } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
-import type { SchedulerDataSourceCache } from '../utils/cache';
-import { SchedulerDataManager } from '../utils/queue';
+import { getDateRangeKey, SchedulerDataManager } from '../utils/queue';
 import type { DateRange } from '../utils/queue';
 import type { SchedulerLazyLoadingParameters } from '../../models';
 
@@ -37,7 +37,7 @@ export class SchedulerLazyLoadingPlugin<
    */
   private latestRequest: {
     /**
-     * The range the view asked for, before trimming the parts already cached.
+     * The whole days the view asked for, before trimming the parts already cached.
      */
     range: DateRange;
     /**
@@ -119,26 +119,22 @@ export class SchedulerLazyLoadingPlugin<
   }
 
   /**
-   * Fetches the events of a range. The range ends at the end of the day of `range.end`, in the
-   * display timezone, which is the coverage the cache records.
+   * Fetches the events of the days from `range.start` to `range.end`, read in the display
+   * timezone. The cache records whole days, so the parts it lacks are whole days too.
    */
   public queueDataFetchForRange = async (range: DateRange, immediate = false) => {
     try {
       const { dataManager, cache } = this;
       if (dataManager && cache) {
-        const { displayTimezone } = this.store.state;
-        const requestedRange = {
-          start: range.start,
-          end: getEndOfDayMs(range.end, displayTimezone),
-        };
+        const requestedRange = toWholeDays(range, this.store.state.displayTimezone);
 
         // Only request the part of the range the cache does not cover yet.
         // A fully covered range still goes through the queue so the cache-hit branch runs.
-        const missingRange = getMissingRange(cache, requestedRange, displayTimezone);
+        const missingRange = cache.getMissingRange(requestedRange.start, requestedRange.end);
         const rangeToFetch = missingRange ?? requestedRange;
         this.latestRequest = {
           range: requestedRange,
-          fetchKey: getFetchKey(rangeToFetch),
+          fetchKey: getDateRangeKey(rangeToFetch),
         };
 
         // Flip `isLoading` synchronously so the skeleton shows immediately,
@@ -175,7 +171,7 @@ export class SchedulerLazyLoadingPlugin<
     if (!dataSource || !cache || !dataManager) {
       return;
     }
-    const fetchedRangeKey = getFetchKey(range);
+    const fetchedRangeKey = getDateRangeKey(range);
     if (cache.hasCoverage(range.start, range.end)) {
       try {
         // Like a stale fetch, a stale cache hit leaves the state to the latest request.
@@ -224,7 +220,7 @@ export class SchedulerLazyLoadingPlugin<
 
       cache.setRange(range.start, range.end, events ?? []);
       // The cached part of a trimmed request can expire while it is pending.
-      if (getMissingRange(cache, latestRequest.range, displayTimezone) !== null) {
+      if (cache.getMissingRange(latestRequest.range.start, latestRequest.range.end) !== null) {
         requestToRefetch = latestRequest;
       }
       // Build from the full cache so disjoint already-cached ranges stay visible
@@ -344,27 +340,13 @@ export class SchedulerLazyLoadingPlugin<
   };
 }
 
-function getFetchKey(range: DateRange) {
-  return `${range.start}:${range.end}`;
-}
-
 /**
- * Returns the smallest range covering the parts of `range` that are not cached,
- * or `null` when the cache already covers it.
+ * Extends a range to the whole days it touches in `timezone`, which is the coverage the cache
+ * records.
  */
-function getMissingRange<TEvent extends object>(
-  cache: SchedulerDataSourceCache<TEvent>,
-  range: DateRange,
-  timezone: TemporalTimezone,
-): DateRange | null {
-  const missing = cache.getMissingRange(range.start, range.end);
-  if (missing === null) {
-    return null;
-  }
-
-  // The trimmed end is rounded to the end of its day, since that's the coverage the cache records.
+export function toWholeDays(range: DateRange, timezone: TemporalTimezone): DateRange {
   return {
-    start: missing.start,
-    end: missing.end === range.end ? range.end : getEndOfDayMs(missing.end, timezone),
+    start: getStartOfDayMs(range.start, timezone),
+    end: getEndOfDayMs(range.end, timezone),
   };
 }
