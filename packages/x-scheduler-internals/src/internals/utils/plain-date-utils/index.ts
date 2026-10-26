@@ -4,6 +4,7 @@ export {
   getStartOfDayMs,
   localToEpochMs,
   toEpochMs,
+  toLocalDayNumber,
   toLocalMs,
   toPlainDateTime,
 } from './timeZone';
