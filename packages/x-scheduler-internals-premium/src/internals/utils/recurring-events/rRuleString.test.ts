@@ -378,6 +378,13 @@ describe('recurring-events/rRuleString', () => {
       expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T000000Z', 'default');
     });
 
+    it('should serialize the minutes and seconds of UNTIL', () => {
+      const until = adapter.date('2025-03-15T13:45:30Z', 'default');
+      const rule = { freq: 'DAILY' as const, until };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T134530Z');
+    });
+
     it('should combine multiple properties correctly', () => {
       const until = adapter.date('2025-03-15T00:00:00Z', 'default');
       const rule = {
