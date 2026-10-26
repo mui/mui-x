@@ -71,7 +71,7 @@
     "moment-jalaali": "catalog:",
     "moment-timezone": "catalog:",
     "motion": "catalog:",
-    "next": "^16.4.0",
+    "next": "^16.4.3",
     "prop-types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
