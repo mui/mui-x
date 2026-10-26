@@ -61,7 +61,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
       <Button
         className={classes.viewSwitcherButton}
         size="medium"
-        id={`${schedulerId}-view-switcher-button`}
         aria-controls={open ? `${schedulerId}-view-switcher-menu` : undefined}
         aria-haspopup="true"
         aria-expanded={open}

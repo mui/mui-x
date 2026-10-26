@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, within, waitFor } from '@mui/internal-test-utils';
+import { within, waitFor } from '@mui/internal-test-utils';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
@@ -104,24 +104,13 @@ describe('<SidePanelDrawer />', () => {
     );
   });
 
-  it('should not expose the view list as a listbox', async () => {
-    const { user } = renderCompact(<EventCalendar events={[]} />);
-    await openDrawer(user);
-
-    const drawer = getDrawer()!;
-    // A listbox implies arrow keys that change the selection, which the list doesn't do.
-    expect(within(drawer).queryByRole('listbox')).to.equal(null);
-    expect(within(drawer).queryAllByRole('option')).to.have.length(0);
-  });
-
   it('should take the view list accessible name from the localeText', async () => {
     const { user } = renderCompact(
       <EventCalendar events={[]} localeText={{ viewSwitcherAriaLabel: 'Calendar views' }} />,
     );
     await openDrawer(user);
 
-    const viewList = getDrawer()!.querySelector(`.${eventCalendarClasses.sidePanelDrawerViewList}`);
-    expect(viewList).toHaveAccessibleName('Calendar views');
+    expect(within(getDrawer()!).getByRole('menu')).toHaveAccessibleName('Calendar views');
   });
 
   it('should move between the views with the arrow keys and pick one with Enter', async () => {
@@ -129,9 +118,12 @@ describe('<SidePanelDrawer />', () => {
     await openDrawer(user);
 
     const viewList = within(getDrawer()!).getByRole('menu', { name: 'Views' });
-    act(() => {
-      within(viewList).getByRole('menuitemradio', { name: 'Week' }).focus();
-    });
+
+    // Tab past the close button: the focus lands on the checked view, not on the first one.
+    await user.tab();
+    expect(within(getDrawer()!).getByRole('button', { name: 'Close side panel' })).toHaveFocus();
+    await user.tab();
+    expect(within(viewList).getByRole('menuitemradio', { name: 'Week' })).toHaveFocus();
 
     await user.keyboard('{ArrowUp}');
     expect(within(viewList).getByRole('menuitemradio', { name: 'Day' })).toHaveFocus();

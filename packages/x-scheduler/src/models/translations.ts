@@ -208,9 +208,6 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   months: string;
   weeks: string;
   years: string;
-  /**
-   * Accessible name of the view switcher menu, and of the view list in the side panel drawer.
-   */
   viewSwitcherAriaLabel: string;
 
   // DateNavigator
