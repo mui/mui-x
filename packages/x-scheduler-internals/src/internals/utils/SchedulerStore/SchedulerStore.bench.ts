@@ -27,6 +27,9 @@ describe('buildEventsState', () => {
       bench('10,000 new events', () => {
         buildEventsState({ events, adapter, displayTimezone });
       }),
+      bench('10,000 new events displayed in Paris', () => {
+        buildEventsState({ events, adapter, displayTimezone: 'Europe/Paris' });
+      }),
       bench('one changed event among 10,000', () => {
         buildEventsState({
           events: eventsWithOneChange,
