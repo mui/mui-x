@@ -68,7 +68,8 @@ function formatHourLabel(adapter: TemporalAdapter, hour: number, ampm: boolean) 
 // `toEpochMs()`. The first week of `dayAndWeek` comes from `getStartOfWeek()`.
 
 /**
- * The first instant of the day `getPlainDate()` returns for the day of `date`, `offsetMs` added.
+ * The first instant of the day `getPlainDate()` returns for the day of `date`, or with an
+ * `offsetMs` of `-1`, the last instant before that day.
  */
 function createDateFromPlainDate(
   adapter: TemporalAdapter,

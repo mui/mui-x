@@ -5,7 +5,7 @@ import type {
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { PlainDate } from './base-temporal/PlainDate';
-import { createAdapterDate } from './plain-date-utils/adapter';
+import { addToAdapterDate, createAdapterDate } from './plain-date-utils/adapter';
 import { toEpochMs, toPlainDateTime } from './plain-date-utils/timeZone';
 
 const INTERNAL_DRAG_OR_RESIZE_PLACEHOLDER_TYPES = new Set(['internal-drag', 'internal-resize']);
@@ -31,21 +31,12 @@ export function moveToPlainDate(
 }
 
 /**
- * Moves a date by whole days, keeping its time of day on the wall clock of its timezone.
+ * Moves a date by whole days like `addToAdapterDate()`, and returns it unchanged for 0 days.
  */
 export function addDaysOnWallClock(
   adapter: Adapter,
   date: TemporalSupportedObject,
   dayCount: number,
 ): TemporalSupportedObject {
-  if (dayCount === 0) {
-    return date;
-  }
-  const timezone = adapter.getTimezone(date);
-  const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
-  return createAdapterDate(
-    adapter,
-    toEpochMs(plainDateTime.date.add({ days: dayCount }), plainDateTime.msInDay, timezone),
-    timezone,
-  );
+  return dayCount === 0 ? date : addToAdapterDate(adapter, date, { days: dayCount });
 }
