@@ -11,6 +11,7 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
 } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
+import type { PlainDate } from '../utils/base-temporal/PlainDate';
 import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
 
 /** Contract implemented by the premium recurring-events plugin. */
@@ -103,12 +104,12 @@ export interface SchedulerRecurringEventsPluginInterface {
 
   /**
    * Returns the 7 week days with their code and date,
-   * starting at the start of the week containing the given visible date.
+   * starting at the start of the week containing `visiblePlainDate`.
    */
   getWeeklyDays(
     adapter: Adapter,
-    visibleDate: TemporalSupportedObject,
-  ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[];
+    visiblePlainDate: PlainDate,
+  ): { code: RecurringEventWeekDayCode; date: PlainDate }[];
 
   /**
    * Returns month reference for the given occurrence: dayOfMonth, weekday code and ordinal.

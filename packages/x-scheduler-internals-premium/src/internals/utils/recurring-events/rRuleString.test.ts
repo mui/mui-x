@@ -143,7 +143,14 @@ describe('recurring-events/rRuleString', () => {
     });
 
     it('should throw when UNTIL is a date that does not exist', () => {
-      for (const until of ['20250231T000000Z', '20250101T240000Z']) {
+      for (const until of [
+        '20250231T000000Z',
+        '20251301T000000Z',
+        '20250001T000000Z',
+        '20250100T000000Z',
+        '20250101T240000Z',
+        '20250101T006000Z',
+      ]) {
         expect(() => parseRRule(adapter, `FREQ=DAILY;UNTIL=${until}`, 'default')).to.throw(
           `MUI X Scheduler: Invalid UNTIL date "${until}".`,
         );
@@ -369,6 +376,13 @@ describe('recurring-events/rRuleString', () => {
       const rule = { freq: 'DAILY' as const, until };
       const result = serializeRRule(adapter, rule);
       expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T000000Z', 'default');
+    });
+
+    it('should serialize the minutes and seconds of UNTIL', () => {
+      const until = adapter.date('2025-03-15T13:45:30Z', 'default');
+      const rule = { freq: 'DAILY' as const, until };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T134530Z');
     });
 
     it('should combine multiple properties correctly', () => {
