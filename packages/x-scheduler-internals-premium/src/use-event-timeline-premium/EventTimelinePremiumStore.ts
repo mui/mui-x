@@ -10,6 +10,7 @@ import {
   getShouldEventRequireResource,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   EventTimelinePremiumPreferences,
@@ -318,8 +319,10 @@ export class EventTimelinePremiumStore<
    * Goes to the next visible date span based on the current preset.
    */
   public goToNextVisibleDate = (event: React.UIEvent) => {
-    const { adapter, visibleDate, preset } = this.state;
+    const { adapter, preset } = this.state;
     const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
+    // Moves the days of the display timezone, the ones the preset config reads.
+    const visibleDate = schedulerOtherSelectors.visibleDate(this.state);
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, unitCount),
       event,
@@ -330,8 +333,10 @@ export class EventTimelinePremiumStore<
    * Goes to the previous visible date span based on the current preset.
    */
   public goToPreviousVisibleDate = (event: React.UIEvent) => {
-    const { adapter, visibleDate, preset } = this.state;
+    const { adapter, preset } = this.state;
     const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
+    // Moves the days of the display timezone, the ones the preset config reads.
+    const visibleDate = schedulerOtherSelectors.visibleDate(this.state);
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, -unitCount),
       event,
