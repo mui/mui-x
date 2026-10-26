@@ -258,5 +258,21 @@ describe('processEvent', () => {
 
       expect(processed.dataTimezone.rrule).to.equal(undefined);
     });
+
+    it('should keep the premium message by default', () => {
+      const event = EventBuilder.new(adapter).rrule({ freq: 'DAILY' }).build();
+
+      expect(() => {
+        processEvent(event, 'Europe/Paris', adapter, null);
+      }).toWarnDev('Recurring events are a premium feature');
+    });
+
+    it('should warn with the feature message when the hint is "feature"', () => {
+      const event = EventBuilder.new(adapter).rrule({ freq: 'DAILY' }).build();
+
+      expect(() => {
+        processEvent(event, 'Europe/Paris', adapter, null, 'feature');
+      }).toWarnDev('the recurring events feature is not provided');
+    });
   });
 });

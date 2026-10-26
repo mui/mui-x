@@ -14,6 +14,7 @@ const events: SchedulerEvent[] = Array.from({ length: EVENT_COUNT }, (_, index) 
 const initialState = {
   ...buildEventsState({ events, adapter, displayTimezone }),
   recurringEventsPlugin: null,
+  recurringEventsUnavailableHint: 'premium' as const,
 };
 const eventsWithOneChange = [...events];
 eventsWithOneChange[Math.floor(EVENT_COUNT / 2)] = {

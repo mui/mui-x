@@ -15,6 +15,7 @@ import type {
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
+import { SchedulerStore } from '../SchedulerStore';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
 
@@ -2319,5 +2320,22 @@ premiumStoreClasses.forEach((storeClass) => {
         }).not.toWarnDev();
       });
     });
+  });
+});
+
+describe('recurring events unavailable hint', () => {
+  it('should warn with the feature message when creating a recurring event with the "feature" hint', () => {
+    const store = new SchedulerStore<SchedulerEvent, any, any, any>(
+      { events: [], resources: TEST_RESOURCES, onEventsChange: vi.fn() },
+      adapter,
+      'EventTimelinePremiumStore',
+      { getInitialState: (state: any) => state, updateStateFromParameters: (state: any) => state },
+      null,
+      'feature',
+    );
+
+    expect(() => {
+      store.createEvent({ ...EventBuilder.new().build(), rrule: 'FREQ=DAILY' });
+    }).toWarnDev('the recurring events feature is not provided');
   });
 });

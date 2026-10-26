@@ -24,6 +24,7 @@ import type {
 } from '../../../models';
 import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
+import type { SchedulerRecurringEventsUnavailableHint } from '../../plugins/recurringEventsUnavailableWarning';
 
 export interface StoredError {
   /**
@@ -230,6 +231,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * Plugin that provides recurring-events support. `null` when not attached.
    */
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
+  /**
+   * Which fix the warning for ignored `rrule` suggests when `recurringEventsPlugin` is `null`.
+   */
+  recurringEventsUnavailableHint: SchedulerRecurringEventsUnavailableHint;
   /**
    * Configures how events are deleted, normalized from the `eventDeletion` parameter.
    * `false` when event deletion is disabled.

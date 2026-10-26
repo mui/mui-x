@@ -3,5 +3,7 @@ export { buildIsValidDropTarget } from '../build-is-valid-drop-target';
 export * from './utils';
 export * from './models';
 export type { SchedulerRecurringEventsPluginInterface } from './plugins/SchedulerRecurringEventsPlugin.types';
+export type { SchedulerRecurringEventsUnavailableHint } from './plugins/recurringEventsUnavailableWarning';
+export { warnRecurringEventsUnavailable } from './plugins/recurringEventsUnavailableWarning';
 export type { SchedulerSchedulingPluginInterface } from './plugins/SchedulerSchedulingPlugin.types';
 export { useDragHandle } from './utils/useDragHandle';
