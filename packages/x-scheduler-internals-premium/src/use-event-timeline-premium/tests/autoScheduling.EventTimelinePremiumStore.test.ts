@@ -674,6 +674,125 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       expect(timestampOf(emittedB.start)).to.equal(adapter.getTime(date('2025-07-03T10:00:00Z')));
       expect(timestampOf(emittedB.end)).to.equal(adapter.getTime(date('2025-07-03T12:00:00Z')));
     });
+
+    // Turning `b` all-day moves its start back to midnight, before `a` ends, and keeps its end
+    // (already at the end of a day). The cascade only reports the bound it pushes (`start`), so
+    // the contribution isn't a move: it must still refuse the batch rather than be stripped like
+    // a caller's own resize, which would apply `allDay` alone and leave `b` overlapping `a`.
+    it('should refuse the whole batch when the cascade pushes a single bound that is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { start: { getter: (event: any) => event.start } };
+      const longSuccessor = EventBuilder.new()
+        .id('b')
+        .span('2025-07-03T10:00:00Z', '2025-07-05T23:59:59.999Z')
+        .build();
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, events: [eventA, longSuccessor], eventModelStructure, onEventsChange },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({ id: 'b', allDay: true });
+      }).toWarnDev([
+        'MUI X Scheduler: An event was not updated because keeping its dependencies would change a date that could not be written back.\n' +
+          '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(result!.applied).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    // Mirror of the above: turning `b` back to timed makes it end at noon, before `a` ends, so
+    // the FinishToFinish clamp pushes the unwritable `end` alone.
+    it('should refuse the whole batch when the cascade clamps a single end that is not writable', () => {
+      const onEventsChange = vi.fn();
+      const eventModelStructure = { end: { getter: (event: any) => event.end } };
+      const lateEndingPredecessor = EventBuilder.new()
+        .id('a')
+        .span('2025-07-03T09:00:00Z', '2025-07-03T18:00:00Z')
+        .build();
+      const allDaySuccessor = EventBuilder.new()
+        .id('b')
+        .span('2025-07-03T00:00:00Z', '2025-07-03T12:00:00Z', { allDay: true })
+        .build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [lateEndingPredecessor, allDaySuccessor],
+          dependencies: [{ ...DEP_AB, type: 'FinishToFinish' }],
+          eventModelStructure,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      let result: ReturnType<typeof store.updateEvent>;
+      expect(() => {
+        result = store.updateEvent({ id: 'b', allDay: false });
+      }).toWarnDev([
+        'MUI X Scheduler: An event was not updated because keeping its dependencies would change a date that could not be written back.\n' +
+          '`eventModelStructure` declares `end` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
+      ]);
+
+      expect(result!.applied).to.equal(false);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should not add a dependency whose push would change a date that is not writable', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('c').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          dependencies: [],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(
+        store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' }),
+      ).to.deep.equal({ status: 'rejected', reason: 'datesNotWritable', eventId: 'c' });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should not make a dependency stricter when its push would change a date that is not writable', () => {
+      const onEventsChange = vi.fn();
+      const onDependenciesChange = vi.fn();
+      const overlapping = EventBuilder.new().id('b').singleDay('2025-07-03T09:30:00Z').build();
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          events: [eventA, overlapping],
+          dependencies: [{ ...DEP_AB, type: 'StartToStart' }],
+          eventModelStructure: { start: { getter: (event: any) => event.start } },
+          onDependenciesChange,
+          onEventsChange,
+        },
+        adapter,
+      );
+
+      expect(store.updateDependency('dep-1', { type: 'FinishToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'datesNotWritable',
+        eventId: 'b',
+      });
+      expect(store.updateDependency('dep-1', { lag: 2, lagUnit: 'hour' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'datesNotWritable',
+        eventId: 'b',
+      });
+
+      expect(onDependenciesChange.mock.calls.length).to.equal(0);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
   });
 
   describe('method: pasteEvent', () => {

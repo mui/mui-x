@@ -50,6 +50,8 @@ export const UPDATE_REJECTION_MESSAGES: Record<
   string
 > = {
   cascadeBlocked: 'This change would move a read-only event, so it was not applied.',
+  datesNotWritable:
+    "This change would move an event whose dates can't be changed, so it was not applied.",
   duplicateDependency: 'A dependency of this type already exists between these two events.',
   readOnly: 'Dependencies cannot be changed while the scheduler is read-only.',
   unknownDependency: 'This dependency no longer exists.',

@@ -58,6 +58,8 @@ function getDependencyDropTarget(
 const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
   cascadeBlocked: 'This dependency would move a read-only event, so it was not created.',
   cyclicDependency: 'This dependency would create a cycle between events.',
+  datesNotWritable:
+    "This dependency would move an event whose dates can't be changed, so it was not created.",
   duplicateDependency: 'A dependency of this type already exists between these two events.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
   readOnly: 'Dependencies cannot be changed while the scheduler is read-only.',

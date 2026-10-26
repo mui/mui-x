@@ -550,8 +550,9 @@ export class SchedulerStore<
 
   /**
    * Adds, updates and / or deletes events in the calendar.
-   * A batch the scheduling plugin vetoes, or that moves a date `eventModelStructure` can't write
-   * back, is not applied nor emitted: the result then carries the `rejection` for the caller to
+   * A batch the scheduling plugin vetoes, that moves a date `eventModelStructure` can't write
+   * back, or whose plugin contribution changes such a date, is not applied nor emitted: the
+   * result then carries the `rejection` for the caller to
    * surface, and empty lists. `updatedEntries` are the entries as applied — the dates the plugin
    * clamped or cascaded, with any unwritable resize-style date already dropped — in `id` order
    * matching `updated`, which itself preserves the caller's own entries first, then the
@@ -656,11 +657,14 @@ export class SchedulerStore<
     }
 
     // Checked after the plugin's contributions are merged in, so a cascaded successor is covered
-    // too — not only the caller's own entries. Refuses the whole call, not only the offending
+    // too — not only the caller's own entries — and a single contributed bound, which the main
+    // loop would otherwise strip like a caller's resize. Refuses the whole call, not only the offending
     // entry: `updated` / `deleted` in the same call can be one edit (a recurring scope split
     // truncates the series), and applying part of it while dropping the rest would corrupt the
     // series instead of leaving it untouched.
-    const datesNotWritableRejection = this.checkUpdatedDatesWritable(updated.values());
+    const datesNotWritableRejection =
+      this.checkUpdatedDatesWritable(updated.values()) ??
+      this.checkContributedDatesWritable(contributions?.updated, deleted);
     if (datesNotWritableRejection) {
       return {
         deleted: [],
@@ -910,6 +914,45 @@ export class SchedulerStore<
           warnOnce(
             [
               'MUI X Scheduler: An event was not moved because a date could not be written back.',
+              datesNotWritableReason(this.state),
+            ].join('\n'),
+          );
+        }
+        return createDatesNotWritableError();
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Refuses the whole `updateEvents` batch when the scheduling plugin's contribution carries a
+   * date `eventModelStructure` can't write back, even a single one. The cascade only reports the
+   * bound it moves, so this isn't always a move `checkUpdatedDatesWritable` catches — but unlike
+   * a caller's own resize-style entry, the bound is what restores a dependency: stripping it with
+   * `removeUnwritableDates` would apply the rest of the batch with the dependency silently broken.
+   */
+  private checkContributedDatesWritable(
+    contributed: SchedulerEventUpdatedProperties[] | undefined,
+    deleted: ReadonlySet<SchedulerEventId>,
+  ): Error | null {
+    if (!contributed || schedulerEventSelectors.canWriteEventDates(this.state)) {
+      return null;
+    }
+
+    for (const entry of contributed) {
+      if (deleted.has(entry.id)) {
+        continue;
+      }
+      const isUnwritable = (['start', 'end'] as const).some(
+        (property) =>
+          property in entry && !schedulerEventSelectors.isDateWritable(this.state, property),
+      );
+      if (isUnwritable) {
+        if (process.env.NODE_ENV !== 'production') {
+          warnOnce(
+            [
+              'MUI X Scheduler: An event was not updated because keeping its dependencies would change a date that could not be written back.',
               datesNotWritableReason(this.state),
             ].join('\n'),
           );

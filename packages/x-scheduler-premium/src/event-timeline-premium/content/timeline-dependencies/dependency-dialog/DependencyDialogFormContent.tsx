@@ -156,7 +156,9 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
       });
       if (result.status === 'rejected') {
         // On the field that caused it (Type by default), like the event form.
-        const isLagRejected = result.reason === 'cascadeBlocked' && isLagChanged;
+        const isLagRejected =
+          (result.reason === 'cascadeBlocked' || result.reason === 'datesNotWritable') &&
+          isLagChanged;
         ReactDOM.flushSync(() =>
           formStore.setError(
             isLagRejected ? 'lagAmount' : 'type',

@@ -19,6 +19,7 @@ import type {
   SchedulerDependency,
   SchedulerDependencyCascadeBlockedRejection,
   SchedulerDependencyCreationProperties,
+  SchedulerDependencyDatesNotWritableRejection,
   SchedulerDependencyId,
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
@@ -207,7 +208,8 @@ export class SchedulerSchedulingPlugin<
    * Adds a dependency between two events.
    * Rejects every dependency while the scheduler is read-only, and dependencies
    * referencing an unknown or recurring event, duplicating an existing dependency, closing
-   * a cycle, or needing a read-only event to move.
+   * a cycle, needing a read-only event to move, or needing a date `eventModelStructure`
+   * can't write back to change.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other.
    * Implementation of the store's `addDependency()` — call it through the store.
@@ -308,13 +310,18 @@ export class SchedulerSchedulingPlugin<
   /**
    * Emits `nextList` and moves the events `enforced` needs, with a single engine run:
    * going through the `updateEvents` cascade would also clamp them by other dependencies.
-   * Emits nothing if a read-only event would have to move. `onDependenciesChange` is
-   * emitted before `onEventsChange`, as two separate changes.
+   * Emits nothing if a read-only event would have to move, or a date `eventModelStructure`
+   * can't write back would have to change: `updateEvents` would refuse or strip it after
+   * `onDependenciesChange` went out, leaving the new dependency broken.
+   * `onDependenciesChange` is emitted before `onEventsChange`, as two separate changes.
    */
   private commitDependencyChange(
     nextList: SchedulerDependency[],
     enforced: SchedulerDependency | null,
-  ): SchedulerDependencyCascadeBlockedRejection | null {
+  ):
+    | SchedulerDependencyCascadeBlockedRejection
+    | SchedulerDependencyDatesNotWritableRejection
+    | null {
     const { adapter, processedEventLookup } = this.store.state;
     const activeDependencies = getActiveDependencies(
       buildDependenciesState(nextList).dependencyModelLookup,
@@ -333,6 +340,15 @@ export class SchedulerSchedulingPlugin<
     });
     if (result.blocked.length > 0) {
       return { status: 'rejected', reason: 'cascadeBlocked', eventId: result.blocked[0] };
+    }
+    const unwritable = result.updated.find((entry) =>
+      (['start', 'end'] as const).some(
+        (property) =>
+          property in entry && !schedulerEventSelectors.isDateWritable(this.store.state, property),
+      ),
+    );
+    if (unwritable) {
+      return { status: 'rejected', reason: 'datesNotWritable', eventId: unwritable.id };
     }
 
     this.updateDependencies(nextList);
