@@ -39,19 +39,20 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
     // The time of day of now, on the wall clock of the day of the column.
-    const { nowForColumn, endForCalc } = React.useMemo(() => {
+    const nowForColumn = React.useMemo(() => {
       const columnPlainDate = toPlainDateTime(adapter.getTime(columnStart), displayTimezone).date;
       const nowMsInDay = toPlainDateTime(adapter.getTime(now), displayTimezone).msInDay;
-      const timestamp = toEpochMs(columnPlainDate, nowMsInDay, displayTimezone);
-      return {
-        nowForColumn: createProcessedDate(adapter, timestamp, displayTimezone),
-        endForCalc: createProcessedDate(adapter, timestamp + 60_000, displayTimezone),
-      };
+      return createProcessedDate(
+        adapter,
+        toEpochMs(columnPlainDate, nowMsInDay, displayTimezone),
+        displayTimezone,
+      );
     }, [adapter, columnStart, displayTimezone, now]);
 
     const { position } = useElementPositionInCollection({
+      // Only the position is read, which depends on the start alone.
       start: nowForColumn,
-      end: endForCalc,
+      end: nowForColumn,
       collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
     });
 

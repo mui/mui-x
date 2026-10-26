@@ -377,7 +377,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
@@ -397,22 +397,17 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const [hasScroll, setHasScroll] = React.useState(false);
 
-  const { start, end, lastDayNumber } = React.useMemo(() => {
+  const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
     const lastPlainDate = toPlainDateTime(days[days.length - 1].timestamp, displayTimezone).date;
     return {
       start: days[0].value,
       end: createEndOfPlainDate(adapter, lastPlainDate, displayTimezone),
+      firstDayNumber: toLocalDayNumber(days[0].timestamp, displayTimezone),
       lastDayNumber: lastPlainDate.dayNumber,
     };
   }, [adapter, days, displayTimezone]);
 
-  const isTodayInView = React.useMemo(() => {
-    const nowDayNumber = toLocalDayNumber(adapter.getTime(now), displayTimezone);
-    return (
-      nowDayNumber >= toLocalDayNumber(days[0].timestamp, displayTimezone) &&
-      nowDayNumber <= lastDayNumber
-    );
-  }, [adapter, days, displayTimezone, lastDayNumber, now]);
+  const isTodayInView = nowDayNumber >= firstDayNumber && nowDayNumber <= lastDayNumber;
 
   const updateHasScroll = React.useCallback(() => {
     const body = bodyRef.current;

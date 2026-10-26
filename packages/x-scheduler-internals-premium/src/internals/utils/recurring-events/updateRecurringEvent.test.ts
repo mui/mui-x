@@ -6,7 +6,6 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import { mergeDateAndTime } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import {
   adjustRRuleForAllMove,
@@ -875,8 +874,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          start: mergeDateAndTime(adapter, defaultEvent.dataTimezone.start.value, newStart),
-          end: mergeDateAndTime(adapter, defaultEvent.dataTimezone.end.value, newEnd),
+          start: adapter.date('2025-01-01T11:15:00Z', 'default'),
+          end: adapter.date('2025-01-01T12:15:00Z', 'default'),
         },
       ]);
     });
@@ -900,8 +899,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          start: mergeDateAndTime(adapter, original.dataTimezone.start.value, changes.start!),
-          end: mergeDateAndTime(adapter, original.dataTimezone.end.value, changes.end!),
+          start: adapter.date('2025-01-01T11:00:00Z', 'default'),
+          end: adapter.date('2025-01-01T12:00:00Z', 'default'),
           rrule: { byDay: ['SA'], freq: 'WEEKLY' },
         },
       ]);

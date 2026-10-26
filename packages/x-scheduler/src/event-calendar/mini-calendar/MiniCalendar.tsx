@@ -19,7 +19,6 @@ import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-lis
 import {
   createStartOfPlainDate,
   getPlainDateWeekStart,
-  toLocalDayNumber,
   toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
@@ -171,7 +170,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
     const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
     // The first day of the displayed month.
@@ -181,7 +180,8 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
     // Sync displayed month when visibleDate changes externally
     React.useEffect(() => {
-      setDisplayedMonth(visiblePlainDate.with({ day: 1 }));
+      const visibleMonth = visiblePlainDate.with({ day: 1 });
+      setDisplayedMonth((prev) => (prev.equals(visibleMonth) ? prev : visibleMonth));
     }, [visiblePlainDate]);
 
     // Generate days for the displayed month (including padding days from adjacent months)
@@ -199,13 +199,10 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
         // 6 weeks = 42 days, so end is 41 days after start
         lastPlainDate: gridStart.add({ days: 41 }),
         timezone: displayTimezone,
-        excludeWeekends: false,
       });
     }, [adapter, displayedMonth, displayTimezone, weekStartsOn]);
 
     // Group days into weeks
-    const nowDayNumber = toLocalDayNumber(adapter.getTime(now), displayTimezone);
-
     const weeks = React.useMemo(() => {
       const result: SchedulerProcessedDate[][] = [];
       for (let i = 0; i < days.length; i += 7) {

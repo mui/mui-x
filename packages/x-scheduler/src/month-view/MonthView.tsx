@@ -10,8 +10,8 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
-  createStartOfPlainDate,
   getPlainDateWeekStart,
+  plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
@@ -26,6 +26,7 @@ import type { MonthViewProps } from './MonthView.types';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
+import { getSiblingMonthStart } from '../internals/utils/date-utils';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -119,21 +120,20 @@ const EVENT_HEIGHT = 18;
 const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
 
 const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
-  siblingVisibleDateGetter: ({ state, delta }) =>
-    createStartOfPlainDate(
-      state.adapter,
-      schedulerOtherSelectors.visiblePlainDate(state).with({ day: 1 }).add({ months: delta }),
-      state.displayTimezone,
-    ),
+  siblingVisibleDateGetter: ({ state, delta }) => getSiblingMonthStart(state, delta),
   visibleDaysSelector: createSelectorMemoized(
     (state: State) => state.adapter,
-    schedulerOtherSelectors.visiblePlainDate,
-    (state: State) => state.displayTimezone,
+    // The day number of the first day of the month, so a move inside the month keeps the days.
+    (state: State) => {
+      const visiblePlainDate = schedulerOtherSelectors.visiblePlainDate(state);
+      return visiblePlainDate.dayNumber - visiblePlainDate.day + 1;
+    },
+    schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.weekStartsOn,
-    (adapter, visiblePlainDate, timezone, showWeekends, weekStartsOn) => {
-      const firstOfMonth = visiblePlainDate.with({ day: 1 });
-      const lastOfMonth = firstOfMonth.add({ months: 1 }).add({ days: -1 });
+    (adapter, firstDayNumber, timezone, showWeekends, weekStartsOn) => {
+      const firstOfMonth = plainDateFromDayNumber(firstDayNumber);
+      const lastOfMonth = firstOfMonth.with({ day: firstOfMonth.daysInMonth });
       return getDayListFromPlainDates({
         adapter,
         firstPlainDate: getPlainDateWeekStart(adapter, firstOfMonth, weekStartsOn, timezone),

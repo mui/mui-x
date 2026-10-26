@@ -1,8 +1,5 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type {
-  EventCalendarViewDefinition,
-  SchedulerProcessedDate,
-} from '@mui/x-scheduler-internals/models';
+import type { EventCalendarViewDefinition } from '@mui/x-scheduler-internals/models';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -27,7 +24,7 @@ export type DayTimeGridDayCount = 1 | 3 | 7;
  * Builds an `EventCalendarViewDefinition` for a day-time-grid based view.
  *
  * When `dayCount === 7` the definition is week-aligned: it snaps the visible range to
- * `startOfWeek` and honors the `showWeekends` and `weekStartsOn` preferences. For any
+ * the start of the week and honors the `showWeekends` and `weekStartsOn` preferences. For any
  * other value, the definition shows `dayCount` consecutive days starting from the current
  * visible date.
  */
@@ -50,7 +47,7 @@ export function createDayTimeGridViewDefinition(
       visibleDaysSelector: createSelectorMemoized(
         (state: State) => state.adapter,
         schedulerOtherSelectors.visiblePlainDate,
-        (state: State) => state.displayTimezone,
+        schedulerOtherSelectors.displayTimezone,
         eventCalendarPreferenceSelectors.showWeekends,
         eventCalendarPreferenceSelectors.weekStartsOn,
         (adapter, visiblePlainDate, timezone, showWeekends, weekStartsOn) => {
@@ -80,14 +77,13 @@ export function createDayTimeGridViewDefinition(
     visibleDaysSelector: createSelectorMemoized(
       (state: State) => state.adapter,
       schedulerOtherSelectors.visiblePlainDate,
-      (state: State) => state.displayTimezone,
-      (adapter, visiblePlainDate, timezone): SchedulerProcessedDate[] =>
+      schedulerOtherSelectors.displayTimezone,
+      (adapter, visiblePlainDate, timezone) =>
         getDayListFromPlainDates({
           adapter,
           firstPlainDate: visiblePlainDate,
           lastPlainDate: visiblePlainDate.add({ days: dayCount - 1 }),
           timezone,
-          excludeWeekends: false,
         }),
     ),
   };

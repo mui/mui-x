@@ -40,7 +40,7 @@ export function getDayListFromPlainDates(parameters: {
   firstPlainDate: PlainDate;
   lastPlainDate: PlainDate;
   timezone: TemporalTimezone;
-  excludeWeekends: boolean | undefined;
+  excludeWeekends?: boolean;
 }): GetDaytListReturnValue {
   const { adapter, firstPlainDate, lastPlainDate, timezone, excludeWeekends } = parameters;
   // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, has no instant.

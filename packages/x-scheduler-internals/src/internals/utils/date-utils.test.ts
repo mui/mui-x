@@ -1,26 +1,11 @@
 import { adapter, adapterFr } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { mergeDateAndTime, getStartOfWeek, getEndOfWeek, getWeekNumber } from './date-utils';
+import { getStartOfWeek, getWeekNumber } from './date-utils';
 import { normalizeAllDayBounds } from './plain-date-utils/adapter';
 
 const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
 
 describe('date-utils', () => {
-  describe('mergeDateAndTime', () => {
-    it('merges hour/minute/second/ms from timeParam into dateParam', () => {
-      const date = adapter.date('2025-03-10T00:00:00Z', 'default');
-      const time = adapter.date('2024-12-25T13:45:27.123Z', 'default');
-      const merged = mergeDateAndTime(adapter, date, time);
-      expect(adapter.getYear(merged)).to.equal(2025);
-      expect(adapter.getMonth(merged)).to.equal(2);
-      expect(adapter.getDate(merged)).to.equal(10);
-      expect(adapter.getHours(merged)).to.equal(13);
-      expect(adapter.getMinutes(merged)).to.equal(45);
-      expect(adapter.getSeconds(merged)).to.equal(27);
-      expect(adapter.getMilliseconds(merged)).to.equal(123);
-    });
-  });
-
   describe('normalizeAllDayBounds', () => {
     const start = adapter.date('2025-01-08T09:00:00.000Z', 'default');
     const end = adapter.date('2025-01-08T18:00:00.000Z', 'default');
@@ -112,49 +97,6 @@ describe('date-utils', () => {
       expect(adapter.isSameDay(result, adapter.date('2025-01-04T12:00:00.000Z', 'UTC'))).to.equal(
         true,
       );
-    });
-  });
-
-  describe('getEndOfWeek', () => {
-    it('uses the first day of the week of the locale when weekStartsOn is undefined', () => {
-      for (const currentAdapter of [adapter, adapterFr]) {
-        const result = getEndOfWeek(currentAdapter, wednesday, undefined);
-        expect(currentAdapter.isEqual(result, currentAdapter.endOfWeek(wednesday))).to.equal(true);
-      }
-    });
-
-    it('returns Saturday (2025-01-11) when weekStartsOn is 0 (Sun–Sat week)', () => {
-      const result = getEndOfWeek(adapter, wednesday, 0);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-11T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
-    });
-
-    it('returns Sunday (2025-01-12) when weekStartsOn is 1 (Mon–Sun week)', () => {
-      const result = getEndOfWeek(adapter, wednesday, 1);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-12T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
-    });
-
-    it('returns Friday (2025-01-10) when weekStartsOn is 6 (Sat–Fri week)', () => {
-      const result = getEndOfWeek(adapter, wednesday, 6);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-10T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
-    });
-
-    it('end of week is always 6 days after start of week', () => {
-      const start = getStartOfWeek(adapter, wednesday, 1);
-      const end = getEndOfWeek(adapter, wednesday, 1);
-      expect(adapter.isSameDay(adapter.addDays(start, 6), end)).to.equal(true);
-    });
-
-    it('should end the week on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
-      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on Saturday April 6th, 2024.
-      const date = adapter.date('2024-04-03T12:00:00', 'America/Santiago');
-      const result = getEndOfWeek(adapter, date, 0);
-      expect(adapter.toJsDate(result).toISOString()).to.equal('2024-04-07T03:59:59.999Z');
     });
   });
 
