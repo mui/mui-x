@@ -6,9 +6,12 @@ import type {
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
-import { getStartOfWeek, getEndOfWeek } from '@mui/x-scheduler-internals/internals';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
+import {
+  addToAdapterDate,
+  createStartOfPlainDate,
+  getPlainDateWeekStart,
+} from '@mui/x-scheduler-internals/internals';
 
 const DAYS_IN_WEEK = 7;
 
@@ -34,40 +37,58 @@ export function createDayTimeGridViewDefinition(
   if (dayCount === DAYS_IN_WEEK) {
     return {
       siblingVisibleDateGetter: ({ state, delta }) =>
-        state.adapter.addWeeks(
-          getStartOfWeek(
+        createStartOfPlainDate(
+          state.adapter,
+          getPlainDateWeekStart(
             state.adapter,
-            schedulerOtherSelectors.visibleDate(state),
+            schedulerOtherSelectors.visiblePlainDate(state),
             eventCalendarPreferenceSelectors.weekStartsOn(state),
-          ),
-          delta,
+            state.displayTimezone,
+          ).add({ weeks: delta }),
+          state.displayTimezone,
         ),
       visibleDaysSelector: createSelectorMemoized(
         (state: State) => state.adapter,
-        schedulerOtherSelectors.visibleDate,
+        schedulerOtherSelectors.visiblePlainDate,
+        (state: State) => state.displayTimezone,
         eventCalendarPreferenceSelectors.showWeekends,
         eventCalendarPreferenceSelectors.weekStartsOn,
-        (adapter, visibleDate, showWeekends, weekStartsOn) =>
-          getDayList({
+        (adapter, visiblePlainDate, timezone, showWeekends, weekStartsOn) => {
+          const weekStart = getPlainDateWeekStart(
             adapter,
-            start: getStartOfWeek(adapter, visibleDate, weekStartsOn),
-            end: getEndOfWeek(adapter, visibleDate, weekStartsOn),
+            visiblePlainDate,
+            weekStartsOn,
+            timezone,
+          );
+          return getDayListFromPlainDates({
+            adapter,
+            firstPlainDate: weekStart,
+            lastPlainDate: weekStart.add({ days: DAYS_IN_WEEK - 1 }),
+            timezone,
             excludeWeekends: !showWeekends,
-          }),
+          });
+        },
       ),
     };
   }
 
   return {
     siblingVisibleDateGetter: ({ state, delta }) =>
-      state.adapter.addDays(schedulerOtherSelectors.visibleDate(state), delta * dayCount),
+      addToAdapterDate(state.adapter, schedulerOtherSelectors.visibleDate(state), {
+        days: delta * dayCount,
+      }),
     visibleDaysSelector: createSelectorMemoized(
       (state: State) => state.adapter,
-      schedulerOtherSelectors.visibleDate,
-      (adapter, visibleDate): SchedulerProcessedDate[] =>
-        Array.from({ length: dayCount }, (_, index) =>
-          processDate(adapter.addDays(visibleDate, index), adapter),
-        ),
+      schedulerOtherSelectors.visiblePlainDate,
+      (state: State) => state.displayTimezone,
+      (adapter, visiblePlainDate, timezone): SchedulerProcessedDate[] =>
+        getDayListFromPlainDates({
+          adapter,
+          firstPlainDate: visiblePlainDate,
+          lastPlainDate: visiblePlainDate.add({ days: dayCount - 1 }),
+          timezone,
+          excludeWeekends: false,
+        }),
     ),
   };
 }

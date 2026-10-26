@@ -136,10 +136,35 @@ export function getWeekStartPlainDate(
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,
 ): PlainDate {
-  const plainDate = buildTemporalPlainDate(adapter, date);
+  return getWeekStartOfPlainDate(adapter, buildTemporalPlainDate(adapter, date), weekStartsOn, () =>
+    adapter.getDayOfWeek(date),
+  );
+}
+
+/**
+ * The first day of the week of `plainDate`. Without `weekStartsOn`, the week starts on the first
+ * day of the locale of the adapter.
+ */
+export function getPlainDateWeekStart(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  weekStartsOn: WeekStartsOn | undefined,
+  timezone: TemporalTimezone,
+): PlainDate {
+  return getWeekStartOfPlainDate(adapter, plainDate, weekStartsOn, () =>
+    adapter.getDayOfWeek(createStartOfPlainDate(adapter, plainDate, timezone)),
+  );
+}
+
+function getWeekStartOfPlainDate(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  weekStartsOn: WeekStartsOn | undefined,
+  getLocaleDayOfWeek: () => number,
+): PlainDate {
   if (weekStartsOn === undefined) {
     // The adapter numbers the days of the week from 1, starting on the first day of the locale.
-    return plainDate.add({ days: 1 - adapter.getDayOfWeek(date) });
+    return plainDate.add({ days: 1 - getLocaleDayOfWeek() });
   }
   checkWeekStartsOn(weekStartsOn);
   // `weekStartsOn` and ISO weekdays agree, except for Sunday (0 and 7), which both accept.

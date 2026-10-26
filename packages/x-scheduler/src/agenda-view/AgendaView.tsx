@@ -13,7 +13,13 @@ import {
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { getStartOfWeek, getWeekNumber } from '@mui/x-scheduler-internals/internals';
+import {
+  addToAdapterDate,
+  createStartOfPlainDate,
+  getWeekNumber,
+  getWeekStartPlainDate,
+  toLocalDayNumber,
+} from '@mui/x-scheduler-internals/internals';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
@@ -171,9 +177,13 @@ const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
     const visibleDate = schedulerOtherSelectors.visibleDate(state);
     const dayCount = eventCalendarViewSelectors.agendaDayCount(state);
     if (dayCount === 'month') {
-      return state.adapter.addMonths(state.adapter.startOfMonth(visibleDate), delta);
+      return createStartOfPlainDate(
+        state.adapter,
+        schedulerOtherSelectors.visiblePlainDate(state).with({ day: 1 }).add({ months: delta }),
+        state.displayTimezone,
+      );
     }
-    return state.adapter.addDays(visibleDate, dayCount * delta);
+    return addToAdapterDate(state.adapter, visibleDate, { days: dayCount * delta });
   },
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
   fetchRangeSelector: eventCalendarAgendaSelectors.fetchRange,
@@ -194,6 +204,7 @@ export const AgendaView = React.memo(
 
     // Selector hooks
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
@@ -208,21 +219,19 @@ export const AgendaView = React.memo(
     const days = isLoading && visibleDays.length === 0 ? baseVisibleDays : visibleDays;
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
-    const daysWithOccurrences = React.useMemo(
-      () =>
-        days.map((date, index) => {
-          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
-          const weekNumber = getWeekNumber(adapter, date.value, weekStartsOn);
-          const isFirstDayOfWeek =
-            index === 0 ||
-            !adapter.isSameDay(
-              getStartOfWeek(adapter, date.value, weekStartsOn),
-              getStartOfWeek(adapter, days[index - 1].value, weekStartsOn),
-            );
-          return { date, occurrences, weekNumber, isFirstDayOfWeek };
-        }),
-      [adapter, days, occurrencesMap, weekStartsOn],
-    );
+    const daysWithOccurrences = React.useMemo(() => {
+      const nowDayNumber = toLocalDayNumber(adapter.getTime(now), displayTimezone);
+      return days.map((date, index) => {
+        const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
+        const weekNumber = getWeekNumber(adapter, date.value, weekStartsOn);
+        const isFirstDayOfWeek =
+          index === 0 ||
+          getWeekStartPlainDate(adapter, date.value, weekStartsOn).dayNumber !==
+            getWeekStartPlainDate(adapter, days[index - 1].value, weekStartsOn).dayNumber;
+        const isToday = toLocalDayNumber(date.timestamp, displayTimezone) === nowDayNumber;
+        return { date, occurrences, weekNumber, isFirstDayOfWeek, isToday };
+      });
+    }, [adapter, days, displayTimezone, now, occurrencesMap, weekStartsOn]);
 
     return (
       <AgendaViewRoot
@@ -235,7 +244,7 @@ export const AgendaView = React.memo(
             {localeText.agendaViewEmptyStateLabel}
           </AgendaViewEmptyState>
         )}
-        {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (
+        {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber, isToday }) => (
           <React.Fragment key={date.key}>
             {showWeekNumber && isFirstDayOfWeek && (
               <AgendaViewWeekNumberRow className={classes.agendaViewWeekNumberRow}>
@@ -256,12 +265,12 @@ export const AgendaView = React.memo(
                 className={classes.agendaViewDayHeaderCell}
                 id={`${schedulerId}-DayHeaderCell-${date.key}`}
                 aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
-                aria-current={adapter.isSameDay(date.value, now) ? 'date' : undefined}
+                data-current={isToday ? '' : undefined}
+                aria-current={isToday ? 'date' : undefined}
               >
                 <DayNumberCell
                   className={classes.agendaViewDayNumberCell}
-                  data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
+                  data-current={isToday ? '' : undefined}
                 >
                   {adapter.format(date.value, 'dayOfMonth')}
                 </DayNumberCell>

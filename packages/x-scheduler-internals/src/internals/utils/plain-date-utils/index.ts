@@ -16,6 +16,7 @@ export {
   createAdapterDateOnPlainDate,
   createEndOfPlainDate,
   createProcessedDate,
+  createStartOfPlainDate,
   getDateKey,
   getPlainDateKey,
   normalizeAllDayBounds,
