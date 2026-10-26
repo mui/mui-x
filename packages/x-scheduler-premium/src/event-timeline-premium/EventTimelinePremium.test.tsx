@@ -4,6 +4,7 @@ import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { ErrorContainer, SharedComponentsStyledContext } from '@mui/x-scheduler/internals';
@@ -96,6 +97,7 @@ describe('<EventTimelinePremium />', () => {
         slots={options?.slots}
         slotProps={options?.slotProps}
         getEventAriaLabel={options?.getEventAriaLabel}
+        features={{ recurringEvents: recurringEventsFeature }}
       />,
     );
     return view;
@@ -379,6 +381,7 @@ describe('<EventTimelinePremium />', () => {
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndMonth"
           presets={['dayAndMonth', 'dayAndWeek']}
+          features={{ recurringEvents: recurringEventsFeature }}
         />,
       );
       baseEvents.forEach((eventItem) => {

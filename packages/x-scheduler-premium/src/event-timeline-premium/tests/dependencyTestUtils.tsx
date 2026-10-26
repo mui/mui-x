@@ -3,10 +3,6 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import {
-  dependenciesStoreFeature,
-  schedulerRecurringEventsPlugin,
-} from '@mui/x-scheduler-internals-premium/internals';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import type {
   EventTimelinePremiumStore,
@@ -25,6 +21,10 @@ import { buildDependency, resource1, resource2 } from './dependencyGeometryTestU
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
+import { recurringEventsFeature } from '../../recurring-events';
+import { dependenciesFeature } from '../content/timeline-dependencies/dependenciesFeature';
+import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
+import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
 
 export { buildDependency, resource1, resource2 };
 
@@ -113,6 +113,11 @@ export function TestTimeline({
   // render a timeline with dependencies disabled.
   const dependenciesEnabled = dependencies !== undefined;
 
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures({
+    recurringEvents: recurringEventsFeature,
+    dependencies: dependenciesFeature,
+  });
+
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
     resources,
@@ -129,10 +134,7 @@ export function TestTimeline({
     preset: 'dayAndHour',
     presets: ['dayAndHour'],
     presetConfig,
-    storeFeatures: {
-      recurringEvents: schedulerRecurringEventsPlugin,
-      dependencies: dependenciesStoreFeature,
-    },
+    storeFeatures,
   };
   const store = useEventTimelinePremium(parameters);
   React.useEffect(() => {
@@ -144,13 +146,15 @@ export function TestTimeline({
 
   return (
     <SchedulerStoreContext.Provider value={storeContextValue}>
-      <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-        <EventEditingStyledContext.Provider value={styledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-            <EventTimelinePremiumContent />
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventTimelinePremiumStyledContext.Provider>
+      <EventTimelinePremiumFeaturesContext.Provider value={features}>
+        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+          <EventEditingStyledContext.Provider value={styledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
+              <EventTimelinePremiumContent />
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </EventTimelinePremiumFeaturesContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }

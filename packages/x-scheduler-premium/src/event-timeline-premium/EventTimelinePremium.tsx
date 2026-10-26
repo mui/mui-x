@@ -9,7 +9,6 @@ import {
   useExtractEventTimelinePremiumParameters,
   useEventTimelinePremium,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
@@ -28,6 +27,8 @@ import { EventTimelinePremiumContent } from './content';
 import type { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 import { getEventTimelinePremiumUtilityClass } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
+import { EventTimelinePremiumFeaturesContext } from './features/EventTimelinePremiumFeaturesContext';
+import { useFrozenEventTimelinePremiumFeatures } from './features/useFrozenEventTimelinePremiumFeatures';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -91,9 +92,6 @@ const EventTimelinePremiumRoot = styled('div', {
   fontSize: theme.typography.body2.fontSize,
 }));
 
-// Interim: the recurring events plugin is still bundled with the component.
-const STORE_FEATURES = { recurringEvents: schedulerRecurringEventsPlugin };
-
 const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   TEvent extends object,
   TResource extends object,
@@ -108,11 +106,12 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
 
   const {
     parameters,
-    forwardedProps: { className, classes: classesProp, ...forwardedProps },
+    forwardedProps: { className, classes: classesProp, features: featuresProp, ...forwardedProps },
   } = useExtractEventTimelinePremiumParameters<TEvent, TResource, typeof props>(props);
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
   const storeParameters = React.useMemo(
-    () => ({ ...parameters, storeFeatures: STORE_FEATURES }),
-    [parameters],
+    () => ({ ...parameters, storeFeatures }),
+    [parameters, storeFeatures],
   );
   const store = useEventTimelinePremium(storeParameters);
   const classes = useUtilityClasses(classesProp);
@@ -148,25 +147,27 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
-      <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
-        <EventEditingStyledContext.Provider value={editingStyledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
-            <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <SchedulerDirectionProvider>
-                <EventTimelinePremiumRoot
-                  ref={forwardedRef}
-                  className={clsx(classes.root, className)}
-                  {...other}
-                >
-                  <EventTimelinePremiumContent />
-                  <ErrorContainer />
-                  {watermark}
-                </EventTimelinePremiumRoot>
-              </SchedulerDirectionProvider>
-            </SchedulerSlotsProvider>
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventTimelinePremiumStyledContext.Provider>
+      <EventTimelinePremiumFeaturesContext.Provider value={features}>
+        <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
+          <EventEditingStyledContext.Provider value={editingStyledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+              <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
+                <SchedulerDirectionProvider>
+                  <EventTimelinePremiumRoot
+                    ref={forwardedRef}
+                    className={clsx(classes.root, className)}
+                    {...other}
+                  >
+                    <EventTimelinePremiumContent />
+                    <ErrorContainer />
+                    {watermark}
+                  </EventTimelinePremiumRoot>
+                </SchedulerDirectionProvider>
+              </SchedulerSlotsProvider>
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </EventTimelinePremiumFeaturesContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }) as EventTimelinePremiumComponent;

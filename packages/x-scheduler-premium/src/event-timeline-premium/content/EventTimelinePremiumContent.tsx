@@ -7,6 +7,7 @@ import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import type { ColumnWithWidth, PinnedColumns } from '@mui/x-virtualizer';
 import { useVirtualizer, LayoutDataGrid, Dimensions, Virtualization } from '@mui/x-virtualizer';
@@ -37,13 +38,13 @@ import {
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
 import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals/internals';
-import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import type { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
 import { createEventTimelinePremiumOccurrenceIndex } from '../utils/eventTimelinePremiumOccurrenceIndex';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
+import { useEventTimelinePremiumFeatures } from '../features/EventTimelinePremiumFeaturesContext';
 import {
   EventTimelinePremiumVirtualizerContext,
   useEventTimelinePremiumVirtualizerStore,
@@ -58,13 +59,6 @@ import { useTitleScrollSync } from './useTitleScrollSync';
 import { useEventTabNavigation } from './useEventTabNavigation';
 import { getRowHeightForLaneCount } from './rowGeometry';
 import { getVisibleFractionRange } from './getVisibleFractionRange';
-import {
-  EventTimelinePremiumDependencyArrows,
-  EventTimelinePremiumDependencyGeometryProvider,
-  EventTimelinePremiumDependencyInteractions,
-  EventTimelinePremiumDependencyTerminals,
-  EventTimelinePremiumDependencyDialog,
-} from './timeline-dependencies';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -652,6 +646,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
+  const { recurringEvents, dependencies } = useEventTimelinePremiumFeatures();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -894,6 +889,18 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     dimensions.viewportOuterSize.height - dimensions.minimumSize.height,
   );
 
+  const rowGroupContent = (
+    <React.Fragment>
+      {virtualizer.api.getters.getRows()}
+      {showCurrentTimeIndicator && (
+        <EventTimelinePremiumCurrentTimeIndicator
+          className={classes.currentTimeIndicator}
+          aria-hidden
+        />
+      )}
+    </React.Fragment>
+  );
+
   return (
     <EventTimelinePremiumContentRoot
       className={classes.content}
@@ -915,7 +922,9 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     >
       <EventTimelinePremiumVirtualizerContext.Provider value={virtualizer.store}>
         <TitleColumnWidthProvider value={reportTitleWidth}>
-          <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+          <EventDialogProvider
+            optionalRenderers={recurringEvents?.optionalRenderers ?? EMPTY_OBJECT}
+          >
             <EventTimelinePremiumGrid
               className={classes.grid}
               {...scrollerProps}
@@ -930,21 +939,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                     showCurrentTimeIndicator={showCurrentTimeIndicator}
                   />
                   <RowContainer role="rowgroup" {...positionerProps}>
-                    <EventTimelinePremiumDependencyGeometryProvider>
-                      <EventTimelinePremiumDependencyArrows />
-                      {virtualizer.api.getters.getRows()}
-                      {showCurrentTimeIndicator && (
-                        <EventTimelinePremiumCurrentTimeIndicator
-                          className={classes.currentTimeIndicator}
-                          aria-hidden
-                        />
-                      )}
-                      <EventTimelinePremiumDependencyDialog />
-                      <EventTimelinePremiumDependencyInteractions />
-                      {/* Last so the revealed terminals win their z-index ties and
-                          paint above the arrows and their click hit-areas. */}
-                      <EventTimelinePremiumDependencyTerminals />
-                    </EventTimelinePremiumDependencyGeometryProvider>
+                    {dependencies ? (
+                      <dependencies.Layer>{rowGroupContent}</dependencies.Layer>
+                    ) : (
+                      rowGroupContent
+                    )}
                   </RowContainer>
                   <FillerRow />
                 </EventTimelinePremiumViewport>
