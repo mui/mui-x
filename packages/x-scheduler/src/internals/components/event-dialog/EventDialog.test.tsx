@@ -14,6 +14,7 @@ import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createAdapterDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -617,6 +618,35 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
       expect(screen.queryByLabelText(/event title/i)).to.equal(null);
     });
+
+    it('should not render the Delete event button when `eventDeletion` is `false`, while Save still applies the changes', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange, eventDeletion: false });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      const titleInput = await screen.findByRole('textbox', { name: /event title/i });
+
+      expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
+
+      await user.type(titleInput, ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.lastCall?.[0][0].title).to.equal(
+        `${DEFAULT_EVENT.title} (renamed)`,
+      );
+    });
+
+    it('should render the Delete event button when `eventDeletion` is an object', async () => {
+      const { user } = renderDialogProvider({
+        onEventsChange: vi.fn(),
+        eventDeletion: { confirmation: true },
+      });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+
+      expect(await screen.findByRole('button', { name: 'Delete event' })).not.to.equal(null);
+    });
   });
 
   it('should not render the recurrence tab when no slot is provided', () => {
@@ -907,8 +937,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -991,8 +1021,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               });
@@ -1016,7 +1046,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
       const placeholder = schedulerOccurrencePlaceholderSelectors.value(schedulerStore.state)!;
-      expect(adapter.formatByString(placeholder.start, 'yyyy-MM-dd')).to.equal('2025-05-27');
+      expect(
+        adapter.formatByString(
+          createAdapterDate(adapter, placeholder.start, 'default'),
+          'yyyy-MM-dd',
+        ),
+      ).to.equal('2025-05-27');
     });
 
     it('should open the dialog for an event with a property named hasOwnProperty', () => {

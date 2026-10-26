@@ -370,6 +370,28 @@ describe('<WeekView />', () => {
       expect(todayColumn).to.equal(null);
     });
 
+    it('renders the current time indicator in the repeated last hour of a day', () => {
+      // America/Santiago leaves summer time at the end of April 6th, 2024: 23:00 to 24:00 comes
+      // twice, and 03:30 UTC is the second 23:30.
+      vi.setSystemTime(new Date('2024-04-07T03:30:00Z'));
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={new Date('2024-04-03T12:00:00Z')}
+          displayTimezone="America/Santiago"
+          view="week"
+        />,
+      );
+
+      const todayColumn = document.querySelector(
+        `.${eventCalendarClasses.dayTimeGridColumn}[data-current]`,
+      );
+      expect(todayColumn).not.to.equal(null);
+      expect(
+        todayColumn!.querySelector(`.${eventCalendarClasses.dayTimeGridCurrentTimeIndicator}`),
+      ).not.to.equal(null);
+    });
+
     it('respects flag: hides indicator when showCurrentTimeIndicator is false', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
 
