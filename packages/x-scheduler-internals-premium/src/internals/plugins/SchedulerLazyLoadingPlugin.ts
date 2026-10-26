@@ -120,18 +120,21 @@ export class SchedulerLazyLoadingPlugin<
 
   /**
    * Fetches the events of the days from `range.start` to `range.end`, read in the display
-   * timezone. The cache records whole days, so the parts it lacks are whole days too.
+   * timezone.
    */
   public queueDataFetchForRange = async (range: DateRange, immediate = false) => {
     try {
       const { dataManager, cache } = this;
       if (dataManager && cache) {
-        const requestedRange = toWholeDays(range, this.store.state.displayTimezone);
+        const { displayTimezone } = this.store.state;
+        const requestedRange = toWholeDays(range, displayTimezone);
 
-        // Only request the part of the range the cache does not cover yet.
+        // Only request the days of the range the cache does not cover yet. The cache can hold the
+        // days of a previous display timezone, so the part it lacks is extended to whole days.
         // A fully covered range still goes through the queue so the cache-hit branch runs.
         const missingRange = cache.getMissingRange(requestedRange.start, requestedRange.end);
-        const rangeToFetch = missingRange ?? requestedRange;
+        const rangeToFetch =
+          missingRange === null ? requestedRange : toWholeDays(missingRange, displayTimezone);
         this.latestRequest = {
           range: requestedRange,
           fetchKey: getDateRangeKey(rangeToFetch),

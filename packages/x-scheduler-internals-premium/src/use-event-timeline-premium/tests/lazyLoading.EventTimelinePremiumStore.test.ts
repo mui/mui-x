@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
-import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import type { SchedulerEventId, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -34,6 +34,14 @@ const flushEffect = async () => {
 
 const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 
+/**
+ * The bounds of the `callIndex`-th call of `getEvents()`, as ISO strings.
+ */
+const getFetchedRange = (getEvents: { mock: { calls: unknown[][] } }, callIndex = 0) =>
+  (getEvents.mock.calls[callIndex] as TemporalSupportedObject[]).map((date) =>
+    adapter.toJsDate(date).toISOString(),
+  );
+
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
   defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
@@ -63,6 +71,33 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
     expect(dataSource.getEvents.mock.calls.length).to.equal(1);
     expect(store.state.eventIdList).to.have.length(1);
+  });
+
+  it('should fetch the whole days of the preset in the display timezone', async () => {
+    const dataSource = {
+      getEvents: vi.fn(async () => buildEvents()),
+      persistEvents: noopPersistEvents,
+    };
+    const params = {
+      ...DEFAULT_PARAMS,
+      dataSource,
+      defaultPreset: 'dayAndHour' as const,
+      // The 4 days of the preset start at midnight in UTC, which is June 30th at 20:00 in New York.
+      defaultVisibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
+      displayTimezone: 'America/New_York',
+    };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    store.updateStateFromParameters(params, adapter);
+
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.mock.calls.length).to.equal(1);
+    // From June 30th to July 4th in New York.
+    expect(getFetchedRange(dataSource.getEvents)).to.deep.equal([
+      '2025-06-30T04:00:00.000Z',
+      '2025-07-05T03:59:59.999Z',
+    ]);
   });
 
   it('should NOT fetch before updateStateFromParameters is called', async () => {
