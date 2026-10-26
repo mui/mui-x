@@ -10,6 +10,7 @@ import {
   getAllEventsByTitle,
   ResourceBuilder,
   SchedulerStoreRunner,
+  setSystemTimezone,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { act, screen, within, waitFor } from '@mui/internal-test-utils';
@@ -1365,6 +1366,35 @@ describe('<MonthView />', () => {
       );
       expect(cellNumbers[cellNumbers.length - 1]).to.have.text('30');
     });
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should fill an event on two days of the display timezone, whatever the timezone of the system',
+      () => {
+        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+        // December 30th and 31st as the same day in the other timezones.
+        setSystemTimezone('Pacific/Apia');
+        const event = EventBuilder.new()
+          .title('Trip')
+          .span('2011-12-30T15:00:00Z', '2011-12-31T15:00:00Z')
+          .build();
+
+        render(
+          <EventCalendar
+            events={[event]}
+            view="month"
+            visibleDate={new Date('2011-12-15T00:00:00Z')}
+            displayTimezone="America/New_York"
+          />,
+        );
+
+        // The day after the first one only holds the space of the event.
+        const variants = getAllEventsByTitle('Trip').map((part) =>
+          part.getAttribute('data-variant'),
+        );
+        expect(variants).to.deep.equal(['filled', 'invisible']);
+      },
+    );
 
     it('should display correct ISO week numbers when weekStartsOn=1 and showWeekNumber=true', () => {
       // May 2025 week 1 starts Mon Apr 28.

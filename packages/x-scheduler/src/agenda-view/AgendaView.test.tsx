@@ -5,7 +5,9 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
   ResourceBuilder,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { vi, describe, it, expect } from 'vitest';
 import { openPreferencesMenu, toggleShowEmptyDaysInAgenda } from '../internals/utils/test-utils';
@@ -85,6 +87,36 @@ describe('<AgendaView />', () => {
       `${adapter.format(today, 'weekday')} ${adapter.format(today, 'dayOfMonth')}`,
     );
   });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
+    'should show an event on two days of the display timezone as a multi-day event, whatever the timezone of the system',
+    () => {
+      // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+      // December 30th and 31st as the same day in the other timezones.
+      setSystemTimezone('Pacific/Apia');
+      const event = EventBuilder.new()
+        .title('Trip')
+        .span('2011-12-30T15:00:00Z', '2011-12-31T15:00:00Z')
+        .build();
+
+      render(
+        <EventCalendar
+          events={[event]}
+          visibleDate={new Date('2011-12-30T15:00:00Z')}
+          displayTimezone="America/New_York"
+          view="agenda"
+        />,
+      );
+
+      const [firstDay, secondDay] = screen.getAllByRole('button', { name: /^Trip/ });
+      expect(firstDay).to.have.text('Ends 31 DecTrip');
+      expect(firstDay).to.have.attribute('data-ending-after-edge');
+      expect(firstDay).not.to.have.attribute('data-starting-before-edge');
+      expect(secondDay).to.have.attribute('data-starting-before-edge');
+      expect(secondDay).not.to.have.attribute('data-ending-after-edge');
+    },
+  );
 
   it('should name each event with its title, time range and date', () => {
     const event = EventBuilder.new().title('My Event').build();

@@ -8,7 +8,9 @@ import {
   utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
@@ -839,6 +841,24 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       expect(text).to.equal('Monday, May 26th, 2025, 11:30 PM - Tuesday, May 27th, 2025, 12:15 AM');
     });
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should show both dates of an event on two days of the display timezone, whatever the timezone of the system',
+      () => {
+        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+        // December 30th and 31st as the same day in the other timezones.
+        setSystemTimezone('Pacific/Apia');
+        const { text } = renderReadonlyDetails(
+          EventBuilder.new().span('2011-12-30T15:00:00Z', '2011-12-31T15:00:00Z'),
+          'America/New_York',
+        );
+
+        expect(text).to.equal(
+          'Friday, December 30th, 2011, 10:00 AM - Saturday, December 31st, 2011, 10:00 AM',
+        );
+      },
+    );
 
     it('should show a single date when the event crosses midnight only in its own timezone', () => {
       const { text } = renderReadonlyDetails(

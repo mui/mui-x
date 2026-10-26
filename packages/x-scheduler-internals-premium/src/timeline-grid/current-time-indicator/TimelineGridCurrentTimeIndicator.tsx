@@ -5,14 +5,19 @@ import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
+  createProcessedDate,
   useElementPositionInCollection,
   isStartMinuteOutsideAxisWindow,
 } from '@mui/x-scheduler-internals/internals';
-import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridCurrentTimeIndicatorCssVars } from './TimelineGridCurrentTimeIndicatorCssVars';
+
+const ONE_MINUTE_MS = 60_000;
 
 export const TimelineGridCurrentTimeIndicator = React.forwardRef(
   function TimelineGridCurrentTimeIndicator(
@@ -31,14 +36,18 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     } = componentProps;
 
     const store = useEventTimelinePremiumStoreContext();
-    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const nowTimestamp = useStore(store, schedulerNowSelectors.nowTimestamp);
+    const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
     const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
 
-    const processedNow = React.useMemo(() => processDate(now, adapter), [adapter, now]);
+    const processedNow = React.useMemo(
+      () => createProcessedDate(adapter, nowTimestamp, displayTimezone),
+      [adapter, nowTimestamp, displayTimezone],
+    );
 
     const endForCalc = React.useMemo(
-      () => processDate(adapter.addMinutes(now, 1), adapter),
-      [adapter, now],
+      () => createProcessedDate(adapter, nowTimestamp + ONE_MINUTE_MS, displayTimezone),
+      [adapter, nowTimestamp, displayTimezone],
     );
 
     const { position } = useElementPositionInCollection({
@@ -49,8 +58,8 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
     });
 
     const isOutOfRange =
-      adapter.isBefore(now, config.start) ||
-      adapter.isAfter(now, config.end) ||
+      nowTimestamp < adapter.getTime(config.start) ||
+      nowTimestamp > adapter.getTime(config.end) ||
       isStartMinuteOutsideAxisWindow(config, processedNow.minutesInDay);
 
     return useRenderElement('div', componentProps, {

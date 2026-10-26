@@ -41,7 +41,7 @@ describe('Core - EventCalendarStore', () => {
         eventModelStructure: undefined,
         displayTimezone: 'default',
         editingOccurrence: null,
-        nowUpdatedEveryMinute: adapter.now('default'),
+        nowTimestamp: Date.now(),
         occurrencePlaceholder: null,
         pendingDeleteConfirmation: null,
         pendingRecurringEventOperation: null,

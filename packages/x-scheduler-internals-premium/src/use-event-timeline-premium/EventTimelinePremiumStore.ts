@@ -11,6 +11,7 @@ import {
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type {
   EventTimelinePremiumPreferences,
   EventTimelinePremiumPreset,
@@ -257,7 +258,7 @@ export class EventTimelinePremiumStore<
     // The dialog anchor no longer matches the arrow after a date or preset change.
     this.disposables.defer(
       this.registerStoreEffect(
-        (state) => state.adapter.getTime(state.visibleDate),
+        schedulerOtherSelectors.visibleTimestamp,
         this.closeDependencyEditor,
       ),
     );

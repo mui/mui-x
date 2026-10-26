@@ -5,6 +5,7 @@ import type {
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerEventLocaleText } from '../../models/translations';
 import { formatFullDate, formatHourAndMinutes } from './date-utils';
+import { isOccurrenceMultiDay } from './event-utils';
 
 export interface GetEventAccessibleNameParameters {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -27,7 +28,7 @@ export function getEventAccessibleName(parameters: GetEventAccessibleNameParamet
   const { occurrence, adapter, ampm, localeText, isRecurring, resourceName } = parameters;
   const start = occurrence.displayTimezone.start.value;
   const end = occurrence.displayTimezone.end.value;
-  const isMultiDay = !adapter.isSameDay(start, end);
+  const isMultiDay = isOccurrenceMultiDay(occurrence);
 
   const formatDate = (date: TemporalSupportedObject) => formatFullDate(date, adapter);
   const formatDateTime = (date: TemporalSupportedObject) =>
