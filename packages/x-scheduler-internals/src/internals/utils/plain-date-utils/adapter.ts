@@ -122,21 +122,38 @@ export function getPlainDateKey(adapter: Adapter, date: PlainDate): string {
 }
 
 /**
- * Returns the same processed date as `processDate()` for the adapter value of an instant in
- * `timezone`, reading the date and time with plain arithmetic instead of the adapter.
+ * Returns the processed date of `value`, the adapter value of the instant `epochMs` in `timezone`.
+ * Reads the date and time from the offsets of the timezone instead of the getters of the adapter.
+ */
+export function buildProcessedDate(
+  adapter: Adapter,
+  value: TemporalSupportedObject,
+  epochMs: number,
+  timezone: TemporalTimezone,
+): SchedulerProcessedDate {
+  const plainDateTime = toPlainDateTime(epochMs, timezone);
+  return {
+    value,
+    key: getPlainDateKey(adapter, plainDateTime.date),
+    timestamp: epochMs,
+    minutesInDay: Math.floor(plainDateTime.msInDay / 60_000),
+  };
+}
+
+/**
+ * Returns the processed date of the adapter value of an instant in `timezone`.
  */
 export function createProcessedDate(
   adapter: Adapter,
   epochMs: number,
   timezone: TemporalTimezone,
 ): SchedulerProcessedDate {
-  const { date, msInDay } = toPlainDateTime(epochMs, timezone);
-  return {
-    value: createAdapterDate(adapter, epochMs, timezone),
-    key: getPlainDateKey(adapter, date),
-    timestamp: epochMs,
-    minutesInDay: Math.floor(msInDay / 60_000),
-  };
+  return buildProcessedDate(
+    adapter,
+    createAdapterDate(adapter, epochMs, timezone),
+    epochMs,
+    timezone,
+  );
 }
 
 /**
