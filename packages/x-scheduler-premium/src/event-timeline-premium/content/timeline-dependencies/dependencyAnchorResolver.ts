@@ -10,7 +10,7 @@ import {
   computeElementPositionInCollection,
   getEventResourceIds,
 } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
 import { computeOccurrencesFirstIndexLookup } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type { EventsCellLaneMetrics } from '../rowGeometry';
 
@@ -69,7 +69,7 @@ export interface DependencyAnchorResolverParameters {
   /**
    * The visible date range and daily hour window the arrows are positioned in.
    */
-  axis: TimelineAxis;
+  axis: TimelineAxisRange;
   durationMs: number;
   /**
    * Positions already computed by the axis filter, when the hour window is trimmed.

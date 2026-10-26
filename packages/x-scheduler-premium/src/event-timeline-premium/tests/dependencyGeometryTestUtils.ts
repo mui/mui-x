@@ -3,9 +3,10 @@ import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models'
 import {
   createEventRangeIndex,
   getOccurrencesFromEvents,
+  getTimelineAxis,
   getTimelineAxisDurationMs,
 } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerDependency,
   SchedulerDependencyType,
@@ -18,7 +19,7 @@ import { createDependencyAnchorResolver } from '../content/timeline-dependencies
 
 export const collectionStart = adapter.date('2024-01-15', 'default');
 export const collectionEnd = adapter.endOfDay(collectionStart);
-export const fullDayAxis: TimelineAxis = {
+export const fullDayAxis: TimelineAxisRange = {
   start: collectionStart,
   end: collectionEnd,
   dayStartMinute: 0,
@@ -74,7 +75,7 @@ type ResolverParameters = Parameters<typeof createDependencyAnchorResolver>[0];
 export function buildResolver(parameters: {
   resources: ResolverParameters['resources'];
   rowPositions: readonly number[];
-  axis?: TimelineAxis;
+  axis?: TimelineAxisRange;
   eventsWidth?: number;
   positionByOccurrenceKey?: ResolverParameters['positionByOccurrenceKey'];
   endpointIds?: ResolverParameters['endpointIds'];
@@ -85,7 +86,7 @@ export function buildResolver(parameters: {
     resources: parameters.resources,
     rowPositions: parameters.rowPositions,
     axis: parameters.axis ?? fullDayAxis,
-    durationMs: getTimelineAxisDurationMs(adapter, parameters.axis ?? fullDayAxis),
+    durationMs: getTimelineAxisDurationMs(getTimelineAxis(adapter, parameters.axis ?? fullDayAxis)),
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,

@@ -272,6 +272,26 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       expect(second).to.equal(first);
     });
 
+    it('should read the visible date in the display timezone', () => {
+      const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
+        events: [],
+        preset: 'dayAndMonth',
+        // July 1st at midnight in UTC is June 30th at 20:00 in New York.
+        visibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
+        displayTimezone: 'America/New_York',
+      });
+
+      const config = eventTimelinePremiumPresetSelectors.config(state);
+      const axis = eventTimelinePremiumPresetSelectors.axis(state);
+
+      // From June 30th to August 24th in New York.
+      expect(new Date(axis.start).toISOString()).to.equal('2025-06-30T04:00:00.000Z');
+      expect(new Date(axis.end).toISOString()).to.equal('2025-08-25T03:59:59.999Z');
+      expect(adapter.getTime(config.start)).to.equal(axis.start);
+      expect(adapter.getTime(config.end)).to.equal(axis.end);
+    });
+
     it('should return the same reference when the dependencies are unchanged', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         resources: TEST_RESOURCES,

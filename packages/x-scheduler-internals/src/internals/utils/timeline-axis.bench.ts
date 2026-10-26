@@ -2,7 +2,11 @@ import { describe, test } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
 import { processDate } from '../../process-date';
 import { computeElementPositionInCollection } from './useElementPositionInCollection';
-import { getTimelineAxisDurationMs, timelineAxisOffsetToTimestamp } from './timeline-axis';
+import {
+  getTimelineAxis,
+  getTimelineAxisDurationMs,
+  timelineAxisOffsetToTimestamp,
+} from './timeline-axis';
 
 const occurrenceCount = 1_000;
 
@@ -19,7 +23,7 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     dayStartMinute: 0,
     dayEndMinute: 1440,
   };
-  const durationMs = getTimelineAxisDurationMs(adapter, axis);
+  const durationMs = getTimelineAxisDurationMs(getTimelineAxis(adapter, axis));
   // Occurrences of 30 minutes to 5 hours, every 10 minutes across the week.
   const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
     const occurrenceStart = adapter.addMinutes(start, index * 10);
@@ -44,12 +48,12 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   });
 
   test('map 1,000 pointer positions to dates', { timeout: 0 }, async ({ bench }) => {
+    const timelineAxis = getTimelineAxis(adapter, axis);
     await bench('dates on a week axis', () => {
       let total = 0;
       for (let index = 0; index < occurrenceCount; index += 1) {
         total += timelineAxisOffsetToTimestamp(
-          adapter,
-          axis,
+          timelineAxis,
           (durationMs * index) / occurrenceCount,
         );
       }

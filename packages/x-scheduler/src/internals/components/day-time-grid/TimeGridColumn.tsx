@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
 import {
   buildTemporalPlainDate,
   createAdapterDateOnPlainDate,
@@ -153,7 +153,7 @@ function ColumnInteractiveLayer({
   occurrences,
   maxIndex,
 }: {
-  column: TimelineAxis;
+  column: TimelineAxisRange;
   showCurrentTimeIndicator: boolean;
   index: number;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];

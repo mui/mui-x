@@ -11,6 +11,7 @@ import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
 import { roundToDragPrecision } from '../../internals/utils/drag-utils';
 import {
   FULL_DAY_MINUTES,
+  getTimelineAxis,
   getTimelineAxisDurationMs,
   resolveRepeatedTimeFrom,
   timelineAxisOffsetToTimestamp,
@@ -43,12 +44,12 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const { axis, axisDurationMs, startMs, endMs } = React.useMemo(() => {
-    const columnAxis = { start, end, dayStartMinute, dayEndMinute };
+    const columnAxis = getTimelineAxis(adapter, { start, end, dayStartMinute, dayEndMinute });
     return {
       axis: columnAxis,
-      axisDurationMs: getTimelineAxisDurationMs(adapter, columnAxis),
-      startMs: adapter.getTime(start),
-      endMs: adapter.getTime(end),
+      axisDurationMs: getTimelineAxisDurationMs(columnAxis),
+      startMs: columnAxis.start,
+      endMs: columnAxis.end,
     };
   }, [adapter, start, end, dayStartMinute, dayEndMinute]);
 
@@ -69,7 +70,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         if (positionY === 1) {
           return endMs;
         }
-        return timelineAxisOffsetToTimestamp(adapter, axis, Math.round(axisDurationMs * positionY));
+        return timelineAxisOffsetToTimestamp(axis, Math.round(axisDurationMs * positionY));
       };
       const elementTop = Math.max(elementRef.current.getBoundingClientRect().y, columnTop);
       const cursorY = Math.max(input.clientY, elementTop);
