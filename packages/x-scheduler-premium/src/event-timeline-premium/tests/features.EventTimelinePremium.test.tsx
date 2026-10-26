@@ -116,6 +116,26 @@ describe('EventTimelinePremium - features', () => {
     expect(new Date(updatedEvent.start).toISOString()).to.equal('2025-07-04T09:00:00.000Z');
   });
 
+  it('should keep the rrule of an event edited in the dialog without the recurring events feature', async () => {
+    const handleEventsChange = vi.fn();
+    let view!: Awaited<ReturnType<typeof renderSettled>>;
+    await expect(async () => {
+      view = await renderSettled(<Timeline onEventsChange={handleEventsChange} />);
+    }).toWarnDev('the recurring events feature is not provided');
+
+    await view.user.click(getAllEventsByTitle(dailyEvent.title)[0]);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.to.equal(null);
+    });
+    await view.user.type(screen.getByRole('textbox', { name: /event title/i }), ' (renamed)');
+    await view.user.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const [updatedEvent] = handleEventsChange.mock.calls[0][0];
+    expect(updatedEvent.title).to.equal('Daily standup (renamed)');
+    expect(updatedEvent.rrule).to.deep.equal(dailyEvent.rrule);
+  });
+
   it('should not warn when the features object is recreated with the same values', async () => {
     const { setProps } = await renderSettled(
       <Timeline features={{ recurringEvents: recurringEventsFeature }} />,

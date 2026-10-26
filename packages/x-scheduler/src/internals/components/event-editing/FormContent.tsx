@@ -515,7 +515,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           id: occurrence.id,
           ...(submitStart ? { start } : {}),
           ...(submitEnd ? { end } : {}),
-          rrule: rruleToSubmit,
+          // Without the Recurrence tab, the event keeps its `rrule` untouched.
+          ...(current.showRecurrence ? { rrule: rruleToSubmit } : {}),
         });
         if (!result.applied) {
           // A vetoed save keeps the dialog open; the rejection sits on the range field and
