@@ -9,6 +9,7 @@ import {
   useExtractEventTimelinePremiumParameters,
   useEventTimelinePremium,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
@@ -90,6 +91,9 @@ const EventTimelinePremiumRoot = styled('div', {
   fontSize: theme.typography.body2.fontSize,
 }));
 
+// Interim: the recurring events plugin is still bundled with the component.
+const STORE_FEATURES = { recurringEvents: schedulerRecurringEventsPlugin };
+
 const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
   TEvent extends object,
   TResource extends object,
@@ -106,7 +110,11 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
     parameters,
     forwardedProps: { className, classes: classesProp, ...forwardedProps },
   } = useExtractEventTimelinePremiumParameters<TEvent, TResource, typeof props>(props);
-  const store = useEventTimelinePremium(parameters);
+  const storeParameters = React.useMemo(
+    () => ({ ...parameters, storeFeatures: STORE_FEATURES }),
+    [parameters],
+  );
+  const store = useEventTimelinePremium(storeParameters);
   const classes = useUtilityClasses(classesProp);
 
   const { localeText, resourceColumnLabel, getEventAriaLabel, apiRef, slots, slotProps, ...other } =

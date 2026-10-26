@@ -14,7 +14,13 @@ describe('Core - EventTimelinePremiumStore', () => {
     createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
 
     it('should initialize default state', () => {
-      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      const store = new EventTimelinePremiumStore(
+        {
+          ...DEFAULT_PARAMS,
+          storeFeatures: { recurringEvents: schedulerRecurringEventsPlugin },
+        },
+        adapter,
+      );
 
       const expectedState = {
         adapter,
@@ -59,7 +65,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         ]),
         readOnly: false,
         recurringEventsPlugin: schedulerRecurringEventsPlugin,
-        recurringEventsUnavailableHint: 'premium',
+        recurringEventsUnavailableHint: 'feature',
         shouldEventRequireResource: true,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [TEST_RESOURCE.id],

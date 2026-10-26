@@ -15,6 +15,7 @@ import type {
   SchedulerDependencyEditor,
 } from '../models/dependency';
 import type { SchedulerLazyLoadingParameters } from '../models/lazyLoading';
+import type { EventTimelinePremiumStoreFeatures } from '../internals/features/eventTimelinePremiumStoreFeatures';
 
 export interface EventTimelinePremiumState extends SchedulerState, SchedulerDependenciesState {
   /**
@@ -117,4 +118,9 @@ export interface EventTimelinePremiumStoreParameters<
   TEvent extends object,
   TResource extends object,
 >
-  extends EventTimelinePremiumParameters<TEvent, TResource>, SchedulerDependenciesParameters {}
+  extends EventTimelinePremiumParameters<TEvent, TResource>, SchedulerDependenciesParameters {
+  /**
+   * Optional features of the store, read only when the store is created.
+   */
+  storeFeatures?: EventTimelinePremiumStoreFeatures;
+}

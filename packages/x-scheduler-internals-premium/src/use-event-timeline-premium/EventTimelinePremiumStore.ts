@@ -30,7 +30,6 @@ import type {
   EventTimelinePremiumStoreParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
-import { schedulerRecurringEventsPlugin } from '../internals/plugins/schedulerRecurringEventsPlugin';
 import { SchedulerSchedulingPlugin } from '../internals/plugins/SchedulerSchedulingPlugin';
 import {
   EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
@@ -211,7 +210,14 @@ export class EventTimelinePremiumStore<
     parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventTimelinePremiumStore', mapper, schedulerRecurringEventsPlugin);
+    super(
+      parameters,
+      adapter,
+      'EventTimelinePremiumStore',
+      mapper,
+      parameters.storeFeatures?.recurringEvents ?? null,
+      'feature',
+    );
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
