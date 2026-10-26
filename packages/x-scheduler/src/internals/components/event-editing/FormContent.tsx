@@ -158,11 +158,8 @@ export function FormContent(props: FormContentProps) {
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
     const { timezone } = occurrence.displayTimezone;
-    const startFields = formatDateAndTimeFields(
-      occurrence.displayTimezone.start.timestamp,
-      timezone,
-    );
-    const endFields = formatDateAndTimeFields(occurrence.displayTimezone.end.timestamp, timezone);
+    const startFields = formatDateAndTimeFields(occurrence.displayTimezone.start, timezone);
+    const endFields = formatDateAndTimeFields(occurrence.displayTimezone.end, timezone);
 
     // The rule is read and written in the event's timezone, not the display one.
     const base = getOccurrenceDataTimezone(occurrence)?.rrule;

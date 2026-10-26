@@ -168,18 +168,17 @@ function readTimeField(raw: string): number | null {
 }
 
 /**
- * Formats the date and the time of an instant in `timezone` for the `yyyy-MM-dd` and `HH:mm`
- * fields.
+ * Formats a processed date for the `yyyy-MM-dd` and `HH:mm` fields. `timezone` is the one the date
+ * was processed in.
  */
 export function formatDateAndTimeFields(
-  timestamp: number,
+  processedDate: SchedulerProcessedDate,
   timezone: TemporalTimezone,
 ): { date: string; time: string } {
-  const plainDateTime = toPlainDateTime(timestamp, timezone);
-  const minutesInDay = Math.floor(plainDateTime.msInDay / 60_000);
+  const { minutesInDay } = processedDate;
   const pad = (value: number) => String(value).padStart(2, '0');
   return {
-    date: plainDateTime.date.toString(),
+    date: toPlainDateTime(processedDate.timestamp, timezone).date.toString(),
     time: `${pad(Math.floor(minutesInDay / 60))}:${pad(minutesInDay % 60)}`,
   };
 }
