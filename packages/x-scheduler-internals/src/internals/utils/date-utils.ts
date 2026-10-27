@@ -54,6 +54,26 @@ export function getWallTimeIsoFormat(adapter: Adapter): string {
   ].join('');
 }
 
+const hourLabelTemplates = new WeakMap<Adapter, TemporalSupportedObject>();
+
+/**
+ * Formats a wall-clock hour, like `9:00 AM`, rather than an instant: the hour that a
+ * spring-forward transition skips has no instant on that day. The label is built on a date in
+ * UTC, which has no DST transition, cached per adapter as the headers build one label per hour.
+ */
+export function formatWallClockHour(adapter: Adapter, hour: number, ampm: boolean): string {
+  let template = hourLabelTemplates.get(adapter);
+  if (!template) {
+    template = createAdapterDate(adapter, Date.UTC(2020, 0, 1), 'UTC');
+    hourLabelTemplates.set(adapter, template);
+  }
+  const f = adapter.formats;
+  const pattern = ampm
+    ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
+    : `${f.hours24h}:${f.minutesPadded}`;
+  return adapter.formatByString(adapter.setHours(template, hour), pattern);
+}
+
 /**
  * Converts a `TemporalSupportedObject` back to a string, respecting the
  * original date format: instant strings (ending with `Z`) stay as UTC ISO

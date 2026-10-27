@@ -21,8 +21,10 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
+  formatWallClockHour,
   getDisplayedHourRange,
   getEndOfDayMs,
   getInitialScrollTime,
@@ -34,7 +36,6 @@ import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
-import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
@@ -379,6 +380,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -390,8 +392,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       [timeGridEvents],
     ),
   });
-
-  const formatTime = useFormatTime();
 
   const [hasScroll, setHasScroll] = React.useState(false);
 
@@ -446,7 +446,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 
-  const template = adapter.date('2020-01-01T00:00:00', 'default');
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
@@ -549,7 +548,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     style={{ '--hour': index } as React.CSSProperties}
                   >
                     <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
-                      {index === 0 ? null : formatTime(adapter.setHours(template, hour))}
+                      {index === 0 ? null : formatWallClockHour(adapter, hour, ampm)}
                     </DayTimeGridTimeAxisText>
                   </DayTimeGridTimeAxisCell>
                 );
