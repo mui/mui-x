@@ -37,8 +37,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
 
     const occurrences = getOccurrencesFromEvents({
       adapter,
-      start,
-      end,
+      start: adapter.getTime(start),
+      end: adapter.getTime(end),
       eventRangeIndex,
       visibleResources,
       displayTimezone,

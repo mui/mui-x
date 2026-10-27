@@ -250,8 +250,14 @@ export function getResourceSelectionMode(
 
 export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
+  /**
+   * The first instant of the range, as a timestamp.
+   */
+  start: number;
+  /**
+   * The last instant of the range, as a timestamp.
+   */
+  end: number;
   eventRangeIndex: SchedulerEventRangeIndex;
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;

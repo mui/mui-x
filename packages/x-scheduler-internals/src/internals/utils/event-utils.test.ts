@@ -176,9 +176,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
-        eventRangeIndex: createEventRangeIndex([event], adapter, false),
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
@@ -202,9 +202,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
-        eventRangeIndex: createEventRangeIndex(events, adapter, false),
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
+        eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: { [resourceA.id]: true, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
@@ -227,9 +227,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start: adapter.startOfDay(rangeStart),
-        end: adapter.endOfDay(rangeStart),
-        eventRangeIndex: createEventRangeIndex(events, adapter, true),
+        start: adapter.getTime(adapter.startOfDay(rangeStart)),
+        end: adapter.getTime(adapter.endOfDay(rangeStart)),
+        eventRangeIndex: createEventRangeIndex(events, true),
         visibleResources: {},
         displayTimezone: 'default',
         recurringEventsPlugin: schedulerRecurringEventsPlugin,
@@ -250,9 +250,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
-        eventRangeIndex: createEventRangeIndex([event], adapter, false),
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,
@@ -266,9 +266,9 @@ describe('event-utils', () => {
 
       const result = getOccurrencesFromEvents({
         adapter,
-        start,
-        end,
-        eventRangeIndex: createEventRangeIndex([event], adapter, false),
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
+        eventRangeIndex: createEventRangeIndex([event], false),
         visibleResources: { [resourceA.id]: false, [resourceB.id]: false },
         displayTimezone: 'default',
         recurringEventsPlugin: null,

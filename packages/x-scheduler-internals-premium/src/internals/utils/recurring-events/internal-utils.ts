@@ -32,17 +32,18 @@ export function createStartOfPreviousDay(
 }
 
 /**
- * Moves the end of an event to `plainDate` like `moveToPlainDate()`, except that a time a DST
- * transition repeats resolves to its first instant at or after `startMs`, so that the end of an
- * event starting in the second occurrence of a repeated hour doesn't come before its start.
+ * Moves the end of an event to `plainDate` on the wall clock of `timezone`, like
+ * `moveToPlainDate()`, except that a time a DST transition repeats resolves to its first instant at
+ * or after `startMs`, so that the end of an event starting in the second occurrence of a repeated
+ * hour doesn't come before its start.
  */
 export function moveEndToPlainDate(
   adapter: Adapter,
   end: TemporalSupportedObject,
   plainDate: PlainDate,
   startMs: number,
+  timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  const timezone = adapter.getTimezone(end);
   const { msInDay } = toPlainDateTime(adapter.getTime(end), timezone);
   let endMs = toEpochMs(plainDate, msInDay, timezone);
   if (endMs < startMs) {

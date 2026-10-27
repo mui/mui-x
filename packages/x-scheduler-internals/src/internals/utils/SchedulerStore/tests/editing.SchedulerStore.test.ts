@@ -776,8 +776,8 @@ premiumStoreClasses.forEach((storeClass) => {
       const days = schedulerRecurringEventsPlugin
         .getOccurrencesForVisibleDays(
           reprocessed,
-          visibleStart,
-          adapter.addDays(visibleStart, 4),
+          adapter.getTime(visibleStart),
+          adapter.getTime(adapter.addDays(visibleStart, 4)),
           adapter,
           'default',
         )
