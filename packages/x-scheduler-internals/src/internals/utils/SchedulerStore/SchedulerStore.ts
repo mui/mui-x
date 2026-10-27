@@ -966,9 +966,9 @@ export class SchedulerStore<
           'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature, to enable recurring events.',
         ]);
       }
-      return toUpdateEventResult(
-        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
-      );
+      // Drop the key rather than sending `undefined`, which would remove the stored rule.
+      const { rrule, ...changes } = calendarEvent;
+      return toUpdateEventResult(this.updateEvents({ updated: [changes] }));
     }
 
     return toUpdateEventResult(this.updateEvents({ updated: [calendarEvent] }));
