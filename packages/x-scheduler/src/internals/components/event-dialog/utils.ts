@@ -11,11 +11,10 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
-  buildTemporalPlainDate,
   createAdapterDate,
   createEndOfPlainDate,
+  createLabelDate,
   createProcessedDate,
-  getJsDayOfWeek,
   getOccurrenceDataTimezone,
   MS_PER_DAY,
   PlainDate,
@@ -110,9 +109,9 @@ const WEEKDAYS: SchedulerWeekday[] = [
   'saturday',
 ];
 
-export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject) => {
-  // Read in the value's own timezone: a plain `Date` would give the system weekday.
-  return WEEKDAYS[getJsDayOfWeek(adapter, value)];
+export const getWeekdayToken = (plainDate: PlainDate) => {
+  // ISO weekdays go from 1 (Monday) to 7 (Sunday).
+  return WEEKDAYS[plainDate.dayOfWeek % 7];
 };
 
 export type EndsSelection = 'never' | 'after' | 'until';
@@ -299,7 +298,7 @@ export function getRangeErrorMessage(
 
 export function getRecurrenceLabel(
   adapter: Adapter,
-  start: SchedulerProcessedDate,
+  startPlainDate: PlainDate,
   recurrenceKey: RecurringEventPresetKey | 'custom' | null,
   localeText: EventEditingLocaleText,
 ): string {
@@ -311,17 +310,18 @@ export function getRecurrenceLabel(
     case 'DAILY':
       return localeText.recurrenceDailyPresetLabel;
     case 'WEEKLY': {
-      const weekday = getWeekdayToken(adapter, start.value);
-      const weekdayName = adapter.format(start.value, 'weekday');
+      const weekday = getWeekdayToken(startPlainDate);
+      const weekdayName = adapter.format(createLabelDate(adapter, startPlainDate), 'weekday');
       return localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName });
     }
     case 'MONTHLY': {
-      return localeText.recurrenceMonthlyPresetLabel(
-        buildTemporalPlainDate(adapter, start.value).day,
-      );
+      return localeText.recurrenceMonthlyPresetLabel(startPlainDate.day);
     }
     case 'YEARLY': {
-      const normalDate = formatDayOfMonthAndMonthFullLetter(start.value, adapter);
+      const normalDate = formatDayOfMonthAndMonthFullLetter(
+        createLabelDate(adapter, startPlainDate),
+        adapter,
+      );
       return localeText.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':

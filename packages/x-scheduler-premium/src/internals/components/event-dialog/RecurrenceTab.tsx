@@ -36,6 +36,7 @@ import {
   createAdapterDate,
   createLabelDate,
   getEndOfDayMs,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
@@ -240,13 +241,17 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     return { start: bound('start', startResent), end: bound('end', endResent) };
   }, [adapter, occurrence, formStore, rangeValues, displayTimezone]);
   const ruleStart = ruleBounds.start;
+  const ruleStartPlainDate = React.useMemo(
+    () => toPlainDate(ruleStart.timestamp, eventTimezone),
+    [ruleStart.timestamp, eventTimezone],
+  );
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
     [adapter, eventTimezone, displayTimezone],
   );
   const monthlyRef = React.useMemo(
-    () => getMonthlyReference(adapter, ruleStart),
-    [adapter, ruleStart],
+    () => getMonthlyReference(ruleStartPlainDate),
+    [ruleStartPlainDate],
   );
 
   // A preset's draft follows the start it is built on, so the weekday or day of month shown
@@ -264,9 +269,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     formStore.setValue('rruleDraft', {
       byDay: [],
       byMonthDay: [],
-      ...schedulerRecurringEventSelectors.presets(store.state, ruleStart)![selection],
+      ...schedulerRecurringEventSelectors.presets(store.state, ruleStartPlainDate)![selection],
     });
-  }, [formStore, store, ruleStart]);
+  }, [formStore, store, ruleStart.timestamp, ruleStartPlainDate]);
   const weeklyDays = React.useMemo(
     () => getWeeklyDays(adapter, visiblePlainDate, weekStartsOn),
     [adapter, visiblePlainDate, weekStartsOn],
@@ -284,7 +289,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       ? {
           byDay: [],
           byMonthDay: [],
-          ...schedulerRecurringEventSelectors.presets(store.state, ruleStart)![newSelection],
+          ...schedulerRecurringEventSelectors.presets(store.state, ruleStartPlainDate)![
+            newSelection
+          ],
         }
       : { freq: 'WEEKLY' as const, interval: 1, byDay: [], byMonthDay: [] };
     formStore.setValues({ recurrenceSelection: newSelection, rruleDraft: newDraft });
@@ -396,7 +403,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const recurrenceOptions = ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map(
     (value) => ({
       value,
-      label: getRecurrenceLabel(adapter, ruleStart, value, localeText),
+      label: getRecurrenceLabel(adapter, ruleStartPlainDate, value, localeText),
     }),
   );
 
@@ -436,12 +443,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const ordinal = monthlyRef.ord;
     const dayOfMonthLabel = localeText.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
     const isLast = ordinal === -1;
-    const weekday = getWeekdayToken(adapter, monthlyRef.date);
-    const ariaParams = { weekday, weekdayName: adapter.format(monthlyRef.date, 'weekday') };
-    const labelParams = {
-      weekday,
-      weekdayName: adapter.format(monthlyRef.date, 'weekday3Letters'),
-    };
+    const weekday = getWeekdayToken(ruleStartPlainDate);
+    const labelDate = createLabelDate(adapter, ruleStartPlainDate);
+    const ariaParams = { weekday, weekdayName: adapter.format(labelDate, 'weekday') };
+    const labelParams = { weekday, weekdayName: adapter.format(labelDate, 'weekday3Letters') };
     const weekAriaLabel = isLast
       ? localeText.recurrenceMonthlyLastWeekAriaLabel(ariaParams)
       : localeText.recurrenceMonthlyWeekNumberAriaLabel?.({ ...ariaParams, ord: ordinal });
@@ -461,7 +466,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         label: weekLabel,
       },
     ];
-  }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, localeText]);
+  }, [adapter, ruleStartPlainDate, monthlyRef.dayOfMonth, monthlyRef.ord, localeText]);
 
   const monthlyMode: 'byMonthDay' | 'byDay' = rruleDraft.byDay?.length ? 'byDay' : 'byMonthDay';
 

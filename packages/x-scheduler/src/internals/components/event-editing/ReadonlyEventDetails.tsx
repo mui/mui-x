@@ -132,12 +132,16 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     getPrimaryResourceId(occurrence.resource),
   );
   // The rule is read in the event's timezone, the one it is expressed in.
-  const eventTimezoneStart = getEventTimezoneBound(adapter, occurrence, 'start');
+  const eventTimezone = getEventTimezone(occurrence);
+  const startPlainDate = toPlainDate(
+    getEventTimezoneBound(adapter, occurrence, 'start').timestamp,
+    eventTimezone,
+  );
   const defaultRecurrenceKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
     getOccurrenceDataTimezone(occurrence)?.rrule,
-    eventTimezoneStart,
+    startPlainDate,
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
@@ -154,14 +158,13 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     occurrence.allDay
       ? toPlainDate(bound.timestamp, boundsTimezone).toString()
       : toWallClockIsoString(bound.timestamp, boundsTimezone);
-  const eventTimezone = getEventTimezone(occurrence);
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
     [adapter, eventTimezone, displayTimezone],
   );
   const recurrenceLabel = getRecurrenceLabel(
     adapter,
-    eventTimezoneStart,
+    startPlainDate,
     defaultRecurrenceKey,
     localeText,
   );

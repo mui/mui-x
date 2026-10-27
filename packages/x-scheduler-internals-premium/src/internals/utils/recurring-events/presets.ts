@@ -1,25 +1,18 @@
-import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventPresetKey,
   RecurringEventWeekDayCode,
-  SchedulerProcessedDate,
   SchedulerProcessedEventRecurrenceRule,
   WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
-import {
-  buildTemporalPlainDate,
-  getPlainDateWeekStart,
-} from '@mui/x-scheduler-internals/internals';
+import { getPlainDateWeekStart } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
-import { getPlainDateWeekDayCode, getWeekDayCode } from './internal-utils';
+import { getPlainDateWeekDayCode } from './internal-utils';
 
 export function computePresets(
-  adapter: Adapter,
-  date: SchedulerProcessedDate,
+  plainDate: PlainDate,
 ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> {
-  const plainDate = buildTemporalPlainDate(adapter, date.value);
   return {
     DAILY: { freq: 'DAILY', interval: 1 },
     WEEKLY: { freq: 'WEEKLY', interval: 1, byDay: [getPlainDateWeekDayCode(plainDate)] },
@@ -29,9 +22,8 @@ export function computePresets(
 }
 
 export function getDefaultPresetKey(
-  adapter: Adapter,
   rule: SchedulerProcessedEventRecurrenceRule | undefined,
-  occurrenceStart: SchedulerProcessedDate,
+  occurrenceStartPlainDate: PlainDate,
 ): RecurringEventPresetKey | 'custom' | null {
   if (!rule) {
     return null;
@@ -48,7 +40,7 @@ export function getDefaultPresetKey(
     }
     case 'WEEKLY': {
       // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-      const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart.value);
+      const occurrenceStartWeekDayCode = getPlainDateWeekDayCode(occurrenceStartPlainDate);
       const byDay = rule.byDay ?? [];
       const matchesDefaultByDay =
         byDay.length === 0 || (byDay.length === 1 && byDay[0] === occurrenceStartWeekDayCode);
@@ -61,7 +53,7 @@ export function getDefaultPresetKey(
     }
     case 'MONTHLY': {
       // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-      const day = buildTemporalPlainDate(adapter, occurrenceStart.value).day;
+      const day = occurrenceStartPlainDate.day;
       const byMonthDay = rule.byMonthDay ?? [];
       const matchesDefaultByMonthDay =
         byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
@@ -93,20 +85,14 @@ export function getWeeklyDays(
   });
 }
 
-export function getMonthlyReference(
-  adapter: Adapter,
-  date: SchedulerProcessedDate,
-): {
+export function getMonthlyReference(plainDate: PlainDate): {
   dayOfMonth: number;
   code: RecurringEventWeekDayCode;
   ord: number;
-  date: TemporalSupportedObject;
 } {
-  const plainDate = buildTemporalPlainDate(adapter, date.value);
   return {
     dayOfMonth: plainDate.day,
     code: getPlainDateWeekDayCode(plainDate),
     ord: computeMonthlyOrdinal(plainDate),
-    date: date.value,
   };
 }

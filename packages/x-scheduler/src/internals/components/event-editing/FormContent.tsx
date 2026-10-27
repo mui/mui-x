@@ -35,6 +35,7 @@ import {
   getResourceSelectionMode,
   isBuiltInEventProperty,
   isEventOccurrence,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -49,6 +50,7 @@ import {
   hasProp,
   BUILT_IN_FORM_KEYS,
   getResentRangeBounds,
+  getEventTimezone,
   getEventTimezoneBound,
   getRecurrenceRuleBound,
 } from '../event-dialog/utils';
@@ -202,7 +204,10 @@ export function FormContent(props: FormContentProps) {
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
         base,
-        getEventTimezoneBound(adapter, occurrence, 'start'),
+        toPlainDate(
+          getEventTimezoneBound(adapter, occurrence, 'start').timestamp,
+          getEventTimezone(occurrence),
+        ),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -463,7 +468,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         'start',
       );
       const recurrencePresets = current.showRecurrence
-        ? schedulerRecurringEventSelectors.presets(store.state, ruleStart)
+        ? schedulerRecurringEventSelectors.presets(
+            store.state,
+            toPlainDate(ruleStart.timestamp, getEventTimezone(occurrence)),
+          )
         : null;
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
       if (recurrencePresets == null || values.recurrenceSelection === null) {

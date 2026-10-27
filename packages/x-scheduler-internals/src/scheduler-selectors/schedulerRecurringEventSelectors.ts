@@ -1,9 +1,6 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type {
-  RecurringEventPresetKey,
-  SchedulerProcessedEventRecurrenceRule,
-  SchedulerProcessedDate,
-} from '../models';
+import type { RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule } from '../models';
+import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 
 const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugin;
@@ -11,25 +8,21 @@ const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugi
 /** Memoized selectors that delegate to the recurring-events plugin. */
 export const schedulerRecurringEventSelectors = {
   presets: createSelectorMemoized(
-    (state: State) => state.adapter,
     selectRecurringEventsPlugin,
     (
-      adapter,
       recurringEventsPlugin,
-      date: SchedulerProcessedDate,
+      plainDate: PlainDate,
     ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> | null =>
-      recurringEventsPlugin?.computePresets(adapter, date) ?? null,
+      recurringEventsPlugin?.computePresets(plainDate) ?? null,
   ),
   defaultPresetKey: createSelectorMemoized(
-    (state: State) => state.adapter,
     selectRecurringEventsPlugin,
     (
-      adapter,
       recurringEventsPlugin,
       rule: SchedulerProcessedEventRecurrenceRule | undefined,
-      occurrenceStart: SchedulerProcessedDate,
+      occurrenceStartPlainDate: PlainDate,
     ): RecurringEventPresetKey | 'custom' | null =>
-      recurringEventsPlugin?.getDefaultPresetKey(adapter, rule, occurrenceStart) ?? null,
+      recurringEventsPlugin?.getDefaultPresetKey(rule, occurrenceStartPlainDate) ?? null,
   ),
   isSameRRule: (
     state: State,

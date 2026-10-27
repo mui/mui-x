@@ -1,5 +1,4 @@
 import { adapter } from 'test/utils/scheduler';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { describe, it, expect } from 'vitest';
 import { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { getMonthlyReference, getWeeklyDays } from './presets';
@@ -52,14 +51,12 @@ describe('recurring-events/presets', () => {
   });
 
   describe('getMonthlyReference', () => {
-    it('returns dayOfMonth, weekday code, ordinal and the underlying date', () => {
-      const occurrenceStart = processDate(adapter.date('2025-07-15T10:00:00Z', 'default'), adapter); // 3rd Tuesday of July 2025
-      const ref = getMonthlyReference(adapter, occurrenceStart);
+    it('returns the day of the month, the weekday code and the ordinal', () => {
+      const ref = getMonthlyReference(PlainDate.from('2025-07-15')); // 3rd Tuesday of July 2025
 
       expect(ref.dayOfMonth).to.equal(15);
       expect(ref.code).to.equal('TU');
       expect(ref.ord).to.equal(3);
-      expect(adapter.getTime(ref.date)).to.equal(adapter.getTime(occurrenceStart.value));
     });
   });
 });

@@ -1,5 +1,6 @@
 import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
+import { PlainDate } from '@mui/x-scheduler-internals/internals';
 import {
   findInvalidRangeField,
   getEditedRangeBounds,
@@ -168,15 +169,9 @@ describe('getRecurrenceTimezoneName', () => {
 });
 
 describe('getWeekdayToken', () => {
-  it("should read the weekday in the value's own timezone", () => {
-    // Monday 01:00 in Tokyo is still Sunday in UTC, the system timezone of the tests.
-    expect(getWeekdayToken(adapter, adapter.date('2025-07-07T01:00:00', 'Asia/Tokyo'))).to.equal(
-      'monday',
-    );
-    // French weeks start on Monday, so the adapter numbers Sunday last.
-    expect(getWeekdayToken(adapterFr, adapter.date('2025-07-06T12:00:00', 'UTC'))).to.equal(
-      'sunday',
-    );
+  it('should return the weekday of the plain date', () => {
+    expect(getWeekdayToken(PlainDate.from('2025-07-07'))).to.equal('monday');
+    expect(getWeekdayToken(PlainDate.from('2025-07-06'))).to.equal('sunday');
   });
 });
 

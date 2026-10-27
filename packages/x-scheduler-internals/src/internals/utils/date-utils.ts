@@ -2,11 +2,7 @@ import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/i
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
-import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-  createLabelDate,
-} from './plain-date-utils/adapter';
+import { createAdapterDate, createLabelDate } from './plain-date-utils/adapter';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
 
@@ -82,14 +78,6 @@ export function getOccurrenceEnd({
 }): TemporalSupportedObject {
   const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
   return adapter.addMilliseconds(occurrenceStart, durationMs);
-}
-
-/**
- * The JS weekday (0=Sun … 6=Sat) of a date, read in its own timezone.
- */
-export function getJsDayOfWeek(adapter: Adapter, date: TemporalSupportedObject): number {
-  // ISO weekdays go from 1 (Monday) to 7 (Sunday).
-  return buildTemporalPlainDate(adapter, date).dayOfWeek % 7;
 }
 
 function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
