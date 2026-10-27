@@ -22,11 +22,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn
-              value={buildTemporalPlainDate(adapter, day)}
-              start={adapter.getTime(adapter.startOfDay(day))}
-              end={adapter.getTime(adapter.endOfDay(day))}
-            >
+            <CalendarGrid.TimeColumn value={buildTemporalPlainDate(adapter, day)}>
               {node}
             </CalendarGrid.TimeColumn>
           </CalendarGrid.Root>
@@ -51,11 +47,7 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
         renderAtNow(
           <EventCalendarProvider events={[]} displayTimezone="America/New_York">
             <CalendarGrid.Root>
-              <CalendarGrid.TimeColumn
-                value={buildTemporalPlainDate(adapter, columnDay)}
-                start={adapter.getTime(adapter.startOfDay(columnDay))}
-                end={adapter.getTime(adapter.endOfDay(columnDay))}
-              >
+              <CalendarGrid.TimeColumn value={buildTemporalPlainDate(adapter, columnDay)}>
                 <CalendarGrid.CurrentTimeIndicator data-testid="indicator" />
               </CalendarGrid.TimeColumn>
             </CalendarGrid.Root>

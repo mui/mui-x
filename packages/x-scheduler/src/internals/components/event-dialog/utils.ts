@@ -5,7 +5,6 @@ import type {
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
-  SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
@@ -14,7 +13,6 @@ import {
   createAdapterDate,
   createEndOfPlainDate,
   createLabelDate,
-  createProcessedDate,
   getOccurrenceDataTimezone,
   MS_PER_DAY,
   PlainDate,
@@ -340,17 +338,25 @@ export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence)
 }
 
 /**
- * A bound of the occurrence in the event's timezone.
+ * The timestamp of a bound of the occurrence's event. All-day display bounds are aligned on the
+ * days of the display timezone, so the bound stored in the event's timezone comes first.
  */
-export function getEventTimezoneBound(
-  adapter: Adapter,
+export function getEventBoundTimestamp(
   occurrence: SchedulerRenderableEventOccurrence,
   bound: 'start' | 'end',
-): SchedulerProcessedDate {
-  return (
-    getOccurrenceDataTimezone(occurrence)?.[bound] ??
-    createProcessedDate(adapter, occurrence.displayTimezone[bound].timestamp, 'default')
-  );
+): number {
+  return (getOccurrenceDataTimezone(occurrence)?.[bound] ?? occurrence.displayTimezone[bound])
+    .timestamp;
+}
+
+/**
+ * The date of an instant in the event's timezone, the one its recurrence rule is expressed in.
+ */
+export function getEventTimezonePlainDate(
+  occurrence: SchedulerRenderableEventOccurrence,
+  timestamp: number,
+): PlainDate {
+  return toPlainDate(timestamp, getEventTimezone(occurrence));
 }
 
 /**
@@ -371,23 +377,21 @@ export function getResentRangeBounds(
 }
 
 /**
- * A bound of the range the event ends up with, in the event's timezone: the submitted one when
- * the save resends it, the occurrence's own otherwise (also while an edited date does not parse).
- * The recurrence rule is built on these bounds.
+ * The timestamp of a bound of the range the event ends up with: the submitted one when the save
+ * resends it, the occurrence's own otherwise (also while an edited date does not parse). The
+ * recurrence rule is built on these bounds, read in the event's timezone.
  */
 export function getRecurrenceRuleBound(
-  adapter: Adapter,
   occurrence: SchedulerRenderableEventOccurrence,
   values: Pick<EventDialogFormValues, RangeFormKey>,
   resent: boolean,
   displayTimezone: TemporalTimezone,
   bound: 'start' | 'end',
-): SchedulerProcessedDate {
+): number {
   if (!resent || findInvalidRangeField(values, displayTimezone) != null) {
-    return getEventTimezoneBound(adapter, occurrence, bound);
+    return getEventBoundTimestamp(occurrence, bound);
   }
-  const range = computeRange(values, displayTimezone);
-  return createProcessedDate(adapter, range[bound], getEventTimezone(occurrence));
+  return computeRange(values, displayTimezone)[bound];
 }
 
 /**

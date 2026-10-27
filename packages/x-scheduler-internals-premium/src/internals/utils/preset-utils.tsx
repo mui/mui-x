@@ -36,16 +36,16 @@ const formatMonthAndYear: FormatDate = (adapter, plainDate) => {
 
 /**
  * The range and the navigation of a preset made of `unitCount` periods of a `unit`, like days or
- * months. The range starts on the first day of the period of the visible date, `getPeriodStart()`,
- * and ends before the period that follows the last one.
+ * months. The range starts on the first day of the period of the visible date,
+ * `getStartPlainDate()`, and ends before the period that follows the last one.
  */
 function createPlainDateRange(
   unit: keyof PlainDateDuration,
-  getPeriodStart: (plainDate: PlainDate) => PlainDate = (plainDate) => plainDate,
+  getStartPlainDate: PresetDefinition['getStartPlainDate'] = (_adapter, plainDate) => plainDate,
 ): Pick<PresetDefinition, 'getStartPlainDate' | 'getEndPlainDate' | 'navigate'> {
   const toDuration = (amount: number) => ({ [unit]: amount }) as PlainDateDuration;
   return {
-    getStartPlainDate: (_adapter, visiblePlainDate) => getPeriodStart(visiblePlainDate),
+    getStartPlainDate,
     getEndPlainDate: (startPlainDate, unitCount) => startPlainDate.add(toDuration(unitCount)),
     navigate: (adapter, date, amount) => addToAdapterDate(adapter, date, toDuration(amount)),
   };
@@ -65,10 +65,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'hour',
     tickWidth: 64,
     headers: [
-      {
-        unit: 'day',
-        renderCell: ({ adapter, plainDate }) => formatWeekDayMonthAndDayOfMonth(adapter, plainDate),
-      },
+      { unit: 'day', formatDate: formatWeekDayMonthAndDayOfMonth },
       {
         unit: 'hour',
         // The hour row ticks in hours, so `iterate()` sets `wallClockHour` on all its cells.
@@ -115,14 +112,12 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       },
       {
         unit: 'day',
-        renderCell: ({ adapter, plainDate }) =>
+        formatDate: (adapter, plainDate) =>
           adapter.format(createLabelDate(adapter, plainDate), 'weekday1Letter'),
       },
     ],
     unitCount: 16, // 16 weeks
-    ...createPlainDateRange('weeks'),
-    getStartPlainDate: (adapter, visiblePlainDate, weekStartsOn) =>
-      getPlainDateWeekStart(adapter, visiblePlainDate, weekStartsOn),
+    ...createPlainDateRange('weeks', getPlainDateWeekStart),
     getCssUnitCount: getDayCount,
   },
   monthAndYear: {
@@ -133,7 +128,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       { unit: 'month', formatDate: formatMonth3Letters },
     ],
     unitCount: 3 * 12, // 3 years
-    ...createPlainDateRange('months', (plainDate) => plainDate.with({ day: 1 })),
+    ...createPlainDateRange('months', (_adapter, plainDate) => plainDate.with({ day: 1 })),
     getCssUnitCount: getDayCount,
   },
   year: {
@@ -141,7 +136,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     tickWidth: 200,
     headers: [{ unit: 'year', formatDate: formatYear }],
     unitCount: 30, // 30 years
-    ...createPlainDateRange('years', (plainDate) => plainDate.with({ month: 1, day: 1 })),
+    ...createPlainDateRange('years', (_adapter, plainDate) => plainDate.with({ month: 1, day: 1 })),
   },
 };
 

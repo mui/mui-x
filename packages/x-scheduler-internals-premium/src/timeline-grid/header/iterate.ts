@@ -1,18 +1,12 @@
-import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
   getPlainDateWeekStart,
-  getStartOfDayMs,
   getTimelineAxisOffsetMs,
   MS_PER_DAY,
   plainDateFromDayNumber,
-  toLocalMs,
 } from '@mui/x-scheduler-internals/internals';
-import type {
-  PlainDate,
-  TimelineAxis,
-  TimelineAxisWindow,
-} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate, TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
 
 const MINUTE_MS = 60_000;
@@ -26,20 +20,28 @@ function toPlainDate(localMs: number): PlainDate {
 }
 
 /**
- * Cells are walked on the wall clock of the timezone of the axis: their bounds are wall-clock
- * times, in milliseconds since 1970-01-01T00:00 of the wall clock, and they hold the dates of
- * those times. A date or an hour that a DST transition skips keeps its cell.
- * The hour window of the axis only applies when the ticks are hours.
+ * The range a header walks: its first date, the date after its last one, and the hour window of
+ * each day.
+ */
+export interface IteratedRange extends TimelineAxisWindow {
+  startPlainDate: PlainDate;
+  endPlainDate: PlainDate;
+}
+
+/**
+ * Cells are walked on the wall clock: their bounds are wall-clock times, in milliseconds since
+ * 1970-01-01T00:00 of the wall clock, and they hold the dates of those times. A date or an hour
+ * that a DST transition skips keeps its cell, as the walk reads no timezone.
+ * The hour window of the range only applies when the ticks are hours.
  */
 export function iterate(
   adapter: TemporalAdapter,
   unit: PresetHeaderUnit,
   tickUnit: PresetHeaderUnit,
-  axis: TimelineAxis,
+  range: IteratedRange,
   weekStartsOn?: WeekStartsOn,
 ): IteratedCell[] {
-  const { start: rangeStart, end: rangeEnd, timezone } = axis;
-  if (rangeEnd < rangeStart) {
+  if (range.endPlainDate.dayNumber <= range.startPlainDate.dayNumber) {
     throw new Error(
       `MUI X Scheduler: TimelineGridHeader.iterate() received a range where rangeEnd is before rangeStart. ` +
         `The iteration would silently produce an empty header, masking the misconfiguration. ` +
@@ -47,20 +49,19 @@ export function iterate(
     );
   }
 
-  const rangeStartLocalMs = getRangeStartLocalMs(rangeStart, timezone);
+  const rangeStartLocalMs = range.startPlainDate.dayNumber * MS_PER_DAY;
 
-  // `rangeEnd` is inclusive (e.g. `endOfDay` = 23:59:59.999). Floor it to the
-  // tick boundary and add one tick to get an exclusive end the loop can compare
-  // against without depending on millisecond precision.
+  // The last tick holds the last date of the range: floor that date to the tick boundary and add
+  // one tick to get an exclusive end.
   const rangeEndExclusive = addUnit(
-    startOf(adapter, rangeEnd, tickUnit, weekStartsOn, timezone),
+    startOf(adapter, range.endPlainDate.dayNumber * MS_PER_DAY - 1, tickUnit, weekStartsOn),
     tickUnit,
     1,
   );
 
   // Hour ticks are a wall-clock grid: every day contributes the same columns whatever
   // its real hours are, so spans are measured on the axis rather than in elapsed hours.
-  const appliedHourWindow = tickUnit === 'hour' ? axis : undefined;
+  const appliedHourWindow = tickUnit === 'hour' ? range : undefined;
 
   // `appliedHourWindow` is only set when the ticks are hours, so this is the hour row.
   if (unit === 'hour' && appliedHourWindow) {
@@ -68,7 +69,7 @@ export function iterate(
   }
 
   const cells: IteratedCell[] = [];
-  let cursor = startOf(adapter, rangeStart, unit, weekStartsOn, timezone);
+  let cursor = startOf(adapter, rangeStartLocalMs, unit, weekStartsOn);
   let index = 0;
 
   while (cursor < rangeEndExclusive) {
@@ -102,18 +103,6 @@ export function iterate(
   }
 
   return cells;
-}
-
-/**
- * The wall-clock time of `rangeStart`. A range starting on the first instant of a day
- * whose midnight is skipped by a DST transition (e.g. `startOfDay` of March 8th, 2026 in
- * America/Havana, at 01:00) starts at the midnight of that day, so its first day stays whole.
- */
-function getRangeStartLocalMs(rangeStart: number, timezone: TemporalTimezone): number {
-  const localMs = toLocalMs(rangeStart, timezone);
-  return getStartOfDayMs(rangeStart, timezone) === rangeStart
-    ? Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY
-    : localMs;
 }
 
 /**
@@ -177,16 +166,14 @@ function iterateHourCells(
 }
 
 /**
- * The wall-clock start of the unit containing `timestamp`, read in `timezone`.
+ * The wall-clock start of the unit containing `localMs`, a wall-clock time.
  */
 function startOf(
   adapter: TemporalAdapter,
-  timestamp: number,
+  localMs: number,
   unit: PresetHeaderUnit,
   weekStartsOn: WeekStartsOn | undefined,
-  timezone: TemporalTimezone,
 ): number {
-  const localMs = toLocalMs(timestamp, timezone);
   switch (unit) {
     case 'hour':
       return Math.floor(localMs / HOUR_MS) * HOUR_MS;

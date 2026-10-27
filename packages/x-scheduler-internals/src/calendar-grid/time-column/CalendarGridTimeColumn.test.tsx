@@ -12,15 +12,12 @@ import {
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
-import { createAdapterDate } from '../../internals/utils/plain-date-utils/adapter';
+import { buildTemporalPlainDate, PlainDate } from '@mui/x-scheduler-internals/internals';
 
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.now('default');
-  const start = adapter.startOfDay(day);
-  const end = adapter.endOfDay(day);
+  const plainDate = buildTemporalPlainDate(adapter, adapter.now('default'));
 
   function TimeColumnWrapper({
     children,
@@ -33,33 +30,21 @@ describe('<CalendarGrid.TimeColumn />', () => {
     );
   }
 
-  describeConformance(
-    <CalendarGrid.TimeColumn
-      value={buildTemporalPlainDate(adapter, start)}
-      start={adapter.getTime(start)}
-      end={adapter.getTime(end)}
-    />,
-    () => ({
-      refInstanceof: window.HTMLDivElement,
-      render: (node) => render(<TimeColumnWrapper>{node}</TimeColumnWrapper>),
-    }),
-  );
+  describeConformance(<CalendarGrid.TimeColumn value={plainDate} />, () => ({
+    refInstanceof: window.HTMLDivElement,
+    render: (node) => render(<TimeColumnWrapper>{node}</TimeColumnWrapper>),
+  }));
 
   describe('pointer interactions', () => {
     it('should start a creation on the previous half hour of the wall clock of the display timezone', () => {
       let store: AnyEventCalendarStore | null = null;
       // Asia/Kathmandu is 5:45 ahead of UTC, so its half hours aren't the half hours of UTC.
       const timezone = 'Asia/Kathmandu';
-      const columnStart = createAdapterDate(adapter, Date.UTC(2025, 6, 2, 18, 15), timezone);
-      const columnEnd = createAdapterDate(adapter, Date.UTC(2025, 6, 3, 18, 15) - 1, timezone);
 
       render(
         <TimeColumnWrapper displayTimezone={timezone}>
-          <CalendarGrid.TimeColumn
-            value={buildTemporalPlainDate(adapter, columnStart)}
-            start={adapter.getTime(columnStart)}
-            end={adapter.getTime(columnEnd)}
-          />
+          {/* July 3rd starts at 18:15 UTC on July 2nd in Kathmandu. */}
+          <CalendarGrid.TimeColumn value={PlainDate.from('2025-07-03')} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -87,11 +72,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const { user } = render(
         <TimeColumnWrapper>
-          <CalendarGrid.TimeColumn
-            value={buildTemporalPlainDate(adapter, start)}
-            start={adapter.getTime(start)}
-            end={adapter.getTime(end)}
-          />
+          <CalendarGrid.TimeColumn value={plainDate} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -115,11 +96,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const { user } = render(
         <TimeColumnWrapper eventCreation={false}>
-          <CalendarGrid.TimeColumn
-            value={buildTemporalPlainDate(adapter, start)}
-            start={adapter.getTime(start)}
-            end={adapter.getTime(end)}
-          />
+          <CalendarGrid.TimeColumn value={plainDate} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {

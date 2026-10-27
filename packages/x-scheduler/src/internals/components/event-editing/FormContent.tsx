@@ -20,7 +20,6 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
@@ -35,7 +34,6 @@ import {
   getResourceSelectionMode,
   isBuiltInEventProperty,
   isEventOccurrence,
-  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import { useEventEditingOptionalRenderers } from './EventEditingOptionalRenderersContext';
@@ -50,8 +48,8 @@ import {
   hasProp,
   BUILT_IN_FORM_KEYS,
   getResentRangeBounds,
-  getEventTimezone,
-  getEventTimezoneBound,
+  getEventBoundTimestamp,
+  getEventTimezonePlainDate,
   getRecurrenceRuleBound,
 } from '../event-dialog/utils';
 import EventDialogHeader from '../event-dialog/EventDialogHeader';
@@ -143,7 +141,6 @@ interface FormContentProps {
 export function FormContent(props: FormContentProps) {
   const { occurrence } = props;
 
-  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
   const pushPlaceholder = usePushPlaceholder();
 
@@ -204,10 +201,7 @@ export function FormContent(props: FormContentProps) {
       recurrenceSelection: schedulerRecurringEventSelectors.defaultPresetKey(
         store.state,
         base,
-        toPlainDate(
-          getEventTimezoneBound(adapter, occurrence, 'start').timestamp,
-          getEventTimezone(occurrence),
-        ),
+        getEventTimezonePlainDate(occurrence, getEventBoundTimestamp(occurrence, 'start')),
       ),
       rruleDraft: {
         freq: (base?.freq ?? 'WEEKLY') as RecurringEventFrequency,
@@ -460,7 +454,6 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // A preset is built on the start the event ends up with, in the event's timezone; the
       // Recurrence tab derives its labels and drafts from the same start.
       const ruleStart = getRecurrenceRuleBound(
-        current.adapter,
         occurrence,
         values,
         startResent,
@@ -470,7 +463,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       const recurrencePresets = current.showRecurrence
         ? schedulerRecurringEventSelectors.presets(
             store.state,
-            toPlainDate(ruleStart.timestamp, getEventTimezone(occurrence)),
+            getEventTimezonePlainDate(occurrence, ruleStart),
           )
         : null;
       let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;

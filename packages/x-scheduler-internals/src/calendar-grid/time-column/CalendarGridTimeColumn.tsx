@@ -13,7 +13,7 @@ import {
   floorToWallClockMinutes,
   toEpochMs,
 } from '../../internals/utils/plain-date-utils/timeZone';
-import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
+import { FULL_DAY_MINUTES, getPlainDateWindowBounds } from '../../internals/utils/timeline-axis';
 import type { TimelineAxis } from '../../internals/utils/timeline-axis';
 import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
@@ -35,8 +35,6 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     style,
     // Internal props
     value,
-    start,
-    end,
     dayStartMinute = 0,
     dayEndMinute = FULL_DAY_MINUTES,
     addPropertiesToDroppedEvent,
@@ -59,9 +57,15 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     focusedCell?.columnIndex === index;
 
   const axis: TimelineAxis = React.useMemo(
-    () => ({ start, end, timezone: displayTimezone, dayStartMinute, dayEndMinute }),
-    [start, end, displayTimezone, dayStartMinute, dayEndMinute],
+    () => ({
+      ...getPlainDateWindowBounds(value, { dayStartMinute, dayEndMinute }, displayTimezone),
+      timezone: displayTimezone,
+      dayStartMinute,
+      dayEndMinute,
+    }),
+    [value, displayTimezone, dayStartMinute, dayEndMinute],
   );
+  const { start, end } = axis;
 
   const {
     getCursorPositionInElementMs,
@@ -186,15 +190,6 @@ export namespace CalendarGridTimeColumn {
      * The date of the column, in the display timezone.
      */
     value: PlainDate;
-    /**
-     * The first instant of the column, as a timestamp read in the display timezone.
-     */
-    start: number;
-    /**
-     * The end of the column, as a timestamp read in the display timezone: the last instant of its
-     * day when the whole day is displayed, otherwise the exclusive end of its hour window.
-     */
-    end: number;
     /**
      * First displayed minute of the day, as an offset from midnight.
      * Derived from the view's whole-hour window so it stays aligned with the

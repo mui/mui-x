@@ -90,6 +90,9 @@ export const eventTimelinePremiumPresetSelectors = {
 
       return {
         ...axis,
+        // The dates of the range, which the header walks.
+        startPlainDate,
+        endPlainDate,
         tickCount,
         tickWidth,
         headers,

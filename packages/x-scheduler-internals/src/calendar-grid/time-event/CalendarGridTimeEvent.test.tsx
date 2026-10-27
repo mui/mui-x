@@ -17,11 +17,7 @@ describe('<CalendarGrid.TimeEvent />', () => {
     return render(
       <EventCalendarProvider events={[]}>
         <CalendarGrid.Root>
-          <CalendarGrid.TimeColumn
-            value={buildTemporalPlainDate(adapter, eventStart.value)}
-            start={eventStart.timestamp}
-            end={eventEnd.timestamp}
-          >
+          <CalendarGrid.TimeColumn value={buildTemporalPlainDate(adapter, eventStart.value)}>
             {node}
           </CalendarGrid.TimeColumn>
         </CalendarGrid.Root>

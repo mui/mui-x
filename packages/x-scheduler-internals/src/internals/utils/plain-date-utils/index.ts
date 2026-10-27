@@ -21,7 +21,6 @@ export {
   createLabelDate,
   createProcessedDate,
   createStartOfPlainDate,
-  getDateKey,
   moveToPlainDate,
   normalizeAllDayBounds,
 } from './adapter';

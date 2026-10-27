@@ -35,7 +35,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
   // The header re-renders on every horizontal scroll (it subscribes to the
-  // virtualizer's render context): only recompute the cell walk when the range
+  // virtualizer's render context): only recompute the cell walk and the labels when the range
   // actually changes.
   const cellsPerLevel = React.useMemo(
     () =>
@@ -43,6 +43,18 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
         iterate(adapter, level.unit, config.timeResolution, config, weekStartsOn),
       ),
     [adapter, config, weekStartsOn],
+  );
+  // Indexed like the cells of each level.
+  const labelsPerLevel = React.useMemo(
+    () =>
+      config.headers.map((level, levelIndex) =>
+        cellsPerLevel[levelIndex].map((cell) =>
+          level.renderCell
+            ? level.renderCell({ ...cell, adapter, ampm, level: levelIndex, unit: level.unit })
+            : level.formatDate(adapter, cell.plainDate),
+        ),
+      ),
+    [adapter, ampm, cellsPerLevel, config.headers],
   );
 
   const children = headers.map((level, levelIndex) => {
@@ -82,21 +94,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
             style={{ '--span': cell.spanInTicks } as React.CSSProperties}
           >
             <time className={classNames?.label} dateTime={getCellDateTime(cell)}>
-              {level.renderCell
-                ? level.renderCell({
-                    adapter,
-                    ampm,
-                    plainDate: cell.plainDate,
-                    firstPlainDate: cell.firstPlainDate,
-                    lastPlainDate: cell.lastPlainDate,
-                    index: cell.index,
-                    key: cell.key,
-                    level: levelIndex,
-                    spanInTicks: cell.spanInTicks,
-                    unit: level.unit,
-                    wallClockHour: cell.wallClockHour,
-                  })
-                : level.formatDate(adapter, cell.plainDate)}
+              {labelsPerLevel[levelIndex][cell.index]}
             </time>
           </div>
         ))}

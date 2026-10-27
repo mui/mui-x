@@ -1,7 +1,8 @@
-import { adapter, createTimelineAxis } from 'test/utils/scheduler';
+import { adapter } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
+import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { PresetHeaderUnit } from '../../models';
 import { iterate } from './iterate';
@@ -14,8 +15,13 @@ function iterateRange(
   weekStartsOn?: WeekStartsOn,
   hourWindow: TimelineAxisWindow = { dayStartMinute: 0, dayEndMinute: 1440 },
 ) {
-  const axis = createTimelineAxis({ start, end, ...hourWindow });
-  return iterate(adapter, unit, tickUnit, axis, weekStartsOn);
+  // The ranges of the tests run from the first instant of a date to the last instant of a date.
+  const range = {
+    startPlainDate: buildTemporalPlainDate(adapter, start),
+    endPlainDate: buildTemporalPlainDate(adapter, end).add({ days: 1 }),
+    ...hourWindow,
+  };
+  return iterate(adapter, unit, tickUnit, range, weekStartsOn);
 }
 
 describe('iterate()', () => {

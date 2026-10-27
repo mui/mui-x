@@ -27,7 +27,8 @@ import {
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
   getEventTimezone,
-  getEventTimezoneBound,
+  getEventBoundTimestamp,
+  getEventTimezonePlainDate,
   getRecurrenceLabel,
   getRecurrenceTimezoneName,
   hasProp,
@@ -133,9 +134,9 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   );
   // The rule is read in the event's timezone, the one it is expressed in.
   const eventTimezone = getEventTimezone(occurrence);
-  const startPlainDate = toPlainDate(
-    getEventTimezoneBound(adapter, occurrence, 'start').timestamp,
-    eventTimezone,
+  const startPlainDate = React.useMemo(
+    () => getEventTimezonePlainDate(occurrence, getEventBoundTimestamp(occurrence, 'start')),
+    [occurrence],
   );
   const defaultRecurrenceKey = useStore(
     store,
@@ -162,11 +163,9 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
     [adapter, eventTimezone, displayTimezone],
   );
-  const recurrenceLabel = getRecurrenceLabel(
-    adapter,
-    startPlainDate,
-    defaultRecurrenceKey,
-    localeText,
+  const recurrenceLabel = React.useMemo(
+    () => getRecurrenceLabel(adapter, startPlainDate, defaultRecurrenceKey, localeText),
+    [adapter, startPlainDate, defaultRecurrenceKey, localeText],
   );
 
   return (

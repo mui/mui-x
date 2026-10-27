@@ -36,7 +36,6 @@ import {
   createAdapterDate,
   createLabelDate,
   getEndOfDayMs,
-  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
@@ -49,6 +48,7 @@ import {
   getWeekdayToken,
   getEventTimezone,
   getResentRangeBounds,
+  getEventTimezonePlainDate,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
   getRecurrenceUntil,
@@ -237,13 +237,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       displayTimezoneMoved,
     );
     const bound = (name: 'start' | 'end', resent: boolean) =>
-      getRecurrenceRuleBound(adapter, occurrence, rangeValues, resent, displayTimezone, name);
+      getRecurrenceRuleBound(occurrence, rangeValues, resent, displayTimezone, name);
     return { start: bound('start', startResent), end: bound('end', endResent) };
-  }, [adapter, occurrence, formStore, rangeValues, displayTimezone]);
+  }, [occurrence, formStore, rangeValues, displayTimezone]);
   const ruleStart = ruleBounds.start;
   const ruleStartPlainDate = React.useMemo(
-    () => toPlainDate(ruleStart.timestamp, eventTimezone),
-    [ruleStart.timestamp, eventTimezone],
+    () => getEventTimezonePlainDate(occurrence, ruleStart),
+    [occurrence, ruleStart],
   );
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
@@ -256,12 +256,12 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   // A preset's draft follows the start it is built on, so the weekday or day of month shown
   // checked is the one the save stores; a custom rule is the user's own pick and is kept.
-  const previousRuleStartRef = React.useRef(ruleStart.timestamp);
+  const previousRuleStartRef = React.useRef(ruleStart);
   React.useEffect(() => {
-    if (previousRuleStartRef.current === ruleStart.timestamp) {
+    if (previousRuleStartRef.current === ruleStart) {
       return;
     }
-    previousRuleStartRef.current = ruleStart.timestamp;
+    previousRuleStartRef.current = ruleStart;
     const selection = formStore.state.values.recurrenceSelection;
     if (selection == null || selection === 'custom') {
       return;
@@ -271,7 +271,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       byMonthDay: [],
       ...schedulerRecurringEventSelectors.presets(store.state, ruleStartPlainDate)![selection],
     });
-  }, [formStore, store, ruleStart.timestamp, ruleStartPlainDate]);
+  }, [formStore, store, ruleStart, ruleStartPlainDate]);
   const weeklyDays = React.useMemo(
     () => getWeeklyDays(adapter, visiblePlainDate, weekStartsOn),
     [adapter, visiblePlainDate, weekStartsOn],
@@ -328,7 +328,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         // The end of the event's last day, in its own timezone.
         const until = createAdapterDate(
           adapter,
-          getEndOfDayMs(ruleBounds.end.timestamp, eventTimezone),
+          getEndOfDayMs(ruleBounds.end, eventTimezone),
           eventTimezone,
         );
         updateCustomDraft({ until, count: undefined });
@@ -400,11 +400,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(rruleDraft);
 
-  const recurrenceOptions = ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map(
-    (value) => ({
-      value,
-      label: getRecurrenceLabel(adapter, ruleStartPlainDate, value, localeText),
-    }),
+  const recurrenceOptions = React.useMemo(
+    () =>
+      ([null, 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY', 'custom'] as const).map((value) => ({
+        value,
+        label: getRecurrenceLabel(adapter, ruleStartPlainDate, value, localeText),
+      })),
+    [adapter, ruleStartPlainDate, localeText],
   );
 
   const recurrenceFrequencyOptions: {
@@ -466,7 +468,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         label: weekLabel,
       },
     ];
-  }, [adapter, ruleStartPlainDate, monthlyRef.dayOfMonth, monthlyRef.ord, localeText]);
+  }, [adapter, ruleStartPlainDate, monthlyRef, localeText]);
 
   const monthlyMode: 'byMonthDay' | 'byDay' = rruleDraft.byDay?.length ? 'byDay' : 'byMonthDay';
 

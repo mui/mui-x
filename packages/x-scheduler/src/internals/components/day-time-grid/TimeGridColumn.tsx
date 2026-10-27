@@ -3,9 +3,8 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import {
-  getEndOfDayMs,
+  getPlainDateWindowBounds,
   isWeekendPlainDate,
-  toEpochMs,
   useCalendarGridTimeColumnContext,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
@@ -77,24 +76,19 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   backgroundColor: (theme.vars || theme).palette.primary.main,
 }));
 
-const HOUR_MS = 3_600_000;
-
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  // Built on the wall clock like the axis of the column.
+  const dayStartMinute = startTime * 60;
+  const dayEndMinute = endTime * 60;
+  // The bounds of the column, which builds them the same way.
   const { start, end } = React.useMemo(
-    () => ({
-      start: toEpochMs(day.plainDate, startTime * HOUR_MS, displayTimezone),
-      end:
-        endTime === 24
-          ? getEndOfDayMs(day.timestamp, displayTimezone)
-          : toEpochMs(day.plainDate, endTime * HOUR_MS, displayTimezone),
-    }),
-    [day.plainDate, day.timestamp, displayTimezone, startTime, endTime],
+    () =>
+      getPlainDateWindowBounds(day.plainDate, { dayStartMinute, dayEndMinute }, displayTimezone),
+    [day.plainDate, dayStartMinute, dayEndMinute, displayTimezone],
   );
 
   // Only place occurrences that overlap the visible `[start, end)` window. Occurrences entirely
@@ -119,10 +113,8 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
     <DayTimeGridColumn
       className={classes.dayTimeGridColumn}
       value={day.plainDate}
-      start={start}
-      end={end}
-      dayStartMinute={startTime * 60}
-      dayEndMinute={endTime * 60}
+      dayStartMinute={dayStartMinute}
+      dayEndMinute={dayEndMinute}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
       data-weekend={isWeekendPlainDate(day.plainDate) || undefined}

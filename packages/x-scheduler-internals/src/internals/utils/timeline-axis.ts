@@ -1,7 +1,9 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { MS_PER_DAY } from './base-temporal/iso';
+import type { PlainDate } from './base-temporal/PlainDate';
 import {
   localToEpochMs,
+  toEpochMs,
   toLocalDayNumber,
   toLocalMs,
   toMsInDay,
@@ -45,6 +47,23 @@ export interface TimelineAxis extends TimelineAxisWindow {
    * The timezone the days and the wall-clock times of the axis are read in.
    */
   timezone: TemporalTimezone;
+}
+
+/**
+ * The bounds of the hour window of a date in `timezone`: its first displayed instant, and the last
+ * instant of the date when the window runs to the end of the day, otherwise the exclusive end of
+ * the window. The bounds of a column of the time grid.
+ */
+export function getPlainDateWindowBounds(
+  plainDate: PlainDate,
+  window: TimelineAxisWindow,
+  timezone: TemporalTimezone,
+): { start: number; end: number } {
+  const endMs = toEpochMs(plainDate, window.dayEndMinute * MINUTE_MS, timezone);
+  return {
+    start: toEpochMs(plainDate, window.dayStartMinute * MINUTE_MS, timezone),
+    end: window.dayEndMinute === FULL_DAY_MINUTES ? endMs - 1 : endMs,
+  };
 }
 
 export function isFullDayAxisWindow(axis: TimelineAxisWindow) {

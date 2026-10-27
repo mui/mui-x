@@ -5,6 +5,7 @@ import { getPlainDateWeekStart, getWeekNumber } from './date-utils';
 import { normalizeAllDayBounds } from './plain-date-utils/adapter';
 
 const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
+const wednesdayPlainDate = PlainDate.from('2025-01-08');
 
 describe('date-utils', () => {
   describe('normalizeAllDayBounds', () => {
@@ -73,22 +74,22 @@ describe('date-utils', () => {
     ] as const)(
       'returns $expected for Wednesday, January 8th, 2025 when weekStartsOn is $weekStartsOn',
       ({ weekStartsOn, expected }) => {
-        expect(
-          getPlainDateWeekStart(adapter, PlainDate.from('2025-01-08'), weekStartsOn),
-        ).toEqualPlainDate(expected);
+        expect(getPlainDateWeekStart(adapter, wednesdayPlainDate, weekStartsOn)).toEqualPlainDate(
+          expected,
+        );
       },
     );
   });
 
   describe('getWeekNumber', () => {
     it('delegates to adapter.getWeekNumber when weekStartsOn is undefined', () => {
-      const result = getWeekNumber(adapter, PlainDate.from('2025-01-08'), undefined);
+      const result = getWeekNumber(adapter, wednesdayPlainDate, undefined);
       expect(result).to.equal(adapter.getWeekNumber(wednesday));
     });
 
     it('returns week 2 for 2025-01-08 (Wednesday) with weekStartsOn=1 (ISO Mon)', () => {
       // ISO week 2 of 2025: Mon 2025-01-06 – Sun 2025-01-12
-      const result = getWeekNumber(adapter, PlainDate.from('2025-01-08'), 1);
+      const result = getWeekNumber(adapter, wednesdayPlainDate, 1);
       expect(result).to.equal(2);
     });
 
@@ -109,22 +110,22 @@ describe('date-utils', () => {
 
     it('returns week 2 for 2025-01-08 with weekStartsOn=0 (Sun)', () => {
       // Sun-week 2: week starts Sun Jan 5 2025; midpoint Wed Jan 8 is in 2025 => week 2.
-      const result = getWeekNumber(adapter, PlainDate.from('2025-01-08'), 0);
+      const result = getWeekNumber(adapter, wednesdayPlainDate, 0);
       expect(result).to.equal(2);
     });
   });
 
   describe('runtime guards', () => {
     it('getPlainDateWeekStart throws in dev when weekStartsOn is out of range', () => {
-      expect(() => getPlainDateWeekStart(adapter, PlainDate.from('2025-01-08'), 7 as any)).to.throw(
+      expect(() => getPlainDateWeekStart(adapter, wednesdayPlainDate, 7 as any)).to.throw(
         /weekStartsOn/,
       );
     });
 
     it('getPlainDateWeekStart throws in dev when weekStartsOn is a float', () => {
-      expect(() =>
-        getPlainDateWeekStart(adapter, PlainDate.from('2025-01-08'), 1.5 as any),
-      ).to.throw(/weekStartsOn/);
+      expect(() => getPlainDateWeekStart(adapter, wednesdayPlainDate, 1.5 as any)).to.throw(
+        /weekStartsOn/,
+      );
     });
   });
 });

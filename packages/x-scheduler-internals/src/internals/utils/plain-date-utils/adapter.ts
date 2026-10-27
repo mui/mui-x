@@ -47,9 +47,9 @@ export function createStartOfPlainDate(
 }
 
 /**
- * Creates the adapter value of the midnight of a plain date in UTC, to format the labels of the
- * date. UTC skips no date, unlike a timezone that skips a midnight or a whole date, like
- * December 30th, 2011 in Pacific/Apia.
+ * Creates the adapter value of the midnight of a plain date in UTC, to format the date or read the
+ * fields that depend on the locale, like its week number. UTC skips no date, unlike a timezone that
+ * skips a midnight or a whole date, like December 30th, 2011 in Pacific/Apia.
  */
 export function createLabelDate(adapter: Adapter, plainDate: PlainDate): TemporalSupportedObject {
   return createStartOfPlainDate(adapter, plainDate, 'UTC');

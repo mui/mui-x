@@ -2,12 +2,14 @@ import { adapter, createTimelineAxis, setSystemTimezone } from 'test/utils/sched
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import {
+  getPlainDateWindowBounds,
   getTimelineAxisDurationMs,
   timelineAxisOffsetToTimestamp,
   timestampToTimelineAxisOffsetMs,
   isStartMinuteOutsideAxisWindow,
   isEndMinuteOutsideAxisWindow,
 } from './timeline-axis';
+import { PlainDate } from './base-temporal/PlainDate';
 
 const MINUTE = 60_000;
 
@@ -18,6 +20,32 @@ describe('timeline-axis', () => {
   const fullAxis = createTimelineAxis({ start, end, dayStartMinute: 0, dayEndMinute: 1440 });
   // Window 8:00 → 20:00: 720 visible minutes per day.
   const trimmedAxis = createTimelineAxis({ start, end, dayStartMinute: 480, dayEndMinute: 1200 });
+
+  describe('getPlainDateWindowBounds', () => {
+    const plainDate = PlainDate.from('2025-07-03');
+    const getBounds = (dayStartMinute: number, dayEndMinute: number) => {
+      const bounds = getPlainDateWindowBounds(plainDate, { dayStartMinute, dayEndMinute }, 'UTC');
+      return [new Date(bounds.start).toISOString(), new Date(bounds.end).toISOString()];
+    };
+
+    it('should end a window that runs to the end of the day on the last instant of the date', () => {
+      expect(getBounds(0, 1440)).to.deep.equal([
+        '2025-07-03T00:00:00.000Z',
+        '2025-07-03T23:59:59.999Z',
+      ]);
+      expect(getBounds(120, 1440)).to.deep.equal([
+        '2025-07-03T02:00:00.000Z',
+        '2025-07-03T23:59:59.999Z',
+      ]);
+    });
+
+    it('should end a window that stops before the end of the day on its exclusive end', () => {
+      expect(getBounds(480, 1200)).to.deep.equal([
+        '2025-07-03T08:00:00.000Z',
+        '2025-07-03T20:00:00.000Z',
+      ]);
+    });
+  });
 
   describe('getTimelineAxisDurationMs', () => {
     it('should return days × 1440 minutes for the full-day window', () => {

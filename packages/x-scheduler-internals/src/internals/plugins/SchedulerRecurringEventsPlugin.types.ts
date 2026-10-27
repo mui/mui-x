@@ -2,7 +2,6 @@ import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/i
 import type {
   RecurringEventPresetKey,
   RecurringEventScope,
-  RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerEventRecurrenceRule,
   SchedulerEventUpdatedProperties,
@@ -99,22 +98,4 @@ export interface SchedulerRecurringEventsPluginInterface {
     rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
     rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
   ): boolean;
-
-  /**
-   * Returns the 7 week days with their code and date,
-   * starting at the start of the week containing `visiblePlainDate`.
-   */
-  getWeeklyDays(
-    adapter: Adapter,
-    visiblePlainDate: PlainDate,
-  ): { code: RecurringEventWeekDayCode; date: PlainDate }[];
-
-  /**
-   * Returns the month reference of a date: its day of the month, weekday code and ordinal.
-   */
-  getMonthlyReference(plainDate: PlainDate): {
-    dayOfMonth: number;
-    code: RecurringEventWeekDayCode;
-    ord: number;
-  };
 }
