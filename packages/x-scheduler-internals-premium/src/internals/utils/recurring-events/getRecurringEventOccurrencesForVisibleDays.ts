@@ -17,8 +17,8 @@ import {
 import { RecurringSeries } from './RecurringSeries';
 
 /**
- * Expands a recurring event into concrete occurrences within a visible range, from the instant
- * `start` to the instant `end`.
+ * Expands a recurring event into concrete occurrences within a visible range, from the timestamp
+ * `start` to the timestamp `end`, both included.
  *
  * The series finds the days of the occurrences in the data timezone, and each day is translated
  * back to adapter values.

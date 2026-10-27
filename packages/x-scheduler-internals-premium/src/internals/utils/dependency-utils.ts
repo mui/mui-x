@@ -50,14 +50,15 @@ export function isDependencyType(type: unknown): type is SchedulerDependencyType
 }
 
 // The range of `Date`, minus a margin for the offsets of the timezone read around the result.
-const MAX_WALL_CLOCK_MS = 8.64e15 - 2 * MS_PER_DAY;
+const MAX_EPOCH_MS = 8.64e15 - 2 * MS_PER_DAY;
 
 /**
  * Adds days to an instant on the wall clock of `timezone` with `addDaysOnWallClock()`, or returns
- * `NaN` past the range of `Date`, where the offsets of the timezone can't be read.
+ * `NaN` past the range of `Date`, where `Intl` throws instead of giving the offsets of an IANA
+ * timezone.
  */
 function addDaysInDateRange(epochMs: number, dayCount: number, timezone: TemporalTimezone) {
-  return Math.abs(epochMs + dayCount * MS_PER_DAY) > MAX_WALL_CLOCK_MS
+  return Math.abs(epochMs + dayCount * MS_PER_DAY) > MAX_EPOCH_MS
     ? NaN
     : addDaysOnWallClock(epochMs, dayCount, timezone);
 }

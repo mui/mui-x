@@ -6,7 +6,8 @@ type EventRangeEntry = [event: SchedulerProcessedEvent, index: number, start: nu
 
 export interface SchedulerEventRangeIndex {
   /**
-   * Returns the events that overlap the range from the instant `start` to the instant `end`.
+   * Returns the events that overlap the range from the timestamp `start` to the timestamp `end`,
+   * both included.
    */
   getEventsForRange(start: number, end: number): SchedulerProcessedEvent[];
 }

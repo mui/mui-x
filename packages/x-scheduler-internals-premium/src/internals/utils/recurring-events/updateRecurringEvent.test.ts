@@ -41,7 +41,6 @@ describe('recurring-events/updateRecurringEvent', () => {
             ...defaultEvent.dataTimezone,
             rrule: originalRule,
             start: processDate(originalSeriesStart, adapter),
-            timezone: adapter.getTimezone(originalSeriesStart),
           },
         },
         split,
@@ -84,6 +83,24 @@ describe('recurring-events/updateRecurringEvent', () => {
 
         const res = call(original, { title: 'New Event Title' });
         expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, count: 37 });
+      });
+
+      it('should count the excluded occurrences toward the COUNT of the new series', () => {
+        // Daily with count 5 from Jan 01, Jan 02 excluded
+        // Split on Jan 04 => Jan 01..03 consumed => remaining 2 => new COUNT=2
+        const event = EventBuilder.new()
+          .singleDay('2025-01-01T09:00:00Z')
+          .rrule({ freq: 'DAILY', count: 5 })
+          .exDates(['2025-01-02Z'])
+          .toProcessed();
+
+        const res = decideSplitRRule(
+          adapter,
+          event,
+          adapter.date('2025-01-04T09:00:00Z', 'default'),
+          { title: 'New Event Title' },
+        );
+        expect(res).to.deep.equal({ freq: 'DAILY', count: 2 });
       });
 
       it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {

@@ -29,7 +29,8 @@ export interface SchedulerRecurringEventsPluginInterface {
 
   /**
    * Expands a recurring event into the occurrences that fall within the visible range, from the
-   * instant `start` to the instant `end`, honoring COUNT/UNTIL boundaries and EXDATE exclusions.
+   * timestamp `start` to the timestamp `end`, both included, honoring COUNT/UNTIL boundaries and
+   * EXDATE exclusions.
    */
   getOccurrencesForVisibleDays(
     event: SchedulerProcessedEvent,
