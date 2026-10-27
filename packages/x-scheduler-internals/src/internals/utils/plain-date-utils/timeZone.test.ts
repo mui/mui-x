@@ -11,6 +11,7 @@ import {
   toEpochMs,
   toMsInDay,
   toPlainDate,
+  toWallClockIsoString,
 } from './timeZone';
 
 const HOUR = 3_600_000;
@@ -64,6 +65,15 @@ describe('timeZone', () => {
       const epochMs = Date.UTC(2025, 2, 3, 0, 30);
       expect(toPlainDate(epochMs, 'America/Los_Angeles').toString()).to.equal('2025-03-02');
       expect(toMsInDay(epochMs, 'America/Los_Angeles')).to.equal((16 * 60 + 30) * 60_000);
+    });
+  });
+
+  describe('toWallClockIsoString', () => {
+    it('should write the wall-clock time to the second, in the offset of the instant', () => {
+      // 01:30:15.999Z is the second 02:30 of the night Paris falls back.
+      expect(toWallClockIsoString(Date.UTC(2026, 9, 25, 1, 30, 15, 999), 'Europe/Paris')).to.equal(
+        '2026-10-25T02:30:15',
+      );
     });
   });
 

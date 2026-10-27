@@ -8,51 +8,7 @@ import {
   createStartOfPlainDate,
 } from './plain-date-utils/adapter';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
-
-/**
- * Builds an adapter-agnostic format string that produces an ISO 8601 date.
- * Produces e.g. `yyyy'-'MM'-'dd` for date-fns.
- */
-export function getIsoDateFormat(adapter: Adapter): string {
-  const f = adapter.formats;
-  const esc = adapter.escapedCharacters;
-  return [
-    f.yearPadded,
-    esc.start,
-    '-',
-    esc.end,
-    f.monthPadded,
-    esc.start,
-    '-',
-    esc.end,
-    f.dayOfMonthPadded,
-  ].join('');
-}
-
-/**
- * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
- * **without** the trailing `Z` (wall-time representation).
- * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
- */
-export function getWallTimeIsoFormat(adapter: Adapter): string {
-  const f = adapter.formats;
-  const esc = adapter.escapedCharacters;
-  return [
-    getIsoDateFormat(adapter),
-    esc.start,
-    'T',
-    esc.end,
-    f.hours24hPadded,
-    esc.start,
-    ':',
-    esc.end,
-    f.minutesPadded,
-    esc.start,
-    ':',
-    esc.end,
-    f.secondsPadded,
-  ].join('');
-}
+import { toWallClockIsoString } from './plain-date-utils/timeZone';
 
 const hourLabelTemplates = new WeakMap<Adapter, TemporalSupportedObject>();
 
@@ -89,8 +45,7 @@ export function dateToEventString(
   if (originalString.endsWith('Z')) {
     return adapter.toJsDate(date).toISOString();
   }
-  const dateInDataTz = adapter.setTimezone(date, dataTimezone);
-  return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
+  return toWallClockIsoString(adapter.getTime(date), dataTimezone);
 }
 
 /**

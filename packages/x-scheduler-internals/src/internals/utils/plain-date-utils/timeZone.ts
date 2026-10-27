@@ -1,6 +1,6 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { ISO_CALENDAR_ID } from '../base-temporal/calendar';
-import { MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
+import { formatIsoTime, MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
 import { createPlainDate } from '../base-temporal/PlainDate';
 import type { PlainDate } from '../base-temporal/PlainDate';
 
@@ -132,6 +132,23 @@ export function toPlainDate(epochMs: number, timezone: TemporalTimezone): PlainD
 export function toMsInDay(epochMs: number, timezone: TemporalTimezone): number {
   const localMs = toLocalMs(epochMs, timezone);
   return localMs - Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
+}
+
+/**
+ * The date and wall-clock time of an instant in `timezone`, as `YYYY-MM-DDTHH:mm:ss`. The
+ * milliseconds are dropped, like in the strings of the events.
+ */
+export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone): string {
+  const msInDay = toMsInDay(epochMs, timezone);
+  const time = formatIsoTime({
+    hour: Math.floor(msInDay / 3_600_000),
+    minute: Math.floor(msInDay / 60_000) % 60,
+    second: Math.floor(msInDay / 1000) % 60,
+    millisecond: 0,
+    microsecond: 0,
+    nanosecond: 0,
+  });
+  return `${toPlainDate(epochMs, timezone).toString()}T${time}`;
 }
 
 /**

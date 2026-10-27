@@ -11,6 +11,7 @@ export {
   toLocalMs,
   toMsInDay,
   toPlainDate,
+  toWallClockIsoString,
 } from './timeZone';
 export {
   addToAdapterDate,
