@@ -41,7 +41,7 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.8.0
   '@types/use-sync-external-store': ^1.7.0
-  '@typescript-eslint/parser': ^8.71.1
+  '@typescript-eslint/parser': ^8.72.0
   '@vitejs/plugin-react': ^6.1.2
   '@vitejs/plugin-react-swc': ^4.3.3
   '@vitest/browser': ^5.0.5
