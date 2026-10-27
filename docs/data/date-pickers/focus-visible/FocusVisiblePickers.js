@@ -41,6 +41,9 @@ export default function FocusVisiblePickers() {
     [existingTheme],
   );
 
+  const value = dayjs().date(15).startOf('day').hour(9).minute(30);
+  const range = [value, value.add(4, 'day').hour(17)];
+
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -54,8 +57,15 @@ export default function FocusVisiblePickers() {
               gap: 2,
             }}
           >
-            <DateCalendar views={['year', 'month', 'day']} sx={{ m: 0 }} />
-            <MultiSectionDigitalClock sx={{ width: 'auto', m: 0 }} />
+            <DateCalendar
+              views={['year', 'month', 'day']}
+              defaultValue={value}
+              sx={{ m: 0 }}
+            />
+            <MultiSectionDigitalClock
+              defaultValue={value}
+              sx={{ width: 'auto', m: 0 }}
+            />
           </Box>
           <Divider sx={{ my: 2 }} />
           <Box
@@ -67,12 +77,12 @@ export default function FocusVisiblePickers() {
               gap: 2,
             }}
           >
-            <DigitalClock sx={{ width: 'auto', m: 0 }} />
-            <TimeClock sx={{ m: 0 }} />
+            <DigitalClock defaultValue={value} sx={{ width: 'auto', m: 0 }} />
+            <TimeClock defaultValue={value} sx={{ m: 0 }} />
           </Box>
           <Divider sx={{ my: 2 }} />
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <DateRangeCalendar />
+            <DateRangeCalendar defaultValue={range} />
           </Box>
           <Divider sx={{ my: 2 }} />
           <Box
@@ -85,11 +95,12 @@ export default function FocusVisiblePickers() {
           >
             <DatePicker
               label="Clearable date"
-              defaultValue={dayjs('2022-04-17')}
+              defaultValue={value}
               slotProps={{ field: { clearable: true } }}
             />
             <DateTimeRangePicker
               label="Date and time range"
+              defaultValue={range}
               slotProps={{
                 shortcuts: { items: shortcutsItems },
                 toolbar: { hidden: false },
