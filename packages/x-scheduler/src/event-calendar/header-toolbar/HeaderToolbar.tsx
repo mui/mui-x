@@ -109,13 +109,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const views = useStore(store, eventCalendarViewSelectors.views);
   const view = useStore(store, eventCalendarViewSelectors.view);
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
   const { onCompactMenuClick, className, ...other } = props;
 
-  const weekNumber = getWeekNumber(adapter, visibleDate, weekStartsOn);
+  const weekNumber = getWeekNumber(adapter, visiblePlainDate, weekStartsOn);
   const showViewSwitcher = views.length > 1;
   const showWeekLabel = showWeekNumber && (view === 'week' || view === 'day');
 

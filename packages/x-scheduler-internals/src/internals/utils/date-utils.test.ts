@@ -117,13 +117,13 @@ describe('date-utils', () => {
 
   describe('getWeekNumber', () => {
     it('delegates to adapter.getWeekNumber when weekStartsOn is undefined', () => {
-      const result = getWeekNumber(adapter, wednesday, undefined);
+      const result = getWeekNumber(adapter, PlainDate.from('2025-01-08'), undefined);
       expect(result).to.equal(adapter.getWeekNumber(wednesday));
     });
 
     it('returns week 2 for 2025-01-08 (Wednesday) with weekStartsOn=1 (ISO Mon)', () => {
       // ISO week 2 of 2025: Mon 2025-01-06 – Sun 2025-01-12
-      const result = getWeekNumber(adapter, wednesday, 1);
+      const result = getWeekNumber(adapter, PlainDate.from('2025-01-08'), 1);
       expect(result).to.equal(2);
     });
 
@@ -131,29 +131,21 @@ describe('date-utils', () => {
       // ISO week 1 of 2025: Mon 2024-12-30 – Sun 2025-01-05, but Jan 1 is in that week.
       // Actually Jan 1 2025 is a Wednesday; its Mon is Dec 30 2024 and midpoint (Thu) is Jan 2, which is in 2025.
       // So it belongs to week 1 of 2025.
-      const jan1 = adapter.date('2025-01-01T12:00:00.000Z', 'UTC');
-      const result = getWeekNumber(adapter, jan1, 1);
+      const result = getWeekNumber(adapter, PlainDate.from('2025-01-01'), 1);
       expect(result).to.equal(1);
     });
 
     it('returns week 1 of 2026 for Dec 29 2025 with weekStartsOn=1', () => {
       // Dec 29 2025 is a Monday, so its midpoint (Thu) is Jan 1 2026, which is in 2026.
       // That means this week belongs to week 1 of 2026.
-      const dec29 = adapter.date('2025-12-29T12:00:00.000Z', 'UTC');
-      const result = getWeekNumber(adapter, dec29, 1);
+      const result = getWeekNumber(adapter, PlainDate.from('2025-12-29'), 1);
       expect(result).to.equal(1);
     });
 
     it('returns week 2 for 2025-01-08 with weekStartsOn=0 (Sun)', () => {
       // Sun-week 2: week starts Sun Jan 5 2025; midpoint Wed Jan 8 is in 2025 => week 2.
-      const result = getWeekNumber(adapter, wednesday, 0);
+      const result = getWeekNumber(adapter, PlainDate.from('2025-01-08'), 0);
       expect(result).to.equal(2);
-    });
-
-    it('should count the weeks from a first week starting on a day the timezone skips', () => {
-      // Pacific/Apia skipped Friday December 30th, 2011, the first day of the first week of 2012.
-      const date = adapter.date('2012-11-23T12:00:00', 'Pacific/Apia');
-      expect(getWeekNumber(adapter, date, 5)).to.equal(48);
     });
   });
 

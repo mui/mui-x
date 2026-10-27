@@ -114,17 +114,6 @@ function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
   }
 }
 
-/**
- * The first day of the week of `date`, read in its own timezone.
- */
-export function getWeekStartPlainDate(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): PlainDate {
-  return getPlainDateWeekStart(adapter, buildTemporalPlainDate(adapter, date), weekStartsOn);
-}
-
 const localeFirstDaysOfWeek = new WeakMap<Adapter, number>();
 
 /**
@@ -171,12 +160,16 @@ export function getStartOfWeek(
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,
 ): TemporalSupportedObject {
-  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
+  const weekStartPlainDate = getPlainDateWeekStart(
+    adapter,
+    buildTemporalPlainDate(adapter, date),
+    weekStartsOn,
+  );
   return createStartOfPlainDate(adapter, weekStartPlainDate, adapter.getTimezone(date));
 }
 
 /**
- * Returns the week number for `date`, using `weekStartsOn` as the first day of
+ * Returns the week number of `plainDate`, using `weekStartsOn` as the first day of
  * the week (0 = Sunday … 6 = Saturday).
  *
  * Applies the ISO 8601 "4-day minimum" rule (the Thursday of each week
@@ -186,13 +179,15 @@ export function getStartOfWeek(
  */
 export function getWeekNumber(
   adapter: Adapter,
-  date: TemporalSupportedObject,
+  plainDate: PlainDate,
   weekStartsOn: WeekStartsOn | undefined,
 ): number {
   if (weekStartsOn === undefined) {
-    return adapter.getWeekNumber(date);
+    // The adapter numbers the weeks with the rules of its locale. It reads them on a date in UTC,
+    // which skips no day.
+    return adapter.getWeekNumber(createStartOfPlainDate(adapter, plainDate, 'UTC'));
   }
-  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
+  const weekStartPlainDate = getPlainDateWeekStart(adapter, plainDate, weekStartsOn);
   // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.
   const year = weekStartPlainDate.add({ days: 3 }).year;
   const firstWeekStart = getStartOfWeekDayNumber(

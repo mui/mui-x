@@ -7,12 +7,7 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
-import {
-  buildTemporalPlainDate,
-  createAdapterDate,
-  getStartOfWeek,
-  toEpochMs,
-} from '@mui/x-scheduler-internals/internals';
+import { buildTemporalPlainDate, getPlainDateWeekStart } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 import { getPlainDateWeekDayCode, getWeekDayCode } from './internal-utils';
@@ -88,16 +83,7 @@ export function getWeeklyDays(
   visiblePlainDate: PlainDate,
   weekStartsOn?: WeekStartsOn,
 ): { code: RecurringEventWeekDayCode; date: PlainDate }[] {
-  // The adapter knows the first day of the week of the locale. It finds it on a date in UTC, which
-  // skips no day.
-  const weekStartPlainDate = buildTemporalPlainDate(
-    adapter,
-    getStartOfWeek(
-      adapter,
-      createAdapterDate(adapter, toEpochMs(visiblePlainDate, 0, 'UTC'), 'UTC'),
-      weekStartsOn,
-    ),
-  );
+  const weekStartPlainDate = getPlainDateWeekStart(adapter, visiblePlainDate, weekStartsOn);
   return Array.from({ length: 7 }, (_, i) => {
     const plainDate = weekStartPlainDate.add({ days: i });
     return { code: getPlainDateWeekDayCode(plainDate), date: plainDate };
