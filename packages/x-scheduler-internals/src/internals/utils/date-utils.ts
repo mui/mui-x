@@ -5,7 +5,7 @@ import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-tem
 import {
   buildTemporalPlainDate,
   createAdapterDate,
-  createStartOfPlainDate,
+  createLabelDate,
 } from './plain-date-utils/adapter';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
@@ -118,7 +118,7 @@ function getLocaleFirstDayOfWeek(adapter: Adapter): number {
   if (firstDayOfWeek === undefined) {
     // The adapter numbers the days of the week from 1, starting on the first day of the locale.
     // January 1st, 2024 is a Monday.
-    const monday = createAdapterDate(adapter, Date.UTC(2024, 0, 1, 12), 'UTC');
+    const monday = createLabelDate(adapter, PlainDate.from('2024-01-01'));
     firstDayOfWeek = ((8 - adapter.getDayOfWeek(monday)) % 7) + 1;
     localeFirstDaysOfWeek.set(adapter, firstDayOfWeek);
   }
@@ -144,25 +144,6 @@ export function getPlainDateWeekStart(
 }
 
 /**
- * Returns the start of the week for `date`, using `weekStartsOn` as the first
- * day of the week (0 = Sunday … 6 = Saturday).
- *
- * When `weekStartsOn` is `undefined` the first day of the week of the locale is used.
- */
-export function getStartOfWeek(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): TemporalSupportedObject {
-  const weekStartPlainDate = getPlainDateWeekStart(
-    adapter,
-    buildTemporalPlainDate(adapter, date),
-    weekStartsOn,
-  );
-  return createStartOfPlainDate(adapter, weekStartPlainDate, adapter.getTimezone(date));
-}
-
-/**
  * Returns the week number of `plainDate`, using `weekStartsOn` as the first day of
  * the week (0 = Sunday … 6 = Saturday).
  *
@@ -177,9 +158,8 @@ export function getWeekNumber(
   weekStartsOn: WeekStartsOn | undefined,
 ): number {
   if (weekStartsOn === undefined) {
-    // The adapter numbers the weeks with the rules of its locale. It reads them on a date in UTC,
-    // which skips no day.
-    return adapter.getWeekNumber(createStartOfPlainDate(adapter, plainDate, 'UTC'));
+    // The adapter numbers the weeks with the rules of its locale.
+    return adapter.getWeekNumber(createLabelDate(adapter, plainDate));
   }
   const weekStartPlainDate = getPlainDateWeekStart(adapter, plainDate, weekStartsOn);
   // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.

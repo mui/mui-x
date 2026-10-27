@@ -3,8 +3,11 @@ import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
 import { getDayListFromPlainDates } from '../get-day-list';
 import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
-import { getStartOfWeek } from '../internals/utils/date-utils';
-import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
+import { getPlainDateWeekStart } from '../internals/utils/date-utils';
+import {
+  buildTemporalPlainDate,
+  createStartOfPlainDate,
+} from '../internals/utils/plain-date-utils/adapter';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
 import { eventCalendarAgendaSelectors } from '../event-calendar-selectors';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
@@ -16,7 +19,15 @@ function createMonthViewScenario(displayTimezone: TemporalTimezone) {
     adapter.date('2026-03-15T10:00:00Z', 'default'),
     displayTimezone,
   );
-  const gridStart = getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), 1);
+  const gridStart = createStartOfPlainDate(
+    adapter,
+    getPlainDateWeekStart(
+      adapter,
+      buildTemporalPlainDate(adapter, visibleDate).with({ day: 1 }),
+      1,
+    ),
+    displayTimezone,
+  );
   // Events of 30 minutes to 30 hours, every 53 minutes across the 6 weeks of the grid.
   const events = Array.from({ length: eventCount }, (_, index) => {
     const start = adapter.addMinutes(gridStart, index * 53);
@@ -36,16 +47,15 @@ function createMonthViewScenario(displayTimezone: TemporalTimezone) {
 
 function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   const { visibleDate, displayTimezone, eventRangeIndex } = scenario;
+  const visiblePlainDate = buildTemporalPlainDate(adapter, visibleDate);
   const days = getDayListFromPlainDates({
     adapter,
-    firstPlainDate: buildTemporalPlainDate(
+    firstPlainDate: getPlainDateWeekStart(adapter, visiblePlainDate.with({ day: 1 }), 1),
+    lastPlainDate: getPlainDateWeekStart(
       adapter,
-      getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), 1),
-    ),
-    lastPlainDate: buildTemporalPlainDate(
-      adapter,
-      adapter.addDays(getStartOfWeek(adapter, adapter.endOfMonth(visibleDate), 1), 6),
-    ),
+      visiblePlainDate.with({ day: visiblePlainDate.daysInMonth }),
+      1,
+    ).add({ days: 6 }),
     timezone: displayTimezone,
   });
   let weekendCount = 0;
