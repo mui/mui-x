@@ -18,6 +18,22 @@ import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import { dateToEventString } from '../date-utils';
+import { schedulerEventSelectors } from '../../../scheduler-selectors/schedulerEventSelectors';
+
+/**
+ * Names the `eventModelStructure` date(s) — `start`, `end`, or both — that have a getter but no
+ * setter, so every writer that refuses a whole event (a creation, a move, a paste, or a
+ * dependency push) because of it can point at the specific property instead of a generic
+ * "start and / or end".
+ */
+export function datesNotWritableReason(state: SchedulerState): string {
+  const properties = (['start', 'end'] as const).filter(
+    (property) => !schedulerEventSelectors.isDateWritable(state, property),
+  );
+  const names = properties.map((property) => `\`${property}\``).join(' and ');
+  const pronoun = properties.length > 1 ? 'they' : 'it';
+  return `\`eventModelStructure\` declares ${names} with a getter but no setter, so ${pronoun} cannot be written back to your event model. Add a \`setter\` to make ${pronoun === 'it' ? 'it' : 'them'} editable.`;
+}
 
 /**
  * Resolves `shouldEventRequireResource` and warns when it is enabled without any resource.

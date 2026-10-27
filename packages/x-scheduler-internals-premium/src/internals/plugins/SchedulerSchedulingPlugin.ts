@@ -8,6 +8,7 @@ import type {
   UpdateEventsParameters,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
+import { datesNotWritableReason } from '@mui/x-scheduler-internals/internals';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   SchedulerEventId,
@@ -17,9 +18,8 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-se
 import type {
   SchedulerAddDependencyResult,
   SchedulerDependency,
-  SchedulerDependencyCascadeBlockedRejection,
+  SchedulerDependencyCascadeRejection,
   SchedulerDependencyCreationProperties,
-  SchedulerDependencyDatesNotWritableRejection,
   SchedulerDependencyId,
   SchedulerDependenciesParameters,
   SchedulerDependenciesState,
@@ -146,13 +146,12 @@ export class SchedulerSchedulingPlugin<
   /**
    * Computes the dependency cleanup for the deleted events and the auto-scheduling cascade for
    * the updated ones, all in the same update. A batch whose cascade would need to move a
-   * read-only event is vetoed instead: nothing is applied, and the rejection is returned for the
-   * caller to surface.
+   * read-only event, or to change a date `eventModelStructure` can't write back, is vetoed
+   * instead: nothing is applied, and the rejection is returned for the caller to surface.
    *
    * Neither is applied here: `updateEvents` can still refuse the merged batch afterward for a
-   * reason this hook can't predict (e.g. a date `eventModelStructure` can't write back), so the
-   * dependency cleanup is returned as `commit`, called only once the caller has confirmed the
-   * batch goes ahead — a vetoed batch must not have emitted it.
+   * reason of its own, so the dependency cleanup is returned as `commit`, called only once the
+   * caller has confirmed the batch goes ahead — a vetoed batch must not have emitted it.
    *
    * With a `dataSource`, event deletions are persisted asynchronously after `commit` has already
    * emitted `onDependenciesChange`. If that persistence fails, the event survives but its
@@ -183,6 +182,19 @@ export class SchedulerSchedulingPlugin<
           rejected: true as const,
           error: /* minify-error-disabled */ new Error(
             `This change would move the read-only event "${blockedEvent.title}", so it was not applied.`,
+          ),
+        };
+      }
+      // The cascade only reports the bound it moves, so a single unwritable bound isn't a move
+      // `updateEvents` refuses: it would strip it like a caller's own resize and apply the rest
+      // of the batch with the dependency broken.
+      const unwritable = this.findUnwritableCascadedEntry(result.updated);
+      if (unwritable) {
+        const unwritableEvent = this.store.state.processedEventLookup.get(unwritable.id)!;
+        return {
+          rejected: true as const,
+          error: /* minify-error-disabled */ new Error(
+            `This change would move the event "${unwritableEvent.title}", whose dates can't be edited, so it was not applied.`,
           ),
         };
       }
@@ -318,10 +330,7 @@ export class SchedulerSchedulingPlugin<
   private commitDependencyChange(
     nextList: SchedulerDependency[],
     enforced: SchedulerDependency | null,
-  ):
-    | SchedulerDependencyCascadeBlockedRejection
-    | SchedulerDependencyDatesNotWritableRejection
-    | null {
+  ): SchedulerDependencyCascadeRejection | null {
     const { adapter, processedEventLookup } = this.store.state;
     const activeDependencies = getActiveDependencies(
       buildDependenciesState(nextList).dependencyModelLookup,
@@ -341,12 +350,7 @@ export class SchedulerSchedulingPlugin<
     if (result.blocked.length > 0) {
       return { status: 'rejected', reason: 'cascadeBlocked', eventId: result.blocked[0] };
     }
-    const unwritable = result.updated.find((entry) =>
-      (['start', 'end'] as const).some(
-        (property) =>
-          property in entry && !schedulerEventSelectors.isDateWritable(this.store.state, property),
-      ),
-    );
+    const unwritable = this.findUnwritableCascadedEntry(result.updated);
     if (unwritable) {
       return { status: 'rejected', reason: 'datesNotWritable', eventId: unwritable.id };
     }
@@ -356,6 +360,36 @@ export class SchedulerSchedulingPlugin<
       this.applyCascade(result.updated);
     }
     return null;
+  }
+
+  /**
+   * The first cascaded entry carrying a date `eventModelStructure` can't write back, warning
+   * about the missing setter in dev. Shared by both paths applying a cascade: the one merged
+   * into an `updateEvents` batch, and the one `commitDependencyChange` applies directly.
+   */
+  private findUnwritableCascadedEntry(
+    cascaded: readonly SchedulerEventUpdatedProperties[],
+  ): SchedulerEventUpdatedProperties | undefined {
+    const { state } = this.store;
+    if (schedulerEventSelectors.canWriteEventDates(state)) {
+      return undefined;
+    }
+    const unwritable = cascaded.find((entry) =>
+      (['start', 'end'] as const).some(
+        (property) => property in entry && !schedulerEventSelectors.isDateWritable(state, property),
+      ),
+    );
+    if (process.env.NODE_ENV !== 'production') {
+      if (unwritable) {
+        warnOnce(
+          [
+            'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.',
+            datesNotWritableReason(state),
+          ].join('\n'),
+        );
+      }
+    }
+    return unwritable;
   }
 
   /**

@@ -477,13 +477,14 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       );
 
       // Only recurring scope changes build such batches today, so the store method is
-      // called directly.
+      // called directly. `a` moves earlier, so the cascade pushes nothing and the store's own
+      // refusal of `a`'s move is the one that has to beat the cleanup.
       let result: any;
       expect(() => {
         result = (store as any).updateEvents({
           deleted: ['d'],
           updated: [
-            { id: 'a', start: date('2025-07-03T11:00:00Z'), end: date('2025-07-03T12:00:00Z') },
+            { id: 'a', start: date('2025-07-03T08:00:00Z'), end: date('2025-07-03T09:00:00Z') },
           ],
         });
       }).toWarnDev([
@@ -499,6 +500,10 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
   // Combines the scheduling cascade with an `eventModelStructure` date that can't be written
   // back — the two features are tested separately everywhere else in this suite.
   describe('unwritable date', () => {
+    const cascadeNotWritableWarning = (property: 'start' | 'end') =>
+      'MUI X Scheduler: A change was not applied because keeping a dependency would move an event whose date could not be written back.\n' +
+      `\`eventModelStructure\` declares \`${property}\` with a getter but no setter, so it cannot be written back to your event model. Add a \`setter\` to make it editable.`;
+
     it('should refuse the whole batch when a cascade would move a successor whose date is not writable', () => {
       const onEventsChange = vi.fn();
       const eventModelStructure = { start: { getter: (event: any) => event.start } };
@@ -514,12 +519,12 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
         result = store.updateEvent({ id: 'a', end: date('2025-07-03T10:30:00Z') });
-      }).toWarnDev([
-        'MUI X Scheduler: An event was not moved because a date could not be written back.\n' +
-          '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
-      ]);
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
 
       expect(result!.applied).to.equal(false);
+      expect((result! as Extract<typeof result, { applied: false }>).rejection.message).to.equal(
+        `This change would move the event "${eventB.title}", whose dates can't be edited, so it was not applied.`,
+      );
       expect(onEventsChange.mock.calls.length).to.equal(0);
     });
 
@@ -694,13 +699,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
         result = store.updateEvent({ id: 'b', allDay: true });
-      }).toWarnDev([
-        'MUI X Scheduler: An event was not updated because keeping its dependencies would change a date that could not be written back.\n' +
-          '`eventModelStructure` declares `start` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
-      ]);
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
 
       expect(result!.applied).to.equal(false);
       expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(store.state.processedEventLookup.get('b')!.allDay).to.equal(false);
     });
 
     // Mirror of the above: turning `b` back to timed makes it end at noon, before `a` ends, so
@@ -730,13 +733,11 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
       let result: ReturnType<typeof store.updateEvent>;
       expect(() => {
         result = store.updateEvent({ id: 'b', allDay: false });
-      }).toWarnDev([
-        'MUI X Scheduler: An event was not updated because keeping its dependencies would change a date that could not be written back.\n' +
-          '`eventModelStructure` declares `end` with a getter but no setter, so it cannot be written back to your event model. Add a `setter` to make it editable.',
-      ]);
+      }).toWarnDev([cascadeNotWritableWarning('end')]);
 
       expect(result!.applied).to.equal(false);
       expect(onEventsChange.mock.calls.length).to.equal(0);
+      expect(store.state.processedEventLookup.get('b')!.allDay).to.equal(true);
     });
 
     it('should not add a dependency whose push would change a date that is not writable', () => {
@@ -755,9 +756,16 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      expect(
-        store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' }),
-      ).to.deep.equal({ status: 'rejected', reason: 'datesNotWritable', eventId: 'c' });
+      let result: ReturnType<typeof store.addDependency>;
+      expect(() => {
+        result = store.addDependency({ source: 'a', target: 'c', type: 'FinishToStart' });
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
+
+      expect(result!).to.deep.equal({
+        status: 'rejected',
+        reason: 'datesNotWritable',
+        eventId: 'c',
+      });
 
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
       expect(onEventsChange.mock.calls.length).to.equal(0);
@@ -779,11 +787,17 @@ describe('Auto-scheduling - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      expect(store.updateDependency('dep-1', { type: 'FinishToStart' })).to.deep.equal({
+      let result: ReturnType<typeof store.updateDependency>;
+      expect(() => {
+        result = store.updateDependency('dep-1', { type: 'FinishToStart' });
+      }).toWarnDev([cascadeNotWritableWarning('start')]);
+
+      expect(result!).to.deep.equal({
         status: 'rejected',
         reason: 'datesNotWritable',
         eventId: 'b',
       });
+      // The warning above is only logged once.
       expect(store.updateDependency('dep-1', { lag: 2, lagUnit: 'hour' })).to.deep.equal({
         status: 'rejected',
         reason: 'datesNotWritable',

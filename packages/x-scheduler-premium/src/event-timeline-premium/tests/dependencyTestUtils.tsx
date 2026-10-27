@@ -70,12 +70,18 @@ type PresetConfig = EventTimelinePremiumStoreParameters<
   SchedulerResource
 >['presetConfig'];
 
+type EventModelStructure = EventTimelinePremiumStoreParameters<
+  SchedulerEvent,
+  SchedulerResource
+>['eventModelStructure'];
+
 interface TestTimelineProps {
   events: SchedulerEvent[];
   resources: SchedulerResource[];
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  eventModelStructure?: EventModelStructure;
   /**
    * Observes the dependency changes on top of the controlled loop.
    */
@@ -93,6 +99,7 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   onDependenciesChange,
   onStoreReady,
 }: TestTimelineProps) {
@@ -114,6 +121,7 @@ export function TestTimeline({
     resources,
     dependencies,
     readOnly,
+    eventModelStructure,
     onEventsChange: setEvents,
     onDependenciesChange: dependenciesEnabled
       ? (value) => {
@@ -153,6 +161,10 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  /**
+   * Pass a module-scope value: the store compares it by reference.
+   */
+  eventModelStructure?: EventModelStructure;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
   /**
    * Sets the theme direction and the `dir` attribute, like a consumer does.
@@ -176,6 +188,7 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  eventModelStructure,
   onDependenciesChange,
   onStoreReady,
   direction = 'ltr',
@@ -205,6 +218,7 @@ function TimelineHost({
             dependencies={dependencies}
             presetConfig={presetConfig}
             readOnly={readOnly}
+            eventModelStructure={eventModelStructure}
             onDependenciesChange={onDependenciesChange}
             onStoreReady={onStoreReady}
           />

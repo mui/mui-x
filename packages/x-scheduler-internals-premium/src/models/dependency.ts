@@ -136,21 +136,12 @@ export type SchedulerDependencyRejectionReason =
   | 'datesNotWritable';
 
 /**
- * Restoring the created or stricter dependency would move the read-only `eventId`.
+ * Restoring the created or stricter dependency would move `eventId`, which is read-only
+ * (`cascadeBlocked`) or has a date `eventModelStructure` can't write back (`datesNotWritable`).
  */
-export type SchedulerDependencyCascadeBlockedRejection = {
+export type SchedulerDependencyCascadeRejection = {
   status: 'rejected';
-  reason: 'cascadeBlocked';
-  eventId: SchedulerEventId;
-};
-
-/**
- * Restoring the created or stricter dependency would change a date of `eventId` that
- * `eventModelStructure` can't write back.
- */
-export type SchedulerDependencyDatesNotWritableRejection = {
-  status: 'rejected';
-  reason: 'datesNotWritable';
+  reason: 'cascadeBlocked' | 'datesNotWritable';
   eventId: SchedulerEventId;
 };
 
@@ -164,8 +155,7 @@ export type SchedulerAddDependencyResult =
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
   | { status: 'rejected'; reason: 'cyclicDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
-  | SchedulerDependencyCascadeBlockedRejection
-  | SchedulerDependencyDatesNotWritableRejection;
+  | SchedulerDependencyCascadeRejection;
 
 /**
  * Properties to change on an existing dependency with `updateDependency()`.
@@ -180,8 +170,7 @@ export type SchedulerUpdateDependencyResult =
   | { status: 'rejected'; reason: 'unknownDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
-  | SchedulerDependencyCascadeBlockedRejection
-  | SchedulerDependencyDatesNotWritableRejection;
+  | SchedulerDependencyCascadeRejection;
 
 /**
  * The dependency open in the dependency dialog, and where the dialog is anchored.

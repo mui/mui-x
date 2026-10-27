@@ -363,7 +363,8 @@ export class EventTimelinePremiumStore<
    * Adds a dependency between two events.
    * Rejects every dependency while the scheduler is read-only, and dependencies
    * referencing an unknown or recurring event, duplicates, cycles, and dependencies
-   * needing a read-only event to move — see the returned `SchedulerAddDependencyResult`.
+   * needing a read-only event to move or a date `eventModelStructure` can't write back
+   * to change — see the returned `SchedulerAddDependencyResult`.
    * A dependency the event dates break moves its successor.
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`
