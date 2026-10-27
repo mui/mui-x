@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { applyChildrenFocusVisible } from '@mui/x-internals/focusVisible';
 import type { MultiSectionDigitalClockSectionClasses } from './multiSectionDigitalClockSectionClasses';
 import { getMultiSectionDigitalClockSectionUtilityClass } from './multiSectionDigitalClockSectionClasses';
 import type {
@@ -116,6 +117,11 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
     '&:focus-visible, &:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible && {
+      '&.Mui-focusVisible': applyChildrenFocusVisible(
+        `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+      ),
+    }),
   },
   ...(!theme.focusVisible && {
     '&.Mui-focusVisible': {

@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { applyChildrenFocusVisible } from '@mui/x-internals/focusVisible';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -88,6 +89,11 @@ export const DigitalClockItem = styled(MenuItem, {
     '&:focus-visible, &:hover': {
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
+    ...(theme.focusVisible && {
+      '&.Mui-focusVisible': applyChildrenFocusVisible(
+        `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+      ),
+    }),
   },
   ...(!theme.focusVisible && {
     '&.Mui-focusVisible': {

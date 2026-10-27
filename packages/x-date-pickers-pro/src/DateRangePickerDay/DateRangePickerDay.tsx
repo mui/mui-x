@@ -10,7 +10,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { MuiEvent } from '@mui/x-internals/types';
-import { applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
+import { applyChildrenFocusVisible, applyInsetFocusVisible } from '@mui/x-internals/focusVisible';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import type {
@@ -138,11 +138,9 @@ const selectedDayStyles = (theme: Theme) => ({
   },
   ...(theme.focusVisible
     ? {
-        [`&.${buttonBaseClasses.focusVisible}`]: {
-          ...theme.focusVisible,
-          ...applyInsetFocusVisible(2),
-          outlineColor: (theme.vars || theme).palette.primary.contrastText,
-        },
+        [`&.${buttonBaseClasses.focusVisible}`]: applyChildrenFocusVisible(
+          `0 0 0 4px ${(theme.vars || theme).palette.primary.contrastText}`,
+        ),
       }
     : {
         '&:focus': {
