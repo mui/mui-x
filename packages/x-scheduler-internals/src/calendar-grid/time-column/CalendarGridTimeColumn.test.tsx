@@ -12,6 +12,7 @@ import {
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
+import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 import { createAdapterDate } from '../../internals/utils/plain-date-utils/adapter';
 
 describe('<CalendarGrid.TimeColumn />', () => {
@@ -33,7 +34,11 @@ describe('<CalendarGrid.TimeColumn />', () => {
   }
 
   describeConformance(
-    <CalendarGrid.TimeColumn start={adapter.getTime(start)} end={adapter.getTime(end)} />,
+    <CalendarGrid.TimeColumn
+      value={buildTemporalPlainDate(adapter, start)}
+      start={adapter.getTime(start)}
+      end={adapter.getTime(end)}
+    />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render: (node) => render(<TimeColumnWrapper>{node}</TimeColumnWrapper>),
@@ -51,6 +56,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
       render(
         <TimeColumnWrapper displayTimezone={timezone}>
           <CalendarGrid.TimeColumn
+            value={buildTemporalPlainDate(adapter, columnStart)}
             start={adapter.getTime(columnStart)}
             end={adapter.getTime(columnEnd)}
           />
@@ -81,7 +87,11 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const { user } = render(
         <TimeColumnWrapper>
-          <CalendarGrid.TimeColumn start={adapter.getTime(start)} end={adapter.getTime(end)} />
+          <CalendarGrid.TimeColumn
+            value={buildTemporalPlainDate(adapter, start)}
+            start={adapter.getTime(start)}
+            end={adapter.getTime(end)}
+          />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {
@@ -105,7 +115,11 @@ describe('<CalendarGrid.TimeColumn />', () => {
 
       const { user } = render(
         <TimeColumnWrapper eventCreation={false}>
-          <CalendarGrid.TimeColumn start={adapter.getTime(start)} end={adapter.getTime(end)} />
+          <CalendarGrid.TimeColumn
+            value={buildTemporalPlainDate(adapter, start)}
+            start={adapter.getTime(start)}
+            end={adapter.getTime(end)}
+          />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {

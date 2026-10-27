@@ -118,6 +118,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   return (
     <DayTimeGridColumn
       className={classes.dayTimeGridColumn}
+      value={day.plainDate}
       start={start}
       end={end}
       dayStartMinute={startTime * 60}

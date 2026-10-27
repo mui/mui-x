@@ -12,10 +12,10 @@ import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
 import {
   floorToWallClockMinutes,
   toEpochMs,
-  toPlainDate,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
 import type { TimelineAxis } from '../../internals/utils/timeline-axis';
+import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
@@ -34,6 +34,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     render,
     style,
     // Internal props
+    value,
     start,
     end,
     dayStartMinute = 0,
@@ -46,7 +47,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const store = useEventCalendarStoreContext();
   const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
   const isRtl = useDirection() === 'rtl';
-  const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
+  const isCurrentDay = useStore(store, schedulerNowSelectors.nowDayNumber) === value.dayNumber;
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
@@ -87,7 +88,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   });
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig, timezone }) => {
-    const noon = toEpochMs(toPlainDate(start, timezone), 12 * 60 * 60_000, timezone);
+    const noon = toEpochMs(value, 12 * 60 * 60_000, timezone);
     // Keep the default creation anchor inside the visible window when the view limits its hour range.
     const anchor = noon < start || noon >= end ? start : noon;
     return {
@@ -139,12 +140,13 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
     () => ({
+      plainDate: value,
       axis,
       hasFocus,
       getCursorPositionInElementMs,
       getTimestampAtPointer,
     }),
-    [axis, hasFocus, getCursorPositionInElementMs, getTimestampAtPointer],
+    [value, axis, hasFocus, getCursorPositionInElementMs, getTimestampAtPointer],
   );
 
   const keyboardProps = {
@@ -180,6 +182,10 @@ export namespace CalendarGridTimeColumn {
   }
 
   export interface Props extends BaseUIComponentProps<'div', State> {
+    /**
+     * The date of the column, in the display timezone.
+     */
+    value: PlainDate;
     /**
      * The first instant of the column, as a timestamp read in the display timezone.
      */

@@ -10,10 +10,7 @@ import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTi
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
-import {
-  moveTimestampToPlainDate,
-  toPlainDate,
-} from '../../internals/utils/plain-date-utils/timeZone';
+import { moveTimestampToPlainDate } from '../../internals/utils/plain-date-utils/timeZone';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
   function CalendarGridCurrentTimeIndicator(
@@ -31,21 +28,22 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       ...elementProps
     } = componentProps;
 
-    const { axis: columnAxis } = useCalendarGridTimeColumnContext();
+    const { axis: columnAxis, plainDate: columnPlainDate } = useCalendarGridTimeColumnContext();
     const { start: columnStart, end: columnEnd } = columnAxis;
     const store = useEventCalendarStoreContext();
     const nowTimestamp = useStore(store, schedulerNowSelectors.nowTimestamp);
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
     // The time of day of now, on the wall clock of the day of the column.
-    const nowForColumn = React.useMemo(() => {
-      const columnPlainDate = toPlainDate(columnStart, displayTimezone);
-      return createProcessedDate(
-        adapter,
-        moveTimestampToPlainDate(nowTimestamp, columnPlainDate, displayTimezone),
-        displayTimezone,
-      );
-    }, [adapter, columnStart, displayTimezone, nowTimestamp]);
+    const nowForColumn = React.useMemo(
+      () =>
+        createProcessedDate(
+          adapter,
+          moveTimestampToPlainDate(nowTimestamp, columnPlainDate, displayTimezone),
+          displayTimezone,
+        ),
+      [adapter, columnPlainDate, displayTimezone, nowTimestamp],
+    );
 
     const { position } = useElementPositionInCollection({
       // Only the position is read, which depends on the start alone.
