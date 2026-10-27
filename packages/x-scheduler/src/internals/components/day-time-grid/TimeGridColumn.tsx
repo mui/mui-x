@@ -153,8 +153,7 @@ function ColumnInteractiveLayer({
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
-  const { axis: column } = useCalendarGridTimeColumnContext();
-  const { start, end } = column;
+  const { start, end } = useCalendarGridTimeColumnContext().axis;
   const { startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
 
@@ -188,12 +187,10 @@ function ColumnInteractiveLayer({
       {!isLoading &&
         occurrences.map((occurrence) => (
           <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
-            <TimeGridEvent occurrence={occurrence} column={column} variant="regular" />
+            <TimeGridEvent occurrence={occurrence} variant="regular" />
           </EventContextMenuTrigger>
         ))}
-      {placeholder != null && (
-        <TimeGridEvent occurrence={placeholder} column={column} variant="placeholder" />
-      )}
+      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
         <DayTimeGridCurrentTimeIndicator
           className={classes.dayTimeGridCurrentTimeIndicator}

@@ -182,8 +182,8 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 export namespace useTimeDropTarget {
   export interface Parameters {
     /**
-     * The axis of the column: its first and last instants, read in the display timezone, and the
-     * hour window of the view.
+     * The axis of the column: its bounds, read in the display timezone, and the hour window of the
+     * view.
      */
     axis: TimelineAxis;
     /**

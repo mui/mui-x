@@ -3,12 +3,13 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { SchedulerEvent } from '../../models';
-import { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import {
   addDaysOnWallClock,
   getEndOfDayMs,
   moveTimestampToPlainDate,
   toEpochMs,
+  toLocalDayNumber,
   toPlainDateTime,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
@@ -43,7 +44,6 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Days are compared as plain dates, and each date moves on the wall clock of the display
       // timezone.
-
       // Move a Day Grid Event within the Day Grid, or a Time Grid Event into it
       if (data.source === 'CalendarGridDayEvent' || data.source === 'CalendarGridTimeEvent') {
         // The day under the grab point.
@@ -62,7 +62,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          const order = PlainDate.compare(value, toPlainDateTime(data.end, timezone).date);
+          const order = value.dayNumber - toLocalDayNumber(data.end, timezone);
           if (order > 0) {
             return undefined;
           }
@@ -74,7 +74,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         }
 
         if (data.side === 'end') {
-          const order = PlainDate.compare(value, toPlainDateTime(data.start, timezone).date);
+          const order = value.dayNumber - toLocalDayNumber(data.start, timezone);
           if (order < 0) {
             return undefined;
           }

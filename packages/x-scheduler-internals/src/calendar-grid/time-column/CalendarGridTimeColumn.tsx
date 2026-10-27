@@ -185,7 +185,8 @@ export namespace CalendarGridTimeColumn {
      */
     start: number;
     /**
-     * The last instant of the column, as a timestamp read in the display timezone.
+     * The end of the column, as a timestamp read in the display timezone: the last instant of its
+     * day when the whole day is displayed, otherwise the exclusive end of its hour window.
      */
     end: number;
     /**

@@ -96,7 +96,8 @@ export namespace useCalendarGridPlaceholderInRange {
      */
     start: number;
     /**
-     * The last instant of the range, as a timestamp read in the display timezone.
+     * The end of the range, as a timestamp read in the display timezone: the end of a time column,
+     * or the last instant of a day row.
      */
     end: number;
   }

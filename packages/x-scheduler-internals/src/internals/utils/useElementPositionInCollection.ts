@@ -67,16 +67,16 @@ export function computeElementPositionInCollection(
 export namespace useElementPositionInCollection {
   export interface Parameters {
     /**
-     * The start of the element, processed in the timezone of the start of the collection.
+     * The start of the element, processed in the timezone of the collection.
      */
     start: SchedulerProcessedDate;
     /**
-     * The end of the element, processed in the timezone of the start of the collection.
+     * The end of the element, processed in the timezone of the collection.
      */
     end: SchedulerProcessedDate;
     /**
-     * The displayed range and daily hour window the element is positioned in: a
-     * time-grid column (`viewConfig`) or the timeline's axis (`presetConfig`).
+     * The axis the element is positioned in: the axis of a CalendarGrid time column or day row, or
+     * the `axis` of the timeline's preset config.
      */
     collection: TimelineAxis;
     /**
