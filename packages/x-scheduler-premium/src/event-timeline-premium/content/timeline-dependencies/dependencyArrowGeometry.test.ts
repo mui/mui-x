@@ -1054,9 +1054,9 @@ describe('dependencyArrowGeometry', () => {
         const getTwoDayOccurrences = (events: SchedulerProcessedEvent[]) =>
           getOccurrencesFromEvents({
             adapter,
-            start: collectionStart,
-            end: adapter.endOfDay(adapter.addDays(collectionStart, 1)),
-            eventRangeIndex: createEventRangeIndex(events, adapter, false),
+            start: adapter.getTime(collectionStart),
+            end: twoDayAxis.end,
+            eventRangeIndex: createEventRangeIndex(events, false),
             displayTimezone: 'default',
             visibleResources: {},
             recurringEventsPlugin: null,

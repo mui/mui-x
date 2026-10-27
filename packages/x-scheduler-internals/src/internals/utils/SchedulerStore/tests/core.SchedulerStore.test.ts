@@ -1,11 +1,14 @@
 import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, onTestFinished, vi } from 'vitest';
 import {
   schedulerEventSelectors,
+  schedulerNowSelectors,
   schedulerResourceSelectors,
 } from '../../../../scheduler-selectors';
+
+const MS_PER_DAY = 86_400_000;
 
 const DEFAULT_PARAMS = {
   events: [] as SchedulerEvent[],
@@ -40,6 +43,42 @@ storeClasses.forEach((storeClass) => {
 
         expect(store.state.visibleDate).toEqualDateTime(expectedToday);
         expect(adapter.getTimezone(store.state.visibleDate)).to.equal(displayTimezone);
+      });
+
+      it('should start today at the end of the gap when the display timezone skips midnight', () => {
+        vi.useFakeTimers();
+        onTestFinished(() => {
+          vi.useRealTimers();
+        });
+        // Santiago skips from 00:00 to 01:00 on September 8th, 2024.
+        vi.setSystemTime(new Date('2024-09-08T12:00:00Z'));
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, displayTimezone: 'America/Santiago' },
+          adapter,
+        );
+
+        expect(adapter.getTime(store.state.visibleDate)).to.equal(
+          Date.parse('2024-09-08T04:00:00Z'),
+        );
+      });
+
+      it('should move `nowTimestamp` and the current day every minute', () => {
+        vi.useFakeTimers();
+        onTestFinished(() => {
+          vi.useRealTimers();
+        });
+        vi.setSystemTime(new Date('2025-07-03T23:59:30Z'));
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone: 'UTC' }, adapter);
+
+        // The first tick lands on the next minute, the following ones a minute apart.
+        vi.advanceTimersByTime(30_000);
+        expect(store.state.nowTimestamp).to.equal(Date.parse('2025-07-04T00:00:00Z'));
+        expect(schedulerNowSelectors.nowDayNumber(store.state)).to.equal(
+          Date.UTC(2025, 6, 4) / MS_PER_DAY,
+        );
+
+        vi.advanceTimersByTime(60_000);
+        expect(store.state.nowTimestamp).to.equal(Date.parse('2025-07-04T00:01:00Z'));
       });
     });
 
@@ -155,32 +194,42 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.visibleDate).toEqualDateTime(visibleDate);
       });
 
-      it('should keep the same `nowUpdatedEveryMinute` reference when a non-timezone parameter changes', () => {
+      it('should keep the same `nowTimestamp` when a parameter changes', () => {
         const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
-        const before = store.state.nowUpdatedEveryMinute;
+        const before = store.state.nowTimestamp;
 
         store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, showCurrentTimeIndicator: false },
+          {
+            ...DEFAULT_PARAMS,
+            displayTimezone: 'America/New_York',
+            showCurrentTimeIndicator: false,
+          },
           adapter,
         );
 
-        expect(store.state.nowUpdatedEveryMinute).to.equal(before);
+        expect(store.state.nowTimestamp).to.equal(before);
       });
 
-      it('should recompute `nowUpdatedEveryMinute` when the display timezone changes', () => {
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, displayTimezone: 'default' },
-          adapter,
+      it('should read the current day in the new display timezone', () => {
+        vi.useFakeTimers();
+        onTestFinished(() => {
+          vi.useRealTimers();
+        });
+        // Still July 2nd in New York.
+        vi.setSystemTime(new Date('2025-07-03T02:00:00Z'));
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone: 'UTC' }, adapter);
+        expect(schedulerNowSelectors.nowDayNumber(store.state)).to.equal(
+          Date.UTC(2025, 6, 3) / MS_PER_DAY,
         );
-        const before = store.state.nowUpdatedEveryMinute;
 
         store.updateStateFromParameters(
           { ...DEFAULT_PARAMS, displayTimezone: 'America/New_York' },
           adapter,
         );
 
-        expect(store.state.nowUpdatedEveryMinute).to.not.equal(before);
-        expect(adapter.getTimezone(store.state.nowUpdatedEveryMinute)).to.equal('America/New_York');
+        expect(schedulerNowSelectors.nowDayNumber(store.state)).to.equal(
+          Date.UTC(2025, 6, 2) / MS_PER_DAY,
+        );
       });
     });
 
@@ -211,7 +260,7 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('errors', () => {
-      // Pinned to a minute boundary: the store schedules its `nowUpdatedEveryMinute`
+      // Pinned to a minute boundary: the store schedules its `nowTimestamp`
       // tick for the next one, counted from wherever the clock starts. On the real
       // time a run in the last seconds of a minute lets these tests advance across
       // the boundary and pick up a state write they do not test. Keep the advances

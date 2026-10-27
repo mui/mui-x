@@ -19,6 +19,7 @@ import { useEventCalendarStyledContext } from '../../../../event-calendar/EventC
 import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
+import { isOccurrenceMultiDay } from '../../../utils/event-utils';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -182,13 +183,10 @@ export const EventItem = React.forwardRef(function EventItem(
     localeText,
   });
 
-  const adapter = useAdapterContext();
-  const startsBeforeDay =
-    !adapter.isSameDay(occurrence.displayTimezone.start.value, date.value) &&
-    adapter.isBefore(occurrence.displayTimezone.start.value, date.value);
-  const endsAfterDay =
-    !adapter.isSameDay(occurrence.displayTimezone.end.value, date.value) &&
-    adapter.isAfter(occurrence.displayTimezone.end.value, date.value);
+  // The keys of the processed dates only depend on their day in the display timezone.
+  const { start, end } = occurrence.displayTimezone;
+  const startsBeforeDay = start.key !== date.key && start.timestamp < date.timestamp;
+  const endsAfterDay = end.key !== date.key && end.timestamp > date.timestamp;
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -292,9 +290,7 @@ function MultiDayDateLabel(props: {
   const adapter = useAdapterContext();
   const { classes, localeText } = useEventCalendarStyledContext();
 
-  if (
-    !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
-  ) {
+  if (isOccurrenceMultiDay(occurrence)) {
     const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
     return (
       <EventItemTime className={classes.eventItemTime} as="span">

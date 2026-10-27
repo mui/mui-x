@@ -270,9 +270,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
-                  variant={
-                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                  }
+                  variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
                   {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
               </EventContextMenuTrigger>

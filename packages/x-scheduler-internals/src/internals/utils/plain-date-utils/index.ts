@@ -21,8 +21,7 @@ export {
   createProcessedDate,
   createStartOfPlainDate,
   getDateKey,
-  getPlainDateKey,
   moveToPlainDate,
   normalizeAllDayBounds,
 } from './adapter';
-export { isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';
+export { getPlainDateKey, isWeekendPlainDate, plainDateFromDayNumber } from './plainDate';

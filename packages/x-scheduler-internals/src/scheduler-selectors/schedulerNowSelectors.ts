@@ -7,15 +7,17 @@ import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
  * the current day re-render when it changes, not every minute.
  */
 const nowDayNumber = createSelectorMemoized(
-  (state: State) => state.adapter,
-  (state: State) => state.nowUpdatedEveryMinute,
+  (state: State) => state.nowTimestamp,
   (state: State) => state.displayTimezone,
-  (adapter, now, timezone) => toLocalDayNumber(adapter.getTime(now), timezone),
+  (nowTimestamp, timezone) => toLocalDayNumber(nowTimestamp, timezone),
 );
 
 export const schedulerNowSelectors = {
   showCurrentTimeIndicator: (state: State) => state.showCurrentTimeIndicator,
-  nowUpdatedEveryMinute: (state: State) => state.nowUpdatedEveryMinute,
+  /**
+   * The timestamp of now, updated every minute. Read it in the display timezone.
+   */
+  nowTimestamp: (state: State) => state.nowTimestamp,
   nowDayNumber,
   /**
    * Whether `timestamp` is on the current day of the display timezone.

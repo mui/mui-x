@@ -30,7 +30,7 @@ function createMonthViewScenario(displayTimezone: TemporalTimezone) {
   return {
     visibleDate,
     displayTimezone,
-    eventRangeIndex: createEventRangeIndex(events, adapter, false),
+    eventRangeIndex: createEventRangeIndex(events, false),
   };
 }
 
