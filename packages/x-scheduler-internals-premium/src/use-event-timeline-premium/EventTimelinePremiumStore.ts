@@ -5,7 +5,6 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
-  DEFAULT_SCHEDULER_PREFERENCES,
   getDisplayedHourRange,
   getShouldEventRequireResource,
   SchedulerStore,
@@ -13,7 +12,6 @@ import {
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
-  EventTimelinePremiumPreferences,
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
   SchedulerAddDependencyResult,
@@ -140,8 +138,6 @@ const deriveAreDependenciesEnabled = (parameters: SchedulerDependenciesParameter
   }
   return enabled;
 };
-
-export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
 const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumState,
