@@ -288,9 +288,33 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       // From June 30th to August 24th in New York.
       expect(new Date(axis.start).toISOString()).to.equal('2025-06-30T04:00:00.000Z');
       expect(new Date(axis.end).toISOString()).to.equal('2025-08-25T03:59:59.999Z');
+      expect(axis.timezone).to.equal('America/New_York');
       expect(adapter.getTime(config.start)).to.equal(axis.start);
       expect(adapter.getTime(config.end)).to.equal(axis.end);
     });
+
+    it.each([
+      // The week of December 31st, 2022 in New York starts on Sunday the 25th.
+      { preset: 'dayAndWeek', start: '2022-12-25T05:00:00.000Z' },
+      { preset: 'monthAndYear', start: '2022-12-01T05:00:00.000Z' },
+      { preset: 'year', start: '2022-01-01T05:00:00.000Z' },
+    ] as const)(
+      'should read the visible date in the display timezone in the $preset preset',
+      ({ preset, start }) => {
+        const state = getEventTimelinePremiumStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [],
+          preset,
+          // January 1st, 2023 at midnight in UTC is December 31st, 2022 at 19:00 in New York.
+          visibleDate: adapter.date('2023-01-01T00:00:00', 'UTC'),
+          displayTimezone: 'America/New_York',
+        });
+
+        const axis = eventTimelinePremiumPresetSelectors.axis(state);
+
+        expect(new Date(axis.start).toISOString()).to.equal(start);
+      },
+    );
 
     it('should return the same reference when the dependencies are unchanged', () => {
       const state = getEventTimelinePremiumStateFromParameters({

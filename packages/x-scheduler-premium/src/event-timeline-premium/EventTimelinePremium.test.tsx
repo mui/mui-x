@@ -1259,8 +1259,11 @@ describe('<EventTimelinePremium />', () => {
         displayTimezone: 'America/New_York',
       });
 
-      // The days start on June 30th, not on July 1st, the day of the visible date in UTC.
-      expect(screen.queryByText('Mon, Jun 30')).not.to.equal(null);
+      // The four days start on June 30th, not on July 1st, the day of the visible date in UTC.
+      ['Mon, Jun 30', 'Tue, Jul 1', 'Wed, Jul 2', 'Thu, Jul 3'].forEach((label) => {
+        expect(screen.queryByText(label)).not.to.equal(null);
+      });
+      expect(screen.queryByText('Fri, Jul 4')).to.equal(null);
     });
   });
 
