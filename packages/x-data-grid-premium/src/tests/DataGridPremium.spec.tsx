@@ -1,8 +1,13 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
-import type { GridApiPremium } from '@mui/x-data-grid-premium';
+import type {
+  GridApiPremium,
+  GridComputedColDefOverrides,
+  GridComputedColumnDefinition,
+} from '@mui/x-data-grid-premium';
 import { formulaFeature } from '@mui/x-data-grid-premium/formula';
+import type { Expect, Equal } from 'test/utils/typeUtils';
 
 function ColumnPropTest() {
   return (
@@ -161,6 +166,85 @@ function FormulaFeatureInjectionTest() {
       {/* An arbitrary object is not a formula feature */}
       {/* @ts-expect-error An arbitrary object does not implement the formula feature interface. */}
       <DataGridPremium rows={[]} columns={[]} featureDependencies={{ formula: {} }} />
+    </div>
+  );
+}
+
+// The properties set by the grid on a computed column, and the ones only called for editable cells.
+type ComputedColDefOwnProperty =
+  | 'field'
+  | 'type'
+  | 'computed'
+  | 'editable'
+  | 'allowFormulas'
+  | 'valueGetter'
+  | 'valueSetter'
+  | 'groupingValueGetter'
+  | 'rowSpanValueGetter'
+  | 'renderEditCell'
+  | 'preProcessEditCellProps'
+  | 'pastedValueParser';
+
+type ComputedColDefTests = [
+  Expect<Equal<GridComputedColDefOverrides[ComputedColDefOwnProperty], undefined>>,
+];
+
+function ComputedColDefTest() {
+  const overrides: GridComputedColDefOverrides = {
+    width: 120,
+    headerAlign: 'center',
+    cellClassName: 'total',
+    headerClassName: 'total-header',
+    // Parses the filter values.
+    valueParser: (value: string) => Number(value) / 100,
+  };
+  const editableOverrides = { width: 120, editable: true };
+  const getOverrides = (definition: GridComputedColumnDefinition) => ({
+    width: 120,
+    renderEditCell: () => definition.field,
+  });
+  return (
+    <div>
+      {/* The properties the grid applies to a computed column */}
+      <DataGridPremium rows={[]} columns={[]} computedColDef={overrides} />
+      <DataGridPremium
+        rows={[]}
+        columns={[]}
+        computedColDef={(definition) => ({
+          width: definition.type === 'number' ? 120 : 180,
+          valueFormatter: (value: number) => value.toFixed(2),
+        })}
+      />
+      {/* The properties that make it a computed column, and the cell editing ones, in every form */}
+      <DataGridPremium
+        rows={[]}
+        columns={[]}
+        // @ts-expect-error The grid sets the getters of a computed column.
+        computedColDef={{ width: 120, valueGetter: () => 1 }}
+      />
+      <DataGridPremium
+        rows={[]}
+        columns={[]}
+        // @ts-expect-error The cells of a computed column are never editable.
+        computedColDef={(definition) => ({ width: 120, editable: definition.type === 'number' })}
+      />
+      {/* @ts-expect-error The cells of a computed column are never editable. */}
+      <DataGridPremium rows={[]} columns={[]} computedColDef={editableOverrides} />
+      {/* @ts-expect-error The cells of a computed column are never edited. */}
+      <DataGridPremium rows={[]} columns={[]} computedColDef={getOverrides} />
+      {/* The properties of the column types a computed column never has */}
+      <DataGridPremium
+        rows={[]}
+        columns={[]}
+        // @ts-expect-error A computed column is never a `singleSelect` one.
+        computedColDef={{ width: 120, valueOptions: ['a'] }}
+      />
+      <DataGridPremium
+        rows={[]}
+        columns={[]}
+        // @ts-expect-error A computed column is never an `actions` one.
+        computedColDef={{ width: 120, getActions: () => [] }}
+      />
     </div>
   );
 }

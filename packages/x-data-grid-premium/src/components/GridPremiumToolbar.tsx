@@ -6,6 +6,7 @@ import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
+import { ComputedColumnsPanelTrigger } from './computedColumnsPanel/ComputedColumnsPanelTrigger';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
 import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
 import {
@@ -17,7 +18,7 @@ import {
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const { excelOptions, formulaBar, ...other } = props;
+  const { excelOptions, formulaBar, showComputedColumnsButton = true, ...other } = props;
   // The formula bar component comes from the injected formula feature.
   const FormulaBar = rootProps.featureDependencies?.formula?.FormulaBar;
 
@@ -81,6 +82,20 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
             <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarPivot')}>
               <ToolbarButton {...triggerProps} color={state.active ? 'primary' : 'default'}>
                 <rootProps.slots.pivotIcon fontSize="small" />
+              </ToolbarButton>
+            </rootProps.slots.baseTooltip>
+          )}
+        />
+      )}
+      {/* Renders nothing when computed columns are not available. */}
+      {showComputedColumnsButton && (
+        <ComputedColumnsPanelTrigger
+          render={(triggerProps) => (
+            <rootProps.slots.baseTooltip
+              title={apiRef.current.getLocaleText('toolbarComputedColumns')}
+            >
+              <ToolbarButton {...triggerProps} color="default">
+                <rootProps.slots.computedColumnIcon fontSize="small" />
               </ToolbarButton>
             </rootProps.slots.baseTooltip>
           )}

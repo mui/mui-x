@@ -231,6 +231,13 @@
     "componentProp": "onColumnWidthChange"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "computedColumnsChange",
+    "description": "Fired when the computed columns model changes.",
+    "params": "GridComputedColumnsModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "debouncedResize",
     "description": "Fired when the grid is resized with a debounced time of 60ms.",
