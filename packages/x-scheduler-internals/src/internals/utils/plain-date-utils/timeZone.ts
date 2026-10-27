@@ -66,7 +66,7 @@ function getSystemTimezoneOffsetMs(epochMs: number): number {
  * The offset of `timezone` from UTC at an instant, in milliseconds.
  * `'default'` and `'system'` read the timezone of the system, like the adapter.
  */
-export function getTimezoneOffsetMs(timezone: TemporalTimezone, epochMs: number): number {
+function getTimezoneOffsetMs(timezone: TemporalTimezone, epochMs: number): number {
   if (timezone === 'default' || timezone === 'system') {
     return getSystemTimezoneOffsetMs(epochMs);
   }

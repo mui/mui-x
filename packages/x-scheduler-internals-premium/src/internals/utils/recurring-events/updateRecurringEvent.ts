@@ -4,7 +4,6 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventScope,
   RecurringEventWeekDayCode,
-  SchedulerEvent,
   SchedulerEventCreationProperties,
   SchedulerEventRecurrenceRule,
   SchedulerEventUpdatedProperties,
@@ -16,7 +15,6 @@ import {
   buildTemporalPlainDate,
   extractStandaloneEvent,
   dateToEventString,
-  getDateKey,
   getOccurrenceEnd,
   moveToPlainDate,
   toPlainDate,
@@ -82,11 +80,11 @@ export function applyRecurringUpdateFollowing(
 
   // 1) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(adapter, originalEvent, occurrenceStart, changes);
-  const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
   const originalModel = originalEvent.modelInBuiltInFormat;
   const dataTimezone = originalModel.timezone ?? 'default';
-  const stringified: Record<string, any> = { ...changes };
+  // The store gives the new series its own id when it creates it.
+  const { id: unusedChangesId, ...stringified }: Record<string, any> = changes;
   // When start/end are not explicitly changed, the new series must start at the occurrence
   // date (not at DTSTART), otherwise the split series and the truncated original would overlap.
   stringified.start = dateToEventString(adapter, newStart, originalModel.start, dataTimezone);
@@ -118,12 +116,12 @@ export function applyRecurringUpdateFollowing(
     }
   }
 
-  const newEvent: SchedulerEvent = {
-    ...originalEvent.modelInBuiltInFormat,
+  const { id: unusedId, ...originalModelWithoutId } = originalModel;
+  const newEvent: SchedulerEventCreationProperties = {
+    ...originalModelWithoutId,
     ...stringified,
-    id: newEventId,
     rrule: newEventRRule,
-    extractedFromId: originalEvent.modelInBuiltInFormat.id,
+    extractedFromId: originalModel.id,
   };
 
   // 2) Old series: truncated to end the day before the edited occurrence, like a deletion.

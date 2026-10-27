@@ -239,8 +239,10 @@ export const AgendaView = React.memo(
             date.plainDate,
             weekStartsOn,
           ).dayNumber;
-          weekNumber = getWeekNumber(adapter, date.plainDate, weekStartsOn);
           isFirstDayOfWeek = weekStartDayNumber !== previousWeekStartDayNumber;
+          if (isFirstDayOfWeek) {
+            weekNumber = getWeekNumber(adapter, date.plainDate, weekStartsOn);
+          }
           previousWeekStartDayNumber = weekStartDayNumber;
         }
         result.push({ date, occurrences, weekNumber, isFirstDayOfWeek });

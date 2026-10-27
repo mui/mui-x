@@ -82,7 +82,7 @@ export function isEndMinuteOutsideAxisWindow(
  * minutes (a full day is always 1440 minutes) so the axis matches the rendered grid,
  * whose tick count is pinned per day and does not stretch on DST transitions.
  */
-export function getTimelineAxisDayMs(axis: TimelineAxisWindow): number {
+function getTimelineAxisDayMs(axis: TimelineAxisWindow): number {
   return Math.max(1, axis.dayEndMinute - axis.dayStartMinute) * MINUTE_MS;
 }
 
