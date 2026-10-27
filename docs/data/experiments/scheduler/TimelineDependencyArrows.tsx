@@ -222,7 +222,9 @@ export default function TimelineDependencyArrows() {
         <EventTimelinePremiumFeaturesContext.Provider value={features}>
           <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
             <EventEditingStyledContext.Provider value={styledContextValue}>
-              <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
+              <SharedComponentsStyledContext.Provider
+                value={sharedStyledContextValue}
+              >
                 <SchedulerDirectionProvider>
                   <EventTimelinePremiumContent />
                   <ErrorContainer />

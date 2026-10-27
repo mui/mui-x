@@ -130,6 +130,7 @@ export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknow
 export type SchedulerDependencyRejectionReason =
   | SchedulerDependencyEventRejectionReason
   | 'readOnly'
+  | 'featureDisabled'
   | 'duplicateDependency'
   | 'cyclicDependency'
   | 'cascadeBlocked';
