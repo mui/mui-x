@@ -16,9 +16,7 @@ import { getPlainDateKey } from './plainDate';
 // receives and returns the same values as the rest of the Scheduler.
 
 /**
- * Returns a string representation of the date.
- * It can be used as key in Maps or passed to the React `key` property when looping through days.
- * It only contains date information, two dates representing the same day but with different time will have the same key.
+ * Returns the `getPlainDateKey()` of the day of `day`, in the timezone it's labeled with.
  */
 export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
   return getPlainDateKey(buildTemporalPlainDate(adapter, day));

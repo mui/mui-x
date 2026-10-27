@@ -10,7 +10,6 @@ import {
   createProcessedDate,
   getDateKey,
 } from './adapter';
-import { getPlainDateKey } from './plainDate';
 import type { TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 
@@ -78,7 +77,6 @@ describe('base-temporal adapter bridge', () => {
       // July 4th at 02:00 in Tokyo is July 3rd in UTC.
       const value = currentAdapter.date('2025-07-04T02:00:00', 'Asia/Tokyo');
       expect(getDateKey(value, currentAdapter)).to.equal('2025-07-04');
-      expect(getPlainDateKey(buildTemporalPlainDate(currentAdapter, value))).to.equal('2025-07-04');
     }
   });
 

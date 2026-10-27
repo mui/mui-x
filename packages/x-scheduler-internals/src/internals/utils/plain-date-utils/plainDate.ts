@@ -1,7 +1,6 @@
 import { createPlainDate } from '../base-temporal/PlainDate';
 import type { PlainDate } from '../base-temporal/PlainDate';
 import { ISO_CALENDAR_ID } from '../base-temporal/calendar';
-import { formatIsoDate, fromDayNumber } from '../base-temporal/iso';
 
 /**
  * The plain date of a day number, in the ISO calendar.
@@ -34,8 +33,7 @@ export function getPlainDateKey(plainDate: PlainDate): string {
     if (plainDateKeys.size >= MAX_CACHED_KEYS) {
       plainDateKeys.clear();
     }
-    const isoDate = fromDayNumber(plainDate.dayNumber);
-    key = formatIsoDate(isoDate.year, isoDate.month, isoDate.day);
+    key = plainDate.toString();
     plainDateKeys.set(plainDate.dayNumber, key);
   }
   return key;
