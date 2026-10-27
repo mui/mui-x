@@ -17,7 +17,6 @@ import { processEvent } from '../../../process-event';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
-import type { SchedulerRecurringEventsUnavailableHint } from '../../plugins/recurringEventsUnavailableWarning';
 import { dateToEventString } from '../date-utils';
 
 /**
@@ -121,7 +120,6 @@ export function getProcessedEventFromModel<TEvent extends object>(
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   displayTimezone: TemporalTimezone,
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
-  recurringEventsUnavailableHint: SchedulerRecurringEventsUnavailableHint = 'premium',
 ): SchedulerProcessedEvent {
   // 1. Convert the model to a default event model
   const modelInDefaultFormat = {} as SchedulerEvent;
@@ -134,13 +132,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   }
 
   // 2. Convert the default event model to a processed event
-  return processEvent(
-    modelInDefaultFormat,
-    displayTimezone,
-    adapter,
-    recurringEventsPlugin,
-    recurringEventsUnavailableHint,
-  );
+  return processEvent(modelInDefaultFormat, displayTimezone, adapter, recurringEventsPlugin);
 }
 
 /**
@@ -357,19 +349,13 @@ type BuildEventsStateParameters<TEvent extends object, TResource extends object>
 } & (
     | {
         recurringEventsPlugin?: SchedulerRecurringEventsPluginInterface | null;
-        recurringEventsUnavailableHint?: SchedulerRecurringEventsUnavailableHint;
         previousState?: never;
       }
     | {
         recurringEventsPlugin?: never;
-        recurringEventsUnavailableHint?: never;
         previousState: Pick<
           SchedulerState<TEvent>,
-          | 'eventIdList'
-          | 'eventModelLookup'
-          | 'processedEventLookup'
-          | 'recurringEventsPlugin'
-          | 'recurringEventsUnavailableHint'
+          'eventIdList' | 'eventModelLookup' | 'processedEventLookup' | 'recurringEventsPlugin'
         >;
       }
   );
@@ -388,10 +374,6 @@ export function buildEventsState<TEvent extends object, TResource extends object
   const events = options.events ?? EMPTY_ARRAY;
   const recurringEventsPlugin =
     options.recurringEventsPlugin ?? previousState?.recurringEventsPlugin ?? null;
-  const recurringEventsUnavailableHint =
-    options.recurringEventsUnavailableHint ??
-    previousState?.recurringEventsUnavailableHint ??
-    'premium';
 
   const eventIdList: SchedulerEventId[] = [];
   const eventModelLookup = new Map<SchedulerEventId, TEvent>();
@@ -421,7 +403,6 @@ export function buildEventsState<TEvent extends object, TResource extends object
         eventModelStructure,
         displayTimezone,
         recurringEventsPlugin,
-        recurringEventsUnavailableHint,
       );
     processedEventByModel.set(event, processedEvent);
     const { id } = processedEvent;

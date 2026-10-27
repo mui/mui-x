@@ -73,7 +73,7 @@ describe('EventTimelinePremium - features', () => {
 
   it('should render a recurring event once without the recurring events feature', async () => {
     await expect(() => renderSettled(<Timeline />)).toWarnDev(
-      'the recurring events feature is not provided',
+      'with the `recurringEvents` feature',
     );
 
     expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
@@ -89,7 +89,7 @@ describe('EventTimelinePremium - features', () => {
     let view!: Awaited<ReturnType<typeof renderSettled>>;
     await expect(async () => {
       view = await renderSettled(<Timeline />);
-    }).toWarnDev('the recurring events feature is not provided');
+    }).toWarnDev('with the `recurringEvents` feature');
 
     await view.user.click(getAllEventsByTitle(dailyEvent.title)[0]);
     await waitFor(() => {
@@ -112,7 +112,7 @@ describe('EventTimelinePremium - features', () => {
   it('should move an rrule event as a single event without the recurring events feature', async () => {
     const handleEventsChange = vi.fn();
     await expect(() => renderSettled(<Timeline onEventsChange={handleEventsChange} />)).toWarnDev(
-      'the recurring events feature is not provided',
+      'with the `recurringEvents` feature',
     );
 
     mockAllEventRowBounds(AXIS_WIDTH);
@@ -142,7 +142,7 @@ describe('EventTimelinePremium - features', () => {
     let view!: Awaited<ReturnType<typeof renderSettled>>;
     await expect(async () => {
       view = await renderSettled(<Timeline onEventsChange={handleEventsChange} />);
-    }).toWarnDev('the recurring events feature is not provided');
+    }).toWarnDev('with the `recurringEvents` feature');
 
     await view.user.click(getAllEventsByTitle(dailyEvent.title)[0]);
     await waitFor(() => {
@@ -171,7 +171,7 @@ describe('EventTimelinePremium - features', () => {
     let setProps!: Awaited<ReturnType<typeof renderSettled>>['setProps'];
     await expect(async () => {
       ({ setProps } = await renderSettled(<Timeline />));
-    }).toWarnDev('the recurring events feature is not provided');
+    }).toWarnDev('with the `recurringEvents` feature');
 
     expect(() => {
       setProps({ features: { recurringEvents: recurringEventsFeature } });

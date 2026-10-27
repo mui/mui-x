@@ -66,7 +66,6 @@ describe('Core - EventTimelinePremiumStore', () => {
         ]),
         readOnly: false,
         recurringEventsPlugin: schedulerRecurringEventsPlugin,
-        recurringEventsUnavailableHint: 'feature',
         shouldEventRequireResource: true,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [TEST_RESOURCE.id],

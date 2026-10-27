@@ -51,7 +51,6 @@ describe('Core - EventCalendarStore', () => {
         processedResourceLookup: new Map(),
         readOnly: false,
         recurringEventsPlugin: null,
-        recurringEventsUnavailableHint: 'premium',
         shouldEventRequireResource: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
