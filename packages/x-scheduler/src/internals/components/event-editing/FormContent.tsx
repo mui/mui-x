@@ -157,9 +157,9 @@ export function FormContent(props: FormContentProps) {
 
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
-    const { timezone } = occurrence.displayTimezone;
-    const startFields = formatDateAndTimeFields(occurrence.displayTimezone.start, timezone);
-    const endFields = formatDateAndTimeFields(occurrence.displayTimezone.end, timezone);
+    const { start, end, timezone } = occurrence.displayTimezone;
+    const startFields = formatDateAndTimeFields(start.timestamp, timezone);
+    const endFields = formatDateAndTimeFields(end.timestamp, timezone);
 
     // The rule is read and written in the event's timezone, not the display one.
     const base = getOccurrenceDataTimezone(occurrence)?.rrule;
@@ -304,8 +304,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
     }
 
-    // An invalid field already blocks; the ordering verdict would compare
-    // against the computeRange fallback and blame a healthy field.
+    // An invalid field already blocks. Its bound reads as now or `NaN`: the
+    // ordering check would blame a healthy field, or throw.
     const rangeError = invalidRangeField
       ? null
       : validateRange(start, end, values.allDay, current.displayTimezone);

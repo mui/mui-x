@@ -168,46 +168,50 @@ function readTimeField(raw: string): number | null {
 }
 
 /**
- * Formats a processed date for the `yyyy-MM-dd` and `HH:mm` fields. `timezone` is the one the date
- * was processed in.
+ * Reads a `yyyy-MM-dd` field and a time of day as an instant in `timezone`, or returns `NaN` when
+ * the field isn't an existing date, the time is `null` or the timezone is unknown.
+ */
+function readDateFieldMs(rawDate: string, msInDay: number | null, timezone: TemporalTimezone) {
+  const plainDate = readDateField(rawDate);
+  return plainDate == null || msInDay == null ? NaN : toEpochMs(plainDate, msInDay, timezone);
+}
+
+/**
+ * Formats an instant for the `yyyy-MM-dd` and `HH:mm` fields, on the wall clock of `timezone`.
  */
 export function formatDateAndTimeFields(
-  processedDate: SchedulerProcessedDate,
+  epochMs: number,
   timezone: TemporalTimezone,
 ): { date: string; time: string } {
-  const { minutesInDay } = processedDate;
+  const plainDateTime = toPlainDateTime(epochMs, timezone);
+  const minutesInDay = Math.floor(plainDateTime.msInDay / 60_000);
   const pad = (value: number) => String(value).padStart(2, '0');
   return {
-    date: toPlainDateTime(processedDate.timestamp, timezone).date.toString(),
+    date: plainDateTime.date.toString(),
     time: `${pad(Math.floor(minutesInDay / 60))}:${pad(minutesInDay % 60)}`,
   };
 }
 
 /**
  * The instants of the range the fields describe, read in the display timezone. An all-day range
- * goes from the first instant of its first day to the last instant of its last day. A time a DST
- * transition skips moves forward by the length of the gap, and a time it repeats resolves to its
- * first instant, whatever the timezone of the system. An empty field reads as now, and a field
- * that doesn't parse as `NaN`.
+ * goes from the first instant of its first day to the last instant of its last day. A time field
+ * that a DST transition skips moves forward by the length of the gap, and one it repeats resolves
+ * to its first instant, whatever the timezone of the system. An empty field reads as now, and a
+ * field that doesn't parse as `NaN`.
  */
 export function computeRange(
   next: Pick<EventDialogFormValues, RangeFormKey>,
   displayTimezone: TemporalTimezone,
 ): { start: number; end: number; surfaceType: 'day-grid' | 'time-grid' } {
   const now = Date.now();
-  const readBound = (rawDate: string, msInDay: number | null) => {
-    const plainDate = readDateField(rawDate);
-    return plainDate == null || msInDay == null
-      ? NaN
-      : toEpochMs(plainDate, msInDay, displayTimezone);
-  };
 
   if (next.allDay) {
     return {
-      start: next.startDate === '' ? now : readBound(next.startDate, 0),
+      start: next.startDate === '' ? now : readDateFieldMs(next.startDate, 0, displayTimezone),
       // The last instant before the next day starts: when a DST transition repeats the last hour
       // of the day, it's the later 23:59:59.999.
-      end: next.endDate === '' ? now : readBound(next.endDate, MS_PER_DAY) - 1,
+      end:
+        next.endDate === '' ? now : readDateFieldMs(next.endDate, MS_PER_DAY, displayTimezone) - 1,
       surfaceType: 'day-grid',
     };
   }
@@ -216,15 +220,21 @@ export function computeRange(
     start:
       next.startDate === '' || next.startTime === ''
         ? now
-        : readBound(next.startDate, readTimeField(next.startTime)),
+        : readDateFieldMs(next.startDate, readTimeField(next.startTime), displayTimezone),
     end:
       next.endDate === '' || next.endTime === ''
         ? now
-        : readBound(next.endDate, readTimeField(next.endTime)),
+        : readDateFieldMs(next.endDate, readTimeField(next.endTime), displayTimezone),
     surfaceType: 'time-grid',
   };
 }
 
+/**
+ * Checks the order of the bounds of a range: the end day can't be before the start day, and on the
+ * same day, the end of a timed range must be after its start. The days are read in
+ * `displayTimezone`, the one the fields are read in. `start` and `end` must be finite: check the
+ * fields with `findInvalidRangeField()` first.
+ */
 export function validateRange(
   start: number,
   end: number,
@@ -254,11 +264,8 @@ export function findInvalidRangeField(
   values: Pick<EventDialogFormValues, RangeFormKey>,
   displayTimezone: TemporalTimezone,
 ): 'startDate' | 'startTime' | 'endDate' | 'endTime' | null {
-  const parsesAsDate = (raw: string) => {
-    const plainDate = readDateField(raw);
-    // An unknown timezone gives no instant.
-    return plainDate != null && Number.isFinite(toEpochMs(plainDate, 0, displayTimezone));
-  };
+  // A date in an unknown timezone gives no instant, so it doesn't parse either.
+  const parsesAsDate = (raw: string) => Number.isFinite(readDateFieldMs(raw, 0, displayTimezone));
   const parsesAsTime = (raw: string) => readTimeField(raw) != null;
 
   if (!parsesAsDate(values.startDate)) {

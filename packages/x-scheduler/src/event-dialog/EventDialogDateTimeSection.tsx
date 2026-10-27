@@ -79,8 +79,8 @@ export function EventDialogDateTimeSection() {
       if (invalidField === field) {
         return getInvalidValueErrorMessage(field, localeText);
       }
-      // While any field is invalid, the ordering verdict would compare against
-      // the computeRange fallback and blame a healthy field.
+      // While any field is invalid, its bound reads as now or `NaN`: the ordering
+      // check would blame a healthy field, or throw.
       if (invalidField !== null || field === 'startDate' || field === 'startTime') {
         return null;
       }

@@ -32,6 +32,11 @@ export function usePushPlaceholder() {
 
     const displayTimezone = schedulerOtherSelectors.displayTimezone(store.state);
     const { start, end, surfaceType } = computeRange(values, displayTimezone);
+    // A custom field can hold a date that doesn't exist, like 2025-06-31: the placeholder stays
+    // where it was, since the grids can't place a bound that isn't an instant.
+    if (!Number.isFinite(start) || !Number.isFinite(end)) {
+      return;
+    }
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType
       : surfaceType;

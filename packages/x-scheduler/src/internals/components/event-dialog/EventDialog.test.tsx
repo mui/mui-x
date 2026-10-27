@@ -29,7 +29,6 @@ import {
   useEventDialogOccurrence,
 } from '@mui/x-scheduler/event-dialog';
 import { vi, describe, it, expect, afterEach, beforeEach } from 'vitest';
-import type { Mock } from 'vitest';
 import type { SchedulerSlotProps, SchedulerSlots } from '../../../models/slots';
 import { MonthView } from '../../../month-view';
 import { EventDialogContent, EventDialogProvider } from './EventDialog';
@@ -991,7 +990,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.queryByRole('textbox', { name: 'Description' })).to.equal(null);
     });
 
-    function renderCreation(onEventsChange: Mock<(events: SchedulerEvent[]) => void>) {
+    function renderCreation(
+      generalTab: React.ComponentType,
+      onEventsChange: (events: SchedulerEvent[]) => void = () => {},
+    ) {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:15:00Z', 'default');
       const creationOccurrence = EventBuilder.new()
@@ -1000,11 +1002,13 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
         .toOccurrence();
 
-      return render(
+      let schedulerStore!: AnyEventCalendarStore;
+      const view = render(
         <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext}
-            onMount={(store) =>
+            onMount={(store) => {
+              schedulerStore = store;
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
@@ -1012,22 +1016,25 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
                 end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
-              })
-            }
+              });
+            }}
           />
           <SchedulerSlotsProvider
-            slots={{ eventDialogGeneralTab: CustomSection }}
+            slots={{ eventDialogGeneralTab: generalTab }}
             slotProps={undefined}
           >
             <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
           </SchedulerSlotsProvider>
         </EventCalendarProvider>,
       );
+      const getPlaceholder = () =>
+        schedulerOccurrencePlaceholderSelectors.value(schedulerStore.state)!;
+      return { ...view, getPlaceholder };
     }
 
     it('should save an edited custom field when creating an event', async () => {
       const onEventsChange = vi.fn();
-      const { user } = renderCreation(onEventsChange);
+      const { user } = renderCreation(CustomSection, onEventsChange);
 
       await user.type(screen.getByRole('textbox', { name: /event title/i }), 'Meeting');
       const priority = screen.getByRole('textbox', { name: 'Priority' });
@@ -1042,7 +1049,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     it('should omit an untouched default when creating an event', async () => {
       const onEventsChange = vi.fn();
-      const { user } = renderCreation(onEventsChange);
+      const { user } = renderCreation(CustomSection, onEventsChange);
 
       expect(screen.getByRole('textbox', { name: 'Priority' })).to.have.value('normal');
       await user.type(screen.getByRole('textbox', { name: /event title/i }), 'Meeting');
@@ -1074,39 +1081,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           </React.Fragment>
         );
       }
-      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
-      const end = adapter.date('2025-05-26T08:15:00Z', 'default');
-      const creationOccurrence = EventBuilder.new()
-        .id('placeholder-id')
-        .title('')
-        .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
-        .toOccurrence();
-
-      let schedulerStore!: AnyEventCalendarStore;
-      render(
-        <EventCalendarProvider events={[]} resources={resources} onEventsChange={() => {}}>
-          <SchedulerStoreRunner<AnyEventCalendarStore>
-            context={SchedulerStoreContext}
-            onMount={(store) => {
-              schedulerStore = store;
-              store.setOccurrencePlaceholder({
-                type: 'creation',
-                surfaceType: 'time-grid',
-                start: adapter.getTime(start),
-                end: adapter.getTime(end),
-                lockSurfaceType: false,
-                resourceId: null,
-              });
-            }}
-          />
-          <SchedulerSlotsProvider
-            slots={{ eventDialogGeneralTab: CreationSections }}
-            slotProps={undefined}
-          >
-            <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
-          </SchedulerSlotsProvider>
-        </EventCalendarProvider>,
-      );
+      const { getPlaceholder } = renderCreation(CreationSections);
 
       const rendersBefore = onRender.mock.calls.length;
       fireEvent.change(screen.getByLabelText(/start date/i), { target: { value: '2025-05-27' } });
@@ -1116,13 +1091,33 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-27');
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
-      const placeholder = schedulerOccurrencePlaceholderSelectors.value(schedulerStore.state)!;
       expect(
         adapter.formatByString(
-          createAdapterDate(adapter, placeholder.start, 'default'),
+          createAdapterDate(adapter, getPlaceholder().start, 'default'),
           'yyyy-MM-dd',
         ),
       ).to.equal('2025-05-27');
+    });
+
+    it('should keep the placeholder in place while a custom field holds a date that does not exist', () => {
+      function CustomEndDateField() {
+        const endDate = useEventDialogFormField('endDate');
+        return (
+          <input
+            aria-label="End date"
+            value={endDate.value}
+            onChange={(event) => endDate.setValue(event.target.value)}
+          />
+        );
+      }
+      const { getPlaceholder } = renderCreation(CustomEndDateField);
+      const placeholderBefore = getPlaceholder();
+
+      fireEvent.change(screen.getByRole('textbox', { name: 'End date' }), {
+        target: { value: '2025-06-31' },
+      });
+
+      expect(getPlaceholder()).to.deep.equal(placeholderBefore);
     });
 
     it('should open the dialog for an event with a property named hasOwnProperty', () => {

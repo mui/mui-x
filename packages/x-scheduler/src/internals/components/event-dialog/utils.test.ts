@@ -67,6 +67,10 @@ describe('findInvalidRangeField', () => {
       expect(run({ startTime: '24:00', allDay: true })).to.equal(null);
     });
   });
+
+  it('should reject the dates when the display timezone is unknown', () => {
+    expect(findInvalidRangeField(base, 'Not/A_Timezone')).to.equal('startDate');
+  });
 });
 
 describe('getEditedRangeBounds', () => {
