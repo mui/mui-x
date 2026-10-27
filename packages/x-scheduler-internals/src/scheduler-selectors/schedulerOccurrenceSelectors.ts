@@ -30,15 +30,15 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     resourcesChildrenMap,
     displayTimezone,
     recurringEventsPlugin,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
+    start: number,
+    end: number,
   ) => {
     const occurrencesGroupedByResource = new Map<string, SchedulerEventOccurrence[]>();
 
     const occurrences = getOccurrencesFromEvents({
       adapter,
-      start: adapter.getTime(start),
-      end: adapter.getTime(end),
+      start,
+      end,
       eventRangeIndex,
       visibleResources,
       displayTimezone,

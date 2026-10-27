@@ -10,7 +10,6 @@ import {
   computeOccurrencesMaxIndex,
 } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
-  adapter,
   EventBuilder,
   getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
@@ -29,9 +28,9 @@ const state = getEventTimelinePremiumStateFromParameters({
   preset: 'dayAndHour',
 });
 const config = eventTimelinePremiumPresetSelectors.config(state);
-const durationMs = getTimelineAxisDurationMs(config.axis);
-const start = config.start;
-const end = adapter.addHours(start, 1);
+const durationMs = getTimelineAxisDurationMs(config);
+const start = new Date(config.start);
+const end = new Date(config.start + 60 * 60_000);
 const occurrenceTemplate = EventBuilder.new()
   .span(start.toISOString(), end.toISOString())
   .toOccurrence();
@@ -72,7 +71,7 @@ describe('event timeline resource layout', () => {
             const parameters = {
               start: occurrence.displayTimezone.start,
               end: occurrence.displayTimezone.end,
-              collection: config.axis,
+              collection: config,
               durationMs,
             };
             result += computeElementPositionInCollection(parameters).duration;

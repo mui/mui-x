@@ -40,7 +40,6 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
-  const { axis } = config;
 
   // Cursor offsets are measured in axis milliseconds: with a trimmed hour window the
   // hidden hours take no space, so px↔date conversions go through the axis helpers.
@@ -77,7 +76,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
       const axisOffsetToTimestamp = (offsetMs: number) =>
-        timelineAxisOffsetToTimestamp(axis, roundToDragPrecision(offsetMs));
+        timelineAxisOffsetToTimestamp(config, roundToDragPrecision(offsetMs));
 
       // Move a Timeline Event within the Timeline
       if (data.source === 'TimelineGridEvent') {
@@ -90,15 +89,15 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // original dates instead of silently snapping the start to the window edge.
         // A visible start has no remainder, even in the second occurrence of an hour repeated by a
         // fall-back transition, which the axis reads as the first one.
-        const startMsInDay = toMsInDay(data.start, axis.timezone);
+        const startMsInDay = toMsInDay(data.start, config.timezone);
         const hiddenRemainderMs = isStartMinuteOutsideAxisWindow(
           config,
           Math.floor(startMsInDay / 60_000),
         )
           ? data.start -
             timelineAxisOffsetToTimestamp(
-              axis,
-              timestampToTimelineAxisOffsetMs(axis, data.start, startMsInDay),
+              config,
+              timestampToTimelineAxisOffsetMs(config, data.start, startMsInDay),
             )
           : 0;
 
@@ -132,8 +131,8 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
           // The offset from the grab point to the event end must be measured on the axis:
           // the real duration would overshoot when the event spans hidden hours.
           const eventAxisDurationMs =
-            timestampToTimelineAxisOffsetMs(axis, data.end) -
-            timestampToTimelineAxisOffsetMs(axis, data.start);
+            timestampToTimelineAxisOffsetMs(config, data.end) -
+            timestampToTimelineAxisOffsetMs(config, data.start);
 
           // Ensure the new end date is not before or too close to the start date.
           const { end: newEnd } = clampResizedEventEdge({

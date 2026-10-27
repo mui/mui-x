@@ -9,6 +9,7 @@ import {
   getTimelineAxisDurationMs,
   FULL_DAY_MINUTES,
 } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS } from '../internals/utils/preset-utils';
@@ -66,26 +67,24 @@ export const eventTimelinePremiumPresetSelectors = {
           ? (fullDayTickCount * (dayEndMinute - dayStartMinute)) / FULL_DAY_MINUTES
           : fullDayTickCount;
 
-      // The bounds as timestamps, read once per config change.
+      // The config is the axis of the timeline: its bounds as timestamps, read once per config
+      // change, and its hour window.
       const axis = getTimelineAxis(adapter, { start, end, dayStartMinute, dayEndMinute });
 
       return {
+        ...axis,
         tickCount,
-        start,
-        end,
         tickWidth,
         headers,
         timeResolution,
-        dayStartMinute,
-        dayEndMinute,
-        axis,
         // Precomputed once per config change: per-row hooks read it on every render.
         durationMs: getTimelineAxisDurationMs(axis),
       };
     },
   ),
   /**
-   * The axis of the preset, with its bounds as timestamps in the display timezone.
+   * The axis of the preset, with its bounds as timestamps in the display timezone. The config
+   * itself, read as an axis.
    */
-  axis: (state: State) => eventTimelinePremiumPresetSelectors.config(state).axis,
+  axis: (state: State): TimelineAxis => eventTimelinePremiumPresetSelectors.config(state),
 };

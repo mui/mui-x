@@ -66,8 +66,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
       expect(config.tickCount).to.equal(4 * 24);
-      expect(config.start).toEqualDateTime('2025-07-03T00:00:00Z');
-      expect(config.end).toEqualDateTime('2025-07-06T23:59:59.999Z');
+      expect(new Date(config.start)).toEqualDateTime('2025-07-03T00:00:00Z');
+      expect(new Date(config.end)).toEqualDateTime('2025-07-06T23:59:59.999Z');
     });
 
     it('should return the configuration for the dayAndMonth preset', () => {
@@ -81,8 +81,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
       expect(config.tickCount).to.equal(8 * 7);
-      expect(config.start).toEqualDateTime('2025-07-03T00:00:00Z');
-      expect(config.end).toEqualDateTime('2025-08-27T23:59:59.999Z');
+      expect(new Date(config.start)).toEqualDateTime('2025-07-03T00:00:00Z');
+      expect(new Date(config.end)).toEqualDateTime('2025-08-27T23:59:59.999Z');
     });
 
     it('should return the configuration for the dayAndWeek preset', () => {
@@ -98,8 +98,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       // CSS ticks use the preset's `timeResolution` (days here); 16 weeks → 112 days.
       expect(config.tickCount).to.equal(16 * 7);
       // July 3, 2025 is a Thursday → week starts Monday June 30
-      expect(config.start).toEqualDateTime(adapter.startOfWeek(VISIBLE_DATE));
-      expect(config.end).toEqualDateTime(
+      expect(new Date(config.start)).toEqualDateTime(adapter.startOfWeek(VISIBLE_DATE));
+      expect(new Date(config.end)).toEqualDateTime(
         adapter.endOfWeek(adapter.addWeeks(adapter.startOfWeek(VISIBLE_DATE), 15)),
       );
     });
@@ -116,8 +116,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
       // 36 months starting July 2025 → June 2028.
       // 184 (Jul-Dec 2025) + 365 + 365 + 182 (Jan-Jun 2028, leap) = 1096 days.
-      expect(config.start).toEqualDateTime('2025-07-01T00:00:00Z');
-      expect(config.end).toEqualDateTime('2028-06-30T23:59:59.999Z');
+      expect(new Date(config.start)).toEqualDateTime('2025-07-01T00:00:00Z');
+      expect(new Date(config.end)).toEqualDateTime('2028-06-30T23:59:59.999Z');
       expect(config.tickCount).to.equal(1096);
     });
 
@@ -154,8 +154,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
       expect(config.tickCount).to.equal(30);
-      expect(config.start).toEqualDateTime('2025-01-01T00:00:00Z');
-      expect(config.end).toEqualDateTime('2054-12-31T23:59:59.999Z');
+      expect(new Date(config.start)).toEqualDateTime('2025-01-01T00:00:00Z');
+      expect(new Date(config.end)).toEqualDateTime('2054-12-31T23:59:59.999Z');
     });
 
     it('should expose the full-day hour window when no presetConfig is provided', () => {
@@ -190,8 +190,8 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       // Precomputed once here so per-row hooks do not re-derive it on every render.
       expect(config.durationMs).to.equal(4 * 12 * 60 * 60_000);
       // The range itself stays midnight-based: only the rendered hours are trimmed.
-      expect(config.start).toEqualDateTime('2025-07-03T00:00:00Z');
-      expect(config.end).toEqualDateTime('2025-07-06T23:59:59.999Z');
+      expect(new Date(config.start)).toEqualDateTime('2025-07-03T00:00:00Z');
+      expect(new Date(config.end)).toEqualDateTime('2025-07-06T23:59:59.999Z');
     });
 
     it('should warn and fall back to the full day when the hour range is invalid', () => {
@@ -289,8 +289,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       expect(new Date(axis.start).toISOString()).to.equal('2025-06-30T04:00:00.000Z');
       expect(new Date(axis.end).toISOString()).to.equal('2025-08-25T03:59:59.999Z');
       expect(axis.timezone).to.equal('America/New_York');
-      expect(adapter.getTime(config.start)).to.equal(axis.start);
-      expect(adapter.getTime(config.end)).to.equal(axis.end);
+      expect(axis).to.equal(config);
     });
 
     it.each([
