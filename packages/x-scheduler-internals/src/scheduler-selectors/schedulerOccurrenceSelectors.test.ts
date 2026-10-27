@@ -19,7 +19,7 @@ describe('schedulerOccurrenceSelectors', () => {
         events: [],
         resources: TEST_RESOURCES,
       });
-      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T08:00:00Z', 'default');
+      state.nowTimestamp = Date.parse('2025-07-03T08:00:00Z');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
 
@@ -31,7 +31,7 @@ describe('schedulerOccurrenceSelectors', () => {
         events: [],
         resources: TEST_RESOURCES,
       });
-      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:00:00Z', 'default');
+      state.nowTimestamp = Date.parse('2025-07-03T10:00:00Z');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
 
@@ -43,7 +43,7 @@ describe('schedulerOccurrenceSelectors', () => {
         events: [],
         resources: TEST_RESOURCES,
       });
-      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:30:00Z', 'default');
+      state.nowTimestamp = Date.parse('2025-07-03T10:30:00Z');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
 
@@ -57,7 +57,7 @@ describe('schedulerOccurrenceSelectors', () => {
         events: [],
         resources: TEST_RESOURCES,
       });
-      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:30:00Z', 'default');
+      state.nowTimestamp = Date.parse('2025-07-03T10:30:00Z');
 
       const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
 
@@ -69,7 +69,7 @@ describe('schedulerOccurrenceSelectors', () => {
         events: [],
         resources: TEST_RESOURCES,
       });
-      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T11:00:00Z', 'default');
+      state.nowTimestamp = Date.parse('2025-07-03T11:00:00Z');
 
       const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
 
@@ -81,7 +81,7 @@ describe('schedulerOccurrenceSelectors', () => {
         events: [],
         resources: TEST_RESOURCES,
       });
-      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T12:00:00Z', 'default');
+      state.nowTimestamp = Date.parse('2025-07-03T12:00:00Z');
 
       const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
 

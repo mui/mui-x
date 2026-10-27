@@ -387,9 +387,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     days,
     occurrencesMap,
     shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) =>
-        isOccurrenceInDayGrid(occurrence, adapter, timeGridEvents),
-      [adapter, timeGridEvents],
+      (occurrence: SchedulerEventOccurrence) => isOccurrenceInDayGrid(occurrence, timeGridEvents),
+      [timeGridEvents],
     ),
   });
 

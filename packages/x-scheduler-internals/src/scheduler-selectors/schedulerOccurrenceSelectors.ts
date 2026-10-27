@@ -89,12 +89,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
 );
 
 export const schedulerOccurrenceSelectors = {
-  isStarted: (state: State, start: SchedulerProcessedDate) => {
-    const now = state.nowUpdatedEveryMinute;
-    return state.adapter.isBefore(start.value, now) || state.adapter.isEqual(start.value, now);
-  },
-  isEnded: (state: State, end: SchedulerProcessedDate) => {
-    return state.adapter.isBefore(end.value, state.nowUpdatedEveryMinute);
-  },
+  isStarted: (state: State, start: SchedulerProcessedDate) => start.timestamp <= state.nowTimestamp,
+  isEnded: (state: State, end: SchedulerProcessedDate) => end.timestamp < state.nowTimestamp,
   groupedByResourceList: occurrencesGroupedByResourceListSelector,
 };

@@ -33,6 +33,7 @@ import {
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { formatFullDate } from '../../utils/date-utils';
+import { isOccurrenceMultiDay } from '../../utils/event-utils';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 
@@ -143,7 +144,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const formatTime = useFormatTime();
   const start = occurrence.displayTimezone.start.value;
   const end = occurrence.displayTimezone.end.value;
-  const isMultiDay = !adapter.isSameDay(start, end);
+  const isMultiDay = isOccurrenceMultiDay(occurrence);
   const formatBound = occurrence.allDay
     ? (date: TemporalSupportedObject) => formatFullDate(date, adapter)
     : (date: TemporalSupportedObject) => `${formatFullDate(date, adapter)}, ${formatTime(date)}`;
