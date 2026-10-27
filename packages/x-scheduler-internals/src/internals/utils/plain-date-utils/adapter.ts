@@ -34,20 +34,6 @@ export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupported
 }
 
 /**
- * Creates the adapter value of a wall-clock time of a plain date in `timezone`, given in
- * milliseconds since midnight. A time a DST transition skips moves forward by the length of the
- * gap, and a time it repeats resolves to its first instant, whatever the timezone of the system.
- */
-export function createAdapterDateOnPlainDate(
-  adapter: Adapter,
-  plainDate: PlainDate,
-  msInDay: number,
-  timezone: TemporalTimezone,
-): TemporalSupportedObject {
-  return createAdapterDate(adapter, toEpochMs(plainDate, msInDay, timezone), timezone);
-}
-
-/**
  * Creates the adapter value of the first instant of a plain date in `timezone`, the reverse of
  * `buildTemporalPlainDate()`. A day whose midnight a DST transition skips starts at the end of the
  * gap.
@@ -57,7 +43,16 @@ export function createStartOfPlainDate(
   plainDate: PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  return createAdapterDateOnPlainDate(adapter, plainDate, 0, timezone);
+  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
+}
+
+/**
+ * Creates the adapter value of the midnight of a plain date in UTC, to format the labels of the
+ * date. UTC skips no date, unlike a timezone that skips a midnight or a whole date, like
+ * December 30th, 2011 in Pacific/Apia.
+ */
+export function createLabelDate(adapter: Adapter, plainDate: PlainDate): TemporalSupportedObject {
+  return createStartOfPlainDate(adapter, plainDate, 'UTC');
 }
 
 /**

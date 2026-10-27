@@ -86,10 +86,9 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
                 ? level.renderCell({
                     adapter,
                     ampm,
-                    date: cell.date,
                     plainDate: cell.plainDate,
-                    start: cell.start,
-                    end: cell.end,
+                    firstPlainDate: cell.firstPlainDate,
+                    lastPlainDate: cell.lastPlainDate,
                     index: cell.index,
                     key: cell.key,
                     level: levelIndex,
@@ -97,7 +96,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
                     unit: level.unit,
                     wallClockHour: cell.wallClockHour,
                   })
-                : level.formatDate(adapter, cell.date)}
+                : level.formatDate(adapter, cell.plainDate)}
             </time>
           </div>
         ))}
@@ -137,9 +136,8 @@ export namespace TimelineGridHeader {
 }
 
 /**
- * Machine-readable local date-time of a cell, like `2026-03-08T00:00`. It's built from the
- * wall clock rather than from `date`, which moves the hour or the date skipped by a DST
- * transition to the next existing one. Only hour cells start after midnight.
+ * Machine-readable local date-time of a cell, like `2026-03-08T00:00`, on the wall clock of the
+ * axis. Only hour cells start after midnight.
  */
 function getCellDateTime(cell: IteratedCell) {
   return `${cell.plainDate.toString()}T${String(cell.wallClockHour ?? 0).padStart(2, '0')}:00`;

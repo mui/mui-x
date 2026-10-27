@@ -1,114 +1,46 @@
 import { adapter, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
+import { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS, getPresetPxPerDay } from './preset-utils';
 import type { EventTimelinePremiumPreset } from '../../models';
 
 describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
   describe('dayAndHour.getCssUnitCount', () => {
-    const start = adapter.date('2025-07-03T00:00:00Z', 'default');
-    const end = adapter.endOfDay(adapter.addDays(start, 3));
-
     it('should pin the tick count to 4 days × 24 hours', () => {
       // The displayed hour window scales this in the preset selector, so the preset
       // always sizes the full day.
       const count = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.getCssUnitCount!(
-        adapter,
-        start,
-        end,
+        PlainDate.from('2025-07-03'),
+        PlainDate.from('2025-07-07'),
       );
       expect(count).to.equal(4 * 24);
     });
   });
 
-  describe('getStartDate', () => {
-    it.skipIf(!isJSDOM)(
-      'should start the range at the first instant of the day, whatever the timezone of the system',
-      () => {
-        setSystemTimezone('Australia/Lord_Howe');
-        // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
-        const visibleDate = adapter.date('2026-04-05T12:00:00', 'America/Santiago');
-        const start = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.getStartDate(
+  describe('getStartPlainDate and getEndPlainDate', () => {
+    it.each([
+      { preset: 'dayAndHour', start: '2025-07-03', end: '2025-07-07' },
+      { preset: 'dayAndMonth', start: '2025-07-03', end: '2025-08-28' },
+      // July 3rd, 2025 is a Thursday, and the weeks start on Monday.
+      { preset: 'dayAndWeek', start: '2025-06-30', end: '2025-10-20' },
+      { preset: 'monthAndYear', start: '2025-07-01', end: '2028-07-01' },
+      { preset: 'year', start: '2025-01-01', end: '2055-01-01' },
+    ] as const)(
+      'should start $preset on the first date of the period of the visible date and end it after its periods',
+      ({ preset, start, end }) => {
+        const definition = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
+        const startPlainDate = definition.getStartPlainDate(
           adapter,
-          visibleDate,
+          PlainDate.from('2025-07-03'),
           1,
         );
-        expect(adapter.toJsDate(start).toISOString()).to.equal('2026-04-05T04:00:00.000Z');
-      },
-    );
-
-    it.skipIf(!isJSDOM)(
-      'should start the range at the first instant of a midnight a DST transition repeats',
-      () => {
-        setSystemTimezone('America/Los_Angeles');
-        // Havana leaves summer time on November 1st, 2026, when 01:00 becomes 00:00 again.
-        const visibleDate = adapter.date('2026-11-15T12:00:00', 'America/Havana');
-        const start = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.monthAndYear.getStartDate(
-          adapter,
-          visibleDate,
-          1,
+        expect(startPlainDate).toEqualPlainDate(start);
+        expect(definition.getEndPlainDate(startPlainDate, definition.unitCount)).toEqualPlainDate(
+          end,
         );
-        expect(adapter.toJsDate(start).toISOString()).to.equal('2026-11-01T04:00:00.000Z');
       },
     );
-  });
-
-  describe('getEndDate', () => {
-    it.skipIf(!isJSDOM)(
-      'should end the range just before the next day starts when its last hour is repeated',
-      () => {
-        setSystemTimezone('UTC');
-        // Santiago repeats the 23:00 hour of April 4th, 2026.
-        const start = adapter.date('2026-04-01T00:00:00', 'America/Santiago');
-        const end = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndHour.getEndDate(
-          adapter,
-          start,
-          4,
-          1,
-        );
-        expect(adapter.toJsDate(end).toISOString()).to.equal('2026-04-05T03:59:59.999Z');
-      },
-    );
-
-    it.skipIf(!isJSDOM)(
-      'should end a week on its last day when the timezone of the system skips a day of it',
-      () => {
-        // Apia skipped December 30th, 2011, when it moved across the date line.
-        setSystemTimezone('Pacific/Apia');
-        const start = adapter.date('2011-12-24T00:00:00', 'America/New_York');
-        const end = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.dayAndWeek.getEndDate(
-          adapter,
-          start,
-          1,
-          6,
-        );
-        expect(adapter.toJsDate(end).toISOString()).to.equal('2011-12-31T04:59:59.999Z');
-      },
-    );
-
-    it.skipIf(!isJSDOM)(
-      'should end a month on its last day when the timezone of the system has the same DST transition',
-      () => {
-        setSystemTimezone('Europe/Paris');
-        // Nuuk leaves summer time at the same instant as Paris, when 23:00 on October 30th, 2021
-        // becomes 22:00 again.
-        const start = adapter.date('2021-10-01T00:00:00', 'America/Nuuk');
-        const end = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.monthAndYear.getEndDate(
-          adapter,
-          start,
-          1,
-          1,
-        );
-        expect(adapter.toJsDate(end).toISOString()).to.equal('2021-11-01T02:59:59.999Z');
-      },
-    );
-
-    it('should end a year just before the next one starts when its timezone skips its last day', () => {
-      // Kiritimati skipped December 31st, 1994, when it moved across the date line.
-      const start = adapter.date('1994-01-01T00:00:00', 'Pacific/Kiritimati');
-      const end = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS.year.getEndDate(adapter, start, 1, 1);
-      expect(adapter.toJsDate(end).toISOString()).to.equal('1994-12-31T09:59:59.999Z');
-    });
   });
 
   describe('navigate', () => {

@@ -1,6 +1,5 @@
 import { describe, test } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
-import { getTimelineAxis } from '@mui/x-scheduler-internals/internals';
+import { adapter, createTimelineAxis } from 'test/utils/scheduler';
 import { iterate } from './iterate';
 
 export const benchmarkResult = { value: undefined as unknown };
@@ -15,7 +14,7 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const dayStart = adapter.startOfDay(visibleDate);
   const monthStart = adapter.startOfMonth(visibleDate);
   const toAxis = (start: typeof dayStart, end: typeof dayStart) =>
-    getTimelineAxis(adapter, { start, end, dayStartMinute: 0, dayEndMinute: 1440 });
+    createTimelineAxis({ start, end, dayStartMinute: 0, dayEndMinute: 1440 });
   const presets = {
     dayAndHour: () => {
       const axis = toAxis(dayStart, adapter.endOfDay(adapter.addDays(dayStart, 3)));

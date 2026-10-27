@@ -5,10 +5,11 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   getDisplayedHourRange,
-  getTimelineAxis,
   getTimelineAxisDurationMs,
   FULL_DAY_MINUTES,
+  toEpochMs,
 } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS } from '../internals/utils/preset-utils';
@@ -19,7 +20,8 @@ export const eventTimelinePremiumPresetSelectors = {
   config: createSelectorMemoized(
     (state: State) => state.adapter,
     // Read in the display timezone, like the visible date of the Event Calendar views.
-    schedulerOtherSelectors.visibleDate,
+    schedulerOtherSelectors.visiblePlainDate,
+    schedulerOtherSelectors.displayTimezone,
     (state: State) => state.preset,
     // Primitive inputs so an inline `presetConfig` literal cannot defeat the
     // memoization (the object identity changes on every parent render).
@@ -28,7 +30,15 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) =>
       state.presetConfig[state.preset as keyof EventTimelinePremiumPresetConfig]?.endTime,
     schedulerPreferenceSelectors.weekStartsOn,
-    (adapter, visibleDate, preset, presetStartTime, presetEndTime, weekStartsOn) => {
+    (
+      adapter,
+      visiblePlainDate,
+      displayTimezone,
+      preset,
+      presetStartTime,
+      presetEndTime,
+      weekStartsOn,
+    ) => {
       const config = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
       if (!config) {
         throw new Error(
@@ -38,16 +48,16 @@ export const eventTimelinePremiumPresetSelectors = {
         );
       }
       const {
-        getStartDate,
-        getEndDate,
+        getStartPlainDate,
+        getEndPlainDate,
         unitCount,
         getCssUnitCount,
         tickWidth,
         headers,
         timeResolution,
       } = config;
-      const start = getStartDate(adapter, visibleDate, weekStartsOn);
-      const end = getEndDate(adapter, start, unitCount, weekStartsOn);
+      const startPlainDate = getStartPlainDate(adapter, visiblePlainDate, weekStartsOn);
+      const endPlainDate = getEndPlainDate(startPlainDate, unitCount);
 
       // Only hour-resolution presets can trim their visible hours. The range itself stays
       // midnight-based: the hour window is applied through `dayStartMinute` / `dayEndMinute`.
@@ -60,15 +70,23 @@ export const eventTimelinePremiumPresetSelectors = {
 
       // Preset callbacks size the grid for the full day; the hour window scales the
       // tick count once here instead of threading it through every preset.
-      const fullDayTickCount = getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount;
+      const fullDayTickCount = getCssUnitCount
+        ? getCssUnitCount(startPlainDate, endPlainDate)
+        : unitCount;
       const tickCount =
         timeResolution === 'hour'
           ? (fullDayTickCount * (dayEndMinute - dayStartMinute)) / FULL_DAY_MINUTES
           : fullDayTickCount;
 
-      // The config is the axis of the timeline: its bounds as timestamps, read once per config
-      // change, and its hour window.
-      const axis = getTimelineAxis(adapter, { start, end, dayStartMinute, dayEndMinute });
+      // The config is the axis of the timeline: the first instant of its first date, the last
+      // instant before the date after it, and its hour window.
+      const axis: TimelineAxis = {
+        start: toEpochMs(startPlainDate, 0, displayTimezone),
+        end: toEpochMs(endPlainDate, 0, displayTimezone) - 1,
+        timezone: displayTimezone,
+        dayStartMinute,
+        dayEndMinute,
+      };
 
       return {
         ...axis,

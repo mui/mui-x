@@ -2,7 +2,9 @@ import {
   adapter,
   getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import type {
   EventTimelinePremiumPreset,
   PresetHeaderUnit,
@@ -312,6 +314,61 @@ describe('eventTimelinePremiumPresetSelectors', () => {
         expect(new Date(config.start).toISOString()).to.equal(start);
       },
     );
+
+    describe('bounds across DST transitions', () => {
+      const getBounds = (
+        preset: EventTimelinePremiumPreset,
+        visibleDate: string,
+        displayTimezone: string,
+      ) => {
+        const state = getEventTimelinePremiumStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [],
+          preset,
+          visibleDate: adapter.date(visibleDate, displayTimezone),
+          displayTimezone,
+        });
+        const config = eventTimelinePremiumPresetSelectors.config(state);
+        return [new Date(config.start).toISOString(), new Date(config.end).toISOString()];
+      };
+
+      // Browsers cannot change their timezone through process.env.TZ.
+      it.skipIf(!isJSDOM)(
+        'should start the range at the first instant of the day, whatever the timezone of the system',
+        () => {
+          setSystemTimezone('Australia/Lord_Howe');
+          // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+          expect(getBounds('dayAndHour', '2026-04-05T12:00:00', 'America/Santiago')[0]).to.equal(
+            '2026-04-05T04:00:00.000Z',
+          );
+        },
+      );
+
+      it.skipIf(!isJSDOM)(
+        'should start the range at the first instant of a midnight a DST transition repeats',
+        () => {
+          setSystemTimezone('America/Los_Angeles');
+          // Havana leaves summer time on November 1st, 2026, when 01:00 becomes 00:00 again.
+          expect(getBounds('monthAndYear', '2026-11-15T12:00:00', 'America/Havana')[0]).to.equal(
+            '2026-11-01T04:00:00.000Z',
+          );
+        },
+      );
+
+      it('should end the range just before the next day starts when its last hour is repeated', () => {
+        // Santiago repeats the 23:00 hour of April 4th, 2026.
+        expect(getBounds('dayAndHour', '2026-04-01T00:00:00', 'America/Santiago')[1]).to.equal(
+          '2026-04-05T03:59:59.999Z',
+        );
+      });
+
+      it('should end the range just before the next day starts when its timezone skips its last day', () => {
+        // Kiritimati skipped December 31st, 1994, when it moved across the date line.
+        expect(getBounds('dayAndHour', '1994-12-28T12:00:00', 'Pacific/Kiritimati')[1]).to.equal(
+          '1994-12-31T09:59:59.999Z',
+        );
+      });
+    });
 
     it('should return the same reference when the dependencies are unchanged', () => {
       const state = getEventTimelinePremiumStateFromParameters({

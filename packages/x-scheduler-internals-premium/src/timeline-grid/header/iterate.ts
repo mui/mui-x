@@ -1,15 +1,9 @@
-import type {
-  TemporalAdapter,
-  TemporalSupportedObject,
-  TemporalTimezone,
-} from '@base-ui/react/internals/temporal';
+import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
-  createAdapterDate,
   getPlainDateWeekStart,
   getStartOfDayMs,
   getTimelineAxisOffsetMs,
-  localToEpochMs,
   MS_PER_DAY,
   plainDateFromDayNumber,
   toLocalMs,
@@ -24,8 +18,6 @@ import type { IteratedCell, PresetHeaderUnit } from '../../models';
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
 
-type ToAdapterDate = (localMs: number) => TemporalSupportedObject;
-
 /**
  * The date of a wall-clock time.
  */
@@ -35,9 +27,8 @@ function toPlainDate(localMs: number): PlainDate {
 
 /**
  * Cells are walked on the wall clock of the timezone of the axis: their bounds are wall-clock
- * times, in milliseconds since 1970-01-01T00:00 of the wall clock, converted to adapter values at
- * the end. A wall-clock time skipped by a DST transition moves forward by the length of the gap,
- * and a repeated one resolves to its first instant, whatever the timezone of the system.
+ * times, in milliseconds since 1970-01-01T00:00 of the wall clock, and they hold the dates of
+ * those times. A date or an hour that a DST transition skips keeps its cell.
  * The hour window of the axis only applies when the ticks are hours.
  */
 export function iterate(
@@ -52,12 +43,10 @@ export function iterate(
     throw new Error(
       `MUI X Scheduler: TimelineGridHeader.iterate() received a range where rangeEnd is before rangeStart. ` +
         `The iteration would silently produce an empty header, masking the misconfiguration. ` +
-        `Check the preset's \`getStartDate\` / \`getEndDate\` so they return ordered dates.`,
+        `Check the preset's \`getStartPlainDate\` / \`getEndPlainDate\` so they return ordered dates.`,
     );
   }
 
-  const toAdapterDate: ToAdapterDate = (localMs) =>
-    createAdapterDate(adapter, localToEpochMs(localMs, timezone), timezone);
   const rangeStartLocalMs = getRangeStartLocalMs(rangeStart, timezone);
 
   // `rangeEnd` is inclusive (e.g. `endOfDay` = 23:59:59.999). Floor it to the
@@ -68,7 +57,6 @@ export function iterate(
     tickUnit,
     1,
   );
-  const rangeEndExclusiveDate = toAdapterDate(rangeEndExclusive);
 
   // Hour ticks are a wall-clock grid: every day contributes the same columns whatever
   // its real hours are, so spans are measured on the axis rather than in elapsed hours.
@@ -76,15 +64,12 @@ export function iterate(
 
   // `appliedHourWindow` is only set when the ticks are hours, so this is the hour row.
   if (unit === 'hour' && appliedHourWindow) {
-    return iterateHourCells(toAdapterDate, rangeStartLocalMs, rangeEndExclusive, appliedHourWindow);
+    return iterateHourCells(rangeStartLocalMs, rangeEndExclusive, appliedHourWindow);
   }
 
   const cells: IteratedCell[] = [];
   let cursor = startOf(adapter, rangeStart, unit, weekStartsOn, timezone);
-  let cursorDate = toAdapterDate(cursor);
   let index = 0;
-  // The start of a first cell aligned before the range is clamped to the range start.
-  const rangeStartDate = createAdapterDate(adapter, rangeStart, timezone);
 
   while (cursor < rangeEndExclusive) {
     // Guard against runaway iteration from a misconfigured preset (e.g. hour ticks over a
@@ -93,8 +78,6 @@ export function iterate(
       throwTooManyCells(unit, tickUnit);
     }
     const nextCursor = addUnit(cursor, unit, 1);
-    const isLastCell = nextCursor >= rangeEndExclusive;
-    const nextCursorDate = isLastCell ? rangeEndExclusiveDate : toAdapterDate(nextCursor);
 
     // First and last cells can extend past the visible range (e.g. a year cell
     // aligned to Jan 1 when the range starts mid-year). Clamp them so
@@ -102,11 +85,10 @@ export function iterate(
     const spanEnd = Math.min(nextCursor, rangeEndExclusive);
     const spanStart = Math.max(cursor, rangeStartLocalMs);
     cells.push({
-      date: cursorDate,
-      // Read from the wall clock: a date skipped by a transition keeps its own date.
       plainDate: toPlainDate(cursor),
-      start: cursor < rangeStartLocalMs ? rangeStartDate : cursorDate,
-      end: nextCursorDate,
+      firstPlainDate: toPlainDate(spanStart),
+      // `spanEnd` is exclusive.
+      lastPlainDate: toPlainDate(spanEnd - 1),
       spanInTicks: appliedHourWindow
         ? countVisibleHours(spanEnd, spanStart, appliedHourWindow)
         : differenceInUnits(spanEnd, spanStart, tickUnit),
@@ -116,7 +98,6 @@ export function iterate(
       index,
     });
     cursor = nextCursor;
-    cursorDate = nextCursorDate;
     index += 1;
   }
 
@@ -157,7 +138,6 @@ function throwTooManyCells(unit: PresetHeaderUnit, tickUnit: PresetHeaderUnit): 
  * shrinking over the fixed grid.
  */
 function iterateHourCells(
-  toAdapterDate: ToAdapterDate,
   rangeStartLocalMs: number,
   rangeEndExclusive: number,
   hourWindow: TimelineAxisWindow,
@@ -179,24 +159,17 @@ function iterateHourCells(
   for (let dayIndex = 0; dayIndex < dayCount; dayIndex += 1) {
     const dayStartLocalMs = (firstDay + dayIndex) * MS_PER_DAY;
     const plainDate = plainDateFromDayNumber(firstDay + dayIndex);
-    // On a spring-forward day the skipped hour has no instant, so `date` moves forward to
-    // the next existing one. `wallClockHour` is what the column stands for and is what
-    // labels must be built from.
-    let date = toAdapterDate(dayStartLocalMs + startHour * HOUR_MS);
     for (let hour = startHour; hour < endHour; hour += 1) {
-      // The end of the last hour of the day is the start of the next day.
-      const end = toAdapterDate(dayStartLocalMs + (hour + 1) * HOUR_MS);
       cells.push({
-        date,
         plainDate,
-        start: date,
-        end,
+        firstPlainDate: plainDate,
+        lastPlainDate: plainDate,
         spanInTicks: 1,
         key: `${dayStartLocalMs}:${hour}`,
         index: cells.length,
+        // The hour a spring-forward transition skips has no instant, but keeps its column.
         wallClockHour: hour,
       });
-      date = end;
     }
   }
 

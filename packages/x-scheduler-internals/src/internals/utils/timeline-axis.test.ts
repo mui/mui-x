@@ -1,27 +1,23 @@
-import { adapter, setSystemTimezone } from 'test/utils/scheduler';
+import { adapter, createTimelineAxis, setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import {
-  getTimelineAxis,
   getTimelineAxisDurationMs,
   timelineAxisOffsetToTimestamp,
   timestampToTimelineAxisOffsetMs,
   isStartMinuteOutsideAxisWindow,
   isEndMinuteOutsideAxisWindow,
 } from './timeline-axis';
-import type { TimelineAxisRange } from './timeline-axis';
 
 const MINUTE = 60_000;
-
-const toAxis = (range: TimelineAxisRange) => getTimelineAxis(adapter, range);
 
 describe('timeline-axis', () => {
   const start = adapter.date('2025-01-05T00:00:00.000Z', 'UTC');
   const end = adapter.endOfDay(adapter.date('2025-01-08T00:00:00.000Z', 'UTC'));
 
-  const fullAxis = toAxis({ start, end, dayStartMinute: 0, dayEndMinute: 1440 });
+  const fullAxis = createTimelineAxis({ start, end, dayStartMinute: 0, dayEndMinute: 1440 });
   // Window 8:00 → 20:00: 720 visible minutes per day.
-  const trimmedAxis = toAxis({ start, end, dayStartMinute: 480, dayEndMinute: 1200 });
+  const trimmedAxis = createTimelineAxis({ start, end, dayStartMinute: 480, dayEndMinute: 1200 });
 
   describe('getTimelineAxisDurationMs', () => {
     it('should return days × 1440 minutes for the full-day window', () => {
@@ -107,7 +103,12 @@ describe('timeline-axis', () => {
     const dstEnd = adapter.endOfDay(adapter.addDays(dstStart, 1));
 
     it('should map an offset to the wall-clock hour even after a fall-back transition', () => {
-      const axis = toAxis({ start: dstStart, end: dstEnd, dayStartMinute: 0, dayEndMinute: 720 });
+      const axis = createTimelineAxis({
+        start: dstStart,
+        end: dstEnd,
+        dayStartMinute: 0,
+        dayEndMinute: 720,
+      });
       // 480 axis minutes = the "08:00" column: wall-clock 08:00, not midnight + 480 real
       // minutes (which is 07:00 after the extra hour).
       const timestamp = timelineAxisOffsetToTimestamp(axis, 480 * MINUTE);
@@ -115,7 +116,7 @@ describe('timeline-axis', () => {
     });
 
     it('should round-trip px↔date across a fall-back transition', () => {
-      const axis = toAxis({
+      const axis = createTimelineAxis({
         start: dstStart,
         end: dstEnd,
         dayStartMinute: 480,
@@ -130,7 +131,7 @@ describe('timeline-axis', () => {
     it('should round-trip px↔date across a spring-forward transition', () => {
       // Mar 8 2026: clocks spring forward at 02:00, the day lasts 23 hours.
       const springStart = adapter.date('2026-03-08T00:00:00', 'America/New_York');
-      const axis = toAxis({
+      const axis = createTimelineAxis({
         start: springStart,
         end: adapter.endOfDay(adapter.addDays(springStart, 1)),
         dayStartMinute: 480,
@@ -146,7 +147,7 @@ describe('timeline-axis', () => {
       // 02:00 does not exist on Mar 8 2026: the offset resolves to 03:00 and does not
       // round-trip (known limitation, documented on `timelineAxisOffsetToTimestamp`).
       const springStart = adapter.date('2026-03-08T00:00:00', 'America/New_York');
-      const axis = toAxis({
+      const axis = createTimelineAxis({
         start: springStart,
         end: adapter.endOfDay(springStart),
         dayStartMinute: 0,
@@ -164,7 +165,7 @@ describe('timeline-axis', () => {
         // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
         setSystemTimezone('America/New_York');
         const parisStart = adapter.date('2026-10-25T00:00:00', 'Europe/Paris');
-        const axis = toAxis({
+        const axis = createTimelineAxis({
           start: parisStart,
           end: adapter.endOfDay(parisStart),
           dayStartMinute: 0,
