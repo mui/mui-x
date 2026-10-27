@@ -264,7 +264,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           title: 'Edited Event',
           start: changes.start!.toISOString(),
           end: changes.end!.toISOString(),
-          id: `${defaultEvent.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
+          id: `${defaultEvent.id}::2025-01-05`,
           extractedFromId: defaultEvent.id,
           rrule: {
             ...defaultEvent.dataTimezone.rrule,
@@ -346,7 +346,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           title: 'Edited First',
           start: changes.start!.toISOString(),
           end: changes.end!.toISOString(),
-          id: `${original.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
+          id: `${original.id}::2025-01-10`,
           extractedFromId: original.id,
           rrule: {
             ...original.dataTimezone.rrule,

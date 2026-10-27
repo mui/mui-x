@@ -57,7 +57,7 @@ export function getRecurringOccurrenceKey(
 }
 
 /**
- * The render key of a recurring occurrence, from the `getDateKey()` of its day.
+ * The render key of a recurring occurrence, from the key of its day (`getPlainDateKey()`).
  */
 export function getRecurringOccurrenceKeyFromDateKey(
   eventId: SchedulerEventId,

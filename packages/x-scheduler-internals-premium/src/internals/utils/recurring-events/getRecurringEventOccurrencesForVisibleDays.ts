@@ -62,7 +62,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
     const dataEnd = createProcessedDate(adapter, endMs, dataTimezone);
     return {
       ...event,
-      key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(adapter, day)),
+      key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
       dataTimezone: {
         ...event.dataTimezone,
         start: dataStart,

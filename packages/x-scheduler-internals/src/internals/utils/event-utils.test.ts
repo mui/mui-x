@@ -29,7 +29,7 @@ describe('event-utils', () => {
       processDate(adapter.date('2024-01-18', 'default'), adapter),
     ];
 
-    const formattedDays = days.map((day) => adapter.format(day.value, 'localizedNumericDate'));
+    const dayKeys = ['2024-01-14', '2024-01-15', '2024-01-16', '2024-01-17', '2024-01-18'];
     const dayNumbers = days.map((day) => toLocalDayNumber(day.timestamp, 'default'));
 
     it('should return all days when event spans multiple days', () => {
@@ -39,7 +39,7 @@ describe('event-utils', () => {
         .toOccurrence();
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
-      expect(result).toEqual([formattedDays[1], formattedDays[2], formattedDays[3]]);
+      expect(result).toEqual([dayKeys[1], dayKeys[2], dayKeys[3]]);
     });
 
     it('should return empty array when event is completely outside visible range', () => {
@@ -69,7 +69,7 @@ describe('event-utils', () => {
         .toOccurrence();
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
-      expect(result).toEqual([formattedDays[0], formattedDays[1], formattedDays[2]]);
+      expect(result).toEqual([dayKeys[0], dayKeys[1], dayKeys[2]]);
     });
 
     it('should handle event that partially overlaps with visible range at the end', () => {
@@ -79,7 +79,7 @@ describe('event-utils', () => {
         .toOccurrence();
 
       const result = getDaysTheOccurrenceIsVisibleOn(event, days, dayNumbers);
-      expect(result).toEqual([formattedDays[2], formattedDays[3], formattedDays[4]]);
+      expect(result).toEqual([dayKeys[2], dayKeys[3], dayKeys[4]]);
     });
   });
 
