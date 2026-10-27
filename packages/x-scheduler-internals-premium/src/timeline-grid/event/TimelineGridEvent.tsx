@@ -23,11 +23,10 @@ import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRo
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
 import { TimelineGridEventContext } from './TimelineGridEventContext';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
-import {
-  NOOP_USE_EVENT_DROP_TARGET,
-  selectDependenciesFeature,
-} from '../../internals/features/eventTimelinePremiumStoreFeatures';
+import type { useEventDependencyDropTarget } from './useEventDependencyDropTarget';
 import { TimelineGridEventDataAttributes } from './TimelineGridEventDataAttributes';
+
+const useNoEventDropTarget = (_parameters: useEventDependencyDropTarget.Parameters) => false;
 
 const extraStateAttributesMapping = {
   startingBeforeEdge: (value: boolean) =>
@@ -82,7 +81,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
 
   // The feature is frozen at store construction, so the hook is the same on every render.
   const useEventDropTarget =
-    selectDependenciesFeature(store.state)?.useEventDropTarget ?? NOOP_USE_EVENT_DROP_TARGET;
+    // eslint-disable-next-line react-compiler/react-compiler
+    store.state.dependenciesFeature?.useEventDropTarget ?? useNoEventDropTarget;
 
   // Feature hooks
   const getOriginalOccurrence = useOriginalOccurrence({

@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { SchedulerParametersToStateMapper } from '@mui/x-scheduler-internals/internals';
 import {
@@ -16,6 +16,7 @@ import type {
   EventTimelinePremiumPreset,
   EventTimelinePremiumPresetConfig,
   SchedulerAddDependencyResult,
+  SchedulerDependenciesState,
   SchedulerDependenciesParameters,
   SchedulerDependencyCreation,
   SchedulerDependencyCreationProperties,
@@ -35,8 +36,12 @@ import {
   EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS,
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
-import { EMPTY_DEPENDENCIES_STATE } from '../internals/features/eventTimelinePremiumStoreFeatures';
 import type { EventTimelinePremiumDependenciesStoreFeature } from '../internals/features/eventTimelinePremiumStoreFeatures';
+
+const EMPTY_DEPENDENCIES_STATE: SchedulerDependenciesState = {
+  dependencyModelList: EMPTY_ARRAY,
+  dependencyModelLookup: new Map(),
+};
 
 // Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
 // tickWidth)` must produce a unique px/day — otherwise the order is decided by
@@ -239,7 +244,6 @@ export class EventTimelinePremiumStore<
       'EventTimelinePremiumStore',
       mapper,
       parameters.storeFeatures?.recurringEvents ?? null,
-      'feature',
     );
 
     if (process.env.NODE_ENV !== 'production') {

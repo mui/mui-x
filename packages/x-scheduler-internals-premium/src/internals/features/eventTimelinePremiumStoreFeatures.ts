@@ -1,4 +1,3 @@
-import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type { SchedulerRecurringEventsPluginInterface } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventUpdatedProperties } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependenciesState, SchedulerDependency } from '../../models';
@@ -10,8 +9,6 @@ import type {
   EventTimelinePremiumState,
   EventTimelinePremiumStoreParameters,
 } from '../../use-event-timeline-premium/EventTimelinePremiumStore.types';
-
-export type UseEventDependencyDropTargetParameters = useEventDependencyDropTarget.Parameters;
 
 /**
  * The dependencies engine of the timeline store, and the hooks of its UI.
@@ -36,7 +33,7 @@ export interface EventTimelinePremiumDependenciesStoreFeature {
    * Registers an event element as a drop target of the create-dependency gesture.
    * Returns whether the gesture currently targets it.
    */
-  useEventDropTarget(parameters: UseEventDependencyDropTargetParameters): boolean;
+  useEventDropTarget(parameters: useEventDependencyDropTarget.Parameters): boolean;
 }
 
 /**
@@ -57,17 +54,3 @@ export interface EventTimelinePremiumStoreFeatures {
    */
   dependencies?: EventTimelinePremiumDependenciesStoreFeature;
 }
-
-export const EMPTY_DEPENDENCIES_STATE: SchedulerDependenciesState = {
-  dependencyModelList: EMPTY_ARRAY,
-  dependencyModelLookup: new Map(),
-};
-
-export const NOOP_USE_CREATION_MONITOR = () => {};
-
-export const NOOP_USE_EVENT_DROP_TARGET: (
-  parameters: UseEventDependencyDropTargetParameters,
-) => boolean = () => false;
-
-export const selectDependenciesFeature = (state: EventTimelinePremiumState) =>
-  state.dependenciesFeature;

@@ -9,16 +9,14 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
-import {
-  NOOP_USE_CREATION_MONITOR,
-  selectDependenciesFeature,
-} from '../../internals/features/eventTimelinePremiumStoreFeatures';
 import { TimelineGridRootCssVars } from './TimelineGridRootCssVars';
 import type {
   TimelineGridCellCoordinates,
   TimelineGridColumnType,
 } from '../../models/timelineGrid';
 import { TimelineGridRootContext, DEFAULT_COLUMN_TYPES } from './TimelineGridRootContext';
+
+const useNoCreationMonitor = () => {};
 
 export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   componentProps: TimelineGridRoot.Props,
@@ -67,7 +65,8 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
 
   // The feature is frozen at store construction, so the hook is the same on every render.
   const useCreationMonitor =
-    selectDependenciesFeature(store.state)?.useCreationMonitor ?? NOOP_USE_CREATION_MONITOR;
+    // eslint-disable-next-line react-compiler/react-compiler
+    store.state.dependenciesFeature?.useCreationMonitor ?? useNoCreationMonitor;
   // eslint-disable-next-line react-compiler/react-compiler
   useCreationMonitor();
 

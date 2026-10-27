@@ -5,12 +5,9 @@ import { useEventDependencyDropTarget } from '../../timeline-grid/event/useEvent
 import { SchedulerSchedulingPlugin } from '../plugins/SchedulerSchedulingPlugin';
 import { buildDependenciesState, isDependencyActive } from '../utils/dependency-utils';
 import { useDependencyCreationMonitor } from '../utils/useDependencyCreationMonitor';
-import type {
-  EventTimelinePremiumDependenciesStoreFeature,
-  UseEventDependencyDropTargetParameters,
-} from './eventTimelinePremiumStoreFeatures';
+import type { EventTimelinePremiumDependenciesStoreFeature } from './eventTimelinePremiumStoreFeatures';
 
-function useEventDropTarget(parameters: UseEventDependencyDropTargetParameters) {
+function useEventDropTarget(parameters: useEventDependencyDropTarget.Parameters) {
   useEventDependencyDropTarget(parameters);
   const store = useEventTimelinePremiumStoreContext();
   return useStore(

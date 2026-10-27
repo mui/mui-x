@@ -8,7 +8,3 @@ export { EventTimelinePremiumStyledContext } from '../event-timeline-premium/Eve
 export { dependenciesFeature } from '../event-timeline-premium/content/timeline-dependencies/dependenciesFeature';
 export { EventTimelinePremiumFeaturesContext } from '../event-timeline-premium/features/EventTimelinePremiumFeaturesContext';
 export { useFrozenEventTimelinePremiumFeatures } from '../event-timeline-premium/features/useFrozenEventTimelinePremiumFeatures';
-export type {
-  EventTimelinePremiumDependenciesFeature,
-  EventTimelinePremiumInternalFeatures,
-} from '../event-timeline-premium/features/EventTimelinePremiumFeatures.types';
