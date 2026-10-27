@@ -1,8 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import { useAdapterContext } from '../../use-adapter-context';
-import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
+import type { SchedulerEvent } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
@@ -10,12 +9,11 @@ import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
 import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
 import { roundToDragPrecision } from '../../internals/utils/drag-utils';
 import {
-  FULL_DAY_MINUTES,
-  getTimelineAxis,
   getTimelineAxisDurationMs,
   resolveRepeatedTimeFrom,
   timelineAxisOffsetToTimestamp,
 } from '../../internals/utils/timeline-axis';
+import type { TimelineAxis } from '../../internals/utils/timeline-axis';
 import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
@@ -28,30 +26,16 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
-  const {
-    start,
-    end,
-    dayStartMinute = 0,
-    dayEndMinute = FULL_DAY_MINUTES,
-    addPropertiesToDroppedEvent,
-  } = parameters;
+  const { axis, addPropertiesToDroppedEvent } = parameters;
+  const { start: startMs, end: endMs } = axis;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const { axis, axisDurationMs, startMs, endMs } = React.useMemo(() => {
-    const columnAxis = getTimelineAxis(adapter, { start, end, dayStartMinute, dayEndMinute });
-    return {
-      axis: columnAxis,
-      axisDurationMs: getTimelineAxisDurationMs(columnAxis),
-      startMs: columnAxis.start,
-      endMs: columnAxis.end,
-    };
-  }, [adapter, start, end, dayStartMinute, dayEndMinute]);
+  const axisDurationMs = React.useMemo(() => getTimelineAxisDurationMs(axis), [axis]);
 
   const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
     useStableCallback(({ input, elementRef, elementStart }) => {
@@ -198,23 +182,10 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 export namespace useTimeDropTarget {
   export interface Parameters {
     /**
-     * The data and time at which the column starts.
+     * The axis of the column: its bounds, read in the display timezone, and the hour window of the
+     * view.
      */
-    start: TemporalSupportedObject;
-    /**
-     * The data and time at which the column ends.
-     */
-    end: TemporalSupportedObject;
-    /**
-     * The first displayed minute of the day, as an offset from midnight.
-     * @default 0
-     */
-    dayStartMinute?: number;
-    /**
-     * The end of the displayed window of the day, as an exclusive offset from midnight.
-     * @default 1440
-     */
-    dayEndMinute?: number;
+    axis: TimelineAxis;
     /**
      * Add properties to the event dropped in the column before storing it in the store.
      */

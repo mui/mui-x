@@ -47,7 +47,7 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       // Only the position is read, which depends on the start alone.
       start: processedNow,
       end: processedNow,
-      collection: config,
+      collection: config.axis,
       durationMs: config.durationMs,
     });
 

@@ -6,8 +6,10 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
+import {
+  useCalendarGridTimeColumnContext,
+  useElementPositionInCollection,
+} from '@mui/x-scheduler-internals/internals';
 import type { PaletteName } from '../../../utils/tokens';
 import type { TimeGridEventProps } from './TimeGridEvent.types';
 
@@ -40,9 +42,9 @@ export interface UseTimeGridEventReturnValue {
 
 export function useTimeGridEvent(
   occurrence: TimeGridEventProps['occurrence'],
-  column: TimelineAxisRange,
 ): UseTimeGridEventReturnValue {
   const store = useEventCalendarStoreContext();
+  const { axis: column } = useCalendarGridTimeColumnContext();
 
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);

@@ -4,7 +4,6 @@ import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   floorToWallClockMinutes,
   useEventCreation,
@@ -52,7 +51,6 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   } = componentProps;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   const { rowRef, hasFocus, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
@@ -81,13 +79,12 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     () => ({
       ...occurrenceLayoutWithoutTimelinePositions,
       occurrences: addTimelinePositionsToOccurrences({
-        adapter,
         config,
         occurrences: occurrenceLayoutWithoutTimelinePositions.occurrences,
         positionByOccurrenceKey,
       }),
     }),
-    [adapter, config, occurrenceLayoutWithoutTimelinePositions, positionByOccurrenceKey],
+    [config, occurrenceLayoutWithoutTimelinePositions, positionByOccurrenceKey],
   );
 
   // Feature hooks

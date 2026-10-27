@@ -1,15 +1,12 @@
 import * as React from 'react';
-import { useAdapterContext } from '../../use-adapter-context';
-import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { SchedulerProcessedDate } from '../../models';
 import {
-  getTimelineAxis,
   getTimelineAxisDurationMs,
   isStartMinuteOutsideAxisWindow,
   isEndMinuteOutsideAxisWindow,
   timestampToTimelineAxisOffsetMs,
 } from './timeline-axis';
-import type { TimelineAxisRange } from './timeline-axis';
+import type { TimelineAxis } from './timeline-axis';
 
 const MINUTE_MS = 60_000;
 
@@ -17,20 +14,10 @@ export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
   const { start, end, collection, durationMs } = parameters;
-  // Deconstructed so an inline collection object stays memoization-friendly.
-  const { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute } = collection;
-
-  const adapter = useAdapterContext();
 
   return React.useMemo(
-    () =>
-      computeElementPositionInCollection(adapter, {
-        start,
-        end,
-        collection: { start: collectionStart, end: collectionEnd, dayStartMinute, dayEndMinute },
-        durationMs,
-      }),
-    [adapter, start, end, collectionStart, collectionEnd, dayStartMinute, dayEndMinute, durationMs],
+    () => computeElementPositionInCollection({ start, end, collection, durationMs }),
+    [start, end, collection, durationMs],
   );
 }
 
@@ -38,11 +25,9 @@ export function useElementPositionInCollection(
  * Pure helper behind `useElementPositionInCollection`, callable outside React.
  */
 export function computeElementPositionInCollection(
-  adapter: Adapter,
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
-  const { start, end, collection } = parameters;
-  const axis = getTimelineAxis(adapter, collection);
+  const { start, end, collection: axis } = parameters;
 
   // The processed bounds already carry their wall-clock time of day. The offsets are
   // monotonic in the date (day index × day size + a clamped in-day term), so no
@@ -67,9 +52,9 @@ export function computeElementPositionInCollection(
 
   // A bound clamped in either direction means part of the element is hidden.
   const startingBeforeEdge =
-    startOffsetMs < 0 || isStartMinuteOutsideAxisWindow(collection, start.minutesInDay);
+    startOffsetMs < 0 || isStartMinuteOutsideAxisWindow(axis, start.minutesInDay);
   const endingAfterEdge =
-    endOffsetMs > totalMs || isEndMinuteOutsideAxisWindow(collection, end.minutesInDay);
+    endOffsetMs > totalMs || isEndMinuteOutsideAxisWindow(axis, end.minutesInDay);
 
   return {
     position: clampedStartMs / totalMs,
@@ -82,18 +67,18 @@ export function computeElementPositionInCollection(
 export namespace useElementPositionInCollection {
   export interface Parameters {
     /**
-     * The start of the element, processed in the timezone of the start of the collection.
+     * The start of the element, processed in the timezone of the collection.
      */
     start: SchedulerProcessedDate;
     /**
-     * The end of the element, processed in the timezone of the start of the collection.
+     * The end of the element, processed in the timezone of the collection.
      */
     end: SchedulerProcessedDate;
     /**
-     * The displayed range and daily hour window the element is positioned in: a
-     * time-grid column (`viewConfig`) or the timeline's axis (`presetConfig`).
+     * The axis the element is positioned in: the axis of a CalendarGrid time column or day row, or
+     * the `axis` of the timeline's preset config.
      */
-    collection: TimelineAxisRange;
+    collection: TimelineAxis;
     /**
      * Precomputed `getTimelineAxisDurationMs()` of the collection, skipping the
      * per-call derivation when the caller already holds it.

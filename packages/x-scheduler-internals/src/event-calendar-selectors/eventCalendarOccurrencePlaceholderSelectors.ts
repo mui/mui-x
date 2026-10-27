@@ -1,21 +1,17 @@
 import type { EventCalendarState as State } from '../use-event-calendar';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
+import type { SchedulerProcessedDate } from '../models';
 import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
 // These selectors run for every cell while dragging, so they compare timestamps and day numbers,
 // which are cheaper than the adapter's comparison methods and than plain dates.
 
-// The placeholder and the bounds of the views are in the display timezone.
+// The placeholder and the bounds of the rows and columns are timestamps read in the display timezone.
 function getDayNumber(state: State, timestamp: number): number {
   return toLocalDayNumber(timestamp, state.displayTimezone);
 }
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
-  placeholderInDayCell: (
-    state: State,
-    day: SchedulerProcessedDate,
-    rowStart: TemporalSupportedObject,
-  ) => {
+  placeholderInDayCell: (state: State, day: SchedulerProcessedDate, rowStart: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder === null || placeholder.surfaceType !== 'day-grid' || placeholder.isHidden) {
       return null;
@@ -27,12 +23,11 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     }
 
     // A placeholder starting in a previous row also renders from the first day of this one.
-    const rowStartTimestamp = state.adapter.getTime(rowStart);
-    if (dayNumber === getDayNumber(state, rowStartTimestamp)) {
+    if (dayNumber === getDayNumber(state, rowStart)) {
       // Inclusive, in either order, like the adapter's `isWithinRange()`.
       if (
-        Math.min(placeholder.start, placeholder.end) <= rowStartTimestamp &&
-        rowStartTimestamp <= Math.max(placeholder.start, placeholder.end)
+        Math.min(placeholder.start, placeholder.end) <= rowStart &&
+        rowStart <= Math.max(placeholder.start, placeholder.end)
       ) {
         return placeholder;
       }
@@ -40,18 +35,13 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
 
     return null;
   },
-  placeholderInTimeRange: (
-    state: State,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
-  ) => {
+  placeholderInTimeRange: (state: State, start: number, end: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder === null || placeholder.surfaceType !== 'time-grid' || placeholder.isHidden) {
       return null;
     }
 
-    const { adapter } = state;
-    if (placeholder.end <= adapter.getTime(start) || placeholder.start >= adapter.getTime(end)) {
+    if (placeholder.end <= start || placeholder.start >= end) {
       return null;
     }
 
@@ -64,23 +54,18 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     }
     return getDayNumber(state, day.timestamp) === getDayNumber(state, placeholder.start);
   },
-  isCreatingInTimeRange: (
-    state: State,
-    dayStart: TemporalSupportedObject,
-    dayEnd: TemporalSupportedObject,
-  ) => {
+  isCreatingInTimeRange: (state: State, dayStart: number, dayEnd: number) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'time-grid' || placeholder.type !== 'creation') {
       return false;
     }
 
-    const dayStartTimestamp = state.adapter.getTime(dayStart);
-    if (getDayNumber(state, placeholder.start) !== getDayNumber(state, dayStartTimestamp)) {
+    if (getDayNumber(state, placeholder.start) !== getDayNumber(state, dayStart)) {
       return false;
     }
 
-    const startsBeforeEnd = placeholder.start < state.adapter.getTime(dayEnd);
-    const endsAfterStart = placeholder.end > dayStartTimestamp;
+    const startsBeforeEnd = placeholder.start < dayEnd;
+    const endsAfterStart = placeholder.end > dayStart;
 
     return startsBeforeEnd && endsAfterStart;
   },

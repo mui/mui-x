@@ -1,5 +1,4 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type { TemporalSupportedObject } from '../models';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
@@ -20,6 +19,9 @@ export const schedulerNowSelectors = {
    */
   nowTimestamp: (state: State) => state.nowTimestamp,
   nowDayNumber,
-  isCurrentDay: (state: State, date: TemporalSupportedObject) =>
-    toLocalDayNumber(state.adapter.getTime(date), state.displayTimezone) === nowDayNumber(state),
+  /**
+   * Whether `timestamp` is on the current day of the display timezone.
+   */
+  isCurrentDay: (state: State, timestamp: number) =>
+    toLocalDayNumber(timestamp, state.displayTimezone) === nowDayNumber(state),
 };

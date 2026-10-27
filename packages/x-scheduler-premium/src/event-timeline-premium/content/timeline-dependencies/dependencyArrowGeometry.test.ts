@@ -9,7 +9,7 @@ import {
   createEventRangeIndex,
   getOccurrencesFromEvents,
 } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import { computeDependencyArrows } from './dependencyArrowGeometry';
 import {
@@ -28,13 +28,10 @@ import {
 } from '../../tests/dependencyGeometryTestUtils';
 
 // Mirrors the axis filter of the occurrence selector: visible ≡ non-zero width.
-const filterVisibleOccurrences = (
-  axis: TimelineAxisRange,
-  occurrences: SchedulerEventOccurrence[],
-) =>
+const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEventOccurrence[]) =>
   occurrences.filter(
     (occurrence) =>
-      computeElementPositionInCollection(adapter, {
+      computeElementPositionInCollection({
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
         collection: axis,
@@ -934,9 +931,10 @@ describe('dependencyArrowGeometry', () => {
     describe('trimmed hour window', () => {
       // Window 8:00 → 20:00 on a single day: 720 axis minutes, eventsWidth 720 → 1px
       // per axis minute.
-      const TRIMMED_AXIS = {
-        start: collectionStart,
-        end: collectionEnd,
+      const TRIMMED_AXIS: TimelineAxis = {
+        start: adapter.getTime(collectionStart),
+        end: adapter.getTime(collectionEnd),
+        timezone: 'default',
         dayStartMinute: 480,
         dayEndMinute: 1200,
       };
@@ -1018,7 +1016,7 @@ describe('dependencyArrowGeometry', () => {
         // Two-day axis: 21:00–23:00 on the first day falls in the night the window hides.
         const twoDayAxis = {
           ...TRIMMED_AXIS,
-          end: adapter.endOfDay(adapter.addDays(collectionStart, 1)),
+          end: adapter.getTime(adapter.endOfDay(adapter.addDays(collectionStart, 1))),
         };
         const hiddenSource = EventBuilder.new()
           .id('event-hidden')
@@ -1051,13 +1049,13 @@ describe('dependencyArrowGeometry', () => {
         // below the rendered event.
         const twoDayAxis = {
           ...TRIMMED_AXIS,
-          end: adapter.endOfDay(adapter.addDays(collectionStart, 1)),
+          end: adapter.getTime(adapter.endOfDay(adapter.addDays(collectionStart, 1))),
         };
         const getTwoDayOccurrences = (events: SchedulerProcessedEvent[]) =>
           getOccurrencesFromEvents({
             adapter,
             start: adapter.getTime(collectionStart),
-            end: adapter.getTime(twoDayAxis.end),
+            end: twoDayAxis.end,
             eventRangeIndex: createEventRangeIndex(events, false),
             displayTimezone: 'default',
             visibleResources: {},

@@ -8,11 +8,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-eve
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import {
-  createEndOfPlainDate,
-  getWeekNumber,
-  toPlainDateTime,
-} from '@mui/x-scheduler-internals/internals';
+import { getEndOfDayMs, getWeekNumber } from '@mui/x-scheduler-internals/internals';
 import type { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
@@ -56,17 +52,9 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const weekNumber = getWeekNumber(adapter, days[0].value, weekStartsOn);
 
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const { start, end } = React.useMemo(
-    () => ({
-      start: days[0].value,
-      end: createEndOfPlainDate(
-        adapter,
-        toPlainDateTime(days[days.length - 1].timestamp, displayTimezone).date,
-        displayTimezone,
-      ),
-    }),
-    [adapter, days, displayTimezone],
-  );
+  // `days[0].timestamp` is the first instant of the first day.
+  const start = days[0].timestamp;
+  const end = getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone);
 
   const weekNumberId = showWeekNumber
     ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`

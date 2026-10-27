@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
 import {
-  buildTemporalPlainDate,
-  createAdapterDateOnPlainDate,
-  createEndOfPlainDate,
+  getEndOfDayMs,
+  toEpochMs,
+  toPlainDateTime,
+  useCalendarGridTimeColumnContext,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
@@ -85,38 +85,33 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
   const adapter = useAdapterContext();
+  const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
-  // Built on the wall clock like the axis of the column, as `adapter.setHours()` and
-  // `adapter.endOfDay()` resolve the hours a DST transition repeats depending on the timezone of
-  // the system.
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  // Built on the wall clock like the axis of the column.
   const { start, end } = React.useMemo(() => {
-    const timezone = adapter.getTimezone(day.value);
-    const plainDate = buildTemporalPlainDate(adapter, day.value);
+    const plainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
     return {
-      start: createAdapterDateOnPlainDate(adapter, plainDate, startTime * HOUR_MS, timezone),
+      start: toEpochMs(plainDate, startTime * HOUR_MS, displayTimezone),
       end:
         endTime === 24
-          ? createEndOfPlainDate(adapter, plainDate, timezone)
-          : createAdapterDateOnPlainDate(adapter, plainDate, endTime * HOUR_MS, timezone),
+          ? getEndOfDayMs(day.timestamp, displayTimezone)
+          : toEpochMs(plainDate, endTime * HOUR_MS, displayTimezone),
     };
-  }, [adapter, day.value, startTime, endTime]);
-  const column = React.useMemo(
-    () => ({ start, end, dayStartMinute: startTime * 60, dayEndMinute: endTime * 60 }),
-    [start, end, startTime, endTime],
-  );
+  }, [day.timestamp, displayTimezone, startTime, endTime]);
 
   // Only place occurrences that overlap the visible `[start, end)` window. Occurrences entirely
   // before `startTime` or after `endTime` would otherwise be clamped to a zero-height sliver pinned
   // to an edge (showing a misleading time) and still count toward the column's lane count.
-  const visibleOccurrences = React.useMemo(() => {
-    const startTimestamp = adapter.getTime(start);
-    const endTimestamp = adapter.getTime(end);
-    return day.withoutPosition.filter(
-      (occurrence) =>
-        occurrence.displayTimezone.end.timestamp > startTimestamp &&
-        occurrence.displayTimezone.start.timestamp < endTimestamp,
-    );
-  }, [adapter, day.withoutPosition, start, end]);
+  const visibleOccurrences = React.useMemo(
+    () =>
+      day.withoutPosition.filter(
+        (occurrence) =>
+          occurrence.displayTimezone.end.timestamp > start &&
+          occurrence.displayTimezone.start.timestamp < end,
+      ),
+    [day.withoutPosition, start, end],
+  );
 
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
     occurrences: visibleOccurrences,
@@ -126,17 +121,16 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   return (
     <DayTimeGridColumn
       className={classes.dayTimeGridColumn}
-      start={column.start}
-      end={column.end}
-      dayStartMinute={column.dayStartMinute}
-      dayEndMinute={column.dayEndMinute}
+      start={start}
+      end={end}
+      dayStartMinute={startTime * 60}
+      dayEndMinute={endTime * 60}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
       data-weekend={isWeekend(adapter, day.value) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
-        column={column}
         showCurrentTimeIndicator={showCurrentTimeIndicator}
         index={index}
         occurrences={occurrences}
@@ -147,22 +141,19 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 }
 
 function ColumnInteractiveLayer({
-  column,
   showCurrentTimeIndicator,
   index,
   occurrences,
   maxIndex,
 }: {
-  column: TimelineAxisRange;
   showCurrentTimeIndicator: boolean;
   index: number;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
   maxIndex: number;
 }) {
-  const { start, end } = column;
-
   // Context hooks
   const store = useEventCalendarStoreContext();
+  const { start, end } = useCalendarGridTimeColumnContext().axis;
   const { startEditing } = useEventEditingContext();
   const { classes } = useEventCalendarStyledContext();
 
@@ -196,12 +187,10 @@ function ColumnInteractiveLayer({
       {!isLoading &&
         occurrences.map((occurrence) => (
           <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
-            <TimeGridEvent occurrence={occurrence} column={column} variant="regular" />
+            <TimeGridEvent occurrence={occurrence} variant="regular" />
           </EventContextMenuTrigger>
         ))}
-      {placeholder != null && (
-        <TimeGridEvent occurrence={placeholder} column={column} variant="placeholder" />
-      )}
+      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
         <DayTimeGridCurrentTimeIndicator
           className={classes.dayTimeGridCurrentTimeIndicator}

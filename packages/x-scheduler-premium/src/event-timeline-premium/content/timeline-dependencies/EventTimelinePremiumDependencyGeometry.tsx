@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { Dimensions, Virtualization } from '@mui/x-virtualizer';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
@@ -141,7 +140,6 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
 }: {
   children: React.ReactNode;
 }) {
-  const adapter = useAdapterContext();
   const theme = useTheme();
   const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
@@ -176,10 +174,9 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
   const resolver = React.useMemo(
     () =>
       createDependencyAnchorResolver({
-        adapter,
         resources,
         rowPositions: rowsMeta.positions,
-        axis: config,
+        axis: config.axis,
         durationMs: config.durationMs,
         positionByOccurrenceKey,
         eventsWidth,
@@ -189,7 +186,6 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
       }),
     // The config selector is memoized, so the object identity only changes with its content.
     [
-      adapter,
       resources,
       positionByOccurrenceKey,
       rowsMeta.positions,

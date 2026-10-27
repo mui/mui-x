@@ -17,13 +17,13 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   const start = adapter.startOfDay(
     adapter.setTimezone(adapter.date('2026-03-02T12:00:00Z', 'default'), timezone),
   );
-  const axis = {
+  const axis = getTimelineAxis(adapter, {
     start,
     end: adapter.endOfDay(adapter.addDays(start, 6)),
     dayStartMinute: 0,
     dayEndMinute: 1440,
-  };
-  const durationMs = getTimelineAxisDurationMs(getTimelineAxis(adapter, axis));
+  });
+  const durationMs = getTimelineAxisDurationMs(axis);
   // Occurrences of 30 minutes to 5 hours, every 10 minutes across the week.
   const occurrences = Array.from({ length: occurrenceCount }, (_, index) => {
     const occurrenceStart = adapter.addMinutes(start, index * 10);
@@ -37,7 +37,7 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     await bench('positions on a week axis', () => {
       let total = 0;
       for (const occurrence of occurrences) {
-        total += computeElementPositionInCollection(adapter, {
+        total += computeElementPositionInCollection({
           ...occurrence,
           collection: axis,
           durationMs,
@@ -48,7 +48,7 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   });
 
   test('map 1,000 pointer positions to dates', { timeout: 0 }, async ({ bench }) => {
-    const timelineAxis = getTimelineAxis(adapter, axis);
+    const timelineAxis = axis;
     await bench('dates on a week axis', () => {
       let total = 0;
       for (let index = 0; index < occurrenceCount; index += 1) {

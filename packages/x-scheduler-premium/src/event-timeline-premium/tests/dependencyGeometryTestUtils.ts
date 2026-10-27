@@ -3,10 +3,9 @@ import type { SchedulerProcessedEvent } from '@mui/x-scheduler-internals/models'
 import {
   createEventRangeIndex,
   getOccurrencesFromEvents,
-  getTimelineAxis,
   getTimelineAxisDurationMs,
 } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type {
   SchedulerDependency,
   SchedulerDependencyType,
@@ -19,9 +18,10 @@ import { createDependencyAnchorResolver } from '../content/timeline-dependencies
 
 export const collectionStart = adapter.date('2024-01-15', 'default');
 export const collectionEnd = adapter.endOfDay(collectionStart);
-export const fullDayAxis: TimelineAxisRange = {
-  start: collectionStart,
-  end: collectionEnd,
+export const fullDayAxis: TimelineAxis = {
+  start: adapter.getTime(collectionStart),
+  end: adapter.getTime(collectionEnd),
+  timezone: 'default',
   dayStartMinute: 0,
   dayEndMinute: 1440,
 };
@@ -75,18 +75,17 @@ type ResolverParameters = Parameters<typeof createDependencyAnchorResolver>[0];
 export function buildResolver(parameters: {
   resources: ResolverParameters['resources'];
   rowPositions: readonly number[];
-  axis?: TimelineAxisRange;
+  axis?: TimelineAxis;
   eventsWidth?: number;
   positionByOccurrenceKey?: ResolverParameters['positionByOccurrenceKey'];
   endpointIds?: ResolverParameters['endpointIds'];
   processedEventLookup?: ResolverParameters['processedEventLookup'];
 }) {
   return createDependencyAnchorResolver({
-    adapter,
     resources: parameters.resources,
     rowPositions: parameters.rowPositions,
     axis: parameters.axis ?? fullDayAxis,
-    durationMs: getTimelineAxisDurationMs(getTimelineAxis(adapter, parameters.axis ?? fullDayAxis)),
+    durationMs: getTimelineAxisDurationMs(parameters.axis ?? fullDayAxis),
     positionByOccurrenceKey: parameters.positionByOccurrenceKey,
     eventsWidth: parameters.eventsWidth ?? EVENTS_WIDTH,
     laneMetrics,
