@@ -10,7 +10,8 @@ import {
   treeItemClasses as classes,
 } from '@mui/x-tree-view/TreeItem';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
-import { useTreeItem, type UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
+import type { UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import { describeConformance } from 'test/utils/describeConformance';
 import { getFakeContextValue } from 'test/utils/tree-view/fakeContextValue';
 import { describeSlotsConformance } from 'test/utils/describeSlotsConformance';
@@ -57,8 +58,9 @@ describe('<TreeItem />', () => {
       props: Omit<UseTreeItemParameters, 'rootRef'>,
       ref: React.Ref<HTMLLIElement>,
     ) {
-      const { getContextProviderProps, getRootProps, getContentProps, getLabelProps } =
-        useTreeItem({ ...props, rootRef: ref });
+      const { getContextProviderProps, getRootProps, getContentProps, getLabelProps } = useTreeItem(
+        { ...props, rootRef: ref },
+      );
 
       return (
         <TreeItemProvider {...getContextProviderProps()}>

@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
-import { createTheme, ThemeProvider, type Theme } from '@mui/material/styles';
-import {
-  PickerDay,
-  pickerDayClasses as classes,
-  type PickerDayProps,
-} from '@mui/x-date-pickers/PickerDay';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+import { PickerDay, pickerDayClasses as classes } from '@mui/x-date-pickers/PickerDay';
+import type { PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -171,10 +169,9 @@ describe('<PickerDay />', () => {
     });
 
     it.skipIf(isJSDOM)('keeps the outline color set in the theme on a selected day', async () => {
-      const { user } = renderDay(
-        createTheme({ focusVisible: { outlineColor: 'rgb(4, 5, 6)' } }),
-        { selected: true },
-      );
+      const { user } = renderDay(createTheme({ focusVisible: { outlineColor: 'rgb(4, 5, 6)' } }), {
+        selected: true,
+      });
 
       await user.keyboard('{Tab}');
 
