@@ -7,7 +7,6 @@ import { useRtl } from '@mui/system/RtlProvider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -19,6 +18,7 @@ import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-lis
 import {
   createStartOfPlainDate,
   getPlainDateWeekStart,
+  isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
@@ -263,7 +263,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               aria-label={adapter.formatByString(day.value, adapter.formats.weekday)}
               aria-colindex={dayIndex + 1}
               className={classes.miniCalendarWeekdayCell}
-              data-weekend={isWeekend(adapter, day.value) || undefined}
+              data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
             >
               {adapter.formatByString(day.value, adapter.formats.weekday1Letter)}
             </MiniCalendarWeekdayCell>

@@ -3,8 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -59,7 +58,6 @@ export function DayGridCell(props: DayGridCellProps) {
   const { day, row, colIndex } = props;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { startEditing } = useEventEditingContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
@@ -100,7 +98,7 @@ export function DayGridCell(props: DayGridCellProps) {
       aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
       aria-colindex={colIndex}
       role="gridcell"
-      data-weekend={isWeekend(adapter, day.value) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
     >
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {isLoading && <EventSkeleton data-variant="day-grid" />}

@@ -4,13 +4,12 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import {
   getEndOfDayMs,
+  isWeekendPlainDate,
   toEpochMs,
   useCalendarGridTimeColumnContext,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -83,7 +82,6 @@ const HOUR_MS = 3_600_000;
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
@@ -126,7 +124,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       dayEndMinute={endTime * 60}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
-      data-weekend={isWeekend(adapter, day.value) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer

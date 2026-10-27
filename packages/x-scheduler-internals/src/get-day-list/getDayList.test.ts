@@ -7,7 +7,7 @@ import {
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { getDayListFromPlainDates } from './getDayList';
-import { isWeekend } from '../use-adapter';
+import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 import { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 
 describe('getDayListFromPlainDates', () => {
@@ -67,7 +67,7 @@ describe('getDayListFromPlainDates', () => {
     const start = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
     const expectedDays = Array.from({ length: 7 }, (_, i) =>
       processDay(adapter.addDays(start, i), adapter),
-    ).filter((day) => !isWeekend(adapter, day.value));
+    ).filter((day) => !isWeekendPlainDate(day.plainDate));
 
     expect(days).to.deep.equal(expectedDays);
   });

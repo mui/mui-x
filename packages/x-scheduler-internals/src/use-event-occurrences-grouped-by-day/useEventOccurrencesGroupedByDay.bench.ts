@@ -2,7 +2,7 @@ import { describe, test } from 'vitest';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter, EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
 import { getDayListFromPlainDates } from '../get-day-list';
-import { isWeekend } from '../use-adapter';
+import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 import { getStartOfWeek } from '../internals/utils/date-utils';
 import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
@@ -50,7 +50,7 @@ function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   });
   let weekendCount = 0;
   for (const day of days) {
-    weekendCount += isWeekend(adapter, day.value) ? 1 : 0;
+    weekendCount += isWeekendPlainDate(day.plainDate) ? 1 : 0;
   }
   const occurrencesByDay = innerGetEventOccurrencesGroupedByDay({
     adapter,

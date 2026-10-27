@@ -14,7 +14,6 @@ import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
@@ -28,6 +27,7 @@ import {
   getDisplayedHourRange,
   getEndOfDayMs,
   getInitialScrollTime,
+  isWeekendPlainDate,
   toLocalDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
@@ -444,7 +444,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     applyInitialScroll();
   });
 
-  const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
+  const lastIsWeekend = isWeekendPlainDate(days[days.length - 1].plainDate);
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
