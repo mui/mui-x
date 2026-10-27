@@ -1,6 +1,7 @@
 import { createPlainDate } from '../base-temporal/PlainDate';
 import type { PlainDate } from '../base-temporal/PlainDate';
 import { ISO_CALENDAR_ID } from '../base-temporal/calendar';
+import { formatIsoDate, fromDayNumber } from '../base-temporal/iso';
 
 /**
  * The plain date of a day number, in the ISO calendar.
@@ -19,10 +20,23 @@ export function isWeekendPlainDate(plainDate: PlainDate): boolean {
   return plainDate.dayOfWeek >= 6;
 }
 
+const MAX_CACHED_KEYS = 10_000;
+const plainDateKeys = new Map<number, string>();
+
 /**
  * The key of `plainDate` that the processed dates and the occurrences use: its ISO date, such as
  * `2026-03-07`, whatever the locale.
+ * Cached per day, since a lookup is faster than building the string.
  */
 export function getPlainDateKey(plainDate: PlainDate): string {
-  return plainDate.toString();
+  let key = plainDateKeys.get(plainDate.dayNumber);
+  if (key === undefined) {
+    if (plainDateKeys.size >= MAX_CACHED_KEYS) {
+      plainDateKeys.clear();
+    }
+    const isoDate = fromDayNumber(plainDate.dayNumber);
+    key = formatIsoDate(isoDate.year, isoDate.month, isoDate.day);
+    plainDateKeys.set(plainDate.dayNumber, key);
+  }
+  return key;
 }
