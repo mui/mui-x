@@ -25,7 +25,8 @@ const plainDateKeys = new Map<number, string>();
 /**
  * The key of `plainDate` that the processed dates and the occurrences use: its ISO date, such as
  * `2026-03-07`, whatever the locale.
- * Cached per day, since a lookup is faster than building the string.
+ * Cached per day, since a lookup is faster than building the string. The cache ignores the
+ * calendar, as all the plain dates of the Scheduler share one, the ISO calendar for now.
  */
 export function getPlainDateKey(plainDate: PlainDate): string {
   let key = plainDateKeys.get(plainDate.dayNumber);
