@@ -42,6 +42,7 @@ export interface EventTimelinePremiumDependenciesStoreFeature {
 /**
  * Optional features the timeline store receives at construction.
  * They are read once, later values are ignored.
+ * They also carry the hooks of the `TimelineGrid` parts, which can only reach the store.
  * @internal
  */
 export interface EventTimelinePremiumStoreFeatures {
