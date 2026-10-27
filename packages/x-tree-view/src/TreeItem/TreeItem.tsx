@@ -16,7 +16,7 @@ import type { TreeItemProps } from './TreeItem.types';
 import type { UseTreeItemLabelSlotOwnProps, UseTreeItemStatus } from '../useTreeItem';
 import { useTreeItem } from '../useTreeItem';
 import type { TreeItemClasses } from './treeItemClasses';
-import { getTreeItemUtilityClass, treeItemClasses } from './treeItemClasses';
+import { getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
@@ -67,7 +67,7 @@ export const TreeItemContent = styled('div', {
   },
   ...(theme.focusVisible
     ? {
-        [`.${treeItemClasses.root}:focus-visible > &`]: {
+        '[role="treeitem"]:focus-visible > &': {
           ...applyInsetFocusVisible(1),
           ...theme.focusVisible,
         },
