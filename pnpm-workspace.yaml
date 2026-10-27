@@ -57,7 +57,7 @@ catalog:
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.23
   es-toolkit: ^1.52.0
-  execa: 10.1.0
+  execa: 10.2.1
   jscodeshift: 17.4.0
   jsdom: 30.1.2
   luxon: ^3.7.2
