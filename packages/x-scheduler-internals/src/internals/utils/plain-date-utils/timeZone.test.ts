@@ -9,7 +9,8 @@ import {
   getStartOfDayMs,
   getTimezoneOffsetMs,
   toEpochMs,
-  toPlainDateTime,
+  toMsInDay,
+  toPlainDate,
 } from './timeZone';
 
 const HOUR = 3_600_000;
@@ -41,28 +42,28 @@ describe('timeZone', () => {
     });
   });
 
-  describe('toPlainDateTime', () => {
+  describe('toPlainDate and toMsInDay', () => {
     // Browsers cannot change their timezone through process.env.TZ.
     it.skipIf(!isJSDOM)(
       'should keep the seconds of a local mean time offset of the system timezone',
       () => {
         // Paris used +00:09:21 until 1911.
         setSystemTimezone('Europe/Paris');
-        const { date, msInDay } = toPlainDateTime(new Date(1890, 0, 1).getTime(), 'default');
-        expect(date.toString()).to.equal('1890-01-01');
-        expect(msInDay).to.equal(0);
+        const epochMs = new Date(1890, 0, 1).getTime();
+        expect(toPlainDate(epochMs, 'default').toString()).to.equal('1890-01-01');
+        expect(toMsInDay(epochMs, 'default')).to.equal(0);
 
         // Years 0 to 99 aren't remapped to the 1900s.
         const year99 = new Date(1890, 0, 1);
         year99.setFullYear(99);
-        expect(toPlainDateTime(year99.getTime(), 'system').date.toString()).to.equal('0099-01-01');
+        expect(toPlainDate(year99.getTime(), 'system').toString()).to.equal('0099-01-01');
       },
     );
 
     it('should read the date and wall-clock time in the timezone', () => {
-      const { date, msInDay } = toPlainDateTime(Date.UTC(2025, 2, 3, 0, 30), 'America/Los_Angeles');
-      expect(date.toString()).to.equal('2025-03-02');
-      expect(msInDay).to.equal((16 * 60 + 30) * 60_000);
+      const epochMs = Date.UTC(2025, 2, 3, 0, 30);
+      expect(toPlainDate(epochMs, 'America/Los_Angeles').toString()).to.equal('2025-03-02');
+      expect(toMsInDay(epochMs, 'America/Los_Angeles')).to.equal((16 * 60 + 30) * 60_000);
     });
   });
 
@@ -96,11 +97,12 @@ describe('timeZone', () => {
       );
     });
 
-    it('should round-trip with toPlainDateTime outside DST transitions', () => {
+    it('should round-trip with toPlainDate and toMsInDay outside DST transitions', () => {
       const epochMs = Date.UTC(2025, 4, 20, 17, 45, 12, 345);
       for (const timezone of ['default', 'UTC', 'Europe/Paris', 'Asia/Kathmandu', 'Pacific/Apia']) {
-        const { date, msInDay } = toPlainDateTime(epochMs, timezone);
-        expect(toEpochMs(date, msInDay, timezone)).to.equal(epochMs);
+        expect(
+          toEpochMs(toPlainDate(epochMs, timezone), toMsInDay(epochMs, timezone), timezone),
+        ).to.equal(epochMs);
       }
     });
   });

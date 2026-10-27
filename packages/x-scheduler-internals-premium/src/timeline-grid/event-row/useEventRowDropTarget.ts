@@ -11,7 +11,7 @@ import {
   isStartMinuteOutsideAxisWindow,
   timelineAxisOffsetToTimestamp,
   timestampToTimelineAxisOffsetMs,
-  toPlainDateTime,
+  toMsInDay,
 } from '@mui/x-scheduler-internals/internals';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import {
@@ -90,7 +90,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // original dates instead of silently snapping the start to the window edge.
         // A visible start has no remainder, even in the second occurrence of an hour repeated by a
         // fall-back transition, which the axis reads as the first one.
-        const startMsInDay = toPlainDateTime(data.start, axis.timezone).msInDay;
+        const startMsInDay = toMsInDay(data.start, axis.timezone);
         const hiddenRemainderMs = isStartMinuteOutsideAxisWindow(
           config,
           Math.floor(startMsInDay / 60_000),

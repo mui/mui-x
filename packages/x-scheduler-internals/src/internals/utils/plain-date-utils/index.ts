@@ -9,9 +9,9 @@ export {
   toEpochMs,
   toLocalDayNumber,
   toLocalMs,
-  toPlainDateTime,
+  toMsInDay,
+  toPlainDate,
 } from './timeZone';
-export type { PlainDateTime } from './timeZone';
 export {
   addToAdapterDate,
   buildTemporalPlainDate,

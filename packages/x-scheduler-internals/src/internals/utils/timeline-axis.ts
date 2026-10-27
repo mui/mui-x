@@ -8,7 +8,7 @@ import {
   localToEpochMs,
   toLocalDayNumber,
   toLocalMs,
-  toPlainDateTime,
+  toMsInDay,
 } from './plain-date-utils/timeZone';
 
 const MINUTE_MS = 60_000;
@@ -178,7 +178,7 @@ export function resolveRepeatedTimeFrom(
 export function timestampToTimelineAxisOffsetMs(
   axis: TimelineAxis,
   timestamp: number,
-  msInDay: number = toPlainDateTime(timestamp, axis.timezone).msInDay,
+  msInDay: number = toMsInDay(timestamp, axis.timezone),
 ): number {
   // Day numbers, as this runs for every event.
   const dayIndex =

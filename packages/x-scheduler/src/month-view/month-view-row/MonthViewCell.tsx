@@ -5,7 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { isWeekendPlainDate, toPlainDateTime } from '@mui/x-scheduler-internals/internals';
+import { isWeekendPlainDate, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -192,7 +192,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  const dayPlainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
+  const dayPlainDate = toPlainDate(day.timestamp, displayTimezone);
   const isCurrentMonth =
     dayPlainDate.year === visiblePlainDate.year && dayPlainDate.month === visiblePlainDate.month;
   const isFirstDayOfMonth = dayPlainDate.day === 1;

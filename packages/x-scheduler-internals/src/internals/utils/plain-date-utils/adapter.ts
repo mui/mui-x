@@ -2,15 +2,18 @@ import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { PlainDate, PlainDateDuration } from '../base-temporal/PlainDate';
+import { MS_PER_DAY } from '../base-temporal/iso';
 import {
   getEndOfDayMs,
   getStartOfDayMs,
   localToEpochMs,
   moveTimestampToPlainDate,
   toEpochMs,
-  toPlainDateTime,
+  toLocalMs,
+  toMsInDay,
+  toPlainDate,
 } from './timeZone';
-import { getPlainDateKey } from './plainDate';
+import { getPlainDateKey, plainDateFromDayNumber } from './plainDate';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.
@@ -28,7 +31,7 @@ export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): stri
  * returns the same date.
  */
 export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
-  return toPlainDateTime(adapter.getTime(date), adapter.getTimezone(date)).date;
+  return toPlainDate(adapter.getTime(date), adapter.getTimezone(date));
 }
 
 /**
@@ -151,12 +154,14 @@ export function buildProcessedDate(
   epochMs: number,
   timezone: TemporalTimezone,
 ): SchedulerProcessedDate {
-  const plainDateTime = toPlainDateTime(epochMs, timezone);
+  // The wall clock is read once, as this runs for each occurrence of the visible range.
+  const localMs = toLocalMs(epochMs, timezone);
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
   return {
     value,
-    key: getPlainDateKey(plainDateTime.date),
+    key: getPlainDateKey(plainDateFromDayNumber(dayNumber)),
     timestamp: epochMs,
-    minutesInDay: Math.floor(plainDateTime.msInDay / 60_000),
+    minutesInDay: Math.floor((localMs - dayNumber * MS_PER_DAY) / 60_000),
   };
 }
 
@@ -198,10 +203,14 @@ export function addToAdapterDate(
   duration: PlainDateDuration,
 ): TemporalSupportedObject {
   const timezone = adapter.getTimezone(date);
-  const plainDateTime = toPlainDateTime(adapter.getTime(date), timezone);
+  const epochMs = adapter.getTime(date);
   return createAdapterDate(
     adapter,
-    toEpochMs(plainDateTime.date.add(duration), plainDateTime.msInDay, timezone),
+    toEpochMs(
+      toPlainDate(epochMs, timezone).add(duration),
+      toMsInDay(epochMs, timezone),
+      timezone,
+    ),
     timezone,
   );
 }

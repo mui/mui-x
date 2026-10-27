@@ -12,7 +12,7 @@ import type { EventCalendarFetchRange, SchedulerProcessedDate } from '../models'
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayListFromPlainDates } from '../get-day-list';
 import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
-import { toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 
 /**
  * The span of days the agenda displays: `dayCount` days from the visible date,
@@ -182,14 +182,14 @@ export const eventCalendarAgendaSelectors = {
       // so fall back to the bounds of the range.
       const firstPlainDate =
         baseDays.length > 0
-          ? toPlainDateTime(baseDays[0].timestamp, displayTimezone).date
+          ? toPlainDate(baseDays[0].timestamp, displayTimezone)
           : range.start;
       if (!showEmptyDaysInAgenda) {
         return { start: firstPlainDate, end: horizonPlainDate };
       }
       const lastPlainDate =
         baseDays.length > 0
-          ? toPlainDateTime(baseDays[baseDays.length - 1].timestamp, displayTimezone).date
+          ? toPlainDate(baseDays[baseDays.length - 1].timestamp, displayTimezone)
           : range.end;
       return { start: firstPlainDate, end: lastPlainDate };
     },

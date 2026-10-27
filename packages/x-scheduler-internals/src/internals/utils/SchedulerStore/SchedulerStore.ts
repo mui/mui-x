@@ -74,7 +74,7 @@ import {
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { createStartOfPlainDate } from '../plain-date-utils/adapter';
-import { toPlainDateTime } from '../plain-date-utils/timeZone';
+import { toPlainDate } from '../plain-date-utils/timeZone';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -83,7 +83,7 @@ const ONE_MINUTE_IN_MS = 60 * 1000;
  * the end of the gap.
  */
 function createStartOfToday(adapter: Adapter, nowTimestamp: number, timezone: TemporalTimezone) {
-  return createStartOfPlainDate(adapter, toPlainDateTime(nowTimestamp, timezone).date, timezone);
+  return createStartOfPlainDate(adapter, toPlainDate(nowTimestamp, timezone), timezone);
 }
 
 /**

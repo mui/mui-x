@@ -19,7 +19,7 @@ import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-lis
 import {
   createStartOfPlainDate,
   getPlainDateWeekStart,
-  toPlainDateTime,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
@@ -280,7 +280,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarWeekRow}
             >
               {week.map((day, dayIndex) => {
-                const dayPlainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
+                const dayPlainDate = toPlainDate(day.timestamp, displayTimezone);
                 const isToday = dayPlainDate.dayNumber === nowDayNumber;
                 const isActive = dayPlainDate.dayNumber === visiblePlainDate.dayNumber;
                 const isOtherMonth =

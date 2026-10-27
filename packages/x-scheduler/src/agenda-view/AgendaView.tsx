@@ -21,7 +21,7 @@ import {
   addToAdapterDate,
   getPlainDateWeekStart,
   getWeekNumber,
-  toPlainDateTime,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import {
@@ -235,7 +235,7 @@ export const AgendaView = React.memo(
       let previousWeekStartDayNumber: number | null = null;
       for (const date of days) {
         const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
-        const plainDate = toPlainDateTime(date.timestamp, displayTimezone).date;
+        const plainDate = toPlainDate(date.timestamp, displayTimezone);
         let weekNumber = 0;
         let isFirstDayOfWeek = false;
         if (showWeekNumber) {

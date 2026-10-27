@@ -12,7 +12,7 @@ import { EVENT_CREATION_PRECISION_MINUTE } from '../../constants';
 import {
   floorToWallClockMinutes,
   toEpochMs,
-  toPlainDateTime,
+  toPlainDate,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { FULL_DAY_MINUTES } from '../../internals/utils/timeline-axis';
 import type { TimelineAxis } from '../../internals/utils/timeline-axis';
@@ -87,7 +87,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   });
 
   const triggerKeyboardCreation = useKeyboardEventCreation(({ creationConfig, timezone }) => {
-    const noon = toEpochMs(toPlainDateTime(start, timezone).date, 12 * 60 * 60_000, timezone);
+    const noon = toEpochMs(toPlainDate(start, timezone), 12 * 60 * 60_000, timezone);
     // Keep the default creation anchor inside the visible window when the view limits its hour range.
     const anchor = noon < start || noon >= end ? start : noon;
     return {

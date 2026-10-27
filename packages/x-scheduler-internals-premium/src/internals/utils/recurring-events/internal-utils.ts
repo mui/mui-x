@@ -5,7 +5,8 @@ import {
   createAdapterDate,
   getStartOfDayMs,
   toEpochMs,
-  toPlainDateTime,
+  toMsInDay,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -44,13 +45,15 @@ export function moveEndToPlainDate(
   startMs: number,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
-  const { msInDay } = toPlainDateTime(adapter.getTime(end), timezone);
+  const msInDay = toMsInDay(adapter.getTime(end), timezone);
   let endMs = toEpochMs(plainDate, msInDay, timezone);
   if (endMs < startMs) {
     // The same wall-clock time, in the offset of the start.
-    const laterMs = startMs + msInDay - toPlainDateTime(startMs, timezone).msInDay;
-    const later = toPlainDateTime(laterMs, timezone);
-    if (later.date.equals(plainDate) && later.msInDay === msInDay) {
+    const laterMs = startMs + msInDay - toMsInDay(startMs, timezone);
+    if (
+      toPlainDate(laterMs, timezone).equals(plainDate) &&
+      toMsInDay(laterMs, timezone) === msInDay
+    ) {
       endMs = laterMs;
     }
   }

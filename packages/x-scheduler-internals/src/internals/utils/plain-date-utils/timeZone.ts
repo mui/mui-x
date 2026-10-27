@@ -4,17 +4,6 @@ import { MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
 import { createPlainDate } from '../base-temporal/PlainDate';
 import type { PlainDate } from '../base-temporal/PlainDate';
 
-/**
- * A date and a wall-clock time without a timezone.
- */
-export interface PlainDateTime {
-  date: PlainDate;
-  /**
-   * The wall-clock time, in milliseconds since midnight.
-   */
-  msInDay: number;
-}
-
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
   /**
@@ -131,15 +120,18 @@ export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
 }
 
 /**
- * The date and wall-clock time of an instant in `timezone`.
+ * The date of an instant in `timezone`.
  */
-export function toPlainDateTime(epochMs: number, timezone: TemporalTimezone): PlainDateTime {
-  const local = toLocalMs(epochMs, timezone);
-  const dayNumber = Math.floor(local / MS_PER_DAY);
-  return {
-    date: createPlainDate(dayNumber, ISO_CALENDAR_ID),
-    msInDay: local - dayNumber * MS_PER_DAY,
-  };
+export function toPlainDate(epochMs: number, timezone: TemporalTimezone): PlainDate {
+  return createPlainDate(toLocalDayNumber(epochMs, timezone), ISO_CALENDAR_ID);
+}
+
+/**
+ * The wall-clock time of an instant in `timezone`, in milliseconds since midnight.
+ */
+export function toMsInDay(epochMs: number, timezone: TemporalTimezone): number {
+  const localMs = toLocalMs(epochMs, timezone);
+  return localMs - Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
 }
 
 /**
@@ -190,7 +182,7 @@ export function moveTimestampToPlainDate(
   plainDate: PlainDate,
   timezone: TemporalTimezone,
 ): number {
-  return toEpochMs(plainDate, toPlainDateTime(epochMs, timezone).msInDay, timezone);
+  return toEpochMs(plainDate, toMsInDay(epochMs, timezone), timezone);
 }
 
 /**
@@ -229,7 +221,7 @@ export function floorToWallClockMinutes(
 
 /**
  * The day number of the date of an instant in `timezone`. For the loops that compare many dates, a
- * day number is cheaper than `toPlainDateTime().date`.
+ * day number is cheaper than `toPlainDate()`.
  */
 export function toLocalDayNumber(epochMs: number, timezone: TemporalTimezone): number {
   return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);

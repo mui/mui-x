@@ -5,7 +5,7 @@ import { useStore } from '@base-ui/utils/store';
 import {
   getEndOfDayMs,
   toEpochMs,
-  toPlainDateTime,
+  toPlainDate,
   useCalendarGridTimeColumnContext,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
@@ -90,7 +90,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   // Built on the wall clock like the axis of the column.
   const { start, end } = React.useMemo(() => {
-    const plainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
+    const plainDate = toPlainDate(day.timestamp, displayTimezone);
     return {
       start: toEpochMs(plainDate, startTime * HOUR_MS, displayTimezone),
       end:
