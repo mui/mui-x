@@ -5,6 +5,7 @@ import type {
 } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
+import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 
 export type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 
@@ -415,6 +416,17 @@ export interface SchedulerProcessedDate {
    * and is intentionally independent from real-time duration (e.g. DST shifts).
    */
   minutesInDay: number;
+}
+
+/**
+ * A day of a view: a cell, a column or a row, starting at the first instant of its date.
+ * Days never reach the public API, unlike the bounds of the occurrences.
+ */
+export interface SchedulerProcessedDay extends SchedulerProcessedDate {
+  /**
+   * The date of the day, in the timezone the day list was built in.
+   */
+  plainDate: PlainDate;
 }
 
 /**

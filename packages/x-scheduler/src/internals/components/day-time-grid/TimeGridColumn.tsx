@@ -5,7 +5,6 @@ import { useStore } from '@base-ui/utils/store';
 import {
   getEndOfDayMs,
   toEpochMs,
-  toPlainDate,
   useCalendarGridTimeColumnContext,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
@@ -89,16 +88,16 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { classes } = useEventCalendarStyledContext();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   // Built on the wall clock like the axis of the column.
-  const { start, end } = React.useMemo(() => {
-    const plainDate = toPlainDate(day.timestamp, displayTimezone);
-    return {
-      start: toEpochMs(plainDate, startTime * HOUR_MS, displayTimezone),
+  const { start, end } = React.useMemo(
+    () => ({
+      start: toEpochMs(day.plainDate, startTime * HOUR_MS, displayTimezone),
       end:
         endTime === 24
           ? getEndOfDayMs(day.timestamp, displayTimezone)
-          : toEpochMs(plainDate, endTime * HOUR_MS, displayTimezone),
-    };
-  }, [day.timestamp, displayTimezone, startTime, endTime]);
+          : toEpochMs(day.plainDate, endTime * HOUR_MS, displayTimezone),
+    }),
+    [day.plainDate, day.timestamp, displayTimezone, startTime, endTime],
+  );
 
   // Only place occurrences that overlap the visible `[start, end)` window. Occurrences entirely
   // before `startTime` or after `endTime` would otherwise be clamped to a zero-height sliver pinned

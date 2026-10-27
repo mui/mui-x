@@ -19,10 +19,9 @@ import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-lis
 import {
   createStartOfPlainDate,
   getPlainDateWeekStart,
-  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
-import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import type { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
@@ -199,7 +198,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
     // Group days into weeks
     const weeks = React.useMemo(() => {
-      const result: SchedulerProcessedDate[][] = [];
+      const result: SchedulerProcessedDay[][] = [];
       for (let i = 0; i < days.length; i += 7) {
         result.push(days.slice(i, i + 7));
       }
@@ -280,7 +279,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarWeekRow}
             >
               {week.map((day, dayIndex) => {
-                const dayPlainDate = toPlainDate(day.timestamp, displayTimezone);
+                const dayPlainDate = day.plainDate;
                 const isToday = dayPlainDate.dayNumber === nowDayNumber;
                 const isActive = dayPlainDate.dayNumber === visiblePlainDate.dayNumber;
                 const isOtherMonth =
