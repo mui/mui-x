@@ -10,10 +10,7 @@ import { describe, it, expect } from 'vitest';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import type { EventCalendarState } from '../use-event-calendar';
 import { processDate } from '../process-date';
-import {
-  createAdapterDate,
-  createProcessedDate,
-} from '../internals/utils/plain-date-utils/adapter';
+import { createProcessedDate } from '../internals/utils/plain-date-utils/adapter';
 
 // A UTC creation placeholder on December 30th, 2011, on a Pacific/Apia system, which skipped that
 // date: the adapter's `isSameDay()` counts it as the same day as December 31st.
@@ -47,7 +44,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       () => {
         const { state, december30, december31 } = getStateInUTCOnApiaSystem();
         // The row starts before the placeholder, so only its start can match.
-        const rowStart = createAdapterDate(state.adapter, Date.UTC(2011, 11, 25), 'UTC');
+        const rowStart = Date.UTC(2011, 11, 25);
         expect(
           eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
             state,
@@ -83,7 +80,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(state.occurrencePlaceholder);
     });
 
@@ -99,7 +100,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(null);
     });
 
@@ -119,8 +124,8 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
       expect(
         eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange(
           state,
-          rangeStart,
-          rangeEnd,
+          adapter.getTime(rangeStart),
+          adapter.getTime(rangeEnd),
         ),
       ).to.equal(null);
     });
@@ -228,7 +233,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -244,7 +253,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -264,7 +277,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -281,7 +298,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -297,7 +318,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(true);
     });
 
@@ -313,7 +338,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
 
@@ -329,7 +358,11 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
         },
       };
       expect(
-        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(state, dayStart, dayEnd),
+        eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange(
+          state,
+          adapter.getTime(dayStart),
+          adapter.getTime(dayEnd),
+        ),
       ).to.equal(false);
     });
   });

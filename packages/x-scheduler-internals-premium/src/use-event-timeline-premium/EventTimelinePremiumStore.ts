@@ -10,6 +10,7 @@ import {
   getShouldEventRequireResource,
   SchedulerStore,
 } from '@mui/x-scheduler-internals/internals';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { createChangeEventDetails } from '@base-ui/react/internals/createBaseUIEventDetails';
 import type {
   EventTimelinePremiumPreferences,
@@ -257,7 +258,7 @@ export class EventTimelinePremiumStore<
     // The dialog anchor no longer matches the arrow after a date or preset change.
     this.disposables.defer(
       this.registerStoreEffect(
-        (state) => state.adapter.getTime(state.visibleDate),
+        schedulerOtherSelectors.visibleTimestamp,
         this.closeDependencyEditor,
       ),
     );
@@ -314,29 +315,27 @@ export class EventTimelinePremiumStore<
     };
   }
 
-  /**
-   * Goes to the next visible date span based on the current preset.
-   */
-  public goToNextVisibleDate = (event: React.UIEvent) => {
-    const { adapter, visibleDate, preset } = this.state;
+  private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
+    const { adapter, preset } = this.state;
     const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
+    // Moves the days of the display timezone, the ones the preset config reads. Days added in
+    // another timezone can skip a day of the display timezone across a DST transition.
+    const visibleDate = schedulerOtherSelectors.visibleDate(this.state);
     this.setVisibleDate({
-      visibleDate: navigate(adapter, visibleDate, unitCount),
+      visibleDate: navigate(adapter, visibleDate, delta * unitCount),
       event,
     });
   };
 
   /**
+   * Goes to the next visible date span based on the current preset.
+   */
+  public goToNextVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(1, event);
+
+  /**
    * Goes to the previous visible date span based on the current preset.
    */
-  public goToPreviousVisibleDate = (event: React.UIEvent) => {
-    const { adapter, visibleDate, preset } = this.state;
-    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
-    this.setVisibleDate({
-      visibleDate: navigate(adapter, visibleDate, -unitCount),
-      event,
-    });
-  };
+  public goToPreviousVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(-1, event);
 
   /**
    * Sets the preset of the timeline.

@@ -18,7 +18,7 @@ export function useCalendarGridPlaceholderInDay(
 ): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
-  const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
+  const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext().axis;
 
   const findAvailableIndex = React.useCallback(
     (excludeKey?: string): number => {
@@ -61,7 +61,7 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     // The placeholder can run past the week row: the next rows render their own piece.
-    const endInRow = Math.min(rawPlaceholder.end, adapter.getTime(rowEnd));
+    const endInRow = Math.min(rawPlaceholder.end, rowEnd);
     // The placeholder covers every date up to its end, like the occurrences.
     const daySpan =
       toLocalDayNumber(endInRow, displayTimezone) -

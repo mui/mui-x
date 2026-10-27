@@ -43,7 +43,7 @@ export const TimelineGridEventPlaceholder = React.forwardRef(function TimelineGr
     useElementPositionInCollection({
       start,
       end,
-      collection: config,
+      collection: config.axis,
       durationMs: config.durationMs,
     });
 

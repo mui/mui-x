@@ -23,11 +23,10 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  createEndOfPlainDate,
   getDisplayedHourRange,
+  getEndOfDayMs,
   getInitialScrollTime,
   toLocalDayNumber,
-  toPlainDateTime,
 } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
@@ -387,9 +386,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     days,
     occurrencesMap,
     shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) =>
-        isOccurrenceInDayGrid(occurrence, adapter, timeGridEvents),
-      [adapter, timeGridEvents],
+      (occurrence: SchedulerEventOccurrence) => isOccurrenceInDayGrid(occurrence, timeGridEvents),
+      [timeGridEvents],
     ),
   });
 
@@ -398,14 +396,15 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const [hasScroll, setHasScroll] = React.useState(false);
 
   const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
-    const lastPlainDate = toPlainDateTime(days[days.length - 1].timestamp, displayTimezone).date;
+    const lastTimestamp = days[days.length - 1].timestamp;
     return {
-      start: days[0].value,
-      end: createEndOfPlainDate(adapter, lastPlainDate, displayTimezone),
+      // `days[0].timestamp` is the first instant of the first day.
+      start: days[0].timestamp,
+      end: getEndOfDayMs(lastTimestamp, displayTimezone),
       firstDayNumber: toLocalDayNumber(days[0].timestamp, displayTimezone),
-      lastDayNumber: lastPlainDate.dayNumber,
+      lastDayNumber: toLocalDayNumber(lastTimestamp, displayTimezone),
     };
-  }, [adapter, days, displayTimezone]);
+  }, [days, displayTimezone]);
 
   const isTodayInView = nowDayNumber >= firstDayNumber && nowDayNumber <= lastDayNumber;
 

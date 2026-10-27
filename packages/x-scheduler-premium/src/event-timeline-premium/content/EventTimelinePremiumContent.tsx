@@ -660,17 +660,15 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   // Selector hooks
   const adapter = useAdapterContext();
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const nowTimestamp = useStore(store, schedulerNowSelectors.nowTimestamp);
   const showCurrentTimeIndicatorSetting = useStore(
     store,
     schedulerNowSelectors.showCurrentTimeIndicator,
   );
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const hasNestedResources = useStore(store, schedulerResourceSelectors.hasNestedResources);
-  const isNowInView = React.useMemo(
-    () => adapter.isWithinRange(now, [config.start, config.end]),
-    [adapter, now, config.start, config.end],
-  );
+  const isNowInView =
+    nowTimestamp >= adapter.getTime(config.start) && nowTimestamp <= adapter.getTime(config.end);
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
   // The visible list preserves the resource entries (only their occurrence lists are
@@ -842,12 +840,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   });
 
   const { handleKeyDown: handleEventTabKeyDown } = useEventTabNavigation({
-    adapter,
     // The axis-filtered list: a hidden occurrence never mounts, so navigating to it
     // would swallow Tab in an unfocusable retry loop.
     resources: visibleResources,
     scrollerRef: gridRef,
-    axis: config,
+    axis: config.axis,
     durationMs: config.durationMs,
     tickCount: config.tickCount,
     tickWidth: config.tickWidth,

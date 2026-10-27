@@ -222,7 +222,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             getFocusFallback={getFocusFallback}
           >
             <EventItem
-              variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
+              variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
             />

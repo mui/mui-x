@@ -16,6 +16,7 @@ import type {
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
   TemporalSupportedObject,
+  TemporalTimezone,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   RecurringEventScope,
@@ -51,7 +52,11 @@ import type {
   SchedulerEventParameters,
 } from '../../models/events';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
-import { schedulerEventSelectors, schedulerResourceSelectors } from '../../../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '../../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
@@ -69,8 +74,18 @@ import {
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
+import { createStartOfPlainDate } from '../plain-date-utils/adapter';
+import { toPlainDateTime } from '../plain-date-utils/timeZone';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
+
+/**
+ * The first instant of today in `timezone`. A day whose midnight a DST transition skips starts at
+ * the end of the gap.
+ */
+function createStartOfToday(adapter: Adapter, nowTimestamp: number, timezone: TemporalTimezone) {
+  return createStartOfPlainDate(adapter, toPlainDateTime(nowTimestamp, timezone).date, timezone);
+}
 
 /**
  * How long a transient error stays in `state.errors` before dismissing itself.
@@ -213,6 +228,7 @@ export class SchedulerStore<
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
+    const nowTimestamp = Date.now();
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
       ...stateFromParameters,
@@ -231,7 +247,7 @@ export class SchedulerStore<
       editingOccurrence: null,
       copiedEvent: null,
       selection: null,
-      nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
+      nowTimestamp,
       pendingRecurringEventOperation: null,
       visibleResources:
         parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
@@ -240,7 +256,7 @@ export class SchedulerStore<
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
+        createStartOfToday(adapter, nowTimestamp, stateFromParameters.displayTimezone),
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
@@ -258,10 +274,7 @@ export class SchedulerStore<
     // The edited occurrence is a snapshot, so a date change can leave its toolbar acting on an event
     // that is no longer on screen. Timestamp, not the object: a re-passed equal date is not a change.
     this.disposables.defer(
-      this.registerStoreEffect(
-        (state) => state.adapter.getTime(state.visibleDate),
-        this.stopEditing,
-      ),
+      this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, this.stopEditing),
     );
 
     const currentDate = new Date();
@@ -269,9 +282,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
+      this.set('nowTimestamp', Date.now());
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
+        this.set('nowTimestamp', Date.now());
       });
     });
 
@@ -376,11 +389,6 @@ export class SchedulerStore<
         }),
       );
     }
-    // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
-    if (newSchedulerState.displayTimezone !== this.state.displayTimezone) {
-      newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
-    }
-
     if (
       parameters.resources !== this.parameters.resources ||
       parameters.resourceModelStructure !== this.parameters.resourceModelStructure
@@ -540,7 +548,8 @@ export class SchedulerStore<
   }) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
-    const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
+    const hasChange =
+      adapter.getTime(visibleDate) !== schedulerOtherSelectors.visibleTimestamp(this.state);
 
     if (hasChange) {
       const eventDetails = createChangeEventDetails('none', event?.nativeEvent);
@@ -801,9 +810,9 @@ export class SchedulerStore<
    * Goes to today's date without changing the view.
    */
   public goToToday = (event: React.UIEvent) => {
-    const { adapter } = this.state;
     this.setVisibleDate({
-      visibleDate: adapter.startOfDay(adapter.now(this.state.displayTimezone)),
+      // Not `state.nowTimestamp`, which lags up to a minute behind.
+      visibleDate: createStartOfToday(this.state.adapter, Date.now(), this.state.displayTimezone),
       event,
     });
   };

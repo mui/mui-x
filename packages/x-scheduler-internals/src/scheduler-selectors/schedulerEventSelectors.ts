@@ -211,11 +211,9 @@ export const schedulerEventSelectors = {
     },
   ),
   processedEventRangeIndex: createSelectorMemoized(
-    (state: State) => state.adapter,
     processedEventListSelector,
     (state: State) => state.recurringEventsPlugin,
-    (adapter, events, recurringEventsPlugin) =>
-      createEventRangeIndex(events, adapter, recurringEventsPlugin != null),
+    (events, recurringEventsPlugin) => createEventRangeIndex(events, recurringEventsPlugin != null),
   ),
   idList: (state: State) => state.eventIdList,
   modelList: (state: State) => state.eventModelList,

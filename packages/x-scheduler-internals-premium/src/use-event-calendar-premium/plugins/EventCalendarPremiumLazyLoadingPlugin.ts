@@ -1,4 +1,5 @@
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
+import { toEpochMs } from '@mui/x-scheduler-internals/internals';
 import {
   SchedulerLazyLoadingPlugin,
   toWholeDays,
@@ -50,7 +51,7 @@ export class EventCalendarPremiumLazyLoadingPlugin<
  * or `null` when there is nothing to fetch.
  */
 function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
-  const { viewDefinition, adapter, displayTimezone } = state;
+  const { viewDefinition, displayTimezone } = state;
   if (!viewDefinition) {
     return null;
   }
@@ -59,7 +60,10 @@ function getRangeToFetch(state: EventCalendarPremiumState): DateRange | null {
   if (viewDefinition.fetchRangeSelector) {
     const range = viewDefinition.fetchRangeSelector(calendarState);
     return toWholeDays(
-      { start: adapter.getTime(range.start), end: adapter.getTime(range.end) },
+      {
+        start: toEpochMs(range.start, 0, displayTimezone),
+        end: toEpochMs(range.end, 0, displayTimezone),
+      },
       displayTimezone,
     );
   }

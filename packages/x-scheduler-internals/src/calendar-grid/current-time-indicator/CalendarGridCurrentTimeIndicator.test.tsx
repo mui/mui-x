@@ -21,7 +21,10 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
+            <CalendarGrid.TimeColumn
+              start={adapter.getTime(adapter.startOfDay(day))}
+              end={adapter.getTime(adapter.endOfDay(day))}
+            >
               {node}
             </CalendarGrid.TimeColumn>
           </CalendarGrid.Root>
@@ -47,8 +50,8 @@ describe('<CalendarGrid.CurrentTimeIndicator />', () => {
           <EventCalendarProvider events={[]} displayTimezone="America/New_York">
             <CalendarGrid.Root>
               <CalendarGrid.TimeColumn
-                start={adapter.startOfDay(columnDay)}
-                end={adapter.endOfDay(columnDay)}
+                start={adapter.getTime(adapter.startOfDay(columnDay))}
+                end={adapter.getTime(adapter.endOfDay(columnDay))}
               >
                 <CalendarGrid.CurrentTimeIndicator data-testid="indicator" />
               </CalendarGrid.TimeColumn>
