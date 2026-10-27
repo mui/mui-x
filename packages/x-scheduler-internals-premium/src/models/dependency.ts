@@ -153,6 +153,7 @@ export type SchedulerAddDependencyResult =
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
   | { status: 'rejected'; reason: 'cyclicDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
+  | { status: 'rejected'; reason: 'featureDisabled' }
   | SchedulerDependencyCascadeBlockedRejection;
 
 /**
@@ -167,6 +168,7 @@ export type SchedulerUpdateDependencyResult =
   | { status: 'updated' }
   | { status: 'rejected'; reason: 'unknownDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
+  | { status: 'rejected'; reason: 'featureDisabled' }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
   | SchedulerDependencyCascadeBlockedRejection;
 

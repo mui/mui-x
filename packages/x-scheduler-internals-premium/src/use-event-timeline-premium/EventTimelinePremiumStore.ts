@@ -401,12 +401,12 @@ export class EventTimelinePremiumStore<
    * The guards read the controlled `dependencies` value, so two adds in the same
    * tick are not validated against each other: wait for the updated `dependencies`
    * value before making another validated add.
-   * Without the dependencies feature, every add is rejected as `readOnly`.
+   * Without the dependencies feature, every add is rejected as `featureDisabled`.
    */
   public addDependency = (
     properties: SchedulerDependencyCreationProperties,
   ): SchedulerAddDependencyResult =>
-    this.scheduling?.addDependency(properties) ?? { status: 'rejected', reason: 'readOnly' };
+    this.scheduling?.addDependency(properties) ?? { status: 'rejected', reason: 'featureDisabled' };
 
   /**
    * Changes the type or lag of a dependency — see `SchedulerUpdateDependencyResult` for
@@ -418,12 +418,12 @@ export class EventTimelinePremiumStore<
   ): SchedulerUpdateDependencyResult =>
     this.scheduling?.updateDependency(dependencyId, changes) ?? {
       status: 'rejected',
-      reason: 'unknownDependency',
+      reason: 'featureDisabled',
     };
 
   /**
    * Deletes a dependency. Returns `false` when the deletion was refused: the id is
-   * unknown, or the scheduler is read-only.
+   * unknown, the scheduler is read-only, or the dependencies feature is missing.
    */
   public deleteDependency = (dependencyId: SchedulerDependencyId): boolean =>
     this.scheduling?.deleteDependency(dependencyId) ?? false;

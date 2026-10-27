@@ -113,7 +113,12 @@ describe('Features - EventTimelinePremiumStore', () => {
       expect(store.state.dependencyModelList).to.deep.equal([]);
       expect(
         store.addDependency({ source: 'b', target: 'a', type: 'FinishToStart' }),
-      ).to.have.property('status', 'rejected');
+      ).to.deep.equal({ status: 'rejected', reason: 'featureDisabled' });
+      expect(store.updateDependency(dependencyAB.id, { type: 'StartToStart' })).to.deep.equal({
+        status: 'rejected',
+        reason: 'featureDisabled',
+      });
+      expect(store.deleteDependency(dependencyAB.id)).to.equal(false);
       expect(onDependenciesChange.mock.calls.length).to.equal(0);
     });
 
