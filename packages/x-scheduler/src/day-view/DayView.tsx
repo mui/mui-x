@@ -36,6 +36,7 @@ export const DayView = React.memo(
         startTime={config?.startTime}
         endTime={config?.endTime}
         initialScrollTime={config?.initialScrollTime}
+        timeGridEvents={config?.timeGridEvents}
         hourRangeSource="viewConfig.day"
         {...props}
       />

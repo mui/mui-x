@@ -16,6 +16,7 @@ import {
   EventCalendarRoot,
   SharedComponentsStyledContext,
   SchedulerSlotsProvider,
+  SchedulerDirectionProvider,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
   EventCalendarStyledContext,
   useEventCalendarUtilityClasses,
@@ -82,11 +83,13 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
-                  {watermark}
-                </EventCalendarRoot>
-              </EventDialogProvider>
+              <SchedulerDirectionProvider>
+                <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
+                  <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
+                    {watermark}
+                  </EventCalendarRoot>
+                </EventDialogProvider>
+              </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
@@ -205,7 +208,8 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    * @default "default"
    */
   displayTimezone: PropTypes.string,
@@ -239,6 +243,19 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
       canHaveMultipleResources: PropTypes.bool,
       duration: PropTypes.number,
       interaction: PropTypes.oneOf(['click', 'double-click']),
+    }),
+    PropTypes.bool,
+  ]),
+  /**
+   * Configures how events are deleted.
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
+   */
+  eventDeletion: PropTypes.oneOfType([
+    PropTypes.shape({
+      confirmation: PropTypes.bool,
     }),
     PropTypes.bool,
   ]),
@@ -372,20 +389,28 @@ EventCalendarPremium.propTypes /* remove-proptypes */ = {
   /**
    * Configuration applied to each view, keyed by the view name.
    * For the `day` and `week` views, `startTime` and `endTime` (whole hours between 0 and 24)
-   * limit the hours displayed in the time grid, and `initialScrollTime` is the hour the grid
-   * scrolls to on mount.
-   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 } }
+   * limit the hours displayed in the time grid, `initialScrollTime` is the hour the grid
+   * scrolls to on mount, and `timeGridEvents` sets which timed events are rendered in the
+   * time grid.
+   * For the `agenda` view, `dayCount` is how many days are displayed (and how far the
+   * navigation moves), or `'month'` to display the month of the visible date and navigate one month at a time.
+   * @example { week: { startTime: 8, endTime: 20, initialScrollTime: 9 }, agenda: { dayCount: 'month' } }
    */
   viewConfig: PropTypes.shape({
+    agenda: PropTypes.shape({
+      dayCount: PropTypes.oneOfType([PropTypes.oneOf(['month']), PropTypes.number]),
+    }),
     day: PropTypes.shape({
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
+      timeGridEvents: PropTypes.oneOf(['same-day-only', 'shorter-than-one-day']),
     }),
     week: PropTypes.shape({
       endTime: PropTypes.number,
       initialScrollTime: PropTypes.number,
       startTime: PropTypes.number,
+      timeGridEvents: PropTypes.oneOf(['same-day-only', 'shorter-than-one-day']),
     }),
   }),
   /**

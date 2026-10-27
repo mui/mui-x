@@ -50,6 +50,10 @@
         "description": "{ canHaveMultipleResources?: bool, duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
       }
     },
+    "eventDeletion": {
+      "type": { "name": "union", "description": "{ confirmation?: bool }<br>&#124;&nbsp;bool" },
+      "default": "true"
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -102,7 +106,7 @@
     "viewConfig": {
       "type": {
         "name": "shape",
-        "description": "{ week?: { endTime?: number, initialScrollTime?: number, startTime?: number } }"
+        "description": "{ week?: { endTime?: number, initialScrollTime?: number, startTime?: number, timeGridEvents?: 'same-day-only'<br>&#124;&nbsp;'shorter-than-one-day' } }"
       }
     },
     "views": {

@@ -31,6 +31,12 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
+import {
+  buildTemporalPlainDate,
+  createAdapterDate,
+  getEndOfDayMs,
+  toEpochMs,
+} from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
 import {
   useEventEditingStyledContext,
@@ -44,6 +50,7 @@ import {
   getResentRangeBounds,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
+  getRecurrenceUntil,
   eventDialogFormSelectors,
 } from '@mui/x-scheduler/internals';
 import {
@@ -213,7 +220,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   // Selector hooks
   const inputsDisabled = recurrenceSelection === null || rruleReadOnly;
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
@@ -261,8 +268,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     });
   }, [formStore, store, ruleStart]);
   const weeklyDays = React.useMemo(
-    () => getWeeklyDays(adapter, visibleDate, weekStartsOn),
-    [adapter, visibleDate, weekStartsOn],
+    () => getWeeklyDays(adapter, visiblePlainDate, weekStartsOn),
+    [adapter, visiblePlainDate, weekStartsOn],
   );
 
   const handleRecurrenceSelectionChange = (
@@ -312,7 +319,12 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     switch (endsSelection) {
       case 'until': {
         // The end of the event's last day, in its own timezone.
-        updateCustomDraft({ until: adapter.endOfDay(ruleBounds.end.value), count: undefined });
+        const until = createAdapterDate(
+          adapter,
+          getEndOfDayMs(ruleBounds.end.timestamp, eventTimezone),
+          eventTimezone,
+        );
+        updateCustomDraft({ until, count: undefined });
         break;
       }
       case 'after': {
@@ -338,7 +350,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const handleChangeUntil = (event: React.ChangeEvent<HTMLInputElement>) => {
     const untilValue = event.currentTarget.value;
     // The chosen day is the last one the series runs on, in the event's timezone.
-    updateCustomDraft({ until: adapter.endOfDay(adapter.date(untilValue, eventTimezone)) });
+    updateCustomDraft({ until: getRecurrenceUntil(adapter, untilValue, eventTimezone) });
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
@@ -409,11 +421,15 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const weeklyDayItems = React.useMemo(
     () =>
-      weeklyDays.map(({ code, date }) => ({
-        value: code,
-        ariaLabel: adapter.format(date, 'weekday'),
-        label: adapter.format(date, 'weekday3Letters'),
-      })),
+      weeklyDays.map(({ code, date: plainDate }) => {
+        // In UTC, which skips no day, the date falls on the weekday of the plain date.
+        const date = createAdapterDate(adapter, toEpochMs(plainDate, 0, 'UTC'), 'UTC');
+        return {
+          value: code,
+          ariaLabel: adapter.format(date, 'weekday'),
+          label: adapter.format(date, 'weekday3Letters'),
+        };
+      }),
     [adapter, weeklyDays],
   );
 
@@ -654,7 +670,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 type="date"
                 value={
                   customEndsValue === 'until' && adapter.isValid(rruleDraft.until ?? null)
-                    ? adapter.formatByString(rruleDraft.until!, 'yyyy-MM-dd')
+                    ? buildTemporalPlainDate(adapter, rruleDraft.until!).toString()
                     : ''
                 }
                 onChange={handleChangeUntil}

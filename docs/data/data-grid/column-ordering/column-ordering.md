@@ -20,6 +20,12 @@ Column reordering emits the following events:
 - `columnHeaderDragOver`: emitted when the user drags a header cell over another header cell.
 - `columnHeaderDragEnd`: emitted when the user stops dragging the header cell.
 
+These events are only emitted for mouse drags. Touch and pen drags only call `onColumnOrderChange`.
+`onColumnOrderChange` is not called when the column is dropped back at its original position.
+
+A touch or pen drag can be released anywhere inside the Data Grid, including the column group headers, the toolbar, and the footer: the column keeps the position it was dragged to.
+Releasing outside the Data Grid moves the column back to its original position, unless `keepColumnPositionIfDraggedOutside` is enabled.
+
 ## Disabling column reordering
 
 Drag-and-drop column reordering is enabled by default on the Data Grid Pro, but you can disable it for some or all columns.

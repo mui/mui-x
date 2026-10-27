@@ -8,6 +8,7 @@ import {
   ResourceBuilder,
   withinMonthView,
   dateLocaleFr,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import type { EventCalendarPreferences } from '@mui/x-scheduler/models';
@@ -219,6 +220,42 @@ describe('EventCalendar', () => {
       expect(view.queryByRole('button', { name: /Morning Run/i })).to.equal(null);
     },
   );
+
+  describe('current day', () => {
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM).each([
+      { view: 'month', viewLabel: '30', currentColumnCount: 0 },
+      { view: 'week', viewLabel: 'Friday 30', currentColumnCount: 1 },
+      { view: 'agenda', viewLabel: 'Friday 30', currentColumnCount: 0 },
+    ] as const)(
+      'should mark the current day of the display timezone in the $view view, whatever the timezone of the system',
+      ({ view, viewLabel, currentColumnCount }) => {
+        // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+        // December 30th and 31st as the same day in the other timezones.
+        setSystemTimezone('Pacific/Apia');
+        // It's still December 30th at 21:00 in New York, but December 31st in UTC and in Apia.
+        const now = new Date('2011-12-31T02:00:00Z');
+        vi.setSystemTime(now);
+        render(
+          <EventCalendar
+            events={[]}
+            view={view}
+            visibleDate={now}
+            displayTimezone="America/New_York"
+          />,
+        );
+
+        // The mini calendar of the side panel marks the current day too.
+        const currentLabels = Array.from(document.querySelectorAll('[aria-current="date"]')).map(
+          (element) => element.getAttribute('aria-label') ?? element.textContent,
+        );
+        expect(currentLabels).to.deep.equal(['Friday, December 30th, 2011', viewLabel]);
+        expect(
+          document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridColumn}[data-current]`),
+        ).to.have.length(currentColumnCount);
+      },
+    );
+  });
 
   describe('Preferences Menu', () => {
     it('should call onPreferencesChange and apply the change when preferences are controlled', async () => {
@@ -538,6 +575,20 @@ describe('EventCalendar', () => {
       const eventElement = document.querySelector('.agenda-class');
       expect(eventElement).not.to.equal(null);
       expect(eventElement?.textContent).to.include('Agenda Event');
+    });
+  });
+
+  describe('classes property', () => {
+    it('should apply the responsiveTypographyContainer class to the responsive container', () => {
+      render(
+        <EventCalendar events={[]} classes={{ responsiveTypographyContainer: 'custom-class' }} />,
+      );
+
+      const element = document.querySelector('.custom-class');
+      expect(element).not.to.equal(null);
+      expect(
+        element?.classList.contains(eventCalendarClasses.responsiveTypographyContainer),
+      ).to.equal(true);
     });
   });
 

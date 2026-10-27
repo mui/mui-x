@@ -5,7 +5,6 @@ import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/i
 import type {
   SchedulerProcessedEvent,
   SchedulerEventId,
-  SchedulerOccurrencePlaceholder,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerEventModelStructure,
@@ -21,42 +20,27 @@ import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/Sche
 import { dateToEventString } from '../date-utils';
 
 /**
- * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
+ * Resolves `shouldEventRequireResource` and warns when it is enabled without any resource.
  */
-export function shouldUpdateOccurrencePlaceholder(
-  adapter: Adapter,
-  previous: SchedulerOccurrencePlaceholder | null,
-  next: SchedulerOccurrencePlaceholder | null,
+export function getShouldEventRequireResource(
+  parameters: SchedulerParameters<any, any>,
+  defaultValue: boolean,
 ): boolean {
-  if (next == null || previous == null) {
-    return next !== previous;
+  const shouldEventRequireResource = parameters.shouldEventRequireResource ?? defaultValue;
+  if (
+    shouldEventRequireResource &&
+    (parameters.resources == null || parameters.resources.length === 0)
+  ) {
+    warnOnce(
+      [
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+        'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+      ].join('\n'),
+    );
   }
-
-  const untypedPrevious = previous as Record<string, any>;
-  const untypedNext = next as Record<string, any>;
-
-  // Compare keys present in `next`.
-  for (const key in untypedNext) {
-    if (key === 'start' || key === 'end') {
-      if (!adapter.isEqual(untypedNext[key], untypedPrevious[key])) {
-        return true;
-      }
-    } else if (!Object.is(untypedNext[key], untypedPrevious[key])) {
-      return true;
-    }
-  }
-
-  // Catch keys present in `previous` but removed from `next` (e.g. `isHidden`).
-  for (const key in untypedPrevious) {
-    if (!(key in untypedNext)) {
-      return true;
-    }
-  }
-
-  return false;
+  return shouldEventRequireResource;
 }
-
-export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
 
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   id: true,

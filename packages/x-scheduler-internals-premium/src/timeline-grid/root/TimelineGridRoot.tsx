@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
@@ -26,6 +27,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     render,
     style,
     columnTypes = DEFAULT_COLUMN_TYPES,
+    scrollRowIntoView,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -98,35 +100,64 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
       : null;
   }, []);
 
+  const moveFocusToRow = useStableCallback((coordinates: TimelineGridCellCoordinates) => {
+    scrollRowIntoView?.(coordinates.rowIndex);
+    setFocusedCell(coordinates);
+  });
+
+  // The focus left a row that still exists: stop tracking it, so removing it later doesn't
+  // pull the focus back.
+  const releaseTrackedRowIfListed = React.useCallback(
+    (focused: (typeof focusedResourceRef)['current']) => {
+      if (
+        focused !== null &&
+        focusedResourceRef.current === focused &&
+        resourcesRef.current.some((entry) => entry.resource.id === focused.resourceId)
+      ) {
+        focusedResourceRef.current = null;
+      }
+    },
+    [],
+  );
+
   const clearFocusedCellIfMatches = React.useCallback(
     (columnType: TimelineGridColumnType, rowIndex: number) => {
       setFocusedCellState((prev) =>
         prev?.columnType === columnType && prev.rowIndex === rowIndex ? null : prev,
       );
+      const focused = focusedResourceRef.current;
+      if (focused?.columnType === columnType && focused.rowIndex === rowIndex) {
+        // Deferred: `resourcesRef` can still list the removed row.
+        queueMicrotask(() => releaseTrackedRowIfListed(focused));
+      }
     },
-    [],
+    [releaseTrackedRowIfListed],
   );
 
   // Clears focusedCell when focus leaves the grid.
-  const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {
-    const nextTarget = event.relatedTarget;
-    if (nextTarget) {
-      if (!rootRef.current?.contains(nextTarget)) {
-        focusedResourceRef.current = null;
-        setFocusedCellState(null);
+  const handleBlur = React.useCallback(
+    (event: React.FocusEvent<HTMLDivElement>) => {
+      const nextTarget = event.relatedTarget;
+      if (nextTarget) {
+        if (!rootRef.current?.contains(nextTarget)) {
+          focusedResourceRef.current = null;
+          setFocusedCellState(null);
+        }
+        return;
       }
-      return;
-    }
-    // `relatedTarget` is null with portals, programmatic blur, or window-blur.
-    // Defer to let focus settle, then recheck whether focus truly left the grid.
-    // The tracked resource is left untouched: a null `relatedTarget` also covers
-    // the focused row unmounting on collapse, which the effect below re-homes.
-    queueMicrotask(() => {
-      if (!rootRef.current?.contains(document.activeElement)) {
-        setFocusedCellState(null);
-      }
-    });
-  }, []);
+      // `relatedTarget` is null with portals, programmatic blur, or window-blur.
+      // Defer to let focus settle, then recheck whether focus truly left the grid.
+      // A removed row (collapse) stays tracked so the effect below can re-home the focus.
+      const focused = focusedResourceRef.current;
+      queueMicrotask(() => {
+        if (!rootRef.current?.contains(document.activeElement)) {
+          setFocusedCellState(null);
+          releaseTrackedRowIfListed(focused);
+        }
+      });
+    },
+    [releaseTrackedRowIfListed],
+  );
 
   // When the focused resource row is removed (e.g. an ancestor collapses), move
   // focus to the row now at the clamped position in the same column — the
@@ -141,8 +172,14 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
 
     const nextIndex = resources.findIndex((entry) => entry.resource.id === focused.resourceId);
     if (nextIndex !== -1) {
-      // Still visible; keep the tracked index in sync in case rows shifted above it.
+      // Still visible; keep the indexes in sync in case rows shifted above it.
+      const previousIndex = focused.rowIndex;
       focused.rowIndex = nextIndex;
+      if (nextIndex !== previousIndex) {
+        setFocusedCellState((prev) =>
+          prev?.rowIndex === previousIndex ? { ...prev, rowIndex: nextIndex } : prev,
+        );
+      }
       return;
     }
 
@@ -164,17 +201,31 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
       return;
     }
 
-    setFocusedCell({
+    moveFocusToRow({
       columnType: focused.columnType,
       rowIndex: Math.min(focused.rowIndex, resources.length - 1),
     });
-  }, [resources, setFocusedCell]);
+  }, [resources, moveFocusToRow]);
 
   const totalRowCount = resources.length;
 
   const contextValue: TimelineGridRootContext = React.useMemo(
-    () => ({ focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount }),
-    [focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount],
+    () => ({
+      focusedCell,
+      setFocusedCell,
+      moveFocusToRow,
+      clearFocusedCellIfMatches,
+      columnTypes,
+      totalRowCount,
+    }),
+    [
+      focusedCell,
+      setFocusedCell,
+      moveFocusToRow,
+      clearFocusedCellIfMatches,
+      columnTypes,
+      totalRowCount,
+    ],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -209,5 +260,11 @@ export namespace TimelineGridRoot {
      * @default ['title', 'events']
      */
     columnTypes?: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
+    /**
+     * Called before the focus moves to another row, to scroll that row into view.
+     * Needed when the rows are virtualized.
+     * @param {number} rowIndex The `index` of the target `<TimelineGrid.BodyRow />`.
+     */
+    scrollRowIntoView?: (rowIndex: number) => void;
   }
 }

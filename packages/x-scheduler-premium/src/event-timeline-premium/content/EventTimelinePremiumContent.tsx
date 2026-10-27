@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
@@ -61,7 +63,8 @@ import {
   EventTimelinePremiumDependencyGeometryProvider,
   EventTimelinePremiumDependencyInteractions,
   EventTimelinePremiumDependencyTerminals,
-} from './timeline-dependency-arrows';
+  EventTimelinePremiumDependencyDialog,
+} from './timeline-dependencies';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -128,7 +131,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   fontSize: theme.typography.body2.fontSize,
   alignItems: 'flex-end',
   height: '100%',
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   // `clip` instead of `hidden` so vertical overflow stays visible; the legacy
   // overflow rule forces `visible` to `auto` when paired with `hidden`, which
   // would clip the pseudo-element below.
@@ -146,8 +149,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   '&::after': {
     content: '""',
     position: 'absolute',
-    left: 0,
-    right: 0,
+    insetInline: 0,
     bottom: -4,
     height: 4,
     backgroundColor: (theme.vars || theme).palette.background.default,
@@ -195,8 +197,7 @@ const EventTimelinePremiumViewport = styled('div', {
   top: 0,
   // The viewport spans the scrollport exactly, so both 0-insets resolve to the same
   // offset and it stays pinned in LTR and RTL alike.
-  left: 0,
-  right: 0,
+  insetInline: 0,
   overflow: 'hidden',
 });
 
@@ -227,7 +228,6 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   position: 'relative',
   padding: theme.spacing(2, 0),
   alignContent: 'start',
-  zIndex: 1,
   // Counted by `getRowHeightForLaneCount`, so it has to stay on this element: moving it
   // to the row would shrink the cell's content box and shift every event by a pixel.
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -263,10 +263,11 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   // Extend below the row container by the filler height so the line reaches
   // the very bottom of the viewport when the rows don't fill it.
   bottom: 'calc(-1 * var(--filler-height, 0px))',
-  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
+  insetInlineStart:
+    'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
   zIndex: 2,
-  borderLeft: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+  borderInlineStart: `2px solid ${(theme.vars || theme).palette.primary.main}`,
   pointerEvents: 'none',
 }));
 
@@ -278,7 +279,8 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   // `bottom: -4` so the circle sits centered on the header/body boundary line.
   bottom: -4,
   // 3px = half the circle's width (4px) minus half the line's width (1px), to center the circle on the line.
-  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
+  insetInlineStart:
+    'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
   width: 8,
   height: 8,
   borderRadius: '50%',
@@ -291,7 +293,8 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
 
 // In macOS Safari and Gnome Web, scrollbars are overlaid and report size 0.
 // The virtual scrollbar container needs a real size, so we clamp to at least 14px.
-const SCROLLBAR_SIZE_CSS = 'calc(max(var(--scrollbar-size, 10px), 14px))';
+const MIN_SCROLLBAR_SIZE = 14;
+const SCROLLBAR_SIZE_CSS = `calc(max(var(--scrollbar-size, 10px), ${MIN_SCROLLBAR_SIZE}px))`;
 
 const Scrollbar = styled('div', {
   name: 'MuiEventTimeline',
@@ -321,7 +324,7 @@ const ScrollbarVertical = styled(Scrollbar, {
     width: 'var(--size)',
   },
   top: 'var(--header-height, 0px)',
-  right: 0,
+  insetInlineEnd: 0,
 });
 
 const ScrollbarHorizontal = styled(Scrollbar, {
@@ -338,7 +341,7 @@ const ScrollbarHorizontal = styled(Scrollbar, {
     height: 'var(--size)',
   },
   bottom: 0,
-  left: 'var(--title-column-width)',
+  insetInlineStart: 'var(--title-column-width)',
 });
 
 const ScrollbarTitleHorizontal = styled(Scrollbar, {
@@ -355,22 +358,22 @@ const ScrollbarTitleHorizontal = styled(Scrollbar, {
     height: 'var(--size)',
   },
   bottom: 0,
-  left: 0,
+  insetInlineStart: 0,
 });
 
-// When the title scrollbar is not rendered (no overflow) but the events
-// horizontal scrollbar is, this filler sits in the bottom-left strip to
-// extend the title column's right border down to the very bottom.
+// When the title scrollbar is not rendered (no overflow) but the events horizontal
+// scrollbar is, this filler sits under the title column, in the scrollbar strip, to
+// extend the title column's inline-end border down to the very bottom.
 const TitleScrollbarFiller = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'TitleScrollbarFiller',
 })(({ theme }) => ({
   position: 'absolute',
   bottom: 0,
-  left: 0,
+  insetInlineStart: 0,
   width: 'var(--title-column-width)',
   height: SCROLLBAR_SIZE_CSS,
-  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   backgroundColor: (theme.vars || theme).palette.background.default,
   zIndex: 6,
   pointerEvents: 'none',
@@ -394,7 +397,7 @@ const EventTimelinePremiumFillerRow = styled('div', {
   position: 'relative',
   '& > div': {
     width: 'var(--title-column-width)',
-    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
     position: 'absolute',
     height: '100%',
     zIndex: 3,
@@ -657,17 +660,15 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   // Selector hooks
   const adapter = useAdapterContext();
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const nowTimestamp = useStore(store, schedulerNowSelectors.nowTimestamp);
   const showCurrentTimeIndicatorSetting = useStore(
     store,
     schedulerNowSelectors.showCurrentTimeIndicator,
   );
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const hasNestedResources = useStore(store, schedulerResourceSelectors.hasNestedResources);
-  const isNowInView = React.useMemo(
-    () => adapter.isWithinRange(now, [config.start, config.end]),
-    [adapter, now, config.start, config.end],
-  );
+  const isNowInView =
+    nowTimestamp >= adapter.getTime(config.start) && nowTimestamp <= adapter.getTime(config.end);
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
   // The visible list preserves the resource entries (only their occurrence lists are
@@ -774,6 +775,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [titleColumn],
   );
 
+  const isRtl = useDirection() === 'rtl';
+
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
@@ -782,7 +785,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       columnsTotalWidth,
       leftPinnedWidth: titleColumnWidth,
     },
-    virtualization: { layoutMode: 'controlled' },
+    virtualization: { layoutMode: 'controlled', isRtl },
     rows,
     range,
     rowCount: rows.length,
@@ -833,25 +836,56 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   useTimelineDragAutoScroll({
     scrollerRef: gridRef,
     pinnedLeftWidth: titleColumnWidth,
+    isRtl,
   });
 
   const { handleKeyDown: handleEventTabKeyDown } = useEventTabNavigation({
-    adapter,
     // The axis-filtered list: a hidden occurrence never mounts, so navigating to it
     // would swallow Tab in an unfocusable retry loop.
     resources: visibleResources,
     scrollerRef: gridRef,
-    axis: config,
+    axis: config.axis,
     durationMs: config.durationMs,
     tickCount: config.tickCount,
     tickWidth: config.tickWidth,
     titleColumnWidth,
+    isRtl,
   });
 
   const eventsWidth = config.tickCount * config.tickWidth;
   const hasScrollX = dimensions.hasScrollX;
   const hasScrollY = dimensions.hasScrollY;
   const hasBottomScrollbar = hasScrollX || hasTitleOverflow;
+
+  // The target row may not be mounted yet: scroll just enough to show it whole.
+  const scrollRowIntoView = useStableCallback((rowIndex: number) => {
+    const scroller = gridRef.current;
+    const state = virtualizer.store.state;
+    const { positions, currentPageTotalHeight } = Dimensions.selectors.rowsMeta(state);
+    const rowTop = positions[rowIndex];
+    if (!scroller || rowTop === undefined) {
+      return;
+    }
+    const rowBottom = positions[rowIndex + 1] ?? currentPageTotalHeight;
+    const { viewportInnerSize, scrollbarSize } = Dimensions.selectors.dimensions(state);
+    // `viewportInnerSize` excludes the native scrollbar; use the bottom scrollbars instead,
+    // which are drawn over the rows.
+    const viewportHeight =
+      viewportInnerSize.height +
+      (hasScrollX ? scrollbarSize : 0) -
+      (hasBottomScrollbar ? Math.max(scrollbarSize, MIN_SCROLLBAR_SIZE) : 0);
+    // Not measured yet.
+    if (viewportHeight <= 0) {
+      return;
+    }
+    // A row taller than the viewport is aligned to its top.
+    if (rowTop < scroller.scrollTop || rowBottom - rowTop > viewportHeight) {
+      scroller.scrollTop = rowTop;
+    } else if (rowBottom > scroller.scrollTop + viewportHeight) {
+      scroller.scrollTop = rowBottom - viewportHeight;
+    }
+  });
+
   const fillerHeight = Math.max(
     0,
     dimensions.viewportOuterSize.height - dimensions.minimumSize.height,
@@ -884,6 +918,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               {...scrollerProps}
               ref={gridMergedRef}
               onKeyDown={handleEventTabKeyDown}
+              scrollRowIntoView={scrollRowIntoView}
             >
               <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
                 <EventTimelinePremiumViewport {...viewportProps}>
@@ -901,6 +936,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                           aria-hidden
                         />
                       )}
+                      <EventTimelinePremiumDependencyDialog />
                       <EventTimelinePremiumDependencyInteractions />
                       {/* Last so the revealed terminals win their z-index ties and
                           paint above the arrows and their click hit-areas. */}

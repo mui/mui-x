@@ -145,7 +145,8 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    * @default "default"
    */
   displayTimezone: PropTypes.string,
@@ -179,6 +180,19 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
       canHaveMultipleResources: PropTypes.bool,
       duration: PropTypes.number,
       interaction: PropTypes.oneOf(['click', 'double-click']),
+    }),
+    PropTypes.bool,
+  ]),
+  /**
+   * Configures how events are deleted.
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
+   */
+  eventDeletion: PropTypes.oneOfType([
+    PropTypes.shape({
+      confirmation: PropTypes.bool,
     }),
     PropTypes.bool,
   ]),
@@ -307,9 +321,15 @@ StandaloneAgendaViewPremium.propTypes /* remove-proptypes */ = {
   view: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
   /**
    * Configuration applied to the view, keyed by the view name.
-   * The `agenda` view does not support any configuration keys yet.
+   * For the `agenda` view, `dayCount` is how many days are displayed (and how far the
+   * navigation moves), or `'month'` to display the month of the visible date and navigate one month at a time.
+   * @example { agenda: { dayCount: 'month' } }
    */
-  viewConfig: PropTypes.object,
+  viewConfig: PropTypes.shape({
+    agenda: PropTypes.shape({
+      dayCount: PropTypes.oneOfType([PropTypes.oneOf(['month']), PropTypes.number]),
+    }),
+  }),
   /**
    * The views available in the calendar.
    * @default ["day", "week", "month", "agenda"]

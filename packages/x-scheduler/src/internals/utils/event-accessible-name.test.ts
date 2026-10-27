@@ -1,4 +1,5 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import { enUS } from '../../locales/enUS';
 import type { SchedulerEventLocaleText } from '../../models/translations';
@@ -129,4 +130,24 @@ describe('getEventAccessibleName', () => {
 
     expect(getName(occurrence)).to.equal('Late call, 8:30 AM to 9:30 AM, Friday, July 4th, 2025');
   });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
+    'should announce the days of the display timezone, whatever the timezone of the system',
+    () => {
+      // Pacific/Apia skipped December 30th, 2011. On a system there, `adapter.isSameDay()` reads
+      // December 30th and 31st as the same day in the other timezones.
+      setSystemTimezone('Pacific/Apia');
+      const occurrence = EventBuilder.new()
+        .title('Trip')
+        .startAt('2011-12-30T15:00:00Z')
+        .endAt('2011-12-31T15:00:00Z')
+        .withDisplayTimezone('America/New_York')
+        .toOccurrence();
+
+      expect(getName(occurrence)).to.equal(
+        'Trip, From Friday, December 30th, 2011 10:00 AM to Saturday, December 31st, 2011 10:00 AM',
+      );
+    },
+  );
 });

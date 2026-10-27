@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -14,12 +15,14 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
-import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
-import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
-import type {
-  SchedulerProcessedDate,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/models';
+import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
+import {
+  createStartOfPlainDate,
+  getPlainDateWeekStart,
+  toPlainDateTime,
+} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import type { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
@@ -57,7 +60,7 @@ const MiniCalendarMonthLabel = styled('span', {
 })(({ theme }) => ({
   ...theme.typography.subtitle2,
   fontWeight: theme.typography.fontWeightMedium,
-  paddingLeft: theme.spacing(1.25),
+  paddingInlineStart: theme.spacing(1.25),
 }));
 
 const MiniCalendarWeekdayHeader = styled('div', {
@@ -159,35 +162,40 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const { className, ...other } = props;
 
     const adapter = useAdapterContext();
+    const isRtl = useRtl();
+    const PreviousIcon = isRtl ? ChevronRightIcon : ChevronLeftIcon;
+    const NextIcon = isRtl ? ChevronLeftIcon : ChevronRightIcon;
     const store = useEventCalendarStoreContext();
     const { classes, localeText } = useEventCalendarStyledContext();
 
-    const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
-    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
+    const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+    const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
     const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
-    const [displayedMonth, setDisplayedMonth] = React.useState<TemporalSupportedObject>(() =>
-      adapter.startOfMonth(visibleDate),
+    // The first day of the displayed month.
+    const [displayedMonth, setDisplayedMonth] = React.useState<PlainDate>(() =>
+      visiblePlainDate.with({ day: 1 }),
     );
 
     // Sync displayed month when visibleDate changes externally
     React.useEffect(() => {
-      setDisplayedMonth(adapter.startOfMonth(visibleDate));
-    }, [adapter, visibleDate]);
+      const visibleMonth = visiblePlainDate.with({ day: 1 });
+      setDisplayedMonth((prev) => (prev.equals(visibleMonth) ? prev : visibleMonth));
+    }, [visiblePlainDate]);
 
     // Generate days for the displayed month (including padding days from adjacent months)
     // Always show 6 weeks (42 days) for consistent height
     const days = React.useMemo(() => {
-      const monthStart = adapter.startOfMonth(displayedMonth);
-      const gridStart = getStartOfWeek(adapter, monthStart, weekStartsOn);
-      // 6 weeks = 42 days, so end is 41 days after start
-      const gridEnd = adapter.addDays(gridStart, 41);
-      return getDayList({
+      const gridStart = getPlainDateWeekStart(adapter, displayedMonth, weekStartsOn);
+      return getDayListFromPlainDates({
         adapter,
-        start: gridStart,
-        end: gridEnd,
+        firstPlainDate: gridStart,
+        // 6 weeks = 42 days, so end is 41 days after start
+        lastPlainDate: gridStart.add({ days: 41 }),
+        timezone: displayTimezone,
       });
-    }, [adapter, displayedMonth, weekStartsOn]);
+    }, [adapter, displayedMonth, displayTimezone, weekStartsOn]);
 
     // Group days into weeks
     const weeks = React.useMemo(() => {
@@ -202,8 +210,12 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const weekdays = weeks[0] ?? [];
 
     const monthYearLabel = React.useMemo(
-      () => formatMonthFullLetterAndYear(displayedMonth, adapter),
-      [adapter, displayedMonth],
+      () =>
+        formatMonthFullLetterAndYear(
+          createStartOfPlainDate(adapter, displayedMonth, displayTimezone),
+          adapter,
+        ),
+      [adapter, displayedMonth, displayTimezone],
     );
 
     return (
@@ -225,17 +237,17 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarPreviousButton}
               size="small"
               aria-label={localeText.miniCalendarGoToPreviousMonth}
-              onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, -1))}
+              onClick={() => setDisplayedMonth((prev) => prev.add({ months: -1 }))}
             >
-              <ChevronLeftIcon fontSize="small" />
+              <PreviousIcon fontSize="small" />
             </IconButton>
             <IconButton
               className={classes.miniCalendarNextButton}
               size="small"
               aria-label={localeText.miniCalendarGoToNextMonth}
-              onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, 1))}
+              onClick={() => setDisplayedMonth((prev) => prev.add({ months: 1 }))}
             >
-              <ChevronRightIcon fontSize="small" />
+              <NextIcon fontSize="small" />
             </IconButton>
           </MiniCalendarNavigation>
         </MiniCalendarHeader>
@@ -268,9 +280,12 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarWeekRow}
             >
               {week.map((day, dayIndex) => {
-                const isToday = adapter.isSameDay(day.value, now);
-                const isActive = adapter.isSameDay(day.value, visibleDate);
-                const isOtherMonth = !adapter.isSameMonth(day.value, displayedMonth);
+                const dayPlainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
+                const isToday = dayPlainDate.dayNumber === nowDayNumber;
+                const isActive = dayPlainDate.dayNumber === visiblePlainDate.dayNumber;
+                const isOtherMonth =
+                  dayPlainDate.year !== displayedMonth.year ||
+                  dayPlainDate.month !== displayedMonth.month;
 
                 // Create a full date label for accessibility
                 const fullDateLabel = adapter.formatByString(

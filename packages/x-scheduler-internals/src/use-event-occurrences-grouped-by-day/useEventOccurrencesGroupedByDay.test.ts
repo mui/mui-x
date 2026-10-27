@@ -28,7 +28,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     return innerGetEventOccurrencesGroupedByDay({
       adapter,
       days: visibleDays,
-      eventRangeIndex: createEventRangeIndex(events, adapter, false),
+      eventRangeIndex: createEventRangeIndex(events, false),
       visibleResources: visible,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -91,7 +91,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([visibleEvent, invisibleEvent], adapter, false),
+      eventRangeIndex: createEventRangeIndex([visibleEvent, invisibleEvent], false),
       visibleResources: visibilityWithHidden,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -117,7 +117,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, false),
+      eventRangeIndex: createEventRangeIndex([event], false),
       visibleResources: visibilityWithOneHidden,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -142,7 +142,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, false),
+      eventRangeIndex: createEventRangeIndex([event], false),
       visibleResources: visibilityAllHidden,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -171,6 +171,27 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     expect(result.get(days[0].key)!.map((o) => o.id)).to.deep.equal([e2.id]);
     expect(result.get(days[1].key)!.map((o) => o.id)).to.deep.equal([e1.id, e2.id]);
     expect(result.get(days[2].key)!.map((o) => o.id)).to.deep.equal([e2.id, e3.id]);
+  });
+
+  it('should include an event in the repeated last hour of the last day', () => {
+    // In America/Santiago, the clocks go back from 24:00 to 23:00 on April 6th, 2024.
+    // 2024-04-07T03:30:00Z is the second 23:30 of April 6th.
+    const lastDay = processDate(adapter.date('2024-04-06T12:00:00Z', 'America/Santiago'), adapter);
+    const event = EventBuilder.new(adapter)
+      .span('2024-04-07T03:30:00Z', '2024-04-07T03:45:00Z')
+      .withDisplayTimezone('America/Santiago')
+      .toProcessed();
+
+    const result = innerGetEventOccurrencesGroupedByDay({
+      adapter,
+      days: [lastDay],
+      eventRangeIndex: createEventRangeIndex([event], false),
+      visibleResources: visible,
+      displayTimezone: 'America/Santiago',
+      recurringEventsPlugin: null,
+    });
+
+    expect(result.get(lastDay.key)!.map((occurrence) => occurrence.id)).to.deep.equal([event.id]);
   });
 
   it('should render a recurring event as a single non-expanded occurrence when no plugin is provided', () => {
@@ -204,7 +225,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, true),
+      eventRangeIndex: createEventRangeIndex([event], true),
       visibleResources: visible,
       displayTimezone: 'Europe/Paris',
       recurringEventsPlugin: schedulerRecurringEventsPlugin,

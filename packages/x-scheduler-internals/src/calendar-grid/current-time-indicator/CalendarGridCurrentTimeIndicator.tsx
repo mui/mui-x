@@ -7,10 +7,13 @@ import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
-import { mergeDateAndTime } from '../../internals/utils/date-utils';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { schedulerNowSelectors } from '../../scheduler-selectors';
-import { processDate } from '../../process-date';
+import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
+import {
+  moveTimestampToPlainDate,
+  toPlainDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
   function CalendarGridCurrentTimeIndicator(
@@ -28,34 +31,30 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       ...elementProps
     } = componentProps;
 
-    const {
-      start: columnStart,
-      end: columnEnd,
-      dayStartMinute,
-      dayEndMinute,
-    } = useCalendarGridTimeColumnContext();
+    const { axis: columnAxis } = useCalendarGridTimeColumnContext();
+    const { start: columnStart, end: columnEnd } = columnAxis;
     const store = useEventCalendarStoreContext();
-    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const nowTimestamp = useStore(store, schedulerNowSelectors.nowTimestamp);
+    const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
-    const nowForColumn = React.useMemo(
-      () => processDate(mergeDateAndTime(adapter, columnStart, now), adapter),
-      [adapter, columnStart, now],
-    );
-
-    const endForCalc = React.useMemo(
-      () => processDate(adapter.addMinutes(nowForColumn.value, 1), adapter),
-      [adapter, nowForColumn],
-    );
+    // The time of day of now, on the wall clock of the day of the column.
+    const nowForColumn = React.useMemo(() => {
+      const columnPlainDate = toPlainDateTime(columnStart, displayTimezone).date;
+      return createProcessedDate(
+        adapter,
+        moveTimestampToPlainDate(nowTimestamp, columnPlainDate, displayTimezone),
+        displayTimezone,
+      );
+    }, [adapter, columnStart, displayTimezone, nowTimestamp]);
 
     const { position } = useElementPositionInCollection({
+      // Only the position is read, which depends on the start alone.
       start: nowForColumn,
-      end: endForCalc,
-      collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
+      end: nowForColumn,
+      collection: columnAxis,
     });
 
-    const isOutOfRange =
-      adapter.isBefore(nowForColumn.value, columnStart) ||
-      adapter.isAfter(nowForColumn.value, columnEnd);
+    const isOutOfRange = nowForColumn.timestamp < columnStart || nowForColumn.timestamp > columnEnd;
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

@@ -791,6 +791,45 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
+    describe('isResourceReadOnly', () => {
+      it('should return false by default', () => {
+        const state = new storeClass.Value(
+          { events: [], shouldEventRequireResource: false },
+          adapter,
+        ).state;
+        expect(schedulerResourceSelectors.isResourceReadOnly(state, 'does-not-exist')).to.equal(
+          false,
+        );
+      });
+
+      it('should return true when the resource has areEventsReadOnly set', () => {
+        const resource = ResourceBuilder.new().areEventsReadOnly().build();
+        const state = new storeClass.Value({ events: [], resources: [resource] }, adapter).state;
+        expect(schedulerResourceSelectors.isResourceReadOnly(state, resource.id)).to.equal(true);
+      });
+
+      it('should inherit areEventsReadOnly from a parent resource', () => {
+        const childResource = ResourceBuilder.new().build();
+        const parentResource = ResourceBuilder.new()
+          .areEventsReadOnly()
+          .children([childResource])
+          .build();
+        const state = new storeClass.Value({ events: [], resources: [parentResource] }, adapter)
+          .state;
+        expect(schedulerResourceSelectors.isResourceReadOnly(state, childResource.id)).to.equal(
+          true,
+        );
+      });
+
+      it('should fall back to the scheduler readOnly when there is no resource', () => {
+        const state = new storeClass.Value(
+          { events: [], readOnly: true, shouldEventRequireResource: false },
+          adapter,
+        ).state;
+        expect(schedulerResourceSelectors.isResourceReadOnly(state, undefined)).to.equal(true);
+      });
+    });
+
     describe('resourceHasVisibleChildren', () => {
       const child1 = ResourceBuilder.new().title('Child 1').build();
       const child2 = ResourceBuilder.new().title('Child 2').build();

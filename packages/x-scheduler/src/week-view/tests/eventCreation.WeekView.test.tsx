@@ -50,4 +50,52 @@ describe('<WeekView /> event creation', () => {
     // Canceling a creation drops the draft placeholder.
     expect(store!.state.occurrencePlaceholder).to.equal(null);
   });
+
+  describe.each([
+    // Without a display timezone, the creations keep the `'default'` timezone of the occurrences.
+    { displayTimezone: undefined, timezone: 'default' },
+    { displayTimezone: 'America/New_York', timezone: 'America/New_York' },
+  ])('in the $timezone display timezone', ({ displayTimezone, timezone }) => {
+    async function createWithKeyboard(className: string) {
+      const onEventEditingStart = vi.fn((_occurrence: any, eventDetails: any) =>
+        eventDetails.cancel(),
+      );
+      const { user } = render(
+        <EventCalendarProvider
+          events={[]}
+          resources={[]}
+          displayTimezone={displayTimezone}
+          onEventEditingStart={onEventEditingStart}
+        >
+          <EventDialogProvider>
+            <WeekView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      act(() => {
+        document.querySelector<HTMLElement>(`[role="gridcell"].${className}`)!.focus();
+      });
+      await user.keyboard('{Enter}');
+
+      expect(onEventEditingStart.mock.calls.length).to.equal(1);
+      return onEventEditingStart.mock.lastCall![0];
+    }
+
+    it('should pass a creation in the time grid to `onEventEditingStart` in the display timezone', async () => {
+      const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridColumn);
+
+      expect(occurrence.displayTimezone.timezone).to.equal(timezone);
+      // The creation starts at noon.
+      expect(occurrence.displayTimezone.start.minutesInDay).to.equal(12 * 60);
+    });
+
+    it('should pass a creation in the day grid to `onEventEditingStart` in the display timezone', async () => {
+      const occurrence = await createWithKeyboard(eventCalendarClasses.dayTimeGridAllDayEventsCell);
+
+      expect(occurrence.displayTimezone.timezone).to.equal(timezone);
+      // The creation ends on the last minute of its day.
+      expect(occurrence.displayTimezone.end.minutesInDay).to.equal(24 * 60 - 1);
+    });
+  });
 });

@@ -16,6 +16,7 @@ import {
   ErrorContainer,
   SharedComponentsStyledContext,
   SchedulerSlotsProvider,
+  SchedulerDirectionProvider,
   eventDialogSlots,
   eventContextMenuSlots,
   EventEditingStyledContext,
@@ -143,15 +144,17 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
         <EventEditingStyledContext.Provider value={editingStyledContextValue}>
           <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
             <SchedulerSlotsProvider slots={slots} slotProps={slotProps}>
-              <EventTimelinePremiumRoot
-                ref={forwardedRef}
-                className={clsx(classes.root, className)}
-                {...other}
-              >
-                <EventTimelinePremiumContent />
-                <ErrorContainer />
-                {watermark}
-              </EventTimelinePremiumRoot>
+              <SchedulerDirectionProvider>
+                <EventTimelinePremiumRoot
+                  ref={forwardedRef}
+                  className={clsx(classes.root, className)}
+                  {...other}
+                >
+                  <EventTimelinePremiumContent />
+                  <ErrorContainer />
+                  {watermark}
+                </EventTimelinePremiumRoot>
+              </SchedulerDirectionProvider>
             </SchedulerSlotsProvider>
           </SharedComponentsStyledContext.Provider>
         </EventEditingStyledContext.Provider>
@@ -274,7 +277,8 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    * @default "default"
    */
   displayTimezone: PropTypes.string,
@@ -308,6 +312,19 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
       canHaveMultipleResources: PropTypes.bool,
       duration: PropTypes.number,
       interaction: PropTypes.oneOf(['click', 'double-click']),
+    }),
+    PropTypes.bool,
+  ]),
+  /**
+   * Configures how events are deleted.
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
+   */
+  eventDeletion: PropTypes.oneOfType([
+    PropTypes.shape({
+      confirmation: PropTypes.bool,
     }),
     PropTypes.bool,
   ]),

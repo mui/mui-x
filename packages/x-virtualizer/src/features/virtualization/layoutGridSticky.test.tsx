@@ -160,6 +160,7 @@ const HorizontalPropsProbe = React.memo(function HorizontalPropsProbe(props: {
 });
 
 type StickyGridProps = {
+  apiRef?: React.RefObject<Virtualizer | null>;
   width?: number;
   scrollbarSize?: number;
   tall?: boolean;
@@ -205,6 +206,12 @@ function StickyGrid(props: StickyGridProps) {
       />
     ),
   });
+
+  React.useEffect(() => {
+    if (props.apiRef) {
+      props.apiRef.current = virtualizer;
+    }
+  }, [props.apiRef, virtualizer]);
 
   const renderContext = virtualizer.store.use(Virtualization.selectors.renderContext);
 
@@ -410,6 +417,35 @@ describe.skipIf(isJSDOM)('<LayoutGridSticky />', () => {
     });
     return view;
   }
+
+  it.each([false, true])(
+    'preserves a render-window adjustment when dimensions are unchanged (Strict Mode: %s)',
+    async (strict) => {
+      const apiRef = React.createRef<Virtualizer | null>();
+      render(<StickyGrid apiRef={apiRef} />, { strict });
+      const store = apiRef.current!.store;
+      const dimensions = Dimensions.selectors.dimensions(store.state);
+      expect(dimensions.isReady).toBe(true);
+      const { renderContext: initialContext } = store.state.virtualization;
+      expect(initialContext.lastColumnIndex).toBeLessThan(COLUMN_COUNT - 1);
+      const expandedContext = {
+        ...initialContext,
+        lastColumnIndex: initialContext.lastColumnIndex + 1,
+      };
+
+      // Like Mosaic when unpinning, retain an extra column by extending the window.
+      // This updates only the render context; dimensions and inputs stay unchanged.
+      await act(async () => {
+        store.set('virtualization', {
+          ...store.state.virtualization,
+          renderContext: expandedContext,
+        });
+      });
+
+      expect(Dimensions.selectors.dimensions(store.state)).toBe(dimensions);
+      expect(Virtualization.selectors.renderContext(store.state)).toEqual(expandedContext);
+    },
+  );
 
   it('renders only a window of rows and columns', async () => {
     await renderGrid();

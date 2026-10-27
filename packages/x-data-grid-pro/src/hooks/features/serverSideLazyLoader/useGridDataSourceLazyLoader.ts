@@ -33,6 +33,7 @@ import {
   DataSourceRowsUpdateStrategy,
   useGridDataSourceFilterModelChange,
   useGridDataSourcePolling,
+  asReplaceUpdates,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
@@ -332,7 +333,7 @@ export const useGridDataSourceLazyLoader = (
             }
 
             // Efficient data-only update — no tree restructuring needed
-            privateApiRef.current.updateRows(changedRows);
+            privateApiRef.current.updateRows(asReplaceUpdates(changedRows));
             // Cache is already updated by fetchRows in useGridDataSourceBase
           } else {
             // DIFFERENT ROW IDs — server returned new rows for this range

@@ -9,16 +9,14 @@ import type {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerResourceId,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import {
   useDraggableEvent,
   useOriginalOccurrence,
   computeElementPositionInCollection,
-  dateToTimelineAxisOffsetMs,
+  timestampToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { useTimelineGridEventRowContext } from '../event-row/TimelineGridEventRowContext';
 import { TimelineGridEventCssVars } from './TimelineGridEventCssVars';
@@ -67,7 +65,6 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const isInteractive = true;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
   const {
     resourceId: rowResourceId,
@@ -101,7 +98,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       // Measured on the axis so it stays consistent with the cursor offsets when a
       // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
+        -timestampToTimelineAxisOffsetMs(config.axis, start.timestamp),
         0,
       );
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
@@ -109,8 +106,8 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
         eventId,
         occurrenceKey,
         originalOccurrence: getOriginalOccurrence(),
-        start: start.value,
-        end: end.value,
+        start: start.timestamp,
+        end: end.timestamp,
         initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
         sourceResourceId: rowResourceId,
       };
@@ -125,13 +122,13 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
   const elementPosition = React.useMemo(
     () =>
       elementPositionProp ??
-      computeElementPositionInCollection(adapter, {
+      computeElementPositionInCollection({
         start,
         end,
-        collection: config,
+        collection: config.axis,
         durationMs: config.durationMs,
       }),
-    [adapter, config, elementPositionProp, end, start],
+    [config, elementPositionProp, end, start],
   );
   const { position, duration, startingBeforeEdge, endingAfterEdge } = elementPosition;
 
@@ -216,8 +213,14 @@ export namespace TimelineGridEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
+    /**
+     * The start of the occurrence, as a timestamp in milliseconds.
+     */
+    start: number;
+    /**
+     * The end of the occurrence, as a timestamp in milliseconds.
+     */
+    end: number;
     /**
      * Cursor offset from the event start, in axis milliseconds.
      */

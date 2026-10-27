@@ -26,9 +26,13 @@ import {
 import { EventContextMenuProvider } from '../event-context-menu';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
 import { AnchoredEventToolbar } from '../event-toolbar';
+import {
+  DeleteConfirmationDialog,
+  DeleteConfirmationDialogHostContext,
+} from '../delete-confirmation-dialog';
 import ReadonlyContent from './ReadonlyContent';
 
-const EventDialogRoot = styled(Dialog, {
+export const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
   slot: 'Root',
 })({
@@ -41,6 +45,12 @@ const EventDialogRoot = styled(Dialog, {
     alignItems: 'unset',
   },
   [`& .${dialogClasses.paper}`]: {
+    // `useAnchoredPosition` sets `top` and `left` in viewport coordinates. With the default
+    // `position: relative`, they would offset the paper from the flex start, which is the right
+    // edge in RTL.
+    position: 'absolute',
+    // Otherwise the width would shrink with the space left after `left`.
+    width: 'max-content',
     margin: 0,
     // Never let the anchored dialog grow past the viewport on narrow (mobile) screens.
     maxWidth: '100%',
@@ -60,13 +70,18 @@ const EventDialogPaper = styled(Paper, {
   },
 }));
 
-interface PaperComponentProps extends PaperProps {
+export interface EventDialogDraggablePaperProps extends PaperProps {
   anchor: HTMLElement | null;
   dragHandlerRef: React.RefObject<HTMLElement | null>;
 }
 
-// 1. Setup the Draggable Paper Logic
-const PaperComponent = function PaperComponent(props: PaperComponentProps) {
+/**
+ * The draggable paper of the event dialog, positioned next to `anchor`.
+ * Pass `anchor` and `dragHandlerRef` through `slotProps.paper`.
+ */
+export const EventDialogDraggablePaper = function EventDialogDraggablePaper(
+  props: EventDialogDraggablePaperProps,
+) {
   const nodeRef = React.useRef<HTMLDivElement>(null);
 
   const mutateStyle = React.useCallback(
@@ -115,6 +130,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       occurrence={occurrence}
       onClose={onClose}
       dragHandlerRef={dragHandlerRef}
+      anchor={anchor}
     />
   );
 
@@ -123,7 +139,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       ref={forwardedRef}
       open={open}
       onClose={onClose}
-      PaperComponent={PaperComponent}
+      PaperComponent={EventDialogDraggablePaper}
       aria-labelledby={`${schedulerId}-event-dialog-title`}
       aria-modal="false"
       className={classes.eventDialog}
@@ -181,7 +197,8 @@ function EventDialogSurface() {
 
 /**
  * Desktop editing surface: anchored, draggable dialog via `EventEditingProvider`, with the armed
- * action toolbar and the recurring scope confirmation rendered as independent top-level siblings.
+ * action toolbar, the delete confirmation, and the recurring scope confirmation rendered as
+ * independent top-level siblings.
  */
 export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, optionalRenderers } = props;
@@ -194,9 +211,12 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       value={optionalRenderers ?? (EMPTY_OBJECT as EventEditingOptionalRenderers)}
     >
       <EventEditingProvider surface="dialog">
-        <EventContextMenuProvider>{children}</EventContextMenuProvider>
+        <DeleteConfirmationDialogHostContext.Provider value>
+          <EventContextMenuProvider>{children}</EventContextMenuProvider>
+        </DeleteConfirmationDialogHostContext.Provider>
         <AnchoredEventToolbarSurface />
         <EventDialogSurface />
+        <DeleteConfirmationDialog />
         {RecurringScopeDialogRenderer && <RecurringScopeDialogRenderer />}
       </EventEditingProvider>
     </EventEditingOptionalRenderersContext.Provider>

@@ -42,13 +42,16 @@
       "description": "The IDs of the resources initially visible. To render a controlled scheduler, use the <code>visibleResources</code> prop."
     },
     "displayTimezone": {
-      "description": "The timezone used to display events in the scheduler.<br>Accepts any valid IANA timezone name (for example &quot;America/New_York&quot;, &quot;Europe/Paris&quot;, &quot;Asia/Tokyo&quot;), or keywords understood by the adapter, such as &quot;default&quot; (use the adapter&#39;s default timezone), &quot;locale&quot; (use the user&#39;s current locale timezone), or &quot;UTC&quot;.<br>This timezone only affects rendering, events keep their original data timezone."
+      "description": "The timezone used to display events in the scheduler.<br>Accepts any valid IANA timezone name (for example &quot;America/New_York&quot;, &quot;Europe/Paris&quot;, &quot;Asia/Tokyo&quot;), or keywords understood by the adapter, such as &quot;default&quot; (use the adapter&#39;s default timezone), &quot;locale&quot; (use the user&#39;s current locale timezone), or &quot;UTC&quot;.<br>Events keep their original data timezone. The visible range starts on the day of the visible date in this timezone, and the next and previous navigation return dates in this timezone."
     },
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
     },
     "eventCreation": {
       "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
+    },
+    "eventDeletion": {
+      "description": "Configures how events are deleted. If <code>false</code>, event deletion is disabled. If <code>true</code>, event deletion is enabled with default configuration. If an object, event deletion is enabled with the provided configuration."
     },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
@@ -94,7 +97,7 @@
     },
     "view": { "description": "The view currently displayed in the calendar." },
     "viewConfig": {
-      "description": "Configuration applied to each view, keyed by the view name. For the <code>day</code> and <code>week</code> views, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid, and <code>initialScrollTime</code> is the hour the grid scrolls to on mount."
+      "description": "Configuration applied to each view, keyed by the view name. For the <code>day</code> and <code>week</code> views, <code>startTime</code> and <code>endTime</code> (whole hours between 0 and 24) limit the hours displayed in the time grid, <code>initialScrollTime</code> is the hour the grid scrolls to on mount, and <code>timeGridEvents</code> sets which timed events are rendered in the time grid. For the <code>agenda</code> view, <code>dayCount</code> is how many days are displayed (and how far the navigation moves), or <code>&#39;month&#39;</code> to display the month of the visible date and navigate one month at a time."
     },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
@@ -247,7 +250,7 @@
     },
     "dayTimeGridAllDayEventsHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the day time grid all day events header cell element"
+      "nodeName": "the day time grid all day events header cell (visually hidden row label)"
     },
     "dayTimeGridAllDayEventsRow": {
       "description": "Styles applied to {{nodeName}}.",
@@ -637,10 +640,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar label element"
     },
-    "headerToolbarLeftElement": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header toolbar left side element"
-    },
     "headerToolbarNextButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar next button element"
@@ -652,6 +651,10 @@
     "headerToolbarSidePanelToggle": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar side panel toggle button element"
+    },
+    "headerToolbarStart": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar start side element"
     },
     "headerToolbarTodayButton": {
       "description": "Styles applied to {{nodeName}}.",
@@ -840,6 +843,10 @@
     "resourcesTreeLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the resources tree section label element"
+    },
+    "responsiveTypographyContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element that hosts the responsive typography tokens"
     },
     "root": { "description": "Styles applied to the root element." },
     "sidePanel": {

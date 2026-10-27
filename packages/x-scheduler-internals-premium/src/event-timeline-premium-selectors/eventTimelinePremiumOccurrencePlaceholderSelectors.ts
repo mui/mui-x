@@ -54,11 +54,8 @@ export const timelineOccurrencePlaceholderSelectors = {
       return null;
     }
 
-    const config = eventTimelinePremiumPresetSelectors.config(state);
-    if (
-      state.adapter.isBefore(placeholder.end, config.start) ||
-      state.adapter.isAfter(placeholder.start, config.end)
-    ) {
+    const axis = eventTimelinePremiumPresetSelectors.axis(state);
+    if (placeholder.end < axis.start || placeholder.start > axis.end) {
       return null;
     }
 
