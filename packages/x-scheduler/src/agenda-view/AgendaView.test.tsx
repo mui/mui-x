@@ -109,7 +109,9 @@ describe('<AgendaView />', () => {
         />,
       );
 
-      const [firstDay, secondDay] = screen.getAllByRole('button', { name: /^Trip/ });
+      const parts = screen.getAllByRole('button', { name: /^Trip/ });
+      expect(parts).to.have.length(2);
+      const [firstDay, secondDay] = parts;
       expect(firstDay).to.have.text('Ends 31 DecTrip');
       expect(firstDay).to.have.attribute('data-ending-after-edge');
       expect(firstDay).not.to.have.attribute('data-starting-before-edge');

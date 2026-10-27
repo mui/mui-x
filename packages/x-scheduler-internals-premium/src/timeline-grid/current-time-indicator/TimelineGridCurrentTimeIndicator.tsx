@@ -17,8 +17,6 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { TimelineGridCurrentTimeIndicatorCssVars } from './TimelineGridCurrentTimeIndicatorCssVars';
 
-const ONE_MINUTE_MS = 60_000;
-
 export const TimelineGridCurrentTimeIndicator = React.forwardRef(
   function TimelineGridCurrentTimeIndicator(
     componentProps: TimelineGridCurrentTimeIndicator.Props,
@@ -45,14 +43,10 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       [adapter, nowTimestamp, displayTimezone],
     );
 
-    const endForCalc = React.useMemo(
-      () => createProcessedDate(adapter, nowTimestamp + ONE_MINUTE_MS, displayTimezone),
-      [adapter, nowTimestamp, displayTimezone],
-    );
-
     const { position } = useElementPositionInCollection({
+      // Only the position is read, which depends on the start alone.
       start: processedNow,
-      end: endForCalc,
+      end: processedNow,
       collection: config,
       durationMs: config.durationMs,
     });

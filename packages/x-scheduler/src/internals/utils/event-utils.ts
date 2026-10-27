@@ -27,7 +27,7 @@ export function isOccurrenceInDayGrid(
     // Invalid values fall back to the default.
     case 'shorter-than-one-day':
     default: {
-      // Lasts at least a day on the wall clock of the display timezone.
+      // All-day, or lasts at least a day on the wall clock of the display timezone.
       const { start, end, timezone } = occurrence.displayTimezone;
       return (
         !!occurrence.allDay || end.timestamp >= addDaysOnWallClock(start.timestamp, 1, timezone)

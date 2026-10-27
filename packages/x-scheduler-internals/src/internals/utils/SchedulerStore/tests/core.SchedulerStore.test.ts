@@ -44,6 +44,42 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.visibleDate).toEqualDateTime(expectedToday);
         expect(adapter.getTimezone(store.state.visibleDate)).to.equal(displayTimezone);
       });
+
+      it('should start today at the end of the gap when the display timezone skips midnight', () => {
+        vi.useFakeTimers();
+        onTestFinished(() => {
+          vi.useRealTimers();
+        });
+        // Santiago skips from 00:00 to 01:00 on September 8th, 2024.
+        vi.setSystemTime(new Date('2024-09-08T12:00:00Z'));
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, displayTimezone: 'America/Santiago' },
+          adapter,
+        );
+
+        expect(adapter.getTime(store.state.visibleDate)).to.equal(
+          Date.parse('2024-09-08T04:00:00Z'),
+        );
+      });
+
+      it('should move `nowTimestamp` and the current day every minute', () => {
+        vi.useFakeTimers();
+        onTestFinished(() => {
+          vi.useRealTimers();
+        });
+        vi.setSystemTime(new Date('2025-07-03T23:59:30Z'));
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone: 'UTC' }, adapter);
+
+        // The first tick lands on the next minute, the following ones a minute apart.
+        vi.advanceTimersByTime(30_000);
+        expect(store.state.nowTimestamp).to.equal(Date.parse('2025-07-04T00:00:00Z'));
+        expect(schedulerNowSelectors.nowDayNumber(store.state)).to.equal(
+          Date.UTC(2025, 6, 4) / MS_PER_DAY,
+        );
+
+        vi.advanceTimersByTime(60_000);
+        expect(store.state.nowTimestamp).to.equal(Date.parse('2025-07-04T00:01:00Z'));
+      });
     });
 
     describe('updater', () => {

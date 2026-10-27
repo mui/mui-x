@@ -823,6 +823,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     this.setVisibleDate({
+      // Not `state.nowTimestamp`, which lags up to a minute behind.
       visibleDate: createStartOfToday(this.state.adapter, Date.now(), this.state.displayTimezone),
       event,
     });
