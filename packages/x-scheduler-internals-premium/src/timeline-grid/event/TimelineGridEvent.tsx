@@ -14,7 +14,7 @@ import {
   useDraggableEvent,
   useOriginalOccurrence,
   computeElementPositionInCollection,
-  dateToTimelineAxisOffsetMs,
+  timestampToTimelineAxisOffsetMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { useElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -100,7 +100,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
       // Measured on the axis so it stays consistent with the cursor offsets when a
       // trimmed hour window compresses the days.
       const offsetBeforeRowStart = Math.max(
-        -dateToTimelineAxisOffsetMs(adapter, config, start.value),
+        -timestampToTimelineAxisOffsetMs(config.axis, start.timestamp),
         0,
       );
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });

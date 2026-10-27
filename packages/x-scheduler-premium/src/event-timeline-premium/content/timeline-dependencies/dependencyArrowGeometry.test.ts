@@ -9,7 +9,7 @@ import {
   createEventRangeIndex,
   getOccurrencesFromEvents,
 } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import { computeDependencyArrows } from './dependencyArrowGeometry';
 import {
@@ -28,7 +28,10 @@ import {
 } from '../../tests/dependencyGeometryTestUtils';
 
 // Mirrors the axis filter of the occurrence selector: visible ≡ non-zero width.
-const filterVisibleOccurrences = (axis: TimelineAxis, occurrences: SchedulerEventOccurrence[]) =>
+const filterVisibleOccurrences = (
+  axis: TimelineAxisRange,
+  occurrences: SchedulerEventOccurrence[],
+) =>
   occurrences.filter(
     (occurrence) =>
       computeElementPositionInCollection(adapter, {

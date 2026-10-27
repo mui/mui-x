@@ -1,5 +1,6 @@
 import { describe, test } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
+import { getTimelineAxis } from '@mui/x-scheduler-internals/internals';
 import { iterate } from './iterate';
 
 export const benchmarkResult = { value: undefined as unknown };
@@ -13,27 +14,23 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
   // The header rows of the presets, with the ranges they display.
   const dayStart = adapter.startOfDay(visibleDate);
   const monthStart = adapter.startOfMonth(visibleDate);
+  const toAxis = (start: typeof dayStart, end: typeof dayStart) =>
+    getTimelineAxis(adapter, { start, end, dayStartMinute: 0, dayEndMinute: 1440 });
   const presets = {
     dayAndHour: () => {
-      const end = adapter.endOfDay(adapter.addDays(dayStart, 3));
-      return [
-        iterate(adapter, 'day', 'hour', dayStart, end),
-        iterate(adapter, 'hour', 'hour', dayStart, end),
-      ];
+      const axis = toAxis(dayStart, adapter.endOfDay(adapter.addDays(dayStart, 3)));
+      return [iterate(adapter, 'day', 'hour', axis), iterate(adapter, 'hour', 'hour', axis)];
     },
     dayAndMonth: () => {
-      const end = adapter.endOfDay(adapter.addDays(dayStart, 8 * 7 - 1));
-      return [
-        iterate(adapter, 'month', 'day', dayStart, end),
-        iterate(adapter, 'day', 'day', dayStart, end),
-      ];
+      const axis = toAxis(dayStart, adapter.endOfDay(adapter.addDays(dayStart, 8 * 7 - 1)));
+      return [iterate(adapter, 'month', 'day', axis), iterate(adapter, 'day', 'day', axis)];
     },
     monthAndYear: () => {
-      const end = adapter.endOfMonth(adapter.addMonths(monthStart, 3 * 12 - 1));
-      return [
-        iterate(adapter, 'year', 'day', monthStart, end),
-        iterate(adapter, 'month', 'day', monthStart, end),
-      ];
+      const axis = toAxis(
+        monthStart,
+        adapter.endOfMonth(adapter.addMonths(monthStart, 3 * 12 - 1)),
+      );
+      return [iterate(adapter, 'year', 'day', axis), iterate(adapter, 'month', 'day', axis)];
     },
   };
 

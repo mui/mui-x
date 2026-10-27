@@ -29,7 +29,7 @@ const state = getEventTimelinePremiumStateFromParameters({
   preset: 'dayAndHour',
 });
 const config = eventTimelinePremiumPresetSelectors.config(state);
-const durationMs = getTimelineAxisDurationMs(adapter, config);
+const durationMs = getTimelineAxisDurationMs(config.axis);
 const start = config.start;
 const end = adapter.addHours(start, 1);
 const occurrenceTemplate = EventBuilder.new()

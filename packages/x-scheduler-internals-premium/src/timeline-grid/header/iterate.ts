@@ -6,22 +6,23 @@ import type {
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
   createAdapterDate,
-  FULL_DAY_MINUTES,
+  getPlainDateWeekStart,
   getStartOfDayMs,
   getTimelineAxisOffsetMs,
-  getWeekStartPlainDate,
   localToEpochMs,
   MS_PER_DAY,
   plainDateFromDayNumber,
   toLocalMs,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate, TimelineAxis } from '@mui/x-scheduler-internals/internals';
+import type {
+  PlainDate,
+  TimelineAxis,
+  TimelineAxisWindow,
+} from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
-
-type HourWindow = Pick<TimelineAxis, 'dayStartMinute' | 'dayEndMinute'>;
 
 type ToAdapterDate = (localMs: number) => TemporalSupportedObject;
 
@@ -33,21 +34,21 @@ function toPlainDate(localMs: number): PlainDate {
 }
 
 /**
- * Cells are walked on the wall clock of the timezone of `rangeStart`: their bounds are wall-clock
+ * Cells are walked on the wall clock of the timezone of the axis: their bounds are wall-clock
  * times, in milliseconds since 1970-01-01T00:00 of the wall clock, converted to adapter values at
  * the end. A wall-clock time skipped by a DST transition moves forward by the length of the gap,
  * and a repeated one resolves to its first instant, whatever the timezone of the system.
+ * The hour window of the axis only applies when the ticks are hours.
  */
 export function iterate(
   adapter: TemporalAdapter,
   unit: PresetHeaderUnit,
   tickUnit: PresetHeaderUnit,
-  rangeStart: TemporalSupportedObject,
-  rangeEnd: TemporalSupportedObject,
+  axis: TimelineAxis,
   weekStartsOn?: WeekStartsOn,
-  hourWindow?: HourWindow,
 ): IteratedCell[] {
-  if (adapter.getTime(rangeEnd) < adapter.getTime(rangeStart)) {
+  const { start: rangeStart, end: rangeEnd, timezone } = axis;
+  if (rangeEnd < rangeStart) {
     throw new Error(
       `MUI X Scheduler: TimelineGridHeader.iterate() received a range where rangeEnd is before rangeStart. ` +
         `The iteration would silently produce an empty header, masking the misconfiguration. ` +
@@ -55,10 +56,9 @@ export function iterate(
     );
   }
 
-  const timezone = adapter.getTimezone(rangeStart);
   const toAdapterDate: ToAdapterDate = (localMs) =>
     createAdapterDate(adapter, localToEpochMs(localMs, timezone), timezone);
-  const rangeStartLocalMs = getRangeStartLocalMs(adapter, rangeStart, timezone);
+  const rangeStartLocalMs = getRangeStartLocalMs(rangeStart, timezone);
 
   // `rangeEnd` is inclusive (e.g. `endOfDay` = 23:59:59.999). Floor it to the
   // tick boundary and add one tick to get an exclusive end the loop can compare
@@ -72,10 +72,7 @@ export function iterate(
 
   // Hour ticks are a wall-clock grid: every day contributes the same columns whatever
   // its real hours are, so spans are measured on the axis rather than in elapsed hours.
-  const appliedHourWindow =
-    tickUnit === 'hour'
-      ? (hourWindow ?? { dayStartMinute: 0, dayEndMinute: FULL_DAY_MINUTES })
-      : undefined;
+  const appliedHourWindow = tickUnit === 'hour' ? axis : undefined;
 
   // `appliedHourWindow` is only set when the ticks are hours, so this is the hour row.
   if (unit === 'hour' && appliedHourWindow) {
@@ -86,6 +83,8 @@ export function iterate(
   let cursor = startOf(adapter, rangeStart, unit, weekStartsOn, timezone);
   let cursorDate = toAdapterDate(cursor);
   let index = 0;
+  // The start of a first cell aligned before the range is clamped to the range start.
+  const rangeStartDate = createAdapterDate(adapter, rangeStart, timezone);
 
   while (cursor < rangeEndExclusive) {
     // Guard against runaway iteration from a misconfigured preset (e.g. hour ticks over a
@@ -106,7 +105,7 @@ export function iterate(
       date: cursorDate,
       // Read from the wall clock: a date skipped by a transition keeps its own date.
       plainDate: toPlainDate(cursor),
-      start: cursor < rangeStartLocalMs ? rangeStart : cursorDate,
+      start: cursor < rangeStartLocalMs ? rangeStartDate : cursorDate,
       end: nextCursorDate,
       spanInTicks: appliedHourWindow
         ? countVisibleHours(spanEnd, spanStart, appliedHourWindow)
@@ -129,14 +128,9 @@ export function iterate(
  * whose midnight is skipped by a DST transition (e.g. `startOfDay` of March 8th, 2026 in
  * America/Havana, at 01:00) starts at the midnight of that day, so its first day stays whole.
  */
-function getRangeStartLocalMs(
-  adapter: TemporalAdapter,
-  rangeStart: TemporalSupportedObject,
-  timezone: TemporalTimezone,
-): number {
-  const time = adapter.getTime(rangeStart);
-  const localMs = toLocalMs(time, timezone);
-  return getStartOfDayMs(time, timezone) === time
+function getRangeStartLocalMs(rangeStart: number, timezone: TemporalTimezone): number {
+  const localMs = toLocalMs(rangeStart, timezone);
+  return getStartOfDayMs(rangeStart, timezone) === rangeStart
     ? Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY
     : localMs;
 }
@@ -166,7 +160,7 @@ function iterateHourCells(
   toAdapterDate: ToAdapterDate,
   rangeStartLocalMs: number,
   rangeEndExclusive: number,
-  hourWindow: HourWindow,
+  hourWindow: TimelineAxisWindow,
 ): IteratedCell[] {
   const startHour = Math.ceil(hourWindow.dayStartMinute / 60);
   const endHour = Math.ceil(hourWindow.dayEndMinute / 60);
@@ -210,23 +204,25 @@ function iterateHourCells(
 }
 
 /**
- * The wall-clock start of the unit containing `date`.
+ * The wall-clock start of the unit containing `timestamp`, read in `timezone`.
  */
 function startOf(
   adapter: TemporalAdapter,
-  date: TemporalSupportedObject,
+  timestamp: number,
   unit: PresetHeaderUnit,
   weekStartsOn: WeekStartsOn | undefined,
   timezone: TemporalTimezone,
 ): number {
-  const localMs = toLocalMs(adapter.getTime(date), timezone);
+  const localMs = toLocalMs(timestamp, timezone);
   switch (unit) {
     case 'hour':
       return Math.floor(localMs / HOUR_MS) * HOUR_MS;
     case 'day':
       return Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
     case 'week':
-      return getWeekStartPlainDate(adapter, date, weekStartsOn).dayNumber * MS_PER_DAY;
+      return (
+        getPlainDateWeekStart(adapter, toPlainDate(localMs), weekStartsOn).dayNumber * MS_PER_DAY
+      );
     case 'month':
       return toPlainDate(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
     case 'year':
@@ -280,7 +276,7 @@ function addMonths(localMs: number, months: number): number {
  * the visible hour window: the axis distance between the two bounds, in hours. Closed form
  * (no hour-by-hour walk), consistent with the pinned tick count of the grid.
  */
-function countVisibleHours(later: number, earlier: number, hourWindow: HourWindow): number {
+function countVisibleHours(later: number, earlier: number, hourWindow: TimelineAxisWindow): number {
   const toAxisMs = (localMs: number) => {
     const dayNumber = Math.floor(localMs / MS_PER_DAY);
     return getTimelineAxisOffsetMs(hourWindow, dayNumber, localMs - dayNumber * MS_PER_DAY);

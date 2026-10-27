@@ -8,7 +8,7 @@ import type {
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { getTabbableDescendants } from '@mui/x-internals/domUtils';
 import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
+import type { TimelineAxisRange } from '@mui/x-scheduler-internals/internals';
 
 type ResourceWithOccurrences = {
   resource: SchedulerResource;
@@ -33,7 +33,7 @@ export function useEventTabNavigation(params: {
    */
   resources: readonly ResourceWithOccurrences[];
   scrollerRef: React.RefObject<HTMLDivElement | null>;
-  axis: TimelineAxis;
+  axis: TimelineAxisRange;
   durationMs: number;
   tickCount: number;
   tickWidth: number;

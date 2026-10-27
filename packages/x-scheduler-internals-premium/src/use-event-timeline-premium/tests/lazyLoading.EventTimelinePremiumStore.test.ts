@@ -82,7 +82,8 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       ...DEFAULT_PARAMS,
       dataSource,
       defaultPreset: 'dayAndHour' as const,
-      // The 4 days of the preset start at midnight in UTC, which is June 30th at 20:00 in New York.
+      // July 1st at midnight in UTC is June 30th at 20:00 in New York, where the 4 days of the
+      // preset start.
       defaultVisibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
       displayTimezone: 'America/New_York',
     };
@@ -93,10 +94,10 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     expect(dataSource.getEvents.mock.calls.length).to.equal(1);
-    // From June 30th to July 4th in New York.
+    // From June 30th to July 3rd in New York.
     expect(getFetchedRange(dataSource.getEvents)).to.deep.equal([
       '2025-06-30T04:00:00.000Z',
-      '2025-07-05T03:59:59.999Z',
+      '2025-07-04T03:59:59.999Z',
     ]);
   });
 

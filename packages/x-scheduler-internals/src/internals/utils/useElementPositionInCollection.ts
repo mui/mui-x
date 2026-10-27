@@ -3,12 +3,13 @@ import { useAdapterContext } from '../../use-adapter-context';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { SchedulerProcessedDate } from '../../models';
 import {
-  dateToTimelineAxisOffsetMs,
+  getTimelineAxis,
   getTimelineAxisDurationMs,
   isStartMinuteOutsideAxisWindow,
   isEndMinuteOutsideAxisWindow,
+  timestampToTimelineAxisOffsetMs,
 } from './timeline-axis';
-import type { TimelineAxis } from './timeline-axis';
+import type { TimelineAxisRange } from './timeline-axis';
 
 const MINUTE_MS = 60_000;
 
@@ -41,24 +42,23 @@ export function computeElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
   const { start, end, collection } = parameters;
+  const axis = getTimelineAxis(adapter, collection);
 
   // The processed bounds already carry their wall-clock time of day. The offsets are
   // monotonic in the date (day index × day size + a clamped in-day term), so no
   // midnight-wrap correction is needed for `end >= start` inputs.
-  const startOffsetMs = dateToTimelineAxisOffsetMs(
-    adapter,
-    collection,
-    start.value,
+  const startOffsetMs = timestampToTimelineAxisOffsetMs(
+    axis,
+    start.timestamp,
     start.minutesInDay * MINUTE_MS,
   );
-  const endOffsetMs = dateToTimelineAxisOffsetMs(
-    adapter,
-    collection,
-    end.value,
+  const endOffsetMs = timestampToTimelineAxisOffsetMs(
+    axis,
+    end.timestamp,
     end.minutesInDay * MINUTE_MS,
   );
 
-  const totalMs = parameters.durationMs ?? getTimelineAxisDurationMs(adapter, collection);
+  const totalMs = parameters.durationMs ?? getTimelineAxisDurationMs(axis);
 
   const clampToTimeline = (value: number) => Math.min(Math.max(value, 0), totalMs);
 
@@ -81,15 +81,21 @@ export function computeElementPositionInCollection(
 
 export namespace useElementPositionInCollection {
   export interface Parameters {
+    /**
+     * The start of the element, processed in the timezone of the start of the collection.
+     */
     start: SchedulerProcessedDate;
+    /**
+     * The end of the element, processed in the timezone of the start of the collection.
+     */
     end: SchedulerProcessedDate;
     /**
      * The displayed range and daily hour window the element is positioned in: a
      * time-grid column (`viewConfig`) or the timeline's axis (`presetConfig`).
      */
-    collection: TimelineAxis;
+    collection: TimelineAxisRange;
     /**
-     * Precomputed `getTimelineAxisDurationMs(adapter, collection)`, skipping the
+     * Precomputed `getTimelineAxisDurationMs()` of the collection, skipping the
      * per-call derivation when the caller already holds it.
      */
     durationMs?: number;
