@@ -176,13 +176,8 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 ## View switcher
 
 The view switcher button exposes `aria-haspopup="true"`, `aria-expanded`, and `aria-controls`.
-The menu uses `role="menu"` with a localized `aria-label` (default: `"Views"`), instead of taking its name from the button, which shows the current view.
 Inside the menu, each view uses `role="menuitemradio"` with `aria-checked`, so the current view is announced as checked.
-
-When the calendar is narrow, the side panel drawer lists the views instead.
-This list uses the same `role="menu"`, `aria-label`, and `role="menuitemradio"` items with `aria-checked`.
-
-In both, <kbd class="key">Arrow Up</kbd> and <kbd class="key">Arrow Down</kbd> move the focus between the views, and <kbd class="key">Enter</kbd> picks the focused one.
+When the calendar is narrow, the side panel drawer lists the views with the same semantics.
 
 ## Preferences menu
 
