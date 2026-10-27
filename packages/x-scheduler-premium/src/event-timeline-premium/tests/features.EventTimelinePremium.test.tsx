@@ -72,9 +72,7 @@ describe('EventTimelinePremium - features', () => {
   }
 
   it('should render a recurring event once without the recurring events feature', async () => {
-    await expect(() => renderSettled(<Timeline />)).toWarnDev(
-      'with the `recurringEvents` feature',
-    );
+    await expect(() => renderSettled(<Timeline />)).toWarnDev('with the `recurringEvents` feature');
 
     expect(getAllEventsByTitle(dailyEvent.title)).to.have.length(1);
   });
