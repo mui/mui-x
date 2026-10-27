@@ -279,12 +279,11 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarWeekRow}
             >
               {week.map((day, dayIndex) => {
-                const dayPlainDate = day.plainDate;
-                const isToday = dayPlainDate.dayNumber === nowDayNumber;
-                const isActive = dayPlainDate.dayNumber === visiblePlainDate.dayNumber;
+                const isToday = day.plainDate.dayNumber === nowDayNumber;
+                const isActive = day.plainDate.dayNumber === visiblePlainDate.dayNumber;
                 const isOtherMonth =
-                  dayPlainDate.year !== displayedMonth.year ||
-                  dayPlainDate.month !== displayedMonth.month;
+                  day.plainDate.year !== displayedMonth.year ||
+                  day.plainDate.month !== displayedMonth.month;
 
                 // Create a full date label for accessibility
                 const fullDateLabel = adapter.formatByString(

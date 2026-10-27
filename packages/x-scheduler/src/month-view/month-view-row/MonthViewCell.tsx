@@ -191,11 +191,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  const dayPlainDate = day.plainDate;
   const isCurrentMonth =
-    dayPlainDate.year === visiblePlainDate.year && dayPlainDate.month === visiblePlainDate.month;
-  const isFirstDayOfMonth = dayPlainDate.day === 1;
-  const isToday = dayPlainDate.dayNumber === nowDayNumber;
+    day.plainDate.year === visiblePlainDate.year && day.plainDate.month === visiblePlainDate.month;
+  const isFirstDayOfMonth = day.plainDate.day === 1;
+  const isToday = day.plainDate.dayNumber === nowDayNumber;
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
   const hasOverflow = inBoundOccurrences.length < day.withPosition.length;
@@ -230,13 +229,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       className={classes.monthViewCell}
       ref={handleRef}
       key={day.key}
-      value={dayPlainDate}
+      value={day.plainDate}
       aria-colindex={colIndex}
       aria-labelledby={ariaLabelledBy}
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
-      data-weekend={isWeekendPlainDate(dayPlainDate) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >

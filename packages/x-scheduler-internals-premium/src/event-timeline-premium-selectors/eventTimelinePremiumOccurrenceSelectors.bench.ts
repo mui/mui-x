@@ -7,6 +7,7 @@ import {
   computeOccurrencesMaxIndex,
 } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
+  DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
   getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
@@ -26,10 +27,9 @@ const state = getEventTimelinePremiumStateFromParameters({
 });
 const config = eventTimelinePremiumPresetSelectors.config(state);
 const durationMs = config.durationMs;
-const start = new Date(config.start);
-const end = new Date(config.start + 60 * 60_000);
+// One hour at the start of the range, which starts on the default visible date.
 const occurrenceTemplate = EventBuilder.new()
-  .span(start.toISOString(), end.toISOString())
+  .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
   .toOccurrence();
 const groupedOccurrences = resources.map((resource, resourceIndex) => ({
   resource,
