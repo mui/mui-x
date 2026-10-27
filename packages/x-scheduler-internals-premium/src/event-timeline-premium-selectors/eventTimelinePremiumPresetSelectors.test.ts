@@ -283,13 +283,11 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       });
 
       const config = eventTimelinePremiumPresetSelectors.config(state);
-      const axis = eventTimelinePremiumPresetSelectors.axis(state);
 
       // From June 30th to August 24th in New York.
-      expect(new Date(axis.start).toISOString()).to.equal('2025-06-30T04:00:00.000Z');
-      expect(new Date(axis.end).toISOString()).to.equal('2025-08-25T03:59:59.999Z');
-      expect(axis.timezone).to.equal('America/New_York');
-      expect(axis).to.equal(config);
+      expect(new Date(config.start).toISOString()).to.equal('2025-06-30T04:00:00.000Z');
+      expect(new Date(config.end).toISOString()).to.equal('2025-08-25T03:59:59.999Z');
+      expect(config.timezone).to.equal('America/New_York');
     });
 
     it.each([
@@ -309,9 +307,9 @@ describe('eventTimelinePremiumPresetSelectors', () => {
           displayTimezone: 'America/New_York',
         });
 
-        const axis = eventTimelinePremiumPresetSelectors.axis(state);
+        const config = eventTimelinePremiumPresetSelectors.config(state);
 
-        expect(new Date(axis.start).toISOString()).to.equal(start);
+        expect(new Date(config.start).toISOString()).to.equal(start);
       },
     );
 

@@ -10,7 +10,6 @@ import {
   moveTimestampToPlainDate,
   toEpochMs,
   toLocalMs,
-  toMsInDay,
   toPlainDate,
 } from './timeZone';
 import { getPlainDateKey, plainDateFromDayNumber } from './plainDate';
@@ -202,11 +201,5 @@ export function addToAdapterDate(
   date: TemporalSupportedObject,
   duration: PlainDateDuration,
 ): TemporalSupportedObject {
-  const timezone = adapter.getTimezone(date);
-  const epochMs = adapter.getTime(date);
-  return createAdapterDate(
-    adapter,
-    toEpochMs(toPlainDate(epochMs, timezone).add(duration), toMsInDay(epochMs, timezone), timezone),
-    timezone,
-  );
+  return moveToPlainDate(adapter, date, buildTemporalPlainDate(adapter, date).add(duration));
 }

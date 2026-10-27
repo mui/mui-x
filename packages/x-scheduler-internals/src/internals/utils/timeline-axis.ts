@@ -52,7 +52,8 @@ export interface TimelineAxis extends TimelineAxisWindow {
 }
 
 /**
- * The range of an axis as adapter values, as the timeline's preset config holds it.
+ * The range of an axis as adapter values, as the presets of the timeline return it, read by
+ * `getTimelineAxis()`.
  */
 export interface TimelineAxisRange extends TimelineAxisWindow {
   start: TemporalSupportedObject;

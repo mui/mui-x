@@ -149,10 +149,11 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const formatBound = occurrence.allDay
     ? (date: TemporalSupportedObject) => formatFullDate(date, adapter)
     : (date: TemporalSupportedObject) => `${formatFullDate(date, adapter)}, ${formatTime(date)}`;
+  const boundsTimezone = occurrence.displayTimezone.timezone;
   const formatBoundDateTime = (bound: SchedulerProcessedDate) =>
     occurrence.allDay
-      ? toPlainDate(bound.timestamp, displayTimezone).toString()
-      : toWallClockIsoString(bound.timestamp, displayTimezone);
+      ? toPlainDate(bound.timestamp, boundsTimezone).toString()
+      : toWallClockIsoString(bound.timestamp, boundsTimezone);
   const eventTimezone = getEventTimezone(occurrence);
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),

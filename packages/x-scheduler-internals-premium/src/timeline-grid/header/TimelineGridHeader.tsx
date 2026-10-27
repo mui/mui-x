@@ -39,8 +39,10 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   // actually changes.
   const cellsPerLevel = React.useMemo(
     () =>
-      headers.map((level) => iterate(adapter, level.unit, timeResolution, config, weekStartsOn)),
-    [adapter, headers, timeResolution, config, weekStartsOn],
+      config.headers.map((level) =>
+        iterate(adapter, level.unit, config.timeResolution, config, weekStartsOn),
+      ),
+    [adapter, config, weekStartsOn],
   );
 
   const children = headers.map((level, levelIndex) => {

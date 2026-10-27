@@ -1,8 +1,5 @@
 import { describe, test } from 'vitest';
-import {
-  computeElementPositionInCollection,
-  getTimelineAxisDurationMs,
-} from '@mui/x-scheduler-internals/internals';
+import { computeElementPositionInCollection } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
 import {
@@ -28,7 +25,7 @@ const state = getEventTimelinePremiumStateFromParameters({
   preset: 'dayAndHour',
 });
 const config = eventTimelinePremiumPresetSelectors.config(state);
-const durationMs = getTimelineAxisDurationMs(config);
+const durationMs = config.durationMs;
 const start = new Date(config.start);
 const end = new Date(config.start + 60 * 60_000);
 const occurrenceTemplate = EventBuilder.new()

@@ -9,7 +9,6 @@ import {
   getTimelineAxisDurationMs,
   FULL_DAY_MINUTES,
 } from '@mui/x-scheduler-internals/internals';
-import type { TimelineAxis } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPresetConfig } from '../models/preset';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS } from '../internals/utils/preset-utils';
@@ -82,9 +81,4 @@ export const eventTimelinePremiumPresetSelectors = {
       };
     },
   ),
-  /**
-   * The axis of the preset, with its bounds as timestamps in the display timezone. The config
-   * itself, read as an axis.
-   */
-  axis: (state: State): TimelineAxis => eventTimelinePremiumPresetSelectors.config(state),
 };

@@ -1,8 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { ISO_CALENDAR_ID } from '../base-temporal/calendar';
 import { formatIsoTime, MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
-import { createPlainDate } from '../base-temporal/PlainDate';
 import type { PlainDate } from '../base-temporal/PlainDate';
+import { plainDateFromDayNumber } from './plainDate';
 
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
@@ -123,7 +122,7 @@ export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
  * The date of an instant in `timezone`.
  */
 export function toPlainDate(epochMs: number, timezone: TemporalTimezone): PlainDate {
-  return createPlainDate(toLocalDayNumber(epochMs, timezone), ISO_CALENDAR_ID);
+  return plainDateFromDayNumber(toLocalDayNumber(epochMs, timezone));
 }
 
 /**
@@ -139,7 +138,9 @@ export function toMsInDay(epochMs: number, timezone: TemporalTimezone): number {
  * milliseconds are dropped, like in the strings of the events.
  */
 export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone): string {
-  const msInDay = toMsInDay(epochMs, timezone);
+  const localMs = toLocalMs(epochMs, timezone);
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  const msInDay = localMs - dayNumber * MS_PER_DAY;
   const time = formatIsoTime({
     hour: Math.floor(msInDay / 3_600_000),
     minute: Math.floor(msInDay / 60_000) % 60,
@@ -148,7 +149,7 @@ export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone
     microsecond: 0,
     nanosecond: 0,
   });
-  return `${toPlainDate(epochMs, timezone).toString()}T${time}`;
+  return `${plainDateFromDayNumber(dayNumber).toString()}T${time}`;
 }
 
 /**

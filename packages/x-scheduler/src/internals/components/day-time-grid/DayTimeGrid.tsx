@@ -28,7 +28,6 @@ import {
   getEndOfDayMs,
   getInitialScrollTime,
   isWeekendPlainDate,
-  toLocalDayNumber,
 } from '@mui/x-scheduler-internals/internals';
 import clsx from 'clsx';
 import type { DayTimeGridProps } from './DayTimeGrid.types';
@@ -396,13 +395,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const [hasScroll, setHasScroll] = React.useState(false);
 
   const { start, end, firstDayNumber, lastDayNumber } = React.useMemo(() => {
-    const lastTimestamp = days[days.length - 1].timestamp;
+    const lastDay = days[days.length - 1];
     return {
       // `days[0].timestamp` is the first instant of the first day.
       start: days[0].timestamp,
-      end: getEndOfDayMs(lastTimestamp, displayTimezone),
-      firstDayNumber: toLocalDayNumber(days[0].timestamp, displayTimezone),
-      lastDayNumber: toLocalDayNumber(lastTimestamp, displayTimezone),
+      end: getEndOfDayMs(lastDay.timestamp, displayTimezone),
+      firstDayNumber: days[0].plainDate.dayNumber,
+      lastDayNumber: lastDay.plainDate.dayNumber,
     };
   }, [days, displayTimezone]);
 

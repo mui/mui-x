@@ -52,7 +52,7 @@ export const schedulerOtherSelectors = {
   visiblePlainDate: createSelectorMemoized(
     visibleTimestamp,
     (state: State) => state.displayTimezone,
-    (timestamp, timezone) => toPlainDate(timestamp, timezone),
+    toPlainDate,
   ),
   /**
    * Which face the edited occurrence is in (`'armed'` toolbar or `'edit'` surface), or `null` when idle.

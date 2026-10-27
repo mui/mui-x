@@ -10,24 +10,43 @@ import {
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
 
-const hourLabelTemplates = new WeakMap<Adapter, TemporalSupportedObject>();
+/**
+ * @example "1:30 PM" or "13:30"
+ */
+export function formatHourAndMinutes(
+  date: TemporalSupportedObject,
+  adapter: Adapter,
+  ampm: boolean,
+): string {
+  const f = adapter.formats;
+  const timeFormat = ampm
+    ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
+    : `${f.hours24h}:${f.minutesPadded}`;
+
+  return adapter.formatByString(date, timeFormat);
+}
+
+const hourLabels = new WeakMap<Adapter, string[]>();
 
 /**
  * Formats a wall-clock hour, like `9:00 AM`, rather than an instant: the hour that a
  * spring-forward transition skips has no instant on that day. The label is built on a date in
- * UTC, which has no DST transition, cached per adapter as the headers build one label per hour.
+ * UTC, which has no DST transition. The labels are cached per adapter, as the headers build one
+ * label per hour on every render.
  */
 export function formatWallClockHour(adapter: Adapter, hour: number, ampm: boolean): string {
-  let template = hourLabelTemplates.get(adapter);
-  if (!template) {
-    template = createAdapterDate(adapter, Date.UTC(2020, 0, 1), 'UTC');
-    hourLabelTemplates.set(adapter, template);
+  let labels = hourLabels.get(adapter);
+  if (!labels) {
+    labels = [];
+    hourLabels.set(adapter, labels);
   }
-  const f = adapter.formats;
-  const pattern = ampm
-    ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
-    : `${f.hours24h}:${f.minutesPadded}`;
-  return adapter.formatByString(adapter.setHours(template, hour), pattern);
+  const index = ampm ? hour + 24 : hour;
+  labels[index] ??= formatHourAndMinutes(
+    createAdapterDate(adapter, Date.UTC(2020, 0, 1, hour), 'UTC'),
+    adapter,
+    ampm,
+  );
+  return labels[index];
 }
 
 /**

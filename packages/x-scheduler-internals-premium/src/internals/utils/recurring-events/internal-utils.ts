@@ -4,9 +4,10 @@ import {
   buildTemporalPlainDate,
   createAdapterDate,
   getStartOfDayMs,
+  MS_PER_DAY,
   toEpochMs,
+  toLocalMs,
   toMsInDay,
-  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type {
@@ -50,10 +51,7 @@ export function moveEndToPlainDate(
   if (endMs < startMs) {
     // The same wall-clock time, in the offset of the start.
     const laterMs = startMs + msInDay - toMsInDay(startMs, timezone);
-    if (
-      toPlainDate(laterMs, timezone).equals(plainDate) &&
-      toMsInDay(laterMs, timezone) === msInDay
-    ) {
+    if (toLocalMs(laterMs, timezone) === plainDate.dayNumber * MS_PER_DAY + msInDay) {
       endMs = laterMs;
     }
   }

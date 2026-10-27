@@ -20,8 +20,8 @@ import {
   MS_PER_DAY,
   PlainDate,
   toEpochMs,
-  toMsInDay,
   toPlainDate,
+  toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
@@ -184,12 +184,8 @@ export function formatDateAndTimeFields(
   epochMs: number,
   timezone: TemporalTimezone,
 ): { date: string; time: string } {
-  const minutesInDay = Math.floor(toMsInDay(epochMs, timezone) / 60_000);
-  const pad = (value: number) => String(value).padStart(2, '0');
-  return {
-    date: toPlainDate(epochMs, timezone).toString(),
-    time: `${pad(Math.floor(minutesInDay / 60))}:${pad(minutesInDay % 60)}`,
-  };
+  const isoString = toWallClockIsoString(epochMs, timezone);
+  return { date: isoString.slice(0, 10), time: isoString.slice(11, 16) };
 }
 
 /**

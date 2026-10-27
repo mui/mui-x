@@ -36,13 +36,14 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const series = RecurringSeries.fromEvent(adapter, event);
   const dataTimezone = series.timezone;
   const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
-  const toDate = (epochMs: number) => toPlainDate(epochMs, dataTimezone);
 
   // Adjust scan range to catch multi-day events starting before visible range
   const durationInDays =
-    toDate(event.dataTimezone.end.timestamp).dayNumber - series.startPlainDate.dayNumber + 1;
-  const scanFirstDay = toDate(start).add({ days: 1 - durationInDays });
-  const scanLastDay = toDate(end);
+    toPlainDate(event.dataTimezone.end.timestamp, dataTimezone).dayNumber -
+    series.startPlainDate.dayNumber +
+    1;
+  const scanFirstDay = toPlainDate(start, dataTimezone).add({ days: 1 - durationInDays });
+  const scanLastDay = toPlainDate(end, dataTimezone);
 
   // In the data timezone, a display date at the same instant is a copy of the data date.
   const processDisplayDate = (epochMs: number, dataDate: SchedulerProcessedDate) =>

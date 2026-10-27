@@ -3,8 +3,9 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { formatHourAndMinutes } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerEventLocaleText } from '../../models/translations';
-import { formatFullDate, formatHourAndMinutes } from './date-utils';
+import { formatFullDate } from './date-utils';
 import { isOccurrenceMultiDay } from './event-utils';
 
 export interface GetEventAccessibleNameParameters {

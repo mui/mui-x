@@ -168,15 +168,8 @@ export const eventCalendarAgendaSelectors = {
     baseRange,
     baseVisibleDays,
     horizonEndPlainDate,
-    schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-    (
-      range,
-      baseDays,
-      horizonPlainDate,
-      displayTimezone,
-      showEmptyDaysInAgenda,
-    ): EventCalendarFetchRange => {
+    (range, baseDays, horizonPlainDate, showEmptyDaysInAgenda): EventCalendarFetchRange => {
       // The day list is empty when a short `dayCount` only covers hidden weekend days,
       // so fall back to the bounds of the range.
       const firstPlainDate = baseDays.length > 0 ? baseDays[0].plainDate : range.start;
