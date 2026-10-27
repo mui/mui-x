@@ -1,7 +1,8 @@
 import { act, screen } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
-import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { createPickerRenderer, adapterToUse, AdapterClassToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -233,4 +234,30 @@ describe('<YearCalendar />', () => {
       expect(selectedYear).to.have.style('box-shadow', 'rgb(1, 2, 3) 0px 0px 0px 4px inset');
     },
   );
+
+  it('should not format the years again when the value changes', () => {
+    const formatCalls: string[] = [];
+    class CountingAdapter extends AdapterClassToUse {
+      constructor(...args: ConstructorParameters<typeof AdapterClassToUse>) {
+        super(...args);
+        const format = this.format;
+        this.format = (value, formatKey) => {
+          formatCalls.push(formatKey);
+          return format(value, formatKey);
+        };
+      }
+    }
+
+    const { setProps } = render(
+      <LocalizationProvider dateAdapter={CountingAdapter}>
+        <YearCalendar value={adapterToUse.date('2018-02-02')} />
+      </LocalizationProvider>,
+    );
+    formatCalls.length = 0;
+
+    setProps({ children: <YearCalendar value={adapterToUse.date('2019-02-02')} /> });
+
+    expect(screen.getByRole('radio', { name: '2019', checked: true })).not.to.equal(null);
+    expect(formatCalls.filter((formatKey) => formatKey === 'year')).to.have.length(0);
+  });
 });

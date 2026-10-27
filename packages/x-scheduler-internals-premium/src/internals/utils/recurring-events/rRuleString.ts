@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject, TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventByDayValue,
@@ -6,35 +6,36 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
+import { createAdapterDate, ZonedDateTime } from '@mui/x-scheduler-internals/internals';
 import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
-import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
+import {
+  NOT_LOCALIZED_WEEK_DAYS_INDEXES,
+  parsesByDayForMonthlyFrequency,
+  parsesByDayForWeeklyFrequency,
+  tokenizeByDay,
+} from './internal-utils';
 
 // `yyyyMMddTHHmmssZ`, the UTC date-time form of `UNTIL`.
 const UNTIL_UTC_REGEX = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/;
 
 /**
- * Reads a UTC `UNTIL` without going through the host timezone, whose daylight saving gap
- * would shift some times. Returns `null` for a malformed value or a date that does not
- * exist: the date setters roll them over (February 31st becomes March 3rd).
+ * Reads a UTC `UNTIL` as an instant. Returns `null` for a malformed value or a date-time that does
+ * not exist, like February 31st.
  */
-function parseUntilUtc(adapter: Adapter, value: string): TemporalSupportedObject | null {
+function parseUntilUtc(value: string): number | null {
   const match = UNTIL_UTC_REGEX.exec(value);
   if (!match) {
     return null;
   }
-  const [year, month, day, hours, minutes, seconds] = match.slice(1).map(Number);
-  // Not `Date.UTC`, which maps the years 0 to 99 to 1900 to 1999.
-  const date = new Date(0);
-  date.setUTCFullYear(year, month - 1, day);
-  date.setUTCHours(hours, minutes, seconds);
-  const exists =
-    date.getUTCFullYear() === year &&
-    date.getUTCMonth() === month - 1 &&
-    date.getUTCDate() === day &&
-    date.getUTCHours() === hours &&
-    date.getUTCMinutes() === minutes &&
-    date.getUTCSeconds() === seconds;
-  return exists ? adapter.date(date.toISOString(), 'default') : null;
+  const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
+  try {
+    return ZonedDateTime.from(
+      { year, month, day, hour, minute, second, timeZone: 'UTC' },
+      { overflow: 'reject' },
+    ).epochMilliseconds;
+  } catch {
+    return null;
+  }
 }
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -73,23 +74,133 @@ function validateFreq(freq: string): RecurringEventFrequency {
   return freq as RecurringEventFrequency;
 }
 
+function throwInvalidInterval(value: string | number): never {
+  throw new Error(
+    `MUI X Scheduler: Invalid INTERVAL value "${value}". ` +
+      'INTERVAL must be a positive integer (1 or greater). ' +
+      'Provide a valid interval value.',
+  );
+}
+
+function throwInvalidByMonthDay(value: string): never {
+  throw new Error(
+    `MUI X Scheduler: Invalid BYMONTHDAY values "${value}". ` +
+      'BYMONTHDAY values must be integers between 1 and 31. ' +
+      'Provide valid day of month values.',
+  );
+}
+
+function isValidMonthDay(day: number): boolean {
+  return Number.isInteger(day) && day >= 1 && day <= 31;
+}
+
+/**
+ * Rejects the rules whose occurrences can't be computed, for the string and object forms.
+ */
+function validateRule(rule: SchedulerProcessedEventRecurrenceRule): void {
+  const hasCount = typeof rule.count === 'number' && rule.count > 0;
+  if (hasCount && rule.until) {
+    throw new Error(
+      'MUI X Scheduler: The recurring rule cannot have both count and until properties. ' +
+        'A recurrence rule should specify either a count (number of occurrences) or an until date, but not both. ' +
+        'Remove one of these properties from the recurrence rule.',
+    );
+  }
+
+  switch (rule.freq) {
+    case 'WEEKLY': {
+      parsesByDayForWeeklyFrequency(rule.byDay);
+      break;
+    }
+    case 'MONTHLY': {
+      if (rule.byDay?.length && rule.byMonthDay?.length) {
+        throw new Error(
+          'MUI X Scheduler: Monthly recurrences cannot have both byDay and byMonthDay properties. ' +
+            'Specify either specific weekdays (byDay) or specific dates (byMonthDay), but not both. ' +
+            'Remove one of these properties from the recurrence rule.',
+        );
+      }
+      if (rule.byDay?.length) {
+        parsesByDayForMonthlyFrequency(rule.byDay);
+      }
+      // Without COUNT, only the first value is used.
+      if (hasCount && (rule.byMonthDay?.length ?? 0) > 1) {
+        throw new Error(
+          'MUI X Scheduler: Monthly recurrences only support a single byMonthDay value. ' +
+            'Multiple byMonthDay values are not supported. ' +
+            'Provide only one day of the month value.',
+        );
+      }
+      break;
+    }
+    case 'YEARLY': {
+      // Only exact "same month + same day" recurrence is supported.
+      if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
+        throw new Error(
+          'MUI X Scheduler: Yearly recurrences only support exact same date recurrence. ' +
+            'The yearly frequency repeats on the same month and day as DTSTART. ' +
+            'Remove byMonth, byMonthDay, and byDay properties for yearly recurrence.',
+        );
+      }
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+/**
+ * Reads a rule object. Its INTERVAL is truncated, and an INTERVAL below 1 counts as 1.
+ * Its BYMONTHDAY values are validated like the ones of an RRULE string.
+ */
+function readRuleObject(
+  adapter: Adapter,
+  input: SchedulerEventRecurrenceRule,
+  timezone: TemporalTimezone,
+): SchedulerProcessedEventRecurrenceRule {
+  // The typed object API validates `freq` as-is; unlike the RRULE string below, it is not normalized.
+  validateFreq(input.freq);
+  let rule = input as SchedulerProcessedEventRecurrenceRule;
+  if (input.interval != null) {
+    if (!Number.isFinite(input.interval)) {
+      throwInvalidInterval(input.interval);
+    }
+    const interval = Math.max(1, Math.trunc(input.interval));
+    if (interval !== input.interval) {
+      rule = { ...rule, interval };
+    }
+  }
+  if (input.byMonthDay != null && !input.byMonthDay.every(isValidMonthDay)) {
+    throwInvalidByMonthDay(input.byMonthDay.join(','));
+  }
+  if (input.until != null) {
+    rule = { ...rule, until: resolveEventDate(input.until, timezone, adapter) };
+  }
+  return rule;
+}
+
+/**
+ * Reads and validates a recurrence rule, from an RRULE string or a rule object.
+ * The occurrences of the rules it returns can be computed.
+ */
 export function parseRRule(
   adapter: Adapter,
   input: string | SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
 ): SchedulerProcessedEventRecurrenceRule {
-  if (typeof input === 'object') {
-    // The typed object API validates `freq` as-is; unlike the RRULE string below, it is not normalized.
-    validateFreq(input.freq);
-    if (input.until != null) {
-      return {
-        ...input,
-        until: resolveEventDate(input.until, timezone, adapter),
-      };
-    }
-    return input as SchedulerProcessedEventRecurrenceRule;
-  }
+  const rule =
+    typeof input === 'object'
+      ? readRuleObject(adapter, input, timezone)
+      : readRuleString(adapter, input, timezone);
+  validateRule(rule);
+  return rule;
+}
 
+function readRuleString(
+  adapter: Adapter,
+  input: string,
+  timezone: TemporalTimezone,
+): SchedulerProcessedEventRecurrenceRule {
   const rruleObject: Record<string, string> = {};
   const parts = input
     .split(';')
@@ -134,12 +245,8 @@ export function parseRRule(
 
   if (rruleObject.INTERVAL) {
     const interval = Number(rruleObject.INTERVAL);
-    if (Number.isNaN(interval) || interval < 1) {
-      throw new Error(
-        `MUI X Scheduler: Invalid INTERVAL value "${rruleObject.INTERVAL}". ` +
-          'INTERVAL must be a positive integer (1 or greater). ' +
-          'Provide a valid interval value.',
-      );
+    if (!Number.isInteger(interval) || interval < 1) {
+      throwInvalidInterval(rruleObject.INTERVAL);
     }
     rrule.interval = interval;
   }
@@ -151,12 +258,8 @@ export function parseRRule(
 
   if (rruleObject.BYMONTHDAY) {
     const days = rruleObject.BYMONTHDAY.split(',').map((d) => Number(d.trim()));
-    if (days.some((d) => Number.isNaN(d) || d < 1 || d > 31)) {
-      throw new Error(
-        `MUI X Scheduler: Invalid BYMONTHDAY values "${rruleObject.BYMONTHDAY}". ` +
-          'BYMONTHDAY values must be integers between 1 and 31. ' +
-          'Provide valid day of month values.',
-      );
+    if (!days.every(isValidMonthDay)) {
+      throwInvalidByMonthDay(rruleObject.BYMONTHDAY);
     }
     rrule.byMonthDay = days.toSorted((a, b) => a - b);
   }
@@ -187,7 +290,7 @@ export function parseRRule(
 
   if (rruleObject.UNTIL) {
     // The trailing `Z` makes the value a UTC instant (RFC 5545).
-    const parsed = parseUntilUtc(adapter, rruleObject.UNTIL);
+    const parsed = parseUntilUtc(rruleObject.UNTIL);
 
     if (parsed === null) {
       throw new Error(
@@ -197,7 +300,7 @@ export function parseRRule(
       );
     }
 
-    rrule.until = adapter.setTimezone(parsed, timezone);
+    rrule.until = createAdapterDate(adapter, parsed, timezone);
   }
 
   return rrule;
@@ -233,8 +336,9 @@ export function serializeRRule(
   }
 
   if (rule.until) {
-    const utcDate = adapter.setTimezone(rule.until, 'UTC');
-    const untilIso = adapter.formatByString(utcDate, getAdapterCache(adapter).untilFormat);
+    // RFC 5545 writes UNTIL as a UTC date-time like `20250105T093000Z`.
+    const isoString = new Date(adapter.getTime(rule.until)).toISOString();
+    const untilIso = `${isoString.slice(0, 19).replace(/[-:]/g, '')}Z`;
 
     parts.push(`UNTIL=${untilIso}`);
   }

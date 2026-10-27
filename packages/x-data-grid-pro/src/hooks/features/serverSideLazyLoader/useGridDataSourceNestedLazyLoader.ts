@@ -39,6 +39,7 @@ import {
   DataSourceRowsUpdateStrategy,
   useGridDataSourceFilterModelChange,
   useGridDataSourcePolling,
+  asReplaceUpdates,
 } from '@mui/x-data-grid/internals';
 import type { GridStrategyProcessor, GridTreeDepths } from '@mui/x-data-grid/internals';
 import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
@@ -930,7 +931,7 @@ export const useGridDataSourceNestedLazyLoader = (
           parentId === GRID_ROOT_GROUP_ID
             ? []
             : ((parentNode as GridDataSourceGroupNode).path ?? []);
-        privateApiRef.current.updateNestedRows(changedRows, parentPath);
+        privateApiRef.current.updateNestedRows(asReplaceUpdates(changedRows), parentPath);
       }
 
       return true;

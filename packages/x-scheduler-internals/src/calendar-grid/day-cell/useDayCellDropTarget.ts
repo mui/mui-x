@@ -4,7 +4,14 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapterContext } from '../../use-adapter-context';
 import type { SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { mergeDateAndTime } from '../../internals/utils/date-utils';
+import { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
+import {
+  addDaysOnWallClock,
+  getEndOfDayMs,
+  getStartOfDayMs,
+  moveTimestampToPlainDate,
+  toPlainDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([
@@ -25,69 +32,70 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
   // Feature hooks
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside }) => {
+    ({ data, getDataFromInside, getDataFromOutside, timezone }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
-      // Move a Day Grid Event within the Day Grid
-      if (data.source === 'CalendarGridDayEvent') {
-        const offset = adapter.differenceInDays(value, data.draggedDay);
+      const valueTimestamp = adapter.getTime(value);
+
+      // Move an Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
+        return getDataFromOutside(data, valueTimestamp);
+      }
+
+      // Days are compared as plain dates, and each date moves on the wall clock of the display
+      // timezone.
+      const valuePlainDate = toPlainDateTime(valueTimestamp, timezone).date;
+
+      // Move a Day Grid Event within the Day Grid, or a Time Grid Event into it
+      if (data.source === 'CalendarGridDayEvent' || data.source === 'CalendarGridTimeEvent') {
+        // The day under the grab point.
+        const grabbedPlainDate =
+          data.source === 'CalendarGridDayEvent'
+            ? data.draggedDay
+            : toPlainDateTime(data.start + data.initialCursorPositionInEventMs, timezone).date;
+        const dayCount = valuePlainDate.dayNumber - grabbedPlainDate.dayNumber;
         return getDataFromInside(
           data,
-          offset === 0 ? data.start : adapter.addDays(data.start, offset),
-          offset === 0 ? data.end : adapter.addDays(data.end, offset),
+          addDaysOnWallClock(data.start, dayCount, timezone),
+          addDaysOnWallClock(data.end, dayCount, timezone),
         );
       }
 
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          if (adapter.isAfter(value, adapter.endOfDay(data.end))) {
+          const order = PlainDate.compare(valuePlainDate, toPlainDateTime(data.end, timezone).date);
+          if (order > 0) {
             return undefined;
           }
 
-          let newStart: TemporalSupportedObject;
-          if (adapter.isSameDay(value, data.end)) {
-            newStart = adapter.startOfDay(data.end);
-          } else {
-            newStart = mergeDateAndTime(adapter, value, data.start);
-          }
+          // The new start keeps its time of day, unless it moves to the day of the end.
+          const newStart =
+            order === 0
+              ? getStartOfDayMs(valueTimestamp, timezone)
+              : moveTimestampToPlainDate(data.start, valuePlainDate, timezone);
           return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
-          if (adapter.isBefore(value, adapter.startOfDay(data.start))) {
+          const order = PlainDate.compare(
+            valuePlainDate,
+            toPlainDateTime(data.start, timezone).date,
+          );
+          if (order < 0) {
             return undefined;
           }
 
-          let draggedDay: TemporalSupportedObject;
-          if (adapter.isSameDay(value, data.start)) {
-            draggedDay = adapter.endOfDay(data.start);
-          } else {
-            draggedDay = mergeDateAndTime(adapter, value, data.end);
-          }
+          // The new end keeps its time of day, unless it moves to the day of the start.
+          const newEnd =
+            order === 0
+              ? getEndOfDayMs(valueTimestamp, timezone)
+              : moveTimestampToPlainDate(data.end, valuePlainDate, timezone);
 
-          return getDataFromInside(data, data.start, draggedDay);
+          return getDataFromInside(data, data.start, newEnd);
         }
-      }
-
-      // Move a Time Grid Event into the Day Grid
-      if (data.source === 'CalendarGridTimeEvent') {
-        const cursorDate = adapter.startOfDay(
-          adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs),
-        );
-        const offset = adapter.differenceInDays(value, cursorDate);
-        return getDataFromInside(
-          data,
-          offset === 0 ? data.start : adapter.addDays(data.start, offset),
-          offset === 0 ? data.end : adapter.addDays(data.end, offset),
-        );
-      }
-
-      // Move an Standalone Event into the Time Grid
-      if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, value);
       }
 
       return undefined;

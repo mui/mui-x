@@ -1,16 +1,20 @@
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
+import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import { isWeekend } from '../use-adapter/useAdapter';
-import { processDate } from '../process-date';
+import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import {
+  buildTemporalPlainDate,
+  createProcessedDate,
+} from '../internals/utils/plain-date-utils/adapter';
+import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
+import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 
 export function getDayList(parameters: GetDaytListParameters): GetDaytListReturnValue {
-  const { adapter, start: rawStart, end: rawEnd, excludeWeekends } = parameters;
-
-  const start = adapter.startOfDay(rawStart);
-  const end = adapter.endOfDay(rawEnd);
+  const { adapter, start, end, excludeWeekends } = parameters;
+  const firstPlainDate = buildTemporalPlainDate(adapter, start);
+  const lastPlainDate = buildTemporalPlainDate(adapter, end);
 
   if (process.env.NODE_ENV !== 'production') {
-    if (adapter.isBefore(adapter.startOfDay(end), adapter.startOfDay(start))) {
+    if (lastPlainDate.dayNumber < firstPlainDate.dayNumber) {
       // TODO: fix mui/no-guarded-throw
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
@@ -19,28 +23,43 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
     }
   }
 
-  let current = start;
-  let currentDayNumber = adapter.getDayOfWeek(current);
-  const days: TemporalSupportedObject[] = [];
+  return getDayListFromPlainDates({
+    adapter,
+    firstPlainDate,
+    lastPlainDate,
+    timezone: adapter.getTimezone(start),
+    excludeWeekends,
+  });
+}
 
-  while (adapter.isBefore(current, end)) {
-    if (!excludeWeekends || !isWeekend(adapter, current)) {
-      days.push(current);
-    }
-
-    const prevDayNumber = currentDayNumber;
-    current = adapter.addDays(current, 1);
-    currentDayNumber = adapter.getDayOfWeek(current);
-
-    // If there is a TZ change at midnight, adding 1 day may only increase the date by 23 hours to 11pm
-    // To fix, bump the date into the next day (add 12 hours) and then revert to the start of the day
-    // See https://github.com/moment/moment/issues/4743#issuecomment-811306874 for context.
-    if (prevDayNumber === currentDayNumber) {
-      current = adapter.startOfDay(adapter.addHours(current, 12));
+/**
+ * Returns the days from `firstPlainDate` to `lastPlainDate`, both included, in `timezone`.
+ */
+export function getDayListFromPlainDates(parameters: {
+  adapter: TemporalAdapter;
+  firstPlainDate: PlainDate;
+  lastPlainDate: PlainDate;
+  timezone: TemporalTimezone;
+  excludeWeekends?: boolean;
+}): GetDaytListReturnValue {
+  const { adapter, firstPlainDate, lastPlainDate, timezone, excludeWeekends } = parameters;
+  // A day the timezone skips, like December 30th, 2011 in Pacific/Apia, has no instant.
+  const skippedDays = getSkippedDays(firstPlainDate, lastPlainDate.add({ days: 1 }), timezone);
+  const days: SchedulerProcessedDate[] = [];
+  for (
+    let plainDate = firstPlainDate;
+    plainDate.dayNumber <= lastPlainDate.dayNumber;
+    plainDate = plainDate.add({ days: 1 })
+  ) {
+    if (
+      !skippedDays.has(plainDate.dayNumber) &&
+      !(excludeWeekends && isWeekendPlainDate(plainDate))
+    ) {
+      days.push(createProcessedDate(adapter, toEpochMs(plainDate, 0, timezone), timezone));
     }
   }
 
-  return days.map((day) => processDate(day, adapter));
+  return days;
 }
 
 export interface GetDaytListParameters {

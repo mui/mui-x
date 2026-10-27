@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "9.14.0",
+  "version": "9.16.0",
   "author": "MUI Team",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "license": "MIT",
@@ -50,9 +50,6 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "exports": {
     "./*": "./src/*/index.ts"

@@ -7,8 +7,16 @@ import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import type { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 import { clampResizedEventEdge } from '../../internals/utils/resize-utils';
-import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
+import { EVENT_DRAG_PRECISION_MINUTE } from '../../constants';
+import { roundToDragPrecision } from '../../internals/utils/drag-utils';
+import {
+  FULL_DAY_MINUTES,
+  getTimelineAxisDurationMs,
+  resolveRepeatedTimeFrom,
+  timelineAxisOffsetToTimestamp,
+} from '../../internals/utils/timeline-axis';
+import { schedulerEventSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
+import { toLocalDayNumber } from '../../internals/utils/plain-date-utils/timeZone';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
 const isValidDropTarget = buildIsValidDropTarget([
@@ -19,7 +27,13 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
-  const { start, end, addPropertiesToDroppedEvent } = parameters;
+  const {
+    start,
+    end,
+    dayStartMinute = 0,
+    dayEndMinute = FULL_DAY_MINUTES,
+    addPropertiesToDroppedEvent,
+  } = parameters;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -28,142 +42,141 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const collectionStartTimestamp = adapter.getTime(start);
-  const collectionEndTimestamp = adapter.getTime(end);
-  const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
+  const { axis, axisDurationMs, startMs, endMs } = React.useMemo(() => {
+    const columnAxis = { start, end, dayStartMinute, dayEndMinute };
+    return {
+      axis: columnAxis,
+      axisDurationMs: getTimelineAxisDurationMs(adapter, columnAxis),
+      startMs: adapter.getTime(start),
+      endMs: adapter.getTime(end),
+    };
+  }, [adapter, start, end, dayStartMinute, dayEndMinute]);
 
   const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
-    useStableCallback(({ input, elementRef }) => {
+    useStableCallback(({ input, elementRef, elementStart }) => {
       if (!ref.current || !elementRef.current) {
         return 0;
       }
 
-      const clientY = input.clientY;
-      const elementPosition = elementRef.current.getBoundingClientRect();
-      const positionY = (clientY - elementPosition.y) / ref.current.offsetHeight;
-      const clampedPositionY = Math.max(0, Math.min(1, positionY));
+      // The column renders a wall-clock axis, which keeps every hour on DST days. Reading the
+      // dates under the element top and under the cursor on that axis keeps the offset in sync
+      // with the rendered grid. The offset is the time elapsed between them.
+      const column = ref.current;
+      const columnTop = column.getBoundingClientRect().y;
+      const getTimestampAtClientY = (clientY: number) => {
+        const positionY = Math.max(0, Math.min(1, (clientY - columnTop) / column.offsetHeight));
+        // The axis maps its full duration to the next day's window start.
+        if (positionY === 1) {
+          return endMs;
+        }
+        return timelineAxisOffsetToTimestamp(adapter, axis, Math.round(axisDurationMs * positionY));
+      };
+      const elementTop = Math.max(elementRef.current.getBoundingClientRect().y, columnTop);
+      const cursorY = Math.max(input.clientY, elementTop);
 
-      return Math.round(collectionDurationMs * clampedPositionY);
+      let cursorTimestamp = getTimestampAtClientY(cursorY);
+      let topTimestamp = getTimestampAtClientY(elementTop);
+      // On a fall-back day, the axis reads the top of an element starting in the second occurrence
+      // of the repeated hour, and the cursor inside that hour, as their first occurrence.
+      if (elementStart != null) {
+        const timezone = schedulerOtherSelectors.displayTimezone(store.state);
+        const startTimestamp = Math.max(elementStart, startMs);
+        cursorTimestamp = resolveRepeatedTimeFrom(cursorTimestamp, startTimestamp, timezone);
+        topTimestamp = resolveRepeatedTimeFrom(topTimestamp, startTimestamp, timezone);
+      }
+      return cursorTimestamp - topTimestamp;
     });
 
-  const getDateAtPointer: CalendarGridTimeColumnContext['getDateAtPointer'] = useStableCallback(
-    (input) => {
+  const getTimestampAtPointer: CalendarGridTimeColumnContext['getTimestampAtPointer'] =
+    useStableCallback((input) => {
       // Bail when the column isn't measurable yet — zero height makes `getCursorPositionInElementMs` return NaN.
       if (!ref.current || ref.current.offsetHeight === 0) {
         return null;
       }
       const offsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
-      const roundedOffsetMs =
-        Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-      return adapter.addMilliseconds(start, roundedOffsetMs);
-    },
-  );
+      return startMs + roundToDragPrecision(offsetMs);
+    });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input }) => {
+    ({ data, getDataFromInside, getDataFromOutside, input, timezone }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
-
-      const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
-        const roundedOffset =
-          Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-
-        return adapter.addMilliseconds(date, roundedOffset);
-      };
+      const offsetToTimestamp = (offsetMs: number) => startMs + roundToDragPrecision(offsetMs);
 
       // Move a Time Grid Event within the Time Grid
       if (data.source === 'CalendarGridTimeEvent') {
-        const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
+        const eventDurationMs = data.end - data.start;
 
-        let newStartDate = addOffsetToDate(
-          start,
-          cursorOffsetMs - data.initialCursorPositionInEventMs,
-        );
+        let newStart = offsetToTimestamp(cursorOffsetMs - data.initialCursorPositionInEventMs);
 
-        // Clamp the event to stay within the time grid bounds
-        if (adapter.isBefore(newStartDate, start)) {
-          newStartDate = start;
-        }
-        const maxStartDate = adapter.addMilliseconds(end, -eventDurationMs);
-        if (adapter.isAfter(newStartDate, maxStartDate)) {
-          newStartDate = maxStartDate;
+        // Clamp the event to stay within the time grid bounds, unless it already crosses midnight
+        if (toLocalDayNumber(data.start, timezone) === toLocalDayNumber(data.end, timezone)) {
+          newStart = Math.min(Math.max(newStart, startMs), endMs - eventDurationMs);
         }
 
-        const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
-
-        return getDataFromInside(data, newStartDate, newEndDate);
+        return getDataFromInside(data, newStart, newStart + eventDurationMs);
       }
 
       // Resize a Time Grid Event
       if (data.source === 'CalendarGridTimeEventResizeHandler') {
         if (data.side === 'start') {
-          let cursorDate = addOffsetToDate(
-            start,
-            cursorOffsetMs - data.initialCursorPositionInEventMs,
+          // Clamped to the time grid bounds.
+          const cursorTimestamp = Math.max(
+            offsetToTimestamp(cursorOffsetMs - data.initialCursorPositionInEventMs),
+            startMs,
           );
 
-          // Clamp to the time grid bounds
-          if (adapter.isBefore(cursorDate, start)) {
-            cursorDate = start;
-          }
-
           // Ensure the new start date is not after or too close to the end date.
-          const { start: newStartDate } = clampResizedEventEdge({
-            adapter,
+          const { start: newStart } = clampResizedEventEdge({
             side: 'start',
             start: data.start,
             end: data.end,
-            cursorDate,
+            cursorTimestamp,
             precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
           });
 
-          return getDataFromInside(data, newStartDate, data.end);
+          return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
-          const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
+          const eventDurationMs = data.end - data.start;
 
-          let cursorDate = addOffsetToDate(
-            start,
-            cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
+          // Clamped to the time grid bounds.
+          const cursorTimestamp = Math.min(
+            offsetToTimestamp(
+              cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
+            ),
+            endMs,
           );
 
-          // Clamp to the time grid bounds
-          if (adapter.isAfter(cursorDate, end)) {
-            cursorDate = end;
-          }
-
           // Ensure the new end date is not before or too close to the start date.
-          const { end: newEndDate } = clampResizedEventEdge({
-            adapter,
+          const { end: newEnd } = clampResizedEventEdge({
             side: 'end',
             start: data.start,
             end: data.end,
-            cursorDate,
+            cursorTimestamp,
             precisionMinute: EVENT_DRAG_PRECISION_MINUTE,
           });
 
-          return getDataFromInside(data, data.start, newEndDate);
+          return getDataFromInside(data, data.start, newEnd);
         }
       }
 
       // Move a Day Grid Event into the Time Grid
       if (data.source === 'CalendarGridDayEvent') {
-        const newStartDate = addOffsetToDate(start, cursorOffsetMs);
-        const newEndDate = adapter.addMinutes(
-          newStartDate,
-          schedulerEventSelectors.defaultEventDuration(store.state),
-        );
+        const newStart = offsetToTimestamp(cursorOffsetMs);
+        const newEnd =
+          newStart + schedulerEventSelectors.defaultEventDuration(store.state) * 60_000;
 
-        return getDataFromInside(data, newStartDate, newEndDate);
+        return getDataFromInside(data, newStart, newEnd);
       }
 
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
+        return getDataFromOutside(data, offsetToTimestamp(cursorOffsetMs));
       }
 
       return undefined;
@@ -178,7 +191,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     addPropertiesToDroppedEvent,
   });
 
-  return { getCursorPositionInElementMs, getDateAtPointer, ref };
+  return { getCursorPositionInElementMs, getTimestampAtPointer, ref };
 }
 
 export namespace useTimeDropTarget {
@@ -192,6 +205,16 @@ export namespace useTimeDropTarget {
      */
     end: TemporalSupportedObject;
     /**
+     * The first displayed minute of the day, as an offset from midnight.
+     * @default 0
+     */
+    dayStartMinute?: number;
+    /**
+     * The end of the displayed window of the day, as an exclusive offset from midnight.
+     * @default 1440
+     */
+    dayEndMinute?: number;
+    /**
      * Add properties to the event dropped in the column before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
@@ -199,6 +222,6 @@ export namespace useTimeDropTarget {
 
   export interface ReturnValue extends Pick<
     CalendarGridTimeColumnContext,
-    'getCursorPositionInElementMs' | 'getDateAtPointer'
+    'getCursorPositionInElementMs' | 'getTimestampAtPointer'
   > {}
 }

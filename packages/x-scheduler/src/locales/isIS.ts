@@ -20,6 +20,9 @@ const isISDialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   // deleteEvent: 'Delete event',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  // cancel: 'Cancel',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -83,7 +86,6 @@ const isISDialog: SchedulerDialogTranslations = {
   // startTimeLabel: 'Start time',
   // RecurringScopeDialog
   // all: 'All events',
-  // cancel: 'Cancel',
   // confirm: 'Confirm',
   // onlyThis: 'Only this event',
   // radioGroupAriaLabel: 'Editing recurring events scope',
@@ -142,11 +144,14 @@ const isISCalendar: SchedulerCalendarTranslations = {
   // weekdaySaturday: 'Saturday',
   // WeekView
   // allDay: 'All day',
+  // dayGridLabel: 'All-day and multi-day events',
   // hiddenEvents: hiddenEventsCount => `${hiddenEventsCount} more..`,
   // nextTimeSpan: timeSpan => `Next ${timeSpan}`,
   // previousTimeSpan: timeSpan => `Previous ${timeSpan}`,
   // weekAbbreviation: 'W',
   // weekNumberAriaLabel: weekNumber => `Week ${weekNumber}`,
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
   // EventItem
   // eventItemMultiDayLabel: endDate => `Ends ${endDate}`,
   // MiniCalendar

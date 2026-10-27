@@ -1516,10 +1516,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
     },
-    "filterFormColumnInput": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the column input of the filter form component"
-    },
     "filterFormDeleteIcon": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the delete icon of the filter form component"
@@ -2098,6 +2094,7 @@
     "detailPanels": "Component responsible for rendering the detail panels.",
     "emptyPivotOverlay": "Component rendered when pivot mode is enabled but no rows are defined.",
     "exportIcon": "Icon displayed on the open export button present in the toolbar by default.",
+    "filterFormColumnInput": "Column input component rendered in each filter form of the filter panel.",
     "filterPanel": "Filter panel component rendered when clicking the filter button.",
     "filterPanelAddIcon": "Icon displayed for deleting the filter from filter panel.",
     "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",

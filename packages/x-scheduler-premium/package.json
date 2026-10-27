@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "9.0.0-beta.12",
+  "version": "9.0.0-beta.14",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
@@ -62,12 +62,12 @@
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-internals": "workspace:^",
+    "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:^",
     "@mui/x-scheduler": "workspace:*",
     "@mui/x-scheduler-internals": "workspace:*",
     "@mui/x-scheduler-internals-premium": "workspace:*",
-    "@mui/x-virtualizer": "workspace:^",
+    "@mui/x-virtualizer": "workspace:*",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },
@@ -99,9 +99,6 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"

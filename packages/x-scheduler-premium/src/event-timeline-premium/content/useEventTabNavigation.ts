@@ -38,6 +38,7 @@ export function useEventTabNavigation(params: {
   tickCount: number;
   tickWidth: number;
   titleColumnWidth: number;
+  isRtl: boolean;
 }) {
   const {
     adapter,
@@ -48,6 +49,7 @@ export function useEventTabNavigation(params: {
     tickCount,
     tickWidth,
     titleColumnWidth,
+    isRtl,
   } = params;
 
   const pendingFocusRef = React.useRef<{
@@ -100,22 +102,25 @@ export function useEventTabNavigation(params: {
       return;
     }
     const { fractionStart, fractionEnd } = computeFractionRange(occurrence);
-    const eventLeft = fractionStart * eventsTotalWidth;
-    const eventRight = fractionEnd * eventsTotalWidth;
+    const eventStart = fractionStart * eventsTotalWidth;
+    const eventEnd = fractionEnd * eventsTotalWidth;
     const eventsViewportWidth = scrollerRef.current.clientWidth - titleColumnWidth;
-    // scrollLeft is measured from the start of scrollerContent; the events area
+    // The scroll offset is measured from the start of scrollerContent; the events area
     // begins after the pinned title column, so the visible events window is
-    // [scrollLeft, scrollLeft + clientWidth - titleColumnWidth) in event coords.
-    const viewportLeft = scrollerRef.current.scrollLeft;
-    const viewportRight = viewportLeft + eventsViewportWidth;
+    // [offset, offset + clientWidth - titleColumnWidth) in event coords.
+    // In RTL, `scrollLeft` goes from 0 down to negative values.
+    const viewportStart = Math.abs(scrollerRef.current.scrollLeft);
+    const viewportEnd = viewportStart + eventsViewportWidth;
+    const scrollSign = isRtl ? -1 : 1;
     // Small breathing room so the target doesn't land flush against the edge,
     // which can re-trigger browser scroll-into-view on focus.
     const PADDING = 32;
-    if (eventLeft < viewportLeft) {
+    if (eventStart < viewportStart) {
       // eslint-disable-next-line react-compiler/react-compiler -- intentional DOM scroll mutation
-      scrollerRef.current.scrollLeft = Math.max(0, eventLeft - PADDING);
-    } else if (eventRight > viewportRight) {
-      scrollerRef.current.scrollLeft = Math.max(0, eventRight - eventsViewportWidth + PADDING);
+      scrollerRef.current.scrollLeft = scrollSign * Math.max(0, eventStart - PADDING);
+    } else if (eventEnd > viewportEnd) {
+      scrollerRef.current.scrollLeft =
+        scrollSign * Math.max(0, eventEnd - eventsViewportWidth + PADDING);
     }
   });
 

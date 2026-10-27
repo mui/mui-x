@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useStore } from '@base-ui/utils/store';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -60,8 +61,10 @@ import {
 } from '../event-dialog/form/EventDialogFormContext';
 import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormStore';
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
+import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
+import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
 
-const FormActions = styled(DialogActions, {
+export const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
@@ -69,7 +72,7 @@ const FormActions = styled(DialogActions, {
   gap: theme.spacing(2),
 }));
 
-const DialogContent = styled(MuiDialogContent, {
+export const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
   slot: 'DialogContent',
 })({
@@ -86,7 +89,7 @@ const DialogContent = styled(MuiDialogContent, {
   maxHeight: '100%',
 });
 
-const EventDialogForm = styled('form', {
+export const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
   slot: 'Form',
 })({
@@ -131,6 +134,8 @@ interface FormContentProps {
    * @default true
    */
   isDraggable?: boolean;
+  /** The element the surface is anchored to, where focus goes back to after a delete. */
+  anchor?: HTMLElement | null;
 }
 
 export function FormContent(props: FormContentProps) {
@@ -222,7 +227,7 @@ export function FormContent(props: FormContentProps) {
 }
 
 function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
-  const { onClose, dragHandlerRef, isDraggable } = props;
+  const { onClose, dragHandlerRef, isDraggable, anchor } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventEditingStyledContext();
@@ -320,6 +325,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
 
     if (formStore.state.isSubmitting) {
       return;
@@ -434,7 +440,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         const failingKeys = Object.keys(formStore.state.errors);
         const onlyRecurrenceFails =
           failingKeys.length > 0 && failingKeys.every((key) => RECURRENCE_FORM_KEYS.has(key));
-        setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general');
+        // Rendered synchronously so the failing field is on screen to take the focus.
+        ReactDOM.flushSync(() => setTabValue(onlyRecurrenceFails ? 'recurrence' : 'general'));
+        focusFirstInvalid(form);
         return;
       }
 
@@ -513,9 +521,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
           // A vetoed save keeps the dialog open; the rejection sits on the range field and
           // editing the dates clears it.
           const rejectedField = values.allDay ? 'endDate' : 'endTime';
-          warnUnvalidatedField(rejectedField, 'The scheduling plugin rejected the save');
+          warnUnvalidatedField(rejectedField, 'The save was rejected');
           formStore.setError(rejectedField, result.rejection.message);
-          setTabValue('general');
+          ReactDOM.flushSync(() => setTabValue('general'));
+          focusFirstInvalid(form);
           return;
         }
       }
@@ -529,8 +538,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   };
 
   const handleDelete = () => {
-    // A recurring delete closes the dialog on scope submit instead of right away.
-    store.deleteOccurrence(occurrence, onClose);
+    deleteOccurrenceAndRestoreFocus(store, occurrence, anchor, onClose);
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -558,7 +566,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   const hasTabs = Boolean(showRecurrence && RecurrenceTabRenderer);
 
   return (
-    <DialogContent className={classes.eventDialogContent}>
+    <EventDialogContentRoot className={classes.eventDialogContent}>
       <EventDialogForm
         onSubmit={handleSubmit}
         onInvalidCapture={handleFormInvalid}
@@ -596,29 +604,33 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         <Divider className={classes.eventDialogFormDivider} />
         <FormActionButtons onDelete={handleDelete} />
       </EventDialogForm>
-    </DialogContent>
+    </EventDialogContentRoot>
   );
 }
 
-// Subscribes to isSubmitting on its own so a submit only re-renders the buttons.
+// Subscribes to isSubmitting and the deletion config on its own so a change only re-renders the buttons.
 function FormActionButtons(props: { onDelete: () => void }) {
   const { classes, localeText } = useEventEditingStyledContext();
+  const store = useSchedulerStoreContext();
   const formStore = useEventDialogFormContext();
   const isSubmitting = useStore(formStore, eventDialogFormSelectors.isSubmitting);
+  const deletionConfig = useStore(store, schedulerEventSelectors.deletionConfig);
 
   return (
-    <FormActions className={classes.eventDialogFormActions}>
-      <Button
-        className={classes.eventDialogDeleteButton}
-        color="error"
-        type="button"
-        onClick={props.onDelete}
-        // A delete during a pending recurring submit would get its scope
-        // operation overwritten by the resolving update.
-        disabled={isSubmitting}
-      >
-        {localeText.deleteEvent}
-      </Button>
+    <EventDialogFormActions className={classes.eventDialogFormActions}>
+      {deletionConfig !== false && (
+        <Button
+          className={classes.eventDialogDeleteButton}
+          color="error"
+          type="button"
+          onClick={props.onDelete}
+          // A delete during a pending recurring submit would get its scope
+          // operation overwritten by the resolving update.
+          disabled={isSubmitting}
+        >
+          {localeText.deleteEvent}
+        </Button>
+      )}
       <Button
         className={classes.eventDialogSaveButton}
         variant="contained"
@@ -627,6 +639,6 @@ function FormActionButtons(props: { onDelete: () => void }) {
       >
         {localeText.saveChanges}
       </Button>
-    </FormActions>
+    </EventDialogFormActions>
   );
 }

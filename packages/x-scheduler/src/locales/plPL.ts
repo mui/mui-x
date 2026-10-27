@@ -20,6 +20,9 @@ const plPLDialog: SchedulerDialogTranslations = {
   // deleteEventButtonAriaLabel: 'Delete event',
   // eventActionsToolbarAriaLabel: 'Event actions',
   deleteEvent: 'Usuń wydarzenie',
+  // deleteConfirmationTitle: 'Delete this event?',
+  // deleteConfirmationMessage: 'This action is irreversible. Are you sure you want to proceed?',
+  cancel: 'Anuluj',
   // editEvent: 'Edit event',
   // showEventDetails: 'Show details',
   // eventContextMenuAriaLabel: 'Event actions',
@@ -85,7 +88,6 @@ const plPLDialog: SchedulerDialogTranslations = {
 
   // RecurringScopeDialog
   all: 'Wszystkie wydarzenia',
-  cancel: 'Anuluj',
   confirm: 'Potwierdź',
   onlyThis: 'Tylko to wydarzenie',
   radioGroupAriaLabel: 'Zakres edycji wydarzeń cyklicznych',
@@ -149,11 +151,15 @@ const plPLCalendar: SchedulerCalendarTranslations = {
 
   // WeekView
   allDay: 'Cały dzień',
+  // dayGridLabel: 'All-day and multi-day events',
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} więcej..`,
   nextTimeSpan: (timeSpan) => `Następny ${timeSpan}`,
   previousTimeSpan: (timeSpan) => `Poprzedni ${timeSpan}`,
   weekAbbreviation: 'T',
   weekNumberAriaLabel: (weekNumber) => `Tydzień ${weekNumber}`,
+
+  // AgendaView
+  // agendaViewEmptyStateLabel: 'No upcoming events',
 
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Kończy się ${endDate}`,

@@ -1,4 +1,5 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
 import {
@@ -57,6 +58,50 @@ describe('recurring-events/deleteRecurringEvent', () => {
         },
       ]);
     });
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should exclude the day of the occurrence, whatever the timezone of the system',
+      () => {
+        // America/Santiago falls back from 00:00 to 23:00 on April 5th, 2026, and
+        // Australia/Lord_Howe falls back from 02:00 to 01:30 the same day.
+        setSystemTimezone('Australia/Lord_Howe');
+        const event = EventBuilder.new(adapter)
+          .withDataTimezone('America/Santiago')
+          .singleDay('2026-04-01T09:00:00')
+          .rrule({ freq: 'DAILY' })
+          .toProcessed();
+        const occurrenceStart = adapter.date('2026-04-05T09:00:00', 'America/Santiago');
+
+        const result = applyRecurringDeleteOnlyThis(adapter, event, occurrenceStart);
+        const exDates = result.updated![0].exDates!;
+
+        expect(adapter.toJsDate(exDates[0]).toISOString()).to.equal('2026-04-05T04:00:00.000Z'); // midnight, April 5th
+      },
+    );
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'should exclude the day of the occurrence when the timezone of the system skips it',
+      () => {
+        // Pacific/Apia skipped December 30th, 2011.
+        setSystemTimezone('Pacific/Apia');
+        const event = EventBuilder.new(adapter)
+          .withDataTimezone('America/New_York')
+          .singleDay('2011-12-26T14:00:00Z') // 09:00 EST
+          .rrule({ freq: 'DAILY' })
+          .toProcessed();
+        const occurrenceStart = adapter.setTimezone(
+          adapter.date('2011-12-30T14:00:00Z', 'default'), // 09:00 EST
+          'America/New_York',
+        );
+
+        const result = applyRecurringDeleteOnlyThis(adapter, event, occurrenceStart);
+        const exDates = result.updated![0].exDates!;
+
+        expect(adapter.toJsDate(exDates[0]).toISOString()).to.equal('2011-12-30T05:00:00.000Z'); // midnight, December 30th
+      },
+    );
 
     it('should delete the whole series when removing the only occurrence of a finite series', () => {
       const event = EventBuilder.new()
@@ -182,6 +227,58 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
 
       expect(adapter.getDate(until)).to.equal(2);
+    });
+
+    it('should truncate the series to the last day that exists before the occurrence', () => {
+      // Pacific/Apia skipped December 30th, 2011.
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('Pacific/Apia')
+        .singleDay('2011-12-28T09:00:00')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2011-12-31T09:00:00', 'Pacific/Apia');
+
+      const result = applyRecurringDeleteFollowing(adapter, event, occurrenceStart);
+      const until = (result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule).until!;
+
+      expect(adapter.toJsDate(until).toISOString()).to.equal('2011-12-29T10:00:00.000Z'); // midnight, December 29th
+    });
+
+    it.each([
+      // Europe/Paris springs forward from 02:00 to 03:00 on March 29th, 2026.
+      { length: 23, occurrence: '2026-03-30T09:00:00', until: '2026-03-28T23:00:00.000Z' },
+      // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026.
+      { length: 25, occurrence: '2026-10-26T09:00:00', until: '2026-10-24T22:00:00.000Z' },
+    ])(
+      'should truncate the series to the start of the day before the occurrence when that day lasts $length hours',
+      ({ occurrence, until }) => {
+        const event = EventBuilder.new(adapter)
+          .withDataTimezone('Europe/Paris')
+          .singleDay('2026-03-01T09:00:00')
+          .rrule({ freq: 'DAILY' })
+          .toProcessed();
+        const occurrenceStart = adapter.date(occurrence, 'Europe/Paris');
+
+        const result = applyRecurringDeleteFollowing(adapter, event, occurrenceStart);
+        const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
+
+        expect(adapter.toJsDate(rule.until!).toISOString()).to.equal(until); // midnight
+      },
+    );
+
+    it('should truncate the series to the midnight of the day before a DST transition at midnight', () => {
+      // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
+      const event = EventBuilder.new(adapter)
+        .withDataTimezone('America/Havana')
+        .singleDay('2026-03-01T09:00:00')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2026-03-08T09:00:00', 'America/Havana');
+
+      const result = applyRecurringDeleteFollowing(adapter, event, occurrenceStart);
+      const rule = result.updated![0].rrule as SchedulerProcessedEventRecurrenceRule;
+
+      expect(adapter.toJsDate(rule.until!).toISOString()).to.equal('2026-03-07T05:00:00.000Z'); // midnight, March 7th
     });
   });
 });

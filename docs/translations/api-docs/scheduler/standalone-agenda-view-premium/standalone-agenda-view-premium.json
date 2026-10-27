@@ -40,6 +40,9 @@
     "eventCreation": {
       "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
     },
+    "eventDeletion": {
+      "description": "Configures how events are deleted. If <code>false</code>, event deletion is disabled. If <code>true</code>, event deletion is enabled with default configuration. If an object, event deletion is enabled with the provided configuration."
+    },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
@@ -81,7 +84,7 @@
     },
     "view": { "description": "The view currently displayed in the calendar." },
     "viewConfig": {
-      "description": "Configuration applied to the view, keyed by the view name. The <code>agenda</code> view does not support any configuration keys yet."
+      "description": "Configuration applied to the view, keyed by the view name. For the <code>agenda</code> view, <code>dayCount</code> is how many days are displayed (and how far the navigation moves), or <code>&#39;month&#39;</code> to display the month of the visible date and navigate one month at a time."
     },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {

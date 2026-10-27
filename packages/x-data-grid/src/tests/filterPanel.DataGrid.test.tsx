@@ -8,6 +8,7 @@ import {
 } from '@mui/x-data-grid';
 import type {
   DataGridProps,
+  GridFilterFormColumnInputProps,
   GridFilterInputValueProps,
   GridFilterOperator,
 } from '@mui/x-data-grid';
@@ -467,11 +468,11 @@ describe('<DataGrid /> - Filter panel', () => {
         onFilterModelChange={onFilterModelChange}
       />,
     );
-    expect(screen.queryAllByRole('tooltip').length).to.deep.equal(1);
+    expect(screen.queryAllByRole('dialog').length).to.deep.equal(1);
 
     deleteFilterForm();
 
-    expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
+    expect(screen.queryAllByRole('dialog').length).to.deep.equal(0);
   });
 
   // See https://github.com/mui/mui-x/issues/5402
@@ -558,6 +559,98 @@ describe('<DataGrid /> - Filter panel', () => {
     // check that the filter is changed to default one (`is`)
     expect(getSelectByName('Column').value).to.equal('country');
     expect(getSelectByName('Operator').value).to.equal('is');
+  });
+
+  describe('slot: filterFormColumnInput', () => {
+    function CustomColumnInput(props: GridFilterFormColumnInputProps & { testId?: string }) {
+      const { columns, value, onChange, disabled, className, testId } = props;
+      return (
+        <div className={className} data-testid={testId}>
+          {columns.map((col) => (
+            <button
+              key={col.field}
+              type="button"
+              aria-pressed={col.field === value}
+              disabled={disabled}
+              onClick={() => onChange(col.field)}
+            >
+              {col.headerName ?? col.field}
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    it('should render the custom column input with the filterable columns', () => {
+      render(
+        <TestCase
+          slots={{ filterFormColumnInput: CustomColumnInput }}
+          slotProps={{ filterFormColumnInput: { testId: 'custom-column-input' } as any }}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+          filterModel={{ items: [{ field: 'brand', operator: 'contains' }] }}
+        />,
+      );
+
+      const input = screen.getByTestId('custom-column-input');
+      expect(input).to.have.class('MuiDataGrid-filterFormColumnInput');
+      expect(
+        within(input)
+          .getAllByRole('button')
+          .map((button) => button.textContent),
+      ).to.deep.equal(['brand', 'slogan', 'isPublished', 'country', 'status']);
+      expect(within(input).getByRole('button', { name: 'brand' })).to.have.attribute(
+        'aria-pressed',
+        'true',
+      );
+    });
+
+    it('should update the filter item when the custom column input calls onChange', () => {
+      const onFilterModelChange = vi.fn();
+      render(
+        <TestCase
+          slots={{ filterFormColumnInput: CustomColumnInput }}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+          filterModel={{ items: [{ id: 1, field: 'brand', operator: 'equals', value: 'Puma' }] }}
+          onFilterModelChange={onFilterModelChange}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'slogan' }));
+
+      expect(onFilterModelChange.mock.lastCall![0].items).to.deep.equal([
+        { id: 1, field: 'slogan', operator: 'equals', value: 'Puma' },
+      ]);
+    });
+
+    it('should pass `columnInputProps` to the column input slot', () => {
+      render(
+        <TestCase
+          slots={{ filterFormColumnInput: CustomColumnInput }}
+          slotProps={{
+            filterPanel: { filterFormProps: { columnInputProps: { testId: 'from-form-props' } } },
+          }}
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+          filterModel={{ items: [{ field: 'brand', operator: 'contains' }] }}
+        />,
+      );
+
+      expect(screen.queryByTestId('from-form-props')).not.to.equal(null);
+    });
   });
 
   describe('singleSelect blank option', () => {

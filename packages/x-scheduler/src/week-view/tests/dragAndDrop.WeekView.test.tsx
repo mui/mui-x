@@ -6,7 +6,9 @@ import {
   mockElementBounds,
   clientYForTime,
   getResizeHandle,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { vi, describe, it, expect } from 'vitest';
 
@@ -47,10 +49,10 @@ function getDayGridCell(dayOfMonth: number): HTMLElement {
  * This is needed because the drag start calculation (`initialCursorPositionInEventMs`)
  * uses `offsetHeight` and `getBoundingClientRect()` on the source column.
  */
-function mockAllTimeGridColumnBounds() {
+function mockAllTimeGridColumnBounds(height = 1440) {
   const columns = getTimeGridColumns();
   for (const column of columns) {
-    mockElementBounds(column, { top: 0, height: 1440, width: 200 });
+    mockElementBounds(column, { top: 0, height, width: 200 });
   }
 }
 
@@ -193,6 +195,479 @@ describe('WeekView - Drag and Drop', () => {
     const updatedEvents = handleEventsChange.mock.calls[0][0];
     expect(updatedEvents[0].allDay).to.not.equal(true);
     expect(new Date(updatedEvents[0].start).getUTCDate()).to.equal(4);
+  });
+
+  it('should keep a same-day time event within its day when moved', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Morning Meeting')
+      .singleDay('2025-07-03T10:00:00Z', 60)
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const eventElement = screen.getByRole('button', { name: /Morning Meeting/i });
+    const columns = getTimeGridColumns();
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: columns[JULY_3_COLUMN_INDEX],
+        targetClientY: clientYForTime(0, 24, 23.5),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].end).getUTCDate()).to.equal(3);
+  });
+
+  it('should move a time event crossing midnight without clamping it to a single day', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Night shift')
+      .span('2025-07-03T22:00:00Z', '2025-07-04T06:00:00Z')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const parts = screen.getAllByRole('button', { name: /Night shift/i });
+    expect(parts).to.have.length(2);
+    const columns = getTimeGridColumns();
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: parts[0],
+        target: columns[JULY_3_COLUMN_INDEX],
+        targetClientY: clientYForTime(0, 24, 23),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T23:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-04T07:00:00.000Z');
+  });
+
+  it('should move a time event crossing midnight from the part on its second day', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Night shift')
+      .span('2025-07-03T22:00:00Z', '2025-07-04T06:00:00Z')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const parts = screen.getAllByRole('button', { name: /Night shift/i });
+    expect(parts).to.have.length(2);
+    const columns = getTimeGridColumns();
+
+    // The part is grabbed at its top edge, 2 hours after the event start.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: parts[1],
+        target: columns[JULY_4_COLUMN_INDEX],
+        targetClientY: clientYForTime(0, 24, 1),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T23:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-04T07:00:00.000Z');
+  });
+
+  // Browsers cannot change their timezone through process.env.TZ.
+  it.skipIf(!isJSDOM)(
+    'should read whether a time event crosses midnight in the display timezone, whatever the timezone of the system',
+    async () => {
+      // Pacific/Apia skips December 30th, 2011, which makes `adapter.isSameDay()` read the two
+      // dates of this event as the same day on an Apia system.
+      setSystemTimezone('Pacific/Apia');
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Night shift')
+        .span('2011-12-30T23:30:00Z', '2011-12-31T00:30:00Z')
+        .draggable(true)
+        .build();
+
+      render(
+        <StandaloneWeekView
+          events={[event]}
+          resources={[]}
+          displayTimezone="UTC"
+          visibleDate={new Date('2011-12-30T12:00:00Z')}
+          onEventsChange={handleEventsChange}
+        />,
+      );
+
+      mockAllTimeGridColumnBounds();
+
+      // Dropped on the 23:45 row of December 30th, the sixth column of the week: the event isn't
+      // clamped to the day.
+      await act(async () => {
+        simulateDragAndDrop({
+          source: screen.getAllByRole('button', { name: /Night shift/i })[0],
+          target: getTimeGridColumns()[5],
+          targetClientY: clientYForTime(0, 24, 23.75),
+        });
+      });
+
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2011-12-30T23:45:00.000Z');
+      expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2011-12-31T00:45:00.000Z');
+    },
+  );
+
+  it('should move a part of a time event crossing midnight to the day grid', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Night shift')
+      .span('2025-07-03T22:00:00Z', '2025-07-04T06:00:00Z')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const parts = screen.getAllByRole('button', { name: /Night shift/i });
+    expect(parts).to.have.length(2);
+
+    // The July 4 part is dropped on July 5: the event moves by one day.
+    await act(async () => {
+      simulateDragAndDrop({ source: parts[1], target: getDayGridCell(5) });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(updatedEvents[0].allDay).to.equal(true);
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-04T22:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-05T06:00:00.000Z');
+  });
+
+  it('should resize the end of the part of a time event crossing midnight on its end day', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Night shift')
+      .span('2025-07-03T22:00:00Z', '2025-07-04T06:00:00Z')
+      .resizable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const parts = screen.getAllByRole('button', { name: /Night shift/i });
+    expect(parts).to.have.length(2);
+    const columns = getTimeGridColumns();
+    // The July 4 part covers 00:00 to 06:00, its end handle is grabbed at 06:00.
+    mockElementBounds(parts[1], { top: 0, height: clientYForTime(0, 24, 6) });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: getResizeHandle(parts[1], 'end'),
+        target: columns[JULY_4_COLUMN_INDEX],
+        sourceClientY: clientYForTime(0, 24, 6),
+        targetClientY: clientYForTime(0, 24, 8),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T22:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-04T08:00:00.000Z');
+  });
+
+  it('should resize the start of the part of a time event crossing midnight on its start day', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Night shift')
+      .span('2025-07-03T22:00:00Z', '2025-07-04T06:00:00Z')
+      .resizable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView events={[event]} resources={[]} onEventsChange={handleEventsChange} />,
+    );
+
+    mockAllTimeGridColumnBounds();
+
+    const parts = screen.getAllByRole('button', { name: /Night shift/i });
+    expect(parts).to.have.length(2);
+    const columns = getTimeGridColumns();
+    // The July 3 part covers 22:00 to 24:00, its start handle is grabbed at 22:00.
+    mockElementBounds(parts[0], {
+      top: clientYForTime(0, 24, 22),
+      height: clientYForTime(0, 24, 2),
+    });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: getResizeHandle(parts[0], 'start'),
+        target: columns[JULY_3_COLUMN_INDEX],
+        sourceClientY: clientYForTime(0, 24, 22),
+        targetClientY: clientYForTime(0, 24, 20),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T20:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-04T06:00:00.000Z');
+  });
+
+  it('should keep the span of a time event crossing midnight that the visible hours also clip', async () => {
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Night shift')
+      .span('2025-07-03T18:00:00Z', '2025-07-04T06:00:00Z')
+      .draggable(true)
+      .resizable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView
+        events={[event]}
+        resources={[]}
+        onEventsChange={handleEventsChange}
+        viewConfig={{ week: { startTime: 0, endTime: 20 } }}
+      />,
+    );
+
+    // 1px per minute of the 00:00 to 20:00 window.
+    const columns = getTimeGridColumns();
+    for (const column of columns) {
+      mockElementBounds(column, { top: 0, height: clientYForTime(0, 20, 20), width: 200 });
+    }
+
+    const parts = screen.getAllByRole('button', { name: /Night shift/i });
+    expect(parts).to.have.length(2);
+
+    // The July 3 part stops at the 20:00 window edge, so its end can't be resized from there.
+    expect(parts[0].querySelector('[data-start]')).not.to.equal(null);
+    expect(parts[0].querySelector('[data-end]')).to.equal(null);
+
+    mockElementBounds(parts[0], {
+      top: clientYForTime(0, 20, 18),
+      height: clientYForTime(0, 20, 2),
+    });
+
+    await act(async () => {
+      simulateDragAndDrop({
+        source: parts[0],
+        target: columns[JULY_3_COLUMN_INDEX],
+        sourceClientY: clientYForTime(0, 20, 18),
+        targetClientY: clientYForTime(0, 20, 19),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2025-07-03T19:00:00.000Z');
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2025-07-04T07:00:00.000Z');
+  });
+
+  it('should keep the time elapsed between the event start and the cursor when moving an event across a DST transition', async () => {
+    // America/New_York springs forward from 02:00 to 03:00 on March 8th, 2026: the column keeps
+    // 24 hour rows, so the event, from 01:00 EST to 05:00 EDT, spans 4 rows for 3 hours.
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Night shift')
+      .span('2026-03-08T06:00:00Z', '2026-03-08T09:00:00Z')
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView
+        events={[event]}
+        resources={[]}
+        displayTimezone="America/New_York"
+        visibleDate={new Date('2026-03-08T12:00:00Z')}
+        onEventsChange={handleEventsChange}
+      />,
+    );
+
+    mockAllTimeGridColumnBounds();
+    const eventElement = screen.getByRole('button', { name: /Night shift/i });
+    mockElementBounds(eventElement, {
+      top: clientYForTime(0, 24, 1),
+      height: clientYForTime(0, 24, 4),
+    });
+
+    // Grabbed on the 04:00 row, 2 hours after the event start, and dropped on the 10:00 row of
+    // the same day, the first column of the week.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getTimeGridColumns()[0],
+        sourceClientY: clientYForTime(0, 24, 4),
+        targetClientY: clientYForTime(0, 24, 10),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2026-03-08T12:00:00.000Z'); // 08:00 EDT
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2026-03-08T15:00:00.000Z'); // 11:00 EDT
+  });
+
+  it.each([
+    {
+      grabbed: 'after that hour',
+      grabHour: 2,
+      start: '2026-11-01T14:00:00.000Z', // 09:00 EST
+      end: '2026-11-01T16:00:00.000Z', // 11:00 EST
+    },
+    {
+      grabbed: 'inside that hour',
+      grabHour: 1.5,
+      start: '2026-11-01T14:30:00.000Z', // 09:30 EST
+      end: '2026-11-01T16:30:00.000Z', // 11:30 EST
+    },
+  ])(
+    'should keep the time elapsed between the event start and the cursor when moving an event starting in the hour repeated by a DST transition, grabbed $grabbed',
+    async ({ grabHour, start, end }) => {
+      // America/New_York falls back from 02:00 to 01:00 on November 1st, 2026: the event starts in
+      // the second 01:00, EST, which renders on the same row as the first one.
+      const handleEventsChange = vi.fn();
+      const event = EventBuilder.new()
+        .id('event-1')
+        .title('Night shift')
+        .span('2026-11-01T06:00:00Z', '2026-11-01T08:00:00Z')
+        .draggable(true)
+        .build();
+
+      render(
+        <StandaloneWeekView
+          events={[event]}
+          resources={[]}
+          displayTimezone="America/New_York"
+          visibleDate={new Date('2026-11-01T12:00:00Z')}
+          onEventsChange={handleEventsChange}
+        />,
+      );
+
+      mockAllTimeGridColumnBounds();
+      const eventElement = screen.getByRole('button', { name: /Night shift/i });
+      // `TimeGridEvent` renders 1px below the start of the event.
+      mockElementBounds(eventElement, {
+        top: clientYForTime(0, 24, 1) + 1,
+        height: clientYForTime(0, 24, 2),
+      });
+
+      // Dropped on the 10:00 row of the same day, the first column of the week.
+      await act(async () => {
+        simulateDragAndDrop({
+          source: eventElement,
+          target: getTimeGridColumns()[0],
+          sourceClientY: clientYForTime(0, 24, grabHour),
+          targetClientY: clientYForTime(0, 24, 10),
+        });
+      });
+
+      expect(handleEventsChange.mock.calls.length).to.equal(1);
+      const updatedEvents = handleEventsChange.mock.calls[0][0];
+      expect(new Date(updatedEvents[0].start).toISOString()).to.equal(start);
+      expect(new Date(updatedEvents[0].end).toISOString()).to.equal(end);
+    },
+  );
+
+  it('should drop an event on the row under the cursor when the day starts in the hour repeated by a DST transition', async () => {
+    // Europe/Paris falls back from 03:00 to 02:00 on October 25th, 2026: the window starts at the
+    // first 02:00, CEST, like the rows of the column.
+    const handleEventsChange = vi.fn();
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Meeting')
+      .span('2026-10-25T07:00:00Z', '2026-10-25T08:00:00Z') // 08:00 to 09:00 CET
+      .draggable(true)
+      .build();
+
+    render(
+      <StandaloneWeekView
+        events={[event]}
+        resources={[]}
+        displayTimezone="Europe/Paris"
+        visibleDate={new Date('2026-10-25T12:00:00Z')}
+        onEventsChange={handleEventsChange}
+        viewConfig={{ week: { startTime: 2, endTime: 24 } }}
+      />,
+    );
+
+    // 1px per minute of the 02:00 to 24:00 window.
+    mockAllTimeGridColumnBounds(clientYForTime(2, 24, 24));
+    const eventElement = screen.getByRole('button', { name: /Meeting/i });
+    mockElementBounds(eventElement, {
+      top: clientYForTime(2, 24, 8),
+      height: clientYForTime(2, 24, 3),
+    });
+
+    // Grabbed at its start and dropped on the 10:00 row of the same day, the first column of the
+    // week.
+    await act(async () => {
+      simulateDragAndDrop({
+        source: eventElement,
+        target: getTimeGridColumns()[0],
+        sourceClientY: clientYForTime(2, 24, 8),
+        targetClientY: clientYForTime(2, 24, 10),
+      });
+    });
+
+    expect(handleEventsChange.mock.calls.length).to.equal(1);
+    const updatedEvents = handleEventsChange.mock.calls[0][0];
+    expect(new Date(updatedEvents[0].start).toISOString()).to.equal('2026-10-25T09:00:00.000Z'); // 10:00 CET
+    expect(new Date(updatedEvents[0].end).toISOString()).to.equal('2026-10-25T10:00:00.000Z'); // 11:00 CET
+  });
+
+  it('should render an event in the second occurrence of the last hour of a day a DST transition repeats', () => {
+    // America/Santiago falls back from 24:00 to 23:00 on April 4th, 2026: the event starts in the
+    // second 23:00, -04, which still belongs to April 4th.
+    const event = EventBuilder.new()
+      .id('event-1')
+      .title('Late shift')
+      .span('2026-04-05T03:15:00Z', '2026-04-05T03:45:00Z')
+      .build();
+
+    render(
+      <StandaloneWeekView
+        events={[event]}
+        resources={[]}
+        displayTimezone="America/Santiago"
+        visibleDate={new Date('2026-04-04T12:00:00Z')}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /Late shift/i })).not.to.equal(null);
   });
 
   it('should move an all-day event to a different day in the day grid', async () => {

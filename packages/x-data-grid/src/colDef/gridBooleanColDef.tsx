@@ -42,8 +42,10 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   valueFormatter: gridBooleanFormatter,
   filterOperators: getGridBooleanOperators(),
   getApplyQuickFilterFn: () => null,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds chartable only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds chartable only when the Premium package is included.
   chartable: false,
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Premium augmentation adds pastedValueParser only when the Premium package is included.
+  // @ts-ignore Premium augmentation adds pastedValueParser only when the Premium package is included.
   pastedValueParser: (value) => stringToBoolean(value),
 };

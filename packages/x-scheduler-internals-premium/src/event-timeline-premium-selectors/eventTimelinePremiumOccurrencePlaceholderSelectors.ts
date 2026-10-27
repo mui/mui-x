@@ -56,8 +56,8 @@ export const timelineOccurrencePlaceholderSelectors = {
 
     const config = eventTimelinePremiumPresetSelectors.config(state);
     if (
-      state.adapter.isBefore(placeholder.end, config.start) ||
-      state.adapter.isAfter(placeholder.start, config.end)
+      placeholder.end < state.adapter.getTime(config.start) ||
+      placeholder.start > state.adapter.getTime(config.end)
     ) {
       return null;
     }

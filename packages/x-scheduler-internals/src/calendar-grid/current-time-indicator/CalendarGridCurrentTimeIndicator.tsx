@@ -7,10 +7,10 @@ import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
-import { mergeDateAndTime } from '../../internals/utils/date-utils';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { schedulerNowSelectors } from '../../scheduler-selectors';
-import { processDate } from '../../process-date';
+import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
+import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
+import { toEpochMs, toPlainDateTime } from '../../internals/utils/plain-date-utils/timeZone';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
   function CalendarGridCurrentTimeIndicator(
@@ -36,26 +36,29 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     } = useCalendarGridTimeColumnContext();
     const store = useEventCalendarStoreContext();
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
-    const nowForColumn = React.useMemo(
-      () => processDate(mergeDateAndTime(adapter, columnStart, now), adapter),
-      [adapter, columnStart, now],
-    );
-
-    const endForCalc = React.useMemo(
-      () => processDate(adapter.addMinutes(nowForColumn.value, 1), adapter),
-      [adapter, nowForColumn],
-    );
+    // The time of day of now, on the wall clock of the day of the column.
+    const nowForColumn = React.useMemo(() => {
+      const columnPlainDate = toPlainDateTime(adapter.getTime(columnStart), displayTimezone).date;
+      const nowMsInDay = toPlainDateTime(adapter.getTime(now), displayTimezone).msInDay;
+      return createProcessedDate(
+        adapter,
+        toEpochMs(columnPlainDate, nowMsInDay, displayTimezone),
+        displayTimezone,
+      );
+    }, [adapter, columnStart, displayTimezone, now]);
 
     const { position } = useElementPositionInCollection({
+      // Only the position is read, which depends on the start alone.
       start: nowForColumn,
-      end: endForCalc,
+      end: nowForColumn,
       collection: { start: columnStart, end: columnEnd, dayStartMinute, dayEndMinute },
     });
 
     const isOutOfRange =
-      adapter.isBefore(nowForColumn.value, columnStart) ||
-      adapter.isAfter(nowForColumn.value, columnEnd);
+      nowForColumn.timestamp < adapter.getTime(columnStart) ||
+      nowForColumn.timestamp > adapter.getTime(columnEnd);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],

@@ -797,6 +797,41 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
   });
 
+  it('should repaint rows when `getRows()` returns the stored row objects mutated in place', async () => {
+    const rows = [{ id: 1, name: 'A', value: 1, descendantCount: 0 }];
+    const dataSource: GridDataSource = {
+      getRows: async () => ({ rows, rowCount: rows.length }),
+      getGroupKey: (row) => row.name,
+      getChildrenCount: (row) => row.descendantCount,
+    };
+
+    function TestComponent() {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[{ field: 'name' }, { field: 'value' }]}
+            dataSource={dataSource}
+            dataSourceCache={null}
+            treeData
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    render(<TestComponent />);
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('1'));
+
+    rows[0].value = 2;
+    await act(async () => {
+      await apiRef.current!.dataSource.fetchRows();
+    });
+
+    await waitFor(() => expect(getCell(0, 2).textContent).to.equal('2'));
+  });
+
   it('should lazily fetch nested data when using `defaultGroupingExpansionDepth`', async () => {
     render(<TestDataSource defaultGroupingExpansionDepth={1} />);
 
@@ -849,6 +884,27 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // Collapse the first parent row
     await user.click(within(cell).getByRole('button'));
   });
+
+  // See https://github.com/mui/mui-x/issues/10251
+  it('should support switching from data source tree data to client-side rows', async () => {
+    const { setProps } = render(<TestDataSource />);
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    setProps({
+      treeData: false,
+      dataSource: undefined,
+      columns: [{ field: 'name' }],
+      rows: [
+        { id: 1, name: 'A' },
+        { id: 2, name: 'B' },
+      ],
+    });
+
+    await waitFor(() => {
+      expect(apiRef.current!.getAllRowIds()).to.deep.equal([1, 2]);
+    });
+  });
+
   // https://github.com/mui/mui-x/issues/23009
   describe('nested row updates', () => {
     const NESTED_DATA: Record<string, any[]> = {

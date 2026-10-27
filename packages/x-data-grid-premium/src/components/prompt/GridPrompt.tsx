@@ -300,11 +300,13 @@ function GridPrompt(props: GridPromptProps) {
             getColumnName(filter.column),
             filterOperator,
             filterValue as string,
+            filter.operator,
           ),
           description: apiRef.current.getLocaleText('promptChangeFilterDescription')(
             getColumnName(filter.column),
             filterOperator,
             filterValue as string,
+            filter.operator,
           ),
           icon: rootProps.slots.promptFilterIcon,
         };

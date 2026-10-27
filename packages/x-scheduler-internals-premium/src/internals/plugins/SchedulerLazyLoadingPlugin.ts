@@ -1,5 +1,5 @@
 import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import type { TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import type {
   SchedulerState,
   SchedulerParameters,
@@ -7,9 +7,15 @@ import type {
   SchedulerEventParameters,
   SchedulerPersistEventsResult,
 } from '@mui/x-scheduler-internals/internals';
-import { buildEventsState } from '@mui/x-scheduler-internals/internals';
+import {
+  buildEventsState,
+  createAdapterDate,
+  getEndOfDayMs,
+  getStartOfDayMs,
+} from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
-import { SchedulerDataManager } from '../utils/queue';
+import { getDateRangeKey, SchedulerDataManager } from '../utils/queue';
+import type { DateRange } from '../utils/queue';
 import type { SchedulerLazyLoadingParameters } from '../../models';
 
 export class SchedulerLazyLoadingPlugin<
@@ -24,16 +30,24 @@ export class SchedulerLazyLoadingPlugin<
 
   private isFetchScheduled = false;
   private pendingIsInstantLoad = false;
-  private pendingComputeRange:
-    (() => { start: TemporalSupportedObject; end: TemporalSupportedObject }) | null = null;
+  private pendingComputeRange: (() => DateRange | null) | null = null;
 
   /**
-   * Range key of the most recently requested fetch. Used to skip stale fetches:
-   * if a request resolves while a different range has been requested since, its
-   * cache write + state update are dropped so the latest range's data isn't
-   * polluted by stale, possibly-deleted events.
+   * The most recent request.
    */
-  private latestRequestedRangeKey: string | null = null;
+  private latestRequest: {
+    /**
+     * The whole days the view asked for, before trimming the parts already cached.
+     */
+    range: DateRange;
+    /**
+     * Range key of the fetch sent to the data source. Used to skip stale fetches:
+     * if a request resolves while a different range has been requested since, its
+     * cache write + state update are dropped so the latest range's data isn't
+     * polluted by stale, possibly-deleted events.
+     */
+    fetchKey: string;
+  } | null = null;
 
   protected readonly disposables = new DisposableStack();
 
@@ -41,10 +55,7 @@ export class SchedulerLazyLoadingPlugin<
    * Coalesces multiple calls within the same tick into one microtask. The latest
    * `computeRange` wins; `isInstantLoad=true` is sticky across coalesced calls.
    */
-  protected scheduleFetch = (
-    computeRange: () => { start: TemporalSupportedObject; end: TemporalSupportedObject },
-    isInstantLoad: boolean,
-  ) => {
+  protected scheduleFetch = (computeRange: () => DateRange | null, isInstantLoad: boolean) => {
     if (isInstantLoad) {
       this.pendingIsInstantLoad = true;
     }
@@ -69,6 +80,9 @@ export class SchedulerLazyLoadingPlugin<
           return;
         }
         const range = compute();
+        if (range === null) {
+          return;
+        }
         await this.queueDataFetchForRange(range, instantLoad);
       } catch (error) {
         if (process.env.NODE_ENV !== 'production') {
@@ -87,12 +101,12 @@ export class SchedulerLazyLoadingPlugin<
         getId: this.store.parameters.eventModelStructure?.id?.getter,
       });
       this.dataManager = this.disposables.use(
-        new SchedulerDataManager(this.store.state.adapter, this.loadEventsFromDataSource),
+        new SchedulerDataManager(this.loadEventsFromDataSource),
       );
 
       this.disposables.defer(this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated));
       this.disposables.defer(() => {
-        this.latestRequestedRangeKey = null;
+        this.latestRequest = null;
         this.pendingComputeRange = null;
         this.cache = null;
         this.dataManager = null;
@@ -104,34 +118,38 @@ export class SchedulerLazyLoadingPlugin<
     this.disposables.dispose();
   }
 
-  public queueDataFetchForRange = async (
-    range: {
-      start: TemporalSupportedObject;
-      end: TemporalSupportedObject;
-    },
-    immediate = false,
-  ) => {
+  /**
+   * Fetches the events of the days from `range.start` to `range.end`, read in the display
+   * timezone.
+   */
+  public queueDataFetchForRange = async (range: DateRange, immediate = false) => {
     try {
-      if (this.dataManager) {
-        const { adapter } = this.store.state;
-        this.latestRequestedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
+      const { dataManager, cache } = this;
+      if (dataManager && cache) {
+        const { displayTimezone } = this.store.state;
+        const requestedRange = toWholeDays(range, displayTimezone);
+
+        // Only request the days of the range the cache does not cover yet. The cache can hold the
+        // days of a previous display timezone, so the part it lacks is extended to whole days.
+        // A fully covered range still goes through the queue so the cache-hit branch runs.
+        const missingRange = cache.getMissingRange(requestedRange.start, requestedRange.end);
+        const rangeToFetch =
+          missingRange === null ? requestedRange : toWholeDays(missingRange, displayTimezone);
+        this.latestRequest = {
+          range: requestedRange,
+          fetchKey: getDateRangeKey(rangeToFetch),
+        };
 
         // Flip `isLoading` synchronously so the skeleton shows immediately,
         // before any debounce delay on the queued path.
-        if (
-          this.cache &&
-          !this.cache.hasCoverage(
-            adapter.getTime(range.start),
-            adapter.getTime(adapter.endOfDay(range.end)),
-          )
-        ) {
+        if (missingRange !== null) {
           this.store.set('isLoading', true);
         }
 
         if (immediate) {
-          await this.dataManager.queueImmediate([range]);
+          await dataManager.queueImmediate([rangeToFetch]);
         } else {
-          await this.dataManager.queue([range]);
+          await dataManager.queue([rangeToFetch]);
         }
       }
     } catch (error) {
@@ -146,10 +164,7 @@ export class SchedulerLazyLoadingPlugin<
   /**
    * Loads events from the data source.
    */
-  private loadEventsFromDataSource = async (range: {
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
-  }) => {
+  private loadEventsFromDataSource = async (range: DateRange) => {
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
     // Capture locally; `dispose` may null these during the await.
@@ -159,10 +174,13 @@ export class SchedulerLazyLoadingPlugin<
     if (!dataSource || !cache || !dataManager) {
       return;
     }
-    if (
-      cache.hasCoverage(adapter.getTime(range.start), adapter.getTime(adapter.endOfDay(range.end)))
-    ) {
+    const fetchedRangeKey = getDateRangeKey(range);
+    if (cache.hasCoverage(range.start, range.end)) {
       try {
+        // Like a stale fetch, a stale cache hit leaves the state to the latest request.
+        if (this.latestRequest?.fetchKey !== fetchedRangeKey) {
+          return;
+        }
         const allCachedEvents = cache.getAll();
         const eventsState = buildEventsState({
           events: allCachedEvents,
@@ -185,22 +203,29 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
+    let isStale = false;
+    let requestToRefetch: typeof this.latestRequest = null;
     try {
-      const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
-      const events = await dataSource.getEvents(range.start, range.end);
+      const events = await dataSource.getEvents(
+        createAdapterDate(adapter, range.start, displayTimezone),
+        createAdapterDate(adapter, range.end, displayTimezone),
+      );
+      const latestRequest = this.latestRequest;
 
       // Drop the result if a more recent range has been requested since this
       // fetch started — its events are now stale relative to the latest range
       // (e.g. a server-side delete could be hidden by re-introducing them).
-      if (this.latestRequestedRangeKey !== fetchedRangeKey) {
+      // The latest fetch owns `isLoading`, so this one leaves it untouched.
+      if (latestRequest?.fetchKey !== fetchedRangeKey) {
+        isStale = true;
         return;
       }
 
-      cache.setRange(
-        adapter.getTime(range.start),
-        adapter.getTime(adapter.endOfDay(range.end)),
-        events ?? [],
-      );
+      cache.setRange(range.start, range.end, events ?? []);
+      // The cached part of a trimmed request can expire while it is pending.
+      if (cache.getMissingRange(latestRequest.range.start, latestRequest.range.end) !== null) {
+        requestToRefetch = latestRequest;
+      }
       // Build from the full cache so disjoint already-cached ranges stay visible
       // when the visible range expands to cover them.
       const allCachedEvents = cache.getAll();
@@ -220,12 +245,21 @@ export class SchedulerLazyLoadingPlugin<
       if (this.disposables.disposed) {
         return;
       }
+      // The user already left this range, so its error is dropped too.
+      if (this.latestRequest?.fetchKey !== fetchedRangeKey) {
+        isStale = true;
+        return;
+      }
       this.store.pushError(error);
     } finally {
-      if (!this.disposables.disposed) {
+      if (!this.disposables.disposed && !isStale && !requestToRefetch) {
         this.store.set('isLoading', false);
       }
       await dataManager.setRequestSettled(range);
+      // Settling can wait for other queued fetches, skip the refetch if the user navigated meanwhile.
+      if (requestToRefetch && requestToRefetch === this.latestRequest) {
+        await this.queueDataFetchForRange(requestToRefetch.range, true);
+      }
     }
   };
 
@@ -306,5 +340,16 @@ export class SchedulerLazyLoadingPlugin<
       ...eventsState,
       errors: [],
     });
+  };
+}
+
+/**
+ * Extends a range to the whole days it touches in `timezone`, which is the coverage the cache
+ * records.
+ */
+export function toWholeDays(range: DateRange, timezone: TemporalTimezone): DateRange {
+  return {
+    start: getStartOfDayMs(range.start, timezone),
+    end: getEndOfDayMs(range.end, timezone),
   };
 }

@@ -9,11 +9,12 @@ import {
   ResourceBuilder,
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
-import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import type { SchedulerResource, TemporalTimezone } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { createAdapterDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { SchedulerEvent } from '@mui/x-scheduler/models';
 import {
@@ -332,7 +333,11 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     });
   });
 
-  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event', async () => {
+  it('should delete the event and close the dialog when Delete is pressed on a non-recurring event, with confirmation off', async () => {
+    // `EventDialogContent` doesn't mount `DeleteConfirmationDialog` (that only happens through
+    // `EventDialogProvider`), so the confirmation is opted out of here to keep testing this
+    // component's own direct wiring to the store. See the `Deletion` suite below for the
+    // confirmation dialog itself, exercised through the full `EventDialogProvider`.
     const onEventsChange = vi.fn();
     const onClose = vi.fn();
     const { user } = render(
@@ -340,6 +345,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         events={[DEFAULT_EVENT]}
         resources={resources}
         onEventsChange={onEventsChange}
+        eventDeletion={{ confirmation: false }}
       >
         <EventDialogContent open {...defaultProps} onClose={onClose} />
       </EventCalendarProvider>,
@@ -457,6 +463,190 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
     await user.click(screen.getByText(DEFAULT_EVENT.title));
     expect(await screen.findByLabelText(/event title/i)).to.have.value(DEFAULT_EVENT.title);
+  });
+
+  describe('Deletion', () => {
+    function renderDialogProvider(providerProps: Record<string, unknown> = {}) {
+      return render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+          {...providerProps}
+        >
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+    }
+
+    // `renderDialogProvider`'s fixed `events` array never actually removes the event from the DOM
+    // on delete (the store warns if nothing feeds `onEventsChange` back into it), which can't
+    // exercise what happens to focus once an occurrence really unmounts. This one is controlled.
+    function renderStatefulDialogProvider(providerProps: Record<string, unknown> = {}) {
+      function StatefulProvider() {
+        const [events, setEvents] = React.useState<SchedulerEvent[]>([DEFAULT_EVENT]);
+        return (
+          <EventCalendarProvider
+            events={events}
+            onEventsChange={setEvents}
+            resources={resources}
+            visibleDate={adapter.date('2025-05-26T00:00:00Z', 'default')}
+            {...providerProps}
+          >
+            <EventDialogProvider>
+              <MonthView />
+            </EventDialogProvider>
+          </EventCalendarProvider>
+        );
+      }
+
+      return render(<StatefulProvider />);
+    }
+
+    it('should open the delete confirmation dialog instead of deleting immediately when the dialog Delete event is clicked', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+
+      expect(screen.getByRole('dialog', { name: /delete this event/i })).not.to.equal(null);
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+    });
+
+    it('should delete the event and close the dialog once Delete event is confirmed', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+      // The event dialog's own delete button shares the same accessible name, so the confirm
+      // click is scoped to the confirmation dialog.
+      const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+      await user.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
+      await waitFor(() => {
+        expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+      });
+    });
+
+    it('should keep the event and the dialog open when Cancel is clicked in the confirmation dialog', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(0);
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      });
+      expect(screen.getByLabelText(/event title/i)).to.have.value(DEFAULT_EVENT.title);
+    });
+
+    it('should move focus to the owning grid cell after a confirmed Delete', async () => {
+      const { user } = renderStatefulDialogProvider();
+      const cell = screen.getByText(DEFAULT_EVENT.title).closest<HTMLElement>('[role="gridcell"]')!;
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+      const dialog = screen.getByRole('dialog', { name: /delete this event/i });
+      await user.click(within(dialog).getByRole('button', { name: 'Delete event' }));
+
+      // Confirms the event actually unmounts here, so the assertion below exercises the real
+      // focus-loss scenario, not a no-op.
+      await waitFor(() => {
+        expect(screen.queryByText(DEFAULT_EVENT.title)).to.equal(null);
+      });
+      // The fallback focus is deferred past the dialog's own focus trap releasing.
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should move focus to the owning grid cell after a delete with no confirmation', async () => {
+      const { user } = renderStatefulDialogProvider({ eventDeletion: { confirmation: false } });
+      const cell = screen.getByText(DEFAULT_EVENT.title).closest<HTMLElement>('[role="gridcell"]')!;
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+
+      await waitFor(() => {
+        expect(screen.queryByText(DEFAULT_EVENT.title)).to.equal(null);
+      });
+      await waitFor(() => {
+        expect(document.activeElement).to.equal(cell);
+      });
+    });
+
+    it('should return focus to the dialog Delete event button after Cancel', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      const deleteButton = await screen.findByRole('button', { name: 'Delete event' });
+      await user.click(deleteButton);
+      await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      // The dialog closes through an exit transition, so it lingers in the DOM for a tick —
+      // asserting before it's gone would only catch focus still sitting inside it.
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      });
+      // Nothing was deleted, so MUI's own restore-on-close returns focus to the dialog's Delete
+      // event button — the element that had it when the confirmation dialog opened.
+      expect(document.activeElement).to.equal(deleteButton);
+    });
+
+    it('should delete the event immediately, with no confirmation, when `eventDeletion.confirmation` is `false`', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({
+        onEventsChange,
+        eventDeletion: { confirmation: false },
+      });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      await user.click(await screen.findByRole('button', { name: 'Delete event' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.calls[0][0]).to.have.length(0);
+      expect(screen.queryByRole('dialog', { name: /delete this event/i })).to.equal(null);
+      expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+    });
+
+    it('should not render the Delete event button when `eventDeletion` is `false`, while Save still applies the changes', async () => {
+      const onEventsChange = vi.fn();
+      const { user } = renderDialogProvider({ onEventsChange, eventDeletion: false });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+      const titleInput = await screen.findByRole('textbox', { name: /event title/i });
+
+      expect(screen.queryByRole('button', { name: 'Delete event' })).to.equal(null);
+
+      await user.type(titleInput, ' (renamed)');
+      await user.click(screen.getByRole('button', { name: 'Save' }));
+
+      expect(onEventsChange.mock.calls.length).to.equal(1);
+      expect(onEventsChange.mock.lastCall?.[0][0].title).to.equal(
+        `${DEFAULT_EVENT.title} (renamed)`,
+      );
+    });
+
+    it('should render the Delete event button when `eventDeletion` is an object', async () => {
+      const { user } = renderDialogProvider({
+        onEventsChange: vi.fn(),
+        eventDeletion: { confirmation: true },
+      });
+
+      await user.click(screen.getByText(DEFAULT_EVENT.title));
+
+      expect(await screen.findByRole('button', { name: 'Delete event' })).not.to.equal(null);
+    });
   });
 
   it('should not render the recurrence tab when no slot is provided', () => {
@@ -583,6 +773,101 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
   });
 
+  describe('read-only date and time', () => {
+    function renderReadonlyDetails(builder: EventBuilder, displayTimezone?: TemporalTimezone) {
+      if (displayTimezone) {
+        builder.withDisplayTimezone(displayTimezone);
+      }
+      const event: SchedulerEvent = builder.readOnly().build();
+
+      render(
+        <EventCalendarProvider events={[event]} displayTimezone={displayTimezone}>
+          <EventDialogContent open {...defaultProps} occurrence={builder.toOccurrence()} />
+        </EventCalendarProvider>,
+      );
+
+      const label = document.querySelector<HTMLElement>(
+        `.${eventCalendarClasses.eventDialogDateTimeLabel}`,
+      )!;
+      const times = Array.from(label.querySelectorAll('time')).map((time) =>
+        time.getAttribute('datetime'),
+      );
+      return { text: label.textContent, times };
+    }
+
+    it('should show the date and the time range of a single-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 7:30 AM - 8:15 AM');
+      expect(times).to.deep.equal(['2025-05-26T07:30:00', '2025-05-26T08:15:00']);
+    });
+
+    it('should show the end date of a multi-day timed event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-03T13:30:00Z', '2025-05-05T14:15:00Z'),
+      );
+
+      expect(text).to.equal('Saturday, May 3rd, 2025, 1:30 PM - Monday, May 5th, 2025, 2:15 PM');
+      expect(times).to.deep.equal(['2025-05-03T13:30:00', '2025-05-05T14:15:00']);
+    });
+
+    it('should show a timed event ending at midnight as a multi-day event, like the grid', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T22:00:00Z', '2025-05-27T00:00:00Z'),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 10:00 PM - Tuesday, May 27th, 2025, 12:00 AM');
+    });
+
+    it('should show the dates and times in the display timezone', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 4:30 PM - 5:15 PM');
+      expect(times).to.deep.equal(['2025-05-26T16:30:00', '2025-05-26T17:15:00']);
+    });
+
+    it('should show both dates when the event crosses midnight only in the display timezone', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T14:30:00Z', '2025-05-26T15:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, 11:30 PM - Tuesday, May 27th, 2025, 12:15 AM');
+    });
+
+    it('should show a single date when the event crosses midnight only in its own timezone', () => {
+      const { text } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T23:30:00Z', '2025-05-27T00:15:00Z'),
+        'Asia/Tokyo',
+      );
+
+      expect(text).to.equal('Tuesday, May 27th, 2025, 8:30 AM - 9:15 AM');
+    });
+
+    it('should show the date of a single-day all-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-26T00:00:00Z', '2025-05-26T23:59:59Z', { allDay: true }),
+      );
+
+      expect(text).to.equal('Monday, May 26th, 2025, All Day');
+      expect(times).to.deep.equal(['2025-05-26']);
+    });
+
+    it('should show the date range of a multi-day all-day event', () => {
+      const { text, times } = renderReadonlyDetails(
+        EventBuilder.new().span('2025-05-03T00:00:00Z', '2025-05-05T23:59:59Z', { allDay: true }),
+      );
+
+      expect(text).to.equal('Saturday, May 3rd, 2025 - Monday, May 5th, 2025, All Day');
+      expect(times).to.deep.equal(['2025-05-03', '2025-05-05']);
+    });
+  });
+
   describe('eventDialogGeneralTab slot', () => {
     // `defaultProps.occurrence` has no description, and the seeding assertions below need one.
     const occurrenceWithDescription = EventBuilder.new()
@@ -652,8 +937,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -736,8 +1021,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               });
@@ -761,7 +1046,12 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       expect(onRender.mock.calls.length).to.equal(rendersBefore);
 
       const placeholder = schedulerOccurrencePlaceholderSelectors.value(schedulerStore.state)!;
-      expect(adapter.formatByString(placeholder.start, 'yyyy-MM-dd')).to.equal('2025-05-27');
+      expect(
+        adapter.formatByString(
+          createAdapterDate(adapter, placeholder.start, 'default'),
+          'yyyy-MM-dd',
+        ),
+      ).to.equal('2025-05-27');
     });
 
     it('should open the dialog for an event with a property named hasOwnProperty', () => {
@@ -1201,8 +1491,17 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.clear(endDateInput);
       await user.type(endDateInput, '2025-05-20');
       await user.click(screen.getByRole('button', { name: 'Save' }));
-      expect(screen.getByRole('alert')).to.have.text('End date cannot be before start date.');
+      expect(screen.getByLabelText(/end date/i)).toHaveAccessibleDescription(
+        'End date cannot be before start date.',
+      );
     }
+
+    it('should focus the field with the range error on save', async () => {
+      const { user } = renderWithSlot({}, { onEventsChange: () => {} });
+      await submitInvertedRange(user);
+
+      expect(document.activeElement).to.equal(screen.getByLabelText(/end date/i));
+    });
 
     it('should clear the range error when the range is fixed through the start date', async () => {
       const { user } = renderWithSlot({}, { onEventsChange: () => {} });
@@ -1212,7 +1511,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       const startDateInput = screen.getByLabelText(/start date/i);
       await user.clear(startDateInput);
       await user.type(startDateInput, '2025-05-19');
-      expect(screen.queryByRole('alert')).to.equal(null);
+      expect(screen.queryByText('End date cannot be before start date.')).to.equal(null);
     });
 
     it('should clear the range error when the all-day switch is toggled', async () => {
@@ -1220,7 +1519,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await submitInvertedRange(user);
 
       await user.click(screen.getByRole('switch', { name: /all day/i }));
-      expect(screen.queryByRole('alert')).to.equal(null);
+      expect(screen.queryByText('End date cannot be before start date.')).to.equal(null);
     });
 
     it('should block the submit of an unparseable date from a custom field', async () => {
@@ -1306,11 +1605,14 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       // The native `required` on the section's input already blocks a UI submit,
       // so exercise the programmatic path that reaches the form contract.
       fireEvent.submit(screen.getByRole('button', { name: 'Save' }).closest('form')!);
-      await screen.findAllByRole('alert');
+      await screen.findByText('Enter a valid date.');
 
       expect(onEventsChange.mock.calls.length).to.equal(0);
-      const alerts = screen.getAllByRole('alert').map((alert) => alert.textContent);
-      expect(alerts).to.deep.equal(['Enter a valid date.']);
+      // On the start date only.
+      expect(screen.getAllByText(/^Enter a valid/)).to.have.length(1);
+      expect(screen.getByLabelText(/start date/i)).toHaveAccessibleDescription(
+        'Enter a valid date.',
+      );
     });
 
     it('should ignore the time fields of an all-day event when validating', async () => {
@@ -1435,7 +1737,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       expect(onEventsChange.mock.calls.length).to.equal(0);
       // Effects register in tree order, so the earlier sibling's validator wins.
-      expect(screen.getByRole('alert')).to.have.text('Must stay within the project period');
+      expect(screen.getByLabelText(/end date/i)).toHaveAccessibleDescription(
+        'Must stay within the project period',
+      );
     });
 
     it('should mark the date and time inputs required', () => {

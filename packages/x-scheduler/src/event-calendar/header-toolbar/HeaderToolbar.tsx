@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import MenuOpen from '@mui/icons-material/MenuOpen';
@@ -53,9 +54,9 @@ const HeaderToolbarDateNavigator = styled('div', {
   gap: theme.spacing(2),
 }));
 
-const HeaderToolbarLeftElement = styled('div', {
+const HeaderToolbarStart = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'HeaderToolbarLeftElement',
+  slot: 'HeaderToolbarStart',
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -100,6 +101,9 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const store = useEventCalendarStoreContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const adapter = useAdapterContext();
+  const isRtl = useRtl();
+  const PreviousIcon = isRtl ? ChevronRight : ChevronLeft;
+  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
@@ -122,7 +126,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       {...other}
       className={clsx(className, classes.headerToolbar)}
     >
-      <HeaderToolbarLeftElement className={classes.headerToolbarLeftElement}>
+      <HeaderToolbarStart className={classes.headerToolbarStart}>
         {/* Compact: opens the side panel drawer. */}
         <IconButton
           data-compact-only
@@ -143,9 +147,18 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
           }
         >
-          {isSidePanelOpen ? <MenuOpen /> : <Menu />}
+          {isSidePanelOpen ? (
+            // Mirrored in RTL so the arrow points toward the side panel, on the inline start.
+            <MenuOpen sx={isRtl ? { transform: 'scaleX(-1)' } : undefined} />
+          ) : (
+            <Menu />
+          )}
         </IconButton>
-        <HeaderToolbarLabel data-expanded-only aria-live="polite">
+        <HeaderToolbarLabel
+          data-expanded-only
+          aria-live="polite"
+          className={classes.headerToolbarLabel}
+        >
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
           {showWeekLabel && (
@@ -154,7 +167,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             </HeaderToolbarWeekNumber>
           )}
         </HeaderToolbarLabel>
-      </HeaderToolbarLeftElement>
+      </HeaderToolbarStart>
       <HeaderToolbarActions className={classes.headerToolbarActions}>
         <HeaderToolbarDateNavigator
           role="navigation"
@@ -165,14 +178,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
             onClick={store.goToPreviousVisibleDate}
             aria-label={localeText.previousTimeSpan(view)}
           >
-            <ChevronLeft />
+            <PreviousIcon />
           </IconButton>
           <IconButton
             className={classes.headerToolbarNextButton}
             onClick={store.goToNextVisibleDate}
             aria-label={localeText.nextTimeSpan(view)}
           >
-            <ChevronRight />
+            <NextIcon />
           </IconButton>
         </HeaderToolbarDateNavigator>
         {/* Compact: today as an icon button replacing the expanded text button. */}
