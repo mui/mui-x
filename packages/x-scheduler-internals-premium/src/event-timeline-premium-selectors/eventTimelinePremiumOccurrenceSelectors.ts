@@ -9,7 +9,6 @@ import type {
   SchedulerEventOccurrence,
   SchedulerResourceId,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
@@ -28,13 +27,12 @@ export interface EventTimelinePremiumLayoutOccurrence
  * rows reuse the positions instead of recomputing them.
  */
 const visibleAxisDataSelector = createSelectorMemoized(
-  (state: State) => state.adapter,
   eventTimelinePremiumPresetSelectors.config,
   (state: State) => {
     const config = eventTimelinePremiumPresetSelectors.config(state);
     return schedulerOccurrenceSelectors.groupedByResourceList(state, config.start, config.end);
   },
-  (adapter, config, resources) => {
+  (config, resources) => {
     if (isFullDayAxisWindow(config)) {
       return { resources, positionByOccurrenceKey: null };
     }
@@ -44,10 +42,10 @@ const visibleAxisDataSelector = createSelectorMemoized(
       resources: resources.map((entry) => ({
         ...entry,
         occurrences: entry.occurrences.filter((occurrence) => {
-          const position = computeElementPositionInCollection(adapter, {
+          const position = computeElementPositionInCollection({
             start: occurrence.displayTimezone.start,
             end: occurrence.displayTimezone.end,
-            collection: config,
+            collection: config.axis,
             durationMs: config.durationMs,
           });
           if (position.duration === 0) {
@@ -81,12 +79,10 @@ const visibleOccurrencesByResourceMapSelector = createSelectorMemoized(
 );
 
 export function addTimelinePositionsToOccurrences({
-  adapter,
   config,
   occurrences,
   positionByOccurrenceKey,
 }: {
-  adapter: Adapter;
   config: ReturnType<typeof eventTimelinePremiumPresetSelectors.config>;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
   positionByOccurrenceKey: ReadonlyMap<string, OccurrencePosition> | null;
@@ -95,10 +91,10 @@ export function addTimelinePositionsToOccurrences({
     ...occurrence,
     timelinePosition:
       positionByOccurrenceKey?.get(occurrence.key) ??
-      computeElementPositionInCollection(adapter, {
+      computeElementPositionInCollection({
         start: occurrence.displayTimezone.start,
         end: occurrence.displayTimezone.end,
-        collection: config,
+        collection: config.axis,
         durationMs: config.durationMs,
       }),
   }));

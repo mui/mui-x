@@ -29,7 +29,7 @@ const state = getEventTimelinePremiumStateFromParameters({
   preset: 'dayAndHour',
 });
 const config = eventTimelinePremiumPresetSelectors.config(state);
-const durationMs = getTimelineAxisDurationMs(adapter, config);
+const durationMs = getTimelineAxisDurationMs(config.axis);
 const start = config.start;
 const end = adapter.addHours(start, 1);
 const occurrenceTemplate = EventBuilder.new()
@@ -72,11 +72,11 @@ describe('event timeline resource layout', () => {
             const parameters = {
               start: occurrence.displayTimezone.start,
               end: occurrence.displayTimezone.end,
-              collection: config,
+              collection: config.axis,
               durationMs,
             };
-            result += computeElementPositionInCollection(adapter, parameters).duration;
-            result += computeElementPositionInCollection(adapter, parameters).duration;
+            result += computeElementPositionInCollection(parameters).duration;
+            result += computeElementPositionInCollection(parameters).duration;
           }
         }
 
@@ -100,7 +100,6 @@ describe('event timeline resource layout', () => {
         for (const { occurrences } of groupedOccurrences.slice(0, 10)) {
           const positionedOccurrences = addLanePositionsToOccurrences(occurrences);
           result += addTimelinePositionsToOccurrences({
-            adapter,
             config,
             occurrences: positionedOccurrences,
             positionByOccurrenceKey: null,

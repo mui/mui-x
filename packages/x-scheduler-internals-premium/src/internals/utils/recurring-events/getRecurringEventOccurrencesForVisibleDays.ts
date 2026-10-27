@@ -3,7 +3,6 @@ import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
   SchedulerProcessedEvent,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
@@ -18,15 +17,16 @@ import {
 import { RecurringSeries } from './RecurringSeries';
 
 /**
- * Expands a recurring event into concrete occurrences within a visible range.
+ * Expands a recurring event into concrete occurrences within a visible range, from the timestamp
+ * `start` to the timestamp `end`, both included.
  *
  * The series finds the days of the occurrences in the data timezone, and each day is translated
  * back to adapter values.
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
-  start: TemporalSupportedObject,
-  end: TemporalSupportedObject,
+  start: number,
+  end: number,
   adapter: Adapter,
   displayTimezone: TemporalTimezone,
 ): SchedulerEventOccurrence[] {
@@ -41,8 +41,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
   // Adjust scan range to catch multi-day events starting before visible range
   const durationInDays =
     toDate(event.dataTimezone.end.timestamp).dayNumber - series.start.date.dayNumber + 1;
-  const scanFirstDay = toDate(adapter.getTime(start)).add({ days: 1 - durationInDays });
-  const scanLastDay = toDate(adapter.getTime(end));
+  const scanFirstDay = toDate(start).add({ days: 1 - durationInDays });
+  const scanLastDay = toDate(end);
 
   // In the data timezone, a display date at the same instant is a copy of the data date.
   const processDisplayDate = (epochMs: number, dataDate: SchedulerProcessedDate) =>
@@ -62,7 +62,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
     const dataEnd = createProcessedDate(adapter, endMs, dataTimezone);
     return {
       ...event,
-      key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(adapter, day)),
+      key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),
       dataTimezone: {
         ...event.dataTimezone,
         start: dataStart,

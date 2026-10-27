@@ -1,7 +1,11 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   getDisplayedHourRange,
+  getTimelineAxis,
   getTimelineAxisDurationMs,
   FULL_DAY_MINUTES,
 } from '@mui/x-scheduler-internals/internals';
@@ -14,7 +18,8 @@ export const eventTimelinePremiumPresetSelectors = {
   presets: (state: State) => state.presets,
   config: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.visibleDate,
+    // Read in the display timezone, like the visible date of the Event Calendar views.
+    schedulerOtherSelectors.visibleDate,
     (state: State) => state.preset,
     // Primitive inputs so an inline `presetConfig` literal cannot defeat the
     // memoization (the object identity changes on every parent render).
@@ -61,6 +66,9 @@ export const eventTimelinePremiumPresetSelectors = {
           ? (fullDayTickCount * (dayEndMinute - dayStartMinute)) / FULL_DAY_MINUTES
           : fullDayTickCount;
 
+      // The bounds as timestamps, read once per config change.
+      const axis = getTimelineAxis(adapter, { start, end, dayStartMinute, dayEndMinute });
+
       return {
         tickCount,
         start,
@@ -70,14 +78,14 @@ export const eventTimelinePremiumPresetSelectors = {
         timeResolution,
         dayStartMinute,
         dayEndMinute,
+        axis,
         // Precomputed once per config change: per-row hooks read it on every render.
-        durationMs: getTimelineAxisDurationMs(adapter, {
-          start,
-          end,
-          dayStartMinute,
-          dayEndMinute,
-        }),
+        durationMs: getTimelineAxisDurationMs(axis),
       };
     },
   ),
+  /**
+   * The axis of the preset, with its bounds as timestamps in the display timezone.
+   */
+  axis: (state: State) => eventTimelinePremiumPresetSelectors.config(state).axis,
 };

@@ -13,11 +13,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import type {
   SchedulerEventUpdatedProperties,
-  SchedulerProcessedDate,
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
-  TemporalSupportedObject,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
@@ -30,6 +28,7 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
+  createAdapterDate,
   getCustomEventProperties,
   getEventResourceIds,
   getOccurrenceDataTimezone,
@@ -43,6 +42,7 @@ import type { EventDialogFormValues } from '../event-dialog/utils';
 import {
   computeRange,
   findInvalidRangeField,
+  formatDateAndTimeFields,
   getInvalidValueErrorMessage,
   getRangeErrorMessage,
   validateRange,
@@ -157,8 +157,9 @@ export function FormContent(props: FormContentProps) {
 
   // Built once: the provider ignores later values anyway.
   const initialValues = useRefWithInit((): EventDialogFormValues => {
-    const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
-    const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
+    const { start, end, timezone } = occurrence.displayTimezone;
+    const startFields = formatDateAndTimeFields(start.timestamp, timezone);
+    const endFields = formatDateAndTimeFields(end.timestamp, timezone);
 
     // The rule is read and written in the event's timezone, not the display one.
     const base = getOccurrenceDataTimezone(occurrence)?.rrule;
@@ -191,10 +192,10 @@ export function FormContent(props: FormContentProps) {
       ...customProperties,
       title: occurrence.title,
       description: hasProp(occurrence, 'description') ? (occurrence.description ?? '') : '',
-      startDate: fmtDate(occurrence.displayTimezone.start),
-      endDate: fmtDate(occurrence.displayTimezone.end),
-      startTime: fmtTime(occurrence.displayTimezone.start),
-      endTime: fmtTime(occurrence.displayTimezone.end),
+      startDate: startFields.date,
+      endDate: endFields.date,
+      startTime: startFields.time,
+      endTime: endFields.time,
       resourceIds: getEventResourceIds(occurrence.resource),
       allDay: !!occurrence.allDay,
       color: hasProp(occurrence, 'color') ? occurrence.color : null,
@@ -278,8 +279,8 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
   // closure values may predate an async validation.
   const runSubmitChecks = (
     values: EventDialogFormValues,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
+    start: number,
+    end: number,
     current: ResolutionSettings,
   ): boolean => {
     const isMissingRequiredResource =
@@ -292,11 +293,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
     }
 
     // Only custom fields can produce unparseable or empty date values.
-    const invalidRangeField = findInvalidRangeField(
-      current.adapter,
-      values,
-      current.displayTimezone,
-    );
+    const invalidRangeField = findInvalidRangeField(values, current.displayTimezone);
     if (invalidRangeField) {
       warnUnvalidatedField(invalidRangeField, 'The value cannot be parsed into a date');
       if (eventDialogFormSelectors.error(formStore.state, invalidRangeField) === undefined) {
@@ -307,11 +304,11 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       }
     }
 
-    // An invalid field already blocks; the ordering verdict would compare
-    // against the computeRange fallback and blame a healthy field.
+    // An invalid field already blocks. Its bound reads as now or `NaN`: the
+    // ordering check would blame a healthy field, or throw.
     const rangeError = invalidRangeField
       ? null
-      : validateRange(current.adapter, start, end, values.allDay);
+      : validateRange(start, end, values.allDay, current.displayTimezone);
     if (rangeError) {
       warnUnvalidatedField(rangeError.field, 'The date range is invalid');
       // A validator on the same field may have stored a more specific message.
@@ -382,7 +379,7 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       };
 
       const values = formStore.state.values;
-      const { start, end } = computeRange(current.adapter, values, current.displayTimezone);
+      const range = computeRange(values, current.displayTimezone);
 
       const dirtyValues = formStore.getDirtyValues();
       // Only the custom fields the user actually edited enter the changes payload,
@@ -431,10 +428,10 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
       // moved since the snapshot; the recurring update defaults it to the occurrence's own.
       const untouchedBound = (bound: 'start' | 'end') =>
         liveEvent != null && liveEvent.dataTimezone.rrule == null
-          ? liveEvent.displayTimezone[bound].value
-          : occurrence.displayTimezone[bound].value;
-      const submittedStart = submitStart ? start : untouchedBound('start');
-      const submittedEnd = submitEnd ? end : untouchedBound('end');
+          ? liveEvent.displayTimezone[bound].timestamp
+          : occurrence.displayTimezone[bound].timestamp;
+      const submittedStart = submitStart ? range.start : untouchedBound('start');
+      const submittedEnd = submitEnd ? range.end : untouchedBound('end');
       if (!runSubmitChecks(values, submittedStart, submittedEnd, current) || !isValid) {
         // Show the tab owning a failing field; General wins when both tabs fail.
         const failingKeys = Object.keys(formStore.state.errors);
@@ -477,6 +474,9 @@ function FormContentInner(props: Omit<FormContentProps, 'occurrence'>) {
         rruleToSubmit = recurrencePresets[values.recurrenceSelection];
       }
 
+      // The store receives adapter values, labeled with the display timezone the fields are read in.
+      const start = createAdapterDate(current.adapter, range.start, current.displayTimezone);
+      const end = createAdapterDate(current.adapter, range.end, current.displayTimezone);
       if (isCreation) {
         store.createEvent({ ...metaChanges, start, end, rrule: rruleToSubmit });
       } else if (

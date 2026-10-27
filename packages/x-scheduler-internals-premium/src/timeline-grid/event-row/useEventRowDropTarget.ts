@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
 import { useDirection } from '@base-ui/react/direction-provider';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { SchedulerResourceId, SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   useDropTarget,
@@ -33,7 +32,6 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   const { resourceId, addPropertiesToDroppedEvent } = parameters;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
   const isRtl = useDirection() === 'rtl';
 
@@ -42,6 +40,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
   // Selector hooks
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const { axis } = config;
 
   // Cursor offsets are measured in axis milliseconds: with a trimmed hour window the
   // hidden hours take no space, so px↔date conversions go through the axis helpers.
@@ -70,7 +69,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
-    ({ data, getDataFromInside, getDataFromOutside, input, timezone }) => {
+    ({ data, getDataFromInside, getDataFromOutside, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
@@ -78,7 +77,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
       const axisOffsetToTimestamp = (offsetMs: number) =>
-        timelineAxisOffsetToTimestamp(adapter, config, roundToDragPrecision(offsetMs));
+        timelineAxisOffsetToTimestamp(axis, roundToDragPrecision(offsetMs));
 
       // Move a Timeline Event within the Timeline
       if (data.source === 'TimelineGridEvent') {
@@ -91,16 +90,15 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         // original dates instead of silently snapping the start to the window edge.
         // A visible start has no remainder, even in the second occurrence of an hour repeated by a
         // fall-back transition, which the axis reads as the first one.
-        const startMsInDay = toPlainDateTime(data.start, timezone).msInDay;
+        const startMsInDay = toPlainDateTime(data.start, axis.timezone).msInDay;
         const hiddenRemainderMs = isStartMinuteOutsideAxisWindow(
           config,
           Math.floor(startMsInDay / 60_000),
         )
           ? data.start -
             timelineAxisOffsetToTimestamp(
-              adapter,
-              config,
-              timestampToTimelineAxisOffsetMs(adapter, config, data.start, timezone, startMsInDay),
+              axis,
+              timestampToTimelineAxisOffsetMs(axis, data.start, startMsInDay),
             )
           : 0;
 
@@ -134,8 +132,8 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
           // The offset from the grab point to the event end must be measured on the axis:
           // the real duration would overshoot when the event spans hidden hours.
           const eventAxisDurationMs =
-            timestampToTimelineAxisOffsetMs(adapter, config, data.end, timezone) -
-            timestampToTimelineAxisOffsetMs(adapter, config, data.start, timezone);
+            timestampToTimelineAxisOffsetMs(axis, data.end) -
+            timestampToTimelineAxisOffsetMs(axis, data.start);
 
           // Ensure the new end date is not before or too close to the start date.
           const { end: newEnd } = clampResizedEventEdge({

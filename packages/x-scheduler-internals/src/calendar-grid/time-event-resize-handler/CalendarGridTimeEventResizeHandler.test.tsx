@@ -16,7 +16,7 @@ describe('<CalendarGrid.TimeEventResizeHandler />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn start={eventStart.value} end={eventEnd.value}>
+            <CalendarGrid.TimeColumn start={eventStart.timestamp} end={eventEnd.timestamp}>
               <CalendarGrid.TimeEvent
                 eventId="fake-id"
                 occurrenceKey="fake-key"

@@ -1,6 +1,7 @@
 import { describe, test } from 'vitest';
 import { adapter, getEventCalendarStateFromParameters } from 'test/utils/scheduler';
-import { getDayList } from '../get-day-list';
+import { getDayListFromPlainDates } from '../get-day-list';
+import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 
 export const benchmarkResult = { value: undefined as unknown };
@@ -11,8 +12,16 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     adapter.date('2026-03-15T12:00:00Z', 'default'),
     timezone,
   );
-  const gridStart = adapter.startOfWeek(adapter.startOfMonth(visibleDate));
-  const days = getDayList({ adapter, start: gridStart, end: adapter.addDays(gridStart, 41) });
+  const firstPlainDate = buildTemporalPlainDate(
+    adapter,
+    adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
+  );
+  const days = getDayListFromPlainDates({
+    adapter,
+    firstPlainDate,
+    lastPlainDate: firstPlainDate.add({ days: 41 }),
+    timezone,
+  });
   // A 3-day event dragged over the grid.
   const state = {
     ...getEventCalendarStateFromParameters({ events: [], displayTimezone: timezone }),
@@ -32,7 +41,7 @@ describe.each(['default', 'America/New_York'] as const)('%s display timezone', (
     await bench('placeholder lookups of 42 day cells', () => {
       let count = 0;
       for (let index = 0; index < days.length; index += 1) {
-        const rowStart = days[index - (index % 7)].value;
+        const rowStart = days[index - (index % 7)].timestamp;
         if (
           eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell(
             state,

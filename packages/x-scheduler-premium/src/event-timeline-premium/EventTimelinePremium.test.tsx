@@ -1253,6 +1253,19 @@ describe('<EventTimelinePremium />', () => {
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
     });
+
+    it('should show the days of the visible date in the display timezone', async () => {
+      await renderTimeline({
+        preset: 'dayAndHour',
+        // July 1st at midnight in UTC is June 30th at 20:00 in New York.
+        visibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
+        displayTimezone: 'America/New_York',
+      });
+
+      // The four days start on June 30th, not on July 1st, the day of the visible date in UTC.
+      expect(screen.queryByText('Mon, Jun 30')).not.to.equal(null);
+      expect(screen.queryByText('Fri, Jul 4')).to.equal(null);
+    });
   });
 
   describe('onEventEditingStart', () => {
