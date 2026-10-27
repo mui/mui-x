@@ -1,12 +1,31 @@
 import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { TimeClock } from '@mui/x-date-pickers/TimeClock';
+import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
+
+const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
+  {
+    label: 'This week',
+    getValue: () => [dayjs().startOf('week'), dayjs().endOf('week')],
+  },
+  {
+    label: 'Next 7 days',
+    getValue: () => [dayjs(), dayjs().add(7, 'day')],
+  },
+  { label: 'Reset', getValue: () => [null, null] },
+];
 
 export default function FocusVisiblePickers() {
   // Inherit the theme from the docs site (dark/light mode)
@@ -36,12 +55,47 @@ export default function FocusVisiblePickers() {
               gap: 2,
             }}
           >
-            <DateCalendar sx={{ m: 0 }} />
+            <DateCalendar views={['year', 'month', 'day']} sx={{ m: 0 }} />
             <MultiSectionDigitalClock sx={{ width: 'auto', m: 0 }} />
+          </Box>
+          <Divider sx={{ my: 2 }} />
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 2,
+            }}
+          >
+            <DigitalClock sx={{ width: 'auto', m: 0 }} />
+            <TimeClock sx={{ m: 0 }} />
           </Box>
           <Divider sx={{ my: 2 }} />
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <DateRangeCalendar />
+          </Box>
+          <Divider sx={{ my: 2 }} />
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gap: 2,
+            }}
+          >
+            <DatePicker
+              label="Clearable date"
+              defaultValue={dayjs('2022-04-17')}
+              slotProps={{ field: { clearable: true } }}
+            />
+            <DateTimeRangePicker
+              label="Date and time range"
+              slotProps={{
+                shortcuts: { items: shortcutsItems },
+                toolbar: { hidden: false },
+              }}
+            />
           </Box>
         </Box>
       </LocalizationProvider>

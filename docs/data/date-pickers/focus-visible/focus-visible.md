@@ -8,7 +8,7 @@ title: Date and Time Pickers - Focus visible
 
 ## Prerequisite
 
-This feature requires Material UI 9.4 or later, and MUI X 9.13 or later.
+This feature requires Material UI 9.4 or later, and MUI X 9.17 or later.
 
 Turn it on in the Material UI theme.
 The Pickers use it automatically, so you don't need to set any prop on the picker:
@@ -39,6 +39,7 @@ Today's date is marked with a circle drawn with the CSS `outline` property.
 The focus ring also uses `outline`, and an element can only have one.
 
 So when today's date has focus, the circle is drawn with `box-shadow` instead, and you see both the ring and the circle.
+Because the circle takes over `box-shadow`, a `boxShadow` set in `theme.focusVisible` isn't applied to today's date.
 
 This only happens when the focus ring is turned on.
 Otherwise, today's date still uses `outline`, so your existing styles on the `today` class keep working.
