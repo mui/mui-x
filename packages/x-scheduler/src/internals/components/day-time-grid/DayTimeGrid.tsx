@@ -446,7 +446,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 
-
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
       <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>

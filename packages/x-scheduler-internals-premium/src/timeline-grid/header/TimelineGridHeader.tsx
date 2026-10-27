@@ -38,7 +38,8 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   // virtualizer's render context): only recompute the cell walk when the range
   // actually changes.
   const cellsPerLevel = React.useMemo(
-    () => headers.map((level) => iterate(adapter, level.unit, timeResolution, config, weekStartsOn)),
+    () =>
+      headers.map((level) => iterate(adapter, level.unit, timeResolution, config, weekStartsOn)),
     [adapter, headers, timeResolution, config, weekStartsOn],
   );
 

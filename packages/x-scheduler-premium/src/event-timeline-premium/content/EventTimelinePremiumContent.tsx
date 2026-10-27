@@ -28,7 +28,6 @@ import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
   EventContextMenuTrigger,
@@ -659,7 +658,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const headerRowRef = React.useRef<HTMLDivElement | null>(null);
 
   // Selector hooks
-  const adapter = useAdapterContext();
   const nowTimestamp = useStore(store, schedulerNowSelectors.nowTimestamp);
   const showCurrentTimeIndicatorSetting = useStore(
     store,

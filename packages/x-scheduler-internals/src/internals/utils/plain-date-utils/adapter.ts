@@ -206,11 +206,7 @@ export function addToAdapterDate(
   const epochMs = adapter.getTime(date);
   return createAdapterDate(
     adapter,
-    toEpochMs(
-      toPlainDate(epochMs, timezone).add(duration),
-      toMsInDay(epochMs, timezone),
-      timezone,
-    ),
+    toEpochMs(toPlainDate(epochMs, timezone).add(duration), toMsInDay(epochMs, timezone), timezone),
     timezone,
   );
 }

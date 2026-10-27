@@ -7,7 +7,10 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
   WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
-import { buildTemporalPlainDate, getPlainDateWeekStart } from '@mui/x-scheduler-internals/internals';
+import {
+  buildTemporalPlainDate,
+  getPlainDateWeekStart,
+} from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 import { getPlainDateWeekDayCode, getWeekDayCode } from './internal-utils';

@@ -74,7 +74,9 @@ function getNthWeekdayOfMonth(
     const lastDayOfWeek = ((monthStart.dayOfWeek + daysInMonth - 2) % 7) + 1;
     day = daysInMonth - ((lastDayOfWeek - dayOfWeek + 7) % 7) + 7 * (ordinal + 1);
   }
-  return day >= 1 && day <= daysInMonth ? plainDateFromDayNumber(monthStart.dayNumber + day - 1) : null;
+  return day >= 1 && day <= daysInMonth
+    ? plainDateFromDayNumber(monthStart.dayNumber + day - 1)
+    : null;
 }
 
 /**
@@ -187,7 +189,9 @@ class RuleDays {
       case 'WEEKLY': {
         const seriesWeekStart = getStartOfRRuleWeek(seriesStart);
         const weeksDiff = (getStartOfRRuleWeek(date).dayNumber - seriesWeekStart.dayNumber) / 7;
-        const startingWeek = plainDateFromDayNumber(seriesWeekStart.dayNumber + 7 * skip(weeksDiff));
+        const startingWeek = plainDateFromDayNumber(
+          seriesWeekStart.dayNumber + 7 * skip(weeksDiff),
+        );
         const first = this.findFirstInWeek(startingWeek, minDate);
         if (first !== null) {
           return first;
@@ -311,8 +315,7 @@ export class RecurringSeries {
 
   constructor(adapter: Adapter, parameters: RecurringSeriesParameters) {
     const { rule, timezone } = parameters;
-    const toDay = (date: TemporalSupportedObject) =>
-      toPlainDate(adapter.getTime(date), timezone);
+    const toDay = (date: TemporalSupportedObject) => toPlainDate(adapter.getTime(date), timezone);
 
     this.timezone = timezone;
     this.startPlainDate = toPlainDate(parameters.start, timezone);
@@ -469,7 +472,8 @@ export class RecurringSeries {
     }
     if (
       count === 0 ||
-      getSkippedDays(startDay, plainDateFromDayNumber(lastDay.dayNumber + 1), this.timezone).size === 0
+      getSkippedDays(startDay, plainDateFromDayNumber(lastDay.dayNumber + 1), this.timezone)
+        .size === 0
     ) {
       return count;
     }

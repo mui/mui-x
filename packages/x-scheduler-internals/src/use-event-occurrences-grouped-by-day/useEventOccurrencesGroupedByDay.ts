@@ -7,10 +7,7 @@ import {
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
 import { useAdapterContext } from '../use-adapter-context';
-import {
-  getEndOfDayMs,
-  getStartOfDayMs,
-} from '../internals/utils/plain-date-utils/timeZone';
+import { getEndOfDayMs, getStartOfDayMs } from '../internals/utils/plain-date-utils/timeZone';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,

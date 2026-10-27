@@ -3,7 +3,6 @@ import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
   SchedulerResource,
-  TemporalSupportedObject,
 } from '../models';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
