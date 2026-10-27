@@ -9,9 +9,7 @@ import {
   createAdapterDateFromWallTime,
   createProcessedDate,
   getDateKey,
-  getPlainDateKey,
 } from './adapter';
-import { PlainDate } from '../base-temporal/PlainDate';
 import type { TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
 
@@ -74,30 +72,18 @@ describe('base-temporal adapter bridge', () => {
     },
   );
 
-  it('should return the key getDateKey() returns for the same day', () => {
+  it('should return the ISO date of the day in the timezone of the value as the key, whatever the locale', () => {
     for (const currentAdapter of [adapter, adapterFr]) {
-      const value = currentAdapter.date('2025-07-04T15:00:00', 'Asia/Tokyo');
-      const plainDate = buildTemporalPlainDate(currentAdapter, value);
-      expect(getPlainDateKey(currentAdapter, plainDate)).to.equal(
-        getDateKey(value, currentAdapter),
-      );
+      // July 4th at 02:00 in Tokyo is July 3rd in UTC.
+      const value = currentAdapter.date('2025-07-04T02:00:00', 'Asia/Tokyo');
+      expect(getDateKey(value, currentAdapter)).to.equal('2025-07-04');
     }
-  });
-
-  // Browsers cannot change their timezone through process.env.TZ.
-  it.skipIf(!isJSDOM)('should return the key of a day the system timezone skips', () => {
-    // Pacific/Apia skipped December 30th, 2011.
-    setSystemTimezone('Pacific/Apia');
-    const systemAdapter = new TemporalAdapterDateFns();
-    expect(
-      getPlainDateKey(systemAdapter, PlainDate.from({ year: 2011, month: 12, day: 30 })),
-    ).to.equal('12/30/2011');
   });
 
   // The processed date the adapter reads from a value, which processed dates must match.
   const readThroughAdapter = (currentAdapter: Adapter, value: TemporalSupportedObject) => ({
     value,
-    key: getDateKey(value, currentAdapter),
+    key: currentAdapter.formatByString(value, 'yyyy-MM-dd'),
     timestamp: currentAdapter.getTime(value),
     minutesInDay: currentAdapter.getHours(value) * 60 + currentAdapter.getMinutes(value),
   });

@@ -9,5 +9,5 @@ export function processDate(
   date: TemporalSupportedObject,
   adapter: Adapter,
 ): SchedulerProcessedDate {
-  return buildProcessedDate(adapter, date, adapter.getTime(date), adapter.getTimezone(date));
+  return buildProcessedDate(date, adapter.getTime(date), adapter.getTimezone(date));
 }

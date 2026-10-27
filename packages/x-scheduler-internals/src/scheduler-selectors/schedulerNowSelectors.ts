@@ -1,5 +1,4 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import type { TemporalSupportedObject } from '../models';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
 
@@ -8,16 +7,21 @@ import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
  * the current day re-render when it changes, not every minute.
  */
 const nowDayNumber = createSelectorMemoized(
-  (state: State) => state.adapter,
-  (state: State) => state.nowUpdatedEveryMinute,
+  (state: State) => state.nowTimestamp,
   (state: State) => state.displayTimezone,
-  (adapter, now, timezone) => toLocalDayNumber(adapter.getTime(now), timezone),
+  (nowTimestamp, timezone) => toLocalDayNumber(nowTimestamp, timezone),
 );
 
 export const schedulerNowSelectors = {
   showCurrentTimeIndicator: (state: State) => state.showCurrentTimeIndicator,
-  nowUpdatedEveryMinute: (state: State) => state.nowUpdatedEveryMinute,
+  /**
+   * The timestamp of now, updated every minute. Read it in the display timezone.
+   */
+  nowTimestamp: (state: State) => state.nowTimestamp,
   nowDayNumber,
-  isCurrentDay: (state: State, date: TemporalSupportedObject) =>
-    toLocalDayNumber(state.adapter.getTime(date), state.displayTimezone) === nowDayNumber(state),
+  /**
+   * Whether `timestamp` is on the current day of the display timezone.
+   */
+  isCurrentDay: (state: State, timestamp: number) =>
+    toLocalDayNumber(timestamp, state.displayTimezone) === nowDayNumber(state),
 };

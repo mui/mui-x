@@ -9,6 +9,7 @@ import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-in
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { toPlainDateTime } from '@mui/x-scheduler-internals/internals';
 import { DayGridEvent } from '../event';
 import { useEventEditingContext } from '../event-editing';
 import { EventContextMenuTrigger } from '../event-context-menu';
@@ -75,6 +76,7 @@ export function DayGridCell(props: DayGridCellProps) {
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
 
@@ -90,7 +92,7 @@ export function DayGridCell(props: DayGridCellProps) {
     <DayTimeGridAllDayEventsCell
       className={classes.dayTimeGridAllDayEventsCell}
       ref={cellRef}
-      value={day.value}
+      value={toPlainDateTime(day.timestamp, displayTimezone).date}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       style={
         {

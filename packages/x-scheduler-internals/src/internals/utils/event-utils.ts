@@ -57,7 +57,7 @@ export function getRecurringOccurrenceKey(
 }
 
 /**
- * The render key of a recurring occurrence, from the `getDateKey()` of its day.
+ * The render key of a recurring occurrence, from the key of its day (`getPlainDateKey()`).
  */
 export function getRecurringOccurrenceKeyFromDateKey(
   eventId: SchedulerEventId,
@@ -250,8 +250,14 @@ export function getResourceSelectionMode(
 
 export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
+  /**
+   * The first instant of the range, as a timestamp.
+   */
+  start: number;
+  /**
+   * The last instant of the range, as a timestamp.
+   */
+  end: number;
   eventRangeIndex: SchedulerEventRangeIndex;
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;

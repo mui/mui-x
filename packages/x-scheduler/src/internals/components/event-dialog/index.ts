@@ -16,6 +16,7 @@ export {
   getResentRangeBounds,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,
+  getRecurrenceUntil,
 } from './utils';
 export { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 export { useEventDialogFormContext } from './form/EventDialogFormContext';

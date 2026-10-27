@@ -131,10 +131,10 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
 
       const occurrence = list[0].occurrences[0];
       expect(positions.get(occurrence.key)).to.deep.equal(
-        computeElementPositionInCollection(adapter, {
+        computeElementPositionInCollection({
           start: occurrence.displayTimezone.start,
           end: occurrence.displayTimezone.end,
-          collection: config,
+          collection: config.axis,
         }),
       );
     });
@@ -170,7 +170,6 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
         eventTimelinePremiumOccurrenceSelectors.visiblePositionByOccurrenceKey(state)!;
 
       const [layoutOccurrence] = addTimelinePositionsToOccurrences({
-        adapter,
         config,
         occurrences: [{ ...occurrence, position: { firstIndex: 1, lastIndex: 1 } }],
         positionByOccurrenceKey,
@@ -190,17 +189,16 @@ describe('eventTimelinePremiumOccurrenceSelectors', () => {
       )[0];
 
       const [layoutOccurrence] = addTimelinePositionsToOccurrences({
-        adapter,
         config,
         occurrences: [{ ...occurrence, position: { firstIndex: 1, lastIndex: 1 } }],
         positionByOccurrenceKey: null,
       });
 
       expect(layoutOccurrence.timelinePosition).to.deep.equal(
-        computeElementPositionInCollection(adapter, {
+        computeElementPositionInCollection({
           start: occurrence.displayTimezone.start,
           end: occurrence.displayTimezone.end,
-          collection: config,
+          collection: config.axis,
           durationMs: config.durationMs,
         }),
       );

@@ -6,7 +6,8 @@ import { processDate } from '../process-date';
 import type { SchedulerProcessedEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
-import { getDayList } from '../get-day-list';
+import { getDayListFromPlainDates } from '../get-day-list';
+import { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const days = [
@@ -24,7 +25,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days: dayList,
-        eventRangeIndex: createEventRangeIndex(events, adapter, false),
+        eventRangeIndex: createEventRangeIndex(events, false),
         visibleResources: {},
         displayTimezone,
         recurringEventsPlugin: null,
@@ -184,8 +185,12 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should span the next day when the first day starts after midnight', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
     const timezone = 'America/Havana';
-    const start = adapter.date('2026-03-08T12:00:00', timezone);
-    const dayList = getDayList({ adapter, start, end: adapter.addDays(start, 1) });
+    const dayList = getDayListFromPlainDates({
+      adapter,
+      firstPlainDate: PlainDate.from('2026-03-08'),
+      lastPlainDate: PlainDate.from('2026-03-09'),
+      timezone,
+    });
     const result = testHook(
       [
         EventBuilder.new()
@@ -208,10 +213,11 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   it('should span every date an event covers after a DST transition at midnight', () => {
     // America/Havana springs forward from 00:00 to 01:00 on March 8th, 2026.
-    const havanaDays = getDayList({
+    const havanaDays = getDayListFromPlainDates({
       adapter,
-      start: adapter.date('2026-03-08T12:00:00', 'America/Havana'),
-      end: adapter.date('2026-03-10T12:00:00', 'America/Havana'),
+      firstPlainDate: PlainDate.from('2026-03-08'),
+      lastPlainDate: PlainDate.from('2026-03-10'),
+      timezone: 'America/Havana',
     });
     const result = testHook(
       [

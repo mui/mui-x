@@ -8,11 +8,10 @@ import {
 } from '../internals/utils/event-utils';
 import { useAdapterContext } from '../use-adapter-context';
 import {
-  createEndOfPlainDate,
-  createStartOfPlainDate,
-} from '../internals/utils/plain-date-utils/adapter';
-import { plainDateFromDayNumber } from '../internals/utils/plain-date-utils/plainDate';
-import { toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+  getEndOfDayMs,
+  getStartOfDayMs,
+  toLocalDayNumber,
+} from '../internals/utils/plain-date-utils/timeZone';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
@@ -91,12 +90,8 @@ export function innerGetEventOccurrencesGroupedByDay(
   const dayNumbers = days.map((day) => toLocalDayNumber(day.timestamp, displayTimezone));
   const occurrences = getOccurrencesFromEvents({
     adapter,
-    start: createStartOfPlainDate(adapter, plainDateFromDayNumber(dayNumbers[0]), displayTimezone),
-    end: createEndOfPlainDate(
-      adapter,
-      plainDateFromDayNumber(dayNumbers[dayNumbers.length - 1]),
-      displayTimezone,
-    ),
+    start: getStartOfDayMs(days[0].timestamp, displayTimezone),
+    end: getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone),
     eventRangeIndex,
     visibleResources,
     displayTimezone,
