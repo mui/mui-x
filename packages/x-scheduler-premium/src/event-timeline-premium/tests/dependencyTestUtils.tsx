@@ -25,6 +25,7 @@ import { recurringEventsFeature } from '../../recurring-events';
 import { dependenciesFeature } from '../content/timeline-dependencies/dependenciesFeature';
 import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
 import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
+import type { EventTimelinePremiumInternalFeatures } from '../features/EventTimelinePremiumFeatures.types';
 
 export { buildDependency, resource1, resource2 };
 
@@ -69,6 +70,11 @@ const styledContextValue = {
 
 const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
 
+const defaultFeatures: EventTimelinePremiumInternalFeatures = {
+  recurringEvents: recurringEventsFeature,
+  dependencies: dependenciesFeature,
+};
+
 type PresetConfig = EventTimelinePremiumStoreParameters<
   SchedulerEvent,
   SchedulerResource
@@ -80,6 +86,10 @@ interface TestTimelineProps {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  /**
+   * @default both features
+   */
+  features?: EventTimelinePremiumInternalFeatures;
   /**
    * Observes the dependency changes on top of the controlled loop.
    */
@@ -97,6 +107,7 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  features: featuresProp = defaultFeatures,
   onDependenciesChange,
   onStoreReady,
 }: TestTimelineProps) {
@@ -113,10 +124,7 @@ export function TestTimeline({
   // render a timeline with dependencies disabled.
   const dependenciesEnabled = dependencies !== undefined;
 
-  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures({
-    recurringEvents: recurringEventsFeature,
-    dependencies: dependenciesFeature,
-  });
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
 
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
@@ -165,6 +173,7 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  features?: EventTimelinePremiumInternalFeatures;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
   /**
    * Sets the theme direction and the `dir` attribute, like a consumer does.
@@ -188,6 +197,7 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  features,
   onDependenciesChange,
   onStoreReady,
   direction = 'ltr',
@@ -217,6 +227,7 @@ function TimelineHost({
             dependencies={dependencies}
             presetConfig={presetConfig}
             readOnly={readOnly}
+            features={features}
             onDependenciesChange={onDependenciesChange}
             onStoreReady={onStoreReady}
           />
