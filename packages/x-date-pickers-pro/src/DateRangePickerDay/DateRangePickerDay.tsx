@@ -270,9 +270,7 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
           [`&.${buttonBaseClasses.focusVisible}`]: {
             ...theme.focusVisible,
             ...applyInsetFocusVisible(2),
-            boxShadow: theme.focusVisible?.boxShadow
-              ? `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}, ${theme.focusVisible.boxShadow}`
-              : `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
+            boxShadow: `inset 0 0 0 1px ${(theme.vars || theme).palette.text.secondary}`,
           },
         }),
       },
