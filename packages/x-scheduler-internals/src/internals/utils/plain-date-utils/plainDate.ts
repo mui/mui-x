@@ -18,3 +18,11 @@ export function isWeekendPlainDate(plainDate: PlainDate): boolean {
   // ISO weekdays 6 and 7 are Saturday and Sunday.
   return plainDate.dayOfWeek >= 6;
 }
+
+/**
+ * The key of `plainDate` that the processed dates and the occurrences use: its ISO date, such as
+ * `2026-03-07`, whatever the locale.
+ */
+export function getPlainDateKey(plainDate: PlainDate): string {
+  return plainDate.toString();
+}

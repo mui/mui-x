@@ -230,7 +230,7 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays.map((day) => day.key)).to.deep.equal(['12/31/2011']);
+      expect(visibleDays.map((day) => day.key)).to.deep.equal(['2011-12-31']);
     });
 
     it('should not find an event past the horizon when showEmptyDaysInAgenda=false', () => {

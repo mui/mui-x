@@ -26,7 +26,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       for (let i = 0; i < result.length; i += 1) {
         const occ = result[i];
         expect(occ.displayTimezone.start.key).to.equal(
-          adapter.format(adapter.addDays(visibleStart, i), 'localizedNumericDate'),
+          adapter.formatByString(adapter.addDays(visibleStart, i), 'yyyy-MM-dd'),
         );
         expect(
           adapter.differenceInMinutes(
@@ -638,7 +638,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
             'America/New_York',
           ).map((o) => o.dataTimezone.start.key);
 
-        expect(expand('2024-01-01T00:00:00', '2024-01-31T23:59:59')).to.deep.equal(['01/01/2024']);
+        expect(expand('2024-01-01T00:00:00', '2024-01-31T23:59:59')).to.deep.equal(['2024-01-01']);
         expect(expand('2025-01-01T00:00:00', '2025-01-31T23:59:59')).to.deep.equal([]);
       },
     );
@@ -1017,9 +1017,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       result.map((o) => adapter.formatByString(o.dataTimezone.start.value, 'yyyy-MM-dd HH:mm')),
     ).to.deep.equal(['2026-01-01 00:30', '2026-02-01 00:30', '2026-03-01 00:30']);
     expect(result.map((o) => o.dataTimezone.start.key)).to.deep.equal([
-      '01/01/2026',
-      '02/01/2026',
-      '03/01/2026',
+      '2026-01-01',
+      '2026-02-01',
+      '2026-03-01',
     ]);
   });
 
