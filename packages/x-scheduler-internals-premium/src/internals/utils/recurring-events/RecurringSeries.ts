@@ -274,14 +274,13 @@ export interface RecurringSeriesParameters {
    */
   rule: SchedulerProcessedEventRecurrenceRule;
   /**
-   * The start of the first occurrence (DTSTART), labeled in the timezone of the series.
+   * The instant of the first occurrence (DTSTART).
    */
-  start: TemporalSupportedObject;
+  start: number;
   /**
    * The timezone of the series.
-   * @default the timezone `start` is labeled with
    */
-  timezone?: TemporalTimezone;
+  timezone: TemporalTimezone;
   /**
    * The excluded occurrences (EXDATE), labeled in the timezone of the series.
    */
@@ -315,13 +314,12 @@ export class RecurringSeries {
   private readonly skippedDaysByPeriod = new Map<number, Set<number>>();
 
   constructor(adapter: Adapter, parameters: RecurringSeriesParameters) {
-    const { rule } = parameters;
-    const timezone = parameters.timezone ?? adapter.getTimezone(parameters.start);
+    const { rule, timezone } = parameters;
     const toDay = (date: TemporalSupportedObject) =>
       toPlainDateTime(adapter.getTime(date), timezone).date;
 
     this.timezone = timezone;
-    this.start = toPlainDateTime(adapter.getTime(parameters.start), timezone);
+    this.start = toPlainDateTime(parameters.start, timezone);
     this.ruleDays = new RuleDays(rule, this.start.date);
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
@@ -340,7 +338,7 @@ export class RecurringSeries {
   ): RecurringSeries {
     return new RecurringSeries(adapter, {
       rule: event.dataTimezone.rrule!,
-      start: event.dataTimezone.start.value,
+      start: event.dataTimezone.start.timestamp,
       timezone: event.dataTimezone.timezone,
       exDates,
     });

@@ -164,9 +164,10 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   occurrencePlaceholder: SchedulerOccurrencePlaceholder | null;
   /**
-   * The current date and time, updated every minute.
+   * The timestamp of the current date and time, updated every minute.
+   * Read it in the display timezone.
    */
-  nowUpdatedEveryMinute: TemporalSupportedObject;
+  nowTimestamp: number;
   /**
    * Whether the calendar is in read-only mode.
    * @default false

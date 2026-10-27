@@ -258,7 +258,7 @@ export class EventTimelinePremiumStore<
     // The dialog anchor no longer matches the arrow after a date or preset change.
     this.disposables.defer(
       this.registerStoreEffect(
-        (state) => state.adapter.getTime(state.visibleDate),
+        schedulerOtherSelectors.visibleTimestamp,
         this.closeDependencyEditor,
       ),
     );

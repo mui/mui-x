@@ -10,7 +10,10 @@ import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTi
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
-import { toEpochMs, toPlainDateTime } from '../../internals/utils/plain-date-utils/timeZone';
+import {
+  moveTimestampToPlainDate,
+  toPlainDateTime,
+} from '../../internals/utils/plain-date-utils/timeZone';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
   function CalendarGridCurrentTimeIndicator(
@@ -35,19 +38,18 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       dayEndMinute,
     } = useCalendarGridTimeColumnContext();
     const store = useEventCalendarStoreContext();
-    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const nowTimestamp = useStore(store, schedulerNowSelectors.nowTimestamp);
     const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
     // The time of day of now, on the wall clock of the day of the column.
     const nowForColumn = React.useMemo(() => {
       const columnPlainDate = toPlainDateTime(adapter.getTime(columnStart), displayTimezone).date;
-      const nowMsInDay = toPlainDateTime(adapter.getTime(now), displayTimezone).msInDay;
       return createProcessedDate(
         adapter,
-        toEpochMs(columnPlainDate, nowMsInDay, displayTimezone),
+        moveTimestampToPlainDate(nowTimestamp, columnPlainDate, displayTimezone),
         displayTimezone,
       );
-    }, [adapter, columnStart, displayTimezone, now]);
+    }, [adapter, columnStart, displayTimezone, nowTimestamp]);
 
     const { position } = useElementPositionInCollection({
       // Only the position is read, which depends on the start alone.

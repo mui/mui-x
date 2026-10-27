@@ -66,7 +66,7 @@ describe('getDayList', () => {
       start: adapter.date('2011-12-29T12:00:00', 'Pacific/Apia'),
       end: adapter.date('2011-12-31T12:00:00', 'Pacific/Apia'),
     });
-    expect(days.map((day) => day.key)).to.deep.equal(['12/29/2011', '12/31/2011']);
+    expect(days.map((day) => day.key)).to.deep.equal(['2011-12-29', '2011-12-31']);
   });
 
   it('should start the days after a DST transition at midnight at midnight', () => {
@@ -74,10 +74,10 @@ describe('getDayList', () => {
     const start = adapter.date('2026-03-07T00:00:00', 'America/Havana');
     const days = getDayList({ adapter, start, end: adapter.addDays(start, 3) });
     expect(days.map((day) => day.key)).to.deep.equal([
-      '03/07/2026',
-      '03/08/2026',
-      '03/09/2026',
-      '03/10/2026',
+      '2026-03-07',
+      '2026-03-08',
+      '2026-03-09',
+      '2026-03-10',
     ]);
     // March 8th has no midnight, so it starts at 01:00.
     expect(days.map((day) => day.minutesInDay)).to.deep.equal([0, 60, 0, 0]);

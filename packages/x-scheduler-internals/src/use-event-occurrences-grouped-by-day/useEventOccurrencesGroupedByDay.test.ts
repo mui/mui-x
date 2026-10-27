@@ -28,7 +28,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     return innerGetEventOccurrencesGroupedByDay({
       adapter,
       days: visibleDays,
-      eventRangeIndex: createEventRangeIndex(events, adapter, false),
+      eventRangeIndex: createEventRangeIndex(events, false),
       visibleResources: visible,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -91,7 +91,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([visibleEvent, invisibleEvent], adapter, false),
+      eventRangeIndex: createEventRangeIndex([visibleEvent, invisibleEvent], false),
       visibleResources: visibilityWithHidden,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -117,7 +117,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, false),
+      eventRangeIndex: createEventRangeIndex([event], false),
       visibleResources: visibilityWithOneHidden,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -142,7 +142,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, false),
+      eventRangeIndex: createEventRangeIndex([event], false),
       visibleResources: visibilityAllHidden,
       displayTimezone: 'default',
       recurringEventsPlugin: null,
@@ -185,7 +185,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days: [lastDay],
-      eventRangeIndex: createEventRangeIndex([event], adapter, false),
+      eventRangeIndex: createEventRangeIndex([event], false),
       visibleResources: visible,
       displayTimezone: 'America/Santiago',
       recurringEventsPlugin: null,
@@ -225,7 +225,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      eventRangeIndex: createEventRangeIndex([event], adapter, true),
+      eventRangeIndex: createEventRangeIndex([event], true),
       visibleResources: visible,
       displayTimezone: 'Europe/Paris',
       recurringEventsPlugin: schedulerRecurringEventsPlugin,

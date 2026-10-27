@@ -7,6 +7,7 @@ import type {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { describe, it, expect } from 'vitest';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
 import {
   adjustRRuleForAllMove,
   applyRecurringUpdateAll,
@@ -32,8 +33,19 @@ describe('recurring-events/updateRecurringEvent', () => {
       originalSeriesStart: TemporalSupportedObject = seriesStart,
       split: TemporalSupportedObject = splitStart,
     ) =>
-      decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes) as
-        SchedulerProcessedEventRecurrenceRule | undefined;
+      decideSplitRRule(
+        adapter,
+        {
+          ...defaultEvent,
+          dataTimezone: {
+            ...defaultEvent.dataTimezone,
+            rrule: originalRule,
+            start: processDate(originalSeriesStart, adapter),
+          },
+        },
+        split,
+        changes,
+      ) as SchedulerProcessedEventRecurrenceRule | undefined;
 
     it('should return changes.rrule as is when user explicitly changed recurrence', () => {
       const original: SchedulerProcessedEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
@@ -71,6 +83,24 @@ describe('recurring-events/updateRecurringEvent', () => {
 
         const res = call(original, { title: 'New Event Title' });
         expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, count: 37 });
+      });
+
+      it('should count the excluded occurrences toward the COUNT of the new series', () => {
+        // Daily with count 5 from Jan 01, Jan 02 excluded
+        // Split on Jan 04 => Jan 01..03 consumed => remaining 2 => new COUNT=2
+        const event = EventBuilder.new()
+          .singleDay('2025-01-01T09:00:00Z')
+          .rrule({ freq: 'DAILY', count: 5 })
+          .exDates(['2025-01-02Z'])
+          .toProcessed();
+
+        const res = decideSplitRRule(
+          adapter,
+          event,
+          adapter.date('2025-01-04T09:00:00Z', 'default'),
+          { title: 'New Event Title' },
+        );
+        expect(res).to.deep.equal({ freq: 'DAILY', count: 2 });
       });
 
       it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {
@@ -234,7 +264,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           title: 'Edited Event',
           start: changes.start!.toISOString(),
           end: changes.end!.toISOString(),
-          id: `${defaultEvent.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
+          id: `${defaultEvent.id}::2025-01-05`,
           extractedFromId: defaultEvent.id,
           rrule: {
             ...defaultEvent.dataTimezone.rrule,
@@ -316,7 +346,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           title: 'Edited First',
           start: changes.start!.toISOString(),
           end: changes.end!.toISOString(),
-          id: `${original.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
+          id: `${original.id}::2025-01-10`,
           extractedFromId: original.id,
           rrule: {
             ...original.dataTimezone.rrule,
@@ -1179,8 +1209,8 @@ describe('recurring-events/updateRecurringEvent', () => {
           .toProcessed();
         const [occurrence] = getRecurringEventOccurrencesForVisibleDays(
           event,
-          adapter.date('2025-10-26T00:00:00Z', 'default'),
-          adapter.date('2025-10-26T12:00:00Z', 'default'),
+          adapter.getTime(adapter.date('2025-10-26T00:00:00Z', 'default')),
+          adapter.getTime(adapter.date('2025-10-26T12:00:00Z', 'default')),
           adapter,
           'Europe/Paris',
         );
