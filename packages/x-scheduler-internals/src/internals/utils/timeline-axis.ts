@@ -3,8 +3,9 @@ import type {
   TemporalSupportedObject,
   TemporalTimezone,
 } from '@base-ui/react/internals/temporal';
+import { MS_PER_DAY } from './base-temporal/iso';
 import {
-  toEpochMs,
+  localToEpochMs,
   toLocalDayNumber,
   toLocalMs,
   toPlainDateTime,
@@ -59,7 +60,8 @@ export interface TimelineAxisRange extends TimelineAxisWindow {
 }
 
 /**
- * Reads the bounds of a range once, in the timezone of its start.
+ * Reads the bounds of a range once, in the timezone of its start. Both bounds, and the dates
+ * placed on the axis, are read in that timezone.
  */
 export function getTimelineAxis(adapter: TemporalAdapter, range: TimelineAxisRange): TimelineAxis {
   return {
@@ -139,8 +141,9 @@ export function timelineAxisOffsetToTimestamp(axis: TimelineAxis, offsetMs: numb
   const dayMs = getTimelineAxisDayMs(axis);
   const dayIndex = Math.floor(offsetMs / dayMs);
   const msInDay = axis.dayStartMinute * MINUTE_MS + (offsetMs - dayIndex * dayMs);
-  const plainDate = toPlainDateTime(axis.start, axis.timezone).date.add({ days: dayIndex });
-  return toEpochMs(plainDate, msInDay, axis.timezone);
+  // Day numbers, as this runs on every pointer move.
+  const dayNumber = toLocalDayNumber(axis.start, axis.timezone) + dayIndex;
+  return localToEpochMs(dayNumber * MS_PER_DAY + msInDay, axis.timezone);
 }
 
 /**
@@ -169,8 +172,8 @@ export function resolveRepeatedTimeFrom(
  * in the timezone of the axis.
  * Timestamps outside the visible window are clamped to their day's window edge; timestamps outside
  * the collection range produce out-of-range offsets (e.g. negative before the start).
- * `msInDay` can be provided when the caller already knows the wall-clock time of day
- * (e.g. from a `SchedulerProcessedDate`), skipping its computation.
+ * `msInDay`, the wall-clock time of day in the timezone of the axis, can be provided when the
+ * caller already knows it (e.g. from a `SchedulerProcessedDate`), skipping its computation.
  */
 export function timestampToTimelineAxisOffsetMs(
   axis: TimelineAxis,

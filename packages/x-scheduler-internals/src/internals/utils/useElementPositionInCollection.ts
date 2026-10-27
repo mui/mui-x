@@ -66,7 +66,13 @@ export function computeElementPositionInCollection(
 
 export namespace useElementPositionInCollection {
   export interface Parameters {
+    /**
+     * The start of the element, processed in the timezone of the start of the collection.
+     */
     start: SchedulerProcessedDate;
+    /**
+     * The end of the element, processed in the timezone of the start of the collection.
+     */
     end: SchedulerProcessedDate;
     /**
      * The displayed range and daily hour window the element is positioned in: a
