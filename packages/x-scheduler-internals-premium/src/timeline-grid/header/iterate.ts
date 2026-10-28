@@ -15,7 +15,7 @@ const HOUR_MS = 60 * MINUTE_MS;
 /**
  * The date of a wall-clock time.
  */
-function toPlainDate(localMs: number): PlainDate {
+function plainDateFromLocalMs(localMs: number): PlainDate {
   return plainDateFromDayNumber(Math.floor(localMs / MS_PER_DAY));
 }
 
@@ -86,10 +86,10 @@ export function iterate(
     const spanEnd = Math.min(nextCursor, rangeEndExclusive);
     const spanStart = Math.max(cursor, rangeStartLocalMs);
     cells.push({
-      plainDate: toPlainDate(cursor),
-      firstPlainDate: toPlainDate(spanStart),
+      plainDate: plainDateFromLocalMs(cursor),
+      firstPlainDate: plainDateFromLocalMs(spanStart),
       // `spanEnd` is exclusive.
-      lastPlainDate: toPlainDate(spanEnd - 1),
+      lastPlainDate: plainDateFromLocalMs(spanEnd - 1),
       spanInTicks: appliedHourWindow
         ? countVisibleHours(spanEnd, spanStart, appliedHourWindow)
         : differenceInUnits(spanEnd, spanStart, tickUnit),
@@ -181,12 +181,13 @@ function startOf(
       return Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
     case 'week':
       return (
-        getPlainDateWeekStart(adapter, toPlainDate(localMs), weekStartsOn).dayNumber * MS_PER_DAY
+        getPlainDateWeekStart(adapter, plainDateFromLocalMs(localMs), weekStartsOn).dayNumber *
+        MS_PER_DAY
       );
     case 'month':
-      return toPlainDate(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
+      return plainDateFromLocalMs(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
     case 'year':
-      return toPlainDate(localMs).with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
+      return plainDateFromLocalMs(localMs).with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +
@@ -225,7 +226,7 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
  * Adds months to a wall-clock time, keeping its time of day.
  */
 function addMonths(localMs: number, months: number): number {
-  const plainDate = toPlainDate(localMs);
+  const plainDate = plainDateFromLocalMs(localMs);
   return (
     plainDate.add({ months }).dayNumber * MS_PER_DAY + (localMs - plainDate.dayNumber * MS_PER_DAY)
   );
@@ -248,8 +249,8 @@ function countVisibleHours(later: number, earlier: number, hourWindow: TimelineA
  * The number of whole months from `earlier` to `later`, two wall-clock times.
  */
 function differenceInMonths(later: number, earlier: number): number {
-  const laterPlainDate = toPlainDate(later);
-  const earlierPlainDate = toPlainDate(earlier);
+  const laterPlainDate = plainDateFromLocalMs(later);
+  const earlierPlainDate = plainDateFromLocalMs(earlier);
   const months =
     (laterPlainDate.year - earlierPlainDate.year) * 12 +
     (laterPlainDate.month - earlierPlainDate.month);

@@ -420,11 +420,11 @@ export interface SchedulerProcessedDate {
 
 /**
  * A day of a view: a cell, a column or a row, starting at the first instant of its date.
- * Days never reach the public API, unlike the bounds of the occurrences.
  */
 export interface SchedulerProcessedDay extends SchedulerProcessedDate {
   /**
-   * The date of the day, in the timezone the day list was built in.
+   * The date of the day in the display timezone, which the day list is built in: consumers compare
+   * its `dayNumber` with the day numbers of instants in that timezone.
    */
   plainDate: PlainDate;
 }
