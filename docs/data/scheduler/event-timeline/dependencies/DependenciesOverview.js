@@ -97,7 +97,7 @@ export default function DependenciesOverview() {
   const [dependencies, setDependencies] = React.useState(initialDependencies);
 
   return (
-    <div style={{ height: '500px', width: '100%' }}>
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
       <EventTimelinePremium
         events={events}
         onEventsChange={setEvents}
