@@ -8,7 +8,6 @@ import {
   getStartOfWeekDayNumber,
   LAST_SUPPORTED_DAY,
   plainDateFromDayNumber,
-  toLocalDayNumber,
   toMsInDay,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
@@ -332,9 +331,7 @@ export class RecurringSeries {
     // A fractional COUNT is rounded up.
     this.count = Math.ceil(rule.count ?? Infinity);
     this.untilDay = rule.until ? toDay(rule.until) : null;
-    this.excludedDays = new Set(
-      parameters.exDates?.map((exDate) => toLocalDayNumber(adapter.getTime(exDate), timezone)),
-    );
+    this.excludedDays = new Set(parameters.exDates?.map((exDate) => getDayNumber(toDay(exDate))));
   }
 
   /**
