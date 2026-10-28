@@ -12,7 +12,8 @@ import {
   SchedulerStoreRunner,
 } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
-import { buildTemporalPlainDate, PlainDate } from '@mui/x-scheduler-internals/internals';
+import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import { BaseTemporal } from '../../internals/utils/base-temporal';
 
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
@@ -44,7 +45,7 @@ describe('<CalendarGrid.TimeColumn />', () => {
       render(
         <TimeColumnWrapper displayTimezone={timezone}>
           {/* July 3rd starts at 18:15 UTC on July 2nd in Kathmandu. */}
-          <CalendarGrid.TimeColumn value={PlainDate.from('2025-07-03')} />
+          <CalendarGrid.TimeColumn value={BaseTemporal.PlainDate.from('2025-07-03')} />
           <SchedulerStoreRunner<AnyEventCalendarStore>
             context={SchedulerStoreContext as any}
             onMount={(s) => {

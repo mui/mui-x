@@ -1,7 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
-import type { PlainDate, PlainDateDuration } from '../base-temporal/PlainDate';
+import type { PlainDateDuration } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
 import {
   getEndOfDayMs,
@@ -13,6 +13,7 @@ import {
   toPlainDate,
 } from './timeZone';
 import { getPlainDateKey, plainDateFromDayNumber } from './plainDate';
+import type { BaseTemporal } from '../base-temporal';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.
@@ -29,7 +30,10 @@ export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): stri
  * Read from the offsets of the timezone, which is faster than the getters of the adapter and
  * returns the same date.
  */
-export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
+export function buildTemporalPlainDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+): BaseTemporal.PlainDate {
   return toPlainDate(adapter.getTime(date), adapter.getTimezone(date));
 }
 
@@ -40,7 +44,7 @@ export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupported
  */
 export function createStartOfPlainDate(
   adapter: Adapter,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
   return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
@@ -52,7 +56,7 @@ export function createStartOfPlainDate(
  */
 export function createEndOfPlainDate(
   adapter: Adapter,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
   const nextPlainDate = plainDate.add({ days: 1 });
@@ -167,7 +171,7 @@ export function createProcessedDate(
 export function moveToPlainDate(
   adapter: Adapter,
   date: TemporalSupportedObject,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
 ): TemporalSupportedObject {
   const timezone = adapter.getTimezone(date);
   return createAdapterDate(

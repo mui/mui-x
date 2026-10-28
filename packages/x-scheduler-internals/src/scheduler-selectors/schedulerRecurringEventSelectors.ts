@@ -1,6 +1,6 @@
 import type { RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule } from '../models';
-import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
 
 const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugin;
 
@@ -8,13 +8,13 @@ const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugi
 export const schedulerRecurringEventSelectors = {
   presets: (
     state: State,
-    plainDate: PlainDate,
+    plainDate: BaseTemporal.PlainDate,
   ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> | null =>
     selectRecurringEventsPlugin(state)?.computePresets(plainDate) ?? null,
   defaultPresetKey: (
     state: State,
     rule: SchedulerProcessedEventRecurrenceRule | undefined,
-    occurrenceStartPlainDate: PlainDate,
+    occurrenceStartPlainDate: BaseTemporal.PlainDate,
   ): RecurringEventPresetKey | 'custom' | null =>
     selectRecurringEventsPlugin(state)?.getDefaultPresetKey(rule, occurrenceStartPlainDate) ?? null,
   isSameRRule: (

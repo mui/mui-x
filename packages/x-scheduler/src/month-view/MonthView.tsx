@@ -11,6 +11,7 @@ import type {
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
   formatWeekdayShort,
+  getDayNumber,
   getPlainDateWeekStart,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
@@ -126,7 +127,7 @@ const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
     // The day number of the first day of the month, so a move inside the month keeps the days.
     (state: State) => {
       const visiblePlainDate = schedulerOtherSelectors.visiblePlainDate(state);
-      return visiblePlainDate.dayNumber - visiblePlainDate.day + 1;
+      return getDayNumber(visiblePlainDate) - visiblePlainDate.day + 1;
     },
     schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,

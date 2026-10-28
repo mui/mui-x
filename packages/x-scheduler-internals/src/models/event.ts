@@ -5,7 +5,7 @@ import type {
 } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
-import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
 
 export type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 
@@ -424,9 +424,9 @@ export interface SchedulerProcessedDate {
 export interface SchedulerProcessedDay extends SchedulerProcessedDate {
   /**
    * The date of the day in the display timezone, which the day list is built in: consumers compare
-   * its `dayNumber` with the day numbers of instants in that timezone.
+   * its day number with the day numbers of instants in that timezone.
    */
-  plainDate: PlainDate;
+  plainDate: BaseTemporal.PlainDate;
 }
 
 /**

@@ -14,7 +14,6 @@ import {
   toEpochMs,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { FULL_DAY_MINUTES, getPlainDateTimelineAxis } from '../../internals/utils/timeline-axis';
-import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
@@ -22,6 +21,8 @@ import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarG
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useTimeDropTarget } from './useTimeDropTarget';
+import type { BaseTemporal } from '../../internals/utils/base-temporal';
+import { getDayNumber } from '../../internals/utils/base-temporal/PlainDate';
 
 export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTimeColumn(
   componentProps: CalendarGridTimeColumn.Props,
@@ -44,7 +45,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const store = useEventCalendarStoreContext();
   const { focusedCell, setFocusedCell, rowTypes, rowsPerType } = useCalendarGridRootContext();
   const isRtl = useDirection() === 'rtl';
-  const isCurrentDay = useStore(store, schedulerNowSelectors.nowDayNumber) === value.dayNumber;
+  const isCurrentDay = useStore(store, schedulerNowSelectors.nowDayNumber) === getDayNumber(value);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
@@ -184,7 +185,7 @@ export namespace CalendarGridTimeColumn {
      * The date of the column, in the display timezone.
      * Keep its identity stable: the column rebuilds its axis and its context when it changes.
      */
-    value: PlainDate;
+    value: BaseTemporal.PlainDate;
     /**
      * First displayed minute of the day, as an offset from midnight.
      * Derived from the view's whole-hour window so it stays aligned with the

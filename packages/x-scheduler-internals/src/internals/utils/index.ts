@@ -20,14 +20,14 @@ export * from './date-utils';
 export * from './plain-date-utils';
 export {
   addMonths as addMonthsToDayNumber,
+  getDayNumber,
   getStartOfMonth as getStartOfMonthDayNumber,
   getStartOfWeek as getStartOfWeekDayNumber,
   LAST_SUPPORTED_DAY,
-  PlainDate,
   type PlainDateDuration,
 } from './base-temporal/PlainDate';
+export { BaseTemporal } from './base-temporal';
 export { MS_PER_DAY } from './base-temporal/iso';
-export { ZonedDateTime } from './base-temporal/ZonedDateTime';
 export * from './extractStandaloneEvent';
 export * from './useInitializeApiRef';
 export * from './useEventCreation';

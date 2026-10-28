@@ -7,6 +7,7 @@ import type {
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { sortEventOccurrences } from '../sort-event-occurrences';
 import { differenceInDays, toLocalDayNumber } from '../internals/utils/plain-date-utils/timeZone';
+import { getDayNumber } from '../internals/utils/base-temporal/PlainDate';
 
 /**
  * The number of full days an occurrence spans in the display timezone.
@@ -130,7 +131,7 @@ export function useEventOccurrencesWithDayGridPosition(
               index: smallestAvailableIndex,
               daySpan: Math.min(
                 toLocalDayNumber(occurrence.displayTimezone.end.timestamp, timezone) -
-                  day.plainDate.dayNumber +
+                  getDayNumber(day.plainDate) +
                   1,
                 dayListSize - dayIndex,
               ),

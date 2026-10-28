@@ -1,6 +1,5 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { MS_PER_DAY } from './base-temporal/iso';
-import type { PlainDate } from './base-temporal/PlainDate';
 import {
   localToEpochMs,
   toEpochMs,
@@ -8,6 +7,7 @@ import {
   toLocalMs,
   toMsInDay,
 } from './plain-date-utils/timeZone';
+import type { BaseTemporal } from './base-temporal';
 
 const MINUTE_MS = 60_000;
 export const FULL_DAY_MINUTES = 24 * 60;
@@ -55,7 +55,7 @@ export interface TimelineAxis extends TimelineAxisWindow {
  * runs to the end of the day, otherwise on the exclusive end of the window.
  */
 export function getPlainDateTimelineAxis(
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   window: TimelineAxisWindow,
   timezone: TemporalTimezone,
 ): TimelineAxis {

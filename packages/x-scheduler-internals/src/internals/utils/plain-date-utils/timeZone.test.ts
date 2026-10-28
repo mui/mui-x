@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { setSystemTimezone } from 'test/utils/scheduler';
 import { isJSDOM } from 'test/utils/skipIf';
-import { PlainDate } from '../base-temporal/PlainDate';
 import {
   addDaysOnWallClock,
   differenceInDays,
@@ -13,6 +12,7 @@ import {
   toPlainDate,
   toWallClockIsoString,
 } from './timeZone';
+import { BaseTemporal } from '../base-temporal';
 
 const HOUR = 3_600_000;
 
@@ -20,7 +20,11 @@ function epochMsOf(date: string, time: string, timezone: string) {
   const [year, month, day] = date.split('-').map(Number);
   const [hours, minutes] = time.split(':').map(Number);
   return new Date(
-    toEpochMs(PlainDate.from({ year, month, day }), (hours * 60 + minutes) * 60_000, timezone),
+    toEpochMs(
+      BaseTemporal.PlainDate.from({ year, month, day }),
+      (hours * 60 + minutes) * 60_000,
+      timezone,
+    ),
   ).toISOString();
 }
 

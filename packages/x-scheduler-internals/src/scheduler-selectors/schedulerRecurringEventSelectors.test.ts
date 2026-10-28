@@ -1,8 +1,8 @@
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 import type { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
-import { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { describe, it, expect } from 'vitest';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClass] as const))(
   `Recurring event - %s`,
@@ -11,7 +11,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
       const state = new storeClass.Value({ events: [] }, adapter).state;
 
       it('returns daily, weekly, monthly and yearly presets', () => {
-        const startPlainDate = PlainDate.from('2025-08-05'); // Tuesday
+        const startPlainDate = BaseTemporal.PlainDate.from('2025-08-05'); // Tuesday
         const presets = schedulerRecurringEventSelectors.presets(state, startPlainDate)!;
 
         expect(presets.DAILY).to.deep.equal({
@@ -37,7 +37,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
 
     describe('Selector: defaultRecurrencePresetKey', () => {
       const state = new storeClass.Value({ events: [] }, adapter).state;
-      const startPlainDate = PlainDate.from('2025-08-05'); // Tuesday
+      const startPlainDate = BaseTemporal.PlainDate.from('2025-08-05'); // Tuesday
       const presets = schedulerRecurringEventSelectors.presets(state, startPlainDate)!;
 
       it('returns null when rule undefined', () => {

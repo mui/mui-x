@@ -1,17 +1,18 @@
 import type { TemporalAdapter, TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDay } from '../models';
-import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 import { createProcessedDate } from '../internals/utils/plain-date-utils/adapter';
 import { getSkippedDays, toEpochMs } from '../internals/utils/plain-date-utils/timeZone';
 import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
+import type { BaseTemporal } from '../internals/utils/base-temporal';
+import { getDayNumber } from '../internals/utils/base-temporal/PlainDate';
 
 /**
  * Returns the days from `firstPlainDate` to `lastPlainDate`, both included, in `timezone`.
  */
 export function getDayListFromPlainDates(parameters: {
   adapter: TemporalAdapter;
-  firstPlainDate: PlainDate;
-  lastPlainDate: PlainDate;
+  firstPlainDate: BaseTemporal.PlainDate;
+  lastPlainDate: BaseTemporal.PlainDate;
   timezone: TemporalTimezone;
   excludeWeekends?: boolean;
 }): SchedulerProcessedDay[] {
@@ -21,11 +22,11 @@ export function getDayListFromPlainDates(parameters: {
   const days: SchedulerProcessedDay[] = [];
   for (
     let plainDate = firstPlainDate;
-    plainDate.dayNumber <= lastPlainDate.dayNumber;
+    getDayNumber(plainDate) <= getDayNumber(lastPlainDate);
     plainDate = plainDate.add({ days: 1 })
   ) {
     if (
-      !skippedDays.has(plainDate.dayNumber) &&
+      !skippedDays.has(getDayNumber(plainDate)) &&
       !(excludeWeekends && isWeekendPlainDate(plainDate))
     ) {
       days.push({

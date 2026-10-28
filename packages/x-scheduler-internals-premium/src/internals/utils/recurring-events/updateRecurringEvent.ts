@@ -10,7 +10,7 @@ import type {
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import type { PlainDate, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
+import type { BaseTemporal, UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
   buildTemporalPlainDate,
   extractStandaloneEvent,
@@ -285,7 +285,7 @@ export function adjustRRuleForAllMove(
  */
 function realignMonthlyRule(
   rule: SchedulerProcessedEventRecurrenceRule,
-  newStartPlainDate: PlainDate,
+  newStartPlainDate: BaseTemporal.PlainDate,
 ): SchedulerProcessedEventRecurrenceRule {
   const realignedRule: SchedulerProcessedEventRecurrenceRule = { ...rule };
   if (rule.byMonthDay?.length) {

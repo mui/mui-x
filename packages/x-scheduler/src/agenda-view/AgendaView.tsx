@@ -23,6 +23,7 @@ import {
   formatWeekday,
   formatWeekdayMonthAndDayOfMonth,
   formatWeekNumber,
+  getDayNumber,
   getPlainDateWeekStart,
   getWeekNumber,
 } from '@mui/x-scheduler-internals/internals';
@@ -238,10 +239,9 @@ export const AgendaView = React.memo(
         let weekNumber = 0;
         let isFirstDayOfWeek = false;
         if (showWeekNumber) {
-          const weekStartDayNumber = getPlainDateWeekStart(
-            date.plainDate,
-            weekInfo.firstDay,
-          ).dayNumber;
+          const weekStartDayNumber = getDayNumber(
+            getPlainDateWeekStart(date.plainDate, weekInfo.firstDay),
+          );
           isFirstDayOfWeek = weekStartDayNumber !== previousWeekStartDayNumber;
           if (isFirstDayOfWeek) {
             weekNumber = getWeekNumber(date.plainDate, weekInfo);
@@ -265,7 +265,7 @@ export const AgendaView = React.memo(
           </AgendaViewEmptyState>
         )}
         {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => {
-          const isToday = date.plainDate.dayNumber === nowDayNumber;
+          const isToday = getDayNumber(date.plainDate) === nowDayNumber;
           return (
             <React.Fragment key={date.key}>
               {showWeekNumber && isFirstDayOfWeek && (

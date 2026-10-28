@@ -16,15 +16,15 @@ import {
   getResourceSelectionMode,
 } from './event-utils';
 import { getDayListFromPlainDates } from '../../get-day-list';
-import { PlainDate } from './base-temporal/PlainDate';
 import { createEventRangeIndex } from './event-range-index';
+import { BaseTemporal } from './base-temporal';
 
 describe('event-utils', () => {
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
     const days = getDayListFromPlainDates({
       adapter,
-      firstPlainDate: PlainDate.from('2024-01-14'),
-      lastPlainDate: PlainDate.from('2024-01-18'),
+      firstPlainDate: BaseTemporal.PlainDate.from('2024-01-14'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2024-01-18'),
       timezone: 'default',
     });
 

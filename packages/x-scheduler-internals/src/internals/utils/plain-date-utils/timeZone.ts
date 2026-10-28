@@ -1,7 +1,8 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { formatIsoTime, MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
-import type { PlainDate } from '../base-temporal/PlainDate';
 import { plainDateFromDayNumber } from './plainDate';
+import type { BaseTemporal } from '../base-temporal';
+import { getDayNumber } from '../base-temporal/PlainDate';
 
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
@@ -121,7 +122,7 @@ export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
 /**
  * The date of an instant in `timezone`.
  */
-export function toPlainDate(epochMs: number, timezone: TemporalTimezone): PlainDate {
+export function toPlainDate(epochMs: number, timezone: TemporalTimezone): BaseTemporal.PlainDate {
   return plainDateFromDayNumber(toLocalDayNumber(epochMs, timezone));
 }
 
@@ -187,8 +188,12 @@ export function localToEpochMs(localMs: number, timezone: TemporalTimezone): num
 /**
  * The instant of a date and wall-clock time in `timezone`, resolved like `localToEpochMs()`.
  */
-export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTimezone): number {
-  return localToEpochMs(date.dayNumber * MS_PER_DAY + msInDay, timezone);
+export function toEpochMs(
+  date: BaseTemporal.PlainDate,
+  msInDay: number,
+  timezone: TemporalTimezone,
+): number {
+  return localToEpochMs(getDayNumber(date) * MS_PER_DAY + msInDay, timezone);
 }
 
 /**
@@ -197,7 +202,7 @@ export function toEpochMs(date: PlainDate, msInDay: number, timezone: TemporalTi
  */
 export function moveTimestampToPlainDate(
   epochMs: number,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): number {
   return toEpochMs(plainDate, toMsInDay(epochMs, timezone), timezone);
@@ -284,8 +289,8 @@ export function differenceInDays(
  * like December 30th, 2011, which Pacific/Apia skipped when it moved across the date line.
  */
 export function getSkippedDays(
-  from: PlainDate,
-  to: PlainDate,
+  from: BaseTemporal.PlainDate,
+  to: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): Set<number> {
   const skippedDays = new Set<number>();
@@ -294,9 +299,9 @@ export function getSkippedDays(
   // A skipped day makes the days of a period last a day longer than the time elapsed between their
   // starts, when DST transitions change it by hours. The periods are a month long, as a timezone
   // never skipped and repeated a day within a month, which would cancel out.
-  let periodStartMs = getStartMs(from.dayNumber);
-  for (let start = from.dayNumber; start < to.dayNumber; start += 31) {
-    const end = Math.min(start + 31, to.dayNumber);
+  let periodStartMs = getStartMs(getDayNumber(from));
+  for (let start = getDayNumber(from); start < getDayNumber(to); start += 31) {
+    const end = Math.min(start + 31, getDayNumber(to));
     const periodEndMs = getStartMs(end);
     if ((end - start) * MS_PER_DAY - (periodEndMs - periodStartMs) >= MS_PER_DAY / 2) {
       for (let dayNumber = start; dayNumber < end; dayNumber += 1) {

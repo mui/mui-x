@@ -1,7 +1,8 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import type { WeekStartsOn } from '../../models';
 import { MS_PER_DAY } from './base-temporal/iso';
-import type { PlainDate } from './base-temporal/PlainDate';
+import type { BaseTemporal } from './base-temporal';
+import { getDayNumber } from './base-temporal/PlainDate';
 
 /**
  * The locale of the dates when the `dateLocale` prop isn't set.
@@ -199,8 +200,8 @@ function toUtcDate(epochMs: number): Date {
 }
 
 // The day number of a date is the number of days from January 1st, 1970 in UTC.
-function toUtcDateOfPlainDate(plainDate: PlainDate): Date {
-  return toUtcDate(plainDate.dayNumber * MS_PER_DAY);
+function toUtcDateOfPlainDate(plainDate: BaseTemporal.PlainDate): Date {
+  return toUtcDate(getDayNumber(plainDate) * MS_PER_DAY);
 }
 
 /**
@@ -208,7 +209,7 @@ function toUtcDateOfPlainDate(plainDate: PlainDate): Date {
  */
 function createDateFormat(options: Intl.DateTimeFormatOptions) {
   const getFormatter = createGetFormatter(options);
-  return (locale: string, plainDate: PlainDate): string =>
+  return (locale: string, plainDate: BaseTemporal.PlainDate): string =>
     getFormatter(locale).format(toUtcDateOfPlainDate(plainDate));
 }
 
@@ -237,7 +238,7 @@ const dayOfMonthLabelLookup = new Map<string, string[]>();
  * formats one.
  * @example "13"
  */
-export function formatDayOfMonth(locale: string, plainDate: PlainDate): string {
+export function formatDayOfMonth(locale: string, plainDate: BaseTemporal.PlainDate): string {
   let labels = dayOfMonthLabelLookup.get(locale);
   if (!labels) {
     labels = [];
@@ -308,8 +309,8 @@ const getWeekdayShortMonthShortAndDayOfMonthFormatter = /* #__PURE__ */ createGe
  */
 export function formatWeekdayShortMonthShortAndDayOfMonthRange(
   locale: string,
-  startPlainDate: PlainDate,
-  endPlainDate: PlainDate,
+  startPlainDate: BaseTemporal.PlainDate,
+  endPlainDate: BaseTemporal.PlainDate,
 ): string {
   return getWeekdayShortMonthShortAndDayOfMonthFormatter(locale).formatRange(
     toUtcDateOfPlainDate(startPlainDate),

@@ -2,10 +2,10 @@ import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { describe, it, expect } from 'vitest';
 import { getDayListFromPlainDates } from '../get-day-list';
-import { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
 import type { SchedulerProcessedDay, SchedulerProcessedEvent } from '../models';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
+import { BaseTemporal } from '../internals/utils/base-temporal';
 
 describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day0Str = '2024-01-10T00:00:00Z';
@@ -13,8 +13,8 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day2Str = '2024-01-12T00:00:00Z';
   const days = getDayListFromPlainDates({
     adapter,
-    firstPlainDate: PlainDate.from('2024-01-10'),
-    lastPlainDate: PlainDate.from('2024-01-12'),
+    firstPlainDate: BaseTemporal.PlainDate.from('2024-01-10'),
+    lastPlainDate: BaseTemporal.PlainDate.from('2024-01-12'),
     timezone: 'default',
   });
 
@@ -180,8 +180,8 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     // 2024-04-07T03:30:00Z is the second 23:30 of April 6th.
     const [lastDay] = getDayListFromPlainDates({
       adapter,
-      firstPlainDate: PlainDate.from('2024-04-06'),
-      lastPlainDate: PlainDate.from('2024-04-06'),
+      firstPlainDate: BaseTemporal.PlainDate.from('2024-04-06'),
+      lastPlainDate: BaseTemporal.PlainDate.from('2024-04-06'),
       timezone: 'America/Santiago',
     });
     const event = EventBuilder.new(adapter)

@@ -21,11 +21,12 @@ import {
   formatMonthAndYear,
   formatWeekday,
   formatWeekdayNarrow,
+  getDayNumber,
   getPlainDateWeekStart,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 import type { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 
@@ -177,7 +178,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
     // The first day of the displayed month.
-    const [displayedMonth, setDisplayedMonth] = React.useState<PlainDate>(() =>
+    const [displayedMonth, setDisplayedMonth] = React.useState<BaseTemporal.PlainDate>(() =>
       visiblePlainDate.with({ day: 1 }),
     );
 
@@ -276,8 +277,8 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarWeekRow}
             >
               {week.map((day, dayIndex) => {
-                const isToday = day.plainDate.dayNumber === nowDayNumber;
-                const isActive = day.plainDate.dayNumber === visiblePlainDate.dayNumber;
+                const isToday = getDayNumber(day.plainDate) === nowDayNumber;
+                const isActive = getDayNumber(day.plainDate) === getDayNumber(visiblePlainDate);
                 const isOtherMonth =
                   day.plainDate.year !== displayedMonth.year ||
                   day.plainDate.month !== displayedMonth.month;

@@ -3,19 +3,20 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   buildTemporalPlainDate,
   createAdapterDate,
+  getDayNumber,
   getStartOfDayMs,
   MS_PER_DAY,
   toEpochMs,
   toLocalMs,
   toMsInDay,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   TemporalSupportedObject,
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
+import type { BaseTemporal } from '@mui/x-scheduler-internals/internals';
 
 /**
  * Creates the adapter value of the first instant of the last day before a plain date that exists
@@ -23,7 +24,7 @@ import type {
  */
 export function createStartOfPreviousDay(
   adapter: Adapter,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
   return createAdapterDate(
@@ -42,7 +43,7 @@ export function createStartOfPreviousDay(
 export function moveEndToPlainDate(
   adapter: Adapter,
   end: TemporalSupportedObject,
-  plainDate: PlainDate,
+  plainDate: BaseTemporal.PlainDate,
   startMs: number,
   timezone: TemporalTimezone,
 ): TemporalSupportedObject {
@@ -51,7 +52,7 @@ export function moveEndToPlainDate(
   if (endMs < startMs) {
     // The same wall-clock time, in the offset of the start.
     const laterMs = startMs + msInDay - toMsInDay(startMs, timezone);
-    if (toLocalMs(laterMs, timezone) === plainDate.dayNumber * MS_PER_DAY + msInDay) {
+    if (toLocalMs(laterMs, timezone) === getDayNumber(plainDate) * MS_PER_DAY + msInDay) {
       endMs = laterMs;
     }
   }
@@ -81,7 +82,9 @@ export const NOT_LOCALIZED_WEEK_DAYS_INDEXES = new Map<RecurringEventWeekDayCode
 /**
  * Returns the week day code (MO..SU) of a plain date.
  */
-export function getPlainDateWeekDayCode(plainDate: PlainDate): RecurringEventWeekDayCode {
+export function getPlainDateWeekDayCode(
+  plainDate: BaseTemporal.PlainDate,
+): RecurringEventWeekDayCode {
   return NOT_LOCALIZED_WEEK_DAYS[plainDate.dayOfWeek - 1];
 }
 
