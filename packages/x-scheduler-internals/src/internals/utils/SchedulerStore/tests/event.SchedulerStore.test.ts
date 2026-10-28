@@ -996,6 +996,30 @@ storeClasses.forEach((storeClass) => {
         },
       );
 
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should keep the stored rrule when updating with a new rrule without the recurring events plugin',
+        () => {
+          const onEventsChange = vi.fn();
+          const event = EventBuilder.new().recurrent('DAILY').build();
+
+          let store: any;
+          expect(() => {
+            store = new storeClass.Value(
+              { resources: TEST_RESOURCES, events: [event], onEventsChange },
+              adapter,
+            );
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          ]);
+
+          store.updateEvent({ id: event.id, title: 'updated', rrule: { freq: 'WEEKLY' } });
+
+          const updated = onEventsChange.mock.lastCall?.[0][0];
+          expect(updated.title).to.equal('updated');
+          expect(updated.rrule).to.deep.equal(event.rrule);
+        },
+      );
+
       it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
         const event = EventBuilder.new().build();
         const store = new storeClass.Value(
@@ -1511,6 +1535,69 @@ storeClasses.forEach((storeClass) => {
         store.updateStateFromParameters({ ...params, onEventsChange: vi.fn() }, adapter);
 
         expect(store.state.eventDeletion).to.equal(eventDeletionBefore);
+      });
+
+      it('should normalize `eventDeletion={false}` to `false` and `eventDeletion={true}` to the default config', () => {
+        const disabledStore = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [], eventDeletion: false },
+          adapter,
+        );
+        expect(disabledStore.state.eventDeletion).to.equal(false);
+
+        const enabledStore = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [], eventDeletion: true },
+          adapter,
+        );
+        expect(enabledStore.state.eventDeletion).to.deep.equal({ confirmation: true });
+      });
+
+      it('should toggle `eventDeletion` between `false` and enabled through `updateStateFromParameters`', () => {
+        const params = { resources: TEST_RESOURCES, events: [], onEventsChange: vi.fn() };
+        const store = new storeClass.Value({ ...params, eventDeletion: false }, adapter);
+
+        store.updateStateFromParameters({ ...params, eventDeletion: true }, adapter);
+        expect(store.state.eventDeletion).to.deep.equal({ confirmation: true });
+
+        store.updateStateFromParameters({ ...params, eventDeletion: false }, adapter);
+        expect(store.state.eventDeletion).to.equal(false);
+      });
+
+      it('should still delete immediately, with no dialog, when `eventDeletion` is `false`', () => {
+        const onEventsChange = vi.fn();
+        const onSubmit = vi.fn();
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          { resources: TEST_RESOURCES, events: [event], onEventsChange, eventDeletion: false },
+          adapter,
+        );
+
+        // `eventDeletion={false}` only removes the UI affordances, a programmatic request still applies.
+        store.requestEventDeletion({ eventId: event.id, onSubmit });
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([]);
+        expect(onSubmit.mock.calls.length).to.equal(1);
+        expect(store.state.pendingDeleteConfirmation).to.equal(null);
+      });
+
+      it('should not block `deleteEvent` when `eventDeletion` is `false`', () => {
+        const onEventsChange = vi.fn();
+        const event1 = EventBuilder.new().build();
+        const event2 = EventBuilder.new().build();
+        const store = new storeClass.Value(
+          {
+            resources: TEST_RESOURCES,
+            events: [event1, event2],
+            onEventsChange,
+            eventDeletion: false,
+          },
+          adapter,
+        );
+
+        store.deleteEvent(event1.id);
+
+        expect(onEventsChange.mock.calls.length).to.equal(1);
+        expect(onEventsChange.mock.lastCall?.[0]).to.deep.equal([event2]);
       });
     });
 

@@ -1,32 +1,14 @@
-import { adapter } from 'test/utils/scheduler';
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import { describe, it, expect } from 'vitest';
-import {
-  mergeDateAndTime,
-  normalizeAllDayBounds,
-  getStartOfWeek,
-  getEndOfWeek,
-  getWeekNumber,
-} from './date-utils';
+import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
+import { adapter, adapterFr, setSystemTimezone } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
+import { PlainDate } from './base-temporal/PlainDate';
+import { getPlainDateWeekStart, getWeekNumber } from './date-utils';
+import { normalizeAllDayBounds } from './plain-date-utils/adapter';
 
-const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
+const wednesdayPlainDate = PlainDate.from('2025-01-08');
 
 describe('date-utils', () => {
-  describe('mergeDateAndTime', () => {
-    it('merges hour/minute/second/ms from timeParam into dateParam', () => {
-      const date = adapter.date('2025-03-10T00:00:00Z', 'default');
-      const time = adapter.date('2024-12-25T13:45:27.123Z', 'default');
-      const merged = mergeDateAndTime(adapter, date, time);
-      expect(adapter.getYear(merged)).to.equal(2025);
-      expect(adapter.getMonth(merged)).to.equal(2);
-      expect(adapter.getDate(merged)).to.equal(10);
-      expect(adapter.getHours(merged)).to.equal(13);
-      expect(adapter.getMinutes(merged)).to.equal(45);
-      expect(adapter.getSeconds(merged)).to.equal(27);
-      expect(adapter.getMilliseconds(merged)).to.equal(123);
-    });
-  });
-
   describe('normalizeAllDayBounds', () => {
     const start = adapter.date('2025-01-08T09:00:00.000Z', 'default');
     const end = adapter.date('2025-01-08T18:00:00.000Z', 'default');
@@ -62,77 +44,69 @@ describe('date-utils', () => {
     });
   });
 
-  describe('getStartOfWeek', () => {
-    it('delegates to adapter.startOfWeek when weekStartsOn is undefined', () => {
-      const result = getStartOfWeek(adapter, wednesday, undefined);
-      expect(adapter.isSameDay(result, adapter.startOfWeek(wednesday))).to.equal(true);
-    });
-
-    it('returns Sunday (2025-01-05) when weekStartsOn is 0', () => {
-      const result = getStartOfWeek(adapter, wednesday, 0);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-05T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
+  describe('normalizeAllDayBounds across DST transitions', () => {
+    it('should end the day on the later 23:59:59.999 when a DST transition repeats its last hour', () => {
+      // America/Santiago falls back from 00:00 -03:00 to 23:00 -04:00 on April 6th, 2024.
+      const day = adapter.date('2024-04-06T12:00:00', 'America/Santiago');
+      const result = normalizeAllDayBounds(adapter, day, day, true);
+      expect(new Date(adapter.getTime(result.start)).toISOString()).to.equal(
+        '2024-04-06T03:00:00.000Z',
       );
-    });
-
-    it('returns Monday (2025-01-06) when weekStartsOn is 1', () => {
-      const result = getStartOfWeek(adapter, wednesday, 1);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-06T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
+      expect(new Date(adapter.getTime(result.end)).toISOString()).to.equal(
+        '2024-04-07T03:59:59.999Z',
       );
-    });
-
-    it('returns Saturday (2025-01-04) when weekStartsOn is 6', () => {
-      const result = getStartOfWeek(adapter, wednesday, 6);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-04T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
+      expect(adapter.getTimezone(result.end)).to.equal('America/Santiago');
     });
   });
 
-  describe('getEndOfWeek', () => {
-    it('delegates to adapter.endOfWeek when weekStartsOn is undefined', () => {
-      const result = getEndOfWeek(adapter, wednesday, undefined);
-      expect(adapter.isSameDay(result, adapter.endOfWeek(wednesday))).to.equal(true);
+  describe('getPlainDateWeekStart', () => {
+    it('reads the weekday of the plain date for the first day of the week of the locale', () => {
+      // Pacific/Apia skipped Friday, December 30th, 2011, so the day has no first instant to read
+      // its weekday from. Weeks start on Sunday in English and on Monday in French.
+      const plainDate = PlainDate.from('2011-12-30');
+      expect(getPlainDateWeekStart(adapter, plainDate, undefined)).toEqualPlainDate('2011-12-25');
+      expect(getPlainDateWeekStart(adapterFr, plainDate, undefined)).toEqualPlainDate('2011-12-26');
     });
 
-    it('returns Saturday (2025-01-11) when weekStartsOn is 0 (Sun–Sat week)', () => {
-      const result = getEndOfWeek(adapter, wednesday, 0);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-11T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
-    });
-
-    it('returns Sunday (2025-01-12) when weekStartsOn is 1 (Mon–Sun week)', () => {
-      const result = getEndOfWeek(adapter, wednesday, 1);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-12T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
-    });
-
-    it('returns Friday (2025-01-10) when weekStartsOn is 6 (Sat–Fri week)', () => {
-      const result = getEndOfWeek(adapter, wednesday, 6);
-      expect(adapter.isSameDay(result, adapter.date('2025-01-10T12:00:00.000Z', 'UTC'))).to.equal(
-        true,
-      );
-    });
-
-    it('end of week is always 6 days after start of week', () => {
-      const start = getStartOfWeek(adapter, wednesday, 1);
-      const end = getEndOfWeek(adapter, wednesday, 1);
-      expect(adapter.isSameDay(adapter.addDays(start, 6), end)).to.equal(true);
-    });
+    it.each([
+      { weekStartsOn: 0, expected: '2025-01-05' }, // Sunday
+      { weekStartsOn: 1, expected: '2025-01-06' }, // Monday
+      { weekStartsOn: 6, expected: '2025-01-04' }, // Saturday
+    ] as const)(
+      'returns $expected for Wednesday, January 8th, 2025 when weekStartsOn is $weekStartsOn',
+      ({ weekStartsOn, expected }) => {
+        expect(getPlainDateWeekStart(adapter, wednesdayPlainDate, weekStartsOn)).toEqualPlainDate(
+          expected,
+        );
+      },
+    );
   });
 
   describe('getWeekNumber', () => {
-    it('delegates to adapter.getWeekNumber when weekStartsOn is undefined', () => {
-      const result = getWeekNumber(adapter, wednesday, undefined);
-      expect(result).to.equal(adapter.getWeekNumber(wednesday));
+    it('numbers the weeks with the rules of the locale when weekStartsOn is undefined', () => {
+      // Friday, January 1st, 2027 is in the first week of 2027 in English, and in the last week of
+      // 2026 in French, whose first week holds January 4th.
+      const plainDate = PlainDate.from('2027-01-01');
+      expect(getWeekNumber(adapter, plainDate, undefined)).to.equal(1);
+      expect(getWeekNumber(adapterFr, plainDate, undefined)).to.equal(53);
     });
+
+    // Browsers cannot change their timezone through process.env.TZ.
+    it.skipIf(!isJSDOM)(
+      'numbers the week of the locale on the date itself, whatever the system timezone',
+      () => {
+        setSystemTimezone('Pacific/Pago_Pago');
+        // A new adapter, as adapters cache data computed in the current system timezone.
+        const systemAdapter = new TemporalAdapterDateFns();
+        // Sunday, January 5th, 2025 starts the second week of 2025 in English. Pago Pago (UTC−11)
+        // is still on Saturday at its midnight in UTC.
+        expect(getWeekNumber(systemAdapter, PlainDate.from('2025-01-05'), undefined)).to.equal(2);
+      },
+    );
 
     it('returns week 2 for 2025-01-08 (Wednesday) with weekStartsOn=1 (ISO Mon)', () => {
       // ISO week 2 of 2025: Mon 2025-01-06 – Sun 2025-01-12
-      const result = getWeekNumber(adapter, wednesday, 1);
+      const result = getWeekNumber(adapter, wednesdayPlainDate, 1);
       expect(result).to.equal(2);
     });
 
@@ -140,42 +114,41 @@ describe('date-utils', () => {
       // ISO week 1 of 2025: Mon 2024-12-30 – Sun 2025-01-05, but Jan 1 is in that week.
       // Actually Jan 1 2025 is a Wednesday; its Mon is Dec 30 2024 and midpoint (Thu) is Jan 2, which is in 2025.
       // So it belongs to week 1 of 2025.
-      const jan1 = adapter.date('2025-01-01T12:00:00.000Z', 'UTC');
-      const result = getWeekNumber(adapter, jan1, 1);
+      const result = getWeekNumber(adapter, PlainDate.from('2025-01-01'), 1);
       expect(result).to.equal(1);
     });
 
     it('returns week 1 of 2026 for Dec 29 2025 with weekStartsOn=1', () => {
       // Dec 29 2025 is a Monday, so its midpoint (Thu) is Jan 1 2026, which is in 2026.
       // That means this week belongs to week 1 of 2026.
-      const dec29 = adapter.date('2025-12-29T12:00:00.000Z', 'UTC');
-      const result = getWeekNumber(adapter, dec29, 1);
+      const result = getWeekNumber(adapter, PlainDate.from('2025-12-29'), 1);
       expect(result).to.equal(1);
     });
 
     it('returns week 2 for 2025-01-08 with weekStartsOn=0 (Sun)', () => {
       // Sun-week 2: week starts Sun Jan 5 2025; midpoint Wed Jan 8 is in 2025 => week 2.
-      const result = getWeekNumber(adapter, wednesday, 0);
+      const result = getWeekNumber(adapter, wednesdayPlainDate, 0);
       expect(result).to.equal(2);
+    });
+
+    it('returns week 48 for 2012-11-23 with weekStartsOn=5 (Fri)', () => {
+      // Fri-week 1 of 2012 starts on Friday, December 30th, 2011, and holds January 4th.
+      const result = getWeekNumber(adapter, PlainDate.from('2012-11-23'), 5);
+      expect(result).to.equal(48);
     });
   });
 
   describe('runtime guards', () => {
-    it('getStartOfWeek throws in dev when weekStartsOn is out of range', () => {
-      expect(() => getStartOfWeek(adapter, wednesday, 7 as any)).to.throw(/weekStartsOn/);
+    it('getPlainDateWeekStart throws in dev when weekStartsOn is out of range', () => {
+      expect(() => getPlainDateWeekStart(adapter, wednesdayPlainDate, 7 as any)).to.throw(
+        /weekStartsOn/,
+      );
     });
 
-    it('getStartOfWeek throws in dev when weekStartsOn is a float', () => {
-      expect(() => getStartOfWeek(adapter, wednesday, 1.5 as any)).to.throw(/weekStartsOn/);
-    });
-
-    it('getSundayDayNumber throws in dev when adapter.getDayOfWeek returns out-of-range value', () => {
-      const badAdapter = {
-        ...adapter,
-        getDayOfWeek: () => 0,
-      } as unknown as TemporalAdapter;
-      // Use an object not previously seen so the WeakMap has no cache for it
-      expect(() => getStartOfWeek(badAdapter, wednesday, 1)).to.throw(/getDayOfWeek/);
+    it('getPlainDateWeekStart throws in dev when weekStartsOn is a float', () => {
+      expect(() => getPlainDateWeekStart(adapter, wednesdayPlainDate, 1.5 as any)).to.throw(
+        /weekStartsOn/,
+      );
     });
   });
 });

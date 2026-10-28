@@ -48,8 +48,8 @@
       }
     },
     "eventDeletion": {
-      "type": { "name": "shape", "description": "{ confirmation?: bool }" },
-      "default": "{ confirmation: true }"
+      "type": { "name": "union", "description": "{ confirmation?: bool }<br>&#124;&nbsp;bool" },
+      "default": "true"
     },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {

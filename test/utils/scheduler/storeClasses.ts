@@ -1,6 +1,38 @@
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
-import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import {
+  EventTimelinePremiumStore,
+  type EventTimelinePremiumStoreParameters,
+} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import {
+  dependenciesStoreFeature,
+  schedulerRecurringEventsPlugin,
+} from '@mui/x-scheduler-internals-premium/internals';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+
+/**
+ * Timeline store that receives the recurring events and dependencies features.
+ */
+export class EventTimelinePremiumStoreWithFeatures<
+  TEvent extends object,
+  TResource extends object,
+> extends EventTimelinePremiumStore<TEvent, TResource> {
+  public constructor(
+    parameters: EventTimelinePremiumStoreParameters<TEvent, TResource>,
+    adapter: Adapter,
+  ) {
+    super(
+      {
+        storeFeatures: {
+          recurringEvents: schedulerRecurringEventsPlugin,
+          dependencies: dependenciesStoreFeature,
+        },
+        ...parameters,
+      },
+      adapter,
+    );
+  }
+}
 
 /**
  * Store classes for general scheduler tests.
@@ -9,7 +41,7 @@ import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/us
 export const storeClasses = [
   { name: 'EventCalendarStore', Value: EventCalendarStore },
   { name: 'EventCalendarPremiumStore', Value: EventCalendarPremiumStore },
-  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStore },
+  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStoreWithFeatures },
 ];
 
 /**
@@ -17,5 +49,5 @@ export const storeClasses = [
  */
 export const premiumStoreClasses = [
   { name: 'EventCalendarPremiumStore', Value: EventCalendarPremiumStore },
-  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStore },
+  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStoreWithFeatures },
 ];

@@ -6,6 +6,7 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type {
+  SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
@@ -20,19 +21,21 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   getOccurrenceDataTimezone,
   getPrimaryResourceId,
-  getIsoDateFormat,
-  getWallTimeIsoFormat,
+  toPlainDate,
+  toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
 import { useEventEditingStyledContext } from './EventEditingStyledContext';
 import {
   getEventTimezone,
-  getEventTimezoneBound,
+  getEventBoundTimestamp,
+  getEventTimezonePlainDate,
   getRecurrenceLabel,
   getRecurrenceTimezoneName,
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { formatFullDate } from '../../utils/date-utils';
+import { isOccurrenceMultiDay } from '../../utils/event-utils';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
 
@@ -130,12 +133,16 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     getPrimaryResourceId(occurrence.resource),
   );
   // The rule is read in the event's timezone, the one it is expressed in.
-  const eventTimezoneStart = getEventTimezoneBound(adapter, occurrence, 'start');
+  const eventTimezone = getEventTimezone(occurrence);
+  const startPlainDate = React.useMemo(
+    () => getEventTimezonePlainDate(occurrence, getEventBoundTimestamp(occurrence, 'start')),
+    [occurrence],
+  );
   const defaultRecurrenceKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
     getOccurrenceDataTimezone(occurrence)?.rrule,
-    eventTimezoneStart,
+    startPlainDate,
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
@@ -143,24 +150,22 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const formatTime = useFormatTime();
   const start = occurrence.displayTimezone.start.value;
   const end = occurrence.displayTimezone.end.value;
-  const isMultiDay = !adapter.isSameDay(start, end);
+  const isMultiDay = isOccurrenceMultiDay(occurrence);
   const formatBound = occurrence.allDay
     ? (date: TemporalSupportedObject) => formatFullDate(date, adapter)
     : (date: TemporalSupportedObject) => `${formatFullDate(date, adapter)}, ${formatTime(date)}`;
-  const formatBoundDateTime = occurrence.allDay
-    ? (date: TemporalSupportedObject) => adapter.formatByString(date, getIsoDateFormat(adapter))
-    : (date: TemporalSupportedObject) =>
-        adapter.formatByString(date, getWallTimeIsoFormat(adapter));
-  const eventTimezone = getEventTimezone(occurrence);
+  const boundsTimezone = occurrence.displayTimezone.timezone;
+  const formatBoundDateTime = (bound: SchedulerProcessedDate) =>
+    occurrence.allDay
+      ? toPlainDate(bound.timestamp, boundsTimezone).toString()
+      : toWallClockIsoString(bound.timestamp, boundsTimezone);
   const recurrenceTimezoneName = React.useMemo(
     () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
     [adapter, eventTimezone, displayTimezone],
   );
-  const recurrenceLabel = getRecurrenceLabel(
-    adapter,
-    eventTimezoneStart,
-    defaultRecurrenceKey,
-    localeText,
+  const recurrenceLabel = React.useMemo(
+    () => getRecurrenceLabel(adapter, startPlainDate, defaultRecurrenceKey, localeText),
+    [adapter, startPlainDate, defaultRecurrenceKey, localeText],
   );
 
   return (
@@ -186,11 +191,13 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
       <EventDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
         <CalendarMonthRounded className={classes.eventDialogDateTimeIcon} fontSize="small" />
         <Typography className={classes.eventDialogDateTimeLabel} variant="body2" component="p">
-          <time dateTime={formatBoundDateTime(start)}>{formatBound(start)}</time>
+          <time dateTime={formatBoundDateTime(occurrence.displayTimezone.start)}>
+            {formatBound(start)}
+          </time>
           {(isMultiDay || !occurrence.allDay) && (
             <React.Fragment>
               {' - '}
-              <time dateTime={formatBoundDateTime(end)}>
+              <time dateTime={formatBoundDateTime(occurrence.displayTimezone.end)}>
                 {isMultiDay ? formatBound(end) : formatTime(end)}
               </time>
             </React.Fragment>

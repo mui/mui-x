@@ -4,8 +4,8 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -177,22 +177,24 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
-    day.value,
+    day,
   );
-  const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
+  const nowDayNumber = useStore(store, schedulerNowSelectors.nowDayNumber);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row, maxEvents);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day, row, maxEvents);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
-  const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
+  const isCurrentMonth =
+    day.plainDate.year === visiblePlainDate.year && day.plainDate.month === visiblePlainDate.month;
+  const isFirstDayOfMonth = day.plainDate.day === 1;
+  const isToday = day.plainDate.dayNumber === nowDayNumber;
 
   const inBoundOccurrences = day.withPosition.filter((o) => o.position.index <= maxEvents);
   const hasOverflow = inBoundOccurrences.length < day.withPosition.length;
@@ -227,13 +229,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       className={classes.monthViewCell}
       ref={handleRef}
       key={day.key}
-      value={day.value}
+      value={day.plainDate}
       aria-colindex={colIndex}
       aria-labelledby={ariaLabelledBy}
       data-current={isToday || undefined}
       aria-current={isToday ? 'date' : undefined}
       data-other-month={!isCurrentMonth || undefined}
-      data-weekend={isWeekend(adapter, day.value) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
       lockSurfaceType
       style={{ '--row-count': rowCount } as React.CSSProperties}
     >
@@ -259,17 +261,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               );
             }
 
-            const startsBeforeThisDay =
-              !adapter.isSameDay(occurrence.displayTimezone.start.value, day.value) &&
-              adapter.isBefore(occurrence.displayTimezone.start.value, day.value);
+            // `day.timestamp` is the first instant of the day.
+            const startsBeforeThisDay = occurrence.displayTimezone.start.timestamp < day.timestamp;
 
             return (
               <EventContextMenuTrigger key={occurrence.key} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
-                  variant={
-                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                  }
+                  variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
                   {...(startsBeforeThisDay ? { 'data-starting-before-edge': '' } : {})}
                 />
               </EventContextMenuTrigger>

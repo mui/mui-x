@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -86,6 +87,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
   const { classes } = useEventCalendarStyledContext();
+  const isRtl = useRtl();
 
   // The popover stays open behind the editing surface, so close it when that surface closes.
   React.useEffect(() => {
@@ -193,6 +195,9 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       className={classes.moreEventsPopover}
       open={open}
       anchorEl={anchorEl}
+      // Aligned with the inline start of the button.
+      anchorOrigin={{ vertical: 'top', horizontal: isRtl ? 'right' : 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: isRtl ? 'right' : 'left' }}
       onClose={onClose}
       slotProps={{ transition: { onExited: restoreFocusOnExit } }}
     >
@@ -217,7 +222,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             getFocusFallback={getFocusFallback}
           >
             <EventItem
-              variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
+              variant={isOccurrenceAllDayOrMultipleDay(occurrence) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
             />

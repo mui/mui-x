@@ -1,14 +1,18 @@
+import type { RefObject } from '@mui/x-internals/types';
 import type { GridColDef } from '@mui/x-data-grid-pro';
+import { isGroupingColumn } from '@mui/x-data-grid-pro/internals';
 import {
   FORMULA_BUILT_IN_FUNCTIONS,
   createFormulaFunctionRegistry,
   createFormulaParser,
 } from './engine';
 import type {
+  GridComputedColumnsRuntimeCache,
   GridFormulaFunctionDefinition,
   GridFormulaInternalCache,
 } from './gridFormulaInterfaces';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 /**
  * The built-in formula functions.
@@ -35,11 +39,24 @@ export function getEffectiveFormulaFunctions(
   return props.dataSource ? EMPTY_FORMULA_FUNCTIONS : GRID_FORMULA_FUNCTIONS;
 }
 
+export function createComputedColumnsRuntimeCache(): GridComputedColumnsRuntimeCache {
+  return {
+    records: new Map(),
+    results: new WeakMap(),
+    dependencyClosure: new Map(),
+    referencedFields: new Set(),
+    model: null,
+    computedColDef: undefined,
+    hydratedColDefs: new Map(),
+  };
+}
+
 export function createFormulaInternalCache(
   formulaFunctions: Record<string, GridFormulaFunctionDefinition>,
 ): GridFormulaInternalCache {
   return {
     parser: createFormulaParser(),
+    computedColumns: createComputedColumnsRuntimeCache(),
     registry: createFormulaFunctionRegistry(Object.values(formulaFunctions)),
     registrySource: formulaFunctions,
     records: new Map(),
@@ -47,6 +64,7 @@ export function createFormulaInternalCache(
     dependentsByRowId: new Map(),
     recordsByField: new Map(),
     positionDependentKeys: new Set(),
+    cyclicKeys: new Set(),
     rangeDependentsByField: new Map(),
     positionContext: null,
     positionContextRowIds: null,
@@ -66,12 +84,31 @@ export function createFormulaInternalCache(
   };
 }
 
+/**
+ * Returns the internal cache of the grid instance, creating it on first use.
+ * The computed columns are injected while the columns state initializes and are
+ * read by the initial row tree build — both run before the formula state
+ * initializer, so the cache cannot wait for it.
+ */
+export function ensureFormulaInternalCache(
+  apiRef: RefObject<GridPrivateApiPremium>,
+  props: Pick<DataGridPremiumProcessedProps, 'formulaFunctions' | 'dataSource'>,
+): GridFormulaInternalCache {
+  let cache = apiRef.current.caches.formula;
+  if (cache === undefined) {
+    cache = createFormulaInternalCache(getEffectiveFormulaFunctions(props));
+    apiRef.current.caches.formula = cache;
+  }
+  return cache;
+}
+
 export function resetFormulaEvaluationCache(cache: GridFormulaInternalCache) {
   cache.records = new Map();
   cache.dependents = new Map();
   cache.dependentsByRowId = new Map();
   cache.recordsByField = new Map();
   cache.positionDependentKeys = new Set();
+  cache.cyclicKeys = new Set();
   cache.rangeDependentsByField = new Map();
   // The version counter survives: it must keep increasing across resets.
   cache.positionContext = null;
@@ -105,14 +142,18 @@ export function areFormulaFieldsEqual(a: string[], b: string[]): boolean {
 
 /**
  * The column inputs evaluation depends on: field existence and `valueGetter`
- * identity (raw dependency reads go through it).
+ * identity (raw dependency reads go through it). The row grouping columns are
+ * left out — every hydration rebuilds them with fresh getters that read the
+ * grouped columns at call time, so their identity says nothing about the data.
  */
 export function computeColumnsSignature(
   columnsLookup: Record<string, GridColDef>,
 ): Map<string, unknown> {
   const signature = new Map<string, unknown>();
   for (const field of Object.keys(columnsLookup)) {
-    signature.set(field, columnsLookup[field].valueGetter);
+    if (!isGroupingColumn(field)) {
+      signature.set(field, columnsLookup[field].valueGetter);
+    }
   }
   return signature;
 }
@@ -130,6 +171,34 @@ export function areColumnsSignaturesEqual(
     }
   }
   return true;
+}
+
+/**
+ * Whether a columns signature change touches the inputs of the computed columns:
+ * a referenced field appearing or disappearing (`#REF!` ⇄ value) or getting a
+ * new `valueGetter` (its read path), or a computed column's own getter changing
+ * with its formula. An unrelated column with an inline getter does not.
+ * @param {Map<string, unknown>} next The current columns signature.
+ * @param {Map<string, unknown>} previous The signature the results were memoized with.
+ * @param {GridComputedColumnsRuntimeCache} runtime The computed columns runtime cache.
+ * @returns {boolean} `true` when the memoized computed results may be stale.
+ */
+export function haveComputedInputsChanged(
+  next: Map<string, unknown>,
+  previous: Map<string, unknown>,
+  runtime: GridComputedColumnsRuntimeCache,
+): boolean {
+  for (const field of runtime.referencedFields) {
+    if (next.has(field) !== previous.has(field) || next.get(field) !== previous.get(field)) {
+      return true;
+    }
+  }
+  for (const field of runtime.records.keys()) {
+    if (next.get(field) !== previous.get(field)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export function areFormulaFunctionRecordsEqual(

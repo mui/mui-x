@@ -5,6 +5,7 @@ import type {
 } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
+import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 
 export type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 
@@ -311,13 +312,15 @@ interface SchedulerOccurrencePlaceholderBase {
    */
   surfaceType: EventSurfaceType;
   /**
-   * The new start date and time of the event occurrence.
+   * The new start of the event occurrence, as a timestamp in milliseconds.
+   * Its date and time are read in the display timezone.
    */
-  start: TemporalSupportedObject;
+  start: number;
   /**
-   * The new end date and time of the event occurrence.
+   * The new end of the event occurrence, as a timestamp in milliseconds.
+   * Its date and time are read in the display timezone.
    */
-  end: TemporalSupportedObject;
+  end: number;
   /**
    * The id of the resource onto which to drop the event.
    * If null, the event will be dropped outside of any resource.
@@ -413,6 +416,17 @@ export interface SchedulerProcessedDate {
    * and is intentionally independent from real-time duration (e.g. DST shifts).
    */
   minutesInDay: number;
+}
+
+/**
+ * A day of a view: a cell, a column or a row, starting at the first instant of its date.
+ */
+export interface SchedulerProcessedDay extends SchedulerProcessedDate {
+  /**
+   * The date of the day in the display timezone, which the day list is built in: consumers compare
+   * its `dayNumber` with the day numbers of instants in that timezone.
+   */
+  plainDate: PlainDate;
 }
 
 /**

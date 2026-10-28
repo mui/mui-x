@@ -4,9 +4,10 @@ import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useCompositeListItem } from '@base-ui/react/internals/composite';
+import { useDirection } from '@base-ui/react/direction-provider';
 import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
+import type { SchedulerProcessedDate } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
@@ -16,9 +17,9 @@ import type { EventCalendarState } from '../../use-event-calendar';
 
 const selectorIsCurrentDate = (
   state: EventCalendarState,
-  date: TemporalSupportedObject,
+  timestamp: number,
   skipDataCurrent: boolean | undefined,
-) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date);
+) => !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, timestamp);
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
   componentProps: CalendarGridHeaderCell.Props,
@@ -47,7 +48,8 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     rowTypes,
     rowsPerType,
   } = useCalendarGridRootContext();
-  const isCurrentDay = useStore(store, selectorIsCurrentDate, date.value, skipDataCurrent);
+  const isRtl = useDirection() === 'rtl';
+  const isCurrentDay = useStore(store, selectorIsCurrentDate, date.timestamp, skipDataCurrent);
 
   const { ref: listItemRef, index } = useCompositeListItem();
   const cellsRefs = useCalendarGridCellsRefsContext();
@@ -71,6 +73,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
       columnCount: cellsRefs.current.length,
       rowTypes,
       rowsPerType,
+      isRtl,
     });
     if (target) {
       event.preventDefault();

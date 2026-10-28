@@ -4,6 +4,7 @@ import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { ErrorContainer, SharedComponentsStyledContext } from '@mui/x-scheduler/internals';
@@ -62,6 +63,7 @@ describe('<EventTimelinePremium />', () => {
     preset?: EventTimelinePremiumPreset;
     presets?: EventTimelinePremiumPreset[];
     visibleDate?: TemporalSupportedObject;
+    displayTimezone?: string;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
     localeText?: Partial<EventTimelineLocaleText>;
@@ -79,6 +81,7 @@ describe('<EventTimelinePremium />', () => {
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
         visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
+        displayTimezone={options?.displayTimezone}
         preset={options?.preset ?? 'dayAndMonth'}
         presets={
           options?.presets ?? ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']
@@ -94,6 +97,7 @@ describe('<EventTimelinePremium />', () => {
         slots={options?.slots}
         slotProps={options?.slotProps}
         getEventAriaLabel={options?.getEventAriaLabel}
+        features={{ recurringEvents: recurringEventsFeature }}
       />,
     );
     return view;
@@ -377,6 +381,7 @@ describe('<EventTimelinePremium />', () => {
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndMonth"
           presets={['dayAndMonth', 'dayAndWeek']}
+          features={{ recurringEvents: recurringEventsFeature }}
         />,
       );
       baseEvents.forEach((eventItem) => {
@@ -1248,6 +1253,19 @@ describe('<EventTimelinePremium />', () => {
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
     });
+
+    it('should show the days of the visible date in the display timezone', async () => {
+      await renderTimeline({
+        preset: 'dayAndHour',
+        // July 1st at midnight in UTC is June 30th at 20:00 in New York.
+        visibleDate: adapter.date('2025-07-01T00:00:00', 'UTC'),
+        displayTimezone: 'America/New_York',
+      });
+
+      // The four days start on June 30th, not on July 1st, the day of the visible date in UTC.
+      expect(screen.queryByText('Mon, Jun 30')).not.to.equal(null);
+      expect(screen.queryByText('Fri, Jul 4')).to.equal(null);
+    });
   });
 
   describe('onEventEditingStart', () => {
@@ -1337,6 +1355,33 @@ describe('<EventTimelinePremium />', () => {
       expect(onEventEditingStart.mock.lastCall?.[1].anchor).to.equal(row);
       expect(row.isConnected).to.equal(true);
     });
+
+    it.each([
+      // Without a display timezone, the creation keeps the `'default'` timezone of the occurrences.
+      { displayTimezone: undefined, timezone: 'default' },
+      { displayTimezone: 'America/New_York', timezone: 'America/New_York' },
+    ])(
+      'should pass a creation to `onEventEditingStart` in the display timezone ($timezone)',
+      async ({ displayTimezone, timezone }) => {
+        const onEventEditingStart = vi.fn((_occurrence, eventDetails) => eventDetails.cancel());
+        const { user } = await renderTimeline({
+          events: [],
+          visibleDate: adapter.date('2025-07-03T12:00:00Z', displayTimezone ?? 'default'),
+          displayTimezone,
+          onEventEditingStart,
+        });
+
+        const row = document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement;
+        await act(async () => row.focus());
+        await user.keyboard('{Enter}');
+
+        expect(onEventEditingStart.mock.calls.length).to.equal(1);
+        const occurrence = onEventEditingStart.mock.lastCall![0];
+        expect(occurrence.displayTimezone.timezone).to.equal(timezone);
+        // The creation starts at the first instant of the preset, at midnight.
+        expect(occurrence.displayTimezone.start.minutesInDay).to.equal(0);
+      },
+    );
   });
 
   describe('accessible name', () => {

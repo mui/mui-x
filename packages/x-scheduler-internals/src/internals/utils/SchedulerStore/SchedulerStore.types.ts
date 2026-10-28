@@ -164,9 +164,10 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   occurrencePlaceholder: SchedulerOccurrencePlaceholder | null;
   /**
-   * The current date and time, updated every minute.
+   * The timestamp of the current date and time, updated every minute.
+   * Read it in the display timezone.
    */
-  nowUpdatedEveryMinute: TemporalSupportedObject;
+  nowTimestamp: number;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -197,7 +198,8 @@ export interface SchedulerState<TEvent extends object = any> {
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    */
   displayTimezone: TemporalTimezone;
   /**
@@ -232,8 +234,9 @@ export interface SchedulerState<TEvent extends object = any> {
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
   /**
    * Configures how events are deleted, normalized from the `eventDeletion` parameter.
+   * `false` when event deletion is disabled.
    */
-  eventDeletion: SchedulerEventDeletionConfig;
+  eventDeletion: SchedulerEventDeletionConfig | false;
   /**
    * The event for which the delete confirmation dialog is open, if any. `null` when the dialog is closed.
    */
@@ -419,7 +422,8 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
-   * This timezone only affects rendering, events keep their original data timezone.
+   * Events keep their original data timezone. The visible range starts on the day of the visible
+   * date in this timezone, and the next and previous navigation return dates in this timezone.
    * @default "default"
    */
   displayTimezone?: TemporalTimezone;
@@ -433,9 +437,12 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
 
   /**
    * Configures how events are deleted.
-   * @default { confirmation: true }
+   * If `false`, event deletion is disabled.
+   * If `true`, event deletion is enabled with default configuration.
+   * If an object, event deletion is enabled with the provided configuration.
+   * @default true
    */
-  eventDeletion?: Partial<SchedulerEventDeletionConfig>;
+  eventDeletion?: Partial<SchedulerEventDeletionConfig> | boolean;
 }
 
 /**
@@ -519,11 +526,13 @@ export interface SchedulerParametersToStateMapper<
   ) => State;
   /**
    * Updates the state based on the new parameters.
+   * `currentState` is the state before the update.
    */
   updateStateFromParameters: (
     newState: Partial<SchedulerState>,
     parameters: Parameters,
     updateModel: SchedulerModelUpdater<State, Parameters>,
+    currentState: State,
   ) => Partial<State>;
 }
 

@@ -287,6 +287,14 @@ For more detail, see https://mui.com/x/react-data-grid/row-updates/.`,
 };
 
 /**
+ * Wraps rows into `{ _action: 'replace', row }` updates, so they are stored as-is instead of merged.
+ * @param {GridRowModel[]} rows The rows to store.
+ * @returns {GridRowModelReplace[]} The replace updates.
+ */
+export const asReplaceUpdates = (rows: GridRowModel[]): GridRowModelReplace[] =>
+  rows.map((row) => ({ _action: 'replace', row }));
+
+/**
  * Merges a partial update into the existing row.
  * Prototype-preservation rules:
  *   1. If partialRow is a class instance (non-plain object), use its prototype — the

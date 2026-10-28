@@ -267,7 +267,7 @@ const isResizableSelector = (
 
   // In month view, only multi-day and all-day events can be resized
   if (view === 'month') {
-    return isOccurrenceAllDayOrMultipleDay(occurrence, state.adapter);
+    return isOccurrenceAllDayOrMultipleDay(occurrence);
   }
 
   return true;
