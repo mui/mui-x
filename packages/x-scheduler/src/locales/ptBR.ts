@@ -128,6 +128,7 @@ const ptBRCalendar: SchedulerCalendarTranslations = {
   months: 'Meses',
   weeks: 'Semanas',
   years: 'Anos',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Fechar painel lateral',

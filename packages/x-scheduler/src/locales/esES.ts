@@ -130,6 +130,7 @@ const esESCalendar: SchedulerCalendarTranslations = {
   months: 'Meses',
   weeks: 'Semanas',
   years: 'Años',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Cerrar panel lateral',

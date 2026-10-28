@@ -129,6 +129,7 @@ const nbNOCalendar: SchedulerCalendarTranslations = {
   months: 'Måneder',
   weeks: 'Uker',
   years: 'År',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Lukk sidepanel',

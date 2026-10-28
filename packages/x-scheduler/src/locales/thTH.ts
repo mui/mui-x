@@ -137,6 +137,7 @@ const thTHCalendar: SchedulerCalendarTranslations = {
   // months: 'Months',
   // weeks: 'Weeks',
   // years: 'Years',
+  // viewSwitcherAriaLabel: 'Views',
   // DateNavigator
   // closeSidePanel: 'Close side panel',
   // openSidePanel: 'Open side panel',

@@ -232,6 +232,7 @@ export interface EventCalendarLocaleText extends EventEditingLocaleText, Schedul
   months: string;
   weeks: string;
   years: string;
+  viewSwitcherAriaLabel: string;
 
   // DateNavigator
   closeSidePanel: string;
