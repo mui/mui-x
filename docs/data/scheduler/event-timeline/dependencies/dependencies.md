@@ -111,42 +111,19 @@ The lag is applied in the successor's [timezone](/x/react-scheduler/timezone/).
 
 Minutes and hours count elapsed time.
 An all-day successor can only wait whole days, so a lag in minutes or hours is rounded down to whole days, and a lag shorter than a day adds no wait.
-The dependency dialog shows how the lag applies in that case.
 
-## Create dependencies
+## Create, edit, and delete dependencies
 
-Hover an event to show its terminals: a handle on each of its edges.
-Drag from a terminal and drop it on another event to create a dependency:
-
-- Dropping it on one of the other event's terminals links those two edges: from the end of an event to the start of another creates a `FinishToStart` dependency.
-- Dropping it on the event itself links to its start.
-
-Press <kbd class="key">Escape</kbd>, or drop it on an empty area or on the same event, to cancel.
-
-{{"demo": "DependencyCreation.js", "bg": "inline", "defaultCodeOpen": false}}
-
-If the new dependency is already broken, the successor moves to respect it, as described in [Auto-scheduling](#auto-scheduling).
-The same happens when you edit a dependency so that it requires the successor to be later than before, for example by increasing its lag.
-
-## Edit and delete dependencies
-
-Click an arrow to select it, and press <kbd class="key">Escape</kbd> to deselect it.
-
-To edit a dependency's type and lag, double-click its arrow, or right-click it and pick **Edit dependency**.
-
-To delete a dependency, select it and do one of the following:
-
-- Press <kbd class="key">Delete</kbd> or <kbd class="key">Backspace</kbd>.
-- Click the **×** button at the end of its arrow.
-- Pick **Delete** in the right-click menu or in the dialog.
+Users create a dependency by dragging from the edge of an event to another event, and edit or delete it from its arrow.
+Every change is reported through `onDependenciesChange`.
 
 {{"demo": "DependencyEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-An edit that duplicates another dependency, or that would need to move a read-only event, isn't applied, and the dialog explains why.
-
-When the Event Timeline is [read-only](/x/react-scheduler/event-timeline/editing/#read-only), the terminals and the **×** button are hidden, and the right-click menu offers **Show details** instead: the dialog shows the dependency without letting you edit it.
+If a new or edited dependency is broken, the successor moves to respect it, as described in [Auto-scheduling](#auto-scheduling).
 
 Deleting an event also deletes its dependencies, in the same `onDependenciesChange` call.
+
+When the Event Timeline is [read-only](/x/react-scheduler/event-timeline/editing/#read-only), users can't create, edit, or delete dependencies.
 
 ## Rejected dependencies
 
@@ -165,7 +142,7 @@ In the demo above, try linking **Testing** to **Wireframes**, linking the end of
 
 ## Known limitations
 
-- Recurring events have no terminals, and dependencies on them are ignored: they don't render and don't move events.
+- Dependencies on recurring events are ignored: they don't render and don't move events.
 - A negative lag (a lead) isn't supported.
   A negative or fractional lag, or an unknown `lagUnit`, is ignored: the dependency applies with no lag, and a warning is logged in development.
 - With [lazy loading](/x/react-scheduler/event-timeline/lazy-loading/), a dependency only applies once both of its events are loaded: until then it has no arrow and doesn't move either event.
