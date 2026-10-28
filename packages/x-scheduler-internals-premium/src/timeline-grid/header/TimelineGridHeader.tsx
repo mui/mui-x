@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
-import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
+import { formatPlainDate, isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
 import {
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
@@ -53,7 +53,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
         cellsPerLevel[levelIndex].map((cell) =>
           level.renderCell
             ? level.renderCell({ ...cell, locale, ampm, level: levelIndex, unit: level.unit })
-            : level.formatDate(locale, cell.plainDate),
+            : formatPlainDate(locale, cell.plainDate, level.format),
         ),
       ),
     [locale, ampm, cellsPerLevel, config.headers],

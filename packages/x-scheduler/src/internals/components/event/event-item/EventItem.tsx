@@ -11,7 +11,6 @@ import {
 import { Button } from '@base-ui/react/button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { formatPlainDate, toPlainDate } from '@mui/x-scheduler-internals/internals';
 import { useEventAccessibleName } from '../../../hooks/useEventAccessibleName';
 import type { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -20,6 +19,7 @@ import type { PaletteName } from '../../../utils/tokens';
 import { getPaletteVariants } from '../../../utils/tokens';
 import { getArrowEdgeStyles, getArrowFocusVisibleStyles } from '../arrowClips';
 import { isOccurrenceMultiDay } from '../../../utils/event-utils';
+import { formatProcessedDate } from '../../../utils/date-utils';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -296,7 +296,7 @@ function MultiDayDateLabel(props: {
     return (
       <EventItemTime className={classes.eventItemTime} as="span">
         {localeText.eventItemMultiDayLabel(
-          formatPlainDate(locale, toPlainDate(end.timestamp, timezone), 'monthShortAndDayOfMonth'),
+          formatProcessedDate(locale, end, timezone, 'monthShortAndDayOfMonth'),
         )}
       </EventItemTime>
     );

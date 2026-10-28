@@ -3,34 +3,29 @@ import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import {
   createStartOfPlainDate,
   formatPlainDate,
-  formatTime,
   toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
+import type { PlainDate, SchedulerDateFormat } from '@mui/x-scheduler-internals/internals';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 
 /**
  * Formats the date of a processed date, read in `timezone`.
- * @example "Sunday, July 13, 2025"
  */
-export function formatFullDate(
+export function formatProcessedDate(
   locale: string,
   date: SchedulerProcessedDate,
   timezone: TemporalTimezone,
+  format: SchedulerDateFormat,
 ): string {
-  return formatPlainDate(locale, toPlainDate(date.timestamp, timezone), 'fullDate');
+  return formatPlainDate(locale, toPlainDate(date.timestamp, timezone), format);
 }
 
 /**
- * Formats the wall-clock time of a processed date.
- * @example "1:30 PM" or "13:30"
+ * @example "Sunday 13"
  */
-export function formatProcessedDateTime(
-  locale: string,
-  date: SchedulerProcessedDate,
-  ampm: boolean,
-): string {
-  return formatTime(locale, date.minutesInDay * 60_000, ampm);
+export function formatWeekdayAndDayOfMonth(locale: string, plainDate: PlainDate): string {
+  return `${formatPlainDate(locale, plainDate, 'weekday')} ${formatPlainDate(locale, plainDate, 'dayOfMonth')}`;
 }
 
 /**

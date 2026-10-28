@@ -32,7 +32,7 @@ import {
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { formatFullDate } from '../../utils/date-utils';
+import { formatProcessedDate } from '../../utils/date-utils';
 import { isOccurrenceMultiDay } from '../../utils/event-utils';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
@@ -148,10 +148,10 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const formatTime = useFormatTime();
   const { start, end, timezone: boundsTimezone } = occurrence.displayTimezone;
   const isMultiDay = isOccurrenceMultiDay(occurrence);
-  const formatBound = occurrence.allDay
-    ? (date: SchedulerProcessedDate) => formatFullDate(locale, date, boundsTimezone)
-    : (date: SchedulerProcessedDate) =>
-        `${formatFullDate(locale, date, boundsTimezone)}, ${formatTime(date)}`;
+  const formatBound = (date: SchedulerProcessedDate) => {
+    const fullDate = formatProcessedDate(locale, date, boundsTimezone, 'fullDate');
+    return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(date)}`;
+  };
   const formatBoundDateTime = (bound: SchedulerProcessedDate) =>
     occurrence.allDay
       ? toPlainDate(bound.timestamp, boundsTimezone).toString()
@@ -188,13 +188,11 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
       <EventDialogDateTimeContainer className={classes.eventDialogDateTimeContainer}>
         <CalendarMonthRounded className={classes.eventDialogDateTimeIcon} fontSize="small" />
         <Typography className={classes.eventDialogDateTimeLabel} variant="body2" component="p">
-          <time dateTime={formatBoundDateTime(occurrence.displayTimezone.start)}>
-            {formatBound(start)}
-          </time>
+          <time dateTime={formatBoundDateTime(start)}>{formatBound(start)}</time>
           {(isMultiDay || !occurrence.allDay) && (
             <React.Fragment>
               {' - '}
-              <time dateTime={formatBoundDateTime(occurrence.displayTimezone.end)}>
+              <time dateTime={formatBoundDateTime(end)}>
                 {isMultiDay ? formatBound(end) : formatTime(end)}
               </time>
             </React.Fragment>

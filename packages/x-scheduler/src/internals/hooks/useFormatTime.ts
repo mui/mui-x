@@ -6,7 +6,7 @@ import {
   schedulerOtherSelectors,
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { formatProcessedDateTime } from '../utils/date-utils';
+import { formatTime } from '@mui/x-scheduler-internals/internals';
 
 export function useFormatTime() {
   // Context hooks
@@ -17,7 +17,7 @@ export function useFormatTime() {
   const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   return React.useCallback(
-    (date: SchedulerProcessedDate) => formatProcessedDateTime(locale, date, ampm),
+    (date: SchedulerProcessedDate) => formatTime(locale, date.minutesInDay, ampm),
     [locale, ampm],
   );
 }

@@ -44,11 +44,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
 
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
+  const weekInfo = useStore(store, eventCalendarPreferenceSelectors.weekInfo);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
-  const minimalDaysInFirstWeek = useStore(store, schedulerOtherSelectors.minimalDaysInFirstWeek);
-  const weekNumber = getWeekNumber(days[0].plainDate, weekStartsOn, minimalDaysInFirstWeek);
+  const weekNumber = getWeekNumber(days[0].plainDate, weekInfo);
 
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   // `days[0].timestamp` is the first instant of the first day.

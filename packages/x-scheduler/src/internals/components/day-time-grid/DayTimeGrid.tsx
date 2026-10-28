@@ -36,6 +36,7 @@ import { DayGridCell } from './DayGridCell';
 import { useEventEditingContext } from '../event-editing';
 import { useDisarmOnOutsidePointer } from '../armed-occurrence';
 import { isOccurrenceInDayGrid } from '../../utils/event-utils';
+import { formatWeekdayAndDayOfMonth } from '../../utils/date-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { eventCalendarContentCompactQuery } from '../../constants/responsiveTypography';
@@ -479,7 +480,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             key={day.key}
             className={classes.dayTimeGridHeaderCell}
             date={day}
-            aria-label={`${formatPlainDate(locale, day.plainDate, 'weekday')} ${formatPlainDate(locale, day.plainDate, 'dayOfMonth')}`}
+            aria-label={formatWeekdayAndDayOfMonth(locale, day.plainDate)}
             aria-colindex={index + 1}
             data-has-scroll={(index === days.length - 1 && hasScroll) || undefined}
           >
@@ -546,7 +547,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     style={{ '--hour': index } as React.CSSProperties}
                   >
                     <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
-                      {index === 0 ? null : formatTime(locale, hour * 3_600_000, ampm)}
+                      {index === 0 ? null : formatTime(locale, hour * 60, ampm)}
                     </DayTimeGridTimeAxisText>
                   </DayTimeGridTimeAxisCell>
                 );

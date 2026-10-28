@@ -8,9 +8,9 @@ import type { PlainDate } from './base-temporal/PlainDate';
 export const DEFAULT_DATE_LOCALE = 'en-US';
 
 /**
- * The weeks of a locale.
+ * The weeks of the views: the day they start on, and the first week of a year.
  */
-export interface LocaleWeekInfo {
+export interface WeekInfo {
   /**
    * The ISO weekday the weeks start on (1 = Monday … 7 = Sunday).
    */
@@ -21,14 +21,10 @@ export interface LocaleWeekInfo {
   minimalDays: number;
 }
 
-interface IntlWeekInfo {
-  firstDay: number;
-}
-
 // Not in the TypeScript library of every supported version.
 interface IntlLocaleWithWeekInfo {
-  getWeekInfo?: () => IntlWeekInfo;
-  weekInfo?: IntlWeekInfo;
+  getWeekInfo?: () => { firstDay: number };
+  weekInfo?: { firstDay: number };
 }
 
 // The regions whose first week of the year has at least 4 days in that year, from the week data
@@ -40,23 +36,21 @@ const FOUR_MINIMAL_DAYS_REGIONS = new Set(
   ),
 );
 
-const weekInfoLookup = new Map<string, LocaleWeekInfo>();
+const weekInfoLookup = new Map<string, WeekInfo>();
 
 /**
  * The first day of the week of `locale`, from `Intl.Locale.prototype.getWeekInfo()`, and the
  * first week of the year of its region.
  */
-export function getLocaleWeekInfo(locale: string): LocaleWeekInfo {
+export function getLocaleWeekInfo(locale: string): WeekInfo {
   let weekInfo = weekInfoLookup.get(locale);
   if (!weekInfo) {
-    const intlLocale = new Intl.Locale(locale);
-    const intlWeekInfo =
-      (intlLocale as unknown as IntlLocaleWithWeekInfo).getWeekInfo?.() ??
-      // Older browsers have a `weekInfo` accessor instead of `getWeekInfo()`.
-      (intlLocale as unknown as IntlLocaleWithWeekInfo).weekInfo;
+    const intlLocale = new Intl.Locale(locale) as Intl.Locale & IntlLocaleWithWeekInfo;
+    // Older browsers have a `weekInfo` accessor instead of `getWeekInfo()`.
+    const intlWeekInfo = intlLocale.getWeekInfo?.() ?? intlLocale.weekInfo;
     const region = intlLocale.maximize().region;
     weekInfo = {
-      // The ISO 8601 weeks start on Monday, for the browsers that know neither.
+      // Like the ISO 8601 weeks, for the browsers that know neither.
       firstDay: (intlWeekInfo?.firstDay ?? 1) as WeekStartsOn,
       minimalDays: region !== undefined && FOUR_MINIMAL_DAYS_REGIONS.has(region) ? 4 : 1,
     };
@@ -86,10 +80,6 @@ const DATE_FORMATS = {
    * @example "Jul"
    */
   monthShort: { month: 'short' },
-  /**
-   * @example "July"
-   */
-  month: { month: 'long' },
   /**
    * @example "2025"
    */
@@ -159,10 +149,20 @@ export function formatPlainDate(
   return getFormatter(locale, format).format(plainDate.dayNumber * MS_PER_DAY);
 }
 
+const timeLabelLookup = new Map<string, Record<'time12h' | 'time24h', string[]>>();
+
 /**
- * Formats a wall-clock time, in milliseconds since midnight, in `locale`.
+ * Formats a wall-clock time, in minutes since midnight, in `locale`. The labels are cached, as the
+ * time axis formats one per hour and the events two per bound on every render.
  * @example "1:30 PM" or "13:30"
  */
-export function formatTime(locale: string, msInDay: number, ampm: boolean): string {
-  return getFormatter(locale, ampm ? 'time12h' : 'time24h').format(msInDay);
+export function formatTime(locale: string, minutesInDay: number, ampm: boolean): string {
+  let labels = timeLabelLookup.get(locale);
+  if (!labels) {
+    labels = { time12h: [], time24h: [] };
+    timeLabelLookup.set(locale, labels);
+  }
+  const format = ampm ? 'time12h' : 'time24h';
+  labels[format][minutesInDay] ??= getFormatter(locale, format).format(minutesInDay * 60_000);
+  return labels[format][minutesInDay];
 }

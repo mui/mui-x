@@ -133,7 +133,6 @@ export function usePreferencesMenuItems(): {
   const { classes, localeText } = useEventCalendarStyledContext();
 
   const preferences = useStore(store, eventCalendarPreferenceSelectors.all);
-  // Without the preference, the weeks start on the first day of the week of the locale.
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   const {
     currentView,

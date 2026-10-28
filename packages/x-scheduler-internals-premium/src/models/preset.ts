@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import type { PlainDate } from '@mui/x-scheduler-internals/internals';
+import type { PlainDate, SchedulerDateFormat } from '@mui/x-scheduler-internals/internals';
 
 export type EventTimelinePremiumPreset =
   'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
@@ -61,17 +61,17 @@ interface PresetHeaderLevelConfigBase {
 
 /**
  * Configuration for one header row of a preset. Each level must provide either
- * `formatDate` (text-only label) or `renderCell` (full React render), never both.
+ * `format` (text-only label) or `renderCell` (full React render), never both.
  */
 export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
   (
     | {
-        /** Formats the date of the aligned start of the cell into a string label. */
-        formatDate: (locale: string, plainDate: PlainDate) => string;
+        /** The format of the label: the date of the aligned start of the cell. */
+        format: SchedulerDateFormat;
         renderCell?: undefined;
       }
     | {
-        formatDate?: undefined;
+        format?: undefined;
         /**
          * Renders the cell label from the full cell state. Use this when the
          * label needs more than the date of the aligned start (e.g. a range, multiple

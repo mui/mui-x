@@ -85,11 +85,11 @@ describe('date-locale', () => {
   });
 
   describe('formatTime', () => {
-    const msInDay = (13 * 60 + 5) * 60_000;
+    const minutesInDay = 13 * 60 + 5;
 
     it('should format a wall-clock time in 12-hour or 24-hour format', () => {
-      expect(formatTime('en-US', msInDay, true)).to.equal('1:05 PM');
-      expect(formatTime('en-US', msInDay, false)).to.equal('13:05');
+      expect(formatTime('en-US', minutesInDay, true)).to.equal('1:05 PM');
+      expect(formatTime('en-US', minutesInDay, false)).to.equal('13:05');
       expect(formatTime('fr-FR', 0, false)).to.equal('0:00');
     });
 

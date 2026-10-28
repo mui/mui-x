@@ -5,29 +5,10 @@ import {
   formatTime,
   getPlainDateWeekStart,
 } from '@mui/x-scheduler-internals/internals';
-import type {
-  PlainDate,
-  PlainDateDuration,
-  SchedulerDateFormat,
-} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate, PlainDateDuration } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPreset, PresetDefinition, PresetHeaderUnit } from '../../models';
 
-const HOUR_MS = 3_600_000;
-
 const DAY_AND_HOUR_DAYS = 4;
-
-const createFormatDate =
-  (format: SchedulerDateFormat) =>
-  (locale: string, plainDate: PlainDate): string =>
-    formatPlainDate(locale, plainDate, format);
-
-const formatYear = createFormatDate('year');
-
-const formatMonthShort = createFormatDate('monthShort');
-
-const formatWeekdayMonthAndDayOfMonth = createFormatDate('weekdayShortMonthShortAndDayOfMonth');
-
-const formatMonthAndYear = createFormatDate('monthAndYear');
 
 /**
  * The range and the navigation of a preset made of `unitCount` periods of a `unit`, like days or
@@ -60,14 +41,12 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'hour',
     tickWidth: 64,
     headers: [
-      { unit: 'day', formatDate: formatWeekdayMonthAndDayOfMonth },
+      { unit: 'day', format: 'weekdayShortMonthShortAndDayOfMonth' },
       {
         unit: 'hour',
-        // The hour row ticks in hours, so `iterate()` sets `wallClockHour` on all its cells. The
-        // label is a wall-clock time: the hour that a spring-forward transition skips has no
-        // instant on that day.
+        // The hour row ticks in hours, so `iterate()` sets `wallClockHour` on all its cells.
         renderCell: ({ locale, wallClockHour, ampm }) =>
-          formatTime(locale, wallClockHour! * HOUR_MS, ampm),
+          formatTime(locale, wallClockHour! * 60, ampm),
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,
@@ -81,7 +60,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'day',
     tickWidth: 120,
     headers: [
-      { unit: 'month', formatDate: formatMonthAndYear },
+      { unit: 'month', format: 'monthAndYear' },
       {
         unit: 'day',
         renderCell: ({ locale, plainDate }) => (
@@ -102,9 +81,9 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       {
         unit: 'week',
         renderCell: ({ locale, firstPlainDate, lastPlainDate }) =>
-          `${formatWeekdayMonthAndDayOfMonth(locale, firstPlainDate)} - ${formatWeekdayMonthAndDayOfMonth(locale, lastPlainDate)}`,
+          `${formatPlainDate(locale, firstPlainDate, 'weekdayShortMonthShortAndDayOfMonth')} - ${formatPlainDate(locale, lastPlainDate, 'weekdayShortMonthShortAndDayOfMonth')}`,
       },
-      { unit: 'day', formatDate: createFormatDate('weekdayNarrow') },
+      { unit: 'day', format: 'weekdayNarrow' },
     ],
     unitCount: 16, // 16 weeks
     ...createPlainDateRange('weeks', getPlainDateWeekStart),
@@ -114,8 +93,8 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'day',
     tickWidth: 6,
     headers: [
-      { unit: 'year', formatDate: formatYear },
-      { unit: 'month', formatDate: formatMonthShort },
+      { unit: 'year', format: 'year' },
+      { unit: 'month', format: 'monthShort' },
     ],
     unitCount: 3 * 12, // 3 years
     ...createPlainDateRange('months', (plainDate) => plainDate.with({ day: 1 })),
@@ -124,7 +103,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
   year: {
     timeResolution: 'year',
     tickWidth: 200,
-    headers: [{ unit: 'year', formatDate: formatYear }],
+    headers: [{ unit: 'year', format: 'year' }],
     unitCount: 30, // 30 years
     ...createPlainDateRange('years', (plainDate) => plainDate.with({ month: 1, day: 1 })),
   },

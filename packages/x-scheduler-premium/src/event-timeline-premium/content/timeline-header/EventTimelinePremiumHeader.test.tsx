@@ -114,8 +114,8 @@ describe('<EventTimelinePremiumHeader />', () => {
     });
   });
 
-  describe('formatDate content', () => {
-    it('should render the formatDate result as the cell label', async () => {
+  describe('format content', () => {
+    it('should render the formatted date as the cell label', async () => {
       await renderHeader({ preset: 'monthAndYear' });
 
       // Visible range Jul 2025 → Jun 2028.
@@ -149,8 +149,8 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('weekend marking', () => {
-    // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); the test adapter has no
-    // locale configured, so date-fns starts weeks on Sunday → first cell is Sun Jun 29.
+    // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); the weeks of the default date locale,
+    // English (United States), start on Sunday → first cell is Sun Jun 29.
     it('should mark weekend day cells with data-weekend in `dayAndWeek` (where the day row is the leaf)', async () => {
       await renderHeader({ preset: 'dayAndWeek' });
 

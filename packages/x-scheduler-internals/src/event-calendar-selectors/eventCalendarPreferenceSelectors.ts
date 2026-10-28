@@ -19,5 +19,6 @@ export const eventCalendarPreferenceSelectors = {
   showWeekNumber: (state: State) => allPreferencesSelector(state).showWeekNumber,
   showEmptyDaysInAgenda: (state: State) => allPreferencesSelector(state).showEmptyDaysInAgenda,
   isSidePanelOpen: (state: State) => allPreferencesSelector(state).isSidePanelOpen,
+  weekInfo: schedulerPreferenceSelectors.weekInfo,
   weekStartsOn: schedulerPreferenceSelectors.weekStartsOn,
 };

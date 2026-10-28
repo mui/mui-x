@@ -3,6 +3,7 @@ import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import type { WeekInfo } from './date-locale';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
 
 /**
@@ -65,18 +66,14 @@ export function getPlainDateWeekStart(plainDate: PlainDate, weekStartsOn: WeekSt
 }
 
 /**
- * Returns the week number of `plainDate`, with weeks starting on `weekStartsOn`
+ * Returns the week number of `plainDate`, with weeks starting on `weekInfo.firstDay`
  * (1 = Monday … 7 = Sunday).
  *
- * The first week of a year is the first one with at least `minimalDays` days in that year, like in
- * `Intl.Locale.prototype.getWeekInfo()`. With weeks starting on Monday and 4 minimal days, the
- * result is the ISO 8601 week number.
+ * The first week of a year is the first one with at least `weekInfo.minimalDays` days in that
+ * year. With weeks starting on Monday and 4 minimal days, the result is the ISO 8601 week number.
  */
-export function getWeekNumber(
-  plainDate: PlainDate,
-  weekStartsOn: WeekStartsOn,
-  minimalDays: number,
-): number {
+export function getWeekNumber(plainDate: PlainDate, weekInfo: WeekInfo): number {
+  const { firstDay: weekStartsOn, minimalDays } = weekInfo;
   const weekStartPlainDate = getPlainDateWeekStart(plainDate, weekStartsOn);
   // A week belongs to the year of its last `minimalDays` days, and the first week of a year holds
   // its `minimalDays`-th day.
