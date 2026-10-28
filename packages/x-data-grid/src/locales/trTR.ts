@@ -168,6 +168,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'Evet',
   booleanCellFalseLabel: 'Hayır',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Genişlet',
   longTextCellCollapseLabel: 'Gizle',

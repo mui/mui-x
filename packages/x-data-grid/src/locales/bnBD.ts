@@ -173,6 +173,9 @@ const bnBDGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'হ্যাঁ',
   booleanCellFalseLabel: 'না',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'সম্প্রসারিত করুন',
   longTextCellCollapseLabel: 'সংকুচিত করুন',

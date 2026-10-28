@@ -13,6 +13,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useStore } from '@base-ui/utils/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useId from '@mui/utils/useId';
 import { focusElement } from '../../utils/focusElement';
 import { PRE_MOUNTED_EDITOR_SELECTOR } from '../../utils/cellEditor';
 import { isImeKeyDown } from '../../utils/keyboardUtils';
@@ -135,6 +136,14 @@ function handlePreMountedEditorKeyDown(event: React.KeyboardEvent<HTMLDivElement
   }
 }
 
+// Returns the first tab stop in the content of the cell, for example a link from `renderCell`.
+// The editor that the cell renders before edit mode starts is not part of the content.
+function getContentTabStop(cell: HTMLElement) {
+  return Array.from(cell.querySelectorAll<HTMLElement>('[tabindex="0"]')).find(
+    (element) => !element.closest(PRE_MOUNTED_EDITOR_SELECTOR),
+  );
+}
+
 function isCoarsePointer() {
   // On touch devices, an editable element with focus opens the virtual keyboard.
   return typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
@@ -250,10 +259,15 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   // but the DOM focus stays in the editor. Keep the editor while it has the DOM focus.
   // Then the focus does not move to the body.
   const [editorHasDomFocus, setEditorHasDomFocus] = React.useState(false);
+  // Content with a tab stop (for example a link from `renderCell`) keeps the focus, as without the editor.
+  // Then Enter activates the content, and the cell has only one tab stop.
+  const [contentHasTabStop, setContentHasTabStop] = React.useState(false);
+  const cellId = useId();
   const isEditorPreMounted =
     imeFastEdit &&
     cellMode === GridCellModes.View &&
     ((hasFocus && isEditable) || editorHasDomFocus) &&
+    !contentHasTabStop &&
     canPreMountEditor(column) &&
     !isCoarsePointer();
   // React does not call `onBlur` when it removes an element that has the focus.
@@ -431,6 +445,16 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     rowSpan,
   ]);
 
+  // The content gets its tab stop only in the focused cell, because `renderCell` receives `tabIndex: 0` only there.
+  // This effect runs before the focus effect below. Thus the editor goes away before it gets the focus.
+  useEnhancedEffect(() => {
+    if (!imeFastEdit || !hasFocus || cellMode !== GridCellModes.View || !cellRef.current) {
+      return;
+    }
+    setContentHasTabStop(getContentTabStop(cellRef.current) !== undefined);
+    // `row` and `column` change the content of `renderCell`.
+  }, [imeFastEdit, hasFocus, cellMode, row, column]);
+
   useEnhancedEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
@@ -451,7 +475,10 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
         return;
       }
 
-      const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
+      // A tab stop in the content comes before the editor that the cell renders before edit mode starts.
+      const focusableElement =
+        getContentTabStop(cellRef.current) ??
+        cellRef.current.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
 
       focusElement(elementToFocus, apiRef);
@@ -462,7 +489,11 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   // Only the cell itself gives the focus to the editor. Thus the editor never takes the focus from another element.
   const focusPreMountedEditor = React.useCallback(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current)!;
-    if (!cellRef.current || doc.activeElement !== cellRef.current) {
+    if (
+      !cellRef.current ||
+      doc.activeElement !== cellRef.current ||
+      getContentTabStop(cellRef.current) !== undefined
+    ) {
       return;
     }
     const input = cellRef.current.querySelector<HTMLElement>(
@@ -618,8 +649,10 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
                 ...PRE_MOUNTED_EDITOR_INPUT_PROPS,
                 // The editor replaces the cell as the tab stop.
                 tabIndex: cellParams.tabIndex,
-                // The input is empty. Screen readers must announce the value of the cell.
-                'aria-label': valueToRender?.toString() || undefined,
+                // The input is empty. Screen readers must announce the content of the cell.
+                ...(children == null || children === ''
+                  ? { 'aria-label': apiRef.current.getLocaleText('emptyCellLabel') }
+                  : { 'aria-labelledby': cellId }),
               },
             },
           },
@@ -662,6 +695,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     <div
       className={clsx(classes.root, classNames, className)}
       role={column.rowHeader ? 'rowheader' : 'gridcell'}
+      id={isEditorPreMounted ? cellId : undefined}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}

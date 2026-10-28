@@ -202,6 +202,9 @@ const beBYGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'праўда',
   booleanCellFalseLabel: 'няпраўда',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Разгарнуць',
   longTextCellCollapseLabel: 'Згарнуць',

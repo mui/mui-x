@@ -201,6 +201,9 @@ const csCZGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Rozbalit',
   longTextCellCollapseLabel: 'Sbalit',

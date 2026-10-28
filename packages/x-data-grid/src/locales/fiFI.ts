@@ -173,6 +173,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'tosi',
   booleanCellFalseLabel: 'epätosi',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Laajenna',
   longTextCellCollapseLabel: 'Tiivistä',

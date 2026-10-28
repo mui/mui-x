@@ -168,6 +168,9 @@ const huHUGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'igen',
   booleanCellFalseLabel: 'nem',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Kibontás',
   longTextCellCollapseLabel: 'Összecsukás',

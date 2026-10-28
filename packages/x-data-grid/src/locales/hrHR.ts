@@ -193,6 +193,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'Da',
   booleanCellFalseLabel: 'Ne',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Proširiti',
   longTextCellCollapseLabel: 'Skupiti',

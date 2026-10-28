@@ -175,6 +175,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'vrai',
   booleanCellFalseLabel: 'faux',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'Afficher',
   longTextCellCollapseLabel: 'Masquer',

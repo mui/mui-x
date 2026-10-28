@@ -169,6 +169,9 @@ export interface GridLocaleText {
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
 
+  // Cell editor text
+  emptyCellLabel: string;
+
   // Long text cell
   longTextCellExpandLabel: string;
   longTextCellCollapseLabel: string;

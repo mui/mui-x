@@ -170,6 +170,9 @@ const thTHGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ใช่',
   booleanCellFalseLabel: 'ไม่ใช่',
 
+  // Cell editor text
+  // emptyCellLabel: 'Empty',
+
   // Long text cell
   longTextCellExpandLabel: 'ขยาย',
   longTextCellCollapseLabel: 'ย่อ',
