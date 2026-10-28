@@ -146,10 +146,3 @@ In the demo above, try linking **Testing** to **Wireframes**, linking the end of
 - A negative lag (a lead) isn't supported.
   A negative or fractional lag, or an unknown `lagUnit`, is ignored: the dependency applies with no lag, and a warning is logged in development.
 - With [lazy loading](/x/react-scheduler/event-timeline/lazy-loading/), a dependency only applies once both of its events are loaded: until then it has no arrow and doesn't move either event.
-
-## Accessibility
-
-The arrows are hidden from assistive technologies.
-Instead, each successor describes the dependencies it waits on, for example "Cannot start until Design finishes.", through `aria-describedby`.
-
-Dependencies can't be created, selected, or edited with the keyboard yet.
