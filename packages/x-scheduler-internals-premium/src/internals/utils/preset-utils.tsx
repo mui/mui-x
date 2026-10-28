@@ -1,38 +1,20 @@
 import * as React from 'react';
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import {
   addToAdapterDate,
-  createLabelDate,
-  formatWallClockHour,
+  formatDayOfMonth,
+  formatMonthAndYear,
+  formatMonthShort,
+  formatTime,
+  formatWeekdayNarrow,
+  formatWeekdayShortMonthShortAndDayOfMonth,
+  formatWeekdayShortMonthShortAndDayOfMonthRange,
+  formatYear,
   getPlainDateWeekStart,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate, PlainDateDuration } from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPreset, PresetDefinition, PresetHeaderUnit } from '../../models';
 
-type FormatDate = (adapter: TemporalAdapter, plainDate: PlainDate) => string;
-
 const DAY_AND_HOUR_DAYS = 4;
-
-const formatYear: FormatDate = (_adapter, plainDate) => String(plainDate.year);
-
-const formatMonth3Letters: FormatDate = (adapter, plainDate) =>
-  adapter.format(createLabelDate(adapter, plainDate), 'month3Letters');
-
-const formatWeekDayMonthAndDayOfMonth: FormatDate = (adapter, plainDate) => {
-  const f = adapter.formats;
-  return adapter.formatByString(
-    createLabelDate(adapter, plainDate),
-    `${f.weekday3Letters}, ${f.month3Letters} ${f.dayOfMonth}`,
-  );
-};
-
-const formatMonthAndYear: FormatDate = (adapter, plainDate) => {
-  const f = adapter.formats;
-  return adapter.formatByString(
-    createLabelDate(adapter, plainDate),
-    `${f.monthFullLetter} ${f.yearPadded}`,
-  );
-};
 
 /**
  * The range and the navigation of a preset made of `unitCount` periods of a `unit`, like days or
@@ -41,7 +23,7 @@ const formatMonthAndYear: FormatDate = (adapter, plainDate) => {
  */
 function createPlainDateRange(
   unit: keyof PlainDateDuration,
-  getStartPlainDate: PresetDefinition['getStartPlainDate'] = (_adapter, plainDate) => plainDate,
+  getStartPlainDate: PresetDefinition['getStartPlainDate'] = (plainDate) => plainDate,
 ): Pick<PresetDefinition, 'getStartPlainDate' | 'getEndPlainDate' | 'navigate'> {
   const toDuration = (amount: number) => ({ [unit]: amount }) as PlainDateDuration;
   return {
@@ -65,12 +47,12 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'hour',
     tickWidth: 64,
     headers: [
-      { unit: 'day', formatDate: formatWeekDayMonthAndDayOfMonth },
+      { unit: 'day', format: formatWeekdayShortMonthShortAndDayOfMonth },
       {
         unit: 'hour',
         // The hour row ticks in hours, so `iterate()` sets `wallClockHour` on all its cells.
-        renderCell: ({ adapter, wallClockHour, ampm }) =>
-          formatWallClockHour(adapter, wallClockHour!, ampm),
+        renderCell: ({ locale, wallClockHour, ampm }) =>
+          formatTime(locale, wallClockHour! * 60, ampm),
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,
@@ -84,18 +66,15 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'day',
     tickWidth: 120,
     headers: [
-      { unit: 'month', formatDate: formatMonthAndYear },
+      { unit: 'month', format: formatMonthAndYear },
       {
         unit: 'day',
-        renderCell: ({ adapter, plainDate }) => {
-          const date = createLabelDate(adapter, plainDate);
-          return (
-            <span data-slot="dayCell">
-              <span data-slot="weekday">{adapter.format(date, 'weekday1Letter')}</span>
-              <span data-slot="dayOfMonth">{adapter.format(date, 'dayOfMonth')}</span>
-            </span>
-          );
-        },
+        renderCell: ({ locale, plainDate }) => (
+          <span data-slot="dayCell">
+            <span data-slot="weekday">{formatWeekdayNarrow(locale, plainDate)}</span>
+            <span data-slot="dayOfMonth">{formatDayOfMonth(locale, plainDate)}</span>
+          </span>
+        ),
       },
     ],
     unitCount: 8 * 7, // 8 weeks
@@ -107,14 +86,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     headers: [
       {
         unit: 'week',
-        renderCell: ({ adapter, firstPlainDate, lastPlainDate }) =>
-          `${formatWeekDayMonthAndDayOfMonth(adapter, firstPlainDate)} - ${formatWeekDayMonthAndDayOfMonth(adapter, lastPlainDate)}`,
+        renderCell: ({ locale, firstPlainDate, lastPlainDate }) =>
+          formatWeekdayShortMonthShortAndDayOfMonthRange(locale, firstPlainDate, lastPlainDate),
       },
-      {
-        unit: 'day',
-        formatDate: (adapter, plainDate) =>
-          adapter.format(createLabelDate(adapter, plainDate), 'weekday1Letter'),
-      },
+      { unit: 'day', format: formatWeekdayNarrow },
     ],
     unitCount: 16, // 16 weeks
     ...createPlainDateRange('weeks', getPlainDateWeekStart),
@@ -124,19 +99,19 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'day',
     tickWidth: 6,
     headers: [
-      { unit: 'year', formatDate: formatYear },
-      { unit: 'month', formatDate: formatMonth3Letters },
+      { unit: 'year', format: formatYear },
+      { unit: 'month', format: formatMonthShort },
     ],
     unitCount: 3 * 12, // 3 years
-    ...createPlainDateRange('months', (_adapter, plainDate) => plainDate.with({ day: 1 })),
+    ...createPlainDateRange('months', (plainDate) => plainDate.with({ day: 1 })),
     getCssUnitCount: getDayCount,
   },
   year: {
     timeResolution: 'year',
     tickWidth: 200,
-    headers: [{ unit: 'year', formatDate: formatYear }],
+    headers: [{ unit: 'year', format: formatYear }],
     unitCount: 30, // 30 years
-    ...createPlainDateRange('years', (_adapter, plainDate) => plainDate.with({ month: 1, day: 1 })),
+    ...createPlainDateRange('years', (plainDate) => plainDate.with({ month: 1, day: 1 })),
   },
 };
 

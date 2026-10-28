@@ -21,11 +21,7 @@ function createMonthViewScenario(displayTimezone: TemporalTimezone) {
   );
   const gridStart = createStartOfPlainDate(
     adapter,
-    getPlainDateWeekStart(
-      adapter,
-      buildTemporalPlainDate(adapter, visibleDate).with({ day: 1 }),
-      1,
-    ),
+    getPlainDateWeekStart(buildTemporalPlainDate(adapter, visibleDate).with({ day: 1 }), 1),
     displayTimezone,
   );
   // Events of 30 minutes to 30 hours, every 53 minutes across the 6 weeks of the grid.
@@ -50,9 +46,8 @@ function runMonthView(scenario: ReturnType<typeof createMonthViewScenario>) {
   const visiblePlainDate = buildTemporalPlainDate(adapter, visibleDate);
   const days = getDayListFromPlainDates({
     adapter,
-    firstPlainDate: getPlainDateWeekStart(adapter, visiblePlainDate.with({ day: 1 }), 1),
+    firstPlainDate: getPlainDateWeekStart(visiblePlainDate.with({ day: 1 }), 1),
     lastPlainDate: getPlainDateWeekStart(
-      adapter,
       visiblePlainDate.with({ day: visiblePlainDate.daysInMonth }),
       1,
     ).add({ days: 6 }),

@@ -30,11 +30,7 @@ describe('EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS', () => {
       'should start $preset on the first date of the period of the visible date and end it after its periods',
       ({ preset, start, end }) => {
         const definition = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
-        const startPlainDate = definition.getStartPlainDate(
-          adapter,
-          PlainDate.from('2025-07-03'),
-          1,
-        );
+        const startPlainDate = definition.getStartPlainDate(PlainDate.from('2025-07-03'), 1);
         expect(startPlainDate).toEqualPlainDate(start);
         expect(definition.getEndPlainDate(startPlainDate, definition.unitCount)).toEqualPlainDate(
           end,
