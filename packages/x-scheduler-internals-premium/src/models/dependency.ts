@@ -130,6 +130,7 @@ export type SchedulerDependencyEventRejectionReason = 'recurringEvent' | 'unknow
 export type SchedulerDependencyRejectionReason =
   | SchedulerDependencyEventRejectionReason
   | 'readOnly'
+  | 'featureDisabled'
   | 'duplicateDependency'
   | 'cyclicDependency'
   | 'cascadeBlocked'
@@ -155,7 +156,8 @@ export type SchedulerAddDependencyResult =
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
   | { status: 'rejected'; reason: 'cyclicDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
-  | SchedulerDependencyCascadeRejection;
+  | { status: 'rejected'; reason: 'featureDisabled' }
+  | SchedulerDependencyCascadeBlockedRejection;
 
 /**
  * Properties to change on an existing dependency with `updateDependency()`.
@@ -169,6 +171,7 @@ export type SchedulerUpdateDependencyResult =
   | { status: 'updated' }
   | { status: 'rejected'; reason: 'unknownDependency' }
   | { status: 'rejected'; reason: 'readOnly' }
+  | { status: 'rejected'; reason: 'featureDisabled' }
   | { status: 'rejected'; reason: 'duplicateDependency'; dependencyId: SchedulerDependencyId }
   | SchedulerDependencyCascadeRejection;
 
@@ -210,9 +213,9 @@ export interface SchedulerDependenciesState {
  */
 export interface SchedulerDependenciesParameters {
   /**
-   * The dependencies between events. Providing a value — even an empty array —
-   * enables the dependencies feature (terminals, arrows, selection); omitting it
-   * disables the feature entirely.
+   * The dependencies between events. Ignored unless the dependencies feature is provided.
+   * With it, providing a value — even an empty array — enables terminals, arrows and
+   * selection.
    */
   dependencies?: readonly SchedulerDependency[];
   /**

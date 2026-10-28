@@ -103,7 +103,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // the collection, where it would not be rendered at all.
     const lastStartOffsetMs = config.durationMs - EVENT_CREATION_PRECISION_MINUTE * 60_000;
     const startTimestamp = floorToWallClockMinutes(
-      timelineAxisOffsetToTimestamp(config.axis, Math.min(offsetMs, lastStartOffsetMs)),
+      timelineAxisOffsetToTimestamp(config, Math.min(offsetMs, lastStartOffsetMs)),
       EVENT_CREATION_PRECISION_MINUTE,
       timezone,
     );
@@ -120,7 +120,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     // Start at the first visible hour: with a trimmed window an event created at
     // midnight would be hidden. Offset 0 resolves it as a wall-clock hour, which
     // `addMinutes` from midnight would miss on a DST day.
-    const creationStart = timelineAxisOffsetToTimestamp(config.axis, 0);
+    const creationStart = timelineAxisOffsetToTimestamp(config, 0);
     return {
       surfaceType: 'timeline' as const,
       start: creationStart,

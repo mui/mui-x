@@ -13,6 +13,7 @@ export {
   getWeekdayToken,
   getRecurrenceLabel,
   getEventTimezone,
+  getEventTimezonePlainDate,
   getResentRangeBounds,
   getRecurrenceRuleBound,
   getRecurrenceTimezoneName,

@@ -10,7 +10,6 @@ import {
   moveTimestampToPlainDate,
   toEpochMs,
   toLocalDayNumber,
-  toPlainDateTime,
 } from '../../internals/utils/plain-date-utils/timeZone';
 import { useDropTarget } from '../../internals/utils/useDropTarget';
 
@@ -47,11 +46,11 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Move a Day Grid Event within the Day Grid, or a Time Grid Event into it
       if (data.source === 'CalendarGridDayEvent' || data.source === 'CalendarGridTimeEvent') {
         // The day under the grab point.
-        const grabbedPlainDate =
+        const grabbedDayNumber =
           data.source === 'CalendarGridDayEvent'
-            ? data.draggedDay
-            : toPlainDateTime(data.start + data.initialCursorPositionInEventMs, timezone).date;
-        const dayCount = value.dayNumber - grabbedPlainDate.dayNumber;
+            ? data.draggedDay.dayNumber
+            : toLocalDayNumber(data.start + data.initialCursorPositionInEventMs, timezone);
+        const dayCount = value.dayNumber - grabbedDayNumber;
         return getDataFromInside(
           data,
           addDaysOnWallClock(data.start, dayCount, timezone),

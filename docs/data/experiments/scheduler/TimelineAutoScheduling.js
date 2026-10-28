@@ -4,6 +4,9 @@ import { eventTimelinePremiumClasses } from '@mui/x-scheduler-premium/event-time
 import {
   EventTimelinePremiumContent,
   EventTimelinePremiumStyledContext,
+  EventTimelinePremiumFeaturesContext,
+  dependenciesFeature,
+  useFrozenEventTimelinePremiumFeatures,
 } from '@mui/x-scheduler-premium/internals';
 import { useEventTimelinePremium } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 
@@ -134,6 +137,10 @@ export default function TimelineAutoScheduling() {
   const [events, setEvents] = React.useState(initialEvents);
   const [dependencies, setDependencies] = React.useState(initialDependencies);
 
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures({
+    dependencies: dependenciesFeature,
+  });
+
   // `dependencies` has no public API yet (#22854), so instead of `<EventTimelinePremium />`
   // this experiment feeds the internal store parameters to the same hook the component
   // uses and renders its content inside the same providers.
@@ -147,6 +154,7 @@ export default function TimelineAutoScheduling() {
     defaultPreset: 'dayAndHour',
     areEventsDraggable: true,
     areEventsResizable: true,
+    storeFeatures,
   };
   const store = useEventTimelinePremium(parameters);
   // The context is typed on the base state and the store generic is invariant: the
@@ -174,16 +182,20 @@ export default function TimelineAutoScheduling() {
         }
       </style>
       <SchedulerStoreContext.Provider value={storeContextValue}>
-        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-          <EventEditingStyledContext.Provider value={styledContextValue}>
-            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-              <SchedulerDirectionProvider>
-                <EventTimelinePremiumContent />
-                <ErrorContainer />
-              </SchedulerDirectionProvider>
-            </SharedComponentsStyledContext.Provider>
-          </EventEditingStyledContext.Provider>
-        </EventTimelinePremiumStyledContext.Provider>
+        <EventTimelinePremiumFeaturesContext.Provider value={features}>
+          <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+            <EventEditingStyledContext.Provider value={styledContextValue}>
+              <SharedComponentsStyledContext.Provider
+                value={sharedStyledContextValue}
+              >
+                <SchedulerDirectionProvider>
+                  <EventTimelinePremiumContent />
+                  <ErrorContainer />
+                </SchedulerDirectionProvider>
+              </SharedComponentsStyledContext.Provider>
+            </EventEditingStyledContext.Provider>
+          </EventTimelinePremiumStyledContext.Provider>
+        </EventTimelinePremiumFeaturesContext.Provider>
       </SchedulerStoreContext.Provider>
     </div>
   );

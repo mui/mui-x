@@ -1,138 +1,100 @@
-import type {
-  TemporalAdapter,
-  TemporalSupportedObject,
-  TemporalTimezone,
-} from '@base-ui/react/internals/temporal';
+import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
-  createAdapterDate,
   getPlainDateWeekStart,
-  getStartOfDayMs,
   getTimelineAxisOffsetMs,
-  localToEpochMs,
   MS_PER_DAY,
   plainDateFromDayNumber,
-  toLocalMs,
 } from '@mui/x-scheduler-internals/internals';
-import type {
-  PlainDate,
-  TimelineAxis,
-  TimelineAxisWindow,
-} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate, TimelineAxisWindow } from '@mui/x-scheduler-internals/internals';
 import type { IteratedCell, PresetHeaderUnit } from '../../models';
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
 
-type ToAdapterDate = (localMs: number) => TemporalSupportedObject;
-
 /**
  * The date of a wall-clock time.
  */
-function toPlainDate(localMs: number): PlainDate {
+function plainDateFromLocalMs(localMs: number): PlainDate {
   return plainDateFromDayNumber(Math.floor(localMs / MS_PER_DAY));
 }
 
 /**
- * Cells are walked on the wall clock of the timezone of the axis: their bounds are wall-clock
- * times, in milliseconds since 1970-01-01T00:00 of the wall clock, converted to adapter values at
- * the end. A wall-clock time skipped by a DST transition moves forward by the length of the gap,
- * and a repeated one resolves to its first instant, whatever the timezone of the system.
- * The hour window of the axis only applies when the ticks are hours.
+ * The range a header walks: its first date, the date after its last one, and the hour window of
+ * each day.
+ */
+export interface IteratedRange extends TimelineAxisWindow {
+  startPlainDate: PlainDate;
+  endPlainDate: PlainDate;
+}
+
+/**
+ * Cells are walked on the wall clock: their bounds are wall-clock times, in milliseconds since
+ * 1970-01-01T00:00 of the wall clock, and they hold the dates of those times. A date or an hour
+ * that a DST transition skips keeps its cell, as the walk reads no timezone.
+ * The hour window of the range only applies when the ticks are hours.
  */
 export function iterate(
   adapter: TemporalAdapter,
   unit: PresetHeaderUnit,
   tickUnit: PresetHeaderUnit,
-  axis: TimelineAxis,
+  range: IteratedRange,
   weekStartsOn?: WeekStartsOn,
 ): IteratedCell[] {
-  const { start: rangeStart, end: rangeEnd, timezone } = axis;
-  if (rangeEnd < rangeStart) {
+  if (range.endPlainDate.dayNumber <= range.startPlainDate.dayNumber) {
     throw new Error(
-      `MUI X Scheduler: TimelineGridHeader.iterate() received a range where rangeEnd is before rangeStart. ` +
+      `MUI X Scheduler: TimelineGridHeader.iterate() received a range whose end date is not after its start date. ` +
         `The iteration would silently produce an empty header, masking the misconfiguration. ` +
-        `Check the preset's \`getStartDate\` / \`getEndDate\` so they return ordered dates.`,
+        `Check the preset's \`getStartPlainDate\` / \`getEndPlainDate\` so they return ordered dates.`,
     );
   }
 
-  const toAdapterDate: ToAdapterDate = (localMs) =>
-    createAdapterDate(adapter, localToEpochMs(localMs, timezone), timezone);
-  const rangeStartLocalMs = getRangeStartLocalMs(rangeStart, timezone);
-
-  // `rangeEnd` is inclusive (e.g. `endOfDay` = 23:59:59.999). Floor it to the
-  // tick boundary and add one tick to get an exclusive end the loop can compare
-  // against without depending on millisecond precision.
-  const rangeEndExclusive = addUnit(
-    startOf(adapter, rangeEnd, tickUnit, weekStartsOn, timezone),
-    tickUnit,
-    1,
-  );
-  const rangeEndExclusiveDate = toAdapterDate(rangeEndExclusive);
+  const rangeStartLocalMs = range.startPlainDate.dayNumber * MS_PER_DAY;
+  const rangeEndLocalMs = range.endPlainDate.dayNumber * MS_PER_DAY;
 
   // Hour ticks are a wall-clock grid: every day contributes the same columns whatever
   // its real hours are, so spans are measured on the axis rather than in elapsed hours.
-  const appliedHourWindow = tickUnit === 'hour' ? axis : undefined;
+  const appliedHourWindow = tickUnit === 'hour' ? range : undefined;
 
   // `appliedHourWindow` is only set when the ticks are hours, so this is the hour row.
   if (unit === 'hour' && appliedHourWindow) {
-    return iterateHourCells(toAdapterDate, rangeStartLocalMs, rangeEndExclusive, appliedHourWindow);
+    return iterateHourCells(range);
   }
 
   const cells: IteratedCell[] = [];
-  let cursor = startOf(adapter, rangeStart, unit, weekStartsOn, timezone);
-  let cursorDate = toAdapterDate(cursor);
+  let cursor = startOf(adapter, rangeStartLocalMs, unit, weekStartsOn);
   let index = 0;
-  // The start of a first cell aligned before the range is clamped to the range start.
-  const rangeStartDate = createAdapterDate(adapter, rangeStart, timezone);
 
-  while (cursor < rangeEndExclusive) {
+  while (cursor < rangeEndLocalMs) {
     // Guard against runaway iteration from a misconfigured preset (e.g. hour ticks over a
     // 100-year range).
     if (index >= 10_000) {
       throwTooManyCells(unit, tickUnit);
     }
     const nextCursor = addUnit(cursor, unit, 1);
-    const isLastCell = nextCursor >= rangeEndExclusive;
-    const nextCursorDate = isLastCell ? rangeEndExclusiveDate : toAdapterDate(nextCursor);
 
     // First and last cells can extend past the visible range (e.g. a year cell
     // aligned to Jan 1 when the range starts mid-year). Clamp them so
-    // `spanInTicks` reflects only the portion within `[rangeStart, rangeEndExclusive)`.
-    const spanEnd = Math.min(nextCursor, rangeEndExclusive);
+    // `spanInTicks` reflects only the portion within `[rangeStartLocalMs, rangeEndLocalMs)`.
+    const spanEnd = Math.min(nextCursor, rangeEndLocalMs);
     const spanStart = Math.max(cursor, rangeStartLocalMs);
     cells.push({
-      date: cursorDate,
-      // Read from the wall clock: a date skipped by a transition keeps its own date.
-      plainDate: toPlainDate(cursor),
-      start: cursor < rangeStartLocalMs ? rangeStartDate : cursorDate,
-      end: nextCursorDate,
+      plainDate: plainDateFromLocalMs(cursor),
+      firstPlainDate: plainDateFromLocalMs(spanStart),
+      // `spanEnd` is exclusive.
+      lastPlainDate: plainDateFromLocalMs(spanEnd - 1),
       spanInTicks: appliedHourWindow
         ? countVisibleHours(spanEnd, spanStart, appliedHourWindow)
         : differenceInUnits(spanEnd, spanStart, tickUnit),
-      // A date skipped by a transition resolves to the same instants as the next one, so
-      // the key is built from the wall-clock time.
+      // The wall-clock time of the aligned start.
       key: String(cursor),
       index,
     });
     cursor = nextCursor;
-    cursorDate = nextCursorDate;
     index += 1;
   }
 
   return cells;
-}
-
-/**
- * The wall-clock time of `rangeStart`. A range starting on the first instant of a day
- * whose midnight is skipped by a DST transition (e.g. `startOfDay` of March 8th, 2026 in
- * America/Havana, at 01:00) starts at the midnight of that day, so its first day stays whole.
- */
-function getRangeStartLocalMs(rangeStart: number, timezone: TemporalTimezone): number {
-  const localMs = toLocalMs(rangeStart, timezone);
-  return getStartOfDayMs(rangeStart, timezone) === rangeStart
-    ? Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY
-    : localMs;
 }
 
 /**
@@ -156,19 +118,12 @@ function throwTooManyCells(unit: PresetHeaderUnit, tickUnit: PresetHeaderUnit): 
  * repeated by fall-back gets a single one. Events absorb the difference by stretching or
  * shrinking over the fixed grid.
  */
-function iterateHourCells(
-  toAdapterDate: ToAdapterDate,
-  rangeStartLocalMs: number,
-  rangeEndExclusive: number,
-  hourWindow: TimelineAxisWindow,
-): IteratedCell[] {
-  const startHour = Math.ceil(hourWindow.dayStartMinute / 60);
-  const endHour = Math.ceil(hourWindow.dayEndMinute / 60);
+function iterateHourCells(range: IteratedRange): IteratedCell[] {
+  const startHour = Math.ceil(range.dayStartMinute / 60);
+  const endHour = Math.ceil(range.dayEndMinute / 60);
 
-  const firstDay = Math.floor(rangeStartLocalMs / MS_PER_DAY);
-  // `rangeEndExclusive` lands on midnight when the range ends on a day boundary, in
-  // which case that day contributes no cells.
-  const dayCount = Math.ceil(rangeEndExclusive / MS_PER_DAY) - firstDay;
+  const firstDay = range.startPlainDate.dayNumber;
+  const dayCount = range.endPlainDate.dayNumber - firstDay;
 
   // Same runaway guard as the generic walk, checked up front since the count is known.
   if (dayCount * Math.max(0, endHour - startHour) > 10_000) {
@@ -179,24 +134,17 @@ function iterateHourCells(
   for (let dayIndex = 0; dayIndex < dayCount; dayIndex += 1) {
     const dayStartLocalMs = (firstDay + dayIndex) * MS_PER_DAY;
     const plainDate = plainDateFromDayNumber(firstDay + dayIndex);
-    // On a spring-forward day the skipped hour has no instant, so `date` moves forward to
-    // the next existing one. `wallClockHour` is what the column stands for and is what
-    // labels must be built from.
-    let date = toAdapterDate(dayStartLocalMs + startHour * HOUR_MS);
     for (let hour = startHour; hour < endHour; hour += 1) {
-      // The end of the last hour of the day is the start of the next day.
-      const end = toAdapterDate(dayStartLocalMs + (hour + 1) * HOUR_MS);
       cells.push({
-        date,
         plainDate,
-        start: date,
-        end,
+        firstPlainDate: plainDate,
+        lastPlainDate: plainDate,
         spanInTicks: 1,
         key: `${dayStartLocalMs}:${hour}`,
         index: cells.length,
+        // The hour a spring-forward transition skips has no instant, but keeps its column.
         wallClockHour: hour,
       });
-      date = end;
     }
   }
 
@@ -204,16 +152,14 @@ function iterateHourCells(
 }
 
 /**
- * The wall-clock start of the unit containing `timestamp`, read in `timezone`.
+ * The wall-clock start of the unit containing `localMs`, a wall-clock time.
  */
 function startOf(
   adapter: TemporalAdapter,
-  timestamp: number,
+  localMs: number,
   unit: PresetHeaderUnit,
   weekStartsOn: WeekStartsOn | undefined,
-  timezone: TemporalTimezone,
 ): number {
-  const localMs = toLocalMs(timestamp, timezone);
   switch (unit) {
     case 'hour':
       return Math.floor(localMs / HOUR_MS) * HOUR_MS;
@@ -221,12 +167,13 @@ function startOf(
       return Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
     case 'week':
       return (
-        getPlainDateWeekStart(adapter, toPlainDate(localMs), weekStartsOn).dayNumber * MS_PER_DAY
+        getPlainDateWeekStart(adapter, plainDateFromLocalMs(localMs), weekStartsOn).dayNumber *
+        MS_PER_DAY
       );
     case 'month':
-      return toPlainDate(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
+      return plainDateFromLocalMs(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
     case 'year':
-      return toPlainDate(localMs).with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
+      return plainDateFromLocalMs(localMs).with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +
@@ -265,7 +212,7 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
  * Adds months to a wall-clock time, keeping its time of day.
  */
 function addMonths(localMs: number, months: number): number {
-  const plainDate = toPlainDate(localMs);
+  const plainDate = plainDateFromLocalMs(localMs);
   return (
     plainDate.add({ months }).dayNumber * MS_PER_DAY + (localMs - plainDate.dayNumber * MS_PER_DAY)
   );
@@ -288,8 +235,8 @@ function countVisibleHours(later: number, earlier: number, hourWindow: TimelineA
  * The number of whole months from `earlier` to `later`, two wall-clock times.
  */
 function differenceInMonths(later: number, earlier: number): number {
-  const laterPlainDate = toPlainDate(later);
-  const earlierPlainDate = toPlainDate(earlier);
+  const laterPlainDate = plainDateFromLocalMs(later);
+  const earlierPlainDate = plainDateFromLocalMs(earlier);
   const months =
     (laterPlainDate.year - earlierPlainDate.year) * 12 +
     (laterPlainDate.month - earlierPlainDate.month);

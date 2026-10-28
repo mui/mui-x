@@ -2,7 +2,7 @@ import * as React from 'react';
 import type {
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
-  SchedulerProcessedDate,
+  SchedulerProcessedDay,
 } from '../models';
 import type { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { sortEventOccurrences } from '../sort-event-occurrences';
@@ -130,7 +130,7 @@ export function useEventOccurrencesWithDayGridPosition(
               index: smallestAvailableIndex,
               daySpan: Math.min(
                 toLocalDayNumber(occurrence.displayTimezone.end.timestamp, timezone) -
-                  toLocalDayNumber(day.timestamp, timezone) +
+                  day.plainDate.dayNumber +
                   1,
                 dayListSize - dayIndex,
               ),
@@ -169,7 +169,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
     /**
      * The days to add the occurrences to.
      */
-    days: SchedulerProcessedDate[];
+    days: SchedulerProcessedDay[];
     /**
      * The occurrences Map as returned by `useEventOccurrences()`.
      * It should contain the occurrences for each requested day but can also contain occurrences for other days.
@@ -215,7 +215,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
   export type EventRenderableOccurrenceWithPosition =
     EventOccurrenceWithPosition | EventOccurrencePlaceholderWithPosition;
 
-  export interface DayData extends SchedulerProcessedDate {
+  export interface DayData extends SchedulerProcessedDay {
     /**
      * Occurrences that have been augmented with position information.
      */

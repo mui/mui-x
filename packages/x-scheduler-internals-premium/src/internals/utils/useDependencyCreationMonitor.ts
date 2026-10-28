@@ -61,6 +61,7 @@ const REJECTION_MESSAGES: Record<SchedulerDependencyRejectionReason, string> = {
   datesNotWritable:
     "This dependency would move an event whose dates can't be changed, so it was not created.",
   duplicateDependency: 'A dependency of this type already exists between these two events.',
+  featureDisabled: 'Dependencies are not enabled on this timeline.',
   recurringEvent: 'Dependencies cannot involve recurring events.',
   readOnly: 'Dependencies cannot be changed while the scheduler is read-only.',
   unknownEvent: 'This dependency cannot be created because one of its events no longer exists.',

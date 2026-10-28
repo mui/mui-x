@@ -2,7 +2,6 @@ import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
-import { processDate } from '../process-date';
 import type { SchedulerProcessedEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { createEventRangeIndex } from '../internals/utils/event-range-index';
@@ -10,11 +9,12 @@ import { getDayListFromPlainDates } from '../get-day-list';
 import { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
-  const days = [
-    processDate(adapter.date('2024-01-15Z', 'default'), adapter),
-    processDate(adapter.date('2024-01-16Z', 'default'), adapter),
-    processDate(adapter.date('2024-01-17Z', 'default'), adapter),
-  ];
+  const days = getDayListFromPlainDates({
+    adapter,
+    firstPlainDate: PlainDate.from('2024-01-15'),
+    lastPlainDate: PlainDate.from('2024-01-17'),
+    timezone: 'default',
+  });
 
   function testHook(
     events: SchedulerProcessedEvent[],
