@@ -5,7 +5,6 @@
   dependencies={dependencies}
   onDependenciesChange={setDependencies}
   features={features}
-  defaultVisibleDate={new Date('2025-07-03T00:00:00')}
-  defaultPreset="dayAndHour"
-  presetConfig={presetConfig}
+  defaultVisibleDate={new Date('2025-07-07T00:00:00')}
+  defaultPreset="dayAndWeek"
 />

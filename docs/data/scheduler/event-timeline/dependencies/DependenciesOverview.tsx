@@ -5,7 +5,6 @@ import { dependenciesFeature } from '@mui/x-scheduler-premium/internals';
 import { EventTimelinePremium } from './DependenciesTimeline';
 
 const features = { dependencies: dependenciesFeature };
-const presetConfig = { dayAndHour: { startTime: 8, endTime: 18 } };
 
 // The rows are sorted by title.
 const resources: SchedulerResource[] = [
@@ -21,75 +20,73 @@ const initialEvents: SchedulerEvent[] = [
   {
     id: 'wireframes',
     title: 'Wireframes',
-    start: '2025-07-03T08:30:00',
-    end: '2025-07-03T10:00:00',
+    start: '2025-07-07T00:00:00',
+    end: '2025-07-09T00:00:00',
     resource: 'design',
   },
   {
     id: 'api',
     title: 'API',
-    start: '2025-07-03T09:00:00',
-    end: '2025-07-03T12:30:00',
+    start: '2025-07-08T00:00:00',
+    end: '2025-07-12T00:00:00',
     resource: 'backend',
   },
   {
     id: 'ui',
     title: 'UI',
-    start: '2025-07-03T10:30:00',
-    end: '2025-07-03T12:30:00',
+    start: '2025-07-09T00:00:00',
+    end: '2025-07-12T00:00:00',
     resource: 'frontend',
   },
   {
     id: 'integration',
     title: 'Integration',
-    start: '2025-07-03T13:30:00',
-    end: '2025-07-03T15:00:00',
+    start: '2025-07-14T00:00:00',
+    end: '2025-07-16T00:00:00',
     resource: 'frontend',
   },
   {
     id: 'testing',
     title: 'Testing',
-    start: '2025-07-03T14:00:00',
-    end: '2025-07-03T16:00:00',
+    start: '2025-07-15T00:00:00',
+    end: '2025-07-18T00:00:00',
     resource: 'qa',
   },
   {
     id: 'release-notes',
     title: 'Release notes',
-    start: '2025-07-03T13:00:00',
-    end: '2025-07-03T16:00:00',
+    start: '2025-07-14T00:00:00',
+    end: '2025-07-18T00:00:00',
     resource: 'docs',
   },
   {
     id: 'deploy',
     title: 'Deploy',
-    start: '2025-07-03T16:30:00',
-    end: '2025-07-03T17:30:00',
+    start: '2025-07-18T00:00:00',
+    end: '2025-07-19T00:00:00',
     resource: 'ops',
   },
 ];
 
 const initialDependencies: SchedulerDependency[] = [
-  // The API work starts half an hour after the wireframes start.
+  // The API work starts a day after the wireframes start.
   {
     id: 'd1',
     source: 'wireframes',
     target: 'api',
     type: 'StartToStart',
-    lag: 30,
-    lagUnit: 'minute',
+    lag: 1,
   },
   { id: 'd2', source: 'wireframes', target: 'ui', type: 'FinishToStart' },
   { id: 'd3', source: 'api', target: 'integration', type: 'FinishToStart' },
   { id: 'd4', source: 'ui', target: 'integration', type: 'FinishToStart' },
-  // Testing starts half an hour after the integration starts.
+  // Testing starts a day after the integration starts.
   {
     id: 'd5',
     source: 'integration',
     target: 'testing',
     type: 'StartToStart',
-    lag: 30,
-    lagUnit: 'minute',
+    lag: 1,
   },
   // The release notes can't be finished before testing is.
   { id: 'd6', source: 'testing', target: 'release-notes', type: 'FinishToFinish' },
@@ -109,9 +106,8 @@ export default function DependenciesOverview() {
         dependencies={dependencies}
         onDependenciesChange={setDependencies}
         features={features}
-        defaultVisibleDate={new Date('2025-07-03T00:00:00')}
-        defaultPreset="dayAndHour"
-        presetConfig={presetConfig}
+        defaultVisibleDate={new Date('2025-07-07T00:00:00')}
+        defaultPreset="dayAndWeek"
       />
     </div>
   );

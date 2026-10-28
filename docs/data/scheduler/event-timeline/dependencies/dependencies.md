@@ -109,6 +109,9 @@ The pushed successors keep their duration, and every moved event is reported in 
 
 {{"demo": "AutoScheduling.js", "bg": "inline", "defaultCodeOpen": false}}
 
+In the demo above, drag **Design** later: each event only moves once the gap before it is used up.
+**Launch** is read-only: a move that would push it is rejected.
+
 The scheduling only ever pushes events later:
 
 - Moving a predecessor earlier doesn't pull its successors back.
@@ -149,7 +152,7 @@ A message explains why the dependency wasn't created.
 
 {{"demo": "DependencyRejections.js", "bg": "inline", "defaultCodeOpen": false}}
 
-In the demo above, try linking **Testing** to **Wireframes**, linking the end of **Wireframes** to the start of **Mockups** a second time, or linking **Mockups** to **Review (read-only)**.
+In the demo above, try linking **Testing** to **Wireframes**, linking the end of **Wireframes** to the start of **Mockups** a second time, or linking **Mockups** to **Review**, which is read-only.
 
 ## Limitations
 
