@@ -238,12 +238,6 @@
       "isGlobal": false
     },
     {
-      "key": "dependencyDialogAnchor",
-      "className": "MuiEventTimeline-dependencyDialogAnchor",
-      "description": "Styles applied to the dependency dialog anchor element.",
-      "isGlobal": false
-    },
-    {
       "key": "dependencyDialogBody",
       "className": "MuiEventTimeline-dependencyDialogBody",
       "description": "Styles applied to the dependency dialog body element.",
@@ -276,19 +270,13 @@
     {
       "key": "dependencyDialogLagNote",
       "className": "MuiEventTimeline-dependencyDialogLagNote",
-      "description": "Styles applied to the dependency dialog lag note element.",
+      "description": "Styles applied to the lag note of the read-only dependency dialog.",
       "isGlobal": false
     },
     {
       "key": "dependencyDialogLagUnit",
       "className": "MuiEventTimeline-dependencyDialogLagUnit",
       "description": "Styles applied to the dependency dialog lag unit select element.",
-      "isGlobal": false
-    },
-    {
-      "key": "dependencyInteractions",
-      "className": "MuiEventTimeline-dependencyInteractions",
-      "description": "Styles applied to the dependency interactions overlay element (arrow hit areas and delete button).",
       "isGlobal": false
     },
     {

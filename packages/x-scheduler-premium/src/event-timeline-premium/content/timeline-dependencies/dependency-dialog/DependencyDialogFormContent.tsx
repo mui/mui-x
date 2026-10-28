@@ -31,7 +31,6 @@ import {
   focusFirstInvalid,
   SchedulerFormStore,
   schedulerFormSelectors,
-  useEventEditingStyledContext,
   useSchedulerFormField,
 } from '@mui/x-scheduler/internals';
 import {
@@ -77,8 +76,7 @@ const DependencyDialogLagUnit = styled(Select, {
 export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId, localeText } = useEventEditingStyledContext();
-  const { classes } = useEventTimelinePremiumStyledContext();
+  const { schedulerId, classes, localeText } = useEventTimelinePremiumStyledContext();
   const isTargetAllDay = useStore(
     store,
     (state) => schedulerEventSelectors.processedEvent(state, dependency.target)?.allDay ?? false,

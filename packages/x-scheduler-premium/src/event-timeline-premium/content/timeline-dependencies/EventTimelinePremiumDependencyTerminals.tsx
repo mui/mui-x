@@ -126,6 +126,7 @@ const TERMINAL_SIDES: readonly SchedulerEventSide[] = ['start', 'end'];
 type TerminalGestureRole = 'source' | 'target' | 'drop' | null;
 
 interface DependencyTerminalProps {
+  className: string;
   eventId: SchedulerEventId;
   occurrenceKey: string;
   resourceId: SchedulerResourceId;
@@ -140,12 +141,21 @@ interface DependencyTerminalProps {
 // Primitive props only, so the memo holds: a creation transition re-renders the
 // layer, and only the gesture's terminals (whose role changed) re-render with it.
 const DependencyTerminal = React.memo(function DependencyTerminal(props: DependencyTerminalProps) {
-  const { eventId, occurrenceKey, resourceId, side, color, inlineStart, top, gestureRole, muted } =
-    props;
-  const { classes } = useEventTimelinePremiumStyledContext();
+  const {
+    className,
+    eventId,
+    occurrenceKey,
+    resourceId,
+    side,
+    color,
+    inlineStart,
+    top,
+    gestureRole,
+    muted,
+  } = props;
   return (
     <EventTimelinePremiumDependencyTerminal
-      className={classes.eventDependencyTerminal}
+      className={className}
       eventId={eventId}
       occurrenceKey={occurrenceKey}
       resourceId={resourceId}
@@ -398,6 +408,7 @@ function DependencyTerminalsLayerImpl() {
             // The occurrence key repeats on every row of a multi-resource event: only
             // the row disambiguates the appearance.
             key={`${rowIndex}:${occurrence.key}:${side}`}
+            className={classes.eventDependencyTerminal}
             eventId={occurrence.id}
             occurrenceKey={occurrence.key}
             resourceId={rowResourceId}

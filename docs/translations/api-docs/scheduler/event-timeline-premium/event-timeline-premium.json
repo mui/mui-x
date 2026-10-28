@@ -170,10 +170,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the dependency arrows overlay element"
     },
-    "dependencyDialogAnchor": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the dependency dialog anchor element"
-    },
     "dependencyDialogBody": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the dependency dialog body element"
@@ -196,15 +192,11 @@
     },
     "dependencyDialogLagNote": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the dependency dialog lag note element"
+      "nodeName": "the lag note of the read-only dependency dialog"
     },
     "dependencyDialogLagUnit": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the dependency dialog lag unit select element"
-    },
-    "dependencyInteractions": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the dependency interactions overlay element (arrow hit areas and delete button)"
     },
     "dependencyTerminals": {
       "description": "Styles applied to {{nodeName}}.",

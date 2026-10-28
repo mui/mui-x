@@ -10,7 +10,6 @@ import {
   EventDialogDraggablePaper,
   EventDialogContentRoot,
   EventDialogRoot,
-  useEventEditingStyledContext,
 } from '@mui/x-scheduler/internals';
 import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
@@ -29,7 +28,7 @@ const DependencyDialogAnchor = styled('span', {
   pointerEvents: 'none',
 });
 
-// The event dialog's own styles, under a slot of its own for the theme.
+// The event dialog's styles, in a slot of its own so the theme reaches the portaled dialog.
 const DependencyDialogContentRoot = styled(EventDialogContentRoot, {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogContent',
@@ -64,8 +63,7 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
 ) {
   const { anchor, ...other } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { schedulerId } = useEventEditingStyledContext();
-  const { classes } = useEventTimelinePremiumStyledContext();
+  const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
   const isReadOnly = useStore(store, eventTimelinePremiumDependencySelectors.isReadOnly);
   const dragHandlerRef = React.useRef<HTMLElement>(null);
   const titleId = `${schedulerId}-dependency-dialog-title`;
@@ -108,7 +106,6 @@ function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
     eventTimelinePremiumDependencySelectors.model,
     editor.dependencyId,
   );
-  const { classes } = useEventTimelinePremiumStyledContext();
   const { offsetTop } = useDependencyGeometry();
   const [anchor, setAnchor] = React.useState<HTMLSpanElement | null>(null);
 
@@ -120,7 +117,6 @@ function DependencyDialog({ editor }: { editor: SchedulerDependencyEditor }) {
     <React.Fragment>
       <DependencyDialogAnchor
         ref={setAnchor}
-        className={classes.dependencyDialogAnchor}
         data-dependency-dialog-anchor=""
         style={{
           insetInlineStart: `calc(var(--title-column-width) + ${editor.anchor.x}px)`,

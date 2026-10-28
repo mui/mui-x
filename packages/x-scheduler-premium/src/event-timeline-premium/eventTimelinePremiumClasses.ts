@@ -63,14 +63,10 @@ export interface EventTimelinePremiumClasses
   eventRecurringIcon: string;
   /** Styles applied to the dependency arrows overlay element. */
   dependencyArrows: string;
-  /** Styles applied to the dependency interactions overlay element (arrow hit areas and delete button). */
-  dependencyInteractions: string;
   /** Styles applied to the dependency terminals overlay element. */
   dependencyTerminals: string;
   /** Styles applied to event dependency terminal elements. */
   eventDependencyTerminal: string;
-  /** Styles applied to the dependency dialog anchor element. */
-  dependencyDialogAnchor: string;
   /** Styles applied to the dependency dialog content element. */
   dependencyDialogContent: string;
   /** Styles applied to the dependency dialog body element. */
@@ -83,7 +79,7 @@ export interface EventTimelinePremiumClasses
   dependencyDialogLag: string;
   /** Styles applied to the dependency dialog lag unit select element. */
   dependencyDialogLagUnit: string;
-  /** Styles applied to the dependency dialog lag note element. */
+  /** Styles applied to the lag note of the read-only dependency dialog. */
   dependencyDialogLagNote: string;
 }
 
@@ -120,10 +116,8 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'eventLinesClamp',
     'eventRecurringIcon',
     'dependencyArrows',
-    'dependencyInteractions',
     'dependencyTerminals',
     'eventDependencyTerminal',
-    'dependencyDialogAnchor',
     'dependencyDialogContent',
     'dependencyDialogBody',
     'dependencyDialogDetails',

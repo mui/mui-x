@@ -15,7 +15,6 @@ import {
   EventDialogForm,
   EventDialogFormActions,
   EventDialogHeader,
-  useEventEditingStyledContext,
 } from '@mui/x-scheduler/internals';
 import {
   DEPENDENCY_DIALOG_TEXT,
@@ -43,8 +42,7 @@ const DependencyDialogLagNote = styled('span', {
 export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps) {
   const { dependency, titleId, dragHandlerRef, onClose } = props;
   const store = useEventTimelinePremiumStoreContext();
-  const { localeText } = useEventEditingStyledContext();
-  const { classes } = useEventTimelinePremiumStyledContext();
+  const { classes, localeText } = useEventTimelinePremiumStyledContext();
   const lag = getDependencyLag(dependency);
   const isTargetAllDay = useStore(
     store,
