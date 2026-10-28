@@ -5,17 +5,14 @@ import type {
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
-  SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
-  buildTemporalPlainDate,
   createAdapterDate,
   createEndOfPlainDate,
-  createProcessedDate,
-  getJsDayOfWeek,
+  createLabelDate,
   getOccurrenceDataTimezone,
   MS_PER_DAY,
   PlainDate,
@@ -110,9 +107,9 @@ const WEEKDAYS: SchedulerWeekday[] = [
   'saturday',
 ];
 
-export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject) => {
-  // Read in the value's own timezone: a plain `Date` would give the system weekday.
-  return WEEKDAYS[getJsDayOfWeek(adapter, value)];
+export const getWeekdayToken = (plainDate: PlainDate) => {
+  // ISO weekdays go from 1 (Monday) to 7 (Sunday).
+  return WEEKDAYS[plainDate.dayOfWeek % 7];
 };
 
 export type EndsSelection = 'never' | 'after' | 'until';
@@ -299,7 +296,7 @@ export function getRangeErrorMessage(
 
 export function getRecurrenceLabel(
   adapter: Adapter,
-  start: SchedulerProcessedDate,
+  startPlainDate: PlainDate,
   recurrenceKey: RecurringEventPresetKey | 'custom' | null,
   localeText: EventEditingLocaleText,
 ): string {
@@ -311,17 +308,18 @@ export function getRecurrenceLabel(
     case 'DAILY':
       return localeText.recurrenceDailyPresetLabel;
     case 'WEEKLY': {
-      const weekday = getWeekdayToken(adapter, start.value);
-      const weekdayName = adapter.format(start.value, 'weekday');
+      const weekday = getWeekdayToken(startPlainDate);
+      const weekdayName = adapter.format(createLabelDate(adapter, startPlainDate), 'weekday');
       return localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName });
     }
     case 'MONTHLY': {
-      return localeText.recurrenceMonthlyPresetLabel(
-        buildTemporalPlainDate(adapter, start.value).day,
-      );
+      return localeText.recurrenceMonthlyPresetLabel(startPlainDate.day);
     }
     case 'YEARLY': {
-      const normalDate = formatDayOfMonthAndMonthFullLetter(start.value, adapter);
+      const normalDate = formatDayOfMonthAndMonthFullLetter(
+        createLabelDate(adapter, startPlainDate),
+        adapter,
+      );
       return localeText.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':
@@ -340,17 +338,25 @@ export function getEventTimezone(occurrence: SchedulerRenderableEventOccurrence)
 }
 
 /**
- * A bound of the occurrence in the event's timezone.
+ * The timestamp of a bound of the occurrence's event. All-day display bounds are aligned on the
+ * days of the display timezone, so the bound stored in the event's timezone comes first.
  */
-export function getEventTimezoneBound(
-  adapter: Adapter,
+export function getEventBoundTimestamp(
   occurrence: SchedulerRenderableEventOccurrence,
   bound: 'start' | 'end',
-): SchedulerProcessedDate {
-  return (
-    getOccurrenceDataTimezone(occurrence)?.[bound] ??
-    createProcessedDate(adapter, occurrence.displayTimezone[bound].timestamp, 'default')
-  );
+): number {
+  return (getOccurrenceDataTimezone(occurrence)?.[bound] ?? occurrence.displayTimezone[bound])
+    .timestamp;
+}
+
+/**
+ * The date of an instant in the event's timezone, the one its recurrence rule is expressed in.
+ */
+export function getEventTimezonePlainDate(
+  occurrence: SchedulerRenderableEventOccurrence,
+  timestamp: number,
+): PlainDate {
+  return toPlainDate(timestamp, getEventTimezone(occurrence));
 }
 
 /**
@@ -371,23 +377,21 @@ export function getResentRangeBounds(
 }
 
 /**
- * A bound of the range the event ends up with, in the event's timezone: the submitted one when
- * the save resends it, the occurrence's own otherwise (also while an edited date does not parse).
- * The recurrence rule is built on these bounds.
+ * The timestamp of a bound of the range the event ends up with: the submitted one when the save
+ * resends it, the occurrence's own otherwise (also while an edited date does not parse). The
+ * recurrence rule is built on these bounds, read in the event's timezone.
  */
 export function getRecurrenceRuleBound(
-  adapter: Adapter,
   occurrence: SchedulerRenderableEventOccurrence,
   values: Pick<EventDialogFormValues, RangeFormKey>,
   resent: boolean,
   displayTimezone: TemporalTimezone,
   bound: 'start' | 'end',
-): SchedulerProcessedDate {
+): number {
   if (!resent || findInvalidRangeField(values, displayTimezone) != null) {
-    return getEventTimezoneBound(adapter, occurrence, bound);
+    return getEventBoundTimestamp(occurrence, bound);
   }
-  const range = computeRange(values, displayTimezone);
-  return createProcessedDate(adapter, range[bound], getEventTimezone(occurrence));
+  return computeRange(values, displayTimezone)[bound];
 }
 
 /**

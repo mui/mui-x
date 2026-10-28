@@ -7,8 +7,8 @@ import {
   differenceInDays,
   getEndOfDayMs,
   getStartOfDayMs,
-  getTimezoneOffsetMs,
   toEpochMs,
+  toLocalMs,
   toMsInDay,
   toPlainDate,
   toWallClockIsoString,
@@ -25,21 +25,24 @@ function epochMsOf(date: string, time: string, timezone: string) {
 }
 
 describe('timeZone', () => {
-  describe('getTimezoneOffsetMs', () => {
+  describe('toLocalMs', () => {
+    const getOffsetMs = (timezone: string, epochMs: number) =>
+      toLocalMs(epochMs, timezone) - epochMs;
+
     it('should read IANA offsets, with and without DST', () => {
-      expect(getTimezoneOffsetMs('America/New_York', Date.UTC(2025, 0, 15))).to.equal(-5 * HOUR);
-      expect(getTimezoneOffsetMs('America/New_York', Date.UTC(2025, 6, 15))).to.equal(-4 * HOUR);
-      expect(getTimezoneOffsetMs('Asia/Kolkata', Date.UTC(2025, 0, 15))).to.equal(5.5 * HOUR);
-      expect(getTimezoneOffsetMs('Europe/London', Date.UTC(2025, 0, 15))).to.equal(0);
-      expect(getTimezoneOffsetMs('UTC', Date.UTC(2025, 0, 15))).to.equal(0);
+      expect(getOffsetMs('America/New_York', Date.UTC(2025, 0, 15))).to.equal(-5 * HOUR);
+      expect(getOffsetMs('America/New_York', Date.UTC(2025, 6, 15))).to.equal(-4 * HOUR);
+      expect(getOffsetMs('Asia/Kolkata', Date.UTC(2025, 0, 15))).to.equal(5.5 * HOUR);
+      expect(getOffsetMs('Europe/London', Date.UTC(2025, 0, 15))).to.equal(0);
+      expect(getOffsetMs('UTC', Date.UTC(2025, 0, 15))).to.equal(0);
     });
 
     // Browsers cannot change their timezone through process.env.TZ.
     it.skipIf(!isJSDOM)('should read the system offset for the default timezone', () => {
       setSystemTimezone('Australia/Lord_Howe');
       // +11:00 in DST, +10:30 otherwise.
-      expect(getTimezoneOffsetMs('default', Date.UTC(2025, 0, 15))).to.equal(11 * HOUR);
-      expect(getTimezoneOffsetMs('system', Date.UTC(2025, 6, 15))).to.equal(10.5 * HOUR);
+      expect(getOffsetMs('default', Date.UTC(2025, 0, 15))).to.equal(11 * HOUR);
+      expect(getOffsetMs('system', Date.UTC(2025, 6, 15))).to.equal(10.5 * HOUR);
     });
   });
 

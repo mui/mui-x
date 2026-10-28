@@ -290,9 +290,7 @@ export class SchedulerStore<
       this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, this.stopEditing),
     );
 
-    const currentDate = new Date();
-    const timeUntilNextMinuteMs =
-      ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
+    const timeUntilNextMinuteMs = ONE_MINUTE_IN_MS - (Date.now() % ONE_MINUTE_IN_MS);
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
       this.set('nowTimestamp', Date.now());

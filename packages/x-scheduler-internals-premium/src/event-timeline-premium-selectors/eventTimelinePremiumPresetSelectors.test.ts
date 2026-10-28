@@ -2,7 +2,9 @@ import {
   adapter,
   getEventTimelinePremiumStateFromParameters,
   ResourceBuilder,
+  setSystemTimezone,
 } from 'test/utils/scheduler';
+import { isJSDOM } from 'test/utils/skipIf';
 import type {
   EventTimelinePremiumPreset,
   PresetHeaderUnit,
@@ -292,12 +294,12 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
     it.each([
       // The week of December 31st, 2022 in New York starts on Sunday the 25th.
-      { preset: 'dayAndWeek', start: '2022-12-25T05:00:00.000Z' },
-      { preset: 'monthAndYear', start: '2022-12-01T05:00:00.000Z' },
-      { preset: 'year', start: '2022-01-01T05:00:00.000Z' },
+      { preset: 'dayAndWeek', startPlainDate: '2022-12-25', start: '2022-12-25T05:00:00.000Z' },
+      { preset: 'monthAndYear', startPlainDate: '2022-12-01', start: '2022-12-01T05:00:00.000Z' },
+      { preset: 'year', startPlainDate: '2022-01-01', start: '2022-01-01T05:00:00.000Z' },
     ] as const)(
       'should read the visible date in the display timezone in the $preset preset',
-      ({ preset, start }) => {
+      ({ preset, startPlainDate, start }) => {
         const state = getEventTimelinePremiumStateFromParameters({
           resources: TEST_RESOURCES,
           events: [],
@@ -309,9 +311,94 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
         const config = eventTimelinePremiumPresetSelectors.config(state);
 
+        expect(config.startPlainDate).toEqualPlainDate(startPlainDate);
         expect(new Date(config.start).toISOString()).to.equal(start);
       },
     );
+
+    describe('bounds across DST transitions', () => {
+      const getBounds = (
+        preset: EventTimelinePremiumPreset,
+        visibleDate: string,
+        displayTimezone: string,
+      ) => {
+        const state = getEventTimelinePremiumStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [],
+          preset,
+          visibleDate: adapter.date(visibleDate, displayTimezone),
+          displayTimezone,
+        });
+        const config = eventTimelinePremiumPresetSelectors.config(state);
+        return [new Date(config.start).toISOString(), new Date(config.end).toISOString()];
+      };
+
+      // Browsers cannot change their timezone through process.env.TZ.
+      it.skipIf(!isJSDOM)(
+        'should start the range at the first instant of the day, whatever the timezone of the system',
+        () => {
+          setSystemTimezone('Australia/Lord_Howe');
+          // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+          expect(getBounds('dayAndHour', '2026-04-05T12:00:00', 'America/Santiago')[0]).to.equal(
+            '2026-04-05T04:00:00.000Z',
+          );
+        },
+      );
+
+      it.skipIf(!isJSDOM)(
+        'should start the range at the first instant of a midnight a DST transition repeats',
+        () => {
+          setSystemTimezone('America/Los_Angeles');
+          // Havana leaves summer time on November 1st, 2026, when 01:00 becomes 00:00 again.
+          expect(getBounds('monthAndYear', '2026-11-15T12:00:00', 'America/Havana')[0]).to.equal(
+            '2026-11-01T04:00:00.000Z',
+          );
+        },
+      );
+
+      it('should end the range just before the next day starts when its last hour is repeated', () => {
+        // Santiago repeats the 23:00 hour of April 4th, 2026.
+        expect(getBounds('dayAndHour', '2026-04-01T00:00:00', 'America/Santiago')[1]).to.equal(
+          '2026-04-05T03:59:59.999Z',
+        );
+      });
+
+      it('should end the range just before the next day starts when its timezone skips its last day', () => {
+        // Kiritimati skipped December 31st, 1994, when it moved across the date line.
+        expect(getBounds('dayAndHour', '1994-12-28T12:00:00', 'Pacific/Kiritimati')[1]).to.equal(
+          '1994-12-31T09:59:59.999Z',
+        );
+      });
+
+      it('should give a day of the axis to each date of the range, even one its timezone skips', () => {
+        // Kiritimati skipped December 31st, 1994, the last date of the range, which the header
+        // shows and the grid sizes.
+        const state = getEventTimelinePremiumStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [],
+          preset: 'dayAndHour',
+          visibleDate: adapter.date('1994-12-28T12:00:00', 'Pacific/Kiritimati'),
+          displayTimezone: 'Pacific/Kiritimati',
+        });
+        const config = eventTimelinePremiumPresetSelectors.config(state);
+        expect(config.endPlainDate).toEqualPlainDate('1995-01-01');
+        expect(config.tickCount).to.equal(4 * 24);
+        expect(config.durationMs).to.equal(4 * 24 * 3_600_000);
+      });
+
+      // Browsers cannot change their timezone through process.env.TZ.
+      it.skipIf(!isJSDOM)(
+        'should read the range in the timezone of the system when the display timezone is the default one',
+        () => {
+          // Apia skipped December 30th, 2011, when it moved from UTC−10 to UTC+14.
+          setSystemTimezone('Pacific/Apia');
+          expect(getBounds('dayAndHour', '2011-12-29T12:00:00', 'default')).to.deep.equal([
+            '2011-12-29T10:00:00.000Z',
+            '2012-01-01T09:59:59.999Z',
+          ]);
+        },
+      );
+    });
 
     it('should return the same reference when the dependencies are unchanged', () => {
       const state = getEventTimelinePremiumStateFromParameters({

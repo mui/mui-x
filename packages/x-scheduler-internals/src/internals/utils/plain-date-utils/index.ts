@@ -17,11 +17,10 @@ export {
   addToAdapterDate,
   buildTemporalPlainDate,
   createAdapterDate,
-  createAdapterDateOnPlainDate,
   createEndOfPlainDate,
+  createLabelDate,
   createProcessedDate,
   createStartOfPlainDate,
-  getDateKey,
   moveToPlainDate,
   normalizeAllDayBounds,
 } from './adapter';

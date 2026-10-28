@@ -16,7 +16,7 @@ import {
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
-  createStartOfPlainDate,
+  createLabelDate,
   getPlainDateWeekStart,
   isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
@@ -209,12 +209,8 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     const weekdays = weeks[0] ?? [];
 
     const monthYearLabel = React.useMemo(
-      () =>
-        formatMonthFullLetterAndYear(
-          createStartOfPlainDate(adapter, displayedMonth, displayTimezone),
-          adapter,
-        ),
-      [adapter, displayedMonth, displayTimezone],
+      () => formatMonthFullLetterAndYear(createLabelDate(adapter, displayedMonth), adapter),
+      [adapter, displayedMonth],
     );
 
     return (

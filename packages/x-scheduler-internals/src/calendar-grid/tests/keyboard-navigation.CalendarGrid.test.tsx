@@ -399,8 +399,7 @@ describe('CalendarGrid keyboard navigation', () => {
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.TimeColumn
                   key={i}
-                  start={adapter.getTime(day)}
-                  end={adapter.getTime(adapter.endOfDay(day))}
+                  value={buildTemporalPlainDate(adapter, day)}
                   data-testid={`time-${i}`}
                 />
               ))}
@@ -534,8 +533,7 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['time-grid']} rowsPerType={{}}>
             <CalendarGrid.TimeScrollableContent>
               <CalendarGrid.TimeColumn
-                start={adapter.getTime(day1)}
-                end={adapter.getTime(adapter.endOfDay(day1))}
+                value={buildTemporalPlainDate(adapter, day1)}
                 data-testid="col-0"
               >
                 <CalendarGrid.TimeEvent
@@ -549,8 +547,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 />
               </CalendarGrid.TimeColumn>
               <CalendarGrid.TimeColumn
-                start={adapter.getTime(day2)}
-                end={adapter.getTime(adapter.endOfDay(day2))}
+                value={buildTemporalPlainDate(adapter, day2)}
                 data-testid="col-1"
               >
                 <CalendarGrid.TimeEvent
