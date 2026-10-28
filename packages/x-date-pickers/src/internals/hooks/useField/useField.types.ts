@@ -121,33 +121,12 @@ export interface UseFieldForwardedProps {
    * The ref used to access the DOM elements of the sections.
    */
   sectionListRef?: React.Ref<PickersSectionListRef>;
-  /**
-   * @ignore
-   */
   onClick?: React.MouseEventHandler;
-  /**
-   * @ignore
-   */
   onMouseDown?: React.MouseEventHandler;
-  /**
-   * @ignore
-   */
   onKeyDown?: React.KeyboardEventHandler;
-  /**
-   * @ignore
-   */
   onFocus?: React.FocusEventHandler;
-  /**
-   * @ignore
-   */
   onBlur?: React.FocusEventHandler;
-  /**
-   * @ignore
-   */
   onInput?: React.FormEventHandler<HTMLDivElement>;
-  /**
-   * @ignore
-   */
   onPaste?: React.ClipboardEventHandler<HTMLDivElement>;
   onClear?: React.MouseEventHandler;
 }

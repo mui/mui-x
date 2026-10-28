@@ -203,9 +203,6 @@ TimeField.propTypes /* remove-proptypes */ = {
    * Name attribute of the `input` element.
    */
   name: PropTypes.string,
-  /**
-   * @ignore
-   */
   onBlur: PropTypes.func,
   /**
    * Callback fired when the value changes.
@@ -219,9 +216,6 @@ TimeField.propTypes /* remove-proptypes */ = {
    * Callback fired when the clear button is clicked.
    */
   onClear: PropTypes.func,
-  /**
-   * @ignore
-   */
   onClick: PropTypes.func,
   /**
    * Callback fired when the error associated with the current value changes.
@@ -233,25 +227,10 @@ TimeField.propTypes /* remove-proptypes */ = {
    * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
-  /**
-   * @ignore
-   */
   onFocus: PropTypes.func,
-  /**
-   * @ignore
-   */
   onInput: PropTypes.func,
-  /**
-   * @ignore
-   */
   onKeyDown: PropTypes.func,
-  /**
-   * @ignore
-   */
   onMouseDown: PropTypes.func,
-  /**
-   * @ignore
-   */
   onPaste: PropTypes.func,
   /**
    * Callback fired when the selected sections change.

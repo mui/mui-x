@@ -18,25 +18,10 @@ export interface PickersInputPropsUsedByField extends Pick<
    */
   areAllSectionsEmpty: boolean;
 
-  /**
-   * @ignore
-   */
   onClick: React.MouseEventHandler<HTMLDivElement>;
-  /**
-   * @ignore
-   */
   onMouseDown: React.MouseEventHandler<HTMLDivElement>;
-  /**
-   * @ignore
-   */
   onKeyDown: React.EventHandler<MuiEvent<React.KeyboardEvent<HTMLDivElement>>>;
-  /**
-   * @ignore
-   */
   onInput: React.FormEventHandler<HTMLDivElement>;
-  /**
-   * @ignore
-   */
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;
 
   /**
@@ -52,9 +37,6 @@ export interface PickersInputPropsUsedByField extends Pick<
    * The value of the hidden `input` element.
    */
   value: string;
-  /**
-   * @ignore
-   */
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 
   /**

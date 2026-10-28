@@ -63,13 +63,7 @@ export interface PickersTextFieldSlotsAndSlotProps<InputPropsType extends Picker
 }
 
 interface PickersTextFieldPropsUsedByField {
-  /**
-   * @ignore
-   */
   onFocus: React.FocusEventHandler<HTMLDivElement>;
-  /**
-   * @ignore
-   */
   onBlur: React.FocusEventHandler<HTMLDivElement>;
   /**
    * If `true`, the component is disabled.

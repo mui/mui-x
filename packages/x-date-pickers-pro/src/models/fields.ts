@@ -23,9 +23,6 @@ export type MultiInputFieldSlotTextFieldProps = UseMultiInputRangeFieldTextField
  * Props the `root` slot of the multi input field can receive when used inside a picker.
  */
 export interface MultiInputFieldSlotRootProps {
-  /**
-   * @ignore
-   */
   onBlur?: React.FocusEventHandler;
 }
 
