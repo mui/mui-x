@@ -7,136 +7,93 @@ import { EventTimelinePremium } from './DependenciesTimeline';
 const features = { dependencies: dependenciesFeature };
 const presetConfig = { dayAndHour: { startTime: 8, endTime: 18 } };
 
+// The rows are sorted by title.
 const resources: SchedulerResource[] = [
-  { id: 'backend', title: 'Backend' },
-  { id: 'frontend', title: 'Frontend' },
-  { id: 'qa', title: 'QA' },
-  { id: 'docs', title: 'Docs' },
-  { id: 'devops', title: 'DevOps' },
-  { id: 'support', title: 'Support' },
+  { id: 'design', title: 'Alice (Design)', eventColor: 'purple' },
+  { id: 'backend', title: 'Ben (Backend)', eventColor: 'blue' },
+  { id: 'frontend', title: 'Chloe (Frontend)', eventColor: 'teal' },
+  { id: 'qa', title: 'Dan (QA)', eventColor: 'amber' },
+  { id: 'docs', title: 'Emma (Docs)', eventColor: 'pink' },
+  { id: 'ops', title: 'Finn (Ops)', eventColor: 'green' },
 ];
 
 const initialEvents: SchedulerEvent[] = [
   {
-    id: 'api',
-    title: 'API design',
-    start: '2025-07-03T08:15:00',
-    end: '2025-07-03T09:45:00',
-    resource: 'backend',
+    id: 'wireframes',
+    title: 'Wireframes',
+    start: '2025-07-03T08:30:00',
+    end: '2025-07-03T10:00:00',
+    resource: 'design',
   },
   {
-    id: 'backend-impl',
-    title: 'Backend',
-    start: '2025-07-03T09:45:00',
-    end: '2025-07-03T12:15:00',
+    id: 'api',
+    title: 'API',
+    start: '2025-07-03T09:00:00',
+    end: '2025-07-03T12:30:00',
     resource: 'backend',
   },
   {
     id: 'ui',
     title: 'UI',
-    start: '2025-07-03T10:15:00',
-    end: '2025-07-03T13:00:00',
+    start: '2025-07-03T10:30:00',
+    end: '2025-07-03T12:30:00',
     resource: 'frontend',
   },
   {
-    id: 'polish',
-    title: 'Polish',
-    start: '2025-07-03T13:55:00',
-    end: '2025-07-03T14:35:00',
+    id: 'integration',
+    title: 'Integration',
+    start: '2025-07-03T13:30:00',
+    end: '2025-07-03T15:00:00',
     resource: 'frontend',
-  },
-  {
-    id: 'test-plan',
-    title: 'Test plan',
-    start: '2025-07-03T08:45:00',
-    end: '2025-07-03T09:45:00',
-    resource: 'qa',
   },
   {
     id: 'testing',
     title: 'Testing',
-    start: '2025-07-03T13:15:00',
-    end: '2025-07-03T15:15:00',
+    start: '2025-07-03T14:00:00',
+    end: '2025-07-03T16:00:00',
     resource: 'qa',
   },
   {
-    id: 'guide',
-    title: 'Guide',
-    start: '2025-07-03T10:30:00',
-    end: '2025-07-03T13:30:00',
-    resource: 'docs',
-  },
-  {
-    id: 'notes',
-    title: 'Notes',
-    start: '2025-07-03T15:00:00',
-    end: '2025-07-03T16:00:00',
-    resource: 'docs',
-  },
-  {
-    id: 'staging',
-    title: 'Staging',
+    id: 'release-notes',
+    title: 'Release notes',
     start: '2025-07-03T13:00:00',
-    end: '2025-07-03T14:00:00',
-    resource: 'devops',
-  },
-  {
-    id: 'prod',
-    title: 'Deploy',
-    start: '2025-07-03T16:45:00',
-    end: '2025-07-03T17:45:00',
-    resource: 'devops',
-  },
-  {
-    id: 'on-call',
-    title: 'On-call shift',
-    start: '2025-07-03T10:00:00',
-    end: '2025-07-03T17:00:00',
-    resource: 'support',
-  },
-  // Assigned to three teams: one appearance per row, one arrow per appearance.
-  {
-    id: 'sync',
-    title: 'Sync',
-    start: '2025-07-03T15:30:00',
     end: '2025-07-03T16:00:00',
-    resource: ['frontend', 'qa', 'devops'],
+    resource: 'docs',
+  },
+  {
+    id: 'deploy',
+    title: 'Deploy',
+    start: '2025-07-03T16:30:00',
+    end: '2025-07-03T17:30:00',
+    resource: 'ops',
   },
 ];
 
 const initialDependencies: SchedulerDependency[] = [
-  // Adjacent events in the same row: the short arrow over the junction.
-  { id: 'd1', source: 'api', target: 'backend-impl', type: 'FinishToStart' },
-  // Across rows: the forward elbow. The UI starts half an hour after the API design ends.
+  // The API work starts half an hour after the wireframes start.
   {
-    id: 'd2',
-    source: 'api',
-    target: 'ui',
-    type: 'FinishToStart',
-    lag: 30,
-    lagUnit: 'minute',
-  },
-  // The test plan starts half an hour after the API design has started: wraps around
-  // the left.
-  {
-    id: 'd3',
-    source: 'api',
-    target: 'test-plan',
+    id: 'd1',
+    source: 'wireframes',
+    target: 'api',
     type: 'StartToStart',
     lag: 30,
     lagUnit: 'minute',
   },
-  { id: 'd4', source: 'backend-impl', target: 'staging', type: 'FinishToStart' },
-  // Same row, forward: the straight arrow.
-  { id: 'd5', source: 'ui', target: 'polish', type: 'FinishToStart' },
-  // The guide cannot be finished before the UI is: wraps around the right.
-  { id: 'd6', source: 'ui', target: 'guide', type: 'FinishToFinish' },
-  // Already broken: the notes start before testing finishes. Stays as is until testing moves.
-  { id: 'd7', source: 'testing', target: 'notes', type: 'FinishToStart' },
-  // Multi-resource source: one arrow out of each of its rows.
-  { id: 'd8', source: 'sync', target: 'prod', type: 'FinishToStart' },
-  // The on-call shift cannot end until the production deploy has started.
-  { id: 'd9', source: 'prod', target: 'on-call', type: 'StartToFinish' },
+  { id: 'd2', source: 'wireframes', target: 'ui', type: 'FinishToStart' },
+  { id: 'd3', source: 'api', target: 'integration', type: 'FinishToStart' },
+  { id: 'd4', source: 'ui', target: 'integration', type: 'FinishToStart' },
+  // Testing starts half an hour after the integration starts.
+  {
+    id: 'd5',
+    source: 'integration',
+    target: 'testing',
+    type: 'StartToStart',
+    lag: 30,
+    lagUnit: 'minute',
+  },
+  // The release notes can't be finished before testing is.
+  { id: 'd6', source: 'testing', target: 'release-notes', type: 'FinishToFinish' },
+  { id: 'd7', source: 'testing', target: 'deploy', type: 'FinishToStart' },
 ];
 
 export default function DependenciesOverview() {
