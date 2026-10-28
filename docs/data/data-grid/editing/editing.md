@@ -128,10 +128,22 @@ This feature is experimental. It has these limits:
   Columns with a custom `renderEditCell`, columns with formulas, and other column types keep the default behavior.
 - It is not available on devices with a coarse primary pointer, such as touch screens and tablets.
   On these devices, an input that has the focus opens the virtual keyboard.
-- Screen readers announce a text field instead of a cell. The label of the text field is the value of the cell.
+- It is not available in cells where `renderCell` returns an element with `tabIndex={params.tabIndex}`, such as a link or a button.
+  This element keeps the focus, so that Enter activates it.
+- Screen readers announce a text field instead of a cell. The name of the text field is the content of the cell.
+  An empty cell uses the `emptyCellLabel` locale text.
 - The hidden input receives the keyboard events of the focused cell.
   In `onCellKeyDown`, `event.target` is the input element, not the cell element.
   Use `params` to identify the cell.
+- The hidden input has the focus, not the cell. Thus the `.MuiDataGrid-cell:focus` selector does not match the cell.
+  To change the focus outline of the cell, use the `.MuiDataGrid-cell:focus-within` selector:
+
+  ```tsx
+  <DataGrid
+    experimentalFeatures={{ imeFastEdit: true }}
+    sx={{ '& .MuiDataGrid-cell:focus-within': { outline: 'none' } }}
+  />
+  ```
 
 :::
 

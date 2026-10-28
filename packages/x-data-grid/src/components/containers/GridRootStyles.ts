@@ -274,7 +274,9 @@ export const GridRootStyles = styled('div', {
     },
     // A browser that does not support `:has()` ignores all selectors of the rule.
     // Keep this selector in a separate rule, so that the other focus outlines stay.
-    [`& .${c.cell}:has(> [data-cell-editor="preMounted"]:focus-within)`]: {
+    // `:where()` gives the rule the specificity of `.cell:focus-within`.
+    // Thus an override of `.cell:focus-within` also removes this outline.
+    [`& .${c.cell}:has(> :where([data-cell-editor="preMounted"]):focus-within)`]: {
       outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
     },

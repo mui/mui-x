@@ -278,18 +278,21 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
+          // Only pass the pressed key when the row editing is controlled via `rowModesModel`.
+          // In uncontrolled mode, the default editor already inserts the character and passing it here would duplicate it.
+          const key = rowModesModelProp && isPrintableKey(event) ? event.key : undefined;
+          // A controlled `rowModesModel` starts edit mode in an effect, maybe after the `input` event.
+          // The editor that the cell renders before edit mode starts ignores this event in view mode.
+          // Thus the key gives the character, and the editor must not also receive it.
+          if (key !== undefined && isEventFromPreMountedEditor(event)) {
+            event.preventDefault();
+          }
           const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStartParams = {
             ...rowParams,
             field: params.field,
             reason,
-            // Only pass the pressed key when the row editing is controlled via `rowModesModel`.
-            // In uncontrolled mode, the default editor already inserts the character and passing it here would duplicate it.
-            // The editor that the cell renders before edit mode starts already receives the character.
-            key:
-              rowModesModelProp && isPrintableKey(event) && !isEventFromPreMountedEditor(event)
-                ? event.key
-                : undefined,
+            key,
           };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
         }

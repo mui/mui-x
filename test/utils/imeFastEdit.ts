@@ -2,7 +2,7 @@
 // The focused editable string cell renders a hidden editor (`data-cell-editor="preMounted"`).
 // This editor has the DOM focus, and a composition starts edit mode on its input.
 import { expect } from 'vitest';
-import { fireEvent, waitFor } from '@mui/internal-test-utils';
+import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import type { MuiRenderResult } from '@mui/internal-test-utils';
 import type { GridDataSource, GridGetRowsParams } from '@mui/x-data-grid';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
@@ -144,6 +144,23 @@ export async function compareWithBaseline<T>(
   const baseline = await scenario(false);
   const withFlag = await scenario(true);
   return { baseline, withFlag };
+}
+
+// Types one character in the input as a browser does: `keydown` and `input` in the same task.
+// user-event wraps each event in `act()`, which flushes the effects between `keydown` and `input`.
+// This helper uses one `act()` for the two events, so that no effect runs between them.
+// The browser does not insert the character when a `keydown` listener prevents the default.
+export function typeInSameTask(input: HTMLInputElement, key: string) {
+  act(() => {
+    const keyDown = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    if (!input.dispatchEvent(keyDown)) {
+      return;
+    }
+    // Set the value with the native setter. Then React sees the change in the `input` event.
+    const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    setValue.call(input, `${input.value}${key}`);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
 }
 
 // Composes an IME text in the input. The composition does not commit the value.

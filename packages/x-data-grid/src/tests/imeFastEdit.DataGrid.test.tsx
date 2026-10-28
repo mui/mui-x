@@ -11,7 +11,13 @@ import type {
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { describe, it, expect, vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-import { focusCell, getEditorWrappers, getFocusTarget, getInput } from 'test/utils/imeFastEdit';
+import {
+  focusCell,
+  getEditorWrappers,
+  getFocusTarget,
+  getInput,
+  typeInSameTask,
+} from 'test/utils/imeFastEdit';
 import type { User } from 'test/utils/imeFastEdit';
 
 const columns: GridColDef[] = [
@@ -312,6 +318,55 @@ describe('<DataGrid /> - IME fast edit', () => {
       expect(document.activeElement).to.have.text('after');
       await user.tab({ shift: true });
       expect(document.activeElement).to.equal(getInput(cell));
+    });
+
+    describe('`renderCell` with a tab stop', () => {
+      const linkColumns: GridColDef[] = [
+        { field: 'name', editable: true },
+        {
+          field: 'city',
+          editable: true,
+          renderCell: (params: GridRenderCellParams) => (
+            <a href="#" tabIndex={params.tabIndex}>
+              {params.value}
+            </a>
+          ),
+        },
+      ];
+
+      it('gives the focus to the link and not to the editor when ArrowRight moves the focus to the cell', async () => {
+        const { user } = render(<TestCase columns={linkColumns} />);
+        await focusCell(user, 0, 0);
+        await user.keyboard('{ArrowRight}');
+        const cell = getCell(0, 1);
+        expect(document.activeElement).to.equal(cell.querySelector('a'));
+        expect(getEditorWrappers()).to.have.length(0);
+      });
+
+      it('keeps the focus on the cell and removes the editor when the cell is clicked', async () => {
+        const { user } = render(<TestCase columns={linkColumns} />);
+        const cell = await focusCell(user, 0, 1);
+        expect(document.activeElement).to.equal(cell);
+        expect(getEditorWrappers()).to.have.length(0);
+      });
+
+      it('gives the cell one tab stop', async () => {
+        const { user } = render(<TestCase columns={linkColumns} />);
+        await focusCell(user, 0, 0);
+        await user.keyboard('{ArrowRight}');
+        const cell = getCell(0, 1);
+        expect(cell.querySelectorAll('[tabindex="0"]')).to.have.length(1);
+      });
+
+      it('starts edit mode with a printable key, as without the flag', async () => {
+        const { user } = render(<TestCase columns={linkColumns} />);
+        await focusCell(user, 0, 0);
+        await user.keyboard('{ArrowRight}');
+        await user.keyboard('x');
+        const cell = getCell(0, 1);
+        expect(cell).to.have.class('MuiDataGrid-cell--editing');
+        expect(getInput(cell)!.value).to.equal('x');
+      });
     });
   });
 
@@ -625,26 +680,57 @@ describe('<DataGrid /> - IME fast edit', () => {
   });
 
   describe('hidden editor attributes', () => {
-    it('labels the hidden editor with the value of the cell', async () => {
+    it('names the hidden editor with the content of the cell', async () => {
       const { user } = render(<TestCase />);
       const cell = await focusCell(user, 0, 1);
-      expect(getInput(cell)).to.have.attribute('aria-label', 'Seoul');
+      expect(getInput(cell)).to.have.attribute('aria-labelledby', cell.id);
+      expect(getInput(cell)).toHaveAccessibleName('Seoul');
     });
 
-    it('labels the hidden editor with the formatted value of the cell', async () => {
+    it('names the hidden editor with the formatted value of the cell', async () => {
       const { user } = render(
         <TestCase
           columns={[{ field: 'city', editable: true, valueFormatter: (value) => `City: ${value}` }]}
         />,
       );
       const cell = await focusCell(user, 0, 0);
-      expect(getInput(cell)).to.have.attribute('aria-label', 'City: Seoul');
+      expect(getInput(cell)).toHaveAccessibleName('City: Seoul');
     });
 
-    it('does not label the hidden editor of an empty cell', async () => {
+    it('names the hidden editor with the content from `renderCell`', async () => {
+      const { user } = render(
+        <TestCase
+          columns={[
+            { field: 'city', editable: true, renderCell: (params) => `Custom ${params.value}` },
+          ]}
+        />,
+      );
+      const cell = await focusCell(user, 0, 0);
+      expect(getInput(cell)).toHaveAccessibleName('Custom Seoul');
+    });
+
+    it('gives a fallback name to the hidden editor of an empty cell', async () => {
       const { user } = render(<TestCase rows={[{ id: 0, name: '', city: '' }]} />);
       const cell = await focusCell(user, 0, 1);
-      expect(getInput(cell)).not.to.have.attribute('aria-label');
+      expect(getInput(cell)).not.to.have.attribute('aria-labelledby');
+      expect(getInput(cell)).toHaveAccessibleName('Empty');
+    });
+
+    it('uses the `emptyCellLabel` locale text for the fallback name', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[{ id: 0, name: '', city: '' }]}
+          localeText={{ emptyCellLabel: '비어 있음' }}
+        />,
+      );
+      const cell = await focusCell(user, 0, 1);
+      expect(getInput(cell)).toHaveAccessibleName('비어 있음');
+    });
+
+    it('does not set an id on a cell without the hidden editor', async () => {
+      const { user } = render(<TestCase />);
+      await focusCell(user, 0, 1);
+      expect(getCell(0, 0)).not.to.have.attribute('id');
     });
 
     it('turns off autofill, spell check, and password managers on the hidden editor', async () => {
@@ -668,6 +754,7 @@ describe('<DataGrid /> - IME fast edit', () => {
       });
       expect(getInput(cell)).to.equal(input);
       expect(input).not.to.have.attribute('aria-label');
+      expect(input).not.to.have.attribute('aria-labelledby');
     });
   });
 
@@ -721,6 +808,18 @@ describe('<DataGrid /> - IME fast edit', () => {
         expect(selector).not.to.contain(':focus,');
       });
     });
+
+    it.skipIf(isJSDOM)(
+      'removes the focus outline of the cell with an override of `:focus-within`',
+      async () => {
+        const { user } = render(
+          <TestCase sx={{ '& .MuiDataGrid-cell:focus-within': { outline: 'none' } }} />,
+        );
+        const cell = await focusCell(user, 0, 1);
+        expect(document.activeElement).to.equal(getInput(cell));
+        expect(getComputedStyle(cell).outlineStyle).to.equal('none');
+      },
+    );
   });
 
   describe('edit start', () => {
@@ -853,6 +952,20 @@ describe('<DataGrid /> - IME fast edit', () => {
         expect(getInput(cell)).to.equal(input);
         expect(input.value).to.equal('x');
       });
+
+      // A controlled `cellModesModel` also loses the first character without the flag.
+      it.skipIf(editMode === 'cell')(
+        'types the first character once when no effect runs between `keydown` and `input`',
+        async () => {
+          const { user } = render(<ControlledTest />);
+          const cell = await focusCell(user, 0, 1);
+          const input = getInput(cell)!;
+          typeInSameTask(input, 'x');
+          expect(cell).to.have.class('MuiDataGrid-cell--editing');
+          expect(getInput(cell)).to.equal(input);
+          expect(input.value).to.equal('x');
+        },
+      );
 
       it('keeps the same input when a composition starts', async () => {
         const { user } = render(<ControlledTest />);
