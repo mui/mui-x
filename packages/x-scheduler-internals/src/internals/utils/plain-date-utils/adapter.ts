@@ -21,17 +21,6 @@ import { getPlainDateKey, plainDateFromDayNumber } from './plainDate';
 // so their date and time are always read in an explicit timezone.
 
 /**
- * Returns the `getPlainDateKey()` of the day of `day` in `timezone`.
- */
-export function getDateKey(
-  day: TemporalSupportedObject,
-  adapter: Adapter,
-  timezone: TemporalTimezone,
-): string {
-  return getPlainDateKey(buildTemporalPlainDate(adapter, day, timezone));
-}
-
-/**
  * Builds the plain date of an adapter value in `timezone`.
  */
 export function buildTemporalPlainDate(

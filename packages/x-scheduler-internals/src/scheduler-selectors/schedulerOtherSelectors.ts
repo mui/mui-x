@@ -1,7 +1,6 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
-import { createAdapterDate } from '../internals/utils/plain-date-utils/adapter';
 
 const visibleTimestamp = (state: State) => state.adapter.getTime(state.visibleDate);
 
@@ -41,10 +40,6 @@ export const schedulerOtherSelectors = {
    * The locale the dates are formatted in.
    */
   dateLocale: (state: State) => state.dateLocale,
-  /**
-   * A copy of `visibleDate`, created by the Scheduler, for the code that passes it on.
-   */
-  visibleDate: createSelectorMemoized(visibleTimestamp, createAdapterDate),
   /**
    * The date of `visibleDate` in the display timezone, for the code that works on plain dates.
    */

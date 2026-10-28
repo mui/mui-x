@@ -355,7 +355,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const handleChangeUntil = (event: React.ChangeEvent<HTMLInputElement>) => {
     const untilValue = event.currentTarget.value;
     // The chosen day is the last one the series runs on, in the event's timezone.
-    updateCustomDraft({ until: getRecurrenceUntil(adapter, untilValue, eventTimezone) });
+    updateCustomDraft({ until: getRecurrenceUntil(untilValue, eventTimezone) });
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {

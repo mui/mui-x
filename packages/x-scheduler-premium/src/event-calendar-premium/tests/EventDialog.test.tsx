@@ -3633,8 +3633,8 @@ describe('<EventDialogContent open />', () => {
         });
 
         it('should pre-fill "Until" with the end of the event\'s last day in its own timezone', async () => {
-          // The pre-filled day is the event's own May 26, not the Tokyo midnight relabeled
-          // (May 25 in New York).
+          // The pre-filled day is the event's own May 26, not the Tokyo midnight read in
+          // New York (May 25).
           const { user, onEventsChange } = renderCrossTimezoneDialog(
             runningInNewYorkBuilder(),
             'Asia/Tokyo',

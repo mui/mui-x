@@ -23,7 +23,7 @@ describe('resolveEventDate', () => {
     expect(adapter.getHours(result)).to.equal(9);
   });
 
-  // TZDate resolves DST transitions with the timezone of the system, recurring events don't.
+  // The DST transitions must resolve the same way whatever the timezone of the system.
   describe.each(['UTC', 'America/New_York', 'Europe/Paris'])(
     'system timezone: %s',
     (systemTimezone) => {

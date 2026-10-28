@@ -8,7 +8,6 @@ import {
   createAdapterDate,
   createAdapterDateFromWallTime,
   createProcessedDate,
-  getDateKey,
 } from './adapter';
 import type { TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
@@ -68,13 +67,6 @@ describe('base-temporal adapter bridge', () => {
       }
     },
   );
-
-  it('should return the ISO date of the day in the timezone as the key', () => {
-    // July 4th at 02:00 in Tokyo is July 3rd in UTC.
-    const value = adapter.date('2025-07-03T17:00:00Z', 'default');
-    expect(getDateKey(value, adapter, 'Asia/Tokyo')).to.equal('2025-07-04');
-    expect(getDateKey(value, adapter, 'UTC')).to.equal('2025-07-03');
-  });
 
   // The fields of a processed date as the adapter reads them in `timezone`, which processed dates
   // must match.
@@ -144,7 +136,7 @@ describe('base-temporal adapter bridge', () => {
       return date === null ? null : new Date(adapter.getTime(date)).toISOString();
     };
 
-    // TZDate resolves DST transitions with the timezone of the system, the plain dates don't.
+    // The DST transitions must resolve the same way whatever the timezone of the system.
     describe.each(['UTC', 'America/New_York', 'Europe/Paris'])(
       'system timezone: %s',
       (systemTimezone) => {
