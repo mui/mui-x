@@ -1,0 +1,13 @@
+<CacheProvider value={cacheRtl}>
+  <ThemeProvider theme={theme}>
+    <div dir="rtl" style={{ height: '500px', width: '100%', overflow: 'auto' }}>
+      <EventTimelinePremium
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        defaultPreset="monthAndYear"
+      />
+    </div>
+  </ThemeProvider>
+</CacheProvider>

@@ -9,6 +9,7 @@ import {
   utcJuly4AllDayBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
+  setSystemTimezone,
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
@@ -141,8 +142,8 @@ describe('<EventDialogContent open />', () => {
     const placeholder: SchedulerOccurrencePlaceholderCreation = {
       type: 'creation',
       surfaceType: 'time-grid' as const,
-      start,
-      end,
+      start: adapter.getTime(start),
+      end: adapter.getTime(end),
       lockSurfaceType: false,
       resourceId: null,
     };
@@ -1210,8 +1211,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1245,8 +1246,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1651,8 +1652,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1696,8 +1697,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1740,8 +1741,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'day-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1783,8 +1784,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: true,
                 resourceId: null,
               })
@@ -1825,8 +1826,8 @@ describe('<EventDialogContent open />', () => {
               store.setOccurrencePlaceholder({
                 type: 'creation',
                 surfaceType: 'time-grid',
-                start,
-                end,
+                start: adapter.getTime(start),
+                end: adapter.getTime(end),
                 lockSurfaceType: false,
                 resourceId: null,
               })
@@ -1857,8 +1858,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -1927,8 +1928,8 @@ describe('<EventDialogContent open />', () => {
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
-        start,
-        end,
+        start: adapter.getTime(start),
+        end: adapter.getTime(end),
         lockSurfaceType: false,
         resourceId: null,
       };
@@ -2709,6 +2710,27 @@ describe('<EventDialogContent open />', () => {
         expect(updated.rrule).to.deep.include({ freq: 'WEEKLY', byDay: ['FR'] });
       });
 
+      it('should label each weekday once when the timezone skips a day of the week', async () => {
+        // Pacific/Apia skips Friday, December 30th, 2011.
+        const { user } = renderCrossTimezoneDialog(
+          EventBuilder.new()
+            .title('Standup')
+            .withDataTimezone('Pacific/Apia')
+            .span('2011-12-28T09:00:00', '2011-12-28T09:30:00'),
+          'Pacific/Apia',
+          { visibleDate: adapter.date('2011-12-28T12:00:00', 'Pacific/Apia') },
+        );
+
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(
+          await screen.findByRole('option', { name: 'Repeats weekly on Wednesday' }),
+        );
+
+        expect(screen.getAllByRole('checkbox', { name: 'Friday' })).to.have.length(1);
+        expect(screen.getAllByRole('checkbox', { name: 'Saturday' })).to.have.length(1);
+      });
+
       it('should re-anchor the weekday of a picked preset when the start is edited afterwards', async () => {
         const { user, event, onEventsChange } = renderCrossTimezoneDialog(
           lateCallBuilder(),
@@ -2926,10 +2948,7 @@ describe('<EventDialogContent open />', () => {
               onMount={(mountedStore) => {
                 store = mountedStore;
                 (mountedStore as any).lazyLoading.queueDataFetchForRange(
-                  {
-                    start: adapter.date('2025-05-26T00:00:00', 'UTC'),
-                    end: adapter.date('2025-05-26T00:00:00', 'UTC'),
-                  },
+                  { start: Date.UTC(2025, 4, 26), end: Date.UTC(2025, 4, 26) },
                   true,
                 );
               }}
@@ -3684,6 +3703,64 @@ describe('<EventDialogContent open />', () => {
 
           const updated = onEventsChange.mock.calls[0][0][0];
           expect(updated.rrule?.until).to.equal('2025-07-06T23:59:59');
+        });
+
+        describe('on a day whose last hour a DST transition repeats', () => {
+          // Santiago leaves summer time at the end of April 4th, 2026, when 24:00 becomes 23:00.
+          // The event is stored as instants, in the default timezone of the system.
+          async function renderSantiagoSystemDialog(start: string, end: string) {
+            setSystemTimezone('America/Santiago');
+            const { user, onEventsChange } = renderCrossTimezoneDialog(
+              EventBuilder.new().title('Run').span(start, end),
+              'default',
+            );
+            await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+            await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+            await user.click(await screen.findByRole('option', { name: /custom/i }));
+            return { user, onEventsChange };
+          }
+
+          it.skipIf(!isJSDOM)(
+            'should pre-fill "Until" with the later 23:59:59.999 of the last day',
+            async () => {
+              const { user, onEventsChange } = await renderSantiagoSystemDialog(
+                '2026-04-04T14:00:00Z',
+                '2026-04-04T15:00:00Z',
+              );
+              const endsFieldset = screen.getByRole('group', { name: /ends/i });
+              await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+              const dateInput = endsFieldset.querySelector(
+                'input[type="date"]',
+              ) as HTMLInputElement;
+              expect(dateInput.value).to.equal('2026-04-04');
+              await user.click(screen.getByRole('button', { name: /save/i }));
+
+              const updated = onEventsChange.mock.calls[0][0][0];
+              expect(updated.rrule?.until).to.equal('2026-04-05T03:59:59.999Z');
+            },
+          );
+
+          it.skipIf(!isJSDOM)(
+            'should end the series on the later 23:59:59.999 of the "Until" day',
+            async () => {
+              // On April 3rd, so that the pre-filled day differs from the typed one.
+              const { user, onEventsChange } = await renderSantiagoSystemDialog(
+                '2026-04-03T14:00:00Z',
+                '2026-04-03T15:00:00Z',
+              );
+              const endsFieldset = screen.getByRole('group', { name: /ends/i });
+              await user.click(within(endsFieldset).getByRole('radio', { name: /until/i }));
+              const dateInput = endsFieldset.querySelector(
+                'input[type="date"]',
+              ) as HTMLInputElement;
+              await user.clear(dateInput);
+              await user.type(dateInput, '2026-04-04');
+              await user.click(screen.getByRole('button', { name: /save/i }));
+
+              const updated = onEventsChange.mock.calls[0][0][0];
+              expect(updated.rrule?.until).to.equal('2026-04-05T03:59:59.999Z');
+            },
+          );
         });
 
         it('should pre-fill the "Until" input with the stored day in the event timezone', async () => {

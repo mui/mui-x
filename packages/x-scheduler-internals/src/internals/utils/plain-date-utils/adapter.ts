@@ -1,23 +1,71 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { SchedulerProcessedDate, TemporalSupportedObject } from '../../../models';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
-import { getDateKey } from '../date-utils';
-import { PlainDate } from '../base-temporal/PlainDate';
+import type { PlainDate, PlainDateDuration } from '../base-temporal/PlainDate';
 import { MS_PER_DAY } from '../base-temporal/iso';
-import { getEndOfDayMs, getStartOfDayMs, localToEpochMs, toPlainDateTime } from './timeZone';
+import {
+  getEndOfDayMs,
+  getStartOfDayMs,
+  localToEpochMs,
+  moveTimestampToPlainDate,
+  toEpochMs,
+  toLocalMs,
+  toPlainDate,
+} from './timeZone';
+import { getPlainDateKey, plainDateFromDayNumber } from './plainDate';
 
 // Translates between the adapter's date objects and plain dates, so that code working on plain dates
 // receives and returns the same values as the rest of the Scheduler.
 
 /**
+ * Returns the `getPlainDateKey()` of the day of `day`, in the timezone it's labeled with.
+ */
+export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
+  return getPlainDateKey(buildTemporalPlainDate(adapter, day));
+}
+
+/**
  * Builds the plain date of an adapter value, in the timezone the value is labeled with.
+ * Read from the offsets of the timezone, which is faster than the getters of the adapter and
+ * returns the same date.
  */
 export function buildTemporalPlainDate(adapter: Adapter, date: TemporalSupportedObject): PlainDate {
-  return PlainDate.from({
-    year: adapter.getYear(date),
-    month: adapter.getMonth(date) + 1,
-    day: adapter.getDate(date),
-  });
+  return toPlainDate(adapter.getTime(date), adapter.getTimezone(date));
+}
+
+/**
+ * Creates the adapter value of the first instant of a plain date in `timezone`, the reverse of
+ * `buildTemporalPlainDate()`. A day whose midnight a DST transition skips starts at the end of the
+ * gap.
+ */
+export function createStartOfPlainDate(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  return createAdapterDate(adapter, toEpochMs(plainDate, 0, timezone), timezone);
+}
+
+/**
+ * Creates the adapter value of the midnight of a plain date in UTC, to format the date or read the
+ * fields that depend on the locale, like its week number. UTC skips no date, unlike a timezone that
+ * skips a midnight or a whole date, like December 30th, 2011 in Pacific/Apia.
+ */
+export function createLabelDate(adapter: Adapter, plainDate: PlainDate): TemporalSupportedObject {
+  return createStartOfPlainDate(adapter, plainDate, 'UTC');
+}
+
+/**
+ * Creates the adapter value of the last instant of a plain date in `timezone`, just before the next
+ * day starts. When a DST transition repeats the last hour of the day, it's the later 23:59:59.999.
+ */
+export function createEndOfPlainDate(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  const nextPlainDate = plainDate.add({ days: 1 });
+  return createAdapterDate(adapter, toEpochMs(nextPlainDate, 0, timezone) - 1, timezone);
 }
 
 const epochValues = new WeakMap<Adapter, TemporalSupportedObject>();
@@ -91,46 +139,62 @@ export function normalizeAllDayBounds(
   };
 }
 
-const MAX_CACHED_KEYS_PER_ADAPTER = 10_000;
-const dateKeysCache = new WeakMap<Adapter, Map<number, string>>();
-
 /**
- * Returns the `getDateKey()` of any adapter value on `date`.
- * The key only depends on the date and the adapter's locale, so it's formatted once per day.
+ * Returns the processed date of `value`, the adapter value of the instant `epochMs` in `timezone`.
+ * Reads the date and time from the offsets of the timezone instead of the getters of the adapter.
  */
-export function getPlainDateKey(adapter: Adapter, date: PlainDate): string {
-  let keys = dateKeysCache.get(adapter);
-  if (keys === undefined) {
-    keys = new Map();
-    dateKeysCache.set(adapter, keys);
-  }
-  let key = keys.get(date.dayNumber);
-  if (key === undefined) {
-    if (keys.size >= MAX_CACHED_KEYS_PER_ADAPTER) {
-      keys.clear();
-    }
-    // Labeled in UTC: a system timezone can skip the local midnight of a day, such as
-    // December 30th, 2011 in Pacific/Apia.
-    key = getDateKey(createAdapterDate(adapter, date.dayNumber * MS_PER_DAY, 'UTC'), adapter);
-    keys.set(date.dayNumber, key);
-  }
-  return key;
+export function buildProcessedDate(
+  value: TemporalSupportedObject,
+  epochMs: number,
+  timezone: TemporalTimezone,
+): SchedulerProcessedDate {
+  // The wall clock is read once, as this runs for each occurrence of the visible range.
+  const localMs = toLocalMs(epochMs, timezone);
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  return {
+    value,
+    key: getPlainDateKey(plainDateFromDayNumber(dayNumber)),
+    timestamp: epochMs,
+    minutesInDay: Math.floor((localMs - dayNumber * MS_PER_DAY) / 60_000),
+  };
 }
 
 /**
- * Returns the same processed date as `processDate()` for the adapter value of an instant in
- * `timezone`, reading the date and time with plain arithmetic instead of the adapter.
+ * Returns the processed date of the adapter value of an instant in `timezone`.
  */
 export function createProcessedDate(
   adapter: Adapter,
   epochMs: number,
   timezone: TemporalTimezone,
 ): SchedulerProcessedDate {
-  const { date, msInDay } = toPlainDateTime(epochMs, timezone);
-  return {
-    value: createAdapterDate(adapter, epochMs, timezone),
-    key: getPlainDateKey(adapter, date),
-    timestamp: epochMs,
-    minutesInDay: Math.floor(msInDay / 60_000),
-  };
+  return buildProcessedDate(createAdapterDate(adapter, epochMs, timezone), epochMs, timezone);
+}
+
+/**
+ * Moves a date to `plainDate` like `moveTimestampToPlainDate()`, in the timezone of the date.
+ */
+export function moveToPlainDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  plainDate: PlainDate,
+): TemporalSupportedObject {
+  const timezone = adapter.getTimezone(date);
+  return createAdapterDate(
+    adapter,
+    moveTimestampToPlainDate(adapter.getTime(date), plainDate, timezone),
+    timezone,
+  );
+}
+
+/**
+ * Moves an adapter value by a duration of the calendar, keeping its time of day on the wall clock of
+ * its timezone. A time that a DST transition skips moves forward by the length of the gap, and a
+ * repeated one resolves to its first instant, like `toEpochMs()`.
+ */
+export function addToAdapterDate(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  duration: PlainDateDuration,
+): TemporalSupportedObject {
+  return moveToPlainDate(adapter, date, buildTemporalPlainDate(adapter, date).add(duration));
 }

@@ -4,7 +4,7 @@ import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models'
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { formatHourAndMinutes } from '../utils/date-utils';
+import { formatHourAndMinutes } from '@mui/x-scheduler-internals/internals';
 
 export function useFormatTime() {
   // Context hooks
@@ -16,7 +16,7 @@ export function useFormatTime() {
 
   return React.useCallback(
     (date: TemporalSupportedObject) => {
-      return formatHourAndMinutes(date, adapter, ampm);
+      return formatHourAndMinutes(adapter, date, ampm);
     },
     [adapter, ampm],
   );

@@ -776,8 +776,8 @@ premiumStoreClasses.forEach((storeClass) => {
       const days = schedulerRecurringEventsPlugin
         .getOccurrencesForVisibleDays(
           reprocessed,
-          visibleStart,
-          adapter.addDays(visibleStart, 4),
+          adapter.getTime(visibleStart),
+          adapter.getTime(adapter.addDays(visibleStart, 4)),
           adapter,
           'default',
         )
@@ -852,6 +852,28 @@ premiumStoreClasses.forEach((storeClass) => {
         // `start` was stripped out of the change entirely (not merely resubmitted unchanged), so
         // the model keeps its original string as-is instead of being reformatted.
         expect(updated.start).to.equal(RECURRING_EVENT.start);
+      });
+
+      // On a later occurrence, the end of the series follows the new start with the duration of the
+      // edited occurrence: it must not be submitted when it doesn't move, or the resize becomes a
+      // move.
+      it('should apply an "all" edit that only resizes the start of a later occurrence when end lacks a setter', () => {
+        const store = createControlledStore([RECURRING_EVENT], {
+          eventModelStructure: { end: { getter: (event: any) => event.end } },
+        });
+
+        expect(() => {
+          store.updateRecurringEvent({
+            occurrenceStart: dayB,
+            changes: { id: 'standup', start: adapter.addMinutes(dayB, 30) },
+          });
+          store.selectRecurringEventScope('all');
+        }).not.toWarnDev();
+
+        expect(store.state.errors.length).to.equal(0);
+        const series = schedulerEventSelectors.processedEvent(store.state, 'standup')!;
+        expect(series.dataTimezone.start.value).toEqualDateTime(adapter.addMinutes(dayA, 30));
+        expect(series.dataTimezone.end.value).toEqualDateTime(adapter.addHours(dayA, 1));
       });
 
       // The tests above use the shared, daily `RECURRING_EVENT`, where every occurrence falls on

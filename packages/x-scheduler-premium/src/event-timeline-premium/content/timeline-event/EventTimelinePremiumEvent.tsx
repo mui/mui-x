@@ -12,9 +12,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getOccurrenceDataTimezone } from '@mui/x-scheduler-internals/internals';
-import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import type { SchedulerDependencySourceDescription } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import type { SchedulerDependencyType } from '@mui/x-scheduler-internals-premium/models';
+import type { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   EventDragPreview,
@@ -29,6 +27,7 @@ import type {
 } from '../../../models/slots';
 import type { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
+import { useEventTimelinePremiumFeatures } from '../../features/EventTimelinePremiumFeaturesContext';
 import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 
 // React 18 drops `inert={true}` as an unknown boolean attribute and React 19 drops `inert=""`.
@@ -142,25 +141,7 @@ const EventTimelinePremiumEventResizeHandler = styled(TimelineGrid.EventResizeHa
   },
 });
 
-// TODO(dependencies public flip, #23420): move to localeText, together with the lag sentence
-// built below, whose unit names and plural are English too. Hardcoded while the feature has
-// no public API.
-const DEPENDENCY_SOURCE_DESCRIPTIONS: Record<
-  SchedulerDependencyType,
-  (title: string, lag: string) => string
-> = {
-  FinishToStart: (title, lag) => `Cannot start until ${lag}${title} finishes.`,
-  StartToStart: (title, lag) => `Cannot start until ${lag}${title} starts.`,
-  FinishToFinish: (title, lag) => `Cannot finish until ${lag}${title} finishes.`,
-  StartToFinish: (title, lag) => `Cannot finish until ${lag}${title} starts.`,
-};
-
-function describeDependencySource(source: SchedulerDependencySourceDescription): string {
-  const { lag } = source;
-  const lagText =
-    lag === null ? '' : `${lag.amount} ${lag.unit}${lag.amount === 1 ? '' : 's'} after `;
-  return DEPENDENCY_SOURCE_DESCRIPTIONS[source.type](source.title, lagText);
-}
+const useNoDependencyDescription = (_occurrenceId: SchedulerEventId): string | null => null;
 
 export const EventTimelinePremiumEvent = React.forwardRef(function EventTimelinePremiumEvent(
   props: EventTimelinePremiumEventProps,
@@ -180,6 +161,10 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
   const { classes, localeText, getEventAriaLabel } = useEventTimelinePremiumStyledContext();
+  const { dependencies } = useEventTimelinePremiumFeatures();
+  // The features are frozen on mount, so the hook is the same on every render.
+  // eslint-disable-next-line react-compiler/react-compiler
+  const useDescription = dependencies?.useDescription ?? useNoDependencyDescription;
   const { slots, slotProps } = useSchedulerSlots<
     EventTimelinePremiumSlots,
     EventTimelinePremiumSlotProps
@@ -195,15 +180,12 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id, resourceId);
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
-  const dependencySources = useStore(
-    store,
-    eventTimelinePremiumDependencySelectors.activeSourcesForTarget,
-    occurrence.id,
-  );
   const rowResource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
 
   // Feature hooks
   const id = useId(idProp);
+  // eslint-disable-next-line react-compiler/react-compiler
+  const dependencyDescription = useDescription(occurrence.id);
   const defaultAccessibleName = useEventAccessibleName({
     occurrence,
     isRecurring,
@@ -278,7 +260,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-label={accessibleName}
       {...sharedProps}
-      aria-describedby={dependencySources.length > 0 ? `${id}-dependencies` : undefined}
+      aria-describedby={dependencyDescription !== null ? `${id}-dependencies` : undefined}
       className={clsx(sharedProps.className, classes.event)}
     >
       {isStartResizable && (
@@ -290,11 +272,11 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
         {content}
       </EventTimelinePremiumEventLinesClamp>
-      {dependencySources.length > 0 && (
+      {dependencyDescription !== null && (
         // Visually hidden, and `aria-hidden` so it is announced through the `aria-describedby`
         // reference above rather than as a child of the event.
         <span id={`${id}-dependencies`} style={visuallyHidden} aria-hidden>
-          {dependencySources.map(describeDependencySource).join(' ')}
+          {dependencyDescription}
         </span>
       )}
       {isRecurring && (

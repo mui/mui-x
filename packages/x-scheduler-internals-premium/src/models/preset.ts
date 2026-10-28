@@ -1,6 +1,7 @@
 import type * as React from 'react';
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 
 export type EventTimelinePremiumPreset =
   'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
@@ -15,15 +16,15 @@ export type PresetHeaderUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
  */
 export interface IteratedCell {
   /**
-   * Aligned start of the cell at its unit boundary (e.g. first day of month for a
-   * `month` row). Always `<= start`; for a partial first cell it sits before the
-   * visible range, so use `start` / `end` for layout math and `date` for labels.
+   * Date of the aligned start of the cell at its unit boundary (e.g. the first day of the month
+   * for a `month` row), on the wall clock of the axis. For a partial first cell, it's before the
+   * visible range.
    */
-  date: TemporalSupportedObject;
-  /** Clamped start, always within the visible range. */
-  start: TemporalSupportedObject;
-  /** Clamped end (exclusive), always within the visible range. */
-  end: TemporalSupportedObject;
+  plainDate: PlainDate;
+  /** First date of the cell within the visible range. */
+  firstPlainDate: PlainDate;
+  /** Last date of the cell within the visible range. */
+  lastPlainDate: PlainDate;
   /** Cell width measured in `tickUnit` ticks. */
   spanInTicks: number;
   /** Stable key derived from the aligned start. */
@@ -31,9 +32,8 @@ export interface IteratedCell {
   /** Index within the row. */
   index: number;
   /**
-   * Wall-clock hour the cell stands for, set on `hour` cells only. Labels must be built
-   * from it rather than from `date`: the hour skipped by a spring-forward transition has
-   * no instant, so its `date` normalizes to the next existing hour.
+   * Wall-clock hour the cell stands for, set on `hour` cells only. The hour skipped by a
+   * spring-forward transition has no instant, but keeps its cell.
    */
   wallClockHour?: number;
 }
@@ -65,15 +65,15 @@ interface PresetHeaderLevelConfigBase {
 export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
   (
     | {
-        /** Formats the cell's aligned start date into a string label. */
-        formatDate: (adapter: TemporalAdapter, date: TemporalSupportedObject) => string;
+        /** Formats the date of the aligned start of the cell into a string label. */
+        formatDate: (adapter: TemporalAdapter, plainDate: PlainDate) => string;
         renderCell?: undefined;
       }
     | {
         formatDate?: undefined;
         /**
          * Renders the cell label from the full cell state. Use this when the
-         * label needs more than the aligned start date (e.g. a range, multiple
+         * label needs more than the date of the aligned start (e.g. a range, multiple
          * spans, or preferences such as `ampm`).
          */
         renderCell: (state: PresetHeaderCellState) => React.ReactNode;
@@ -99,22 +99,25 @@ export interface PresetDefinition {
   /**
    * Step size of one navigation period, expressed in the preset's navigation
    * unit (e.g. `4` days for `dayAndHour`, `36` months for `monthAndYear`).
-   * Passed to `navigate` on next/previous jumps and to `getEndDate` to
+   * Passed to `navigate` on next/previous jumps and to `getEndPlainDate` to
    * compute the visible range; also used as the CSS tick count when
    * `getCssUnitCount` is not provided.
    */
   unitCount: number;
-  getStartDate: (
+  /**
+   * Returns the first date of the visible range, from the date of the visible date in the
+   * display timezone.
+   */
+  getStartPlainDate: (
     adapter: TemporalAdapter,
-    visibleDate: TemporalSupportedObject,
+    visiblePlainDate: PlainDate,
     weekStartsOn: WeekStartsOn | undefined,
-  ) => TemporalSupportedObject;
-  getEndDate: (
-    adapter: TemporalAdapter,
-    start: TemporalSupportedObject,
-    unitCount: number,
-    weekStartsOn: WeekStartsOn | undefined,
-  ) => TemporalSupportedObject;
+  ) => PlainDate;
+  /**
+   * Returns the date after the last date of the visible range, `unitCount` periods after its
+   * first date.
+   */
+  getEndPlainDate: (startPlainDate: PlainDate, unitCount: number) => PlainDate;
   /**
    * Returns the exact number of CSS ticks for the visible range, sized for the
    * full day. Override `unitCount` whenever the grid width must differ from the
@@ -122,13 +125,9 @@ export interface PresetDefinition {
    * days per month differ) or because it has to stay stable against runtime
    * drift (e.g. `dayAndHour` pins it to `4 × 24` so the grid width does not
    * shrink on DST days). The displayed hour window scales the result in the
-   * preset selector, so presets never see it.
+   * preset selector, so presets never see it. `endPlainDate` is the date after the range.
    */
-  getCssUnitCount?: (
-    adapter: TemporalAdapter,
-    start: TemporalSupportedObject,
-    end: TemporalSupportedObject,
-  ) => number;
+  getCssUnitCount?: (startPlainDate: PlainDate, endPlainDate: PlainDate) => number;
   /**
    * Adds `amount` units (of the preset's navigation unit) to `date`. Called by
    * `goToNextVisibleDate` / `goToPreviousVisibleDate` with `amount = ±unitCount`.

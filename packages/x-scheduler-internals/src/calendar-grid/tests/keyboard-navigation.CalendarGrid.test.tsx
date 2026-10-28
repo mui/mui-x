@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
+import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import type { GridRowType } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
+import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/adapter';
 
 /**
  * Integration tests for keyboard navigation across the CalendarGrid.
@@ -38,9 +40,16 @@ describe('CalendarGrid keyboard navigation', () => {
               </CalendarGrid.HeaderCell>
             ))}
           </CalendarGrid.HeaderRow>
-          <CalendarGrid.DayRow start={days[0]} end={adapter.endOfDay(days[6])}>
+          <CalendarGrid.DayRow
+            start={adapter.getTime(days[0])}
+            end={adapter.getTime(adapter.endOfDay(days[6]))}
+          >
             {days.map((day, i) => (
-              <CalendarGrid.DayCell key={i} value={day} data-testid={`day-${i}`} />
+              <CalendarGrid.DayCell
+                key={i}
+                value={buildTemporalPlainDate(adapter, day)}
+                data-testid={`day-${i}`}
+              />
             ))}
           </CalendarGrid.DayRow>
         </CalendarGrid.Root>
@@ -89,6 +98,32 @@ describe('CalendarGrid keyboard navigation', () => {
       await user.keyboard('{ArrowLeft}');
 
       expect(firstCell).toHaveFocus();
+    });
+
+    it('should move focus to the next column on ArrowLeft in RTL', async () => {
+      const { user } = render(
+        <DirectionProvider direction="rtl">
+          <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />
+        </DirectionProvider>,
+      );
+
+      await user.click(screen.getByTestId('day-2'));
+      await user.keyboard('{ArrowLeft}');
+
+      expect(screen.getByTestId('day-3')).toHaveFocus();
+    });
+
+    it('should move focus to the previous column on ArrowRight in RTL', async () => {
+      const { user } = render(
+        <DirectionProvider direction="rtl">
+          <GridWithHeaderAndDayCells rowTypes={['header', 'day-grid']} />
+        </DirectionProvider>,
+      );
+
+      await user.click(screen.getByTestId('header-2'));
+      await user.keyboard('{ArrowRight}');
+
+      expect(screen.getByTestId('header-1')).toHaveFocus();
     });
   });
 
@@ -165,29 +200,41 @@ describe('CalendarGrid keyboard navigation', () => {
             </CalendarGrid.HeaderRow>
             <CalendarGrid.DayRow
               rowIndex={0}
-              start={week0Days[0]}
-              end={adapter.endOfDay(week0Days[6])}
+              start={adapter.getTime(week0Days[0])}
+              end={adapter.getTime(adapter.endOfDay(week0Days[6]))}
             >
               {week0Days.map((day, i) => (
-                <CalendarGrid.DayCell key={i} value={day} data-testid={`w0-${i}`} />
+                <CalendarGrid.DayCell
+                  key={i}
+                  value={buildTemporalPlainDate(adapter, day)}
+                  data-testid={`w0-${i}`}
+                />
               ))}
             </CalendarGrid.DayRow>
             <CalendarGrid.DayRow
               rowIndex={1}
-              start={week1Days[0]}
-              end={adapter.endOfDay(week1Days[6])}
+              start={adapter.getTime(week1Days[0])}
+              end={adapter.getTime(adapter.endOfDay(week1Days[6]))}
             >
               {week1Days.map((day, i) => (
-                <CalendarGrid.DayCell key={i} value={day} data-testid={`w1-${i}`} />
+                <CalendarGrid.DayCell
+                  key={i}
+                  value={buildTemporalPlainDate(adapter, day)}
+                  data-testid={`w1-${i}`}
+                />
               ))}
             </CalendarGrid.DayRow>
             <CalendarGrid.DayRow
               rowIndex={2}
-              start={week2Days[0]}
-              end={adapter.endOfDay(week2Days[6])}
+              start={adapter.getTime(week2Days[0])}
+              end={adapter.getTime(adapter.endOfDay(week2Days[6]))}
             >
               {week2Days.map((day, i) => (
-                <CalendarGrid.DayCell key={i} value={day} data-testid={`w2-${i}`} />
+                <CalendarGrid.DayCell
+                  key={i}
+                  value={buildTemporalPlainDate(adapter, day)}
+                  data-testid={`w2-${i}`}
+                />
               ))}
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>
@@ -336,17 +383,23 @@ describe('CalendarGrid keyboard navigation', () => {
                 </CalendarGrid.HeaderCell>
               ))}
             </CalendarGrid.HeaderRow>
-            <CalendarGrid.DayRow start={days[0]} end={adapter.endOfDay(days[2])}>
+            <CalendarGrid.DayRow
+              start={adapter.getTime(days[0])}
+              end={adapter.getTime(adapter.endOfDay(days[2]))}
+            >
               {days.slice(0, 3).map((day, i) => (
-                <CalendarGrid.DayCell key={i} value={day} data-testid={`day-${i}`} />
+                <CalendarGrid.DayCell
+                  key={i}
+                  value={buildTemporalPlainDate(adapter, day)}
+                  data-testid={`day-${i}`}
+                />
               ))}
             </CalendarGrid.DayRow>
             <CalendarGrid.TimeScrollableContent>
               {days.slice(0, 3).map((day, i) => (
                 <CalendarGrid.TimeColumn
                   key={i}
-                  start={day}
-                  end={adapter.endOfDay(day)}
+                  value={buildTemporalPlainDate(adapter, day)}
                   data-testid={`time-${i}`}
                 />
               ))}
@@ -355,6 +408,19 @@ describe('CalendarGrid keyboard navigation', () => {
         </EventCalendarProvider>
       );
     }
+
+    it('should move focus to the next time column on ArrowLeft in RTL', async () => {
+      const { user } = render(
+        <DirectionProvider direction="rtl">
+          <FullGrid />
+        </DirectionProvider>,
+      );
+
+      await user.click(screen.getByTestId('time-1'));
+      await user.keyboard('{ArrowLeft}');
+
+      expect(screen.getByTestId('time-2')).toHaveFocus();
+    });
 
     it('should navigate from header to day-grid to time-grid with ArrowDown', async () => {
       const { user } = render(<FullGrid />);
@@ -399,8 +465,14 @@ describe('CalendarGrid keyboard navigation', () => {
       return (
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root rowTypes={['day-grid']} rowsPerType={{}}>
-            <CalendarGrid.DayRow start={day1} end={adapter.endOfDay(day2)}>
-              <CalendarGrid.DayCell value={day1} data-testid="cell-0">
+            <CalendarGrid.DayRow
+              start={adapter.getTime(day1)}
+              end={adapter.getTime(adapter.endOfDay(day2))}
+            >
+              <CalendarGrid.DayCell
+                value={buildTemporalPlainDate(adapter, day1)}
+                data-testid="cell-0"
+              >
                 <CalendarGrid.DayEvent
                   eventId="event-1"
                   occurrenceKey="occ-1"
@@ -411,7 +483,10 @@ describe('CalendarGrid keyboard navigation', () => {
                   data-testid="event-1"
                 />
               </CalendarGrid.DayCell>
-              <CalendarGrid.DayCell value={day2} data-testid="cell-1">
+              <CalendarGrid.DayCell
+                value={buildTemporalPlainDate(adapter, day2)}
+                data-testid="cell-1"
+              >
                 <CalendarGrid.DayEvent
                   eventId="event-2"
                   occurrenceKey="occ-2"
@@ -458,8 +533,7 @@ describe('CalendarGrid keyboard navigation', () => {
           <CalendarGrid.Root rowTypes={['time-grid']} rowsPerType={{}}>
             <CalendarGrid.TimeScrollableContent>
               <CalendarGrid.TimeColumn
-                start={day1}
-                end={adapter.endOfDay(day1)}
+                value={buildTemporalPlainDate(adapter, day1)}
                 data-testid="col-0"
               >
                 <CalendarGrid.TimeEvent
@@ -473,8 +547,7 @@ describe('CalendarGrid keyboard navigation', () => {
                 />
               </CalendarGrid.TimeColumn>
               <CalendarGrid.TimeColumn
-                start={day2}
-                end={adapter.endOfDay(day2)}
+                value={buildTemporalPlainDate(adapter, day2)}
                 data-testid="col-1"
               >
                 <CalendarGrid.TimeEvent
