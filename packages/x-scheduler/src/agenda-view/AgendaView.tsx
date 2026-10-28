@@ -18,7 +18,9 @@ import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   addToAdapterDate,
-  formatPlainDate,
+  formatDayOfMonth,
+  formatMonthAndYear,
+  formatWeekday,
   getPlainDateWeekStart,
   getWeekNumber,
 } from '@mui/x-scheduler-internals/internals';
@@ -290,20 +292,20 @@ export const AgendaView = React.memo(
                     className={classes.agendaViewDayNumberCell}
                     data-current={isToday ? '' : undefined}
                   >
-                    {formatPlainDate(locale, date.plainDate, 'dayOfMonth')}
+                    {formatDayOfMonth(locale, date.plainDate)}
                   </DayNumberCell>
                   <WeekDayCell className={classes.agendaViewWeekDayCell}>
                     <AgendaWeekDayNameLabel
                       className={classes.agendaViewWeekDayNameLabel}
                       style={{ '--number-of-lines': 1 } as React.CSSProperties}
                     >
-                      {formatPlainDate(locale, date.plainDate, 'weekday')}
+                      {formatWeekday(locale, date.plainDate)}
                     </AgendaWeekDayNameLabel>
                     <AgendaYearAndMonthLabel
                       className={classes.agendaViewYearAndMonthLabel}
                       style={{ '--number-of-lines': 1 } as React.CSSProperties}
                     >
-                      {formatPlainDate(locale, date.plainDate, 'monthAndYear')}
+                      {formatMonthAndYear(locale, date.plainDate)}
                     </AgendaYearAndMonthLabel>
                   </WeekDayCell>
                 </DayHeaderCell>

@@ -10,7 +10,7 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
-  formatPlainDate,
+  formatWeekdayShort,
   getPlainDateWeekStart,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
@@ -233,7 +233,7 @@ export const MonthView = React.memo(
                   aria-colindex={dayIdx + 1}
                   skipDataCurrent
                 >
-                  {formatPlainDate(locale, weekDay.plainDate, 'weekdayShort')}
+                  {formatWeekdayShort(locale, weekDay.plainDate)}
                 </MonthViewHeaderCell>
               ))}
             </MonthViewHeader>

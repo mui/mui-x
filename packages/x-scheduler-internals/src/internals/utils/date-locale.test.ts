@@ -1,8 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { PlainDate } from './base-temporal/PlainDate';
 import {
-  formatPlainDate,
-  formatPlainDateRange,
+  formatFullDate,
+  formatMonthAndYear,
+  formatWeekdayShortMonthShortAndDayOfMonth,
+  formatWeekdayShortMonthShortAndDayOfMonthRange,
   formatTime,
   getLocaleAmpm,
   getLocaleWeekInfo,
@@ -77,27 +79,25 @@ describe('date-locale', () => {
     });
   });
 
-  describe('formatPlainDate', () => {
+  describe('format functions', () => {
     const plainDate = PlainDate.from('2025-07-13');
 
     it('should format the date in the locale', () => {
-      expect(formatPlainDate('en-US', plainDate, 'weekdayShortMonthShortAndDayOfMonth')).to.equal(
-        'Sun, Jul 13',
-      );
-      expect(formatPlainDate('fr-FR', plainDate, 'fullDate')).to.equal('dimanche 13 juillet 2025');
-      expect(formatPlainDate('en-US', plainDate, 'monthAndYear')).to.equal('July 2025');
+      expect(formatWeekdayShortMonthShortAndDayOfMonth('en-US', plainDate)).to.equal('Sun, Jul 13');
+      expect(formatFullDate('fr-FR', plainDate)).to.equal('dimanche 13 juillet 2025');
+      expect(formatMonthAndYear('en-US', plainDate)).to.equal('July 2025');
     });
 
     it('should format the date itself, whatever its timezone', () => {
       // Pacific/Apia skipped December 30th, 2011.
-      expect(formatPlainDate('en-US', PlainDate.from('2011-12-30'), 'fullDate')).to.equal(
+      expect(formatFullDate('en-US', PlainDate.from('2011-12-30'))).to.equal(
         'Friday, December 30, 2011',
       );
     });
 
     it('should format the date on the Gregorian calendar when the locale has another one', () => {
       // The default calendar of Persian (Iran) is the Solar Hijri one.
-      expect(formatPlainDate('fa-IR', plainDate, 'monthAndYear')).to.equal(
+      expect(formatMonthAndYear('fa-IR', plainDate)).to.equal(
         new Intl.DateTimeFormat('fa-IR', {
           month: 'long',
           year: 'numeric',
@@ -117,23 +117,23 @@ describe('date-locale', () => {
     });
   });
 
-  describe('formatPlainDateRange', () => {
+  describe('formatWeekdayShortMonthShortAndDayOfMonthRange', () => {
     it('should format the range in the order of the locale, writing the shared parts once', () => {
       const startPlainDate = PlainDate.from('2025-07-13');
       const endPlainDate = PlainDate.from('2025-07-19');
-      const format = 'weekdayShortMonthShortAndDayOfMonth';
-      expect(formatPlainDateRange('en-US', startPlainDate, endPlainDate, format)).to.equal(
-        'Sun, Jul 13\u2009–\u2009Sat, Jul 19',
-      );
-      expect(formatPlainDateRange('fr-FR', startPlainDate, endPlainDate, format)).to.equal(
-        'dim. 13\u2009–\u2009sam. 19 juil.',
-      );
+      // An en dash between spaces, thin ones in some runtimes.
+      expect(
+        formatWeekdayShortMonthShortAndDayOfMonthRange('en-US', startPlainDate, endPlainDate),
+      ).to.match(/^Sun, Jul 13\s–\sSat, Jul 19$/);
+      expect(
+        formatWeekdayShortMonthShortAndDayOfMonthRange('fr-FR', startPlainDate, endPlainDate),
+      ).to.match(/^dim\. 13\s–\ssam\. 19 juil\.$/);
     });
 
     it('should format a range of one date as that date', () => {
       const plainDate = PlainDate.from('2025-07-13');
       expect(
-        formatPlainDateRange('en-US', plainDate, plainDate, 'weekdayShortMonthShortAndDayOfMonth'),
+        formatWeekdayShortMonthShortAndDayOfMonthRange('en-US', plainDate, plainDate),
       ).to.equal('Sun, Jul 13');
     });
   });

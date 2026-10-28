@@ -17,7 +17,7 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { formatPlainDate, getWeekNumber } from '@mui/x-scheduler-internals/internals';
+import { formatMonthAndYear, getWeekNumber } from '@mui/x-scheduler-internals/internals';
 import type { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
@@ -158,7 +158,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           aria-live="polite"
           className={classes.headerToolbarLabel}
         >
-          {formatPlainDate(locale, visiblePlainDate, 'monthAndYear')}
+          {formatMonthAndYear(locale, visiblePlainDate)}
           {showWeekLabel && (
             <HeaderToolbarWeekNumber className={classes.headerToolbarWeekNumber}>
               {`${localeText.week} ${weekNumber}`}

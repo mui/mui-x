@@ -22,7 +22,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { formatPlainDate } from '@mui/x-scheduler-internals/internals';
+import { formatMonthAndYear } from '@mui/x-scheduler-internals/internals';
 import { ResourcesTree } from '../resources-tree';
 import { usePreferencesMenuItems } from '../header-toolbar/preferences-menu';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
@@ -166,7 +166,7 @@ export const SidePanelDrawer = React.forwardRef(function SidePanelDrawer(
     >
       <SidePanelDrawerHeader className={classes.sidePanelDrawerHeader}>
         <SidePanelDrawerTitle id={titleId} className={classes.sidePanelDrawerTitle}>
-          {formatPlainDate(locale, visiblePlainDate, 'monthAndYear')}
+          {formatMonthAndYear(locale, visiblePlainDate)}
         </SidePanelDrawerTitle>
         <IconButton
           className={classes.sidePanelDrawerCloseButton}

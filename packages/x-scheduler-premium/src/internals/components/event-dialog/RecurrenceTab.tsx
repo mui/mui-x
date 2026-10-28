@@ -34,7 +34,8 @@ import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-p
 import {
   buildTemporalPlainDate,
   createAdapterDate,
-  formatPlainDate,
+  formatWeekday,
+  formatWeekdayShort,
   getEndOfDayMs,
 } from '@mui/x-scheduler-internals/internals';
 import type { EndsSelection } from '@mui/x-scheduler/internals';
@@ -433,8 +434,8 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     () =>
       weeklyDays.map(({ code, date: plainDate }) => ({
         value: code,
-        ariaLabel: formatPlainDate(locale, plainDate, 'weekday'),
-        label: formatPlainDate(locale, plainDate, 'weekdayShort'),
+        ariaLabel: formatWeekday(locale, plainDate),
+        label: formatWeekdayShort(locale, plainDate),
       })),
     [locale, weeklyDays],
   );
@@ -444,10 +445,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const dayOfMonthLabel = localeText.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
     const isLast = ordinal === -1;
     const weekday = getWeekdayToken(ruleStartPlainDate);
-    const ariaParams = { weekday, weekdayName: formatPlainDate(locale, ruleStartPlainDate, 'weekday') };
+    const ariaParams = { weekday, weekdayName: formatWeekday(locale, ruleStartPlainDate) };
     const labelParams = {
       weekday,
-      weekdayName: formatPlainDate(locale, ruleStartPlainDate, 'weekdayShort'),
+      weekdayName: formatWeekdayShort(locale, ruleStartPlainDate),
     };
     const weekAriaLabel = isLast
       ? localeText.recurrenceMonthlyLastWeekAriaLabel(ariaParams)

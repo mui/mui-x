@@ -11,7 +11,7 @@ import type { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { formatPlainDate } from '@mui/x-scheduler-internals/internals';
+import { formatWeekdayShortMonthShortAndDayOfMonth } from '@mui/x-scheduler-internals/internals';
 import type {
   MoreEventsPopoverProps,
   MoreEventsPopoverProviderProps,
@@ -204,7 +204,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     >
       <MoreEventsPopoverHeader className={classes.moreEventsPopoverHeader}>
         <MoreEventsPopoverTitle className={classes.moreEventsPopoverTitle}>
-          {formatPlainDate(locale, day.plainDate, 'weekdayShortMonthShortAndDayOfMonth')}
+          {formatWeekdayShortMonthShortAndDayOfMonth(locale, day.plainDate)}
         </MoreEventsPopoverTitle>
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody

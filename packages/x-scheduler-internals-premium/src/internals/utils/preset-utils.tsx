@@ -1,9 +1,14 @@
 import * as React from 'react';
 import {
   addToAdapterDate,
-  formatPlainDate,
-  formatPlainDateRange,
+  formatDayOfMonth,
+  formatMonthAndYear,
+  formatMonthShort,
   formatTime,
+  formatWeekdayNarrow,
+  formatWeekdayShortMonthShortAndDayOfMonth,
+  formatWeekdayShortMonthShortAndDayOfMonthRange,
+  formatYear,
   getPlainDateWeekStart,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate, PlainDateDuration } from '@mui/x-scheduler-internals/internals';
@@ -42,7 +47,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'hour',
     tickWidth: 64,
     headers: [
-      { unit: 'day', format: 'weekdayShortMonthShortAndDayOfMonth' },
+      { unit: 'day', format: formatWeekdayShortMonthShortAndDayOfMonth },
       {
         unit: 'hour',
         // The hour row ticks in hours, so `iterate()` sets `wallClockHour` on all its cells.
@@ -61,13 +66,13 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'day',
     tickWidth: 120,
     headers: [
-      { unit: 'month', format: 'monthAndYear' },
+      { unit: 'month', format: formatMonthAndYear },
       {
         unit: 'day',
         renderCell: ({ locale, plainDate }) => (
           <span data-slot="dayCell">
-            <span data-slot="weekday">{formatPlainDate(locale, plainDate, 'weekdayNarrow')}</span>
-            <span data-slot="dayOfMonth">{formatPlainDate(locale, plainDate, 'dayOfMonth')}</span>
+            <span data-slot="weekday">{formatWeekdayNarrow(locale, plainDate)}</span>
+            <span data-slot="dayOfMonth">{formatDayOfMonth(locale, plainDate)}</span>
           </span>
         ),
       },
@@ -82,14 +87,9 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       {
         unit: 'week',
         renderCell: ({ locale, firstPlainDate, lastPlainDate }) =>
-          formatPlainDateRange(
-            locale,
-            firstPlainDate,
-            lastPlainDate,
-            'weekdayShortMonthShortAndDayOfMonth',
-          ),
+          formatWeekdayShortMonthShortAndDayOfMonthRange(locale, firstPlainDate, lastPlainDate),
       },
-      { unit: 'day', format: 'weekdayNarrow' },
+      { unit: 'day', format: formatWeekdayNarrow },
     ],
     unitCount: 16, // 16 weeks
     ...createPlainDateRange('weeks', getPlainDateWeekStart),
@@ -99,8 +99,8 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'day',
     tickWidth: 6,
     headers: [
-      { unit: 'year', format: 'year' },
-      { unit: 'month', format: 'monthShort' },
+      { unit: 'year', format: formatYear },
+      { unit: 'month', format: formatMonthShort },
     ],
     unitCount: 3 * 12, // 3 years
     ...createPlainDateRange('months', (plainDate) => plainDate.with({ day: 1 })),
@@ -109,7 +109,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
   year: {
     timeResolution: 'year',
     tickWidth: 200,
-    headers: [{ unit: 'year', format: 'year' }],
+    headers: [{ unit: 'year', format: formatYear }],
     unitCount: 30, // 30 years
     ...createPlainDateRange('years', (plainDate) => plainDate.with({ month: 1, day: 1 })),
   },

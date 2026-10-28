@@ -22,8 +22,9 @@ import {
   schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
-  formatPlainDate,
+  formatDayOfMonth,
   formatTime,
+  formatWeekdayShort,
   getDisplayedHourRange,
   getEndOfDayMs,
   getInitialScrollTime,
@@ -449,10 +450,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const renderHeaderContent = (day: SchedulerProcessedDay) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
       <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>
-        {formatPlainDate(locale, day.plainDate, 'weekdayShort')}
+        {formatWeekdayShort(locale, day.plainDate)}
       </DayTimeGridHeaderDayName>
       <DayTimeGridHeaderDayNumber className={classes.dayTimeGridHeaderDayNumber}>
-        {formatPlainDate(locale, day.plainDate, 'dayOfMonth')}
+        {formatDayOfMonth(locale, day.plainDate)}
       </DayTimeGridHeaderDayNumber>
     </DayTimeGridHeaderContent>
   );

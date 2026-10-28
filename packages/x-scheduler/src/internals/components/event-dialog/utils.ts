@@ -12,7 +12,8 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   createAdapterDate,
   createEndOfPlainDate,
-  formatPlainDate,
+  formatMonthAndDayOfMonth,
+  formatWeekday,
   getOccurrenceDataTimezone,
   MS_PER_DAY,
   PlainDate,
@@ -308,7 +309,7 @@ export function getRecurrenceLabel(
       return localeText.recurrenceDailyPresetLabel;
     case 'WEEKLY': {
       const weekday = getWeekdayToken(startPlainDate);
-      const weekdayName = formatPlainDate(locale, startPlainDate, 'weekday');
+      const weekdayName = formatWeekday(locale, startPlainDate);
       return localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName });
     }
     case 'MONTHLY': {
@@ -316,7 +317,7 @@ export function getRecurrenceLabel(
     }
     case 'YEARLY': {
       return localeText.recurrenceYearlyPresetLabel(
-        formatPlainDate(locale, startPlainDate, 'monthAndDayOfMonth'),
+        formatMonthAndDayOfMonth(locale, startPlainDate),
       );
     }
     case 'custom':

@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import type { TemporalAdapter, TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
-import type { PlainDate, SchedulerDateFormat } from '@mui/x-scheduler-internals/internals';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 
 export type EventTimelinePremiumPreset =
   'dayAndHour' | 'dayAndMonth' | 'dayAndWeek' | 'monthAndYear' | 'year';
@@ -66,8 +66,8 @@ interface PresetHeaderLevelConfigBase {
 export type PresetHeaderLevelConfig = PresetHeaderLevelConfigBase &
   (
     | {
-        /** The format of the label: the date of the aligned start of the cell. */
-        format: SchedulerDateFormat;
+        /** Formats the date of the aligned start of the cell into a string label. */
+        format: (locale: string, plainDate: PlainDate) => string;
         renderCell?: undefined;
       }
     | {

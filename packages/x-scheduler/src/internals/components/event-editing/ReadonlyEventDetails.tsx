@@ -17,6 +17,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
+  formatFullDate,
   getOccurrenceDataTimezone,
   getPrimaryResourceId,
   toPlainDate,
@@ -32,7 +33,6 @@ import {
   hasProp,
 } from '../event-dialog/utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { formatProcessedDate } from '../../utils/date-utils';
 import { isOccurrenceMultiDay } from '../../utils/event-utils';
 import type { PaletteName } from '../../utils/tokens';
 import { getPaletteVariants } from '../../utils/tokens';
@@ -149,7 +149,7 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const { start, end, timezone: boundsTimezone } = occurrence.displayTimezone;
   const isMultiDay = isOccurrenceMultiDay(occurrence);
   const formatBound = (date: SchedulerProcessedDate) => {
-    const fullDate = formatProcessedDate(locale, date, boundsTimezone, 'fullDate');
+    const fullDate = formatFullDate(locale, toPlainDate(date.timestamp, boundsTimezone));
     return occurrence.allDay ? fullDate : `${fullDate}, ${formatTime(date)}`;
   };
   const formatBoundDateTime = (bound: SchedulerProcessedDate) =>

@@ -4,7 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { formatPlainDate, isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  formatDayOfMonth,
+  formatMonthShortAndDayOfMonth,
+  isWeekendPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -206,8 +210,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
       {isFirstDayOfMonth
-        ? formatPlainDate(locale, day.plainDate, 'monthShortAndDayOfMonth')
-        : formatPlainDate(locale, day.plainDate, 'dayOfMonth')}
+        ? formatMonthShortAndDayOfMonth(locale, day.plainDate)
+        : formatDayOfMonth(locale, day.plainDate)}
     </MonthViewCellNumber>
   );
 

@@ -84,114 +84,172 @@ export function getLocaleAmpm(locale: string): boolean {
   return ampm;
 }
 
-const DATE_FORMATS = {
-  /**
-   * @example "Sunday"
-   */
-  weekday: { weekday: 'long' },
-  /**
-   * @example "Sun"
-   */
-  weekdayShort: { weekday: 'short' },
-  /**
-   * @example "S"
-   */
-  weekdayNarrow: { weekday: 'narrow' },
-  /**
-   * @example "13"
-   */
-  dayOfMonth: { day: 'numeric' },
-  /**
-   * @example "Jul"
-   */
-  monthShort: { month: 'short' },
-  /**
-   * @example "2025"
-   */
-  year: { year: 'numeric' },
-  /**
-   * @example "Jul 13"
-   */
-  monthShortAndDayOfMonth: { month: 'short', day: 'numeric' },
-  /**
-   * @example "July 13"
-   */
-  monthAndDayOfMonth: { month: 'long', day: 'numeric' },
-  /**
-   * @example "Sun, Jul 13"
-   */
-  weekdayShortMonthShortAndDayOfMonth: { weekday: 'short', month: 'short', day: 'numeric' },
-  /**
-   * @example "July 2025"
-   */
-  monthAndYear: { month: 'long', year: 'numeric' },
-  /**
-   * @example "Sunday, July 13, 2025"
-   */
-  fullDate: { dateStyle: 'full' },
-  /**
-   * @example "1:30 PM"
-   */
-  time12h: { hour: 'numeric', minute: '2-digit', hourCycle: 'h12' },
-  /**
-   * @example "13:30"
-   */
-  time24h: { hour: 'numeric', minute: '2-digit', hourCycle: 'h23' },
-} satisfies Record<string, Intl.DateTimeFormatOptions>;
+const formatterLookup = new Map<string, Map<Intl.DateTimeFormatOptions, Intl.DateTimeFormat>>();
 
-export type SchedulerDateFormat = keyof typeof DATE_FORMATS;
-
-const formatterLookup = new Map<
-  string,
-  Partial<Record<SchedulerDateFormat, Intl.DateTimeFormat>>
->();
-
-function getFormatter(locale: string, format: SchedulerDateFormat): Intl.DateTimeFormat {
+/**
+ * The formatter of `options` in `locale`, created once.
+ * The formats are module constants, one per format function, so the bundles keep only the ones
+ * they use.
+ */
+function getFormatter(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
   let formatters = formatterLookup.get(locale);
   if (!formatters) {
-    formatters = {};
+    formatters = new Map();
     formatterLookup.set(locale, formatters);
   }
-  // The values are wall-clock times read in UTC. The views show the dates of the ISO calendar, so
-  // the labels use the Gregorian calendar even when the locale has another one.
-  formatters[format] ??= new Intl.DateTimeFormat(locale, {
-    ...DATE_FORMATS[format],
-    timeZone: 'UTC',
-    calendar: 'gregory',
-  });
-  return formatters[format];
+  let formatter = formatters.get(options);
+  if (!formatter) {
+    // The values are wall-clock times read in UTC. The views show the dates of the ISO calendar,
+    // so the labels use the Gregorian calendar even when the locale has another one.
+    formatter = new Intl.DateTimeFormat(locale, {
+      ...options,
+      timeZone: 'UTC',
+      calendar: 'gregory',
+    });
+    formatters.set(options, formatter);
+  }
+  return formatter;
 }
 
+// The day number of a date is the number of days from January 1st, 1970 in UTC.
+function formatDate(locale: string, plainDate: PlainDate, options: Intl.DateTimeFormatOptions) {
+  return getFormatter(locale, options).format(plainDate.dayNumber * MS_PER_DAY);
+}
+
+const WEEKDAY: Intl.DateTimeFormatOptions = { weekday: 'long' };
+
 /**
- * Formats a date in `locale`.
+ * @example "Sunday"
  */
-export function formatPlainDate(
+export function formatWeekday(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, WEEKDAY);
+}
+
+const WEEKDAY_SHORT: Intl.DateTimeFormatOptions = { weekday: 'short' };
+
+/**
+ * @example "Sun"
+ */
+export function formatWeekdayShort(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, WEEKDAY_SHORT);
+}
+
+const WEEKDAY_NARROW: Intl.DateTimeFormatOptions = { weekday: 'narrow' };
+
+/**
+ * @example "S"
+ */
+export function formatWeekdayNarrow(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, WEEKDAY_NARROW);
+}
+
+const DAY_OF_MONTH: Intl.DateTimeFormatOptions = { day: 'numeric' };
+
+/**
+ * @example "13"
+ */
+export function formatDayOfMonth(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, DAY_OF_MONTH);
+}
+
+const MONTH_SHORT: Intl.DateTimeFormatOptions = { month: 'short' };
+
+/**
+ * @example "Jul"
+ */
+export function formatMonthShort(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, MONTH_SHORT);
+}
+
+const YEAR: Intl.DateTimeFormatOptions = { year: 'numeric' };
+
+/**
+ * @example "2025"
+ */
+export function formatYear(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, YEAR);
+}
+
+const MONTH_SHORT_AND_DAY_OF_MONTH: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+
+/**
+ * @example "Jul 13"
+ */
+export function formatMonthShortAndDayOfMonth(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, MONTH_SHORT_AND_DAY_OF_MONTH);
+}
+
+const MONTH_AND_DAY_OF_MONTH: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
+
+/**
+ * @example "July 13"
+ */
+export function formatMonthAndDayOfMonth(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, MONTH_AND_DAY_OF_MONTH);
+}
+
+const WEEKDAY_SHORT_MONTH_SHORT_AND_DAY_OF_MONTH: Intl.DateTimeFormatOptions = {
+  weekday: 'short',
+  month: 'short',
+  day: 'numeric',
+};
+
+/**
+ * @example "Sun, Jul 13"
+ */
+export function formatWeekdayShortMonthShortAndDayOfMonth(
   locale: string,
   plainDate: PlainDate,
-  format: SchedulerDateFormat,
 ): string {
-  // The day number of a date is the number of days from January 1st, 1970 in UTC.
-  return getFormatter(locale, format).format(plainDate.dayNumber * MS_PER_DAY);
+  return formatDate(locale, plainDate, WEEKDAY_SHORT_MONTH_SHORT_AND_DAY_OF_MONTH);
 }
 
 /**
- * Formats the range of dates from `startPlainDate` to `endPlainDate`, both included, in `locale`.
- * The locale writes the separator and the parts the two dates share once.
+ * Formats the range of dates from `startPlainDate` to `endPlainDate`, both included. The locale
+ * writes the separator and the parts the two dates share once.
  * @example "Sun, Jul 13 – Sat, Jul 19"
  */
-export function formatPlainDateRange(
+export function formatWeekdayShortMonthShortAndDayOfMonthRange(
   locale: string,
   startPlainDate: PlainDate,
   endPlainDate: PlainDate,
-  format: SchedulerDateFormat,
 ): string {
-  return getFormatter(locale, format).formatRange(
+  return getFormatter(locale, WEEKDAY_SHORT_MONTH_SHORT_AND_DAY_OF_MONTH).formatRange(
     startPlainDate.dayNumber * MS_PER_DAY,
     endPlainDate.dayNumber * MS_PER_DAY,
   );
 }
 
-const timeLabelLookup = new Map<string, Record<'time12h' | 'time24h', string[]>>();
+const MONTH_AND_YEAR: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
+
+/**
+ * @example "July 2025"
+ */
+export function formatMonthAndYear(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, MONTH_AND_YEAR);
+}
+
+const FULL_DATE: Intl.DateTimeFormatOptions = { dateStyle: 'full' };
+
+/**
+ * @example "Sunday, July 13, 2025"
+ */
+export function formatFullDate(locale: string, plainDate: PlainDate): string {
+  return formatDate(locale, plainDate, FULL_DATE);
+}
+
+const TIME_12H: Intl.DateTimeFormatOptions = {
+  hour: 'numeric',
+  minute: '2-digit',
+  hourCycle: 'h12',
+};
+const TIME_24H: Intl.DateTimeFormatOptions = {
+  hour: 'numeric',
+  minute: '2-digit',
+  hourCycle: 'h23',
+};
+
+const timeLabelLookup = new Map<string, { ampm: string[]; h24: string[] }>();
 
 /**
  * Formats a wall-clock time, in minutes since midnight, in `locale`. The labels are cached, as the
@@ -201,10 +259,12 @@ const timeLabelLookup = new Map<string, Record<'time12h' | 'time24h', string[]>>
 export function formatTime(locale: string, minutesInDay: number, ampm: boolean): string {
   let labels = timeLabelLookup.get(locale);
   if (!labels) {
-    labels = { time12h: [], time24h: [] };
+    labels = { ampm: [], h24: [] };
     timeLabelLookup.set(locale, labels);
   }
-  const format = ampm ? 'time12h' : 'time24h';
-  labels[format][minutesInDay] ??= getFormatter(locale, format).format(minutesInDay * 60_000);
-  return labels[format][minutesInDay];
+  const cycleLabels = ampm ? labels.ampm : labels.h24;
+  cycleLabels[minutesInDay] ??= getFormatter(locale, ampm ? TIME_12H : TIME_24H).format(
+    minutesInDay * 60_000,
+  );
+  return cycleLabels[minutesInDay];
 }

@@ -12,7 +12,7 @@ import { getNavigationTarget } from '../../internals/utils/getNavigationTarget';
 import { useCalendarGridCellsRefsContext } from '../../internals/utils/CalendarGridCellsRefsContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-selectors';
-import { formatPlainDate } from '../../internals/utils/date-locale';
+import { formatWeekday } from '../../internals/utils/date-locale';
 import type { EventCalendarState } from '../../use-event-calendar';
 
 const selectorIsCurrentDate = (
@@ -113,7 +113,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
       {
         role: 'columnheader',
         id,
-        'aria-label': formatPlainDate(locale, date.plainDate, 'weekday'),
+        'aria-label': formatWeekday(locale, date.plainDate),
         'aria-colindex': index + 1,
         'aria-current': isCurrentDay ? 'date' : undefined,
       },

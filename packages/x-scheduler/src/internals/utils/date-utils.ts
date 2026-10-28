@@ -1,31 +1,17 @@
-import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import {
   createStartOfPlainDate,
-  formatPlainDate,
-  toPlainDate,
+  formatDayOfMonth,
+  formatWeekday,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate, SchedulerDateFormat } from '@mui/x-scheduler-internals/internals';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
-
-/**
- * Formats the date of a processed date, read in `timezone`.
- */
-export function formatProcessedDate(
-  locale: string,
-  date: SchedulerProcessedDate,
-  timezone: TemporalTimezone,
-  format: SchedulerDateFormat,
-): string {
-  return formatPlainDate(locale, toPlainDate(date.timestamp, timezone), format);
-}
 
 /**
  * @example "Sunday 13"
  */
 export function formatWeekdayAndDayOfMonth(locale: string, plainDate: PlainDate): string {
-  return `${formatPlainDate(locale, plainDate, 'weekday')} ${formatPlainDate(locale, plainDate, 'dayOfMonth')}`;
+  return `${formatWeekday(locale, plainDate)} ${formatDayOfMonth(locale, plainDate)}`;
 }
 
 /**
