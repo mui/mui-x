@@ -12,7 +12,8 @@ import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   createAdapterDate,
   createEndOfPlainDate,
-  createLabelDate,
+  formatMonthAndDayOfMonth,
+  formatWeekday,
   getOccurrenceDataTimezone,
   MS_PER_DAY,
   PlainDate,
@@ -21,7 +22,6 @@ import {
   toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
-import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 /**
  * Form values handled by the built-in submit logic.
@@ -295,7 +295,7 @@ export function getRangeErrorMessage(
 }
 
 export function getRecurrenceLabel(
-  adapter: Adapter,
+  locale: string,
   startPlainDate: PlainDate,
   recurrenceKey: RecurringEventPresetKey | 'custom' | null,
   localeText: EventEditingLocaleText,
@@ -309,18 +309,16 @@ export function getRecurrenceLabel(
       return localeText.recurrenceDailyPresetLabel;
     case 'WEEKLY': {
       const weekday = getWeekdayToken(startPlainDate);
-      const weekdayName = adapter.format(createLabelDate(adapter, startPlainDate), 'weekday');
+      const weekdayName = formatWeekday(locale, startPlainDate);
       return localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName });
     }
     case 'MONTHLY': {
       return localeText.recurrenceMonthlyPresetLabel(startPlainDate.day);
     }
     case 'YEARLY': {
-      const normalDate = formatDayOfMonthAndMonthFullLetter(
-        createLabelDate(adapter, startPlainDate),
-        adapter,
+      return localeText.recurrenceYearlyPresetLabel(
+        formatMonthAndDayOfMonth(locale, startPlainDate),
       );
-      return localeText.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':
       return localeText.recurrenceCustomRepeat;
@@ -430,9 +428,9 @@ function getTimezoneId(timezone: TemporalTimezone): string {
  * The localized generic name of a timezone (e.g. "Pacific Time"), or its identifier when the
  * runtime has no name for it and prints an offset instead.
  */
-function getTimezoneDisplayName(adapter: Adapter, timezoneId: string): string {
+function getTimezoneDisplayName(locale: string, timezoneId: string): string {
   try {
-    const name = new Intl.DateTimeFormat(adapter.getCurrentLocaleCode(), {
+    const name = new Intl.DateTimeFormat(locale, {
       timeZone: timezoneId,
       timeZoneName: 'longGeneric',
     })
@@ -450,14 +448,14 @@ function getTimezoneDisplayName(adapter: Adapter, timezoneId: string): string {
  * of its recurrence rule can be labeled; `null` when both timezones are the same.
  */
 export function getRecurrenceTimezoneName(
-  adapter: Adapter,
+  locale: string,
   eventTimezone: TemporalTimezone,
   displayTimezone: TemporalTimezone,
 ): string | null {
   const eventTimezoneId = getTimezoneId(eventTimezone);
   return eventTimezoneId === getTimezoneId(displayTimezone)
     ? null
-    : getTimezoneDisplayName(adapter, eventTimezoneId);
+    : getTimezoneDisplayName(locale, eventTimezoneId);
 }
 
 export function getEndsSelectionFromRRule(rrule?: {

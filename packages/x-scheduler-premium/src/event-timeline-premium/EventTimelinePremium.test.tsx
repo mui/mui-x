@@ -1397,7 +1397,7 @@ describe('<EventTimelinePremium />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Standup, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: Team',
+          name: 'Standup, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: Team',
         }),
       ).not.to.equal(null);
     });
@@ -1419,10 +1419,10 @@ describe('<EventTimelinePremium />', () => {
       ).getByRole('button');
 
       expect(inEngineering).toHaveAccessibleName(
-        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
       );
       expect(inDesign).toHaveAccessibleName(
-        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${design.title}`,
+        `Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${design.title}`,
       );
     });
 
@@ -1436,7 +1436,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({ events: [trip], preset: 'dayAndMonth' });
 
       expect(getEventByTitle('Trip')).toHaveAccessibleName(
-        `Trip, From Thursday, July 3rd, 2025 7:30 AM to Saturday, July 5th, 2025 5:00 PM, Resource: ${engineering.title}`,
+        `Trip, From Thursday, July 3, 2025 7:30 AM to Saturday, July 5, 2025 5:00 PM, Resource: ${engineering.title}`,
       );
     });
 
@@ -1450,7 +1450,7 @@ describe('<EventTimelinePremium />', () => {
       await renderTimeline({ events: [conference], preset: 'dayAndMonth' });
 
       expect(getEventByTitle('Conference')).toHaveAccessibleName(
-        `Conference, All day, From Thursday, July 3rd, 2025 to Saturday, July 5th, 2025, Resource: ${engineering.title}`,
+        `Conference, All day, From Thursday, July 3, 2025 to Saturday, July 5, 2025, Resource: ${engineering.title}`,
       );
     });
 
@@ -1467,7 +1467,7 @@ describe('<EventTimelinePremium />', () => {
       });
 
       expect(getEventByTitle('Reunión')).toHaveAccessibleName(
-        `Reunión, de 9:00 AM a 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+        `Reunión, de 9:00 AM a 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
       );
     });
 
@@ -1485,7 +1485,7 @@ describe('<EventTimelinePremium />', () => {
           `${defaultAriaLabel}, ${occurrence.id} in ${resource.title}`,
       });
 
-      const defaultName = 'Shared, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025';
+      const defaultName = 'Shared, 9:00 AM to 10:00 AM, Thursday, July 3, 2025';
       const inEngineering = within(
         document.querySelector(`[data-resource-id="${engineering.id}"]`) as HTMLElement,
       ).getByRole('button');
@@ -1518,16 +1518,16 @@ describe('<EventTimelinePremium />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Thursday, July 3rd, 2025, Resource: ${engineering.title}, Recurring`,
+          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Thursday, July 3, 2025, Resource: ${engineering.title}, Recurring`,
         }),
       ).not.to.equal(null);
       expect(getEventByTitle(singleEvent.title)).toHaveAccessibleName(
-        `${singleEvent.title}, 11:00 AM to 12:00 PM, Thursday, July 3rd, 2025, Resource: ${engineering.title}`,
+        `${singleEvent.title}, 11:00 AM to 12:00 PM, Thursday, July 3, 2025, Resource: ${engineering.title}`,
       );
       // Each occurrence announces its own date, not the date of the series.
       expect(
         screen.getByRole('button', {
-          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Friday, July 4th, 2025, Resource: ${engineering.title}, Recurring`,
+          name: `${recurringEvent.title}, 9:00 AM to 10:00 AM, Friday, July 4, 2025, Resource: ${engineering.title}, Recurring`,
         }),
       ).not.to.equal(null);
     });

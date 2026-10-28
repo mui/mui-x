@@ -480,7 +480,7 @@ describe('<EventTimelinePremium /> dependency arrows', () => {
       });
 
       expect(getEventElement('Event B')).toHaveAccessibleName(
-        `Event B, 11:00 AM to 12:00 PM, Thursday, July 3rd, 2025, Resource: ${resource1.title}`,
+        `Event B, 11:00 AM to 12:00 PM, Thursday, July 3, 2025, Resource: ${resource1.title}`,
       );
     });
 
