@@ -21,7 +21,7 @@ export interface ExportedBaseToolbarProps {
    */
   toolbarPlaceholder?: React.ReactNode;
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className?: string;
   /**

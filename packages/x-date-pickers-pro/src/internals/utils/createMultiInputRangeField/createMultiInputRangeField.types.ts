@@ -26,7 +26,7 @@ export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
        */
       autoFocus?: boolean;
       /**
-       * @ignore
+       * A CSS class name applied to the root element.
        */
       className?: string;
       /**

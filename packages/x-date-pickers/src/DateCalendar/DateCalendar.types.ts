@@ -100,7 +100,7 @@ export interface DateCalendarProps
    */
   referenceDate?: PickerValidDate;
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className?: string;
   /**

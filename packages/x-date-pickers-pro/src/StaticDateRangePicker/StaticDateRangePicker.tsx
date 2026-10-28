@@ -91,7 +91,7 @@ StaticDateRangePicker.propTypes /* remove-proptypes */ = {
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className: PropTypes.string,
   /**

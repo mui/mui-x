@@ -100,7 +100,7 @@ export interface PickersLayoutProps<TValue extends PickerValidValue> extends Omi
   'children' | 'className'
 > {
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className?: string;
   /**

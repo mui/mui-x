@@ -280,7 +280,7 @@ PickersFilledInput.propTypes /* remove-proptypes */ = {
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   classes: PropTypes.object,
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className: PropTypes.string,
   /**

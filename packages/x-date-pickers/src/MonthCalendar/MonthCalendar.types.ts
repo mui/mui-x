@@ -47,7 +47,7 @@ export interface MonthCalendarProps
    */
   autoFocus?: boolean;
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className?: string;
   /**

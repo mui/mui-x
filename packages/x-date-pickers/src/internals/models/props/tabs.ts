@@ -3,7 +3,7 @@ import type { Theme } from '@mui/material/styles';
 
 export interface ExportedBaseTabsProps {
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className?: string;
   /**

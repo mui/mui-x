@@ -22,7 +22,7 @@ export interface ExportedBaseClockProps
 export interface BaseClockProps<TView extends TimeViewWithMeridiem>
   extends ExportedUseViewsOptions<PickerValue, TView>, ExportedBaseClockProps, FormProps {
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className?: string;
   /**

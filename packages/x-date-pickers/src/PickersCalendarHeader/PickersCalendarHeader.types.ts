@@ -94,7 +94,7 @@ export interface PickersCalendarHeaderProps
    */
   classes?: Partial<PickersCalendarHeaderClasses>;
   /**
-   * @ignore
+   * A CSS class name applied to the root element.
    */
   className?: string;
   /**
