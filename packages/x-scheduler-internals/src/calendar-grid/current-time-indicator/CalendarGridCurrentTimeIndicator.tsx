@@ -12,7 +12,7 @@ import { schedulerNowSelectors, schedulerOtherSelectors } from '../../scheduler-
 import { createProcessedDate } from '../../internals/utils/plain-date-utils/adapter';
 import {
   moveTimestampToPlainDate,
-  toPlainDateTime,
+  toPlainDate,
 } from '../../internals/utils/plain-date-utils/timeZone';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
@@ -39,7 +39,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
 
     // The time of day of now, on the wall clock of the day of the column.
     const nowForColumn = React.useMemo(() => {
-      const columnPlainDate = toPlainDateTime(columnStart, displayTimezone).date;
+      const columnPlainDate = toPlainDate(columnStart, displayTimezone);
       return createProcessedDate(
         adapter,
         moveTimestampToPlainDate(nowTimestamp, columnPlainDate, displayTimezone),

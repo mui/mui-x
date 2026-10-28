@@ -29,10 +29,8 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { axis, headers, timeResolution } = useStore(
-    store,
-    eventTimelinePremiumPresetSelectors.config,
-  );
+  const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const { headers, timeResolution } = config;
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
@@ -40,8 +38,11 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   // virtualizer's render context): only recompute the cell walk when the range
   // actually changes.
   const cellsPerLevel = React.useMemo(
-    () => headers.map((level) => iterate(adapter, level.unit, timeResolution, axis, weekStartsOn)),
-    [adapter, headers, timeResolution, axis, weekStartsOn],
+    () =>
+      config.headers.map((level) =>
+        iterate(adapter, level.unit, config.timeResolution, config, weekStartsOn),
+      ),
+    [adapter, config, weekStartsOn],
   );
 
   const children = headers.map((level, levelIndex) => {

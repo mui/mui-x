@@ -7,7 +7,6 @@ import { useRtl } from '@mui/system/RtlProvider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -19,10 +18,10 @@ import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-lis
 import {
   createStartOfPlainDate,
   getPlainDateWeekStart,
-  toPlainDateTime,
+  isWeekendPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import type { PlainDate } from '@mui/x-scheduler-internals/internals';
-import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import type { SchedulerProcessedDay } from '@mui/x-scheduler-internals/models';
 import type { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
 import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
@@ -199,7 +198,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
     // Group days into weeks
     const weeks = React.useMemo(() => {
-      const result: SchedulerProcessedDate[][] = [];
+      const result: SchedulerProcessedDay[][] = [];
       for (let i = 0; i < days.length; i += 7) {
         result.push(days.slice(i, i + 7));
       }
@@ -264,7 +263,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               aria-label={adapter.formatByString(day.value, adapter.formats.weekday)}
               aria-colindex={dayIndex + 1}
               className={classes.miniCalendarWeekdayCell}
-              data-weekend={isWeekend(adapter, day.value) || undefined}
+              data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
             >
               {adapter.formatByString(day.value, adapter.formats.weekday1Letter)}
             </MiniCalendarWeekdayCell>
@@ -280,12 +279,11 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               className={classes.miniCalendarWeekRow}
             >
               {week.map((day, dayIndex) => {
-                const dayPlainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
-                const isToday = dayPlainDate.dayNumber === nowDayNumber;
-                const isActive = dayPlainDate.dayNumber === visiblePlainDate.dayNumber;
+                const isToday = day.plainDate.dayNumber === nowDayNumber;
+                const isActive = day.plainDate.dayNumber === visiblePlainDate.dayNumber;
                 const isOtherMonth =
-                  dayPlainDate.year !== displayedMonth.year ||
-                  dayPlainDate.month !== displayedMonth.month;
+                  day.plainDate.year !== displayedMonth.year ||
+                  day.plainDate.month !== displayedMonth.month;
 
                 // Create a full date label for accessibility
                 const fullDateLabel = adapter.formatByString(

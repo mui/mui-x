@@ -20,7 +20,8 @@ import {
   MS_PER_DAY,
   PlainDate,
   toEpochMs,
-  toPlainDateTime,
+  toPlainDate,
+  toWallClockIsoString,
 } from '@mui/x-scheduler-internals/internals';
 import type { EventEditingLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
@@ -183,13 +184,8 @@ export function formatDateAndTimeFields(
   epochMs: number,
   timezone: TemporalTimezone,
 ): { date: string; time: string } {
-  const plainDateTime = toPlainDateTime(epochMs, timezone);
-  const minutesInDay = Math.floor(plainDateTime.msInDay / 60_000);
-  const pad = (value: number) => String(value).padStart(2, '0');
-  return {
-    date: plainDateTime.date.toString(),
-    time: `${pad(Math.floor(minutesInDay / 60))}:${pad(minutesInDay % 60)}`,
-  };
+  const isoString = toWallClockIsoString(epochMs, timezone);
+  return { date: isoString.slice(0, 10), time: isoString.slice(11, 16) };
 }
 
 /**
@@ -242,8 +238,8 @@ export function validateRange(
   displayTimezone: TemporalTimezone,
 ): null | { field: 'endDate' | 'endTime' } {
   const dayOrder = PlainDate.compare(
-    toPlainDateTime(start, displayTimezone).date,
-    toPlainDateTime(end, displayTimezone).date,
+    toPlainDate(start, displayTimezone),
+    toPlainDate(end, displayTimezone),
   );
   // endDay < startDay → date error
   if (dayOrder > 0) {

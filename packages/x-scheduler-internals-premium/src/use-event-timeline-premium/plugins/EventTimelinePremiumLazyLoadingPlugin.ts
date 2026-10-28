@@ -49,6 +49,6 @@ export class EventTimelinePremiumLazyLoadingPlugin<
  * Returns the days of the visible range of the preset.
  */
 function getRangeToFetch(state: EventTimelinePremiumState): DateRange {
-  const axis = eventTimelinePremiumPresetSelectors.axis(state);
-  return { start: axis.start, end: axis.end };
+  const config = eventTimelinePremiumPresetSelectors.config(state);
+  return { start: config.start, end: config.end };
 }

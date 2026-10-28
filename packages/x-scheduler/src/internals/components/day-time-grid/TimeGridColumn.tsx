@@ -4,14 +4,12 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import {
   getEndOfDayMs,
+  isWeekendPlainDate,
   toEpochMs,
-  toPlainDateTime,
   useCalendarGridTimeColumnContext,
 } from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -84,21 +82,20 @@ const HOUR_MS = 3_600_000;
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index, colIndex, startTime, endTime } = props;
 
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   // Built on the wall clock like the axis of the column.
-  const { start, end } = React.useMemo(() => {
-    const plainDate = toPlainDateTime(day.timestamp, displayTimezone).date;
-    return {
-      start: toEpochMs(plainDate, startTime * HOUR_MS, displayTimezone),
+  const { start, end } = React.useMemo(
+    () => ({
+      start: toEpochMs(day.plainDate, startTime * HOUR_MS, displayTimezone),
       end:
         endTime === 24
           ? getEndOfDayMs(day.timestamp, displayTimezone)
-          : toEpochMs(plainDate, endTime * HOUR_MS, displayTimezone),
-    };
-  }, [day.timestamp, displayTimezone, startTime, endTime]);
+          : toEpochMs(day.plainDate, endTime * HOUR_MS, displayTimezone),
+    }),
+    [day.plainDate, day.timestamp, displayTimezone, startTime, endTime],
+  );
 
   // Only place occurrences that overlap the visible `[start, end)` window. Occurrences entirely
   // before `startTime` or after `endTime` would otherwise be clamped to a zero-height sliver pinned
@@ -127,7 +124,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       dayEndMinute={endTime * 60}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       aria-colindex={colIndex}
-      data-weekend={isWeekend(adapter, day.value) || undefined}
+      data-weekend={isWeekendPlainDate(day.plainDate) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer

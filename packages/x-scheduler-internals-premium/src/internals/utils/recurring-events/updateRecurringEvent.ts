@@ -19,7 +19,7 @@ import {
   getDateKey,
   getOccurrenceEnd,
   moveToPlainDate,
-  toPlainDateTime,
+  toPlainDate,
 } from '@mui/x-scheduler-internals/internals';
 import {
   getPlainDateWeekDayCode,
@@ -168,7 +168,7 @@ export function applyRecurringUpdateAll(
   // 2) Is the edited occurrence the first of the series (DTSTART)?
   const seriesStart = originalEvent.dataTimezone.start;
   const dataTimezone = originalEvent.dataTimezone.timezone;
-  const seriesStartPlainDate = toPlainDateTime(seriesStart.timestamp, dataTimezone).date;
+  const seriesStartPlainDate = toPlainDate(seriesStart.timestamp, dataTimezone);
   const editedIsDtstart = occurrencePlainDate.equals(seriesStartPlainDate);
 
   // 3) Decide new start/end: editing the first occurrence keeps the instants of the changes, which
@@ -184,7 +184,7 @@ export function applyRecurringUpdateAll(
       eventUpdatedProperties.end = moveEndToPlainDate(
         adapter,
         changes.end,
-        toPlainDateTime(originalEvent.dataTimezone.end.timestamp, dataTimezone).date,
+        toPlainDate(originalEvent.dataTimezone.end.timestamp, dataTimezone),
         eventUpdatedProperties.start == null
           ? seriesStart.timestamp
           : adapter.getTime(eventUpdatedProperties.start),

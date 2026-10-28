@@ -29,7 +29,7 @@ type ToAdapterDate = (localMs: number) => TemporalSupportedObject;
 /**
  * The date of a wall-clock time.
  */
-function toPlainDate(localMs: number): PlainDate {
+function plainDateFromLocalMs(localMs: number): PlainDate {
   return plainDateFromDayNumber(Math.floor(localMs / MS_PER_DAY));
 }
 
@@ -104,7 +104,7 @@ export function iterate(
     cells.push({
       date: cursorDate,
       // Read from the wall clock: a date skipped by a transition keeps its own date.
-      plainDate: toPlainDate(cursor),
+      plainDate: plainDateFromLocalMs(cursor),
       start: cursor < rangeStartLocalMs ? rangeStartDate : cursorDate,
       end: nextCursorDate,
       spanInTicks: appliedHourWindow
@@ -221,12 +221,13 @@ function startOf(
       return Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
     case 'week':
       return (
-        getPlainDateWeekStart(adapter, toPlainDate(localMs), weekStartsOn).dayNumber * MS_PER_DAY
+        getPlainDateWeekStart(adapter, plainDateFromLocalMs(localMs), weekStartsOn).dayNumber *
+        MS_PER_DAY
       );
     case 'month':
-      return toPlainDate(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
+      return plainDateFromLocalMs(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;
     case 'year':
-      return toPlainDate(localMs).with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
+      return plainDateFromLocalMs(localMs).with({ month: 1, day: 1 }).dayNumber * MS_PER_DAY;
     default:
       throw new Error(
         `MUI X Scheduler: Unsupported header unit "${unit}". ` +
@@ -265,7 +266,7 @@ function addUnit(localMs: number, unit: PresetHeaderUnit, amount: number): numbe
  * Adds months to a wall-clock time, keeping its time of day.
  */
 function addMonths(localMs: number, months: number): number {
-  const plainDate = toPlainDate(localMs);
+  const plainDate = plainDateFromLocalMs(localMs);
   return (
     plainDate.add({ months }).dayNumber * MS_PER_DAY + (localMs - plainDate.dayNumber * MS_PER_DAY)
   );
@@ -288,8 +289,8 @@ function countVisibleHours(later: number, earlier: number, hourWindow: TimelineA
  * The number of whole months from `earlier` to `later`, two wall-clock times.
  */
 function differenceInMonths(later: number, earlier: number): number {
-  const laterPlainDate = toPlainDate(later);
-  const earlierPlainDate = toPlainDate(earlier);
+  const laterPlainDate = plainDateFromLocalMs(later);
+  const earlierPlainDate = plainDateFromLocalMs(earlier);
   const months =
     (laterPlainDate.year - earlierPlainDate.year) * 12 +
     (laterPlainDate.month - earlierPlainDate.month);

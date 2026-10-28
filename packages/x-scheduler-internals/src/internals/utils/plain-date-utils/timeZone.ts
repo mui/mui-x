@@ -1,19 +1,7 @@
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
-import { ISO_CALENDAR_ID } from '../base-temporal/calendar';
-import { MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
-import { createPlainDate } from '../base-temporal/PlainDate';
+import { formatIsoTime, MS_PER_DAY, toDayNumber } from '../base-temporal/iso';
 import type { PlainDate } from '../base-temporal/PlainDate';
-
-/**
- * A date and a wall-clock time without a timezone.
- */
-export interface PlainDateTime {
-  date: PlainDate;
-  /**
-   * The wall-clock time, in milliseconds since midnight.
-   */
-  msInDay: number;
-}
+import { plainDateFromDayNumber } from './plainDate';
 
 interface TimezoneOffsets {
   format: (epochMs: number) => string;
@@ -131,15 +119,37 @@ export function toLocalMs(epochMs: number, timezone: TemporalTimezone): number {
 }
 
 /**
- * The date and wall-clock time of an instant in `timezone`.
+ * The date of an instant in `timezone`.
  */
-export function toPlainDateTime(epochMs: number, timezone: TemporalTimezone): PlainDateTime {
-  const local = toLocalMs(epochMs, timezone);
-  const dayNumber = Math.floor(local / MS_PER_DAY);
-  return {
-    date: createPlainDate(dayNumber, ISO_CALENDAR_ID),
-    msInDay: local - dayNumber * MS_PER_DAY,
-  };
+export function toPlainDate(epochMs: number, timezone: TemporalTimezone): PlainDate {
+  return plainDateFromDayNumber(toLocalDayNumber(epochMs, timezone));
+}
+
+/**
+ * The wall-clock time of an instant in `timezone`, in milliseconds since midnight.
+ */
+export function toMsInDay(epochMs: number, timezone: TemporalTimezone): number {
+  const localMs = toLocalMs(epochMs, timezone);
+  return localMs - Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
+}
+
+/**
+ * The date and wall-clock time of an instant in `timezone`, as `YYYY-MM-DDTHH:mm:ss`. The
+ * milliseconds are dropped, like in the strings of the events.
+ */
+export function toWallClockIsoString(epochMs: number, timezone: TemporalTimezone): string {
+  const localMs = toLocalMs(epochMs, timezone);
+  const dayNumber = Math.floor(localMs / MS_PER_DAY);
+  const msInDay = localMs - dayNumber * MS_PER_DAY;
+  const time = formatIsoTime({
+    hour: Math.floor(msInDay / 3_600_000),
+    minute: Math.floor(msInDay / 60_000) % 60,
+    second: Math.floor(msInDay / 1000) % 60,
+    millisecond: 0,
+    microsecond: 0,
+    nanosecond: 0,
+  });
+  return `${plainDateFromDayNumber(dayNumber).toString()}T${time}`;
 }
 
 /**
@@ -190,7 +200,7 @@ export function moveTimestampToPlainDate(
   plainDate: PlainDate,
   timezone: TemporalTimezone,
 ): number {
-  return toEpochMs(plainDate, toPlainDateTime(epochMs, timezone).msInDay, timezone);
+  return toEpochMs(plainDate, toMsInDay(epochMs, timezone), timezone);
 }
 
 /**
@@ -229,7 +239,7 @@ export function floorToWallClockMinutes(
 
 /**
  * The day number of the date of an instant in `timezone`. For the loops that compare many dates, a
- * day number is cheaper than `toPlainDateTime().date`.
+ * day number is cheaper than `toPlainDate()`.
  */
 export function toLocalDayNumber(epochMs: number, timezone: TemporalTimezone): number {
   return Math.floor(toLocalMs(epochMs, timezone) / MS_PER_DAY);

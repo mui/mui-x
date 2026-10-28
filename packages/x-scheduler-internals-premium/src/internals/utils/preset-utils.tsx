@@ -4,6 +4,7 @@ import {
   addToAdapterDate,
   buildTemporalPlainDate,
   createAdapterDate,
+  formatWallClockHour,
   getStartOfWeek,
   MS_PER_DAY,
   toEpochMs,
@@ -41,35 +42,6 @@ function formatWeekDayMonthAndDayOfMonth(adapter: TemporalAdapter, date: Tempora
 function formatMonthAndYear(adapter: TemporalAdapter, date: TemporalSupportedObject) {
   const f = adapter.formats;
   return adapter.formatByString(date, `${f.monthFullLetter} ${f.yearPadded}`);
-}
-
-/**
- * A day with no DST transition, used as the base of the hour labels. Cached per adapter:
- * the header re-renders on every horizontal scroll and builds one label per visible hour
- * cell, so parsing the date there would repeat the same work on every frame.
- */
-const dstFreeTemplateDay = new WeakMap<TemporalAdapter, TemporalSupportedObject>();
-
-function getDstFreeTemplateDay(adapter: TemporalAdapter) {
-  let template = dstFreeTemplateDay.get(adapter);
-  if (!template) {
-    template = adapter.date('2020-01-01T00:00:00', 'default');
-    dstFreeTemplateDay.set(adapter, template);
-  }
-  return template;
-}
-
-/**
- * Formats a wall-clock hour, not an instant: the hour skipped by a spring-forward
- * transition has no instant on that day, so the label is built on a DST-free template
- * day. Same approach as the Event Calendar's time axis.
- */
-function formatHourLabel(adapter: TemporalAdapter, hour: number, ampm: boolean) {
-  const f = adapter.formats;
-  const pattern = ampm
-    ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
-    : `${f.hours24h}:${f.minutesPadded}`;
-  return adapter.formatByString(adapter.setHours(getDstFreeTemplateDay(adapter), hour), pattern);
 }
 
 // The presets read and move their ranges on the plain dates of their timezone, resolved like
@@ -145,7 +117,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       {
         unit: 'hour',
         renderCell: ({ adapter, date, wallClockHour, ampm }) =>
-          formatHourLabel(adapter, wallClockHour ?? adapter.getHours(date), ampm),
+          formatWallClockHour(adapter, wallClockHour ?? adapter.getHours(date), ampm),
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,

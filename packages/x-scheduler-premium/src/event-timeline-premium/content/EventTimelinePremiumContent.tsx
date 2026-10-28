@@ -28,7 +28,6 @@ import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
   EventContextMenuTrigger,
@@ -659,7 +658,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const headerRowRef = React.useRef<HTMLDivElement | null>(null);
 
   // Selector hooks
-  const adapter = useAdapterContext();
   const nowTimestamp = useStore(store, schedulerNowSelectors.nowTimestamp);
   const showCurrentTimeIndicatorSetting = useStore(
     store,
@@ -667,8 +665,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const hasNestedResources = useStore(store, schedulerResourceSelectors.hasNestedResources);
-  const isNowInView =
-    nowTimestamp >= adapter.getTime(config.start) && nowTimestamp <= adapter.getTime(config.end);
+  const isNowInView = nowTimestamp >= config.start && nowTimestamp <= config.end;
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
   // The visible list preserves the resource entries (only their occurrence lists are
@@ -814,7 +811,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
   const gridMergedRef = useMergedRefs(scrollerProps.ref as React.Ref<HTMLDivElement>, gridRef);
 
-  // Reset horizontal scroll when navigating to a new time period.
+  // Reset the horizontal scroll whenever the config changes: a new period, another preset or
+  // another hour window.
   useIsoLayoutEffect(() => {
     const grid = gridRef.current;
     if (grid) {
@@ -823,7 +821,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     if (scrollbarHorizontalRef.current) {
       scrollbarHorizontalRef.current.scrollLeft = 0;
     }
-  }, [config.start]);
+  }, [config]);
 
   useTitleScrollSync({
     enabled: hasTitleOverflow,
@@ -844,7 +842,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     // would swallow Tab in an unfocusable retry loop.
     resources: visibleResources,
     scrollerRef: gridRef,
-    axis: config.axis,
+    axis: config,
     durationMs: config.durationMs,
     tickCount: config.tickCount,
     tickWidth: config.tickWidth,

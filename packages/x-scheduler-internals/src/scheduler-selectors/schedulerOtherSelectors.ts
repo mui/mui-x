@@ -1,6 +1,6 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
-import { toPlainDateTime } from '../internals/utils/plain-date-utils/timeZone';
+import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 import { createAdapterDate } from '../internals/utils/plain-date-utils/adapter';
 
 const visibleTimestamp = (state: State) => state.adapter.getTime(state.visibleDate);
@@ -52,7 +52,7 @@ export const schedulerOtherSelectors = {
   visiblePlainDate: createSelectorMemoized(
     visibleTimestamp,
     (state: State) => state.displayTimezone,
-    (timestamp, timezone) => toPlainDateTime(timestamp, timezone).date,
+    toPlainDate,
   ),
   /**
    * Which face the edited occurrence is in (`'armed'` toolbar or `'edit'` surface), or `null` when idle.

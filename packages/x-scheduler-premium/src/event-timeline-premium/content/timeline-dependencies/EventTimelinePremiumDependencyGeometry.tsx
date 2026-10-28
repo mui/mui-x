@@ -176,7 +176,7 @@ function EventTimelinePremiumDependencyGeometryProviderImpl({
       createDependencyAnchorResolver({
         resources,
         rowPositions: rowsMeta.positions,
-        axis: config.axis,
+        axis: config,
         durationMs: config.durationMs,
         positionByOccurrenceKey,
         eventsWidth,

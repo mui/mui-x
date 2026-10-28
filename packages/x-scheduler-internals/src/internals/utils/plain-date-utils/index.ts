@@ -9,9 +9,10 @@ export {
   toEpochMs,
   toLocalDayNumber,
   toLocalMs,
-  toPlainDateTime,
+  toMsInDay,
+  toPlainDate,
+  toWallClockIsoString,
 } from './timeZone';
-export type { PlainDateTime } from './timeZone';
 export {
   addToAdapterDate,
   buildTemporalPlainDate,

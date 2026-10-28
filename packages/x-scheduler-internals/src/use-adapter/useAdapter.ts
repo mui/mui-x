@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
-import type { TemporalSupportedObject } from '../models';
 import type { DateLocale } from './useAdapter.types';
-import { buildTemporalPlainDate } from '../internals/utils/plain-date-utils/adapter';
-import { isWeekendPlainDate } from '../internals/utils/plain-date-utils/plainDate';
 
 const DEFAULT_ADAPTER = new TemporalAdapterDateFns();
 
@@ -14,11 +10,4 @@ export function useAdapter(dateLocale?: DateLocale) {
     () => (dateLocale ? new TemporalAdapterDateFns({ locale: dateLocale }) : DEFAULT_ADAPTER),
     [dateLocale],
   );
-}
-
-/**
- * Checks if the given date is a weekend (Saturday or Sunday), in its own timezone.
- */
-export function isWeekend(adapter: TemporalAdapter, value: TemporalSupportedObject): boolean {
-  return isWeekendPlainDate(buildTemporalPlainDate(adapter, value));
 }

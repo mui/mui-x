@@ -8,50 +8,45 @@ import {
   createStartOfPlainDate,
 } from './plain-date-utils/adapter';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
+import { toWallClockIsoString } from './plain-date-utils/timeZone';
 
 /**
- * Builds an adapter-agnostic format string that produces an ISO 8601 date.
- * Produces e.g. `yyyy'-'MM'-'dd` for date-fns.
+ * @example "1:30 PM" or "13:30"
  */
-export function getIsoDateFormat(adapter: Adapter): string {
+export function formatHourAndMinutes(
+  adapter: Adapter,
+  date: TemporalSupportedObject,
+  ampm: boolean,
+): string {
   const f = adapter.formats;
-  const esc = adapter.escapedCharacters;
-  return [
-    f.yearPadded,
-    esc.start,
-    '-',
-    esc.end,
-    f.monthPadded,
-    esc.start,
-    '-',
-    esc.end,
-    f.dayOfMonthPadded,
-  ].join('');
+  const timeFormat = ampm
+    ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
+    : `${f.hours24h}:${f.minutesPadded}`;
+
+  return adapter.formatByString(date, timeFormat);
 }
 
+const hourLabels = new WeakMap<Adapter, string[]>();
+
 /**
- * Builds an adapter-agnostic format string that produces an ISO 8601 date-time
- * **without** the trailing `Z` (wall-time representation).
- * Produces e.g. `yyyy'-'MM'-'dd'T'HH':'mm':'ss` for date-fns.
+ * Formats a wall-clock hour, like `9:00 AM`, rather than an instant: the hour that a
+ * spring-forward transition skips has no instant on that day. The label is built on a date in
+ * UTC, which has no DST transition. The labels are cached per adapter, which carries the locale,
+ * as the Timeline header and the time grid build one label per hour on every render.
  */
-export function getWallTimeIsoFormat(adapter: Adapter): string {
-  const f = adapter.formats;
-  const esc = adapter.escapedCharacters;
-  return [
-    getIsoDateFormat(adapter),
-    esc.start,
-    'T',
-    esc.end,
-    f.hours24hPadded,
-    esc.start,
-    ':',
-    esc.end,
-    f.minutesPadded,
-    esc.start,
-    ':',
-    esc.end,
-    f.secondsPadded,
-  ].join('');
+export function formatWallClockHour(adapter: Adapter, hour: number, ampm: boolean): string {
+  let labels = hourLabels.get(adapter);
+  if (!labels) {
+    labels = [];
+    hourLabels.set(adapter, labels);
+  }
+  const index = hour * 2 + Number(ampm);
+  labels[index] ??= formatHourAndMinutes(
+    adapter,
+    createAdapterDate(adapter, Date.UTC(2020, 0, 1, hour), 'UTC'),
+    ampm,
+  );
+  return labels[index];
 }
 
 /**
@@ -69,8 +64,7 @@ export function dateToEventString(
   if (originalString.endsWith('Z')) {
     return adapter.toJsDate(date).toISOString();
   }
-  const dateInDataTz = adapter.setTimezone(date, dataTimezone);
-  return adapter.formatByString(dateInDataTz, getWallTimeIsoFormat(adapter));
+  return toWallClockIsoString(adapter.getTime(date), dataTimezone);
 }
 
 /**
@@ -112,17 +106,6 @@ function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
       );
     }
   }
-}
-
-/**
- * The first day of the week of `date`, read in its own timezone.
- */
-export function getWeekStartPlainDate(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  weekStartsOn: WeekStartsOn | undefined,
-): PlainDate {
-  return getPlainDateWeekStart(adapter, buildTemporalPlainDate(adapter, date), weekStartsOn);
 }
 
 const localeFirstDaysOfWeek = new WeakMap<Adapter, number>();
@@ -171,12 +154,16 @@ export function getStartOfWeek(
   date: TemporalSupportedObject,
   weekStartsOn: WeekStartsOn | undefined,
 ): TemporalSupportedObject {
-  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
+  const weekStartPlainDate = getPlainDateWeekStart(
+    adapter,
+    buildTemporalPlainDate(adapter, date),
+    weekStartsOn,
+  );
   return createStartOfPlainDate(adapter, weekStartPlainDate, adapter.getTimezone(date));
 }
 
 /**
- * Returns the week number for `date`, using `weekStartsOn` as the first day of
+ * Returns the week number of `plainDate`, using `weekStartsOn` as the first day of
  * the week (0 = Sunday … 6 = Saturday).
  *
  * Applies the ISO 8601 "4-day minimum" rule (the Thursday of each week
@@ -186,13 +173,15 @@ export function getStartOfWeek(
  */
 export function getWeekNumber(
   adapter: Adapter,
-  date: TemporalSupportedObject,
+  plainDate: PlainDate,
   weekStartsOn: WeekStartsOn | undefined,
 ): number {
   if (weekStartsOn === undefined) {
-    return adapter.getWeekNumber(date);
+    // The adapter numbers the weeks with the rules of its locale. It reads them on a date in UTC,
+    // which skips no day.
+    return adapter.getWeekNumber(createStartOfPlainDate(adapter, plainDate, 'UTC'));
   }
-  const weekStartPlainDate = getWeekStartPlainDate(adapter, date, weekStartsOn);
+  const weekStartPlainDate = getPlainDateWeekStart(adapter, plainDate, weekStartsOn);
   // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.
   const year = weekStartPlainDate.add({ days: 3 }).year;
   const firstWeekStart = getStartOfWeekDayNumber(

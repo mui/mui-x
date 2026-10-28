@@ -47,13 +47,13 @@ export const TimelineGridCurrentTimeIndicator = React.forwardRef(
       // Only the position is read, which depends on the start alone.
       start: processedNow,
       end: processedNow,
-      collection: config.axis,
+      collection: config,
       durationMs: config.durationMs,
     });
 
     const isOutOfRange =
-      nowTimestamp < adapter.getTime(config.start) ||
-      nowTimestamp > adapter.getTime(config.end) ||
+      nowTimestamp < config.start ||
+      nowTimestamp > config.end ||
       isStartMinuteOutsideAxisWindow(config, processedNow.minutesInDay);
 
     return useRenderElement('div', componentProps, {
