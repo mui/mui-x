@@ -17,8 +17,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 4),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 4)),
         adapter,
         'default',
       );
@@ -26,7 +26,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       for (let i = 0; i < result.length; i += 1) {
         const occ = result[i];
         expect(occ.displayTimezone.start.key).to.equal(
-          adapter.format(adapter.addDays(visibleStart, i), 'localizedNumericDate'),
+          adapter.formatByString(adapter.addDays(visibleStart, i), 'yyyy-MM-dd'),
         );
         expect(
           adapter.differenceInMinutes(
@@ -47,8 +47,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 9),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 9)),
         adapter,
         'default',
       );
@@ -67,8 +67,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 6),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 6)),
         adapter,
         'default',
       );
@@ -87,8 +87,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 29),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 29)),
         adapter,
         'default',
       );
@@ -110,8 +110,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 119),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 119)),
         adapter,
         'default',
       );
@@ -128,8 +128,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addYears(visibleStart, 5),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addYears(visibleStart, 5)),
         adapter,
         'default',
       );
@@ -148,8 +148,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 4),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 4)),
         adapter,
         'default',
       );
@@ -168,8 +168,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 4),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 4)),
         adapter,
         'default',
       );
@@ -191,8 +191,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 4),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 4)),
         adapter,
         'default',
       );
@@ -216,8 +216,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 7),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 7)),
         adapter,
         'default',
       );
@@ -241,8 +241,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 28),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 28)),
         adapter,
         'default',
       );
@@ -260,8 +260,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 10),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 10)),
         adapter,
         'default',
       );
@@ -279,8 +279,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 6),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 6)),
         adapter,
         'default',
       );
@@ -298,8 +298,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const expand = (start: string, end: string) =>
         getRecurringEventOccurrencesForVisibleDays(
           event,
-          adapter.date(start, 'default'),
-          adapter.date(end, 'default'),
+          adapter.getTime(adapter.date(start, 'default')),
+          adapter.getTime(adapter.date(end, 'default')),
           adapter,
           'default',
         ).map((o) => adapter.getDate(o.displayTimezone.start.value));
@@ -319,8 +319,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 6), // Mon-Sun
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 6)), // Mon-Sun
         adapter,
         'default',
       );
@@ -337,8 +337,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 6),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 6)),
         adapter,
         'default',
       );
@@ -356,8 +356,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 14),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 14)),
         adapter,
         'default',
       );
@@ -378,8 +378,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        visibleEnd,
+        adapter.getTime(visibleStart),
+        adapter.getTime(visibleEnd),
         adapter,
         'default',
       );
@@ -419,8 +419,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addMonths(visibleStart, 6),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addMonths(visibleStart, 6)),
         adapter,
         'default',
       );
@@ -438,8 +438,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addMonths(visibleStart, 3),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addMonths(visibleStart, 3)),
         adapter,
         'default',
       );
@@ -457,8 +457,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addMonths(visibleStart, 5),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addMonths(visibleStart, 5)),
         adapter,
         'default',
       );
@@ -478,8 +478,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addMonths(visibleStart, 4), // Jul, Aug, Sep, Oct
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addMonths(visibleStart, 4)), // Jul, Aug, Sep, Oct
         adapter,
         'default',
       );
@@ -497,8 +497,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addMonths(visibleStart, 3), // Jul, Aug, Sep
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addMonths(visibleStart, 3)), // Jul, Aug, Sep
         adapter,
         'default',
       );
@@ -518,8 +518,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addMonths(visibleStart, 5),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addMonths(visibleStart, 5)),
         adapter,
         'default',
       );
@@ -538,8 +538,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addMonths(visibleStart, 3), // Jul, Aug, Sep
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addMonths(visibleStart, 3)), // Jul, Aug, Sep
         adapter,
         'default',
       );
@@ -559,8 +559,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addYears(visibleStart, 3),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addYears(visibleStart, 3)),
         adapter,
         'default',
       );
@@ -582,8 +582,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addYears(visibleStart, 8),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addYears(visibleStart, 8)),
         adapter,
         'default',
       );
@@ -606,8 +606,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        visibleEnd,
+        adapter.getTime(visibleStart),
+        adapter.getTime(visibleEnd),
         adapter,
         'default',
       );
@@ -632,13 +632,13 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         const expand = (start: string, end: string) =>
           getRecurringEventOccurrencesForVisibleDays(
             event,
-            adapter.date(start, 'America/New_York'),
-            adapter.date(end, 'America/New_York'),
+            adapter.getTime(adapter.date(start, 'America/New_York')),
+            adapter.getTime(adapter.date(end, 'America/New_York')),
             adapter,
             'America/New_York',
           ).map((o) => o.dataTimezone.start.key);
 
-        expect(expand('2024-01-01T00:00:00', '2024-01-31T23:59:59')).to.deep.equal(['01/01/2024']);
+        expect(expand('2024-01-01T00:00:00', '2024-01-31T23:59:59')).to.deep.equal(['2024-01-01']);
         expect(expand('2025-01-01T00:00:00', '2025-01-31T23:59:59')).to.deep.equal([]);
       },
     );
@@ -663,8 +663,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        visibleEnd,
+        adapter.getTime(visibleStart),
+        adapter.getTime(visibleEnd),
         adapter,
         'Europe/Madrid',
       );
@@ -692,8 +692,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        visibleEnd,
+        adapter.getTime(visibleStart),
+        adapter.getTime(visibleEnd),
         adapter,
         'Europe/Madrid',
       );
@@ -723,8 +723,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        visibleEnd,
+        adapter.getTime(visibleStart),
+        adapter.getTime(visibleEnd),
         adapter,
         'Europe/Madrid',
       );
@@ -760,8 +760,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        visibleEnd,
+        adapter.getTime(visibleStart),
+        adapter.getTime(visibleEnd),
         adapter,
         'Europe/Paris',
       );
@@ -797,8 +797,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const visibleStart = adapter.date('2025-07-04T00:00:00Z', 'default');
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 15),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 15)),
         adapter,
         'default',
       );
@@ -820,8 +820,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const visibleStart = adapter.date('2025-10-26T00:00:00Z', 'default');
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 15),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 15)),
         adapter,
         'default',
       );
@@ -842,8 +842,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        visibleStart,
-        adapter.addDays(visibleStart, 9),
+        adapter.getTime(visibleStart),
+        adapter.getTime(adapter.addDays(visibleStart, 9)),
         adapter,
         'default',
       );
@@ -864,8 +864,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     const result = getRecurringEventOccurrencesForVisibleDays(
       event,
-      adapter.date('2000-01-01T00:00:00Z', 'default'),
-      adapter.date('2060-12-31T00:00:00Z', 'default'),
+      adapter.getTime(adapter.date('2000-01-01T00:00:00Z', 'default')),
+      adapter.getTime(adapter.date('2060-12-31T00:00:00Z', 'default')),
       adapter,
       'UTC',
     );
@@ -886,8 +886,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const rangeStart = adapter.date(visibleStart, 'default');
       return getRecurringEventOccurrencesForVisibleDays(
         event,
-        rangeStart,
-        adapter.addDays(rangeStart, 6),
+        adapter.getTime(rangeStart),
+        adapter.getTime(adapter.addDays(rangeStart, 6)),
         adapter,
         'Pacific/Apia',
       ).map((o) => adapter.formatByString(o.dataTimezone.start.value, 'yyyy-MM-dd HH:mm'));
@@ -916,8 +916,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const expand = (visibleStart: string) =>
         getRecurringEventOccurrencesForVisibleDays(
           event,
-          adapter.date(visibleStart, 'default'),
-          adapter.date('1993-08-25T00:00:00Z', 'default'),
+          adapter.getTime(adapter.date(visibleStart, 'default')),
+          adapter.getTime(adapter.date('1993-08-25T00:00:00Z', 'default')),
           adapter,
           'Pacific/Kwajalein',
         ).map((o) => adapter.formatByString(o.dataTimezone.start.value, 'yyyy-MM-dd'));
@@ -956,8 +956,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
-        adapter.date('2012-01-01T00:00:00', 'Pacific/Apia'),
-        adapter.date('2012-01-31T00:00:00', 'Pacific/Apia'),
+        adapter.getTime(adapter.date('2012-01-01T00:00:00', 'Pacific/Apia')),
+        adapter.getTime(adapter.date('2012-01-31T00:00:00', 'Pacific/Apia')),
         adapter,
         'Pacific/Apia',
       );
@@ -979,8 +979,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     const result = getRecurringEventOccurrencesForVisibleDays(
       event,
-      adapter.date('2025-03-29T00:00:00Z', 'default'),
-      adapter.date('2025-03-31T23:00:00Z', 'default'),
+      adapter.getTime(adapter.date('2025-03-29T00:00:00Z', 'default')),
+      adapter.getTime(adapter.date('2025-03-31T23:00:00Z', 'default')),
       adapter,
       'Europe/Paris',
     );
@@ -1007,8 +1007,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
     const result = getRecurringEventOccurrencesForVisibleDays(
       event,
-      adapter.date('2025-12-31T00:00:00Z', 'default'),
-      adapter.date('2026-04-30T00:00:00Z', 'default'),
+      adapter.getTime(adapter.date('2025-12-31T00:00:00Z', 'default')),
+      adapter.getTime(adapter.date('2026-04-30T00:00:00Z', 'default')),
       adapter,
       '-00:30',
     );
@@ -1017,9 +1017,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       result.map((o) => adapter.formatByString(o.dataTimezone.start.value, 'yyyy-MM-dd HH:mm')),
     ).to.deep.equal(['2026-01-01 00:30', '2026-02-01 00:30', '2026-03-01 00:30']);
     expect(result.map((o) => o.dataTimezone.start.key)).to.deep.equal([
-      '01/01/2026',
-      '02/01/2026',
-      '03/01/2026',
+      '2026-01-01',
+      '2026-02-01',
+      '2026-03-01',
     ]);
   });
 
@@ -1046,8 +1046,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
           const result = getRecurringEventOccurrencesForVisibleDays(
             event,
-            systemAdapter.date('2025-10-20T00:00:00Z', 'default'),
-            systemAdapter.date('2025-11-02T00:00:00Z', 'default'),
+            adapter.getTime(systemAdapter.date('2025-10-20T00:00:00Z', 'default')),
+            adapter.getTime(systemAdapter.date('2025-11-02T00:00:00Z', 'default')),
             systemAdapter,
             'America/New_York',
           );
@@ -1085,8 +1085,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           const rangeStart = adapter.date(visibleStart, 'default');
           return getRecurringEventOccurrencesForVisibleDays(
             event,
-            rangeStart,
-            adapter.addDays(rangeStart, visibleDays),
+            adapter.getTime(rangeStart),
+            adapter.getTime(adapter.addDays(rangeStart, visibleDays)),
             adapter,
             timezone,
           );
@@ -1242,8 +1242,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
           const result = getRecurringEventOccurrencesForVisibleDays(
             event,
-            adapter.date('2026-04-03T12:00:00Z', 'default'),
-            adapter.date('2026-04-06T12:00:00Z', 'default'),
+            adapter.getTime(adapter.date('2026-04-03T12:00:00Z', 'default')),
+            adapter.getTime(adapter.date('2026-04-06T12:00:00Z', 'default')),
             adapter,
             'America/Santiago',
           );

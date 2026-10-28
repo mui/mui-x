@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  describeConformance,
+  processDay,
+} from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
-import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { vi, describe, it, expect } from 'vitest';
 
 describe('<CalendarGrid.HeaderCell />', () => {
@@ -11,7 +15,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
 
   const day = adapter.now('default');
 
-  describeConformance(<CalendarGrid.HeaderCell date={processDate(day, adapter)} />, () => ({
+  describeConformance(<CalendarGrid.HeaderCell date={processDay(day, adapter)} />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
@@ -31,7 +35,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
             <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={processDate(day, adapter)}>
+              <CalendarGrid.HeaderCell date={processDay(day, adapter)}>
                 <button type="button" onClick={onClick}>
                   Click me
                 </button>
@@ -53,7 +57,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
             <CalendarGrid.HeaderRow>
-              <CalendarGrid.HeaderCell date={processDate(day, adapter)}>
+              <CalendarGrid.HeaderCell date={processDay(day, adapter)}>
                 Monday
               </CalendarGrid.HeaderCell>
             </CalendarGrid.HeaderRow>

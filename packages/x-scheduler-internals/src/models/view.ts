@@ -1,6 +1,7 @@
 import type { TemporalSupportedObject } from '@base-ui/react/internals/temporal';
 import type { EventCalendarState } from '../use-event-calendar';
-import type { SchedulerProcessedDate } from './event';
+import type { SchedulerProcessedDay } from './event';
+import type { PlainDate } from '../internals/utils/base-temporal/PlainDate';
 
 export type CalendarView = 'day' | 'week' | 'month' | 'agenda';
 
@@ -17,7 +18,7 @@ export interface EventCalendarViewDefinition {
   siblingVisibleDateGetter: (
     parameters: SiblingVisibleDateGetterParameters,
   ) => TemporalSupportedObject;
-  visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDate[];
+  visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDay[];
   /**
    * The range to fetch from the data source.
    * Defaults to the span of the visible days.
@@ -26,8 +27,14 @@ export interface EventCalendarViewDefinition {
 }
 
 export interface EventCalendarFetchRange {
-  start: TemporalSupportedObject;
-  end: TemporalSupportedObject;
+  /**
+   * The first day to fetch, read in the display timezone.
+   */
+  start: PlainDate;
+  /**
+   * The last day to fetch, read in the display timezone.
+   */
+  end: PlainDate;
 }
 
 interface SiblingVisibleDateGetterParameters {

@@ -1,5 +1,15 @@
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  buildTemporalPlainDate,
+  createAdapterDate,
+  getStartOfDayMs,
+  MS_PER_DAY,
+  toEpochMs,
+  toLocalMs,
+  toMsInDay,
+} from '@mui/x-scheduler-internals/internals';
+import type { PlainDate } from '@mui/x-scheduler-internals/internals';
 import type {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
@@ -7,33 +17,45 @@ import type {
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
 
-const adapterCache = new WeakMap<
-  Adapter,
-  {
-    /**
-     * Date format string for UNTIL serialization (RFC5545 format: YYYYMMDDTHHmmssZ)
-     */
-    untilFormat: string;
-  }
->();
+/**
+ * Creates the adapter value of the first instant of the last day before a plain date that exists
+ * in `timezone`. A day the timezone skips, like December 30th, 2011 in Pacific/Apia, is passed over.
+ */
+export function createStartOfPreviousDay(
+  adapter: Adapter,
+  plainDate: PlainDate,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  return createAdapterDate(
+    adapter,
+    getStartOfDayMs(toEpochMs(plainDate, 0, timezone) - 1, timezone),
+    timezone,
+  );
+}
 
 /**
- * Returns cached adapter data.
+ * Moves the end of an event to `plainDate` on the wall clock of `timezone`, like
+ * `moveToPlainDate()`, except that a time a DST transition repeats resolves to its first instant at
+ * or after `startMs`, so that the end of an event starting in the second occurrence of a repeated
+ * hour doesn't come before its start.
  */
-export function getAdapterCache(adapter: Adapter) {
-  let cache = adapterCache.get(adapter);
-  if (!cache) {
-    const f = adapter.formats;
-    const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
-    const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
-    const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
-    const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
-    const untilFormat = `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
-
-    cache = { untilFormat };
-    adapterCache.set(adapter, cache);
+export function moveEndToPlainDate(
+  adapter: Adapter,
+  end: TemporalSupportedObject,
+  plainDate: PlainDate,
+  startMs: number,
+  timezone: TemporalTimezone,
+): TemporalSupportedObject {
+  const msInDay = toMsInDay(adapter.getTime(end), timezone);
+  let endMs = toEpochMs(plainDate, msInDay, timezone);
+  if (endMs < startMs) {
+    // The same wall-clock time, in the offset of the start.
+    const laterMs = startMs + msInDay - toMsInDay(startMs, timezone);
+    if (toLocalMs(laterMs, timezone) === plainDate.dayNumber * MS_PER_DAY + msInDay) {
+      endMs = laterMs;
+    }
   }
-  return cache;
+  return createAdapterDate(adapter, endMs, timezone);
 }
 
 /**
@@ -57,14 +79,20 @@ export const NOT_LOCALIZED_WEEK_DAYS_INDEXES = new Map<RecurringEventWeekDayCode
 );
 
 /**
+ * Returns the week day code (MO..SU) of a plain date.
+ */
+export function getPlainDateWeekDayCode(plainDate: PlainDate): RecurringEventWeekDayCode {
+  return NOT_LOCALIZED_WEEK_DAYS[plainDate.dayOfWeek - 1];
+}
+
+/**
  * Returns the week day code (MO..SU) for a given date, read in the timezone it is labeled with.
  */
 export function getWeekDayCode(
   adapter: Adapter,
   date: TemporalSupportedObject,
 ): RecurringEventWeekDayCode {
-  const plainDate = buildTemporalPlainDate(adapter, date);
-  return NOT_LOCALIZED_WEEK_DAYS[plainDate.dayOfWeek - 1];
+  return getPlainDateWeekDayCode(buildTemporalPlainDate(adapter, date));
 }
 
 /**

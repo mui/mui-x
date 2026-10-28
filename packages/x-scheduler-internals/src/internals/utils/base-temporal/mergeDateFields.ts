@@ -1,4 +1,5 @@
 import type { PlainDate, PlainDateFields } from './PlainDate';
+import { getCalendar } from './calendar';
 
 /**
  * Sets date fields on the fields of a date, following Temporal: a year, an era or a year of era
@@ -13,13 +14,15 @@ export function mergeDateFields(
   const replacesYear =
     fields.year !== undefined || fields.era !== undefined || fields.eraYear !== undefined;
   const replacesMonth = fields.month !== undefined || fields.monthCode !== undefined;
+  // Read once: a date in the ISO calendar computes each field when it's read.
+  const calendarDate = base.calendarDate ?? getCalendar(base.calendarId).getDate(base.dayNumber);
   return {
     calendar: base.calendarId,
-    era: replacesYear ? fields.era : base.era,
-    eraYear: replacesYear ? fields.eraYear : base.eraYear,
-    year: replacesYear ? fields.year : base.year,
-    month: replacesYear || replacesMonth ? fields.month : base.month,
-    monthCode: replacesMonth ? fields.monthCode : base.monthCode,
-    day: fields.day === undefined ? base.day : fields.day,
+    era: replacesYear ? fields.era : calendarDate.era,
+    eraYear: replacesYear ? fields.eraYear : calendarDate.eraYear,
+    year: replacesYear ? fields.year : calendarDate.year,
+    month: replacesYear || replacesMonth ? fields.month : calendarDate.month,
+    monthCode: replacesMonth ? fields.monthCode : calendarDate.monthCode,
+    day: fields.day === undefined ? calendarDate.day : fields.day,
   };
 }

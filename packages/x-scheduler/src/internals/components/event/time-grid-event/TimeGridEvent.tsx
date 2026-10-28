@@ -435,15 +435,15 @@ const TimeGridEventContent = React.memo(function TimeGridEventContent(props: {
             {occurrence.title}
           </TimeGridEventTitle>
           <TimeGridEventTime className={classes.timeGridEventTime} data-variant="block">
-            {formatTime(occurrence.displayTimezone.start.value)} -{' '}
-            {formatTime(occurrence.displayTimezone.end.value)}
+            {formatTime(occurrence.displayTimezone.start)} -{' '}
+            {formatTime(occurrence.displayTimezone.end)}
           </TimeGridEventTime>
         </React.Fragment>
       ) : (
         <TimeGridEventTitle className={classes.timeGridEventTitle}>
           {occurrence.title}{' '}
           <TimeGridEventTime className={classes.timeGridEventTime} data-variant="inline">
-            {formatTime(occurrence.displayTimezone.start.value)}
+            {formatTime(occurrence.displayTimezone.start)}
           </TimeGridEventTime>
         </TimeGridEventTitle>
       )}
@@ -467,14 +467,12 @@ const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlacehol
   props: TimeGridEventVariantProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, column, className, ...other } = props;
+  const { occurrence, className, ...other } = props;
 
   const { classes } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const { isRecurring, isStacked, rootDataAttributes, rootPositionProps } = useTimeGridEvent(
-    occurrence,
-    column,
-  );
+  const { isRecurring, isStacked, rootDataAttributes, rootPositionProps } =
+    useTimeGridEvent(occurrence);
 
   // Creation / internal-resize placeholders host sizing handles; move placeholders don't. Suppressed
   // in `edit` mode where the form owns the times — matching the regular event (see `useTimeGridEvent`).
@@ -525,7 +523,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
   props: TimeGridEventVariantProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, column, className, ...other } = props;
+  const { occurrence, className, ...other } = props;
 
   const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
@@ -537,7 +535,7 @@ const TimeGridEventRegular = React.forwardRef(function TimeGridEventRegular(
     isStacked,
     rootDataAttributes,
     rootPositionProps,
-  } = useTimeGridEvent(occurrence, column);
+  } = useTimeGridEvent(occurrence);
   const accessibleName = useEventAccessibleName({
     occurrence,
     isRecurring,

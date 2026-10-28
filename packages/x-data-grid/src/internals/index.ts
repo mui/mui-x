@@ -131,6 +131,7 @@ export {
   getRowValue,
   isReplaceUpdate,
   getReplaceRow,
+  asReplaceUpdates,
   warnIfReplaceLosesPrototype,
 } from '../hooks/features/rows/gridRowsUtils';
 export {

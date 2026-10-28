@@ -116,6 +116,7 @@ const itITCalendar: SchedulerCalendarTranslations = {
   months: 'Mesi',
   weeks: 'Settimane',
   years: 'Anni',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Chiudi pannello laterale',

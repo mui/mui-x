@@ -5,6 +5,7 @@ import {
 } from '@mui/x-internals/disposable';
 import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { fastObjectShallowCompare } from '@base-ui/utils/fastObjectShallowCompare';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -15,6 +16,7 @@ import type {
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
   TemporalSupportedObject,
+  TemporalTimezone,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   RecurringEventScope,
@@ -25,6 +27,7 @@ import type {
   SchedulerRenderableEventOccurrence,
   SchedulerEventOccurrence,
   SchedulerEventOccurrencePlaceholder,
+  SchedulerEventDeletionConfig,
 } from '../../../models';
 import type {
   SchedulerState,
@@ -49,14 +52,17 @@ import type {
   SchedulerEventParameters,
 } from '../../models/events';
 import type { Adapter } from '../../../use-adapter/useAdapter.types';
-import { schedulerEventSelectors, schedulerResourceSelectors } from '../../../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '../../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
   getCustomEventProperties,
   getUpdatedEventModelFromChanges,
-  shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString, getOccurrenceEnd } from '../date-utils';
 import {
@@ -67,17 +73,26 @@ import {
 } from '../event-utils';
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
+import { createStartOfPlainDate } from '../plain-date-utils/adapter';
+import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
+import { toPlainDate } from '../plain-date-utils/timeZone';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
+
+/**
+ * The first instant of today in `timezone`. A day whose midnight a DST transition skips starts at
+ * the end of the gap.
+ */
+function createStartOfToday(adapter: Adapter, nowTimestamp: number, timezone: TemporalTimezone) {
+  return createStartOfPlainDate(adapter, toPlainDate(nowTimestamp, timezone), timezone);
+}
 
 /**
  * How long a transient error stays in `state.errors` before dismissing itself.
  */
 const TRANSIENT_ERROR_DURATION_MS = 5000;
 
-export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
-  ampm: true,
-};
+export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {};
 
 const MOCK_EVENT_STATE = {
   eventIdList: [],
@@ -106,6 +121,23 @@ function createEventChangedWhileConfirmingError() {
   return /* minify-error-disabled */ new Error(
     'This event changed while the delete confirmation was open, so the deletion was not applied. Try deleting it again.',
   );
+}
+
+/**
+ * Normalizes the `eventDeletion` parameter: `false` disables deletion, `true`, an object or
+ * `undefined` resolve to a full config. Returns `previous` when its `confirmation` is unchanged,
+ * so `update()` doesn't treat a new inline object as a change and notify every subscriber.
+ */
+function getEventDeletionState(
+  parameter: Partial<SchedulerEventDeletionConfig> | boolean | undefined,
+  previous?: SchedulerEventDeletionConfig | false,
+): SchedulerEventDeletionConfig | false {
+  if (parameter === false) {
+    return false;
+  }
+
+  const confirmation = (typeof parameter === 'object' ? parameter.confirmation : undefined) ?? true;
+  return previous && previous.confirmation === confirmation ? previous : { confirmation };
 }
 
 function toUpdateEventResult(result: {
@@ -208,6 +240,7 @@ export class SchedulerStore<
     recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
+    const nowTimestamp = Date.now();
 
     const schedulerInitialState: Omit<SchedulerState<TEvent>, 'shouldEventRequireResource'> = {
       ...stateFromParameters,
@@ -226,7 +259,7 @@ export class SchedulerStore<
       editingOccurrence: null,
       copiedEvent: null,
       selection: null,
-      nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
+      nowTimestamp,
       pendingRecurringEventOperation: null,
       visibleResources:
         parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
@@ -235,11 +268,11 @@ export class SchedulerStore<
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
+        createStartOfToday(adapter, nowTimestamp, stateFromParameters.displayTimezone),
       errors: [],
       isLoading: hasDataSource(parameters),
       recurringEventsPlugin,
-      eventDeletion: { confirmation: parameters.eventDeletion?.confirmation ?? true },
+      eventDeletion: getEventDeletionState(parameters.eventDeletion),
       pendingDeleteConfirmation: null,
     };
 
@@ -253,20 +286,15 @@ export class SchedulerStore<
     // The edited occurrence is a snapshot, so a date change can leave its toolbar acting on an event
     // that is no longer on screen. Timestamp, not the object: a re-passed equal date is not a change.
     this.disposables.defer(
-      this.registerStoreEffect(
-        (state) => state.adapter.getTime(state.visibleDate),
-        this.stopEditing,
-      ),
+      this.registerStoreEffect(schedulerOtherSelectors.visibleTimestamp, this.stopEditing),
     );
 
-    const currentDate = new Date();
-    const timeUntilNextMinuteMs =
-      ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
+    const timeUntilNextMinuteMs = ONE_MINUTE_IN_MS - (Date.now() % ONE_MINUTE_IN_MS);
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
+      this.set('nowTimestamp', Date.now());
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
+        this.set('nowTimestamp', Date.now());
       });
     });
 
@@ -283,8 +311,11 @@ export class SchedulerStore<
     parameters: SchedulerParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
+    const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
+    checkDateLocale(dateLocale);
     return {
       adapter,
+      dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
       areEventsResizable: parameters.areEventsResizable ?? true,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
@@ -348,11 +379,10 @@ export class SchedulerStore<
     // Kept out of `deriveStateFromParameters`, which has no previous state to compare against:
     // a fresh object on every call would make `update()` treat an unchanged `confirmation` as a
     // change and notify every subscriber.
-    const confirmation = parameters.eventDeletion?.confirmation ?? true;
-    newSchedulerState.eventDeletion =
-      confirmation === this.state.eventDeletion.confirmation
-        ? this.state.eventDeletion
-        : { confirmation };
+    newSchedulerState.eventDeletion = getEventDeletionState(
+      parameters.eventDeletion,
+      this.state.eventDeletion,
+    );
 
     if (
       !hasDataSource(parameters) &&
@@ -372,11 +402,6 @@ export class SchedulerStore<
         }),
       );
     }
-    // Recompute "now" only when the display timezone changes; the minute timer maintains it otherwise.
-    if (newSchedulerState.displayTimezone !== this.state.displayTimezone) {
-      newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
-    }
-
     if (
       parameters.resources !== this.parameters.resources ||
       parameters.resourceModelStructure !== this.parameters.resourceModelStructure
@@ -392,6 +417,7 @@ export class SchedulerStore<
       newSchedulerState,
       parameters,
       updateModel,
+      this.state,
     );
 
     this.update(newState as State);
@@ -536,7 +562,8 @@ export class SchedulerStore<
   }) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
-    const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
+    const hasChange =
+      adapter.getTime(visibleDate) !== schedulerOtherSelectors.visibleTimestamp(this.state);
 
     if (hasChange) {
       const eventDetails = createChangeEventDetails('none', event?.nativeEvent);
@@ -796,9 +823,9 @@ export class SchedulerStore<
    * Goes to today's date without changing the view.
    */
   public goToToday = (event: React.UIEvent) => {
-    const { adapter } = this.state;
     this.setVisibleDate({
-      visibleDate: adapter.startOfDay(adapter.now(this.state.displayTimezone)),
+      // Not `state.nowTimestamp`, which lags up to a minute behind.
+      visibleDate: createStartOfToday(this.state.adapter, Date.now(), this.state.displayTimezone),
       event,
     });
   };
@@ -822,7 +849,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -943,13 +970,13 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
-      return toUpdateEventResult(
-        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
-      );
+      // Drop the key rather than sending `undefined`, which would remove the stored rule.
+      const { rrule, ...changes } = calendarEvent;
+      return toUpdateEventResult(this.updateEvents({ updated: [changes] }));
     }
 
     return toUpdateEventResult(this.updateEvents({ updated: [calendarEvent] }));
@@ -964,7 +991,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring event updates are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -982,7 +1009,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring event deletions are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -1145,7 +1172,10 @@ export class SchedulerStore<
    * Requests deletion of an event, opening the confirmation dialog when configured.
    */
   public requestEventDeletion = ({ eventId, onSubmit }: RequestEventDeletionParameters) => {
-    if (!this.state.eventDeletion.confirmation) {
+    // `eventDeletion={false}` only removes the UI affordances: a programmatic request still
+    // deletes, with nothing to confirm.
+    const { eventDeletion } = this.state;
+    if (eventDeletion === false || !eventDeletion.confirmation) {
       this.deleteEvent(eventId);
       onSubmit?.();
       return;
@@ -1402,8 +1432,7 @@ export class SchedulerStore<
     newPlaceholder: SchedulerOccurrencePlaceholder | null,
     event?: Event,
   ) => {
-    const { adapter, occurrencePlaceholder: previous } = this.state;
-    if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
+    if (!fastObjectShallowCompare(this.state.occurrencePlaceholder, newPlaceholder)) {
       this.occurrencePlaceholderEvent = newPlaceholder == null ? undefined : event;
       this.set('occurrencePlaceholder', newPlaceholder);
     }

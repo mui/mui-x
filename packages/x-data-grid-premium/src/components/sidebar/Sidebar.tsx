@@ -31,7 +31,7 @@ const SidebarRoot = styled(ResizablePanel, {
   flexDirection: 'column',
   width: 300,
   minWidth: 260,
-  maxWidth: 400,
+  maxWidth: 520,
   overflow: 'hidden',
 });
 

@@ -172,6 +172,7 @@ const heILCalendar: SchedulerCalendarTranslations = {
   months: 'חודשים',
   weeks: 'שבועות',
   years: 'שנים',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'סגירת חלונית הצד',

@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import type { SchedulerEventOccurrence, SchedulerProcessedDate } from '../models';
+import type { SchedulerEventOccurrence, SchedulerProcessedDay } from '../models';
 import type { GetOccurrencesFromEventsParameters } from '../internals/utils/event-utils';
 import {
   getDaysTheOccurrenceIsVisibleOn,
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
 import { useAdapterContext } from '../use-adapter-context';
+import { getEndOfDayMs } from '../internals/utils/plain-date-utils/timeZone';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
@@ -50,7 +51,7 @@ export namespace useEventOccurrencesGroupedByDay {
     /**
      * The days to get the occurrences for.
      */
-    days: SchedulerProcessedDate[];
+    days: SchedulerProcessedDay[];
   }
 
   export type ReturnValue = Map<string, SchedulerEventOccurrence[]>;
@@ -62,7 +63,7 @@ export namespace useEventOccurrencesGroupedByDay {
  */
 export function innerGetEventOccurrencesGroupedByDay(
   parameters: Omit<GetOccurrencesFromEventsParameters, 'start' | 'end'> & {
-    days: SchedulerProcessedDate[];
+    days: SchedulerProcessedDay[];
   },
 ): Map<string, SchedulerEventOccurrence[]> {
   const {
@@ -82,12 +83,11 @@ export function innerGetEventOccurrencesGroupedByDay(
     return occurrenceMap;
   }
 
-  const start = adapter.startOfDay(days[0].value);
-  const end = adapter.endOfDay(days[days.length - 1].value);
   const occurrences = getOccurrencesFromEvents({
     adapter,
-    start,
-    end,
+    // The days start on their first instant.
+    start: days[0].timestamp,
+    end: getEndOfDayMs(days[days.length - 1].timestamp, displayTimezone),
     eventRangeIndex,
     visibleResources,
     displayTimezone,
@@ -95,7 +95,7 @@ export function innerGetEventOccurrencesGroupedByDay(
   });
 
   for (const occurrence of occurrences) {
-    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days);
     for (const dayKey of eventDays) {
       occurrenceMap.get(dayKey)!.push(occurrence);
     }

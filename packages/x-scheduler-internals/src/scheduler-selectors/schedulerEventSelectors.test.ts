@@ -1,5 +1,5 @@
+import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import {
-  adapterFr,
   EventBuilder,
   ResourceBuilder,
   getEventCalendarStateFromParameters,
@@ -63,7 +63,10 @@ describe('schedulerEventSelectors', () => {
         index,
       );
       expect(
-        schedulerEventSelectors.processedEventRangeIndex({ ...state, adapter: adapterFr }),
+        schedulerEventSelectors.processedEventRangeIndex({
+          ...state,
+          adapter: new TemporalAdapterDateFns(),
+        }),
       ).not.to.equal(index);
     });
   });
@@ -152,6 +155,48 @@ describe('schedulerEventSelectors', () => {
         },
       });
       expect(schedulerEventSelectors.creationConfig(state)).to.equal(false);
+    });
+  });
+
+  describe('deletionConfig', () => {
+    it('should return the default config when props.eventDeletion is not defined', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal({ confirmation: true });
+    });
+
+    it('should return false when props.eventDeletion is false', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventDeletion: false,
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.equal(false);
+    });
+
+    it('should return the default config when props.eventDeletion is true', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventDeletion: true,
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal({ confirmation: true });
+    });
+
+    it('should return the provided config when props.eventDeletion is an object', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        eventDeletion: { confirmation: false },
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.deep.equal({ confirmation: false });
+    });
+
+    it('should return false when the scheduler is read-only', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        readOnly: true,
+        eventDeletion: true,
+      });
+      expect(schedulerEventSelectors.deletionConfig(state)).to.equal(false);
     });
   });
 

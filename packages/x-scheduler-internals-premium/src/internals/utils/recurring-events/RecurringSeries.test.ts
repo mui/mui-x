@@ -10,6 +10,13 @@ import { describe, it, expect } from 'vitest';
 import { RecurringSeries } from './RecurringSeries';
 
 /**
+ * The DTSTART parameters of a series starting at `start`, in the timezone it is labeled with.
+ */
+function seriesStart(start: TemporalSupportedObject) {
+  return { start: adapter.getTime(start), timezone: adapter.getTimezone(start) };
+}
+
+/**
  * The number of occurrences of a series with `count` occurrences that remain after `date`, included.
  */
 function countRemaining(
@@ -18,7 +25,7 @@ function countRemaining(
   date: TemporalSupportedObject,
   count: number,
 ) {
-  const series = new RecurringSeries(adapter, { rule: { ...rule, count }, start });
+  const series = new RecurringSeries(adapter, { rule: { ...rule, count }, ...seriesStart(start) });
   const datePlainDate = buildTemporalPlainDate(adapter, date);
   return count - series.countOccurrencesBefore(datePlainDate.add({ days: 1 }));
 }
@@ -32,7 +39,7 @@ function getOccurrenceDays(
 ) {
   const series = new RecurringSeries(adapter, {
     rule,
-    start: adapter.date(start, 'UTC'),
+    ...seriesStart(adapter.date(start, 'UTC')),
     exDates: exDates?.map((exDate) => adapter.date(exDate, 'UTC')),
   });
   const fromPlainDate = buildTemporalPlainDate(adapter, adapter.date(from, 'UTC'));
@@ -98,7 +105,7 @@ describe('recurring-events/RecurringSeries', () => {
   });
 
   describe('last supported day', () => {
-    it('should end every frequency on December 31st, 9999', () => {
+    it('should end every frequency on December 31, 9999', () => {
       const lastYear = ['9999-01-01T00:00:00', '9999-12-31T00:00:00'] as const;
       expect(
         getOccurrenceDays(
@@ -113,6 +120,14 @@ describe('recurring-events/RecurringSeries', () => {
       ).to.deep.equal(['9999-06-01']);
       expect(
         getOccurrenceDays({ freq: 'MONTHLY', interval: 5 }, '9999-10-15T09:00:00', ...lastYear),
+      ).to.deep.equal(['9999-10-15']);
+      // The month after the first one is too far to compute.
+      expect(
+        getOccurrenceDays(
+          { freq: 'MONTHLY', interval: Number.MAX_VALUE },
+          '9999-10-15T09:00:00',
+          ...lastYear,
+        ),
       ).to.deep.equal(['9999-10-15']);
     });
 
@@ -129,7 +144,7 @@ describe('recurring-events/RecurringSeries', () => {
       // December 9999 has no 5th Sunday, which would be January 2nd, 10000.
       const series = new RecurringSeries(adapter, {
         rule: { freq: 'MONTHLY', byDay: ['5SU'], count: 3 },
-        start: adapter.date('9999-10-31T09:00:00', 'UTC'),
+        ...seriesStart(adapter.date('9999-10-31T09:00:00', 'UTC')),
         exDates: [adapter.date('9999-10-31T09:00:00', 'UTC')],
       });
       expect(series.hasOccurrence()).to.equal(false);
@@ -140,7 +155,7 @@ describe('recurring-events/RecurringSeries', () => {
     it('should ignore the excluded occurrences', () => {
       const series = new RecurringSeries(adapter, {
         rule: { freq: 'WEEKLY' },
-        start: adapter.date('2025-01-06T09:00:00', 'UTC'),
+        ...seriesStart(adapter.date('2025-01-06T09:00:00', 'UTC')),
         exDates: [adapter.date('2025-01-06T09:00:00', 'UTC')],
       });
       const day = (date: string) => buildTemporalPlainDate(adapter, adapter.date(date, 'UTC'));
@@ -154,7 +169,7 @@ describe('recurring-events/RecurringSeries', () => {
       // February 29th: excluding 2024 leaves 2028.
       const series = new RecurringSeries(adapter, {
         rule: { freq: 'YEARLY', count: 2 },
-        start: adapter.date('2024-02-29T09:00:00', 'UTC'),
+        ...seriesStart(adapter.date('2024-02-29T09:00:00', 'UTC')),
         exDates: [adapter.date('2024-02-29T09:00:00', 'UTC')],
       });
       expect(series.hasOccurrence()).to.equal(true);
@@ -163,7 +178,7 @@ describe('recurring-events/RecurringSeries', () => {
     it('should return false when every occurrence is excluded', () => {
       const series = new RecurringSeries(adapter, {
         rule: { freq: 'DAILY', count: 2 },
-        start: adapter.date('2025-01-01T09:00:00', 'UTC'),
+        ...seriesStart(adapter.date('2025-01-01T09:00:00', 'UTC')),
         exDates: [
           adapter.date('2025-01-01T09:00:00', 'UTC'),
           adapter.date('2025-01-02T09:00:00', 'UTC'),
