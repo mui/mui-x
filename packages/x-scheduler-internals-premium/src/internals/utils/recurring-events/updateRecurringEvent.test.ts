@@ -46,7 +46,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           dataTimezone: {
             ...defaultEvent.dataTimezone,
             rrule: originalRule,
-            start: processDate(originalSeriesStart, adapter),
+            start: processDate(originalSeriesStart, adapter, defaultEvent.dataTimezone.timezone),
           },
         },
         split,
@@ -544,7 +544,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // Sunday
       const newStart = adapter.date('2025-01-11T11:00:00Z', 'default'); // Saturday
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['SA'] });
     });
@@ -557,7 +557,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // SU
       const newStart = adapter.date('2025-01-11T11:00:00Z', 'default'); // SA
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'WE', 'SA'] });
     });
@@ -570,7 +570,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default'); // SU
       const newStart = adapter.date('2025-01-11T11:00:00Z', 'default'); // SA
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       // MO before WE before SA, though SU moved to SA.
       expect(next.byDay).to.deep.equal(['MO', 'WE', 'SA']);
@@ -581,7 +581,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
       const newStart = adapter.date('2025-01-12T11:00:00Z', 'default');
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'MONTHLY', byMonthDay: [12] });
     });
@@ -592,7 +592,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-14T09:00:00Z', 'default'); // second Tuesday
       const newStart = adapter.date('2025-01-18T11:00:00Z', 'default'); // third Saturday
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal({ freq: 'MONTHLY', byDay: ['3SA'] });
     });
@@ -602,7 +602,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
       const newStart = adapter.date('2025-01-12T11:00:00Z', 'default');
 
-      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart, 'default');
 
       expect(next).to.deep.equal(rrule);
     });

@@ -42,14 +42,9 @@ export const schedulerOtherSelectors = {
    */
   dateLocale: (state: State) => state.dateLocale,
   /**
-   * `visibleDate` in the display timezone, for the code that formats it or passes it on.
+   * A copy of `visibleDate`, created by the Scheduler, for the code that passes it on.
    */
-  visibleDate: createSelectorMemoized(
-    (state: State) => state.adapter,
-    visibleTimestamp,
-    (state: State) => state.displayTimezone,
-    createAdapterDate,
-  ),
+  visibleDate: createSelectorMemoized(visibleTimestamp, createAdapterDate),
   /**
    * The date of `visibleDate` in the display timezone, for the code that works on plain dates.
    */

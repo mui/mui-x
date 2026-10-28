@@ -51,7 +51,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const processDisplayDate = (epochMs: number, dataDate: SchedulerProcessedDate) =>
     displayTimezone === dataTimezone && epochMs === dataDate.timestamp
       ? { ...dataDate }
-      : createProcessedDate(adapter, epochMs, displayTimezone);
+      : createProcessedDate(epochMs, displayTimezone);
 
   return series.getOccurrenceDays(scanFirstDay, scanLastDay).map((day) => {
     const startMs = toEpochMs(day, series.startMsInDay, dataTimezone);
@@ -61,8 +61,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
     const displayStartMs = event.allDay ? getStartOfDayMs(startMs, displayTimezone) : startMs;
     const displayEndMs = event.allDay ? getEndOfDayMs(endMs, displayTimezone) : endMs;
 
-    const dataStart = createProcessedDate(adapter, startMs, dataTimezone);
-    const dataEnd = createProcessedDate(adapter, endMs, dataTimezone);
+    const dataStart = createProcessedDate(startMs, dataTimezone);
+    const dataEnd = createProcessedDate(endMs, dataTimezone);
     return {
       ...event,
       key: getRecurringOccurrenceKeyFromDateKey(event.id, getPlainDateKey(day)),

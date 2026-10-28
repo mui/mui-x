@@ -16,10 +16,11 @@ function iterateRange(
   weekStartsOn: WeekStartsOn = 7,
   hourWindow: TimelineAxisWindow = { dayStartMinute: 0, dayEndMinute: 1440 },
 ) {
-  // The ranges of the tests run from the first instant of a date to the last instant of a date.
+  // The ranges of the tests run from the first instant of a date to the last instant of a date,
+  // read in the timezone the test creates them in.
   const range = {
-    startPlainDate: buildTemporalPlainDate(adapter, start),
-    endPlainDate: buildTemporalPlainDate(adapter, end).add({ days: 1 }),
+    startPlainDate: buildTemporalPlainDate(adapter, start, adapter.getTimezone(start)),
+    endPlainDate: buildTemporalPlainDate(adapter, end, adapter.getTimezone(end)).add({ days: 1 }),
     ...hourWindow,
   };
   return iterate(unit, tickUnit, range, weekStartsOn);

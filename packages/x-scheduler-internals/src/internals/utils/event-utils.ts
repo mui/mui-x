@@ -53,8 +53,9 @@ export function getRecurringOccurrenceKey(
   eventId: SchedulerEventId,
   day: TemporalSupportedObject,
   adapter: Adapter,
+  timezone: TemporalTimezone,
 ): string {
-  return getRecurringOccurrenceKeyFromDateKey(eventId, getDateKey(day, adapter));
+  return getRecurringOccurrenceKeyFromDateKey(eventId, getDateKey(day, adapter, timezone));
 }
 
 /**

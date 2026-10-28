@@ -16,6 +16,7 @@ import {
   schedulerRecurringEventsPlugin,
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
+import { buildTemporalPlainDate } from '@mui/x-scheduler-internals/internals';
 import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
 import { adapter as defaultAdapter } from './adapters';
@@ -27,11 +28,10 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
 );
 
 /**
- * Serializes a date as a UTC instant. A date labeled in the event's data timezone
- * stringifies with an offset suffix, which `resolveEventDate` re-reads as wall time.
+ * Serializes a date as a UTC instant.
  */
-function toInstantString(adapter: Adapter, value: Parameters<Adapter['toJsDate']>[0]): string {
-  return adapter.toJsDate(value).toISOString();
+function toInstantString(adapter: Adapter, value: Parameters<Adapter['getTime']>[0]): string {
+  return new Date(adapter.getTime(value)).toISOString();
 }
 
 /**
@@ -233,15 +233,15 @@ export class EventBuilder {
     const dataTimezone = this.event.timezone ?? 'default';
     const anchor = this.event.start
       ? resolveEventDate(this.event.start, dataTimezone, this.adapter)
-      : this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
+      : DEFAULT_TESTING_VISIBLE_DATE;
 
     let base: SchedulerEventRecurrenceRule = { freq: kind, interval: 1 };
 
     if (kind === 'WEEKLY') {
-      const code = getWeekDayCode(this.adapter, anchor);
+      const code = getWeekDayCode(this.adapter, anchor, dataTimezone);
       base = { ...base, byDay: [code] };
     } else if (kind === 'MONTHLY') {
-      const dayOfMonth = this.adapter.getDate(anchor);
+      const dayOfMonth = buildTemporalPlainDate(this.adapter, anchor, dataTimezone).day;
       base = { ...base, byMonthDay: [dayOfMonth] };
     }
 

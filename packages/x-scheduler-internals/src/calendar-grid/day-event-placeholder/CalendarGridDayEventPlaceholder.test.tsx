@@ -8,8 +8,8 @@ import { buildTemporalPlainDate } from '../../internals/utils/plain-date-utils/a
 describe('<CalendarGrid.DayEventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.now('default'), adapter);
-  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
+  const eventStart = processDate(adapter.now('default'), adapter, 'default');
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter, 'default');
 
   describeConformance(
     <CalendarGrid.DayEventPlaceholder start={eventStart} end={eventEnd} />,
@@ -20,7 +20,9 @@ describe('<CalendarGrid.DayEventPlaceholder />', () => {
           <EventCalendarProvider events={[]}>
             <CalendarGrid.Root>
               <CalendarGrid.DayRow start={eventStart.timestamp} end={eventEnd.timestamp}>
-                <CalendarGrid.DayCell value={buildTemporalPlainDate(adapter, eventStart.value)}>
+                <CalendarGrid.DayCell
+                  value={buildTemporalPlainDate(adapter, eventStart.value, 'default')}
+                >
                   {node}
                 </CalendarGrid.DayCell>
               </CalendarGrid.DayRow>

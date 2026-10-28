@@ -1987,8 +1987,8 @@ describe('<EventDialogContent open />', () => {
       const expectedStart = adapter.date('2025-06-10T09:00:00', displayTimezone);
       const expectedEnd = adapter.date('2025-06-10T10:00:00', displayTimezone);
 
-      expect(payload.start).toEqualDateTime(expectedStart);
-      expect(payload.end).toEqualDateTime(expectedEnd);
+      expect(adapter.getTime(payload.start)).to.equal(adapter.getTime(expectedStart));
+      expect(adapter.getTime(payload.end)).to.equal(adapter.getTime(expectedEnd));
     });
 
     it("should anchor a weekly rule on the created event's own weekday from another timezone", async () => {
@@ -2677,12 +2677,8 @@ describe('<EventDialogContent open />', () => {
         // The range was validated as a pair in New York, so the untouched start follows the
         // edited end instead of keeping its UTC instant next to a New York end.
         const payload = updateRecurringEventSpy!.mock.lastCall![0];
-        expect(payload.changes.start).toEqualDateTime(
-          adapter.date('2025-07-04T00:00:00', 'America/New_York'),
-        );
-        expect(payload.changes.end).toEqualDateTime(
-          adapter.date('2025-07-05T23:59:59.999', 'America/New_York'),
-        );
+        expect(payload.changes.start).toEqualDateTime('2025-07-04T04:00:00.000Z'); // 00:00 EDT
+        expect(payload.changes.end).toEqualDateTime('2025-07-06T03:59:59.999Z'); // 23:59:59.999 EDT
       });
 
       it('should build a preset on the stored start when only the display timezone moved', async () => {

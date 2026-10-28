@@ -328,11 +328,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     switch (endsSelection) {
       case 'until': {
         // The end of the event's last day, in its own timezone.
-        const until = createAdapterDate(
-          adapter,
-          getEndOfDayMs(ruleBounds.end, eventTimezone),
-          eventTimezone,
-        );
+        const until = createAdapterDate(getEndOfDayMs(ruleBounds.end, eventTimezone));
         updateCustomDraft({ until, count: undefined });
         break;
       }
@@ -677,7 +673,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 type="date"
                 value={
                   customEndsValue === 'until' && adapter.isValid(rruleDraft.until ?? null)
-                    ? buildTemporalPlainDate(adapter, rruleDraft.until!).toString()
+                    ? buildTemporalPlainDate(adapter, rruleDraft.until!, eventTimezone).toString()
                     : ''
                 }
                 onChange={handleChangeUntil}
