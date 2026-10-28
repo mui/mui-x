@@ -78,12 +78,13 @@ StandaloneMonthView.propTypes /* remove-proptypes */ = {
    */
   canDropEventsToTheOutside: PropTypes.bool,
   /**
-   * The locale object from `date-fns` used to format dates.
-   * This affects day names, month names, week start day, and other locale-dependent formatting.
-   * Import a locale from `date-fns/locale` and pass it to this prop.
-   * @default enUS (English)
+   * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
+   * `Intl.DateTimeFormat`.
+   * This affects day names, month names, the first day of the week, week numbers and the other
+   * locale-dependent formatting.
+   * @default "en-US"
    */
-  dateLocale: PropTypes.object,
+  dateLocale: PropTypes.string,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
@@ -95,7 +96,7 @@ StandaloneMonthView.propTypes /* remove-proptypes */ = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
-    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+    weekStartsOn: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   }),
   /**
    * The view initially displayed in the calendar.
@@ -234,7 +235,7 @@ StandaloneMonthView.propTypes /* remove-proptypes */ = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
-    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
+    weekStartsOn: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7]),
   }),
   /**
    * Config of the preferences menu.

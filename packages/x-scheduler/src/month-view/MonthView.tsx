@@ -10,10 +10,10 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import { getDayListFromPlainDates } from '@mui/x-scheduler-internals/get-day-list';
 import {
+  formatPlainDate,
   getPlainDateWeekStart,
   plainDateFromDayNumber,
 } from '@mui/x-scheduler-internals/internals';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
@@ -136,10 +136,8 @@ const MONTH_VIEW_DEFINITION: EventCalendarViewDefinition = {
       const lastOfMonth = firstOfMonth.with({ day: firstOfMonth.daysInMonth });
       return getDayListFromPlainDates({
         adapter,
-        firstPlainDate: getPlainDateWeekStart(adapter, firstOfMonth, weekStartsOn),
-        lastPlainDate: getPlainDateWeekStart(adapter, lastOfMonth, weekStartsOn).add({
-          days: 6,
-        }),
+        firstPlainDate: getPlainDateWeekStart(firstOfMonth, weekStartsOn),
+        lastPlainDate: getPlainDateWeekStart(lastOfMonth, weekStartsOn).add({ days: 6 }),
         timezone,
         excludeWeekends: !showWeekends,
       });
@@ -156,7 +154,6 @@ export const MonthView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     // Context hooks
-    const adapter = useAdapterContext();
     const { classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
@@ -166,6 +163,7 @@ export const MonthView = React.memo(
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
     const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
+    const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(2);
@@ -235,7 +233,7 @@ export const MonthView = React.memo(
                   aria-colindex={dayIdx + 1}
                   skipDataCurrent
                 >
-                  {adapter.formatByString(weekDay.value, 'ccc')}
+                  {formatPlainDate(locale, weekDay.plainDate, 'weekdayShort')}
                 </MonthViewHeaderCell>
               ))}
             </MonthViewHeader>

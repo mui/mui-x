@@ -22,7 +22,7 @@ import type {
   SchedulerEventDeletionConfig,
   RecurringEventScope,
 } from '../../../models';
-import type { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import type { Adapter } from '../../../use-adapter/useAdapter.types';
 import type { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 export interface StoredError {
@@ -70,6 +70,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
    */
   adapter: Adapter;
+  /**
+   * The locale the dates are formatted in.
+   */
+  dateLocale: string;
   /**
    * The date used to determine the visible date range.
    */
@@ -428,12 +432,13 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   displayTimezone?: TemporalTimezone;
   /**
-   * The locale object from `date-fns` used to format dates.
-   * This affects day names, month names, week start day, and other locale-dependent formatting.
-   * Import a locale from `date-fns/locale` and pass it to this prop.
-   * @default enUS (English)
+   * The locale of the dates, as a BCP 47 language tag such as `"fr-FR"`, like the locales of
+   * `Intl.DateTimeFormat`.
+   * This affects day names, month names, the first day of the week, week numbers and the other
+   * locale-dependent formatting.
+   * @default "en-US"
    */
-  dateLocale?: DateLocale;
+  dateLocale?: string;
 
   /**
    * Configures how events are deleted.

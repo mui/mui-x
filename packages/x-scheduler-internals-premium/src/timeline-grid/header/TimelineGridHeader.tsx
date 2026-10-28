@@ -4,8 +4,10 @@ import { useStore } from '@base-ui/utils/store';
 import type { BaseUIComponentProps } from '@base-ui/react/internals/types';
 import { useRenderElement } from '@base-ui/react/internals/useRenderElement';
 import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import type { IteratedCell } from '../../models';
@@ -26,12 +28,12 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     ...elementProps
   } = componentProps;
 
-  const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   const config = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const { headers, timeResolution } = config;
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
   // The header re-renders on every horizontal scroll (it subscribes to the
@@ -40,9 +42,9 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const cellsPerLevel = React.useMemo(
     () =>
       config.headers.map((level) =>
-        iterate(adapter, level.unit, config.timeResolution, config, weekStartsOn),
+        iterate(level.unit, config.timeResolution, config, weekStartsOn),
       ),
-    [adapter, config, weekStartsOn],
+    [config, weekStartsOn],
   );
   // Indexed like the cells of each level.
   const labelsPerLevel = React.useMemo(
@@ -50,11 +52,11 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
       config.headers.map((level, levelIndex) =>
         cellsPerLevel[levelIndex].map((cell) =>
           level.renderCell
-            ? level.renderCell({ ...cell, adapter, ampm, level: levelIndex, unit: level.unit })
-            : level.formatDate(adapter, cell.plainDate),
+            ? level.renderCell({ ...cell, locale, ampm, level: levelIndex, unit: level.unit })
+            : level.formatDate(locale, cell.plainDate),
         ),
       ),
-    [adapter, ampm, cellsPerLevel, config.headers],
+    [locale, ampm, cellsPerLevel, config.headers],
   );
 
   const children = headers.map((level, levelIndex) => {

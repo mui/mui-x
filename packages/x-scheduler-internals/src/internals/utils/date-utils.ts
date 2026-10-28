@@ -2,48 +2,8 @@ import type { TemporalTimezone, TemporalSupportedObject } from '@base-ui/react/i
 import type { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import { getStartOfWeek as getStartOfWeekDayNumber, PlainDate } from './base-temporal/PlainDate';
-import { createAdapterDate, createLabelDate } from './plain-date-utils/adapter';
 import { plainDateFromDayNumber } from './plain-date-utils/plainDate';
 import { toWallClockIsoString } from './plain-date-utils/timeZone';
-
-/**
- * @example "1:30 PM" or "13:30"
- */
-export function formatHourAndMinutes(
-  adapter: Adapter,
-  date: TemporalSupportedObject,
-  ampm: boolean,
-): string {
-  const f = adapter.formats;
-  const timeFormat = ampm
-    ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
-    : `${f.hours24h}:${f.minutesPadded}`;
-
-  return adapter.formatByString(date, timeFormat);
-}
-
-const hourLabels = new WeakMap<Adapter, string[]>();
-
-/**
- * Formats a wall-clock hour, like `9:00 AM`, rather than an instant: the hour that a
- * spring-forward transition skips has no instant on that day. The label is built on a date in
- * UTC, which has no DST transition. The labels are cached per adapter, which carries the locale,
- * as the Timeline header and the time grid build one label per hour on every render.
- */
-export function formatWallClockHour(adapter: Adapter, hour: number, ampm: boolean): string {
-  let labels = hourLabels.get(adapter);
-  if (!labels) {
-    labels = [];
-    hourLabels.set(adapter, labels);
-  }
-  const index = hour * 2 + Number(ampm);
-  labels[index] ??= formatHourAndMinutes(
-    adapter,
-    createAdapterDate(adapter, Date.UTC(2020, 0, 1, hour), 'UTC'),
-    ampm,
-  );
-  return labels[index];
-}
 
 /**
  * Converts a `TemporalSupportedObject` back to a string, respecting the
@@ -84,76 +44,45 @@ function checkWeekStartsOn(weekStartsOn: WeekStartsOn) {
   if (process.env.NODE_ENV !== 'production') {
     if (
       !Number.isInteger(weekStartsOn) ||
-      (weekStartsOn as number) < 0 ||
-      (weekStartsOn as number) > 6
+      (weekStartsOn as number) < 1 ||
+      (weekStartsOn as number) > 7
     ) {
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
-        `MUI X Scheduler: weekStartsOn must be an integer between 0 (Sunday) and 6 (Saturday),` +
+        `MUI X Scheduler: weekStartsOn must be an integer between 1 (Monday) and 7 (Sunday),` +
           ` but received ${weekStartsOn}.`,
       );
     }
   }
 }
 
-const localeFirstDaysOfWeek = new WeakMap<Adapter, number>();
-
 /**
- * The ISO weekday (1 = Monday … 7 = Sunday) the weeks of the locale of the adapter start on.
+ * The first day of the week of `plainDate`.
  */
-function getLocaleFirstDayOfWeek(adapter: Adapter): number {
-  let firstDayOfWeek = localeFirstDaysOfWeek.get(adapter);
-  if (firstDayOfWeek === undefined) {
-    // The adapter numbers the days of the week from 1, starting on the first day of the locale.
-    // January 1st, 2024 is a Monday.
-    const monday = createLabelDate(adapter, PlainDate.from('2024-01-01'));
-    firstDayOfWeek = ((8 - adapter.getDayOfWeek(monday)) % 7) + 1;
-    localeFirstDaysOfWeek.set(adapter, firstDayOfWeek);
-  }
-  return firstDayOfWeek;
+export function getPlainDateWeekStart(plainDate: PlainDate, weekStartsOn: WeekStartsOn): PlainDate {
+  checkWeekStartsOn(weekStartsOn);
+  return plainDateFromDayNumber(getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn));
 }
 
 /**
- * The first day of the week of `plainDate`. Without `weekStartsOn`, the week starts on the first
- * day of the locale of the adapter.
- */
-export function getPlainDateWeekStart(
-  adapter: Adapter,
-  plainDate: PlainDate,
-  weekStartsOn: WeekStartsOn | undefined,
-): PlainDate {
-  if (weekStartsOn !== undefined) {
-    checkWeekStartsOn(weekStartsOn);
-  }
-  // `weekStartsOn` and ISO weekdays agree, except for Sunday (0 and 7), which both accept.
-  return plainDateFromDayNumber(
-    getStartOfWeekDayNumber(plainDate.dayNumber, weekStartsOn ?? getLocaleFirstDayOfWeek(adapter)),
-  );
-}
-
-/**
- * Returns the week number of `plainDate`, using `weekStartsOn` as the first day of
- * the week (0 = Sunday … 6 = Saturday).
+ * Returns the week number of `plainDate`, with weeks starting on `weekStartsOn`
+ * (1 = Monday … 7 = Sunday).
  *
- * Applies the ISO 8601 "4-day minimum" rule (the Thursday of each week
- * determines its year) with a parametric first day of the week. When
- * `weekStartsOn` is 1 the result is a standard ISO 8601 week number; for
- * other values it is the same algorithm with a shifted origin.
+ * The first week of a year is the first one with at least `minimalDays` days in that year, like in
+ * `Intl.Locale.prototype.getWeekInfo()`. With weeks starting on Monday and 4 minimal days, the
+ * result is the ISO 8601 week number.
  */
 export function getWeekNumber(
-  adapter: Adapter,
   plainDate: PlainDate,
-  weekStartsOn: WeekStartsOn | undefined,
+  weekStartsOn: WeekStartsOn,
+  minimalDays: number,
 ): number {
-  if (weekStartsOn === undefined) {
-    // The adapter numbers the weeks with the rules of its locale.
-    return adapter.getWeekNumber(createLabelDate(adapter, plainDate));
-  }
-  const weekStartPlainDate = getPlainDateWeekStart(adapter, plainDate, weekStartsOn);
-  // The week belongs to the year of its 4th day, and the first week of a year holds January 4th.
-  const year = weekStartPlainDate.add({ days: 3 }).year;
+  const weekStartPlainDate = getPlainDateWeekStart(plainDate, weekStartsOn);
+  // A week belongs to the year of its last `minimalDays` days, and the first week of a year holds
+  // its `minimalDays`-th day.
+  const year = weekStartPlainDate.add({ days: 7 - minimalDays }).year;
   const firstWeekStart = getStartOfWeekDayNumber(
-    PlainDate.from({ year, month: 1, day: 4 }).dayNumber,
+    PlainDate.from({ year, month: 1, day: minimalDays }).dayNumber,
     weekStartsOn,
   );
   return (weekStartPlainDate.dayNumber - firstWeekStart) / 7 + 1;

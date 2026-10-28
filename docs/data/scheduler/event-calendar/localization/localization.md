@@ -89,13 +89,17 @@ import { frFR } from '@mui/x-scheduler/locales';
 ## Date locale
 
 The `localeText` prop only translates the UI labels (button text, menu items, etc.).
-To also translate formatted dates (day names, month names, and week start day), pass a `date-fns` locale object.
+To also translate **formatted dates** (day names, month names, and week start day), pass a locale to the `dateLocale` prop, such as `"fr-FR"`.
+The dates are formatted with [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat), so `dateLocale` accepts the same locales, and they need no import.
+The dates always use the Gregorian calendar, even when the default calendar of the locale is another one.
+
+The locale also sets the numbering of the weeks, and the first day of the week unless the [`weekStartsOn` preference](/x/react-scheduler/event-calendar/preferences/) is set.
+The first day of the week comes from [`Intl.Locale.prototype.getWeekInfo()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo): the browsers that don't support it start the weeks on Monday.
 
 Use the `createDateLocaleTheme` helper to set the date locale globally via the theme, alongside `localeText` translations:
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { fr } from 'date-fns/locale/fr';
 import { frFR, createDateLocaleTheme } from '@mui/x-scheduler/locales';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
@@ -106,7 +110,7 @@ const theme = createTheme(
     },
   },
   frFR,
-  createDateLocaleTheme(fr),
+  createDateLocaleTheme('fr-FR'),
 );
 
 <ThemeProvider theme={theme}>
@@ -117,10 +121,9 @@ const theme = createTheme(
 You can pass the `dateLocale` prop directly to the component to override the theme value or avoid using a theme:
 
 ```jsx
-import { fr } from 'date-fns/locale/fr';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
-<EventCalendar dateLocale={fr} />;
+<EventCalendar dateLocale="fr-FR" />;
 ```
 
 {{"demo": "DateLocaleCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -142,7 +145,7 @@ Follow the [right-to-left guide](/material-ui/customization/right-to-left/) to s
 Set `dir="rtl"` on the `<html>` or `<body>` element, not on a wrapper around the Event Calendar.
 The Event Calendar renders its dialogs and popovers in a portal at the end of `<body>`, so a `dir` attribute on a wrapper element doesn't apply to them.
 
-The demo below uses the Hebrew translations (`heIL`) and the Hebrew date locale.
+The demo below uses the Hebrew translations (`heIL`) and the `he-IL` date locale.
 The documentation page is left-to-right, so this demo sets `dir="rtl"` on its container instead, and its dialogs and popovers stay left-to-right.
 
 {{"demo": "RTLCalendar.js", "bg": "inline"}}

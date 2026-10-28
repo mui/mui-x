@@ -11,14 +11,13 @@ import Menu from '@mui/icons-material/Menu';
 import Today from '@mui/icons-material/Today';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   eventCalendarPreferenceSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { getWeekNumber } from '@mui/x-scheduler-internals/internals';
+import { formatPlainDate, getWeekNumber } from '@mui/x-scheduler-internals/internals';
 import type { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
@@ -100,7 +99,6 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
-  const adapter = useAdapterContext();
   const isRtl = useRtl();
   const PreviousIcon = isRtl ? ChevronRight : ChevronLeft;
   const NextIcon = isRtl ? ChevronLeft : ChevronRight;
@@ -108,15 +106,16 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
   const view = useStore(store, eventCalendarViewSelectors.view);
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
+  const minimalDaysInFirstWeek = useStore(store, schedulerOtherSelectors.minimalDaysInFirstWeek);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   const { onCompactMenuClick, className, ...other } = props;
 
-  const weekNumber = getWeekNumber(adapter, visiblePlainDate, weekStartsOn);
+  const weekNumber = getWeekNumber(visiblePlainDate, weekStartsOn, minimalDaysInFirstWeek);
   const showViewSwitcher = views.length > 1;
   const showWeekLabel = showWeekNumber && (view === 'week' || view === 'day');
 
@@ -160,8 +159,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           aria-live="polite"
           className={classes.headerToolbarLabel}
         >
-          {adapter.format(visibleDate, 'monthFullLetter')}{' '}
-          {adapter.format(visibleDate, 'yearPadded')}
+          {formatPlainDate(locale, visiblePlainDate, 'monthAndYear')}
           {showWeekLabel && (
             <HeaderToolbarWeekNumber className={classes.headerToolbarWeekNumber}>
               {`${localeText.week} ${weekNumber}`}

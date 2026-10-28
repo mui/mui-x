@@ -239,7 +239,7 @@ describe('week number badge', () => {
     expect(badge).to.have.text('Week 1');
   });
 
-  it('shows "Week 2" for Jan 5 2025 when weekStartsOn=0 (regression)', () => {
+  it('shows "Week 2" for Jan 5 2025 when weekStartsOn=7 (regression)', () => {
     const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
 
     render(
@@ -247,7 +247,7 @@ describe('week number badge', () => {
         events={[]}
         visibleDate={visibleDate}
         view="week"
-        preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+        preferences={{ showWeekNumber: true, weekStartsOn: 7 }}
       />,
     );
 
@@ -255,6 +255,30 @@ describe('week number badge', () => {
     expect(badge).not.to.equal(null);
     expect(badge).to.have.text('Week 2');
   });
+
+  it.each([
+    // January 1st is in the first week in English (United States), and the first week holds
+    // January 4th in French.
+    { dateLocale: 'en-US', expected: 'Week 1' },
+    { dateLocale: 'fr-FR', expected: 'Week 53' },
+  ])(
+    'numbers the week of Friday, January 1st, 2027 with the rules of $dateLocale',
+    ({ dateLocale, expected }) => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={adapter.date('2027-01-01T12:00:00Z', 'default')}
+          view="week"
+          dateLocale={dateLocale}
+          preferences={{ showWeekNumber: true }}
+        />,
+      );
+
+      expect(
+        document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`),
+      ).to.have.text(expected);
+    },
+  );
 });
 
 describe('side panel toggle', () => {

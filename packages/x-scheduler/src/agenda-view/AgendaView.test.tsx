@@ -112,7 +112,7 @@ describe('<AgendaView />', () => {
       const parts = screen.getAllByRole('button', { name: /^Trip/ });
       expect(parts).to.have.length(2);
       const [firstDay, secondDay] = parts;
-      expect(firstDay).to.have.text('Ends 31 DecTrip');
+      expect(firstDay).to.have.text('Ends Dec 31Trip');
       expect(firstDay).to.have.attribute('data-ending-after-edge');
       expect(firstDay).not.to.have.attribute('data-starting-before-edge');
       expect(secondDay).to.have.attribute('data-starting-before-edge');
@@ -128,7 +128,7 @@ describe('<AgendaView />', () => {
     );
 
     const eventButton = screen.getByRole('button', {
-      name: 'My Event, 12:00 AM to 1:00 AM, Thursday, July 3rd, 2025',
+      name: 'My Event, 12:00 AM to 1:00 AM, Thursday, July 3, 2025',
     });
     expect(eventButton).not.to.have.attribute('aria-labelledby');
   });
@@ -319,13 +319,13 @@ describe('<AgendaView />', () => {
       expect(separators.length).to.be.at.least(2);
     });
 
-    it('renders the second week separator before the Sunday when weekStartsOn=0', () => {
+    it('renders the second week separator before the Sunday when weekStartsOn=7', () => {
       render(
         <EventCalendar
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           view="agenda"
-          preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+          preferences={{ showWeekNumber: true, weekStartsOn: 7 }}
         />,
       );
 
@@ -373,7 +373,7 @@ describe('<AgendaView />', () => {
       expect(within(nextRow).getByText('5')).not.to.equal(null);
     });
 
-    it('shows "Week 2" for Jan 5 2025 when weekStartsOn=0', () => {
+    it('shows "Week 2" for Jan 5 2025 when weekStartsOn=7', () => {
       const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
 
       render(
@@ -381,7 +381,7 @@ describe('<AgendaView />', () => {
           events={[]}
           visibleDate={visibleDate}
           view="agenda"
-          preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+          preferences={{ showWeekNumber: true, weekStartsOn: 7 }}
         />,
       );
 

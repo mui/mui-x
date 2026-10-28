@@ -1,6 +1,7 @@
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { EventCalendarState as State } from '../use-event-calendar';
 import { DEFAULT_EVENT_CALENDAR_PREFERENCES } from '../use-event-calendar/EventCalendarStore';
+import { schedulerPreferenceSelectors } from '../scheduler-selectors/schedulerPreferenceSelectors';
 
 const allPreferencesSelector = createSelectorMemoized(
   (state: State) => state.preferences,
@@ -18,5 +19,5 @@ export const eventCalendarPreferenceSelectors = {
   showWeekNumber: (state: State) => allPreferencesSelector(state).showWeekNumber,
   showEmptyDaysInAgenda: (state: State) => allPreferencesSelector(state).showEmptyDaysInAgenda,
   isSidePanelOpen: (state: State) => allPreferencesSelector(state).isSidePanelOpen,
-  weekStartsOn: (state: State) => allPreferencesSelector(state).weekStartsOn,
+  weekStartsOn: schedulerPreferenceSelectors.weekStartsOn,
 };

@@ -238,7 +238,7 @@ describe('<PreferencesMenu />', () => {
       const { user } = render(
         <EventCalendarProvider
           events={[]}
-          defaultPreferences={{ weekStartsOn: 0 }}
+          defaultPreferences={{ weekStartsOn: 7 }}
           preferencesMenuConfig={{ toggleWeekStartsOn: true }}
         >
           <PreferencesMenu />

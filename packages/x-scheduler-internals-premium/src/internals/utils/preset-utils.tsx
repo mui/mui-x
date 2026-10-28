@@ -1,38 +1,33 @@
 import * as React from 'react';
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import {
   addToAdapterDate,
-  createLabelDate,
-  formatWallClockHour,
+  formatPlainDate,
+  formatTime,
   getPlainDateWeekStart,
 } from '@mui/x-scheduler-internals/internals';
-import type { PlainDate, PlainDateDuration } from '@mui/x-scheduler-internals/internals';
+import type {
+  PlainDate,
+  PlainDateDuration,
+  SchedulerDateFormat,
+} from '@mui/x-scheduler-internals/internals';
 import type { EventTimelinePremiumPreset, PresetDefinition, PresetHeaderUnit } from '../../models';
 
-type FormatDate = (adapter: TemporalAdapter, plainDate: PlainDate) => string;
+const HOUR_MS = 3_600_000;
 
 const DAY_AND_HOUR_DAYS = 4;
 
-const formatYear: FormatDate = (_adapter, plainDate) => String(plainDate.year);
+const createFormatDate =
+  (format: SchedulerDateFormat) =>
+  (locale: string, plainDate: PlainDate): string =>
+    formatPlainDate(locale, plainDate, format);
 
-const formatMonth3Letters: FormatDate = (adapter, plainDate) =>
-  adapter.format(createLabelDate(adapter, plainDate), 'month3Letters');
+const formatYear = createFormatDate('year');
 
-const formatWeekDayMonthAndDayOfMonth: FormatDate = (adapter, plainDate) => {
-  const f = adapter.formats;
-  return adapter.formatByString(
-    createLabelDate(adapter, plainDate),
-    `${f.weekday3Letters}, ${f.month3Letters} ${f.dayOfMonth}`,
-  );
-};
+const formatMonthShort = createFormatDate('monthShort');
 
-const formatMonthAndYear: FormatDate = (adapter, plainDate) => {
-  const f = adapter.formats;
-  return adapter.formatByString(
-    createLabelDate(adapter, plainDate),
-    `${f.monthFullLetter} ${f.yearPadded}`,
-  );
-};
+const formatWeekdayMonthAndDayOfMonth = createFormatDate('weekdayShortMonthShortAndDayOfMonth');
+
+const formatMonthAndYear = createFormatDate('monthAndYear');
 
 /**
  * The range and the navigation of a preset made of `unitCount` periods of a `unit`, like days or
@@ -41,7 +36,7 @@ const formatMonthAndYear: FormatDate = (adapter, plainDate) => {
  */
 function createPlainDateRange(
   unit: keyof PlainDateDuration,
-  getStartPlainDate: PresetDefinition['getStartPlainDate'] = (_adapter, plainDate) => plainDate,
+  getStartPlainDate: PresetDefinition['getStartPlainDate'] = (plainDate) => plainDate,
 ): Pick<PresetDefinition, 'getStartPlainDate' | 'getEndPlainDate' | 'navigate'> {
   const toDuration = (amount: number) => ({ [unit]: amount }) as PlainDateDuration;
   return {
@@ -65,12 +60,14 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     timeResolution: 'hour',
     tickWidth: 64,
     headers: [
-      { unit: 'day', formatDate: formatWeekDayMonthAndDayOfMonth },
+      { unit: 'day', formatDate: formatWeekdayMonthAndDayOfMonth },
       {
         unit: 'hour',
-        // The hour row ticks in hours, so `iterate()` sets `wallClockHour` on all its cells.
-        renderCell: ({ adapter, wallClockHour, ampm }) =>
-          formatWallClockHour(adapter, wallClockHour!, ampm),
+        // The hour row ticks in hours, so `iterate()` sets `wallClockHour` on all its cells. The
+        // label is a wall-clock time: the hour that a spring-forward transition skips has no
+        // instant on that day.
+        renderCell: ({ locale, wallClockHour, ampm }) =>
+          formatTime(locale, wallClockHour! * HOUR_MS, ampm),
       },
     ],
     unitCount: DAY_AND_HOUR_DAYS,
@@ -87,15 +84,12 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       { unit: 'month', formatDate: formatMonthAndYear },
       {
         unit: 'day',
-        renderCell: ({ adapter, plainDate }) => {
-          const date = createLabelDate(adapter, plainDate);
-          return (
-            <span data-slot="dayCell">
-              <span data-slot="weekday">{adapter.format(date, 'weekday1Letter')}</span>
-              <span data-slot="dayOfMonth">{adapter.format(date, 'dayOfMonth')}</span>
-            </span>
-          );
-        },
+        renderCell: ({ locale, plainDate }) => (
+          <span data-slot="dayCell">
+            <span data-slot="weekday">{formatPlainDate(locale, plainDate, 'weekdayNarrow')}</span>
+            <span data-slot="dayOfMonth">{formatPlainDate(locale, plainDate, 'dayOfMonth')}</span>
+          </span>
+        ),
       },
     ],
     unitCount: 8 * 7, // 8 weeks
@@ -107,14 +101,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     headers: [
       {
         unit: 'week',
-        renderCell: ({ adapter, firstPlainDate, lastPlainDate }) =>
-          `${formatWeekDayMonthAndDayOfMonth(adapter, firstPlainDate)} - ${formatWeekDayMonthAndDayOfMonth(adapter, lastPlainDate)}`,
+        renderCell: ({ locale, firstPlainDate, lastPlainDate }) =>
+          `${formatWeekdayMonthAndDayOfMonth(locale, firstPlainDate)} - ${formatWeekdayMonthAndDayOfMonth(locale, lastPlainDate)}`,
       },
-      {
-        unit: 'day',
-        formatDate: (adapter, plainDate) =>
-          adapter.format(createLabelDate(adapter, plainDate), 'weekday1Letter'),
-      },
+      { unit: 'day', formatDate: createFormatDate('weekdayNarrow') },
     ],
     unitCount: 16, // 16 weeks
     ...createPlainDateRange('weeks', getPlainDateWeekStart),
@@ -125,10 +115,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     tickWidth: 6,
     headers: [
       { unit: 'year', formatDate: formatYear },
-      { unit: 'month', formatDate: formatMonth3Letters },
+      { unit: 'month', formatDate: formatMonthShort },
     ],
     unitCount: 3 * 12, // 3 years
-    ...createPlainDateRange('months', (_adapter, plainDate) => plainDate.with({ day: 1 })),
+    ...createPlainDateRange('months', (plainDate) => plainDate.with({ day: 1 })),
     getCssUnitCount: getDayCount,
   },
   year: {
@@ -136,7 +126,7 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
     tickWidth: 200,
     headers: [{ unit: 'year', formatDate: formatYear }],
     unitCount: 30, // 30 years
-    ...createPlainDateRange('years', (_adapter, plainDate) => plainDate.with({ month: 1, day: 1 })),
+    ...createPlainDateRange('years', (plainDate) => plainDate.with({ month: 1, day: 1 })),
   },
 };
 

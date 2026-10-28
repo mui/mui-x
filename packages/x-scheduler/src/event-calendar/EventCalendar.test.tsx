@@ -7,7 +7,6 @@ import {
   EventBuilder,
   ResourceBuilder,
   withinMonthView,
-  dateLocaleFr,
   setSystemTimezone,
 } from 'test/utils/scheduler';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
@@ -52,7 +51,7 @@ describe('EventCalendar', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025, Resource: Sport',
+        name: 'Running, 7:30 AM to 8:15 AM, Monday, May 26, 2025, Resource: Sport',
       }),
     ).not.to.equal(null);
   });
@@ -85,7 +84,7 @@ describe('EventCalendar', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday, May 26th, 2025' }),
+      screen.getByRole('button', { name: 'Running, de 7:30 AM a 8:15 AM, Monday, May 26, 2025' }),
     ).not.to.equal(null);
   });
 
@@ -104,11 +103,11 @@ describe('EventCalendar', () => {
 
     expect(mondayEvent).to.have.attribute(
       'aria-label',
-      'Running, 7:30 AM to 8:15 AM, Monday, May 26th, 2025',
+      'Running, 7:30 AM to 8:15 AM, Monday, May 26, 2025',
     );
     expect(tuesdayEvent).to.have.attribute(
       'aria-label',
-      'Weekly, 4:00 PM to 5:00 PM, Tuesday, May 27th, 2025',
+      'Weekly, 4:00 PM to 5:00 PM, Tuesday, May 27, 2025',
     );
     expect(mondayEvent).not.to.have.attribute('aria-labelledby');
 
@@ -249,7 +248,7 @@ describe('EventCalendar', () => {
         const currentLabels = Array.from(document.querySelectorAll('[aria-current="date"]')).map(
           (element) => element.getAttribute('aria-label') ?? element.textContent,
         );
-        expect(currentLabels).to.deep.equal(['Friday, December 30th, 2011', viewLabel]);
+        expect(currentLabels).to.deep.equal(['Friday, December 30, 2011', viewLabel]);
         expect(
           document.querySelectorAll(`.${eventCalendarClasses.dayTimeGridColumn}[data-current]`),
         ).to.have.length(currentColumnCount);
@@ -425,7 +424,7 @@ describe('EventCalendar', () => {
 
       expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
         'aria-label',
-        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+        'Running, 07:30 to 08:15, Monday, May 26, 2025',
       );
 
       // Show 12 hours format again
@@ -452,7 +451,7 @@ describe('EventCalendar', () => {
       await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
       expect(screen.getByRole('button', { name: /^Running,/ })).to.have.attribute(
         'aria-label',
-        'Running, 7:30 to 8:15, Monday, May 26th, 2025',
+        'Running, 07:30 to 08:15, Monday, May 26, 2025',
       );
 
       // Show 12 hours format again
@@ -517,16 +516,16 @@ describe('EventCalendar', () => {
   });
 
   describe('dateLocale', () => {
-    it('should render day headers in French when dateLocale is set to fr', () => {
-      render(<EventCalendar events={[]} dateLocale={dateLocaleFr} />);
+    it('should render day headers in French when dateLocale is fr-FR', () => {
+      render(<EventCalendar events={[]} dateLocale="fr-FR" />);
 
       // In French, Monday is "lundi" and week starts on Monday by default
       expect(screen.getByRole('columnheader', { name: /lundi 26/i })).not.to.equal(null);
       expect(screen.getByRole('columnheader', { name: /mardi 27/i })).not.to.equal(null);
     });
 
-    it('should render month view headers in French when dateLocale is set to fr', () => {
-      render(<EventCalendar events={[]} defaultView="month" dateLocale={dateLocaleFr} />);
+    it('should render month view headers in French when dateLocale is fr-FR', () => {
+      render(<EventCalendar events={[]} defaultView="month" dateLocale="fr-FR" />);
 
       const monthView = withinMonthView();
 

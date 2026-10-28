@@ -1,54 +1,36 @@
-import type { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { createStartOfPlainDate } from '@mui/x-scheduler-internals/internals';
+import type { TemporalTimezone } from '@base-ui/react/internals/temporal';
+import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import {
+  createStartOfPlainDate,
+  formatPlainDate,
+  formatTime,
+  toPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { EventCalendarState } from '@mui/x-scheduler-internals/use-event-calendar';
 
 /**
- * @example "Sun, Jul 13"
+ * Formats the date of a processed date, read in `timezone`.
+ * @example "Sunday, July 13, 2025"
  */
-export function formatWeekDayMonthAndDayOfMonth(date: TemporalSupportedObject, adapter: Adapter) {
-  const f = adapter.formats;
-  const dateFormat = `${f.weekday3Letters}, ${f.month3Letters} ${f.dayOfMonth}`;
-
-  return adapter.formatByString(date, dateFormat);
+export function formatFullDate(
+  locale: string,
+  date: SchedulerProcessedDate,
+  timezone: TemporalTimezone,
+): string {
+  return formatPlainDate(locale, toPlainDate(date.timestamp, timezone), 'fullDate');
 }
 
 /**
- * @example "Jul 13"
+ * Formats the wall-clock time of a processed date.
+ * @example "1:30 PM" or "13:30"
  */
-export function formatMonthAndDayOfMonth(date: TemporalSupportedObject, adapter: Adapter) {
-  const f = adapter.formats;
-  const dateFormat = `${f.month3Letters} ${f.dayOfMonth}`;
-
-  return adapter.formatByString(date, dateFormat);
-}
-
-/**
- * @example "13 December"
- */
-export function formatDayOfMonthAndMonthFullLetter(
-  date: TemporalSupportedObject,
-  adapter: Adapter,
-) {
-  const f = adapter.formats;
-  const dateFormat = `${f.dayOfMonth} ${f.monthFullLetter}`;
-
-  return adapter.formatByString(date, dateFormat);
-}
-
-export function formatMonthFullLetterAndYear(date: TemporalSupportedObject, adapter: Adapter) {
-  const f = adapter.formats;
-  const dateFormat = `${f.monthFullLetter} ${f.yearPadded}`;
-
-  return adapter.formatByString(date, dateFormat);
-}
-
-/**
- * @example "Sunday, July 13th, 2025"
- */
-export function formatFullDate(date: TemporalSupportedObject, adapter: Adapter): string {
-  return adapter.format(date, 'localizedDateWithFullMonthAndWeekDay');
+export function formatProcessedDateTime(
+  locale: string,
+  date: SchedulerProcessedDate,
+  ampm: boolean,
+): string {
+  return formatTime(locale, date.minutesInDay * 60_000, ampm);
 }
 
 /**

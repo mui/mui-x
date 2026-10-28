@@ -4,7 +4,6 @@ import rtlPlugin from '@mui/stylis-plugin-rtl';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import { he } from 'date-fns/locale/he';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { heIL, createDateLocaleTheme } from '@mui/x-scheduler/locales';
@@ -113,7 +112,7 @@ export default function RTLTimeline() {
   const existingTheme = useTheme();
   const theme = React.useMemo(
     () =>
-      createTheme(existingTheme, heIL, createDateLocaleTheme(he), {
+      createTheme(existingTheme, heIL, createDateLocaleTheme('he-IL'), {
         direction: 'rtl',
       }),
     [existingTheme],

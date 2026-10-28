@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
@@ -43,13 +42,13 @@ const MonthViewWeekNumberCell = styled('div', {
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { rowIndex, maxEvents, days, occurrencesMap, firstDayRef } = props;
 
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap, maxEvents });
-  const weekNumber = getWeekNumber(adapter, days[0].plainDate, weekStartsOn);
+  const minimalDaysInFirstWeek = useStore(store, schedulerOtherSelectors.minimalDaysInFirstWeek);
+  const weekNumber = getWeekNumber(days[0].plainDate, weekStartsOn, minimalDaysInFirstWeek);
 
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   // `days[0].timestamp` is the first instant of the first day.

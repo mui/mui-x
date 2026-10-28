@@ -1,4 +1,3 @@
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import type {
   RecurringEventPresetKey,
   RecurringEventWeekDayCode,
@@ -78,11 +77,10 @@ export function getDefaultPresetKey(
  * `visiblePlainDate`.
  */
 export function getWeeklyDays(
-  adapter: Adapter,
   visiblePlainDate: PlainDate,
-  weekStartsOn?: WeekStartsOn,
+  weekStartsOn: WeekStartsOn,
 ): { code: RecurringEventWeekDayCode; date: PlainDate }[] {
-  const weekStartPlainDate = getPlainDateWeekStart(adapter, visiblePlainDate, weekStartsOn);
+  const weekStartPlainDate = getPlainDateWeekStart(visiblePlainDate, weekStartsOn);
   return Array.from({ length: 7 }, (_, i) => {
     const plainDate = weekStartPlainDate.add({ days: i });
     return { code: getPlainDateWeekDayCode(plainDate), date: plainDate };

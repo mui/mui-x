@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import type {
   SchedulerProcessedDate,
   SchedulerRenderableEventOccurrence,
-  TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
@@ -17,7 +16,6 @@ import {
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   getOccurrenceDataTimezone,
   getPrimaryResourceId,
@@ -121,7 +119,6 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
   const { occurrence } = props;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const { classes, localeText } = useEventEditingStyledContext();
   const store = useSchedulerStoreContext();
 
@@ -145,27 +142,27 @@ export function ReadonlyEventDetails(props: ReadonlyEventDetailsProps) {
     startPlainDate,
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
 
   // Feature hook
   const formatTime = useFormatTime();
-  const start = occurrence.displayTimezone.start.value;
-  const end = occurrence.displayTimezone.end.value;
+  const { start, end, timezone: boundsTimezone } = occurrence.displayTimezone;
   const isMultiDay = isOccurrenceMultiDay(occurrence);
   const formatBound = occurrence.allDay
-    ? (date: TemporalSupportedObject) => formatFullDate(date, adapter)
-    : (date: TemporalSupportedObject) => `${formatFullDate(date, adapter)}, ${formatTime(date)}`;
-  const boundsTimezone = occurrence.displayTimezone.timezone;
+    ? (date: SchedulerProcessedDate) => formatFullDate(locale, date, boundsTimezone)
+    : (date: SchedulerProcessedDate) =>
+        `${formatFullDate(locale, date, boundsTimezone)}, ${formatTime(date)}`;
   const formatBoundDateTime = (bound: SchedulerProcessedDate) =>
     occurrence.allDay
       ? toPlainDate(bound.timestamp, boundsTimezone).toString()
       : toWallClockIsoString(bound.timestamp, boundsTimezone);
   const recurrenceTimezoneName = React.useMemo(
-    () => getRecurrenceTimezoneName(adapter, eventTimezone, displayTimezone),
-    [adapter, eventTimezone, displayTimezone],
+    () => getRecurrenceTimezoneName(locale, eventTimezone, displayTimezone),
+    [locale, eventTimezone, displayTimezone],
   );
   const recurrenceLabel = React.useMemo(
-    () => getRecurrenceLabel(adapter, startPlainDate, defaultRecurrenceKey, localeText),
-    [adapter, startPlainDate, defaultRecurrenceKey, localeText],
+    () => getRecurrenceLabel(locale, startPlainDate, defaultRecurrenceKey, localeText),
+    [locale, startPlainDate, defaultRecurrenceKey, localeText],
   );
 
   return (

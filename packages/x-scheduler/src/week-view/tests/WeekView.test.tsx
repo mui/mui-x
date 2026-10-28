@@ -426,7 +426,7 @@ describe('<WeekView />', () => {
           events={[]}
           visibleDate={visibleDate}
           view="week"
-          defaultPreferences={{ weekStartsOn: 0 }}
+          defaultPreferences={{ weekStartsOn: 7 }}
         />,
       );
 

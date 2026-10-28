@@ -1,4 +1,4 @@
-import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { describe, it, expect } from 'vitest';
 import { PlainDate } from '@mui/x-scheduler-internals/internals';
 import {
@@ -131,41 +131,41 @@ describe('getRecurrenceTimezoneName', () => {
       .find((part) => part.type === 'timeZoneName')!.value;
 
   it("should name the event's timezone when it is not the display one", () => {
-    expect(getRecurrenceTimezoneName(adapter, 'America/Los_Angeles', 'Europe/Paris')).to.equal(
+    expect(getRecurrenceTimezoneName('en-US', 'America/Los_Angeles', 'Europe/Paris')).to.equal(
       'Pacific Time',
     );
-    expect(getRecurrenceTimezoneName(adapter, 'Asia/Tokyo', 'Europe/Paris')).to.equal(
+    expect(getRecurrenceTimezoneName('en-US', 'Asia/Tokyo', 'Europe/Paris')).to.equal(
       'Japan Standard Time',
     );
   });
 
-  it('should name the timezone in the adapter locale', () => {
-    const frenchName = getRecurrenceTimezoneName(adapterFr, 'America/Los_Angeles', 'Europe/Paris');
-    expect(frenchName).to.equal(genericName('fr', 'America/Los_Angeles'));
+  it('should name the timezone in the locale of the dates', () => {
+    const frenchName = getRecurrenceTimezoneName('fr-FR', 'America/Los_Angeles', 'Europe/Paris');
+    expect(frenchName).to.equal(genericName('fr-FR', 'America/Los_Angeles'));
     expect(frenchName).to.not.equal('Pacific Time');
   });
 
   it('should fall back to the identifier when the runtime only has an offset for it', () => {
-    expect(getRecurrenceTimezoneName(adapter, 'UTC', 'America/New_York')).to.equal('UTC');
+    expect(getRecurrenceTimezoneName('en-US', 'UTC', 'America/New_York')).to.equal('UTC');
     // The offset is spelled differently per locale ("UTC+00:00" in French).
-    expect(getRecurrenceTimezoneName(adapterFr, 'UTC', 'America/New_York')).to.equal('UTC');
+    expect(getRecurrenceTimezoneName('fr-FR', 'UTC', 'America/New_York')).to.equal('UTC');
   });
 
   it('should return null when both timezones are the same', () => {
-    expect(getRecurrenceTimezoneName(adapter, 'Asia/Tokyo', 'Asia/Tokyo')).to.equal(null);
+    expect(getRecurrenceTimezoneName('en-US', 'Asia/Tokyo', 'Asia/Tokyo')).to.equal(null);
   });
 
   it('should treat aliases of the same timezone as the same', () => {
     // Relies on `Intl.DateTimeFormat().resolvedOptions().timeZone` canonicalizing links; the
     // ECMA-402 timezone canonicalization proposal changes that to return the input as is.
-    expect(getRecurrenceTimezoneName(adapter, 'US/Eastern', 'America/New_York')).to.equal(null);
-    expect(getRecurrenceTimezoneName(adapter, 'Etc/UTC', 'UTC')).to.equal(null);
+    expect(getRecurrenceTimezoneName('en-US', 'US/Eastern', 'America/New_York')).to.equal(null);
+    expect(getRecurrenceTimezoneName('en-US', 'Etc/UTC', 'UTC')).to.equal(null);
   });
 
-  it('should resolve the adapter aliases to the system timezone', () => {
-    expect(getRecurrenceTimezoneName(adapter, 'default', 'system')).to.equal(null);
-    expect(getRecurrenceTimezoneName(adapter, 'default', systemTimezone)).to.equal(null);
-    expect(getRecurrenceTimezoneName(adapter, 'default', 'Pacific/Kiritimati')).to.not.equal(null);
+  it('should resolve the timezone keywords to the system timezone', () => {
+    expect(getRecurrenceTimezoneName('en-US', 'default', 'system')).to.equal(null);
+    expect(getRecurrenceTimezoneName('en-US', 'default', systemTimezone)).to.equal(null);
+    expect(getRecurrenceTimezoneName('en-US', 'default', 'Pacific/Kiritimati')).to.not.equal(null);
   });
 });
 

@@ -8,7 +8,6 @@ import { screen } from '@mui/internal-test-utils';
 import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { isJSDOM } from 'test/utils/skipIf';
-import { fr } from 'date-fns/locale/fr';
 import {
   createDateLocaleTheme,
   esES,
@@ -68,7 +67,7 @@ describe('<StandaloneWeekView />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3rd, 2025',
+          name: 'Correr, de 7:30 AM a 8:30 AM, Thursday, July 3, 2025',
         }),
       ).not.to.equal(null);
     });
@@ -94,7 +93,7 @@ describe('<StandaloneWeekView />', () => {
 
       expect(
         screen.getByRole('button', {
-          name: 'Laufen, 7:30 AM to 8:30 AM, Thursday, July 3rd, 2025',
+          name: 'Laufen, 7:30 AM to 8:30 AM, Thursday, July 3, 2025',
         }),
       ).not.to.equal(null);
     });
@@ -107,7 +106,7 @@ describe('<StandaloneWeekView />', () => {
         .build();
 
       render(
-        <ThemeProvider theme={createTheme({}, frFR, createDateLocaleTheme(fr))}>
+        <ThemeProvider theme={createTheme({}, frFR, createDateLocaleTheme('fr-FR'))}>
           <StandaloneWeekView events={[event]} visibleDate={DEFAULT_TESTING_VISIBLE_DATE} />
         </ThemeProvider>,
       );

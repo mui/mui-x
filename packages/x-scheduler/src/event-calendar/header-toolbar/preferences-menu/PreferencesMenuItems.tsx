@@ -133,6 +133,8 @@ export function usePreferencesMenuItems(): {
   const { classes, localeText } = useEventCalendarStyledContext();
 
   const preferences = useStore(store, eventCalendarPreferenceSelectors.all);
+  // Without the preference, the weeks start on the first day of the week of the locale.
+  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   const {
     currentView,
     visibleOptions,
@@ -151,7 +153,7 @@ export function usePreferencesMenuItems(): {
     store.setPreferences({ ampm: value === '12' }, event);
   };
 
-  const handleWeekStartsOnChange = (value: 0 | 1 | 6, event: Event) => {
+  const handleWeekStartsOnChange = (value: 1 | 6 | 7, event: Event) => {
     store.setPreferences({ weekStartsOn: value }, event);
   };
 
@@ -247,7 +249,7 @@ export function usePreferencesMenuItems(): {
     );
     (
       [
-        { value: 0, label: localeText.weekdaySunday },
+        { value: 7, label: localeText.weekdaySunday },
         { value: 1, label: localeText.weekdayMonday },
         { value: 6, label: localeText.weekdaySaturday },
       ] as const
@@ -256,7 +258,7 @@ export function usePreferencesMenuItems(): {
         renderCheckableItem(
           `week-start-${value}`,
           'menuitemradio',
-          preferences.weekStartsOn === value,
+          weekStartsOn === value,
           label,
           (event) => handleWeekStartsOnChange(value, event.nativeEvent),
         ),

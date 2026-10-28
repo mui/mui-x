@@ -277,7 +277,7 @@ describe('MiniCalendar', () => {
     }
 
     it('should show Sunday as the first weekday header when weekStartsOn is 0', () => {
-      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 0 }} />);
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 7 }} />);
 
       expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/sunday/i);
     });

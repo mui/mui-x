@@ -31,7 +31,7 @@ Available properties:
 - `ampm`: Whether the component displays time in 12-hour format with AM/PM.
 - `showWeekends`: Whether the calendar shows weekends.
 - `showWeekNumber`: Whether the calendar shows the week number.
-- `weekStartsOn`: The first day of the week, from `0` (Sunday) to `6` (Saturday). Defaults to the locale's first day of the week.
+- `weekStartsOn`: The first day of the week, as an ISO weekday, from `1` (Monday) to `7` (Sunday). Defaults to the first day of the week of the [date locale](/x/react-scheduler/event-calendar/localization/#date-locale).
 - `isSidePanelOpen`: Whether the side panel is open.
 - `showEmptyDaysInAgenda`: Whether the agenda view shows days with no events. When set to `false`, the agenda view looks for events in the next 180 days (or in the visible month when `viewConfig.agenda.dayCount` is `'month'`) and shows a message when none is found, customizable through `localeText.agendaViewEmptyStateLabel`.
 

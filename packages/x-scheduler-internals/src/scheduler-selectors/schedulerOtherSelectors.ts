@@ -2,6 +2,7 @@ import { createSelectorMemoized } from '@base-ui/utils/store';
 import type { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { toPlainDate } from '../internals/utils/plain-date-utils/timeZone';
 import { createAdapterDate } from '../internals/utils/plain-date-utils/adapter';
+import { getLocaleWeekInfo } from '../internals/utils/date-locale';
 
 const visibleTimestamp = (state: State) => state.adapter.getTime(state.visibleDate);
 
@@ -37,6 +38,15 @@ export const schedulerOtherSelectors = {
    * date of the same instant changes nothing.
    */
   visibleTimestamp,
+  /**
+   * The locale the dates are formatted in.
+   */
+  dateLocale: (state: State) => state.dateLocale,
+  /**
+   * The minimal number of days of the first week of a year that are in that year, in the locale
+   * of the dates.
+   */
+  minimalDaysInFirstWeek: (state: State) => getLocaleWeekInfo(state.dateLocale).minimalDays,
   /**
    * `visibleDate` in the display timezone, for the code that formats it or passes it on.
    */
