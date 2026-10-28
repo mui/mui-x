@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "eventsource-parser": "^4.1.1",
-    "p-queue": "^9.3.3"
+    "eventsource-parser": "^4.1.2",
+    "p-queue": "^9.3.5"
   },
   "peerDependencies": {
     "zod": "^4.0.0"
