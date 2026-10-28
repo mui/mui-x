@@ -34,12 +34,6 @@ type GridPivotPanelFieldProps = {
   onDragStart: (modelKey: FieldTransferObject['modelKey']) => void;
   onDragEnd: () => void;
   /**
-   * Touch and pen presses start a pointer drag. Mouse presses keep using HTML drag and drop.
-   * @param {React.PointerEvent<HTMLDivElement>} event The `pointerdown` event.
-   * @param {FieldTransferObject} data The pressed field and its section.
-   */
-  onPointerDown: (event: React.PointerEvent<HTMLDivElement>, data: FieldTransferObject) => void;
-  /**
    * The drop indicator of a touch or pen drag, set by the panel body.
    * Mouse drags set it from the HTML drag and drop events of the field.
    */
@@ -251,7 +245,7 @@ function AggregationSelect({
 }
 
 function GridPivotPanelField(props: GridPivotPanelFieldProps) {
-  const { children, field, onDragStart, onDragEnd, onPointerDown, pointerDropPosition } = props;
+  const { children, field, onDragStart, onDragEnd, pointerDropPosition } = props;
   const rootProps = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
   const section = props.modelKey;
@@ -297,13 +291,6 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
       setDropPosition(null);
     }
   }, []);
-
-  const handlePointerDown = React.useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      onPointerDown(event, { field, modelKey: section });
-    },
-    [field, onPointerDown, section],
-  );
 
   const handleDrop = React.useCallback(
     (event: React.DragEvent) => {
@@ -385,7 +372,6 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
       onDrop={handleDrop}
       onDragStart={handleDragStart}
       onDragEnd={onDragEnd}
-      onPointerDown={handlePointerDown}
       draggable="true"
       data-field={field}
     >

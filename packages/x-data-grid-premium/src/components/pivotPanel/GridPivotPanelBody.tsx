@@ -214,6 +214,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
 
   // Touch and pen drags. They apply the same rules as the HTML drag and drop handlers below:
   // a drop on a field inserts above or below it, a drop on a zone appends to its section.
+  // The presses on the fields are handled on the panel, through `pointerDrag.panelRef`.
   const pointerDrag = usePanelFieldPointerDrag<FieldTransferObject['modelKey']>({
     apiRef,
     zoneSelector: ZONE_SELECTOR,
@@ -249,13 +250,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
     },
     onDragEnd: handleDragEnd,
   });
-
-  const handleFieldPointerDown = (
-    event: React.PointerEvent<HTMLDivElement>,
-    data: FieldTransferObject,
-  ) => {
-    pointerDrag.onPointerDown(event, { field: data.field, section: data.modelKey });
-  };
 
   const getPointerDropPosition = (field: string) =>
     drag.targetField === field ? drag.targetPosition : null;
@@ -337,7 +331,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                 modelKey={null}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
-                onPointerDown={handleFieldPointerDown}
                 pointerDropPosition={getPointerDropPosition(field)}
               >
                 {getColumnName(field)}
@@ -387,7 +380,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       modelValue={modelValue}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
-                      onPointerDown={handleFieldPointerDown}
                       pointerDropPosition={getPointerDropPosition(modelValue.field)}
                     >
                       {getColumnName(modelValue.field)}
@@ -431,7 +423,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       modelValue={modelValue}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
-                      onPointerDown={handleFieldPointerDown}
                       pointerDropPosition={getPointerDropPosition(modelValue.field)}
                     >
                       {getColumnName(modelValue.field)}
@@ -475,7 +466,6 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
                       modelValue={modelValue}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
-                      onPointerDown={handleFieldPointerDown}
                       pointerDropPosition={getPointerDropPosition(modelValue.field)}
                     >
                       {getColumnName(modelValue.field)}

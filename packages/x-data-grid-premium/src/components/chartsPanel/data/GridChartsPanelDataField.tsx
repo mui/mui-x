@@ -42,12 +42,6 @@ type GridChartsPanelDataFieldProps = {
   onDragStart: (field: string, section: GridChartsIntegrationSection) => void;
   onDragEnd: () => void;
   /**
-   * Touch and pen presses start a pointer drag. Mouse presses keep using HTML drag and drop.
-   * @param {React.PointerEvent<HTMLDivElement>} event The `pointerdown` event.
-   * @param {FieldTransferObject} data The pressed field and its section.
-   */
-  onPointerDown: (event: React.PointerEvent<HTMLDivElement>, data: FieldTransferObject) => void;
-  /**
    * The drop indicator of a touch or pen drag, set by the panel body.
    * Mouse drags set it from the HTML drag and drop events of the field.
    */
@@ -288,7 +282,6 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
     onChange,
     onDragStart,
     onDragEnd,
-    onPointerDown,
     pointerDropPosition,
   } = props;
   const rootProps = useGridRootProps();
@@ -344,15 +337,6 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
     }
   }, []);
 
-  const handlePointerDown = React.useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      if (!disabled) {
-        onPointerDown(event, { field, section });
-      }
-    },
-    [disabled, field, onPointerDown, section],
-  );
-
   const handleDrop = React.useCallback(
     (event: React.DragEvent) => {
       setDropPosition(null);
@@ -394,7 +378,6 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
         onDrop={handleDrop}
         onDragStart={handleDragStart}
         onDragEnd={onDragEnd}
-        onPointerDown={handlePointerDown}
         draggable={!disabled}
         disabled={!!disabled}
         data-field={field}

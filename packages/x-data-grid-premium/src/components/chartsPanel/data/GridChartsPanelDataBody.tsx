@@ -290,6 +290,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
 
   // Touch and pen drags. They apply the same rules as the HTML drag and drop handlers below:
   // a drop on a field inserts above or below it, a drop on a zone appends to its section.
+  // The presses on the fields are handled on the panel, through `pointerDrag.panelRef`.
   const pointerDrag = usePanelFieldPointerDrag<FieldTransferObject['section']>({
     apiRef,
     zoneSelector: ZONE_SELECTOR,
@@ -422,7 +423,6 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                 valuesLabel={valuesLabel}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
-                onPointerDown={pointerDrag.onPointerDown}
                 pointerDropPosition={getPointerDropPosition(field)}
               >
                 {apiRef.current.chartsIntegration.getColumnName(field)}
@@ -491,7 +491,6 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                       disabled={disabledSections.has('dimensions')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
-                      onPointerDown={pointerDrag.onPointerDown}
                       pointerDropPosition={getPointerDropPosition(dimension.field)}
                     >
                       {apiRef.current.chartsIntegration.getColumnName(dimension.field)}
@@ -553,7 +552,6 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                       disabled={disabledSections.has('values')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
-                      onPointerDown={pointerDrag.onPointerDown}
                       pointerDropPosition={getPointerDropPosition(value.field)}
                     >
                       {apiRef.current.chartsIntegration.getColumnName(value.field)}

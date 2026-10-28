@@ -46,6 +46,7 @@ export interface UsePanelFieldPointerDragOptions<Section> {
   zoneSelector: string;
   /**
    * Selector of the fields. The `data-field` attribute of a field is its field.
+   * A field with `draggable="false"` can't be dragged.
    */
   fieldSelector: string;
   /**
@@ -75,21 +76,12 @@ export interface UsePanelFieldPointerDragOptions<Section> {
   onDragEnd: () => void;
 }
 
-export interface UsePanelFieldPointerDragReturnValue<Section> {
+export interface UsePanelFieldPointerDragReturnValue {
   /**
-   * Ref of the panel element. Only the zones inside it are drop targets.
+   * Ref of the panel element.
+   * Touch and pen presses on its fields start a pointer drag, and only the zones inside it are drop targets.
    */
   panelRef: RefObject<HTMLDivElement | null>;
-  /**
-   * The `pointerdown` handler of a field.
-   * Touch and pen presses start a pointer drag. Mouse presses keep using HTML drag and drop.
-   * @param {React.PointerEvent<HTMLElement>} event The `pointerdown` event, with the field as `currentTarget`.
-   * @param {PanelFieldDragData<Section>} data The pressed field.
-   */
-  onPointerDown: (
-    event: React.PointerEvent<HTMLElement>,
-    data: PanelFieldDragData<Section>,
-  ) => void;
 }
 
 interface DragData<Section> extends PanelFieldDragData<Section> {
@@ -156,11 +148,13 @@ function isSameTarget<Section>(
 /**
  * Drag and drop of the fields of a side panel, like the pivot panel, with pointer events, for touch and pen input.
  * Mouse input keeps using the HTML drag and drop handlers of the panel, which work on desktop but not on all touch devices.
+ * The presses are handled on the panel: a field is found from its `data-field` attribute, and its section from the
+ * `data-section` attribute of its zone, like the HTML drag and drop handlers do on drop.
  * A field can be dropped on a zone, or on another field of a zone, above or below it.
  */
 export function usePanelFieldPointerDrag<Section>(
   options: UsePanelFieldPointerDragOptions<Section>,
-): UsePanelFieldPointerDragReturnValue<Section> {
+): UsePanelFieldPointerDragReturnValue {
   const { apiRef } = options;
   const optionsRef = React.useRef(options);
   const panelRef = React.useRef<HTMLDivElement>(null);
@@ -326,17 +320,26 @@ export function usePanelFieldPointerDrag<Section>(
     onDragCancel: cancelDrag,
   });
 
-  const onPointerDown = useEventCallback(
-    (event: React.PointerEvent<HTMLElement>, data: PanelFieldDragData<Section>) => {
-      if (!isPointerDragType(event.pointerType)) {
-        return;
-      }
-      if ((event.target as Element).closest?.(INTERACTIVE_CONTROL_SELECTOR)) {
-        return;
-      }
-      pointerDrag.onPointerDown(event, { ...data, handle: event.currentTarget });
-    },
-  );
+  // Touch and pen presses on a field start a pointer drag. Mouse presses keep using HTML drag and drop.
+  const handleFieldPress = useEventCallback((event: PointerEvent) => {
+    if (!isPointerDragType(event.pointerType)) {
+      return;
+    }
+    const target = event.target as Element | null;
+    const { fieldSelector, zoneSelector } = optionsRef.current;
+    const fieldElement = target?.closest?.<HTMLElement>(fieldSelector);
+    const field = fieldElement?.getAttribute('data-field');
+    if (!fieldElement || field == null || fieldElement.getAttribute('draggable') !== 'true') {
+      return;
+    }
+    const control = target!.closest(INTERACTIVE_CONTROL_SELECTOR);
+    if (control && fieldElement.contains(control)) {
+      return;
+    }
+    const zone = fieldElement.closest(zoneSelector);
+    const section = (zone?.getAttribute('data-section') ?? null) as Section;
+    pointerDrag.onPointerDown(event, { field, section, handle: fieldElement });
+  });
 
   // A long press on a draggable element starts a native drag on some browsers (Chrome on Android).
   // It would cancel the pointer events, so it's blocked when the field was pressed with touch or pen.
@@ -347,10 +350,11 @@ export function usePanelFieldPointerDrag<Section>(
     if (!panel) {
       return undefined;
     }
-    // Recorded on the panel, not in `onPointerDown`: a field can skip that handler, for example when it's disabled
+    // Recorded for every press, including the ones that don't start a drag: a blocked field, or a control of a field
     let lastPointerType: string | null = null;
     const handlePointerDown = (event: PointerEvent) => {
       lastPointerType = event.pointerType;
+      handleFieldPress(event);
     };
     const handleNativeDragStart = (event: DragEvent) => {
       if (
@@ -367,7 +371,7 @@ export function usePanelFieldPointerDrag<Section>(
       panel.removeEventListener('pointerdown', handlePointerDown, true);
       panel.removeEventListener('dragstart', handleNativeDragStart, true);
     };
-  }, []);
+  }, [handleFieldPress]);
 
   React.useEffect(() => {
     return () => {
@@ -381,5 +385,5 @@ export function usePanelFieldPointerDrag<Section>(
     };
   }, []);
 
-  return { panelRef, onPointerDown };
+  return { panelRef };
 }
