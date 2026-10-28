@@ -124,6 +124,9 @@ DatePickerToolbar.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * If `true`, show the toolbar even in desktop mode.
@@ -138,6 +141,10 @@ DatePickerToolbar.propTypes /* remove-proptypes */ = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The id of the toolbar title element.
+   * The picker uses it to label its popup.
+   */
   titleId: PropTypes.string,
   /**
    * Toolbar date format.

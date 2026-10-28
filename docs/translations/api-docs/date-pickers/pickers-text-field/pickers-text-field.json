@@ -10,6 +10,7 @@
     "contentEditable": {
       "description": "If true, the whole element is editable. Useful when all the sections are selected."
     },
+    "disabled": { "description": "If <code>true</code>, the component is disabled." },
     "elements": {
       "description": "The elements to render. Each element contains the prop to edit a section of the value."
     },
@@ -34,9 +35,11 @@
       "description": "If <code>dense</code> or <code>normal</code>, will adjust vertical spacing of this and contained components."
     },
     "name": { "description": "Name attribute of the <code>input</code> element." },
+    "readOnly": { "description": "If <code>true</code>, the component is read-only." },
     "required": {
       "description": "If <code>true</code>, the label will indicate that the <code>input</code> is required."
     },
+    "sectionListRef": { "description": "The ref used to access the DOM elements of the sections." },
     "size": { "description": "The size of the component." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "The components used for each slot inside." },
@@ -44,6 +47,7 @@
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
+    "value": { "description": "The value of the hidden <code>input</code> element." },
     "variant": { "description": "The variant to use." }
   },
   "classDescriptions": {

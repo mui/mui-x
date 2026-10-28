@@ -341,12 +341,22 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
+  /**
+   * The month currently displayed in the calendar.
+   * The months shown belong to its year.
+   */
   currentMonth: PropTypes.object,
   /**
    * The default selected value.
@@ -374,7 +384,15 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * The id of the element that labels the month grid.
+   * It is used as the `aria-labelledby` of the grid.
+   */
   gridLabelId: PropTypes.string,
+  /**
+   * If `true`, the component has keyboard focus.
+   * Use with `onFocusedViewChange` to control the focus.
+   */
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
@@ -396,7 +414,15 @@ MonthCalendar.propTypes /* remove-proptypes */ = {
    * @param {PickerValidDate} value The new value.
    */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the component gains or loses keyboard focus.
+   * @param {boolean} hasFocus `true` if the component has focus.
+   */
   onFocusedViewChange: PropTypes.func,
+  /**
+   * Callback fired when a month receives focus.
+   * @param {number} month The focused month.
+   */
   onMonthFocus: PropTypes.func,
   /**
    * If `true`, the component is read-only.

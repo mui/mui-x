@@ -373,11 +373,17 @@ YearCalendar.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
   /**
    * The default selected value.
@@ -405,7 +411,15 @@ YearCalendar.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * The id of the element that labels the year grid.
+   * It is used as the `aria-labelledby` of the grid.
+   */
   gridLabelId: PropTypes.string,
+  /**
+   * If `true`, the component has keyboard focus.
+   * Use with `onFocusedViewChange` to control the focus.
+   */
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
@@ -422,7 +436,15 @@ YearCalendar.propTypes /* remove-proptypes */ = {
    * @param {PickerValidDate} value The new value.
    */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the component gains or loses keyboard focus.
+   * @param {boolean} hasFocus `true` if the component has focus.
+   */
   onFocusedViewChange: PropTypes.func,
+  /**
+   * Callback fired when a year receives focus.
+   * @param {number} year The focused year.
+   */
   onYearFocus: PropTypes.func,
   /**
    * If `true`, the component is read-only.

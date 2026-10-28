@@ -42,8 +42,18 @@ export interface MonthCalendarProps
     BaseDateValidationProps,
     TimezoneProps,
     FormProps {
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus?: boolean;
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
+  /**
+   * The month currently displayed in the calendar.
+   * The months shown belong to its year.
+   */
   currentMonth?: PickerValidDate;
   /**
    * Override or extend the styles applied to the component.
@@ -88,8 +98,24 @@ export interface MonthCalendarProps
    * @default false
    */
   disableHighlightToday?: boolean;
+  /**
+   * Callback fired when a month receives focus.
+   * @param {number} month The focused month.
+   */
   onMonthFocus?: (month: number) => void;
+  /**
+   * If `true`, the component has keyboard focus.
+   * Use with `onFocusedViewChange` to control the focus.
+   */
   hasFocus?: boolean;
+  /**
+   * Callback fired when the component gains or loses keyboard focus.
+   * @param {boolean} hasFocus `true` if the component has focus.
+   */
   onFocusedViewChange?: (hasFocus: boolean) => void;
+  /**
+   * The id of the element that labels the month grid.
+   * It is used as the `aria-labelledby` of the grid.
+   */
   gridLabelId?: string;
 }

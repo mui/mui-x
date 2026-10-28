@@ -1,7 +1,14 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "autoFocus": {
+      "description": "If <code>true</code>, the component is focused when it mounts."
+    },
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "A CSS class name applied to the root element." },
+    "currentMonth": {
+      "description": "The month currently displayed in the calendar. The months shown belong to its year."
+    },
     "defaultValue": {
       "description": "The default selected value. Used when the component is not controlled."
     },
@@ -17,12 +24,31 @@
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
     },
+    "gridLabelId": {
+      "description": "The id of the element that labels the month grid. It is used as the <code>aria-labelledby</code> of the grid."
+    },
+    "hasFocus": {
+      "description": "If <code>true</code>, the component has keyboard focus. Use with <code>onFocusedViewChange</code> to control the focus."
+    },
     "maxDate": { "description": "Maximal selectable date." },
     "minDate": { "description": "Minimal selectable date." },
     "monthsPerRow": { "description": "Months rendered per row." },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": { "value": { "name": "value", "description": "The new value." } }
+    },
+    "onFocusedViewChange": {
+      "description": "Callback fired when the component gains or loses keyboard focus.",
+      "typeDescriptions": {
+        "hasFocus": {
+          "name": "hasFocus",
+          "description": "<code>true</code> if the component has focus."
+        }
+      }
+    },
+    "onMonthFocus": {
+      "description": "Callback fired when a month receives focus.",
+      "typeDescriptions": { "month": { "name": "month", "description": "The focused month." } }
     },
     "readOnly": {
       "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."

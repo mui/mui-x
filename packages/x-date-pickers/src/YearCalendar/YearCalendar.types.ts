@@ -49,7 +49,13 @@ export interface YearCalendarProps
     BaseDateValidationProps,
     TimezoneProps,
     FormProps {
+  /**
+   * If `true`, the component is focused when it mounts.
+   */
   autoFocus?: boolean;
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
   /**
    * Override or extend the styles applied to the component.
@@ -94,8 +100,24 @@ export interface YearCalendarProps
    * @default false
    */
   disableHighlightToday?: boolean;
+  /**
+   * Callback fired when a year receives focus.
+   * @param {number} year The focused year.
+   */
   onYearFocus?: (year: number) => void;
+  /**
+   * If `true`, the component has keyboard focus.
+   * Use with `onFocusedViewChange` to control the focus.
+   */
   hasFocus?: boolean;
+  /**
+   * Callback fired when the component gains or loses keyboard focus.
+   * @param {boolean} hasFocus `true` if the component has focus.
+   */
   onFocusedViewChange?: (hasFocus: boolean) => void;
+  /**
+   * The id of the element that labels the year grid.
+   * It is used as the `aria-labelledby` of the grid.
+   */
   gridLabelId?: string;
 }

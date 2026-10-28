@@ -279,6 +279,9 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  /**
+   * @ignore
+   */
   className: PropTypes.string,
   /**
    * The color of the component.
@@ -287,12 +290,19 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
+  /**
+   * @ignore
+   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
   disabled: PropTypes.bool.isRequired,
   /**
    * The elements to render.
@@ -356,20 +366,50 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * Name attribute of the `input` element.
    */
   name: PropTypes.string,
+  /**
+   * @ignore
+   */
   onBlur: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onChange: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onClick: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onFocus: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onInput: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onKeyDown: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onMouseDown: PropTypes.func.isRequired,
+  /**
+   * @ignore
+   */
   onPaste: PropTypes.func.isRequired,
+  /**
+   * If `true`, the component is read-only.
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, the label will indicate that the `input` is required.
    * @default false
    */
   required: PropTypes.bool,
+  /**
+   * The ref used to access the DOM elements of the sections.
+   */
   sectionListRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
@@ -400,6 +440,9 @@ PickersTextField.propTypes /* remove-proptypes */ = {
    * Start `InputAdornment` for this component.
    */
   startAdornment: PropTypes.node,
+  /**
+   * @ignore
+   */
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -409,6 +452,9 @@ PickersTextField.propTypes /* remove-proptypes */ = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The value of the hidden `input` element.
+   */
   value: PropTypes.string.isRequired,
   /**
    * The variant to use.

@@ -2,6 +2,7 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" } },
+    "className": { "type": { "name": "string" } },
     "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "defaultRangePosition": {
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },

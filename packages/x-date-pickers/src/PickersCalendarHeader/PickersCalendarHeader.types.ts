@@ -54,12 +54,35 @@ export interface PickersCalendarHeaderProps
    * @default {}
    */
   slotProps?: PickersCalendarHeaderSlotProps;
+  /**
+   * The month currently displayed.
+   */
   currentMonth: PickerValidDate;
+  /**
+   * If `true`, the view switch button is hidden.
+   */
   disabled?: boolean;
+  /**
+   * Available views.
+   */
   views: readonly DateView[];
+  /**
+   * Callback fired when the displayed month changes.
+   * @param {PickerValidDate} date The new displayed month.
+   */
   onMonthChange: (date: PickerValidDate) => void;
+  /**
+   * The visible view.
+   */
   view: DateView;
+  /**
+   * If `true`, disable heavy animations.
+   */
   reduceAnimations: boolean;
+  /**
+   * Callback fired when the view changes.
+   * @param {DateView} view The new view.
+   */
   onViewChange?: (view: DateView) => void;
   /**
    * Id of the calendar text element.
@@ -70,6 +93,9 @@ export interface PickersCalendarHeaderProps
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickersCalendarHeaderClasses>;
+  /**
+   * A CSS class name applied to the root element.
+   */
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

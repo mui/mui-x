@@ -59,7 +59,13 @@ MultiInputTimeRangeField.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * A CSS class name applied to the root element.
+   */
   className: PropTypes.string,
+  /**
+   * @ignore
+   */
   component: PropTypes.elementType,
   /**
    * String displayed between the start and the end dates.
@@ -239,6 +245,9 @@ MultiInputTimeRangeField.propTypes /* remove-proptypes */ = {
    * The ref object used to interact with the start field imperatively.
    */
   startFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  /**
+   * @ignore
+   */
   style: PropTypes.object,
   /**
    * The system prop, which allows defining system overrides as well as additional CSS styles.

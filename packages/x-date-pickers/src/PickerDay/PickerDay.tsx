@@ -304,7 +304,13 @@ PickerDayRaw.propTypes /* remove-proptypes */ = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * @ignore
+   */
   className: PropTypes.string,
+  /**
+   * @ignore
+   */
   component: PropTypes.elementType,
   /**
    * The date to show.
@@ -447,6 +453,9 @@ PickerDayRaw.propTypes /* remove-proptypes */ = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * @ignore
+   */
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -457,7 +466,7 @@ PickerDayRaw.propTypes /* remove-proptypes */ = {
     PropTypes.object,
   ]),
   /**
-   * @default 0
+   * @ignore
    */
   tabIndex: PropTypes.number,
   /**

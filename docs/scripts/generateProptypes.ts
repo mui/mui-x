@@ -93,6 +93,28 @@ function makePropTypesDeterministic(components: any[]): void {
   });
 }
 
+/**
+ * Hides props without JSDoc that are only declared in dependencies (React, Material UI).
+ * Props declared in MUI X must be documented, or explicitly marked `@ignore`.
+ */
+function ignoreUndocumentedExternalProps(components: any[]): void {
+  components.forEach((component) => {
+    component.types?.forEach((definition: any) => {
+      const filenames: string[] = Array.from(definition.filenames ?? []);
+      const hasDescription = (definition.jsDoc ?? '')
+        .split('\n')
+        .some((line: string) => line.trim() !== '' && !line.trim().startsWith('@'));
+      if (
+        !hasDescription &&
+        filenames.length > 0 &&
+        filenames.every((filename) => filename.includes('/node_modules/'))
+      ) {
+        definition.jsDoc = '@ignore';
+      }
+    });
+  });
+}
+
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const isDateObject = (name: string) => {
     if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
@@ -188,6 +210,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
   // Sort union members deterministically so the output does not depend on the
   // order TypeScript enumerated them (which shifts with the import graph).
   makePropTypesDeterministic(components);
+  ignoreUndocumentedExternalProps(components);
 
   const sourceContent = await fs.readFile(sourceFile, 'utf8');
 
