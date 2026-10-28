@@ -15,11 +15,24 @@ import type { LineClasses } from './lineClasses';
 import type { AreaPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface AreaElementOwnerState {
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: SeriesId;
+  /**
+   * The color of the area.
+   */
   color: string;
+  /**
+   * The id of the gradient used to color the element.
+   * The `gradientId` is used as `url(#gradientId)`.
+   */
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<Pick<LineClasses, 'area'>>;
 }
 
@@ -40,6 +53,9 @@ export interface AreaElementProps
     Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
     Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color'> {
+  /**
+   * The SVG path of the element.
+   */
   d: string;
   /**
    * The props used for each component slot.
@@ -121,10 +137,26 @@ AreaElement.propTypes /* remove-proptypes */ = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * The color of the area.
+   */
   color: PropTypes.string.isRequired,
+  /**
+   * The SVG path of the element.
+   */
   d: PropTypes.string.isRequired,
+  /**
+   * The id of the gradient used to color the element.
+   * The `gradientId` is used as `url(#gradientId)`.
+   */
   gradientId: PropTypes.string,
+  /**
+   * The id of the series the element belongs to.
+   */
   seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.

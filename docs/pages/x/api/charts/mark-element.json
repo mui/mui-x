@@ -1,6 +1,7 @@
 {
   "props": {
     "dataIndex": { "type": { "name": "number" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
     "shape": {
       "type": {
         "name": "enum",
@@ -8,6 +9,7 @@
       },
       "required": true
     },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "false" },
     "isFaded": { "type": { "name": "bool" }, "default": "false" },
     "isHighlighted": { "type": { "name": "bool" }, "default": "false" },

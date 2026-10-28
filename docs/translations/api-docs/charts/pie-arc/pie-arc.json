@@ -1,10 +1,27 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "color": { "description": "The color of the element." },
+    "cornerRadius": {
+      "description": "The radius applied to arc corners (similar to border radius)."
+    },
+    "dataIndex": { "description": "The index of the data point in the series." },
+    "endAngle": { "description": "The end angle (deg)." },
+    "innerRadius": {
+      "description": "The radius between circle center and the beginning of the arc."
+    },
+    "isFaded": { "description": "If <code>true</code>, the element is faded." },
+    "isFocused": { "description": "If <code>true</code>, the element has keyboard focus." },
+    "isHighlighted": { "description": "If <code>true</code>, the element is highlighted." },
+    "outerRadius": { "description": "The radius between circle center and the end of the arc." },
+    "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
+    "seriesId": { "description": "The id of the series the element belongs to." },
     "skipAnimation": { "description": "If <code>true</code>, the animation is disabled." },
     "skipInteraction": {
       "description": "If <code>true</code>, the default event handlers are disabled. Those are used, for example, to display a tooltip or highlight the arc on hover."
-    }
+    },
+    "startAngle": { "description": "The start angle (deg)." }
   },
   "classDescriptions": {
     "animate": { "description": "Styles applied when animation is not skipped." },
