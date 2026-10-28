@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   addToAdapterDate,
   formatPlainDate,
+  formatPlainDateRange,
   formatTime,
   getPlainDateWeekStart,
 } from '@mui/x-scheduler-internals/internals';
@@ -81,7 +82,12 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS: Readonly<
       {
         unit: 'week',
         renderCell: ({ locale, firstPlainDate, lastPlainDate }) =>
-          `${formatPlainDate(locale, firstPlainDate, 'weekdayShortMonthShortAndDayOfMonth')} - ${formatPlainDate(locale, lastPlainDate, 'weekdayShortMonthShortAndDayOfMonth')}`,
+          formatPlainDateRange(
+            locale,
+            firstPlainDate,
+            lastPlainDate,
+            'weekdayShortMonthShortAndDayOfMonth',
+          ),
       },
       { unit: 'day', format: 'weekdayNarrow' },
     ],

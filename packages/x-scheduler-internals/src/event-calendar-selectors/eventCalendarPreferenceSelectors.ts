@@ -14,7 +14,7 @@ const allPreferencesSelector = createSelectorMemoized(
 export const eventCalendarPreferenceSelectors = {
   all: allPreferencesSelector,
   menuConfig: (state: State) => state.preferencesMenuConfig,
-  ampm: (state: State) => allPreferencesSelector(state).ampm,
+  ampm: schedulerPreferenceSelectors.ampm,
   showWeekends: (state: State) => allPreferencesSelector(state).showWeekends,
   showWeekNumber: (state: State) => allPreferencesSelector(state).showWeekNumber,
   showEmptyDaysInAgenda: (state: State) => allPreferencesSelector(state).showEmptyDaysInAgenda,

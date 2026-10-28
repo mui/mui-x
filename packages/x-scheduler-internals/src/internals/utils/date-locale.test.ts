@@ -1,6 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import { PlainDate } from './base-temporal/PlainDate';
-import { formatPlainDate, formatTime, getLocaleWeekInfo } from './date-locale';
+import {
+  formatPlainDate,
+  formatPlainDateRange,
+  formatTime,
+  getLocaleAmpm,
+  getLocaleWeekInfo,
+} from './date-locale';
 
 describe('date-locale', () => {
   describe('getLocaleWeekInfo', () => {
@@ -99,6 +105,36 @@ describe('date-locale', () => {
           timeZone: 'UTC',
         }).format(Date.UTC(2025, 6, 13)),
       );
+    });
+  });
+
+  describe('getLocaleAmpm', () => {
+    it('should follow the hour cycle of the locale', () => {
+      expect(getLocaleAmpm('en-US')).to.equal(true);
+      expect(getLocaleAmpm('fr-FR')).to.equal(false);
+      expect(getLocaleAmpm('en-GB')).to.equal(false);
+      expect(getLocaleAmpm('en-US-u-hc-h23')).to.equal(false);
+    });
+  });
+
+  describe('formatPlainDateRange', () => {
+    it('should format the range in the order of the locale, writing the shared parts once', () => {
+      const startPlainDate = PlainDate.from('2025-07-13');
+      const endPlainDate = PlainDate.from('2025-07-19');
+      const format = 'weekdayShortMonthShortAndDayOfMonth';
+      expect(formatPlainDateRange('en-US', startPlainDate, endPlainDate, format)).to.equal(
+        'Sun, Jul 13\u2009–\u2009Sat, Jul 19',
+      );
+      expect(formatPlainDateRange('fr-FR', startPlainDate, endPlainDate, format)).to.equal(
+        'dim. 13\u2009–\u2009sam. 19 juil.',
+      );
+    });
+
+    it('should format a range of one date as that date', () => {
+      const plainDate = PlainDate.from('2025-07-13');
+      expect(
+        formatPlainDateRange('en-US', plainDate, plainDate, 'weekdayShortMonthShortAndDayOfMonth'),
+      ).to.equal('Sun, Jul 13');
     });
   });
 

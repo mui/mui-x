@@ -247,7 +247,7 @@ EventTimelinePremium.propTypes /* remove-proptypes */ = {
   /**
    * The default preferences for the timeline.
    * To use controlled preferences, use the `preferences` prop.
-   * @default { ampm: true }
+   * @default {}
    */
   defaultPreferences: PropTypes.shape({
     ampm: PropTypes.bool,

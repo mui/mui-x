@@ -92,9 +92,7 @@ function createStartOfToday(adapter: Adapter, nowTimestamp: number, timezone: Te
  */
 const TRANSIENT_ERROR_DURATION_MS = 5000;
 
-export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
-  ampm: true,
-};
+export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {};
 
 const MOCK_EVENT_STATE = {
   eventIdList: [],

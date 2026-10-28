@@ -25,10 +25,12 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('ampm', () => {
-      it('should return the default ampm preference when none is set in the state', () => {
+      it('should follow the hour cycle of the date locale when none is set in the state', () => {
         const state = new storeClass.Value({ ...BASE_PARAMS }, adapter).state;
-        const ampm = schedulerPreferenceSelectors.ampm(state);
-        expect(ampm).to.equal(DEFAULT_SCHEDULER_PREFERENCES.ampm);
+        expect(schedulerPreferenceSelectors.ampm(state)).to.equal(true);
+        const frenchState = new storeClass.Value({ ...BASE_PARAMS, dateLocale: 'fr-FR' }, adapter)
+          .state;
+        expect(schedulerPreferenceSelectors.ampm(frenchState)).to.equal(false);
       });
 
       it('should return the custom ampm preference when it is set in the state (false)', () => {

@@ -69,6 +69,21 @@ export function getLocaleWeekInfo(locale: string): WeekInfo {
   return weekInfo;
 }
 
+const ampmLookup = new Map<string, boolean>();
+
+/**
+ * Whether `locale` shows the times on a 12-hour clock with AM/PM, from the hour cycle of
+ * `Intl.DateTimeFormat`.
+ */
+export function getLocaleAmpm(locale: string): boolean {
+  let ampm = ampmLookup.get(locale);
+  if (ampm === undefined) {
+    ampm = new Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hour12 ?? false;
+    ampmLookup.set(locale, ampm);
+  }
+  return ampm;
+}
+
 const DATE_FORMATS = {
   /**
    * @example "Sunday"
@@ -157,6 +172,23 @@ export function formatPlainDate(
 ): string {
   // The day number of a date is the number of days from January 1st, 1970 in UTC.
   return getFormatter(locale, format).format(plainDate.dayNumber * MS_PER_DAY);
+}
+
+/**
+ * Formats the range of dates from `startPlainDate` to `endPlainDate`, both included, in `locale`.
+ * The locale writes the separator and the parts the two dates share once.
+ * @example "Sun, Jul 13 – Sat, Jul 19"
+ */
+export function formatPlainDateRange(
+  locale: string,
+  startPlainDate: PlainDate,
+  endPlainDate: PlainDate,
+  format: SchedulerDateFormat,
+): string {
+  return getFormatter(locale, format).formatRange(
+    startPlainDate.dayNumber * MS_PER_DAY,
+    endPlainDate.dayNumber * MS_PER_DAY,
+  );
 }
 
 const timeLabelLookup = new Map<string, Record<'time12h' | 'time24h', string[]>>();

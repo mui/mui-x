@@ -133,6 +133,7 @@ export function usePreferencesMenuItems(): {
   const { classes, localeText } = useEventCalendarStyledContext();
 
   const preferences = useStore(store, eventCalendarPreferenceSelectors.all);
+  const ampm = useStore(store, eventCalendarPreferenceSelectors.ampm);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   const {
     currentView,
@@ -217,19 +218,11 @@ export function usePreferencesMenuItems(): {
       >
         {localeText.timeFormat}
       </PreferencesMenuListSubheader>,
-      renderCheckableItem(
-        'ampm-12',
-        'menuitemradio',
-        !!preferences.ampm,
-        localeText.amPm12h,
-        (event) => handleTimeFormatChange('12', event.nativeEvent),
+      renderCheckableItem('ampm-12', 'menuitemradio', ampm, localeText.amPm12h, (event) =>
+        handleTimeFormatChange('12', event.nativeEvent),
       ),
-      renderCheckableItem(
-        'ampm-24',
-        'menuitemradio',
-        !preferences.ampm,
-        localeText.hour24h,
-        (event) => handleTimeFormatChange('24', event.nativeEvent),
+      renderCheckableItem('ampm-24', 'menuitemradio', !ampm, localeText.hour24h, (event) =>
+        handleTimeFormatChange('24', event.nativeEvent),
       ),
     );
   }

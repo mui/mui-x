@@ -25,7 +25,7 @@
         "name": "shape",
         "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6<br>&#124;&nbsp;7 }"
       },
-      "default": "{ showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }"
+      "default": "{ showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true }"
     },
     "defaultView": {
       "type": {

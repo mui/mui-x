@@ -97,7 +97,7 @@ To also translate **formatted dates** (day names, month names, and week start da
 The dates are formatted with [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat), so `dateLocale` accepts the same locales, and they need no import.
 The dates always use the Gregorian calendar, even when the default calendar of the locale is another one.
 
-The locale also sets the numbering of the weeks, and the first day of the week unless the [`weekStartsOn` preference](/x/react-scheduler/event-timeline/preferences/) is set.
+The locale also sets the numbering of the weeks, the first day of the week unless the [`weekStartsOn` preference](/x/react-scheduler/event-timeline/preferences/) is set, and the 12-hour or 24-hour clock unless the [`ampm` preference](/x/react-scheduler/event-timeline/preferences/) is set.
 The first day of the week comes from [`Intl.Locale.prototype.getWeekInfo()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo): the browsers that don't support it start the weeks on Monday.
 
 Use the `createDateLocaleTheme` helper to set the date locale globally via the theme, alongside `localeText` translations:

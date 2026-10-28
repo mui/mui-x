@@ -28,7 +28,7 @@ const defaultPreferences = {
 
 Available properties:
 
-- `ampm`: Whether the component displays time in 12-hour format with AM/PM.
+- `ampm`: Whether the component displays time in 12-hour format with AM/PM. Defaults to the hour cycle of the [date locale](/x/react-scheduler/event-calendar/localization/#date-locale).
 - `showWeekends`: Whether the calendar shows weekends.
 - `showWeekNumber`: Whether the calendar shows the week number.
 - `weekStartsOn`: The first day of the week, as an ISO weekday, from `1` (Monday) to `7` (Sunday). Defaults to the first day of the week of the [date locale](/x/react-scheduler/event-calendar/localization/#date-locale).

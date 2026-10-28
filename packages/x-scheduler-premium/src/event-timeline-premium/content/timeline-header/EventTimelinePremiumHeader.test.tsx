@@ -224,7 +224,8 @@ describe('<EventTimelinePremiumHeader />', () => {
       const weekCell = document.querySelector<HTMLElement>(
         `.${classes.headerCell}[data-unit="week"][data-index="0"]`,
       );
-      expect(weekCell!.textContent).to.equal('Sat, Dec 24 - Fri, Dec 30');
+      // The range of `Intl.DateTimeFormat` separates the dates with an en dash between thin spaces.
+      expect(weekCell!.textContent).to.equal('Sat, Dec 24\u2009–\u2009Fri, Dec 30');
     });
   });
 
