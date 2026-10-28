@@ -203,8 +203,9 @@
       "nodeName": "the dependency dialog event chip elements"
     },
     "dependencyDialogForm": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the dependency dialog form element"
+      "description": "Styles applied to {{nodeName}}, {{conditions}}.",
+      "nodeName": "the dependency dialog form element",
+      "conditions": "or its details section when read-only"
     },
     "dependencyDialogHeader": {
       "description": "Styles applied to {{nodeName}}.",

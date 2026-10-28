@@ -79,12 +79,8 @@ export interface EventTimelinePremiumClasses
   dependencyDialogCloseButton: string;
   /** Styles applied to the dependency dialog content element. */
   dependencyDialogContent: string;
-  /** Styles applied to the dependency dialog form element. */
+  /** Styles applied to the dependency dialog form element, or its details section when read-only. */
   dependencyDialogForm: string;
-  /** Styles applied to the dependency dialog divider element. */
-  dependencyDialogDivider: string;
-  /** Styles applied to the dependency dialog actions element. */
-  dependencyDialogActions: string;
   /** Styles applied to the dependency dialog body element. */
   dependencyDialogBody: string;
   /** Styles applied to the dependency dialog details element. */
@@ -97,6 +93,10 @@ export interface EventTimelinePremiumClasses
   dependencyDialogLagUnit: string;
   /** Styles applied to the lag note of the read-only dependency dialog. */
   dependencyDialogLagNote: string;
+  /** Styles applied to the dependency dialog divider element. */
+  dependencyDialogDivider: string;
+  /** Styles applied to the dependency dialog actions element. */
+  dependencyDialogActions: string;
 }
 
 export type EventTimelinePremiumClassKey = keyof EventTimelinePremiumClasses;
@@ -141,14 +141,14 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'dependencyDialogCloseButton',
     'dependencyDialogContent',
     'dependencyDialogForm',
-    'dependencyDialogDivider',
-    'dependencyDialogActions',
     'dependencyDialogBody',
     'dependencyDialogDetails',
     'dependencyDialogEventChip',
     'dependencyDialogLag',
     'dependencyDialogLagUnit',
     'dependencyDialogLagNote',
+    'dependencyDialogDivider',
+    'dependencyDialogActions',
     ...errorContainerClassKeys,
     ...eventSkeletonClassKeys,
     ...eventDialogClassKeys,

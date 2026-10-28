@@ -43,7 +43,7 @@ export const getDialogHeaderBaseStyles = (theme: Theme): CSSObject => ({
   justifyContent: 'space-between',
   gap: theme.spacing(1.5),
   padding: theme.spacing(3),
-  // Only the draggable desktop dialog shows the move affordance; the drawer reuses this header.
+  // A header without `data-draggable` (the drawer's) shows no move cursor.
   '&[data-draggable]': {
     cursor: 'move',
   },

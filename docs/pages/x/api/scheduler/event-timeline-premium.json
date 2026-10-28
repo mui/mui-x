@@ -288,7 +288,7 @@
     {
       "key": "dependencyDialogForm",
       "className": "MuiEventTimeline-dependencyDialogForm",
-      "description": "Styles applied to the dependency dialog form element.",
+      "description": "Styles applied to the dependency dialog form element, or its details section when read-only.",
       "isGlobal": false
     },
     {
