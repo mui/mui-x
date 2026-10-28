@@ -9,13 +9,14 @@ import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
-import { useDependencyCreationMonitor } from '../../internals/utils/useDependencyCreationMonitor';
 import { TimelineGridRootCssVars } from './TimelineGridRootCssVars';
 import type {
   TimelineGridCellCoordinates,
   TimelineGridColumnType,
 } from '../../models/timelineGrid';
 import { TimelineGridRootContext, DEFAULT_COLUMN_TYPES } from './TimelineGridRootContext';
+
+const useNoCreationMonitor = () => {};
 
 export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
   componentProps: TimelineGridRoot.Props,
@@ -62,7 +63,12 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
 
   const rootRef = React.useRef<HTMLDivElement>(null);
 
-  useDependencyCreationMonitor();
+  // The feature is frozen at store construction, so the hook is the same on every render.
+  const useCreationMonitor =
+    // eslint-disable-next-line react-compiler/react-compiler
+    store.state.dependenciesFeature?.useCreationMonitor ?? useNoCreationMonitor;
+  // eslint-disable-next-line react-compiler/react-compiler
+  useCreationMonitor();
 
   const [focusedCell, setFocusedCellState] = React.useState<TimelineGridCellCoordinates | null>(
     null,

@@ -3,6 +3,7 @@ import {
   adapter,
   createSchedulerRenderer,
   EventBuilder,
+  EventTimelinePremiumStoreWithFeatures,
   ResourceBuilder,
   StoreSpy,
 } from 'test/utils/scheduler';
@@ -14,7 +15,6 @@ import type {
 } from '@mui/x-scheduler-internals/models';
 import type { SchedulerDependency } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import {
   EventDialogContent,
   EventEditingOptionalRenderersContext,
@@ -81,7 +81,7 @@ describe('<EventDialogContent /> — Event Timeline Premium creation', () => {
     const start = adapter.date('2025-07-03T09:00:00Z', 'default');
     const end = adapter.date('2025-07-03T09:30:00Z', 'default');
 
-    const store = new EventTimelinePremiumStore(
+    const store = new EventTimelinePremiumStoreWithFeatures(
       { events: [], resources, eventCreation, onEventsChange: () => {} },
       adapter,
     );
@@ -210,7 +210,7 @@ describe('<EventDialogContent /> — Event Timeline Premium editing', () => {
     const onEventsChange = vi.fn();
     const onClose = vi.fn();
 
-    const store = new EventTimelinePremiumStore(
+    const store = new EventTimelinePremiumStoreWithFeatures(
       {
         events: [predecessor, readOnlySuccessor],
         resources,

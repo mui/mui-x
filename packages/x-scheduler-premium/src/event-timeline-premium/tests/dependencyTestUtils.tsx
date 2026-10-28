@@ -21,6 +21,11 @@ import { buildDependency, resource1, resource2 } from './dependencyGeometryTestU
 import { EventTimelinePremiumContent } from '../content';
 import { EventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import { eventTimelinePremiumClasses } from '../eventTimelinePremiumClasses';
+import { recurringEventsFeature } from '../../recurring-events';
+import { dependenciesFeature } from '../content/timeline-dependencies/dependenciesFeature';
+import { EventTimelinePremiumFeaturesContext } from '../features/EventTimelinePremiumFeaturesContext';
+import { useFrozenEventTimelinePremiumFeatures } from '../features/useFrozenEventTimelinePremiumFeatures';
+import type { EventTimelinePremiumInternalFeatures } from '../features/EventTimelinePremiumFeatures.types';
 
 export { buildDependency, resource1, resource2 };
 
@@ -65,6 +70,11 @@ const styledContextValue = {
 
 const sharedStyledContextValue = { classes: eventTimelinePremiumClasses };
 
+const defaultFeatures: EventTimelinePremiumInternalFeatures = {
+  recurringEvents: recurringEventsFeature,
+  dependencies: dependenciesFeature,
+};
+
 type PresetConfig = EventTimelinePremiumStoreParameters<
   SchedulerEvent,
   SchedulerResource
@@ -76,6 +86,10 @@ interface TestTimelineProps {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  /**
+   * @default both features
+   */
+  features?: EventTimelinePremiumInternalFeatures;
   /**
    * Observes the dependency changes on top of the controlled loop.
    */
@@ -93,6 +107,7 @@ export function TestTimeline({
   dependencies: initialDependencies,
   presetConfig,
   readOnly,
+  features: featuresProp = defaultFeatures,
   onDependenciesChange,
   onStoreReady,
 }: TestTimelineProps) {
@@ -108,6 +123,8 @@ export function TestTimeline({
   // Providing a dependencies parameter enables the feature: tests without one must
   // render a timeline with dependencies disabled.
   const dependenciesEnabled = dependencies !== undefined;
+
+  const { features, storeFeatures } = useFrozenEventTimelinePremiumFeatures(featuresProp);
 
   const parameters: EventTimelinePremiumStoreParameters<SchedulerEvent, SchedulerResource> = {
     events,
@@ -125,6 +142,7 @@ export function TestTimeline({
     preset: 'dayAndHour',
     presets: ['dayAndHour'],
     presetConfig,
+    storeFeatures,
   };
   const store = useEventTimelinePremium(parameters);
   React.useEffect(() => {
@@ -136,13 +154,15 @@ export function TestTimeline({
 
   return (
     <SchedulerStoreContext.Provider value={storeContextValue}>
-      <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-        <EventEditingStyledContext.Provider value={styledContextValue}>
-          <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
-            <EventTimelinePremiumContent />
-          </SharedComponentsStyledContext.Provider>
-        </EventEditingStyledContext.Provider>
-      </EventTimelinePremiumStyledContext.Provider>
+      <EventTimelinePremiumFeaturesContext.Provider value={features}>
+        <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+          <EventEditingStyledContext.Provider value={styledContextValue}>
+            <SharedComponentsStyledContext.Provider value={sharedStyledContextValue}>
+              <EventTimelinePremiumContent />
+            </SharedComponentsStyledContext.Provider>
+          </EventEditingStyledContext.Provider>
+        </EventTimelinePremiumStyledContext.Provider>
+      </EventTimelinePremiumFeaturesContext.Provider>
     </SchedulerStoreContext.Provider>
   );
 }
@@ -153,6 +173,7 @@ interface RenderTimelineParameters {
   dependencies?: SchedulerDependency[];
   presetConfig?: PresetConfig;
   readOnly?: boolean;
+  features?: EventTimelinePremiumInternalFeatures;
   onDependenciesChange?: (dependencies: SchedulerDependency[]) => void;
   /**
    * Sets the theme direction and the `dir` attribute, like a consumer does.
@@ -176,6 +197,7 @@ function TimelineHost({
   dependencies,
   presetConfig,
   readOnly,
+  features,
   onDependenciesChange,
   onStoreReady,
   direction = 'ltr',
@@ -205,6 +227,7 @@ function TimelineHost({
             dependencies={dependencies}
             presetConfig={presetConfig}
             readOnly={readOnly}
+            features={features}
             onDependenciesChange={onDependenciesChange}
             onStoreReady={onStoreReady}
           />

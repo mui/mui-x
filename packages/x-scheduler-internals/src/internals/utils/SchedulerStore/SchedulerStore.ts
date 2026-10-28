@@ -415,6 +415,7 @@ export class SchedulerStore<
       newSchedulerState,
       parameters,
       updateModel,
+      this.state,
     );
 
     this.update(newState as State);
@@ -846,7 +847,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -967,13 +968,13 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
-      return toUpdateEventResult(
-        this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] }),
-      );
+      // Drop the key rather than sending `undefined`, which would remove the stored rule.
+      const { rrule, ...changes } = calendarEvent;
+      return toUpdateEventResult(this.updateEvents({ updated: [changes] }));
     }
 
     return toUpdateEventResult(this.updateEvents({ updated: [calendarEvent] }));
@@ -988,7 +989,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring event updates are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }
@@ -1006,7 +1007,7 @@ export class SchedulerStore<
         warnOnce(
           [
             'MUI X Scheduler: Recurring event deletions are a premium feature.',
-            'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+            'Use <EventCalendarPremium />, or <EventTimelinePremium /> with the `recurringEvents` feature from `@mui/x-scheduler-premium/recurring-events`, to enable recurring events.',
           ].join('\n'),
         );
       }

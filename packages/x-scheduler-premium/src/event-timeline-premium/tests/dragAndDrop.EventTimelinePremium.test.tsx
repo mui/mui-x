@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { screen, within, act, fireEvent } from '@mui/internal-test-utils';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { recurringEventsFeature } from '@mui/x-scheduler-premium/recurring-events';
 import { StandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 import {
   adapter,
@@ -312,6 +313,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         preset="dayAndMonth"
         presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
+        features={{ recurringEvents: recurringEventsFeature }}
       />,
     );
 
@@ -368,6 +370,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         preset="dayAndMonth"
         presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
+        features={{ recurringEvents: recurringEventsFeature }}
       />,
     );
 

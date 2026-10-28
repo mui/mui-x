@@ -71,6 +71,12 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
     },
+    "features": {
+      "type": {
+        "name": "shape",
+        "description": "{ recurringEvents?: { optionalRenderers: { recurrenceTab?: elementType, recurringScopeDialog?: elementType }, store: { applyDataTimezoneToEventUpdate: func, computePresets: func, deleteRecurringEvent: func, getDefaultPresetKey: func, getMonthlyReference: func, getOccurrencesForVisibleDays: func, getWeeklyDays: func, isSameRRule: func, parseRRule: func, updateRecurringEvent: func } } }"
+      }
+    },
     "getEventAriaLabel": {
       "type": { "name": "func" },
       "signature": {
