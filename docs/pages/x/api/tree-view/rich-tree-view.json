@@ -1,5 +1,6 @@
 {
   "props": {
+    "items": { "type": { "name": "array" }, "required": true },
     "apiRef": {
       "type": {
         "name": "shape",
