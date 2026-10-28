@@ -39,7 +39,6 @@ export interface SchedulerUserFacingErrorParams {
   dependencyCascadeBlockedError: undefined;
   dependencyCycleError: undefined;
   dependencyDuplicateError: undefined;
-  dependenciesDisabledError: undefined;
   dependencyRecurringEventError: undefined;
   dependencyReadOnlyError: undefined;
   dependencyUnknownEventError: undefined;

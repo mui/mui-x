@@ -53,15 +53,15 @@ function getDependencyDropTarget(
 }
 
 // The `Record` is exhaustive on the rejection union: a new reason fails to compile
-// until it brings a `localeText` code.
+// until it brings a `localeText` code. `featureDisabled` can't happen here: this monitor
+// only runs when the dependencies feature is provided.
 const REJECTION_ERRORS: Record<
-  SchedulerDependencyRejectionReason,
+  Exclude<SchedulerDependencyRejectionReason, 'featureDisabled'>,
   SchedulerUserFacingErrorDescriptor
 > = {
   cascadeBlocked: { code: 'dependencyCascadeBlockedError' },
   cyclicDependency: { code: 'dependencyCycleError' },
   duplicateDependency: { code: 'dependencyDuplicateError' },
-  featureDisabled: { code: 'dependenciesDisabledError' },
   recurringEvent: { code: 'dependencyRecurringEventError' },
   readOnly: { code: 'dependencyReadOnlyError' },
   unknownEvent: { code: 'dependencyUnknownEventError' },
@@ -134,7 +134,7 @@ export function useDependencyCreationMonitor() {
           type: getDependencyType(source.data.sourceSide, target.targetSide),
         });
 
-        if (result.status === 'rejected') {
+        if (result.status === 'rejected' && result.reason !== 'featureDisabled') {
           // A duplicate selects the existing arrow: the feedback points at the link
           // that already covers the attempted connection.
           if (result.reason === 'duplicateDependency') {

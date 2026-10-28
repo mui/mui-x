@@ -89,7 +89,7 @@ describe('<EventCalendarPremium /> - Data Source', () => {
         />,
       );
       await waitFor(() => {
-        expect(screen.getByText('Something went wrong.')).not.to.equal(null);
+        expect(screen.getByText('Something went wrong. Try again.')).not.to.equal(null);
       });
     }).toErrorDev([
       'MUI X Scheduler: The user was shown the `somethingWentWrongError` error, caused by: Error: Network down',

@@ -40,7 +40,6 @@ export interface SchedulerErrorLocaleText {
   dependencyCascadeBlockedError: string;
   dependencyCycleError: string;
   dependencyDuplicateError: string;
-  dependenciesDisabledError: string;
   dependencyRecurringEventError: string;
   dependencyReadOnlyError: string;
   dependencyUnknownEventError: string;

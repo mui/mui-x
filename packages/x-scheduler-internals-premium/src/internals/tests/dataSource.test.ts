@@ -829,6 +829,7 @@ premiumStoreClasses.forEach((storeClass) => {
         await store.lazyLoading?.queueDataFetchForRange(toRange(startFailing, endFailing), true);
       }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} Error: Range failed`]);
       expect(store.state.errors).toHaveLength(1);
+      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
 
       await store.lazyLoading?.queueDataFetchForRange(toRange(startCached, endCached), true);
       expect(store.state.errors).toHaveLength(0);
@@ -1032,6 +1033,7 @@ premiumStoreClasses.forEach((storeClass) => {
         }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} Error: boom`]);
 
         expect(store.state.errors).toHaveLength(1);
+        expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
         expect(store.state.isLoading).to.equal(false);
       } finally {
         vi.useRealTimers();
@@ -1053,6 +1055,7 @@ premiumStoreClasses.forEach((storeClass) => {
         await store.lazyLoading?.queueDataFetchForRange(toRange(startFailing, endFailing), true);
       }).toErrorDev([`${SOMETHING_WENT_WRONG_LOG} Error: Fetch failed`]);
       expect(store.state.errors).toHaveLength(1);
+      expect(store.state.errors[0].code).to.equal('somethingWentWrongError');
 
       const updatedEvent: TestEvent = {
         id: '1',

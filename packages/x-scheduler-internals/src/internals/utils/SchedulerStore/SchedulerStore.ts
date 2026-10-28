@@ -160,9 +160,9 @@ function datesNotWritableReason(state: SchedulerState): string {
 }
 
 /**
- * Surfaced to the user (like `EVENT_NOT_LOADED_ERROR`): a plain sentence, not the
- * `eventModelStructure` / `setter` explanation, which belongs in the dev warning instead — the
- * end user looking at a field error or a toast has no `setter` to add.
+ * Surfaced to the user (like `EVENT_NOT_LOADED_ERROR`). Its `localeText` message is a plain
+ * sentence, not the `eventModelStructure` / `setter` explanation, which belongs in the dev
+ * warning instead — the end user looking at a field error or a toast has no `setter` to add.
  */
 const DATES_NOT_WRITABLE_ERROR: SchedulerUserFacingErrorDescriptor = {
   code: 'datesNotWritableError',
@@ -171,7 +171,7 @@ const DATES_NOT_WRITABLE_ERROR: SchedulerUserFacingErrorDescriptor = {
 /**
  * Surfaced to the user, for a refused creation — unlike a move, nothing the user did
  * necessarily touched a date: a recurring split detaching an occurrence hits this from an edit
- * to any field (the title, say), so the message doesn't blame "this date" for it.
+ * to any field (the title, say), so its `localeText` message doesn't blame "this date" for it.
  */
 const EVENT_NOT_CREATABLE_ERROR: SchedulerUserFacingErrorDescriptor = {
   code: 'eventNotCreatableError',
@@ -465,7 +465,7 @@ export class SchedulerStore<
   private transientErrorKeys = new Set<string>();
 
   /**
-   * Appends an error to `state.errors`, to show it to the user. `error` is the original
+   * Appends an error to `state.errors`, to show it to the user. `options.error` is the original
    * failure, if any: it is logged to the console and never stored.
    * The store owns the key counter so uniqueness is enforced in one place. Does not dedupe —
    * pushing the same error twice produces two entries (intentional; e.g. a retried failure that
