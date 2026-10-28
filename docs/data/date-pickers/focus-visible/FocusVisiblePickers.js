@@ -88,8 +88,8 @@ export default function FocusVisiblePickers() {
           <Box
             sx={{
               display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
               gap: 2,
             }}
           >
@@ -101,6 +101,7 @@ export default function FocusVisiblePickers() {
             <DateTimeRangePicker
               label="Date and time range"
               defaultValue={range}
+              sx={{ width: '100%', maxWidth: 440 }}
               slotProps={{
                 shortcuts: { items: shortcutsItems },
                 toolbar: { hidden: false },
