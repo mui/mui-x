@@ -2539,9 +2539,15 @@ importers:
       '@emotion/react':
         specifier: 'catalog:'
         version: 11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0)
+      '@emotion/styled':
+        specifier: 'catalog:'
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0)
       '@mui/internal-benchmark':
-        specifier: 0.1.1-canary.4
-        version: 0.1.1-canary.4(@vitest/browser-playwright@5.0.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)
+        specifier: 0.1.1-canary.11
+        version: 0.1.1-canary.11(@playwright/test@1.64.0)(@vitest/browser-playwright@5.0.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 9.5.0(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react@19.3.0)(supports-color@11.0.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@mui/x-charts':
         specifier: workspace:^
         version: link:../../packages/x-charts/build
@@ -2551,12 +2557,12 @@ importers:
       '@mui/x-charts-pro':
         specifier: workspace:^
         version: link:../../packages/x-charts-pro/build
-      '@vitejs/plugin-react':
+      '@mui/x-license':
+        specifier: workspace:^
+        version: link:../../packages/x-license/build
+      '@playwright/test':
         specifier: 'catalog:'
-        version: 6.1.2(babel-plugin-react-compiler@1.0.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
-      '@vitest/browser-playwright':
-        specifier: 'catalog:'
-        version: 5.0.5(playwright@1.64.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)
+        version: 1.64.0
       react:
         specifier: 'catalog:'
         version: 19.3.0
@@ -2566,9 +2572,6 @@ importers:
       vite:
         specifier: 'catalog:'
         version: 8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
-      vitest:
-        specifier: 'catalog:'
-        version: 5.0.5(@types/node@22.20.5)(@vitest/browser-playwright@5.0.5)(@vitest/coverage-v8@5.0.5)(@vitest/ui@5.0.5)(jsdom@30.1.2)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
 
   test/regressions:
     devDependencies:
@@ -4517,13 +4520,19 @@ packages:
     peerDependencies:
       '@babel/core': ^8.0.0
 
-  '@mui/internal-benchmark@0.1.1-canary.4':
-    resolution: {integrity: sha512-0erBVOxTLtqpTUtt4KZFYykZ3IEurm5W8Z0gpM2os9Mtk8HrfpCQ0C3lnm7BVP1jbELW9h/G3IaZ2JGGq/e7Dw==}
+  '@mui/internal-benchmark@0.1.1-canary.11':
+    resolution: {integrity: sha512-SC9OtZq9KZ9Bd4HQtIrhN7FX2QFZxLCj3Vsh666WJNX0iiDC9mgWhlCxnYvf0bZdNlca9OCVQICNs141jYgidQ==}
+    hasBin: true
     peerDependencies:
+      '@playwright/test': '>=1.50.0'
       '@vitest/browser-playwright': '>=4.1'
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
+      vite: ^7.0.0 || ^8.0.0
       vitest: '>=4.1'
+    peerDependenciesMeta:
+      vite:
+        optional: true
 
   '@mui/internal-bundle-size-checker@1.1.1-canary.4':
     resolution: {integrity: sha512-+VlK8xq0NgStsFZ3DZ0nQpJlC20DndBrbF2Gy177UTohLf8dqdAjIO/CxX/5ZxteJ7DsP70WJVe3JRldqMZbDA==}
@@ -11358,6 +11367,9 @@ packages:
   zod@4.6.5:
     resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
 
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -13269,24 +13281,31 @@ snapshots:
       '@babel/core': 8.0.7
       resolve: 1.22.13
 
-  '@mui/internal-benchmark@0.1.1-canary.4(@vitest/browser-playwright@5.0.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)':
+  '@mui/internal-benchmark@0.1.1-canary.11(@playwright/test@1.64.0)(@vitest/browser-playwright@5.0.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)':
     dependencies:
       '@babel/runtime': 8.0.7
+      '@playwright/test': 1.64.0
+      '@pnpm/find-workspace-dir': 1000.1.5
       '@vitejs/plugin-react': 6.1.2(babel-plugin-react-compiler@1.0.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
       '@vitest/browser-playwright': 5.0.5(playwright@1.64.0)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.5)
       chalk: 6.0.1
       env-ci: 11.2.0
       es-toolkit: 1.52.0
       execa: 10.2.1
+      globby: 16.2.4
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
+      sirv: 3.0.2
       vitest: 5.0.5(@types/node@22.20.5)(@vitest/browser-playwright@5.0.5)(@vitest/coverage-v8@5.0.5)(@vitest/ui@5.0.5)(jsdom@30.1.2)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
-      zod: 4.6.5
+      yaml: 2.9.1
+      yargs: 18.2.0
+      zod: 4.6.7
+    optionalDependencies:
+      vite: 8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@rolldown/plugin-babel'
       - babel-plugin-react-compiler
       - oxc-transform-react
-      - vite
 
   '@mui/internal-bundle-size-checker@1.1.1-canary.4(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(rolldown@1.2.15)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)':
     dependencies:
@@ -21327,6 +21346,8 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.6.5: {}
+
+  zod@4.6.7: {}
 
   zwitch@2.0.4: {}
 

@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["tests/**/*", "setup.ts", "utils/**/*", "vitest.config.ts"],
-  "exclude": ["node_modules"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "src/__bench__"],
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "es2022",

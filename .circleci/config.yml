@@ -240,7 +240,9 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.64.0-noble
-    resource_class: medium
+    # 2 vCPUs starve V8's background compilers, which makes the same code's speed vary from sample to
+    # sample; see the @mui/internal-benchmark README.
+    resource_class: medium+.gen2
     steps:
       - checkout
       - run:
@@ -251,7 +253,8 @@ jobs:
               exit 0
             fi
             BASE="${BASE_BRANCH:-master}"
-            git fetch --no-tags --depth=50 origin "$BASE"
+            # Full history: the baseline below is where the branch forked.
+            git fetch --no-tags origin "$BASE"
             CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
               'packages/x-charts*' \
               'test/performance-charts' \
@@ -265,13 +268,33 @@ jobs:
             circleci-agent step halt
       - install-deps
       - run:
-          name: Build charts packages
-          command: pnpm --filter "@mui/x-charts-premium..." build
+          name: Resolve the baseline commit
+          # On the base branch, the previous commit; on a pull request, where it forked from it.
+          command: |
+            set -e
+            BASE_SHA=$(pnpm code-infra baseline --base-branch "${BASE_BRANCH:-master}")
+            echo "Baseline commit: $BASE_SHA"
+            echo "$BASE_SHA" > .benchmark-baseline-sha
+      - restore_cache:
+          name: Restore the packed-baseline cache
+          keys:
+            - charts-benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
       - run:
-          name: Run charts benchmarks
-          environment:
-            BENCHMARK_UPLOAD: 'true'
-          command: pnpm test:charts-benchmark
+          name: Run the charts benchmarks
+          no_output_timeout: 30m
+          # Only the smoke benchmarks, to keep a pull request's check short; the other benchmark files
+          # are left to manual runs. The run builds and packs both sides itself.
+          command: pnpm test:charts-benchmark smoke --baseline "$(cat .benchmark-baseline-sha)"
+      - run:
+          name: Upload the benchmark report
+          # Also after a failed run, so the comment says what happened.
+          when: always
+          command: pnpm test:charts-benchmark upload
+      - save_cache:
+          name: Save the packed-baseline cache
+          key: charts-benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
+          paths:
+            - test/performance-charts/.benchmark/packed
 
 workflows:
   pipeline:

@@ -29,7 +29,8 @@ __diff_output__
 !/docs/public/x/sw.js
 /docs/public/chat/
 /test/regressions/screenshots/
-/test/performance-charts/benchmarks/
+/test/performance-charts/.benchmark/
+/test/performance-charts/src/__bench__/
 build/
 dist/
 node_modules/

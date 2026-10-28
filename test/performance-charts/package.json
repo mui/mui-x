@@ -3,20 +3,21 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:performance": "vitest run",
-    "build": "pnpm --filter=\"@mui/x-charts-premium...\" build"
+    "dev": "vite",
+    "benchmark": "benchmark"
   },
   "devDependencies": {
     "@emotion/react": "catalog:",
-    "@mui/internal-benchmark": "0.1.1-canary.4",
+    "@emotion/styled": "catalog:",
+    "@mui/internal-benchmark": "0.1.1-canary.11",
+    "@mui/material": "catalog:",
     "@mui/x-charts": "workspace:^",
-    "@mui/x-charts-pro": "workspace:^",
     "@mui/x-charts-premium": "workspace:^",
-    "@vitejs/plugin-react": "catalog:",
-    "@vitest/browser-playwright": "catalog:",
+    "@mui/x-charts-pro": "workspace:^",
+    "@mui/x-license": "workspace:^",
+    "@playwright/test": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "vite": "catalog:",
-    "vitest": "catalog:"
+    "vite": "catalog:"
   }
 }
