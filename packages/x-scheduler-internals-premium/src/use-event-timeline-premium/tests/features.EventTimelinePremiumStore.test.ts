@@ -43,8 +43,8 @@ const dependencyAB: SchedulerDependency = {
   type: 'FinishToStart',
 };
 
-const rangeStart = adapter.date('2025-07-01T00:00:00Z', 'default');
-const rangeEnd = adapter.date('2025-07-03T23:59:59Z', 'default');
+const rangeStart = Date.parse('2025-07-01T00:00:00Z');
+const rangeEnd = Date.parse('2025-07-03T23:59:59Z');
 
 const countOccurrences = (store: EventTimelinePremiumStore<any, any>) =>
   schedulerOccurrenceSelectors
