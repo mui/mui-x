@@ -246,26 +246,49 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Skip when no charts changes
+          name: Choose the benchmarks
+          # On the base branch, every chart's benchmark file; on a pull request, the smoke file and the
+          # files of the charts it changes, Pro and Premium variants included. Without charts changes,
+          # the job stops here.
           command: |
-            if [ "$CIRCLE_BRANCH" = "master" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
-              echo "On $CIRCLE_BRANCH; running benchmarks."
-              exit 0
-            fi
+            set -e
             BASE="${BASE_BRANCH:-master}"
-            # Full history: the baseline below is where the branch forked.
-            git fetch --no-tags origin "$BASE"
-            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
+            if [ "$CIRCLE_BRANCH" = "$BASE" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
+              ON_BASE=true
+              RANGE="HEAD~1...HEAD"
+            else
+              ON_BASE=false
+              # Full history: the baseline below is where the branch forked.
+              git fetch --no-tags origin "$BASE"
+              RANGE="origin/$BASE...HEAD"
+            fi
+            CHANGED=$(git diff --name-only "$RANGE" -- \
               'packages/x-charts*' \
-              'test/performance-charts' \
+              'test/benchmark' \
               '.circleci/config.yml')
-            if [ -n "$CHANGED" ]; then
-              echo "Relevant changes detected; running benchmarks:"
-              echo "$CHANGED"
+            if [ -z "$CHANGED" ]; then
+              echo "No changes to packages/x-charts*, test/benchmark, or CircleCI config; halting job."
+              circleci-agent step halt
               exit 0
             fi
-            echo "No changes to packages/x-charts*, test/performance-charts, or CircleCI config; halting job."
-            circleci-agent step halt
+            echo "Relevant changes:"
+            echo "$CHANGED"
+            if [ "$ON_BASE" = true ]; then
+              FILTERS="charts/"
+            else
+              FILTERS="smoke/"
+              # A chart's benchmark folder is named after its source folder.
+              CHARTS=$(echo "$CHANGED" | sed -n \
+                -e 's#^packages/x-charts[^/]*/src/\([^/]*\)/.*#\1#p' \
+                -e 's#^test/benchmark/src/charts/\([^/]*\)/.*#\1#p' | sort -u)
+              for CHART in $CHARTS; do
+                if ls test/benchmark/src/charts/"$CHART"*/*.bench.tsx > /dev/null 2>&1; then
+                  FILTERS="$FILTERS charts/$CHART"
+                fi
+              done
+            fi
+            echo "Benchmark files: $FILTERS"
+            echo "$FILTERS" > .benchmark-filters
       - install-deps
       - run:
           name: Resolve the baseline commit
@@ -278,23 +301,22 @@ jobs:
       - restore_cache:
           name: Restore the packed-baseline cache
           keys:
-            - charts-benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
+            - benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
       - run:
-          name: Run the charts benchmarks
+          name: Run the benchmarks
           no_output_timeout: 30m
-          # Only the smoke benchmarks, to keep a pull request's check short; the other benchmark files
-          # are left to manual runs. The run builds and packs both sides itself.
-          command: pnpm test:charts-benchmark smoke --baseline "$(cat .benchmark-baseline-sha)"
+          # The files chosen above, by path. The run builds and packs both sides itself.
+          command: pnpm test:benchmark $(cat .benchmark-filters) --baseline "$(cat .benchmark-baseline-sha)"
       - run:
           name: Upload the benchmark report
           # Also after a failed run, so the comment says what happened.
           when: always
-          command: pnpm test:charts-benchmark upload
+          command: pnpm test:benchmark upload
       - save_cache:
           name: Save the packed-baseline cache
-          key: charts-benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
+          key: benchmark-packed-v1-{{ checksum ".benchmark-baseline-sha" }}
           paths:
-            - test/performance-charts/.benchmark/packed
+            - test/benchmark/.benchmark/packed
 
 workflows:
   pipeline:
