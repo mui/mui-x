@@ -133,6 +133,7 @@ const enUSCalendar: Omit<
   months: 'Months',
   weeks: 'Weeks',
   years: 'Years',
+  viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Close side panel',

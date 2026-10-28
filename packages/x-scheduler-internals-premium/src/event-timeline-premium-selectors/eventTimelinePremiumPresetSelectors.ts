@@ -18,7 +18,6 @@ export const eventTimelinePremiumPresetSelectors = {
   preset: (state: State) => state.preset,
   presets: (state: State) => state.presets,
   config: createSelectorMemoized(
-    (state: State) => state.adapter,
     // Read in the display timezone, like the visible date of the Event Calendar views.
     schedulerOtherSelectors.visiblePlainDate,
     schedulerOtherSelectors.displayTimezone,
@@ -30,15 +29,7 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) =>
       state.presetConfig[state.preset as keyof EventTimelinePremiumPresetConfig]?.endTime,
     schedulerPreferenceSelectors.weekStartsOn,
-    (
-      adapter,
-      visiblePlainDate,
-      displayTimezone,
-      preset,
-      presetStartTime,
-      presetEndTime,
-      weekStartsOn,
-    ) => {
+    (visiblePlainDate, displayTimezone, preset, presetStartTime, presetEndTime, weekStartsOn) => {
       const config = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
       if (!config) {
         throw new Error(
@@ -56,7 +47,7 @@ export const eventTimelinePremiumPresetSelectors = {
         headers,
         timeResolution,
       } = config;
-      const startPlainDate = getStartPlainDate(adapter, visiblePlainDate, weekStartsOn);
+      const startPlainDate = getStartPlainDate(visiblePlainDate, weekStartsOn);
       const endPlainDate = getEndPlainDate(startPlainDate, unitCount);
 
       // Only hour-resolution presets can trim their visible hours. The range itself stays

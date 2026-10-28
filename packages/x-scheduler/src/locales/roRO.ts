@@ -130,6 +130,7 @@ const roROCalendar: SchedulerCalendarTranslations = {
   months: 'Luni',
   weeks: 'Săptămâni',
   years: 'Ani',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Închide panoul lateral',

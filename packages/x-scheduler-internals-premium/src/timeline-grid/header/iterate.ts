@@ -1,4 +1,3 @@
-import type { TemporalAdapter } from '@base-ui/react/internals/temporal';
 import type { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import {
   getPlainDateWeekStart,
@@ -35,11 +34,10 @@ export interface IteratedRange extends TimelineAxisWindow {
  * The hour window of the range only applies when the ticks are hours.
  */
 export function iterate(
-  adapter: TemporalAdapter,
   unit: PresetHeaderUnit,
   tickUnit: PresetHeaderUnit,
   range: IteratedRange,
-  weekStartsOn?: WeekStartsOn,
+  weekStartsOn: WeekStartsOn,
 ): IteratedCell[] {
   if (range.endPlainDate.dayNumber <= range.startPlainDate.dayNumber) {
     throw new Error(
@@ -62,7 +60,7 @@ export function iterate(
   }
 
   const cells: IteratedCell[] = [];
-  let cursor = startOf(adapter, rangeStartLocalMs, unit, weekStartsOn);
+  let cursor = startOf(rangeStartLocalMs, unit, weekStartsOn);
   let index = 0;
 
   while (cursor < rangeEndLocalMs) {
@@ -154,12 +152,7 @@ function iterateHourCells(range: IteratedRange): IteratedCell[] {
 /**
  * The wall-clock start of the unit containing `localMs`, a wall-clock time.
  */
-function startOf(
-  adapter: TemporalAdapter,
-  localMs: number,
-  unit: PresetHeaderUnit,
-  weekStartsOn: WeekStartsOn | undefined,
-): number {
+function startOf(localMs: number, unit: PresetHeaderUnit, weekStartsOn: WeekStartsOn): number {
   switch (unit) {
     case 'hour':
       return Math.floor(localMs / HOUR_MS) * HOUR_MS;
@@ -167,8 +160,7 @@ function startOf(
       return Math.floor(localMs / MS_PER_DAY) * MS_PER_DAY;
     case 'week':
       return (
-        getPlainDateWeekStart(adapter, plainDateFromLocalMs(localMs), weekStartsOn).dayNumber *
-        MS_PER_DAY
+        getPlainDateWeekStart(plainDateFromLocalMs(localMs), weekStartsOn).dayNumber * MS_PER_DAY
       );
     case 'month':
       return plainDateFromLocalMs(localMs).with({ day: 1 }).dayNumber * MS_PER_DAY;

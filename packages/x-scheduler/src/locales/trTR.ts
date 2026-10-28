@@ -152,6 +152,7 @@ const trTRCalendar: SchedulerCalendarTranslations = {
   months: 'Aylar',
   weeks: 'Haftalar',
   years: 'Yıllar',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Yan paneli kapat',
