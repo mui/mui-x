@@ -194,14 +194,27 @@ const splitSeries = (events, context) => {
     };
   }
 
+  const followingId = context.createId();
+  // The occurrences moved from the following days now belong to the new series.
+  const isFollowingMovedOccurrence = (event) =>
+    event.extractedFromId === series.id &&
+    event.rrule == null &&
+    parseDay(event.start) >= day;
   return {
     events: [
-      ...replaceEvent(events, {
-        ...series,
-        rrule: { ...rule, until: formatEndOfDay(day - 1) },
-        exDates: preceding,
+      ...events.map((event) => {
+        if (event.id === series.id) {
+          return {
+            ...series,
+            rrule: { ...rule, until: formatEndOfDay(day - 1) },
+            exDates: preceding,
+          };
+        }
+        return isFollowingMovedOccurrence(event)
+          ? { ...event, extractedFromId: followingId }
+          : event;
       }),
-      { ...followingSeries, id: context.createId(), extractedFromId: series.id },
+      { ...followingSeries, id: followingId, extractedFromId: series.id },
     ],
     description: `Moved "${series.title}" to ${time} from ${formatDay(day)}`,
   };
@@ -216,6 +229,29 @@ const createSeries = (events, context) => {
   return {
     events: [...events, series],
     description: `Created the weekly "${series.title}" from ${formatDay(day)}`,
+  };
+};
+
+// Deletes a series created by `createSeries` and never split, with the occurrences moved from it.
+const deleteSeries = (events, context) => {
+  const candidates = events.filter(
+    (event) =>
+      String(event.id).startsWith('live-') &&
+      typeof event.rrule === 'object' &&
+      event.rrule.until == null &&
+      event.extractedFromId == null,
+  );
+  if (candidates.length === 0) {
+    return null;
+  }
+  const series = context.random.pick(candidates);
+  const isMovedOccurrence = (event) =>
+    event.extractedFromId === series.id && event.rrule == null;
+  return {
+    events: events.filter(
+      (event) => event.id !== series.id && !isMovedOccurrence(event),
+    ),
+    description: `Deleted the weekly "${series.title}"`,
   };
 };
 
@@ -253,14 +289,16 @@ const deleteEvent = (events, context) => {
   return null;
 };
 
-// The standalone events created balance the ones deleted, and the restored occurrences balance the
+// The events created balance the ones deleted, and the restored occurrences balance the
 // cancelled and moved ones, so the calendar keeps roughly its size.
+// The splits add series, but they don't add occurrences.
 const LIVE_UPDATERS = [
   [cancelOccurrence, 3],
   [restoreOccurrence, 3],
   [moveOccurrence, 3],
   [splitSeries, 1],
   [createSeries, 1],
+  [deleteSeries, 1],
   [createEvent, 2],
   [renameEvent, 2],
   [deleteEvent, 4],
