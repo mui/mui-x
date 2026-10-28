@@ -63,15 +63,16 @@ import { eventDialogFormSelectors } from '../event-dialog/form/EventDialogFormSt
 import { usePushPlaceholder } from '../event-dialog/usePushPlaceholder';
 import { focusFirstInvalid } from '../scheduler-form/focusFirstInvalid';
 import { deleteOccurrenceAndRestoreFocus } from '../../utils/focus-utils';
-import { dialogContentBaseStyles } from '../../constants/dialogStyles';
+import {
+  dialogContentBaseStyles,
+  dialogFormBaseStyles,
+  getDialogFormActionsBaseStyles,
+} from '../../constants/dialogStyles';
 
-export const EventDialogFormActions = styled(DialogActions, {
+const EventDialogFormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
   slot: 'FormActions',
-})(({ theme }) => ({
-  padding: theme.spacing(3),
-  gap: theme.spacing(2),
-}));
+})(({ theme }) => getDialogFormActionsBaseStyles(theme));
 
 const EventDialogContentRoot = styled(MuiDialogContent, {
   name: 'MuiEventDialog',
@@ -82,15 +83,10 @@ const EventDialogContentRoot = styled(MuiDialogContent, {
   width: 450,
 });
 
-export const EventDialogForm = styled('form', {
+const EventDialogForm = styled('form', {
   name: 'MuiEventDialog',
   slot: 'Form',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-  minHeight: 0,
-});
+})(dialogFormBaseStyles);
 
 const EventDialogTabsContainer = styled('div', {
   name: 'MuiEventDialog',

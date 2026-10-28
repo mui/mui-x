@@ -67,8 +67,24 @@ export interface EventTimelinePremiumClasses
   dependencyTerminals: string;
   /** Styles applied to event dependency terminal elements. */
   eventDependencyTerminal: string;
+  /** Styles applied to the dependency dialog root element. */
+  dependencyDialog: string;
+  /** Styles applied to the dependency dialog paper element. */
+  dependencyDialogPaper: string;
+  /** Styles applied to the dependency dialog header element. */
+  dependencyDialogHeader: string;
+  /** Styles applied to the dependency dialog title element. */
+  dependencyDialogTitle: string;
+  /** Styles applied to the dependency dialog close button element. */
+  dependencyDialogCloseButton: string;
   /** Styles applied to the dependency dialog content element. */
   dependencyDialogContent: string;
+  /** Styles applied to the dependency dialog form element. */
+  dependencyDialogForm: string;
+  /** Styles applied to the dependency dialog divider element. */
+  dependencyDialogDivider: string;
+  /** Styles applied to the dependency dialog actions element. */
+  dependencyDialogActions: string;
   /** Styles applied to the dependency dialog body element. */
   dependencyDialogBody: string;
   /** Styles applied to the dependency dialog details element. */
@@ -118,7 +134,15 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'dependencyArrows',
     'dependencyTerminals',
     'eventDependencyTerminal',
+    'dependencyDialog',
+    'dependencyDialogPaper',
+    'dependencyDialogHeader',
+    'dependencyDialogTitle',
+    'dependencyDialogCloseButton',
     'dependencyDialogContent',
+    'dependencyDialogForm',
+    'dependencyDialogDivider',
+    'dependencyDialogActions',
     'dependencyDialogBody',
     'dependencyDialogDetails',
     'dependencyDialogEventChip',

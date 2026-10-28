@@ -2,16 +2,20 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import type { DialogProps } from '@mui/material/Dialog';
 import MuiDialogContent from '@mui/material/DialogContent';
+import Paper from '@mui/material/Paper';
+import type { PaperProps } from '@mui/material/Paper';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumDependencySelectors } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import type { SchedulerDependencyEditor } from '@mui/x-scheduler-internals-premium/models';
 import {
   dialogContentBaseStyles,
-  EventDialogDraggablePaper,
-  EventDialogRoot,
+  dialogRootBaseStyles,
+  getDialogPaperBaseStyles,
+  useDraggableAnchoredPaper,
 } from '@mui/x-scheduler/internals';
-import type { EventDialogDraggablePaperProps } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 import { useDependencyGeometry } from '../EventTimelinePremiumDependencyGeometry';
 import { DependencyDialogFormContent } from './DependencyDialogFormContent';
@@ -27,6 +31,30 @@ const DependencyDialogAnchor = styled('span', {
   height: 0,
   pointerEvents: 'none',
 });
+
+const DependencyDialogRoot = styled(Dialog, {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialog',
+})(dialogRootBaseStyles);
+
+const DependencyDialogPaper = styled(Paper, {
+  name: 'MuiEventTimeline',
+  slot: 'DependencyDialogPaper',
+})(({ theme }) => getDialogPaperBaseStyles(theme));
+
+interface DependencyDialogDraggablePaperProps extends PaperProps {
+  anchor: HTMLElement | null;
+  dragHandlerRef: React.RefObject<HTMLElement | null>;
+}
+
+const DependencyDialogDraggablePaper = function DependencyDialogDraggablePaper(
+  props: DependencyDialogDraggablePaperProps,
+) {
+  const { anchor, dragHandlerRef, ...other } = props;
+  const paperRef = useDraggableAnchoredPaper(anchor, dragHandlerRef);
+
+  return <DependencyDialogPaper {...other} ref={paperRef} />;
+} as any as DialogProps['PaperComponent'];
 
 // Narrower than the event dialog: it only has four fields.
 const DependencyDialogContentRoot = styled(MuiDialogContent, {
@@ -74,19 +102,19 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
   const viewProps = { ...other, titleId, dragHandlerRef };
 
   return (
-    <EventDialogRoot
+    <DependencyDialogRoot
       open
       onClose={other.onClose}
-      PaperComponent={EventDialogDraggablePaper}
+      PaperComponent={DependencyDialogDraggablePaper}
       aria-labelledby={titleId}
       aria-modal="false"
-      className={classes.eventDialog}
+      className={classes.dependencyDialog}
       slotProps={{
         paper: {
-          className: classes.eventDialogPaper,
+          className: classes.dependencyDialogPaper,
           anchor,
           dragHandlerRef,
-        } as EventDialogDraggablePaperProps,
+        } as DependencyDialogDraggablePaperProps,
       }}
     >
       <DependencyDialogContentRoot className={classes.dependencyDialogContent}>
@@ -96,7 +124,7 @@ const DependencyDialogContent = React.memo(function DependencyDialogContent(
           <DependencyDialogFormContent {...viewProps} />
         )}
       </DependencyDialogContentRoot>
-    </EventDialogRoot>
+    </DependencyDialogRoot>
   );
 });
 

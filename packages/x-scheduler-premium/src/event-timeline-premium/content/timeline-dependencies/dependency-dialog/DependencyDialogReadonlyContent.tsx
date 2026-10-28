@@ -12,11 +12,6 @@ import {
   getEffectiveDependencyLag,
 } from '@mui/x-scheduler-internals-premium/internals';
 import {
-  EventDialogForm,
-  EventDialogFormActions,
-  EventDialogHeader,
-} from '@mui/x-scheduler/internals';
-import {
   DEPENDENCY_DIALOG_TEXT,
   DEPENDENCY_TYPE_LABELS,
   formatLag,
@@ -28,6 +23,11 @@ import {
   DependencyDialogEndpoints,
 } from './DependencyDialogDetails';
 import type { DependencyDialogViewProps } from './DependencyDialogDetails';
+import {
+  DependencyDialogActions,
+  DependencyDialogForm,
+  DependencyDialogHeader,
+} from './DependencyDialogLayout';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 
 const DependencyDialogLagNote = styled('span', {
@@ -54,12 +54,12 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
   );
 
   return (
-    <EventDialogForm as="section" className={classes.eventDialogForm}>
-      <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
-        <Typography variant="h6" id={titleId} className={classes.eventDialogTitle}>
+    <DependencyDialogForm as="section" className={classes.dependencyDialogForm}>
+      <DependencyDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+        <Typography variant="h6" id={titleId} className={classes.dependencyDialogTitle}>
           {DEPENDENCY_DIALOG_TEXT.detailsTitle}
         </Typography>
-      </EventDialogHeader>
+      </DependencyDialogHeader>
       <DependencyDialogBody className={classes.dependencyDialogBody}>
         <DependencyDialogDetails className={classes.dependencyDialogDetails}>
           <DependencyDialogEndpoints {...props} />
@@ -76,12 +76,12 @@ export function DependencyDialogReadonlyContent(props: DependencyDialogViewProps
           </Typography>
         </DependencyDialogDetails>
       </DependencyDialogBody>
-      <Divider className={classes.eventDialogFormDivider} />
-      <EventDialogFormActions className={classes.eventDialogFormActions}>
+      <Divider className={classes.dependencyDialogDivider} />
+      <DependencyDialogActions className={classes.dependencyDialogActions}>
         <Button variant="contained" type="button" onClick={onClose}>
           {localeText.closeButtonLabel}
         </Button>
-      </EventDialogFormActions>
-    </EventDialogForm>
+      </DependencyDialogActions>
+    </DependencyDialogForm>
   );
 }

@@ -170,9 +170,21 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the dependency arrows overlay element"
     },
+    "dependencyDialog": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog root element"
+    },
+    "dependencyDialogActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog actions element"
+    },
     "dependencyDialogBody": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the dependency dialog body element"
+    },
+    "dependencyDialogCloseButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog close button element"
     },
     "dependencyDialogContent": {
       "description": "Styles applied to {{nodeName}}.",
@@ -182,9 +194,21 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the dependency dialog details element"
     },
+    "dependencyDialogDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog divider element"
+    },
     "dependencyDialogEventChip": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the dependency dialog event chip elements"
+    },
+    "dependencyDialogForm": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog form element"
+    },
+    "dependencyDialogHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog header element"
     },
     "dependencyDialogLag": {
       "description": "Styles applied to {{nodeName}}.",
@@ -197,6 +221,14 @@
     "dependencyDialogLagUnit": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the dependency dialog lag unit select element"
+    },
+    "dependencyDialogPaper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog paper element"
+    },
+    "dependencyDialogTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the dependency dialog title element"
     },
     "dependencyTerminals": {
       "description": "Styles applied to {{nodeName}}.",

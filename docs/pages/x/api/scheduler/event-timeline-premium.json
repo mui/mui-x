@@ -238,9 +238,27 @@
       "isGlobal": false
     },
     {
+      "key": "dependencyDialog",
+      "className": "MuiEventTimeline-dependencyDialog",
+      "description": "Styles applied to the dependency dialog root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogActions",
+      "className": "MuiEventTimeline-dependencyDialogActions",
+      "description": "Styles applied to the dependency dialog actions element.",
+      "isGlobal": false
+    },
+    {
       "key": "dependencyDialogBody",
       "className": "MuiEventTimeline-dependencyDialogBody",
       "description": "Styles applied to the dependency dialog body element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogCloseButton",
+      "className": "MuiEventTimeline-dependencyDialogCloseButton",
+      "description": "Styles applied to the dependency dialog close button element.",
       "isGlobal": false
     },
     {
@@ -256,9 +274,27 @@
       "isGlobal": false
     },
     {
+      "key": "dependencyDialogDivider",
+      "className": "MuiEventTimeline-dependencyDialogDivider",
+      "description": "Styles applied to the dependency dialog divider element.",
+      "isGlobal": false
+    },
+    {
       "key": "dependencyDialogEventChip",
       "className": "MuiEventTimeline-dependencyDialogEventChip",
       "description": "Styles applied to the dependency dialog event chip elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogForm",
+      "className": "MuiEventTimeline-dependencyDialogForm",
+      "description": "Styles applied to the dependency dialog form element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogHeader",
+      "className": "MuiEventTimeline-dependencyDialogHeader",
+      "description": "Styles applied to the dependency dialog header element.",
       "isGlobal": false
     },
     {
@@ -277,6 +313,18 @@
       "key": "dependencyDialogLagUnit",
       "className": "MuiEventTimeline-dependencyDialogLagUnit",
       "description": "Styles applied to the dependency dialog lag unit select element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogPaper",
+      "className": "MuiEventTimeline-dependencyDialogPaper",
+      "description": "Styles applied to the dependency dialog paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dependencyDialogTitle",
+      "className": "MuiEventTimeline-dependencyDialogTitle",
+      "description": "Styles applied to the dependency dialog title element.",
       "isGlobal": false
     },
     {

@@ -25,9 +25,6 @@ import {
   getEffectiveDependencyLag,
 } from '@mui/x-scheduler-internals-premium/internals';
 import {
-  EventDialogForm,
-  EventDialogFormActions,
-  EventDialogHeader,
   focusFirstInvalid,
   SchedulerFormStore,
   schedulerFormSelectors,
@@ -52,6 +49,11 @@ import {
   DependencyDialogEndpoints,
 } from './DependencyDialogDetails';
 import type { DependencyDialogViewProps } from './DependencyDialogDetails';
+import {
+  DependencyDialogActions,
+  DependencyDialogForm,
+  DependencyDialogHeader,
+} from './DependencyDialogLayout';
 import { useEventTimelinePremiumStyledContext } from '../../../EventTimelinePremiumStyledContext';
 
 // Same right inset as the Type select, so both arrows line up.
@@ -179,12 +181,12 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
   };
 
   return (
-    <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
-      <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
-        <Typography variant="h6" id={titleId} className={classes.eventDialogTitle}>
+    <DependencyDialogForm onSubmit={handleSubmit} className={classes.dependencyDialogForm}>
+      <DependencyDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
+        <Typography variant="h6" id={titleId} className={classes.dependencyDialogTitle}>
           {DEPENDENCY_DIALOG_TEXT.editTitle}
         </Typography>
-      </EventDialogHeader>
+      </DependencyDialogHeader>
       <DependencyDialogBody className={classes.dependencyDialogBody}>
         <DependencyDialogDetails className={classes.dependencyDialogDetails}>
           <DependencyDialogEndpoints {...props} />
@@ -259,15 +261,15 @@ export function DependencyDialogFormContent(props: DependencyDialogViewProps) {
           }}
         />
       </DependencyDialogBody>
-      <Divider className={classes.eventDialogFormDivider} />
-      <EventDialogFormActions className={classes.eventDialogFormActions}>
+      <Divider className={classes.dependencyDialogDivider} />
+      <DependencyDialogActions className={classes.dependencyDialogActions}>
         <Button color="error" type="button" onClick={handleDelete} disabled={isSubmitting}>
           {DEPENDENCY_DIALOG_TEXT.delete}
         </Button>
         <Button variant="contained" type="submit" disabled={isSubmitting}>
           {localeText.saveChanges}
         </Button>
-      </EventDialogFormActions>
-    </EventDialogForm>
+      </DependencyDialogActions>
+    </DependencyDialogForm>
   );
 }
