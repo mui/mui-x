@@ -13,6 +13,7 @@ import {
   getEventResourceIds,
   getOccurrencesFromEvents,
   getPrimaryResourceId,
+  getRecurringOccurrenceKey,
   getResourceSelectionMode,
 } from './event-utils';
 import { getDayListFromPlainDates } from '../../get-day-list';
@@ -327,6 +328,19 @@ describe('event-utils', () => {
       });
 
       expect(occurrence.dataTimezone.start).to.equal(processed.displayTimezone.start);
+    });
+  });
+
+  describe('getRecurringOccurrenceKey', () => {
+    it('should key the occurrence on its day in the timezone', () => {
+      // July 3rd at 17:00 UTC is July 4th in Tokyo.
+      const value = adapter.date('2025-07-03T17:00:00Z', 'default');
+      expect(getRecurringOccurrenceKey('event', value, adapter, 'Asia/Tokyo')).to.equal(
+        'event::2025-07-04',
+      );
+      expect(getRecurringOccurrenceKey('event', value, adapter, 'UTC')).to.equal(
+        'event::2025-07-03',
+      );
     });
   });
 });

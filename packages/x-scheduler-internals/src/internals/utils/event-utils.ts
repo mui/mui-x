@@ -11,7 +11,8 @@ import type {
 } from '../../models';
 import type { SchedulerRecurringEventsPluginInterface } from '../plugins/SchedulerRecurringEventsPlugin.types';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
-import { getDateKey } from './plain-date-utils/adapter';
+import { buildTemporalPlainDate } from './plain-date-utils/adapter';
+import { getPlainDateKey } from './plain-date-utils/plainDate';
 import { toLocalDayNumber } from './plain-date-utils/timeZone';
 import type { SchedulerEventRangeIndex } from './event-range-index';
 
@@ -55,7 +56,10 @@ export function getRecurringOccurrenceKey(
   adapter: Adapter,
   timezone: TemporalTimezone,
 ): string {
-  return getRecurringOccurrenceKeyFromDateKey(eventId, getDateKey(day, adapter, timezone));
+  return getRecurringOccurrenceKeyFromDateKey(
+    eventId,
+    getPlainDateKey(buildTemporalPlainDate(adapter, day, timezone)),
+  );
 }
 
 /**

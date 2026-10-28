@@ -195,7 +195,7 @@ const AGENDA_VIEW_DEFINITION: EventCalendarViewDefinition = {
     }
     return addToAdapterDate(
       state.adapter,
-      schedulerOtherSelectors.visibleDate(state),
+      state.visibleDate,
       { days: dayCount * delta },
       state.displayTimezone,
     );

@@ -62,7 +62,7 @@ export function createDayTimeGridViewDefinition(
     siblingVisibleDateGetter: ({ state, delta }) =>
       addToAdapterDate(
         state.adapter,
-        schedulerOtherSelectors.visibleDate(state),
+        state.visibleDate,
         { days: delta * dayCount },
         state.displayTimezone,
       ),

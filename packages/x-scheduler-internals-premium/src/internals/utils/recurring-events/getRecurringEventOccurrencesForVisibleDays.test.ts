@@ -1047,7 +1047,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     ]);
   });
 
-  // TZDate resolves DST transitions with the timezone of the system, the plain dates don't.
+  // The DST transitions must resolve the same way whatever the timezone of the system.
   describe.each(['UTC', 'America/New_York', 'Australia/Lord_Howe', 'Europe/London'])(
     'system timezone: %s',
     (systemTimezone) => {

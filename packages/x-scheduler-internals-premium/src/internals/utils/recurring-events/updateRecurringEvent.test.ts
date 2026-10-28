@@ -1187,7 +1187,7 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
   });
 
-  // TZDate resolves DST transitions with the timezone of the system, the plain dates don't.
+  // The DST transitions must resolve the same way whatever the timezone of the system.
   describe.each(['UTC', 'America/New_York'])('system timezone: %s', (systemTimezone) => {
     // Europe/Paris falls back from 03:00 CEST to 02:00 CET on October 26th, 2025.
     it.skipIf(!isJSDOM && systemTimezone !== 'UTC').each([
