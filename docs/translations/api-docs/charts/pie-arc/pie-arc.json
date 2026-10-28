@@ -14,6 +14,7 @@
     "isFaded": { "description": "If <code>true</code>, the element is faded." },
     "isFocused": { "description": "If <code>true</code>, the element has keyboard focus." },
     "isHighlighted": { "description": "If <code>true</code>, the element is highlighted." },
+    "onClick": { "description": "Callback fired when the arc is clicked." },
     "outerRadius": { "description": "The radius between circle center and the end of the arc." },
     "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
     "seriesId": { "description": "The id of the series the element belongs to." },

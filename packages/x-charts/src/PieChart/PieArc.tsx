@@ -32,6 +32,10 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> &
      * The radius between circle center and the beginning of the arc.
      */
     innerRadius: number;
+    /**
+     * Callback fired when the arc is clicked.
+     * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+     */
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
     /**
      * The radius between circle center and the end of the arc.
