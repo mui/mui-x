@@ -42,7 +42,15 @@ chai.use((chaiAPI, utils) => {
 
   chaiAPI.Assertion.addMethod('toEqualPlainDate', function toEqualPlainDate(expected, message) {
     // eslint-disable-next-line no-underscore-dangle
-    const assertion = new chaiAPI.Assertion(String(this._obj), message);
+    const actual = this._obj;
+    // A string or `undefined` would stringify to the expected value or fail with a vague message.
+    this.assert(
+      typeof actual === 'object' && actual !== null && typeof actual.dayNumber === 'number',
+      'expected #{this} to be a plain date',
+      'expected #{this} not to be a plain date',
+      expected,
+    );
+    const assertion = new chaiAPI.Assertion(String(actual), message);
     utils.transferFlags(this as any, assertion, false);
     assertion.to.equal(expected);
   });

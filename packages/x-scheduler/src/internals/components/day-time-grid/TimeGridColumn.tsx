@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import {
-  getPlainDateWindowBounds,
+  getPlainDateTimelineAxis,
   isWeekendPlainDate,
   useCalendarGridTimeColumnContext,
 } from '@mui/x-scheduler-internals/internals';
@@ -87,7 +87,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   // The bounds of the column, which builds them the same way.
   const { start, end } = React.useMemo(
     () =>
-      getPlainDateWindowBounds(day.plainDate, { dayStartMinute, dayEndMinute }, displayTimezone),
+      getPlainDateTimelineAxis(day.plainDate, { dayStartMinute, dayEndMinute }, displayTimezone),
     [day.plainDate, dayStartMinute, dayEndMinute, displayTimezone],
   );
 

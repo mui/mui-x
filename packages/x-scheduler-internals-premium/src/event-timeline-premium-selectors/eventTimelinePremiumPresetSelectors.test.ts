@@ -294,12 +294,12 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
     it.each([
       // The week of December 31st, 2022 in New York starts on Sunday the 25th.
-      { preset: 'dayAndWeek', start: '2022-12-25T05:00:00.000Z' },
-      { preset: 'monthAndYear', start: '2022-12-01T05:00:00.000Z' },
-      { preset: 'year', start: '2022-01-01T05:00:00.000Z' },
+      { preset: 'dayAndWeek', startPlainDate: '2022-12-25', start: '2022-12-25T05:00:00.000Z' },
+      { preset: 'monthAndYear', startPlainDate: '2022-12-01', start: '2022-12-01T05:00:00.000Z' },
+      { preset: 'year', startPlainDate: '2022-01-01', start: '2022-01-01T05:00:00.000Z' },
     ] as const)(
       'should read the visible date in the display timezone in the $preset preset',
-      ({ preset, start }) => {
+      ({ preset, startPlainDate, start }) => {
         const state = getEventTimelinePremiumStateFromParameters({
           resources: TEST_RESOURCES,
           events: [],
@@ -311,6 +311,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
         const config = eventTimelinePremiumPresetSelectors.config(state);
 
+        expect(config.startPlainDate).toEqualPlainDate(startPlainDate);
         expect(new Date(config.start).toISOString()).to.equal(start);
       },
     );
@@ -368,6 +369,35 @@ describe('eventTimelinePremiumPresetSelectors', () => {
           '1994-12-31T09:59:59.999Z',
         );
       });
+
+      it('should give a day of the axis to each date of the range, even one its timezone skips', () => {
+        // Kiritimati skipped December 31st, 1994, the last date of the range, which the header
+        // shows and the grid sizes.
+        const state = getEventTimelinePremiumStateFromParameters({
+          resources: TEST_RESOURCES,
+          events: [],
+          preset: 'dayAndHour',
+          visibleDate: adapter.date('1994-12-28T12:00:00', 'Pacific/Kiritimati'),
+          displayTimezone: 'Pacific/Kiritimati',
+        });
+        const config = eventTimelinePremiumPresetSelectors.config(state);
+        expect(config.endPlainDate).toEqualPlainDate('1995-01-01');
+        expect(config.tickCount).to.equal(4 * 24);
+        expect(config.durationMs).to.equal(4 * 24 * 3_600_000);
+      });
+
+      // Browsers cannot change their timezone through process.env.TZ.
+      it.skipIf(!isJSDOM)(
+        'should read the range in the timezone of the system when the display timezone is the default one',
+        () => {
+          // Apia skipped December 30th, 2011, when it moved from UTC−10 to UTC+14.
+          setSystemTimezone('Pacific/Apia');
+          expect(getBounds('dayAndHour', '2011-12-29T12:00:00', 'default')).to.deep.equal([
+            '2011-12-29T10:00:00.000Z',
+            '2012-01-01T09:59:59.999Z',
+          ]);
+        },
+      );
     });
 
     it('should return the same reference when the dependencies are unchanged', () => {

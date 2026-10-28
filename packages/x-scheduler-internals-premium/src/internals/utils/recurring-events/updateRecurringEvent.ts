@@ -83,8 +83,7 @@ export function applyRecurringUpdateFollowing(
 
   const originalModel = originalEvent.modelInBuiltInFormat;
   const dataTimezone = originalModel.timezone ?? 'default';
-  // The store gives the new series its own id when it creates it.
-  const { id: unusedChangesId, ...stringified }: Record<string, any> = changes;
+  const stringified: Record<string, any> = { ...changes };
   // When start/end are not explicitly changed, the new series must start at the occurrence
   // date (not at DTSTART), otherwise the split series and the truncated original would overlap.
   stringified.start = dateToEventString(adapter, newStart, originalModel.start, dataTimezone);
@@ -116,9 +115,9 @@ export function applyRecurringUpdateFollowing(
     }
   }
 
-  const { id: unusedId, ...originalModelWithoutId } = originalModel;
-  const newEvent: SchedulerEventCreationProperties = {
-    ...originalModelWithoutId,
+  // The store gives the new series its own id when it creates it.
+  const { id: unusedId, ...newEvent } = {
+    ...originalModel,
     ...stringified,
     rrule: newEventRRule,
     extractedFromId: originalModel.id,

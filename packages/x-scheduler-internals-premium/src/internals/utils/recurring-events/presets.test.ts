@@ -46,7 +46,7 @@ describe('recurring-events/presets', () => {
       const days = getWeeklyDays(adapter, PlainDate.from('2011-12-31'), 5); // Saturday
 
       expect(days.map((d) => d.code)).to.deep.equal(['FR', 'SA', 'SU', 'MO', 'TU', 'WE', 'TH']);
-      expect(days[0].date.toString()).to.equal('2011-12-30');
+      expect(days[0].date).toEqualPlainDate('2011-12-30');
     });
   });
 

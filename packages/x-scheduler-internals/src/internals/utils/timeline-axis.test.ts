@@ -2,7 +2,7 @@ import { adapter, createTimelineAxis, setSystemTimezone } from 'test/utils/sched
 import { isJSDOM } from 'test/utils/skipIf';
 import { describe, it, expect } from 'vitest';
 import {
-  getPlainDateWindowBounds,
+  getPlainDateTimelineAxis,
   getTimelineAxisDurationMs,
   timelineAxisOffsetToTimestamp,
   timestampToTimelineAxisOffsetMs,
@@ -21,11 +21,19 @@ describe('timeline-axis', () => {
   // Window 8:00 → 20:00: 720 visible minutes per day.
   const trimmedAxis = createTimelineAxis({ start, end, dayStartMinute: 480, dayEndMinute: 1200 });
 
-  describe('getPlainDateWindowBounds', () => {
-    const plainDate = PlainDate.from('2025-07-03');
-    const getBounds = (dayStartMinute: number, dayEndMinute: number) => {
-      const bounds = getPlainDateWindowBounds(plainDate, { dayStartMinute, dayEndMinute }, 'UTC');
-      return [new Date(bounds.start).toISOString(), new Date(bounds.end).toISOString()];
+  describe('getPlainDateTimelineAxis', () => {
+    const getBounds = (
+      dayStartMinute: number,
+      dayEndMinute: number,
+      date = '2025-07-03',
+      timezone = 'UTC',
+    ) => {
+      const axis = getPlainDateTimelineAxis(
+        PlainDate.from(date),
+        { dayStartMinute, dayEndMinute },
+        timezone,
+      );
+      return [new Date(axis.start).toISOString(), new Date(axis.end).toISOString()];
     };
 
     it('should end a window that runs to the end of the day on the last instant of the date', () => {
@@ -44,6 +52,40 @@ describe('timeline-axis', () => {
         '2025-07-03T08:00:00.000Z',
         '2025-07-03T20:00:00.000Z',
       ]);
+    });
+
+    it('should bound the days that a DST transition shortens or lengthens', () => {
+      // New York springs forward on March 8th, 2026 (23 hours) and falls back on November 2nd,
+      // 2025 (25 hours).
+      expect(getBounds(0, 1440, '2026-03-08', 'America/New_York')).to.deep.equal([
+        '2026-03-08T05:00:00.000Z',
+        '2026-03-09T03:59:59.999Z',
+      ]);
+      expect(getBounds(0, 1440, '2025-11-02', 'America/New_York')).to.deep.equal([
+        '2025-11-02T04:00:00.000Z',
+        '2025-11-03T04:59:59.999Z',
+      ]);
+    });
+
+    it('should start a window on a skipped time at the end of the gap', () => {
+      // 02:00 doesn't exist in New York on March 8th, 2026: the window starts at 03:00 EDT.
+      expect(getBounds(120, 1200, '2026-03-08', 'America/New_York')).to.deep.equal([
+        '2026-03-08T07:00:00.000Z',
+        '2026-03-09T00:00:00.000Z',
+      ]);
+    });
+
+    it('should return the axis of the window in the timezone', () => {
+      const axis = getPlainDateTimelineAxis(
+        PlainDate.from('2025-07-03'),
+        { dayStartMinute: 480, dayEndMinute: 1200 },
+        'Europe/Paris',
+      );
+      expect(axis).to.include({
+        timezone: 'Europe/Paris',
+        dayStartMinute: 480,
+        dayEndMinute: 1200,
+      });
     });
   });
 

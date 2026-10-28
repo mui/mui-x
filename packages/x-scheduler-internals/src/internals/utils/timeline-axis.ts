@@ -30,9 +30,9 @@ export interface TimelineAxisWindow {
 /**
  * A displayed date range with the hour window shown for each day. When the window is
  * trimmed, the axis is piecewise — the hidden hours of each day take no space — so
- * px↔date conversions must go through these helpers. Built by the time-grid columns and the
- * day-grid rows from their timestamps, and by the timeline's preset config (horizontal axis)
- * from its dates.
+ * px↔date conversions must go through these helpers. Built by the time-grid columns from their
+ * date, by the day-grid rows from their timestamps, and by the timeline's preset config
+ * (horizontal axis) from its dates.
  */
 export interface TimelineAxis extends TimelineAxisWindow {
   /**
@@ -50,19 +50,23 @@ export interface TimelineAxis extends TimelineAxisWindow {
 }
 
 /**
- * The bounds of the hour window of a date in `timezone`: its first displayed instant, and the last
- * instant of the date when the window runs to the end of the day, otherwise the exclusive end of
- * the window. The bounds of a column of the time grid.
+ * The axis of the hour window of a date in `timezone`, the axis of a column of the time grid. It
+ * starts on the first displayed instant, and ends on the last instant of the date when the window
+ * runs to the end of the day, otherwise on the exclusive end of the window.
  */
-export function getPlainDateWindowBounds(
+export function getPlainDateTimelineAxis(
   plainDate: PlainDate,
   window: TimelineAxisWindow,
   timezone: TemporalTimezone,
-): { start: number; end: number } {
-  const endMs = toEpochMs(plainDate, window.dayEndMinute * MINUTE_MS, timezone);
+): TimelineAxis {
+  const { dayStartMinute, dayEndMinute } = window;
+  const endMs = toEpochMs(plainDate, dayEndMinute * MINUTE_MS, timezone);
   return {
-    start: toEpochMs(plainDate, window.dayStartMinute * MINUTE_MS, timezone),
-    end: window.dayEndMinute === FULL_DAY_MINUTES ? endMs - 1 : endMs,
+    start: toEpochMs(plainDate, dayStartMinute * MINUTE_MS, timezone),
+    end: dayEndMinute === FULL_DAY_MINUTES ? endMs - 1 : endMs,
+    timezone,
+    dayStartMinute,
+    dayEndMinute,
   };
 }
 
@@ -101,7 +105,7 @@ export function isEndMinuteOutsideAxisWindow(
  * minutes (a full day is always 1440 minutes) so the axis matches the rendered grid,
  * whose tick count is pinned per day and does not stretch on DST transitions.
  */
-function getTimelineAxisDayMs(axis: TimelineAxisWindow): number {
+export function getTimelineAxisDayMs(axis: TimelineAxisWindow): number {
   return Math.max(1, axis.dayEndMinute - axis.dayStartMinute) * MINUTE_MS;
 }
 

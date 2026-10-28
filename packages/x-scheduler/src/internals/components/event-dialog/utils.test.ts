@@ -278,3 +278,17 @@ describe('getRecurrenceRuleBound', () => {
     expect(getEventTimezonePlainDate(placeholder, start)).toEqualPlainDate('2025-07-04');
   });
 });
+
+describe('getEventTimezonePlainDate', () => {
+  it('should read the date in the timezone of the event', () => {
+    const occurrence = EventBuilder.new(adapter)
+      .withDataTimezone('Asia/Tokyo')
+      .span('2025-07-07T00:30:00', '2025-07-07T01:30:00')
+      .withDisplayTimezone('UTC')
+      .toOccurrence();
+    // 15:30 UTC on July 6th is 00:30 on July 7th in Tokyo.
+    expect(
+      getEventTimezonePlainDate(occurrence, Date.parse('2025-07-06T15:30:00Z')),
+    ).toEqualPlainDate('2025-07-07');
+  });
+});

@@ -73,6 +73,10 @@ export function getDefaultPresetKey(
   }
 }
 
+/**
+ * Returns the 7 week days with their code and date, starting at the start of the week containing
+ * `visiblePlainDate`.
+ */
 export function getWeeklyDays(
   adapter: Adapter,
   visiblePlainDate: PlainDate,
@@ -85,6 +89,10 @@ export function getWeeklyDays(
   });
 }
 
+/**
+ * Returns the monthly reference of a date: its day of the month, its weekday code and the ordinal
+ * of that weekday in the month.
+ */
 export function getMonthlyReference(plainDate: PlainDate): {
   dayOfMonth: number;
   code: RecurringEventWeekDayCode;

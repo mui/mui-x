@@ -13,8 +13,7 @@ import {
   floorToWallClockMinutes,
   toEpochMs,
 } from '../../internals/utils/plain-date-utils/timeZone';
-import { FULL_DAY_MINUTES, getPlainDateWindowBounds } from '../../internals/utils/timeline-axis';
-import type { TimelineAxis } from '../../internals/utils/timeline-axis';
+import { FULL_DAY_MINUTES, getPlainDateTimelineAxis } from '../../internals/utils/timeline-axis';
 import type { PlainDate } from '../../internals/utils/base-temporal/PlainDate';
 import { useEventCreation } from '../../internals/utils/useEventCreation';
 import { useKeyboardEventCreation } from '../../internals/utils/useKeyboardEventCreation';
@@ -56,13 +55,8 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     focusedCell?.rowIndex === 0 &&
     focusedCell?.columnIndex === index;
 
-  const axis: TimelineAxis = React.useMemo(
-    () => ({
-      ...getPlainDateWindowBounds(value, { dayStartMinute, dayEndMinute }, displayTimezone),
-      timezone: displayTimezone,
-      dayStartMinute,
-      dayEndMinute,
-    }),
+  const axis = React.useMemo(
+    () => getPlainDateTimelineAxis(value, { dayStartMinute, dayEndMinute }, displayTimezone),
     [value, displayTimezone, dayStartMinute, dayEndMinute],
   );
   const { start, end } = axis;
@@ -188,6 +182,7 @@ export namespace CalendarGridTimeColumn {
   export interface Props extends BaseUIComponentProps<'div', State> {
     /**
      * The date of the column, in the display timezone.
+     * Keep its identity stable: the column rebuilds its axis and its context when it changes.
      */
     value: PlainDate;
     /**

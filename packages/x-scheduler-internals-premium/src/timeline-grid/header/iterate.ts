@@ -43,21 +43,14 @@ export function iterate(
 ): IteratedCell[] {
   if (range.endPlainDate.dayNumber <= range.startPlainDate.dayNumber) {
     throw new Error(
-      `MUI X Scheduler: TimelineGridHeader.iterate() received a range where rangeEnd is before rangeStart. ` +
+      `MUI X Scheduler: TimelineGridHeader.iterate() received a range whose end date is not after its start date. ` +
         `The iteration would silently produce an empty header, masking the misconfiguration. ` +
         `Check the preset's \`getStartPlainDate\` / \`getEndPlainDate\` so they return ordered dates.`,
     );
   }
 
   const rangeStartLocalMs = range.startPlainDate.dayNumber * MS_PER_DAY;
-
-  // The last tick holds the last date of the range: floor that date to the tick boundary and add
-  // one tick to get an exclusive end.
-  const rangeEndExclusive = addUnit(
-    startOf(adapter, range.endPlainDate.dayNumber * MS_PER_DAY - 1, tickUnit, weekStartsOn),
-    tickUnit,
-    1,
-  );
+  const rangeEndLocalMs = range.endPlainDate.dayNumber * MS_PER_DAY;
 
   // Hour ticks are a wall-clock grid: every day contributes the same columns whatever
   // its real hours are, so spans are measured on the axis rather than in elapsed hours.
@@ -65,14 +58,14 @@ export function iterate(
 
   // `appliedHourWindow` is only set when the ticks are hours, so this is the hour row.
   if (unit === 'hour' && appliedHourWindow) {
-    return iterateHourCells(rangeStartLocalMs, rangeEndExclusive, appliedHourWindow);
+    return iterateHourCells(range);
   }
 
   const cells: IteratedCell[] = [];
   let cursor = startOf(adapter, rangeStartLocalMs, unit, weekStartsOn);
   let index = 0;
 
-  while (cursor < rangeEndExclusive) {
+  while (cursor < rangeEndLocalMs) {
     // Guard against runaway iteration from a misconfigured preset (e.g. hour ticks over a
     // 100-year range).
     if (index >= 10_000) {
@@ -82,8 +75,8 @@ export function iterate(
 
     // First and last cells can extend past the visible range (e.g. a year cell
     // aligned to Jan 1 when the range starts mid-year). Clamp them so
-    // `spanInTicks` reflects only the portion within `[rangeStart, rangeEndExclusive)`.
-    const spanEnd = Math.min(nextCursor, rangeEndExclusive);
+    // `spanInTicks` reflects only the portion within `[rangeStartLocalMs, rangeEndLocalMs)`.
+    const spanEnd = Math.min(nextCursor, rangeEndLocalMs);
     const spanStart = Math.max(cursor, rangeStartLocalMs);
     cells.push({
       plainDate: plainDateFromLocalMs(cursor),
@@ -93,8 +86,7 @@ export function iterate(
       spanInTicks: appliedHourWindow
         ? countVisibleHours(spanEnd, spanStart, appliedHourWindow)
         : differenceInUnits(spanEnd, spanStart, tickUnit),
-      // A date skipped by a transition resolves to the same instants as the next one, so
-      // the key is built from the wall-clock time.
+      // The wall-clock time of the aligned start.
       key: String(cursor),
       index,
     });
@@ -126,18 +118,12 @@ function throwTooManyCells(unit: PresetHeaderUnit, tickUnit: PresetHeaderUnit): 
  * repeated by fall-back gets a single one. Events absorb the difference by stretching or
  * shrinking over the fixed grid.
  */
-function iterateHourCells(
-  rangeStartLocalMs: number,
-  rangeEndExclusive: number,
-  hourWindow: TimelineAxisWindow,
-): IteratedCell[] {
-  const startHour = Math.ceil(hourWindow.dayStartMinute / 60);
-  const endHour = Math.ceil(hourWindow.dayEndMinute / 60);
+function iterateHourCells(range: IteratedRange): IteratedCell[] {
+  const startHour = Math.ceil(range.dayStartMinute / 60);
+  const endHour = Math.ceil(range.dayEndMinute / 60);
 
-  const firstDay = Math.floor(rangeStartLocalMs / MS_PER_DAY);
-  // `rangeEndExclusive` lands on midnight when the range ends on a day boundary, in
-  // which case that day contributes no cells.
-  const dayCount = Math.ceil(rangeEndExclusive / MS_PER_DAY) - firstDay;
+  const firstDay = range.startPlainDate.dayNumber;
+  const dayCount = range.endPlainDate.dayNumber - firstDay;
 
   // Same runaway guard as the generic walk, checked up front since the count is known.
   if (dayCount * Math.max(0, endHour - startHour) > 10_000) {

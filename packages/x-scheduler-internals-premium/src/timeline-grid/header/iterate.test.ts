@@ -387,13 +387,16 @@ describe('iterate()', () => {
       );
     });
 
-    it('should throw when rangeEnd is before rangeStart', () => {
+    it('should throw when the end date of the range is not after its start date', () => {
       const start = adapter.date('2025-07-31T00:00:00Z', 'default');
-      const end = adapter.date('2025-07-01T00:00:00Z', 'default');
 
-      expect(() => iterateRange('day', 'day', start, end)).to.throw(
-        /rangeEnd is before rangeStart/,
-      );
+      expect(() =>
+        iterateRange('day', 'day', start, adapter.date('2025-07-01T00:00:00Z', 'default')),
+      ).to.throw(/end date is not after its start date/);
+      // The range ends on its start date.
+      expect(() =>
+        iterateRange('day', 'day', start, adapter.date('2025-07-30T00:00:00Z', 'default')),
+      ).to.throw(/end date is not after its start date/);
     });
 
     it('should throw when the cell count would exceed the 10k safety cap', () => {
