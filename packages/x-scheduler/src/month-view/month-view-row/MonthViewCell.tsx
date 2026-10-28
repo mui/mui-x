@@ -4,8 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { isWeekendPlainDate } from '@mui/x-scheduler-internals/internals';
+import {
+  formatDayOfMonth,
+  formatMonthShortAndDayOfMonth,
+  isWeekendPlainDate,
+} from '@mui/x-scheduler-internals/internals';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
@@ -19,7 +22,6 @@ import {
 import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
-import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import { useEventEditingContext } from '../../internals/components/event-editing';
 import { EventContextMenuTrigger } from '../../internals/components/event-context-menu';
@@ -170,7 +172,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const { day, row, maxEvents, colIndex, ariaLabelledBy } = props;
 
   // Context hooks
-  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { classes, localeText } = useEventCalendarStyledContext();
   const { startEditing } = useEventEditingContext();
@@ -178,6 +179,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visiblePlainDate = useStore(store, schedulerOtherSelectors.visiblePlainDate);
+  const locale = useStore(store, schedulerOtherSelectors.dateLocale);
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
@@ -208,8 +210,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
       {isFirstDayOfMonth
-        ? formatMonthAndDayOfMonth(day.value, adapter)
-        : adapter.format(day.value, 'dayOfMonth')}
+        ? formatMonthShortAndDayOfMonth(locale, day.plainDate)
+        : formatDayOfMonth(locale, day.plainDate)}
     </MonthViewCellNumber>
   );
 

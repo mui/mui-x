@@ -74,6 +74,7 @@ import {
 import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { createStartOfPlainDate } from '../plain-date-utils/adapter';
+import { checkDateLocale, DEFAULT_DATE_LOCALE } from '../date-locale';
 import { toPlainDate } from '../plain-date-utils/timeZone';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -91,9 +92,7 @@ function createStartOfToday(adapter: Adapter, nowTimestamp: number, timezone: Te
  */
 const TRANSIENT_ERROR_DURATION_MS = 5000;
 
-export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
-  ampm: true,
-};
+export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {};
 
 const MOCK_EVENT_STATE = {
   eventIdList: [],
@@ -312,8 +311,11 @@ export class SchedulerStore<
     parameters: SchedulerParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
+    const dateLocale = parameters.dateLocale ?? DEFAULT_DATE_LOCALE;
+    checkDateLocale(dateLocale);
     return {
       adapter,
+      dateLocale,
       areEventsDraggable: parameters.areEventsDraggable ?? true,
       areEventsResizable: parameters.areEventsResizable ?? true,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,

@@ -1,6 +1,6 @@
+import { TemporalAdapterDateFns } from '@base-ui/react/internals/temporal-adapter-date-fns';
 import {
   adapter,
-  adapterFr,
   EventBuilder,
   premiumStoreClasses,
   ResourceBuilder,
@@ -17,6 +17,8 @@ import { vi, describe, it, expect } from 'vitest';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
 const TEST_RESOURCES = [ResourceBuilder.new().build()];
+
+const otherAdapter = new TemporalAdapterDateFns();
 
 // Pins the reason text `datesNotWritableReason` in `SchedulerStore.ts` builds (not exported):
 // `toWarnDev` matches by `includes`, so an assertion naming only the first line of a warning
@@ -774,7 +776,7 @@ storeClasses.forEach((storeClass) => {
             displayTimezone: 'Europe/Paris',
             showCurrentTimeIndicator: true,
           },
-          adapterFr,
+          otherAdapter,
         );
 
         expect(idGetter.mock.calls.length).to.equal(7);
@@ -791,7 +793,7 @@ storeClasses.forEach((storeClass) => {
             displayTimezone: 'Europe/Paris',
             showCurrentTimeIndicator: true,
           },
-          adapterFr,
+          otherAdapter,
         );
 
         // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
@@ -806,7 +808,7 @@ storeClasses.forEach((storeClass) => {
             displayTimezone: 'Europe/Paris',
             showCurrentTimeIndicator: true,
           },
-          adapterFr,
+          otherAdapter,
         );
 
         expect(idGetter.mock.calls.length).to.equal(9);

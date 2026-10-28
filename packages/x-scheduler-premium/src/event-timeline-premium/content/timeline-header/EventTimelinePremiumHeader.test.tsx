@@ -114,8 +114,8 @@ describe('<EventTimelinePremiumHeader />', () => {
     });
   });
 
-  describe('formatDate content', () => {
-    it('should render the formatDate result as the cell label', async () => {
+  describe('format content', () => {
+    it('should render the formatted date as the cell label', async () => {
       await renderHeader({ preset: 'monthAndYear' });
 
       // Visible range Jul 2025 → Jun 2028.
@@ -149,8 +149,8 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('weekend marking', () => {
-    // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); the test adapter has no
-    // locale configured, so date-fns starts weeks on Sunday → first cell is Sun Jun 29.
+    // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); the weeks of the default date locale,
+    // English (United States), start on Sunday → first cell is Sun Jun 29.
     it('should mark weekend day cells with data-weekend in `dayAndWeek` (where the day row is the leaf)', async () => {
       await renderHeader({ preset: 'dayAndWeek' });
 
@@ -224,7 +224,9 @@ describe('<EventTimelinePremiumHeader />', () => {
       const weekCell = document.querySelector<HTMLElement>(
         `.${classes.headerCell}[data-unit="week"][data-index="0"]`,
       );
-      expect(weekCell!.textContent).to.equal('Sat, Dec 24 - Fri, Dec 30');
+      // The range of `Intl.DateTimeFormat` separates the dates with an en dash between spaces, thin
+      // ones in some runtimes.
+      expect(weekCell!.textContent).to.match(/^Sat, Dec 24\s–\sFri, Dec 30$/);
     });
   });
 

@@ -105,7 +105,7 @@ describe('recurring-events/RecurringSeries', () => {
   });
 
   describe('last supported day', () => {
-    it('should end every frequency on December 31st, 9999', () => {
+    it('should end every frequency on December 31, 9999', () => {
       const lastYear = ['9999-01-01T00:00:00', '9999-12-31T00:00:00'] as const;
       expect(
         getOccurrenceDays(

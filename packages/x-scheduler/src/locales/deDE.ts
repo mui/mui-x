@@ -116,6 +116,7 @@ const deDECalendar: SchedulerCalendarTranslations = {
   months: 'Monate',
   weeks: 'Wochen',
   years: 'Jahre',
+  // viewSwitcherAriaLabel: 'Views',
 
   // DateNavigator
   closeSidePanel: 'Seitenpanel schließen',

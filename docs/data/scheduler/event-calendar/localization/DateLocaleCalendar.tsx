@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
-import { fr } from 'date-fns/locale/fr';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { frFR, createDateLocaleTheme } from '@mui/x-scheduler/locales';
@@ -13,7 +12,7 @@ import {
 export default function DateLocaleCalendar() {
   const existingTheme = useTheme();
   const theme = React.useMemo(
-    () => createTheme(existingTheme, frFR, createDateLocaleTheme(fr)),
+    () => createTheme(existingTheme, frFR, createDateLocaleTheme('fr-FR')),
     [existingTheme],
   );
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
