@@ -29,14 +29,7 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) =>
       state.presetConfig[state.preset as keyof EventTimelinePremiumPresetConfig]?.endTime,
     schedulerPreferenceSelectors.weekStartsOn,
-    (
-      visiblePlainDate,
-      displayTimezone,
-      preset,
-      presetStartTime,
-      presetEndTime,
-      weekStartsOn,
-    ) => {
+    (visiblePlainDate, displayTimezone, preset, presetStartTime, presetEndTime, weekStartsOn) => {
       const config = EVENT_TIMELINE_PREMIUM_PRESET_DEFINITIONS[preset];
       if (!config) {
         throw new Error(

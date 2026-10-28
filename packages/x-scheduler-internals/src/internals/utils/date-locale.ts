@@ -111,9 +111,18 @@ function getFormatter(locale: string, options: Intl.DateTimeFormatOptions): Intl
   return formatter;
 }
 
+/**
+ * The `Date` of a wall-clock time in UTC. The formatters take a `Date` rather than its timestamp:
+ * the replacements of `Intl` that fake the clock, like `@sinonjs/fake-timers`, format the current
+ * date instead of a timestamp of `0`, the midnight of January 1st, 1970.
+ */
+function toUtcDate(epochMs: number): Date {
+  return new Date(epochMs);
+}
+
 // The day number of a date is the number of days from January 1st, 1970 in UTC.
 function formatDate(locale: string, plainDate: PlainDate, options: Intl.DateTimeFormatOptions) {
-  return getFormatter(locale, options).format(plainDate.dayNumber * MS_PER_DAY);
+  return getFormatter(locale, options).format(toUtcDate(plainDate.dayNumber * MS_PER_DAY));
 }
 
 const WEEKDAY: Intl.DateTimeFormatOptions = { weekday: 'long' };
@@ -215,8 +224,8 @@ export function formatWeekdayShortMonthShortAndDayOfMonthRange(
   endPlainDate: PlainDate,
 ): string {
   return getFormatter(locale, WEEKDAY_SHORT_MONTH_SHORT_AND_DAY_OF_MONTH).formatRange(
-    startPlainDate.dayNumber * MS_PER_DAY,
-    endPlainDate.dayNumber * MS_PER_DAY,
+    toUtcDate(startPlainDate.dayNumber * MS_PER_DAY),
+    toUtcDate(endPlainDate.dayNumber * MS_PER_DAY),
   );
 }
 
@@ -264,7 +273,7 @@ export function formatTime(locale: string, minutesInDay: number, ampm: boolean):
   }
   const cycleLabels = ampm ? labels.ampm : labels.h24;
   cycleLabels[minutesInDay] ??= getFormatter(locale, ampm ? TIME_12H : TIME_24H).format(
-    minutesInDay * 60_000,
+    toUtcDate(minutesInDay * 60_000),
   );
   return cycleLabels[minutesInDay];
 }

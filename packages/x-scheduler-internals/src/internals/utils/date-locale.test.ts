@@ -150,5 +150,16 @@ describe('date-locale', () => {
     it('should format midnight as 12 AM in 12-hour format', () => {
       expect(formatTime('en-US', 0, true)).to.equal('12:00 AM');
     });
+
+    it('should format midnight when the clock and Intl are faked', () => {
+      // The fake `Intl` formats the current date instead of a falsy timestamp.
+      vi.useFakeTimers({ now: Date.UTC(2014, 7, 18, 19, 11), toFake: ['Date', 'Intl'] });
+      try {
+        // A locale that isn't cached yet.
+        expect(formatTime('en-CA', 0, false)).to.equal('00:00');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 });
