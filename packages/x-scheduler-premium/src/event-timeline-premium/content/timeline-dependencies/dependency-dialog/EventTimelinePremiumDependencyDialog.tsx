@@ -28,11 +28,14 @@ const DependencyDialogAnchor = styled('span', {
   pointerEvents: 'none',
 });
 
-// The event dialog's styles, in a slot of its own so the theme reaches the portaled dialog.
+// Narrower than the event dialog: it only has four fields.
 const DependencyDialogContentRoot = styled(EventDialogContentRoot, {
   name: 'MuiEventTimeline',
   slot: 'DependencyDialogContent',
-})({});
+})({
+  minWidth: 0,
+  width: 345,
+});
 
 /**
  * Dialog to edit a dependency, or show its details when read-only.
